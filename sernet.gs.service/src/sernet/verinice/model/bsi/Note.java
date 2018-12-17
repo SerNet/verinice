@@ -72,7 +72,7 @@ public class Note extends Addition implements Serializable{
 		return subEntityType;
 	}
 
-	
+	@Override
 	public String getTypeId() {
 		return TYPE_ID;
 	}

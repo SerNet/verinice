@@ -21,8 +21,7 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
 public class Messages extends NLS {
@@ -90,8 +89,7 @@ public class Messages extends NLS {
     public static String ReportDepositView_7;
     public static String ReportDepositView_8;
     public static String ReportDepositView_9;
-    
-    
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

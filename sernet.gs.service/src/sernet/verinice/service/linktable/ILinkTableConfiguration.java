@@ -72,4 +72,9 @@ public interface ILinkTableConfiguration extends Serializable {
      * Removes all scope ids of this configuration. 
      */
     void removeAllScopeIds();
+    
+    /**
+     * Follow the links out of the scope.
+     */
+    boolean followLinksOutsideOfScope();
 }

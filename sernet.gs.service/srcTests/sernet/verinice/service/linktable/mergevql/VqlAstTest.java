@@ -25,7 +25,7 @@ import static sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO.readLink
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jgrapht.DirectedGraph;
+import org.jgrapht.Graph;
 import org.jgrapht.traverse.BreadthFirstIterator;
 import org.junit.Test;
 
@@ -52,7 +52,7 @@ public class VqlAstTest {
         ILinkTableConfiguration conf = readLinkTableConfiguration(getFilePath(TEST_VLT_FILE));
         VqlAst mergedVqlAst = new VqlAst(conf);
 
-        DirectedGraph<VqlNode, VqlEdge> vqlAst = mergedVqlAst.getVqlGraph();
+        Graph<VqlNode, VqlEdge> vqlAst = mergedVqlAst.getVqlGraph();
 
         VqlNode root = mergedVqlAst.getRoot();
 
@@ -84,7 +84,7 @@ public class VqlAstTest {
         assertTrue("text must be part of propertyId", property.contains(next.getTypeId()));
     }
 
-    private void testForRoot(DirectedGraph<VqlNode, VqlEdge> vqlAst, VqlNode next) {
+    private void testForRoot(Graph<VqlNode, VqlEdge> vqlAst, VqlNode next) {
         if (next.getPath().equals(ROOT_ELEMENT)) {
             assertTrue(vqlAst.outgoingEdgesOf(next).size() == 1);
         }

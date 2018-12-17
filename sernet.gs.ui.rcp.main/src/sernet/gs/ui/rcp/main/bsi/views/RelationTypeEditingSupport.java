@@ -54,7 +54,7 @@ import sernet.verinice.service.commands.crud.ChangeLinkType;
  */
 public class RelationTypeEditingSupport extends EditingSupport {
 
-    private Logger log = Logger.getLogger(RelationTypeEditingSupport.class);
+    private static final Logger log = Logger.getLogger(RelationTypeEditingSupport.class);
 
     private IRelationTable view;
     private TableViewer viewer;
@@ -179,7 +179,7 @@ public class RelationTypeEditingSupport extends EditingSupport {
         
         CnALink newCnaLink = null;
         if (changeLinkDirection(cnaLink, linkTypeId)) {
-            CreateLink<CnALink, CnATreeElement, CnATreeElement> createLinkCommand =
+            CreateLink<CnATreeElement, CnATreeElement> createLinkCommand =
                     new CreateLink<>(
                             cnaLink.getDependency(), cnaLink.getDependant(), linkTypeId);
             try {
@@ -194,6 +194,8 @@ public class RelationTypeEditingSupport extends EditingSupport {
                     }
                     CnAElementFactory.getInstance().getISO27kModel().linkRemoved(cnaLink);
                     CnAElementFactory.getInstance().getISO27kModel().linkAdded(newCnaLink);
+                    CnAElementFactory.getInstance().getBpModel().linkRemoved(cnaLink);
+                    CnAElementFactory.getInstance().getBpModel().linkAdded(newCnaLink);
                 }
             } catch (CommandException e) {
                 ExceptionUtil.log(e, Messages.RelationTypeEditingSupport_1);
@@ -216,6 +218,7 @@ public class RelationTypeEditingSupport extends EditingSupport {
             }
             
             CnAElementFactory.getInstance().getISO27kModel().linkChanged(cnaLink, newCnaLink, view);
+            CnAElementFactory.getInstance().getBpModel().linkChanged(cnaLink, newCnaLink, view);
         }
     }
     

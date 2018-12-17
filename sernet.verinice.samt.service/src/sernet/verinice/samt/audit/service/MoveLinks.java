@@ -49,11 +49,7 @@ import sernet.verinice.service.commands.CreateLink;
  */
 public class MoveLinks extends ChangeLoggingCommand implements IChangeLoggingCommand, IAuthAwareCommand {
 
-    private transient Logger log = Logger.getLogger(MoveLinks.class);
-    public Logger getLog() {
-        if (log == null) { log = Logger.getLogger(MoveLinks.class); }
-        return log;
-    }
+    private static final Logger log = Logger.getLogger(MoveLinks.class);
     
     private Map<String, String> sourceDestMap;
     
@@ -142,11 +138,11 @@ public class MoveLinks extends ChangeLoggingCommand implements IChangeLoggingCom
 
     private CnALink createLink(CnATreeElement dependant, CnATreeElement dependency, String relationId) {
         try {
-            CreateLink<CnALink, CnATreeElement, CnATreeElement> createLink = new CreateLink<CnALink, CnATreeElement, CnATreeElement>(dependant, dependency, relationId, "created by command CopyLinks");      
+            CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<>(dependant, dependency, relationId, "created by command CopyLinks");
             createLink = getCommandService().executeCommand(createLink);
             return createLink.getLink();          
         } catch (CommandException e) {
-            getLog().error("Error while creating cnalink in db", e);
+            log.error("Error while creating cnalink in db", e);
             return null;
         }       
     }

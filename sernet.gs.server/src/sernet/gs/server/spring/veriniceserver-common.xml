@@ -102,6 +102,7 @@ This variant:
             <entry key="countService" value-ref="countService" />
             <entry key="individualService" value-ref="individualService" />
             <entry key="layoutConfig" value-ref="layoutConfig" />
+            <entry key="itbpRiskService" value-ref="itbpRiskService" />
         </map>
     </property>
 	</bean>
@@ -257,6 +258,9 @@ This variant:
 		<property name="networkDAO" ref="networkDAO" />
 		<property name="roomDAO" ref="roomDAO" />
     <property name="safeguardDAO" ref="safeguardDAO" />
+    <property name="bpDocumentDAO" ref="bpDocumentDAO" />
+    <property name="bpIncidentDAO" ref="bpIncidentDAO" />
+    <property name="bpRecordDAO" ref="bpRecordDAO" />
 		<property name="bpModelDAO" ref="bpModelDAO" />
 		<property name="applicationGroupDAO" ref="applicationGroupDAO" />
     <property name="bpPersonGroupDAO" ref="bpPersonGroupDAO" />
@@ -269,6 +273,9 @@ This variant:
 		<property name="networkGroupDAO" ref="networkGroupDAO" />
 		<property name="roomGroupDAO" ref="roomGroupDAO" />
     <property name="safeguardGroupDAO" ref="safeguardGroupDAO" />
+    <property name="bpDocumentGroupDAO" ref="bpDocumentGroupDAO" />
+    <property name="bpIncidentGroupDAO" ref="bpIncidentGroupDAO" />
+    <property name="bpRecordGroupDAO" ref="bpRecordGroupDAO" />
 
         <!-- Miscellaneous DAOs -->
         <property name="importIsoDAO" ref="importIsoDAO" /> 
@@ -285,6 +292,8 @@ This variant:
         <property name="catalogModelDAO" ref="catalogModelDao" />
 	</bean>
 
+  <!-- Documentation of the transaction management of Spring 1.2 used here: -->
+  <!-- https://docs.spring.io/spring/docs/1.2.x/reference/transaction.html -->
 	<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
 		<property name="sessionFactory">
 			<ref bean="sessionFactory" />
@@ -359,7 +368,7 @@ This variant:
     
     <!-- A service to load and analyse the element network of verinice with JGraphT. -->
     <!-- JGraphT is a free Java graph library that provides mathematical graph-theory objects and algorithms. -->
-    <bean id="graphService" class="sernet.verinice.graph.GraphService" scope="prototype">  
+    <bean id="graphService" class="sernet.verinice.graph.GraphService">
         <property name="cnaTreeElementDao" ref="cnaTreeElementDao" />
         <property name="cnaLinkDao" ref="cnaLinkDao" />
     </bean>
@@ -424,5 +433,61 @@ This variant:
                 <bean class="org.bouncycastle.jce.provider.BouncyCastleProvider"/>
             </list>
         </property>
+    </bean>
+    
+    <bean id="migrateElementJobImpl" class="sernet.verinice.service.bp.migration.MigrateElementJobImpl" scope="prototype">  
+        <property name="commandService" ref="hibernateCommandService" />
+        <property name="linkDao" ref="cnaLinkDao" />
+    </bean>
+    <bean id="migrateElementJob" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"  scope="prototype">
+        <property name="transactionManager" ref="txManager" />
+        <property name="target" ref="migrateElementJobImpl" />
+        <property name="transactionAttributes">
+            <props>
+                <prop key="migrateModeling">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
     </bean> 
+    
+    <bean id="migrateItNetworkJobImpl" class="sernet.verinice.service.bp.migration.MigrateItNetworkJob" scope="prototype">
+        <property name="graphService" ref="graphService" />
+        <property name="commandService" ref="hibernateCommandService" />
+        <property name="elementDao" ref="cnaTreeElementDao" />
+        <property name="migrateElementJobFactory">
+          <bean class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+            <property name="targetBeanName">
+              <idref local="migrateElementJob" />
+            </property>
+          </bean>
+        </property>
+    </bean>
+    
+    <!-- This service migrates the modeling data in ITBP from version 1.16 to 1.17 -->
+    <bean id="modelingMigrationServiceImpl" class="sernet.verinice.service.bp.migration.ModelingMigrationServiceImpl">
+        <property name="commandService" ref="hibernateCommandService" />
+        <property name="migrateItNetworkJobFactory">
+          <bean class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+            <property name="targetBeanName">
+              <idref local="migrateItNetworkJobImpl" />
+            </property>
+          </bean>
+        </property>
+    </bean>
+    
+    <bean id="modelingMigrationServiceExecuter" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager" ref="txManager" />
+        <property name="target" ref="modelingMigrationServiceImpl" />
+        <property name="transactionAttributes">
+            <props>
+                <prop key="isMigrationRequired">PROPAGATION_REQUIRES_NEW</prop>
+            </props>
+        </property>
+    </bean>
+    
+     <!-- This service migrates the modeling data in ITBP from version 1.16 to 1.17 -->
+    <bean id="modelingMigrationService" class="sernet.verinice.service.bp.migration.ModelingMigrationDatabaseServiceImpl">
+        <property name="modelingMigrationService" ref="modelingMigrationServiceExecuter" />
+        <property name="elementDao" ref="cnaTreeElementDao" />
+    </bean>
+    
 </beans>

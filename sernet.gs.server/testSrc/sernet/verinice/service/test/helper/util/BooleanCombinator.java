@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.jgrapht.alg.BellmanFordShortestPath;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -34,7 +33,7 @@ import org.junit.Test;
  */
 public class BooleanCombinator {
 
-    private Logger log = Logger.getLogger(BooleanCombinator.class);
+    private static final Logger log = Logger.getLogger(BooleanCombinator.class);
 
     private int upperBound;
 

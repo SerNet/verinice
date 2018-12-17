@@ -112,7 +112,7 @@ public class ITVerbund extends CnATreeElement
 		return false;
 	}
 
-
+	@Override
 	public void setTitel(String name) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}

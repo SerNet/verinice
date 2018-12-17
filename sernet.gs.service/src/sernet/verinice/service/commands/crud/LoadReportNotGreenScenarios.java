@@ -37,7 +37,7 @@ import sernet.verinice.service.risk.RiskAnalysisHelperImpl;
  */
 public class LoadReportNotGreenScenarios extends GenericCommand implements ICachedCommand{
     
-    private transient Logger log = Logger.getLogger(LoadReportNotGreenScenarios.class);
+    private static final Logger log = Logger.getLogger(LoadReportNotGreenScenarios.class);
     
     public static final String[] COLUMNS = new String[]{"SCENARIO_NAME",
                                                   "RISK_COLOUR",
@@ -107,18 +107,11 @@ public class LoadReportNotGreenScenarios extends GenericCommand implements ICach
                 }
 
             } catch (CommandException e){
-                getLog().error("Error while executing command", e);
+                log.error("Error while executing command", e);
             }
         }
     }
     
-    private Logger getLog(){
-        if(log == null){
-            log = Logger.getLogger(LoadReportNotGreenScenarios.class);
-        }
-        return log;
-    }
-
     public List<ArrayList<String>> getResult() {
         return results;
     }
@@ -144,8 +137,8 @@ public class LoadReportNotGreenScenarios extends GenericCommand implements ICach
     public void injectCacheResult(Object result) {
         this.results = (ArrayList<ArrayList<String>>)result;
         resultInjectedFromCache = true;
-        if(getLog().isDebugEnabled()){
-            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        if(log.isDebugEnabled()){
+            log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 

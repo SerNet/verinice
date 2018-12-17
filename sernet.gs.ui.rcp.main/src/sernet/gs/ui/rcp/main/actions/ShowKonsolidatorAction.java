@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.actions;
 
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -42,8 +43,6 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.task.KonsolidatorCommand;
@@ -55,27 +54,12 @@ public class ShowKonsolidatorAction extends RightsEnabledAction implements ISele
     private final IWorkbenchWindow window;
 
     public ShowKonsolidatorAction(IWorkbenchWindow window, String label) {
+        super(ActionRightIDs.KONSOLIDATOR, label);
         this.window = window;
-        setText(label);
         setId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.KONSOLIDATOR));
         window.getSelectionService().addSelectionListener(this);
         setToolTipText(Messages.ShowKonsolidatorAction_1);
-        setRightID(ActionRightIDs.KONSOLIDATOR);
-        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
-            IInternalServerStartListener listener = new IInternalServerStartListener(){
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if(e.isStarted()){
-                        setEnabled(checkRights());
-                    }
-                }
-
-            };
-            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-        } else {
-            setEnabled(checkRights());
-        }
     }
     
 
@@ -195,9 +179,5 @@ public class ShowKonsolidatorAction extends RightsEnabledAction implements ISele
         }
         // no structured selection:
         setEnabled(false);
-    }
-
-    private void dispose() {
-        window.getSelectionService().removeSelectionListener(this);
     }
 }

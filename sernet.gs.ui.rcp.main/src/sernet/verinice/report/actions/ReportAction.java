@@ -53,107 +53,144 @@ import sernet.verinice.report.rcp.Messages;
 /**
  * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
  */
-public abstract class ReportAction extends RightsEnabledActionDelegate implements IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {
-    
+public abstract class ReportAction extends RightsEnabledActionDelegate
+        implements IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {
+
     private static final Logger LOG = Logger.getLogger(ReportAction.class);
 
     Shell shell;
 
     protected GenerateReportDialog dialog;
-    protected List<Object> rootObjects;
-    
+    protected List<?> rootObjects;
+
     private boolean generationSuccessful = false;
-    
+
     private boolean isContextMenuCall;
-    
+
     @Override
     public void init(IWorkbenchWindow window) {
         try {
             shell = window.getShell();
-        } catch(Exception t) {
+        } catch (Exception t) {
             LOG.error("Error creating dialog", t); //$NON-NLS-1$
         }
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.RightsEnabledActionDelegate#doRun(org.eclipse.jface.action.IAction)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.rcp.RightsEnabledActionDelegate#doRun(org.eclipse.jface.
+     * action.IAction)
      */
     @Override
-    public void doRun(IAction action) {    
+    public void doRun(IAction action) {
         try {
             openDialog();
             if (dialog.open() == Dialog.OK) {
                 final IReportOptions ro = prepareReportOptions();
-                
-                 PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-                    @Override
-                    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                        runUIBlockingReportGeneration(ro, monitor);
-                    }
-                 });
-                
+
+                PlatformUI.getWorkbench().getProgressService()
+                        .busyCursorWhile(new IRunnableWithProgress() {
+                            @Override
+                            public void run(IProgressMonitor monitor)
+                                    throws InvocationTargetException, InterruptedException {
+                                runUIBlockingReportGeneration(ro, monitor);
+                            }
+                        });
+
             }
-        } catch(Exception t) {
+        } catch (Exception t) {
             ExceptionUtil.log(t, Messages.GenerateReportDialog_32);
             setGenerationSuccessful(Boolean.FALSE);
         }
-        
+
         provideUserFeedback();
     }
 
     protected void openDialog() {
-        if(!isContextMenuCall() || rootObjects == null || rootObjects.size() == 0){
+        if (!isContextMenuCall() || rootObjects == null || rootObjects.isEmpty()) {
             dialog = new GenerateReportDialog(shell);
-        }
-        else if(rootObjects.size() == 1 && isContextMenuCall()){
+        } else if (rootObjects.size() == 1 && isContextMenuCall()) {
             dialog = new GenerateReportDialog(shell, rootObjects.get(0));
-        } else if(rootObjects != null && rootObjects.size() > 1 && isContextMenuCall()){
-            dialog = new GenerateReportDialog(shell, rootObjects, IReportType.USE_CASE_ID_GENERAL_REPORT);
+        } else if (rootObjects != null && rootObjects.size() > 1 && isContextMenuCall()) {
+            dialog = new GenerateReportDialog(shell, rootObjects,
+                    IReportType.USE_CASE_ID_GENERAL_REPORT);
         }
         dialog.setContextMenuCall(isContextMenuCall());
     }
 
     private IReportOptions prepareReportOptions() {
-        File f = dialog.getOutputFile();
         final IReportOptions ro = new IReportOptions() {
-            Integer rootElmt; 
+            Integer rootElmt;
             Integer[] rootElmts;
+
             @Override
-            public boolean isToBeEncrypted() { return false; }
+            public boolean isToBeEncrypted() {
+                return false;
+            }
+
             @Override
-            public boolean isToBeCompressed() { return false; }
+            public boolean isToBeCompressed() {
+                return false;
+            }
+
             @Override
-            public IOutputFormat getOutputFormat() { return dialog.getOutputFormat(); } 
+            public IOutputFormat getOutputFormat() {
+                return dialog.getOutputFormat();
+            }
+
             @Override
-            public File getOutputFile() { return dialog.getOutputFile(); }
+            public File getOutputFile() {
+                return dialog.getOutputFile();
+            }
+
             @Override
-            public void setRootElement(Integer rootElement) { rootElmt = rootElement; }
+            public void setRootElement(Integer rootElement) {
+                rootElmt = rootElement;
+            }
+
             @Override
-            public Integer getRootElement() {return rootElmt; }
+            public Integer getRootElement() {
+                return rootElmt;
+            }
+
             @Override
-            public Integer[] getRootElements(){return rootElmts;}
+            public Integer[] getRootElements() {
+                return rootElmts;
+            }
+
             @Override
-            public void setRootElements(Integer[] rootElements) { this.rootElmts = rootElements;}
+            public void setRootElements(Integer[] rootElements) {
+                this.rootElmts = rootElements;
+            }
+
             @Override
-            public String getServerURL(){ return Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.VNSERVER_URI);}
+            public String getServerURL() {
+                return Activator.getDefault().getPreferenceStore()
+                        .getString(PreferenceConstants.VNSERVER_URI);
+            }
         };
-        if(dialog.getRootElement() != null){
+        if (dialog.getRootElement() != null) {
             ro.setRootElement(dialog.getRootElement());
-        } else if (dialog.getRootElements() != null && dialog.getRootElements().length > 0){
+        } else if (dialog.getRootElements() != null && dialog.getRootElements().length > 0) {
             ro.setRootElements(dialog.getRootElements());
         }
         return ro;
     }
 
     private void provideUserFeedback() {
-        if(isGenerationSuccessful()){
+        if (isGenerationSuccessful()) {
             Display.getDefault().asyncExec(new Runnable() {
-                
+
                 @Override
                 public void run() {
-                    String path =  dialog.getOutputFile().getAbsolutePath();
+                    String path = dialog.getOutputFile().getAbsolutePath();
                     String reportName = dialog.getReportMetaData().getOutputname();
-                    MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.GenerateReportDialog_30, Messages.bind(Messages.GenerateReportDialog_31, new Object[]{reportName, path}));
+                    MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+                            Messages.GenerateReportDialog_30,
+                            Messages.bind(Messages.GenerateReportDialog_31,
+                                    new Object[] { reportName, path }));
                 }
             });
         }
@@ -162,13 +199,12 @@ public abstract class ReportAction extends RightsEnabledActionDelegate implement
     private void runUIBlockingReportGeneration(final IReportOptions ro, IProgressMonitor monitor) {
         monitor.beginTask(Messages.GenerateReportAction_1, IProgressMonitor.UNKNOWN);
         Activator.inheritVeriniceContextState();
-        IOutputFormat format = dialog.getOutputFormat();
-        try{
+        try {
             dialog.getReportType().createReport(ro);
             dialog.getReportType().createReport(dialog.getReportMetaData());
             setGenerationSuccessful(true);
-        }catch (ReportTypeException exception){
-            if(exception.causedBySecurityException()) {
+        } catch (ReportTypeException exception) {
+            if (exception.causedBySecurityException()) {
                 ExceptionUtil.log(exception, Messages.GenerateReportDialog_34);
             } else {
                 ExceptionUtil.log(exception, Messages.GenerateReportDialog_32);
@@ -178,23 +214,27 @@ public abstract class ReportAction extends RightsEnabledActionDelegate implement
             monitor.done();
         }
     }
-    
+
     @Override
     public String getRightID() {
         return ActionRightIDs.GENERATEORGREPORT;
     }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.actions.ActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.ui.actions.ActionDelegate#selectionChanged(org.eclipse.jface.
+     * action.IAction, org.eclipse.jface.viewers.ISelection)
      */
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
-        if(selection instanceof ITreeSelection) {
+        if (selection instanceof ITreeSelection) {
             ITreeSelection treeSelection = (ITreeSelection) selection;
             rootObjects = treeSelection.toList();
         }
     }
-    
+
     public boolean isContextMenuCall() {
         return isContextMenuCall;
     }
@@ -207,7 +247,8 @@ public abstract class ReportAction extends RightsEnabledActionDelegate implement
     }
 
     /**
-     * @param generationSuccessful the generationSuccessful to set
+     * @param generationSuccessful
+     *            the generationSuccessful to set
      */
     private void setGenerationSuccessful(boolean generationSuccessful) {
         this.generationSuccessful = generationSuccessful;

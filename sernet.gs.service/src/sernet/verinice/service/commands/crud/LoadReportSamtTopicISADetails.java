@@ -35,7 +35,7 @@ import sernet.verinice.service.commands.RetrieveCnATreeElement;
  */
 public class LoadReportSamtTopicISADetails extends GenericCommand implements ICachedCommand{
     
-    private static transient Logger log = Logger.getLogger(LoadReportSamtTopicISADetails.class);
+    private static final Logger log = Logger.getLogger(LoadReportSamtTopicISADetails.class);
     private static final String PROP_SAMT_RISK = "samt_topic_audit_ra";	
     private static final String SAMT_TOPIC_ISA_FINDINGS = "samt_topic_audit_findings";
     
@@ -94,7 +94,7 @@ public class LoadReportSamtTopicISADetails extends GenericCommand implements ICa
                 }
 
             } catch (CommandException e) {
-                getLog().error("");
+                log.error("");
             }
         }
     }
@@ -124,8 +124,8 @@ public class LoadReportSamtTopicISADetails extends GenericCommand implements ICa
     public void injectCacheResult(Object result) {
         this.result = (ArrayList<List<String>>)result;
         resultInjectedFromCache = true;
-        if(getLog().isDebugEnabled()){
-            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        if(log.isDebugEnabled()){
+            log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 
@@ -138,10 +138,4 @@ public class LoadReportSamtTopicISADetails extends GenericCommand implements ICa
         return this.result;
     }
     
-    private Logger getLog(){
-        if(log == null){
-            log = Logger.getLogger(LoadReportSamtTopicISADetails.class);
-        }
-        return log;
-    }
 }

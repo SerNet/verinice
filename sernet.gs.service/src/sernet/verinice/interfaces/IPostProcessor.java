@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.interfaces;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -26,8 +27,9 @@ import java.util.Map;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public interface IPostProcessor {
-    
-    void process(List<String> copyUuidList, Map<String, String> sourceDestMap);
-    
+public interface IPostProcessor extends Serializable {
+
+    void process(ICommandService commandService, List<String> copyUuidList,
+            Map<String, String> sourceDestMap);
+
 }

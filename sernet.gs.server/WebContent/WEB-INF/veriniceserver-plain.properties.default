@@ -76,7 +76,7 @@ veriniceserver.notification.email.replyto=donotreply@verinice.invalid
 veriniceserver.notification.email.dateformat=dd.MM.yyyy
 
 # This link is included in notification mails for users, adapt to your actual hostname and domain:
-veriniceserver.notification.email.linkto=http://verinice.local.example/veriniceserver/todo/task.jsf
+veriniceserver.notification.email.linkto=http://verinice.local.example/veriniceserver/edit/tasks.xhtml
 
 # Max. file size for attachments in MB, default value is 100
 veriniceserver.filesize.max=100

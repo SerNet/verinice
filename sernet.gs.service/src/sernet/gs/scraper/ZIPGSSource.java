@@ -52,7 +52,7 @@ import sernet.gs.service.GSServiceException;
  */
 public class ZIPGSSource implements IGSSource {
 
-    private Logger log = Logger.getLogger(ZIPGSSource.class);
+    private static final Logger log = Logger.getLogger(ZIPGSSource.class);
 
     private ZipFile zf;
     private static final String BAUSTEIN_PATH_2005 = "gshb/deutsch/baust/";

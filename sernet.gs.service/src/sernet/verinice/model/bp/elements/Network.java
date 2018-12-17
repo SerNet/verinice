@@ -19,10 +19,18 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.elements;
 
+import java.util.Collection;
+
+import sernet.hui.common.connect.IAbbreviatedElement;
+import sernet.hui.common.connect.ITaggableElement;
+import sernet.hui.common.connect.ITargetObject;
 import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.bp.groups.BpThreatGroup;
+import sernet.verinice.model.bp.groups.SafeguardGroup;
+import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementWithChilds;
 import sernet.verinice.model.common.ILinkChangeListener;
@@ -33,14 +41,18 @@ import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class Network extends ElementWithChilds implements IBpElement, IBpGroup {
+public class Network extends ElementWithChilds
+        implements IBpElement, IAbbreviatedElement, IBpGroup, ITaggableElement, ITargetObject {
     
     private static final long serialVersionUID = -5306479716342566201L;
     
     public static final String TYPE_ID = "bp_network"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_network_name"; //$NON-NLS-1$
-    
-    public static final String[] CHILD_TYPES = new String[] {BpRequirementGroup.TYPE_ID};
+    public static final String PROP_TAG = "bp_network_tag"; //$NON-NLS-1$
+    public static final String PROP_ABBR = "bp_network_abbr"; //$NON-NLS-1$
+
+    public static final String[] CHILD_TYPES = new String[] { BpRequirementGroup.TYPE_ID,
+            SafeguardGroup.TYPE_ID, BpThreatGroup.TYPE_ID };
     
     private final ILinkChangeListener linkChangeListener = new MaximumProtectionRequirementsValueListener(this);
     private final IReevaluator protectionRequirementsProvider = new ProtectionRequirementsValueAdapter(this);
@@ -82,4 +94,13 @@ public class Network extends ElementWithChilds implements IBpElement, IBpGroup {
         return CHILD_TYPES;
     }
     
+    @Override
+    public Collection<String> getTags() {
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
+    }
+
+    @Override
+    public String getAbbreviation() {
+        return getEntity().getPropertyValue(PROP_ABBR);
+    }
 }

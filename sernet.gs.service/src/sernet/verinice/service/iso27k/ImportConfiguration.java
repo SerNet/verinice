@@ -31,15 +31,7 @@ import sernet.gs.service.CsvFile;
  */
 public class ImportConfiguration implements Serializable {
 
-	private transient Logger log = Logger.getLogger(ImportConfiguration.class);
-	
-	public Logger getLog() {
-		if(log==null) {
-			log = Logger.getLogger(ImportConfiguration.class);
-		}
-		return log;
-	}
-	
+	private static final Logger log = Logger.getLogger(ImportConfiguration.class);
 	
 	public static final char COMMA = ',';
 	
@@ -145,19 +137,19 @@ public class ImportConfiguration implements Serializable {
 				else if(sepSpace && (!sepSemicolon && !sepTab && !sepComma)) {
 					setSeperator(ImportConfiguration.SPACE);			
 				}
-				if (getLog().isInfoEnabled()) {
+				if (log.isInfoEnabled()) {
 					if(getSeperator()==ImportConfiguration.SPACE) {
-						getLog().info("Seperartor char is: space");
+						log.info("Seperartor char is: space");
 					} else if(getSeperator()==ImportConfiguration.TAB) {
-						getLog().info("Seperartor char is: tab");
+						log.info("Seperartor char is: tab");
 					} else {
-						getLog().info("Seperartor char is: " + getSeperator());
+						log.info("Seperartor char is: " + getSeperator());
 					}
 					
 				}
 			}
 		} catch(Exception e) {
-			getLog().error("Error while creating configurtation", e);
+			log.error("Error while creating configurtation", e);
 		}
 	}
 	

@@ -37,7 +37,7 @@ import sernet.verinice.model.common.configuration.Configuration;
 public class LoadConfigurationByUser extends GenericCommand {
 
     private static final long serialVersionUID = -8792664615062443804L;
-    private transient Logger log = Logger.getLogger(LoadConfigurationByUser.class);
+    private static final Logger log = Logger.getLogger(LoadConfigurationByUser.class);
 
     private Configuration configuration;
     private CnATreeElement person;

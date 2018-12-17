@@ -1108,7 +1108,7 @@ bstCountHQL = "select count(massnahme.dbId) from CnATreeElement as massnahme " +
 		        	"inner join propertyList.properties as props " + 
 				"where massnahme.objectType = :typeIdMnums AND " + 
 				"massnahme.parentId = :bstId AND props.propertyType = :propUmsetzung " +
-				"and props.propertyValue in (:umsList)";
+				"and cast(props.propertyValue as string) in (:umsList)";
 
 //values that are not shown in the table
 propList = Arrays.asList(new String[]{"mnums_umsetzung_entbehrlich", "mnums_umsetzung_ja"});

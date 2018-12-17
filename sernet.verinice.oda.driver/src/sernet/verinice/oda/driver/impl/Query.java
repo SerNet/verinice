@@ -28,11 +28,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
 
 import javax.imageio.ImageIO;
 
@@ -51,14 +48,12 @@ import bsh.TargetError;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.HuiTypeFactoryException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommand;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.oda.driver.Activator;
 import sernet.verinice.security.report.ReportClassLoader;
-import sernet.verinice.security.report.ReportSecurityException;
 
 
 
@@ -67,7 +62,7 @@ public class Query implements IQuery
     public static final String ODA_DATA_SOURCE_ID = "verinice.oda.driver.dataSource.id";  //$NON-NLS-1$
     public static final String ODA_DATA_SET_ID = "verinice.oda.driver.dataSet.id";  //$NON-NLS-1$
     
-	private Logger log = Logger.getLogger(Query.class);
+	private static final Logger log = Logger.getLogger(Query.class);
 	
 	private int maxRows;
     private String queryText;
@@ -107,7 +102,7 @@ public class Query implements IQuery
     }
 
     private void init() {
-        IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();  	
+    	IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
     	ReportClassLoader securedClassLoader = new ReportClassLoader(Query.class.getClassLoader());	
 
     	try {
@@ -225,7 +220,7 @@ public class Query implements IQuery
         
         public String[] getAllPropertyTypes(String entityTypeId, boolean withId) {
             HUITypeFactory htf = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
-            String[] props = htf.getEntityType(entityTypeId).getAllPropertyTypeIDsIncludingGroups();
+            String[] props = htf.getEntityType(entityTypeId).getAllPropertyTypeIds();
             if (withId) {
                 String[] arr = new String[props.length+1];
                 System.arraycopy(props, 0, arr, 0, props.length);
@@ -704,19 +699,6 @@ public class Query implements IQuery
     public void cancel() throws OdaException
     {
     	result = null;
-    }
-    
-    private Set<String> getImportsFromQuery(String query){
-        Set<String> imports = new HashSet<String>();
-        StringTokenizer tokenizer = new StringTokenizer(query, ";");
-        while(tokenizer.hasMoreTokens()){
-            String token = tokenizer.nextToken();
-            if(token.trim().startsWith("import")){
-                String importPath = token.substring(token.lastIndexOf(" "));
-                imports.add(importPath.trim());
-            }
-        }
-        return imports;
     }
     
 }

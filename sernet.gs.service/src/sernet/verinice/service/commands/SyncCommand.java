@@ -53,15 +53,8 @@ import de.sernet.sync.sync.SyncRequest;
 
 @SuppressWarnings("serial")
 public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingCommand, IAuthAwareCommand {
-    private transient Logger log = Logger.getLogger(SyncCommand.class);
+    private static final Logger log = Logger.getLogger(SyncCommand.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(SyncCommand.class);
-        }
-        return log;
-    }
-    
     private String path;
     
     private byte[] fileData;
@@ -201,9 +194,9 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
   
 
     private void logRuntime(long start) {
-        if (getLog().isInfoEnabled()) {
+        if (log.isInfoEnabled()) {
             long time = System.currentTimeMillis() - start;
-            getLog().info("Runtime: " + TimeFormatter.getHumanRedableTime(time));
+            log.info("Runtime: " + TimeFormatter.getHumanRedableTime(time));
         }
     }
 
@@ -244,7 +237,7 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
 
     private long getStartTimestamp() {
         long start = 0;
-        if (getLog().isInfoEnabled()) {
+        if (log.isInfoEnabled()) {
             start = System.currentTimeMillis();
         }
         return start;
@@ -343,12 +336,12 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
     }
     
     private void logXml() {
-        if (getLog().isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             if( veriniceArchive.getVeriniceXml()!=null) {          
                 String xml = new String(veriniceArchive.getVeriniceXml(),VeriniceCharset.CHARSET_UTF_8);
-                getLog().debug("### Importing data begin ###");
-                getLog().debug(xml);
-                getLog().debug("### Importing data end ####");
+                log.debug("### Importing data begin ###");
+                log.debug(xml);
+                log.debug("### Importing data end ####");
             }
         }
     }

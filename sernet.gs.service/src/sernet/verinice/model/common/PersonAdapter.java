@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.model.common;
 
+import sernet.verinice.model.bp.elements.BpPerson;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.iso27k.PersonIso;
 
@@ -46,16 +47,19 @@ public final class PersonAdapter {
         if(person instanceof Person) {
             name = getFullName((Person)person);
         }
+        if (person instanceof BpPerson) {
+            name = getFullName((BpPerson) person);
+        }
         return name;
     }
     
     private static String getFullName(PersonIso person) {
         StringBuilder sb = new StringBuilder();
-        final String surname = person.getEntity().getSimpleValue(PersonIso.PROP_SURNAME);
+        final String surname = person.getEntity().getPropertyValue(PersonIso.PROP_SURNAME);
         if(surname!=null && !surname.isEmpty()) {
             sb.append(surname);
         }
-        final String name = person.getEntity().getSimpleValue(PersonIso.PROP_NAME);
+        final String name = person.getEntity().getPropertyValue(PersonIso.PROP_NAME);
         if(name!=null && !name.isEmpty()) {
             if(sb.length()>0) {
                 sb.append(", ");
@@ -71,9 +75,25 @@ public final class PersonAdapter {
         if(surname!=null && !surname.isEmpty()) {
             sb.append(surname);
         }
-        final String name = person.getEntity().getSimpleValue(Person.P_VORNAME);
+        final String name = person.getEntity().getPropertyValue(Person.P_VORNAME);
         if(name!=null && !name.isEmpty()) {
             if(sb.length()>0) {
+                sb.append(", ");
+            }
+            sb.append(name);
+        }
+        return sb.toString();
+    }
+
+    private static String getFullName(BpPerson person) {
+        StringBuilder sb = new StringBuilder();
+        final String surname = person.getEntity().getPropertyValue(BpPerson.PROP_LAST_NAME);
+        if (surname != null && !surname.isEmpty()) {
+            sb.append(surname);
+        }
+        final String name = person.getEntity().getPropertyValue(BpPerson.PROP_FIRST_NAME);
+        if (name != null && !name.isEmpty()) {
+            if (sb.length() > 0) {
                 sb.append(", ");
             }
             sb.append(name);

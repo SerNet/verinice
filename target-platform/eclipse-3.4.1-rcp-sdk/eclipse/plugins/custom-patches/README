@@ -1,4 +1,0 @@
-Other modifications:
- - spring-context.jar:
-   META-INF/MANIFEST.MF: Removed optional dependency on springframework.orm
-   (this fixes a cyclic dependency)

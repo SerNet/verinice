@@ -227,6 +227,33 @@
         <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />
     </bean>
 
+    <bean id="itbpRiskService"
+        class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        <property name="serviceUrl">
+            <value>${verinice.serverURL}/service/itbpRiskServiceHttpInvoker
+            </value>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.service.bp.risk.RiskService
+            </value>
+        </property>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />
+    </bean>
+    
+    <!-- This service migrates the modeling data in ITBP from version 1.16 to 1.17 -->
+    <bean id="modelingMigrationService"
+        class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        <property name="serviceUrl">
+            <value>${verinice.serverURL}/service/modelingMigrationServiceHttpInvoker
+            </value>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.service.bp.migration.ModelingMigrationDatabaseService
+            </value>
+        </property>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />
+    </bean>
+
     <bean id="updateNewsService"
         class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl">
@@ -371,9 +398,11 @@
                 <entry key="searchService" value-ref="searchService" />
                 <entry key="objectModelService" value-ref="objectModelService" />
                 <entry key="updateNewsService" value-ref="updateNewsService" />               
-                <entry key="riskAnalysisService" value-ref="riskAnalysisService" />
+                <entry key="riskAnalysisService" value-ref="riskAnalysisService" />           
+                <entry key="itbpRiskService" value-ref="itbpRiskService" />
                 <entry key="licenseManagementService" value-ref="licenseManagementService" />
                 <entry key="encryptionService" value-ref="encryptionService" />
+                <entry key="modelingMigrationService" value-ref="modelingMigrationService" />
             </map>
         </property>
     </bean>

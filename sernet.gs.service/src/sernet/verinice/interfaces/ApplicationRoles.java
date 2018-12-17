@@ -30,7 +30,7 @@ package sernet.verinice.interfaces;
  * $LastChangedBy$
  *
  */
-public abstract class ApplicationRoles {
+public final class ApplicationRoles {
     /**
      * User is authenticated and can access general program functions
      * and the RCP client
@@ -66,4 +66,8 @@ public abstract class ApplicationRoles {
 	 * On successfull authentication, the ROLE_GUEST role is added to the token.
 	 */
     public static final String ROLE_GUEST = "ROLE_GUEST";
+
+    private ApplicationRoles() {
+
+    }
 }

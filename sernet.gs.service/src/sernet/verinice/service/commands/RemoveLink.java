@@ -32,16 +32,9 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
 @SuppressWarnings("serial")
-public class RemoveLink<T extends CnALink> extends ChangeLoggingCommand implements IChangeLoggingCommand {
+public class RemoveLink extends ChangeLoggingCommand implements IChangeLoggingCommand {
 
-private transient Logger log = Logger.getLogger(RemoveLink.class);
-    
-    public Logger getLog() {
-        if(log==null) {
-            log = Logger.getLogger(RemoveLink.class);
-        }
-        return log;
-    }
+private static final Logger log = Logger.getLogger(RemoveLink.class);
     
     private String stationId;
     private CnALink element;
@@ -62,8 +55,8 @@ private transient Logger log = Logger.getLogger(RemoveLink.class);
     }
 
     public void execute() {
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Looking for link to remove.");
+        if (log.isDebugEnabled()) {
+            log.debug("Looking for link to remove.");
         }
         
         IBaseDao<CnALink, Serializable> dao = getDaoFactory().getDAO(CnALink.class);
@@ -73,14 +66,14 @@ private transient Logger log = Logger.getLogger(RemoveLink.class);
             element = dao.findById(new CnALink.Id(dependantId, dependencyId, typeId));
         }
         if (element != null) {
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("Found link, removing " + element.getId());
+            if (log.isDebugEnabled()) {
+                log.debug("Found link, removing " + element.getId());
             }
             element.remove();
             dao.delete(element);
             dao.flush();
         } else {
-            getLog().warn("Link was already deleted while trying to delete it.");
+            log.warn("Link was already deleted while trying to delete it.");
         }
     }
 

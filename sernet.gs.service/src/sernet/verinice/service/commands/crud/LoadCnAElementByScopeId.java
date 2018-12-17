@@ -34,7 +34,7 @@ import sernet.verinice.model.common.CnATreeElement;
 @SuppressWarnings("serial")
 public class LoadCnAElementByScopeId extends GenericCommand {
     
-    private static transient Logger LOG = Logger.getLogger(LoadCnAElementByScopeId.class);
+    private static final Logger LOG = Logger.getLogger(LoadCnAElementByScopeId.class);
     
     private List<CnATreeElement> list;
 

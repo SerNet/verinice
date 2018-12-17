@@ -244,7 +244,9 @@ public abstract class CommandServiceProvider extends UuidLoader {
     protected CnALink createLink(CnATreeElement source, CnATreeElement destination, String linkType) throws CommandException {
         CreateLink command = new CreateLink(source, destination, linkType, this.getClass().getSimpleName());
         command = commandService.executeCommand(command);
-        return command.getLink();
+        CnALink link = command.getLink();
+        LOG.debug("Created: " + link);
+        return link;
     }
 
     protected void checkOrganization(Organization organization) {
@@ -283,22 +285,19 @@ public abstract class CommandServiceProvider extends UuidLoader {
      * @throws CommandException
      */
     protected void removeOrganization(Organization org) throws CommandException {
-
-        RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(org);
+        RemoveElement<CnATreeElement> removeCommand = new RemoveElement<>(org);
         commandService.executeCommand(removeCommand);
 
-        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(org.getUuid());
+        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<>(org.getUuid());
         command = commandService.executeCommand(command);
         CnATreeElement element = command.getElement();
         assertNull("organization " + org.getUuid() + " was not deleted.", element);
-
     }
-    
-    
+
     protected CnATreeElement updateElement(CnATreeElement element) throws CommandException {
-        UpdateElementEntity<CnATreeElement> updateElementCommand = new UpdateElementEntity<CnATreeElement>(element, ChangeLogEntry.STATION_ID);
+        UpdateElementEntity<CnATreeElement> updateElementCommand = new UpdateElementEntity<>(element, ChangeLogEntry.STATION_ID);
         updateElementCommand = commandService.executeCommand(updateElementCommand);
-        return updateElementCommand.getElement();
+        return updateElementCommand.getMergedElement();
     }
 
     protected CnATreeElement loadElement(String sourceId, String extId) throws CommandException {

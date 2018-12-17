@@ -40,7 +40,6 @@ import sernet.verinice.model.iso27k.ISO27KModel;
  * @see BpModel
  *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
- *
  */
 public class LoadModel<T extends CnATreeElement> extends GenericCommand implements INoAccessControl {
 

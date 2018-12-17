@@ -45,15 +45,8 @@ import sernet.verinice.model.common.configuration.Configuration;
  */
 public class SaveConfiguration<T extends Configuration> extends GenericCommand implements IAuthAwareCommand {
 
-	private transient Logger log = Logger.getLogger(SaveConfiguration.class);
+	private static final Logger log = Logger.getLogger(SaveConfiguration.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(SaveConfiguration.class);
-        }
-        return log;
-    }
-	
 	private T element;
 	private boolean updatePassword;
 
@@ -99,10 +92,10 @@ public class SaveConfiguration<T extends Configuration> extends GenericCommand i
 			// already logged in checkUsername
 			throw uere;
 		} catch(RuntimeException re) {
-			getLog().error("Runtime Error while saving configuration", re);
+			log.error("Runtime Error while saving configuration", re);
 			throw re;
 		} catch(Exception re) {
-			getLog().error("Error while saving configuration", re);
+			log.error("Error while saving configuration", re);
 			throw new RuntimeException(re);
 		}
 	}
@@ -122,8 +115,8 @@ public class SaveConfiguration<T extends Configuration> extends GenericCommand i
 			if(usernameProperty!=null && usernameProperty.getPropertyValue()!=null) {
 				String username = usernameProperty.getPropertyValue();
 				if(getAuthService().getAdminUsername().equals(username)) {
-				    if (getLog().isDebugEnabled()) {
-                        getLog().debug("Username is admin name: " + username);
+				    if (log.isDebugEnabled()) {
+                        log.debug("Username is admin name: " + username);
                     }
 				    throw new UsernameExistsRuntimeException(username,"Username already exists: " + username);
 				}
@@ -151,8 +144,8 @@ public class SaveConfiguration<T extends Configuration> extends GenericCommand i
 						}
 					}
 					if (doubleUsername) {
-						if (getLog().isDebugEnabled()) {
-							getLog().debug("Username exists: " + username);
+						if (log.isDebugEnabled()) {
+							log.debug("Username exists: " + username);
 						}
 						throw new UsernameExistsRuntimeException(username,"Username already exists: " + username);
 					}

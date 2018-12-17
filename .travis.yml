@@ -1,15 +1,17 @@
-# Use http://lint.travis-ci.org/ to validate
-# the Travis config file before pushing it to the repo. See
-# https://docs.travis-ci.com/user/travis-lint for more info.
-
 language: java
-
-# See https://docs.travis-ci.com/user/languages/java/#Testing-Against-Multiple-JDKs
-# for supported JDKs.
+# use Java 8
 jdk:
-      - oraclejdk8
+- oraclejdk8
 
-before_script:
-      - cd sernet.verinice.releng.parent
+# see https://blog.travis-ci.com/2014-12-17-faster-builds-with-container-based-infrastructure
+sudo: false
 
-script: "mvn -B -Dtycho.disableP2Mirrors=true clean verify"
+# cache the build tool's caches
+cache:
+  directories:
+  - $HOME/.m2
+  - $HOME/.gradle
+
+# integration with codecov
+after_success:
+- bash <(curl -s https://codecov.io/bash)

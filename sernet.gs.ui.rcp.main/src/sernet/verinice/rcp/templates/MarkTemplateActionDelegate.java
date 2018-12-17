@@ -123,18 +123,6 @@ public abstract class MarkTemplateActionDelegate implements IObjectActionDelegat
         return isModelingTemplateActive() && service.isEnabled(getRightID());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.
-     * lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // do nothing
-    }
-
     private static ICommandService getCommandService() {
         return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
     }

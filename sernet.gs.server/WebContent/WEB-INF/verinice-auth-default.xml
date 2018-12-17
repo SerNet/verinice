@@ -69,8 +69,8 @@
             <action id="deleteitem" />
             <action id="derivestatus" />
             <action id="documentview" />
-            <action id="dsmodelview" />
             <action id="editlinks" />
+            <action id="editriskconfiguration" />
             <action id="exportlinktable" />
             <action id="files" />
             <action id="generateauditreport" />
@@ -87,6 +87,7 @@
             <action id="ismviewweb" />
             <action id="konsolidator" />
             <action id="naturalize" />
+            <action id="migrate_data_protection"/>
             <action id="notes" />
             <action id="relations" />
             <action id="reportdeposit" />
@@ -162,8 +163,8 @@
 	        <action id="deleteitem" />
 	        <action id="derivestatus" />
 	        <action id="documentview" />
-	        <action id="dsmodelview" />
 	        <action id="editlinks" />
+          <action id="editriskconfiguration" />
           <action id="exportlinktable" />
 	        <action id="files" />
 	        <action id="generateauditreport" />
@@ -179,6 +180,7 @@
 	        <action id="ismview" />
           <action id="ismviewweb" />
 	        <action id="konsolidator" />
+            <action id="migrate_data_protection"/>
 	        <action id="naturalize" />
 	        <action id="notes" />
 	        <action id="relations" />
@@ -209,7 +211,6 @@
             <action id="deleteitem" />
             <action id="derivestatus" />
             <action id="documentview" />
-            <action id="dsmodelview" />
             <action id="editlinks" />
             <action id="exportlinktable" />
             <action id="files" />
@@ -295,8 +296,8 @@
 	        <action id="deleteitem" />
 	        <action id="derivestatus"/>
 	        <action id="documentview" />
-	        <action id="dsmodelview" />
 	        <action id="editlinks" />
+          <action id="editriskconfiguration" />
           <action id="exportlinktable" />
 	        <action id="files" />
 	        <action id="generateauditreport" />
@@ -309,6 +310,7 @@
 	        <action id="ismview" />
           <action id="ismviewweb" />
 	        <action id="konsolidator" />
+            <action id="migrate_data_protection"/>
 	        <action id="naturalize" />
 	        <action id="notes" />
 	        <action id="relations" />
@@ -380,9 +382,9 @@
             <action id="deleteitem" /> 
             <action id="derivestatus"/> 
             <action id="documentview" /> 
-            <action id="dsmodelview" /> 
             <action id="editlinks" /> 
-            <action id="editprofile" /> 
+            <action id="editprofile" />
+            <action id="editriskconfiguration" /> 
           	<action id="exportlinktable" /> 
             <action id="files" /> 
             <action id="generateauditreport" /> 
@@ -396,6 +398,7 @@
           	<action id="ismviewweb" /> 
             <action id="konsolidator" />
             <action id="naturalize" /> 
+            <action id="migrate_data_protection"/>
             <action id="notes" /> 
             <action id="relations" /> 
             <action id="reportdeposit" /> 
@@ -462,9 +465,9 @@
 	        <action id="deleteitem" />
 	        <action id="derivestatus"/>
 	        <action id="documentview" />
-	        <action id="dsmodelview" />
 	        <action id="editlinks" />
           <action id="editprofile" />
+          <action id="editriskconfiguration" />
           <action id="exportlinktable" />
 	        <action id="files" />
 	        <action id="generateauditreport" />
@@ -481,6 +484,7 @@
           <action id="ismviewweb" />
 	        <action id="konsolidator" />
 	        <action id="naturalize" />
+	        <action id="migrate_data_protection"/>
 	        <action id="notes" />
 	        <action id="relations" />
 	        <action id="reportdeposit" />

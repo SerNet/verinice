@@ -89,6 +89,7 @@ public class SMIMEBasedEncryption {
     private static final String CRYPT_TYPE = "PKCS11";
     private static final String STD_ERR_MSG = "There was a problem during the en- or decryption process. See the stacktrace for details.";
     private static final String IO_ERR_MSG = "There was an IO problem during the en- or decryption process. See the stacktrace for details.";
+    private static final Logger log = Logger.getLogger(SMIMEBasedEncryption.class);
     
     private SMIMEBasedEncryption(){}
 
@@ -147,22 +148,22 @@ public class SMIMEBasedEncryption {
                 encryptedMimeData = bout.toByteArray();
 
             } catch (GeneralSecurityException e) {
-                getLog().error(STD_ERR_MSG, e);
+                log.error(STD_ERR_MSG, e);
                                 throw new EncryptionException(STD_ERR_MSG, e);
             } catch (CMSException e) {
-                getLog().error(IO_ERR_MSG, e);
+                log.error(IO_ERR_MSG, e);
                 throw new EncryptionException(IO_ERR_MSG, e);
             } catch (IllegalArgumentException e) {
-                getLog().error(IO_ERR_MSG, e);
+                log.error(IO_ERR_MSG, e);
                 throw new EncryptionException(IO_ERR_MSG, e);
             } catch (OperatorCreationException e) {
-                getLog().error(IO_ERR_MSG, e);
+                log.error(IO_ERR_MSG, e);
                 throw new EncryptionException(IO_ERR_MSG, e);
             } catch (Exception e){
-                getLog().error(STD_ERR_MSG, e);
+                log.error(STD_ERR_MSG, e);
                 throw new EncryptionException(STD_ERR_MSG, e);
             } catch (Throwable t){
-                getLog().error(STD_ERR_MSG, t);
+                log.error(STD_ERR_MSG, t);
                 throw new EncryptionException(STD_ERR_MSG, t);
             }
             encryptedMimeData = (encryptedMimeData == null) ? new byte[] {} : encryptedMimeData;
@@ -326,7 +327,7 @@ public class SMIMEBasedEncryption {
                 try{
                     recipientInfo = (RecipientInformation) recipient;
                 } catch (Exception e){
-                    getLog().error("Error determing recipient", e);
+                    log.error("Error determing recipient", e);
                 }
             }
 
@@ -492,8 +493,4 @@ public class SMIMEBasedEncryption {
         return decryptedByteData;
     }
     
-    private static Logger getLog(){
-        return Logger.getLogger(SMIMEBasedEncryption.class);
-    }
-
 }

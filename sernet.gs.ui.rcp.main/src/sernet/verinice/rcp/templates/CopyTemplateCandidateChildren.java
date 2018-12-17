@@ -31,6 +31,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.CopyTreeElements;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.CnATreeElement.TemplateType;
+import sernet.verinice.service.commands.CopyLinksCommand;
 import sernet.verinice.service.commands.SaveElement;
 
 /**
@@ -48,10 +49,10 @@ public class CopyTemplateCandidateChildren extends CopyTreeElements {
 
     private static final Logger LOG = Logger.getLogger(CopyTemplateCandidateChildren.class);
 
-    private Set<String> templateCandidateUuids = new HashSet<String>();
+    private Set<String> templateCandidateUuids = new HashSet<>();
 
     public CopyTemplateCandidateChildren(CnATreeElement selectedGroup, List<CnATreeElement> elements, Set<String> templateCandidateUuids) {
-        super(selectedGroup, elements, false);
+        super(selectedGroup, elements, CopyLinksCommand.CopyLinksMode.NONE);
         this.templateCandidateUuids = templateCandidateUuids;
     }
 
@@ -64,7 +65,8 @@ public class CopyTemplateCandidateChildren extends CopyTreeElements {
         if (this.getSelectedGroup().isImplementation()) {
             try {
                 this.getSelectedGroup().getImplementedTemplateUuids().addAll(templateCandidateUuids);
-                SaveElement<CnATreeElement> saveCommand = new SaveElement<CnATreeElement>(this.getSelectedGroup(), true);
+                SaveElement<CnATreeElement> saveCommand = new SaveElement<>(
+                        this.getSelectedGroup());
                 saveCommand = ServiceFactory.lookupCommandService().executeCommand(saveCommand);
 
             } catch (CommandException e) {

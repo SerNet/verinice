@@ -165,15 +165,6 @@ public class IconSelectAction implements IWorkbenchWindowActionDelegate, RightEn
     public String getRightID() {
         return ActionRightIDs.CHANGEICON;
     }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // DO nothing, no need for an implementation        
-        
-    }
     
     private ICommandService getCommandService() {
         return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);

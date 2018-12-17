@@ -47,7 +47,7 @@ import sernet.verinice.interfaces.IVeriniceConstants;
  */
 public class ElasticsearchClientFactory implements DisposableBean {
 
-    private final static Logger LOG = Logger.getLogger(ElasticsearchClientFactory.class);
+    private static final Logger LOG = Logger.getLogger(ElasticsearchClientFactory.class);
     
     private static final String SERNET_VERINICE_SEARCH_ANALYSIS_JSON = "sernet/verinice/search/analysis";
     private static final String SEPERATOR_LANGUAGE = "_";
@@ -73,8 +73,8 @@ public class ElasticsearchClientFactory implements DisposableBean {
                 client = node.client();
                 configure();
                 Map<String, String> map = ImmutableSettings.builder().internalMap();
-                for(String key : map.keySet()){
-                    LOG.error("ES Setting:\t<" + key + ", " + map.get(key) + ">");
+                for(Entry<String, String> e : map.entrySet()){
+                    LOG.error("ES Setting:\t<" + e.getKey() + ", " + e.getValue() + ">");
                 }
                 // Wait for Yellow status
                 client

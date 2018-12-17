@@ -23,7 +23,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -40,6 +39,7 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionModelingTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.VeriniceElementTransfer;
@@ -64,22 +64,21 @@ import sernet.verinice.model.bp.elements.Network;
 import sernet.verinice.model.bp.elements.Room;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
+import sernet.verinice.rcp.Preferences;
 import sernet.verinice.rcp.catalog.CatalogDragListener;
 import sernet.verinice.service.bp.exceptions.BpModelingException;
-import sernet.verinice.service.bp.exceptions.GroupNotFoundInScopeException;
 import sernet.verinice.service.commands.bp.ModelCommand;
 
 /**
- * This drop performer class starts the modeling process
- * of IT base protection after one or more modules
- * are dragged from sernet.verinice.rcp.catalog.CatalogView
- * and dropped on an element in BaseProtectionView.
+ * This drop performer class starts the modeling process of IT base protection
+ * after one or more modules are dragged from
+ * sernet.verinice.rcp.catalog.CatalogView and dropped on an element in
+ * BaseProtectionView.
  *
  * @see CatalogDragListener
  * @see MetaDropAdapter
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-@SuppressWarnings("restriction")
 public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserInteraction {
 
     private static final Logger log = Logger.getLogger(BbModelingDropPerformer.class);
@@ -104,8 +103,6 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
     private CnATreeElement targetElement = null;
 
     /*
-     * (non-Javadoc)
-     *
      * @see
      * sernet.verinice.iso27k.rcp.action.DropPerformer#performDrop(java.lang.
      * Object, java.lang.Object, org.eclipse.jface.viewers.Viewer)
@@ -117,23 +114,67 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
             if (log.isDebugEnabled()) {
                 logParameter(draggedModules, targetElement);
             }
-            if (draggedModules == null || draggedModules.isEmpty()) {
-                log.warn("List of dragged modules is empty. Can not model element."); //$NON-NLS-1$
-                return false;
+            if (isValid(draggedModules)) {
+                startModelingByProgressService(draggedModules);
+                showConfirmationDialog();
             }
-            startModelingByProgressService(draggedModules);
-            showConfirmationDialog();
             return true;
         } catch (InvocationTargetException e) {
             log.error(e);
-            showError(e, Messages.BbModelingDropPerformer_Error0);
+            showError(e);
             return false;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt(); // set interrupt flag
             log.error("InterruptedException occurred while model module and element", e); //$NON-NLS-1$
-            showError(e, Messages.BbModelingDropPerformer_Error1);
+            showError(e);
             return false;
         }
+    }
+
+    private void startModelingByProgressService(final List<CnATreeElement> draggedModules)
+            throws InvocationTargetException, InterruptedException {
+        closeEditors();
+        PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+            @Override
+            public void run(IProgressMonitor monitor)
+                    throws InvocationTargetException, InterruptedException {
+                try {
+                    monitor.beginTask(getTaskMessage(draggedModules, targetElement),
+                            IProgressMonitor.UNKNOWN);
+                    modelModulesAndElement(draggedModules, targetElement);
+                    monitor.done();
+                } catch (CommandException e) {
+                    showError(e);
+                }
+            }
+        });
+    }
+
+    private void modelModulesAndElement(List<CnATreeElement> draggedModules, CnATreeElement element)
+            throws CommandException {
+        Set<String> compendiumUuids = new HashSet<>(draggedModules.size());
+        for (CnATreeElement module : draggedModules) {
+            compendiumUuids.add(module.getUuid());
+        }
+        executeModelCommand(compendiumUuids, Collections.singletonList(element.getUuid()));
+        CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
+    }
+
+    private void executeModelCommand(Set<String> compendiumUuids, List<String> targetUuids)
+            throws CommandException {
+        modelCommand = new ModelCommand(compendiumUuids, targetUuids);
+        modelCommand.setHandleSafeguards(Preferences.isModelSafeguardsActive());
+        modelCommand.setHandleDummySafeguards(Preferences.isModelDummySafeguardsActive());
+        modelCommand = getCommandService().executeCommand(modelCommand);
+        CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
+    }
+
+    private boolean isValid(List<CnATreeElement> draggedModules) {
+        if (draggedModules == null || draggedModules.isEmpty()) {
+            log.warn("List of dragged modules is empty. Can not model element."); //$NON-NLS-1$
+            return false;
+        }
+        return true;
     }
 
     private void showConfirmationDialog() {
@@ -147,47 +188,12 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
         String message = Messages.BbModelingDropPerformerConfirmationNoProceeding;
         String proceedingLabel = null;
         if (modelCommand != null) {
-            proceedingLabel = modelCommand.getProceedingLable();
+            proceedingLabel = modelCommand.getProceedingLabel();
         }
         if (proceedingLabel != null && !proceedingLabel.isEmpty()) {
             message = NLS.bind(Messages.BbModelingDropPerformerConfirmation, proceedingLabel);
         }
         return message;
-    }
-
-    private void startModelingByProgressService(final List<CnATreeElement> draggedModules)
-            throws InvocationTargetException, InterruptedException {
-        closeEditors();
-        PlatformUI.getWorkbench().getProgressService()
-                .busyCursorWhile(new IRunnableWithProgress() {
-                    @Override
-                    public void run(IProgressMonitor monitor)
-                            throws InvocationTargetException, InterruptedException {
-                        try {
-                            monitor.beginTask(getTaskMessage(draggedModules, targetElement),
-                                    IProgressMonitor.UNKNOWN);
-                            modelModulesAndElement(draggedModules, targetElement);
-                            monitor.done();
-                        } catch (CommandException e) {
-                            showError(e, Messages.BbModelingDropPerformer_Error0);
-                        }
-                    }
-                });
-    }
-
-    private void modelModulesAndElement(List<CnATreeElement> draggedModules, CnATreeElement element)
-            throws CommandException {
-        Set<String> compendiumUuids = new HashSet<>();
-        for (CnATreeElement module : draggedModules) {
-            compendiumUuids.add(module.getUuid());
-        }
-        List<String> targetUuids = new LinkedList<>();
-        targetUuids.add(element.getUuid());
-
-        modelCommand = new ModelCommand(compendiumUuids, targetUuids);
-        modelCommand = getCommandService().executeCommand(modelCommand);
-        CnAElementFactory.getInstance().reloadBpModelFromDatabase();
-        CnAElementFactory.getInstance().reloadCatalogModelFromDatabase();
     }
 
     private void closeEditors() {
@@ -199,10 +205,11 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
                     continue;
                 }
                 if (er.getEditorInput() instanceof BSIElementEditorInput) {
-                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(er.getEditor(true), true);
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                            .closeEditor(er.getEditor(true), true);
                 }
             } catch (PartInitException e) {
-                ExceptionUtil.log(e, "Error closing editors");
+                ExceptionUtil.log(e, Messages.BbModelingDropPerformer_errorClosingEditors);
             }
         }
     }
@@ -210,7 +217,7 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
     private List<CnATreeElement> getDraggedElements(Object data) {
         List<CnATreeElement> elementList = null;
         if (data instanceof Object[]) {
-            elementList = new LinkedList<>();
+            elementList = new ArrayList<>(((Object[]) data).length);
             for (Object o : (Object[]) data) {
                 if (o instanceof CnATreeElement) {
                     elementList.add((CnATreeElement) o);
@@ -289,6 +296,7 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
      */
     @Override
     public boolean checkRights() {
+        Activator.inheritVeriniceContextState();
         RightsServiceClient service = (RightsServiceClient) VeriniceContext
                 .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
@@ -300,16 +308,6 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
     @Override
     public String getRightID() {
         return ActionRightIDs.BASEPROTECTIONMODELING;
-    }
-
-    /*
-     * @see
-     * sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.
-     * lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // nothing to do
     }
 
     private CnATreeElement getTargetElement(Object target) {
@@ -333,26 +331,20 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
         return this.targetElement != null;
     }
 
-    private void showError(Exception e, String message) {
+    private void showError(Exception e) {
         final Throwable rootCause = ExceptionUtils.getRootCause(e);
-        if (rootCause instanceof GroupNotFoundInScopeException
-                || rootCause instanceof BpModelingException) {
-            showModelingError(rootCause);
+        if (rootCause instanceof BpModelingException) {
+            showModelingError(rootCause.getMessage());
         } else {
-            ExceptionUtil.log(e, message);
+            ExceptionUtil.log(e, Messages.BbModelingDropPerformer_ModelingAborted);
         }
     }
 
-    private void showModelingError(final Throwable rootCause) {
-        final String message = NLS.bind(Messages.BbModelingDropPerformer_ModelingAborted,
-                rootCause.getMessage());
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                MessageDialog.openError(Display.getDefault().getActiveShell(),
-                        Messages.BbModelingDropPerformerModelingError, message);
-            }
-        });
+    private void showModelingError(final String causeMessage) {
+        final String message = String.join("", causeMessage, " ",
+                Messages.BbModelingDropPerformer_ModelingAborted, causeMessage);
+        Display.getDefault().asyncExec(() -> MessageDialog.openError(Display.getDefault().getActiveShell(),
+                Messages.BbModelingDropPerformerModelingError, message));
     }
 
     protected VeriniceElementTransfer getTransfer() {

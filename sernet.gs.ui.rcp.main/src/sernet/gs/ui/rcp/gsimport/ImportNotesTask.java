@@ -35,46 +35,52 @@ import sernet.verinice.service.gstoolimport.TransferData;
 
 /**
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
-public class ImportNotesTask extends AbstractGstoolImportTask  {
-	
-	private IProgress monitor;
-	private TransferData transferData;
+public class ImportNotesTask extends AbstractGstoolImportTask {
 
-	public void executeTask(int importType, IProgress monitor) throws DBException, CommandException {
-		Preferences prefs = Activator.getDefault().getPluginPreferences();
-		String sourceDbUrl = prefs.getString(PreferenceConstants.GS_DB_URL);
-		if (sourceDbUrl.indexOf("odbc") > -1) {
-			throw new DBException("Kann nicht direkt aus MDB-Datei importieren. Datenbank vorher anhängen in Menü \"Bearbeiten, Einstellungen\".");
-		}
-		this.monitor = monitor;	
-		transferData = new TransferData(getGstoolDao(), false);
-		importNotes();
-	}
-	
+    private IProgress monitor;
 
-	/**
-	 * Import notes for existing elements, based on their exact name.
-	 * @throws CommandException 
-	 */
-	private void importNotes() throws CommandException {
-		List<ZielobjektTypeResult> allZielobjekte = getGstoolDao().findZielobjektTypAll();
-		int n = allZielobjekte.size();
-		int i = 0;
-		monitor.beginTask("Importiere Notizen", n);
-		for (ZielobjektTypeResult zielobjekt : allZielobjekte) {
-			String name = zielobjekt.zielobjekt.getName();
-			monitor.worked(1);
-			i++;
-			monitor.subTask(i + "/" + n + " - Zielobjekt: " + name);
-			List<NotizenMassnahmeResult> notesResults = getGstoolDao().findNotizenForZielobjekt(name);
-			Map<MbBaust, List<NotizenMassnahmeResult>> notizenMap = transferData.convertZielobjektNotizenMap(notesResults);
-			ImportNotesForZielobjekt command = new ImportNotesForZielobjekt(name, notizenMap);
-			command = ServiceFactory.lookupCommandService().executeCommand(command);
-		}
-	}
+    public void executeTask(int importType, IProgress monitor)
+            throws DBException, CommandException {
+        Preferences prefs = Activator.getDefault().getPluginPreferences();
+        String sourceDbUrl = prefs.getString(PreferenceConstants.GS_DB_URL);
+        if (sourceDbUrl.indexOf("odbc") > -1) {
+            throw new DBException(
+                    "Kann nicht direkt aus MDB-Datei importieren. Datenbank vorher anhängen in Menü \"Bearbeiten, Einstellungen\".");
+        }
+        this.monitor = monitor;
+        importNotes();
+    }
+
+    /**
+     * Import notes for existing elements, based on their exact name.
+     * 
+     * @throws CommandException
+     */
+    private void importNotes() throws CommandException {
+        List<ZielobjektTypeResult> allZielobjekte = getGstoolDao().findZielobjektTypAll();
+        int n = allZielobjekte.size();
+        int i = 0;
+        monitor.beginTask("Importiere Notizen", n);
+        for (ZielobjektTypeResult zielobjekt : allZielobjekte) {
+            String name = zielobjekt.zielobjekt.getName();
+            monitor.worked(1);
+            i++;
+            monitor.subTask(i + "/" + n + " - Zielobjekt: " + name);
+            List<NotizenMassnahmeResult> notesResults = getGstoolDao()
+                    .findNotizenForZielobjekt(name);
+            if (!notesResults.isEmpty()) {
+                Map<MbBaust, List<NotizenMassnahmeResult>> notizenMap = TransferData
+                        .convertZielobjektNotizenMap(notesResults);
+                String importedObjectTypeId = GstoolTypeMapper
+                        .getVeriniceTypeOrDefault(zielobjekt.type, zielobjekt.subtype);
+                ImportNotesForZielobjekt command = new ImportNotesForZielobjekt(name,
+                        importedObjectTypeId, notizenMap);
+                ServiceFactory.lookupCommandService().executeCommand(command);
+            }
+        }
+    }
 
 }

@@ -25,13 +25,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.Status;
-
-import org.apache.log4j.Logger;
-
 import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
@@ -47,7 +47,7 @@ import sernet.verinice.service.commands.crud.LoadReportElements;
  */
 public class LoadISAReportChapterList extends GenericCommand implements ICachedCommand{
 
-    private static transient Logger log = Logger.getLogger(LoadISAReportChapterList.class);
+    private static final Logger log = LoggerFactory.getLogger(LoadISAReportChapterList.class);
     
     public static final String[] COLUMNS = new String[]{"dbid", "title"};
     
@@ -108,7 +108,7 @@ public class LoadISAReportChapterList extends GenericCommand implements ICachedC
                 }
             }
         } catch (CommandException e) {
-            getLog().error("Error while determing controlgroups");
+            log.error("Error while determing controlgroups");
         }
         retList.trimToSize();
         Collections.sort(retList, new Comparator<ControlGroup>() {
@@ -164,7 +164,7 @@ public class LoadISAReportChapterList extends GenericCommand implements ICachedC
             getCache().put(new Element(el.getUuid(), newElement));
             return newElement;
         } catch (CommandException e) {
-            getLog().error("error while loading children of CnaTreeElment", e);
+            log.error("error while loading children of CnaTreeElment", e);
         }
         return null;
     }
@@ -213,8 +213,8 @@ public class LoadISAReportChapterList extends GenericCommand implements ICachedC
     public void injectCacheResult(Object result) {
         this.result = (ArrayList<List<String>>)result;
         resultInjectedFromCache = true;
-        if(getLog().isDebugEnabled()){
-            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        if(log.isDebugEnabled()){
+            log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 
@@ -227,10 +227,4 @@ public class LoadISAReportChapterList extends GenericCommand implements ICachedC
         return result;
     }
     
-    private Logger getLog(){
-        if(log == null){
-            log = Logger.getLogger(this.getClass());
-        }
-        return log;
-    }
 }

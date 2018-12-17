@@ -82,13 +82,11 @@ public class Messages extends NLS {
     public static String ApplicationActionBarAdvisor_41;
     public static String ApplicationActionBarAdvisor_42;
     public static String ApplicationActionBarAdvisor_43;
-    public static String ApplicationActionBarAdvisor_44;
     public static String ApplicationActionBarAdvisor_45;
     public static String ApplicationActionBarAdvisor_CatalogView;
     public static String ApplicationActionBarAdvisor_5;
     public static String ApplicationActionBarAdvisor_6;
     public static String ApplicationActionBarAdvisor_7;
-    public static String ApplicationActionBarAdvisor_8;
     public static String ApplicationActionBarAdvisor_9;
     public static String ApplicationWorkbenchWindowAdvisor_0;
     public static String ApplicationWorkbenchWindowAdvisor_1;
@@ -104,8 +102,12 @@ public class Messages extends NLS {
     public static String CnAWorkspace_4;
     public static String ExceptionUtil_2;
     public static String ExceptionUtil_3;
+    public static String ExceptionUtilErrorPopupTitle;
     public static String ExceptionUtilErrorMessageStandalone;
     public static String ExceptionUtilErrorMessageServerMode;
+    public static String ClientAndServerIncompatible;
+    public static String FilterInformationNetworksByProceeding;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

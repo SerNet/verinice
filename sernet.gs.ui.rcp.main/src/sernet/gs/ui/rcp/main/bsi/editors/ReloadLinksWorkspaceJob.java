@@ -46,7 +46,7 @@ final class ReloadLinksWorkspaceJob extends WorkspaceJob {
     private final RelationTableViewer viewer;
 
     ReloadLinksWorkspaceJob(CnATreeElement inputElement, RelationTableViewer viewer, String name) {
-        
+
         super(name);
         this.inputElement = inputElement;
         this.viewer = viewer;
@@ -54,7 +54,7 @@ final class ReloadLinksWorkspaceJob extends WorkspaceJob {
 
     @Override
     public IStatus runInWorkspace(final IProgressMonitor monitor) {
-        
+
         Activator.inheritVeriniceContextState();
 
         try {
@@ -64,21 +64,16 @@ final class ReloadLinksWorkspaceJob extends WorkspaceJob {
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             final CnATreeElement linkElmt = command.getElmt();
 
-            Display.getDefault().asyncExec(new Runnable() {
-                @Override
-                public void run() {
+            Display.getDefault().asyncExec(() -> {
+                if (!viewer.getControl().isDisposed()) {
                     viewer.setInput(linkElmt);
                 }
             });
         } catch (Exception e) {
-            
-            Display.getDefault().asyncExec(new Runnable() {
-                @Override
-                public void run() {
-                    viewer.setInput(new PlaceHolder(Messages.LinkMaker_12));
-                }
-            });
-            
+
+            Display.getDefault()
+                    .asyncExec(() -> viewer.setInput(new PlaceHolder(Messages.LinkMaker_12)));
+
             LOGGER.error("Error while searching relations", e);
             ExceptionUtil.log(e, Messages.LinkMaker_13);
         }

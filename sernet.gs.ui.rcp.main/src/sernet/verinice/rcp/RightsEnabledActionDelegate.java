@@ -93,14 +93,6 @@ public abstract class RightsEnabledActionDelegate extends ActionDelegate impleme
         return service.isEnabled(getRightID());
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // DO NOTHING
-    }
-    
     /**
      * @return false if operation mode is standalone and internal server is not running
      */

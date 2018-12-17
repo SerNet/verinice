@@ -42,6 +42,7 @@ public class CompletedStepsSummary extends MassnahmenSummary {
 
 	private static HibernateCallback hcb = new Callback();
 
+	@Override
 	public void execute() {
 		setSummary(getCompletedStufenSummary());
 	}
@@ -86,11 +87,11 @@ public class CompletedStepsSummary extends MassnahmenSummary {
 					+ "and p2.propertytype = :p2type "
 					+ "and p2.propertyvalue in (:p2values) "
 					+ "group by p1.propertyvalue ")
-					.addScalar("pv", Hibernate.STRING)
+					.addScalar("pv", sernet.gs.reveng.type.Types.STRING_TYPE)
 					.addScalar("amount", Hibernate.INTEGER)
 					.setString("p1type", MassnahmenUmsetzung.P_SIEGEL)
 					.setString("p2type", MassnahmenUmsetzung.P_UMSETZUNG)
-					.setParameterList("p2values", new Object[] { MassnahmenUmsetzung.P_UMSETZUNG_JA, MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH }, Hibernate.STRING);
+					.setParameterList("p2values", new Object[] { MassnahmenUmsetzung.P_UMSETZUNG_JA, MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH }, sernet.gs.reveng.type.Types.STRING_TYPE);
 			
 			if (log.isDebugEnabled()){
 				log.debug("generated query:" + query.getQueryString());

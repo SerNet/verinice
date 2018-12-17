@@ -168,4 +168,12 @@ public interface ITaskService {
      * 
      */
     void saveChangedElementPropertiesToCnATreeElement(String taskId, String uuid);
+    
+    /**
+     * Find the task with the given ID
+     * 
+     * @param taskId the task ID
+     * @return the task with the ID or {@code null} if there is no such task.
+     */
+    ITask findTask(String taskId);
 }

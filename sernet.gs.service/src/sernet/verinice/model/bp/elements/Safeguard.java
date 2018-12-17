@@ -19,47 +19,61 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.elements;
 
-import static sernet.verinice.model.bp.DeductionImplementationUtil.setImplementationStausToRequirement;
-
+import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.StringTokenizer;
 
+import sernet.hui.common.connect.IIdentifiableElement;
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IReevaluator;
+import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bp.ISecurityLevelProvider;
+import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.Reevaluator;
+import sernet.verinice.model.bp.SecurityLevel;
+import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.AbstractLinkChangeListener;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 import sernet.verinice.model.common.TransactionAbortedException;
+import sernet.verinice.service.bp.risk.RiskDeductionUtil;
+import sernet.verinice.service.hibernate.HibernateUtil;
 
 /**
  * @author Daniel Murygin dm[at]sernet.de
  *
  */
-public class Safeguard extends CnATreeElement implements IBpElement {
+public class Safeguard extends CnATreeElement
+        implements IBpElement, IIdentifiableElement, ITaggableElement, ISecurityLevelProvider {
 
-    private static final long serialVersionUID = -2117441377311538326L;
+    private static final long serialVersionUID = -3597661958061483411L;
 
     public static final String TYPE_ID = "bp_safeguard"; //$NON-NLS-1$
     private static final String PROP_ABBR = "bp_safeguard_abbr"; //$NON-NLS-1$
     private static final String PROP_OBJECTBROWSER_DESC = "bp_safeguard_objectbrowser_content"; //$NON-NLS-1$
     private static final String PROP_NAME = "bp_safeguard_name"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_safeguard_id"; //$NON-NLS-1$
-    public static final String PROP_QUALIFIER = "bp_safeguard_qualifier"; //$NON-NLS-1$
+    public static final String PROP_TAG = "bp_safeguard_tag"; //$NON-NLS-1$
     private static final String PROP_LAST_CHANGE = "bp_safeguard_last_change"; //$NON-NLS-1$
-    private static final String PROP_RESP_ROLES = "bp_safeguard_responsibleroles";//$NON-NLS-1$
     public static final String PROP_CONFIDENTIALITY = "bp_safeguard_value_method_confidentiality";//$NON-NLS-1$
     public static final String PROP_INTEGRITY = "bp_safeguard_value_method_integrity";//$NON-NLS-1$
     public static final String PROP_AVAILABILITY = "bp_safeguard_value_method_availability";//$NON-NLS-1$
-    public static final String PROP_QUALIFIER_BASIC = "bp_safeguard_qualifier_basic";//$NON-NLS-1$
-    public static final String PROP_QUALIFIER_STANDARD = "bp_safeguard_qualifier_standard";//$NON-NLS-1$
-    public static final String PROP_QUALIFIER_HIGH = "bp_safeguard_qualifier_high";//$NON-NLS-1$
-    public static final String REL_BP_SAFEGUARD_BP_THREAT = "rel_bp_safeguard_bp_threat"; //$NON-NLS-1$
+    public static final String PROP_QUALIFIER = "bp_safeguard_qualifier"; //$NON-NLS-1$
+    // These keys shall not be used for localization but only to identify which
+    // ENUM value shall be used. Use the ENUMs getLabel() instead.
+    private static final String PROP_QUALIFIER_BASIC = "bp_safeguard_qualifier_basic";//$NON-NLS-1$
+    private static final String PROP_QUALIFIER_STANDARD = "bp_safeguard_qualifier_standard";//$NON-NLS-1$
+    private static final String PROP_QUALIFIER_HIGH = "bp_safeguard_qualifier_high";//$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS = "bp_safeguard_implementation_status"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_NO = "bp_safeguard_implementation_status_no"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_YES = "bp_safeguard_implementation_status_yes"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_PARTIALLY = "bp_safeguard_implementation_status_partially"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE = "bp_safeguard_implementation_status_na"; //$NON-NLS-1$
+    public static final String PROP_STRENGTH_FREQUENCY = "bp_safeguard_safeguard_strength_frequency"; //$NON-NLS-1$
+    public static final String PROP_STRENGTH_IMPACT = "bp_safeguard_safeguard_strength_impact"; //$NON-NLS-1$
+    public static final String PROP_REDUCE_RISK = "bp_safeguard_reduce_risk";
 
     private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
     private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
@@ -72,16 +86,30 @@ public class Safeguard extends CnATreeElement implements IBpElement {
                 return;
             }
 
-            for (CnALink cnALink : Safeguard.this.getLinksUp()) {
-                CnATreeElement dependant = cnALink.getDependant();
-                if ((BpRequirement.TYPE_ID.equals(dependant.getTypeId()))) {
-                    setImplementationStausToRequirement(Safeguard.this, dependant);
-                }
-            }
+            Safeguard.this.getLinksUp().stream().filter(
+                    DeductionImplementationUtil::isRelevantLinkForImplementationStateDeduction)
+                    .map(CnALink::getDependant)
+                    .filter(DeductionImplementationUtil::isDeductiveImplementationEnabled)
+                    .forEach(DeductionImplementationUtil::setImplementationStatusToRequirement);
+
+            Safeguard.this.getLinksUp().stream()
+                    .filter(link -> BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD
+                            .equals(link.getRelationId()))
+                    .map(CnALink::getDependant).map(HibernateUtil::unproxy)
+                    .map(BpRequirement.class::cast)
+                    .forEach(r -> {
+                        try {
+                            RiskDeductionUtil.deduceSafeguardStrength(r);
+                            r.getLinkChangeListener().determineValue(ta);
+                        } catch (TransactionAbortedException e) {
+                            //swallow this exception
+                        }
+                    });
         }
     };
 
-    protected Safeguard() {}
+    protected Safeguard() {
+    }
 
     @Override
     public ILinkChangeListener getLinkChangeListener() {
@@ -92,7 +120,6 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     public IReevaluator getProtectionRequirementsProvider() {
         return protectionRequirementsProvider;
     }
-
 
     public Safeguard(CnATreeElement parent) {
         super(parent);
@@ -109,7 +136,8 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     }
 
     public void setObjectBrowserDescription(String description) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER_DESC), description);
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER_DESC),
+                description);
     }
 
     public String getAbbreviation() {
@@ -129,19 +157,59 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     public void setTitel(String name) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
-    
+
     public void setTitle(String title) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
     }
 
-    public String getQualifier() {
-        return getEntity().getPropertyValue(PROP_QUALIFIER);
+    /**
+     * @return The Security level level represented by property PROP_QUALIFIER
+     */
+    @Override
+    public SecurityLevel getSecurityLevel() {
+        // Parsing the string as SecurityLevel should actually be done
+        // in Proceeding. But every class has different
+        // localization keys. If unique keys, e.g. "QUALIFIER_BASIC"
+        // would be used everywhere this code can and should be moved to
+        // SecurityLevel.ofLocalizationKey.
+        String qualifier = getEntity().getRawPropertyValue(PROP_QUALIFIER);
+        if (qualifier == null) {
+            return null;
+        }
+        switch (qualifier) {
+        case PROP_QUALIFIER_BASIC:
+            return SecurityLevel.BASIC;
+        case PROP_QUALIFIER_STANDARD:
+            return SecurityLevel.STANDARD;
+        case PROP_QUALIFIER_HIGH:
+            return SecurityLevel.HIGH;
+        case "":
+            return null;
+        default:
+            throw new IllegalStateException("Unknown security level '" + qualifier + "'");
+        }
     }
 
-    public void setQualifier(String qualifier) {
+    /**
+     * Stores the appropriate property value id to PROP_QUALIFIER.
+     */
+    public void setSecurityLevel(SecurityLevel level) {
+        String qualifier = null;
+        switch (level) {
+        case BASIC:
+            qualifier = PROP_QUALIFIER_BASIC;
+            break;
+        case STANDARD:
+            qualifier = PROP_QUALIFIER_STANDARD;
+            break;
+        case HIGH:
+            qualifier = PROP_QUALIFIER_HIGH;
+            break;
+        }
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
     }
 
+    @Override
     public String getIdentifier() {
         return getEntity().getPropertyValue(PROP_ID);
     }
@@ -155,40 +223,8 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     }
 
     public void setLastChange(Date date) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_LAST_CHANGE), String.valueOf(date.getTime()));
-    }
-
-    public Set<String> getResponsibleRoles(){
-        String property = getEntity().getPropertyValue(PROP_RESP_ROLES);
-        Set<String> roles;
-        if (property != null && property.length() > 0) {
-            StringTokenizer tokenizer = new StringTokenizer(property, "/");
-            roles = new HashSet<>(tokenizer.countTokens() + 1);
-            while (tokenizer.hasMoreTokens()) {
-                roles.add(tokenizer.nextToken());
-            }
-        } else {
-            roles = new HashSet<>();
-        }
-        return roles;
-    }
-
-    public void setResponisbleRoles(String roles) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_RESP_ROLES), roles);
-    }
-
-    public void addResponsibleRole(String role) {
-        Set<String> roles = getResponsibleRoles();
-        roles.add(role);
-        StringBuilder property = new StringBuilder();
-        Iterator<String> iter = roles.iterator();
-        while (iter.hasNext()) {
-            property.append(iter.next());
-            if (iter.hasNext()) {
-                property.append(" / ");
-            }
-        }
-        setResponisbleRoles(property.toString());
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_LAST_CHANGE),
+                String.valueOf(date.getTime()));
     }
 
     public void setIsAffectsConfidentiality(boolean affectsConfidentiality) {
@@ -215,7 +251,72 @@ public class Safeguard extends CnATreeElement implements IBpElement {
         return ((this.getNumericProperty(PROP_AVAILABILITY) == 1) ? true : false);
     }
 
+    public ImplementationStatus getImplementationStatus() {
+        String rawValue = getEntity().getRawPropertyValue(PROP_IMPLEMENTATION_STATUS);
+        return getImplementationStatus(rawValue);
+    }
+
+    public static ImplementationStatus getImplementationStatus(String rawValue) {
+        if (rawValue == null || rawValue.isEmpty()) {
+            return null;
+        }
+        switch (rawValue) {
+        case PROP_IMPLEMENTATION_STATUS_NO:
+            return ImplementationStatus.NO;
+        case PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE:
+            return ImplementationStatus.NOT_APPLICABLE;
+        case PROP_IMPLEMENTATION_STATUS_PARTIALLY:
+            return ImplementationStatus.PARTIALLY;
+        case PROP_IMPLEMENTATION_STATUS_YES:
+            return ImplementationStatus.YES;
+        default:
+            throw new IllegalStateException("Unknown implementation status '" + rawValue + "'");
+        }
+    }
+
+    public void setImplementationStatus(ImplementationStatus status) {
+        String rawValue;
+        if (status == null) {
+            rawValue = null;
+        } else {
+            switch (status) {
+            case NO:
+                rawValue = PROP_IMPLEMENTATION_STATUS_NO;
+                break;
+            case NOT_APPLICABLE:
+                rawValue = PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE;
+                break;
+            case PARTIALLY:
+                rawValue = PROP_IMPLEMENTATION_STATUS_PARTIALLY;
+                break;
+            case YES:
+                rawValue = PROP_IMPLEMENTATION_STATUS_YES;
+                break;
+            default:
+                throw new IllegalStateException("Unknown implementation status '" + status + "'");
+            }
+        }
+        setSimpleProperty(PROP_IMPLEMENTATION_STATUS, rawValue);
+    }
+
     public static String getIdentifierOfSafeguard(CnATreeElement requirement) {
         return requirement.getEntity().getPropertyValue(PROP_ID);
+    }
+
+    @Override
+    public String getFullTitle() {
+        return joinPrefixAndTitle(getIdentifier(), getTitle());
+    }
+
+    public static boolean isSafeguard(CnATreeElement element) {
+        if (element == null) {
+            return false;
+        }
+        return TYPE_ID.equals(element.getTypeId());
+    }
+
+    @Override
+    public Collection<String> getTags() {
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 }

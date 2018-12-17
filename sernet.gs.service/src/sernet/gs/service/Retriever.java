@@ -36,7 +36,7 @@ import sernet.verinice.service.commands.RetrieveCnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class Retriever {
+public final class Retriever {
 
 	private static final Logger LOG = Logger.getLogger(Retriever.class);
 	
@@ -235,5 +235,8 @@ public class Retriever {
 	    return elementIni && (element == null || links);
 	}
 	
+	private Retriever() {
+
+	}
 	
 }

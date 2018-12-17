@@ -1,19 +1,19 @@
 /*******************************************************************************
  * Copyright (c) 2010 Daniel Murygin.
  *
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU Lesser General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- * This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program. 
+ * along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
@@ -53,9 +53,7 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyGroup;
-import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
-import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IConfigurationService;
@@ -72,7 +70,7 @@ import sernet.verinice.service.parser.GSScraperUtil;
 /**
  * JSF managed bean which provides data for the element editor in the web
  * application. Main purpose for this this bean is template editor.xhtml.
- * 
+ *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @ManagedBean(name = "edit")
@@ -81,7 +79,7 @@ public class EditBean {
 
     private static final Logger LOG = Logger.getLogger(EditBean.class);
 
-    public static final String BOUNDLE_NAME = "sernet.verinice.web.EditMessages";
+    public static final String BUNDLE_NAME = "sernet.verinice.web.EditMessages";
     public static final String TAG_WEB = "Web";
     public static final String TAG_ALL = "ALL-TAGS-VISIBLE";
     private static final String SUBMIT = "submit";
@@ -130,7 +128,7 @@ public class EditBean {
             doInit(task);
         } catch (CommandException t) {
             LOG.error("Error while initialization. ", t);
-            Util.addError("massagePanel", Util.getMessage(BOUNDLE_NAME, "init.failed"));
+            Util.addError("massagePanel", Util.getMessage(BUNDLE_NAME, "init.failed"));
         }
         if (LOG.isDebugEnabled()) {
             long duration = System.currentTimeMillis() - start;
@@ -264,12 +262,12 @@ public class EditBean {
     }
 
     private void loadChangedElementPropertiesFromTask() {
-        Map<String, String> changedProperties = (Map<String, String>) getTaskService().loadChangedElementProperties(task.getId());
+        Map<String, String> changedProperties = getTaskService().loadChangedElementProperties(task.getId());
         for (Entry<String, String> entry : changedProperties.entrySet()) {
             element.setPropertyValue(entry.getKey(), entry.getValue());
         }
 
-        setTitle(element.getTitle() + Util.getMessage(BOUNDLE_NAME, "change.request"));
+        setTitle(element.getTitle() + Util.getMessage(BUNDLE_NAME, "change.request"));
         LOG.info("Loaded changes for element properties from task."); //$NON-NLS-1$
     }
 
@@ -318,7 +316,7 @@ public class EditBean {
     /**
      * Returns true if tagSet contains one of the visible tags for this bean
      * instance.
-     * 
+     *
      * @param tagSet
      *            A set of tags
      * @return true if tagSet contains one of the visible tags
@@ -358,15 +356,12 @@ public class EditBean {
             } else {
                 LOG.warn("Control is null. Can not save.");
             }
-        } catch (SecurityException e) {
+        } catch (SecurityException | sernet.gs.service.SecurityException e) {
             LOG.error("Saving not allowed, uuid: " + getUuid(), e);
-            Util.addError(SUBMIT, Util.getMessage(BOUNDLE_NAME, "save.forbidden"));
-        } catch (sernet.gs.service.SecurityException e) {
-            LOG.error("Saving not allowed, uuid: " + getUuid(), e);
-            Util.addError(SUBMIT, Util.getMessage(BOUNDLE_NAME, "save.forbidden"));
+            Util.addError(SUBMIT, Util.getMessage(BUNDLE_NAME, "save.forbidden"));
         } catch (Exception e) {
             LOG.error("Error while saving element, uuid: " + getUuid(), e);
-            Util.addError(SUBMIT, Util.getMessage(BOUNDLE_NAME, "save.failed"));
+            Util.addError(SUBMIT, Util.getMessage(BUNDLE_NAME, "save.failed"));
         }
     }
 
@@ -386,30 +381,7 @@ public class EditBean {
         if (!writeEnabled()) {
             throw new SecurityException("write is not allowed");
         }
-        Entity entity = getElement().getEntity();
-        for (HuiProperty property : getGeneralPropertyList()) {
-            if (property.getIsMultiselect()) {
-                entity.setPropertyValue(property.getType().getId(), property.getValue() == null ? "" : property.getValue());
-            } else {
-                entity.setSimpleValue(property.getType(), property.getValue());
-            }
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Property: " + property.getType().getId() + " set to: " + property.getValue());
-            }
-        }
-        for (sernet.verinice.web.PropertyGroup group : getGroupList()) {
-            for (HuiProperty property : group.getPropertyList()) {
-
-                if (property.getIsMultiselect()) {
-                    entity.setPropertyValue(property.getType().getId(), property.getValue() == null ? "" : property.getValue());
-                } else {
-                    entity.setSimpleValue(property.getType(), property.getValue());
-                }
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Property: " + property.getType().getId() + " (" + property.getType().getInputName() + ") set to: " + property.getValue());
-                }
-            }
-        }
+        setPropertyValues();
         SaveElement<CnATreeElement> command = new SaveElement<>(getElement());
         command = getCommandService().executeCommand(command);
         setElement(command.getElement());
@@ -422,9 +394,38 @@ public class EditBean {
         Util.addInfo(SUBMIT, getSaveMessage());
     }
 
+    private void setPropertyValues() {
+        Entity entity = getElement().getEntity();
+        for (HuiProperty property : getGeneralPropertyList()) {
+            setPropertyValue(entity, property);
+        }
+        for (sernet.verinice.web.PropertyGroup group : getGroupList()) {
+            for (HuiProperty property : group.getPropertyList()) {
+                setPropertyValue(entity, property);
+            }
+        }
+    }
+
+    private void setPropertyValue(Entity entity, HuiProperty property) {
+        if (property.getIsMultiselect()) {
+            setMultiSelectValue(entity, property);
+        } else {
+            entity.setSimpleValue(property.getType(), property.getValue());
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Property: " + property.getType().getId() + " ("
+                    + property.getType().getInputName() + ") set to: " + property.getValue());
+        }
+    }
+
+    private void setMultiSelectValue(Entity entity, HuiProperty property) {
+        String propertyValue =  property.getValue() == null ? "" : StringUtils.join(property.getSelectedOptions(),","); 
+        entity.setPropertyValue(property.getType().getId(), propertyValue);
+    }
+
     private String getSaveMessage() {
         if (saveMessage == null) {
-            return Util.getMessage(EditBean.BOUNDLE_NAME, "saved");
+            return Util.getMessage(EditBean.BUNDLE_NAME, "saved");
         } else {
             return saveMessage;
         }
@@ -470,9 +471,6 @@ public class EditBean {
     public boolean writeEnabled() {
         boolean enabled = false;
         if (getElement() != null) {
-            // causes NoClassDefFoundError:
-            // org/eclipse/ui/plugin/AbstractUIPlugin
-            // FIXME: fix this dependency to eclipse related classes.
             enabled = getConfigurationService().isWriteAllowed(getElement());
         }
         return enabled;
@@ -481,7 +479,7 @@ public class EditBean {
     /**
      * Check if write is allowed by using the saved element as context and
      * delegating to {@link #isWriteAllowed(CnATreeElement)}.
-     * 
+     *
      * @return true if write is allowed for the element.
      */
     public boolean isWriteAllowed() {
@@ -503,29 +501,20 @@ public class EditBean {
     }
 
     private HuiProperty extractHuiProperty(AjaxBehaviorEvent event) {
-        HuiProperty huiProperty = (HuiProperty) ((UIInput) event.getComponent()).getAttributes().get("huiProperty");
-        return huiProperty;
+        return (HuiProperty) ((UIInput) event.getComponent()).getAttributes().get("huiProperty");
     }
 
     private void trackChangedValuesForReleaseProcess(HuiProperty huiProperty) {
         String key = huiProperty.getKey();
-        String newValue = handleBooleanValue(huiProperty.getValue());
-
         if (StringUtils.isNotEmpty(key)) {
-
-            PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(getElement().getEntityType().getId(), key);
-
-            if (propertyType.isSingleSelect()) {
-                newValue = getSingleSelectOptionId(newValue, propertyType);
-            } else if (propertyType.isNumericSelect()) {
-                Entity entity = getElement().getEntity();
-                newValue = entity.getPropertyValue(key);
+            String newValue = huiProperty.getValue();
+            if (huiProperty.getIsBooleanSelect()) {
+                newValue = handleBooleanValue(huiProperty.getValue());
             }
-
             changedElementProperties.put(key, newValue);
-        }
-        if (key.contains(NAME_SUFFIX)) {
-            setTitle(newValue + Util.getMessage(BOUNDLE_NAME, "change.request"));
+            if (key.contains(NAME_SUFFIX)) {
+                setTitle(newValue + Util.getMessage(BUNDLE_NAME, "change.request"));
+            }
         }
     }
 
@@ -547,19 +536,6 @@ public class EditBean {
         }
 
         return (String) newValue;
-    }
-
-    private String getSingleSelectOptionId(String newValue, PropertyType propertyType) {
-        String optionId = null;
-        if (!Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE).equals(newValue)) {
-            for (IMLPropertyOption option : propertyType.getOptions()) {
-                if (option.getName().equals(newValue)) {
-                    optionId = option.getId();
-                    break;
-                }
-            }
-        }
-        return optionId;
     }
 
     public void onDateSelect(SelectEvent event) {
@@ -846,7 +822,7 @@ public class EditBean {
                 text = GSScraperUtil.getInstanceWeb().getModel().getMassnahmeHtml(massnahme.getUrl(), massnahme.getStand());
             } catch (GSServiceException e) {
                 LOG.error("Error while loading massnahme description.", e);
-                Util.addError("submit", Util.getMessage("todo.load.failed"));
+                Util.addError(SUBMIT, Util.getMessage("todo.load.failed"));
             }
         }
         if (text != null) {
@@ -932,8 +908,13 @@ public class EditBean {
             if (dependsOnValue == null) {
                 return false;
             }
-
-            if (dependsType.isInverse()) {
+            if (dependsOn.getIsMultiselect()) {
+                if (dependsType.isInverse()) {
+                    return !dependsOnValue.contains(dependsType.getPropertyValue());
+                } else {
+                    return dependsOnValue.contains(dependsType.getPropertyValue());
+                }
+            } else if (dependsType.isInverse()) {
                 return !dependsOnValue.equals(dependsType.getPropertyValue());
             } else {
                 return dependsOnValue.equals(dependsType.getPropertyValue());

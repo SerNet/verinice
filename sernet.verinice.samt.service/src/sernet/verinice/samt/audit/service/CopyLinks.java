@@ -48,11 +48,7 @@ import sernet.verinice.service.commands.CreateLink;
  */
 public class CopyLinks extends ChangeLoggingCommand implements IChangeLoggingCommand, IAuthAwareCommand {
 
-    private transient Logger log = Logger.getLogger(CopyLinks.class);
-    public Logger getLog() {
-        if (log == null) { log = Logger.getLogger(CopyLinks.class); }
-        return log;
-    }
+    private static final Logger log = Logger.getLogger(CopyLinks.class);
     
     private List<String> copyUuidList;
     
@@ -162,23 +158,23 @@ public class CopyLinks extends ChangeLoggingCommand implements IChangeLoggingCom
             if(sourceDestMap.get(dependency.getUuid())!=null) {
                 String destUuid = sourceDestMap.get(dependency.getUuid());
                 dependency = getCnaTreeElementDao().findByUuid(destUuid,null);
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Creating link, dependency " + dependency.getTitle() + " (copy)...");
+                if (log.isDebugEnabled()) {
+                    log.debug("Creating link, dependency " + dependency.getTitle() + " (copy)...");
                 }
-            } else if (getLog().isDebugEnabled()) {
-                getLog().debug("Creating link, dependency " + dependency.getTitle() + "...");
+            } else if (log.isDebugEnabled()) {
+                log.debug("Creating link, dependency " + dependency.getTitle() + "...");
             }
             if(sourceDestMap.get(dependant.getUuid())!=null) {
                 String destUuid = sourceDestMap.get(dependant.getUuid());
                 dependant = getCnaTreeElementDao().findByUuid(destUuid,null);
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Creating link, dependant " + dependant.getTitle() + " (copy)...");
+                if (log.isDebugEnabled()) {
+                    log.debug("Creating link, dependant " + dependant.getTitle() + " (copy)...");
                 }
-            } else if (getLog().isDebugEnabled()) {
-                getLog().debug("Creating link, dependant " + dependant.getTitle() + "...");
+            } else if (log.isDebugEnabled()) {
+                log.debug("Creating link, dependant " + dependant.getTitle() + "...");
             } 
             if(!cretedLinkSet.contains(new CnALink(dependant, dependency, relationId, null))) {
-                CreateLink<CnALink, CnATreeElement, CnATreeElement> createLink = new CreateLink<CnALink, CnATreeElement, CnATreeElement>(dependant, dependency, relationId, "created by command CopyLinks");      
+                CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<>(dependant, dependency, relationId, "created by command CopyLinks");
                 createLink = getCommandService().executeCommand(createLink);
                 cretedLinkSet.add(createLink.getLink());
                 return createLink.getLink();
@@ -187,7 +183,7 @@ public class CopyLinks extends ChangeLoggingCommand implements IChangeLoggingCom
             }
             
         } catch (CommandException e) {
-            getLog().error("Error while creating cnalink in db", e);
+            log.error("Error while creating cnalink in db", e);
             return null;
         }
         

@@ -29,15 +29,8 @@ import sernet.verinice.model.common.CnATreeElement;
 @SuppressWarnings("serial")
 public class LoadLinkedElements extends GenericCommand {
 
-    private transient Logger log = Logger.getLogger(LoadLinkedElements.class);
+    private static final Logger log = Logger.getLogger(LoadLinkedElements.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(LoadLinkedElements.class);
-        }
-        return log;
-    }
-    
     private List<String> typeIdList;
 	private List<CnATreeElement> elementList;
 	private int selectedId;
@@ -55,8 +48,8 @@ public class LoadLinkedElements extends GenericCommand {
 		sb.append("where linksDown.id.dependencyId = ? ");
         sb.append("or linksUp.id.dependantId = ? ");
 		final String hql = sb.toString();
-		if(getLog().isDebugEnabled()) {
-		    getLog().debug("hql: " + hql);
+		if(log.isDebugEnabled()) {
+		    log.debug("hql: " + hql);
 		}
 		elementList = new Vector<CnATreeElement>();
 		List<CnATreeElement> resultList = getDaoFactory().getDAO(CnATreeElement.class).findByQuery(hql,new Object[]{selectedId,selectedId});

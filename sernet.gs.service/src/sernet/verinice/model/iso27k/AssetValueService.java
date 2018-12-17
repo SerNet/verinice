@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 
 import sernet.hui.common.connect.Property;
 
-public abstract class AssetValueService {
+public final class AssetValueService {
 
 	public static final String CONFIDENTIALITY 	       = "_value_confidentiality"; //$NON-NLS-1$
 	public static final String AVAILABILITY 		   = "_value_availability"; //$NON-NLS-1$
@@ -52,5 +52,8 @@ public abstract class AssetValueService {
 		return pat_integritaet.matcher(prop.getPropertyTypeID()).matches();
 	}
 
+	private AssetValueService() {
+
+	}
 	
 }

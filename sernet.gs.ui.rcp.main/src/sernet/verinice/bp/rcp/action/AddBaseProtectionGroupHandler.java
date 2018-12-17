@@ -20,16 +20,16 @@
 package sernet.verinice.bp.rcp.action;
 
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.rcp.UpdatingAddGroupHandler;
 
 /**
- * THis handler creates new groups for base protection
- * elements. 
+ * THis handler creates new groups for base protection elements.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class AddBaseProtectionGroupHandler extends sernet.verinice.rcp.AddGroupHandler {    
+public class AddBaseProtectionGroupHandler extends UpdatingAddGroupHandler {
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override
@@ -37,11 +37,4 @@ public class AddBaseProtectionGroupHandler extends sernet.verinice.rcp.AddGroupH
         return ActionRightIDs.ADDBPGROUP;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // DO NOTHING
-    }
 }

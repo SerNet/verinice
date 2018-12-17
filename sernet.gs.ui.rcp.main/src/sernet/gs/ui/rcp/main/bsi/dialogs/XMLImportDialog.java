@@ -907,33 +907,11 @@ public class XMLImportDialog extends Dialog {
         return result;
     }
 
-    private byte[] trimContentSuffix(byte[] fileData) {
-        byte[] fileDataClone = (fileData != null) ? fileData.clone() : null;
-        if (fileDataClone != null) {
-            // fileData ends with lines
-            // Content-Type: text/plain
-            // Content-Transfer-Encoding: 7bit
-            String content = new String(fileDataClone);
-            content = content.trim();
-            int n = content.lastIndexOf(SYNC_REQUEST);
-
-            if (!content.endsWith(SYNC_REQUEST) && n != -1) {
-                if (LOG.isDebugEnabled()) {
-                    // charset debugging
-                    LOG.debug("Encoding: " + content.substring(n + SYNC_REQUEST.length())); //$NON-NLS-1$
-                }
-                content = content.substring(0, n + SYNC_REQUEST.length());
-            }
-            fileDataClone = content.getBytes();
-        }
-        return fileDataClone;
-    }
-
     private void updateModel(Set<CnATreeElement> importRootObjectSet, Set<CnATreeElement> changedElement) {
         final int maxChangedElements = 9;
         if (changedElement != null && changedElement.size() > maxChangedElements) {
             // if more than 9 elements changed or added do a complete reload
-            CnAElementFactory.getInstance().reloadModelFromDatabase();
+            CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
         } else {
             if (importRootObjectSet != null && importRootObjectSet.size() > 0) {
                 for (CnATreeElement importRootObject : importRootObjectSet) {

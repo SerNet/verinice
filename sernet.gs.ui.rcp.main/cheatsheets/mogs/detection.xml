@@ -6,38 +6,35 @@
       <b>Willkommen bei verinice.</b>
       <br/>
       <br/>
-      verinice hilft Ihnen beim konkreten Zuweisen von Schutzbedarfskategorien
-      zu ihren Zielobjekten - dieses Tutorial zeigt Ihnen wie.
+      verinice hilft Ihnen beim konkreten Zuweisen von Schutzbedarfskategorien zu ihren
+      Zielobjekten - dieses Tutorial zeigt Ihnen wie.
     </description>
   </intro>
 
   <item title="Definitionen">
       <description>
-          Öffnen Sie den Informationsverbund durch Doppelklick. Hier finden Sie
-          die Schutzbedarfsdefinitionen der vier Kategorien „unkritisch“,
-          „Normal“, „Hoch“ und „Sehr Hoch“. Diese können Sie auf Ihr
-          Unternehmen anpassen.
+          Öffnen Sie den Informationsverbund durch Doppelklick. Hier finden Sie die
+          Schutzbedarfsdefinitionen der vier Kategorien „unkritisch“, „Normal“,
+          „Hoch“ und „Sehr Hoch“. Diese können Sie auf Ihr Unternehmen
+          anpassen.
           <br/>
-          Schließen Sie danach den Informationsverbund
-          (<b>Strg+W</b>). Sie werden ggf. gefragt, ob Sie die Änderungen speichern
-          wollen.
+          Schließen Sie anschließend den Informationsverbund (<b>Strg+W</b>). Sie
+          werden ggf. gefragt, ob Sie die Änderungen speichern wollen.
           <br/>
-          Hinweis: Da die Standard Definitionen in der SNCA.xml und
-          den entsprechenden properties-Dateien enthalten sind müssen diese
-          ebenfalls angepasst werden um ein Überschreiben der angepassten
-          Definitionen zu verhindern.
+          Hinweis: Da die Standard-Definitionen in der SNCA.xml und den entsprechenden
+          .properties-Dateien enthalten sind, müssen diese ebenfalls angepasst werden,
+          um ein Überschreiben der angepassten Definitionen zu verhindern.
       </description>
   </item>
 
   <item title="Schutzbedarf zuweisen">
       <description>
-          Öffnen Sie eines Ihrer Zielobjekte, welches Sie bereits bei der
-          Strukturanalyse erzeugt haben. Wählen Sie für die drei Werte
-          „Vertraulichkeit“, „Integrität“ und „Verfügbarkeit“ jeweils die
-          Schutzbedarfsstufe.
+          Öffnen Sie eines Ihrer Zielobjekte, welches Sie bereits bei der Strukturanalyse erzeugt
+          haben. Wählen Sie für die drei Werte „Vertraulichkeit“, „Integrität“ und
+          „Verfügbarkeit“ jeweils die Schutzbedarfsstufe.
           <br/>
-          Geben Sie jeweils eine Begründung dafür ein, warum die Daten des
-          Zielobjektes den jeweiligen Schutzbedarf aufweisen könnten.
+          Geben Sie jeweils eine Begründung dafür ein, warum die Daten des Zielobjektes den
+          jeweiligen Schutzbedarf aufweisen könnten.
           <br/>
           Speichern (<b>Strg+S</b>) Sie die Änderungen an dem Zielobjekt.
       </description>
@@ -45,25 +42,22 @@
 
   <item title="Schutzbedarf vererben">
       <description>
-          Die Vererbung des Schutzbedarfes wird nach dem Maximumprinzip
-          vorgenommen und wird anhand der Verknüpfungen zwischen den Objekten
-          vererbt. Aus diesem Grund ist es wichtig, dass die
-          Verknüpfungsrichtung im Vorfeld richtig ausgewählt wurde, andernfalls
-          muss diese nochmals angepasst werden. Sollten bisher noch keine
-          Verknüpfungen angelegt worden sein, so können diese nachträglich
-          ergänzt werden.
+          Die Vererbung des Schutzbedarfes wird nach dem Maximumprinzip vorgenommen und wird anhand
+          der Verknüpfungen zwischen den Objekten vererbt. Aus diesem Grund ist es wichtig,
+          dass die Verknüpfungsrichtung im Vorfeld richtig ausgewählt wurde, andernfalls muss
+          diese nochmals angepasst werden. Sollten bisher noch keine Verknüpfungen angelegt
+          worden sein, so können diese nachträglich ergänzt werden.
           <br/>
-          Bei allen Zielobjekten, ausgenommen den Geschäftsprozessen, ist die
-          Vererbung/Ableitung des Schutzbedarfes standardmäßig ausgewählt. D.h.
-          der Schutzbedarf wird hier automatisch aus den anderen Zielobjekten
-          heraus abgeleitet und es ist kein weiteres Setzen des Schutzbedarfes
-          mehr notwendig.
+          Bei allen Zielobjekten, ausgenommen der Geschäftsprozesse, ist die Vererbung/Ableitung des
+          Schutzbedarfes standardmäßig ausgewählt. D.h. der Schutzbedarf wird hier automatisch
+          aus den anderen Zielobjekten heraus abgeleitet und es ist kein weiteres setzen des
+          Schutzbedarfes mehr notwendig.
           <br/>
-          Sollte die Vererbung an einem Objekt, z.B. aus Gründen des
-          Verteilungs- oder Kummulationseffekten, nicht gewünscht sein, so
-          können Sie die Checkboxen „Vertraulichkeit/Integrität/Verfügbarkeit
-          ableiten“ einfach abwählen. Nun können die Stufen manuell gesetzt
-          werden.
+          Sollte die Vererbung an einem Objekt nicht gewünscht sein, so können Sie
+          die Checkboxen „Vertraulichkeit/Integrität/Verfügbarkeit ableiten nach
+          Maximumprinzip“ einfach abwählen. Nun können die Stufen des Schutzbedarfes manuell
+          gesetzt werden. Zusätzlich können Sie bestimmen, ob der Schutzbedarf aufgrund des
+          Verteilungs- oder Kummulationseffektes manuell gesetzt wird.
       </description>
   </item>
 

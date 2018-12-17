@@ -23,45 +23,45 @@ import java.io.Serializable;
  * Describes a possible relation from one HUI entity to another.
  * 
  * @author koderman[at]sernet[dot]de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
 public class HuiRelation implements Serializable {
 
-	public String getTo() {
-		return to;
-	}
+    public String getTo() {
+        return to;
+    }
 
-	public void setTo(String to) {
-		this.to = to;
-	}
+    public void setTo(String to) {
+        this.to = to;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getTooltip() {
-		return tooltip;
-	}
+    public String getTooltip() {
+        return tooltip;
+    }
 
-	public void setTooltip(String tooltip) {
-		this.tooltip = tooltip;
-	}
+    public void setTooltip(String tooltip) {
+        this.tooltip = tooltip;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	private String id;
-	private String to;
-	private String name; 
-	private String reversename; 
-	/**
+    private String id;
+    private String to;
+    private String name;
+    private String reversename;
+
+    /**
      * @return the from
      */
     public String getFrom() {
@@ -69,23 +69,22 @@ public class HuiRelation implements Serializable {
     }
 
     private String tooltip;
-	private String from;
-	
-	public String getReversename() {
-		return reversename;
-	}
+    private String from;
 
-	public void setReversename(String reversename) {
-		this.reversename = reversename;
-	}
+    public String getReversename() {
+        return reversename;
+    }
 
+    public void setReversename(String reversename) {
+        this.reversename = reversename;
+    }
 
-	/**
-	 * @param attribute
-	 */
-	public HuiRelation(String id) {
-		this.id = id;
-	}
+    /**
+     * @param attribute
+     */
+    public HuiRelation(String id) {
+        this.id = id;
+    }
 
     /**
      * @param sourceTypeId
@@ -93,8 +92,36 @@ public class HuiRelation implements Serializable {
     public void setFrom(String sourceTypeId) {
         this.from = sourceTypeId;
     }
-    
-    
 
+    @Override
+    public String toString() {
+        return "HuiRelation [id=" + id + ", to=" + to + ", name=" + name + ", reversename="
+                + reversename + ", from=" + from + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        HuiRelation other = (HuiRelation) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
 
 }

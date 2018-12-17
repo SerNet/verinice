@@ -20,6 +20,7 @@
 package sernet.verinice.iso27k.rcp.action;
 
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.rcp.UpdatingAddGroupHandler;
 
 /**
  * THis handler creates new groups for ISO2700 
@@ -27,7 +28,7 @@ import sernet.verinice.interfaces.ActionRightIDs;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class AddIsoGroupHandler extends sernet.verinice.rcp.AddGroupHandler {
+public class AddIsoGroupHandler extends UpdatingAddGroupHandler {
 	
 
     /* (non-Javadoc)
@@ -38,11 +39,4 @@ public class AddIsoGroupHandler extends sernet.verinice.rcp.AddGroupHandler {
         return ActionRightIDs.ADDISMGROUP;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // DO NOTHING
-    }
 }

@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
@@ -30,7 +29,6 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
-import sernet.verinice.interfaces.IDAOFactory;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.Audit;
@@ -48,7 +46,7 @@ import sernet.verinice.service.risk.RiskAnalysisHelperImpl;
  */
 public class LoadReportRedYellowScenarioGroups extends GenericCommand implements ICachedCommand {
 
-    private static transient Logger log = Logger.getLogger(LoadReportRedYellowScenarioGroups.class);
+    private static final Logger log = Logger.getLogger(LoadReportRedYellowScenarioGroups.class);
 
     private Integer rootElmt;
 
@@ -205,25 +203,6 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
     }
 
     /**
-     * if a child is marked red, its parent is marked red also
-     * 
-     * @param element
-     * @param currentMap
-     * @param daoFactory
-     * @return
-     */
-    private Map<String, Integer> markParents(CnATreeElement element, Map<String, Integer> currentMap, IDAOFactory daoFactory) {
-        while (!(element instanceof Organization)) {
-            if (element instanceof IncidentScenarioGroup) {
-                currentMap.put(element.getUuid(), RiskAnalysisHelper.RISK_COLOR_RED);
-            }
-            element = element.getParent();
-            element = daoFactory.getDAO(CnATreeElement.class).initializeAndUnproxy(element);
-        }
-        return currentMap;
-    }
-
-    /**
      * returns risk colour for a risk based on a scenario & an asset
      * 
      * @param asset
@@ -316,13 +295,6 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
         return results;
     }
 
-    private Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(LoadReportRedYellowScenarioGroups.class);
-        }
-        return log;
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -350,8 +322,8 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
     public void injectCacheResult(Object result) {
         this.results = (ArrayList<ColoredScenarioGroup>) result;
         resultInjectedFromCache = true;
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        if (log.isDebugEnabled()) {
+            log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 

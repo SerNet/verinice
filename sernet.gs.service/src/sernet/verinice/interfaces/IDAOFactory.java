@@ -19,14 +19,19 @@ package sernet.verinice.interfaces;
 
 import java.io.Serializable;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import sernet.gs.model.Gefaehrdung;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.model.bp.elements.Application;
+import sernet.verinice.model.bp.elements.BpDocument;
+import sernet.verinice.model.bp.elements.BpIncident;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.elements.BpRecord;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.BusinessProcess;
@@ -38,7 +43,10 @@ import sernet.verinice.model.bp.elements.Network;
 import sernet.verinice.model.bp.elements.Room;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpDocumentGroup;
+import sernet.verinice.model.bp.groups.BpIncidentGroup;
 import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRecordGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.groups.BusinessProcessGroup;
@@ -133,461 +141,426 @@ import sernet.verinice.service.commands.UpdateElementEntity;
 
 public interface IDAOFactory {
 
-	/**
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setEntityDao(IBaseDao<Entity, Integer> entityDao);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setEntityDao(IBaseDao<Entity, Integer> entityDao);
 
-	/**
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setGefaehrdungDao(IBaseDao<Gefaehrdung, Integer> dao);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setGefaehrdungDao(IBaseDao<Gefaehrdung, Integer> dao);
 
-	/**
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setBausteinVorschlagDao(
-			IBaseDao<BausteinVorschlag, Integer> dao);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setBausteinVorschlagDao(IBaseDao<BausteinVorschlag, Integer> dao);
 
-	/**
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setConfigurationDao(IBaseDao<Gefaehrdung, Integer> dao);
-	
-	void setAccountGroupDao(IBaseDao<Gefaehrdung, Integer> dao);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setConfigurationDao(IBaseDao<Gefaehrdung, Integer> dao);
 
-	void setchangeLogEntryDAO(
-			IBaseDao<ChangeLogEntry, Integer> dao);
+    void setAccountGroupDao(IBaseDao<Gefaehrdung, Integer> dao);
 
-	/**
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setOwnGefaehrdungDao(
-			IBaseDao<OwnGefaehrdung, Integer> dao);
+    void setChangeLogEntryDAO(IBaseDao<ChangeLogEntry, Integer> dao);
 
-	/**
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setPropertyListDao(
-			IBaseDao<PropertyList, Integer> propertyListDao);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setOwnGefaehrdungDao(IBaseDao<OwnGefaehrdung, Integer> dao);
 
-	/**
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setPropertyDao(IBaseDao<Property, Integer> propertyDao);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setPropertyListDao(IBaseDao<PropertyList, Integer> propertyListDao);
 
-	/**
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setCnaLinkDao(IBaseDao<CnALink, Integer> dao);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setPropertyDao(IBaseDao<Property, Integer> propertyDao);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setAnwendungDAO(IBaseDao<Anwendung, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setCnaLinkDao(IBaseDao<CnALink, Integer> dao);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setAnwendungenKategorieDAO(
-			IBaseDao<AnwendungenKategorie, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setAnwendungDAO(IBaseDao<Anwendung, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setBausteinUmsetzungDAO(
-			IBaseDao<BausteinUmsetzung, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setAnwendungenKategorieDAO(IBaseDao<AnwendungenKategorie, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setBSIModelDAO(IBaseDao<BSIModel, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setBausteinUmsetzungDAO(IBaseDao<BausteinUmsetzung, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setClientDAO(IBaseDao<Client, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setBSIModelDAO(IBaseDao<BSIModel, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setClientsKategorieDAO(
-			IBaseDao<ClientsKategorie, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setClientDAO(IBaseDao<Client, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setDatenverarbeitungDAO(
-			IBaseDao<Datenverarbeitung, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setClientsKategorieDAO(IBaseDao<ClientsKategorie, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setFinishedRiskAnalysisDAO(
-			IBaseDao<FinishedRiskAnalysis, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    @SuppressWarnings("deprecation")
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setGebaeudeDAO(IBaseDao<Gebaeude, Integer> daoToSet);
+    void setDatenverarbeitungDAO(IBaseDao<Datenverarbeitung, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setGebaeudeKategorieDAO(
-			IBaseDao<GebaeudeKategorie, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setFinishedRiskAnalysisDAO(IBaseDao<FinishedRiskAnalysis, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setGefaehrdungsUmsetzungDAO(
-			IBaseDao<GefaehrdungsUmsetzung, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setGebaeudeDAO(IBaseDao<Gebaeude, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setITVerbundDAO(IBaseDao<ITVerbund, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setGebaeudeKategorieDAO(IBaseDao<GebaeudeKategorie, Integer> daoToSet);
 
-	/**
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setGefaehrdungsUmsetzungDAO(IBaseDao<GefaehrdungsUmsetzung, Integer> daoToSet);
+
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setITVerbundDAO(IBaseDao<ITVerbund, Integer> daoToSet);
+
+    /**
      * Setter method used by spring to inject DAO.
      */
     void setSecureItVerbundDAO(IBaseDao<ITVerbund, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setMassnahmenUmsetzungDAO(
-			IBaseDao<MassnahmenUmsetzung, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setMassnahmenUmsetzungDAO(IBaseDao<MassnahmenUmsetzung, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setNetzKomponenteDAO(
-			IBaseDao<NetzKomponente, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setNetzKomponenteDAO(IBaseDao<NetzKomponente, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setNKKategorieDAO(
-			IBaseDao<NKKategorie, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setNKKategorieDAO(IBaseDao<NKKategorie, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setPermissionDAO(IBaseDao<Permission, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setPermissionDAO(IBaseDao<Permission, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setPersonDAO(IBaseDao<Person, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setPersonDAO(IBaseDao<Person, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setPersonengruppenDAO(
-			IBaseDao<Personengruppen, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    @SuppressWarnings("deprecation")
+    void setPersonengruppenDAO(IBaseDao<Personengruppen, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setPersonenKategorieDAO(
-			IBaseDao<PersonenKategorie, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setPersonenKategorieDAO(IBaseDao<PersonenKategorie, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setRaeumeKategorieDAO(
-			IBaseDao<RaeumeKategorie, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setRaeumeKategorieDAO(IBaseDao<RaeumeKategorie, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setRaumDAO(IBaseDao<Raum, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setRaumDAO(IBaseDao<Raum, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setServerDAO(IBaseDao<Server, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setServerDAO(IBaseDao<Server, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setServerKategorieDAO(
-			IBaseDao<ServerKategorie, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setServerKategorieDAO(IBaseDao<ServerKategorie, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setSonstigeITKategorieDAO(
-			IBaseDao<SonstigeITKategorie, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setSonstigeITKategorieDAO(IBaseDao<SonstigeITKategorie, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setSonstITDAO(IBaseDao<SonstIT, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setSonstITDAO(IBaseDao<SonstIT, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setStellungnahmeDSBDAO(
-			IBaseDao<StellungnahmeDSB, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    @SuppressWarnings("deprecation")
+    void setStellungnahmeDSBDAO(IBaseDao<StellungnahmeDSB, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setTelefonKomponenteDAO(
-			IBaseDao<TelefonKomponente, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setTelefonKomponenteDAO(IBaseDao<TelefonKomponente, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setTKKategorieDAO(
-			IBaseDao<TKKategorie, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setTKKategorieDAO(IBaseDao<TKKategorie, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setVerantwortlicheStelleDAO(
-			IBaseDao<VerantwortlicheStelle, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    @SuppressWarnings("deprecation")
+    void setVerantwortlicheStelleDAO(IBaseDao<VerantwortlicheStelle, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setVerarbeitungsangabenDAO(
-			IBaseDao<Verarbeitungsangaben, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    @SuppressWarnings("deprecation")
+    void setVerarbeitungsangabenDAO(IBaseDao<Verarbeitungsangaben, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setZweckbestimmungDAO(
-			IBaseDao<Zweckbestimmung, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    @SuppressWarnings("deprecation")
+    void setZweckbestimmungDAO(IBaseDao<Zweckbestimmung, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setRisikoMassnahmeDAO(
-			IBaseDao<RisikoMassnahme, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setRisikoMassnahmeDAO(IBaseDao<RisikoMassnahme, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setOwnGefaehrdungDAO(
-			IBaseDao<OwnGefaehrdung, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setOwnGefaehrdungDAO(IBaseDao<OwnGefaehrdung, Integer> daoToSet);
 
-	/** 
-	 * Setter method used by spring to inject DAO.
-	 */
-	void setFinishedRiskAnalysisListsDAO(
-			IBaseDao<FinishedRiskAnalysisLists, Integer> daoToSet);
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    void setFinishedRiskAnalysisListsDAO(IBaseDao<FinishedRiskAnalysisLists, Integer> daoToSet);
 
-	void setNoteDAO(IBaseDao<Note, Integer> daoToSet);
+    void setNoteDAO(IBaseDao<Note, Integer> daoToSet);
 
-	void setAttachmentDAO(IBaseDao<Attachment, Integer> daoToSet);
+    void setAttachmentDAO(IBaseDao<Attachment, Integer> daoToSet);
 
-	void setAdditionDAO(IBaseDao<Addition, Integer> daoToSet);
+    void setAdditionDAO(IBaseDao<Addition, Integer> daoToSet);
 
-	void setAttachmentFileDAO(
-			IBaseDao<AttachmentFile, Integer> daoToSet);
+    void setAttachmentFileDAO(IBaseDao<AttachmentFile, Integer> daoToSet);
 
-	void setISO27KModelDAO(
-			IBaseDao<ISO27KModel, Integer> daoToSet);
+    void setISO27KModelDAO(IBaseDao<ISO27KModel, Integer> daoToSet);
 
-	void setOrganizationDAO(
-			IBaseDao<Organization, Integer> daoToSet);
+    void setOrganizationDAO(IBaseDao<Organization, Integer> daoToSet);
 
-	void setAssetGroupDAO(IBaseDao<AssetGroup, Integer> daoToSet);
+    void setAssetGroupDAO(IBaseDao<AssetGroup, Integer> daoToSet);
 
-	void setAssetDAO(IBaseDao<Asset, Integer> daoToSet);
-	
-	void setUnsecureAssetDAO(IBaseDao<Asset, Integer> daoToSet);
+    void setAssetDAO(IBaseDao<Asset, Integer> daoToSet);
 
-	void setControlGroupDAO(
-			IBaseDao<ControlGroup, Integer> daoToSet);
+    void setUnsecureAssetDAO(IBaseDao<Asset, Integer> daoToSet);
 
-	void setControlDAO(IBaseDao<Control, Integer> daoToSet);
+    void setControlGroupDAO(IBaseDao<ControlGroup, Integer> daoToSet);
 
-	void setAuditGroupDAO(IBaseDao<AuditGroup, Integer> daoToSet);
+    void setControlDAO(IBaseDao<Control, Integer> daoToSet);
 
-	void setAuditDAO(IBaseDao<Audit, Integer> daoToSet);
+    void setAuditGroupDAO(IBaseDao<AuditGroup, Integer> daoToSet);
 
-	void setExceptionGroupDAO(
-			IBaseDao<ExceptionGroup, Integer> daoToSet);
+    void setAuditDAO(IBaseDao<Audit, Integer> daoToSet);
 
-	void setExceptionDAO(IBaseDao<Exception, Integer> daoToSet);
+    void setExceptionGroupDAO(IBaseDao<ExceptionGroup, Integer> daoToSet);
 
-	void setPersonGroupDAO(
-			IBaseDao<PersonGroup, Integer> daoToSet);
+    void setExceptionDAO(IBaseDao<Exception, Integer> daoToSet);
 
-	void setPersonIsoDAO(IBaseDao<PersonIso, Integer> daoToSet);
+    void setPersonGroupDAO(IBaseDao<PersonGroup, Integer> daoToSet);
 
-	void setRequirementGroupDAO(
-			IBaseDao<RequirementGroup, Integer> daoToSet);
+    void setPersonIsoDAO(IBaseDao<PersonIso, Integer> daoToSet);
 
-	void setRequirementDAO(
-			IBaseDao<Requirement, Integer> daoToSet);
+    void setRequirementGroupDAO(IBaseDao<RequirementGroup, Integer> daoToSet);
 
-	void setIncidentGroupDAO(
-			IBaseDao<IncidentGroup, Integer> daoToSet);
+    void setRequirementDAO(IBaseDao<Requirement, Integer> daoToSet);
 
-	void setIncidentDAO(IBaseDao<Incident, Integer> daoToSet);
+    void setIncidentGroupDAO(IBaseDao<IncidentGroup, Integer> daoToSet);
 
-	void setIncidentScenarioGroupDAO(
-			IBaseDao<IncidentScenarioGroup, Integer> daoToSet);
+    void setIncidentDAO(IBaseDao<Incident, Integer> daoToSet);
 
-	void setIncidentScenarioDAO(
-			IBaseDao<IncidentScenario, Integer> daoToSet);
-	
-	void setUnsecureIncidentScenarioDAO(IBaseDao<IncidentScenario, Integer> daoToSet);
+    void setIncidentScenarioGroupDAO(IBaseDao<IncidentScenarioGroup, Integer> daoToSet);
 
-	void setResponseGroupDAO(
-			IBaseDao<ResponseGroup, Integer> daoToSet);
+    void setIncidentScenarioDAO(IBaseDao<IncidentScenario, Integer> daoToSet);
 
-	void setResponseDAO(IBaseDao<Response, Integer> daoToSet);
+    void setUnsecureIncidentScenarioDAO(IBaseDao<IncidentScenario, Integer> daoToSet);
 
-	void setThreatGroupDAO(
-			IBaseDao<ThreatGroup, Integer> daoToSet);
+    void setResponseGroupDAO(IBaseDao<ResponseGroup, Integer> daoToSet);
 
-	void setThreatDAO(IBaseDao<Threat, Integer> daoToSet);
+    void setResponseDAO(IBaseDao<Response, Integer> daoToSet);
 
-	void setVulnerabilityGroupDAO(
-			IBaseDao<VulnerabilityGroup, Integer> daoToSet);
+    void setThreatGroupDAO(IBaseDao<ThreatGroup, Integer> daoToSet);
 
-	void setVulnerabilityDAO(
-			IBaseDao<Vulnerability, Integer> daoToSet);
+    void setThreatDAO(IBaseDao<Threat, Integer> daoToSet);
 
-	void setDocumentGroupDAO(
-			IBaseDao<DocumentGroup, Integer> daoToSet);
+    void setVulnerabilityGroupDAO(IBaseDao<VulnerabilityGroup, Integer> daoToSet);
 
-	void setDocumentDAO(IBaseDao<Document, Integer> daoToSet);
+    void setVulnerabilityDAO(IBaseDao<Vulnerability, Integer> daoToSet);
 
-	void setEvidenceGroupDAO(
-			IBaseDao<EvidenceGroup, Integer> daoToSet);
+    void setDocumentGroupDAO(IBaseDao<DocumentGroup, Integer> daoToSet);
 
-	void setEvidenceDAO(IBaseDao<Evidence, Integer> daoToSet);
+    void setDocumentDAO(IBaseDao<Document, Integer> daoToSet);
 
-	void setInterviewGroupDAO(
-			IBaseDao<InterviewGroup, Integer> daoToSet);
+    void setEvidenceGroupDAO(IBaseDao<EvidenceGroup, Integer> daoToSet);
 
-	void setInterviewDAO(IBaseDao<Interview, Integer> daoToSet);
+    void setEvidenceDAO(IBaseDao<Evidence, Integer> daoToSet);
 
-	void setFindingGroupDAO(
-			IBaseDao<FindingGroup, Integer> daoToSet);
+    void setInterviewGroupDAO(IBaseDao<InterviewGroup, Integer> daoToSet);
 
-	void setFindingDAO(IBaseDao<Finding, Integer> daoToSet);
+    void setInterviewDAO(IBaseDao<Interview, Integer> daoToSet);
 
-	void setProcessGroupDAO(
-			IBaseDao<ProcessGroup, Integer> daoToSet);
+    void setFindingGroupDAO(IBaseDao<FindingGroup, Integer> daoToSet);
 
-	void setProcessDAO(
-			IBaseDao<sernet.verinice.model.iso27k.Process, Integer> daoToSet);
+    void setFindingDAO(IBaseDao<Finding, Integer> daoToSet);
 
-	void setRecordGroupDAO(
-			IBaseDao<RecordGroup, Integer> daoToSet);
+    void setProcessGroupDAO(IBaseDao<ProcessGroup, Integer> daoToSet);
 
-	void setRecordDAO(IBaseDao<Record, Integer> daoToSet);
+    void setProcessDAO(IBaseDao<sernet.verinice.model.iso27k.Process, Integer> daoToSet);
 
-	void setSamtTopicDAO(IBaseDao<SamtTopic, Integer> daoToSet);
+    void setRecordGroupDAO(IBaseDao<RecordGroup, Integer> daoToSet);
 
-	void setImportIsoDAO(IBaseDao<ImportIsoGroup, Integer> daoToSet);
-	
-	void setImportBsiDAO(IBaseDao<ImportBsiGroup, Integer> daoToSet);
-	
-	void setImportBpDAO(IBaseDao<ImportBpGroup, Integer> daoToSet);
-	
-	void setApplicationDAO(IBaseDao<Application, Integer> daoToSet);
-	
-	void setBusinessProcessDAO(IBaseDao<BusinessProcess, Integer> daoToSet);
-	
-	void setIcsSystemDAO(IBaseDao<IcsSystem, Integer> daoToSet);
-	
-	void setItNetworkDAO(IBaseDao<ItNetwork, Integer> daoToSet);
-	
-	void setItSystemDAO(IBaseDao<ItSystem, Integer> daoToSet);
-	
-	void setBpPersonDAO(IBaseDao<BpPerson, Integer> daoToSet);
-	
-	void setBpThreatDAO(IBaseDao<BpThreat, Integer> daoToSet);
-	
-	void setBpRequirementDAO(IBaseDao<BpRequirement, Integer> daoToSet);
-	
-	void setNetworkDAO(IBaseDao<Network, Integer> daoToSet);
-	
-	void setDeviceDAO(IBaseDao<Device, Integer> daoToSet);
-	
-	void setRoomDAO(IBaseDao<Room, Integer> daoToSet);
-	
+    void setRecordDAO(IBaseDao<Record, Integer> daoToSet);
+
+    void setSamtTopicDAO(IBaseDao<SamtTopic, Integer> daoToSet);
+
+    void setImportIsoDAO(IBaseDao<ImportIsoGroup, Integer> daoToSet);
+
+    void setImportBsiDAO(IBaseDao<ImportBsiGroup, Integer> daoToSet);
+
+    void setImportBpDAO(IBaseDao<ImportBpGroup, Integer> daoToSet);
+
+    void setApplicationDAO(IBaseDao<Application, Integer> daoToSet);
+
+    void setBusinessProcessDAO(IBaseDao<BusinessProcess, Integer> daoToSet);
+
+    void setIcsSystemDAO(IBaseDao<IcsSystem, Integer> daoToSet);
+
+    void setItNetworkDAO(IBaseDao<ItNetwork, Integer> daoToSet);
+
+    void setItSystemDAO(IBaseDao<ItSystem, Integer> daoToSet);
+
+    void setBpPersonDAO(IBaseDao<BpPerson, Integer> daoToSet);
+
+    void setBpThreatDAO(IBaseDao<BpThreat, Integer> daoToSet);
+
+    void setBpRequirementDAO(IBaseDao<BpRequirement, Integer> daoToSet);
+
+    void setNetworkDAO(IBaseDao<Network, Integer> daoToSet);
+
+    void setDeviceDAO(IBaseDao<Device, Integer> daoToSet);
+
+    void setRoomDAO(IBaseDao<Room, Integer> daoToSet);
+
     void setSafeguardDAO(IBaseDao<Safeguard, Integer> daoToSet);
-	
-	void setBpModelDAO(IBaseDao<BpModel, Integer> daoToSet);
-	
-	void setApplicationGroupDAO(IBaseDao<ApplicationGroup, Integer> daoToSet);
-    
+
+    void setBpModelDAO(IBaseDao<BpModel, Integer> daoToSet);
+
+    void setApplicationGroupDAO(IBaseDao<ApplicationGroup, Integer> daoToSet);
+
     void setBpPersonGroupDAO(IBaseDao<BpPersonGroup, Integer> daoToSet);
-    
+
     void setBpRequirementGroupDAO(IBaseDao<BpRequirementGroup, Integer> daoToSet);
-    
+
     void setBpThreatGroupDAO(IBaseDao<BpThreatGroup, Integer> daoToSet);
-	
-	void setBusinessProcessGroupDAO(IBaseDao<BusinessProcessGroup, Integer> daoToSet);
-    
+
+    void setBusinessProcessGroupDAO(IBaseDao<BusinessProcessGroup, Integer> daoToSet);
+
     void setDeviceGroupDAO(IBaseDao<DeviceGroup, Integer> daoToSet);
-	
-	void setIcsSystemGroupDAO(IBaseDao<IcsSystemGroup, Integer> daoToSet);
-	
-	void setItSystemGroupDAO(IBaseDao<ItSystemGroup, Integer> daoToSet);
-	
-	void setNetworkGroupDAO(IBaseDao<NetworkGroup, Integer> daoToSet);
-	
-	void setRoomGroupDAO(IBaseDao<RoomGroup, Integer> daoToSet);
-    
+
+    void setIcsSystemGroupDAO(IBaseDao<IcsSystemGroup, Integer> daoToSet);
+
+    void setItSystemGroupDAO(IBaseDao<ItSystemGroup, Integer> daoToSet);
+
+    void setNetworkGroupDAO(IBaseDao<NetworkGroup, Integer> daoToSet);
+
+    void setRoomGroupDAO(IBaseDao<RoomGroup, Integer> daoToSet);
+
     void setSafeguardGroupDAO(IBaseDao<SafeguardGroup, Integer> daoToSet);
 
     void setCatalogModelDAO(IBaseDao<CatalogModel, Integer> daoToSet);
 
-	/**
-     * Returns a special Dao for use 
-     * in command {@link UpdateElementEntity}
+    void setBpDocumentDAO(IBaseDao<BpDocument, Integer> daoToSet);
+
+    void setBpDocumentGroupDAO(IBaseDao<BpDocumentGroup, Integer> daoToSet);
+
+    void setBpIncidentDAO(IBaseDao<BpIncident, Integer> daoToSet);
+
+    void setBpIncidentGroupDAO(IBaseDao<BpIncidentGroup, Integer> daoToSet);
+
+    void setBpRecordDAO(IBaseDao<BpRecord, Integer> daoToSet);
+
+    void setBpRecordGroupDAO(IBaseDao<BpRecordGroup, Integer> daoToSet);
+
+    /**
+     * Returns a special Dao for use in command {@link UpdateElementEntity}
      * 
      * @return a UpdateElementEntity Dao
      */
     IElementEntityDao getElementEntityDao();
 
     void setElementEntityDao(IElementEntityDao elementEntityDao);
-	
+
     /**
      * @return
      */
     IAttachmentDao getAttachmentDao();
-    
+
     void setAttachmentDao(IAttachmentDao attachmentDao);
-    
+
     IFinishedRiskAnalysisListsDao getFinishedRiskAnalysisListsDao();
-    
+
     void setFinishedRiskAnalysisListsDao(IFinishedRiskAnalysisListsDao dao);
-    
-	@SuppressWarnings("unchecked")
-	/**
-	 *  Tries to find a DAO by class.
-	 *  If you pass a proxy (class enhanced by cglib), this method tries to find
-	 *  a DAO that works, but it still doesn't work when a proxied class is passed 
-	 *  for a supertype of the actual type (i.e. CnaTreeElement for a Control).
-	 *  
-	 *  In short, when you're passing a Control.class this method will work.
-	 *  When you're passing the result of control.getClass() it probably wont.
-	 *  
-	 *  Instead of this method, you should always use the getDAOforTypedElement() method when you 
-	 *  want to get a DAO for an instantiated object.
-	 */
-	<T> IBaseDao<T, Serializable> getDAO(Class<T> daotype);
 
-	IBaseDao getDAOforTypedElement(ITypedElement object);
+    /**
+     * Retrieve a DAO for the given class. If you pass a proxy (class enhanced
+     * by cglib), this method tries to find a DAO that works, but it still
+     * doesn't work when a proxied class is passed for a supertype of the actual
+     * type (i.e. CnaTreeElement for a Control).
+     * 
+     * In short, when you're passing a Control.class this method will work. When
+     * you're passing the result of control.getClass() it probably wont.
+     * 
+     * Instead of this method, you should always use the getDAOforTypedElement()
+     * method when you want to get a DAO for an instantiated object.
+     */
+    @NonNull
+    <T> IBaseDao<T, Serializable> getDAO(Class<T> daotype);
 
-	/**
-	 * @param typeId
-	 * @return
-	 */
-	IBaseDao getDAO(String typeId);
+    @SuppressWarnings("rawtypes")
+    @NonNull
+    IBaseDao getDAOforTypedElement(ITypedElement object);
 
-
-
+    @SuppressWarnings("rawtypes")
+    @NonNull
+    IBaseDao getDAO(String typeId);
 }

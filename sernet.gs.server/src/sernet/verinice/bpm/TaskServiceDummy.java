@@ -148,5 +148,10 @@ public class TaskServiceDummy implements ITaskService {
     @Override
     public void saveChangedElementPropertiesToCnATreeElement(String taskId, String uuid) {
     }
+    
+    @Override
+    public ITask findTask(String taskId) {
+        return null;
+    }
 
 }

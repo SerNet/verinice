@@ -88,14 +88,14 @@ public final class ItemTransfer extends ByteArrayTransfer {
                 
                 super.javaToNative(out.toByteArray(), transferData);
             } catch (IOException e){
-                getLog().error("Error while serializing object for dnd", e);
+                log.error("Error while serializing object for dnd", e);
             } finally {
                 if(out != null && objectOut != null){
                     try {
                         out.close();
                         objectOut.close();
                     } catch (IOException e) {
-                        getLog().error("Error while closing stream", e);
+                        log.error("Error while closing stream", e);
                     }
                 }
             }
@@ -105,7 +105,7 @@ public final class ItemTransfer extends ByteArrayTransfer {
     public Object nativeToJava(TransferData transferData){
         Object o = null;
         if(transferData == null){
-            getLog().error("transferData is null");
+            log.error("transferData is null");
         }
         if(isSupportedType(transferData)){
             byte[] bs = (byte[]) super.nativeToJava(transferData);
@@ -118,16 +118,16 @@ public final class ItemTransfer extends ByteArrayTransfer {
                     bis.close();
                     in.close();
                 } catch (OptionalDataException e){
-                    getLog().error("Wrong data", e);
+                    log.error("Wrong data", e);
                 } catch (IOException e) {
-                    getLog().error("Error while transfering dnd object back to java", e);
+                    log.error("Error while transfering dnd object back to java", e);
                 } catch (ClassNotFoundException e) {
-                    getLog().error("Error while transfering dnd object back to java", e);
+                    log.error("Error while transfering dnd object back to java", e);
                 }
             } else {
-                getLog().error("bs is null");
+                log.error("bs is null");
                 if(transferData == null){
-                    getLog().error("transferData also");
+                    log.error("transferData also");
                 }
             }
         }
@@ -138,11 +138,4 @@ public final class ItemTransfer extends ByteArrayTransfer {
         return data instanceof Item || data instanceof Item[];
     }
     
-    private Logger getLog(){
-        if(log == null){
-            log = Logger.getLogger(ItemTransfer.class);
-        }
-        return log;
-    }
-
 }

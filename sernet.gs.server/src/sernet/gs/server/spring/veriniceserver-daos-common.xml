@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
@@ -665,6 +665,24 @@
         <constructor-arg>
             <value>sernet.verinice.model.bp.elements.Safeguard</value>
         </constructor-arg>
+    </bean>
+    
+    <bean id="bpDocumentDAO" parent="secureDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.bp.elements.BpDocument</value>
+        </constructor-arg>
+    </bean> 
+
+    <bean id="bpIncidentDAO" parent="secureDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.bp.elements.BpIncident</value>
+        </constructor-arg>
+    </bean> 
+
+    <bean id="bpRecordDAO" parent="secureDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.bp.elements.BpRecord</value>
+        </constructor-arg>
     </bean> 
     
 	
@@ -751,6 +769,28 @@
     </constructor-arg>
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
+  
+    <bean id="bpDocumentGroupDAO" class="sernet.verinice.hibernate.TreeElementDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.bp.groups.BpDocumentGroup</value>
+        </constructor-arg>
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+  
+    <bean id="bpIncidentGroupDAO" class="sernet.verinice.hibernate.TreeElementDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.bp.groups.BpIncidentGroup</value>
+        </constructor-arg>
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+  
+    <bean id="bpRecordGroupDAO" class="sernet.verinice.hibernate.TreeElementDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.bp.groups.BpRecordGroup</value>
+        </constructor-arg>
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+  
 			
   <!-- Miscellaneous Daos ==================================================================== -->
 

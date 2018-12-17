@@ -13,7 +13,6 @@ public interface IAccountSearchParameter {
     public static final String IS_ADMIN = "isAdmin";
     public static final String IS_LOCAL_ADMIN = "isLocalAdmin";
     public static final String IS_SCOPE_ONLY = "isScopeOnly";
-    public static final String IS_DEACTIVATED = "isDeactivated";
     public static final String SCOPE_ID = "scopeId";
     
     int getNumberOfAccountParameter();
@@ -45,9 +44,6 @@ public interface IAccountSearchParameter {
 
     Boolean isScopeOnly();
     IAccountSearchParameter setIsScopeOnly(Boolean isScopeOnly);
-    
-    Boolean isDeactivated();
-    IAccountSearchParameter setIsDeactivated(Boolean isDeactivated);
     
     Integer getScopeId();
     IAccountSearchParameter setScopeId(Integer scopeId);

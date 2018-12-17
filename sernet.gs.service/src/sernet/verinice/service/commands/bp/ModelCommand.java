@@ -23,7 +23,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -44,36 +43,34 @@ import sernet.verinice.service.bp.exceptions.BpModelingException;
  * information group. Supported types of target objects are: IT networks,
  * business processes, other/IoT systems, ICS systems, IT systems, networks and
  * rooms.
- * 
+ *
  * Modeling process:
- * 
+ *
  * Modules / Requirements
- * 
+ *
  * The module and all requirements in the module are copied from the ITBP
- * Compendium to the information network. The group structure of the modules
- * from the compendium is retained in the information network. The modules and
- * groups are created only once per IT network.
- * 
- * Safeguards
- * 
- * If there is a safeguard for a requirement in the compendium, the safeguard is
- * copied to the information network. The group structure of the modules from
- * the compendium is retained in the information network. Safeguards and groups
- * are only created once in the IT network.
- * 
+ * Compendium to the information network. The module is copied and pasted as
+ * child of the element.
+ *
+ * Safeguards (optional)
+ *
+ * If there is a safeguard for a requirement in the compendium, optional the
+ * safeguard is copied to the information network and pasted as child of the
+ * element. Optional dummy safeguards are created if no safeguard is linked to a
+ * requirement in compendium.
+ *
  * Elemental threats
- * 
+ *
  * If there is a elemental threats for a requirement in the compendium, the
- * threat is copied to the information network. The group structure of the
- * threats from the compendium is retained in the information network. Threats
- * and groups are only created once in the IT network.
- * 
+ * threat is copied to the information network. The threat is copied and pasted
+ * as child of the element in a group called "Elemental threats".
+ *
  * Links
- * 
+ *
  * Links are generated from the target object to requirements. Links are
  * generated from the target object to all threats associated with the
  * requirements.
- * 
+ *
  * Links of modeled requirements are created according to the links in the
  * compendium. Two links are created: Requirement to safeguard and requirement
  * to elemental threat if the relevant objects exist.
@@ -82,21 +79,25 @@ import sernet.verinice.service.bp.exceptions.BpModelingException;
  */
 public class ModelCommand extends ChangeLoggingCommand {
 
-    private static final long serialVersionUID = -4024742735347303204L;
+    private static final long serialVersionUID = -7021777504561600179L;
 
-    private transient Logger log = Logger.getLogger(ModelCommand.class);
+    private static final Logger LOG = Logger.getLogger(ModelCommand.class);
 
     private transient ModelingMetaDao metaDao;
 
     private Set<String> moduleUuidsFromCompendium;
-    private transient Set<String> newModuleUuidsFromScope = Collections.emptySet();
+    private transient Set<String> moduleUuidsFromScope = Collections.emptySet();
+    private transient Set<String> safeguardGroupUuidsFromScope = Collections.emptySet();
     private List<String> targetUuids;
-    private transient Set<BpRequirementGroup> requirementGroups;
+    private transient Set<CnATreeElement> requirementGroups;
     private transient Set<CnATreeElement> targetElements;
     private transient ItNetwork itNetwork;
 
+    private boolean handleSafeguards = true;
+    private boolean handleDummySafeguards = true;
+
     // Return values
-    private String proceedingLable;
+    private String proceedingLabel;
 
     private String stationId;
 
@@ -113,45 +114,65 @@ public class ModelCommand extends ChangeLoggingCommand {
         try {
             loadElements();
             handleModules();
-            if (!newModuleUuidsFromScope.isEmpty()) {
+            if (isHandleSafeguards()) {
                 handleSafeguards();
-                handleThreats();
             }
+            setDeduction(isHandleSafeguards());
+            handleThreats();
             createLinks();
+            if (isHandleSafeguards() && isHandleDummySafeguards()) {
+                createDummySafeguards();
+            }
             saveReturnValues();
         } catch (CommandException e) {
-            getLog().error("Error while modeling.", e);
+            LOG.error("Error while modeling.", e);
             throw new RuntimeCommandException("Error while modeling.", e);
         }
     }
 
+
     private void handleModules() throws CommandException {
-        ModelModulesCommand modelModulesCommand = new ModelModulesCommand(requirementGroups,
-                itNetwork);
+        ModelCopyCommand modelModulesCommand = new ModelModulesCommand(requirementGroups,
+                targetElements);
         modelModulesCommand = getCommandService().executeCommand(modelModulesCommand);
-        newModuleUuidsFromScope = modelModulesCommand.getModuleUuidsFromScope();
+        moduleUuidsFromScope = modelModulesCommand.getGroupUuidsFromScope();
     }
 
     private void handleSafeguards() throws CommandException {
-        ModelSafeguardsCommand modelSafeguardsCommand = new ModelSafeguardsCommand(
-                moduleUuidsFromCompendium, getTargetScopeId());
-        getCommandService().executeCommand(modelSafeguardsCommand);
+        ModelSafeguardGroupCommand modelSafeguardsCommand = new ModelSafeguardGroupCommand(
+                moduleUuidsFromCompendium, targetElements);
+        modelSafeguardsCommand = getCommandService().executeCommand(modelSafeguardsCommand);
+        safeguardGroupUuidsFromScope = modelSafeguardsCommand.getGroupUuidsFromScope();
+    }
+
+    private void setDeduction(boolean deductImplementation) throws CommandException {
+        ChangeDeductionCommand changeDeductionCommand = new ChangeDeductionCommand(
+                moduleUuidsFromScope, deductImplementation);
+        getCommandService().executeCommand(changeDeductionCommand);
     }
 
     private void handleThreats() throws CommandException {
-        ModelThreatsCommand modelThreatsCommand = new ModelThreatsCommand(moduleUuidsFromCompendium,
-                getTargetScopeId());
+        ModelThreatGroupCommand modelThreatsCommand = new ModelThreatGroupCommand(
+                moduleUuidsFromCompendium, targetElements);
         getCommandService().executeCommand(modelThreatsCommand);
     }
 
     private void createLinks() throws CommandException {
         ModelLinksCommand modelLinksCommand = new ModelLinksCommand(moduleUuidsFromCompendium,
-                newModuleUuidsFromScope, itNetwork, targetElements);
+                moduleUuidsFromScope, itNetwork, targetElements);
         getCommandService().executeCommand(modelLinksCommand);
     }
 
+    private void createDummySafeguards() throws CommandException {
+        ModelDummySafeguards modelDummySafeguards = new ModelDummySafeguards(moduleUuidsFromScope,
+                safeguardGroupUuidsFromScope);
+        getCommandService().executeCommand(modelDummySafeguards);
+    }
+
     private void saveReturnValues() {
-        proceedingLable = itNetwork.getProceeding();
+        if (itNetwork != null && itNetwork.getProceeding() != null) {
+            proceedingLabel = itNetwork.getProceeding().getLabel();
+        }
     }
 
     private Integer getTargetScopeId() {
@@ -162,8 +183,10 @@ public class ModelCommand extends ChangeLoggingCommand {
     }
 
     private void loadElements() {
-        List<CnATreeElement> elements = getMetaDao().loadElementsWithProperties(getAllUuids());
-        distributeElements(new HashSet<>(elements));
+        List<CnATreeElement> elements = getMetaDao().loadElementsWithProperties(moduleUuidsFromCompendium);
+        requirementGroups = new HashSet<>(elements);
+        elements = getMetaDao().loadElementsWithChildrenProperties(targetUuids);
+        targetElements = new HashSet<>(elements);
         loadItNetwork();
     }
 
@@ -193,17 +216,6 @@ public class ModelCommand extends ChangeLoggingCommand {
         itNetwork = (ItNetwork) element;
     }
 
-    private List<String> getAllUuids() {
-        List<String> allUuids = new LinkedList<>();
-        allUuids.addAll(moduleUuidsFromCompendium);
-        allUuids.addAll(targetUuids);
-        return allUuids;
-    }
-
-    private IBaseDao<CnATreeElement, Serializable> getDao() {
-        return getDaoFactory().getDAO(CnATreeElement.class);
-    }
-
     private void validateParameter(Set<String> compendiumUuids, List<String> targetUuids) {
         if (compendiumUuids == null) {
             throw new IllegalArgumentException("Compedium ids must not be null.");
@@ -226,12 +238,28 @@ public class ModelCommand extends ChangeLoggingCommand {
         return targetModuleId.equals(moduleId);
     }
 
-    public String getProceedingLable() {
-        return proceedingLable;
+    public String getProceedingLabel() {
+        return proceedingLabel;
     }
 
-    public void setProceedingLable(String proceedingLable) {
-        this.proceedingLable = proceedingLable;
+    public void setProceedingLabel(String proceedingLable) {
+        this.proceedingLabel = proceedingLable;
+    }
+
+    public boolean isHandleSafeguards() {
+        return handleSafeguards;
+    }
+
+    public void setHandleSafeguards(boolean handleSafeguards) {
+        this.handleSafeguards = handleSafeguards;
+    }
+
+    public boolean isHandleDummySafeguards() {
+        return handleDummySafeguards;
+    }
+
+    public void setHandleDummySafeguards(boolean handleDummySafeguards) {
+        this.handleDummySafeguards = handleDummySafeguards;
     }
 
     public ModelingMetaDao getMetaDao() {
@@ -239,6 +267,10 @@ public class ModelCommand extends ChangeLoggingCommand {
             metaDao = new ModelingMetaDao(getDao());
         }
         return metaDao;
+    }
+
+    private IBaseDao<CnATreeElement, Serializable> getDao() {
+        return getDaoFactory().getDAO(CnATreeElement.class);
     }
 
     @Override
@@ -251,10 +283,4 @@ public class ModelCommand extends ChangeLoggingCommand {
         return ChangeLogEntry.TYPE_INSERT;
     }
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(ModelCommand.class);
-        }
-        return log;
-    }
 }

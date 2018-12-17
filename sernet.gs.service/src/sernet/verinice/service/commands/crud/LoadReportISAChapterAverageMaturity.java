@@ -34,7 +34,7 @@ import sernet.verinice.model.samt.SamtTopic;
  */
 public class LoadReportISAChapterAverageMaturity extends GenericCommand implements ICachedCommand {
     
-    private static transient Logger LOG = Logger.getLogger(LoadReportISAChapterAverageMaturity.class);
+    private static final Logger LOG = Logger.getLogger(LoadReportISAChapterAverageMaturity.class);
     private static final String PROP_ISATOPIC_MATURITY = "samt_topic_maturity";
     
     public static String[] COLUMNS = new String[]{"maturityAverage"};

@@ -41,7 +41,7 @@ import sernet.verinice.service.risk.RiskAnalysisHelperImpl;
 @SuppressWarnings("serial")
 public class LoadReportHighRiskAssetScenarios extends GenericCommand implements ICachedCommand {
 
-    private transient Logger log;
+    private static final Logger log = Logger.getLogger(LoadReportHighRiskAssetScenarios.class);
     
     private Integer root;
     
@@ -160,7 +160,7 @@ public class LoadReportHighRiskAssetScenarios extends GenericCommand implements 
                     }
                 }
             } catch (CommandException e){
-                getLog().error("Error while executing command", e);
+                log.error("Error while executing command", e);
             }
         }
     }
@@ -218,11 +218,4 @@ public class LoadReportHighRiskAssetScenarios extends GenericCommand implements 
         return results;
     }
     
-    private Logger getLog(){
-        if(log == null){
-            log = Logger.getLogger(LoadReportHighRiskAssetScenarios.class);
-        }
-        return log;
-    }
-
 }

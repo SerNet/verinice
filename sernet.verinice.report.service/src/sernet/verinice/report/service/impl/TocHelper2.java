@@ -28,7 +28,8 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
@@ -47,16 +48,14 @@ public final class TocHelper2 {
     private static int listOfTablesEntryCount = 0;
     
     private static int listOfFiguresEntryCount = 0;
-    
-    private static int pageHeadingCount = 0;
-    
+   
     private static int engineIteration = 0;
     
     private static int pageStartCount = 0;
     
     private static int maxTocEntryLength = 0;
     
-    private static final Logger LOG = Logger.getLogger(TocHelper2.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TocHelper2.class);
     
     // list of tables
     private static Map<Integer, TocEntry<String, Integer>> loTMap = new HashMap<Integer, TocEntry<String,Integer>>();
@@ -131,7 +130,6 @@ public final class TocHelper2 {
             listOfFiguresEntryCount = 0;
             engineIteration = 0;
             pageStartCount = 0;
-            pageHeadingCount = 0;
             break;
 
         default:
@@ -317,12 +315,6 @@ public final class TocHelper2 {
         }        
     }
     
-    public static void increasePHCount(){
-        if(engineIteration > 2){
-            pageHeadingCount++;
-        }
-    }
-    
     
     public static void increaseLoTCount(){
         if(engineIteration > 1){
@@ -412,7 +404,7 @@ public final class TocHelper2 {
             return toString().hashCode();
         }
 
-        /* (non-Javadoc)
+        /*
          * @see java.lang.Comparable#compareTo(java.lang.Object)
          */
         @Override

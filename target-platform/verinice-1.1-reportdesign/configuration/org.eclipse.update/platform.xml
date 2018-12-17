@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<config transient="false">
-	<site policy="USER-EXCLUDE" enabled="true" url="platform:/base/" updateable="true">
-		<feature url="features/org.eclipse.rcp.source_3.5.2.R35x_v20100119-9SA0FxwFnoCU5XxWItFdXXb27BA6/" id="org.eclipse.rcp.source" version="3.5.2.R35x_v20100119-9SA0FxwFnoCU5XxWItFdXXb27BA6">
-		</feature>
-		<feature url="features/org.eclipse.rcp_3.5.2.R35x_v20100119-9SA0FxwFnoCU5XxWItFdXXb27BA6/" id="org.eclipse.rcp" version="3.5.2.R35x_v20100119-9SA0FxwFnoCU5XxWItFdXXb27BA6">
-		</feature>
-	</site>
-</config>

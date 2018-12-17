@@ -38,6 +38,7 @@ import org.apache.log4j.Logger;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.graph.Edge;
+import sernet.verinice.model.bp.risk.configuration.RiskConfigurationCache;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
@@ -66,6 +67,7 @@ final class VeriniceGraphResultEntry {
     private VqlNode vqlNode;
     private VqlEdge vqlEdge;
     private int depth;
+    private RiskConfigurationCache riskConfigurationCache;
 
     private enum Direction {
         INCOMING, OUTCOMING
@@ -76,7 +78,8 @@ final class VeriniceGraphResultEntry {
     // all rows this object is stored in.
     private List<VeriniceGraphResultRow> rows = new ArrayList<>();
 
-    VeriniceGraphResultEntry(VqlNode node, VqlEdge vqlEdge, Edge edge, CnATreeElement element, int depth) {
+    VeriniceGraphResultEntry(VqlNode node, VqlEdge vqlEdge, Edge edge, CnATreeElement element,
+            int depth) {
         this.vqlEdge = vqlEdge;
         this.edge = edge;
         this.element = element;
@@ -96,14 +99,15 @@ final class VeriniceGraphResultEntry {
 
     private void writeNodeToRow(Map<String, String> row) {
         for (String propertyType : vqlNode.getPropertyTypes()) {
-            IPropertyAdapter adapter = PropertyAdapterFactory.getAdapter(element);
+            IPropertyAdapter adapter = PropertyAdapterFactory.getAdapter(element, propertyType,
+                    riskConfigurationCache);
             String propertyValue = adapter.getPropertyValue(propertyType);
             String keyInRow = vqlNode.getPathForProperty(propertyType);
             row.put(keyInRow, propertyValue);
             LOG.debug("expand final row entry: " + keyInRow + " -> " + propertyValue);
         }
     }
-    
+
     private void writeEdgeToRow(Map<String, String> row) {
         if (vqlEdge != null) {
             for (String propertyType : vqlEdge.getPropertyTypes()) {
@@ -114,11 +118,10 @@ final class VeriniceGraphResultEntry {
         }
     }
 
-
     private String printColumn(Edge edge, String propertyType) {
-        
+
         String column = "";
-        
+
         if (TYPE_RISK_VALUE_C.equals(propertyType)) {
             column = getString(edge.getRiskConfidentiality());
         }
@@ -168,8 +171,10 @@ final class VeriniceGraphResultEntry {
 
     static boolean isAssetAndSzenario(CnATreeElement dependant, CnATreeElement dependency) {
         try {
-            return (Asset.TYPE_ID.equals(dependant.getTypeId()) && IncidentScenario.TYPE_ID.equals(dependency.getTypeId())) 
-                    || (Asset.TYPE_ID.equals(dependency.getTypeId()) && IncidentScenario.TYPE_ID.equals(dependant.getTypeId()));
+            return (Asset.TYPE_ID.equals(dependant.getTypeId())
+                    && IncidentScenario.TYPE_ID.equals(dependency.getTypeId()))
+                    || (Asset.TYPE_ID.equals(dependency.getTypeId())
+                            && IncidentScenario.TYPE_ID.equals(dependant.getTypeId()));
         } catch (Exception e) {
             LOG.error("Error while checking link.", e); //$NON-NLS-1$
             return false;
@@ -190,7 +195,8 @@ final class VeriniceGraphResultEntry {
         if (relation == null) {
             return linkType;
         }
-        return direction.equals(Direction.OUTCOMING) ? relation.getName() : relation.getReversename();
+        return direction.equals(Direction.OUTCOMING) ? relation.getName()
+                : relation.getReversename();
     }
 
     @Override
@@ -281,5 +287,10 @@ final class VeriniceGraphResultEntry {
 
     public boolean isParentRelation() {
         return vqlEdge != null ? vqlEdge.getEdgeType() == EdgeType.PARENT : false;
+    }
+
+    public void setRiskConfigurationCache(RiskConfigurationCache riskConfigurationCache) {
+        this.riskConfigurationCache = riskConfigurationCache;
+
     }
 }

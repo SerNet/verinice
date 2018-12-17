@@ -78,10 +78,12 @@ public class VeriniceOdaDriver implements IVeriniceOdaDriver {
 	    return Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.REPORT_LOGGING_ENABLED);
 	}
 	
+	@Override
 	public String getLogLvl(){
 	    return Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.REPORT_LOGGING_LVL);
 	}
 	
+	@Override
 	public String getLogFile(){
 	    String path = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.REPORT_LOG_FILE); 
 	    if(path != null && !path.endsWith(String.valueOf(File.separatorChar))){
@@ -90,10 +92,12 @@ public class VeriniceOdaDriver implements IVeriniceOdaDriver {
 	    return path + REPORT_LOGFILE;
 	}
 	
+	@Override
 	public String getLocalReportLocation(){
 	    return Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.REPORT_LOCAL_TEMPLATE_DIRECTORY);
 	}
 	
+	@Override
 	public boolean isSandboxEnabled(){
 	    String pref = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.REPORT_USE_SANDBOX);
 	    return Boolean.parseBoolean(pref);

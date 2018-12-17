@@ -39,7 +39,7 @@ import sernet.verinice.model.samt.SamtTopic;
  */
 public class LoadReportISAPhysicalChecks extends GenericCommand implements ICachedCommand{
     
-    private transient Logger log = Logger.getLogger(LoadReportISAPhysicalChecks.class);
+    private static final Logger log = Logger.getLogger(LoadReportISAPhysicalChecks.class);
     
     private int rootElement;
 
@@ -96,8 +96,8 @@ public class LoadReportISAPhysicalChecks extends GenericCommand implements ICach
             int roomRootGroupDbId = getRootITRoomGroup(rootScopeID);
             roomRootGroup = (ControlGroup)getDaoFactory().getDAO(ControlGroup.TYPE_ID).findById(roomRootGroupDbId);
             roomRootGroup = (ControlGroup)Retriever.checkRetrieveElementAndChildren(roomRootGroup);
-            if(getLog().isDebugEnabled()){
-                getLog().debug("RootRoomGroup:\t" + roomRootGroup.getUuid());
+            if(log.isDebugEnabled()){
+                log.debug("RootRoomGroup:\t" + roomRootGroup.getUuid());
             }
             if(roomRootGroup != null && roomRootGroup.getChildrenAsArray() != null){
                 for(CnATreeElement e : roomRootGroup.getChildrenAsArray()){
@@ -113,13 +113,13 @@ public class LoadReportISAPhysicalChecks extends GenericCommand implements ICach
                         int severity_high = 0;
                         int severity_veryhigh = 0;
                         e = Retriever.checkRetrieveElementAndChildren(e);
-                        if(getLog().isDebugEnabled()){
-                            getLog().debug("Inspecting Room:\t" + e.getUuid());
+                        if(log.isDebugEnabled()){
+                            log.debug("Inspecting Room:\t" + e.getUuid());
                         }
                         for(CnATreeElement c : e.getChildren()){
                             c = Retriever.checkRetrieveElement(c);
-                            if(getLog().isDebugEnabled()){
-                                getLog().debug("Inspecting SamtTopic:\t" + c.getUuid());
+                            if(log.isDebugEnabled()){
+                                log.debug("Inspecting SamtTopic:\t" + c.getUuid());
                             }
                             if(c.getTypeId().equals(SamtTopic.TYPE_ID)){
                                 SamtTopic t = (SamtTopic)c;
@@ -145,7 +145,7 @@ public class LoadReportISAPhysicalChecks extends GenericCommand implements ICach
                                 }
                                 String implementation = t.getEntity().getOptionValue(IMPLEMENTED_PROPERTY);
                                 if(implementation == null){
-                                    getLog().warn("Implementation for SamtTopic " + t.getUuid() + " not set");
+                                    log.warn("Implementation for SamtTopic " + t.getUuid() + " not set");
                                 } else if(implementation.equals(VALUE_IMPLEMENTED_NA)){
                                     implementation_na++;
                                 } else if(implementation.equals(VALUE_IMPLEMENTED_NO)){
@@ -253,12 +253,4 @@ public class LoadReportISAPhysicalChecks extends GenericCommand implements ICach
         return results;
     }
     
-    private Logger getLog(){
-        if(log == null){
-            log = Logger.getLogger(this.getClass());
-        }
-        return log;
-    }
-
-
 }

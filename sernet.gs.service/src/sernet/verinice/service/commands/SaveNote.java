@@ -30,14 +30,7 @@ import sernet.verinice.model.bsi.Addition;
 
 public class SaveNote extends GenericCommand {
 
-	private transient Logger log = Logger.getLogger(SaveNote.class);
-	
-	public Logger getLog() {
-		if(log==null) {
-			log = Logger.getLogger(SaveNote.class);
-		}
-		return log;
-	}
+	private static final Logger log = Logger.getLogger(SaveNote.class);
 	
 	Addition addition;
 
@@ -47,15 +40,15 @@ public class SaveNote extends GenericCommand {
 	}
 
 	public void execute() {
-		if (getLog().isDebugEnabled()) {
-			getLog().debug("executing...");
+		if (log.isDebugEnabled()) {
+			log.debug("executing...");
 		}
 		try {
 			if(getAddition()!=null) {
 				IBaseDao<Addition, Serializable> dao = getDaoFactory().getDAO(Addition.class);
 				dao.saveOrUpdate(getAddition());
-				if (getLog().isDebugEnabled()) {
-					getLog().debug("addition saved, id: " + getAddition().getDbId());
+				if (log.isDebugEnabled()) {
+					log.debug("addition saved, id: " + getAddition().getDbId());
 				}
 				Entity entity = getAddition().getEntity();
 				if(entity!=null) {

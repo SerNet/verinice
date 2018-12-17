@@ -19,7 +19,6 @@ package sernet.verinice.rcp.linktable.ui;
 
 import org.eclipse.osgi.util.NLS;
 
-@SuppressWarnings("restriction")
 public class Messages extends NLS{
 
     private static final String BUNDLE_NAME = "sernet.verinice.rcp.linktable.ui.messages"; //$NON-NLS-1$
@@ -75,8 +74,11 @@ public class Messages extends NLS{
     public static String VeriniceLinkTableComposite_1;
     public static String VeriniceLinkTableComposite_2;
     public static String VeriniceLinkTableComposite_3;
+    public static String VeriniceLinkTableComposite_Follow_Links_To_Other_Scopes;
+    public static String VeriniceLinkTableComposite_Follow_Links_To_Other_Scopes_ToolTip;
+    public static String VeriniceLinkTableComposite_Query_Selected_Scopes_Only_ToolTip;
+    public static String VeriniceLinkTableComposite_Query_All_Scopes_ToolTip;
 
-    
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

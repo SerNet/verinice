@@ -26,9 +26,12 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bp.elements.BpModel;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
@@ -68,8 +71,11 @@ public abstract class UuidLoader extends ContextConfiguration {
         }
         if(!ISO27KModel.TYPE_ID.equals(typeId) 
            && !BSIModel.TYPE_ID.equals(typeId)
+           && !BpModel.TYPE_ID.equals(typeId)
+           && !CatalogModel.TYPE_ID.equals(typeId)
            && !ImportIsoGroup.TYPE_ID.equals(typeId)
            && !ImportBsiGroup.TYPE_ID.equals(typeId)
+           && !ImportBpGroup.TYPE_ID.equals(typeId)
            && !(GefaehrdungsUmsetzung.TYPE_ID.equals(typeId) && element.getParentId()==null)
            && !ImportBsiGroup.TYPE_ID.equals(parentTypeId)
            && !ImportIsoGroup.TYPE_ID.equals(parentTypeId)) {

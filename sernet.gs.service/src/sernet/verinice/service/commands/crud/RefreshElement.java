@@ -46,16 +46,6 @@ public class RefreshElement<T extends CnATreeElement> extends GenericCommand {
 		HydratorUtil.hydrateElement(dao, element, includeCollections);
 	}
 
-	private Integer getId(T element2) {
-		if (element2 instanceof CnATreeElement) {
-			CnATreeElement elmt = (CnATreeElement) element2;
-			return elmt.getDbId();
-		}
-		
-		return null;
-		
-	}
-
 	public T getElement() {
 		return element;
 	}

@@ -69,31 +69,14 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
     private static final Logger LOG = Logger.getLogger(GSMBasicSecurityCheckAction.class);
     private final IWorkbenchWindow window;
     private String gsmresult = "GSM Result";
-    private boolean serverIsRunning = true;
     
     public GSMBasicSecurityCheckAction(IWorkbenchWindow window, String label) {
+        super(ActionRightIDs.KONSOLIDATOR, label);
         this.window = window;
-        setText(label);
         setId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.KONSOLIDATOR));
         window.getSelectionService().addSelectionListener(this);
         setToolTipText(Messages.GSMBasicSecurityCheckAction_1);
-        setRightID(ActionRightIDs.KONSOLIDATOR);
-        if (Activator.getDefault().isStandalone() && !Activator.getDefault().getInternalServer().isRunning()) {
-            serverIsRunning = false;
-            IInternalServerStartListener listener = new IInternalServerStartListener() {
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if (e.isStarted()) {
-                        serverIsRunning = true;
-                        setEnabled(checkRights());
-                    }
-                }
-            };
-            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-        } else {
-            setEnabled(checkRights());
-        }
     }
 
     /* (non-Javadoc)
@@ -103,7 +86,7 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
     public void doRun () {
         try{
             runSecurityCheck();
-            CnAElementFactory.getInstance().reloadModelFromDatabase();
+            CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
         }
         catch(Exception e){
             LOG.error("Error while security check.", e);
@@ -206,7 +189,7 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
      */
     @Override
     public void selectionChanged(IWorkbenchPart part, ISelection input) {
-        if (serverIsRunning) {
+        if (isServerRunning()) {
             setEnabled(checkRights());  
         if (input instanceof IStructuredSelection) {
             IStructuredSelection selection = (IStructuredSelection) input;   

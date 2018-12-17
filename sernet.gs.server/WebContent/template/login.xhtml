@@ -11,16 +11,13 @@
       <table id="loginGrid">
          <tbody>
             <tr>
-               <td class="title"><h:outputText value="#{msg['login']}" /></td>
-            </tr>
-            <tr>
-               <td class="label"><h:outputText value="Username" /></td>
+               <td class="label"><h:outputText escape="false" value="#{msgWeb['login.username']}" /></td>
             </tr>
             <tr>
                <td><h:inputText id="j_username" /></td>
             </tr>
             <tr>
-               <td class="label"><h:outputText value="Password" /></td>
+               <td class="label"><h:outputText escape="false" value="#{msgWeb['login.password']}" /></td>
             </tr>
             <tr>
                <td><h:inputSecret id="j_password" /></td>
@@ -31,7 +28,7 @@
             <tr>
                <td>
                   <button type="submit" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
-                     <span class="ui-button-text">Login</span>
+                     <span class="ui-button-text"><h:outputText escape="false" value="#{msgWeb['login.login']}" /></span>
                   </button>
                </td>
             </tr>

@@ -22,8 +22,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.events.ExpansionEvent;
-import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
 import sernet.hui.common.connect.PropertyGroup;
@@ -67,16 +65,6 @@ public class PropertyTwistie implements IHuiControl {
 		huiTwistie.setLayoutData(huiTwistieLD);
 		huiTwistie.setText(propGroup.getName());
 		
-		huiTwistie.addExpansionListener(new IExpansionListener() {
-			public void expansionStateChanged(ExpansionEvent arg0) {
-				parent.resizeContainer();
-			}
-
-			public void expansionStateChanging(ExpansionEvent arg0) {
-				// nothing
-			}
-		});
-
 		fieldsComposite = new Composite(huiTwistie, SWT.NULL);
 		
 		// set comp layout:

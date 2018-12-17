@@ -28,16 +28,18 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
  *
  */
 public class ReportDepositContentProvider implements IStructuredContentProvider {
-    
+
     TableViewer viewer;
-    
+
     ReportDepositView depositView;
-    
-    public ReportDepositContentProvider(ReportDepositView view){
+
+    public ReportDepositContentProvider(ReportDepositView view) {
         this.depositView = view;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
     @Override
@@ -45,27 +47,36 @@ public class ReportDepositContentProvider implements IStructuredContentProvider 
         // empty
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface
+     * .viewers.Viewer, java.lang.Object, java.lang.Object)
      */
     @Override
     public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-        this.viewer = (TableViewer)v;
+        this.viewer = (TableViewer) v;
         viewer.refresh();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.
+     * lang.Object)
      */
     @Override
     public Object[] getElements(Object inputElement) {
         if (inputElement instanceof PlaceHolder) {
-            return new Object[] {inputElement};
-        } else if(inputElement instanceof ReportTemplateMetaData[] && ((ReportTemplateMetaData[])inputElement).length > 0 ){
-            return (ReportTemplateMetaData[])inputElement;
+            return new Object[] { inputElement };
+        } else if (inputElement instanceof ReportTemplateMetaData[]
+                && ((ReportTemplateMetaData[]) inputElement).length > 0) {
+            return (ReportTemplateMetaData[]) inputElement;
         }
-        
-        return new Object[]{new PlaceHolder(Messages.ReportDepositView_4)};
+
+        return new Object[] { new PlaceHolder(Messages.ReportDepositView_4) };
     }
 
 }

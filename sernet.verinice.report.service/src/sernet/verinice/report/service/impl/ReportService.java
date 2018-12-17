@@ -19,13 +19,14 @@ package sernet.verinice.report.service.impl;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
 import org.eclipse.birt.report.engine.api.EXCELRenderOption;
 import org.eclipse.birt.report.engine.api.HTMLRenderOption;
 import org.eclipse.birt.report.engine.api.IPDFRenderOption;
 import org.eclipse.birt.report.engine.api.IRenderOption;
 import org.eclipse.birt.report.engine.api.PDFRenderOption;
 import org.eclipse.birt.report.engine.api.RenderOption;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportService;
@@ -39,17 +40,7 @@ public class ReportService implements IReportService {
 	
 	private IReportType[] reportTypes;
 	
-	private static final Logger LOG = Logger.getLogger(ReportService.class);
-	
-    private static final String PROPERTIES_FILE_EXTENSION = "properties";
-    private static final char EXTENSION_SEPARATOR_CHAR = '.';
-    
-    private static final String PROPERTIES_FILENAME = "filename";
-    private static final String PROPERTIES_OUTPUTFORMATS = "outputformats";
-    private static final String PROPERTIES_OUTPUTNAME = "outputname";
-    
 	/*
-	 * (non-Javadoc)
 	 * @see sernet.verinice.interfaces.report.IReportService#getReportTypes()
 	 * 
 	 * List built-in reports offered by this report service.
@@ -59,55 +50,13 @@ public class ReportService implements IReportService {
 	public IReportType[] getReportTypes() {
 		if (reportTypes == null){
 			reportTypes = new IReportType[] { 
-//		        new UserReportType(), 
-//		        new SamtReportType(), 
-//		        new SamtComplianceReport(),
-//		        new ISAActionReport(),
-//		        new ComprehensiveSamtReportType(),
-//		        
-//		        new ISMRiskManagementResultsReport(), // ISO 27k1 Reports (english)
-//		        new ISMRiskManagementResultsReportDe(), // ISO 27k1 Report (german)
-//		        
-//		        new RiskTreatmentReport(),
-//		        
-//		        new ControlMaturityReport(),
-//		        new StatementOfApplicabilityReport(),
-//		        new InventoryOfAssetsReport(),
-//		      		        
-//		        new VulnerabilitiesReport(), // new Export Reports, since v1.6.0
-//		        new ThreatsReport(),
-//		        new ScenariosReport(),
-//		        new ResponsesReport(),
-//		        new RequirementsReport(),
-//		        new RecordsReport(),
-//		        new ProcessesReport(),
-//		        new PersonsReport(),
-//		        new IncidentsReport(),
-//		        new ExceptionsReport(),
-//		        new DocumentsReport(),
-//		        new TasksReport(),//Tasks in english
-//		        new AufgabenReport(),//Aufgaben in deutsch
-//                new VVBSIG_SofortMeldungReport(),
-//                new VVBSIG_StatMeldungReport(),		        
-//		        
-//		        new StrukturanalyseReport(), // BSI reports
-//		        new AbhaengigkeitenReport(),
-//		        new AllItemsReport(), // this is report ID "schutzbedarf"
-//		        new ModellierungReport(),
-//		        new BasisSichCheckReport(),
-//		        new ErgaenzendeSicherheitsanalyseReport(),
-//		        new GSRisikoanalyseReport(),
-//		        new ManagementRisikoBewertung(),
-//		        new RealisierungsplanReport(),
-//		        new GraphischerUmsetzungsstatusReport(),
-//		        new AuditberichtReport()
 		        new GenericReportType()
 		    };
 		}
 		return reportTypes.clone();
 	}
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.report.IReportService#getOutputFormat(java.lang.String)
      */
     @Override
@@ -115,7 +64,7 @@ public class ReportService implements IReportService {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.report.IReportService#getOutputFormats(java.lang.String[])
      */
     @Override
@@ -123,7 +72,7 @@ public class ReportService implements IReportService {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.report.IReportService#getReportTemplates(java.lang.String[])
      */
     @Override

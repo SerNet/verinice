@@ -43,6 +43,7 @@ public class LayerSummary extends CompletedLayerSummary {
 	
 	private HibernateCallback hcb = new Callback();
 
+	@Override
 	public void execute() {
 		try {
 			setSummary(getSchichtenSummary());
@@ -52,6 +53,7 @@ public class LayerSummary extends CompletedLayerSummary {
 	}
 	
 	@SuppressWarnings("unchecked")
+	@Override
 	public Map<String, Integer> getSchichtenSummary() throws CommandException {
 		Map<String, Integer> result = new HashMap<String, Integer>();
 
@@ -103,7 +105,7 @@ public class LayerSummary extends CompletedLayerSummary {
 					+ "and bu.dbid = buc.entity_id "
 					+ "and buc.dbid = muc.parent "
 					+ "group by p.propertyvalue")
-					.addScalar("pv", Hibernate.STRING)
+					.addScalar("pv", sernet.gs.reveng.type.Types.STRING_TYPE)
 					.addScalar("amount", Hibernate.INTEGER)
 					.setString("type", BausteinUmsetzung.P_NR);
 			

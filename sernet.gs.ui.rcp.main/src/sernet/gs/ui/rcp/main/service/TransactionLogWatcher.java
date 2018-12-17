@@ -128,7 +128,7 @@ public class TransactionLogWatcher {
 				// Changes to the permissions are potentially disruptive (items may
 				// be invisible now etc). As such reload everything.
 	
-				CnAElementFactory.getInstance().reloadModelFromDatabase();
+            CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
 				break;
 			default:
 			    //ignore (but debug) other change types

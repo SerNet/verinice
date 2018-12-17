@@ -31,13 +31,7 @@ import sernet.verinice.interfaces.GenericCommand;
  */
 public class LoadFileSizeLimit extends GenericCommand {
 
-    private transient Logger log = Logger.getLogger(LoadFileSizeLimit.class);
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(LoadFileSizeLimit.class);
-        }
-        return log;
-    }
+    private static final Logger log = Logger.getLogger(LoadFileSizeLimit.class);
     
     // Default value if no property is defined in veriniceserver-plain.properties
     // Default value is used in standalone version too
@@ -55,7 +49,7 @@ public class LoadFileSizeLimit extends GenericCommand {
             try {
                 fileSizeMax = Integer.valueOf(property);
             } catch( NumberFormatException e ) {
-                getLog().error("Error while parsing property " + PropertyLoader.FILESIZE_MAX + ". Value is not a number: " + property);
+                log.error("Error while parsing property " + PropertyLoader.FILESIZE_MAX + ". Value is not a number: " + property);
                 fileSizeMax = FILE_SIZE_MAX_DEFAULT;
             }
         }

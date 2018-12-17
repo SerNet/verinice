@@ -51,10 +51,8 @@ public class GraphAction extends Action {
     
     private static String ID = "sernet.verinice.iso27k.rcp.GraphAction";
     
-    private final IWorkbenchWindow window;
     
     public GraphAction(IWorkbenchWindow window) {
-        this.window = window;
         setText("Graph action");
         setId(ID);
         setActionDefinitionId(ID);

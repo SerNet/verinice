@@ -64,13 +64,7 @@ import sernet.verinice.model.samt.SamtTopic;
 @SuppressWarnings("serial")
 public class DeriveStatusCommand extends ChangeLoggingCommand implements IChangeLoggingCommand {
     
-    private transient Logger log = Logger.getLogger(DeriveStatusCommand.class);
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(DeriveStatusCommand.class);
-        }
-        return log;
-    }
+    private static final Logger log = Logger.getLogger(DeriveStatusCommand.class);
     
     private transient CacheManager manager = null;
     private String cacheId = null;
@@ -398,8 +392,8 @@ public class DeriveStatusCommand extends ChangeLoggingCommand implements IChange
         
         CnATreeElement elementFromCache = getElementFromCache(element.getUuid());
         if(elementFromCache!=null) {
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("Element from cache: " + elementFromCache.getTitle());
+            if (log.isDebugEnabled()) {
+                log.debug("Element from cache: " + elementFromCache.getTitle());
             }
             return elementFromCache;
         }

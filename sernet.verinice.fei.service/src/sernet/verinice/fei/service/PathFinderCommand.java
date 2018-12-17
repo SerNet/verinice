@@ -36,17 +36,9 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class PathFinderCommand extends GenericCommand {
 
-    private transient Logger log = Logger.getLogger(PathFinderCommand.class);
+    private static final Logger log = Logger.getLogger(PathFinderCommand.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(PathFinderCommand.class);
-        }
-        return log;
-    }
-    
     private static final String PARENT = "..";
-    private static final String THIS = ".";
     
     private String path;    
     private String uuidStart;
@@ -82,8 +74,8 @@ public class PathFinderCommand extends GenericCommand {
             return;
         }
         String next = st.nextToken();
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Next token: " + next);
+        if (log.isDebugEnabled()) {
+            log.debug("Next token: " + next);
         }
         RetrieveInfo ri = new RetrieveInfo();
         if(next.equals(PARENT)) {
@@ -110,14 +102,14 @@ public class PathFinderCommand extends GenericCommand {
     private CnATreeElement findChild(CnATreeElement element, String name) {
         for (CnATreeElement child : element.getChildren()) {
            if(child.getTitle().startsWith(name)) {
-               if (getLog().isDebugEnabled()) {
-                   getLog().debug("Child found: " + child.getTitle());
+               if (log.isDebugEnabled()) {
+                   log.debug("Child found: " + child.getTitle());
                }
                return child;
            }
         }
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Child not found, token " + name);
+        if (log.isDebugEnabled()) {
+            log.debug("Child not found, token " + name);
         }
         return null;
     }

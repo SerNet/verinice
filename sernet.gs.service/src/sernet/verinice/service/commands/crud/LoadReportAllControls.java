@@ -26,7 +26,7 @@ public class LoadReportAllControls extends GenericCommand implements ICachedComm
 	
 	private Set<Control> result;
 	
-	private transient Logger logger;
+	private static final Logger logger = Logger.getLogger(LoadReportAllControls.class);
 	
     private boolean resultInjectedFromCache = false;
     
@@ -34,7 +34,6 @@ public class LoadReportAllControls extends GenericCommand implements ICachedComm
 	
 	public LoadReportAllControls(Integer root){
 		rootElementId = root;
-		logger = Logger.getLogger(LoadReportAllControls.class);
 	}
 	
 	private Set<Control> getControlChildren(CnATreeElement elmt){
@@ -127,18 +126,11 @@ public class LoadReportAllControls extends GenericCommand implements ICachedComm
     public void injectCacheResult(Object result) {
         this.result = (HashSet<Control>)result;
         resultInjectedFromCache = true;
-        if(getLog().isDebugEnabled()){
-            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        if(logger.isDebugEnabled()){
+            logger.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
     
-    public Logger getLog(){
-        if(logger == null){
-            logger = Logger.getLogger(LoadReportAllControls.class);
-        }
-        return logger;
-    }
-
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
      */

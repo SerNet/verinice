@@ -32,7 +32,7 @@ public class DateAfterRule implements IValidationRule {
     
     private String hint = Messages.DateAfterDefaultHint;
     
-    private static transient Logger log = Logger.getLogger(DateAfterRule.class);
+    private static final Logger log = Logger.getLogger(DateAfterRule.class);
     
     private static final String PATTERN = "dd.MM.yyyy";
     

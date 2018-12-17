@@ -34,7 +34,7 @@ import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
  */
 public class AccountContentProvider extends ArrayContentProvider {
     
-    private Logger log;
+    private static final Logger log = Logger.getLogger(AccountContentProvider.class);;
     
     private TableViewer tableView;
     
@@ -51,7 +51,7 @@ public class AccountContentProvider extends ArrayContentProvider {
         try{
             v.refresh();           
         } catch (Exception e){
-            getLog().error("Wrong input for viewer", e);
+            log.error("Wrong input for viewer", e);
         }
     }
     
@@ -78,13 +78,6 @@ public class AccountContentProvider extends ArrayContentProvider {
             return (String[])input;
         } 
         return new Object[]{new PlaceHolder(Messages.GroupView_41)};
-    }
-    
-    private Logger getLog(){
-        if(log == null){
-            log = Logger.getLogger(AccountContentProvider.class);
-        }
-        return log;
     }
 
 }

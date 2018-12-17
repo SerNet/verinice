@@ -128,6 +128,8 @@ public final class VeriniceContext {
     
     public static final String RISK_ANALYSIS_SERVICE = "riskAnalysisService";
     
+    public static final String ITBP_RISK_SERVICE = "itbpRiskService";
+
     public static final String LICENSE_SERVICE = "licenseManagementService";
     
     public static final String ENCRYPTION_SERVICE = "encryptionService";
@@ -135,6 +137,8 @@ public final class VeriniceContext {
     public static final String GRAPH_SERVICE = "graphService";
 
     public static final String COUNT_SERVICE = "countService";
+
+    public static final String MODELING_MIGRATION_SERVICE = "modelingMigrationService";
 
     private static String serverUrl = null;
 

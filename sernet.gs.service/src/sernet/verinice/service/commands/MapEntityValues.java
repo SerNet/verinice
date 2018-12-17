@@ -48,14 +48,7 @@ public class MapEntityValues extends GenericCommand {
 
     private List<Integer> inputIDs;
     
-   private transient Logger log = Logger.getLogger(MapEntityValues.class);
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(MapEntityValues.class);
-        }
-        return log;
-    }
+   private static final Logger log = Logger.getLogger(MapEntityValues.class);
 
     private boolean addDbId;
 
@@ -87,8 +80,8 @@ public class MapEntityValues extends GenericCommand {
              CnATreeElement e = dao.findById(dbid);
             List<String> row = LoadEntityValues.retrievePropertyValues(e.getEntity(), propertyTypes, classes);
             if (addDbId) {
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Adding dbid: " + e.getDbId() + " to " + e.getTitle());
+                if (log.isDebugEnabled()) {
+                    log.debug("Adding dbid: " + e.getDbId() + " to " + e.getTitle());
                 }
                 row.add(e.getDbId().toString());
             }

@@ -4,7 +4,7 @@ Bundle-Name: MSSQL Driver Fragment
 Bundle-SymbolicName: sernet.gs.hibernate.fragment
 Bundle-Version: 1.1.1
 Fragment-Host: com.springsource.org.hibernate;bundle-version="1.0.12"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: lib/mssql/jackcess-1.1.18.jar,lib/mssql/jtds-1.2.2.j
  ar,.
 Export-Package: com.healthmarketscience.jackcess;uses:="org.apache.com

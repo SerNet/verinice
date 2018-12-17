@@ -51,14 +51,7 @@ import sernet.verinice.service.gstoolimport.MassnahmenFactory;
 public class CreateBaustein extends ChangeLoggingCommand implements IChangeLoggingCommand, 
 	IAuthAwareCommand {
 
-	private transient Logger log = Logger.getLogger(CreateBaustein.class);
-	
-	private Logger getLogger() {
-		if(log==null) {
-			log = Logger.getLogger(CreateBaustein.class);
-		}
-		return log;
-	}
+	private static final Logger log = Logger.getLogger(CreateBaustein.class);
 	
 	private BausteinUmsetzung child;
 	private Baustein baustein;
@@ -68,8 +61,6 @@ public class CreateBaustein extends ChangeLoggingCommand implements IChangeLoggi
     private String typeId;
     private String language;
     
-    private CnATreeElement container;
-
 	public CreateBaustein(CnATreeElement container, Baustein baustein, String language) {
 		
 		dbId = container.getDbId();
@@ -79,8 +70,6 @@ public class CreateBaustein extends ChangeLoggingCommand implements IChangeLoggi
 		stationId = ChangeLogEntry.STATION_ID;
 		
 		this.language = language;
-		
-		this.container = container;
 		
 	}
 	
@@ -92,7 +81,7 @@ public class CreateBaustein extends ChangeLoggingCommand implements IChangeLoggi
 	          IBaseDao<CnATreeElement, Integer> containerDao = getDaoFactory().getDAO(typeId);
 	          CnATreeElement container = containerDao.findById(dbId);
 			if(dbId == null || typeId == null || baustein == null){
-			    getLogger().warn("Some parameter equals null, not importing current ITGS module");
+			    log.warn("Some parameter equals null, not importing current ITGS module");
 			    throw new RuntimeCommandException("Some parameter was null, not importing current ITGS module");
 			}
 			
@@ -102,7 +91,7 @@ public class CreateBaustein extends ChangeLoggingCommand implements IChangeLoggi
 			    // TODO: implement import of userdefined bausteine (and massnahmen)
 			    GetElementPathCommand pathLoader = new GetElementPathCommand(container.getUuid(), container.getTypeId());
 			    String elementPath = getCommandService().executeCommand(pathLoader).getResult();
-			    getLogger().error("ElementContainer:\t" + elementPath + "(" + container.getDbId() + ")" + "\twith TypeId:\t" + typeId + " contains already a baustein with id:\t" + baustein.getId() + "\t" + baustein.getTitel() + " is skipped because of this");
+			    log.error("ElementContainer:\t" + elementPath + "(" + container.getDbId() + ")" + "\twith TypeId:\t" + typeId + " contains already a baustein with id:\t" + baustein.getId() + "\t" + baustein.getTitel() + " is skipped because of this");
 				return;
 			}
 			
@@ -140,7 +129,7 @@ public class CreateBaustein extends ChangeLoggingCommand implements IChangeLoggi
 			}
 			
 		} catch (Exception e) {
-			getLogger().error("Error while creating executing", e);
+		    log.error("Error while creating executing", e);
 			throw new RuntimeCommandException(e);
 		}
 	}

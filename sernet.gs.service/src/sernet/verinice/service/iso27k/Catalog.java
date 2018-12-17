@@ -46,14 +46,7 @@ import sernet.verinice.service.iso27k.Item;;
 @SuppressWarnings("serial")
 public class Catalog extends Item implements ICatalog {
 	
-	private transient Logger log = Logger.getLogger(Catalog.class);
-	
-	public Logger getLog() {
-		if(log==null) {
-			log = Logger.getLogger(Catalog.class);
-		}
-		return log;
-	}
+	private static final Logger log = Logger.getLogger(Catalog.class);
 	
 	/**
 	 * map to buffer and sort all items
@@ -91,7 +84,7 @@ public class Catalog extends Item implements ICatalog {
 	public void bufferItem(Item catalogItem) {
 		String numberString = catalogItem.getNumberString();
 		if(!Pattern.matches(Item.NUMBER_REGEX_PATTERN,numberString)) {
-			getLog().error("Incorrect number: " + numberString);
+			log.error("Incorrect number: " + numberString);
 			throw new IllegalArgumentException("Incorrect number: " + numberString);
 		}
 		getAllItemMap().put(numberString, catalogItem);
@@ -103,8 +96,8 @@ public class Catalog extends Item implements ICatalog {
 	public void processItemBuffer() {
 		for (String number : allItemMap.keySet()) {
 			IItem item = allItemMap.get(number);
-			if (getLog().isDebugEnabled()) {
-				getLog().debug("processing: " + item.getName());
+			if (log.isDebugEnabled()) {
+				log.debug("processing: " + item.getName());
 			}
 			StringTokenizer numberTokens = new StringTokenizer(number,".");
 			((Item) getRoot()).processItem((Item) item,numberTokens);

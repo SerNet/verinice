@@ -19,9 +19,15 @@
  ******************************************************************************/
 package sernet.verinice.model.bp;
 
-import sernet.hui.common.connect.Entity;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -31,59 +37,162 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author uz[at]sernet.de
  *
  */
-public class DeductionImplementationUtil {
+public final class DeductionImplementationUtil {
 
-    public static final String IMPLEMENTATION_STATUS = "_implementation_status";
     public static final String IMPLEMENTATION_DEDUCE = "_implementation_deduce";
-
-    public static final String IMPLEMENTATION_STATUS_CODE_NO = "_implementation_status_no";
-    public static final String IMPLEMENTATION_STATUS_CODE_YES = "_implementation_status_yes";
-    public static final String IMPLEMENTATION_STATUS_CODE_PARTIALLY = "_implementation_status_partially";
-    public static final String IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE = "_implementation_status_na";
 
     private DeductionImplementationUtil() {
         super();
     }
 
     /**
-     * Set the implementation status of the {@link Safeguard} to the
-     * {@link BpRequirement} when the deduction of the implementation status
-     * is enabled for this {@link BpRequirement}.
+     * Set the implementation status to a single requirement by calculating the
+     * the value from the safeguards.
+     *
+     * @return true when the state was changed
      */
-    public static void setImplementationStausToRequirement(CnATreeElement safeguard,
-            CnATreeElement requirement) {
-        if (isDeductiveImplementationEnabled(requirement)) {
-            String optionValue = getImplementationStatus(safeguard);
-            if (optionValue != null) {
-                optionValue = optionValue.replaceFirst(Safeguard.TYPE_ID,
-                        BpRequirement.TYPE_ID);
-                requirement.setPropertyValue(getImplementationStatusId(requirement),
-                        optionValue);
-            }
-        }
+    public static boolean setImplementationStatusToRequirement(CnATreeElement requirement) {
+        List<CnATreeElement> safeGuards = getSafeguardsFromRequirement(requirement);
+        return setImplementationStatusToRequirement(safeGuards, requirement);
     }
 
+    /**
+     * Get the connected safeguards from a requirement.
+     */
+    public static List<CnATreeElement> getSafeguardsFromRequirement(CnATreeElement requirement) {
+        return requirement.getLinksDown().stream()
+                .filter(DeductionImplementationUtil::isRelevantLinkForImplementationStateDeduction)
+                .map(CnALink::getDependency).collect(Collectors.toList());
+    }
+
+    /**
+     * Set the implementation status of the {@link Safeguard} to the
+     * {@link BpRequirement} when the deduction of the implementation status is
+     * enabled for this {@link BpRequirement}.
+     *
+     * @return true if the status has changed
+     */
+    public static boolean setImplementationStatusToRequirement(CnATreeElement safeguard,
+            CnATreeElement requirement) {
+        if (!isDeductiveImplementationEnabled(requirement)) {
+            return false;
+        }
+        ImplementationStatus optionValue = getImplementationStatus(safeguard);
+        return setImplementationStatusToRequirement(requirement, optionValue);
+    }
+
+    /**
+     * Set a safeguard implementation status to a requirement.
+     *
+     * @param optionValue-
+     *            the implementation status from a safeguard, must not be null.
+     *
+     * @return true if the state was changed
+     */
+    public static boolean setImplementationStatusToRequirement(CnATreeElement requirement,
+            ImplementationStatus optionValue) {
+        ImplementationStatus propertyValue = getImplementationStatus(requirement);
+        if (optionValue == propertyValue) {
+            return false;
+        }
+
+        setImplementationStatus(requirement, optionValue);
+        return true;
+    }
+
+    /**
+     * Set the implementation status to a single requirement by calculating the
+     * the value from the safeguards.
+     *
+     * @return true when the state was changed
+     */
+    public static boolean setImplementationStatusToRequirement(List<CnATreeElement> safeGuards,
+            CnATreeElement requirement) {
+        if (safeGuards == null || requirement == null
+                || !isDeductiveImplementationEnabled(requirement)) {
+            return false;
+        }
+        ImplementationStatus implementationStatus;
+        if (safeGuards.isEmpty()) {
+            implementationStatus = null;
+        } else {
+            implementationStatus = getComputedImplementationStatus(safeGuards);
+        }
+        return setImplementationStatus(requirement, implementationStatus);
+    }
+
+    /**
+     * Return the calculated implementation status from the given safeguards.
+     */
+    public static ImplementationStatus getComputedImplementationStatus(
+            List<CnATreeElement> safeGuards) {
+        if (safeGuards == null || safeGuards.isEmpty()) {
+            throw new IllegalArgumentException("Safeguard list is null or empty.");
+        }
+
+        if (safeGuards.size() == 1) {
+            CnATreeElement safeguard = safeGuards.get(0);
+            return getImplementationStatus(safeguard);
+        }
+        Map<ImplementationStatus, Integer> statusCounterMap = new HashMap<>(
+                ImplementationStatus.values().length + 1);
+        for (CnATreeElement cnATreeElement : safeGuards) {
+            ImplementationStatus implementationStatus = getImplementationStatus(cnATreeElement);
+            statusCounterMap.compute(implementationStatus,
+                    (key, value) -> Optional.ofNullable(value).orElse(0) + 1);
+        }
+        // all the same
+        if (statusCounterMap.size() == 1) {
+            CnATreeElement safeguard = safeGuards.get(0);
+            return getImplementationStatus(safeguard);
+        }
+        Integer countNA = statusCounterMap.getOrDefault(ImplementationStatus.NOT_APPLICABLE, 0);
+        Integer countYES = statusCounterMap.getOrDefault(ImplementationStatus.YES, 0);
+        Integer countNO = statusCounterMap.getOrDefault(ImplementationStatus.NO, 0);
+        // only na and yes => yes
+        if (countNA != 0 && countYES != 0 && statusCounterMap.size() == 2) {
+            return ImplementationStatus.YES;
+        }
+        // half of not_na is no => no
+        if (countNO != 0) {
+            int notNA = safeGuards.size() - countNA;
+            if (countNO > (notNA / 2.0f)) {
+                return ImplementationStatus.NO;
+            }
+        }
+        // every other combination => partially
+        return ImplementationStatus.PARTIALLY;
+    }
 
     /**
      * Return the implementation status of the given {@link CnATreeElement}.
-     *
-     * @param element
-     *            - must not be null
      */
-    public static String getImplementationStatus(CnATreeElement element) {
-        Entity entity = element.getEntity();
-        return entity.getOptionValue(getImplementationStatusId(element));
+    public static ImplementationStatus getImplementationStatus(CnATreeElement element) {
+        if (BpRequirement.isBpRequirement(element)) {
+            return BpRequirement.getImplementationStatus(element.getEntity()
+                    .getRawPropertyValue(BpRequirement.PROP_IMPLEMENTATION_STATUS));
+        }
+        if (Safeguard.TYPE_ID.equals(element.getTypeId())) {
+            return Safeguard.getImplementationStatus(
+                    element.getEntity().getRawPropertyValue(Safeguard.PROP_IMPLEMENTATION_STATUS));
+        }
+        throw new IllegalArgumentException("Unhandled element type " + element.getTypeId());
     }
 
     /**
-     * Return the property name of the implementation status for a given
-     * {@link CnATreeElement}.
+     * Set the implementation status in the requirement
      *
-     * @param element
-     *            - must not be null
+     * @return true if the status was changed
      */
-    public static String getImplementationStatusId(CnATreeElement element) {
-        return element.getTypeId() + IMPLEMENTATION_STATUS;
+    private static boolean setImplementationStatus(CnATreeElement requirement,
+            ImplementationStatus status) {
+        ImplementationStatus oldValue = getImplementationStatus(requirement);
+        if (status == oldValue) {
+            return false;
+        }
+        String rawValue = BpRequirement.toRawValue(status);
+        requirement.setSimpleProperty(BpRequirement.PROP_IMPLEMENTATION_STATUS, rawValue);
+        return true;
     }
 
     /**
@@ -96,6 +205,18 @@ public class DeductionImplementationUtil {
     public static boolean isDeductiveImplementationEnabled(CnATreeElement element) {
         String value = element.getPropertyValue(element.getTypeId() + IMPLEMENTATION_DEDUCE);
         return isSelected(value);
+    }
+
+    /**
+     * Checks whether the given link is relevant for the deduction of a
+     * requirement's implementation state, i.e. whether it is a link between a
+     * requirement and a safeguard with the respective link type.
+     *
+     */
+    public static boolean isRelevantLinkForImplementationStateDeduction(CnALink cnALink) {
+        return BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD.equals(cnALink.getRelationId())
+                && BpRequirement.TYPE_ID.equals(cnALink.getDependant().getTypeId())
+                && Safeguard.TYPE_ID.equals(cnALink.getDependency().getTypeId());
     }
 
     /**

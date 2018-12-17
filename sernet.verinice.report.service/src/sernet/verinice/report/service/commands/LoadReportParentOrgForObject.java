@@ -54,7 +54,7 @@ public class LoadReportParentOrgForObject extends GenericCommand implements ICac
     @Override
     public void execute() {
         if(!resultInjectedFromCache){
-            if (child.getTypeId().equals(Organization.TYPE_ID)){
+            if (child.isOrganization()){
                 org = child;
             } else {
                 org = findOrg(child);
@@ -71,7 +71,7 @@ public class LoadReportParentOrgForObject extends GenericCommand implements ICac
         if (parent == null){
             return null;
         }
-        if (parent.getTypeId().equals(Organization.TYPE_ID)) {
+        if (parent.isOrganization()) {
             return parent;
         }
         return findOrg(parent);

@@ -87,7 +87,7 @@ public class ImportIsoGroup extends Group<Organization> implements IISO27kGroup,
      * @see sernet.verinice.model.iso27k.IISO27kElement#getTags()
      */
     @Override
-    public Collection<? extends String> getTags() {
+    public Collection<String> getTags() {
         return Collections.emptyList();
     }
 

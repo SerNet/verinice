@@ -1024,109 +1024,109 @@
             </list-property>
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">Kürzel__(Anwendung__(mod))</property>
+                    <property name="columnName">Kürzel__(Anwendung)</property>
                     <property name="alias">krz</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Kürzel__(Anwendung__(mod))</text-property>
-                    <text-property name="heading">Kürzel__(Anwendung__(mod))</text-property>
+                    <text-property name="displayName">Kürzel__(Anwendung)</text-property>
+                    <text-property name="heading">Kürzel__(Anwendung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Titel__(Anwendung__(mod))</property>
+                    <property name="columnName">Titel__(Anwendung)</property>
                     <property name="alias">titel</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Titel__(Anwendung__(mod))</text-property>
-                    <text-property name="heading">Titel__(Anwendung__(mod))</text-property>
+                    <text-property name="displayName">Titel__(Anwendung)</text-property>
+                    <text-property name="heading">Titel__(Anwendung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Beschreibung__(Anwendung__(mod))</property>
+                    <property name="columnName">Beschreibung__(Anwendung)</property>
                     <property name="alias">desc</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Beschreibung__(Anwendung__(mod))</text-property>
-                    <text-property name="heading">Beschreibung__(Anwendung__(mod))</text-property>
+                    <text-property name="displayName">Beschreibung__(Anwendung)</text-property>
+                    <text-property name="heading">Beschreibung__(Anwendung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Vertraulichkeit__(Anwendung__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Vertraulichkeit__(Anwendung)</property>
                     <property name="alias">con</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Vertraulichkeit__(Anwendung__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Vertraulichkeit__(Anwendung__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Vertraulichkeit__(Anwendung)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Vertraulichkeit__(Anwendung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Begründung__Vertraulichkeit__(Anwendung__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Begründung__Vertraulichkeit__(Anwendung)</property>
                     <property name="alias">con_desc</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Begründung__Vertraulichkeit__(Anwendung__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Begründung__Vertraulichkeit__(Anwendung__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Begründung__Vertraulichkeit__(Anwendung)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Begründung__Vertraulichkeit__(Anwendung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Integrität__(Anwendung__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Integrität__(Anwendung)</property>
                     <property name="alias">int</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Integrität__(Anwendung__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Integrität__(Anwendung__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Integrität__(Anwendung)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Integrität__(Anwendung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Begründung__Integrität__(Anwendung__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Begründung__Integrität__(Anwendung)</property>
                     <property name="alias">int_desc</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Begründung__Integrität__(Anwendung__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Begründung__Integrität__(Anwendung__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Begründung__Integrität__(Anwendung)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Begründung__Integrität__(Anwendung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Verfügbarkeit__(Anwendung__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Verfügbarkeit__(Anwendung)</property>
                     <property name="alias">avi</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Verfügbarkeit__(Anwendung__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Verfügbarkeit__(Anwendung__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Verfügbarkeit__(Anwendung)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Verfügbarkeit__(Anwendung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Begründung__Verfügbarkeit__(Anwendung__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Begründung__Verfügbarkeit__(Anwendung)</property>
                     <property name="alias">avi_desc</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Begründung__Verfügbarkeit__(Anwendung__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Begründung__Verfügbarkeit__(Anwendung__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Begründung__Verfügbarkeit__(Anwendung)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Begründung__Verfügbarkeit__(Anwendung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Anwendung__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Anwendung)</property>
                     <property name="alias">con_max</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Anwendung__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Anwendung__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Anwendung)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Anwendung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Anwendung__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Anwendung)</property>
                     <property name="alias">con_other</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Anwendung__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Anwendung__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Anwendung)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Anwendung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Anwendung__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Anwendung)</property>
                     <property name="alias">int_max</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Anwendung__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Anwendung__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Anwendung)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Anwendung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Anwendung__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Anwendung)</property>
                     <property name="alias">int_other</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Anwendung__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Anwendung__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Anwendung)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Anwendung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Anwendung__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Anwendung)</property>
                     <property name="alias">avi_max</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Anwendung__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Anwendung__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Anwendung)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Anwendung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Anwendung__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Anwendung)</property>
                     <property name="alias">avi_other</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Anwendung__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Anwendung__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Anwendung)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Anwendung)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Vert</property>
@@ -1258,106 +1258,106 @@
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">Kürzel__(Anwendung__(mod))</property>
-                    <property name="nativeName">Kürzel__(Anwendung__(mod))</property>
+                    <property name="name">Kürzel__(Anwendung)</property>
+                    <property name="nativeName">Kürzel__(Anwendung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
-                    <property name="name">Titel__(Anwendung__(mod))</property>
-                    <property name="nativeName">Titel__(Anwendung__(mod))</property>
+                    <property name="name">Titel__(Anwendung)</property>
+                    <property name="nativeName">Titel__(Anwendung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
-                    <property name="name">Beschreibung__(Anwendung__(mod))</property>
-                    <property name="nativeName">Beschreibung__(Anwendung__(mod))</property>
+                    <property name="name">Beschreibung__(Anwendung)</property>
+                    <property name="nativeName">Beschreibung__(Anwendung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">4</property>
-                    <property name="name">Schutzbedarf__-__Vertraulichkeit__(Anwendung__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Vertraulichkeit__(Anwendung__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Vertraulichkeit__(Anwendung)</property>
+                    <property name="nativeName">Schutzbedarf__-__Vertraulichkeit__(Anwendung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">5</property>
-                    <property name="name">Schutzbedarf__-__Begründung__Vertraulichkeit__(Anwendung__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Begründung__Vertraulichkeit__(Anwendung__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Begründung__Vertraulichkeit__(Anwendung)</property>
+                    <property name="nativeName">Schutzbedarf__-__Begründung__Vertraulichkeit__(Anwendung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">6</property>
-                    <property name="name">Schutzbedarf__-__Integrität__(Anwendung__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Integrität__(Anwendung__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Integrität__(Anwendung)</property>
+                    <property name="nativeName">Schutzbedarf__-__Integrität__(Anwendung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">7</property>
-                    <property name="name">Schutzbedarf__-__Begründung__Integrität__(Anwendung__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Begründung__Integrität__(Anwendung__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Begründung__Integrität__(Anwendung)</property>
+                    <property name="nativeName">Schutzbedarf__-__Begründung__Integrität__(Anwendung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">8</property>
-                    <property name="name">Schutzbedarf__-__Verfügbarkeit__(Anwendung__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Verfügbarkeit__(Anwendung__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Verfügbarkeit__(Anwendung)</property>
+                    <property name="nativeName">Schutzbedarf__-__Verfügbarkeit__(Anwendung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">9</property>
-                    <property name="name">Schutzbedarf__-__Begründung__Verfügbarkeit__(Anwendung__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Begründung__Verfügbarkeit__(Anwendung__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Begründung__Verfügbarkeit__(Anwendung)</property>
+                    <property name="nativeName">Schutzbedarf__-__Begründung__Verfügbarkeit__(Anwendung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">10</property>
-                    <property name="name">Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Anwendung__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Anwendung__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Anwendung)</property>
+                    <property name="nativeName">Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Anwendung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">11</property>
-                    <property name="name">Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Anwendung__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Anwendung__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Anwendung)</property>
+                    <property name="nativeName">Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Anwendung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">12</property>
-                    <property name="name">Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Anwendung__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Anwendung__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Anwendung)</property>
+                    <property name="nativeName">Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Anwendung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">13</property>
-                    <property name="name">Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Anwendung__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Anwendung__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Anwendung)</property>
+                    <property name="nativeName">Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Anwendung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">14</property>
-                    <property name="name">Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Anwendung__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Anwendung__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Anwendung)</property>
+                    <property name="nativeName">Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Anwendung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">15</property>
-                    <property name="name">Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Anwendung__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Anwendung__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Anwendung)</property>
+                    <property name="nativeName">Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Anwendung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -1366,21 +1366,21 @@
   "useAllScopes": false,
   "scopeIds": [],
   "columnPaths": [
-    "bp_application.bp_application_abbr AS Kürzel__(Anwendung__(mod))",
-    "bp_application.bp_application_name AS Titel__(Anwendung__(mod))",
-    "bp_application.bp_application_description AS Beschreibung__(Anwendung__(mod))",
-    "bp_application.bp_application_value_confidentiality AS Schutzbedarf__-__Vertraulichkeit__(Anwendung__(mod))",
-    "bp_application.bp_application_value_comment_c AS Schutzbedarf__-__Begründung__Vertraulichkeit__(Anwendung__(mod))",
-    "bp_application.bp_application_value_integrity AS Schutzbedarf__-__Integrität__(Anwendung__(mod))",
-    "bp_application.bp_application_value_comment_i AS Schutzbedarf__-__Begründung__Integrität__(Anwendung__(mod))",
-    "bp_application.bp_application_value_availability AS Schutzbedarf__-__Verfügbarkeit__(Anwendung__(mod))",
-    "bp_application.bp_application_value_comment_a AS Schutzbedarf__-__Begründung__Verfügbarkeit__(Anwendung__(mod))",
-    "bp_application.bp_application_value_method_confidentiality AS Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Anwendung__(mod))",
-    "bp_application.bp_application_method_confidentiality AS Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Anwendung__(mod))",
-    "bp_application.bp_application_value_method_integrity AS Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Anwendung__(mod))",
-    "bp_application.bp_application_method_integrity AS Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Anwendung__(mod))",
-    "bp_application.bp_application_value_method_availability AS Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Anwendung__(mod))",
-    "bp_application.bp_application_method_availability AS Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Anwendung__(mod))"
+    "bp_application.bp_application_abbr AS Kürzel__(Anwendung)",
+    "bp_application.bp_application_name AS Titel__(Anwendung)",
+    "bp_application.bp_application_description AS Beschreibung__(Anwendung)",
+    "bp_application.bp_application_value_confidentiality AS Schutzbedarf__-__Vertraulichkeit__(Anwendung)",
+    "bp_application.bp_application_value_comment_c AS Schutzbedarf__-__Begründung__Vertraulichkeit__(Anwendung)",
+    "bp_application.bp_application_value_integrity AS Schutzbedarf__-__Integrität__(Anwendung)",
+    "bp_application.bp_application_value_comment_i AS Schutzbedarf__-__Begründung__Integrität__(Anwendung)",
+    "bp_application.bp_application_value_availability AS Schutzbedarf__-__Verfügbarkeit__(Anwendung)",
+    "bp_application.bp_application_value_comment_a AS Schutzbedarf__-__Begründung__Verfügbarkeit__(Anwendung)",
+    "bp_application.bp_application_value_method_confidentiality AS Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Anwendung)",
+    "bp_application.bp_application_method_confidentiality AS Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Anwendung)",
+    "bp_application.bp_application_value_method_integrity AS Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Anwendung)",
+    "bp_application.bp_application_method_integrity AS Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Anwendung)",
+    "bp_application.bp_application_value_method_availability AS Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Anwendung)",
+    "bp_application.bp_application_method_availability AS Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Anwendung)"
   ],
   "relationIds": []
 }]]></xml-property>
@@ -1474,109 +1474,109 @@
             </list-property>
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">Kürzel__(Raum__(mod))</property>
+                    <property name="columnName">Kürzel__(Raum)</property>
                     <property name="alias">krz</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Kürzel__(Raum__(mod))</text-property>
-                    <text-property name="heading">Kürzel__(Raum__(mod))</text-property>
+                    <text-property name="displayName">Kürzel__(Raum)</text-property>
+                    <text-property name="heading">Kürzel__(Raum)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Titel__(Raum__(mod))</property>
+                    <property name="columnName">Titel__(Raum)</property>
                     <property name="alias">titel</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Titel__(Raum__(mod))</text-property>
-                    <text-property name="heading">Titel__(Raum__(mod))</text-property>
+                    <text-property name="displayName">Titel__(Raum)</text-property>
+                    <text-property name="heading">Titel__(Raum)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Beschreibung__(Raum__(mod))</property>
+                    <property name="columnName">Beschreibung__(Raum)</property>
                     <property name="alias">desc</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Beschreibung__(Raum__(mod))</text-property>
-                    <text-property name="heading">Beschreibung__(Raum__(mod))</text-property>
+                    <text-property name="displayName">Beschreibung__(Raum)</text-property>
+                    <text-property name="heading">Beschreibung__(Raum)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Vertraulichkeit__(Raum__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Vertraulichkeit__(Raum)</property>
                     <property name="alias">con</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Vertraulichkeit__(Raum__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Vertraulichkeit__(Raum__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Vertraulichkeit__(Raum)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Vertraulichkeit__(Raum)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Begründung__Vertraulichkeit__(Raum__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Begründung__Vertraulichkeit__(Raum)</property>
                     <property name="alias">con_desc</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Begründung__Vertraulichkeit__(Raum__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Begründung__Vertraulichkeit__(Raum__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Begründung__Vertraulichkeit__(Raum)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Begründung__Vertraulichkeit__(Raum)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Integrität__(Raum__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Integrität__(Raum)</property>
                     <property name="alias">int</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Integrität__(Raum__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Integrität__(Raum__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Integrität__(Raum)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Integrität__(Raum)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Begründung__Integrität__(Raum__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Begründung__Integrität__(Raum)</property>
                     <property name="alias">int_desc</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Begründung__Integrität__(Raum__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Begründung__Integrität__(Raum__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Begründung__Integrität__(Raum)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Begründung__Integrität__(Raum)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Verfügbarkeit__(Raum__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Verfügbarkeit__(Raum)</property>
                     <property name="alias">avi</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Verfügbarkeit__(Raum__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Verfügbarkeit__(Raum__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Verfügbarkeit__(Raum)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Verfügbarkeit__(Raum)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Begründung__Verfügbarkeit__(Raum__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Begründung__Verfügbarkeit__(Raum)</property>
                     <property name="alias">avi_desc</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Begründung__Verfügbarkeit__(Raum__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Begründung__Verfügbarkeit__(Raum__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Begründung__Verfügbarkeit__(Raum)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Begründung__Verfügbarkeit__(Raum)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Raum__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Raum)</property>
                     <property name="alias">con_max</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Raum__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Raum__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Raum)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Raum)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Raum__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Raum)</property>
                     <property name="alias">con_other</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Raum__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Raum__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Raum)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Raum)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Raum__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Raum)</property>
                     <property name="alias">int_max</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Raum__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Raum__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Raum)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Raum)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Raum__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Raum)</property>
                     <property name="alias">int_other</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Raum__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Raum__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Raum)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Raum)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Raum__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Raum)</property>
                     <property name="alias">avi_max</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Raum__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Raum__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Raum)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Raum)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Raum__(mod))</property>
+                    <property name="columnName">Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Raum)</property>
                     <property name="alias">avi_other</property>
                     <property name="analysis">attribute</property>
-                    <text-property name="displayName">Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Raum__(mod))</text-property>
-                    <text-property name="heading">Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Raum__(mod))</text-property>
+                    <text-property name="displayName">Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Raum)</text-property>
+                    <text-property name="heading">Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Raum)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Vert</property>
@@ -1708,106 +1708,106 @@
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">Kürzel__(Raum__(mod))</property>
-                    <property name="nativeName">Kürzel__(Raum__(mod))</property>
+                    <property name="name">Kürzel__(Raum)</property>
+                    <property name="nativeName">Kürzel__(Raum)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
-                    <property name="name">Titel__(Raum__(mod))</property>
-                    <property name="nativeName">Titel__(Raum__(mod))</property>
+                    <property name="name">Titel__(Raum)</property>
+                    <property name="nativeName">Titel__(Raum)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
-                    <property name="name">Beschreibung__(Raum__(mod))</property>
-                    <property name="nativeName">Beschreibung__(Raum__(mod))</property>
+                    <property name="name">Beschreibung__(Raum)</property>
+                    <property name="nativeName">Beschreibung__(Raum)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">4</property>
-                    <property name="name">Schutzbedarf__-__Vertraulichkeit__(Raum__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Vertraulichkeit__(Raum__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Vertraulichkeit__(Raum)</property>
+                    <property name="nativeName">Schutzbedarf__-__Vertraulichkeit__(Raum)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">5</property>
-                    <property name="name">Schutzbedarf__-__Begründung__Vertraulichkeit__(Raum__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Begründung__Vertraulichkeit__(Raum__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Begründung__Vertraulichkeit__(Raum)</property>
+                    <property name="nativeName">Schutzbedarf__-__Begründung__Vertraulichkeit__(Raum)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">6</property>
-                    <property name="name">Schutzbedarf__-__Integrität__(Raum__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Integrität__(Raum__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Integrität__(Raum)</property>
+                    <property name="nativeName">Schutzbedarf__-__Integrität__(Raum)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">7</property>
-                    <property name="name">Schutzbedarf__-__Begründung__Integrität__(Raum__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Begründung__Integrität__(Raum__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Begründung__Integrität__(Raum)</property>
+                    <property name="nativeName">Schutzbedarf__-__Begründung__Integrität__(Raum)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">8</property>
-                    <property name="name">Schutzbedarf__-__Verfügbarkeit__(Raum__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Verfügbarkeit__(Raum__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Verfügbarkeit__(Raum)</property>
+                    <property name="nativeName">Schutzbedarf__-__Verfügbarkeit__(Raum)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">9</property>
-                    <property name="name">Schutzbedarf__-__Begründung__Verfügbarkeit__(Raum__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Begründung__Verfügbarkeit__(Raum__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Begründung__Verfügbarkeit__(Raum)</property>
+                    <property name="nativeName">Schutzbedarf__-__Begründung__Verfügbarkeit__(Raum)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">10</property>
-                    <property name="name">Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Raum__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Raum__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Raum)</property>
+                    <property name="nativeName">Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Raum)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">11</property>
-                    <property name="name">Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Raum__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Raum__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Raum)</property>
+                    <property name="nativeName">Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Raum)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">12</property>
-                    <property name="name">Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Raum__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Raum__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Raum)</property>
+                    <property name="nativeName">Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Raum)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">13</property>
-                    <property name="name">Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Raum__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Raum__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Raum)</property>
+                    <property name="nativeName">Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Raum)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">14</property>
-                    <property name="name">Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Raum__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Raum__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Raum)</property>
+                    <property name="nativeName">Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Raum)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">15</property>
-                    <property name="name">Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Raum__(mod))</property>
-                    <property name="nativeName">Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Raum__(mod))</property>
+                    <property name="name">Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Raum)</property>
+                    <property name="nativeName">Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Raum)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -1816,21 +1816,21 @@
   "useAllScopes": false,
   "scopeIds": [],
   "columnPaths": [
-    "bp_room.bp_room_abbr AS Kürzel__(Raum__(mod))",
-    "bp_room.bp_room_name AS Titel__(Raum__(mod))",
-    "bp_room.bp_room_description AS Beschreibung__(Raum__(mod))",
-    "bp_room.bp_room_value_confidentiality AS Schutzbedarf__-__Vertraulichkeit__(Raum__(mod))",
-    "bp_room.bp_room_value_comment_c AS Schutzbedarf__-__Begründung__Vertraulichkeit__(Raum__(mod))",
-    "bp_room.bp_room_value_integrity AS Schutzbedarf__-__Integrität__(Raum__(mod))",
-    "bp_room.bp_room_value_comment_i AS Schutzbedarf__-__Begründung__Integrität__(Raum__(mod))",
-    "bp_room.bp_room_value_availability AS Schutzbedarf__-__Verfügbarkeit__(Raum__(mod))",
-    "bp_room.bp_room_value_comment_a AS Schutzbedarf__-__Begründung__Verfügbarkeit__(Raum__(mod))",
-    "bp_room.bp_room_value_method_confidentiality AS Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Raum__(mod))",
-    "bp_room.bp_room_method_confidentiality AS Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Raum__(mod))",
-    "bp_room.bp_room_value_method_integrity AS Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Raum__(mod))",
-    "bp_room.bp_room_method_integrity AS Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Raum__(mod))",
-    "bp_room.bp_room_value_method_availability AS Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Raum__(mod))",
-    "bp_room.bp_room_method_availability AS Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Raum__(mod))"
+    "bp_room.bp_room_abbr AS Kürzel__(Raum)",
+    "bp_room.bp_room_name AS Titel__(Raum)",
+    "bp_room.bp_room_description AS Beschreibung__(Raum)",
+    "bp_room.bp_room_value_confidentiality AS Schutzbedarf__-__Vertraulichkeit__(Raum)",
+    "bp_room.bp_room_value_comment_c AS Schutzbedarf__-__Begründung__Vertraulichkeit__(Raum)",
+    "bp_room.bp_room_value_integrity AS Schutzbedarf__-__Integrität__(Raum)",
+    "bp_room.bp_room_value_comment_i AS Schutzbedarf__-__Begründung__Integrität__(Raum)",
+    "bp_room.bp_room_value_availability AS Schutzbedarf__-__Verfügbarkeit__(Raum)",
+    "bp_room.bp_room_value_comment_a AS Schutzbedarf__-__Begründung__Verfügbarkeit__(Raum)",
+    "bp_room.bp_room_value_method_confidentiality AS Schutzbedarf__-__Vertraulichkeit__ableiten__nach__Maximumprinzip__(Raum)",
+    "bp_room.bp_room_method_confidentiality AS Schutzbedarf__-__Vertraulichkeit__nach__VerteilungKumulationseffekt__(Raum)",
+    "bp_room.bp_room_value_method_integrity AS Schutzbedarf__-__Integrität__ableiten__nach__Maximumprinzip__(Raum)",
+    "bp_room.bp_room_method_integrity AS Schutzbedarf__-__Integrität__nach__VerteilungKumulationseffekt__(Raum)",
+    "bp_room.bp_room_value_method_availability AS Schutzbedarf__-__Verfügbarkeit__ableiten__nach__Maximumprinzip__(Raum)",
+    "bp_room.bp_room_method_availability AS Schutzbedarf__-__Verfügbarkeit__nach__VerteilungKumulationseffekt__(Raum)"
   ],
   "relationIds": []
 }]]></xml-property>

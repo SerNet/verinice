@@ -19,7 +19,7 @@
 package sernet.verinice.service.commands;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -32,102 +32,90 @@ import sernet.verinice.interfaces.IElementEntityDao;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 
-/** 
+/**
  * Update the entity of an element only, leaving all collections as they were.
  * Accessing the element is subject to write permissions.
  * 
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  * @param <T>
  */
 @SuppressWarnings("restriction")
-public class UpdateElementEntity<T extends CnATreeElement> extends ChangeLoggingCommand implements IChangeLoggingCommand {
+public class UpdateElementEntity<T extends CnATreeElement> extends ChangeLoggingCommand
+        implements IChangeLoggingCommand {
 
-    private transient Logger log = Logger.getLogger(UpdateElementEntity.class);
+    private static final Logger log = Logger.getLogger(UpdateElementEntity.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(UpdateElementEntity.class);
-        }
-        return log;
+    private final T elementToUpdate;
+    private T mergedElement;
+    private String stationId;
+
+    public UpdateElementEntity(T element, String stationId) {
+        this.elementToUpdate = element;
+        this.mergedElement = null;
+        this.stationId = stationId;
     }
-    
-	private T newElement;
-	
-	private String stationId;
 
-	public UpdateElementEntity(T element, String stationId) {
-	    this.newElement = element;
-		this.stationId = stationId;
-	}
+    public void execute() {
+        beforeUpdate();
+        updateElement();
+        afterUpdate();
+    }
 
-	public void execute() {
-	    beforeUpdate();
-	    IBaseDao<T, Serializable> elementDao = getDaoFactory().getDAO(this.newElement.getTypeId());
+    private void updateElement() {
+        IBaseDao<T, Serializable> elementDao = getDaoFactory().getDAO(this.elementToUpdate.getTypeId());
         try {
-            elementDao.checkRights(this.newElement);
-        } catch(SecurityException e) {
-            getLog().warn("Can not update entity of element: " + this.newElement + " security check fails:" + e.getMessage());
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("stacktrace: ", e);
+            elementDao.checkRights(this.elementToUpdate);
+        } catch (SecurityException e) {
+            log.warn("Can not update entity of element: " + this.elementToUpdate
+                    + " security check fails:" + e.getMessage());
+            if (log.isDebugEnabled()) {
+                log.debug("stacktrace: ", e);
             }
             throw e;
         }
-        
-	    IElementEntityDao elementEntityDao = getDaoFactory().getElementEntityDao();
-	    this.newElement = (T) elementEntityDao.mergeEntityOfElement(newElement, true);
-	   
-	    afterUpdate();
-	}
 
-	/**
-     * Called before element entity is updated.
-     * You can override this in subclassed to add additional functionality
+        IElementEntityDao elementEntityDao = getDaoFactory().getElementEntityDao();
+        this.mergedElement = (T) elementEntityDao.mergeEntityOfElement(elementToUpdate, true);
+    }
+
+    /**
+     * Called before element entity is updated. You can override this in
+     * subclassed to add additional functionality
      */
     protected void beforeUpdate() {
         // empty
     }
 
     /**
-     * Called after element entity was updated.
-     * You can override this in subclassed to add additional functionality
+     * Called after element entity was updated. You can override this in
+     * subclassed to add additional functionality
      */
     protected void afterUpdate() {
-        // empty
     }
 
-    public T getElement() {
-		return newElement;
-	}
+    public T getMergedElement() {
+        return mergedElement;
+    }
 
-	public String getStationId() {
-		return stationId;
-	}
+    public String getStationId() {
+        return stationId;
+    }
 
-	public void setStationId(String stationId) {
-		this.stationId = stationId;
-	}
+    public void setStationId(String stationId) {
+        this.stationId = stationId;
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#getChangeType()
-	 */
-	public int getChangeType() {
-		return ChangeLogEntry.TYPE_UPDATE;
-	}
+    public int getChangeType() {
+        return ChangeLogEntry.TYPE_UPDATE;
+    }
 
-
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#getChangedElements()
-	 */
-	public List<CnATreeElement> getChangedElements() {
-		if (newElement instanceof CnATreeElement) {
-			ArrayList<CnATreeElement> list = new ArrayList<CnATreeElement>(1);
-			list.add((CnATreeElement) newElement);
-			return list;
-		}
-		return null;
-	}
-
+    /**
+     * Returns elements that have been changed due to this update, because of
+     * derived properties etc. The updated element itself it contained.
+     */
+    public List<CnATreeElement> getChangedElements() {
+        return Collections.singletonList(elementToUpdate);
+    }
 }

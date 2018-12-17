@@ -19,12 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.bpm.rcp;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -34,9 +28,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.wizard.Wizard;
-
-import com.sun.xml.messaging.saaj.packaging.mime.util.BASE64DecoderStream;
-import com.sun.xml.messaging.saaj.packaging.mime.util.BASE64EncoderStream;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.PropertyType;
@@ -77,7 +68,7 @@ public class IndividualProcessWizard extends Wizard {
 
     public IndividualProcessWizard(List<String> selectedUuids, String elementTitle, String typeId) {
         super();
-        this.uuids = new ArrayList<String>(selectedUuids);
+        this.uuids = new ArrayList<>(selectedUuids);
         this.elementTitle = elementTitle;
         this.elementType = typeId;
         setNeedsProgressMonitor(true);
@@ -89,7 +80,7 @@ public class IndividualProcessWizard extends Wizard {
         descriptionPage = new DescriptionPage(elementTitle);
         addPage(descriptionPage);
         // create relation before datepage
-        relationPage = new RelationPage(elementType);
+        relationPage = new RelationPage(elementType, personTypeId);
         datePage = new DatePage(relationPage.isRelation());
         personPage = new PersonPage();
         personPage.setPersonTypeId(getPersonTypeId());
@@ -236,7 +227,7 @@ public class IndividualProcessWizard extends Wizard {
 
     public Set<String> getProperties() {
         List<PropertyType> selectedTypes = propertyPage.getSelectedProperties();
-        Set<String> typeIds = new HashSet<String>(selectedTypes.size());
+        Set<String> typeIds = new HashSet<>(selectedTypes.size());
         for (PropertyType type : selectedTypes) {
             typeIds.add(type.getId());
         }
@@ -245,7 +236,7 @@ public class IndividualProcessWizard extends Wizard {
 
     public Set<String> getPropertyNames() {
         List<PropertyType> selectedTypes = propertyPage.getSelectedProperties();
-        Set<String> names = new HashSet<String>(selectedTypes.size());
+        Set<String> names = new HashSet<>(selectedTypes.size());
         for (PropertyType type : selectedTypes) {
             names.add(type.getName());
         }
@@ -263,28 +254,6 @@ public class IndividualProcessWizard extends Wizard {
             LOG.error("Error while loading person.", e); //$NON-NLS-1$
         }
         return person;
-    }
-
-    /** Write the object to a Base64 string. */
-    static String toString(Serializable o) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeObject(o);
-        oos.close();
-        return new String(BASE64EncoderStream.encode(baos.toByteArray()));
-    }
-
-    static Object fromString(String s) {
-        Object o = null;
-        try {
-            byte[] data = BASE64DecoderStream.decode(s.getBytes());
-            ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-            o = ois.readObject();
-            ois.close();
-        } catch (Exception e) {
-            LOG.error("Error while deserializing.", e);
-        }
-        return o;
     }
 
 }

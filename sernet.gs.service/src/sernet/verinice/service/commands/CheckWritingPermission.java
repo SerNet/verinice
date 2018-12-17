@@ -35,15 +35,8 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class CheckWritingPermission extends GenericCommand {
 
-    private transient Logger log = Logger.getLogger(CheckWritingPermission.class);
+    private static final Logger log = Logger.getLogger(CheckWritingPermission.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(CheckWritingPermission.class);
-        }
-        return log;
-    }
-   
     private String uuid;
     
     private String username; 
@@ -82,7 +75,7 @@ public class CheckWritingPermission extends GenericCommand {
                 setWriteAllowed(false);                          
             }             
         } catch (Exception t) {
-            getLog().error("Error while checking writing permission for element uuid: " + uuid, t);
+            log.error("Error while checking writing permission for element uuid: " + uuid, t);
         }
     }
 

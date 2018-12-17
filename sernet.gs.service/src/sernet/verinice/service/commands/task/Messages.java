@@ -26,7 +26,7 @@ import org.eclipse.osgi.util.NLS;
  *
  */
 public class Messages extends NLS {
-    private static final String BUNDLE_NAME = "sernet.gs.ui.rcp.main.service.taskcommands.messages"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "sernet.verinice.service.commands.task.messages"; //$NON-NLS-1$
     public static String CreateScenario_2;
     public static String ConfigurationBulkEdit_0;
     static {

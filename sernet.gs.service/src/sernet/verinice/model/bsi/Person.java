@@ -36,15 +36,8 @@ import sernet.verinice.model.common.CnATreeElement;
 public class Person extends CnATreeElement
 implements IBSIStrukturElement {
     
-    private transient Logger log = Logger.getLogger(Person.class);
+    private static final Logger log = Logger.getLogger(Person.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(Person.class);
-        }
-        return log;
-    }
-	
 	public static final String PROP_TAG			= "person_tag"; //$NON-NLS-1$
     public static final String P_ANREDE = "person_anrede"; //$NON-NLS-1$
 	public static final String P_NAME = "nachname"; //$NON-NLS-1$
@@ -219,5 +212,10 @@ implements IBSIStrukturElement {
 	public void setAnzahl(int anzahl) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ANZAHL), Integer.toString(anzahl));
 	}
-	
+
+    @Override
+    public String toString() {
+        return "Person [getFullName()=" + getFullName() + ", getKuerzel()=" + getKuerzel()
+                + ", getId()=" + getId() + "]";
+    }
 }

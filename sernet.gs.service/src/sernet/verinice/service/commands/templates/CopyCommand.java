@@ -49,7 +49,6 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.CnATreeElement.TemplateType;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.service.commands.AttachmentFileCreationFactory;
-import sernet.verinice.service.commands.CopyLinksCommand;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.FindRiskAnalysisListsByParentID;
 import sernet.verinice.service.commands.LoadAttachmentFile;
@@ -116,9 +115,6 @@ public class CopyCommand extends GenericCommand {
         this.uuidGroup = uuidGroup;
         this.uuidList = uuidList;
         this.postProcessorList = postProcessorList;
-        if (copyLinks) {
-            addPostProcessor(new CopyLinks());
-        }
     }
 
     /**
@@ -151,7 +147,7 @@ public class CopyCommand extends GenericCommand {
                     copyElementUuidList.add(element.getUuid());
                 }
                 for (final IPostProcessor postProcessor : getPostProcessorList()) {
-                    postProcessor.process(copyElementUuidList, sourceDestMap);
+                    postProcessor.process(getCommandService(), copyElementUuidList, sourceDestMap);
                 }
             }
         } catch (final Exception e) {
@@ -277,7 +273,7 @@ public class CopyCommand extends GenericCommand {
             }
         }
 
-        SaveElement<CnATreeElement> saveCommand = new SaveElement<CnATreeElement>(newElement, flush);
+        SaveElement<CnATreeElement> saveCommand = new SaveElement<>(newElement);
         saveCommand = getCommandService().executeCommand(saveCommand);
         newElement = saveCommand.getElement();
         newElement.setParentAndScope(toGroup);
@@ -474,38 +470,6 @@ public class CopyCommand extends GenericCommand {
 
     public List<String> getNewElements() {
         return newElements;
-    }
-
-    /**
-     * @author Daniel Murygin <dm[at]sernet[dot]de>
-     *
-     */
-    @SuppressWarnings("serial")
-    public class CopyLinks implements IPostProcessor, Serializable {
-
-        /**
-         * @param linkElement
-         */
-        public CopyLinks() {
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see
-         * sernet.verinice.iso27k.service.PasteService.IPostProcessor#process(
-         * java.util.Map)
-         */
-        @Override
-        public void process(final List<String> copyUuidList, final Map<String, String> sourceDestMap) {
-            getLog().debug("Starting execution of CopyLinks for.");
-            try {
-                final CopyLinksCommand copyLinksCommand = new CopyLinksCommand(sourceDestMap);
-                getCommandService().executeCommand(copyLinksCommand);
-            } catch (final CommandException e) {
-                getLog().error("Error while copy links on server.", e);
-            }
-        }
     }
 
     public boolean isCopyAttachments() {

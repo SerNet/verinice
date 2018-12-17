@@ -83,6 +83,9 @@ final class RemoveLinkSelectionListener implements SelectionListener {
                 CnAElementFactory.getLoadedModel().linkRemoved(link);
             }
             CnAElementFactory.getInstance().getISO27kModel().linkRemoved(link);
+            if (CnAElementFactory.isBpModelLoaded()) {
+                CnAElementFactory.getInstance().getBpModel().linkRemoved(link);
+            }
         }
     }
 }

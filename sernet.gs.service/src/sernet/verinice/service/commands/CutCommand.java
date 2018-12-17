@@ -37,7 +37,6 @@ import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ElementChange;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -49,38 +48,32 @@ import sernet.verinice.model.iso27k.Organization;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class CutCommand extends ChangeLoggingCommand {
- 
-    private transient Logger log = Logger.getLogger(CutCommand.class);
-    
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(CutCommand.class);
-        }
-        return log;
-    }
-    
+
+    private static final Logger log = Logger.getLogger(CutCommand.class);
+
     private String uuidGroup;
-    
+
     private CnATreeElement selectedGroup;
-    
+
     private List<String> uuidList;
-    
+
     private int number = 0;
-    
+
     private List<IPostProcessor> postProcessorList;
-    
+
     private transient IBaseDao<CnATreeElement, Serializable> dao;
-    
+
     // used on server side only !
     private transient Set<ElementChange> elementChanges;
-    
+
     private String stationId;
-    
-    /** 
-     * @return A list of classes that can contain persons or personIsos as children
+
+    /**
+     * @return A list of classes that can contain persons or personIsos as
+     *         children
      */
-    private static List<String> getPersonContainingTypeIDs(){
-        ArrayList<String> list = new ArrayList<String>();
+    private static List<String> getPersonContainingTypeIDs() {
+        ArrayList<String> list = new ArrayList<>();
         list.add(sernet.verinice.model.bsi.Person.TYPE_ID);
         list.add(sernet.verinice.model.bsi.PersonenKategorie.TYPE_ID);
         list.add(sernet.verinice.model.iso27k.Audit.TYPE_ID);
@@ -88,12 +81,13 @@ public class CutCommand extends ChangeLoggingCommand {
         list.add(sernet.verinice.model.iso27k.PersonIso.TYPE_ID);
         return list;
     }
-    
+
     public CutCommand(String uuidGroup, List<String> uuidList) {
-        this(uuidGroup,uuidList,new ArrayList<IPostProcessor>());
+        this(uuidGroup, uuidList, new ArrayList<IPostProcessor>());
     }
 
-    public CutCommand(String uuidGroup, List<String> uuidList, List<IPostProcessor> postProcessorList) {
+    public CutCommand(String uuidGroup, List<String> uuidList,
+            List<IPostProcessor> postProcessorList) {
         super();
         this.uuidGroup = uuidGroup;
         this.uuidList = uuidList;
@@ -101,61 +95,65 @@ public class CutCommand extends ChangeLoggingCommand {
         this.stationId = ChangeLogEntry.STATION_ID;
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
-        try {   
-            doExecute();             
+        try {
+            doExecute();
         } catch (PermissionException e) {
-            if (getLog().isDebugEnabled()) {
-                getLog().debug(e);
+            if (log.isDebugEnabled()) {
+                log.debug(e);
             }
             throw e;
         } catch (RuntimeException e) {
-            getLog().error("RuntimeException while copying element", e);
+            log.error("RuntimeException while copying element", e);
             throw e;
         } catch (Exception e) {
-            getLog().error("Error while copying element", e);
+            log.error("Error while copying element", e);
             throw new RuntimeException("Error while copying element", e);
         }
-        
+
     }
 
     private void doExecute() throws CommandException {
         this.number = 0;
-        elementChanges = new HashSet<ElementChange>();
-        List<CnATreeElement> elementList = createInsertList(uuidList); 
-        selectedGroup = getDao().findByUuid(uuidGroup, RetrieveInfo.getChildrenInstance().setParent(true).setProperties(true));       
-        Map<String, String> sourceDestMap = new Hashtable<String, String>();
+        elementChanges = new HashSet<>();
+        List<CnATreeElement> elementList = createInsertList(uuidList);
+        selectedGroup = getDao().findByUuid(uuidGroup,
+                RetrieveInfo.getChildrenInstance().setParent(true).setProperties(true));
+        Map<String, String> sourceDestMap = new Hashtable<>();
         boolean isPersonMoved = false;
         for (CnATreeElement element : elementList) {
             CnATreeElement movedElement = move(selectedGroup, element);
             // cut: source and dest is the same
-            sourceDestMap.put(movedElement.getUuid(),movedElement.getUuid());
-            for(String s : getPersonContainingTypeIDs()){
-                if(selectedGroup.getTypeId().equals(s)){
+            sourceDestMap.put(movedElement.getUuid(), movedElement.getUuid());
+            for (String s : getPersonContainingTypeIDs()) {
+                if (selectedGroup.getTypeId().equals(s)) {
                     isPersonMoved = true;
                     break;
                 }
             }
-        }       
-        if(isPersonMoved){
+        }
+        if (isPersonMoved) {
+            // TODO discardUserData() will remove all user data from memory, but
+            // we only need to remove the user-specific data
             getCommandService().discardUserData();
-        }                   
-        updateScopeId(elementList);                
+        }
+        updateScopeId(elementList);
         excecutePostProcessor(elementList, sourceDestMap);
     }
 
-    private void excecutePostProcessor(List<CnATreeElement> elementList, Map<String, String> sourceDestMap) {
-        if(getPostProcessorList()!=null && !getPostProcessorList().isEmpty()) {
-            List<String> copyElementUuidList = new ArrayList<String>(elementList.size());
+    private void excecutePostProcessor(List<CnATreeElement> elementList,
+            Map<String, String> sourceDestMap) {
+        if (getPostProcessorList() != null && !getPostProcessorList().isEmpty()) {
+            List<String> copyElementUuidList = new ArrayList<>(elementList.size());
             for (CnATreeElement element : elementList) {
                 copyElementUuidList.add(element.getUuid());
             }
             for (IPostProcessor postProcessor : getPostProcessorList()) {
-                postProcessor.process(copyElementUuidList,sourceDestMap);
+                postProcessor.process(getCommandService(), copyElementUuidList, sourceDestMap);
             }
         }
     }
@@ -163,88 +161,91 @@ public class CutCommand extends ChangeLoggingCommand {
     private void updateScopeId(List<CnATreeElement> elementList) throws CommandException {
         // set scope id of all elements and it's subtrees
         for (CnATreeElement element : elementList) {
-            if(selectedGroup.getScopeId() != null){
-                UpdateScopeId updateScopeId = new UpdateScopeId(element.getDbId(), selectedGroup.getScopeId());
-                updateScopeId = getCommandService().executeCommand(updateScopeId);
-            } else if(!(selectedGroup instanceof Organization) && !(selectedGroup instanceof ITVerbund)) {
-                    getLog().warn("cut&paste target has no scopeID");
+            if (selectedGroup.getScopeId() != null) {
+                UpdateScopeId updateScopeId = new UpdateScopeId(element.getDbId(),
+                        selectedGroup.getScopeId());
+                getCommandService().executeCommand(updateScopeId);
+            } else if (!(selectedGroup instanceof Organization)
+                    && !(selectedGroup instanceof ITVerbund)) {
+                log.warn("cut&paste target has no scopeID");
             }
         }
     }
-    
-    private CnATreeElement move(CnATreeElement group, CnATreeElement element) throws CommandException  {
+
+    private CnATreeElement move(CnATreeElement group, CnATreeElement element)
+            throws CommandException {
         CnATreeElement parentOld = element.getParent();
         parentOld.removeChild(element);
-        
+
         // save old parent (switch to dao from command call because of Bug 918)
         getDao().merge(parentOld, false);
-        
+
         ElementChange delete = new ElementChange(element, ChangeLogEntry.TYPE_DELETE);
         elementChanges.add(delete);
-        
+
         element.setParentAndScope(group);
-        
+
         group.addChild(element);
-        
-        if(element.getIconPath()==null) {
+
+        if (element.getIconPath() == null) {
             element.setIconPath(group.getIconPath());
         }
-        
+
         // save element (switch to dao from command call because of Bug 918)
         getDao().merge(element, false);
         getDao().flush();
         getDao().clear();
-        
+
         ElementChange insert = new ElementChange(element, ChangeLogEntry.TYPE_INSERT);
-        if(insert.getTime().equals(delete.getTime())) {
+        if (insert.getTime().equals(delete.getTime())) {
             Calendar plus1Second = Calendar.getInstance();
-            plus1Second.add(Calendar.SECOND, 1);       
+            plus1Second.add(Calendar.SECOND, 1);
             insert.setTime(plus1Second.getTime());
         }
         elementChanges.add(insert);
-        
+
         number++;
         return element;
     }
-    
+
     /**
-     * Creates a list of elements. First all elements are loaded by
-     * UUID. A child will be removed from the list if it's parent is already 
-     * a member.
+     * Creates a list of elements. First all elements are loaded by UUID. A
+     * child will be removed from the list if it's parent is already a member.
      * 
-     * @param uuidList A list of element UUID
+     * @param uuidList
+     *            A list of element UUID
      * @return List of elements
      */
     protected List<CnATreeElement> createInsertList(List<String> uuidList) {
-        List<CnATreeElement> tempList = new ArrayList<CnATreeElement>();
-        List<CnATreeElement> insertList = new ArrayList<CnATreeElement>();
+        List<CnATreeElement> tempList = new ArrayList<>();
+        List<CnATreeElement> insertList = new ArrayList<>();
         int depth = 0;
-        int removed = 0;
         for (String uuid : uuidList) {
-            CnATreeElement element = getDao().findByUuid(uuid, RetrieveInfo.getChildrenInstance().setParent(true));
-            createInsertList(element,tempList,insertList, depth, removed);
+            CnATreeElement element = getDao().findByUuid(uuid,
+                    RetrieveInfo.getChildrenInstance().setParent(true));
+            createInsertList(element, tempList, insertList, depth);
         }
         return insertList;
     }
 
-    private void createInsertList(CnATreeElement element, List<CnATreeElement> tempList, List<CnATreeElement> insertList, int depth, int removed) {
-        if(!tempList.contains(element)) {
+    private void createInsertList(CnATreeElement element, List<CnATreeElement> tempList,
+            List<CnATreeElement> insertList, int depth) {
+        if (!tempList.contains(element)) {
             tempList.add(element);
-            if(depth==0) {
+            if (depth == 0) {
                 insertList.add(element);
             }
-            if(element instanceof IISO27kGroup && element.getChildren()!=null) {
+            if (element instanceof IISO27kGroup && element.getChildren() != null) {
                 depth++;
                 for (CnATreeElement child : element.getChildren()) {
-                    createInsertList(child,tempList,insertList,depth,removed);
+                    createInsertList(child, tempList, insertList, depth);
                 }
             }
         } else {
             insertList.remove(element);
-            removed++;
         }
     }
-       
+
     public String getUuidGroup() {
         return uuidGroup;
     }
@@ -259,8 +260,8 @@ public class CutCommand extends ChangeLoggingCommand {
 
     public void setUuidList(List<String> uuidList) {
         this.uuidList = uuidList;
-    } 
-    
+    }
+
     public int getNumber() {
         return number;
     }
@@ -274,28 +275,28 @@ public class CutCommand extends ChangeLoggingCommand {
     }
 
     public void addPostProcessor(IPostProcessor task) {
-        if(postProcessorList==null) {
-            postProcessorList = new LinkedList<IPostProcessor>();
+        if (postProcessorList == null) {
+            postProcessorList = new LinkedList<>();
         }
         postProcessorList.add(task);
     }
-    
+
     private IBaseDao<CnATreeElement, Serializable> getDao() {
-        if(dao==null) {
+        if (dao == null) {
             dao = getDaoFactory().getDAO(CnATreeElement.class);
         }
         return dao;
     }
-    
+
     @Override
     public void clear() {
         // changedElements are used on server side only !
-        if(elementChanges!=null) {
+        if (elementChanges != null) {
             elementChanges.clear();
         }
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.IChangeLoggingCommand#getStationId()
      */
     @Override
@@ -303,27 +304,28 @@ public class CutCommand extends ChangeLoggingCommand {
         return this.stationId;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangedElements()
+    /*
+     * @see
+     * sernet.verinice.interfaces.IChangeLoggingCommand#getChangedElements()
      */
     @Override
     public List<ElementChange> getChanges() {
-        ArrayList<ElementChange> changes = new ArrayList<ElementChange>(0);
-        if(elementChanges != null && elementChanges.size() > 0){
+        ArrayList<ElementChange> changes = new ArrayList<>(0);
+        if (elementChanges != null && !elementChanges.isEmpty()) {
             changes.addAll(elementChanges);
         }
         return changes;
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangeType()
      */
     @Override
     public int getChangeType() {
         return ChangeLogEntry.TYPE_UPDATE;
     }
-    
-    public class InheritPermissions extends OverwritePermissions {
+
+    public static class InheritPermissions extends OverwritePermissions {
 
         /**
          * @param element
@@ -333,14 +335,6 @@ public class CutCommand extends ChangeLoggingCommand {
             super(element.getUuid());
         }
 
-        /* (non-Javadoc)
-         * @see sernet.verinice.service.commands.OverwritePermissions#getCommandService()
-         */
-        @Override
-        protected ICommandService getCommandService() {
-            return CutCommand.this.getCommandService();
-        }
-        
     }
 
 }

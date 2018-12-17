@@ -76,7 +76,7 @@ public class TemplateViewLabelProvider extends LabelProvider implements ITableLa
     }
 
     private Image getObjTypeImage(CnATreeElement element) {
-        Image image = CnAImageProvider.getCustomImage(element);
+        Image image = CnAImageProvider.getImage(element);
         if (image != null) {
             return image;
         }

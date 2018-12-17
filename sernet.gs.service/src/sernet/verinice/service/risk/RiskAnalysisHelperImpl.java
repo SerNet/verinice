@@ -42,7 +42,7 @@ import sernet.verinice.service.commands.RetrieveCnATreeElement;
  */
 public class RiskAnalysisHelperImpl implements RiskAnalysisHelper {
     
-    private static final transient Logger LOG = Logger.getLogger(RiskAnalysisHelperImpl.class);
+    private static final Logger LOG = Logger.getLogger(RiskAnalysisHelperImpl.class);
 
     /**
      * Reduce impact levels by all controls applied to this asset.

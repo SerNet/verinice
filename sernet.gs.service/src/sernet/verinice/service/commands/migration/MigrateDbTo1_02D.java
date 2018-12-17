@@ -27,7 +27,7 @@ import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
 @SuppressWarnings("serial")
 public class MigrateDbTo1_02D extends DbMigration {
 
-    private transient Logger log;
+    private static final Logger log = Logger.getLogger(MigrateDbTo1_02D.class);
 
     private static final List<String> DERBY_SQL_LIST;
     private static final List<String> ORACLE_SQL_LIST;
@@ -65,8 +65,8 @@ public class MigrateDbTo1_02D extends DbMigration {
 
     private void alterDatabases() {
         String dialect = getHibernateDialect();
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Updating db to Version: " + getVersion() + " using dialect: " + dialect);
+        if (log.isDebugEnabled()) {
+            log.debug("Updating db to Version: " + getVersion() + " using dialect: " + dialect);
         }
         if (HIBERNATE_DIALECT_DERBY.equals(dialect)) {
             alterDerby();
@@ -75,7 +75,7 @@ public class MigrateDbTo1_02D extends DbMigration {
         } else if (HIBERNATE_DIALECT_ORACLE.equals(dialect)) {
             alterOracle();
         } else {
-            getLog().error("configured Hibernate Dialect is not supported by this migration. please contact support and ask for customized help to migrate to db 1.02D");
+            log.error("configured Hibernate Dialect is not supported by this migration. please contact support and ask for customized help to migrate to db 1.02D");
         }
 
     }
@@ -106,8 +106,8 @@ public class MigrateDbTo1_02D extends DbMigration {
             @Override
             public Integer doInHibernate(Session session) throws HibernateException, SQLException {
                 int result = session.createSQLQuery(sql).executeUpdate();
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Result of session.executeUpdate():\t" + result);
+                if (log.isDebugEnabled()) {
+                    log.debug("Result of session.executeUpdate():\t" + result);
                 }
                 return result;
             }
@@ -117,11 +117,5 @@ public class MigrateDbTo1_02D extends DbMigration {
     @Override
     public double getVersion() {
         return 1.02D;
-    }
-
-    private Logger getLog() {
-        if (log == null)
-            log = Logger.getLogger(MigrateDbTo1_02D.class);
-        return log;
     }
 }

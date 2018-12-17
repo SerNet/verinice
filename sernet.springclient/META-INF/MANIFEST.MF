@@ -21,7 +21,6 @@ Require-Bundle: com.springsource.org.apache.log4j;bundle-version="1.2.15",
  org.eclipse.ui;bundle-version="3.5.2",
  org.springframework.core;bundle-version="2.5.6",
  com.springsource.org.hibernate;bundle-version="3.2.6",
- com.springsource.antlr;bundle-version="2.7.6",
  org.springframework.ws;bundle-version="1.5.5",
  org.apache.commons.httpclient;bundle-version="3.1.0",
  org.springframework.xml;bundle-version="1.5.5",
@@ -30,10 +29,11 @@ Require-Bundle: com.springsource.org.apache.log4j;bundle-version="1.2.15",
  org.eclipse.ui.net,
  sernet.hui.common;bundle-version="1.1.1",
  com.springsource.net.sf.ehcache;bundle-version="1.6.0",
- jgrapht;bundle-version="0.8.3"
+ antlr;bundle-version="2.7.7"
 Import-Package: org.apache.log4j,
  org.eclipse.core.runtime;version="3.4.0",
  org.osgi.framework;version="1.5.0",
  org.springframework.beans.factory,
  org.springframework.security.ui.digestauth;version="2.0.5.RELEASE"
 Eclipse-BuddyPolicy: global
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

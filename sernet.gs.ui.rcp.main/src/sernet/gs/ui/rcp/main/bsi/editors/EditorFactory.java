@@ -33,7 +33,10 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bp.elements.Application;
+import sernet.verinice.model.bp.elements.BpDocument;
+import sernet.verinice.model.bp.elements.BpIncident;
 import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.elements.BpRecord;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.BusinessProcess;
@@ -45,7 +48,10 @@ import sernet.verinice.model.bp.elements.Network;
 import sernet.verinice.model.bp.elements.Room;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpDocumentGroup;
+import sernet.verinice.model.bp.groups.BpIncidentGroup;
 import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRecordGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.groups.BusinessProcessGroup;
@@ -200,7 +206,7 @@ public final class EditorFactory {
     public void updateAndOpenObject(CnATreeElement element, boolean readOnly) {
         BSIElementEditorInput input = new BSIElementEditorInput(element, readOnly);
         try {
-            openEditor(input.getId(), input, BSIElementEditor.EDITOR_ID);
+            openEditor(input.getId(), input, BSIElementEditorMultiPage.EDITOR_ID);
         } catch (Exception e) {
             log.error("Error while opening editor.", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.EditorFactory_2);
@@ -241,7 +247,7 @@ public final class EditorFactory {
                 CnATreeElement element;
                 try {
                     element = CnAElementHome.getInstance().loadById(MassnahmenUmsetzung.TYPE_ID, selection.getDbId());
-                    openEditor(element.getId(), new BSIElementEditorInput(element), BSIElementEditor.EDITOR_ID);
+                    openEditor(element.getId(), new BSIElementEditorInput(element), BSIElementEditorMultiPage.EDITOR_ID);
                 } catch (CommandException e) {
                     log.error("Error while opening editor.", e); //$NON-NLS-1$
                     ExceptionUtil.log(e, Messages.EditorFactory_2);
@@ -262,7 +268,7 @@ public final class EditorFactory {
                 } else {
                     id = gefaehrdung.getEntity().getId();
                 }
-                openEditor(id, new BSIElementEditorInput(gefaehrdung), BSIElementEditor.EDITOR_ID);
+                openEditor(id, new BSIElementEditorInput(gefaehrdung), BSIElementEditorMultiPage.EDITOR_ID);
             }
         };
         typedFactories.put(GefaehrdungsUmsetzung.class, gefaehrdungsUmsetzungFactory);
@@ -279,7 +285,7 @@ public final class EditorFactory {
                     TaskEditorContext context = (TaskEditorContext) o;
                     input = new BSIElementEditorInput(context.getElement(), context.getTask());
                 }
-                openEditor(input.getId(), input, BSIElementEditor.EDITOR_ID);
+                openEditor(input.getId(), input, BSIElementEditorMultiPage.EDITOR_ID);
             }
         };
         typedFactories.put(ITVerbund.class, bsiEditorFactory);
@@ -360,6 +366,13 @@ public final class EditorFactory {
         typedFactories.put(RoomGroup.class, bsiEditorFactory);
         typedFactories.put(Safeguard.class, bsiEditorFactory);
         typedFactories.put(SafeguardGroup.class, bsiEditorFactory);
+        typedFactories.put(BpDocument.class, bsiEditorFactory);
+        typedFactories.put(BpDocumentGroup.class, bsiEditorFactory);
+        typedFactories.put(BpIncident.class, bsiEditorFactory);
+        typedFactories.put(BpIncidentGroup.class, bsiEditorFactory);
+        typedFactories.put(BpRecord.class, bsiEditorFactory);
+        typedFactories.put(BpRecordGroup.class, bsiEditorFactory);
+
         
         // Self Assessment (SAMT) elements
         typedFactories.put(SamtTopic.class, bsiEditorFactory);

@@ -20,7 +20,8 @@ package sernet.verinice.report.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The {@link TocHelper} class simplifies the generation of printable table of
@@ -93,7 +94,7 @@ public final class TocHelper {
 
 	private static List<Integer> pages = new ArrayList<Integer>();
 	
-	private static Logger log = Logger.getLogger(TocHelper.class);
+	private static Logger log = LoggerFactory.getLogger(TocHelper.class);
 	
 	private TocHelper(){};
 	

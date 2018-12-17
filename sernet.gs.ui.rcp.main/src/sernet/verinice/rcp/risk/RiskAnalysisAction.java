@@ -60,10 +60,9 @@ public class RiskAnalysisAction extends RightsEnabledAction implements ISelectio
     private CnATreeElement selectedOrganization;
     
     public RiskAnalysisAction(IWorkbenchWindow window) {
-        setText(Messages.RiskAnalysisAction_Text);
+        super(ActionRightIDs.RISKANALYSIS, Messages.RiskAnalysisAction_Text);
         setId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ISO27K_RISK));
-        setRightID(ActionRightIDs.RISKANALYSIS);
         addLoadListener();
         window.getSelectionService().addSelectionListener(this);
     }

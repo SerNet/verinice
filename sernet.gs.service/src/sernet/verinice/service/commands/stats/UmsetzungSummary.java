@@ -39,6 +39,7 @@ public class UmsetzungSummary extends MassnahmenSummary {
 
 	private static final HibernateCallback HCB = new UmsetzungenSummaryCallback();
 
+	@Override
 	public void execute() {
 		super.execute();
 		setSummary(getUmsetzungenSummary());
@@ -85,7 +86,7 @@ public class UmsetzungSummary extends MassnahmenSummary {
 					+ "from properties "
 					+ "where propertytype = :type "
 					+ "group by propertyvalue ")
-					.addScalar("propertyvalue", Hibernate.STRING)
+					.addScalar("propertyvalue", sernet.gs.reveng.type.Types.STRING_TYPE)
 					.addScalar("amount", Hibernate.INTEGER)
 					.setString("type", MassnahmenUmsetzung.P_UMSETZUNG);
 					

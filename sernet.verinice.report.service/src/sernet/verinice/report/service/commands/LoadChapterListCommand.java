@@ -24,13 +24,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.Status;
-
-import org.apache.log4j.Logger;
-
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
@@ -63,7 +63,7 @@ public class LoadChapterListCommand extends GenericCommand {
 
     private CnATreeElement rootObject;
 
-    private transient Logger log;
+    private static final Logger log = LoggerFactory.getLogger(LoadChapterListCommand.class);
     
     private transient CacheManager manager = null;
     private String cacheId = null;
@@ -74,7 +74,6 @@ public class LoadChapterListCommand extends GenericCommand {
     private static final int OVERVIEW_PROPERTY_TARGET = 0;
     
     public LoadChapterListCommand(Integer chapterId) {
-        log = Logger.getLogger(LoadChapterListCommand.class);
         this.chapterId = chapterId;
     }
 

@@ -55,15 +55,8 @@ import sernet.verinice.model.common.CnATreeElement;
 @SuppressWarnings("serial")
 public class LoadAttachmentFile extends GenericCommand {
 
-	private transient Logger log = Logger.getLogger(LoadAttachmentFile.class);
+	private static final Logger log = Logger.getLogger(LoadAttachmentFile.class);
 	
-	public Logger getLog() {
-		if(log==null) {
-			log = Logger.getLogger(LoadAttachmentFile.class);
-		}
-		return log;
-	}
-
 	private Integer dbId;
 	
 	private boolean flush = false;
@@ -91,8 +84,8 @@ public class LoadAttachmentFile extends GenericCommand {
 
 	@Override
     public void execute() {
-		if (getLog().isDebugEnabled()) {
-			getLog().debug("executing, id is: " + getDbId() + "...");
+		if (log.isDebugEnabled()) {
+			log.debug("executing, id is: " + getDbId() + "...");
 		}
 		if(getDbId()!=null) {
 			IBaseDao<AttachmentFile, Serializable> dao = getDaoFactory().getDAO(AttachmentFile.class);		
@@ -121,7 +114,7 @@ public class LoadAttachmentFile extends GenericCommand {
         try {          
             long start = 0;
             long sizeBefore = 0;
-            if (getLog().isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 start = System.currentTimeMillis();
                 sizeBefore = getAttachmentFile().getFileData().length;
             }
@@ -132,17 +125,17 @@ public class LoadAttachmentFile extends GenericCommand {
                 drawThumbnail(image, thumbnailImage);
                 byte[] thumbByteArray = getByteArray(thumbnailImage);
                 getAttachmentFile().setFileData(thumbByteArray);          
-                if (getLog().isDebugEnabled()) {
+                if (log.isDebugEnabled()) {
                     long time = System.currentTimeMillis() - start;
                     long size = thumbByteArray.length;
-                    getLog().debug("Before: " + sizeBefore + "b, after: " + size + "b, " + time + "ms");
+                    log.debug("Before: " + sizeBefore + "b, after: " + size + "b, " + time + "ms");
                 }
             } else {
                 getAttachmentFile().setFileData(null);
-                getLog().info("Can not scale image. Maybe it has an unknown type. Db-Id is: " + getDbId());
+                log.info("Can not scale image. Maybe it has an unknown type. Db-Id is: " + getDbId());
             }
         } catch(Exception e) {
-            getLog().error("Error while scaling image", e);
+            log.error("Error while scaling image", e);
         }
     }
 
@@ -169,9 +162,9 @@ public class LoadAttachmentFile extends GenericCommand {
         try {
             image = ImageIO.read(in);
         } catch(Exception e) {
-            getLog().warn("Error while reading image the simple way. DbId: " + getAttachmentFile().getDbId() + " cause: " + e.getMessage() + ", Will now try the advanced method...");
-            if(getLog().isDebugEnabled()) {
-                getLog().debug("Stacktrace: ", e);
+            log.warn("Error while reading image the simple way. DbId: " + getAttachmentFile().getDbId() + " cause: " + e.getMessage() + ", Will now try the advanced method...");
+            if(log.isDebugEnabled()) {
+                log.debug("Stacktrace: ", e);
             }
             image = readImageFromByteArrayFallback();
         }
@@ -203,7 +196,7 @@ public class LoadAttachmentFile extends GenericCommand {
                     break;
                 }
             } catch (Exception e) {
-                getLog().error("Error while reading image the advanced way. DbId: " + getAttachmentFile().getDbId(),e);
+                log.error("Error while reading image the advanced way. DbId: " + getAttachmentFile().getDbId(),e);
             } finally {
                 if(null != reader) {
                     reader.dispose();               

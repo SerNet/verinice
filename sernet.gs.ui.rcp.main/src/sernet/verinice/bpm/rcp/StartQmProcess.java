@@ -56,124 +56,116 @@ import sernet.verinice.rcp.InfoDialogWithShowToggle;
 public class StartQmProcess implements IObjectActionDelegate, RightEnabledUserInteraction {
 
     private static final Logger LOG = Logger.getLogger(StartQmProcess.class);
-    
-    private List<String> selectedUuids = new LinkedList<String>();
-    
-    private List<String> selectedTitles = new LinkedList<String>();
-    
+
+    private List<String> selectedUuids = new LinkedList<>();
+
+    private List<String> selectedTitles = new LinkedList<>();
+
     int numberOfProcess = 0;
-    
+
     Boolean isActive = null;
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
+
+    /*
+     * @see
+     * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
+     * action.IAction, org.eclipse.ui.IWorkbenchPart)
      */
     @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
         // TODO Auto-generated method stub
-        
+
     }
 
-    /* (non-Javadoc)
+    /*
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
-    @Override  
+    @Override
     public void run(IAction action) {
-        if(!selectedUuids.isEmpty()) {
-            NewQmIssueDialog dialog = new NewQmIssueDialog(Display.getCurrent().getActiveShell(), selectedTitles.get(0));
-            if( dialog.open() == Dialog.OK ) {
-                startProcess(dialog.getDescription(), dialog.getPriority());  
-            }            
-        }   
-    }
-
-    private void startProcess(final String description, final String priority) {
-        IProgressService progressService = PlatformUI.getWorkbench().getProgressService();       
-        try {
-            progressService.run(true, true, new IRunnableWithProgress() {  
-                @Override
-                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    Activator.inheritVeriniceContextState();
-                    numberOfProcess=0;
-                    IProcessStartInformation info = null;
-                    if(!selectedUuids.isEmpty() ) {
-                        info = ServiceFactory.lookupQmService().startProcessesForElement(selectedUuids.get(0),description, priority);           
-                    }
-                    if(info!=null) {
-                        numberOfProcess=info.getNumber();
-                    }
-                   
-                }
-            });
-            if(numberOfProcess > 0) {
-                TaskChangeRegistry.tasksAdded();
+        if (!selectedUuids.isEmpty()) {
+            NewQmIssueDialog dialog = new NewQmIssueDialog(Display.getCurrent().getActiveShell(),
+                    selectedTitles.get(0));
+            if (dialog.open() == Dialog.OK) {
+                startProcess(dialog.getDescription(), dialog.getPriority());
             }
-            InfoDialogWithShowToggle.openInformation(
-                    Messages.StartIsaProcess_0,  
-                    Messages.bind("{0} QM Processes started", numberOfProcess),
-                    Messages.StartIsaProcess_3,
-                    PreferenceConstants.INFO_PROCESSES_STARTED);
-        } catch (Exception t) {
-            LOG.error("Error while creating tasks.",t); //$NON-NLS-1$
-            ExceptionUtil.log(t, sernet.verinice.bpm.rcp.Messages.StartIsaProcess_5); 
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+    private void startProcess(final String description, final String priority) {
+        IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+        try {
+            progressService.run(true, true, new IRunnableWithProgress() {
+                @Override
+                public void run(IProgressMonitor monitor)
+                        throws InvocationTargetException, InterruptedException {
+                    Activator.inheritVeriniceContextState();
+                    numberOfProcess = 0;
+                    IProcessStartInformation info = null;
+                    if (!selectedUuids.isEmpty()) {
+                        info = ServiceFactory.lookupQmService().startProcessesForElement(
+                                selectedUuids.get(0), description, priority);
+                    }
+                    if (info != null) {
+                        numberOfProcess = info.getNumber();
+                    }
+
+                }
+            });
+            if (numberOfProcess > 0) {
+                TaskChangeRegistry.tasksAdded();
+            }
+            InfoDialogWithShowToggle.openInformation(Messages.StartIsaProcess_0,
+                    Messages.bind("{0} QM Processes started", numberOfProcess),
+                    Messages.StartIsaProcess_3, PreferenceConstants.INFO_PROCESSES_STARTED);
+        } catch (Exception t) {
+            LOG.error("Error while creating tasks.", t); //$NON-NLS-1$
+            ExceptionUtil.log(t, sernet.verinice.bpm.rcp.Messages.StartIsaProcess_5);
+        }
+    }
+
+    /*
+     * @see
+     * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.
+     * IAction, org.eclipse.jface.viewers.ISelection)
      */
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
         action.setEnabled(checkRights());
-        if(isActive()) {
-            if(selection instanceof ITreeSelection) {
+        if (!Activator.getDefault().isStandalone()) {
+            if (selection instanceof ITreeSelection) {
                 ITreeSelection treeSelection = (ITreeSelection) selection;
                 selectedUuids.clear();
                 selectedTitles.clear();
-                for (Iterator iterator = treeSelection.iterator(); iterator.hasNext();) {
-                    Object selectedElement = iterator.next();         
-                    if(selectedElement instanceof CnATreeElement) {
+                for (Iterator<?> iterator = treeSelection.iterator(); iterator.hasNext();) {
+                    Object selectedElement = iterator.next();
+                    if (selectedElement instanceof CnATreeElement) {
                         selectedUuids.add(((CnATreeElement) selectedElement).getUuid());
                         selectedTitles.add(((CnATreeElement) selectedElement).getTitle());
                     }
                 }
-                
+
             }
         } else {
             action.setEnabled(false);
         }
-        
-    }
-    
-    private boolean isActive() {
-        if(isActive==null) {
-            isActive = ServiceFactory.lookupProcessServiceIsa().isActive();
-        }
-        return isActive.booleanValue();
+
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
     public boolean checkRights() {
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override
     public String getRightID() {
         return ActionRightIDs.CREATEISATASKS;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
     }
 
 }

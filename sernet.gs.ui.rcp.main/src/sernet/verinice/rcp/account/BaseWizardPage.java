@@ -113,14 +113,6 @@ public abstract class BaseWizardPage extends WizardPage {
         return gridData;
     }
     
-    protected String avoidEmptyStrings(String s) {
-        String result = s;
-        if(s!=null && s.isEmpty()) {
-            result=null;
-        }
-        return result;
-    }
-    
     protected void setText(Text text, String s) {
         if(s!=null) {
             text.setText(s);

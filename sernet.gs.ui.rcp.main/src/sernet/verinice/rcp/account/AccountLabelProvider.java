@@ -23,8 +23,6 @@ class AccountLabelProvider extends ColumnLabelProvider implements ITableLabelPro
 
     private static final Logger LOG = Logger.getLogger(AccountLabelProvider.class);
     
-    private static final String DUMMY_LM_LABEL = "###verinice-dummy-id###";
-    
     boolean titleMapInitialized = false;
     
     private Map<Integer, LicenseMessageInfos> lmInfosMap;
@@ -49,7 +47,7 @@ class AccountLabelProvider extends ColumnLabelProvider implements ITableLabelPro
             Integer scopeId = account.getPerson().getScopeId();
             switch (columnIndex) { 
             case 0:
-                return ElementTitleCache.get(scopeId);
+                return ElementTitleCache.getInstance().get(scopeId);
             case 1:               
                 return person.getParentName();
             case 2:   

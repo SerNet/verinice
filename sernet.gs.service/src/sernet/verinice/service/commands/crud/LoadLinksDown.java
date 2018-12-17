@@ -23,14 +23,15 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * This command loads the accessory links (linksDown) for a CnATreeElement.
- * To excute 
+ * This command loads the accessory links (linksDown) for a CnATreeElement. To
+ * excute
  * <ul>
  * <li>create this command by passing a CnATreeElement</li>
  * <li>call method <code>execute()</code></li>
@@ -41,56 +42,62 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class LoadLinksDown extends GenericCommand {
 
-	private static final long serialVersionUID = 130016664627158967L;
+    private static final long serialVersionUID = 130016664627158967L;
 
-	private static final Logger LOG = Logger.getLogger(LoadLinksDown.class);
-	
-	private CnATreeElement parent;
-	
-	private Set<CnALink> linksDown;
-	
-	/**
-	 * Creates a new command to load the accessory links of <code>parent</code>.
-	 * 
-	 * @param parent A CnATreeElement, must not be null
-	 */
-	public LoadLinksDown(CnATreeElement parent) {
-		super();
-		this.parent = parent;
-	}
+    private static final Logger LOG = Logger.getLogger(LoadLinksDown.class);
 
-	/**
-	 * Executes this command.
-	 * Loads accessory links of <code>CnATreeElement parent</code> by calling dao method retrieve.
-	 * 
-	 * @see sernet.verinice.interfaces.ICommand#execute()
-	 */
-	public void execute() {
-		if(this.parent==null) {
-			LOG.error("Can not execute command, parent is null");
-			throw new RuntimeException("Can not execute command, parent is null");
-		}
-		if(this.parent.getDbId()==null) {
-			LOG.error("Can not execute command, dbid of parent is null");
-			throw new RuntimeException("Can not execute command, dbif of parent is null");
-		}
-		
-		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(this.parent.getTypeId());
-		
-		RetrieveInfo ri = new RetrieveInfo();
-		ri.setLinksDown(true).setLinksDownProperties(true);
-		CnATreeElement parentWithLinksDown = dao.retrieve(parent.getDbId(),ri);
-		linksDown = parentWithLinksDown.getLinksDown();
-	}
+    private CnATreeElement parent;
 
-	/**
-	 * Returns the accessory links of <code>CnATreeElement parent</code>.
-	 * Call exceute before this method. Otherwise null is returned.
-	 * 
-	 * @return the accessory links of <code>CnATreeElement parent</code>
-	 */
-	public Set<CnALink> getLinksDown() {
-		return linksDown;
-	}
+    private Set<CnALink> linksDown;
+
+    /**
+     * Creates a new command to load the accessory links of <code>parent</code>.
+     * 
+     * @param parent
+     *            A CnATreeElement, must not be null
+     */
+    public LoadLinksDown(CnATreeElement parent) {
+        super();
+        this.parent = parent;
+    }
+
+    /**
+     * Executes this command. Loads accessory links of
+     * <code>CnATreeElement parent</code> by calling dao method retrieve.
+     * 
+     * @see sernet.verinice.interfaces.ICommand#execute()
+     */
+    public void execute() {
+        if (this.parent == null) {
+            LOG.error("Can not execute command, parent is null");
+            throw new RuntimeCommandException("Can not execute command, parent is null");
+        }
+        if (this.parent.getDbId() == null) {
+            LOG.error("Can not execute command, dbid of parent is null");
+            throw new RuntimeCommandException("Can not execute command, dbif of parent is null");
+        }
+
+        IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory()
+                .getDAO(this.parent.getTypeId());
+
+        RetrieveInfo ri = new RetrieveInfo();
+        ri.setLinksDown(true).setLinksDownProperties(true);
+        CnATreeElement parentWithLinksDown = dao.retrieve(parent.getDbId(), ri);
+        if (parentWithLinksDown == null) {
+            throw new RuntimeCommandException(
+                    "Unable to retrieve element with id " + parent.getDbId() + " from DB.");
+        }
+        linksDown = parentWithLinksDown.getLinksDown();
+    }
+
+    /**
+     * Returns the accessory links of <code>CnATreeElement parent</code>. Call
+     * exceute before this method. Otherwise null is returned.
+     * 
+     * @return the accessory links of <code>CnATreeElement parent</code>
+     */
+    public Set<CnALink> getLinksDown() {
+        return linksDown;
+    }
 
 }

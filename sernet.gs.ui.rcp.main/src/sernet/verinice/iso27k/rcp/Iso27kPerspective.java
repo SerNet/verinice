@@ -38,7 +38,7 @@ public class Iso27kPerspective implements IPerspectiveFactory {
 		String editorArea = layout.getEditorArea();
 		layout.setEditorAreaVisible(true);
 		
-		layout.addView(CatalogView.ID,  IPageLayout.LEFT, catalogRatio, editorArea);
+		layout.addView(sernet.verinice.rcp.catalog.CatalogView.ID,  IPageLayout.LEFT, catalogRatio, editorArea);
 		
 		layout.addView(ISMView.ID,  IPageLayout.LEFT, ismRatio, editorArea);
 		layout.addView(RelationView.ID,  IPageLayout.BOTTOM, relationRatio, ISMView.ID);
@@ -48,7 +48,7 @@ public class Iso27kPerspective implements IPerspectiveFactory {
 		folder.addView(FileView.ID);
 		folder.addPlaceholder(NoteView.ID + ":*");
 		
-		layout.getViewLayout(CatalogView.ID).setCloseable(true);
+		layout.getViewLayout(sernet.verinice.rcp.catalog.CatalogView.ID).setCloseable(true);
 		layout.getViewLayout(ISMView.ID).setCloseable(true);
 	}
 }

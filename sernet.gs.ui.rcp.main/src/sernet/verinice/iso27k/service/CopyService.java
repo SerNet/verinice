@@ -30,92 +30,101 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.service.commands.CopyCommand;
+import sernet.verinice.service.commands.CopyLinks;
+import sernet.verinice.service.commands.CopyLinksCommand;
 import sernet.verinice.service.commands.templates.LoadModelingTemplateSettings;
 
 /**
- * A CopyService is a job, which
- * copies a list of elements to an Element-{@link Group}.
- * The progress of the copy process can be monitored by a {@link IProgressObserver}.
+ * A CopyService is a job, which copies a list of elements to an
+ * Element-{@link Group}. The progress of the copy process can be monitored by a
+ * {@link IProgressObserver}.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class CopyService extends PasteService implements IProgressTask {
-	
-	private final Logger log = Logger.getLogger(CopyService.class);
-	
-	
-    
-	private final List<CnATreeElement> elements;
-	
-	private List<String> newElements;
-    
-    private boolean copyLinks = false;
-    
+
+    private final Logger log = Logger.getLogger(CopyService.class);
+
+    private final List<CnATreeElement> elements;
+
+    private List<String> newElements;
+
     private boolean copyAttachments = false;
-    
-	/**
+
+    /**
      * Creates a new CopyService
      * 
-     * @param progressObserver used to monitor the job process
-     * @param group an element group, elements are copied to this group
-     * @param elementList a list of elements
+     * @param progressObserver
+     *            used to monitor the job process
+     * @param group
+     *            an element group, elements are copied to this group
+     * @param elementList
+     *            a list of elements
      */
-    @SuppressWarnings("unchecked")
     public CopyService(final CnATreeElement group, final List<CnATreeElement> elementList) {
         progressObserver = new DummyProgressObserver();
         this.selectedGroup = group;
-        this.elements = elementList;    
+        this.elements = elementList;
     }
-	
-	/**
-	 * Creates a new CopyService
-	 * 
-	 * @param progressObserver used to monitor the job process
-	 * @param group an element group, elements are copied to this group
-	 * @param elementList a list of elements
-	 * @param copyLinks 
-	 */
-	public CopyService(final IProgressObserver progressObserver, final CnATreeElement group, final List<CnATreeElement> elementList, final boolean copyLinks) {
-		this.progressObserver = progressObserver;
-		this.selectedGroup = group;
-		this.elements = elementList;	
-		this.copyLinks = copyLinks;
-	}
 
-	/* (non-Javadoc)
+    /**
+     * Creates a new CopyService
+     * 
+     * @param progressObserver
+     *            used to monitor the job process
+     * @param group
+     *            an element group, elements are copied to this group
+     * @param elementList
+     *            a list of elements
+     * 
+     * @param copyLinksMode
+     */
+    public CopyService(final IProgressObserver progressObserver, final CnATreeElement group,
+            final List<CnATreeElement> elementList,
+            final CopyLinksCommand.CopyLinksMode copyLinksMode) {
+        this.progressObserver = progressObserver;
+        this.selectedGroup = group;
+        this.elements = elementList;
+        if (copyLinksMode != CopyLinksCommand.CopyLinksMode.NONE) {
+            addPostProcessor(new CopyLinks(copyLinksMode));
+        }
+    }
+
+    /*
      * @see sernet.verinice.iso27k.service.IProgressTask#run()
      */
-	@Override
-    public void run()  {
-        if (this.elements.size() == 0) {
-            log.debug("Can not copy elements because element list is empty.");
-            return;
-        }
+    @Override
+    public void run() {
         try {
             Activator.inheritVeriniceContextState();
-            final List<String> uuidList = new ArrayList<String>(this.elements.size());
+            final List<String> uuidList = new ArrayList<>(this.elements.size());
             for (final CnATreeElement element : this.elements) {
                 uuidList.add(element.getUuid());
             }
             numberOfElements = uuidList.size();
             // -1 means unknown runtime
-            progressObserver.beginTask(Messages.getString("CopyService.1", numberOfElements), -1); //$NON-NLS-1$
+            progressObserver.beginTask(Messages.getString("CopyService.1", numberOfElements), //$NON-NLS-1$
+                    IProgressObserver.UNKNOWN_NUMBER_OF_ITEMS);
 
             if (isModelingTemplateActive()) {
-                sernet.verinice.service.commands.templates.CopyCommand cc = new sernet.verinice.service.commands.templates.CopyCommand(this.selectedGroup.getUuid(), uuidList, getPostProcessorList(), this.copyLinks);
+                sernet.verinice.service.commands.templates.CopyCommand cc = new sernet.verinice.service.commands.templates.CopyCommand(
+                        this.selectedGroup.getUuid(), uuidList, getPostProcessorList());
                 cc.setCopyAttachments(isCopyAttachments());
                 cc = getCommandService().executeCommand(cc);
                 numberOfElements = cc.getNumber();
                 newElements = cc.getNewElements();
             } else {
-                sernet.verinice.service.commands.CopyCommand cc = new sernet.verinice.service.commands.CopyCommand(this.selectedGroup.getUuid(), uuidList, getPostProcessorList(), this.copyLinks);
+                CopyCommand cc = new CopyCommand(this.selectedGroup.getUuid(), uuidList,
+                        getPostProcessorList());
                 cc.setCopyAttachments(isCopyAttachments());
                 cc = getCommandService().executeCommand(cc);
                 numberOfElements = cc.getNumber();
                 newElements = cc.getNewElements();
             }
+
             progressObserver.setTaskName(Messages.getString("CopyService.4")); //$NON-NLS-1$
-            CnAElementFactory.getInstance().reloadModelFromDatabase();
+            CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
         } catch (final Exception e) {
             log.error("Error while copying element", e); //$NON-NLS-1$
             throw new RuntimeException("Error while copying element", e); //$NON-NLS-1$
@@ -136,12 +145,13 @@ public class CopyService extends PasteService implements IProgressTask {
     }
 
     /**
-     * @param copyAttachments the copyAttachments to set
+     * @param copyAttachments
+     *            the copyAttachments to set
      */
     public void setCopyAttachments(final boolean copyAttachments) {
         this.copyAttachments = copyAttachments;
     }
-	
+
     private boolean isModelingTemplateActive() {
         boolean standalone = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
         if (standalone) {

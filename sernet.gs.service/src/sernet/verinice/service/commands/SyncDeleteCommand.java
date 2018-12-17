@@ -48,15 +48,8 @@ import de.sernet.sync.data.SyncObject;
 @SuppressWarnings("serial")
 public class SyncDeleteCommand extends GenericCommand {
 
-    private transient Logger log = Logger.getLogger(SyncDeleteCommand.class);
+    private static final Logger log = Logger.getLogger(SyncDeleteCommand.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(SyncDeleteCommand.class);
-        }
-        return log;
-    }
-    
     private String sourceId;
     private SyncData syncData;
 
@@ -85,7 +78,7 @@ public class SyncDeleteCommand extends GenericCommand {
         try {
             command = getCommandService().executeCommand(command);
         } catch (CommandException e) {
-            getLog().error("Error while loading elements by source-id: " + sourceId, e);
+            log.error("Error while loading elements by source-id: " + sourceId, e);
             errors.add("Fehler beim Ausführen von LoadCnAElementsBySourceID mit der sourceId = " + sourceId);
             return;
         }
@@ -108,8 +101,8 @@ public class SyncDeleteCommand extends GenericCommand {
     }
 
     private void deleteElement(CnATreeElement e) {
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Element with source-id: " + sourceId + " not found in VNA / XML, will be deleted now, type: " + e.getTypeId() + ", uuid: " + e.getUuid() + ", ext-id: " + e.getExtId() + "...");
+        if (log.isDebugEnabled()) {
+            log.debug("Element with source-id: " + sourceId + " not found in VNA / XML, will be deleted now, type: " + e.getTypeId() + ", uuid: " + e.getUuid() + ", ext-id: " + e.getExtId() + "...");
         }
         // delete this object from the database:
         RemoveElement<?> cmdRemove = new RemoveElement<CnATreeElement>(e);
@@ -117,7 +110,7 @@ public class SyncDeleteCommand extends GenericCommand {
             cmdRemove = getCommandService().executeCommand(cmdRemove);
             deleted++;
         } catch (CommandException ex) {
-            getLog().error("Error while deleting element, uuid: " + e.getUuid(), ex);
+            log.error("Error while deleting element, uuid: " + e.getUuid(), ex);
             errors.add("Konnte Objekt ( id=" + e.getId() + ", externalId=" + e.getExtId() + ") nicht löschen.");
         }
     }

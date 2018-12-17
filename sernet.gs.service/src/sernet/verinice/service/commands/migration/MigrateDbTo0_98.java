@@ -33,23 +33,16 @@ import sernet.gs.service.RuntimeCommandException;
 @SuppressWarnings("serial")
 public class MigrateDbTo0_98 extends DbMigration {
 
-    private transient Logger log = Logger.getLogger(MigrateDbTo0_98.class);
+    private static final Logger log = Logger.getLogger(MigrateDbTo0_98.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(MigrateDbTo0_98.class);
-        }
-        return log;
-    }
-    
 	@Override
 	public double getVersion() {
 		return 0.98D;
 	}
 
 	public void execute() throws RuntimeCommandException {
-	    if (getLog().isDebugEnabled()) {
-	        getLog().debug("Updating database version to 0.98");
+	    if (log.isDebugEnabled()) {
+	        log.debug("Updating database version to 0.98");
         }
 		super.updateVersion();
 	}

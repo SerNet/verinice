@@ -33,7 +33,7 @@ import sernet.verinice.service.commands.crud.LoadReportRedYellowScenarioGroups.C
  */
 public class LoadReportScenarioGroupColourCount extends GenericCommand implements ICachedCommand {
 
-    private static transient Logger LOG = Logger.getLogger(LoadReportScenarioGroupColourCount.class);
+    private static final Logger LOG = Logger.getLogger(LoadReportScenarioGroupColourCount.class);
 
     private Integer rootElmt;
 
@@ -94,16 +94,9 @@ public class LoadReportScenarioGroupColourCount extends GenericCommand implement
                     }
                 }
             } catch (CommandException e) {
-                getLog().error("Errow while executing command", e);
+                LOG.error("Errow while executing command", e);
             }
         }
-    }
-
-    private Logger getLog() {
-        if (LOG == null) {
-            LOG = Logger.getLogger(LoadReportScenarioGroupColourCount.class);
-        }
-        return LOG;
     }
 
     public List<ArrayList<String>> getResult() {

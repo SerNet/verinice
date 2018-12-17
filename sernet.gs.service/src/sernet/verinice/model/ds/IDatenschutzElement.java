@@ -21,17 +21,15 @@ package sernet.verinice.model.ds;
  * Marker interface for Datenschutz specific classes.
  * 
  * @author koderman[at]sernet[dot]de
- *
+ * @deprecated
  */
+@Deprecated
 public interface IDatenschutzElement {
 	
 	
 	// use new "_link" types instead:
-	@Deprecated
 	String P_ABTEILUNG_OLD = "vs_abteilung";
-	@Deprecated
 	String P_FACHLICHVERANTWORTLICHER_OLD = "vs_fachl";
-	@Deprecated
 	String P_ITVERANTWORTLICHER_OLD = "vs_it";
 	
 	

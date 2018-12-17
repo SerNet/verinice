@@ -28,14 +28,7 @@ import sernet.hui.common.connect.ITypedElement;
 @SuppressWarnings("serial")
 public class Permission implements Serializable, ITypedElement, Comparable<Permission> {
 
-	private static transient Logger log = Logger.getLogger(Permission.class);
-	
-    private static Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(Permission.class);
-        }
-        return log;
-    }
+	private static final Logger log = Logger.getLogger(Permission.class);
 	
 	private Integer dbId;
 	
@@ -133,9 +126,9 @@ public class Permission implements Serializable, ITypedElement, Comparable<Permi
 	public static Set<Permission> clonePermissionSet(CnATreeElement cte, Set<Permission> perms) {
 		HashSet<Permission> clone = null;
 		if(cte==null) {
-			 getLog().warn("Element is null");
+			 log.warn("Element is null");
 		} else if(cte.getUuid()==null) {
-		     getLog().warn("Element uuid is null");
+		     log.warn("Element uuid is null");
 		}
 		if(perms!=null) {
 			clone = new HashSet<Permission>(perms.size());	
@@ -165,7 +158,7 @@ public class Permission implements Serializable, ITypedElement, Comparable<Permi
 			result = prime * result + ((cnaTreeElement==null) ? 0 : cnaTreeElement.hashCode());
 			result = prime * result + ((role == null) ? 0 : role.hashCode());
 		} catch(Exception t ) {
-			getLog().error("Error while creating hashcode, element UUID: " + cnaTreeElement.getUuid() + ", role: " + role, t);
+			log.error("Error while creating hashcode, element UUID: " + cnaTreeElement.getUuid() + ", role: " + role, t);
 		}
 		return result;
 	}
@@ -192,7 +185,7 @@ public class Permission implements Serializable, ITypedElement, Comparable<Permi
 			}
 			return true;
 		} catch(Exception t ) {
-			getLog().error("Error in equals, element UUID: " + cnaTreeElement.getUuid() + ", role: " + role, t);
+			log.error("Error in equals, element UUID: " + cnaTreeElement.getUuid() + ", role: " + role, t);
 			return false;
 		}
 	}

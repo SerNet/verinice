@@ -155,7 +155,7 @@ public class Organization extends CnATreeElement implements IISO27kGroup, IISO27
 	}
 	
 	@Override
-    public Collection<? extends String> getTags() {
+    public Collection<String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 	

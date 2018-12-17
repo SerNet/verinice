@@ -36,12 +36,9 @@ import org.eclipse.ui.PlatformUI;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.actions.helper.UpdateConfigurationHelper;
-import sernet.gs.ui.rcp.main.bsi.dialogs.AccountDialog;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
-import sernet.hui.common.connect.EntityType;
-import sernet.hui.common.connect.HitroUtil;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
@@ -58,10 +55,11 @@ import sernet.verinice.service.commands.SaveConfiguration;
 
 /**
  * ConfigurationAction creates and changes user account. Data of an account is
- * set to entity {@link sernet.verinice.model.common.configuration.Configuration}.
+ * set to entity
+ * {@link sernet.verinice.model.common.configuration.Configuration}.
  * 
- * Account is edited by {@link AccountDialog}. 
- * Account configuration is saved by command {@link SaveConfiguration}.
+ * Account is edited by AccountWizard. Account configuration is saved by command
+ * {@link SaveConfiguration}.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -73,8 +71,6 @@ public class ConfigurationAction extends Action implements IObjectActionDelegate
 
 	Configuration configuration;
 
-	private IWorkbenchPart targetPart;
-	
 	private ICommandService commandService;
 	
 	private IRightsServiceClient rightsService;
@@ -88,14 +84,12 @@ public class ConfigurationAction extends Action implements IObjectActionDelegate
         this.configuration = configuration;
     }
 
-
     @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		this.targetPart = targetPart;
-	}
-	
 
-    /* (non-Javadoc)
+    }
+
+    /*
      * @see org.eclipse.jface.action.Action#run()
      */
     public void run() {
@@ -130,20 +124,13 @@ public class ConfigurationAction extends Action implements IObjectActionDelegate
         }
     }
 
-    private TitleAreaDialog createDialog() {
-        IWorkbenchWindow window2 = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        EntityType entType = HitroUtil.getInstance().getTypeFactory().getEntityType(Configuration.TYPE_ID);     
-        final TitleAreaDialog dialog = new AccountDialog(window2.getShell(), entType, Messages.ConfigurationAction_4, configuration.getEntity());
-        return dialog;
-    }
-    
     private TitleAreaDialog createWizard() {
         AccountWizard wizard = new AccountWizard(configuration);                 
         WizardDialog wizardDialog = new NonModalWizardDialog(Display.getCurrent().getActiveShell(),wizard);
         return wizardDialog;
     }
     
-	/* (non-Javadoc)
+	/*
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
 	@Override
@@ -238,12 +225,6 @@ public class ConfigurationAction extends Action implements IObjectActionDelegate
         return ActionRightIDs.ACCOUNTSETTINGS;
     }
 
-
-    @Override
-    public void setRightID(String rightID) {
-        // DO nothing
-    }
-    
     IRightsServiceClient getRightService() {
         if (rightsService == null) {
             rightsService = (IRightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);

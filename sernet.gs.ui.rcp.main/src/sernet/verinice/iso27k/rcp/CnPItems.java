@@ -22,37 +22,40 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class CnPItems {
-	// TODO use system clipboard
 
-	private static final Logger LOG = Logger.getLogger(CnPItems.class);
-	
-	private static List copyItems = new ArrayList();
-	
-	private static boolean copyLinks = false;
-	
-	private static List cutItems = new ArrayList();
+    // TODO use system clipboard
 
-	public static void setCopyItems(List items) {
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("setCopyItems: " + items);
-		}
-		copyItems.addAll(items); 
-	}
-	
-	public static void setCutItems(List items) {
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("setCutItems: " + items);
-		}
-		cutItems.addAll(items); 
-	}
+    private static final Logger LOG = Logger.getLogger(CnPItems.class);
 
-	public static List getCopyItems() {
-		return copyItems;
-	}
-	
-	public static boolean isCopyLinks() {
+    private static List copyItems = new ArrayList();
+
+    private static boolean copyLinks = false;
+
+    private static List cutItems = new ArrayList();
+
+    private static String copySourcePartId;
+
+    public static void setCopyItems(List items) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("setCopyItems: " + items);
+        }
+        copyItems.addAll(items);
+    }
+
+    public static void setCutItems(List items) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("setCutItems: " + items);
+        }
+        cutItems.addAll(items);
+    }
+
+    public static List getCopyItems() {
+        return copyItems;
+    }
+
+    public static boolean isCopyLinks() {
         return copyLinks;
     }
 
@@ -61,17 +64,24 @@ public class CnPItems {
     }
 
     public static List getCutItems() {
-		return cutItems;
-	}
 
-	public static void clearCopyItems() {
-		copyItems.clear();
-	}
-	
-	public static void clearCutItems() {
-		cutItems.clear();
-	}
-	
-	
+        return cutItems;
+    }
+
+    public static void clearCopyItems() {
+        copyItems.clear();
+    }
+
+    public static void clearCutItems() {
+        cutItems.clear();
+    }
+
+    public static void setCopySourcePartId(String copySourcePartId) {
+        CnPItems.copySourcePartId = copySourcePartId;
+    }
+
+    public static String getCopySourcePartId() {
+        return copySourcePartId;
+    }
 
 }

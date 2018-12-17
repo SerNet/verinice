@@ -22,7 +22,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
@@ -41,16 +42,10 @@ import sernet.verinice.service.commands.crud.LoadReportElements;
 @SuppressWarnings("serial")
 public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCommand, ICachedCommand {
 
-    private transient Logger log = Logger.getLogger(FindSamtGroup.class);
+
+    private static final Logger log = LoggerFactory.getLogger(FindSamtGroup.class);
     
     private boolean resultInjectedFromCache = false;
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(FindSamtGroup.class);
-        }
-        return log;
-    }
 
     private transient IAuthService authService;
 
@@ -101,8 +96,8 @@ public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCom
                 controlGroupList = Collections.emptyList();
             }
 
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("number of controlGroups " + FindISO27kSamtGroup.nullSaveSize(controlGroupList));
+            if (log.isDebugEnabled()) {
+                log.debug("number of controlGroups " + FindISO27kSamtGroup.nullSaveSize(controlGroupList));
             }
 
             // check if parent is Audit and children are SamtTopics
@@ -253,8 +248,8 @@ public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCom
     public void injectCacheResult(Object result) {
         this.selfAssessmentGroup = (ControlGroup)result;
         resultInjectedFromCache = true;
-        if(getLog().isDebugEnabled()){
-            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        if(log.isDebugEnabled()){
+            log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 

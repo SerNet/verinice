@@ -21,17 +21,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.window.Window;
 
 import sernet.gs.service.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.dialogs.CnATreeElementSelectionDialog;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.PersonEntityOptionWrapper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.Entity;
@@ -49,7 +44,6 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.Person;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.service.commands.LoadEntitiesByIds;
@@ -58,7 +52,6 @@ import sernet.verinice.service.commands.crud.LoadCnAElementByEntityUuid;
 import sernet.verinice.service.commands.crud.LoadCnAElementByType;
 import sernet.verinice.service.commands.task.FindAllRoles;
 import sernet.verinice.service.commands.task.FindHuiUrls;
-import sernet.verinice.service.commands.task.FindRelationsFor;
 
 /**
  * The HUI framework has no knowledge about the database, so this factory
@@ -166,101 +159,6 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
         };
     }
     
-    /**
-     * Creates a resolver for all properties of type cnalink-reference.
-     * Allows to create cnalinks to one or more objects according to a given relation id.
-     * 
-     * Note: Since the IReferenceResolver interface was originally designed for the "old" references, 
-     * some of the methods do nothing in this resolver.
-     * 
-     */
-    private void createCnaLinkReferenceResolver() {
-        if (cnalinkresolver==null) {
-            cnalinkresolver = new IReferenceResolver() {
-                
-                @Override
-                public String getTitlesOfLinkedObjects(String referencedRelationId, String entityUuid) {
-                    StringBuilder sb = new StringBuilder();
-                    
-                    CnATreeElement rootElmt;
-                    try {
-                        rootElmt = loadElementByEntityUuid(entityUuid);
-                        FindRelationsFor cmd = new FindRelationsFor(rootElmt);
-                        cmd = ServiceFactory.lookupCommandService().executeCommand(cmd);
-                        rootElmt = cmd.getElmt();
-                        
-                        Set<CnALink> linksUp = rootElmt.getLinksUp();
-                        for (Iterator iterator = linksUp.iterator(); iterator.hasNext();) {
-                            CnALink cnALink = (CnALink) iterator.next();
-                            if (cnALink.getRelationId().equals(referencedRelationId)) {
-                                if (sb.length()>0) {
-                                    sb.append(", ");
-                                }
-                                sb.append(CnALink.getRelationObjectTitle(rootElmt, cnALink));
-                            }
-                        }
-                        
-                        Set<CnALink> linksDown = rootElmt.getLinksDown();
-                        for (Iterator iterator = linksDown.iterator(); iterator.hasNext();) {
-                            CnALink cnALink = (CnALink) iterator.next();
-                            if (cnALink.getRelationId().equals(referencedRelationId)) {
-                                if (sb.length()>0) {
-                                    sb.append(", ");
-                                }
-                                sb.append(CnALink.getRelationObjectTitle(rootElmt, cnALink));
-                            }
-                        }
-                    } catch (CommandException e) {
-                        ExceptionUtil.log(e, "");
-                    }
-                    
-                    return sb.toString();
-                }
-                
-                @Override
-                public List<IMLPropertyOption> getReferencedEntitesForType(String referencedEntityTypeId, List<Property> references) {
-                 // not implemented for this resolver
-                    return new ArrayList<IMLPropertyOption>(0);
-                }
-                
-                @Override
-                public List<IMLPropertyOption> getAllEntitesForType(String referencedEntityTypeId) {
-                    // not implemented for this resolver
-                    return new ArrayList<IMLPropertyOption>(0);
-                }
-                
-                @Override
-                public void createLinks(String referencedEntityType, String linkType, String entityUuid) {
-                    
-                    
-                    CnATreeElement inputElmt;
-                    // find the inputElmt by UUID:
-                    try {
-                        inputElmt = loadElementByEntityUuid(entityUuid);
-                        CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(referencedEntityType, inputElmt);
-                        
-                        if (dialog.open() != Window.OK){
-                            return;
-                        }
-                        List<CnATreeElement> linkTargets = dialog.getSelectedElements();
-                        
-                        // this method also fires events for added links:
-                        CnAElementHome.getInstance().createLinksAccordingToBusinessLogicAsync(inputElmt, linkTargets, linkType);
-                    } catch (CommandException e) {
-                        ExceptionUtil.log(e, "Error while creating links.");
-                    }
-                    
-                                        
-                }
-                
-                @Override
-                public void addNewEntity(Entity parentEntity, String newName) {
-                    // do nothing, not supported
-                }
-            };
-        }
-    }
-
     protected CnATreeElement loadElementByEntityUuid(String entityUuid) throws CommandException {
         LoadCnAElementByEntityUuid command = new LoadCnAElementByEntityUuid(entityUuid);
         command = ServiceFactory.lookupCommandService().executeCommand(command);
@@ -304,7 +202,17 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
 
                     List<Integer> dbIds = new ArrayList<Integer>();
                     for (Property prop : references) {
-                        dbIds.add(Integer.parseInt(prop.getPropertyValue()));
+                        try {
+                            dbIds.add(Integer.parseInt(prop.getPropertyValue()));
+                        } catch (NumberFormatException e) {
+                            LOG.error(
+                                    "Error while resolving reference of a Person, the property type is: "
+                                            + prop.getPropertyTypeID() + " the property value is: "
+                                            + prop.getPropertyValue()
+                                            + " the referenced entity type is: "
+                                            + referencedEntityTypeId);
+                            throw e;
+                        }
                     }
                     LoadEntitiesByIds command = new LoadEntitiesByIds(dbIds);
 

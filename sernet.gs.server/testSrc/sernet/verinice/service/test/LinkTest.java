@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.service.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -34,6 +35,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.junit.Assert;
 import org.junit.Test;
 
 import sernet.gs.service.RetrieveInfo;
@@ -163,18 +165,15 @@ public class LinkTest extends CommandServiceProvider {
             }
         }
 
-        boolean thrown = false;
         for(HuiRelation relation : huiTypeFactory.getPossibleRelations(scenario.getEntityType().getId(), asset.getEntityType().getId())) {
             try {
                 createLink(asset, scenario, relation.getId());
+                Assert.fail("Expected exception was not thrown");
             } catch (CommandException e) {
-                if(e.getCause().getMessage().contains(RelationNotDefinedException.class.getSimpleName())) {
-                    thrown = true;
-                }
+                assertEquals(RelationNotDefinedException.class, e.getCause().getCause().getClass());
             }
         }
 
-        assertTrue(thrown);
 
     }
 

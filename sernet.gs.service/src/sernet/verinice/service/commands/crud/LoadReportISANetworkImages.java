@@ -56,7 +56,7 @@ public class LoadReportISANetworkImages extends GenericCommand implements ICache
     
     private boolean resultInjectedFromCache = false;
     
-    private static transient Logger LOG = Logger.getLogger(LoadReportISANetworkImages.class);
+    private static final Logger LOG = Logger.getLogger(LoadReportISANetworkImages.class);
     
     private boolean oddNumbers = false;
     
@@ -144,13 +144,6 @@ public class LoadReportISANetworkImages extends GenericCommand implements ICache
         return this.results;
     }
     
-    public Logger getLog(){
-        if(LOG != null){
-            LOG = Logger.getLogger(LoadReportISANetworkImages.class);
-        }
-        return LOG;
-    }
-    
     private List<Object[]> getNetworkPictures(List<Evidence> evidences){
         List<Object[]> pictures = new ArrayList<Object[]>(0);
         for(Evidence evidence : evidences){
@@ -229,7 +222,7 @@ public class LoadReportISANetworkImages extends GenericCommand implements ICache
                 return buffer.toByteArray();
             }
         } catch(IOException e){
-            getLog().error("Error while scaling image", e);
+            LOG.error("Error while scaling image", e);
         }
         return imageData;
     }

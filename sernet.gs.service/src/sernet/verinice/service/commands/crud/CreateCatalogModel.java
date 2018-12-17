@@ -37,7 +37,7 @@ import sernet.verinice.service.model.LoadModel;
 public class CreateCatalogModel extends SaveElement<CatalogModel> {
 
     
-    private static transient Logger logger;
+    private static final Logger logger = Logger.getLogger(CreateCatalogModel.class);
     
     private static final long serialVersionUID = 1L;
     
@@ -53,27 +53,16 @@ public class CreateCatalogModel extends SaveElement<CatalogModel> {
         try {
             loadModel = getCommandService().executeCommand(loadModel);
         } catch (CommandException e) {
-            getLogger().error("Error while loading model.", e);
+            logger.error("Error while loading model.", e);
             throw new RuntimeException("Error while loading model.", e);
         }
         final CatalogModel model = loadModel.getModel();
         if(model==null) {
             super.execute();
         } else {
-            getLogger().warn(model.getTitle() + " model exists. Will NOT create another model. Returning existing model.");
+            logger.warn(model.getTitle() + " model exists. Will NOT create another model. Returning existing model.");
             element = model;
         }
     }
-
-
-    private Logger getLogger() {
-        if(logger ==null){
-            logger = Logger.getLogger(CreateCatalogModel.class);
-        }
-        
-        return logger;
-    }
-    
-    
 
 }

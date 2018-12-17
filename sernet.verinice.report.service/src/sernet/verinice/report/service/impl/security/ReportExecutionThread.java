@@ -19,17 +19,16 @@
  ******************************************************************************/
 package sernet.verinice.report.service.impl.security;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.log4j.Logger;
 import org.eclipse.birt.report.engine.api.EngineException;
 import org.eclipse.birt.report.engine.api.IEngineTask;
 import org.eclipse.birt.report.engine.api.IReportRunnable;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 import org.eclipse.birt.report.engine.api.script.element.IReportDesign;
 import org.eclipse.osgi.util.NLS;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sernet.verinice.interfaces.report.ReportTypeException;
-import sernet.verinice.security.report.ReportSecurityException;
 
 /**
  * This thread passes a prepared {@link IRunAndRenderTask} (representing a
@@ -41,7 +40,7 @@ import sernet.verinice.security.report.ReportSecurityException;
  */
 public class ReportExecutionThread extends Thread {
     
-    private static final Logger LOG = Logger.getLogger(ReportExecutionThread.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ReportExecutionThread.class);
     
     private ReportSecurityManager reportSecurityManager ;
     private IRunAndRenderTask task;

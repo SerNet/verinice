@@ -330,7 +330,14 @@ public abstract class AbstractPermissionHandler implements IReportPermissionHand
                 Arrays.asList(new String[]{RUNTIME_ACTIONNAME_SUPPRESSACCESS}));
         runtimeActionsWhitelist .put("com.ibm.icu.impl.JavaTimeZone.getOffset", 
                 Arrays.asList(new String[]{RUNTIME_ACTIONNAME_SUPPRESSACCESS}));
-        
+        runtimeActionsWhitelist.put(
+                "java.io.ObjectOutputStream.writeObject",
+                Arrays.asList(RUNTIME_ACTIONNAME_GETPROTECTIONDOMAIN ));
+        runtimeActionsWhitelist.put("java.io.ObjectInputStream.readObject",
+                Arrays.asList(RUNTIME_ACTIONNAME_GETPROTECTIONDOMAIN ));
+        runtimeActionsWhitelist.put(
+                "org.eclipse.birt.report.engine.nLayout.area.impl.ImageAreaLayout.initialize",
+                Arrays.asList(RUNTIME_ACTIONNAME_SUPPRESSACCESS));
     }
     
     List<String> osgiAdminPermissionList = Arrays.asList(new String[]{

@@ -34,6 +34,8 @@ import org.hibernate.persister.entity.EntityPersister;
  */
 public class HibernateBugFixDeleteEventListener extends
 		DefaultDeleteEventListener {
+
+    @Override
 	protected void deleteTransientEntity(EventSource session, Object entity,
 			boolean cascadeDeleteEnabled, EntityPersister persister,
 			Set transientEntities) {

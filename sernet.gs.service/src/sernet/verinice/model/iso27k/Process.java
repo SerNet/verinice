@@ -35,6 +35,10 @@ public class Process extends CnATreeElement implements IISO27kElement {
 	public static final String PROP_ABBR = "process_abbr"; //$NON-NLS-1$
 	public static final String PROP_NAME = "process_name"; //$NON-NLS-1$
 	public static final String PROP_TAG = "process_tag"; //$NON-NLS-1$
+    public static final String PROP_USER = "process_user"; //$NON-NLS-1$
+    public static final String PROP_VALUE_USER_1 = "process_user_1"; //$NON-NLS-1$
+    public static final String PROP_VALUE_USER_2 = "process_user_2"; //$NON-NLS-1$
+    public static final String PROP_VALUE_USER_3 = "process_user_3"; //$NON-NLS-1$
 	public static final String PROCESS_VALUE_CONFIDENTIALITY = "process_value_confidentiality"; //$NON-NLS-1$
 	public static final String PROCESS_VALUE_INTEGRITY = "process_value_integrity"; //$NON-NLS-1$
 	public static final String PROCESS_VALUE_AVAILABILITY = "process_value_availability"; //$NON-NLS-1$
@@ -101,7 +105,7 @@ public class Process extends CnATreeElement implements IISO27kElement {
 	}
 	
 	@Override
-    public Collection<? extends String> getTags() {
+    public Collection<String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 

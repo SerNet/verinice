@@ -45,8 +45,6 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
         BooleanFieldEditor booleanFieldEditor = new BooleanFieldEditor(PreferenceConstants.HUI_TAGS_STRICT, sernet.gs.ui.rcp.main.preferences.Messages.getString("EditorPreferencePage.1"), getFieldEditorParent()); //$NON-NLS-1$
         addField(booleanFieldEditor);
         createTagList();
-        booleanFieldEditor = new BooleanFieldEditor(PreferenceConstants.SHOW_LINK_MAKER_IN_EDITOR, Messages.getString("EditorPreferencePage.3"), getFieldEditorParent()); //$NON-NLS-1$
-        addField(booleanFieldEditor);
     }
 
     /**

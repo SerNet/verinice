@@ -21,9 +21,9 @@ package sernet.verinice.bpm;
 
 import java.io.InputStream;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -47,8 +47,8 @@ import sernet.verinice.interfaces.bpm.IProcessServiceGeneric;
 import sernet.verinice.interfaces.bpm.KeyMessage;
 
 /**
- * ProcessServiceGeneric implements all generic methods to handle jBPM processes. 
- * jBPM is an open source workflow engine: http://www.jboss.org/jbpm/
+ * ProcessServiceGeneric implements all generic methods to handle jBPM
+ * processes. jBPM is an open source workflow engine: http://www.jboss.org/jbpm/
  * 
  * This class has (almost) no dependencies to verinice classes.
  * 
@@ -57,7 +57,7 @@ import sernet.verinice.interfaces.bpm.KeyMessage;
 public class ProcessServiceGeneric implements IProcessServiceGeneric {
 
     private static final Logger LOG = Logger.getLogger(ProcessServiceGeneric.class);
-    
+
     private ProcessEngine processEngine;
     private Set<String> processDefinitions;
     private boolean wasInitCalled = false;
@@ -67,13 +67,14 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
     private ProcessDao processDao;
 
     /**
-     * Spring init method configured in sernet/gs/server/spring/veriniceserver-jbpm.xml
+     * Spring init method configured in
+     * sernet/gs/server/spring/veriniceserver-jbpm.xml
      * 
      * Initializes the process service. See: doInit()
      */
     public void init() {
         synchronized (this) {
-            if(!wasInitCalled) {
+            if (!wasInitCalled) {
                 doInit();
             }
         }
@@ -82,131 +83,143 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
     /**
      * Initializes the process service.
      * 
-     * Deploys process definitions defined in Spring configuration (veriniceserver-jbpm.xml)
-     * if they are not already deployed.
+     * Deploys process definitions defined in Spring configuration
+     * (veriniceserver-jbpm.xml) if they are not already deployed.
      * 
      * Dont call this unsyncronised method, Call: init()
      */
     private void doInit() {
-        if(!wasInitCalled) {
+        if (!wasInitCalled) {
             try {
                 for (String resource : getProcessDefinitions()) {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Loading process definition from resource: " + resource + "...");
-                    }                 
-                    List<ProcessDefinitionImpl> definitions = parseProcessDefinitions(resource);          
-                            
-                    if(definitions!=null && definitions.size()>1) {
-                        throwException("Process definition from resource: " + resource + " contains more than one process");
+                    }
+                    List<ProcessDefinitionImpl> definitions = parseProcessDefinitions(resource);
+
+                    if (definitions != null && definitions.size() > 1) {
+                        throwException("Process definition from resource: " + resource
+                                + " contains more than one process");
                     }
                     String processId = null;
                     RepositoryService aRepositoryService = null;
                     boolean doDeploy = false;
-                    if(definitions!=null && !definitions.isEmpty()) {
+                    if (definitions != null && !definitions.isEmpty()) {
                         for (ProcessDefinitionImpl definition : definitions) {
-                            String key = definition.getKey(); 
-                            if(key==null) {
-                                throwException("Process definition from resource: " + resource + " contains no key.");                
+                            String key = definition.getKey();
+                            if (key == null) {
+                                throwException("Process definition from resource: " + resource
+                                        + " contains no key.");
                             }
                             int version = definition.getVersion();
-                            if(version<1) {
-                                throwException("Process definition from resource: " + resource + " contains no version > 0.");
+                            if (version < 1) {
+                                throwException("Process definition from resource: " + resource
+                                        + " contains no version > 0.");
                             }
-                            processId = new StringBuilder(key).append("-").append(version).toString();
+                            processId = new StringBuilder(key).append("-").append(version)
+                                    .toString();
                             if (LOG.isDebugEnabled()) {
                                 LOG.debug("Query process repository for id: " + processId);
                             }
-                            if(processEngine==null) {
+                            if (processEngine == null) {
                                 throw new RuntimeException("Init failed. ProcessEngine is null");
                             }
-                            if(processEngine.getRepositoryService()==null) {
-                                throw new RuntimeException("Init failed. RepositoryService is null");
+                            if (processEngine.getRepositoryService() == null) {
+                                throw new RuntimeException(
+                                        "Init failed. RepositoryService is null");
                             }
-                            // don't call this.getRepositoryService() here: endless loop!
+                            // don't call this.getRepositoryService() here:
+                            // endless loop!
                             aRepositoryService = processEngine.getRepositoryService();
-                            doDeploy = aRepositoryService.createProcessDefinitionQuery().processDefinitionId(processId).count() == 0;              
-                        }  
+                            doDeploy = aRepositoryService.createProcessDefinitionQuery()
+                                    .processDefinitionId(processId).count() == 0;
+                        }
                         if (doDeploy) {
                             processId = aRepositoryService.createDeployment()
-                            .addResourceFromClasspath(resource)           
-                            .deploy();
+                                    .addResourceFromClasspath(resource).deploy();
                             if (LOG.isInfoEnabled()) {
-                                LOG.info("Process definition deployed, Id: " + processId + ", loaded from resource: " + resource);
+                                LOG.info("Process definition deployed, Id: " + processId
+                                        + ", loaded from resource: " + resource);
                             }
                         } else if (LOG.isDebugEnabled()) {
-                            LOG.debug("Process definition exitsts, Id: " + processId + ", loaded from resource: " + resource);
+                            LOG.debug("Process definition exitsts, Id: " + processId
+                                    + ", loaded from resource: " + resource);
                         }
                     } else {
                         LOG.warn("Resource contains no process definitions: " + resource);
-                    }              
-                }           
-            } catch(RuntimeException re) {
+                    }
+                }
+            } catch (RuntimeException re) {
                 LOG.error("RuntimeException while initializing", re);
                 throw re;
-            } catch(Exception t) {
+            } catch (Exception t) {
                 LOG.error("Error while initializing", t);
                 throw new RuntimeException("Error while initializing", t);
-            }
-            finally {
-                wasInitCalled=true;
+            } finally {
+                wasInitCalled = true;
             }
         }
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#startProcess(java.lang.String, java.util.Map)
+    /*
+     * @see
+     * sernet.verinice.interfaces.bpm.IProcessServiceGeneric#startProcess(java.
+     * lang.String, java.util.Map)
      */
     @Override
     public void startProcess(String processDefinitionKey, Map<String, ?> variables) {
         ProcessInstance processInstance = null;
-        if(variables==null) {
+        if (variables == null) {
             processInstance = getExecutionService().startProcessInstanceByKey(processDefinitionKey);
         } else {
-            processInstance = getExecutionService().startProcessInstanceByKey(processDefinitionKey,variables);
+            processInstance = getExecutionService().startProcessInstanceByKey(processDefinitionKey,
+                    variables);
         }
         if (LOG.isInfoEnabled()) {
-            LOG.info("Process started, key: " + processDefinitionKey + ", id:" + processInstance.getId());
+            LOG.info("Process started, key: " + processDefinitionKey + ", id:"
+                    + processInstance.getId());
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Variables: ");
-                for (String key : variables.keySet()) {
-                    LOG.debug( key + ": "+ variables.get(key));
+                for (Entry<String, ?> entry : variables.entrySet()) {
+                    LOG.debug(entry.getKey() + ": " + entry.getValue());
                 }
             }
-        }       
+        }
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#findProcessDefinitionId(java.lang.String)
+
+    /*
+     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#
+     * findProcessDefinitionId(java.lang.String)
      */
     @Override
     public String findProcessDefinitionId(String processDefinitionKey) {
         String id = null;
         List<ProcessDefinition> processDefinitionList = getRepositoryService()
-            .createProcessDefinitionQuery()
-            .processDefinitionKey(processDefinitionKey)
-            .orderDesc(ProcessDefinitionQuery.PROPERTY_VERSION).list();
-        if(processDefinitionList!=null && !processDefinitionList.isEmpty()) {
+                .createProcessDefinitionQuery().processDefinitionKey(processDefinitionKey)
+                .orderDesc(ProcessDefinitionQuery.PROPERTY_VERSION).list();
+        if (processDefinitionList != null && !processDefinitionList.isEmpty()) {
             id = processDefinitionList.get(0).getId();
         }
         return id;
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#findAllProcessDefinitions()
+
+    /*
+     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#
+     * findAllProcessDefinitions()
      */
     @Override
     public Set<KeyMessage> findAllProcessDefinitions() {
         List<ProcessDefinition> processDefinitionList = getRepositoryService()
-                .createProcessDefinitionQuery()
-                .orderDesc(ProcessDefinitionQuery.PROPERTY_KEY).list();
-        Set<KeyMessage> keyMessageSet = new HashSet<KeyMessage>();
+                .createProcessDefinitionQuery().orderDesc(ProcessDefinitionQuery.PROPERTY_KEY)
+                .list();
+        Set<KeyMessage> keyMessageSet = new HashSet<>();
         for (ProcessDefinition processDefinition : processDefinitionList) {
             keyMessageSet.add(new KeyMessage(processDefinition.getKey()));
         }
         return keyMessageSet;
     }
-    
-    public List<ExecutionImpl> findExecutionForElement(String key, String uuid) {    
+
+    public List<ExecutionImpl> findExecutionForElement(String key, String uuid) {
         String processDefinitionId = findProcessDefinitionId(key);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Latest processDefinitionId: " + processDefinitionId);
@@ -219,22 +232,14 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
         return getJbpmExecutionDao().findByCriteria(executionCrit);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#deleteProcess(java.lang.String)
+    /*
+     * @see
+     * sernet.verinice.interfaces.bpm.IProcessServiceGeneric#deleteProcess(java.
+     * lang.String)
      */
     @Override
     public void deleteProcess(String id) {
         getExecutionService().deleteProcessInstance(id);
-    }
-    
-    /**
-     * True: This is a real implementation.
-     * 
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceIsa#isActive()
-     */
-    @Override
-    public boolean isActive() {
-        return true;
     }
 
     /**
@@ -253,7 +258,7 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
         parse.execute();
         return (List<ProcessDefinitionImpl>) parse.getDocumentObject();
     }
-    
+
     protected boolean isWasInitCalled() {
         synchronized (this) {
             return wasInitCalled;
@@ -275,8 +280,8 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
     }
 
     public ProcessEngine getProcessEngine() {
-        if(!isWasInitCalled()) {
-            init(); 
+        if (!isWasInitCalled()) {
+            init();
         }
         return processEngine;
     }
@@ -308,7 +313,7 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
     public void setProcessDao(ProcessDao processDao) {
         this.processDao = processDao;
     }
-    
+
     private void throwException(final String message) {
         LOG.error(message);
         throw new RuntimeException(message);

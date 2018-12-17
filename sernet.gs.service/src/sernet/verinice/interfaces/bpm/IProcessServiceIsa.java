@@ -32,53 +32,59 @@ import sernet.verinice.model.samt.SamtTopic;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public interface IProcessServiceIsa extends IProcessServiceGeneric {    
-    
+public interface IProcessServiceIsa extends IProcessServiceGeneric {
+
     /**
-     * Searches for existing process executions for an ISA / SAMT topic.
-     * Returns an empty list if no process exists.
+     * Searches for existing process executions for an ISA / SAMT topic. Returns
+     * an empty list if no process exists.
      * 
-     * @param uuidIsaTopic UUID of a ISA topic
+     * @param uuidIsaTopic
+     *            UUID of a ISA topic
      * @return A list of process executions
      */
     List<ExecutionImpl> findIsaExecution(String uuidIsaTopic);
-    
+
     /**
      * Starts a process for every ISA topic ({@link SamtTopic}) of an
-     * Information Security Assessment (ISA) if no process exists for this topic before.
+     * Information Security Assessment (ISA) if no process exists for this topic
+     * before.
      * 
-     * Parameter is an UUID of an audit, since internally an ISA is an {@link Audit}.
+     * Parameter is an UUID of an audit, since internally an ISA is an
+     * {@link Audit}.
      * 
-     * @param uuidAudit UUID of an {@link Audit} / ISA
+     * @param uuidAudit
+     *            UUID of an {@link Audit} / ISA
      */
     IProcessStartInformation startProcessForIsa(String uuidAudit);
-    
+
     /**
-     * Handles a ISA / SAMT topic and creates a process for this topic if necessary.
-     * If a new process is created true is returned, if not false.
+     * Handles a ISA / SAMT topic and creates a process for this topic if
+     * necessary. If a new process is created true is returned, if not false.
      * 
-     * @param control A ISA topic
+     * @param control
+     *            A ISA topic
      * @return True if a new process is created, false if not
      */
     void handleSamtTopic(SamtTopic control);
-    
+
     /**
-     * Searches for existing process executions for a control.
-     * Returns an empty list if no process exists.
+     * Searches for existing process executions for a control. Returns an empty
+     * list if no process exists.
      * 
-     * @param uuidControl UUID of a control
+     * @param uuidControl
+     *            UUID of a control
      * @return A list of process executions
      */
     List<ExecutionImpl> findControlExecution(String uuidControl);
-    
+
     /**
-     * Handles a control and creates a process for this control if necessary.
-     * If a new process is created true is returned, if not false.
+     * Handles a control and creates a process for this control if necessary. If
+     * a new process is created true is returned, if not false.
      * 
-     * @param control A control
+     * @param control
+     *            A control
      * @return True if a new process is created, false if not
      */
-    void handleControl(Control control); 
-    
-}
+    void handleControl(Control control);
 
+}

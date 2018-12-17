@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.verinice.rcp;
 
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
@@ -28,8 +29,6 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -45,32 +44,12 @@ public class ProfileEditAction extends RightsEnabledAction implements ISelection
     private final IWorkbenchWindow window;
 
     public ProfileEditAction(IWorkbenchWindow window, String label) {
+        super(ActionRightIDs.EDITPROFILE, label);
         this.window = window;
-        setText(label);
         setId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.USERPROFILE));
         setToolTipText(Messages.ProfileEditAction_0);
         window.getSelectionService().addSelectionListener(this);
-        setRightID(ActionRightIDs.EDITPROFILE);
-        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
-            if(!Activator.getDefault().getInternalServer().isRunning()){
-                IInternalServerStartListener listener = new IInternalServerStartListener(){
-                    @Override
-                    public void statusChanged(InternalServerEvent e) {
-                        if(e.isStarted()){
-                            //always disabled in standalone mode
-                            setEnabled(false);
-                        }
-                    }
-
-                };
-                Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-            } else {
-                setEnabled(false);
-            }
-        } else {
-            setEnabled(checkRights());
-        }
     }
 
 

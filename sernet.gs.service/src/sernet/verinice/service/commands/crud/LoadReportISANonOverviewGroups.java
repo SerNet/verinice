@@ -17,9 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.service.commands.crud;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.CommandException;
@@ -48,8 +45,6 @@ public class LoadReportISANonOverviewGroups extends GenericCommand {
                                             
     };
     
-    private List<List<String>> results;
-    
     public LoadReportISANonOverviewGroups(Integer root){
         this.rootElmt = root;
     }
@@ -64,7 +59,6 @@ public class LoadReportISANonOverviewGroups extends GenericCommand {
      */
     @Override
     public void execute() {
-        results = new ArrayList<List<String>>(0);
         try{
             ControlGroup samtGroup = null;
             if(sgdbid != null){
