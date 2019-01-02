@@ -118,4 +118,13 @@ public class Frequency implements Serializable, RiskPropertyValue {
     public int hashCode() {
         return id.hashCode();
     }
+
+    public Frequency withLabel(String newLabel) {
+        return new Frequency(id, newLabel, description);
+    }
+
+    public Frequency withDescription(String newDescription) {
+        return new Frequency(id, label, newDescription);
+    }
+
 }

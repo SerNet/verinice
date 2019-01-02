@@ -118,4 +118,13 @@ public class Impact implements Serializable, RiskPropertyValue {
     public int hashCode() {
         return id.hashCode();
     }
+
+    public Impact withLabel(String newLabel) {
+        return new Impact(id, newLabel, description);
+    }
+
+    public Impact withDescription(String newDescription) {
+        return new Impact(id, label, newDescription);
+    }
+
 }

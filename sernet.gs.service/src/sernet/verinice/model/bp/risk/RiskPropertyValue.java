@@ -26,4 +26,8 @@ public interface RiskPropertyValue {
 
     String getLabel();
 
+    RiskPropertyValue withLabel(String newLabel);
+
+    RiskPropertyValue withDescription(String newDescription);
+
 }

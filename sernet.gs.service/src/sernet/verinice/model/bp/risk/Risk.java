@@ -161,4 +161,17 @@ public class Risk implements Serializable, RiskPropertyValue {
     public int hashCode() {
         return id.hashCode();
     }
+
+    public Risk withLabel(String newLabel) {
+        return new Risk(id, newLabel, description, color);
+    }
+
+    public Risk withDescription(String newDescription) {
+        return new Risk(id, label, newDescription, color);
+    }
+
+    public Risk withColor(Color newColor) {
+        return new Risk(id, label, description, newColor);
+    }
+
 }
