@@ -36,12 +36,12 @@ import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 
 /**
- * Loads a mapping from elements of  a source-group to a destination-group.
+ * Loads a mapping from elements of a source-group to a destination-group.
  * 
  * Mapping is creating by replaceable {@link IElementMapper} instances.
  * 
- * Default mapper {@link IsaMapper} is searching for elements in the destination group 
- * with the same number or the same title as in the source group.
+ * Default mapper {@link IsaMapper} is searching for elements in the destination
+ * group with the same number or the same title as in the source group.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -51,25 +51,30 @@ public class LoadUnifyMapping extends GenericCommand {
     private static final Logger log = Logger.getLogger(LoadUnifyMapping.class);
 
     public static final String NUMBER_REGEX_PATTERN = "^\\d+(\\.\\d+)*(\\.)? ";
-    
-    private String sourceUuid;   
-    private String destinationUuid;   
+
+    private String sourceUuid;
+    private String destinationUuid;
     private String mapperId = ElementMapperFactory.DEFAULT_MAPPER_ID;
-    private List<UnifyMapping> mappings;   
+    private List<UnifyMapping> mappings;
     private transient IBaseDao<ControlGroup, Serializable> dao;
-    
+
     /**
-     * @param sourceUuid UUID of the source group
-     * @param destinationUuid UUID of the destination group
+     * @param sourceUuid
+     *            UUID of the source group
+     * @param destinationUuid
+     *            UUID of the destination group
      */
     public LoadUnifyMapping(String sourceUuid, String destinationUuid) {
         this(sourceUuid, destinationUuid, ElementMapperFactory.DEFAULT_MAPPER_ID);
     }
-    
+
     /**
-     * @param sourceUuid UUID of the source group
-     * @param destinationUuid UUID of the destination group
-     * @param mapperId The id of a IElementMapper
+     * @param sourceUuid
+     *            UUID of the source group
+     * @param destinationUuid
+     *            UUID of the destination group
+     * @param mapperId
+     *            The id of a IElementMapper
      */
     public LoadUnifyMapping(String sourceUuid, String destinationUuid, String mapperId) {
         super();
@@ -78,7 +83,9 @@ public class LoadUnifyMapping extends GenericCommand {
         this.mapperId = mapperId;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
@@ -93,37 +100,37 @@ public class LoadUnifyMapping extends GenericCommand {
     private Map<String, CnATreeElement> loadChildrenTitleMap(String uuidParent) {
         return loadChildrenTitleMap(uuidParent, new Hashtable<String, CnATreeElement>());
     }
-           
-    private Map<String, CnATreeElement> loadChildrenTitleMap(String uuidParent, Map<String, CnATreeElement> map) {
+
+    private Map<String, CnATreeElement> loadChildrenTitleMap(String uuidParent,
+            Map<String, CnATreeElement> map) {
         RetrieveInfo ri = RetrieveInfo.getChildrenInstance().setChildrenProperties(true);
         ControlGroup source = getDao().findByUuid(uuidParent, ri);
-        if(source!=null) {
+        if (source != null) {
             for (CnATreeElement element : source.getChildren()) {
-                if(element instanceof IISO27kGroup) {
+                if (element instanceof IISO27kGroup) {
                     map = loadChildrenTitleMap(element.getUuid(), map);
                 } else {
                     map.put(getNumberOrTitle(element.getTitle()), element);
                 }
-                
+
             }
         }
         return map;
     }
-    
+
     public static String getNumberOrTitle(String title) {
         String numberOrTitle = title;
         Pattern pattern = Pattern.compile(NUMBER_REGEX_PATTERN);
         Matcher matcher = pattern.matcher(title);
-        if(matcher.find()) {
-            numberOrTitle = title.substring(0,matcher.end()).trim();
+        if (matcher.find()) {
+            numberOrTitle = title.substring(0, matcher.end()).trim();
         }
         return numberOrTitle;
     }
-    
+
     private IElementMapper getMapper() {
         return ElementMapperFactory.getMapper(mapperId);
     }
-
 
     public List<UnifyMapping> getMappings() {
         return mappings;
@@ -139,7 +146,7 @@ public class LoadUnifyMapping extends GenericCommand {
 
     @SuppressWarnings("unchecked")
     protected IBaseDao<ControlGroup, Serializable> getDao() {
-        if(dao==null) {
+        if (dao == null) {
             dao = getDaoFactory().getDAO(ControlGroup.TYPE_ID);
         }
         return dao;

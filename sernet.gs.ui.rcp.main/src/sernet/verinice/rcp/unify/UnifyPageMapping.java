@@ -56,24 +56,25 @@ import sernet.verinice.service.commands.unify.UnifyMapping;
  *
  */
 public class UnifyPageMapping extends WizardPageEnteringAware {
-    
+
     private static final Logger LOG = Logger.getLogger(UnifyPageMapping.class);
-    
-    private static final Comparator<UnifyMapping> COMPARATOR = new ElementComparator<UnifyMapping>( new ITitleAdaptor<UnifyMapping>() {
-        @Override
-        public String getTitle(UnifyMapping mapping) {
-            return mapping.getSourceElement().getTitle();
-        }
-    });
-    
+
+    private static final Comparator<UnifyMapping> COMPARATOR = new ElementComparator<UnifyMapping>(
+            new ITitleAdaptor<UnifyMapping>() {
+                @Override
+                public String getTitle(UnifyMapping mapping) {
+                    return mapping.getSourceElement().getTitle();
+                }
+            });
+
     private TableViewer table;
-    
+
     private final Color colorDifferentTitle, colorNoMapping;
-    
+
     private boolean copyLinksEnabled = false;
     private boolean deleteSourceLinksEnabled = false;
     private boolean copyAttributesEnabled = false;
-    
+
     /**
      * @param pageName
      */
@@ -83,13 +84,16 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
         final int dtBlue = 170;
         final int cnmGreen = 210;
         final int cnmBlue = cnmGreen;
-        setTitle(Messages.UnifyPageMapping_0);   
+        setTitle(Messages.UnifyPageMapping_0);
         colorDifferentTitle = SWTResourceManager.getColor(rgbMax, rgbMax, dtBlue);
         colorNoMapping = SWTResourceManager.getColor(rgbMax, cnmGreen, cnmBlue);
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
+     * widgets.Composite)
      */
     @Override
     public void createControl(Composite parent) {
@@ -102,56 +106,57 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
         gridLayout.marginHeight = 0;
         gridLayout.marginWidth = 0;
         composite.setLayout(gridLayout);
-        
+
         table = createTable(composite);
-        table.setContentProvider(new ArrayContentProvider());       
-        table.refresh(true);         
+        table.setContentProvider(new ArrayContentProvider());
+        table.refresh(true);
 
         Composite checkboxComposite = new Composite(composite, SWT.RESIZE);
         GridData cbcGd = new GridData(SWT.FILL, SWT.FILL, true, false);
         cbcGd.minimumHeight = 200;
         checkboxComposite.setLayoutData(cbcGd);
         checkboxComposite.setLayout(gridLayout);
-        
+
         GridData buttonGridData = new GridData(SWT.FILL, SWT.FILL, true, false);
         buttonGridData.minimumHeight = 10;
-        
+
         Button copyLinksCheckbox = new Button(checkboxComposite, SWT.CHECK);
         copyLinksCheckbox.setEnabled(true);
         copyLinksCheckbox.setSelection(copyLinksEnabled);
         copyLinksCheckbox.setText(Messages.UnifyPageMapping_8);
         copyLinksCheckbox.setLayoutData(buttonGridData);
-        
+
         final Button deleteSourceLinksCheckbox = new Button(checkboxComposite, SWT.CHECK);
         deleteSourceLinksCheckbox.setEnabled(false);
         deleteSourceLinksCheckbox.setText(Messages.UnifyPageMapping_9);
         deleteSourceLinksCheckbox.setSelection(deleteSourceLinksEnabled);
         deleteSourceLinksCheckbox.setLayoutData(buttonGridData);
         deleteSourceLinksCheckbox.addSelectionListener(new SelectionListener() {
-            
+
             @Override
             public void widgetSelected(SelectionEvent e) {
-                if(e.getSource() instanceof Button){
-                    setDeleteSourceLinksEnabled(((Button)e.getSource()).getSelection());
+                if (e.getSource() instanceof Button) {
+                    setDeleteSourceLinksEnabled(((Button) e.getSource()).getSelection());
                 }
             }
-            
+
             @Override
             public void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
             }
         });
-        
+
         copyLinksCheckbox.addSelectionListener(new SelectionListener() {
-            
+
             @Override
             public void widgetSelected(SelectionEvent e) {
-                if(e.getSource() instanceof Button){
-                    setCopyLinksEnabled(((Button)e.getSource()).getSelection());
-                    toggleButtonEnabled(deleteSourceLinksCheckbox, ((Button)e.getSource()).getSelection());
+                if (e.getSource() instanceof Button) {
+                    setCopyLinksEnabled(((Button) e.getSource()).getSelection());
+                    toggleButtonEnabled(deleteSourceLinksCheckbox,
+                            ((Button) e.getSource()).getSelection());
                 }
             }
-            
+
             @Override
             public void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
@@ -164,29 +169,27 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
         copyAttributesCheckbox.setSelection(copyAttributesEnabled);
         copyAttributesCheckbox.setLayoutData(buttonGridData);
         copyAttributesCheckbox.addSelectionListener(new SelectionListener() {
-            
+
             @Override
             public void widgetSelected(SelectionEvent e) {
-                if(e.getSource() instanceof Button){
-                    setCopyAttributesEnabled(((Button)e.getSource()).getSelection());
+                if (e.getSource() instanceof Button) {
+                    setCopyAttributesEnabled(((Button) e.getSource()).getSelection());
                 }
             }
-            
+
             @Override
             public void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
             }
         });
-        
+
         setPageComplete(false);
-        
+
         setControl(composite);
     }
-    
-    
+
     /**
-     * Called when this wizuard page is entered.
-     * Override this in your subclass.
+     * Called when this wizuard page is entered. Override this in your subclass.
      */
     protected void pageEntered() {
         if (LOG.isDebugEnabled()) {
@@ -194,37 +197,38 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
         }
         try {
             loadAndShowMapping();
-        } catch(Exception e) {
+        } catch (Exception e) {
             LOG.error("Error while loading mappings.", e); //$NON-NLS-1$
             showError(Messages.UnifyPageMapping_3);
-        }     
+        }
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
      */
     @Override
     public boolean isPageComplete() {
         List<UnifyMapping> mappings = getUnifyWizard().getMappings();
-        return (mappings!=null && !mappings.isEmpty());
+        return (mappings != null && !mappings.isEmpty());
     }
-    
+
     private void loadAndShowMapping() {
         getUnifyWizard().loadMapping();
         List<UnifyMapping> mappings = getUnifyWizard().getMappings();
-        if(mappings!=null) {
+        if (mappings != null) {
             Collections.sort(mappings, COMPARATOR);
             table.setInput(mappings);
             table.refresh();
         }
         setPageComplete(isPageComplete());
     }
-    
- 
+
     private void showError(String message) {
         MessageDialog.openError(this.getShell(), Messages.UnifyPageMapping_4, message);
     }
-    
+
     private UnifyWizard getUnifyWizard() {
         return (UnifyWizard) getWizard();
     }
@@ -232,22 +236,23 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
     private TableViewer createTable(Composite parent) {
 
         final int defaultColumnWeight = 50;
-        
+
         Composite tableComposite = new Composite(parent, SWT.Resize);
         GridData tGd = new GridData(SWT.FILL, SWT.FILL, true, true);
         tGd.minimumHeight = 87;
         tableComposite.setLayoutData(tGd);
-        
+
         TableColumnLayout tableColumnLayout = new TableColumnLayout();
         tableComposite.setLayout(tableColumnLayout);
-        
-        TableViewer tableViewer = new TableViewer(tableComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
+
+        TableViewer tableViewer = new TableViewer(tableComposite,
+                SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
 
         Table internalTable = tableViewer.getTable();
         // Spaltenköpfe und Zeilenbegrenzungen sichtbar machen
         internalTable.setHeaderVisible(true);
         internalTable.setLinesVisible(true);
-        
+
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         tableViewer.getControl().setLayoutData(gd);
 
@@ -260,15 +265,16 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
             public void update(ViewerCell cell) {
                 UnifyMapping mapping = (UnifyMapping) cell.getElement();
                 String sourceTitle = mapping.getSourceElement().getTitle();
-                if(sourceTitle!=null) {
+                if (sourceTitle != null) {
                     cell.setText(sourceTitle);
                 }
-                setCellColor(cell,mapping);              
+                setCellColor(cell, mapping);
             }
-         
+
         });
-        tableColumnLayout.setColumnData(sourceColumn.getColumn(), new ColumnWeightData(defaultColumnWeight));
-        
+        tableColumnLayout.setColumnData(sourceColumn.getColumn(),
+                new ColumnWeightData(defaultColumnWeight));
+
         TableViewerColumn destinationColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         destinationColumn.getColumn().setText(Messages.UnifyPageMapping_6);
         destinationColumn.setLabelProvider(new CellLabelProvider() {
@@ -276,36 +282,34 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
             public void update(ViewerCell cell) {
                 UnifyMapping mapping = (UnifyMapping) cell.getElement();
                 cell.setText(mapping.getDestinationText());
-                setCellColor(cell,mapping); 
+                setCellColor(cell, mapping);
             }
         });
-        tableColumnLayout.setColumnData(destinationColumn.getColumn(), new ColumnWeightData(defaultColumnWeight));
-        
+        tableColumnLayout.setColumnData(destinationColumn.getColumn(),
+                new ColumnWeightData(defaultColumnWeight));
+
         return tableViewer;
     }
-    
+
     protected void setCellColor(ViewerCell cell, UnifyMapping mapping) {
         List<UnifyElement> destinationList = mapping.getDestinationElements();
-        if(destinationList==null || destinationList.isEmpty()) {
+        if (destinationList == null || destinationList.isEmpty()) {
             cell.setBackground(colorNoMapping);
         } else {
             UnifyElement source = mapping.getSourceElement();
-            if(!isTitleEquals(mapping)) {
+            if (!isTitleEquals(mapping)) {
                 cell.setBackground(colorDifferentTitle);
             }
         }
-        
+
     }
 
-    private boolean isTitleEquals(UnifyMapping mapping){
+    private boolean isTitleEquals(UnifyMapping mapping) {
         UnifyElement source = mapping.getSourceElement();
         String destinationText = mapping.getDestinationText();
-        return source!=null 
-                && source.getTitle()!=null 
-                && destinationText!=null && 
-                source.getTitle().equals(destinationText);
+        return source != null && source.getTitle() != null && destinationText != null
+                && source.getTitle().equals(destinationText);
     }
-
 
     public boolean isCopyLinksEnabled() {
         return copyLinksEnabled;
@@ -319,9 +323,9 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
         this.copyLinksEnabled = copyLinksEnabled;
         getUnifyWizard().setCopyLinks(copyLinksEnabled);
     }
-    
-    private void toggleButtonEnabled(Button b, boolean enabled){
-        if(b != null){
+
+    private void toggleButtonEnabled(Button b, boolean enabled) {
+        if (b != null) {
             b.setEnabled(enabled);
         }
     }
@@ -330,9 +334,6 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
         this.deleteSourceLinksEnabled = deleteSourceLinksEnabled;
         getUnifyWizard().setDeleteSourceLinks(deleteSourceLinksEnabled);
     }
-
-
-
 
     public boolean isCopyAttributesEnabled() {
         return copyAttributesEnabled;
@@ -343,13 +344,13 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
         getUnifyWizard().setDontCopyPropertyValues(copyAttributesEnabled);
     }
 
-
-
-
     class ActionLabelProvider extends ColumnLabelProvider {
-        
-        /* (non-Javadoc)
-         * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.
+         * Object)
          */
         @Override
         public String getText(Object element) {
@@ -359,7 +360,6 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
             }
             return text;
         }
-        
-    }
 
+    }
 }

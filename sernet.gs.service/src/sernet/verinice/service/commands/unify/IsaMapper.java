@@ -27,44 +27,56 @@ import java.util.Map.Entry;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * IsaMapper is used by command {@link LoadUnifyMapping} to create a mapping between
- * {@link CnATreeElement}s. IsaMapper is searching for elements with the same
- * number prefix in the destination map as in the source.
+ * IsaMapper is used by command {@link LoadUnifyMapping} to create a mapping
+ * between {@link CnATreeElement}s. IsaMapper is searching for elements with the
+ * same number prefix in the destination map as in the source.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class IsaMapper implements IElementMapper {
 
     public static final String ID = "unify.mapper.isa";
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.commands.unify.IElementMapper#createMapping(java.util.Map, java.util.Map)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.service.commands.unify.IElementMapper#createMapping(java.
+     * util.Map, java.util.Map)
      */
     @Override
-    public List<UnifyMapping> createMapping(Map<String, CnATreeElement> sourceMap, Map<String, CnATreeElement> destinationMap) {
-        List<UnifyMapping> internalMappings = new ArrayList<UnifyMapping>(sourceMap.size());      
-        for(Entry<String, CnATreeElement> sourceEntry : sourceMap.entrySet()){
+    public List<UnifyMapping> createMapping(Map<String, CnATreeElement> sourceMap,
+            Map<String, CnATreeElement> destinationMap) {
+        List<UnifyMapping> internalMappings = new ArrayList<UnifyMapping>(sourceMap.size());
+        for (Entry<String, CnATreeElement> sourceEntry : sourceMap.entrySet()) {
             CnATreeElement source = sourceEntry.getValue();
-            UnifyMapping mapping = new UnifyMapping(new UnifyElement(source.getUuid(), source.getTitle())); 
+            UnifyMapping mapping = new UnifyMapping(
+                    new UnifyElement(source.getUuid(), source.getTitle()));
             List<String> destinationKeyList = getDestinationKey(sourceEntry);
             for (String destinationKey : destinationKeyList) {
                 CnATreeElement destination = destinationMap.get(destinationKey);
-                if(destination!=null) {
-                    mapping.addDestinationElement(new UnifyElement(destination.getUuid(), destination.getTitle()));
+                if (destination != null) {
+                    mapping.addDestinationElement(
+                            new UnifyElement(destination.getUuid(), destination.getTitle()));
                 }
-            }         
+            }
             internalMappings.add(mapping);
         }
         return internalMappings;
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.commands.unify.IElementMapper#validate(java.util.Map, java.util.Map)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.service.commands.unify.IElementMapper#validate(java.util.
+     * Map, java.util.Map)
      */
     @Override
-    public void validate(Map<String, CnATreeElement> sourceMap, Map<String, CnATreeElement> destinationMap) throws UnifyValidationException {
+    public void validate(Map<String, CnATreeElement> sourceMap,
+            Map<String, CnATreeElement> destinationMap) throws UnifyValidationException {
         // no validation needed in this mapper
-        
+
     }
 
     protected List<String> getDestinationKey(Entry<String, CnATreeElement> sourceEntry) {
@@ -72,8 +84,10 @@ public class IsaMapper implements IElementMapper {
         destKeyList.add(sourceEntry.getKey());
         return destKeyList;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.service.commands.unify.IElementMapper#getId()
      */
     @Override

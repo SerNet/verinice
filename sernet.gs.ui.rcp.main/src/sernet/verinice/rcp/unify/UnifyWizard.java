@@ -52,26 +52,26 @@ import sernet.verinice.service.commands.unify.UnifyValidationException;
 public class UnifyWizard extends Wizard {
 
     private static final Logger LOG = Logger.getLogger(UnifyWizard.class);
-    
+
     public static final String PAGE_SELECT_GROUP_ID = "select-group"; //$NON-NLS-1$
     public static final String PAGE_SELECT_MAPPING_ID = "mapping"; //$NON-NLS-1$
-    
+
     private List<CnATreeElement> groups;
-    
-    private CnATreeElement source;    
+
+    private CnATreeElement source;
     private CnATreeElement destination;
     private boolean migrateToIsa2 = false;
 
     private List<UnifyMapping> mappings;
-    
+
     private Map<String, String> uuidParentInformationMap;
-    
+
     private ICommandService commandService;
-    
+
     private boolean copyLinks = false;
     private boolean deleteSourceLinks = false;
     private boolean dontCopyPropertyValues = false;
-    
+
     /**
      * @param groups
      */
@@ -87,8 +87,10 @@ public class UnifyWizard extends Wizard {
             showError(Messages.UnifyWizard_3);
         }
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.wizard.Wizard#addPages()
      */
     @Override
@@ -99,45 +101,47 @@ public class UnifyWizard extends Wizard {
         addPage(pageMapping);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.wizard.Wizard#performFinish()
      */
     @Override
     public boolean performFinish() {
         try {
-            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    monitor.beginTask(Messages.UnifyWizard_4, IProgressMonitor.UNKNOWN);
-                    Activator.inheritVeriniceContextState();
-                    try {
-                        unify();
-                    } catch (Exception e) {
-                        LOG.error("Error while unifying elements.", e); //$NON-NLS-1$
-                        showError(Messages.UnifyWizard_6);
-                    }
-                    monitor.done();
-                }
-             });
+            PlatformUI.getWorkbench().getProgressService()
+                    .busyCursorWhile(new IRunnableWithProgress() {
+                        public void run(IProgressMonitor monitor)
+                                throws InvocationTargetException, InterruptedException {
+                            monitor.beginTask(Messages.UnifyWizard_4, IProgressMonitor.UNKNOWN);
+                            Activator.inheritVeriniceContextState();
+                            try {
+                                unify();
+                            } catch (Exception e) {
+                                LOG.error("Error while unifying elements.", e); //$NON-NLS-1$
+                                showError(Messages.UnifyWizard_6);
+                            }
+                            monitor.done();
+                        }
+                    });
         } catch (Exception e) {
             LOG.error("Error while unifying elements.", e); //$NON-NLS-1$
             showError(Messages.UnifyWizard_6);
         }
-        return true;     
+        return true;
     }
-    
+
     /**
-     * @throws CommandException 
+     * @throws CommandException
      * 
      */
     private void unify() throws CommandException {
-        if(mappings==null) {
+        if (mappings == null) {
             loadMapping();
         }
-        Unify command = new Unify.Builder(mappings)
-        .copyLinks(copyLinks)
-        .deleteSourceLinks(deleteSourceLinks)
-        .dontCopyPropertyValues(dontCopyPropertyValues)
-        .build();
+        Unify command = new Unify.Builder(mappings).copyLinks(copyLinks)
+                .deleteSourceLinks(deleteSourceLinks).dontCopyPropertyValues(dontCopyPropertyValues)
+                .build();
         command = getCommandService().executeCommand(command);
         refresh(command.getChangedElements());
     }
@@ -149,12 +153,12 @@ public class UnifyWizard extends Wizard {
         for (CnATreeElement element : changedElements) {
             element.setParent(null);
             CnAElementFactory.getModel(element).childChanged(element);
-        }    
+        }
     }
-    
+
     private void loadParentInformation() throws CommandException {
         List<String> uuidList = createGroupUuidList();
-        LoadParentTitles command = new  LoadParentTitles(uuidList);
+        LoadParentTitles command = new LoadParentTitles(uuidList);
         command = getCommandService().executeCommand(command);
         uuidParentInformationMap = command.getParentInformationMap();
     }
@@ -170,7 +174,7 @@ public class UnifyWizard extends Wizard {
         return uuidList;
     }
 
-    public void loadMapping() { 
+    public void loadMapping() {
         try {
             loadMappingFromServer();
         } catch (UnifyValidationException e) {
@@ -187,20 +191,20 @@ public class UnifyWizard extends Wizard {
     private void handleCommandException(CommandException e) {
         LOG.error("Command exception while loading unify mapping from server.", e); //$NON-NLS-1$
         Throwable cause = e.getCause();
-        if(cause instanceof UnifyValidationException) {
+        if (cause instanceof UnifyValidationException) {
             showError(cause.getMessage());
-        } else {           
+        } else {
             showError(Messages.UnifyWizard_6);
         }
     }
 
     private void loadMappingFromServer() throws CommandException {
         String mapperId = (isMigrateToIsa2()) ? Isa20Mapper.ID : IsaMapper.ID;
-        LoadUnifyMapping command = new LoadUnifyMapping(getSource().getUuid(), getDestination().getUuid(), mapperId);
-        command = getCommandService().executeCommand(command);    
+        LoadUnifyMapping command = new LoadUnifyMapping(getSource().getUuid(),
+                getDestination().getUuid(), mapperId);
+        command = getCommandService().executeCommand(command);
         mappings = command.getMappings();
     }
-    
 
     private void showError(String message) {
         MessageDialog.openError(this.getShell(), Messages.UnifyWizard_0, message);
@@ -240,19 +244,19 @@ public class UnifyWizard extends Wizard {
     protected CnATreeElement getDestination() {
         return destination;
     }
-    
+
     public boolean isCopyLinks() {
         return copyLinks;
     }
 
-    public void setCopyLinks(boolean b){
+    public void setCopyLinks(boolean b) {
         this.copyLinks = b;
     }
-    
-    public void setDeleteSourceLinks(boolean b){
+
+    public void setDeleteSourceLinks(boolean b) {
         this.deleteSourceLinks = b;
     }
-    
+
     public boolean isDeleteSourceLinks() {
         return deleteSourceLinks;
     }
@@ -266,26 +270,29 @@ public class UnifyWizard extends Wizard {
     }
 
     /**
-     * @param groups the groups to set
+     * @param groups
+     *            the groups to set
      */
     protected void setGroups(List<CnATreeElement> groups) {
         this.groups = groups;
     }
 
     /**
-     * @param source the source to set
+     * @param source
+     *            the source to set
      */
     protected void setSource(CnATreeElement source) {
         this.source = source;
     }
 
     /**
-     * @param destination the destination to set
+     * @param destination
+     *            the destination to set
      */
     protected void setDestination(CnATreeElement destination) {
         this.destination = destination;
     }
-    
+
     public boolean isMigrateToIsa2() {
         return migrateToIsa2;
     }
@@ -295,7 +302,7 @@ public class UnifyWizard extends Wizard {
     }
 
     public ICommandService getCommandService() {
-        if(commandService==null) {
+        if (commandService == null) {
             commandService = createCommandServive();
         }
         return commandService;
