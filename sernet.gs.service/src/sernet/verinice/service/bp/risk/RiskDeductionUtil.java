@@ -158,10 +158,32 @@ public class RiskDeductionUtil {
                         && isSafeGuardStrenghtBothSet(s))
                 .map(s -> s.getEntity().getRawPropertyValue(Safeguard.PROP_STRENGTH_FREQUENCY))
                 .filter(RiskDeductionUtil::notNullAndNotEmpty).min(String::compareTo).orElse(null);
-        requirement.setSimpleProperty(BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT, impactStrength);
-        requirement.setSimpleProperty(BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY,
+        setPropertyIfNecessary(requirement, BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT,
+                impactStrength);
+        setPropertyIfNecessary(requirement, BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY,
                 frequencyStrength);
         return requirement;
+    }
+
+    /**
+     * Set a property in an entity with a special handling for null values to
+     * avoid creating unnecessary {@link sernet.hui.common.connect.PropertyList}
+     * instances.
+     */
+    private static void setPropertyIfNecessary(CnATreeElement element, String propertyId,
+            String propertyValue) {
+
+        if (propertyValue == null
+                && !element.getEntity().getTypedPropertyLists().containsKey(propertyId)) {
+            // if the value is null and there is no existing property list for
+            // the property, don't change anything
+            return;
+        }
+
+        // now, either the property value is not null, so we would have to
+        // create a PropertyList if it does not exist, or it is null AND the
+        // element already has a PropertyList for the property ID
+        element.setSimpleProperty(propertyId, propertyValue);
     }
 
     private static boolean resetRiskValuesIfImpactIsUnset(BpThreat threat) {
