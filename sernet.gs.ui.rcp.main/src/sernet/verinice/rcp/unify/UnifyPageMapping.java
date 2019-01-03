@@ -46,7 +46,6 @@ import org.eclipse.swt.widgets.Table;
 import sernet.hui.swt.SWTResourceManager;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementComparator;
-import sernet.verinice.model.common.ITitleAdaptor;
 import sernet.verinice.rcp.WizardPageEnteringAware;
 import sernet.verinice.service.commands.unify.UnifyElement;
 import sernet.verinice.service.commands.unify.UnifyMapping;
@@ -59,25 +58,18 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
 
     private static final Logger LOG = Logger.getLogger(UnifyPageMapping.class);
 
-    private static final Comparator<UnifyMapping> COMPARATOR = new ElementComparator<UnifyMapping>(
-            new ITitleAdaptor<UnifyMapping>() {
-                @Override
-                public String getTitle(UnifyMapping mapping) {
-                    return mapping.getSourceElement().getTitle();
-                }
-            });
+    private static final Comparator<UnifyMapping> COMPARATOR = new ElementComparator<>(
+            mapping -> mapping.getSourceElement().getTitle());
 
     private TableViewer table;
 
-    private final Color colorDifferentTitle, colorNoMapping;
+    private final Color colorDifferentTitle;
+    private final Color colorNoMapping;
 
     private boolean copyLinksEnabled = false;
     private boolean deleteSourceLinksEnabled = false;
     private boolean copyAttributesEnabled = false;
 
-    /**
-     * @param pageName
-     */
     protected UnifyPageMapping() {
         super(UnifyWizard.PAGE_SELECT_MAPPING_ID);
         final int rgbMax = 255;
@@ -90,7 +82,6 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
     }
 
     /*
-     * (non-Javadoc)
      * 
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
      * widgets.Composite)
@@ -191,6 +182,7 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
     /**
      * Called when this wizuard page is entered. Override this in your subclass.
      */
+    @Override
     protected void pageEntered() {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Page entered..."); //$NON-NLS-1$
@@ -204,8 +196,6 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
      */
     @Override
@@ -296,7 +286,6 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
         if (destinationList == null || destinationList.isEmpty()) {
             cell.setBackground(colorNoMapping);
         } else {
-            UnifyElement source = mapping.getSourceElement();
             if (!isTitleEquals(mapping)) {
                 cell.setBackground(colorDifferentTitle);
             }
@@ -347,8 +336,6 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
     class ActionLabelProvider extends ColumnLabelProvider {
 
         /*
-         * (non-Javadoc)
-         * 
          * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.
          * Object)
          */
@@ -360,6 +347,5 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
             }
             return text;
         }
-
     }
 }

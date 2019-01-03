@@ -72,9 +72,6 @@ public class UnifyWizard extends Wizard {
     private boolean deleteSourceLinks = false;
     private boolean dontCopyPropertyValues = false;
 
-    /**
-     * @param groups
-     */
     public UnifyWizard(List<CnATreeElement> groups) {
         super();
         setWindowTitle(Messages.UnifyWizard_1);
@@ -89,8 +86,6 @@ public class UnifyWizard extends Wizard {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.jface.wizard.Wizard#addPages()
      */
     @Override
@@ -102,8 +97,6 @@ public class UnifyWizard extends Wizard {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.jface.wizard.Wizard#performFinish()
      */
     @Override
@@ -131,10 +124,6 @@ public class UnifyWizard extends Wizard {
         return true;
     }
 
-    /**
-     * @throws CommandException
-     * 
-     */
     private void unify() throws CommandException {
         if (mappings == null) {
             loadMapping();
@@ -146,9 +135,6 @@ public class UnifyWizard extends Wizard {
         refresh(command.getChangedElements());
     }
 
-    /**
-     * @param changedElements
-     */
     private void refresh(List<CnATreeElement> changedElements) {
         for (CnATreeElement element : changedElements) {
             element.setParent(null);
@@ -163,11 +149,8 @@ public class UnifyWizard extends Wizard {
         uuidParentInformationMap = command.getParentInformationMap();
     }
 
-    /**
-     * @return
-     */
     private List<String> createGroupUuidList() {
-        List<String> uuidList = new ArrayList<String>(groups.size());
+        List<String> uuidList = new ArrayList<>(groups.size());
         for (CnATreeElement element : groups) {
             uuidList.add(element.getUuid());
         }
@@ -210,37 +193,22 @@ public class UnifyWizard extends Wizard {
         MessageDialog.openError(this.getShell(), Messages.UnifyWizard_0, message);
     }
 
-    /**
-     * @return the mappings
-     */
     protected List<UnifyMapping> getMappings() {
         return mappings;
     }
 
-    /**
-     * @return the groups
-     */
     protected List<CnATreeElement> getGroups() {
         return groups;
     }
 
-    /**
-     * @return the uuidParentInformationMap
-     */
     protected Map<String, String> getUuidParentInformationMap() {
         return uuidParentInformationMap;
     }
 
-    /**
-     * @return the source
-     */
     protected CnATreeElement getSource() {
         return source;
     }
 
-    /**
-     * @return the destination
-     */
     protected CnATreeElement getDestination() {
         return destination;
     }
@@ -269,26 +237,14 @@ public class UnifyWizard extends Wizard {
         this.dontCopyPropertyValues = b;
     }
 
-    /**
-     * @param groups
-     *            the groups to set
-     */
     protected void setGroups(List<CnATreeElement> groups) {
         this.groups = groups;
     }
 
-    /**
-     * @param source
-     *            the source to set
-     */
     protected void setSource(CnATreeElement source) {
         this.source = source;
     }
 
-    /**
-     * @param destination
-     *            the destination to set
-     */
     protected void setDestination(CnATreeElement destination) {
         this.destination = destination;
     }

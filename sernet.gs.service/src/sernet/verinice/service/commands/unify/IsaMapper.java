@@ -38,8 +38,6 @@ public class IsaMapper implements IElementMapper {
     public static final String ID = "unify.mapper.isa";
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.service.commands.unify.IElementMapper#createMapping(java.
      * util.Map, java.util.Map)
@@ -47,7 +45,7 @@ public class IsaMapper implements IElementMapper {
     @Override
     public List<UnifyMapping> createMapping(Map<String, CnATreeElement> sourceMap,
             Map<String, CnATreeElement> destinationMap) {
-        List<UnifyMapping> internalMappings = new ArrayList<UnifyMapping>(sourceMap.size());
+        List<UnifyMapping> internalMappings = new ArrayList<>(sourceMap.size());
         for (Entry<String, CnATreeElement> sourceEntry : sourceMap.entrySet()) {
             CnATreeElement source = sourceEntry.getValue();
             UnifyMapping mapping = new UnifyMapping(
@@ -66,8 +64,6 @@ public class IsaMapper implements IElementMapper {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.service.commands.unify.IElementMapper#validate(java.util.
      * Map, java.util.Map)
@@ -80,14 +76,12 @@ public class IsaMapper implements IElementMapper {
     }
 
     protected List<String> getDestinationKey(Entry<String, CnATreeElement> sourceEntry) {
-        List<String> destKeyList = new ArrayList<String>(1);
+        List<String> destKeyList = new ArrayList<>(1);
         destKeyList.add(sourceEntry.getKey());
         return destKeyList;
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.service.commands.unify.IElementMapper#getId()
      */
     @Override

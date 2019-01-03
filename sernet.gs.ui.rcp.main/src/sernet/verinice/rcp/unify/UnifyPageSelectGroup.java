@@ -26,9 +26,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -41,7 +39,6 @@ import org.eclipse.swt.widgets.Label;
 
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementComparator;
-import sernet.verinice.model.common.ITitleAdaptor;
 import sernet.verinice.rcp.WizardPageEnteringAware;
 
 /**
@@ -54,25 +51,15 @@ public class UnifyPageSelectGroup extends WizardPageEnteringAware {
 
     private TableViewer table;
 
-    private static final Comparator<CnATreeElement> COMPARATOR = new ElementComparator<CnATreeElement>(
-            new ITitleAdaptor<CnATreeElement>() {
-                @Override
-                public String getTitle(CnATreeElement element) {
-                    return element.getTitle();
-                }
-            });
+    private static final Comparator<CnATreeElement> COMPARATOR = new ElementComparator<>(
+            element -> element.getTitle());
 
-    /**
-     * @param pageName
-     */
     protected UnifyPageSelectGroup() {
         super(UnifyWizard.PAGE_SELECT_GROUP_ID);
         this.setTitle(Messages.UnifyPageSelectGroup_0);
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
      * widgets.Composite)
      */
@@ -92,12 +79,7 @@ public class UnifyPageSelectGroup extends WizardPageEnteringAware {
         table.setLabelProvider(new ActionLabelProvider());
         table.setContentProvider(new ArrayContentProvider());
         table.refresh(true);
-        table.addSelectionChangedListener(new ISelectionChangedListener() {
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                selectSourceAndDestination();
-            }
-        });
+        table.addSelectionChangedListener(event -> selectSourceAndDestination());
 
         List<CnATreeElement> groupList = getUnifyWizard().getGroups();
         Collections.sort(groupList, COMPARATOR);
@@ -122,8 +104,6 @@ public class UnifyPageSelectGroup extends WizardPageEnteringAware {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
      */
     @Override
@@ -159,19 +139,17 @@ public class UnifyPageSelectGroup extends WizardPageEnteringAware {
 
         int style = SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL;
 
-        TableViewer table = new TableViewer(parent, style | SWT.MULTI);
+        TableViewer tableViewer = new TableViewer(parent, style | SWT.MULTI);
 
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-        table.getControl().setLayoutData(gd);
+        tableViewer.getControl().setLayoutData(gd);
 
-        table.setUseHashlookup(true);
+        tableViewer.setUseHashlookup(true);
 
-        return table;
+        return tableViewer;
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.WizardPageEnteringAware#pageEntered()
      */
     @Override
@@ -182,8 +160,6 @@ public class UnifyPageSelectGroup extends WizardPageEnteringAware {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.WizardPageEnteringAware#pageLeft()
      */
     @Override
@@ -196,8 +172,6 @@ public class UnifyPageSelectGroup extends WizardPageEnteringAware {
     class ActionLabelProvider extends ColumnLabelProvider {
 
         /*
-         * (non-Javadoc)
-         * 
          * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.
          * Object)
          */

@@ -26,8 +26,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
-
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
@@ -47,8 +45,6 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
  */
 @SuppressWarnings("serial")
 public class LoadUnifyMapping extends GenericCommand {
-
-    private static final Logger log = Logger.getLogger(LoadUnifyMapping.class);
 
     public static final String NUMBER_REGEX_PATTERN = "^\\d+(\\.\\d+)*(\\.)? ";
 
@@ -84,8 +80,6 @@ public class LoadUnifyMapping extends GenericCommand {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
