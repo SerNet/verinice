@@ -38,8 +38,6 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.LoadParentTitles;
-import sernet.verinice.service.commands.unify.Isa20Mapper;
-import sernet.verinice.service.commands.unify.IsaMapper;
 import sernet.verinice.service.commands.unify.LoadUnifyMapping;
 import sernet.verinice.service.commands.unify.Unify;
 import sernet.verinice.service.commands.unify.UnifyMapping;
@@ -60,7 +58,6 @@ public class UnifyWizard extends Wizard {
 
     private CnATreeElement source;
     private CnATreeElement destination;
-    private boolean migrateToIsa2 = false;
 
     private List<UnifyMapping> mappings;
 
@@ -182,9 +179,8 @@ public class UnifyWizard extends Wizard {
     }
 
     private void loadMappingFromServer() throws CommandException {
-        String mapperId = (isMigrateToIsa2()) ? Isa20Mapper.ID : IsaMapper.ID;
         LoadUnifyMapping command = new LoadUnifyMapping(getSource().getUuid(),
-                getDestination().getUuid(), mapperId);
+                getDestination().getUuid());
         command = getCommandService().executeCommand(command);
         mappings = command.getMappings();
     }
@@ -247,14 +243,6 @@ public class UnifyWizard extends Wizard {
 
     protected void setDestination(CnATreeElement destination) {
         this.destination = destination;
-    }
-
-    public boolean isMigrateToIsa2() {
-        return migrateToIsa2;
-    }
-
-    public void setMigrateToIsa2(boolean migrateToIsa2) {
-        this.migrateToIsa2 = migrateToIsa2;
     }
 
     public ICommandService getCommandService() {

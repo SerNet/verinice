@@ -50,7 +50,6 @@ public class LoadUnifyMapping extends GenericCommand {
 
     private String sourceUuid;
     private String destinationUuid;
-    private String mapperId = ElementMapperFactory.DEFAULT_MAPPER_ID;
     private List<UnifyMapping> mappings;
     private transient IBaseDao<ControlGroup, Serializable> dao;
 
@@ -61,22 +60,8 @@ public class LoadUnifyMapping extends GenericCommand {
      *            UUID of the destination group
      */
     public LoadUnifyMapping(String sourceUuid, String destinationUuid) {
-        this(sourceUuid, destinationUuid, ElementMapperFactory.DEFAULT_MAPPER_ID);
-    }
-
-    /**
-     * @param sourceUuid
-     *            UUID of the source group
-     * @param destinationUuid
-     *            UUID of the destination group
-     * @param mapperId
-     *            The id of a IElementMapper
-     */
-    public LoadUnifyMapping(String sourceUuid, String destinationUuid, String mapperId) {
-        super();
         this.sourceUuid = sourceUuid;
         this.destinationUuid = destinationUuid;
-        this.mapperId = mapperId;
     }
 
     /*
@@ -86,9 +71,7 @@ public class LoadUnifyMapping extends GenericCommand {
     public void execute() {
         Map<String, CnATreeElement> sourceMap = loadChildrenTitleMap(getSourceUuid());
         Map<String, CnATreeElement> destinationMap = loadChildrenTitleMap(getDestinationUuid());
-        IElementMapper mapper = getMapper();
-        mapper.validate(sourceMap, destinationMap);
-        mappings = mapper.createMapping(sourceMap, destinationMap);
+        mappings = IsaMapper.getInstance().createMapping(sourceMap, destinationMap);
     }
 
     private Map<String, CnATreeElement> loadChildrenTitleMap(String uuidParent) {
@@ -120,10 +103,6 @@ public class LoadUnifyMapping extends GenericCommand {
             numberOrTitle = title.substring(0, matcher.end()).trim();
         }
         return numberOrTitle;
-    }
-
-    private IElementMapper getMapper() {
-        return ElementMapperFactory.getMapper(mapperId);
     }
 
     public List<UnifyMapping> getMappings() {

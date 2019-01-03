@@ -29,11 +29,8 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
@@ -86,16 +83,6 @@ public class UnifyPageSelectGroup extends WizardPageEnteringAware {
         table.setInput(groupList);
         table.getTable().setSelection(0);
 
-        final Button cb = new Button(composite, SWT.CHECK);
-        cb.setText(Messages.UnifyPageSelectGroup_2);
-        cb.setSelection(false);
-        cb.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                selectMigrateToIsa2(cb.getSelection());
-            }
-        });
-
         setPageComplete(false);
 
         selectSourceAndDestination();
@@ -110,10 +97,6 @@ public class UnifyPageSelectGroup extends WizardPageEnteringAware {
     public boolean isPageComplete() {
         return (getUnifyWizard().getSource() != null)
                 && (getUnifyWizard().getDestination() != null);
-    }
-
-    protected void selectMigrateToIsa2(boolean selection) {
-        getUnifyWizard().setMigrateToIsa2(selection);
     }
 
     private void selectSourceAndDestination() {
