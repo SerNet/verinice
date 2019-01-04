@@ -23,10 +23,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
-import sernet.verinice.model.iso27k.Organization;
 
 /**
  *
@@ -40,21 +38,15 @@ public class DBIDDecorator extends LabelProvider implements ILightweightLabelDec
      */
     @Override
     public void decorate(Object o, IDecoration decoration) {
-        if (isElementToDecorate(o)) {
-            CnATreeElement elmt = (CnATreeElement) o;
-            if (Activator.getDefault().getPluginPreferences()
-                    .getBoolean(PreferenceConstants.SHOW_DBID_DECORATOR)) {
-                decoration.addSuffix(new StringBuilder().append(" <").append((elmt.getDbId()))
-                        .append(">").toString());
-            }
+        if (!(o instanceof CnATreeElement)) {
+            return;
         }
-    }
-
-    public boolean isElementToDecorate(Object o) {
-        if (o instanceof Organization || o instanceof Audit || o instanceof ITVerbund) {
-            return true;
+        CnATreeElement elmt = (CnATreeElement) o;
+        if ((elmt.isScope() || elmt instanceof Audit) && Activator.getDefault()
+                .getPluginPreferences().getBoolean(PreferenceConstants.SHOW_DBID_DECORATOR)) {
+            decoration.addSuffix(new StringBuilder().append(" <").append((elmt.getDbId()))
+                    .append(">").toString());
         }
-        return false;
     }
 
 }

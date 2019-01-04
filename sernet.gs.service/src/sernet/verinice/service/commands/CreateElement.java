@@ -34,7 +34,6 @@ import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.bp.elements.ItNetwork;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
@@ -153,11 +152,11 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
     protected T createInstance() throws InstantiationException, IllegalAccessException,
             InvocationTargetException, NoSuchMethodException {
         T instance;
-        if (isOrganization()) {
+        if (Organization.class.equals(clazz)) {
             instance = (T) new Organization(container, createChildren);
-        } else if (isItNetwork()) {
+        } else if (ItNetwork.class.equals(clazz)) {
             instance = (T) new ItNetwork(container, createChildren);
-        } else if (isAudit()) {
+        } else if (Audit.class.equals(clazz)) {
             instance = (T) new Audit(container, createChildren);
         } else {
             instance = clazz.getConstructor(CnATreeElement.class).newInstance(container);
@@ -172,30 +171,10 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
         element = getDao().merge(element, false);
         container.addChild(element);
         element.setParentAndScope(container);
-        if (isScope()) {
+        if (element.isScope()) {
             setScopeOfScope(element);
         }
         return element;
-    }
-
-    private boolean isScope() {
-        return isOrganization() || isItVerbund() || isItNetwork();
-    }
-
-    private boolean isOrganization() {
-        return Organization.class.equals(clazz) || Organization.TYPE_ID.equals(typeId);
-    }
-
-    private boolean isItVerbund() {
-        return ITVerbund.class.equals(clazz) || ITVerbund.TYPE_ID.equals(typeId);
-    }
-
-    private boolean isItNetwork() {
-        return ItNetwork.class.equals(clazz) || ItNetwork.TYPE_ID.equals(typeId);
-    }
-
-    private boolean isAudit() {
-        return Audit.class.equals(clazz) || Audit.TYPE_ID.equals(typeId);
     }
 
     private void setScopeOfScope(CnATreeElement orgOrItVerbund) {
@@ -212,7 +191,7 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
         // and has no permissions. Therefore we use the name of the currently
         // logged in user as a role which has read and write permissions for
         // the new scope.
-        if (isScope()) {
+        if (element.isScope()) {
             addPermissionsForScope(pElement);
         } else if (pElement instanceof Audit && isInheritAuditPermissions()) {
             addPermissionsForAudit((Audit) pElement);

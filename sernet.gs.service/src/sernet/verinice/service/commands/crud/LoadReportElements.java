@@ -22,7 +22,6 @@ import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.GebaeudeKategorie;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.LinkKategorie;
 import sernet.verinice.model.bsi.MassnahmeKategorie;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
@@ -50,7 +49,6 @@ import sernet.verinice.model.ds.Zweckbestimmung;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.AuditGroup;
 import sernet.verinice.model.iso27k.IISO27kGroup;
-import sernet.verinice.model.iso27k.Organization;
 
 public class LoadReportElements extends GenericCommand implements ICachedCommand {
 
@@ -102,7 +100,7 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
                 log.debug("Loading children(" + this.typeId + ") of " + root.getTitle());
             }
 
-            if (!useScopeID || !hasScopeID(root)) {
+            if (!useScopeID || !root.isScope()) {
 
                 loadElementsRecursive(root);
 
@@ -129,7 +127,7 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
     }
 
     private void loadElementsUsingScopeId(CnATreeElement root) {
-        if (root instanceof Organization || root instanceof ITVerbund) {
+        if (root.isScope()) {
             try {
                 LoadCnAElementByScopeId scopeCommand = new LoadCnAElementByScopeId(rootElement,
                         typeId);
@@ -146,10 +144,6 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
             NumericStringComparator comparator = new NumericStringComparator();
             return comparator.compare(o1.getTitle(), o2.getTitle());
         });
-    }
-
-    private boolean hasScopeID(CnATreeElement root) {
-        return (root instanceof ITVerbund) || (root instanceof Organization);
     }
 
     /**

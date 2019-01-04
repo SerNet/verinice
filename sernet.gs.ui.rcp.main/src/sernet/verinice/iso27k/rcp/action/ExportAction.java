@@ -60,10 +60,7 @@ import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.iso27k.rcp.ExportDialog;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
-import sernet.verinice.model.bp.elements.ItNetwork;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.rcp.RightsEnabledActionDelegate;
 import sernet.verinice.service.commands.ExportCommand;
 
@@ -276,22 +273,18 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
             Iterator<Object> iter = treeSelection.iterator();
             while (iter.hasNext()) {
                 Object obj = iter.next();
-                if (obj instanceof CnATreeElement && !isScopeElement(obj)) {
+                if (obj instanceof CnATreeElement && !(((CnATreeElement) obj).isScope())) {
                     if (this.selection != null) {
                         this.selection = null;
                     }
                     return;
                 }
             }
-            if (isScopeElement(selectedElement)) {
+            if (selectedElement instanceof CnATreeElement
+                    && ((CnATreeElement) selectedElement).isScope()) {
                 this.selection = treeSelection;
             }
         }
-    }
-
-    protected boolean isScopeElement(Object selectedElement) {
-        return selectedElement instanceof Organization || selectedElement instanceof ITVerbund
-                || selectedElement instanceof ItNetwork;
     }
 
     public static String addExtension(String exportPath, String extension) {

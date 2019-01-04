@@ -38,11 +38,9 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ElementChange;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IPostProcessor;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
-import sernet.verinice.model.iso27k.Organization;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -165,8 +163,7 @@ public class CutCommand extends ChangeLoggingCommand {
                 UpdateScopeId updateScopeId = new UpdateScopeId(element.getDbId(),
                         selectedGroup.getScopeId());
                 getCommandService().executeCommand(updateScopeId);
-            } else if (!(selectedGroup instanceof Organization)
-                    && !(selectedGroup instanceof ITVerbund)) {
+            } else if (!selectedGroup.isScope()) {
                 log.warn("cut&paste target has no scopeID");
             }
         }

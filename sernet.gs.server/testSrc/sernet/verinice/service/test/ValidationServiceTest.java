@@ -40,7 +40,6 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.validation.IValidationService;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
@@ -206,7 +205,7 @@ public class ValidationServiceTest extends CommandServiceProvider {
     }
 
     private void deleteValidations(CnATreeElement element) {
-        if(element.getTypeId().equals(ITVerbund.TYPE_ID) || element.getTypeId().equals(Organization.TYPE_ID)){
+        if(element.isScope()){
             validationService.deleteValidationsOfSubtree(element);
             LOG.debug("Validations for Subtree of " + element.getTitle() + " deleted");
         } else {

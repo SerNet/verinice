@@ -62,14 +62,12 @@ import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
-import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.rcp.IProgressRunnable;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
 import sernet.verinice.rcp.catalog.CatalogView;
@@ -368,7 +366,7 @@ public class PasteHandler extends AbstractHandler {
             elmt = loadElementByUuid((String) elmt);
         }
         return elmt instanceof IISO27kGroup || elmt instanceof IBSIStrukturKategorie
-                || elmt instanceof Organization || elmt instanceof ITVerbund;
+                || (elmt instanceof CnATreeElement && ((CnATreeElement) elmt).isScope());
     }
 
     private CnATreeElement loadElementByUuid(String uuid) {

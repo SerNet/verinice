@@ -28,11 +28,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
-import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.LoadElementByTypeId;
 import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.SyncCommand;
@@ -98,15 +97,8 @@ abstract public class AbstractVNAImportHelper extends CommandServiceProvider {
             Set<CnATreeElement> importedElements = this.syncCommand.getElementSet();
             for (CnATreeElement element : importedElements) {
 
-                if (element instanceof Organization) {
-                    RemoveElement<Organization> removeCommand = new RemoveElement<Organization>(
-                            (Organization) element);
-                    commandService.executeCommand(removeCommand);
-                }
-
-                else if (element instanceof ITVerbund) {
-                    RemoveElement<ITVerbund> removeCommand = new RemoveElement<ITVerbund>(
-                            (ITVerbund) element);
+                if (element.isScope()) {
+                    RemoveElement<?> removeCommand = new RemoveElement<>(element);
                     commandService.executeCommand(removeCommand);
                 }
             }
@@ -114,6 +106,7 @@ abstract public class AbstractVNAImportHelper extends CommandServiceProvider {
             // clean up the parents of imported cnatreeelements
             removeAllElementsByType(ImportBsiGroup.TYPE_ID);
             removeAllElementsByType(ImportIsoGroup.TYPE_ID);
+            removeAllElementsByType(ImportBpGroup.TYPE_ID);
 
         } catch (CommandException e) {
             log.error("deleting element of " + vnaFilePath + " failed", e);
