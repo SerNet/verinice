@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -91,8 +92,20 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
             if (propertiesFile.exists()) {
                 props = parseAndExtendMetaData(rptDesign, locale);
             } else {
-                props = createDefaultProperties(rptDesign.getPath(), rptDesign.getName(), locale);
+                Map<String, byte[]> propertiesFilesAllLocales = getPropertiesFiles(
+                        rptDesign.getName());
+                if (!propertiesFilesAllLocales.isEmpty()) {
+                    Entry<String, byte[]> firstEntry = propertiesFilesAllLocales.entrySet()
+                            .iterator().next();
+                    FileUtils.writeByteArrayToFile(propertiesFile, firstEntry.getValue());
+                    props = parseAndExtendMetaData(rptDesign, locale);
+                } else {
+                    props = createDefaultProperties(rptDesign.getPath(), rptDesign.getName(),
+                            locale);
+                }
+
             }
+
             return createReportMetaData(props);
         } catch (IOException | PropertyFileExistsException ex) {
             handleException("error while fetching/generating metadata", ex);
