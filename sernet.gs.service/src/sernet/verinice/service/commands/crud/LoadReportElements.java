@@ -53,95 +53,87 @@ import sernet.verinice.model.iso27k.AuditGroup;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.Organization;
 
-public class LoadReportElements extends GenericCommand implements ICachedCommand{
+public class LoadReportElements extends GenericCommand implements ICachedCommand {
 
     private static final Logger log = Logger.getLogger(LoadReportElements.class);
-    
+
     private boolean resultInjectedFromCache = false;
-    
-	private String typeId;
+
+    private String typeId;
     private Integer rootElement;
     private List<CnATreeElement> elements;
-    
-    private String[] specialGSClasses = new String[]{
-            FinishedRiskAnalysis.TYPE_ID,
-            BausteinUmsetzung.TYPE_ID,
-            Datenverarbeitung.TYPE_ID,
-            Personengruppen.TYPE_ID,
-            StellungnahmeDSB.TYPE_ID,
-            VerantwortlicheStelle.TYPE_ID,
-            Verarbeitungsangaben.TYPE_ID,
-            Zweckbestimmung.TYPE_ID,
-            GefaehrdungsUmsetzung.TYPE_ID,
-            MassnahmenUmsetzung.TYPE_ID
-    };
-    
-    private boolean useScopeID = false;
-    
-    public LoadReportElements(String typeId, Integer rootElement) {
-	    this.typeId = typeId;
-	    this.rootElement = rootElement;
-	}
 
-    public LoadReportElements(String typeId, Integer rootElement, boolean useScopeID){
+    private String[] specialGSClasses = new String[] { FinishedRiskAnalysis.TYPE_ID,
+            BausteinUmsetzung.TYPE_ID, Datenverarbeitung.TYPE_ID, Personengruppen.TYPE_ID,
+            StellungnahmeDSB.TYPE_ID, VerantwortlicheStelle.TYPE_ID, Verarbeitungsangaben.TYPE_ID,
+            Zweckbestimmung.TYPE_ID, GefaehrdungsUmsetzung.TYPE_ID, MassnahmenUmsetzung.TYPE_ID };
+
+    private boolean useScopeID = false;
+
+    public LoadReportElements(String typeId, Integer rootElement) {
+        this.typeId = typeId;
+        this.rootElement = rootElement;
+    }
+
+    public LoadReportElements(String typeId, Integer rootElement, boolean useScopeID) {
         this(typeId, rootElement);
         this.useScopeID = useScopeID;
     }
-   
-    
-	public void execute() {
-	    elements = new ArrayList<CnATreeElement>(0);
-	    if(!resultInjectedFromCache){
-	        if(log.isDebugEnabled()){
-	            log.debug("LoadReportElements for root_object " + rootElement);
-	        }
 
-	        LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElement});
-	        try {
-	            command = getCommandService().executeCommand(command);
-	        } catch (CommandException e) {
-	            throw new RuntimeCommandException(e);
-	        }
-	        if (command.getElements() == null || command.getElements().size()==0) {
-	            this.elements = new ArrayList<CnATreeElement>(0);
-	            return;
-	        }
-	        CnATreeElement root = command.getElements().get(0);
-	        if(log.isDebugEnabled()){
-	            log.debug("Loading children(" + this.typeId +") of " + root.getTitle());
-	        }
+    public void execute() {
+        elements = new ArrayList<CnATreeElement>(0);
+        if (!resultInjectedFromCache) {
+            if (log.isDebugEnabled()) {
+                log.debug("LoadReportElements for root_object " + rootElement);
+            }
 
-	        if(!useScopeID || !hasScopeID(root)){
+            LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(
+                    new Integer[] { rootElement });
+            try {
+                command = getCommandService().executeCommand(command);
+            } catch (CommandException e) {
+                throw new RuntimeCommandException(e);
+            }
+            if (command.getElements() == null || command.getElements().size() == 0) {
+                this.elements = new ArrayList<CnATreeElement>(0);
+                return;
+            }
+            CnATreeElement root = command.getElements().get(0);
+            if (log.isDebugEnabled()) {
+                log.debug("Loading children(" + this.typeId + ") of " + root.getTitle());
+            }
 
-	            loadElementsRecursive(root);
+            if (!useScopeID || !hasScopeID(root)) {
 
+                loadElementsRecursive(root);
 
-	        } else {
-	            elements = new ArrayList<CnATreeElement>(0);
-	            loadElementsUsingScopeId(root);
-	        }
-	        if(elements != null){
-	            sortResult();
-	        }
-	    }
-	}
+            } else {
+                elements = new ArrayList<CnATreeElement>(0);
+                loadElementsUsingScopeId(root);
+            }
+            if (elements != null) {
+                sortResult();
+            }
+        }
+    }
 
     private void loadElementsRecursive(CnATreeElement root) {
-        //if typeId is that of the root object, just return it itself. else look for children:
+        // if typeId is that of the root object, just return it itself. else
+        // look for children:
         ArrayList<CnATreeElement> items = new ArrayList<CnATreeElement>();
         if (this.typeId.equals(root.getTypeId())) {
             this.elements = items;
             this.elements.add(root);
-        }
-        else {
+        } else {
             elements = getElements(typeId, root);
         }
     }
 
     private void loadElementsUsingScopeId(CnATreeElement root) {
-        if(root instanceof Organization || root instanceof ITVerbund){
+        if (root instanceof Organization || root instanceof ITVerbund) {
             try {
-                LoadCnAElementByScopeId scopeCommand = new LoadCnAElementByScopeId(rootElement, typeId);
+                LoadCnAElementByScopeId scopeCommand = new LoadCnAElementByScopeId(rootElement,
+                        typeId);
                 scopeCommand = getCommandService().executeCommand(scopeCommand);
                 elements.addAll(scopeCommand.getResults());
             } catch (CommandException e) {
@@ -160,11 +152,9 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
         });
     }
 
-	
-	private boolean hasScopeID(CnATreeElement root){
-	    return (root instanceof ITVerbund) || (root instanceof Organization);
-	}
-  
+    private boolean hasScopeID(CnATreeElement root) {
+        return (root instanceof ITVerbund) || (root instanceof Organization);
+    }
 
     /**
      * @return the elements
@@ -176,34 +166,41 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
     public List<CnATreeElement> getElements(String typeFilter, CnATreeElement parent) {
         ArrayList<CnATreeElement> children = new ArrayList<CnATreeElement>(0);
         for (CnATreeElement child : parent.getChildren()) {
-            if (typeFilter != null && typeFilter.length()>0) {
+            if (typeFilter != null && typeFilter.length() > 0) {
                 if (child.getTypeId().equals(typeFilter)) {
                     children.add(child);
                     child.getParent().getTitle();
-                } 
+                }
             } else {
                 children.add(child);
                 child.getParent().getTitle();
             }
-            if(child instanceof IISO27kGroup){ // ism element that can contain children
-                IISO27kGroup g = (IISO27kGroup)child;
-                if((Arrays.asList(g.getChildTypes()).contains(typeFilter) || g.getTypeId().equals(typeFilter) || g instanceof AuditGroup || g instanceof Audit) && child != null){
+            if (child instanceof IISO27kGroup) { // ism element that can contain
+                                                 // children
+                IISO27kGroup g = (IISO27kGroup) child;
+                if ((Arrays.asList(g.getChildTypes()).contains(typeFilter)
+                        || g.getTypeId().equals(typeFilter) || g instanceof AuditGroup
+                        || g instanceof Audit) && child != null) {
                     children.addAll(getElements(typeFilter, child));
                 }
-            // gs elements that can contain children
-            } else if(child instanceof IBSIStrukturKategorie){ 
-                if(isGSKategorieAndCanContain((IBSIStrukturKategorie)child, typeFilter) || Arrays.asList(specialGSClasses).contains(typeFilter)){
+                // gs elements that can contain children
+            } else if (child instanceof IBSIStrukturKategorie) {
+                if (isGSKategorieAndCanContain((IBSIStrukturKategorie) child, typeFilter)
+                        || Arrays.asList(specialGSClasses).contains(typeFilter)) {
                     children.addAll(getElements(typeFilter, child));
                 }
-            } else if(child instanceof IBSIStrukturElement && 
-                    (isGSElementAndCanContain((IBSIStrukturElement)child, typeFilter) || Arrays.asList(specialGSClasses).contains(typeFilter))){
-                    children.addAll(getElements(typeFilter, child));
-            } 
+            } else if (child instanceof IBSIStrukturElement
+                    && (isGSElementAndCanContain((IBSIStrukturElement) child, typeFilter)
+                            || Arrays.asList(specialGSClasses).contains(typeFilter))) {
+                children.addAll(getElements(typeFilter, child));
+            }
         }
         return children;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
      */
     @Override
@@ -216,104 +213,95 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
         return cacheID.toString();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.
+     * Object)
      */
     @Override
     public void injectCacheResult(Object result) {
-        this.elements = (ArrayList<CnATreeElement>)result;
+        this.elements = (ArrayList<CnATreeElement>) result;
         resultInjectedFromCache = true;
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
      */
     @Override
     public Object getCacheableResult() {
         return elements;
     }
-    
-    private boolean isGSElementAndCanContain(IBSIStrukturElement element, String typeId){
-        Class[] gsClasses = new Class[]{
-                FinishedRiskAnalysis.class,
-                BausteinUmsetzung.class,
-                LinkKategorie.class,
-                Datenverarbeitung.class,
-                Personengruppen.class,
-                StellungnahmeDSB.class,
-                VerantwortlicheStelle.class,
-                Verarbeitungsangaben.class,
-                Zweckbestimmung.class
-        };
-        
+
+    private boolean isGSElementAndCanContain(IBSIStrukturElement element, String typeId) {
+        Class[] gsClasses = new Class[] { FinishedRiskAnalysis.class, BausteinUmsetzung.class,
+                LinkKategorie.class, Datenverarbeitung.class, Personengruppen.class,
+                StellungnahmeDSB.class, VerantwortlicheStelle.class, Verarbeitungsangaben.class,
+                Zweckbestimmung.class };
+
         CnATreeElement potentialChild = getPotentialChild(typeId, gsClasses);
-        
-        if(potentialChild != null){
-            if(element instanceof Anwendung){
-                return ((Anwendung)element).canContain(potentialChild);
-            } else if(element instanceof Client){
-                return ((Client)element).canContain(potentialChild);
-            } else if(element instanceof Gebaeude){
-                return ((Gebaeude)element).canContain(potentialChild);
-            } else if(element instanceof NetzKomponente){
-                return ((NetzKomponente)element).canContain(potentialChild);
-            } else if(element instanceof Person){
-                return ((Person)element).canContain(potentialChild);
-            } else if(element instanceof Raum){
-                return ((Raum)element).canContain(potentialChild);
-            } else if(element instanceof Server){
-                return ((Server)element).canContain(potentialChild);
-            } else if(element instanceof SonstIT){
-                return ((SonstIT)element).canContain(potentialChild);
-            } else if(element instanceof TelefonKomponente){
-                return ((TelefonKomponente)element).canContain(potentialChild);
+
+        if (potentialChild != null) {
+            if (element instanceof Anwendung) {
+                return ((Anwendung) element).canContain(potentialChild);
+            } else if (element instanceof Client) {
+                return ((Client) element).canContain(potentialChild);
+            } else if (element instanceof Gebaeude) {
+                return ((Gebaeude) element).canContain(potentialChild);
+            } else if (element instanceof NetzKomponente) {
+                return ((NetzKomponente) element).canContain(potentialChild);
+            } else if (element instanceof Person) {
+                return ((Person) element).canContain(potentialChild);
+            } else if (element instanceof Raum) {
+                return ((Raum) element).canContain(potentialChild);
+            } else if (element instanceof Server) {
+                return ((Server) element).canContain(potentialChild);
+            } else if (element instanceof SonstIT) {
+                return ((SonstIT) element).canContain(potentialChild);
+            } else if (element instanceof TelefonKomponente) {
+                return ((TelefonKomponente) element).canContain(potentialChild);
             }
         }
         return false;
     }
-    
-    private boolean isGSKategorieAndCanContain(IBSIStrukturKategorie kategorie, String typeId){
-        
-        Class[] gsClasses = new Class[]{Anwendung.class,
-                                          Client.class,
-                                          Gebaeude.class,
-                                          MassnahmenUmsetzung.class,
-                                          NetzKomponente.class,
-                                          Person.class,
-                                          Raum.class,
-                                          Server.class,
-                                          SonstIT.class,
-                                          TelefonKomponente.class
-                                          };
-        
+
+    private boolean isGSKategorieAndCanContain(IBSIStrukturKategorie kategorie, String typeId) {
+
+        Class[] gsClasses = new Class[] { Anwendung.class, Client.class, Gebaeude.class,
+                MassnahmenUmsetzung.class, NetzKomponente.class, Person.class, Raum.class,
+                Server.class, SonstIT.class, TelefonKomponente.class };
+
         CnATreeElement potentialChild = getPotentialChild(typeId, gsClasses);
 
-        if(potentialChild != null){
-            if(kategorie instanceof AnwendungenKategorie){
-                return ((AnwendungenKategorie)kategorie).canContain(potentialChild);
-            } else if(kategorie instanceof ClientsKategorie){
-                return ((ClientsKategorie)kategorie).canContain(potentialChild);
-            } else if(kategorie instanceof GebaeudeKategorie){
-                return ((GebaeudeKategorie)kategorie).canContain(potentialChild);
-            } else if(kategorie instanceof MassnahmeKategorie){
-                return ((MassnahmeKategorie)kategorie).canContain(potentialChild);
-            } else if(kategorie instanceof NKKategorie){
-                return ((NKKategorie)kategorie).canContain(potentialChild);
-            } else if(kategorie instanceof PersonenKategorie){
-                return ((PersonenKategorie)kategorie).canContain(potentialChild);
-            } else if(kategorie instanceof RaeumeKategorie){
-                return ((RaeumeKategorie)kategorie).canContain(potentialChild);
-            } else if(kategorie instanceof ServerKategorie){
-                return ((ServerKategorie)kategorie).canContain(potentialChild);
-            } else if((kategorie instanceof SonstigeITKategorie)){
-                return ((SonstigeITKategorie)kategorie).canContain(potentialChild);
-            } else if(kategorie instanceof TKKategorie){
-                return ((TKKategorie)kategorie).canContain(potentialChild);
+        if (potentialChild != null) {
+            if (kategorie instanceof AnwendungenKategorie) {
+                return ((AnwendungenKategorie) kategorie).canContain(potentialChild);
+            } else if (kategorie instanceof ClientsKategorie) {
+                return ((ClientsKategorie) kategorie).canContain(potentialChild);
+            } else if (kategorie instanceof GebaeudeKategorie) {
+                return ((GebaeudeKategorie) kategorie).canContain(potentialChild);
+            } else if (kategorie instanceof MassnahmeKategorie) {
+                return ((MassnahmeKategorie) kategorie).canContain(potentialChild);
+            } else if (kategorie instanceof NKKategorie) {
+                return ((NKKategorie) kategorie).canContain(potentialChild);
+            } else if (kategorie instanceof PersonenKategorie) {
+                return ((PersonenKategorie) kategorie).canContain(potentialChild);
+            } else if (kategorie instanceof RaeumeKategorie) {
+                return ((RaeumeKategorie) kategorie).canContain(potentialChild);
+            } else if (kategorie instanceof ServerKategorie) {
+                return ((ServerKategorie) kategorie).canContain(potentialChild);
+            } else if ((kategorie instanceof SonstigeITKategorie)) {
+                return ((SonstigeITKategorie) kategorie).canContain(potentialChild);
+            } else if (kategorie instanceof TKKategorie) {
+                return ((TKKategorie) kategorie).canContain(potentialChild);
             }
-        } 
+        }
         return false;
     }
 
@@ -324,15 +312,16 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
      */
     private CnATreeElement getPotentialChild(String typeId, Class[] gsClasses) {
         CnATreeElement potentialChild = null;
-        
-        for(Class<? extends CnATreeElement> gsClass : gsClasses){
+
+        for (Class<? extends CnATreeElement> gsClass : gsClasses) {
             Object instance;
             try {
                 final Class classToInstantiate = Class.forName(gsClass.getCanonicalName());
-                instance = classToInstantiate.getConstructor(CnATreeElement.class).newInstance(new Object[]{null});
-                if(instance instanceof CnATreeElement){
-                    CnATreeElement element = (CnATreeElement)instance;
-                    if(element.getTypeId().equals(typeId)){
+                instance = classToInstantiate.getConstructor(CnATreeElement.class)
+                        .newInstance(new Object[] { null });
+                if (instance instanceof CnATreeElement) {
+                    CnATreeElement element = (CnATreeElement) instance;
+                    if (element.getTypeId().equals(typeId)) {
                         potentialChild = element;
                     }
                 }
@@ -340,11 +329,11 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
                 log.error("Error while instantiating Object", e);
             } catch (IllegalAccessException e) {
                 log.error("Wrong element access", e);
-            } catch (ClassNotFoundException e){
+            } catch (ClassNotFoundException e) {
                 log.error("Wrong class selected", e);
-            } catch (NoSuchMethodException e){
+            } catch (NoSuchMethodException e) {
                 log.error("Constructor not found", e);
-            } catch (InvocationTargetException e){
+            } catch (InvocationTargetException e) {
                 log.error("Wrong invocation on target", e);
             }
         }

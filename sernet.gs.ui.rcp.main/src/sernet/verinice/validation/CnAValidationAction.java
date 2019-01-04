@@ -38,26 +38,33 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.rcp.RightsEnabledActionDelegate;
 
-public class CnAValidationAction extends RightsEnabledActionDelegate implements RightEnabledUserInteraction {
+public class CnAValidationAction extends RightsEnabledActionDelegate
+        implements RightEnabledUserInteraction {
 
     private static final Logger LOG = Logger.getLogger(CnAValidationAction.class);
-    
+
     private List<Object> rootObjects;
-    
+
     private IValidationService validationService;
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.RightsEnabledActionDelegate#doRun(org.eclipse.jface.action.IAction)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.rcp.RightsEnabledActionDelegate#doRun(org.eclipse.jface.
+     * action.IAction)
      */
     @Override
     public void doRun(IAction action) {
         try {
             for (Object rootObject : rootObjects) {
-                if (rootObject instanceof Organization || rootObject instanceof ITVerbund || rootObject instanceof ItNetwork) {
+                if (rootObject instanceof Organization || rootObject instanceof ITVerbund
+                        || rootObject instanceof ItNetwork) {
                     CnATreeElement cnATreeElement = (CnATreeElement) rootObject;
                     int scopeID = cnATreeElement.getScopeId();
                     final CreateValidationsJob validationJob = new CreateValidationsJob(scopeID);
-                    IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+                    IProgressService progressService = PlatformUI.getWorkbench()
+                            .getProgressService();
                     progressService.run(true, true, validationJob);
                     CnAElementFactory.getModel(cnATreeElement).validationAdded(scopeID);
                 }
@@ -66,41 +73,47 @@ public class CnAValidationAction extends RightsEnabledActionDelegate implements 
             LOG.error("Error while executing validation action", e);
         }
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override
     public String getRightID() {
         return ActionRightIDs.CNAVALIDATION;
     }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.actions.ActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.ui.actions.ActionDelegate#selectionChanged(org.eclipse.jface.
+     * action.IAction, org.eclipse.jface.viewers.ISelection)
      */
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
         if (isServerRunning()) {
             action.setEnabled(checkRights());
         }
-        if(selection instanceof ITreeSelection) {
+        if (selection instanceof ITreeSelection) {
             ITreeSelection treeSelection = (ITreeSelection) selection;
             rootObjects = treeSelection.toList();
         }
     }
-    
+
     protected HUITypeFactory getTypeFactory() {
         return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
     }
 
     public IValidationService getValidationService() {
-        if(validationService == null){
-            validationService = (IValidationService)VeriniceContext.get(VeriniceContext.VALIDATION_SERVICE);
+        if (validationService == null) {
+            validationService = (IValidationService) VeriniceContext
+                    .get(VeriniceContext.VALIDATION_SERVICE);
         }
         return validationService;
     }
-    
-    
+
     public void setRootObjects(List<Object> rootObjects) {
         this.rootObjects = rootObjects;
     }

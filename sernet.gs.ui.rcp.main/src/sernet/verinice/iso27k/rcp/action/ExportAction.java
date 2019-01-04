@@ -70,85 +70,96 @@ import sernet.verinice.rcp.RightsEnabledActionDelegate;
 import sernet.verinice.service.commands.ExportCommand;
 
 /**
- * Eclipse ActionDelegate which is called to import XML or VNA data.
- * Rights profile management is enabled for this action.
+ * Eclipse ActionDelegate which is called to import XML or VNA data. Rights
+ * profile management is enabled for this action.
  * 
- * Action opens {@link ExportDialog} to import data.
- * If user user hits closes dialog with ok, export is started asynchronously by calling
+ * Action opens {@link ExportDialog} to import data. If user user hits closes
+ * dialog with ok, export is started asynchronously by calling
  * {@link ExportCommand}.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("restriction")
-public class ExportAction extends RightsEnabledActionDelegate implements IViewActionDelegate, IWorkbenchWindowActionDelegate, RightEnabledUserInteraction
-{
-	public static final String ID = "sernet.verinice.samt.rcp.ExportSelfAssessment"; //$NON-NLS-1$
-	
-	private static final Logger LOG = Logger.getLogger(ExportAction.class);
-	
-	public static final String EXTENSION_XML = ".xml"; //$NON-NLS-1$	
-	public static final String EXTENSION_PASSWORD_ENCRPTION = ".pcr"; //$NON-NLS-1$  
+public class ExportAction extends RightsEnabledActionDelegate implements IViewActionDelegate,
+        IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {
+    public static final String ID = "sernet.verinice.samt.rcp.ExportSelfAssessment"; //$NON-NLS-1$
+
+    private static final Logger LOG = Logger.getLogger(ExportAction.class);
+
+    public static final String EXTENSION_XML = ".xml"; //$NON-NLS-1$
+    public static final String EXTENSION_PASSWORD_ENCRPTION = ".pcr"; //$NON-NLS-1$
     public static final String EXTENSION_CERTIFICATE_ENCRPTION = ".ccr"; //$NON-NLS-1$
-   
+
     private ExportDialog dialog;
-	private EncryptionDialog encDialog;
-	
-	private String filePath;
-	
-	private char[] password = null;	
-	private File x509CertificateFile = null;	
-	private String keyAlias = null;
-	
-	private static ISchedulingRule iSchedulingRule = new Mutex();
-	
-	private ITreeSelection selection;
-    
-    /* (non-Javadoc)
+    private EncryptionDialog encDialog;
+
+    private String filePath;
+
+    private char[] password = null;
+    private File x509CertificateFile = null;
+    private String keyAlias = null;
+
+    private static ISchedulingRule iSchedulingRule = new Mutex();
+
+    private ITreeSelection selection;
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
      */
     @Override
     public void init(IViewPart view) {
     }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.
+     * IWorkbenchWindow)
      */
     @Override
     public void init(IWorkbenchWindow window) {
-        
-    }
-    
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.RightsEnabledActionDelegate#doRun(org.eclipse.jface.action.IAction)
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.rcp.RightsEnabledActionDelegate#doRun(org.eclipse.jface.
+     * action.IAction)
      */
     @Override
     public void doRun(IAction action) {
-		dialog = new ExportDialog(Display.getCurrent().getActiveShell(), selection);
-		if( dialog.open() == Dialog.OK ) {	     
-		    if(dialog.getEncryptOutput()) {
-                if(Window.CANCEL == openEncryptionDialog()) {
+        dialog = new ExportDialog(Display.getCurrent().getActiveShell(), selection);
+        if (dialog.open() == Dialog.OK) {
+            if (dialog.getEncryptOutput()) {
+                if (Window.CANCEL == openEncryptionDialog()) {
                     return;
                 }
             }
-		    filePath = dialog.getFilePath();
-		    filePath = ExportAction.addExtension(filePath,ExportDialog.getExtensionArray()[dialog.getFormat()]);
-		    if(password!=null) {		        
-		        filePath = addExtension(filePath, EXTENSION_PASSWORD_ENCRPTION);
-		    }
-		    if(x509CertificateFile!=null) {
-		        filePath = addExtension(filePath, EXTENSION_CERTIFICATE_ENCRPTION);
+            filePath = dialog.getFilePath();
+            filePath = ExportAction.addExtension(filePath,
+                    ExportDialog.getExtensionArray()[dialog.getFormat()]);
+            if (password != null) {
+                filePath = addExtension(filePath, EXTENSION_PASSWORD_ENCRPTION);
             }
-		    WorkspaceJob exportJob = new WorkspaceJob("Exporting...") {
+            if (x509CertificateFile != null) {
+                filePath = addExtension(filePath, EXTENSION_CERTIFICATE_ENCRPTION);
+            }
+            WorkspaceJob exportJob = new WorkspaceJob("Exporting...") {
                 @Override
                 public IStatus runInWorkspace(final IProgressMonitor monitor) {
                     IStatus status = Status.OK_STATUS;
                     try {
-                        monitor.beginTask(NLS.bind(Messages.getString("ExportAction_4"), new Object[] {dialog.getFilePath()}), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
-                        export();                    
+                        monitor.beginTask(NLS.bind(Messages.getString("ExportAction_4"), //$NON-NLS-1$
+                                new Object[] { dialog.getFilePath() }), IProgressMonitor.UNKNOWN);
+                        export();
                     } catch (Exception e) {
                         LOG.error("Error while exporting data.", e); //$NON-NLS-1$
-                        status= new Status(Status.ERROR, "sernet.verinice.samt.rcp", "Error while exporting data.",e); 
+                        status = new Status(Status.ERROR, "sernet.verinice.samt.rcp",
+                                "Error while exporting data.", e);
                     } finally {
                         password = null;
                         x509CertificateFile = null;
@@ -159,53 +170,60 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
                     return status;
                 }
             };
-            exportJob.addJobChangeListener(new ExportJobChangeListener(Display.getDefault().getActiveShell(),filePath,dialog.getSelectedElement().getTitle()));
-            JobScheduler.scheduleJob(exportJob,iSchedulingRule);          
-		}
-	}
-    
-    private void export() {          
-        String internalSourceId = null;
-        final int uuidStringLength = 6;
-        if(getElementSet()!=null && getElementSet().size()>0) {
-        	if(getSourceId()==null || getSourceId().isEmpty()) {
-        		// if source id is not set by user the first 6 char. of an uuid is used
-        		internalSourceId = UUID.randomUUID().toString().substring(0, uuidStringLength);
-        	} else {
-        	    internalSourceId = getSourceId();
-        	}
-            Activator.inheritVeriniceContextState();
-            ExportCommand exportCommand;
-            if(Activator.getDefault().isStandalone() && !isEncryption()) {
-                exportCommand = new ExportCommand(new LinkedList<CnATreeElement>(getElementSet()), internalSourceId, isReImport(), getFileFormat(), filePath);
-            } else {
-                exportCommand = new ExportCommand(new LinkedList<CnATreeElement>(getElementSet()), internalSourceId, isReImport(), getFileFormat());
-            }
-            try {
-                boolean exportRiskAnalysis = Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.EXPORT_RISK_ANALYSIS);        		
-                exportCommand.setExportRiskAnalysis(exportRiskAnalysis);  
-                exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
-        		if(exportCommand.getResult()!=null) {
-                    String salt = RandomStringUtils.random(IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH, true, true);
-                    byte[] saltBytes = salt.getBytes(IEncryptionService.CRYPTO_DEFAULT_ENCODING);
-        		    byte[] cypherTextBytes = encrypt(exportCommand.getResult(), saltBytes);
-        		    
-                    FileUtils.writeByteArrayToFile(new File(filePath), cypherTextBytes);
-        		}
-        		updateModel(exportCommand.getChangedElements());
-        	} catch (Exception e) {
-        		throw new IllegalStateException(e);
-        	}      	
+            exportJob.addJobChangeListener(
+                    new ExportJobChangeListener(Display.getDefault().getActiveShell(), filePath,
+                            dialog.getSelectedElement().getTitle()));
+            JobScheduler.scheduleJob(exportJob, iSchedulingRule);
         }
     }
-    
+
+    private void export() {
+        String internalSourceId = null;
+        final int uuidStringLength = 6;
+        if (getElementSet() != null && getElementSet().size() > 0) {
+            if (getSourceId() == null || getSourceId().isEmpty()) {
+                // if source id is not set by user the first 6 char. of an uuid
+                // is used
+                internalSourceId = UUID.randomUUID().toString().substring(0, uuidStringLength);
+            } else {
+                internalSourceId = getSourceId();
+            }
+            Activator.inheritVeriniceContextState();
+            ExportCommand exportCommand;
+            if (Activator.getDefault().isStandalone() && !isEncryption()) {
+                exportCommand = new ExportCommand(new LinkedList<CnATreeElement>(getElementSet()),
+                        internalSourceId, isReImport(), getFileFormat(), filePath);
+            } else {
+                exportCommand = new ExportCommand(new LinkedList<CnATreeElement>(getElementSet()),
+                        internalSourceId, isReImport(), getFileFormat());
+            }
+            try {
+                boolean exportRiskAnalysis = Activator.getDefault().getPreferenceStore()
+                        .getBoolean(PreferenceConstants.EXPORT_RISK_ANALYSIS);
+                exportCommand.setExportRiskAnalysis(exportRiskAnalysis);
+                exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
+                if (exportCommand.getResult() != null) {
+                    String salt = RandomStringUtils
+                            .random(IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH, true, true);
+                    byte[] saltBytes = salt.getBytes(IEncryptionService.CRYPTO_DEFAULT_ENCODING);
+                    byte[] cypherTextBytes = encrypt(exportCommand.getResult(), saltBytes);
+
+                    FileUtils.writeByteArrayToFile(new File(filePath), cypherTextBytes);
+                }
+                updateModel(exportCommand.getChangedElements());
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+        }
+    }
+
     private void updateModel(List<CnATreeElement> changedElementList) {
         final int maxChangedElements = 9;
-        if(changedElementList!=null && !changedElementList.isEmpty() ) {
-        	if(changedElementList.size()>maxChangedElements) {
-	            // if more than 9 elements changed or added do a complete reload
-	            CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
-        	} else {
+        if (changedElementList != null && !changedElementList.isEmpty()) {
+            if (changedElementList.size() > maxChangedElements) {
+                // if more than 9 elements changed or added do a complete reload
+                CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
+            } else {
                 for (CnATreeElement cnATreeElement : changedElementList) {
                     CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement);
                     CnAElementFactory.getModel(cnATreeElement).databaseChildChanged(cnATreeElement);
@@ -213,7 +231,7 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
             }
         }
     }
-    
+
     private int openEncryptionDialog() {
         encDialog = new EncryptionDialog(Display.getDefault().getActiveShell());
         if (encDialog.open() == Window.OK) {
@@ -233,17 +251,18 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
             return Window.CANCEL;
         }
     }
-	
-    private byte[] encrypt(byte[] result, byte[] salt) throws CertificateException, EncryptionException, IOException {
+
+    private byte[] encrypt(byte[] result, byte[] salt)
+            throws CertificateException, EncryptionException, IOException {
         IEncryptionService service = ServiceFactory.lookupEncryptionService();
         byte[] cypherTextBytes;
         if (keyAlias != null) {
             cypherTextBytes = service.encrypt(result, keyAlias);
-        } else if (password!=null) {
+        } else if (password != null) {
             // Encrypt message
             cypherTextBytes = service.encrypt(result, password, salt);
 
-        } else if (x509CertificateFile!=null) {
+        } else if (x509CertificateFile != null) {
             cypherTextBytes = service.encrypt(result, x509CertificateFile);
         } else {
             cypherTextBytes = result;
@@ -252,26 +271,31 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
         return cypherTextBytes;
     }
 
-    public OutputStream getExportOutputStream(String path, char[] password, File x509CertificateFile) {
+    public OutputStream getExportOutputStream(String path, char[] password,
+            File x509CertificateFile) {
         OutputStream os;
         try {
-            os = new FileOutputStream(path);     
-            if (password!=null || x509CertificateFile!=null) {               
+            os = new FileOutputStream(path);
+            if (password != null || x509CertificateFile != null) {
                 IEncryptionService service = ServiceFactory.lookupEncryptionService();
-                if (password!=null) {
+                if (password != null) {
                     os = service.encrypt(os, password);
-                } else if (x509CertificateFile!=null) {
+                } else if (x509CertificateFile != null) {
                     os = service.encrypt(os, x509CertificateFile);
-                }                     
+                }
             }
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
-        } 
+        }
         return os;
     }
-    
-    /* (non-Javadoc) 
-     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.
+     * IAction, org.eclipse.jface.viewers.ISelection)
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -301,8 +325,7 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
     }
 
     protected boolean isScopeElement(Object selectedElement) {
-        return selectedElement instanceof Organization 
-                || selectedElement instanceof ITVerbund
+        return selectedElement instanceof Organization || selectedElement instanceof ITVerbund
                 || selectedElement instanceof ItNetwork;
     }
 
@@ -321,7 +344,7 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
     private boolean isReImport() {
         return dialog.getReImport();
     }
-    
+
     private boolean isEncryption() {
         return dialog.getEncryptOutput();
     }
@@ -334,7 +357,9 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
         return dialog.getFormat();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override
