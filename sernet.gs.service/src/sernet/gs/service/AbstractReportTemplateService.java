@@ -75,27 +75,26 @@ import sernet.verinice.model.report.WordOutputFormat;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-abstract public class AbstractReportTemplateService implements IReportTemplateService {
+public abstract class AbstractReportTemplateService implements IReportTemplateService {
 
-    private final Logger LOG = Logger.getLogger(AbstractReportTemplateService.class);
+    private static final Logger logger = Logger.getLogger(AbstractReportTemplateService.class);
 
-    abstract public boolean isHandeledByReportDeposit();
+    public abstract boolean isHandeledByReportDeposit();
 
-    abstract public String getTemplateDirectory();
+    public abstract String getTemplateDirectory();
 
     public ReportTemplateMetaData getMetaData(File rptDesign, String locale)
             throws ReportTemplateServiceException {
         try {
-            Properties props = null;
-            if (checkReportMetaDataFile(rptDesign, locale)) {
+            Properties props;
+            File propertiesFile = getPropertiesFile(rptDesign, locale);
+            if (propertiesFile.exists()) {
                 props = parseAndExtendMetaData(rptDesign, locale);
             } else {
                 props = createDefaultProperties(rptDesign.getPath(), rptDesign.getName(), locale);
             }
             return createReportMetaData(props);
-        } catch (IOException ex) {
-            handleException("error while fetching/generating metadata", ex);
-        } catch (PropertyFileExistsException ex) {
+        } catch (IOException | PropertyFileExistsException ex) {
             handleException("error while fetching/generating metadata", ex);
         }
 
@@ -103,13 +102,8 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
     }
 
     protected void handleException(String msg, Exception ex) throws ReportTemplateServiceException {
-        LOG.error(msg, ex);
+        logger.error(msg, ex);
         throw new ReportTemplateServiceException(ex);
-    }
-
-    public boolean checkReportMetaDataFile(File rptDesign, String locale) {
-        File propertiesFile = getPropertiesFile(rptDesign, locale);
-        return propertiesFile.exists();
     }
 
     protected Properties parseAndExtendMetaData(File rptDesign, String locale) throws IOException {
@@ -144,7 +138,7 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
         return props;
     }
 
-    private String removeSuffix(String fileName) {
+    private static String removeSuffix(String fileName) {
         return fileName.substring(0,
                 fileName.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR));
     }
@@ -171,9 +165,8 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
         if (!path.contains(templateDir)) {
             path = templateDir + templateDir;
         }
-        File propFile = new File(path + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR
+        return new File(path + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR
                 + IReportDepositService.PROPERTIES_FILE_EXTENSION);
-        return propFile;
     }
 
     /**
@@ -196,14 +189,14 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
      *
      *
      */
-    private String sanitizeLocale(String locale, String path) {
+    private static String sanitizeLocale(String locale, String path) {
 
         if (locale.length() > 2 && locale.contains(String.valueOf('_'))) {
             locale = locale.substring(0, locale.indexOf(String.valueOf('_')));
         }
 
-        if (!"".equals(locale)) {
-            if ("en".equals(locale.toLowerCase())
+        if (!locale.isEmpty()) {
+            if ("en".equalsIgnoreCase(locale)
                     || path.contains("_" + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR
                             + IReportDepositService.PROPERTIES_FILE_EXTENSION)) {
                 locale = "";
@@ -244,7 +237,7 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
         String outputformatsString = props
                 .getProperty(IReportDepositService.PROPERTIES_OUTPUTFORMATS);
         StringTokenizer tokenizer = new StringTokenizer(outputformatsString, ",");
-        ArrayList<OutputFormat> formats = new ArrayList<OutputFormat>(tokenizer.countTokens());
+        ArrayList<OutputFormat> formats = new ArrayList<>(tokenizer.countTokens());
         while (tokenizer.hasMoreTokens()) {
             String token = tokenizer.nextToken().trim();
             formats.add(OutputFormat.valueOf(token.toUpperCase()));
@@ -261,7 +254,7 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
     }
 
     protected Map<String, byte[]> getPropertiesFiles(String fileName) throws IOException {
-        Map<String, byte[]> propertiesFiles = new TreeMap<String, byte[]>();
+        Map<String, byte[]> propertiesFiles = new TreeMap<>();
         Iterator<File> iter = listPropertiesFiles(fileName);
         while (iter.hasNext()) {
             File f = iter.next();
@@ -276,9 +269,7 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
         String baseName = removeSuffix(fileName);
         IOFileFilter filter = new RegexFileFilter(baseName + "\\_?.*\\.properties",
                 IOCase.INSENSITIVE);
-        Iterator<File> iter = FileUtils.iterateFiles(new File(getTemplateDirectory()), filter,
-                null);
-        return iter;
+        return FileUtils.iterateFiles(new File(getTemplateDirectory()), filter, null);
     }
 
     private String[] getCheckSums(String fileName) throws IOException {
@@ -290,7 +281,7 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
         }
         Iterator<File> iter = listPropertiesFiles(fileName);
 
-        List<String> md5CheckSums = new ArrayList<String>();
+        List<String> md5CheckSums = new ArrayList<>();
         md5CheckSums.add(DigestUtils.md5Hex(FileUtils.readFileToByteArray(new File(filePath))));
 
         while (iter.hasNext()) {
@@ -303,7 +294,7 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
 
     public Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles, String locale)
             throws ReportTemplateServiceException {
-        Set<ReportTemplateMetaData> set = new HashSet<ReportTemplateMetaData>();
+        Set<ReportTemplateMetaData> set = new HashSet<>();
 
         for (String designFilePath : rptDesignFiles) {
             set.add(getMetaData(new File(designFilePath), locale));
@@ -318,7 +309,7 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
 
     @SuppressWarnings({ "unchecked" })
     public String[] getReportTemplateFileNames() {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         IOFileFilter filter = new SuffixFileFilter("rptdesign", IOCase.INSENSITIVE);
         Iterator<File> iter = FileUtils.iterateFiles(new File(getTemplateDirectory()), filter,
                 null);
@@ -349,13 +340,13 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
     }
 
     public IOutputFormat[] getOutputFormats(OutputFormat[] formatLabel) {
-        List<IOutputFormat> list = new ArrayList<IOutputFormat>(formatLabel.length);
+        List<IOutputFormat> list = new ArrayList<>(formatLabel.length);
         for (OutputFormat s : formatLabel) {
             IOutputFormat format = getOutputFormat(s);
             if (format != null) {
                 list.add(format);
             } else {
-                LOG.warn("Report output format:\t" + s + " not available in verinice");
+                logger.warn("Report output format:\t" + s + " not available in verinice");
             }
         }
         return list.toArray(new IOutputFormat[list.size()]);
@@ -393,7 +384,7 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
 
     @SuppressWarnings("unchecked")
     private String[] getServerRptDesigns() throws ReportTemplateServiceException {
-        List<String> list = new ArrayList<String>(0);
+        List<String> list = new ArrayList<>(0);
         // // DirFilter = null means no subdirectories
         IOFileFilter filter = new SuffixFileFilter("rptdesign", IOCase.INSENSITIVE);
         Iterator<File> iter = FileUtils.iterateFiles(new File(getTemplateDirectory()), filter,
