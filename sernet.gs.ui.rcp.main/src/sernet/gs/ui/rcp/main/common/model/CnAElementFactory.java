@@ -613,7 +613,7 @@ public final class CnAElementFactory {
         CnATreeElement child = builder.build(container, input);
 
         if (inheritIcon) {
-            inheritIcon(container.getIconPath(), container.getTypeId(), inheritIcon, child);
+            inheritIcon(container.getIconPath(), container.getTypeId(), child);
         }
 
         // notify all listeners:
@@ -624,9 +624,9 @@ public final class CnAElementFactory {
         return child;
     }
 
-    private CnATreeElement inheritIcon(String iconPath, String containerTypeId, boolean inheritIcon,
+    private CnATreeElement inheritIcon(String iconPath, String containerTypeId,
             CnATreeElement child) throws CommandException {
-        if (inheritIcon && !(ITVerbund.TYPE_ID.equals(containerTypeId)
+        if (!(ITVerbund.TYPE_ID.equals(containerTypeId)
                 || Organization.TYPE_ID.equals(containerTypeId)
                 || ItNetwork.TYPE_ID.equals(containerTypeId)
                 || Audit.TYPE_ID.equals(containerTypeId))) {

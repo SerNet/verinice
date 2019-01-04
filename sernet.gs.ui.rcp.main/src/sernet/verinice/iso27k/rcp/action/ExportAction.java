@@ -19,9 +19,7 @@
 package sernet.verinice.iso27k.rcp.action;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.security.cert.CertificateException;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -79,7 +77,6 @@ import sernet.verinice.service.commands.ExportCommand;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@SuppressWarnings("restriction")
 public class ExportAction extends RightsEnabledActionDelegate implements IViewActionDelegate,
         IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {
     public static final String ID = "sernet.verinice.samt.rcp.ExportSelfAssessment"; //$NON-NLS-1$
@@ -91,7 +88,6 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
     public static final String EXTENSION_CERTIFICATE_ENCRPTION = ".ccr"; //$NON-NLS-1$
 
     private ExportDialog dialog;
-    private EncryptionDialog encDialog;
 
     private String filePath;
 
@@ -104,8 +100,6 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
     private ITreeSelection selection;
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
      */
     @Override
@@ -113,8 +107,6 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.
      * IWorkbenchWindow)
      */
@@ -124,8 +116,6 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.rcp.RightsEnabledActionDelegate#doRun(org.eclipse.jface.
      * action.IAction)
@@ -134,10 +124,8 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
     public void doRun(IAction action) {
         dialog = new ExportDialog(Display.getCurrent().getActiveShell(), selection);
         if (dialog.open() == Dialog.OK) {
-            if (dialog.getEncryptOutput()) {
-                if (Window.CANCEL == openEncryptionDialog()) {
-                    return;
-                }
+            if (dialog.getEncryptOutput() && Window.CANCEL == openEncryptionDialog()) {
+                return;
             }
             filePath = dialog.getFilePath();
             filePath = ExportAction.addExtension(filePath,
@@ -180,7 +168,7 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
     private void export() {
         String internalSourceId = null;
         final int uuidStringLength = 6;
-        if (getElementSet() != null && getElementSet().size() > 0) {
+        if (getElementSet() != null && !getElementSet().isEmpty()) {
             if (getSourceId() == null || getSourceId().isEmpty()) {
                 // if source id is not set by user the first 6 char. of an uuid
                 // is used
@@ -233,7 +221,7 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
     }
 
     private int openEncryptionDialog() {
-        encDialog = new EncryptionDialog(Display.getDefault().getActiveShell());
+        EncryptionDialog encDialog = new EncryptionDialog(Display.getDefault().getActiveShell());
         if (encDialog.open() == Window.OK) {
             EncryptionMethod encMethod = encDialog.getSelectedEncryptionMethod();
             switch (encMethod) {
@@ -271,28 +259,7 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
         return cypherTextBytes;
     }
 
-    public OutputStream getExportOutputStream(String path, char[] password,
-            File x509CertificateFile) {
-        OutputStream os;
-        try {
-            os = new FileOutputStream(path);
-            if (password != null || x509CertificateFile != null) {
-                IEncryptionService service = ServiceFactory.lookupEncryptionService();
-                if (password != null) {
-                    os = service.encrypt(os, password);
-                } else if (x509CertificateFile != null) {
-                    os = service.encrypt(os, x509CertificateFile);
-                }
-            }
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e);
-        }
-        return os;
-    }
-
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.
      * IAction, org.eclipse.jface.viewers.ISelection)
@@ -309,13 +276,11 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
             Iterator<Object> iter = treeSelection.iterator();
             while (iter.hasNext()) {
                 Object obj = iter.next();
-                if (obj instanceof CnATreeElement) {
-                    if (!isScopeElement(obj)) {
-                        if (this.selection != null) {
-                            this.selection = null;
-                        }
-                        return;
+                if (obj instanceof CnATreeElement && !isScopeElement(obj)) {
+                    if (this.selection != null) {
+                        this.selection = null;
                     }
+                    return;
                 }
             }
             if (isScopeElement(selectedElement)) {
@@ -358,8 +323,6 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override

@@ -43,13 +43,11 @@ public class CnAValidationAction extends RightsEnabledActionDelegate
 
     private static final Logger LOG = Logger.getLogger(CnAValidationAction.class);
 
-    private List<Object> rootObjects;
+    private List<?> rootObjects;
 
     private IValidationService validationService;
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.rcp.RightsEnabledActionDelegate#doRun(org.eclipse.jface.
      * action.IAction)
@@ -75,8 +73,6 @@ public class CnAValidationAction extends RightsEnabledActionDelegate
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override
@@ -85,8 +81,6 @@ public class CnAValidationAction extends RightsEnabledActionDelegate
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.ui.actions.ActionDelegate#selectionChanged(org.eclipse.jface.
      * action.IAction, org.eclipse.jface.viewers.ISelection)

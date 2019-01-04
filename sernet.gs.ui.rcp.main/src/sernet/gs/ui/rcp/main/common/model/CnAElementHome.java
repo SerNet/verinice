@@ -30,7 +30,6 @@ import org.hibernate.StaleObjectStateException;
 import sernet.gs.model.Baustein;
 import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
@@ -131,14 +130,6 @@ public final class CnAElementHome {
     }
 
     public void open(IProgress monitor) throws MalformedURLException {
-        open(CnAWorkspace.getInstance().getConfDir(), monitor);
-    }
-
-    public void preload(String confDir) {
-        // do nothing
-    }
-
-    public void open(String confDir, IProgress monitor) throws MalformedURLException {
         monitor.beginTask(Messages.getString("CnAElementHome.0"), IProgress.UNKNOWN_WORK); //$NON-NLS-1$
         ServiceFactory.openCommandService();
         commandService = ServiceFactory.lookupCommandService();
@@ -166,7 +157,7 @@ public final class CnAElementHome {
         if (log.isDebugEnabled()) {
             log.debug("Saving new element, uuid " + element.getUuid()); //$NON-NLS-1$
         }
-        SaveElement<T> saveCommand = new SaveElement<T>(element);
+        SaveElement<T> saveCommand = new SaveElement<>(element);
         saveCommand = getCommandService().executeCommand(saveCommand);
         if (Activator.getDefault().getPluginPreferences()
                 .getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)) {
@@ -221,7 +212,7 @@ public final class CnAElementHome {
             log.debug("Creating new instance of " + clazz.getName() + " in " + container //$NON-NLS-1$ //$NON-NLS-2$
                     + " with title: " + title); //$NON-NLS-1$
         }
-        CreateElement<T> saveCommand = new CreateElement<T>(container, clazz, title);
+        CreateElement<T> saveCommand = new CreateElement<>(container, clazz, title);
         saveCommand.setInheritAuditPermissions(true);
         saveCommand = getCommandService().executeCommand(saveCommand);
         if (Activator.getDefault().getPluginPreferences()
@@ -251,7 +242,7 @@ public final class CnAElementHome {
         if (log.isDebugEnabled()) {
             log.debug("Saving new link from " + dropTarget.getUuid() + " to " + dragged.getUuid()); //$NON-NLS-1$ //$NON-NLS-2$
         }
-        CreateLink command = new CreateLink(dropTarget, dragged);
+        CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(dropTarget, dragged);
         command = getCommandService().executeCommand(command);
         return command.getLink();
     }
@@ -262,7 +253,8 @@ public final class CnAElementHome {
             log.debug("Saving new link from " + dropTarget.getUuid() + " to " + dragged.getUuid() //$NON-NLS-1$ //$NON-NLS-2$
                     + " of type " + typeId); //$NON-NLS-1$
         }
-        CreateLink command = new CreateLink(dropTarget, dragged, typeId, comment);
+        CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(dropTarget, dragged,
+                typeId, comment);
         command = getCommandService().executeCommand(command);
 
         return command.getLink();
@@ -284,9 +276,10 @@ public final class CnAElementHome {
     }
 
     public CnATreeElement update(CnATreeElement element) throws CommandException {
-        UpdateElement command = new UpdateElement(element, true, ChangeLogEntry.STATION_ID);
+        UpdateElement<CnATreeElement> command = new UpdateElement<>(element, true,
+                ChangeLogEntry.STATION_ID);
         command = getCommandService().executeCommand(command);
-        return (CnATreeElement) command.getElement();
+        return command.getElement();
     }
 
     /**
@@ -326,7 +319,6 @@ public final class CnAElementHome {
      * @return
      * @throws CommandException
      */
-    @SuppressWarnings("unchecked")
     public CnATreeElement loadById(String typeId, int id) throws CommandException {
         LoadCnAElementById command = new LoadCnAElementById(typeId, id);
         command = getCommandService().executeCommand(command);
@@ -363,21 +355,20 @@ public final class CnAElementHome {
      * @throws CommandException
      */
     public void refresh(CnATreeElement cnAElement) throws CommandException {
-        RefreshElement command = new RefreshElement(cnAElement);
+        RefreshElement<CnATreeElement> command = new RefreshElement<>(cnAElement);
         command = getCommandService().executeCommand(command);
         CnATreeElement refreshedElement = command.getElement();
         cnAElement.setEntity(refreshedElement.getEntity());
     }
 
     public List<ITVerbund> getItverbuende() throws CommandException {
-        LoadCnAElementByType<ITVerbund> command = new LoadCnAElementByType<ITVerbund>(
-                ITVerbund.class);
+        LoadCnAElementByType<ITVerbund> command = new LoadCnAElementByType<>(ITVerbund.class);
         command = getCommandService().executeCommand(command);
         return command.getElements();
     }
 
     public List<Person> getPersonen() throws CommandException {
-        LoadCnAElementByType<Person> command = new LoadCnAElementByType<Person>(Person.class);
+        LoadCnAElementByType<Person> command = new LoadCnAElementByType<>(Person.class);
         command = getCommandService().executeCommand(command);
         return command.getElements();
 
@@ -506,20 +497,16 @@ public final class CnAElementHome {
             log.debug("createLink..."); //$NON-NLS-1$
         }
 
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                Activator.inheritVeriniceContextState();
-                createLinksAccordingToBusinessLogic(dropTarget, toDrop, linkId);
-            }
-
+        Display.getDefault().asyncExec(() -> {
+            Activator.inheritVeriniceContextState();
+            createLinksAccordingToBusinessLogic(dropTarget, toDrop, linkId);
         });
     }
 
     protected void createLinksAccordingToBusinessLogic(final CnATreeElement dropTarget,
             final List<CnATreeElement> droppedElements, final String linkId) {
-        List<CnALink> newLinks = new ArrayList<CnALink>();
-        allDragged: for (CnATreeElement droppedElement : droppedElements) {
+        List<CnALink> newLinks = new ArrayList<>();
+        for (CnATreeElement droppedElement : droppedElements) {
             try {
                 if (linksAreConfiguredInSnca(dropTarget, droppedElement)) {
 
@@ -537,7 +524,7 @@ public final class CnAElementHome {
                         boolean linkCreated = createTypedLink(newLinks, dropTarget, droppedElement,
                                 linkIdParam, LINK_NO_COMMENT);
                         if (linkCreated) {
-                            continue allDragged;
+                            continue;
                         }
                     }
 
@@ -549,7 +536,7 @@ public final class CnAElementHome {
                         boolean linkCreated = createTypedLink(newLinks, droppedElement, dropTarget,
                                 linkIdParam, LINK_NO_COMMENT);
                         if (linkCreated) {
-                            continue allDragged;
+                            continue;
                         }
                     }
                 } // end for ISO 27k elements
@@ -711,7 +698,7 @@ public final class CnAElementHome {
      * @return update command
      */
     private UpdateElementEntity<? extends CnATreeElement> createCommand(CnATreeElement element) {
-        return new UpdateElementEntity<CnATreeElement>(element, ChangeLogEntry.STATION_ID);
+        return new UpdateElementEntity<>(element, ChangeLogEntry.STATION_ID);
     }
 
     private void validateElement(CnATreeElement elmt) {

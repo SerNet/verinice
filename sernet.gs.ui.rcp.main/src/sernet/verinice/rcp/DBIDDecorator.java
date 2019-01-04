@@ -34,8 +34,6 @@ import sernet.verinice.model.iso27k.Organization;
 public class DBIDDecorator extends LabelProvider implements ILightweightLabelDecorator {
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.jface.viewers.ILightweightLabelDecorator#decorate(java.lang.
      * Object, org.eclipse.jface.viewers.IDecoration)

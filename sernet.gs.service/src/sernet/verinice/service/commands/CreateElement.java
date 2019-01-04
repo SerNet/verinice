@@ -152,7 +152,7 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
     @SuppressWarnings("unchecked")
     protected T createInstance() throws InstantiationException, IllegalAccessException,
             InvocationTargetException, NoSuchMethodException {
-        T instance = null;
+        T instance;
         if (isOrganization()) {
             instance = (T) new Organization(container, createChildren);
         } else if (isItNetwork()) {

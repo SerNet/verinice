@@ -55,7 +55,6 @@ import org.eclipse.ui.internal.ViewIntroAdapterPart;
 
 import sernet.gs.ui.rcp.main.actions.ShowCheatSheetAction;
 import sernet.gs.ui.rcp.main.bsi.views.OpenCataloguesJob;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
@@ -167,7 +166,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             @Override
             public IStatus runInWorkspace(IProgressMonitor monitor) {
                 Activator.inheritVeriniceContextState();
-                CnAElementHome.getInstance().preload(CnAWorkspace.getInstance().getConfDir());
                 return Status.OK_STATUS;
             }
         };

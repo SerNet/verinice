@@ -81,7 +81,6 @@ import sernet.verinice.service.commands.LoadElementByUuid;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-@SuppressWarnings({ "restriction" })
 public class PasteHandler extends AbstractHandler {
 
     private static final Logger LOG = Logger.getLogger(PasteHandler.class);
@@ -131,7 +130,7 @@ public class PasteHandler extends AbstractHandler {
             }
             handlePermissionException(e);
         } catch (Exception t) {
-            if (t.getCause() != null && t.getCause() instanceof PermissionException) {
+            if (t.getCause() instanceof PermissionException) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug(t);
                 }
@@ -231,8 +230,8 @@ public class PasteHandler extends AbstractHandler {
                                                 : Messages.getString("PasteHandler.12")));
                         monitor.beginTask(NLS.bind(Messages.getString("PasteHandler.11"),
                                 new Object[] { jobDescription }), IProgressMonitor.UNKNOWN);
-                        String uuid = ((!isRootElement(tmpTarget) ? tmpTarget.getUuid()
-                                : (validationList.get(0))));
+                        String uuid = (!isRootElement(tmpTarget) ? tmpTarget.getUuid()
+                                : validationList.get(0));
                         ServiceFactory.lookupValidationService()
                                 .createValidationsForSubTreeByUuid(uuid);
                         CnAElementFactory.getModel(loadElementByUuid(uuid))
@@ -247,7 +246,7 @@ public class PasteHandler extends AbstractHandler {
                             CnAElementFactory.getModel(loadElementByUuid(uuid))
                                     .validationAdded(loadElementByUuid(uuid).getScopeId());
                         }
-                        if (validationList != null && validationList.size() > 0) {
+                        if (validationList != null && !validationList.isEmpty()) {
                             CnAElementFactory.getModel(loadElementByUuid(validationList.get(0)))
                                     .validationAdded(
                                             loadElementByUuid(validationList.get(0)).getScopeId());
@@ -298,9 +297,8 @@ public class PasteHandler extends AbstractHandler {
                                         NLS.bind(Messages.getString("PasteHandler.11"),
                                                 new Object[] { jobDescription }),
                                         IProgressMonitor.UNKNOWN);
-                                CnATreeElement elmt = ((!isRootElement(target)
-                                        ? (CnATreeElement) target
-                                        : (CnATreeElement) changes.get(0).getElement()));
+                                CnATreeElement elmt = (!isRootElement(target) ? target
+                                        : changes.get(0).getElement());
                                 ServiceFactory.lookupValidationService()
                                         .createValidationsForSubTreeByUuid(elmt.getUuid());
                                 CnAElementFactory.getModel(elmt).validationAdded(elmt.getScopeId());
@@ -313,7 +311,7 @@ public class PasteHandler extends AbstractHandler {
                                     ServiceFactory.lookupValidationService()
                                             .createValidationByUuid(ec.getElement().getUuid());
                                 }
-                                if (changes != null && changes.size() > 0) {
+                                if (changes != null && !changes.isEmpty()) {
                                     CnAElementFactory.getModel(changes.get(0).getElement())
                                             .validationAdded(
                                                     changes.get(0).getElement().getScopeId());
@@ -374,8 +372,8 @@ public class PasteHandler extends AbstractHandler {
     }
 
     private CnATreeElement loadElementByUuid(String uuid) {
-        LoadElementByUuid<CnATreeElement> elementLoader = new LoadElementByUuid<CnATreeElement>(
-                uuid, new RetrieveInfo().setProperties(true));
+        LoadElementByUuid<CnATreeElement> elementLoader = new LoadElementByUuid<>(uuid,
+                new RetrieveInfo().setProperties(true));
         try {
             elementLoader = ServiceFactory.lookupCommandService().executeCommand(elementLoader);
         } catch (CommandException e) {

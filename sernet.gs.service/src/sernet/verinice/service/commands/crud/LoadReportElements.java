@@ -4,7 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -81,7 +80,7 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
     }
 
     public void execute() {
-        elements = new ArrayList<CnATreeElement>(0);
+        elements = new ArrayList<>(0);
         if (!resultInjectedFromCache) {
             if (log.isDebugEnabled()) {
                 log.debug("LoadReportElements for root_object " + rootElement);
@@ -94,8 +93,8 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
             } catch (CommandException e) {
                 throw new RuntimeCommandException(e);
             }
-            if (command.getElements() == null || command.getElements().size() == 0) {
-                this.elements = new ArrayList<CnATreeElement>(0);
+            if (command.getElements() == null || command.getElements().isEmpty()) {
+                this.elements = new ArrayList<>(0);
                 return;
             }
             CnATreeElement root = command.getElements().get(0);
@@ -108,7 +107,7 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
                 loadElementsRecursive(root);
 
             } else {
-                elements = new ArrayList<CnATreeElement>(0);
+                elements = new ArrayList<>(0);
                 loadElementsUsingScopeId(root);
             }
             if (elements != null) {
@@ -120,7 +119,7 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
     private void loadElementsRecursive(CnATreeElement root) {
         // if typeId is that of the root object, just return it itself. else
         // look for children:
-        ArrayList<CnATreeElement> items = new ArrayList<CnATreeElement>();
+        ArrayList<CnATreeElement> items = new ArrayList<>();
         if (this.typeId.equals(root.getTypeId())) {
             this.elements = items;
             this.elements.add(root);
@@ -143,12 +142,9 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
     }
 
     private void sortResult() {
-        Collections.sort(elements, new Comparator<CnATreeElement>() {
-            @Override
-            public int compare(CnATreeElement o1, CnATreeElement o2) {
-                NumericStringComparator comparator = new NumericStringComparator();
-                return comparator.compare(o1.getTitle(), o2.getTitle());
-            }
+        Collections.sort(elements, (o1, o2) -> {
+            NumericStringComparator comparator = new NumericStringComparator();
+            return comparator.compare(o1.getTitle(), o2.getTitle());
         });
     }
 
@@ -164,7 +160,7 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
     }
 
     public List<CnATreeElement> getElements(String typeFilter, CnATreeElement parent) {
-        ArrayList<CnATreeElement> children = new ArrayList<CnATreeElement>(0);
+        ArrayList<CnATreeElement> children = new ArrayList<>(0);
         for (CnATreeElement child : parent.getChildren()) {
             if (typeFilter != null && typeFilter.length() > 0) {
                 if (child.getTypeId().equals(typeFilter)) {
@@ -199,8 +195,6 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
      */
     @Override
@@ -214,8 +208,6 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.
      * Object)
@@ -230,8 +222,6 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
      */
     @Override
@@ -318,7 +308,7 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
             try {
                 final Class classToInstantiate = Class.forName(gsClass.getCanonicalName());
                 instance = classToInstantiate.getConstructor(CnATreeElement.class)
-                        .newInstance(new Object[] { null });
+                        .newInstance((Object[]) null);
                 if (instance instanceof CnATreeElement) {
                     CnATreeElement element = (CnATreeElement) instance;
                     if (element.getTypeId().equals(typeId)) {
