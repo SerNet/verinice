@@ -37,15 +37,15 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 
 /**
- * Wizard page of wizard {@link IndividualProcessWizard}.
- * User sets the dua date and the reminder period on this page.
+ * Wizard page of wizard {@link IndividualProcessWizard}. User sets the dua date
+ * and the reminder period on this page.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class DatePage extends WizardPage {
 
     private static final Logger LOG = Logger.getLogger(DatePage.class);
-    
+
     public static final String NAME = "DATE_PAGE"; //$NON-NLS-1$
 
     public static final String ASSIGNEE_SELECTION_DIRECT = "ASSIGNEE_SELECTION_DIRECT"; //$NON-NLS-1$
@@ -55,9 +55,9 @@ public class DatePage extends WizardPage {
     private DateTime datePicker;
 
     private Calendar dueDate;
-    
+
     private Combo priorityCombo;
-    
+
     private Button[] radios = new Button[2];
 
     private String period;
@@ -73,7 +73,7 @@ public class DatePage extends WizardPage {
     private String assigneeSelectionMode = ASSIGNEE_SELECTION_DIRECT;
 
     private boolean isRelation = true;
-    
+
     /**
      * @param elementTitle
      * @param pageName
@@ -110,7 +110,8 @@ public class DatePage extends WizardPage {
 
         final Label periodLabel = new Label(composite, SWT.NONE);
         periodLabel.setText(Messages.DatePage_6);
-        priorityCombo = new Combo(composite, SWT.VERTICAL | SWT.DROP_DOWN | SWT.BORDER | SWT.READ_ONLY);
+        priorityCombo = new Combo(composite,
+                SWT.VERTICAL | SWT.DROP_DOWN | SWT.BORDER | SWT.READ_ONLY);
         priorityCombo.setItems(periodArray);
         priorityCombo.select(DEFAULT_PERIOD);
         period = periodArray[DEFAULT_PERIOD];
@@ -121,8 +122,8 @@ public class DatePage extends WizardPage {
             }
         });
 
-        if(isRelation) {
-    
+        if (isRelation) {
+
             radios[0] = new Button(composite, SWT.RADIO);
             radios[0].setSelection(true);
             radios[0].setText(Messages.DatePage_7);
@@ -134,12 +135,12 @@ public class DatePage extends WizardPage {
                         assigneeSelectionMode = ASSIGNEE_SELECTION_DIRECT;
                     }
                 }
-    
+
                 @Override
                 public void widgetDefaultSelected(SelectionEvent e) {
                 }
             });
-    
+
             radios[1] = new Button(composite, SWT.RADIO);
             radios[1].setSelection(false);
             radios[1].setText(Messages.DatePage_8);
@@ -151,7 +152,7 @@ public class DatePage extends WizardPage {
                         assigneeSelectionMode = ASSIGNEE_SELECTION_RELATION;
                     }
                 }
-    
+
                 @Override
                 public void widgetDefaultSelected(SelectionEvent e) {
                 }
@@ -159,15 +160,17 @@ public class DatePage extends WizardPage {
             setRelationModeRadios();
         }
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.wizard.WizardPage#getNextPage()
      */
     @Override
     public IWizardPage getNextPage() {
         RelationPage relationPage = (RelationPage) getWizard().getPage(RelationPage.NAME);
         PersonPage personPage = (PersonPage) getWizard().getPage(PersonPage.NAME);
-        if(ASSIGNEE_SELECTION_RELATION.equals(assigneeSelectionMode)) {
+        if (ASSIGNEE_SELECTION_RELATION.equals(assigneeSelectionMode)) {
             personPage.setActive(false);
             relationPage.setActive(true);
             return relationPage;
@@ -181,9 +184,8 @@ public class DatePage extends WizardPage {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
-     * .Composite)
+     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
+     * widgets .Composite)
      */
     @Override
     public void createControl(Composite parent) {
@@ -217,7 +219,7 @@ public class DatePage extends WizardPage {
         }
         if (valid) {
             Calendar reminderDate = (dueDate != null) ? (Calendar) dueDate.clone() : null;
-            if(reminderDate != null){
+            if (reminderDate != null) {
                 reminderDate.add(Calendar.DATE, Integer.valueOf(period) * (-1));
                 if (reminderDate.before(now)) {
                     valid = false;
@@ -227,8 +229,10 @@ public class DatePage extends WizardPage {
         }
         return valid;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
      */
     @Override
@@ -266,12 +270,12 @@ public class DatePage extends WizardPage {
     public void setPeriod(String period) {
         this.period = period;
         for (int i = 0; i < periodArray.length; i++) {
-            if(periodArray[i].equals(period)){
+            if (periodArray[i].equals(period)) {
                 priorityCombo.select(i);
                 break;
             }
         }
-        setPageComplete(isValid());   
+        setPageComplete(isValid());
     }
 
     public String getAssigneeSelectionMode() {
@@ -287,12 +291,12 @@ public class DatePage extends WizardPage {
      * 
      */
     public void setRelationModeRadios() {
-        if(radios[0]!=null && radios[1]!=null) {
-            if(ASSIGNEE_SELECTION_DIRECT.equals(this.assigneeSelectionMode)) {
+        if (radios[0] != null && radios[1] != null) {
+            if (ASSIGNEE_SELECTION_DIRECT.equals(this.assigneeSelectionMode)) {
                 radios[0].setSelection(true);
                 radios[1].setSelection(false);
             }
-            if(ASSIGNEE_SELECTION_RELATION.equals(this.assigneeSelectionMode)) {
+            if (ASSIGNEE_SELECTION_RELATION.equals(this.assigneeSelectionMode)) {
                 radios[1].setSelection(true);
                 radios[0].setSelection(false);
             }
