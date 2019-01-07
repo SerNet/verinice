@@ -38,8 +38,8 @@ import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.service.commands.LoadConfiguration;
 
 /**
- * Task complete client handler for task IIsaQmProcess.TASK_IQM_SET_ASSIGNEE 
- * and transition IIsaQmProcess.TRANS_IQM_COMPLETE.
+ * Task complete client handler for task IIsaQmProcess.TASK_IQM_SET_ASSIGNEE and
+ * transition IIsaQmProcess.TRANS_IQM_COMPLETE.
  * 
  * This handler opens a dialog to choose a person. Login name of the person is
  * returned as parameter IIsaQmProcess.VAR_IQM_ASSIGNEE in the parameter map.
@@ -52,23 +52,24 @@ import sernet.verinice.service.commands.LoadConfiguration;
 public class SetAssigneeClientHandler implements ICompleteClientHandler {
 
     private static final Logger LOG = Logger.getLogger(SetAssigneeClientHandler.class);
-    
+
     private Shell shell;
-    
+
     private int dialogStatus;
-    
+
     /**
-     * Opens a dialog to choose a person. Login name of the person is
-     * returned as parameter IIsaQmProcess.VAR_IQM_ASSIGNEE in the parameter map.
+     * Opens a dialog to choose a person. Login name of the person is returned
+     * as parameter IIsaQmProcess.VAR_IQM_ASSIGNEE in the parameter map.
      * 
      * @see sernet.verinice.interfaces.bpm.ICompleteClientHandler#execute()
      */
     @Override
     public Map<String, Object> execute(ITask task) {
         Map<String, Object> parameter = null;
-        try {  
-            String type = selectElementType();                           
-            final CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(shell, type, null);            
+        try {
+            String type = selectElementType();
+            final CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(shell,
+                    type, null);
             dialog.setScopeOnly(false);
             dialog.setShowScopeCheckbox(false);
             Display.getDefault().syncExec(new Runnable() {
@@ -77,29 +78,29 @@ public class SetAssigneeClientHandler implements ICompleteClientHandler {
                     dialogStatus = dialog.open();
                 }
             });
-            if (dialogStatus == Window.OK) {         
+            if (dialogStatus == Window.OK) {
                 List<CnATreeElement> userList = dialog.getSelectedElements();
-                if(userList.size()==1) {
-                    CnATreeElement element = userList.get(0);                
+                if (userList.size() == 1) {
+                    CnATreeElement element = userList.get(0);
                     LoadConfiguration command = new LoadConfiguration(element);
                     command = ServiceFactory.lookupCommandService().executeCommand(command);
                     Configuration configuration = command.getConfiguration();
-                    if(configuration!=null) {
+                    if (configuration != null) {
                         parameter = new Hashtable<String, Object>();
                         parameter.put(IIsaQmProcess.VAR_IQM_ASSIGNEE, configuration.getUser());
-                    }                           
+                    }
                 }
             } else {
                 throw new CompletionAbortedException("Canceled by user.");
-            }          
-        } catch(CompletionAbortedException e) {
+            }
+        } catch (CompletionAbortedException e) {
             throw e;
-        } catch(Exception e) {
+        } catch (Exception e) {
             LOG.error("Error while assigning user to task.", e);
         }
         return parameter;
     }
-    
+
     private String selectElementType() {
         final PersonTypeSelectDialog typeDialog = new PersonTypeSelectDialog(shell);
         Display.getDefault().syncExec(new Runnable() {
@@ -108,19 +109,22 @@ public class SetAssigneeClientHandler implements ICompleteClientHandler {
                 dialogStatus = typeDialog.open();
             }
         });
-        if (dialogStatus == Window.OK) { 
+        if (dialogStatus == Window.OK) {
             return typeDialog.getElementType();
         } else {
             throw new CompletionAbortedException("Canceled by user.");
         }
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.ICompleteClientHandler#setShell(org.eclipse.swt.widgets.Shell)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.bpm.ICompleteClientHandler#setShell(org.
+     * eclipse.swt.widgets.Shell)
      */
     @Override
     public void setShell(Shell shell) {
-        this.shell = shell;      
+        this.shell = shell;
     }
 
 }
