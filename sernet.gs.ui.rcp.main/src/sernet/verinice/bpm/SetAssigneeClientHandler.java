@@ -19,7 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.bpm;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -72,12 +72,7 @@ public class SetAssigneeClientHandler implements ICompleteClientHandler {
                     type, null);
             dialog.setScopeOnly(false);
             dialog.setShowScopeCheckbox(false);
-            Display.getDefault().syncExec(new Runnable() {
-                @Override
-                public void run() {
-                    dialogStatus = dialog.open();
-                }
-            });
+            Display.getDefault().syncExec(() -> dialogStatus = dialog.open());
             if (dialogStatus == Window.OK) {
                 List<CnATreeElement> userList = dialog.getSelectedElements();
                 if (userList.size() == 1) {
@@ -86,7 +81,7 @@ public class SetAssigneeClientHandler implements ICompleteClientHandler {
                     command = ServiceFactory.lookupCommandService().executeCommand(command);
                     Configuration configuration = command.getConfiguration();
                     if (configuration != null) {
-                        parameter = new Hashtable<String, Object>();
+                        parameter = new HashMap<>();
                         parameter.put(IIsaQmProcess.VAR_IQM_ASSIGNEE, configuration.getUser());
                     }
                 }
@@ -103,12 +98,7 @@ public class SetAssigneeClientHandler implements ICompleteClientHandler {
 
     private String selectElementType() {
         final PersonTypeSelectDialog typeDialog = new PersonTypeSelectDialog(shell);
-        Display.getDefault().syncExec(new Runnable() {
-            @Override
-            public void run() {
-                dialogStatus = typeDialog.open();
-            }
-        });
+        Display.getDefault().syncExec(() -> dialogStatus = typeDialog.open());
         if (dialogStatus == Window.OK) {
             return typeDialog.getElementType();
         } else {
@@ -117,8 +107,6 @@ public class SetAssigneeClientHandler implements ICompleteClientHandler {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.bpm.ICompleteClientHandler#setShell(org.
      * eclipse.swt.widgets.Shell)
      */

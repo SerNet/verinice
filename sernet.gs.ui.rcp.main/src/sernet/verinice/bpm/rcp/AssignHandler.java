@@ -59,8 +59,6 @@ public class AssignHandler extends RightsEnabledHandler {
     private Shell shell;
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
      * ExecutionEvent)
@@ -70,7 +68,7 @@ public class AssignHandler extends RightsEnabledHandler {
         try {
             ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage()
                     .getSelection();
-            if (selection != null && selection instanceof IStructuredSelection) {
+            if (selection instanceof IStructuredSelection) {
                 Shell shell = HandlerUtil.getActiveWorkbenchWindow(event).getShell();
                 String type = selectElementType();
                 CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(shell,
@@ -104,8 +102,8 @@ public class AssignHandler extends RightsEnabledHandler {
     }
 
     private Set<String> getSelectedTasks(ISelection selection) {
-        Set<String> taskIdSet = new HashSet<String>();
-        for (Iterator iterator = ((IStructuredSelection) selection).iterator(); iterator
+        Set<String> taskIdSet = new HashSet<>();
+        for (Iterator<?> iterator = ((IStructuredSelection) selection).iterator(); iterator
                 .hasNext();) {
             ITask task = (ITask) iterator.next();
             taskIdSet.add(task.getId());
