@@ -103,7 +103,7 @@ public class IndividualProcessWizard extends Wizard {
         cal.set(Calendar.MONTH, dueDate.getMonth());
         cal.set(Calendar.DAY_OF_MONTH, dueDate.getDate());
         datePage.setDueDate(cal);
-        datePage.setPeriod(String.valueOf(template.getReminderPeriodDays()));
+        datePage.setPeriod(template.getReminderPeriodDays());
         if (template.getAssignee() != null || !relationPage.isRelation()) {
             datePage.setAssigneeSelectionMode(DatePage.ASSIGNEE_SELECTION_DIRECT);
             relationPage.setActive(false);
@@ -194,11 +194,7 @@ public class IndividualProcessWizard extends Wizard {
     }
 
     public Integer getPeriod() {
-        Integer period = null;
-        if (datePage.getPeriod() != null) {
-            period = Integer.valueOf(datePage.getPeriod());
-        }
-        return period;
+        return datePage.getPeriod();
     }
 
     public boolean overwriteTemplate() {

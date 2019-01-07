@@ -27,7 +27,6 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -37,14 +36,14 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 
 /**
- * Wizard page of wizard {@link IndividualProcessWizard}. User sets the dua date
+ * Wizard page of wizard {@link IndividualProcessWizard}. User sets the due date
  * and the reminder period on this page.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class DatePage extends WizardPage {
 
-    private static final Logger LOG = Logger.getLogger(DatePage.class);
+    private static final Logger logger = Logger.getLogger(DatePage.class);
 
     public static final String NAME = "DATE_PAGE"; //$NON-NLS-1$
 
@@ -56,17 +55,15 @@ public class DatePage extends WizardPage {
 
     private Calendar dueDate;
 
-    private Combo priorityCombo;
+    private Combo periodCombo;
 
     private Button[] radios = new Button[2];
 
-    private String period;
-
-    private String[] periodArray;
+    private Integer periodDays;
 
     private static final int MAX_PERIOD = 30;
 
-    private static final int DEFAULT_PERIOD = 6;
+    private static final int DEFAULT_PERIOD = 7;
 
     private Calendar now = Calendar.getInstance();
 
@@ -74,16 +71,11 @@ public class DatePage extends WizardPage {
 
     private boolean isRelation = true;
 
-    /**
-     * @param elementTitle
-     * @param pageName
-     */
     protected DatePage() {
         super(NAME);
         setTitle(Messages.DatePage_3);
         setMessage(Messages.DatePage_4);
         setControl(datePicker);
-        initPeriodArray();
     }
 
     public DatePage(boolean relation) {
@@ -99,6 +91,7 @@ public class DatePage extends WizardPage {
         GridData gd = new GridData(SWT.FILL, SWT.TOP, true, false);
         datePicker.setLayoutData(gd);
         datePicker.addSelectionListener(new SelectionAdapter() {
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 dueDate = Calendar.getInstance();
                 dueDate.set(Calendar.YEAR, datePicker.getYear());
@@ -110,14 +103,18 @@ public class DatePage extends WizardPage {
 
         final Label periodLabel = new Label(composite, SWT.NONE);
         periodLabel.setText(Messages.DatePage_6);
-        priorityCombo = new Combo(composite,
+
+        periodCombo = new Combo(composite,
                 SWT.VERTICAL | SWT.DROP_DOWN | SWT.BORDER | SWT.READ_ONLY);
-        priorityCombo.setItems(periodArray);
-        priorityCombo.select(DEFAULT_PERIOD);
-        period = periodArray[DEFAULT_PERIOD];
-        priorityCombo.addSelectionListener(new SelectionAdapter() {
+        String[] selectablePeriods = createPeriodArray(MAX_PERIOD);
+        periodCombo.setItems(selectablePeriods);
+        int defaultPeriodIndex = DEFAULT_PERIOD - 1;
+        periodDays = DEFAULT_PERIOD;
+        periodCombo.select(defaultPeriodIndex);
+        periodCombo.addSelectionListener(new SelectionAdapter() {
+            @Override
             public void widgetSelected(SelectionEvent e) {
-                period = periodArray[priorityCombo.getSelectionIndex()];
+                periodDays = periodCombo.getSelectionIndex() + 1;
                 setPageComplete(isValid());
             }
         });
@@ -127,7 +124,8 @@ public class DatePage extends WizardPage {
             radios[0] = new Button(composite, SWT.RADIO);
             radios[0].setSelection(true);
             radios[0].setText(Messages.DatePage_7);
-            radios[0].addSelectionListener(new SelectionListener() {
+            radios[0].addSelectionListener(new SelectionAdapter() {
+
                 @Override
                 public void widgetSelected(SelectionEvent e) {
                     radios[1].setSelection(!radios[0].getSelection());
@@ -136,15 +134,12 @@ public class DatePage extends WizardPage {
                     }
                 }
 
-                @Override
-                public void widgetDefaultSelected(SelectionEvent e) {
-                }
             });
 
             radios[1] = new Button(composite, SWT.RADIO);
             radios[1].setSelection(false);
             radios[1].setText(Messages.DatePage_8);
-            radios[1].addSelectionListener(new SelectionListener() {
+            radios[1].addSelectionListener(new SelectionAdapter() {
                 @Override
                 public void widgetSelected(SelectionEvent e) {
                     radios[0].setSelection(!radios[1].getSelection());
@@ -153,17 +148,12 @@ public class DatePage extends WizardPage {
                     }
                 }
 
-                @Override
-                public void widgetDefaultSelected(SelectionEvent e) {
-                }
             });
             setRelationModeRadios();
         }
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.jface.wizard.WizardPage#getNextPage()
      */
     @Override
@@ -182,8 +172,6 @@ public class DatePage extends WizardPage {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
      * widgets .Composite)
      */
@@ -207,56 +195,50 @@ public class DatePage extends WizardPage {
     }
 
     public boolean isValid() {
-        boolean valid = true;
         setErrorMessage(null);
-        if (valid && dueDate == null) {
-            valid = false;
+        if (dueDate == null) {
             setErrorMessage(Messages.DatePage_9);
+            return false;
         }
-        if (valid && dueDate.before(now)) {
-            valid = false;
+        if (dueDate.before(now)) {
             setErrorMessage(Messages.DatePage_10);
+            return false;
         }
-        if (valid) {
-            Calendar reminderDate = (dueDate != null) ? (Calendar) dueDate.clone() : null;
-            if (reminderDate != null) {
-                reminderDate.add(Calendar.DATE, Integer.valueOf(period) * (-1));
-                if (reminderDate.before(now)) {
-                    valid = false;
-                    setErrorMessage(Messages.DatePage_11);
-                }
-            }
+        Calendar reminderDate = (Calendar) dueDate.clone();
+        reminderDate.add(Calendar.DATE, periodDays * (-1));
+        if (reminderDate.before(now)) {
+            setErrorMessage(Messages.DatePage_11);
+            return false;
         }
-        return valid;
+        return true;
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
      */
     @Override
     public boolean isPageComplete() {
         boolean complete = super.isPageComplete();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("page complete: " + complete); //$NON-NLS-1$
+        if (logger.isDebugEnabled()) {
+            logger.debug("page complete: " + complete); //$NON-NLS-1$
         }
         return complete;
     }
 
-    private void initPeriodArray() {
-        periodArray = new String[MAX_PERIOD];
+    private static String[] createPeriodArray(int maxPeriod) {
+        String[] periodArray = new String[maxPeriod];
         for (int i = 0; i < periodArray.length; i++) {
             periodArray[i] = String.valueOf(i + 1);
         }
+        return periodArray;
     }
 
     public Calendar getDueDate() {
         return dueDate;
     }
 
-    public String getPeriod() {
-        return period;
+    public Integer getPeriod() {
+        return periodDays;
     }
 
     public void setDueDate(Calendar dueDate) {
@@ -267,14 +249,10 @@ public class DatePage extends WizardPage {
         setPageComplete(isValid());
     }
 
-    public void setPeriod(String period) {
-        this.period = period;
-        for (int i = 0; i < periodArray.length; i++) {
-            if (periodArray[i].equals(period)) {
-                priorityCombo.select(i);
-                break;
-            }
-        }
+    public void setPeriod(Integer period) {
+        this.periodDays = period;
+        int selectionIndex = period - 1;
+        periodCombo.select(selectionIndex);
         setPageComplete(isValid());
     }
 
@@ -287,16 +265,12 @@ public class DatePage extends WizardPage {
         setRelationModeRadios();
     }
 
-    /**
-     * 
-     */
     public void setRelationModeRadios() {
         if (radios[0] != null && radios[1] != null) {
             if (ASSIGNEE_SELECTION_DIRECT.equals(this.assigneeSelectionMode)) {
                 radios[0].setSelection(true);
                 radios[1].setSelection(false);
-            }
-            if (ASSIGNEE_SELECTION_RELATION.equals(this.assigneeSelectionMode)) {
+            } else if (ASSIGNEE_SELECTION_RELATION.equals(this.assigneeSelectionMode)) {
                 radios[1].setSelection(true);
                 radios[0].setSelection(false);
             }
