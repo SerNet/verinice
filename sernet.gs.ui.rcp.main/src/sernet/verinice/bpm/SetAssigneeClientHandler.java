@@ -34,7 +34,10 @@ import sernet.verinice.bpm.rcp.CompletionAbortedException;
 import sernet.verinice.interfaces.bpm.IIsaQmProcess;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Domain;
+import sernet.verinice.model.common.DomainSpecificElementUtil;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.commands.CnATypeMapper;
 import sernet.verinice.service.commands.LoadConfiguration;
 
 /**
@@ -67,7 +70,8 @@ public class SetAssigneeClientHandler implements ICompleteClientHandler {
     public Map<String, Object> execute(ITask task) {
         Map<String, Object> parameter = null;
         try {
-            String type = selectElementType();
+            Domain domain = CnATypeMapper.getDomainFromTypeId(task.getElementType());
+            String type = DomainSpecificElementUtil.getPersonTypeIdFromDomain(domain);
             final CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(shell,
                     type, null);
             dialog.setScopeOnly(false);
@@ -94,16 +98,6 @@ public class SetAssigneeClientHandler implements ICompleteClientHandler {
             LOG.error("Error while assigning user to task.", e);
         }
         return parameter;
-    }
-
-    private String selectElementType() {
-        final PersonTypeSelectDialog typeDialog = new PersonTypeSelectDialog(shell);
-        Display.getDefault().syncExec(() -> dialogStatus = typeDialog.open());
-        if (dialogStatus == Window.OK) {
-            return typeDialog.getElementType();
-        } else {
-            throw new CompletionAbortedException("Canceled by user.");
-        }
     }
 
     /*
