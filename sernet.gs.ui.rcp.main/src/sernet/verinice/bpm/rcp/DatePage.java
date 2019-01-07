@@ -19,7 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.bpm.rcp;
 
-import java.util.Calendar;
+import java.time.LocalDate;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -53,7 +53,7 @@ public class DatePage extends WizardPage {
 
     private DateTime datePicker;
 
-    private Calendar dueDate;
+    private LocalDate dueDate;
 
     private Combo periodCombo;
 
@@ -64,8 +64,6 @@ public class DatePage extends WizardPage {
     private static final int MAX_PERIOD = 30;
 
     private static final int DEFAULT_PERIOD = 7;
-
-    private Calendar now = Calendar.getInstance();
 
     private String assigneeSelectionMode = ASSIGNEE_SELECTION_DIRECT;
 
@@ -93,10 +91,8 @@ public class DatePage extends WizardPage {
         datePicker.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                dueDate = Calendar.getInstance();
-                dueDate.set(Calendar.YEAR, datePicker.getYear());
-                dueDate.set(Calendar.MONTH, datePicker.getMonth());
-                dueDate.set(Calendar.DAY_OF_MONTH, datePicker.getDay());
+                dueDate = LocalDate.of(datePicker.getYear(), datePicker.getMonth() + 1,
+                        datePicker.getDay());
                 setPageComplete(isValid());
             }
         });
@@ -200,13 +196,13 @@ public class DatePage extends WizardPage {
             setErrorMessage(Messages.DatePage_9);
             return false;
         }
-        if (dueDate.before(now)) {
+        if (dueDate.isBefore(LocalDate.now())) {
             setErrorMessage(Messages.DatePage_10);
             return false;
         }
-        Calendar reminderDate = (Calendar) dueDate.clone();
-        reminderDate.add(Calendar.DATE, periodDays * (-1));
-        if (reminderDate.before(now)) {
+
+        LocalDate reminderDate = dueDate.minusDays(periodDays);
+        if (reminderDate.isBefore(LocalDate.now())) {
             setErrorMessage(Messages.DatePage_11);
             return false;
         }
@@ -233,7 +229,7 @@ public class DatePage extends WizardPage {
         return periodArray;
     }
 
-    public Calendar getDueDate() {
+    public LocalDate getDueDate() {
         return dueDate;
     }
 
@@ -241,11 +237,9 @@ public class DatePage extends WizardPage {
         return periodDays;
     }
 
-    public void setDueDate(Calendar dueDate) {
+    public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
-        datePicker.setYear(dueDate.get(Calendar.YEAR));
-        datePicker.setMonth(dueDate.get(Calendar.MONTH));
-        datePicker.setDay(dueDate.get(Calendar.DAY_OF_MONTH));
+        datePicker.setDate(dueDate.getYear(), dueDate.getMonthValue() - 1, dueDate.getDayOfMonth());
         setPageComplete(isValid());
     }
 
