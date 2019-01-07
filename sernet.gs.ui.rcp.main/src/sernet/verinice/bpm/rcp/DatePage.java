@@ -115,6 +115,9 @@ public class DatePage extends WizardPage {
             }
         });
 
+        dueDate = LocalDate.now().plusDays(periodDays);
+        datePicker.setDate(dueDate.getYear(), dueDate.getMonthValue() - 1, dueDate.getDayOfMonth());
+
         if (isRelation) {
 
             radios[0] = new Button(composite, SWT.RADIO);
