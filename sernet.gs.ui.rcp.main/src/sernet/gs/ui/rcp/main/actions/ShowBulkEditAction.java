@@ -69,14 +69,12 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.service.bp.risk.RiskDeductionUtil;
 import sernet.verinice.service.commands.CreateConfiguration;
 import sernet.verinice.service.commands.LoadConfiguration;
 import sernet.verinice.service.commands.UpdateMultipleElementEntities;
-import sernet.verinice.service.commands.task.BulkEditUpdate;
 import sernet.verinice.service.commands.task.ConfigurationBulkEditUpdate;
 
 /**
@@ -95,8 +93,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
     private List<Integer> dbIDs;
     private ArrayList<CnATreeElement> selectedElements;
     private EntityType entType = null;
-    @SuppressWarnings("rawtypes")
-    private Class clazz;
+
     private Dialog chosenDialog;
 
     public static final String ID = "sernet.gs.ui.rcp.main.actions.showbulkeditaction"; //$NON-NLS-1$
@@ -200,7 +197,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
                     pw1 = ((PersonBulkEditDialog) chosenDialog).getPassword();
                     pw2 = ((PersonBulkEditDialog) chosenDialog).getPassword2();
                 }
-                editPersons(clazz, dbIDs, dialogEntity, monitor, pw1, pw2);
+                editPersons(dbIDs, dialogEntity, monitor, pw1, pw2);
             } catch (CommandException e) {
                 throw new InterruptedException(e.getLocalizedMessage());
             }
@@ -240,7 +237,6 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
                 dbIDs.add(item.getDbId());
             }
             entType = HUITypeFactory.getInstance().getEntityType(MassnahmenUmsetzung.TYPE_ID);
-            clazz = MassnahmenUmsetzung.class;
         } else if (selection.getFirstElement() instanceof Person
                 || selection.getFirstElement() instanceof PersonIso) {
             for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
@@ -261,7 +257,6 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
                     ExceptionUtil.log(e, Messages.ShowBulkEditAction_6);
                 }
             }
-            clazz = Configuration.class;
         } else {
             // prepare list according to selected tree items:
             for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
@@ -282,7 +277,6 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
                 selectedElements.add(elmt);
                 logger.debug("Adding to bulk edit: " + elmt.getTitle()); //$NON-NLS-1$
             }
-            clazz = null;
         }
     }
 
@@ -307,26 +301,22 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
         return true;
     }
 
-    private void editPersons(Class<? extends CnATreeElement> clazz, List<Integer> dbIDs,
-            Entity dialogEntity, IProgressMonitor monitor, String newPassword, String newPassword2)
-            throws CommandException {
+    private void editPersons(List<Integer> dbIDs, Entity dialogEntity, IProgressMonitor monitor,
+            String newPassword, String newPassword2) throws CommandException {
         monitor.setTaskName(Messages.ShowBulkEditAction_7);
         monitor.beginTask(Messages.ShowBulkEditAction_8, IProgressMonitor.UNKNOWN);
         GenericCommand command = null;
-        if (!dialogEntity.getEntityType().trim().equalsIgnoreCase(Configuration.TYPE_ID)) {
-            command = new BulkEditUpdate(clazz, dbIDs, dialogEntity);
-        } else {
-            boolean changePassword = false;
-            if (newPassword != null && !newPassword.isEmpty()) {
-                if (!newPassword.equals(newPassword2)) {
-                    throw new PasswordException(Messages.ConfigurationAction_10);
-                } else {
-                    changePassword = true;
-                }
+
+        boolean changePassword = false;
+        if (newPassword != null && !newPassword.isEmpty()) {
+            if (!newPassword.equals(newPassword2)) {
+                throw new PasswordException(Messages.ConfigurationAction_10);
+            } else {
+                changePassword = true;
             }
-            command = new ConfigurationBulkEditUpdate(dbIDs, dialogEntity, changePassword,
-                    newPassword);
         }
+        command = new ConfigurationBulkEditUpdate(dbIDs, dialogEntity, changePassword, newPassword);
+
         command = ServiceFactory.lookupCommandService().executeCommand(command);
         if (!((ConfigurationBulkEditUpdate) command).getFailedUpdates().isEmpty()) {
             StringBuilder sb = new StringBuilder();
