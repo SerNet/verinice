@@ -97,9 +97,13 @@ public class DatePage extends WizardPage {
                 if (newDueDate.isAfter(LocalDate.now())) {
                     dueDate = newDueDate;
                     int diff = (int) ChronoUnit.DAYS.between(LocalDate.now(), dueDate);
-                    if (diff < periodDays) {
-                        setPeriod(diff);
+                    int newMaxPeriod = Math.min(diff, MAX_PERIOD);
+                    if (newMaxPeriod != periodCombo.getItemCount()) {
+                        periodCombo.setItems(createPeriodArray(newMaxPeriod));
+                        periodCombo.pack();
                     }
+                    int newPeriodDays = Math.min(newMaxPeriod, periodDays);
+                    setPeriod(newPeriodDays);
                 } else {
                     datePicker.setDate(dueDate.getYear(), dueDate.getMonthValue() - 1,
                             dueDate.getDayOfMonth());
@@ -114,7 +118,7 @@ public class DatePage extends WizardPage {
 
         periodCombo = new Combo(composite,
                 SWT.VERTICAL | SWT.DROP_DOWN | SWT.BORDER | SWT.READ_ONLY);
-        String[] selectablePeriods = createPeriodArray(MAX_PERIOD);
+        String[] selectablePeriods = createPeriodArray(DEFAULT_PERIOD);
         periodCombo.setItems(selectablePeriods);
         int defaultPeriodIndex = DEFAULT_PERIOD - 1;
         periodDays = DEFAULT_PERIOD;
