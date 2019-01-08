@@ -20,6 +20,7 @@
 package sernet.verinice.bpm.rcp;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -93,6 +94,11 @@ public class DatePage extends WizardPage {
             public void widgetSelected(SelectionEvent e) {
                 dueDate = LocalDate.of(datePicker.getYear(), datePicker.getMonth() + 1,
                         datePicker.getDay());
+                long diff = ChronoUnit.DAYS.between(LocalDate.now(), dueDate);
+                if (diff > 0l && diff < periodDays) {
+                    setPeriod((int) diff);
+                }
+
                 setPageComplete(isValid());
             }
         });
