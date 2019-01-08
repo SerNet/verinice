@@ -92,11 +92,17 @@ public class DatePage extends WizardPage {
         datePicker.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                dueDate = LocalDate.of(datePicker.getYear(), datePicker.getMonth() + 1,
+                LocalDate newDueDate = LocalDate.of(datePicker.getYear(), datePicker.getMonth() + 1,
                         datePicker.getDay());
-                long diff = ChronoUnit.DAYS.between(LocalDate.now(), dueDate);
-                if (diff > 0l && diff < periodDays) {
-                    setPeriod((int) diff);
+                if (newDueDate.isAfter(LocalDate.now())) {
+                    dueDate = newDueDate;
+                    int diff = (int) ChronoUnit.DAYS.between(LocalDate.now(), dueDate);
+                    if (diff < periodDays) {
+                        setPeriod(diff);
+                    }
+                } else {
+                    datePicker.setDate(dueDate.getYear(), dueDate.getMonthValue() - 1,
+                            dueDate.getDayOfMonth());
                 }
 
                 setPageComplete(isValid());
