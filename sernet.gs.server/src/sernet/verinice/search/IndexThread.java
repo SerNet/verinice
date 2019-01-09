@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.search;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.FetchMode;
@@ -35,7 +36,7 @@ import sernet.verinice.model.common.CnATreeElement;
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class IndexThread extends DummyAuthenticatorCallable<List<CnATreeElement>> {
+public class IndexThread extends DummyAuthenticatorCallable<List<IndexedElementDetails>> {
 
     private IBaseDao<CnATreeElement, Integer> elementDao;
     private ISearchDao searchDao;
@@ -47,20 +48,23 @@ public class IndexThread extends DummyAuthenticatorCallable<List<CnATreeElement>
      * @see sernet.verinice.search.DummyAuthenticatorCallable#doCall()
      */
     @Override
-    public List<CnATreeElement> doCall() {
+    public List<IndexedElementDetails> doCall() {
         String json = null;
 
         ServerInitializer.inheritVeriniceContextState();
         List<CnATreeElement> elements = loadElements();
+        List<IndexedElementDetails> result = new ArrayList<>(elements.size());
         for (CnATreeElement cnATreeElement : elements) {
             json = getJsonBuilder().getJson(cnATreeElement);
 
             if (json != null) {
                 getSearchDao().updateOrIndex(cnATreeElement.getUuid(), json);
+                result.add(new IndexedElementDetails(cnATreeElement.getUuid(),
+                        cnATreeElement.getTitle()));
             }
         }
 
-        return elements;
+        return result;
     }
 
     private List<CnATreeElement> loadElements() {
