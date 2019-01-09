@@ -43,6 +43,7 @@ public class IndexThread extends DummyAuthenticatorCallable<List<IndexedElementD
     private ISearchService searchService;
     private List<String> uuids;
     private IJsonBuilder jsonBuilder;
+    private boolean logIndexedElementDetails = false;
 
     /*
      * @see sernet.verinice.search.DummyAuthenticatorCallable#doCall()
@@ -53,14 +54,18 @@ public class IndexThread extends DummyAuthenticatorCallable<List<IndexedElementD
 
         ServerInitializer.inheritVeriniceContextState();
         List<CnATreeElement> elements = loadElements();
-        List<IndexedElementDetails> result = new ArrayList<>(elements.size());
+        List<IndexedElementDetails> result = logIndexedElementDetails
+                ? new ArrayList<>(elements.size())
+                : null;
         for (CnATreeElement cnATreeElement : elements) {
             json = getJsonBuilder().getJson(cnATreeElement);
 
             if (json != null) {
                 getSearchDao().updateOrIndex(cnATreeElement.getUuid(), json);
-                result.add(new IndexedElementDetails(cnATreeElement.getUuid(),
-                        cnATreeElement.getTitle()));
+                if (logIndexedElementDetails) {
+                    result.add(new IndexedElementDetails(cnATreeElement.getUuid(),
+                            cnATreeElement.getTitle()));
+                }
             }
         }
 
@@ -111,6 +116,11 @@ public class IndexThread extends DummyAuthenticatorCallable<List<IndexedElementD
 
     public void setJsonBuilder(IJsonBuilder jsonBuilder) {
         this.jsonBuilder = jsonBuilder;
+    }
+
+    public void setReturnIndexedElementDetails(boolean logIndexedElementDetails) {
+        this.logIndexedElementDetails = logIndexedElementDetails;
+
     }
 
 }
