@@ -229,8 +229,7 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
             task = editorInput.getTask();
 
             CnATreeElement elementWithChildren = Retriever.checkRetrieveChildren(element);
-            LoadElementForEditor<CnATreeElement> command = new LoadElementForEditor<>(element,
-                    false);
+            LoadElementForEditor<CnATreeElement> command = new LoadElementForEditor<>(element);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             cnAElement = command.getElement();
             cnAElement.setChildren(elementWithChildren.getChildren());

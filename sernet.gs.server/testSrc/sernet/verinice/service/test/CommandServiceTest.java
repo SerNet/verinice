@@ -226,7 +226,7 @@ public class CommandServiceTest extends CommandServiceProvider {
         assertNotNull("Element with children is null, uuid: " + uuid, elementWithChildren);
         assertNotNull("Children of element are null, uuid: " + uuid, elementWithChildren.getChildren());
         
-        LoadElementForEditor loadForEditor = new LoadElementForEditor(element,false);       
+        LoadElementForEditor loadForEditor = new LoadElementForEditor(element);
         loadForEditor = commandService.executeCommand(loadForEditor);
         element = loadForEditor.getElement();
         assertNotNull("Element for editor is null, uuid: " + uuid, element);
