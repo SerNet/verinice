@@ -22,7 +22,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnALink;
@@ -48,9 +47,7 @@ public class LoadElementForEditor<T extends CnATreeElement> extends GenericComma
             log.debug("execute, dbId: " + dbId);
         }
         IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
-        RetrieveInfo ri = new RetrieveInfo();
-        ri.setLinksDown(true).setLinksUp(true);
-        element = (T) dao.retrieve(dbId, ri);
+        element = (T) dao.findById(dbId);
         HydratorUtil.hydrateElement(dao, element, false);
         Set<CnALink> linksDown = element.getLinksDown();
         for (CnALink cnALink : linksDown) {
