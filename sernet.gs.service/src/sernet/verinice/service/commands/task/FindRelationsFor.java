@@ -40,17 +40,12 @@ public class FindRelationsFor extends GenericCommand {
     private CnATreeElement elmt;
     private String typeId;
 
-    /**
-     * @param dbId
-     */
     public FindRelationsFor(CnATreeElement elmt) {
         this.dbId = elmt.getDbId();
         this.typeId = elmt.getTypeId();
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
      */
     public void execute() {
