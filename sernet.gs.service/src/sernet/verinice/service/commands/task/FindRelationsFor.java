@@ -20,7 +20,6 @@ package sernet.verinice.service.commands.task;
 import java.io.Serializable;
 import java.util.Set;
 
-import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnALink;
@@ -50,9 +49,7 @@ public class FindRelationsFor extends GenericCommand {
      */
     public void execute() {
         IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
-        RetrieveInfo ri = new RetrieveInfo();
-        ri.setLinksDown(true).setLinksUp(true);
-        elmt = dao.retrieve(dbId, ri);
+        elmt = dao.findById(dbId);
 
         if (elmt != null) {
             Set<CnALink> linksDown = elmt.getLinksDown();
