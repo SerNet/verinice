@@ -18,6 +18,7 @@
 package sernet.verinice.service.bp.risk;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -85,7 +86,8 @@ public class RiskDeductionUtil {
         }
 
         Risk risk = riskConfiguration.getRisk(frequency, impact);
-        threat.setRiskWithoutAdditionalSafeguards(risk.getId());
+        setPropertyIfNecessary(threat, BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                Optional.ofNullable(risk).map(Risk::getId).orElse(null));
 
         LinkedRequirementsInfo linkedRequirementsInfo = getLinkedRequirementsForRiskDeduction(
                 threat);
@@ -112,9 +114,10 @@ public class RiskDeductionUtil {
 
         threat.setFrequencyWithAdditionalSafeguards(frequencyWithAdditionalSafeguards);
         threat.setImpactWithAdditionalSafeguards(impactWithAdditionalSafeguards);
-        String riskWithAdditionalSafeguards = riskConfiguration
-                .getRisk(frequencyWithAdditionalSafeguards, impactWithAdditionalSafeguards).getId();
-        threat.setRiskWithAdditionalSafeguards(riskWithAdditionalSafeguards);
+        Risk riskWithAdditionalSafeguards = riskConfiguration
+                .getRisk(frequencyWithAdditionalSafeguards, impactWithAdditionalSafeguards);
+        setPropertyIfNecessary(threat, BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS,
+                Optional.ofNullable(riskWithAdditionalSafeguards).map(Risk::getId).orElse(null));
         return threat;
     }
 
