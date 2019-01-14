@@ -5,6 +5,7 @@ package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
@@ -24,7 +25,10 @@ import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.bp.risk.Frequency;
 import sernet.verinice.model.bp.risk.Impact;
+import sernet.verinice.model.bp.risk.Risk;
 import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
+import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
+import sernet.verinice.service.bp.risk.RiskDeductionUtil;
 
 /**
  * @author urszeidler
@@ -276,6 +280,36 @@ public class RiskDeductionUtilTest extends AbstractModernizedBaseProtection {
                 bpThreat.getFrequencyWithAdditionalSafeguards());
         assertEquals(riskConfiguration.getImpacts().get(2).getId(),
                 bpThreat.getImpactWithAdditionalSafeguards());
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void testRiskDeductionWithSparseConfig() throws Exception {
+        ItNetwork itNetwork = createNewBPOrganization();
+
+        Frequency frequency = new Frequency("frequency1", "Default frequency",
+                "Default frequency of occurrence");
+        Impact impact = new Impact("impact1", "Default impact", "Default impact");
+        Risk risk = new Risk("risk1", "Default risk", "Default risk", null);
+
+        RiskConfiguration riskConfiguration = new RiskConfiguration(
+                Collections.singletonList(frequency), Collections.singletonList(impact),
+                Collections.singletonList(risk), new Integer[][] { new Integer[] { -1 } });
+        itNetwork.setRiskConfiguration(riskConfiguration);
+        itNetwork = update(itNetwork);
+
+        BpThreatGroup bpThreatGroup = createBpThreatGroup(itNetwork);
+        BpThreat bpThreat = createBpThreat(bpThreatGroup);
+        bpThreat.setTitel("Test-Threat");
+        bpThreat.setFrequencyWithoutAdditionalSafeguards("frequency1");
+        bpThreat.setImpactWithoutAdditionalSafeguards("impact1");
+        bpThreat = update(bpThreat);
+
+        RiskDeductionUtil.deduceRisk(bpThreat);
+        assertEquals(null, bpThreat.getRiskWithoutAdditionalSafeguards());
+        assertEquals(null, bpThreat.getRiskWithAdditionalSafeguards());
+
     }
 
     // private void dumpCnATreeElement(CnATreeElement e) {
