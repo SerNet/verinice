@@ -25,9 +25,9 @@ import java.util.stream.Stream;
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.annotation.NonNull;
 
-import sernet.gs.service.Retriever;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.Safeguard;
@@ -36,6 +36,8 @@ import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.risk.GetLinkedRequirementsInfo;
+import sernet.verinice.service.commands.risk.GetLinkedRequirementsInfo.LinkedRequirementsInfo;
 import sernet.verinice.service.hibernate.HibernateUtil;
 
 public class RiskDeductionUtil {
@@ -67,7 +69,8 @@ public class RiskDeductionUtil {
         return threat;
     }
 
-    private static BpThreat deduceRisk(BpThreat threat, RiskConfiguration riskConfiguration) {
+    private static BpThreat deduceRisk(BpThreat threat, RiskConfiguration riskConfiguration)
+            throws CommandException {
         boolean frequencyIsUnset = resetRiskValuesIfFrequencyIsUnset(threat);
         boolean impactIsUnset = resetRiskValuesIfImpactIsUnset(threat);
 
@@ -84,10 +87,11 @@ public class RiskDeductionUtil {
         Risk risk = riskConfiguration.getRisk(frequency, impact);
         threat.setRiskWithoutAdditionalSafeguards(risk.getId());
 
-        Set<CnATreeElement> linkedRequirements = getLinkedRequirementsForRiskDeduction(threat);
+        LinkedRequirementsInfo linkedRequirementsInfo = getLinkedRequirementsForRiskDeduction(
+                threat);
 
         String frequencyWithAdditionalSafeguards = getFrequencyWithAdditionalSafeguards(
-                Stream.of(frequency), linkedRequirements);
+                Stream.of(frequency), linkedRequirementsInfo.getFrequencies());
         if (nullOrEmpty(frequencyWithAdditionalSafeguards)) {
             threat.setFrequencyWithAdditionalSafeguards(frequency);
             threat.setImpactWithAdditionalSafeguards(impact);
@@ -97,7 +101,7 @@ public class RiskDeductionUtil {
         }
 
         String impactWithAdditionalSafeguards = getImpactsWithAdditionalSafeguards(
-                Stream.of(impact), linkedRequirements);
+                Stream.of(impact), linkedRequirementsInfo.getImpacts());
         if (nullOrEmpty(impactWithAdditionalSafeguards)) {
             threat.setFrequencyWithAdditionalSafeguards(frequency);
             threat.setImpactWithAdditionalSafeguards(impact);
@@ -129,8 +133,9 @@ public class RiskDeductionUtil {
             if (!affectedThreats.isEmpty()) {
                 RiskConfiguration riskConfiguration = findRiskConfiguration(
                         requirement.getScopeId());
-                affectedThreats
-                        .forEach(threat -> RiskDeductionUtil.deduceRisk(threat, riskConfiguration));
+                for (BpThreat threat : affectedThreats) {
+                    RiskDeductionUtil.deduceRisk(threat, riskConfiguration);
+                }
             }
         } catch (CommandException e) {
             logger.error("error fetching scope for bp_requirement", e);
@@ -205,36 +210,29 @@ public class RiskDeductionUtil {
         return false;
     }
 
-    private static Set<CnATreeElement> getLinkedRequirementsForRiskDeduction(BpThreat threat) {
-        Set<CnATreeElement> linkedRequirements = threat.getLinksUp().stream().filter(
-                link -> BpRequirement.REL_BP_REQUIREMENT_BP_THREAT.equals(link.getRelationId())
-                        && BpRequirement.TYPE_ID.equals(link.getDependant().getTypeId()))
-                .map(CnALink::getDependant).map(Retriever::checkRetrieveElement)
-                .filter(r -> r.getEntity().isFlagged(BpRequirement.PROP_SAFEGUARD_REDUCE_RISK))
-                .collect(Collectors.toSet());
-        return Collections.unmodifiableSet(linkedRequirements);
+    private static LinkedRequirementsInfo getLinkedRequirementsForRiskDeduction(BpThreat threat)
+            throws CommandException {
+
+        GetLinkedRequirementsInfo command = new GetLinkedRequirementsInfo(threat);
+        ICommandService commandService = (ICommandService) VeriniceContext
+                .get(VeriniceContext.COMMAND_SERVICE);
+        commandService.executeCommand(command);
+        return command.getLinkedRequirementsInfo();
     }
 
     private static String getFrequencyWithAdditionalSafeguards(
             Stream<String> frequenciesWithoutAdditionalSafeguard,
-            Set<CnATreeElement> linkedRequirements) {
-        Set<String> allFrequencies = Stream
-                .concat(frequenciesWithoutAdditionalSafeguard,
-                        linkedRequirements.stream()
-                                .map(requirement -> requirement.getEntity().getRawPropertyValue(
-                                        BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY)))
-                .collect(Collectors.toSet());
+            Set<String> freqenciesFromLinkedRequirements) {
+        Set<String> allFrequencies = Stream.concat(frequenciesWithoutAdditionalSafeguard,
+                freqenciesFromLinkedRequirements.stream()).collect(Collectors.toSet());
         return allFrequencies.contains(null) ? null : Collections.min(allFrequencies);
     }
 
     private static String getImpactsWithAdditionalSafeguards(
             Stream<String> impactsWithoutAdditionalSafeguard,
-            Set<CnATreeElement> linkedRequirements) {
+            Set<String> impactsFromLinkedRequirements) {
         Set<String> allImpacts = Stream
-                .concat(impactsWithoutAdditionalSafeguard,
-                        linkedRequirements.stream()
-                                .map(requirement -> requirement.getEntity().getRawPropertyValue(
-                                        BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT)))
+                .concat(impactsWithoutAdditionalSafeguard, impactsFromLinkedRequirements.stream())
                 .collect(Collectors.toSet());
         return allImpacts.contains(null) ? null : Collections.min(allImpacts);
     }
