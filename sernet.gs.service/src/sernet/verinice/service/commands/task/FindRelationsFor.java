@@ -20,11 +20,13 @@ package sernet.verinice.service.commands.task;
 import java.io.Serializable;
 import java.util.Set;
 
+import org.hibernate.Hibernate;
+
+import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.HydratorUtil;
 
 /**
  * Loads an element with all links (up and down) for the relation view.
@@ -54,14 +56,18 @@ public class FindRelationsFor extends GenericCommand {
         if (elmt != null) {
             Set<CnALink> linksDown = elmt.getLinksDown();
             for (CnALink cnALink : linksDown) {
-                HydratorUtil.hydrateElement(dao, cnALink.getDependency(), false);
-
+                for (PropertyList pl : cnALink.getDependency().getEntity().getTypedPropertyLists()
+                        .values()) {
+                    Hibernate.initialize(pl.getProperties());
+                }
             }
 
             Set<CnALink> linksUp = elmt.getLinksUp();
             for (CnALink cnALink : linksUp) {
-                HydratorUtil.hydrateElement(dao, cnALink.getDependant(), false);
-
+                for (PropertyList pl : cnALink.getDependant().getEntity().getTypedPropertyLists()
+                        .values()) {
+                    Hibernate.initialize(pl.getProperties());
+                }
             }
         }
     }

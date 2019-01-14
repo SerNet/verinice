@@ -21,7 +21,9 @@ import java.io.Serializable;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
 
+import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnALink;
@@ -51,13 +53,17 @@ public class LoadElementForEditor<T extends CnATreeElement> extends GenericComma
         HydratorUtil.hydrateElement(dao, element, false);
         Set<CnALink> linksDown = element.getLinksDown();
         for (CnALink cnALink : linksDown) {
-            HydratorUtil.hydrateElement(dao, cnALink.getDependency(), false);
-
+            for (PropertyList pl : cnALink.getDependency().getEntity().getTypedPropertyLists()
+                    .values()) {
+                Hibernate.initialize(pl.getProperties());
+            }
         }
         Set<CnALink> linksUp = element.getLinksUp();
         for (CnALink cnALink : linksUp) {
-            HydratorUtil.hydrateElement(dao, cnALink.getDependant(), false);
-
+            for (PropertyList pl : cnALink.getDependant().getEntity().getTypedPropertyLists()
+                    .values()) {
+                Hibernate.initialize(pl.getProperties());
+            }
         }
     }
 
