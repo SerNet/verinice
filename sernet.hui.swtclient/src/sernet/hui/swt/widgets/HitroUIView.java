@@ -32,8 +32,6 @@ import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.PopupList;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -63,7 +61,6 @@ import sernet.hui.swt.widgets.URL.URLControl;
 import sernet.hui.swt.widgets.multiselectionlist.MultiSelectionControl;
 import sernet.snutils.AssertException;
 import sernet.snutils.DBException;
-import sernet.snutils.ExceptionHandlerFactory;
 
 /**
  * Creates the editable SWT view of a collection of properties as defined by a
@@ -83,13 +80,13 @@ public class HitroUIView implements IEntityChangedListener {
     private Entity entity;
 
     // map of typeid : widget
-    private Map<String, IHuiControl> fields = new HashMap<String, IHuiControl>();
+    private Map<String, IHuiControl> fields = new HashMap<>();
 
     /**
      * IEditorBehavior instances implementing special "behavior" of this editor
      * See method addBehavior.
      */
-    private List<IEditorBehavior> editorBehaviorList = new ArrayList<IEditorBehavior>(1);
+    private List<IEditorBehavior> editorBehaviorList = new ArrayList<>(1);
 
     private Composite formComp;
 
@@ -138,9 +135,6 @@ public class HitroUIView implements IEntityChangedListener {
 
     /**
      * Enables simple content assist for text fields.
-     * 
-     * @param typeID
-     * @param helper
      */
     public void setInputHelper(String typeID, final IInputHelper helper, int type,
             final boolean showHint) {
@@ -202,12 +196,7 @@ public class HitroUIView implements IEntityChangedListener {
         };
 
         control.addFocusListener(focusAdapter);
-        control.addDisposeListener(new DisposeListener() {
-            @Override
-            public void widgetDisposed(DisposeEvent arg0) {
-                control.removeFocusListener(focusAdapter);
-            }
-        });
+        control.addDisposeListener(arg0 -> control.removeFocusListener(focusAdapter));
 
     }
 
@@ -269,8 +258,8 @@ public class HitroUIView implements IEntityChangedListener {
 
         EntityType entityType = typeFactory.getEntityType(entity.getEntityType());
         // create all form fields:
-        List allElements = entityType.getElements();
-        for (Iterator iter = allElements.iterator(); iter.hasNext();) {
+        List<?> allElements = entityType.getElements();
+        for (Iterator<?> iter = allElements.iterator(); iter.hasNext();) {
             Object obj = iter.next();
             if (obj instanceof PropertyType) {
                 PropertyType type = (PropertyType) obj;
@@ -415,10 +404,6 @@ public class HitroUIView implements IEntityChangedListener {
         behavior.init();
     }
 
-    /**
-     * @param propertyTags
-     * @return
-     */
     private boolean hideBecauseOfTags(String propertyTags) {
         if (taggedOnly) {
             // for properties with tags set, display them if tag matches:
@@ -451,12 +436,6 @@ public class HitroUIView implements IEntityChangedListener {
         return false;
     }
 
-    /**
-     * @param type
-     * @param editableField
-     * @param parent
-     * @param focus
-     */
     private void createNumericSelect(PropertyType fieldType, boolean editableField,
             Composite parent, boolean focus, boolean showValidationHint,
             boolean useValidationGuiHints) {
@@ -523,9 +502,6 @@ public class HitroUIView implements IEntityChangedListener {
         setFirstField(textControl);
     }
 
-    /**
-     * @param textControl
-     */
     private void setFirstField(IHuiControl control) {
         if (this.firstField == null) {
             firstField = control;
@@ -598,34 +574,10 @@ public class HitroUIView implements IEntityChangedListener {
         for (int i = 0; i < children.length; i++) {
             children[i].dispose();
         }
-        fields = new HashMap<String, IHuiControl>();
+        fields = new HashMap<>();
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.snkdb.connect.docproperties.IDynDocChangedListener#
-     * dependencyChanged(sernet.snkdb.guiswt.multiselectionlist.MLPropertyType,
-     * sernet.snkdb.guiswt.multiselectionlist.MLPropertyOption)
-     */
-    public void dependencyChanged(IMLPropertyType type, IMLPropertyOption opt) {
-        try {
-            closeView();
-            createView(entity, editable, useRules, filterTags, taggedOnly, validationList,
-                    useValidationGuiHints, overrides);
-        } catch (DBException e) {
-            ExceptionHandlerFactory.getDefaultHandler().handleException(e);
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.snkdb.connect.docproperties.IDynDocChangedListener#
-     * selectionChanged(sernet.snkdb.guiswt.multiselectionlist.MLPropertyType,
-     * sernet.snkdb.guiswt.multiselectionlist.MLPropertyOption)
-     */
     @Override
     public void selectionChanged(IMLPropertyType type, IMLPropertyOption opt) {
         Object object = fields.get(type.getId());
