@@ -152,9 +152,10 @@ public class HitroUIView implements IEntityChangedListener {
         } catch (ParseException e) {
             LOG.warn("Parsing error", e);
         }
+        SimpleContentProposalProvider contentProposalProvider = new SimpleContentProposalProvider(
+                new String[0]);
         ContentProposalAdapter adapter = new ContentProposalAdapter(control,
-                new TextContentAdapter(),
-                new SimpleContentProposalProvider(helper.getSuggestions()), keyStroke, null);
+                new TextContentAdapter(), contentProposalProvider, keyStroke, null);
         if (type == IInputHelper.TYPE_REPLACE) {
             adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
         } else {
@@ -168,9 +169,11 @@ public class HitroUIView implements IEntityChangedListener {
                 if (!showHint) {
                     return; // do not show activation hint
                 }
-                if (helper.getSuggestions().length < 1) {
+                String[] suggestions = helper.getSuggestions();
+                if (suggestions.length < 1) {
                     return; // no suggestions
                 }
+                contentProposalProvider.setProposals(suggestions);
                 tip = new Shell(control.getShell(), SWT.ON_TOP | SWT.NO_FOCUS | SWT.TOOL);
                 FillLayout layout = new FillLayout();
                 layout.marginWidth = 2;
