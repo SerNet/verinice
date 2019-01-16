@@ -98,17 +98,16 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
         if (linksToSafeguard == null || linksToSafeguard.isEmpty()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("No safeguards found for requirement with UUID: " //$NON-NLS-1$
-                        + requirement.getUuid()
-                        + ", will create a dummy safewguard now..."); //$NON-NLS-1$
+                        + requirement.getUuid() + ", will create a dummy safewguard now..."); //$NON-NLS-1$
             }
             Safeguard safeguard = createDummySafeguardForRequirement((BpRequirement) requirement);
             linkList.add(new Link(requirement, safeguard,
                     BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD));
         } else if (LOG.isDebugEnabled()) {
             LOG.debug("Safeguards found for requirement with UUID: " + requirement.getUuid()); //$NON-NLS-1$
-                for (CnALink link : linksToSafeguard) {
-                    LOG.debug("Link type: " + link.getRelationId()); //$NON-NLS-1$
-                }
+            for (CnALink link : linksToSafeguard) {
+                LOG.debug("Link type: " + link.getRelationId()); //$NON-NLS-1$
+            }
         }
     }
 
@@ -145,7 +144,8 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
     private Safeguard createSafeguard(BpRequirement requirement, CnATreeElement safeguardGroup)
             throws CommandException {
         CreateElement<Safeguard> createElement = new CreateElement<>(safeguardGroup,
-                Safeguard.class, requirement.getTitle() + " [" + Messages.getString("ModelDummySafeguards.6") + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                Safeguard.class,
+                requirement.getTitle() + " [" + Messages.getString("ModelDummySafeguards.6") + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         createElement = getCommandService().executeCommand(createElement);
         Safeguard safeguard = createElement.getNewElement();
         safeguard.setIdentifier(getSafeguardForRequirementIdentifier(requirement.getIdentifier()));
@@ -155,8 +155,7 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
     }
 
     private CnATreeElement createSafeguardGroup(CnATreeElement parent,
-            BpRequirementGroup requirementGroup)
-            throws CommandException {
+            BpRequirementGroup requirementGroup) throws CommandException {
         CreateElement<SafeguardGroup> createElement = new CreateElement<>(parent,
                 SafeguardGroup.class, requirementGroup.getTitle());
         createElement = getCommandService().executeCommand(createElement);

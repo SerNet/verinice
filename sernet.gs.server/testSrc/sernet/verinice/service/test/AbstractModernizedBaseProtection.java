@@ -176,11 +176,11 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
     }
 
     /**
-	 * Create a {@link SafeguardGroup} in the given container.
-	 */
-	protected BpRequirement createBpRequirement(CnATreeElement container) throws CommandException {
-	    return createElement(container, BpRequirement.class);
-	}
+     * Create a {@link SafeguardGroup} in the given container.
+     */
+    protected BpRequirement createBpRequirement(CnATreeElement container) throws CommandException {
+        return createElement(container, BpRequirement.class);
+    }
 
     /**
      * Create a {@link SafeguardGroup} in the given container.
@@ -190,7 +190,7 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
         return createElement(container, BpRequirement.class, title);
     }
 
-	/**
+    /**
      * Create a {@link BpRequirementGroup} in the given container.
      */
     protected ApplicationGroup createBpApplicationGroup(CnATreeElement container)

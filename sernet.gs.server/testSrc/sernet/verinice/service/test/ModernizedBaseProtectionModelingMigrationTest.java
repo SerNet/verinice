@@ -63,8 +63,7 @@ public class ModernizedBaseProtectionModelingMigrationTest
 
         network = reloadElement(network);
 
-        CnATreeElement firstModule = reloadElement(
-                findChildWithTitle(network, "module 1"));
+        CnATreeElement firstModule = reloadElement(findChildWithTitle(network, "module 1"));
         Assert.assertNotNull(firstModule);
         Assert.assertEquals("module 1", firstModule.getTitle());
         Set<CnATreeElement> childrenOfModule1 = firstModule.getChildren();
@@ -541,8 +540,7 @@ public class ModernizedBaseProtectionModelingMigrationTest
     private BpRequirementGroup createRequirementGroup(CnATreeElement container, String identifier,
             String title) throws CommandException {
         BpRequirementGroup element = setIdentifier(createRequirementGroup(container, title),
-                "bp_requirement_group_id",
-                identifier);
+                "bp_requirement_group_id", identifier);
         log.debug("Created: " + element);
         return element;
     }
@@ -550,8 +548,7 @@ public class ModernizedBaseProtectionModelingMigrationTest
     private BpRequirement createBpRequirement(CnATreeElement container, String identifier,
             String title) throws CommandException {
         BpRequirement element = setIdentifier(createBpRequirement(container, title),
-                BpRequirement.PROP_ID,
-                identifier);
+                BpRequirement.PROP_ID, identifier);
         log.debug("Created: " + element);
         return element;
     }
@@ -559,8 +556,7 @@ public class ModernizedBaseProtectionModelingMigrationTest
     private SafeguardGroup createSafeguardGroup(CnATreeElement container, String identifier,
             String title) throws CommandException {
         SafeguardGroup element = setIdentifier(createSafeguardGroup(container, title),
-                "bp_safeguard_group_id",
-                identifier);
+                "bp_safeguard_group_id", identifier);
         log.debug("Created: " + element);
         return element;
     }

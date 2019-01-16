@@ -94,36 +94,36 @@ public class BpRequirement extends CnATreeElement
     public static final String REL_BP_REQUIREMENT_BP_NETWORK = "rel_bp_requirement_bp_network"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_ROOM = "rel_bp_requirement_bp_room"; //$NON-NLS-1$
 
-	private final IReevaluator protectionRequirementsProvider = new Reevaluator(this) {
-		private static final long serialVersionUID = -2522374396559298793L;
+    private final IReevaluator protectionRequirementsProvider = new Reevaluator(this) {
+        private static final long serialVersionUID = -2522374396559298793L;
 
-		@Override
-		protected void findBottomNodes(CnATreeElement downwardElement, Set<CnATreeElement> bottomNodes,
-				CascadingTransaction downwardsTA) {
-			if (downwardsTA.hasBeenVisited(downwardElement)) {
-				return;
-			}
+        @Override
+        protected void findBottomNodes(CnATreeElement downwardElement,
+                Set<CnATreeElement> bottomNodes, CascadingTransaction downwardsTA) {
+            if (downwardsTA.hasBeenVisited(downwardElement)) {
+                return;
+            }
 
-			try {
-				downwardsTA.enter(downwardElement);
-			} catch (TransactionAbortedException e) {
-				return;
-			}
-			 if (downwardElement.isProtectionRequirementsProvider()) {
-				 bottomNodes.add(downwardElement);
-			 }
-			downwardElement.getLinksDown().stream().map(CnALink::getDependency)//
-				.map(HibernateUtil::unproxy)//
-				.forEach(l -> {
-						if (bottomNodes.add(l)) {
-							findBottomNodes(l, bottomNodes, downwardsTA);
-						}
-				});
-		}
+            try {
+                downwardsTA.enter(downwardElement);
+            } catch (TransactionAbortedException e) {
+                return;
+            }
+            if (downwardElement.isProtectionRequirementsProvider()) {
+                bottomNodes.add(downwardElement);
+            }
+            downwardElement.getLinksDown().stream().map(CnALink::getDependency)//
+                    .map(HibernateUtil::unproxy)//
+                    .forEach(l -> {
+                        if (bottomNodes.add(l)) {
+                            findBottomNodes(l, bottomNodes, downwardsTA);
+                        }
+                    });
+        }
 
-	};
+    };
 
-	private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
+    private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
 
         private static final long serialVersionUID = -3220319074711927103L;
 
