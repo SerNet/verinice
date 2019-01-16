@@ -96,7 +96,7 @@ public class RiskDeductionUtil {
             return threat;
         }
 
-        String impactWithAdditionalSafeguards = getImpactsWithAdditionalSafeguarts(
+        String impactWithAdditionalSafeguards = getImpactsWithAdditionalSafeguards(
                 Stream.of(impact), linkedRequirements);
         if (nullOrEmpty(impactWithAdditionalSafeguards)) {
             threat.setFrequencyWithAdditionalSafeguards(frequency);
@@ -201,7 +201,7 @@ public class RiskDeductionUtil {
         return allFrequencies.contains(null) ? null : Collections.min(allFrequencies);
     }
 
-    private static String getImpactsWithAdditionalSafeguarts(
+    private static String getImpactsWithAdditionalSafeguards(
             Stream<String> impactsWithoutAdditionalSafeguard,
             Set<CnATreeElement> linkedRequirements) {
         Set<String> allImpacts = Stream
