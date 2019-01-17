@@ -142,34 +142,3 @@ Artifacts for the following platforms will be produced:
 * Windows 32 and 64 bit
 * Mac OS X 64 bit
 
-## Building with `make`
-To make the build more convenient a [Makefile][] is provided. Just run
-
-	make VERSION=x.y.z
-
-and get a cup of coffee.
-
-The following targets are most relevant:
-
-- all (default)
-- products
-- tests
-- dists
-- docs
-- clean
-
-See [Makefile][] for more details.
-
-Note that the products are build only if they don't exist. The underlying maven
-build always build everything, which causes the `distribution` target to build
-the product every time.  As a workaround make checks for presence of the
-products, before invoking maven. To force a rebuild of the products run
-
-	make clean && make products VERSION=x.y.z
-
-# Troubleshooting
-## Docker with Proxy
-See [dist/rhel-7](dist/rhel-7/README.md).
-
-[Makefile]: Makefile "Makefile"
-
