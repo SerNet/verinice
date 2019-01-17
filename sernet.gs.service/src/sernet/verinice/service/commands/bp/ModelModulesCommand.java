@@ -45,11 +45,10 @@ public class ModelModulesCommand extends ModelCopyCommand {
     private static final long serialVersionUID = -9211614522872500071L;
     private transient Set<CnATreeElement> modulesCompendium;
 
-    public ModelModulesCommand(Set<CnATreeElement> modules, Set<CnATreeElement> targetElements,
-            boolean handleSafeguards) {
-        super(targetElements, BpRequirementGroup.TYPE_ID,
-                new ChangeDeductionPostProcessor(handleSafeguards));
-        this.modulesCompendium = modules;
+    public ModelModulesCommand(ModelingMetaDao modelingMetaDao, ModelingData modelingData) {
+        super(modelingMetaDao, modelingData, BpRequirementGroup.TYPE_ID,
+                new ChangeDeductionPostProcessor(modelingData.isHandleSafeguards()));
+        this.modulesCompendium = modelingData.getRequirementGroups();
     }
 
     @Override

@@ -46,9 +46,9 @@ public class ModelSafeguardGroupCommand extends ModelCopyCommand {
     private Set<String> moduleUuids;
     private transient Set<CnATreeElement> safeguardGroupsFromCompendium;
 
-    public ModelSafeguardGroupCommand(Set<String> moduleUuids, Set<CnATreeElement> targetElements) {
-        super(targetElements, SafeguardGroup.TYPE_ID);
-        this.moduleUuids = moduleUuids;
+    public ModelSafeguardGroupCommand(ModelingMetaDao modelingMetaDao, ModelingData modelingData) {
+        super(modelingMetaDao, modelingData, SafeguardGroup.TYPE_ID);
+        this.moduleUuids = modelingData.getModuleUuidsFromCompendium();
     }
 
     @Override

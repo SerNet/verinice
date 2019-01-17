@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -59,12 +60,12 @@ public class ModelLinksCommand extends GenericCommand {
 
     private transient ModelingMetaDao metaDao;
 
-    private transient Set<String> moduleUuidsFromCompendium;
-    private transient Set<String> newModuleUuidsFromScope;
     private transient ItNetwork itNetwork;
 
     private transient Set<CnATreeElement> elementsFromScope;
     private transient Set<CnATreeElement> requirementsFromCompendium;
+    private transient Set<String> moduleUuidsFromScope;
+
     // the map's keys are requirement identifiers
     private transient Map<String, CnATreeElement> newRequirementsFromScope;
     // the inner maps' keys are requirement identifiers, the outer maps' keys
@@ -75,21 +76,20 @@ public class ModelLinksCommand extends GenericCommand {
 
     private boolean handleSafeguards;
 
-    public ModelLinksCommand(Set<String> moduleUuidsFromCompendium,
-            Set<String> newModuleUuidsFromScope, ItNetwork itNetwork,
-            Set<CnATreeElement> targetElements, boolean handleSafeguards) {
+    public ModelLinksCommand(ModelingData modelingData) {
         super();
-        this.moduleUuidsFromCompendium = moduleUuidsFromCompendium;
-        this.newModuleUuidsFromScope = newModuleUuidsFromScope;
-        this.itNetwork = itNetwork;
-        this.elementsFromScope = targetElements;
-        this.handleSafeguards = handleSafeguards;
+        this.elementsFromScope = modelingData.getTargetElements();
+        this.itNetwork = modelingData.getItNetwork();
+        this.elementsFromScope = modelingData.getTargetElements();
+        this.handleSafeguards = modelingData.isHandleSafeguards();
+        this.moduleUuidsFromScope = modelingData.getModuleUuidsFromScope();
+        this.requirementsFromCompendium = modelingData.getRequirementGroups().stream()
+                .flatMap(group -> group.getChildren().stream()).collect(Collectors.toSet());
     }
 
     @Override
     public void execute() {
         try {
-            requirementsFromCompendium = loadRequirementsFromCompendium(moduleUuidsFromCompendium);
             loadAllRequirementsFromScope();
             loadAllThreatsFromScope();
             if (isNewModuleInScope()) {
@@ -240,10 +240,6 @@ public class ModelLinksCommand extends GenericCommand {
         return elementA != null && elementB != null;
     }
 
-    private Set<CnATreeElement> loadRequirementsFromCompendium(final Set<String> moduleUuids) {
-        return findRequirementsByModuleUuid(moduleUuids);
-    }
-
     private Set<CnATreeElement> findRequirementsByModuleUuid(final Set<String> moduleUuids) {
         return getMetaDao().loadChildrenWithProperties(moduleUuids, BpRequirement.TYPE_ID);
     }
@@ -264,7 +260,7 @@ public class ModelLinksCommand extends GenericCommand {
 
     protected void loadNewRequirementsFromScope() {
         newRequirementsFromScope = new HashMap<>();
-        Set<CnATreeElement> requirementList = findRequirementsByModuleUuid(newModuleUuidsFromScope);
+        Set<CnATreeElement> requirementList = findRequirementsByModuleUuid(moduleUuidsFromScope);
         for (CnATreeElement requirement : requirementList) {
             String identifier = BpRequirement.getIdentifierOfRequirement(requirement);
             CnATreeElement previousMapping = newRequirementsFromScope.put(identifier, requirement);
@@ -326,7 +322,7 @@ public class ModelLinksCommand extends GenericCommand {
     }
 
     private boolean isNewModuleInScope() {
-        return newModuleUuidsFromScope != null && !newModuleUuidsFromScope.isEmpty();
+        return moduleUuidsFromScope != null && !moduleUuidsFromScope.isEmpty();
     }
 
     public ModelingMetaDao getMetaDao() {

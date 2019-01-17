@@ -20,7 +20,6 @@
 package sernet.verinice.service.commands.bp;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -84,12 +83,7 @@ public class ModelCommand extends ChangeLoggingCommand {
     private transient ModelingMetaDao metaDao;
 
     private Set<String> moduleUuidsFromCompendium;
-    private transient Set<String> moduleUuidsFromScope = Collections.emptySet();
-    private transient Set<String> safeguardGroupUuidsFromScope = Collections.emptySet();
     private List<String> targetUuids;
-    private transient Set<CnATreeElement> requirementGroups;
-    private transient Set<CnATreeElement> targetElements;
-    private transient ItNetwork itNetwork;
 
     private boolean handleSafeguards = true;
     private boolean handleDummySafeguards = true;
@@ -110,79 +104,73 @@ public class ModelCommand extends ChangeLoggingCommand {
     @Override
     public void execute() {
         try {
-            loadElements();
-            handleModules(isHandleSafeguards());
+            Set<CnATreeElement> requirementGroups = new HashSet<>(
+                    getMetaDao().loadElementsWithProperties(moduleUuidsFromCompendium));
+            Set<CnATreeElement> targetElements = new HashSet<>(
+                    getMetaDao().loadElementsWithChildrenProperties(targetUuids));
+            ItNetwork itNetwork = loadItNetwork(targetElements);
+            ModelingData modelingData = new ModelingData(moduleUuidsFromCompendium,
+                    requirementGroups, targetElements, itNetwork, handleSafeguards,
+                    handleDummySafeguards);
+            handleModules(modelingData);
             if (isHandleSafeguards()) {
-                handleSafeguards();
+                handleSafeguards(modelingData);
             }
-            handleThreats();
-            createLinks();
+            handleThreats(modelingData);
+            createLinks(modelingData);
             if (isHandleSafeguards() && isHandleDummySafeguards()) {
-                createDummySafeguards();
+                createDummySafeguards(modelingData);
             }
-            saveReturnValues();
+            saveReturnValues(itNetwork);
         } catch (CommandException e) {
             LOG.error("Error while modeling.", e);
             throw new RuntimeCommandException("Error while modeling.", e);
         }
+
     }
 
-    private void handleModules(boolean handleSafeguards) throws CommandException {
-        ModelCopyCommand modelModulesCommand = new ModelModulesCommand(requirementGroups,
-                targetElements, handleSafeguards);
-        modelModulesCommand = getCommandService().executeCommand(modelModulesCommand);
-        moduleUuidsFromScope = modelModulesCommand.getGroupUuidsFromScope();
+    private void handleModules(ModelingData modelingData) throws CommandException {
+        ModelCopyCommand modelModulesCommand = new ModelModulesCommand(metaDao, modelingData);
+        getCommandService().executeCommand(modelModulesCommand);
     }
 
-    private void handleSafeguards() throws CommandException {
-        ModelSafeguardGroupCommand modelSafeguardsCommand = new ModelSafeguardGroupCommand(
-                moduleUuidsFromCompendium, targetElements);
-        modelSafeguardsCommand = getCommandService().executeCommand(modelSafeguardsCommand);
-        safeguardGroupUuidsFromScope = modelSafeguardsCommand.getGroupUuidsFromScope();
+    private void handleSafeguards(ModelingData modelingData) throws CommandException {
+        ModelSafeguardGroupCommand modelSafeguardsCommand = new ModelSafeguardGroupCommand(metaDao,
+                modelingData);
+        getCommandService().executeCommand(modelSafeguardsCommand);
     }
 
-    private void handleThreats() throws CommandException {
-        ModelThreatGroupCommand modelThreatsCommand = new ModelThreatGroupCommand(
-                moduleUuidsFromCompendium, targetElements);
+    private void handleThreats(ModelingData modelingData) throws CommandException {
+        ModelThreatGroupCommand modelThreatsCommand = new ModelThreatGroupCommand(metaDao,
+                modelingData);
         getCommandService().executeCommand(modelThreatsCommand);
     }
 
-    private void createLinks() throws CommandException {
-        ModelLinksCommand modelLinksCommand = new ModelLinksCommand(moduleUuidsFromCompendium,
-                moduleUuidsFromScope, itNetwork, targetElements, handleSafeguards);
+    private void createLinks(ModelingData modelingData) throws CommandException {
+        ModelLinksCommand modelLinksCommand = new ModelLinksCommand(modelingData);
         getCommandService().executeCommand(modelLinksCommand);
     }
 
-    private void createDummySafeguards() throws CommandException {
-        ModelDummySafeguards modelDummySafeguards = new ModelDummySafeguards(moduleUuidsFromScope,
-                safeguardGroupUuidsFromScope);
+    private void createDummySafeguards(ModelingData modelingData) throws CommandException {
+        ModelDummySafeguards modelDummySafeguards = new ModelDummySafeguards(metaDao, modelingData);
         getCommandService().executeCommand(modelDummySafeguards);
     }
 
-    private void saveReturnValues() {
+    private void saveReturnValues(ItNetwork itNetwork) {
         if (itNetwork != null && itNetwork.getProceeding() != null) {
             proceedingLabel = itNetwork.getProceeding().getLabel();
         }
     }
 
-    private Integer getTargetScopeId() {
+    private Integer getTargetScopeId(Set<CnATreeElement> targetElements) {
         if (targetElements == null || targetElements.isEmpty()) {
             return null;
         }
         return targetElements.iterator().next().getScopeId();
     }
 
-    private void loadElements() {
-        List<CnATreeElement> elements = getMetaDao()
-                .loadElementsWithProperties(moduleUuidsFromCompendium);
-        requirementGroups = new HashSet<>(elements);
-        elements = getMetaDao().loadElementsWithChildrenProperties(targetUuids);
-        targetElements = new HashSet<>(elements);
-        loadItNetwork();
-    }
-
-    private void loadItNetwork() {
-        Integer targetScopeId = getTargetScopeId();
+    private ItNetwork loadItNetwork(Set<CnATreeElement> targetElements) {
+        Integer targetScopeId = getTargetScopeId(targetElements);
         CnATreeElement element = getMetaDao().loadElementWithProperties(targetScopeId);
         if (element == null) {
             throw new BpModelingException("No it network found with db id: " + targetScopeId);
@@ -190,7 +178,7 @@ public class ModelCommand extends ChangeLoggingCommand {
         if (!ItNetwork.isItNetwork(element)) {
             throw new BpModelingException("Elmenent is not an it network, db id: " + targetScopeId);
         }
-        itNetwork = (ItNetwork) element;
+        return (ItNetwork) element;
     }
 
     private void validateParameter(Set<String> compendiumUuids, List<String> targetUuids) {

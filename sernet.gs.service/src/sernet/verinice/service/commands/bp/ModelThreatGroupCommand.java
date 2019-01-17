@@ -46,9 +46,9 @@ public class ModelThreatGroupCommand extends ModelCopyCommand {
     private Set<String> moduleUuids;
     private transient Set<CnATreeElement> threatGroupsFromCompendium;
 
-    public ModelThreatGroupCommand(Set<String> moduleUuids, Set<CnATreeElement> targetElements) {
-        super(targetElements, BpThreatGroup.TYPE_ID);
-        this.moduleUuids = moduleUuids;
+    public ModelThreatGroupCommand(ModelingMetaDao modelingMetaDao, ModelingData modelingData) {
+        super(modelingMetaDao, modelingData, BpThreatGroup.TYPE_ID);
+        this.moduleUuids = modelingData.getModuleUuidsFromCompendium();
     }
 
     @Override

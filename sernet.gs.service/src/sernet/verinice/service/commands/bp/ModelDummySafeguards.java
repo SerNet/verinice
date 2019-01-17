@@ -63,12 +63,10 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
     private transient ModelingMetaDao metaDao;
     private String stationId;
 
-    public ModelDummySafeguards(Set<String> moduleUuidsFromScope,
-            Set<String> safeguardGroupUuidsFromScope) {
-        super();
-        this.moduleUuidsFromScope = moduleUuidsFromScope;
-        this.safeguardGroupUuidsFromScope = safeguardGroupUuidsFromScope;
-        this.stationId = ChangeLogEntry.STATION_ID;
+    public ModelDummySafeguards(ModelingMetaDao metaDao, ModelingData modelingData) {
+        this.metaDao = metaDao;
+        this.moduleUuidsFromScope = modelingData.getModuleUuidsFromScope();
+        this.safeguardGroupUuidsFromScope = modelingData.getSafeguardGroupUuidsFromScope();
     }
 
     @Override
