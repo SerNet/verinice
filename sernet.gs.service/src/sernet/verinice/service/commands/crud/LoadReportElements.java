@@ -302,7 +302,7 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
             try {
                 final Class classToInstantiate = Class.forName(gsClass.getCanonicalName());
                 instance = classToInstantiate.getConstructor(CnATreeElement.class)
-                        .newInstance((Object[]) null);
+                        .newInstance((Object) null);
                 if (instance instanceof CnATreeElement) {
                     CnATreeElement element = (CnATreeElement) instance;
                     if (element.getTypeId().equals(typeId)) {
