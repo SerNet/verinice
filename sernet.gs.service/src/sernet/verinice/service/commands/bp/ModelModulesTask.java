@@ -45,9 +45,9 @@ public class ModelModulesTask extends ModelCopyTask {
 
     private Set<CnATreeElement> modulesCompendium;
 
-    public ModelModulesTask(ModelingMetaDao modelingMetaDao, ICommandService commandService,
-            IDAOFactory daoFactory, ModelingData modelingData) {
-        super(modelingMetaDao, commandService, daoFactory, modelingData, BpRequirementGroup.TYPE_ID,
+    public ModelModulesTask(ICommandService commandService, IDAOFactory daoFactory,
+            ModelingData modelingData) {
+        super(commandService, daoFactory, modelingData, BpRequirementGroup.TYPE_ID,
                 new ChangeDeductionPostProcessor(modelingData.isHandleSafeguards()));
         this.modulesCompendium = modelingData.getRequirementGroups();
     }

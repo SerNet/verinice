@@ -25,6 +25,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.FetchMode;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
@@ -104,14 +107,27 @@ public class ModelCommand extends ChangeLoggingCommand {
     @Override
     public void execute() {
         try {
+            @SuppressWarnings("unchecked")
             Set<CnATreeElement> requirementGroups = new HashSet<>(
-                    getMetaDao().loadElementsWithProperties(moduleUuidsFromCompendium));
+                    getDao().findByCriteria(DetachedCriteria.forClass(CnATreeElement.class)
+                            .add(Restrictions.in(CnATreeElement.UUID, moduleUuidsFromCompendium))
+                            .setFetchMode("children", FetchMode.JOIN)
+                            .setFetchMode("children.linksDown", FetchMode.JOIN)));
+            @SuppressWarnings("unchecked")
             Set<CnATreeElement> targetElements = new HashSet<>(
-                    getMetaDao().loadElementsWithChildrenProperties(targetUuids));
+                    getDao().findByCriteria(DetachedCriteria.forClass(CnATreeElement.class)
+                            .setFetchMode("linksUp", FetchMode.JOIN)
+                            .setFetchMode("children", FetchMode.JOIN)
+                            .setFetchMode("children.children", FetchMode.JOIN)
+                            .setFetchMode("children.children.linksDown", FetchMode.JOIN)
+                            .setFetchMode("children.entity", FetchMode.JOIN)
+                            .setFetchMode("children.entity.typedPropertyLists", FetchMode.JOIN)
+                            .setFetchMode("children.entity.typedPropertyLists.properties",
+                                    FetchMode.JOIN)
+                            .add(Restrictions.in(CnATreeElement.UUID, targetUuids))));
             ItNetwork itNetwork = loadItNetwork(targetElements);
-            ModelingData modelingData = new ModelingData(moduleUuidsFromCompendium,
-                    requirementGroups, targetElements, itNetwork, handleSafeguards,
-                    handleDummySafeguards);
+            ModelingData modelingData = new ModelingData(requirementGroups, targetElements,
+                    itNetwork, handleSafeguards, handleDummySafeguards);
 
             handleModules(modelingData);
             if (isHandleSafeguards()) {
@@ -130,20 +146,20 @@ public class ModelCommand extends ChangeLoggingCommand {
     }
 
     private void handleModules(ModelingData modelingData) {
-        ModelCopyTask modelModulesTask = new ModelModulesTask(metaDao, getCommandService(),
-                getDaoFactory(), modelingData);
+        ModelCopyTask modelModulesTask = new ModelModulesTask(getCommandService(), getDaoFactory(),
+                modelingData);
         modelModulesTask.run();
     }
 
     private void handleSafeguards(ModelingData modelingData) {
-        ModelSafeguardGroupTask modelSafeguardsTask = new ModelSafeguardGroupTask(metaDao,
+        ModelSafeguardGroupTask modelSafeguardsTask = new ModelSafeguardGroupTask(
                 getCommandService(), getDaoFactory(), modelingData);
         modelSafeguardsTask.run();
     }
 
     private void handleThreats(ModelingData modelingData) {
-        ModelThreatGroupTask modelThreatsTask = new ModelThreatGroupTask(metaDao,
-                getCommandService(), getDaoFactory(), modelingData);
+        ModelThreatGroupTask modelThreatsTask = new ModelThreatGroupTask(getCommandService(),
+                getDaoFactory(), modelingData);
         modelThreatsTask.run();
     }
 
@@ -153,8 +169,8 @@ public class ModelCommand extends ChangeLoggingCommand {
     }
 
     private void createDummySafeguards(ModelingData modelingData) {
-        ModelDummySafeguards modelDummySafeguards = new ModelDummySafeguards(metaDao,
-                getCommandService(), getDaoFactory(), modelingData);
+        ModelDummySafeguards modelDummySafeguards = new ModelDummySafeguards(getCommandService(),
+                getDaoFactory(), modelingData);
         modelDummySafeguards.run();
     }
 

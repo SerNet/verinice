@@ -57,27 +57,9 @@ public class ModelingMetaDao {
             + "join fetch element.entity as entity " + JOIN_PROPERTIES
             + "where element.uuid in (:uuids)"; //$NON-NLS-1$
 
-    private static final String HQL_LOAD_ELEMENTS_WITH_CHILDREN_PROPERTIES = "select element from CnATreeElement element "
-            + "left join fetch element.children as child "
-            + "left join fetch child.entity as entity "
-            + "left join fetch entity.typedPropertyLists as propertyList "
-            + "left join fetch propertyList.properties as props "
-            + "where element.uuid in (:uuids)"; // $NON-NLS-6$
-
     private static final String HQL_LOAD_ELEMENTS_OF_SCOPE = "select  safeguard from CnATreeElement safeguard "
             + "join fetch safeguard.entity as entity " + JOIN_PROPERTIES
             + "where safeguard.objectType = :typeId " + "and safeguard.scopeId = :scopeId"; //$NON-NLS-2$
-
-    private static final String HQL_LOAD_CHILDREN_WITH_LINKS_DOWN = "select requirement from CnATreeElement requirement "
-            + "join requirement.parent as module " + "join requirement.linksDown as linksDown "
-            + "where module.uuid in (:uuids) "; // $NON-NLS-2$
-
-    private static final String HQL_LOAD_LINKED_SAFEGUARD_GROUPS_OF_MODULES = "select safeguardGroup from CnATreeElement safeguardGroup "
-            + "join fetch safeguardGroup.children as safeguard "
-            + "join safeguard.linksUp as linksUp " + "join linksUp.dependant as requirement "
-            + "join requirement.parent as module " + "join fetch safeguard.entity as entity "
-            + JOIN_PROPERTIES + "where safeguardGroup.objectType = :typeId "
-            + "and module.uuid in (:uuids)"; //$NON-NLS-1$
 
     private static final String HQL_LOAD_CHILDREN_WITH_PROPERTIES = "select requirement from CnATreeElement requirement "
             + "join requirement.parent as module " + "join fetch requirement.entity as entity "
@@ -126,20 +108,6 @@ public class ModelingMetaDao {
     }
 
     @SuppressWarnings("unchecked")
-    public List<CnATreeElement> loadElementsWithChildrenProperties(
-            final Collection<String> allUuids) {
-        return getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(HQL_LOAD_ELEMENTS_WITH_CHILDREN_PROPERTIES)
-                        .setParameterList(UUIDS, allUuids);
-                query.setReadOnly(true);
-                return query.list();
-            }
-        });
-    }
-
-    @SuppressWarnings("unchecked")
     public Set<CnATreeElement> loadChildrenWithProperties(final Set<String> parentUuids,
             final String typeId) {
         final List<CnATreeElement> resultList = getDao().findByCallback(new HibernateCallback() {
@@ -156,33 +124,6 @@ public class ModelingMetaDao {
             }
         });
         return new HashSet<>(resultList);
-    }
-
-    @SuppressWarnings("unchecked")
-    public Set<CnATreeElement> loadLinkedElementsOfParents(final Collection<String> parentUuids) {
-        final List<CnATreeElement> resultList = getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(ModelingMetaDao.HQL_LOAD_CHILDREN_WITH_LINKS_DOWN)
-                        .setParameterList(UUIDS, parentUuids);
-                return query.list();
-            }
-        });
-        return new HashSet<>(resultList);
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<CnATreeElement> loadChildrenLinksParents(final Set<String> parentUuids,
-            final String typeId) {
-        return getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session
-                        .createQuery(ModelingMetaDao.HQL_LOAD_LINKED_SAFEGUARD_GROUPS_OF_MODULES)
-                        .setParameterList(UUIDS, parentUuids).setParameter(TYPE_ID, typeId);
-                return query.list();
-            }
-        });
     }
 
     /**

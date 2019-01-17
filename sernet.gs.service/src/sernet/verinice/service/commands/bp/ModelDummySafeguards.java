@@ -17,9 +17,7 @@
  ******************************************************************************/
 package sernet.verinice.service.commands.bp;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,40 +48,36 @@ public class ModelDummySafeguards implements Runnable {
 
     private static final Logger LOG = Logger.getLogger(ModelDummySafeguards.class);
 
-    private final ModelingMetaDao metaDao;
     private final ICommandService commandService;
     private final IDAOFactory daoFactory;
 
-    private final Set<String> moduleUuidsFromScope;
-    private final Set<String> safeguardGroupUuidsFromScope;
+    private final Collection<CnATreeElement> modulesFromScope;
+    private final Set<CnATreeElement> safeguardGroupsFromScope;
 
-    private List<CnATreeElement> safeguardGroups;
     private List<Link> linkList;
 
-    public ModelDummySafeguards(ModelingMetaDao metaDao, ICommandService commandService,
-            IDAOFactory daoFactory, ModelingData modelingData) {
-        this.metaDao = metaDao;
+    public ModelDummySafeguards(ICommandService commandService, IDAOFactory daoFactory,
+            ModelingData modelingData) {
         this.commandService = commandService;
         this.daoFactory = daoFactory;
-        this.moduleUuidsFromScope = modelingData.getModuleUuidsFromScope();
-        this.safeguardGroupUuidsFromScope = modelingData.getSafeguardGroupUuidsFromScope();
+        this.modulesFromScope = modelingData.getModulesFromScope();
+        this.safeguardGroupsFromScope = modelingData.getSafeguardGroupsFromScope();
     }
 
     @Override
     public void run() {
-        for (String uuid : moduleUuidsFromScope) {
+        for (CnATreeElement module : modulesFromScope) {
             try {
-                handleModule(uuid);
+                handleModule(module);
             } catch (Exception e) {
-                LOG.error("Error while handling module with UUID: " + uuid, e); //$NON-NLS-1$
+                LOG.error("Error while handling module with UUID: " + module.getUuid(), e); //$NON-NLS-1$
             }
         }
     }
 
-    private void handleModule(String uuid) throws CommandException {
-        Set<CnATreeElement> requirements = findSafeguardsByModuleUuid(uuid);
+    private void handleModule(CnATreeElement module) throws CommandException {
         linkList = new LinkedList<>();
-        for (CnATreeElement requirement : requirements) {
+        for (CnATreeElement requirement : module.getChildren()) {
             handleRequirement(requirement);
         }
         if (!linkList.isEmpty()) {
@@ -168,11 +162,8 @@ public class ModelDummySafeguards implements Runnable {
         CnATreeElement safeguardGroup = null;
         Set<CnATreeElement> children = element.getChildren();
         safeguardGroup = getSafeguardGroup(fullTitle, children);
-        if (safeguardGroup == null && !safeguardGroupUuidsFromScope.isEmpty()) {
-            if (safeguardGroups == null) {
-                safeguardGroups = metaDao.loadElementsWithProperties(safeguardGroupUuidsFromScope);
-            }
-            safeguardGroup = getSafeguardGroup(fullTitle, safeguardGroups);
+        if (safeguardGroup == null && !safeguardGroupsFromScope.isEmpty()) {
+            safeguardGroup = getSafeguardGroup(fullTitle, safeguardGroupsFromScope);
         }
         return safeguardGroup;
     }
@@ -198,20 +189,11 @@ public class ModelDummySafeguards implements Runnable {
                 element = link.getDependency();
             }
         }
-        if (element == null) {
-            return null;
-        }
-        return metaDao
-                .loadElementsWithChildrenProperties(Collections.singletonList(element.getUuid()))
-                .get(0);
+        return element;
     }
 
     private String getSafeguardForRequirementIdentifier(String identifier) {
         return identifier.replace(".A", ".M"); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
-    private Set<CnATreeElement> findSafeguardsByModuleUuid(String uuid) {
-        return metaDao.loadLinkedElementsOfParents(Arrays.asList(uuid));
     }
 
 }

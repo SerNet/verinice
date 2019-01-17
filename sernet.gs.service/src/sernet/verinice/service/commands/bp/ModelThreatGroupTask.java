@@ -19,16 +19,20 @@
  ******************************************************************************/
 package sernet.verinice.service.commands.bp;
 
-import java.util.HashSet;
-import java.util.List;
+import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IDAOFactory;
+import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -43,20 +47,20 @@ public class ModelThreatGroupTask extends ModelCopyTask {
 
     private static final Logger LOG = Logger.getLogger(ModelThreatGroupTask.class);
 
-    private final Set<String> moduleUuids;
+    private final Set<CnATreeElement> requirementGroups;
 
-    private Set<CnATreeElement> threatGroupsFromCompendium;
-
-    public ModelThreatGroupTask(ModelingMetaDao modelingMetaDao, ICommandService commandService,
-            IDAOFactory daoFactory, ModelingData modelingData) {
-        super(modelingMetaDao, commandService, daoFactory, modelingData, BpThreatGroup.TYPE_ID);
-        this.moduleUuids = modelingData.getModuleUuidsFromCompendium();
+    public ModelThreatGroupTask(ICommandService commandService, IDAOFactory daoFactory,
+            ModelingData modelingData) {
+        super(commandService, daoFactory, modelingData, BpThreatGroup.TYPE_ID);
+        this.requirementGroups = modelingData.getRequirementGroups();
     }
 
     @Override
     public Set<CnATreeElement> getGroupsFromCompendium() {
-        if (threatGroupsFromCompendium == null) {
-            loadCompendiumThreatGroups();
+        Set<CnATreeElement> threatGroupsFromCompendium = retrieveThreatGroupsFromModules();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Threat groups linked to modules: ");
+            logElements(threatGroupsFromCompendium);
         }
         return threatGroupsFromCompendium;
     }
@@ -72,16 +76,21 @@ public class ModelThreatGroupTask extends ModelCopyTask {
         return null;
     }
 
-    private void loadCompendiumThreatGroups() {
-        threatGroupsFromCompendium = new HashSet<>(loadThreatGroupsByModuleUuids());
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Threat groups linked to modules: ");
-            logElements(threatGroupsFromCompendium);
+    @SuppressWarnings("unchecked")
+    private Set<CnATreeElement> retrieveThreatGroupsFromModules() {
+        Set<Integer> dbIds = requirementGroups.stream()
+                .flatMap(module -> module.getChildren().stream())
+                .flatMap(requirement -> requirement.getLinksDown().stream())
+                .filter(link -> BpRequirement.REL_BP_REQUIREMENT_BP_THREAT
+                        .equals(link.getId().getTypeId()))
+                .map(CnALink::getDependency).map(CnATreeElement::getParent)
+                .map(CnATreeElement::getDbId).collect(Collectors.toSet());
+        if (dbIds.isEmpty()) {
+            return Collections.emptySet();
         }
+        return (Set<CnATreeElement>) daoFactory
+                .getDAO(BpThreatGroup.class).findByCriteria(DetachedCriteria
+                        .forClass(BpThreatGroup.class).add(Restrictions.in("dbId", dbIds)))
+                .stream().collect(Collectors.toSet());
     }
-
-    private List<CnATreeElement> loadThreatGroupsByModuleUuids() {
-        return metaDao.loadChildrenLinksParents(moduleUuids, BpThreatGroup.TYPE_ID);
-    }
-
 }

@@ -20,7 +20,6 @@ package sernet.verinice.service.commands.bp;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +46,6 @@ public abstract class ModelCopyTask implements Runnable {
 
     private static final Logger LOG = Logger.getLogger(ModelCopyTask.class);
 
-    protected final ModelingMetaDao metaDao;
     protected final ICommandService commandService;
     protected final IDAOFactory daoFactory;
 
@@ -59,10 +57,9 @@ public abstract class ModelCopyTask implements Runnable {
     // key: element from compendium, value: element from scope
     private Map<CnATreeElement, CnATreeElement> existingGroupsByCompendiumGroup;
 
-    public ModelCopyTask(ModelingMetaDao modelingMetaDao, ICommandService commandService,
-            IDAOFactory daoFactory, ModelingData modelingData, String handledGroupTypeId,
+    public ModelCopyTask(ICommandService commandService, IDAOFactory daoFactory,
+            ModelingData modelingData, String handledGroupTypeId,
             IPostProcessor... elementCopyPostProcessors) {
-        this.metaDao = modelingMetaDao;
         this.commandService = commandService;
         this.daoFactory = daoFactory;
         this.modelingData = modelingData;
@@ -78,7 +75,7 @@ public abstract class ModelCopyTask implements Runnable {
                 copyMissingGroups(target);
                 for (Map.Entry<CnATreeElement, CnATreeElement> entry : existingGroupsByCompendiumGroup
                         .entrySet()) {
-                    loadAndHandleExistingGroup(entry.getKey(), entry.getValue());
+                    handleExistingGroup(entry.getKey(), entry.getValue());
                     modelingData.addMappingForExistingElement(entry.getKey(), entry.getValue());
                 }
             }
@@ -149,25 +146,6 @@ public abstract class ModelCopyTask implements Runnable {
                 modelingData.addMappingForNewElement(missingGroups.get(i), newGroups.get(i));
             }
         }
-    }
-
-    private void loadAndHandleExistingGroup(CnATreeElement groupFromCompendium,
-            CnATreeElement groupFromScope) throws CommandException {
-        String uuidCompendium = groupFromCompendium.getUuid();
-        String uuidScope = groupFromScope.getUuid();
-        CnATreeElement elementCompendium = null;
-        CnATreeElement elementScope = null;
-        Set<CnATreeElement> elementsWithChildren = new HashSet<>(metaDao
-                .loadElementsWithChildrenProperties(Arrays.asList(uuidCompendium, uuidScope)));
-        for (CnATreeElement element : elementsWithChildren) {
-            if (element.getUuid().equals(uuidCompendium)) {
-                elementCompendium = element;
-            }
-            if (element.getUuid().equals(uuidScope)) {
-                elementScope = element;
-            }
-        }
-        handleExistingGroup(elementCompendium, elementScope);
     }
 
     private List<CnATreeElement> getMissingGroups(CnATreeElement targetWithChildren) {

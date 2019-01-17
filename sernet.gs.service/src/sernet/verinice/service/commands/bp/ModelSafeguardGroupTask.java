@@ -19,16 +19,20 @@
  ******************************************************************************/
 package sernet.verinice.service.commands.bp;
 
-import java.util.HashSet;
-import java.util.List;
+import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IDAOFactory;
+import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -43,20 +47,20 @@ public class ModelSafeguardGroupTask extends ModelCopyTask {
 
     private static final Logger LOG = Logger.getLogger(ModelSafeguardGroupTask.class);
 
-    private final Set<String> moduleUuids;
+    private final Set<CnATreeElement> requirementGroups;
 
-    private Set<CnATreeElement> safeguardGroupsFromCompendium;
-
-    public ModelSafeguardGroupTask(ModelingMetaDao modelingMetaDao, ICommandService commandService,
-            IDAOFactory daoFactory, ModelingData modelingData) {
-        super(modelingMetaDao, commandService, daoFactory, modelingData, SafeguardGroup.TYPE_ID);
-        this.moduleUuids = modelingData.getModuleUuidsFromCompendium();
+    public ModelSafeguardGroupTask(ICommandService commandService, IDAOFactory daoFactory,
+            ModelingData modelingData) {
+        super(commandService, daoFactory, modelingData, SafeguardGroup.TYPE_ID);
+        this.requirementGroups = modelingData.getRequirementGroups();
     }
 
     @Override
     public Set<CnATreeElement> getGroupsFromCompendium() {
-        if (safeguardGroupsFromCompendium == null) {
-            loadCompendiumSafeguardGroups();
+        Set<CnATreeElement> safeguardGroupsFromCompendium = retrieveSafeguardGroupsFromModules();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Safeguards linked to modules: ");
+            logElements(safeguardGroupsFromCompendium);
         }
         return safeguardGroupsFromCompendium;
     }
@@ -72,16 +76,21 @@ public class ModelSafeguardGroupTask extends ModelCopyTask {
         return null;
     }
 
-    private void loadCompendiumSafeguardGroups() {
-        safeguardGroupsFromCompendium = new HashSet<>(loadSafeguardGroupsByModuleUuids());
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Safeguards linked to modules: ");
-            logElements(safeguardGroupsFromCompendium);
+    @SuppressWarnings("unchecked")
+    private Set<CnATreeElement> retrieveSafeguardGroupsFromModules() {
+        Set<Integer> dbIds = requirementGroups.stream()
+                .flatMap(module -> module.getChildren().stream())
+                .flatMap(requirement -> requirement.getLinksDown().stream())
+                .filter(link -> BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD
+                        .equals(link.getId().getTypeId()))
+                .map(CnALink::getDependency).map(CnATreeElement::getParent)
+                .map(CnATreeElement::getDbId).collect(Collectors.toSet());
+        if (dbIds.isEmpty()) {
+            return Collections.emptySet();
         }
+        return (Set<CnATreeElement>) daoFactory
+                .getDAO(SafeguardGroup.class).findByCriteria(DetachedCriteria
+                        .forClass(SafeguardGroup.class).add(Restrictions.in("dbId", dbIds)))
+                .stream().collect(Collectors.toSet());
     }
-
-    private List<CnATreeElement> loadSafeguardGroupsByModuleUuids() {
-        return metaDao.loadChildrenLinksParents(moduleUuids, SafeguardGroup.TYPE_ID);
-    }
-
 }

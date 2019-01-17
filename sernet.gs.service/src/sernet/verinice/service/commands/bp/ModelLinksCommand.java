@@ -82,7 +82,8 @@ public class ModelLinksCommand extends GenericCommand {
         this.itNetwork = modelingData.getItNetwork();
         this.elementsFromScope = modelingData.getTargetElements();
         this.handleSafeguards = modelingData.isHandleSafeguards();
-        this.moduleUuidsFromScope = modelingData.getModuleUuidsFromScope();
+        this.moduleUuidsFromScope = modelingData.getModulesFromScope().stream()
+                .map(CnATreeElement::getUuid).collect(Collectors.toSet());
         this.requirementsFromCompendium = modelingData.getRequirementGroups().stream()
                 .flatMap(group -> group.getChildren().stream()).collect(Collectors.toSet());
     }

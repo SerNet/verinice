@@ -39,24 +39,17 @@ public class ModelingData {
     private final Set<CnATreeElement> targetElements;
     private final boolean handleSafeguards;
     private final boolean handleDummySafeguards;
-    private final Set<String> moduleUuidsFromCompendium;
     private final ItNetwork itNetwork;
     private final Map<CnATreeElement, CnATreeElement> copiedElementsByCompendiumElement = new HashMap<>();
     private final Set<CnATreeElement> existingElements = new HashSet<>();
 
-    public ModelingData(Set<String> moduleUuidsFromCompendium,
-            Set<CnATreeElement> requirementGroups, Set<CnATreeElement> targetElements,
+    public ModelingData(Set<CnATreeElement> requirementGroups, Set<CnATreeElement> targetElements,
             ItNetwork itNetwork, boolean handleSafeguards, boolean handleDummySafeguards) {
         this.itNetwork = itNetwork;
-        this.moduleUuidsFromCompendium = Collections.unmodifiableSet(moduleUuidsFromCompendium);
         this.requirementGroups = Collections.unmodifiableSet(requirementGroups);
         this.targetElements = Collections.unmodifiableSet(targetElements);
         this.handleSafeguards = handleSafeguards;
         this.handleDummySafeguards = handleDummySafeguards;
-    }
-
-    public Set<String> getModuleUuidsFromCompendium() {
-        return moduleUuidsFromCompendium;
     }
 
     public Set<CnATreeElement> getRequirementGroups() {
@@ -90,18 +83,18 @@ public class ModelingData {
 
     }
 
-    public Set<String> getModuleUuidsFromScope() {
+    public Set<CnATreeElement> getModulesFromScope() {
         return Stream
                 .concat(copiedElementsByCompendiumElement.values().stream(),
                         existingElements.stream())
                 .filter(item -> item.getTypeId().equals(BpRequirementGroup.TYPE_ID))
-                .map(CnATreeElement::getUuid).collect(Collectors.toSet());
+                .collect(Collectors.toSet());
     }
 
-    public Set<String> getSafeguardGroupUuidsFromScope() {
+    public Set<CnATreeElement> getSafeguardGroupsFromScope() {
         return copiedElementsByCompendiumElement.values().stream()
                 .filter(item -> item.getTypeId().equals(SafeguardGroup.TYPE_ID))
-                .map(CnATreeElement::getUuid).collect(Collectors.toSet());
+                .collect(Collectors.toSet());
     }
 
 }
