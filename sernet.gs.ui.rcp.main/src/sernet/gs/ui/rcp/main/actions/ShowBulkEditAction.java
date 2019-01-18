@@ -415,7 +415,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             Entity editEntity = elmt.getEntity();
             editEntity.copyEntity(dialogEntity);
             if (elmt instanceof BpThreat) {
-                Retriever.retrieveElement(elmt,
+                elmt = Retriever.retrieveElement(elmt,
                         RetrieveInfo.getPropertyInstance().setLinksUp(true));
                 RiskDeductionUtil.deduceRisk((BpThreat) elmt);
             }
