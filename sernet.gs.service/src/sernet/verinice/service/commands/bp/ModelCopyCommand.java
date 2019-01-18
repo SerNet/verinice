@@ -52,15 +52,20 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
     private String stationId;
     private transient ModelingMetaDao metaDao;
 
-    protected Set<CnATreeElement> targetElements;
-    protected Set<String> newModuleUuids = Collections.emptySet();
+    private Set<CnATreeElement> targetElements;
+    private Set<String> newGroupUuids = Collections.emptySet();
     // key: element from compendium, value: element from scope
-    protected Map<CnATreeElement, CnATreeElement> elementMap;
+    private Map<CnATreeElement, CnATreeElement> existingGroupsByCompendiumGroup;
 
     private List<IPostProcessor> copyPostProcessors;
 
-    public ModelCopyCommand(IPostProcessor... elementCopyPostProcessors) {
+    private final String handledGroupTypeId;
+
+    public ModelCopyCommand(Set<CnATreeElement> targetElements, String handledGroupTypeId,
+            IPostProcessor... elementCopyPostProcessors) {
         super();
+        this.targetElements = targetElements;
+        this.handledGroupTypeId = handledGroupTypeId;
         this.copyPostProcessors = Arrays.asList(elementCopyPostProcessors);
         this.stationId = ChangeLogEntry.STATION_ID;
     }
@@ -78,38 +83,41 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
     @Override
     public void execute() {
         try {
-            handleElement();
+            for (CnATreeElement target : targetElements) {
+                copyMissingGroups(target);
+                for (Map.Entry<CnATreeElement, CnATreeElement> entry : existingGroupsByCompendiumGroup
+                        .entrySet()) {
+                    loadAndHandleExistingGroup(entry.getKey(), entry.getValue());
+                }
+            }
         } catch (CommandException e) {
             LOG.error("Error while modeling.", e);
             throw new RuntimeCommandException("Error while modeling.", e);
         }
     }
 
-    protected abstract Set<CnATreeElement> getElementsFromCompendium();
+    protected abstract Set<CnATreeElement> getGroupsFromCompendium();
 
-    protected abstract boolean isSuitableType(CnATreeElement e1, CnATreeElement e2);
+    private boolean isSuitableType(CnATreeElement e1, CnATreeElement e2) {
+        return handledGroupTypeId.equals(e2.getTypeId())
+                && handledGroupTypeId.equals(e1.getTypeId());
+    }
 
     protected abstract String getIdentifier(CnATreeElement element);
 
-    private void handleElement() throws CommandException {
-        for (CnATreeElement target : targetElements) {
-            copyMissingElements(target);
-            handleChildren();
-        }
-    }
-
-    protected void handleChild(CnATreeElement elementCompendium, CnATreeElement elementScope)
-            throws CommandException {
-        Map<String, CnATreeElement> compendiumIdMap = getIdMapOfChildren(elementCompendium);
-        Map<String, CnATreeElement> scopeIdMap = getIdMapOfChildren(elementScope);
+    protected void handleExistingGroup(CnATreeElement groupFromCompendium,
+            CnATreeElement groupFromScope) throws CommandException {
+        Map<String, CnATreeElement> compendiumElementsByIdentifier = getIdMapOfChildren(
+                groupFromCompendium);
+        Map<String, CnATreeElement> scopeelementyByIdentifier = getIdMapOfChildren(groupFromScope);
         List<String> missingUuids = new LinkedList<>();
-        for (Map.Entry<String, CnATreeElement> entry : compendiumIdMap.entrySet()) {
-            if (!scopeIdMap.containsKey(entry.getKey())) {
+        for (Map.Entry<String, CnATreeElement> entry : compendiumElementsByIdentifier.entrySet()) {
+            if (!scopeelementyByIdentifier.containsKey(entry.getKey())) {
                 missingUuids.add(entry.getValue().getUuid());
             }
         }
         if (!missingUuids.isEmpty()) {
-            CopyCommand copyCommand = new CopyCommand(elementScope.getUuid(), missingUuids,
+            CopyCommand copyCommand = new CopyCommand(groupFromScope.getUuid(), missingUuids,
                     copyPostProcessors);
             getCommandService().executeCommand(copyCommand);
         }
@@ -123,25 +131,19 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
         return idMap;
     }
 
-    private void copyMissingElements(CnATreeElement target) throws CommandException {
-        List<String> missingUuids = createListOfMissingUuids(target);
-        if (!missingUuids.isEmpty()) {
-            CopyCommand copyCommand = new CopyCommand(target.getUuid(), missingUuids);
+    private void copyMissingGroups(CnATreeElement target) throws CommandException {
+        List<String> missingGroupUuids = getMissingGroupUUIDs(target);
+        if (!missingGroupUuids.isEmpty()) {
+            CopyCommand copyCommand = new CopyCommand(target.getUuid(), missingGroupUuids);
             copyCommand = getCommandService().executeCommand(copyCommand);
-            newModuleUuids = new HashSet<>(copyCommand.getNewElements());
+            newGroupUuids = new HashSet<>(copyCommand.getNewElements());
         }
     }
 
-    private void handleChildren() throws CommandException {
-        for (Map.Entry<CnATreeElement, CnATreeElement> entry : elementMap.entrySet()) {
-            loadAndHandleChild(entry);
-        }
-    }
-
-    private void loadAndHandleChild(Map.Entry<CnATreeElement, CnATreeElement> entry)
-            throws CommandException {
-        String uuidCompendium = entry.getKey().getUuid();
-        String uuidScope = entry.getValue().getUuid();
+    private void loadAndHandleExistingGroup(CnATreeElement groupFromCompendium,
+            CnATreeElement groupFromScope) throws CommandException {
+        String uuidCompendium = groupFromCompendium.getUuid();
+        String uuidScope = groupFromScope.getUuid();
         CnATreeElement elementCompendium = null;
         CnATreeElement elementScope = null;
         Set<CnATreeElement> elementsWithChildren = new HashSet<>(getMetaDao()
@@ -154,22 +156,22 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
                 elementScope = element;
             }
         }
-        handleChild(elementCompendium, elementScope);
+        handleExistingGroup(elementCompendium, elementScope);
     }
 
-    private List<String> createListOfMissingUuids(CnATreeElement targetWithChildren) {
-        List<String> uuids = new LinkedList<>();
+    private List<String> getMissingGroupUUIDs(CnATreeElement targetWithChildren) {
+        List<String> missingGroupUUIDs = new LinkedList<>();
         Set<CnATreeElement> targetChildren = targetWithChildren.getChildren();
-        elementMap = new HashMap<>(targetChildren.size());
-        for (CnATreeElement group : getElementsFromCompendium()) {
-            CnATreeElement existingElement = getElementFromChildren(targetChildren, group);
-            if (existingElement == null) {
-                uuids.add(group.getUuid());
-            } else if (isSuitableType(existingElement, group)) {
-                elementMap.put(group, existingElement);
+        existingGroupsByCompendiumGroup = new HashMap<>(targetChildren.size());
+        for (CnATreeElement group : getGroupsFromCompendium()) {
+            CnATreeElement existingGroup = getElementFromChildren(targetChildren, group);
+            if (existingGroup == null) {
+                missingGroupUUIDs.add(group.getUuid());
+            } else if (isSuitableType(existingGroup, group)) {
+                existingGroupsByCompendiumGroup.put(group, existingGroup);
             }
         }
-        return uuids;
+        return missingGroupUUIDs;
     }
 
     /**
@@ -179,7 +181,7 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
      *            An element
      * @return The element with the same identifier with element from set
      */
-    protected CnATreeElement getElementFromChildren(Set<CnATreeElement> targetChildren,
+    private CnATreeElement getElementFromChildren(Set<CnATreeElement> targetChildren,
             CnATreeElement element) {
         for (CnATreeElement child : targetChildren) {
             if (isEqual(element, child)) {
@@ -189,16 +191,12 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
         return null;
     }
 
-    protected boolean isEqual(CnATreeElement e1, CnATreeElement e2) {
-        boolean equals = false;
-        if (isSuitableType(e1, e2)
-                && ModelCommand.nullSafeEquals(getIdentifier(e1), getIdentifier(e2))) {
-            equals = true;
-        }
-        return equals;
+    private boolean isEqual(CnATreeElement e1, CnATreeElement e2) {
+        return isSuitableType(e1, e2)
+                && ModelCommand.nullSafeEquals(getIdentifier(e1), getIdentifier(e2));
     }
 
-    public ModelingMetaDao getMetaDao() {
+    protected ModelingMetaDao getMetaDao() {
         if (metaDao == null) {
             metaDao = new ModelingMetaDao(getDao());
         }
@@ -209,13 +207,9 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
         return getDaoFactory().getDAO(CnATreeElement.class);
     }
 
-    public Set<CnATreeElement> getTargetElements() {
-        return targetElements;
-    }
-
     public Set<String> getGroupUuidsFromScope() {
-        Set<String> uuids = new HashSet<>(newModuleUuids);
-        for (CnATreeElement element : elementMap.values()) {
+        Set<String> uuids = new HashSet<>(newGroupUuids);
+        for (CnATreeElement element : existingGroupsByCompendiumGroup.values()) {
             uuids.add(element.getUuid());
         }
         return uuids;

@@ -47,11 +47,12 @@ public class ModelModulesCommand extends ModelCopyCommand {
 
     public ModelModulesCommand(Set<CnATreeElement> modules, Set<CnATreeElement> targetElements,
             boolean handleSafeguards) {
-        super(new ChangeDeductionPostProcessor(handleSafeguards));
+        super(targetElements, BpRequirementGroup.TYPE_ID,
+                new ChangeDeductionPostProcessor(handleSafeguards));
         this.modulesCompendium = modules;
-        this.targetElements = targetElements;
     }
 
+    @Override
     protected String getIdentifier(CnATreeElement element) {
         if (element instanceof BpRequirementGroup) {
             return ((BpRequirementGroup) element).getIdentifier();
@@ -62,12 +63,8 @@ public class ModelModulesCommand extends ModelCopyCommand {
         return null;
     }
 
-    protected boolean isSuitableType(CnATreeElement e1, CnATreeElement e2) {
-        return BpRequirementGroup.TYPE_ID.equals(e2.getTypeId())
-                && BpRequirementGroup.TYPE_ID.equals(e1.getTypeId());
-    }
-
-    public Set<CnATreeElement> getElementsFromCompendium() {
+    @Override
+    public Set<CnATreeElement> getGroupsFromCompendium() {
         return modulesCompendium;
     }
 

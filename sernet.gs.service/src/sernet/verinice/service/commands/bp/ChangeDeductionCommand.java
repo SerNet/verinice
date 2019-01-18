@@ -41,12 +41,12 @@ public class ChangeDeductionCommand extends GenericCommand {
 
     private transient Set<String> requirementUUIDs;
 
-    private boolean deductImplementation = false;
+    private boolean deduceImplementation = false;
 
-    public ChangeDeductionCommand(Set<String> requirementUUIDs, boolean deductImplementation) {
+    public ChangeDeductionCommand(Set<String> requirementUUIDs, boolean deduceImplementation) {
         super();
         this.requirementUUIDs = requirementUUIDs;
-        this.deductImplementation = deductImplementation;
+        this.deduceImplementation = deduceImplementation;
     }
 
     @Override
@@ -62,8 +62,8 @@ public class ChangeDeductionCommand extends GenericCommand {
     }
 
     private void handleRequirement(BpRequirement requirement) {
-        requirement.setDeductionOfImplementation(deductImplementation);
-        getMetaDao().save(requirement);
+        requirement.setDeductionOfImplementation(deduceImplementation);
+        getDao().merge(requirement);
     }
 
     private Collection<CnATreeElement> loadRequirements() {

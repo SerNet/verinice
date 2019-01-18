@@ -22,7 +22,6 @@ package sernet.verinice.service.commands.bp;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -65,22 +64,9 @@ public class ModelingMetaDao {
             + "left join fetch propertyList.properties as props "
             + "where element.uuid in (:uuids)"; // $NON-NLS-6$
 
-    public static final String HQL_LOAD_ELEMENTS_OF_SCOPE = "select  safeguard from CnATreeElement safeguard "
+    private static final String HQL_LOAD_ELEMENTS_OF_SCOPE = "select  safeguard from CnATreeElement safeguard "
             + "join fetch safeguard.entity as entity " + JOIN_PROPERTIES
             + "where safeguard.objectType = :typeId " + "and safeguard.scopeId = :scopeId"; //$NON-NLS-2$
-
-    private static final String HQL_LOAD_ELEMENTS_WITH_PARENT = "select distinct element from CnATreeElement element "
-            + "join fetch element.parent as p1 " + "where element.uuid in (:uuids)"; //$NON-NLS-2$
-
-    private static final String HQL_LOAD_ELEMENTS_WITH_3_PARENTS = "select distinct element from CnATreeElement element "
-            + "join fetch element.parent as p1 " + "join fetch p1.parent as p2 "
-            + "join fetch p2.parent as p3 " + "where element.uuid in (:uuids)"; //$NON-NLS-2$
-
-    private static final String HQL_LOAD_LINKED_SAFEGUARDS_WITH_PROPERTIES_OF_MODULES = "select safeguard from CnATreeElement safeguard "
-            + "join safeguard.linksUp as linksUp " + "join linksUp.dependant as requirement "
-            + "join requirement.parent as module " + "join fetch safeguard.entity as entity "
-            + JOIN_PROPERTIES + "where safeguard.objectType = :typeId "
-            + "and module.uuid in (:uuids)"; //$NON-NLS-1$
 
     private static final String HQL_LOAD_CHILDREN_WITH_LINKS_DOWN = "select requirement from CnATreeElement requirement "
             + "join requirement.parent as module " + "join requirement.linksDown as linksDown "
@@ -154,42 +140,6 @@ public class ModelingMetaDao {
     }
 
     @SuppressWarnings("unchecked")
-    public List<CnATreeElement> loadElementsWithParent(final Collection<String> uuids) {
-        return getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(ModelingMetaDao.HQL_LOAD_ELEMENTS_WITH_PARENT)
-                        .setParameterList(UUIDS, uuids);
-                query.setReadOnly(true);
-                return query.list();
-            }
-        });
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<CnATreeElement> loadElementsWith3Parents(final Collection<String> uuids) {
-        return getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(ModelingMetaDao.HQL_LOAD_ELEMENTS_WITH_3_PARENTS)
-                        .setParameterList(UUIDS, uuids);
-                query.setReadOnly(true);
-                return query.list();
-            }
-        });
-    }
-
-    public Set<CnATreeElement> loadChildrenOfElement(String uuid) {
-        RetrieveInfo ri = RetrieveInfo.getChildrenInstance();
-        ri.setChildrenProperties(true);
-        CnATreeElement element = getDao().findByUuid(uuid, ri);
-        if (element == null) {
-            return Collections.emptySet();
-        }
-        return element.getChildren();
-    }
-
-    @SuppressWarnings("unchecked")
     public Set<CnATreeElement> loadChildrenWithProperties(final Set<String> parentUuids,
             final String typeId) {
         final List<CnATreeElement> resultList = getDao().findByCallback(new HibernateCallback() {
@@ -219,20 +169,6 @@ public class ModelingMetaDao {
             }
         });
         return new HashSet<>(resultList);
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<CnATreeElement> loadLinkedElementsWithPropertiesOfParents(
-            final Collection<String> parentUuids, final String typeId) {
-        return getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(
-                        ModelingMetaDao.HQL_LOAD_LINKED_SAFEGUARDS_WITH_PROPERTIES_OF_MODULES)
-                        .setParameterList(UUIDS, parentUuids).setParameter(TYPE_ID, typeId);
-                return query.list();
-            }
-        });
     }
 
     @SuppressWarnings("unchecked")
@@ -273,34 +209,6 @@ public class ModelingMetaDao {
         });
     }
 
-    public CnATreeElement save(CnATreeElement element) {
-        return getDao().merge(element);
-    }
-
-    public CnATreeElement loadElementWithPropertiesAndChildren(String uuid) {
-        return getDao().findByUuid(uuid,
-                RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
-    }
-
-    public CnATreeElement loadElementWithPropertiesAndChildren(Integer dbid) {
-        return getDao().retrieve(dbid,
-                RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
-    }
-
-    public CnATreeElement loadElementWithChildren(String uuid) {
-        return getDao().findByUuid(uuid, RetrieveInfo.getChildrenInstance());
-    }
-
-    public CnATreeElement loadElementWithChildren(Integer dbid) {
-        return getDao().retrieve(dbid, RetrieveInfo.getChildrenInstance());
-    }
-
-    public CnATreeElement loadElementWithChildrenProperties(String uuid) {
-        RetrieveInfo ri = RetrieveInfo.getChildrenInstance();
-        ri.setChildrenProperties(true);
-        return getDao().findByUuid(uuid, ri);
-    }
-
     public CnATreeElement loadElementWithProperties(Integer dbid) {
         return getDao().retrieve(dbid, RetrieveInfo.getPropertyInstance());
     }
@@ -309,7 +217,4 @@ public class ModelingMetaDao {
         return dao;
     }
 
-    public void setDao(IBaseDao<CnATreeElement, Serializable> dao) {
-        this.dao = dao;
-    }
 }

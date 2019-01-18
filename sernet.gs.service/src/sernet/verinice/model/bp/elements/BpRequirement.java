@@ -23,6 +23,8 @@ import static sernet.verinice.model.bp.DeductionImplementationUtil.isDeductiveIm
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import sernet.gs.service.StringUtil;
@@ -93,6 +95,27 @@ public class BpRequirement extends CnATreeElement
     public static final String REL_BP_REQUIREMENT_BP_DEVICE = "rel_bp_requirement_bp_device"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_NETWORK = "rel_bp_requirement_bp_network"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_ROOM = "rel_bp_requirement_bp_room"; //$NON-NLS-1$
+
+    private static final Map<String, String> RELATION_TYPES_BY_TARGET_OBJECT_TYPE = new HashMap<>();
+
+    static {
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(Application.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_APPLICATION);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(BusinessProcess.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_BUSINESSPROCESS);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(Device.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_DEVICE);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(IcsSystem.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_ICSSYSTEM);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(ItNetwork.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_ITNETWORK);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(ItSystem.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_ITSYSTEM);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(Network.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_NETWORK);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(Room.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_ROOM);
+    }
 
     private final IReevaluator protectionRequirementsProvider = new Reevaluator(this) {
         private static final long serialVersionUID = -2522374396559298793L;
@@ -369,6 +392,10 @@ public class BpRequirement extends CnATreeElement
             return false;
         }
         return TYPE_ID.equals(element.getTypeId());
+    }
+
+    public static String getLinkTypeToTargetObject(String objectType) {
+        return RELATION_TYPES_BY_TARGET_OBJECT_TYPE.get(objectType);
     }
 
     @Override

@@ -47,13 +47,12 @@ public class ModelSafeguardGroupCommand extends ModelCopyCommand {
     private transient Set<CnATreeElement> safeguardGroupsFromCompendium;
 
     public ModelSafeguardGroupCommand(Set<String> moduleUuids, Set<CnATreeElement> targetElements) {
-        super();
+        super(targetElements, SafeguardGroup.TYPE_ID);
         this.moduleUuids = moduleUuids;
-        this.targetElements = targetElements;
     }
 
     @Override
-    public Set<CnATreeElement> getElementsFromCompendium() {
+    public Set<CnATreeElement> getGroupsFromCompendium() {
         if (safeguardGroupsFromCompendium == null) {
             loadCompendiumSafeguardGroups();
         }
@@ -69,12 +68,6 @@ public class ModelSafeguardGroupCommand extends ModelCopyCommand {
             return ((SafeguardGroup) element).getTitle();
         }
         return null;
-    }
-
-    @Override
-    protected boolean isSuitableType(CnATreeElement e1, CnATreeElement e2) {
-        return SafeguardGroup.TYPE_ID.equals(e2.getTypeId())
-                && SafeguardGroup.TYPE_ID.equals(e1.getTypeId());
     }
 
     private void loadCompendiumSafeguardGroups() {

@@ -41,19 +41,18 @@ public class ModelThreatGroupCommand extends ModelCopyCommand {
 
     private static final long serialVersionUID = 1220698466409148043L;
 
-    private static final Logger LOG = Logger.getLogger(ModelSafeguardGroupCommand.class);
+    private static final Logger LOG = Logger.getLogger(ModelThreatGroupCommand.class);
 
     private Set<String> moduleUuids;
     private transient Set<CnATreeElement> threatGroupsFromCompendium;
 
     public ModelThreatGroupCommand(Set<String> moduleUuids, Set<CnATreeElement> targetElements) {
-        super();
+        super(targetElements, BpThreatGroup.TYPE_ID);
         this.moduleUuids = moduleUuids;
-        this.targetElements = targetElements;
     }
 
     @Override
-    public Set<CnATreeElement> getElementsFromCompendium() {
+    public Set<CnATreeElement> getGroupsFromCompendium() {
         if (threatGroupsFromCompendium == null) {
             loadCompendiumThreatGroups();
         }
@@ -69,12 +68,6 @@ public class ModelThreatGroupCommand extends ModelCopyCommand {
             return ((BpThreatGroup) element).getTitle();
         }
         return null;
-    }
-
-    @Override
-    protected boolean isSuitableType(CnATreeElement e1, CnATreeElement e2) {
-        return BpThreatGroup.TYPE_ID.equals(e2.getTypeId())
-                && BpThreatGroup.TYPE_ID.equals(e1.getTypeId());
     }
 
     private void loadCompendiumThreatGroups() {

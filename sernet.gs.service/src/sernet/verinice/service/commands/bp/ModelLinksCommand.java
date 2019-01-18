@@ -35,16 +35,9 @@ import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bp.elements.Application;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
-import sernet.verinice.model.bp.elements.BusinessProcess;
-import sernet.verinice.model.bp.elements.Device;
-import sernet.verinice.model.bp.elements.IcsSystem;
 import sernet.verinice.model.bp.elements.ItNetwork;
-import sernet.verinice.model.bp.elements.ItSystem;
-import sernet.verinice.model.bp.elements.Network;
-import sernet.verinice.model.bp.elements.Room;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Link;
@@ -63,39 +56,6 @@ public class ModelLinksCommand extends GenericCommand {
     private static final long serialVersionUID = -2954681557726115473L;
 
     private static final Logger LOG = Logger.getLogger(ModelLinksCommand.class);
-
-    public static final Map<String, String> ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS = new HashMap<>();
-    public static final Map<String, String> ELEMENT_TO_THREAT_LINK_TYPE_IDS = new HashMap<>();
-
-    static {
-        ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS.put(Application.TYPE_ID,
-                BpRequirement.REL_BP_REQUIREMENT_BP_APPLICATION);
-        ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS.put(BusinessProcess.TYPE_ID,
-                BpRequirement.REL_BP_REQUIREMENT_BP_BUSINESSPROCESS);
-        ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS.put(Device.TYPE_ID,
-                BpRequirement.REL_BP_REQUIREMENT_BP_DEVICE);
-        ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS.put(IcsSystem.TYPE_ID,
-                BpRequirement.REL_BP_REQUIREMENT_BP_ICSSYSTEM);
-        ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS.put(ItNetwork.TYPE_ID,
-                BpRequirement.REL_BP_REQUIREMENT_BP_ITNETWORK);
-        ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS.put(ItSystem.TYPE_ID,
-                BpRequirement.REL_BP_REQUIREMENT_BP_ITSYSTEM);
-        ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS.put(Network.TYPE_ID,
-                BpRequirement.REL_BP_REQUIREMENT_BP_NETWORK);
-        ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS.put(Room.TYPE_ID,
-                BpRequirement.REL_BP_REQUIREMENT_BP_ROOM);
-
-        ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(Application.TYPE_ID,
-                BpThreat.REL_BP_THREAT_BP_APPLICATION);
-        ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(BusinessProcess.TYPE_ID,
-                BpThreat.REL_BP_THREAT_BP_BUSINESSPROCESS);
-        ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(Device.TYPE_ID, BpThreat.REL_BP_THREAT_BP_DEVICE);
-        ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(IcsSystem.TYPE_ID, BpThreat.REL_BP_THREAT_BP_ICSSYSTEM);
-        ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(ItNetwork.TYPE_ID, BpThreat.REL_BP_THREAT_BP_ITNETWORK);
-        ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(ItSystem.TYPE_ID, BpThreat.REL_BP_THREAT_BP_ITSYSTEM);
-        ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(Network.TYPE_ID, BpThreat.REL_BP_THREAT_BP_NETWORK);
-        ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(Room.TYPE_ID, BpThreat.REL_BP_THREAT_BP_ROOM);
-    }
 
     private transient ModelingMetaDao metaDao;
 
@@ -187,13 +147,9 @@ public class ModelLinksCommand extends GenericCommand {
                 .get(BpRequirement.getIdentifierOfRequirement(requirementFromCompendium));
         if (validate(requirementScope, elementFromScope)) {
             return new Link(requirementScope, elementFromScope,
-                    getElementToRequirementLinkTypeId(elementFromScope.getObjectType()));
+                    BpRequirement.getLinkTypeToTargetObject(elementFromScope.getObjectType()));
         }
         return null;
-    }
-
-    private String getElementToRequirementLinkTypeId(String objectType) {
-        return ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS.get(objectType);
     }
 
     private Collection<? extends Link> linkThreatsWithTargetElements(
@@ -220,13 +176,9 @@ public class ModelLinksCommand extends GenericCommand {
                 .get(BpThreat.getIdentifierOfThreat(threatFromCompendium));
         if (validate(threatFromScope, elementFromScope)) {
             return new Link(threatFromScope, elementFromScope,
-                    getElementToThreatLinkTypeId(elementFromScope.getObjectType()));
+                    BpThreat.getLinkTypeToTargetObject(elementFromScope.getObjectType()));
         }
         return null;
-    }
-
-    private String getElementToThreatLinkTypeId(String objectType) {
-        return ELEMENT_TO_THREAT_LINK_TYPE_IDS.get(objectType);
     }
 
     private List<Link> createLinksToSafeguardAndThreat(CnATreeElement requirementFromCompendium,

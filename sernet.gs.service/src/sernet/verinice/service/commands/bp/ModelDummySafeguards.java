@@ -29,6 +29,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.hui.common.connect.IIdentifiableElement;
+import sernet.hui.common.connect.ITargetObject;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
@@ -150,7 +151,7 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
         Safeguard safeguard = createElement.getNewElement();
         safeguard.setIdentifier(getSafeguardForRequirementIdentifier(requirement.getIdentifier()));
         safeguard.setSecurityLevel(requirement.getSecurityLevel());
-        safeguard = (Safeguard) getMetaDao().save(safeguard);
+        safeguard = (Safeguard) getDao().merge(safeguard);
         return safeguard;
     }
 
@@ -161,7 +162,7 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
         createElement = getCommandService().executeCommand(createElement);
         SafeguardGroup safeguardGroup = createElement.getNewElement();
         safeguardGroup.setIdentifier(requirementGroup.getIdentifier());
-        return getMetaDao().save(safeguardGroup);
+        return getDao().merge(safeguardGroup);
     }
 
     private CnATreeElement getSafeguardGroup(CnATreeElement element, String fullTitle) {
@@ -194,10 +195,8 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
         // Find target element
         CnATreeElement element = null;
         Set<CnALink> links = requirement.getLinksDown();
-        Collection<String> linkTypes = ModelLinksCommand.ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS
-                .values();
         for (CnALink link : links) {
-            if (linkTypes.contains(link.getRelationId())) {
+            if (link.getDependency() instanceof ITargetObject) {
                 element = link.getDependency();
             }
         }
