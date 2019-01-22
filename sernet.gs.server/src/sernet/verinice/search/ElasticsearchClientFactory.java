@@ -56,7 +56,6 @@ public class ElasticsearchClientFactory implements DisposableBean {
 
     private Node node = null;
     private Client client = null;
-    private Settings settings = null;
     private IDirectoryCreator directoryCreator;
 
     public void init() {
@@ -177,20 +176,9 @@ public class ElasticsearchClientFactory implements DisposableBean {
                 .put("threadpool.search.queue_size", (cores * 5) * 50)
                 .put("threadpool.search.size", cores * 5).put("threadpool.search.type", "fixed");
 
-        builder = setOSDependentFileSystem(builder);
+        setOSDependentFileSystem(builder);
 
-        if (settings != null && builder == null) {
-            builder.put(settings);
-            if (LOG.isDebugEnabled()) {
-                if (builder.internalMap() == null || builder.internalMap().size() == 0) {
-                    LOG.debug("nothing is on the builder map");
-                }
-                for (Entry<String, String> entry : builder.internalMap().entrySet()) {
-                    LOG.debug("<" + entry.getKey() + ", " + entry.getValue() + ">");
-                }
-            }
-        }
-        return (builder != null) ? builder.build() : null;
+        return builder.build();
     }
 
     public IDirectoryCreator getDirectoryCreator() {
