@@ -138,10 +138,6 @@ public class ElasticsearchClientFactory implements DisposableBean {
     }
 
     protected Settings buildNodeSettings() {
-        final int cores = Runtime.getRuntime().availableProcessors();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Found " + cores + " useable cores on localhost");
-        }
         final int shards = 2;
         // Build settings
         ImmutableSettings.Builder builder = ImmutableSettings.settingsBuilder()
@@ -161,16 +157,7 @@ public class ElasticsearchClientFactory implements DisposableBean {
                 // EXPERIMENTAL, could cause perfomance issues, TEST
                 .put("index.store.compress.stored", true)
                 // EXPERIMENTAL, as above;
-                .put("index.store.compress.tv", true).put("compress.default.type", "snappy")
-                .put("threadpool.bulk.queue_size", (cores * 5) * 50)
-                // The size parameter controls the number of threads, and
-                // defaults to the number of cores times 5.
-                .put("threadpool.bulk.size", cores * 5).put("threadpool.bulk.type", "fixed")
-                .put("threadpool.index.queue_size", (cores * 5) * 50)
-                .put("threadpool.index.size", cores * 5).put("threadpool.index.type", "fixed")
-                .put("threadpool.search.queue_size", (cores * 5) * 50)
-                .put("threadpool.search.size", cores * 5).put("threadpool.search.type", "fixed");
-
+                .put("index.store.compress.tv", true).put("compress.default.type", "snappy");
         setOSDependentFileSystem(builder);
 
         return builder.build();
