@@ -116,44 +116,59 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
         checkRights(entity, getAuthService().getUsername());
     }
 
+    /*
+     * @see
+     * sernet.verinice.interfaces.IBaseDao#checkRights(java.io.Serializable,
+     * java.io.Serializable)
+     */
+    @Override
+    public void checkRights(Integer id, Integer scopeId) {
+        checkRights(id, scopeId, getAuthService().getUsername());
+    }
+
 	/* (non-Javadoc)
 	 * @see sernet.verinice.hibernate.TreeElementDao#checkRights(java.lang.Object, java.lang.String)
 	 */
 	@Override
-    public void checkRights(CnATreeElement entity, String username) /*throws SecurityException*/ { 
+    public void checkRights(CnATreeElement element, String username) {
 	    if (log.isDebugEnabled()) {
-            log.debug("Checking rights for entity: " + entity + " and username: " + username);
+            log.debug("Checking rights for entity: " + element + " and username: " + username);
         } 
-	    if (isPermissionHandlingNeeded()) {
-	        doCheckRights(entity, username);
-	    }
+        checkRights(element.getDbId(), element.getScopeId(), username);
     }
 
-    private void doCheckRights(CnATreeElement entity, String username) {
+    private void checkRights(Integer dbId, Integer scopeId, String username) {
+	    if (isPermissionHandlingNeeded()) {
+            doCheckRights(dbId, scopeId, username);
+        }
+    }
+
+    private void doCheckRights(Integer dbId, Integer scopeId, String username) {
         String[] roleArray = getDynamicRoles(username);
         if(roleArray==null) {
             log.error("Role array is null for user: " + username);
         }
         if(!hasAdminRole(roleArray)) {	    
-            checkRightsForNonAdmin(entity, username, roleArray);
+            checkRightsForNonAdmin(dbId, username, roleArray);
         }
-        if(isScopeOnly()
-           && !entity.getScopeId().equals(getConfigurationService().getScopeId(username))) {
-                final String message = "User: " + username + " has no right to write CnATreeElement with id: " + entity.getDbId();
+        if (isScopeOnly() && scopeId != null
+                && !scopeId.equals(getConfigurationService().getScopeId(username))) {
+            final String message = "User: " + username
+                    + " has no right to write CnATreeElement with id: " + dbId;
                 log.warn(message);
                 throw new SecurityException(message);
         }
     }
 
     @SuppressWarnings("unchecked")
-    protected void checkRightsForNonAdmin(CnATreeElement entity, String username,
+    protected void checkRightsForNonAdmin(Integer dbId, String username,
             String[] roleArray) {
         String hql = createHql(roleArray);
 
-        Object[] params = new Object[]{entity.getDbId(),Boolean.TRUE};
+        Object[] params = new Object[] { dbId, Boolean.TRUE };
         if (log.isDebugEnabled()) {
             log.debug("checkRights, hql: " + hql);
-            log.debug("checkRights, entity db-id: " + entity.getDbId() );
+            log.debug("checkRights, entity db-id: " + dbId);
         }
         List<Integer> idList = getPermissionDao().findByQuery(hql, params);
         if (log.isDebugEnabled()) {
@@ -163,7 +178,8 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
             }
         }
         if(idList==null || idList.isEmpty()) {
-            final String message = "User: " + username + " has no right to write CnATreeElement with id: " + entity.getDbId();
+            final String message = "User: " + username
+                    + " has no right to write CnATreeElement with id: " + dbId;
             log.warn(message);
             throw new SecurityException(message);
         }
