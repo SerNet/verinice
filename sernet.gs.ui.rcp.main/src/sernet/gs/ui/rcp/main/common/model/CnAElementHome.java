@@ -713,7 +713,7 @@ public final class CnAElementHome {
         return validationService;
     }
 
-    private void deleteValidations(CnATreeElement element) {
+    private void deleteValidations(CnATreeElement element) throws CommandException {
         if (element.getScopeId() != null && element.getDbId() != null) {
             getValidationService().deleteValidationsOfSubtree(element);
             CnAElementFactory.getModel(element).validationRemoved(element.getScopeId());

@@ -180,9 +180,11 @@ public class ValidationServiceTest extends CommandServiceProvider {
     
     /**
      * deletes given element from db and referencing validation elements
+     * 
      * @param element
+     * @throws CommandException
      */
-    private void deleteElement(CnATreeElement element){
+    private void deleteElement(CnATreeElement element) throws CommandException {
         assertNotNull(element);
         String uuid = element.getUuid();
         element = elementDao.findByUuid(uuid, RetrieveInfo.getPropertyInstance());
@@ -204,7 +206,7 @@ public class ValidationServiceTest extends CommandServiceProvider {
         }
     }
 
-    private void deleteValidations(CnATreeElement element) {
+    private void deleteValidations(CnATreeElement element) throws CommandException {
         if(element.isScope()){
             validationService.deleteValidationsOfSubtree(element);
             LOG.debug("Validations for Subtree of " + element.getTitle() + " deleted");
