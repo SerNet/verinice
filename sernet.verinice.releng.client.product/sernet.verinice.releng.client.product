@@ -785,6 +785,9 @@ Public License instead of this License.  But first, please read
          </text>
    </license>
 
+   <plugins>
+   </plugins>
+
    <features>
       <feature id="org.eclipse.e4.rcp.sernet" version="1.6.100.qualifier"/>
       <feature id="sernet.birt.feature" version="1.0.0"/>
