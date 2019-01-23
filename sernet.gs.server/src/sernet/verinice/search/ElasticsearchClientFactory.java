@@ -157,7 +157,7 @@ public class ElasticsearchClientFactory implements DisposableBean {
                 // EXPERIMENTAL, could cause perfomance issues, TEST
                 .put("index.store.compress.stored", true)
                 // EXPERIMENTAL, as above;
-                .put("index.store.compress.tv", true).put("compress.default.type", "snappy");
+                .put("index.store.compress.tv", true);
         setOSDependentFileSystem(builder);
 
         return builder.build();
