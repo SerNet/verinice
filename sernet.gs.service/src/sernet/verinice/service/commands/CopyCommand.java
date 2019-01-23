@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -130,20 +131,25 @@ public class CopyCommand extends GenericCommand {
             newElements = new ArrayList<>(rootElementsToCopy.size());
             groupToPasteTo = getDao().findByUuid(uuidGroup,
                     RetrieveInfo.getChildrenInstance().setParent(true).setProperties(true));
-            final Map<String, String> sourceDestMap = new HashMap<>();
+            boolean postProcessorsPresent = postProcessorList != null
+                    && !postProcessorList.isEmpty();
+            Optional<Map<String, String>> sourceDestMap = postProcessorsPresent
+                    ? Optional.of(new HashMap<>())
+                    : Optional.empty();
             for (final CnATreeElement copyElement : rootElementsToCopy) {
                 final CnATreeElement newElement = copy(groupToPasteTo, copyElement, sourceDestMap);
                 if (newElement != null && newElement.getUuid() != null) {
                     newElements.add(newElement.getUuid());
                 }
             }
-            if (postProcessorList != null && !postProcessorList.isEmpty()) {
+            if (postProcessorsPresent) {
                 getDao().flush();
                 getDao().clear();
                 final List<String> copyElementUuidList = rootElementsToCopy.stream()
                         .map(CnATreeElement::getUuid).collect(Collectors.toList());
                 for (final IPostProcessor postProcessor : postProcessorList) {
-                    postProcessor.process(getCommandService(), copyElementUuidList, sourceDestMap);
+                    postProcessor.process(getCommandService(), copyElementUuidList,
+                            sourceDestMap.get());
                 }
             }
         } catch (final Exception e) {
@@ -153,7 +159,7 @@ public class CopyCommand extends GenericCommand {
     }
 
     private CnATreeElement copy(final CnATreeElement groupToCopyTo,
-            final CnATreeElement elementToCopy, final Map<String, String> sourceDestMap)
+            final CnATreeElement elementToCopy, final Optional<Map<String, String>> sourceDestMap)
             throws CommandException, IOException {
         CnATreeElement elementCopy = elementToCopy;
         if (elementToCopy != null && elementToCopy.getTypeId() != null
@@ -179,7 +185,7 @@ public class CopyCommand extends GenericCommand {
     }
 
     private CnATreeElement copyRiskAnalysis(CnATreeElement group,
-            CnATreeElement finishedRiskAnalysis, Map<String, String> sourceDestMap)
+            CnATreeElement finishedRiskAnalysis, Optional<Map<String, String>> sourceDestMap)
             throws CommandException, IOException {
 
         CnATreeElement copyOfFinishedRiskAnalysis = saveCopy(group, finishedRiskAnalysis);
@@ -191,8 +197,8 @@ public class CopyCommand extends GenericCommand {
     }
 
     private void copyFinishedRiskAnalysisLists(FinishedRiskAnalysis oldFinishedRiskAnalysis,
-            FinishedRiskAnalysis copyOfFinishedRiskAnalysis, Map<String, String> sourceDestMap)
-            throws CommandException, IOException {
+            FinishedRiskAnalysis copyOfFinishedRiskAnalysis,
+            Optional<Map<String, String>> sourceDestMap) throws CommandException, IOException {
 
         FindRiskAnalysisListsByParentID command = new FindRiskAnalysisListsByParentID(
                 oldFinishedRiskAnalysis.getDbId());
@@ -210,7 +216,7 @@ public class CopyCommand extends GenericCommand {
     }
 
     private void copyAssociatedGefaehrdungen(FinishedRiskAnalysis copyOfFinishedRiskAnalysis,
-            Map<String, String> sourceDestMap, FinishedRiskAnalysisLists listsToCopy,
+            Optional<Map<String, String>> sourceDestMap, FinishedRiskAnalysisLists listsToCopy,
             FinishedRiskAnalysisLists newLists) throws CommandException, IOException {
 
         for (GefaehrdungsUmsetzung gefaehrdung : listsToCopy.getAssociatedGefaehrdungen()) {
@@ -248,16 +254,16 @@ public class CopyCommand extends GenericCommand {
     }
 
     private void afterCopy(CnATreeElement original, CnATreeElement copy,
-            Map<String, String> sourceDestMap) {
-
-        sourceDestMap.put(original.getUuid(), copy.getUuid());
+            Optional<Map<String, String>> sourceDestMap) {
+        sourceDestMap.ifPresent(map -> map.put(original.getUuid(), copy.getUuid()));
         if (number % FLUSH_LEVEL == 0) {
             getDao().flush();
         }
     }
 
-    private void copyChildrenIfExistant(CnATreeElement element, Map<String, String> sourceDestMap,
-            CnATreeElement elementCopy) throws CommandException, IOException {
+    private void copyChildrenIfExistant(CnATreeElement element,
+            Optional<Map<String, String>> sourceDestMap, CnATreeElement elementCopy)
+            throws CommandException, IOException {
         if (element.getChildren() != null) {
             for (CnATreeElement child : element.getChildren()) {
                 copy(elementCopy, child, sourceDestMap);
