@@ -65,7 +65,7 @@ public class CopyCommand extends GenericCommand {
     private static final long serialVersionUID = -269076325994387265L;
     private static final Logger logger = Logger.getLogger(CopyCommand.class);
 
-    private static final int FLUSH_LEVEL = 10;
+    private static final int FLUSH_LEVEL = 50;
 
     private String uuidGroup;
 
@@ -256,7 +256,7 @@ public class CopyCommand extends GenericCommand {
     private void afterCopy(CnATreeElement original, CnATreeElement copy,
             Optional<Map<String, String>> sourceDestMap) {
         sourceDestMap.ifPresent(map -> map.put(original.getUuid(), copy.getUuid()));
-        if (number % FLUSH_LEVEL == 0) {
+        if (number > 0 && number % FLUSH_LEVEL == 0) {
             getDao().flush();
         }
     }
