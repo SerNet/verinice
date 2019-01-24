@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.service.commands.bp;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -30,14 +29,13 @@ import org.apache.log4j.Logger;
 
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITargetObject;
-import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IDAOFactory;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
-import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Link;
@@ -48,29 +46,31 @@ import sernet.verinice.service.commands.CreateMultipleLinks;
  * Creates a dummy safeguard for a requirement if no safeguard is linked to
  * requirement.
  */
-public class ModelDummySafeguards extends ChangeLoggingCommand {
-
-    private static final long serialVersionUID = -5967763349544568712L;
+public class ModelDummySafeguards implements Runnable {
 
     private static final Logger LOG = Logger.getLogger(ModelDummySafeguards.class);
 
-    private Set<String> moduleUuidsFromScope;
-    private Set<String> safeguardGroupUuidsFromScope;
+    private final ModelingMetaDao metaDao;
+    private final ICommandService commandService;
+    private final IDAOFactory daoFactory;
+
+    private final Set<String> moduleUuidsFromScope;
+    private final Set<String> safeguardGroupUuidsFromScope;
+
     private List<CnATreeElement> safeguardGroups;
+    private List<Link> linkList;
 
-    private transient List<Link> linkList;
-
-    private transient ModelingMetaDao metaDao;
-    private String stationId;
-
-    public ModelDummySafeguards(ModelingMetaDao metaDao, ModelingData modelingData) {
+    public ModelDummySafeguards(ModelingMetaDao metaDao, ICommandService commandService,
+            IDAOFactory daoFactory, ModelingData modelingData) {
         this.metaDao = metaDao;
+        this.commandService = commandService;
+        this.daoFactory = daoFactory;
         this.moduleUuidsFromScope = modelingData.getModuleUuidsFromScope();
         this.safeguardGroupUuidsFromScope = modelingData.getSafeguardGroupUuidsFromScope();
     }
 
     @Override
-    public void execute() {
+    public void run() {
         for (String uuid : moduleUuidsFromScope) {
             try {
                 handleModule(uuid);
@@ -88,7 +88,7 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
         }
         if (!linkList.isEmpty()) {
             CreateMultipleLinks createMultipleLinks = new CreateMultipleLinks(linkList);
-            getCommandService().executeCommand(createMultipleLinks);
+            commandService.executeCommand(createMultipleLinks);
         }
     }
 
@@ -146,11 +146,11 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
                 Safeguard.class,
                 requirement.getTitle() + " [" + Messages.getString("ModelDummySafeguards.6") + "]", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 true, true);
-        createElement = getCommandService().executeCommand(createElement);
+        createElement = commandService.executeCommand(createElement);
         Safeguard safeguard = createElement.getNewElement();
         safeguard.setIdentifier(getSafeguardForRequirementIdentifier(requirement.getIdentifier()));
         safeguard.setSecurityLevel(requirement.getSecurityLevel());
-        safeguard = (Safeguard) getDao().merge(safeguard);
+        safeguard = daoFactory.getDAO(Safeguard.class).merge(safeguard);
         return safeguard;
     }
 
@@ -158,10 +158,10 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
             BpRequirementGroup requirementGroup) throws CommandException {
         CreateElement<SafeguardGroup> createElement = new CreateElement<>(parent,
                 SafeguardGroup.class, requirementGroup.getTitle(), true, true);
-        createElement = getCommandService().executeCommand(createElement);
+        createElement = commandService.executeCommand(createElement);
         SafeguardGroup safeguardGroup = createElement.getNewElement();
         safeguardGroup.setIdentifier(requirementGroup.getIdentifier());
-        return getDao().merge(safeguardGroup);
+        return daoFactory.getDAO(SafeguardGroup.class).merge(safeguardGroup);
     }
 
     private CnATreeElement getSafeguardGroup(CnATreeElement element, String fullTitle) {
@@ -170,8 +170,7 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
         safeguardGroup = getSafeguardGroup(fullTitle, children);
         if (safeguardGroup == null && !safeguardGroupUuidsFromScope.isEmpty()) {
             if (safeguardGroups == null) {
-                safeguardGroups = getMetaDao()
-                        .loadElementsWithProperties(safeguardGroupUuidsFromScope);
+                safeguardGroups = metaDao.loadElementsWithProperties(safeguardGroupUuidsFromScope);
             }
             safeguardGroup = getSafeguardGroup(fullTitle, safeguardGroups);
         }
@@ -202,7 +201,7 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
         if (element == null) {
             return null;
         }
-        return getMetaDao()
+        return metaDao
                 .loadElementsWithChildrenProperties(Collections.singletonList(element.getUuid()))
                 .get(0);
     }
@@ -211,28 +210,8 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
         return identifier.replace(".A", ".M"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    @Override
-    public String getStationId() {
-        return stationId;
-    }
-
-    @Override
-    public int getChangeType() {
-        return ChangeLogEntry.TYPE_INSERT;
-    }
-
     private Set<CnATreeElement> findSafeguardsByModuleUuid(String uuid) {
-        return getMetaDao().loadLinkedElementsOfParents(Arrays.asList(uuid));
+        return metaDao.loadLinkedElementsOfParents(Arrays.asList(uuid));
     }
 
-    public ModelingMetaDao getMetaDao() {
-        if (metaDao == null) {
-            metaDao = new ModelingMetaDao(getDao());
-        }
-        return metaDao;
-    }
-
-    private IBaseDao<CnATreeElement, Serializable> getDao() {
-        return getDaoFactory().getDAO(CnATreeElement.class);
-    }
 }

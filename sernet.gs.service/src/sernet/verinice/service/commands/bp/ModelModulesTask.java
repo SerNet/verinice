@@ -27,26 +27,27 @@ import java.util.Set;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IDAOFactory;
 import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * This command models modules (requirements groups) from the ITBP compendium
- * with certain target object types of an IT network.
+ * This task models modules (requirements groups) from the ITBP compendium with
+ * certain target object types of an IT network.
  * 
  * See {@link ModelCommand} for more documentation about the modeling process.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class ModelModulesCommand extends ModelCopyCommand {
+public class ModelModulesTask extends ModelCopyTask {
 
-    private static final long serialVersionUID = -9211614522872500071L;
-    private transient Set<CnATreeElement> modulesCompendium;
+    private Set<CnATreeElement> modulesCompendium;
 
-    public ModelModulesCommand(ModelingMetaDao modelingMetaDao, ModelingData modelingData) {
-        super(modelingMetaDao, modelingData, BpRequirementGroup.TYPE_ID,
+    public ModelModulesTask(ModelingMetaDao modelingMetaDao, ICommandService commandService,
+            IDAOFactory daoFactory, ModelingData modelingData) {
+        super(modelingMetaDao, commandService, daoFactory, modelingData, BpRequirementGroup.TYPE_ID,
                 new ChangeDeductionPostProcessor(modelingData.isHandleSafeguards()));
         this.modulesCompendium = modelingData.getRequirementGroups();
     }

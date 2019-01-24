@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.service.commands.bp;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,60 +32,47 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.RuntimeCommandException;
-import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IDAOFactory;
 import sernet.verinice.interfaces.IPostProcessor;
-import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CopyCommand;
 
 /**
  * Abstract base class for modeling modules and safeguard groups. The modules
- * and safeguard groups are copied and pasted as childs of the elements.
+ * and safeguard groups are copied and pasted as children of the elements.
  */
-public abstract class ModelCopyCommand extends ChangeLoggingCommand {
+public abstract class ModelCopyTask implements Runnable {
 
-    private static final long serialVersionUID = -17533077608768778L;
+    private static final Logger LOG = Logger.getLogger(ModelCopyTask.class);
 
-    private static final Logger LOG = Logger.getLogger(ModelCopyCommand.class);
+    protected final ModelingMetaDao metaDao;
+    protected final ICommandService commandService;
+    protected final IDAOFactory daoFactory;
 
-    private String stationId;
-    private transient ModelingMetaDao metaDao;
+    protected final ModelingData modelingData;
+    private final Set<CnATreeElement> targetElements;
+    private final String handledGroupTypeId;
+    private final List<IPostProcessor> copyPostProcessors;
 
-    private Set<CnATreeElement> targetElements;
     // key: element from compendium, value: element from scope
     private Map<CnATreeElement, CnATreeElement> existingGroupsByCompendiumGroup;
 
-    private List<IPostProcessor> copyPostProcessors;
-
-    private final String handledGroupTypeId;
-
-    protected transient ModelingData modelingData;
-
-    public ModelCopyCommand(ModelingMetaDao modelingMetaDao, ModelingData modelingData,
-            String handledGroupTypeId, IPostProcessor... elementCopyPostProcessors) {
+    public ModelCopyTask(ModelingMetaDao modelingMetaDao, ICommandService commandService,
+            IDAOFactory daoFactory, ModelingData modelingData, String handledGroupTypeId,
+            IPostProcessor... elementCopyPostProcessors) {
         this.metaDao = modelingMetaDao;
-
+        this.commandService = commandService;
+        this.daoFactory = daoFactory;
         this.modelingData = modelingData;
         this.targetElements = modelingData.getTargetElements();
         this.handledGroupTypeId = handledGroupTypeId;
         this.copyPostProcessors = Arrays.asList(elementCopyPostProcessors);
-        this.stationId = ChangeLogEntry.STATION_ID;
     }
 
     @Override
-    public String getStationId() {
-        return stationId;
-    }
-
-    @Override
-    public int getChangeType() {
-        return ChangeLogEntry.TYPE_INSERT;
-    }
-
-    @Override
-    public void execute() {
+    public void run() {
         try {
             for (CnATreeElement target : targetElements) {
                 copyMissingGroups(target);
@@ -132,7 +118,7 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
                     missingElements.stream().map(CnATreeElement::getUuid)
                             .collect(Collectors.toList()),
                     copyPostProcessors, modelingData);
-            getCommandService().executeCommand(copyCommand);
+            commandService.executeCommand(copyCommand);
         }
     }
 
@@ -149,10 +135,10 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
         if (!missingGroups.isEmpty()) {
             CopyCommand copyCommand = new CopyCommand(target.getUuid(), missingGroups.stream()
                     .map(CnATreeElement::getUuid).collect(Collectors.toList()));
-            copyCommand = getCommandService().executeCommand(copyCommand);
+            copyCommand = commandService.executeCommand(copyCommand);
             List<String> newGroupUuids = copyCommand.getNewElements();
             @SuppressWarnings("unchecked")
-            List<CnATreeElement> newGroups = getDaoFactory().getDAO(handledGroupTypeId)
+            List<CnATreeElement> newGroups = daoFactory.getDAO(handledGroupTypeId)
                     .findByCriteria(DetachedCriteria.forClass(CnATreeElement.class)
                             .add(Restrictions.in(CnATreeElement.UUID, newGroupUuids)));
             if (newGroups.size() != missingGroups.size()) {
@@ -171,7 +157,7 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
         String uuidScope = groupFromScope.getUuid();
         CnATreeElement elementCompendium = null;
         CnATreeElement elementScope = null;
-        Set<CnATreeElement> elementsWithChildren = new HashSet<>(getMetaDao()
+        Set<CnATreeElement> elementsWithChildren = new HashSet<>(metaDao
                 .loadElementsWithChildrenProperties(Arrays.asList(uuidCompendium, uuidScope)));
         for (CnATreeElement element : elementsWithChildren) {
             if (element.getUuid().equals(uuidCompendium)) {
@@ -219,17 +205,6 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
     private boolean isEqual(CnATreeElement e1, CnATreeElement e2) {
         return isSuitableType(e1, e2)
                 && ModelCommand.nullSafeEquals(getIdentifier(e1), getIdentifier(e2));
-    }
-
-    protected ModelingMetaDao getMetaDao() {
-        if (metaDao == null) {
-            metaDao = new ModelingMetaDao(getDao());
-        }
-        return metaDao;
-    }
-
-    private IBaseDao<CnATreeElement, Serializable> getDao() {
-        return getDaoFactory().getDAO(CnATreeElement.class);
     }
 
     protected void logElements(Collection<?> collection) {

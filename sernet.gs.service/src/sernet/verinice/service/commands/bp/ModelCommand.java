@@ -112,6 +112,7 @@ public class ModelCommand extends ChangeLoggingCommand {
             ModelingData modelingData = new ModelingData(moduleUuidsFromCompendium,
                     requirementGroups, targetElements, itNetwork, handleSafeguards,
                     handleDummySafeguards);
+
             handleModules(modelingData);
             if (isHandleSafeguards()) {
                 handleSafeguards(modelingData);
@@ -126,24 +127,24 @@ public class ModelCommand extends ChangeLoggingCommand {
             LOG.error("Error while modeling.", e);
             throw new RuntimeCommandException("Error while modeling.", e);
         }
-
     }
 
-    private void handleModules(ModelingData modelingData) throws CommandException {
-        ModelCopyCommand modelModulesCommand = new ModelModulesCommand(metaDao, modelingData);
-        getCommandService().executeCommand(modelModulesCommand);
+    private void handleModules(ModelingData modelingData) {
+        ModelCopyTask modelModulesTask = new ModelModulesTask(metaDao, getCommandService(),
+                getDaoFactory(), modelingData);
+        modelModulesTask.run();
     }
 
-    private void handleSafeguards(ModelingData modelingData) throws CommandException {
-        ModelSafeguardGroupCommand modelSafeguardsCommand = new ModelSafeguardGroupCommand(metaDao,
-                modelingData);
-        getCommandService().executeCommand(modelSafeguardsCommand);
+    private void handleSafeguards(ModelingData modelingData) {
+        ModelSafeguardGroupTask modelSafeguardsTask = new ModelSafeguardGroupTask(metaDao,
+                getCommandService(), getDaoFactory(), modelingData);
+        modelSafeguardsTask.run();
     }
 
-    private void handleThreats(ModelingData modelingData) throws CommandException {
-        ModelThreatGroupCommand modelThreatsCommand = new ModelThreatGroupCommand(metaDao,
-                modelingData);
-        getCommandService().executeCommand(modelThreatsCommand);
+    private void handleThreats(ModelingData modelingData) {
+        ModelThreatGroupTask modelThreatsTask = new ModelThreatGroupTask(metaDao,
+                getCommandService(), getDaoFactory(), modelingData);
+        modelThreatsTask.run();
     }
 
     private void createLinks(ModelingData modelingData) throws CommandException {
@@ -151,9 +152,10 @@ public class ModelCommand extends ChangeLoggingCommand {
         getCommandService().executeCommand(modelLinksCommand);
     }
 
-    private void createDummySafeguards(ModelingData modelingData) throws CommandException {
-        ModelDummySafeguards modelDummySafeguards = new ModelDummySafeguards(metaDao, modelingData);
-        getCommandService().executeCommand(modelDummySafeguards);
+    private void createDummySafeguards(ModelingData modelingData) {
+        ModelDummySafeguards modelDummySafeguards = new ModelDummySafeguards(metaDao,
+                getCommandService(), getDaoFactory(), modelingData);
+        modelDummySafeguards.run();
     }
 
     private void saveReturnValues(ItNetwork itNetwork) {

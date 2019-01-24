@@ -37,11 +37,10 @@ public class ChangeDeductionCommand extends GenericCommand {
 
     private static final Logger LOG = Logger.getLogger(ChangeDeductionCommand.class);
 
-    private transient ModelingMetaDao metaDao;
-
     private transient Set<String> requirementUUIDs;
+    private final boolean deduceImplementation;
 
-    private boolean deduceImplementation = false;
+    private transient ModelingMetaDao metaDao;
 
     public ChangeDeductionCommand(Set<String> requirementUUIDs, boolean deduceImplementation) {
         super();

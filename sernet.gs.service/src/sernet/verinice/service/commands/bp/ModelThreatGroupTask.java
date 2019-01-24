@@ -25,29 +25,31 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IDAOFactory;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * This command models threat groups from the ITBP compendium with certain
- * target object types of an IT network.
+ * This task models threat groups from the ITBP compendium with certain target
+ * object types of an IT network.
  * 
  * See {@link ModelCommand} for more documentation about the modeling process.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class ModelThreatGroupCommand extends ModelCopyCommand {
+public class ModelThreatGroupTask extends ModelCopyTask {
 
-    private static final long serialVersionUID = 1220698466409148043L;
+    private static final Logger LOG = Logger.getLogger(ModelThreatGroupTask.class);
 
-    private static final Logger LOG = Logger.getLogger(ModelThreatGroupCommand.class);
+    private final Set<String> moduleUuids;
 
-    private Set<String> moduleUuids;
-    private transient Set<CnATreeElement> threatGroupsFromCompendium;
+    private Set<CnATreeElement> threatGroupsFromCompendium;
 
-    public ModelThreatGroupCommand(ModelingMetaDao modelingMetaDao, ModelingData modelingData) {
-        super(modelingMetaDao, modelingData, BpThreatGroup.TYPE_ID);
+    public ModelThreatGroupTask(ModelingMetaDao modelingMetaDao, ICommandService commandService,
+            IDAOFactory daoFactory, ModelingData modelingData) {
+        super(modelingMetaDao, commandService, daoFactory, modelingData, BpThreatGroup.TYPE_ID);
         this.moduleUuids = modelingData.getModuleUuidsFromCompendium();
     }
 
@@ -79,7 +81,7 @@ public class ModelThreatGroupCommand extends ModelCopyCommand {
     }
 
     private List<CnATreeElement> loadThreatGroupsByModuleUuids() {
-        return getMetaDao().loadChildrenLinksParents(moduleUuids, BpThreatGroup.TYPE_ID);
+        return metaDao.loadChildrenLinksParents(moduleUuids, BpThreatGroup.TYPE_ID);
     }
 
 }
