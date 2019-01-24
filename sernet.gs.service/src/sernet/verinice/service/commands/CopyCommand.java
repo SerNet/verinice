@@ -282,21 +282,15 @@ public class CopyCommand extends GenericCommand {
             }
 
             if (toGroup.getChildren() != null && !toGroup.getChildren().isEmpty()) {
+                final String title = newElement.getTitle();
+                String prospectiveTitle = title;
                 if (newElement instanceof GefaehrdungsUmsetzung) {
-                    final String title = newElement.getTitle();
-                    final String copyGefaehrdungtitle = ((GefaehrdungsUmsetzung) newElement)
-                            .getText();
-                    Set<CnATreeElement> siblings = toGroup.getChildren();
-                    siblings.remove(newElement);
-                    siblings = removeDifferentTypes(siblings, newElement.getTypeId());
-                    newElement.setTitel(getUniqueTitle(title, copyGefaehrdungtitle, siblings, 0));
-                } else {
-                    final String title = newElement.getTitle();
-                    Set<CnATreeElement> siblings = toGroup.getChildren();
-                    siblings.remove(newElement);
-                    siblings = removeDifferentTypes(siblings, newElement.getTypeId());
-                    newElement.setTitel(getUniqueTitle(title, title, siblings, 0));
+                    prospectiveTitle = ((GefaehrdungsUmsetzung) newElement).getText();
                 }
+                Set<CnATreeElement> siblings = toGroup.getChildren();
+                siblings.remove(newElement);
+                siblings = removeDifferentTypes(siblings, newElement.getTypeId());
+                newElement.setTitel(getUniqueTitle(title, prospectiveTitle, siblings, 0));
             }
         }
         SaveElement<CnATreeElement> saveCommand = new SaveElement<>(newElement);
