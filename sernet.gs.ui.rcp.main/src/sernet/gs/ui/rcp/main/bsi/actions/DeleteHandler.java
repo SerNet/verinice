@@ -38,7 +38,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -70,7 +69,6 @@ import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.rcp.RightsEnabledHandler;
 import sernet.verinice.service.commands.LoadConfiguration;
-import sernet.verinice.service.commands.crud.LoadChildrenForExpansion;
 import sernet.verinice.service.commands.crud.LoadReportElements;
 import sernet.verinice.service.commands.crud.PrepareObjectWithAccountDataForDeletion;
 
@@ -84,8 +82,6 @@ public class DeleteHandler extends RightsEnabledHandler {
     private static final Logger LOG = Logger.getLogger(DeleteHandler.class);
 
     protected static final String DEFAULT_ERR_MSG = "Error while deleting element.";
-
-    protected IWorkbenchPart targetPart;
 
     /*
      * 
@@ -394,14 +390,6 @@ public class DeleteHandler extends RightsEnabledHandler {
         }
 
         return false;
-    }
-
-    protected CnATreeElement loadChildren(CnATreeElement element) throws CommandException {
-        LoadChildrenForExpansion command = new LoadChildrenForExpansion(element);
-        command = ServiceFactory.lookupCommandService().executeCommand(command);
-        element = command.getElementWithChildren();
-        element.setChildrenLoaded(true);
-        return element;
     }
 
     private void changeSelection(ISelection selection) {
