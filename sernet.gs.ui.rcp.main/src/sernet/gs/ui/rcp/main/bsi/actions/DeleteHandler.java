@@ -57,6 +57,8 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bp.DeductionImplementationUtil;
+import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.Person;
@@ -238,6 +240,7 @@ public class DeleteHandler extends RightsEnabledHandler {
                 try {
                     Activator.inheritVeriniceContextState();
                     monitor.beginTask(Messages.DeleteActionDelegate_14, IProgressMonitor.UNKNOWN);
+                    boolean reloadBpModel = false;
                     for (Iterator<CnATreeElement> iter = deleteList.iterator(); iter.hasNext();) {
                         sel = iter.next();
 
@@ -251,6 +254,11 @@ public class DeleteHandler extends RightsEnabledHandler {
 
                         CnATreeElement el = sel;
                         removeElement(el);
+                        reloadBpModel |= (el instanceof IBpElement) && isOrContainsSafeguard(el);
+                    }
+                    if (reloadBpModel) {
+                        BpModel bpModel = CnAElementFactory.getInstance().getBpModel();
+                        bpModel.modelReload(bpModel);
                     }
                 } catch (DataIntegrityViolationException dive) {
                     deleteElementWithAccountAsync((CnATreeElement) sel);
@@ -293,6 +301,11 @@ public class DeleteHandler extends RightsEnabledHandler {
                 }
             }
         });
+    }
+
+    private static boolean isOrContainsSafeguard(CnATreeElement element) {
+        return Safeguard.isSafeguard(element)
+                || element.getChildren().stream().anyMatch(DeleteHandler::isOrContainsSafeguard);
     }
 
     protected List<CnATreeElement> createList(List<CnATreeElement> elementList) {
