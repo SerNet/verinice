@@ -287,9 +287,10 @@ public class CopyCommand extends GenericCommand {
                 if (newElement instanceof GefaehrdungsUmsetzung) {
                     prospectiveTitle = ((GefaehrdungsUmsetzung) newElement).getText();
                 }
-                Set<CnATreeElement> siblings = toGroup.getChildren();
+                String typeId = newElement.getTypeId();
+                Set<CnATreeElement> siblings = new HashSet<>(toGroup.getChildren());
                 siblings.remove(newElement);
-                siblings = removeDifferentTypes(siblings, newElement.getTypeId());
+                siblings.removeIf(element -> !typeId.equals(element.getTypeId()));
                 newElement.setTitel(getUniqueTitle(title, prospectiveTitle, siblings, 0));
             }
         }
@@ -307,12 +308,6 @@ public class CopyCommand extends GenericCommand {
         }
         newElement.setChildren(new HashSet<CnATreeElement>());
         return newElement;
-    }
-
-    private static Set<CnATreeElement> removeDifferentTypes(Set<CnATreeElement> set,
-            String typeId) {
-        return set.stream().filter(element -> typeId.equals(element.getTypeId()))
-                .collect(Collectors.toSet());
     }
 
     private void copyAttachments(final CnATreeElement destinationElement,
