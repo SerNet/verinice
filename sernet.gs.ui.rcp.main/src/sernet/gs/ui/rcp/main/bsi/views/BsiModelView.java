@@ -179,7 +179,7 @@ public class BsiModelView extends RightsEnabledView
      */
     @Override
     public void dispose() {
-        model.removeBSIModelListener(bsiModelListener);
+        CnAElementFactory.getLoadedModel().removeBSIModelListener(bsiModelListener);
         CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
         getSite().getPage().removePartListener(linkWithEditorPartListener);
         super.dispose();
@@ -296,7 +296,13 @@ public class BsiModelView extends RightsEnabledView
 
     private void initData() {
         if (CnAElementFactory.isModelLoaded()) {
-            setModel(CnAElementFactory.getLoadedModel());
+            BSIModel loadedModel = CnAElementFactory.getLoadedModel();
+            if (bsiModelListener == null) {
+                bsiModelListener = new TreeUpdateListener(viewer, elementManager);
+                loadedModel.addBSIModelListener(bsiModelListener);
+
+            }
+            setModel(loadedModel);
         } else if (modelLoadListener == null) {
             // model is not loaded yet: add a listener to load data when it's
             // laoded
@@ -552,20 +558,7 @@ public class BsiModelView extends RightsEnabledView
     }
 
     public void setModel(BSIModel newModel) {
-
-        // create listener only once:
-        if (bsiModelListener == null) {
-            bsiModelListener = new TreeUpdateListener(viewer, elementManager);
-        }
-
-        if (model != null) {
-            // remove listener from old model:
-            model.removeBSIModelListener(bsiModelListener);
-        }
-
         this.model = newModel;
-        model.addBSIModelListener(bsiModelListener);
-
         refreshModelAsync();
 
     }
