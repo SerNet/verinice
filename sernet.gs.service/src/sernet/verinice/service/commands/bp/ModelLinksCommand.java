@@ -314,8 +314,11 @@ public class ModelLinksCommand extends GenericCommand {
         newRequirementsFromScope = new HashMap<>();
         Set<CnATreeElement> requirementList = findRequirementsByModuleUuid(newModuleUuidsFromScope);
         for (CnATreeElement requirement : requirementList) {
-            newRequirementsFromScope.put(BpRequirement.getIdentifierOfRequirement(requirement),
-                    requirement);
+            String identifier = BpRequirement.getIdentifierOfRequirement(requirement);
+            CnATreeElement previousMapping = newRequirementsFromScope.put(identifier, requirement);
+            if (previousMapping != null) {
+                LOG.warn("Found multiple new requirements with identifier " + identifier);
+            }
         }
     }
 
@@ -325,9 +328,14 @@ public class ModelLinksCommand extends GenericCommand {
         allRequirementsFromScope = new HashMap<>();
         for (CnATreeElement requirement : requirements) {
             CnATreeElement elementFromScope = requirement.getParent().getParent();
-            allRequirementsFromScope
+            String identifier = BpRequirement.getIdentifierOfRequirement(requirement);
+            CnATreeElement previousMapping = allRequirementsFromScope
                     .computeIfAbsent(elementFromScope.getDbId(), key -> new HashMap<>())
-                    .put(BpRequirement.getIdentifierOfRequirement(requirement), requirement);
+                    .put(identifier, requirement);
+            if (previousMapping != null) {
+                LOG.warn("Found multiple requirements with identifier " + identifier
+                        + " underneath " + elementFromScope);
+            }
         }
     }
 
@@ -337,9 +345,14 @@ public class ModelLinksCommand extends GenericCommand {
         allSafeguardsFromScope = new HashMap<>(safeguards.size());
         for (CnATreeElement safeguard : safeguards) {
             CnATreeElement elementFromScope = safeguard.getParent().getParent();
-            allSafeguardsFromScope
+            String identifier = Safeguard.getIdentifierOfSafeguard(safeguard);
+            CnATreeElement previousMapping = allSafeguardsFromScope
                     .computeIfAbsent(elementFromScope.getDbId(), key -> new HashMap<>())
-                    .put(Safeguard.getIdentifierOfSafeguard(safeguard), safeguard);
+                    .put(identifier, safeguard);
+            if (previousMapping != null) {
+                LOG.warn("Found multiple safeguards with identifier " + identifier + " underneath "
+                        + elementFromScope);
+            }
         }
     }
 
@@ -349,8 +362,14 @@ public class ModelLinksCommand extends GenericCommand {
         allThreatsFromScope = new HashMap<>(threats.size());
         for (CnATreeElement threat : threats) {
             CnATreeElement elementFromScope = threat.getParent().getParent();
-            allThreatsFromScope.computeIfAbsent(elementFromScope.getDbId(), key -> new HashMap<>())
-                    .put(BpThreat.getIdentifierOfThreat(threat), threat);
+            String identifier = BpThreat.getIdentifierOfThreat(threat);
+            CnATreeElement previousMapping = allThreatsFromScope
+                    .computeIfAbsent(elementFromScope.getDbId(), key -> new HashMap<>())
+                    .put(identifier, threat);
+            if (previousMapping != null) {
+                LOG.warn("Found multiple threats with identifier " + identifier + " underneath "
+                        + elementFromScope);
+            }
         }
     }
 
