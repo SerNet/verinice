@@ -29,6 +29,7 @@ import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.transform.DistinctRootEntityResultTransformer;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.gs.service.RetrieveInfo;
@@ -119,6 +120,7 @@ public class ModelingMetaDao {
                 Query query = session.createQuery(ModelingMetaDao.HQL_LOAD_ELEMENTS_OF_SCOPE)
                         .setParameter("scopeId", scopeId).setParameter(TYPE_ID, typeId);
                 query.setReadOnly(true);
+                query.setResultTransformer(new DistinctRootEntityResultTransformer());
                 return query.list();
             }
         });
