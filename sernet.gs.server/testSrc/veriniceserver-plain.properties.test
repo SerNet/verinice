@@ -127,3 +127,8 @@ veriniceserver.risk.calculation.method=ADDITION
 # A limit on how many elements can be loaded at once
 # Set -1 to disable the limit
 veriniceserver.object.limit=10000
+
++# If true Modeling-Templates is enabled. Default is false
+modeling.template.active=false
++# default user for tasks created when using Modeling-Templates
++modeling.template.master=admin
