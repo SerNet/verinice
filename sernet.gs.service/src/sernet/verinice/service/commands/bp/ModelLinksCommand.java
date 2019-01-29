@@ -110,14 +110,17 @@ public class ModelLinksCommand extends GenericCommand {
     private transient Map<String, CnATreeElement> allSafeguardsFromScope;
     private transient Map<String, CnATreeElement> allThreatsFromScope;
 
+    private boolean handleSafeguards;
+
     public ModelLinksCommand(Set<String> moduleUuidsFromCompendium,
             Set<String> newModuleUuidsFromScope, ItNetwork itNetwork,
-            Set<CnATreeElement> targetElements) {
+            Set<CnATreeElement> targetElements, boolean handleSafeguards) {
         super();
         this.moduleUuidsFromCompendium = moduleUuidsFromCompendium;
         this.newModuleUuidsFromScope = newModuleUuidsFromScope;
         this.itNetwork = itNetwork;
         this.elementsFromScope = targetElements;
+        this.handleSafeguards = handleSafeguards;
     }
 
     @Override
@@ -128,7 +131,9 @@ public class ModelLinksCommand extends GenericCommand {
             loadAllThreatsFromScope();
             if (isNewModuleInScope()) {
                 loadNewRequirementsFromScope();
-                loadAllSafeguardsFromScope();
+                if (handleSafeguards) {
+                    loadAllSafeguardsFromScope();
+                }
             }
             createLinks();
         } catch (CommandException e) {
@@ -290,8 +295,13 @@ public class ModelLinksCommand extends GenericCommand {
     }
 
     private List<CnATreeElement> loadLinkedElementList(final String requirementUuid) {
-        return getMetaDao().loadLinkedElementsWithProperties(requirementUuid,
-                new String[] { Safeguard.TYPE_ID, BpThreat.TYPE_ID });
+        if (handleSafeguards) {
+            return getMetaDao().loadLinkedElementsWithProperties(requirementUuid,
+                    new String[] { Safeguard.TYPE_ID, BpThreat.TYPE_ID });
+        } else {
+            return getMetaDao().loadLinkedElementsWithProperties(requirementUuid,
+                    new String[] { BpThreat.TYPE_ID });
+        }
     }
 
     protected void loadNewRequirementsFromScope() {

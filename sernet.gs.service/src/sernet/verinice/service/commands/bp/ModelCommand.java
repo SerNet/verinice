@@ -149,7 +149,7 @@ public class ModelCommand extends ChangeLoggingCommand {
 
     private void createLinks() throws CommandException {
         ModelLinksCommand modelLinksCommand = new ModelLinksCommand(moduleUuidsFromCompendium,
-                moduleUuidsFromScope, itNetwork, targetElements);
+                moduleUuidsFromScope, itNetwork, targetElements, handleSafeguards);
         getCommandService().executeCommand(modelLinksCommand);
     }
 
