@@ -237,7 +237,7 @@ public final class CnAElementHome {
         if (log.isDebugEnabled()) {
             log.debug("Saving new link from " + dropTarget.getUuid() + " to " + dragged.getUuid()); //$NON-NLS-1$ //$NON-NLS-2$
         }
-        CreateLink command = new CreateLink(dropTarget, dragged);
+        CreateLink command = new CreateLink(dropTarget, dragged, false);
         command = getCommandService().executeCommand(command);
         return command.getLink();
     }
@@ -246,7 +246,7 @@ public final class CnAElementHome {
         if (log.isDebugEnabled()) {
             log.debug("Saving new link from " + dropTarget.getUuid() + " to " + dragged.getUuid() + " of type " + typeId); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
-        CreateLink command = new CreateLink(dropTarget, dragged, typeId, comment);
+        CreateLink command = new CreateLink(dropTarget, dragged, typeId, comment, false);
         command = getCommandService().executeCommand(command);
 
         return command.getLink();
