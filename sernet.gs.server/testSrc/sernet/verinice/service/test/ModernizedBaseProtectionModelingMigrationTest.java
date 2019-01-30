@@ -1,7 +1,6 @@
 package sernet.verinice.service.test;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -535,72 +534,6 @@ public class ModernizedBaseProtectionModelingMigrationTest
         dependencies = getDependantsFromLinks(linksUpFromFirstThreat);
         Assert.assertThat(dependencies, JUnitMatchers.<CnATreeElement> hasItems(firstRequirement));
 
-    }
-
-    private BpRequirementGroup createRequirementGroup(CnATreeElement container, String identifier,
-            String title) throws CommandException {
-        BpRequirementGroup element = setIdentifier(createRequirementGroup(container, title),
-                "bp_requirement_group_id", identifier);
-        log.debug("Created: " + element);
-        return element;
-    }
-
-    private BpRequirement createBpRequirement(CnATreeElement container, String identifier,
-            String title) throws CommandException {
-        BpRequirement element = setIdentifier(createBpRequirement(container, title),
-                BpRequirement.PROP_ID, identifier);
-        log.debug("Created: " + element);
-        return element;
-    }
-
-    private SafeguardGroup createSafeguardGroup(CnATreeElement container, String identifier,
-            String title) throws CommandException {
-        SafeguardGroup element = setIdentifier(createSafeguardGroup(container, title),
-                "bp_safeguard_group_id", identifier);
-        log.debug("Created: " + element);
-        return element;
-    }
-
-    private Safeguard createSafeguard(CnATreeElement container, String identifier, String title)
-            throws CommandException {
-        Safeguard element = setIdentifier(createSafeguard(container, title), "bp_safeguard_id",
-                identifier);
-        log.debug("Created: " + element);
-        return element;
-
-    }
-
-    private BpThreat createThreat(CnATreeElement container, String identifier, String title)
-            throws CommandException {
-        BpThreat element = setIdentifier(createBpThreat(container, title), "bp_threat_id",
-                identifier);
-        log.debug("Created: " + element);
-        return element;
-    }
-
-    protected <T extends CnATreeElement, IIdentifiable> T setIdentifier(T element,
-            String identifierProperty, String identifier) throws CommandException {
-        element.getEntity().setSimpleValue(
-                element.getEntityType().getPropertyType(identifierProperty), identifier);
-        return update(element);
-    }
-
-    private static CnATreeElement findChildWithTypeId(CnATreeElement element, String typeId) {
-        return element.getChildren().stream().filter(child -> child.getTypeId().equals(typeId))
-                .findFirst().orElse(null);
-    }
-
-    private static CnATreeElement findChildWithTitle(CnATreeElement element, String title) {
-        return element.getChildren().stream().filter(child -> title.equals(child.getTitle()))
-                .findFirst().orElse(null);
-    }
-
-    private static Set<CnATreeElement> getDependantsFromLinks(Set<CnALink> links) {
-        return links.stream().map(CnALink::getDependant).collect(Collectors.toSet());
-    }
-
-    private static Set<CnATreeElement> getDependenciesFromLinks(Set<CnALink> links) {
-        return links.stream().map(CnALink::getDependency).collect(Collectors.toSet());
     }
 
     private long getNumberOfItemsInScope(String typeId, Integer scopeId) {
