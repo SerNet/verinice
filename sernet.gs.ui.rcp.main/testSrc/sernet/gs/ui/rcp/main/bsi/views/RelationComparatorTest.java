@@ -35,6 +35,8 @@ import sernet.verinice.model.bp.elements.BusinessProcess;
 import sernet.verinice.model.bp.elements.IcsSystem;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bsi.Anwendung;
+import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
@@ -151,6 +153,22 @@ public class RelationComparatorTest {
                 "rel_bp_application_bp_icssystem", null);
 
         assertFirstArgumentSmaller(icsSystem, linkToApplication1, linkToApplication2);
+    }
+
+    @Test
+    public void testGenericLinksFromOldItbp() {
+        Anwendung application = new Anwendung(null);
+        application.setTitel("A1");
+        Gebaeude building1 = new Gebaeude(null);
+        building1.setTitel("B1");
+        Gebaeude building2 = new Gebaeude(null);
+        building2.setTitel("B2");
+
+        CnALink linkToApplication1 = new CnALink(application, building1, "", null);
+        CnALink linkToApplication2 = new CnALink(application, building2, "", null);
+
+        assertFirstArgumentSmaller(application, linkToApplication1, linkToApplication2);
+
     }
 
     private void assertFirstArgumentSmaller(CnATreeElement elementInQuestion, CnALink link1,
