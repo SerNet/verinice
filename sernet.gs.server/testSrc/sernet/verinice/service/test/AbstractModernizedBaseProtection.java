@@ -24,6 +24,7 @@ import static org.junit.Assert.assertNotNull;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 
@@ -300,6 +301,11 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
     protected static CnATreeElement findChildWithTitle(CnATreeElement element, String title) {
         return element.getChildren().stream().filter(child -> title.equals(child.getTitle()))
                 .findFirst().orElse(null);
+    }
+
+    protected static Set<CnALink> getLinksWithType(CnATreeElement element, String linkType) {
+        return Stream.concat(element.getLinksDown().stream(), element.getLinksUp().stream())
+                .filter(link -> link.getRelationId().equals(linkType)).collect(Collectors.toSet());
     }
 
     protected static Set<CnATreeElement> getDependantsFromLinks(Set<CnALink> links) {

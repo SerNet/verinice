@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.Collections;
+import java.util.Set;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.junit.After;
@@ -40,6 +41,7 @@ import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.catalog.CatalogModel;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.bp.ModelCommand;
 
@@ -80,6 +82,8 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
         elementDao.flush();
 
         itNetwork = reloadElement(itNetwork);
+        assertEquals(0, itNetwork.getLinksDown().size());
+        assertEquals(2, itNetwork.getLinksUp().size());
 
         CnATreeElement modeledRequirementGroup = getChildrenWithTypeId(itNetwork,
                 BpRequirementGroup.TYPE_ID).iterator().next();
@@ -88,6 +92,13 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
         CnATreeElement modeledRequirement = modeledRequirementGroup.getChildren().iterator().next();
         assertEquals(requirement.getTitle(), modeledRequirement.getTitle());
 
+        assertEquals(3, modeledRequirement.getLinksDown().size());
+        assertEquals(0, modeledRequirement.getLinksUp().size());
+        Set<CnALink> linksRequirementNetwork = getLinksWithType(modeledRequirement,
+                BpRequirement.REL_BP_REQUIREMENT_BP_ITNETWORK);
+        assertEquals(1, linksRequirementNetwork.size());
+        assertEquals(linksRequirementNetwork.iterator().next().getDependency(), itNetwork);
+
         CnATreeElement modeledSafeguardGroup = getChildrenWithTypeId(itNetwork,
                 SafeguardGroup.TYPE_ID).iterator().next();
         assertEquals(safeguardGroup.getTitle(), modeledSafeguardGroup.getTitle());
@@ -95,12 +106,27 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
         CnATreeElement modeledSafeguard = modeledSafeguardGroup.getChildren().iterator().next();
         assertEquals(safeguard.getTitle(), modeledSafeguard.getTitle());
 
+        Set<CnALink> linksSafeguardRequirement = getLinksWithType(modeledSafeguard,
+                BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
+        assertEquals(1, linksSafeguardRequirement.size());
+        assertEquals(linksSafeguardRequirement.iterator().next().getDependency(), modeledSafeguard);
+
         CnATreeElement modeledThreatGroup = getChildrenWithTypeId(itNetwork, BpThreatGroup.TYPE_ID)
                 .iterator().next();
         assertEquals(threatGroup.getTitle(), modeledThreatGroup.getTitle());
         assertEquals(1, modeledThreatGroup.getChildren().size());
         CnATreeElement modeledThreat = modeledThreatGroup.getChildren().iterator().next();
         assertEquals(threat.getTitle(), modeledThreat.getTitle());
+
+        Set<CnALink> linksThreatRequirement = getLinksWithType(modeledThreat,
+                BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
+        assertEquals(1, linksThreatRequirement.size());
+        assertEquals(linksThreatRequirement.iterator().next().getDependency(), modeledThreat);
+
+        Set<CnALink> linksThreatTargetObject = getLinksWithType(modeledThreat,
+                BpThreat.REL_BP_THREAT_BP_ITNETWORK);
+        assertEquals(1, linksThreatTargetObject.size());
+        assertEquals(linksThreatTargetObject.iterator().next().getDependency(), itNetwork);
 
     }
 
@@ -132,6 +158,8 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
         elementDao.flush();
 
         itNetwork = reloadElement(itNetwork);
+        assertEquals(0, itNetwork.getLinksDown().size());
+        assertEquals(2, itNetwork.getLinksUp().size());
 
         CnATreeElement modeledRequirementGroup = getChildrenWithTypeId(itNetwork,
                 BpRequirementGroup.TYPE_ID).iterator().next();
@@ -139,6 +167,13 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
         assertEquals(1, modeledRequirementGroup.getChildren().size());
         CnATreeElement modeledRequirement = modeledRequirementGroup.getChildren().iterator().next();
         assertEquals(requirement.getTitle(), modeledRequirement.getTitle());
+
+        assertEquals(2, modeledRequirement.getLinksDown().size());
+        assertEquals(0, modeledRequirement.getLinksUp().size());
+        Set<CnALink> linksRequirementNetwork = getLinksWithType(modeledRequirement,
+                BpRequirement.REL_BP_REQUIREMENT_BP_ITNETWORK);
+        assertEquals(1, linksRequirementNetwork.size());
+        assertEquals(linksRequirementNetwork.iterator().next().getDependency(), itNetwork);
 
         Assert.assertEquals(0l, getChildrenWithTypeId(itNetwork, SafeguardGroup.TYPE_ID).size());
 
@@ -148,6 +183,16 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
         assertEquals(1, modeledThreatGroup.getChildren().size());
         CnATreeElement modeledThreat = modeledThreatGroup.getChildren().iterator().next();
         assertEquals(threat.getTitle(), modeledThreat.getTitle());
+
+        Set<CnALink> linksThreatRequirement = getLinksWithType(modeledThreat,
+                BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
+        assertEquals(1, linksThreatRequirement.size());
+        assertEquals(linksThreatRequirement.iterator().next().getDependency(), modeledThreat);
+
+        Set<CnALink> linksThreatTargetObject = getLinksWithType(modeledThreat,
+                BpThreat.REL_BP_THREAT_BP_ITNETWORK);
+        assertEquals(1, linksThreatTargetObject.size());
+        assertEquals(linksThreatTargetObject.iterator().next().getDependency(), itNetwork);
     }
 
     @Transactional
@@ -174,6 +219,8 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
         elementDao.flush();
 
         itNetwork = reloadElement(itNetwork);
+        assertEquals(0, itNetwork.getLinksDown().size());
+        assertEquals(1, itNetwork.getLinksUp().size());
 
         CnATreeElement modeledRequirementGroup = getChildrenWithTypeId(itNetwork,
                 BpRequirementGroup.TYPE_ID).iterator().next();
@@ -182,12 +229,24 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
         CnATreeElement modeledRequirement = modeledRequirementGroup.getChildren().iterator().next();
         assertEquals(requirement.getTitle(), modeledRequirement.getTitle());
 
+        assertEquals(2, modeledRequirement.getLinksDown().size());
+        assertEquals(0, modeledRequirement.getLinksUp().size());
+        Set<CnALink> linksRequirementNetwork = getLinksWithType(modeledRequirement,
+                BpRequirement.REL_BP_REQUIREMENT_BP_ITNETWORK);
+        assertEquals(1, linksRequirementNetwork.size());
+        assertEquals(linksRequirementNetwork.iterator().next().getDependency(), itNetwork);
+
         CnATreeElement modeledSafeguardGroup = getChildrenWithTypeId(itNetwork,
                 SafeguardGroup.TYPE_ID).iterator().next();
         assertEquals(requirementGroup.getTitle(), modeledSafeguardGroup.getTitle());
         assertEquals(1, modeledSafeguardGroup.getChildren().size());
         CnATreeElement modeledSafeguard = modeledSafeguardGroup.getChildren().iterator().next();
         assertNotNull(modeledSafeguard);
+
+        Set<CnALink> linksSafeguardRequirement = getLinksWithType(modeledSafeguard,
+                BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
+        assertEquals(1, linksSafeguardRequirement.size());
+        assertEquals(linksSafeguardRequirement.iterator().next().getDependency(), modeledSafeguard);
 
     }
 
