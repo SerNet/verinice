@@ -286,6 +286,12 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
         return update(element);
     }
 
+    protected static Set<CnATreeElement> getChildrenWithTypeId(CnATreeElement element,
+            String typeId) {
+        return element.getChildren().stream().filter(child -> child.getTypeId().equals(typeId))
+                .collect(Collectors.toSet());
+    }
+
     protected static CnATreeElement findChildWithTypeId(CnATreeElement element, String typeId) {
         return element.getChildren().stream().filter(child -> child.getTypeId().equals(typeId))
                 .findFirst().orElse(null);

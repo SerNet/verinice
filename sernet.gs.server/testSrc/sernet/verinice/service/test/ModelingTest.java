@@ -23,6 +23,7 @@ import static org.junit.Assert.assertNotNull;
 import java.util.Collections;
 
 import org.hibernate.criterion.DetachedCriteria;
+import org.junit.After;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -46,6 +47,11 @@ import sernet.verinice.service.commands.bp.ModelCommand;
 @Transactional
 public class ModelingTest extends AbstractModernizedBaseProtection {
 
+    @After
+    public void cleanUp() {
+        elementDao.clear();
+    }
+
     @Transactional
     @Rollback(true)
     @Test
@@ -62,38 +68,40 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
 
         ItNetwork itNetwork = createNewBPOrganization();
 
+        elementDao.flush();
+        elementDao.clear();
+
         ModelCommand modelCommand = new ModelCommand(
                 Collections.singleton(requirementGroup.getUuid()),
                 Collections.singletonList(itNetwork.getUuid()));
         modelCommand.setHandleSafeguards(true);
         modelCommand.setHandleDummySafeguards(false);
         commandService.executeCommand(modelCommand);
-        elementDao.clear();
+        elementDao.flush();
 
         itNetwork = reloadElement(itNetwork);
 
-        CnATreeElement modeledRequirementGroup = itNetwork.getChildren().stream()
-                .filter(child -> child.getTypeId().equals(BpRequirementGroup.TYPE_ID)).findFirst()
-                .get();
+        CnATreeElement modeledRequirementGroup = getChildrenWithTypeId(itNetwork,
+                BpRequirementGroup.TYPE_ID).iterator().next();
         assertEquals(requirementGroup.getTitle(), modeledRequirementGroup.getTitle());
         assertEquals(1, modeledRequirementGroup.getChildren().size());
         CnATreeElement modeledRequirement = modeledRequirementGroup.getChildren().iterator().next();
         assertEquals(requirement.getTitle(), modeledRequirement.getTitle());
 
-        CnATreeElement modeledSafeguardGroup = itNetwork.getChildren().stream()
-                .filter(child -> child.getTypeId().equals(SafeguardGroup.TYPE_ID)).findFirst()
-                .get();
+        CnATreeElement modeledSafeguardGroup = getChildrenWithTypeId(itNetwork,
+                SafeguardGroup.TYPE_ID).iterator().next();
         assertEquals(safeguardGroup.getTitle(), modeledSafeguardGroup.getTitle());
         assertEquals(1, modeledSafeguardGroup.getChildren().size());
         CnATreeElement modeledSafeguard = modeledSafeguardGroup.getChildren().iterator().next();
         assertEquals(safeguard.getTitle(), modeledSafeguard.getTitle());
 
-        CnATreeElement modeledThreatGroup = itNetwork.getChildren().stream()
-                .filter(child -> child.getTypeId().equals(BpThreatGroup.TYPE_ID)).findFirst().get();
+        CnATreeElement modeledThreatGroup = getChildrenWithTypeId(itNetwork, BpThreatGroup.TYPE_ID)
+                .iterator().next();
         assertEquals(threatGroup.getTitle(), modeledThreatGroup.getTitle());
         assertEquals(1, modeledThreatGroup.getChildren().size());
         CnATreeElement modeledThreat = modeledThreatGroup.getChildren().iterator().next();
         assertEquals(threat.getTitle(), modeledThreat.getTitle());
+
     }
 
     @Transactional
@@ -112,29 +120,30 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
 
         ItNetwork itNetwork = createNewBPOrganization();
 
+        elementDao.flush();
+        elementDao.clear();
+
         ModelCommand modelCommand = new ModelCommand(
                 Collections.singleton(requirementGroup.getUuid()),
                 Collections.singletonList(itNetwork.getUuid()));
         modelCommand.setHandleSafeguards(false);
         modelCommand.setHandleDummySafeguards(false);
         commandService.executeCommand(modelCommand);
-        elementDao.clear();
+        elementDao.flush();
 
         itNetwork = reloadElement(itNetwork);
 
-        CnATreeElement modeledRequirementGroup = itNetwork.getChildren().stream()
-                .filter(child -> child.getTypeId().equals(BpRequirementGroup.TYPE_ID)).findFirst()
-                .get();
+        CnATreeElement modeledRequirementGroup = getChildrenWithTypeId(itNetwork,
+                BpRequirementGroup.TYPE_ID).iterator().next();
         assertEquals(requirementGroup.getTitle(), modeledRequirementGroup.getTitle());
         assertEquals(1, modeledRequirementGroup.getChildren().size());
         CnATreeElement modeledRequirement = modeledRequirementGroup.getChildren().iterator().next();
         assertEquals(requirement.getTitle(), modeledRequirement.getTitle());
 
-        Assert.assertEquals(0l, itNetwork.getChildren().stream()
-                .filter(child -> child.getTypeId().equals(SafeguardGroup.TYPE_ID)).count());
+        Assert.assertEquals(0l, getChildrenWithTypeId(itNetwork, SafeguardGroup.TYPE_ID).size());
 
-        CnATreeElement modeledThreatGroup = itNetwork.getChildren().stream()
-                .filter(child -> child.getTypeId().equals(BpThreatGroup.TYPE_ID)).findFirst().get();
+        CnATreeElement modeledThreatGroup = getChildrenWithTypeId(itNetwork, BpThreatGroup.TYPE_ID)
+                .iterator().next();
         assertEquals(threatGroup.getTitle(), modeledThreatGroup.getTitle());
         assertEquals(1, modeledThreatGroup.getChildren().size());
         CnATreeElement modeledThreat = modeledThreatGroup.getChildren().iterator().next();
@@ -152,9 +161,9 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
         requirement = update(requirement);
 
         ItNetwork itNetwork = createNewBPOrganization();
+
         elementDao.flush();
         elementDao.clear();
-        itNetwork = reloadElement(itNetwork);
 
         ModelCommand modelCommand = new ModelCommand(
                 Collections.singleton(requirementGroup.getUuid()),
@@ -163,21 +172,18 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
         modelCommand.setHandleDummySafeguards(true);
         commandService.executeCommand(modelCommand);
         elementDao.flush();
-        elementDao.clear();
 
         itNetwork = reloadElement(itNetwork);
 
-        CnATreeElement modeledRequirementGroup = itNetwork.getChildren().stream()
-                .filter(child -> child.getTypeId().equals(BpRequirementGroup.TYPE_ID)).findFirst()
-                .get();
+        CnATreeElement modeledRequirementGroup = getChildrenWithTypeId(itNetwork,
+                BpRequirementGroup.TYPE_ID).iterator().next();
         assertEquals(requirementGroup.getTitle(), modeledRequirementGroup.getTitle());
         assertEquals(1, modeledRequirementGroup.getChildren().size());
         CnATreeElement modeledRequirement = modeledRequirementGroup.getChildren().iterator().next();
         assertEquals(requirement.getTitle(), modeledRequirement.getTitle());
 
-        CnATreeElement modeledSafeguardGroup = itNetwork.getChildren().stream()
-                .filter(child -> child.getTypeId().equals(SafeguardGroup.TYPE_ID)).findFirst()
-                .get();
+        CnATreeElement modeledSafeguardGroup = getChildrenWithTypeId(itNetwork,
+                SafeguardGroup.TYPE_ID).iterator().next();
         assertEquals(requirementGroup.getTitle(), modeledSafeguardGroup.getTitle());
         assertEquals(1, modeledSafeguardGroup.getChildren().size());
         CnATreeElement modeledSafeguard = modeledSafeguardGroup.getChildren().iterator().next();
@@ -189,5 +195,4 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
         return (CatalogModel) elementDao
                 .findByCriteria(DetachedCriteria.forClass(CatalogModel.class)).get(0);
     }
-
 }
