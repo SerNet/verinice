@@ -119,13 +119,7 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
         case 1:
             // if we can't find a real name for the relation, we just display
             // "depends on" or "necessary for":
-            if (CnALink.isDownwardLink(view.getInputElmt(), link)) {
-                return (relation != null) ? relation.getName()
-                        : Messages.RelationViewLabelProvider_2;
-            } else {
-                return (relation != null) ? relation.getReversename()
-                        : Messages.RelationViewLabelProvider_3;
-            }
+            return getRelationLabel(view.getInputElmt(), link, relation);
         case 2:
             return ""; // image only //$NON-NLS-1$
         case 3:
@@ -207,6 +201,16 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
             return null;
         }
 
+    }
+
+    public static String getRelationLabel(CnATreeElement element, CnALink link,
+            HuiRelation relation) {
+        if (CnALink.isDownwardLink(element, link)) {
+            return (relation != null) ? relation.getName() : Messages.RelationViewLabelProvider_2;
+        } else {
+            return (relation != null) ? relation.getReversename()
+                    : Messages.RelationViewLabelProvider_3;
+        }
     }
 
     private static Image getObjTypeImage(CnATreeElement elmt) {
