@@ -96,8 +96,11 @@ public class RelationComparator extends ViewerComparator {
         }
 
         // sort by internationalized relation name
-        String relationName1 = huiTypeFactory.getRelation(link1.getRelationId()).getName();
-        String relationName2 = huiTypeFactory.getRelation(link2.getRelationId()).getName();
+        String relationName1 = RelationViewLabelProvider.getRelationLabel(elementInQuestion, link1,
+                huiTypeFactory.getRelation(link1.getRelationId()));
+        String relationName2 = RelationViewLabelProvider.getRelationLabel(elementInQuestion, link2,
+                huiTypeFactory.getRelation(link2.getRelationId()));
+
         int comparisonByRelationNames = relationName1.compareTo(relationName2);
         if (comparisonByRelationNames != 0) {
             return comparisonByRelationNames;
