@@ -308,7 +308,7 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
         RetrieveInfo ri = new RetrieveInfo().setProperties(true).setLinksUp(true)
                 .setLinksDown(true);
         LoadElementByUuid<CnATreeElement> loadElementByUuid = new LoadElementByUuid<>(
-                Objects.requireNonNull(element).getUuid(), ri);
+                element.getTypeId(), Objects.requireNonNull(element).getUuid(), ri);
         LoadElementByUuid<CnATreeElement> executeCommand = commandService
                 .executeCommand(loadElementByUuid);
         return (T) executeCommand.getElement();
