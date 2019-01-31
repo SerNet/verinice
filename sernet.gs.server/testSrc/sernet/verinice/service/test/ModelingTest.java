@@ -18,8 +18,10 @@
 package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
 import java.util.Set;
@@ -97,6 +99,8 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
         assertEquals(1, modeledRequirementGroup.getChildren().size());
         CnATreeElement modeledRequirement = modeledRequirementGroup.getChildren().iterator().next();
         assertEquals(requirement.getTitle(), modeledRequirement.getTitle());
+        assertTrue(
+                modeledRequirement.getEntity().isFlagged(BpRequirement.PROP_IMPLEMENTATION_DEDUCE));
 
         assertEquals(3, modeledRequirement.getLinksDown().size());
         assertEquals(0, modeledRequirement.getLinksUp().size());
@@ -344,6 +348,8 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
         assertEquals(1, modeledRequirementGroup.getChildren().size());
         CnATreeElement modeledRequirement = modeledRequirementGroup.getChildren().iterator().next();
         assertEquals(requirement.getTitle(), modeledRequirement.getTitle());
+        assertFalse(
+                modeledRequirement.getEntity().isFlagged(BpRequirement.PROP_IMPLEMENTATION_DEDUCE));
 
         assertEquals(2, modeledRequirement.getLinksDown().size());
         assertEquals(0, modeledRequirement.getLinksUp().size());
@@ -406,6 +412,8 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
         assertEquals(1, modeledRequirementGroup.getChildren().size());
         CnATreeElement modeledRequirement = modeledRequirementGroup.getChildren().iterator().next();
         assertEquals(requirement.getTitle(), modeledRequirement.getTitle());
+        assertTrue(
+                modeledRequirement.getEntity().isFlagged(BpRequirement.PROP_IMPLEMENTATION_DEDUCE));
 
         assertEquals(2, modeledRequirement.getLinksDown().size());
         assertEquals(0, modeledRequirement.getLinksUp().size());
