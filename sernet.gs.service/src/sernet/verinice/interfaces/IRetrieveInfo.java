@@ -147,6 +147,12 @@ public interface IRetrieveInfo {
             if (isParentPermissions()) {
                 criteria.setFetchMode("parent.permissions", FetchMode.JOIN);
             }
+            if (isParentProperties()) {
+                criteria.setFetchMode("parent.entity", FetchMode.JOIN);
+                criteria.setFetchMode("parent.entity.typedPropertyLists", FetchMode.JOIN);
+                criteria.setFetchMode("parent.entity.typedPropertyLists.properties",
+                        FetchMode.JOIN);
+            }
         }
         if (isChildren()) {
             criteria.setFetchMode("children", FetchMode.JOIN);
