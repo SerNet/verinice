@@ -228,46 +228,8 @@ public class DeleteHandler extends RightsEnabledHandler {
 
     protected void doDelete(final List<CnATreeElement> deleteList)
             throws InvocationTargetException, InterruptedException {
-        PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-            @Override
-            public void run(IProgressMonitor monitor)
-                    throws InvocationTargetException, InterruptedException {
-                CnATreeElement sel = null;
-                try {
-                    Activator.inheritVeriniceContextState();
-                    monitor.beginTask(Messages.DeleteActionDelegate_14, IProgressMonitor.UNKNOWN);
-                    boolean reloadBpModel = false;
-                    for (Iterator<CnATreeElement> iter = deleteList.iterator(); iter.hasNext();) {
-                        sel = iter.next();
-
-                        // do not delete last ITVerbund:
-                        if (sel instanceof ITVerbund
-                                && CnAElementHome.getInstance().getItverbuende().size() < 2) {
-                            ExceptionUtil.log(new Exception(Messages.DeleteActionDelegate_12),
-                                    Messages.DeleteActionDelegate_13);
-                            return;
-                        }
-
-                        CnATreeElement el = sel;
-                        removeElement(el);
-                        reloadBpModel |= (el instanceof IBpElement) && isOrContainsSafeguard(el);
-                    }
-                    if (reloadBpModel) {
-                        BpModel bpModel = CnAElementFactory.getInstance().getBpModel();
-                        bpModel.modelReload(bpModel);
-                    }
-                } catch (DataIntegrityViolationException dive) {
-                    deleteElementWithAccountAsync((CnATreeElement) sel);
-                } catch (Exception e) {
-                    LOG.error(DEFAULT_ERR_MSG, e);
-                    ExceptionUtil.log(e, Messages.DeleteActionDelegate_15);
-                } finally {
-                    if (monitor != null) {
-                        monitor.done();
-                    }
-                }
-            }
-        });
+        PlatformUI.getWorkbench().getProgressService()
+                .busyCursorWhile(new DeleteElements(deleteList));
     }
 
     protected void doDeleteIso(final List<CnATreeElement> deleteList)
@@ -419,6 +381,53 @@ public class DeleteHandler extends RightsEnabledHandler {
     @Override
     public String getRightID() {
         return ActionRightIDs.DELETEITEM;
+    }
+
+    private static final class DeleteElements implements IRunnableWithProgress {
+        private final List<CnATreeElement> deleteList;
+
+        private DeleteElements(List<CnATreeElement> deleteList) {
+            this.deleteList = deleteList;
+        }
+
+        @Override
+        public void run(IProgressMonitor monitor)
+                throws InvocationTargetException, InterruptedException {
+            CnATreeElement sel = null;
+            try {
+                Activator.inheritVeriniceContextState();
+                monitor.beginTask(Messages.DeleteActionDelegate_14, IProgressMonitor.UNKNOWN);
+                boolean reloadBpModel = false;
+                for (Iterator<CnATreeElement> iter = deleteList.iterator(); iter.hasNext();) {
+                    sel = iter.next();
+
+                    // do not delete last ITVerbund:
+                    if (sel instanceof ITVerbund
+                            && CnAElementHome.getInstance().getItverbuende().size() < 2) {
+                        ExceptionUtil.log(new Exception(Messages.DeleteActionDelegate_12),
+                                Messages.DeleteActionDelegate_13);
+                        return;
+                    }
+
+                    CnATreeElement el = sel;
+                    removeElement(el);
+                    reloadBpModel |= (el instanceof IBpElement) && isOrContainsSafeguard(el);
+                }
+                if (reloadBpModel) {
+                    BpModel bpModel = CnAElementFactory.getInstance().getBpModel();
+                    bpModel.modelReload(bpModel);
+                }
+            } catch (DataIntegrityViolationException dive) {
+                deleteElementWithAccountAsync((CnATreeElement) sel);
+            } catch (Exception e) {
+                LOG.error(DEFAULT_ERR_MSG, e);
+                ExceptionUtil.log(e, Messages.DeleteActionDelegate_15);
+            } finally {
+                if (monitor != null) {
+                    monitor.done();
+                }
+            }
+        }
     }
 
 }
