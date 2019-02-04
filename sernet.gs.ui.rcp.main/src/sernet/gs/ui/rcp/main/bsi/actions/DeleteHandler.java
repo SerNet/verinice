@@ -334,7 +334,7 @@ public class DeleteHandler extends RightsEnabledHandler {
         }
     }
 
-    protected void deleteElementWithAccountAsync(final CnATreeElement element) {
+    protected static void deleteElementWithAccountAsync(final CnATreeElement element) {
         Display.getDefault().asyncExec(() -> {
             try {
                 deleteElementWithAccount(element);
@@ -350,7 +350,8 @@ public class DeleteHandler extends RightsEnabledHandler {
         });
     }
 
-    protected void deleteElementWithAccount(final CnATreeElement element) throws CommandException {
+    protected static void deleteElementWithAccount(final CnATreeElement element)
+            throws CommandException {
         GenericCommand command = null;
         if (loadConfiguration(element)) {
             if (MessageDialog.openConfirm(Display.getDefault().getActiveShell(),
@@ -364,13 +365,13 @@ public class DeleteHandler extends RightsEnabledHandler {
         removeElement(element);
     }
 
-    protected void removeElement(CnATreeElement elementToRemove) throws CommandException {
+    protected static void removeElement(CnATreeElement elementToRemove) throws CommandException {
         CnAElementHome.getInstance().remove(elementToRemove);
         CnAElementFactory.getModel(elementToRemove).databaseChildRemoved(elementToRemove);
         CnAElementFactory.getInstance().getCatalogModel().databaseChildRemoved(elementToRemove);
     }
 
-    protected boolean loadConfiguration(CnATreeElement elmt) {
+    protected static boolean loadConfiguration(CnATreeElement elmt) {
         String[] types = new String[] { Person.TYPE_ID, PersonIso.TYPE_ID };
         ICommandService service = ServiceFactory.lookupCommandService();
         for (String type : types) {
