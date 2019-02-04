@@ -19,16 +19,10 @@
  ******************************************************************************/
 package sernet.verinice.service.commands.bp;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import sernet.gs.service.RuntimeCommandException;
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IDAOFactory;
-import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.common.CnALink;
@@ -44,12 +38,11 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class ModelModulesTask extends ModelCopyTask {
 
-    private Set<CnATreeElement> modulesCompendium;
+    private final Set<CnATreeElement> modulesCompendium;
 
     public ModelModulesTask(ICommandService commandService, IDAOFactory daoFactory,
             ModelingData modelingData) {
-        super(commandService, daoFactory, modelingData, BpRequirementGroup.TYPE_ID,
-                new ChangeDeductionPostProcessor(modelingData.isHandleSafeguards()));
+        super(commandService, daoFactory, modelingData, BpRequirementGroup.TYPE_ID);
         this.modulesCompendium = modelingData.getRequirementGroups();
     }
 
@@ -67,6 +60,13 @@ public class ModelModulesTask extends ModelCopyTask {
     @Override
     protected void afterCopyElement(CnATreeElement targetObject, CnATreeElement newElement,
             CnATreeElement compendiumElement) {
+        boolean shouldDeduceImplementation = modelingData.isHandleSafeguards();
+        if (newElement.getEntity().isFlagged(
+                BpRequirement.PROP_IMPLEMENTATION_DEDUCE) != shouldDeduceImplementation) {
+            newElement.getEntity().setFlag(BpRequirement.PROP_IMPLEMENTATION_DEDUCE,
+                    shouldDeduceImplementation);
+            daoFactory.getDAO(CnATreeElement.class).merge(newElement);
+        }
         afterHandleElement(targetObject, newElement);
     }
 
@@ -87,27 +87,4 @@ public class ModelModulesTask extends ModelCopyTask {
     public Set<CnATreeElement> getGroupsFromCompendium() {
         return modulesCompendium;
     }
-
-    private static final class ChangeDeductionPostProcessor implements IPostProcessor {
-        private final boolean handleSafeguards;
-        private static final long serialVersionUID = 632719636624957140L;
-
-        private ChangeDeductionPostProcessor(boolean handleSafeguards) {
-            this.handleSafeguards = handleSafeguards;
-        }
-
-        @Override
-        public void process(ICommandService commandService, List<String> copyUuidList,
-                Map<String, String> sourceDestMap) {
-            ChangeDeductionCommand changeDeductionCommand = new ChangeDeductionCommand(
-                    new HashSet<>(sourceDestMap.values()), handleSafeguards);
-            try {
-                commandService.executeCommand(changeDeductionCommand);
-            } catch (CommandException e) {
-                throw new RuntimeCommandException(e);
-            }
-
-        }
-    }
-
 }

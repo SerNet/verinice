@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.service.commands.bp;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,7 +32,6 @@ import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IDAOFactory;
-import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CnATypeMapper;
 import sernet.verinice.service.commands.CopyCommand;
@@ -50,24 +48,21 @@ public abstract class ModelCopyTask implements Runnable {
     protected final IDAOFactory daoFactory;
 
     protected final ModelingData modelingData;
-    private final Set<CnATreeElement> targetElements;
     private final String handledGroupTypeId;
     private final String elementTypeId;
-    private final List<IPostProcessor> copyPostProcessors;
+    private final Set<CnATreeElement> targetElements;
 
     // key: element from compendium, value: element from scope
     private Map<CnATreeElement, CnATreeElement> existingGroupsByCompendiumGroup;
 
     public ModelCopyTask(ICommandService commandService, IDAOFactory daoFactory,
-            ModelingData modelingData, String handledGroupTypeId,
-            IPostProcessor... elementCopyPostProcessors) {
+            ModelingData modelingData, String handledGroupTypeId) {
         this.commandService = commandService;
         this.daoFactory = daoFactory;
         this.modelingData = modelingData;
-        this.targetElements = modelingData.getTargetElements();
         this.handledGroupTypeId = handledGroupTypeId;
         this.elementTypeId = CnATypeMapper.getElementTypeIdFromGroupTypeId(handledGroupTypeId);
-        this.copyPostProcessors = Arrays.asList(elementCopyPostProcessors);
+        this.targetElements = modelingData.getTargetElements();
     }
 
     @Override
@@ -123,7 +118,7 @@ public abstract class ModelCopyTask implements Runnable {
             CopyCommand copyCommand = new ModelingCopyCommand(
                     groupFromScope.getParent(), groupFromScope.getUuid(), missingElements.stream()
                             .map(CnATreeElement::getUuid).collect(Collectors.toList()),
-                    copyPostProcessors, modelingData);
+                    modelingData);
             commandService.executeCommand(copyCommand);
         }
     }
@@ -142,7 +137,7 @@ public abstract class ModelCopyTask implements Runnable {
             List<String> missingGroupUuids = missingGroups.stream().map(CnATreeElement::getUuid)
                     .collect(Collectors.toList());
             CopyCommand copyCommand = new ModelingCopyCommand(target, target.getUuid(),
-                    missingGroupUuids, Collections.emptyList(), modelingData);
+                    missingGroupUuids, modelingData);
             commandService.executeCommand(copyCommand);
         }
     }
@@ -199,9 +194,8 @@ public abstract class ModelCopyTask implements Runnable {
         private transient CnATreeElement targetElement;
 
         private ModelingCopyCommand(CnATreeElement targetElement, String uuidGroup,
-                List<String> uuidList, List<IPostProcessor> postProcessorList,
-                ModelingData modelingData) {
-            super(uuidGroup, uuidList, postProcessorList, -1);
+                List<String> uuidList, ModelingData modelingData) {
+            super(uuidGroup, uuidList, Collections.emptyList(), -1);
             this.targetElement = targetElement;
             this.modelingData = modelingData;
         }
