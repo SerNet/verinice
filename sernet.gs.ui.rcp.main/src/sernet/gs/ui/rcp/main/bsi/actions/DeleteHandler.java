@@ -261,11 +261,6 @@ public class DeleteHandler extends RightsEnabledHandler {
         });
     }
 
-    private static boolean isOrContainsSafeguard(CnATreeElement element) {
-        return Safeguard.isSafeguard(element)
-                || element.getChildren().stream().anyMatch(DeleteHandler::isOrContainsSafeguard);
-    }
-
     protected List<CnATreeElement> createList(List<CnATreeElement> elementList) {
         List<CnATreeElement> tempList = new ArrayList<>();
         List<CnATreeElement> insertList = new ArrayList<>();
@@ -411,7 +406,7 @@ public class DeleteHandler extends RightsEnabledHandler {
 
                     CnATreeElement el = sel;
                     removeElement(el);
-                    reloadBpModel |= (el instanceof IBpElement) && isOrContainsSafeguard(el);
+                    reloadBpModel |= el instanceof IBpElement;
                 }
                 if (reloadBpModel) {
                     BpModel bpModel = CnAElementFactory.getInstance().getBpModel();
