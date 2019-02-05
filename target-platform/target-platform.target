@@ -1,44 +1,46 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="target-platform-e4" sequenceNumber="112">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target name="target-platform-e4" sequenceNumber="113">
 <locations>
+
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.equinox.sdk.feature.group" version="3.13.4.v20180322-2228"/>
-<unit id="org.eclipse.platform.ide" version="4.7.3.M20180330-0640"/>
-<unit id="org.eclipse.platform.sdk" version="4.7.3.M20180330-0640"/>
-<unit id="org.eclipse.releng.tools.feature.group" version="3.9.100.v20170516-0717"/>
-<unit id="org.eclipse.sdk.ide" version="4.7.3.M20180330-0640"/>
-<repository location="http://download.eclipse.org/eclipse/updates/4.7"/>
+<unit id="org.eclipse.platform.sdk" version="0.0.0"/>
+<unit id="org.eclipse.platform.ide" version="0.0.0"/>
+<unit id="org.eclipse.sdk.ide" version="0.0.0"/>
+<unit id="org.eclipse.releng.tools.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.equinox.core.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.equinox.executable" version="0.0.0"/>
+<repository location="http://download.eclipse.org/eclipse/updates/4.10/"/>
 </location>
+
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.birt.chart.cshelp.feature.group" version="4.7.0.v201706222054"/>
-<unit id="org.eclipse.birt.cshelp.feature.group" version="4.7.0.v201706222054"/>
-<unit id="org.eclipse.help.feature.group" version="2.2.104.v20180330-0640"/>
-<repository location="http://download.eclipse.org/releases/oxygen"/>
+<unit id="org.eclipse.birt.chart.cshelp.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.birt.cshelp.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.help.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/releases/2018-12/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.e4.core.tools.feature.source.feature.group" version="4.7.0.v20170515-1617"/>
-<unit id="org.eclipse.swt.tools.feature.feature.group" version="3.106.0.v20170503-0851"/>
-<repository location="http://download.eclipse.org/eclipse/updates/4.7"/>
-</location>
+
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="javax.transaction" version="1.1.1.v201105210645"/>
 <unit id="javax.transaction.source" version="1.1.1.v201105210645"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180330011457/repository"/>
 </location>
+
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.birt.rcp.feature.group" version="4.7.0.v201706222054"/>
 <repository location="http://updates.verinice.org/pub/verinice/updatesites/birt-rcp/"/>
 </location>
+
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.birt.feature.group" version="4.7.0.v201706222054"/>
-<unit id="org.eclipse.birt.osgi.runtime.sdk.feature.group" version="4.7.0.v201706222054"/>
-<unit id="org.eclipse.datatools.connectivity.feature.feature.group" version="1.14.100.201802212225"/>
-<unit id="org.eclipse.datatools.enablement.feature.feature.group" version="1.14.100.201801242337"/>
-<unit id="org.eclipse.datatools.enablement.sdk.feature.feature.group" version="1.14.100.201802061819"/>
-<unit id="org.eclipse.datatools.sdk.feature.feature.group" version="1.14.100.201801242337"/>
-<unit id="org.eclipse.datatools.sqldevtools.feature.feature.group" version="1.14.100.201802061753"/>
-<repository location="http://download.eclipse.org/releases/photon"/>
+<unit id="org.eclipse.birt.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.birt.osgi.runtime.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.datatools.connectivity.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.datatools.enablement.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.datatools.enablement.sdk.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.datatools.sdk.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.datatools.sqldevtools.feature.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/releases/2018-12/"/>
 </location>
+
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="ch.qos.logback.classic" version="1.1.2.v20160208-0839"/>
 <unit id="ch.qos.logback.classic.source" version="1.1.2.v20160208-0839"/>
@@ -82,6 +84,8 @@
 <unit id="org.slf4j.api.source" version="1.7.10.v20170428-1633"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180330011457/repository"/>
 </location>
+
+
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="antlr.feature.group" version="2.7.7"/>
 <unit id="antlr.source.feature.group" version="2.7.7"/>
@@ -113,14 +117,16 @@
 <unit id="w3c.source.feature.group" version="0.6.0"/>
 <repository location="http://updates.verinice.org/pub/verinice/updatesites/verinice-deps-20180731162226/"/>
 </location>
+
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.babel.nls_datatools_cs.feature.group" version="4.7.0.v20190126095834"/>
-<unit id="org.eclipse.babel.nls_datatools_de.feature.group" version="4.7.0.v20190126095834"/>
-<unit id="org.eclipse.babel.nls_datatools_it.feature.group" version="4.7.0.v20190126095834"/>
-<unit id="org.eclipse.babel.nls_eclipse_cs.feature.group" version="4.7.0.v20190126095834"/>
-<unit id="org.eclipse.babel.nls_eclipse_de.feature.group" version="4.7.0.v20190126095834"/>
-<unit id="org.eclipse.babel.nls_eclipse_it.feature.group" version="4.7.0.v20190126095834"/>
-<repository location="http://download.eclipse.org/technology/babel/update-site/R0.16.1/oxygen/"/>
+<unit id="org.eclipse.babel.nls_datatools_cs.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.babel.nls_datatools_de.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.babel.nls_datatools_it.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.babel.nls_eclipse_cs.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.babel.nls_eclipse_de.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.babel.nls_eclipse_it.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/technology/babel/update-site/R0.17.0/2018-12/"/>
 </location>
+
 </locations>
 </target>
