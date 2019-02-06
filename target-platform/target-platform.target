@@ -30,11 +30,11 @@
 <repository location="http://updates.verinice.org/pub/verinice/updatesites/birt-rcp/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.babel.nls_datatools_de.feature.group" version="4.7.0.v20171231020002"/>
-<unit id="org.eclipse.babel.nls_datatools_it.feature.group" version="4.7.0.v20171231020002"/>
-<unit id="org.eclipse.babel.nls_eclipse_de.feature.group" version="4.7.0.v20171231020002"/>
-<unit id="org.eclipse.babel.nls_eclipse_it.feature.group" version="4.7.0.v20171231020002"/>
-<repository location="http://download.eclipse.org/technology/babel/update-site/R0.15.1/oxygen/"/>
+<unit id="org.eclipse.babel.nls_datatools_de.feature.group" version="4.7.0.v20190126095834"/>
+<unit id="org.eclipse.babel.nls_datatools_it.feature.group" version="4.7.0.v20190126095834"/>
+<unit id="org.eclipse.babel.nls_eclipse_de.feature.group" version="4.7.0.v20190126095834"/>
+<unit id="org.eclipse.babel.nls_eclipse_it.feature.group" version="4.7.0.v20190126095834"/>
+<repository location="http://download.eclipse.org/technology/babel/update-site/R0.16.1/oxygen/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.birt.feature.group" version="4.7.0.v201706222054"/>
