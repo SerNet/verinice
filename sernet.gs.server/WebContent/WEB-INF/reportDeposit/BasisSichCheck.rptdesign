@@ -5765,6 +5765,7 @@ import java.lang.String;
 import java.lang.Integer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 import java.util.Collections;
 import java.lang.StringBuilder;
 import sernet.hui.common.connect.Entity;
@@ -5793,41 +5794,62 @@ if(elements.size() > 0){
 		cols,
 		true
 	);
+
+	personHql = "select person from CnATreeElement person " +
+		"inner join person.entity as entity " +
+		"inner join entity.typedPropertyLists as propertyList " +
+		"inner join propertyList.properties as props " +
+		"where person.objectType = ?";
+
+	c2 = new ExecuteHQLInReportCommand(personHql, new Object[]{Person.TYPE_ID}, Person.class);
+	result = helper.execute(c2).getResult();
+
+	personTitlesById = new HashMap(result.size());
+	for(Person person : result){
+		personDbId = person.getDbId();
+		if (!personTitlesById.containsKey(personDbId)){
+			person = (Person)Retriever.checkRetrieveElement(person);
+			personTitle = person.getTitle();
+			personTitlesById.put(personDbId, personTitle);
+		}
+	}
+
+	mnumsHql = "select mnums.dbId, link.id.dependantId from CnATreeElement mnums " +
+		"inner join mnums.linksUp as link " +
+		"where mnums.scopeId = ? and mnums.objectType = ? and link.id.typeId = ?";
+
+	personTitlesByMnumsId = new HashMap(lists.size());
+
+	c2 = new ExecuteHQLInReportCommand(mnumsHql, new Object[]{root, MassnahmenUmsetzung.HIBERNATE_TYPE_ID, "rel_person_mnums"}, CnATreeElement.class);
+	result = helper.execute(c2).getResult();
+	for(Object[] oArr : result){
+		mnumsId = oArr[0];
+		personTitlesByMnumsId.putIfAbsent(mnumsId, new ArrayList());
+		personId = oArr[1];
+		personTitle = personTitlesById.get(personId);
+		personTitlesByMnumsId.get(mnumsId).add(personTitle);
+	}
+
 	for(List l : lists){
 		nameList = new ArrayList(0);
 		umsDurch = l.get(umsDurchIndex);
 		dbidIndex = l.size()-1;
 		nameList.add(umsDurch);
-		dbid = l.get(dbidIndex);
-		personNameHql = " from CnATreeElement elmt " + 
-		"inner join elmt.entity as entity " + 
-		"inner join entity.typedPropertyLists as propertyList " + 
-        	"inner join propertyList.properties as props " + 
-		"where elmt.dbId IN ( " +
-		"select link.id.dependantId from CnALink link where link.id.dependencyId IN ( " +
-		"select  elmt2.dbId FROM CnATreeElement elmt2 " +
-		"where elmt2.scopeId = ? and  elmt2.objectType = ?) " +
-		"and link.id.dependencyId = ? " +  
-		")";
-		c2 = new ExecuteHQLInReportCommand(personNameHql, new Object[]{root, "massnahmen-umsetzung", Integer.parseInt(dbid)}, Person.TYPE_ID);
-		persons = helper.execute(c2).getResult();		
-		if(persons != null &amp;&amp; persons.size() > 0){		
-			for(Object[] oArr : persons){
-				for(Object o : oArr){
-					if(o instanceof Person){
-						person = (Person)Retriever.checkRetrieveElement(o);
-						boolean nameAlreadyAdded = false;
-						for(String name : nameList){
-							if(name.equals(person.getTitle()) || name.contains(person.getTitle())){
-								nameAlreadyAdded = true;
-								break;	
-							}
-						}
-						if(!nameAlreadyAdded){
-							nameList.add(person.getTitle());
-						}				
+		dbid = Integer.parseInt(l.get(dbidIndex));
+
+		personTitles = personTitlesByMnumsId.get(dbid);
+
+		if(personTitles != null &amp;&amp; personTitles.size() > 0){
+			for(String personTitle : personTitles){
+				boolean nameAlreadyAdded = false;
+				for(String name : nameList){
+					if(name.equals(personTitle) || name.contains(personTitle)){
+						nameAlreadyAdded = true;
+						break;
 					}
-	
+				}
+				if(!nameAlreadyAdded){
+					nameList.add(personTitle);
 				}
 			}
 		}
