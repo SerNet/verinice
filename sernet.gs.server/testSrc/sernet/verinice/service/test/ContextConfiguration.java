@@ -19,8 +19,17 @@
  ******************************************************************************/
 package sernet.verinice.service.test;
 
+import javax.annotation.Resource;
+
+import org.hibernate.criterion.DetachedCriteria;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.ISO27KModel;
 
 /**
  *
@@ -50,5 +59,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 })
 public abstract class ContextConfiguration  {
 
-
+    @Resource(name="cnaTreeElementDao")
+    protected IBaseDao<CnATreeElement, Integer> elementDao;
+    
+    @Before
+    public void ensureModelsAreCreated() {
+        if (elementDao.findByCriteria(DetachedCriteria.forClass(BSIModel.class)).isEmpty()) {
+            elementDao.merge(new BSIModel());
+        }
+        if (elementDao.findByCriteria(DetachedCriteria.forClass(ISO27KModel.class)).isEmpty()) {
+            elementDao.merge(new ISO27KModel());
+        }
+    }
 }

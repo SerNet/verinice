@@ -22,14 +22,18 @@ package sernet.verinice.service.test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.IRightsServerHandler;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.auth.Action;
@@ -38,6 +42,9 @@ import sernet.verinice.model.auth.OriginType;
 import sernet.verinice.model.auth.Profile;
 import sernet.verinice.model.auth.ProfileRef;
 import sernet.verinice.model.auth.Userprofile;
+import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.service.XmlRightsService;
 
 /**
@@ -45,7 +52,7 @@ import sernet.verinice.service.XmlRightsService;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class RightsServiceTest extends ContextConfiguration {
+public class RightsServiceTest extends UuidLoader {
     
     public static final String[] adminActionIds = {
         ActionRightIDs.ACCOUNTSETTINGS,
@@ -83,6 +90,32 @@ public class RightsServiceTest extends ContextConfiguration {
     @Resource(name="rightsServerHandler")
     private IRightsServerHandler rightsServerHandler;
     
+    @Resource(name="configurationDao")
+    private IDao<Configuration, Serializable> configurationDao;
+
+    @Before
+    public void ensureUsersExist() throws CommandException{
+        if (!rightsService.getUsernames().contains(ADMIN_NAME)) {
+            CnATreeElement admin = new Person(null);
+            admin = elementDao.merge(admin);
+            Configuration adminConfiguration = new Configuration();
+            adminConfiguration.addRole(IRightsService.ADMINDEFAULTGROUPNAME);
+            adminConfiguration.setUser(ADMIN_NAME);
+            adminConfiguration.setPerson(admin);
+            adminConfiguration.setAdminUser(true);
+            configurationDao.merge(adminConfiguration);
+        }
+        if (!rightsService.getUsernames().contains(USER_NAME)) {
+            CnATreeElement user = new Person(null);
+            user = elementDao.merge(user);
+            Configuration userConfiguration = new Configuration();
+            userConfiguration.addRole(IRightsService.USERDEFAULTGROUPNAME);
+            userConfiguration.setUser(USER_NAME);
+            userConfiguration.setPerson(user);
+            configurationDao.merge(userConfiguration);
+        }
+    }
+
     @Test
     public void testUpdate() throws Exception {
         Action action = new Action();
