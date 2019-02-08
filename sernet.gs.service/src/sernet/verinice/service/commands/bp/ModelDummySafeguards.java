@@ -146,7 +146,8 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
             throws CommandException {
         CreateElement<Safeguard> createElement = new CreateElement<>(safeguardGroup,
                 Safeguard.class,
-                requirement.getTitle() + " [" + Messages.getString("ModelDummySafeguards.6") + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                requirement.getTitle() + " [" + Messages.getString("ModelDummySafeguards.6") + "]", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                true, true);
         createElement = getCommandService().executeCommand(createElement);
         Safeguard safeguard = createElement.getNewElement();
         safeguard.setIdentifier(getSafeguardForRequirementIdentifier(requirement.getIdentifier()));
@@ -158,7 +159,7 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
     private CnATreeElement createSafeguardGroup(CnATreeElement parent,
             BpRequirementGroup requirementGroup) throws CommandException {
         CreateElement<SafeguardGroup> createElement = new CreateElement<>(parent,
-                SafeguardGroup.class, requirementGroup.getTitle());
+                SafeguardGroup.class, requirementGroup.getTitle(), true, true);
         createElement = getCommandService().executeCommand(createElement);
         SafeguardGroup safeguardGroup = createElement.getNewElement();
         safeguardGroup.setIdentifier(requirementGroup.getIdentifier());
