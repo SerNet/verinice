@@ -31,6 +31,7 @@ import sernet.verinice.interfaces.IDAOFactory;
 import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -61,6 +62,25 @@ public class ModelModulesTask extends ModelCopyTask {
             return ((BpRequirement) element).getIdentifier();
         }
         return null;
+    }
+
+    @Override
+    protected void afterCopyElement(CnATreeElement targetObject, CnATreeElement newElement,
+            CnATreeElement compendiumElement) {
+        afterHandleElement(targetObject, newElement);
+    }
+
+    @Override
+    protected void afterSkipExistingElement(CnATreeElement targetObject,
+            CnATreeElement existingElement, CnATreeElement compendiumElement) {
+        afterHandleElement(targetObject, existingElement);
+    }
+
+    private void afterHandleElement(CnATreeElement targetObject,
+            CnATreeElement requirementFromScope) {
+        String linkType = BpRequirement.getLinkTypeToTargetObject(targetObject.getTypeId());
+        CnALink linkToTargetObject = new CnALink(requirementFromScope, targetObject, linkType, "");
+        daoFactory.getDAO(CnALink.class).merge(linkToTargetObject);
     }
 
     @Override

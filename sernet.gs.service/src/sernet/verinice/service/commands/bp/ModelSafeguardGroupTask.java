@@ -76,6 +76,33 @@ public class ModelSafeguardGroupTask extends ModelCopyTask {
         return null;
     }
 
+    @Override
+    protected void afterCopyElement(CnATreeElement targetObject, CnATreeElement newElement,
+            CnATreeElement compendiumElement) {
+        afterHandleElement(newElement, compendiumElement);
+    }
+
+    @Override
+    protected void afterSkipExistingElement(CnATreeElement targetObject,
+            CnATreeElement existingElement, CnATreeElement compendiumElement) {
+        afterHandleElement(existingElement, compendiumElement);
+    }
+
+    private void afterHandleElement(CnATreeElement safeguardFromScope,
+            CnATreeElement safeguardFromCompendium) {
+        for (CnALink link : safeguardFromCompendium.getLinksUp()) {
+            if (BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD.equals(link.getRelationId())) {
+                CnATreeElement newDependant = modelingData
+                        .getScopeElementByCompendiumElement(link.getDependant());
+                if (newDependant != null) {
+                    CnALink newLink = new CnALink(newDependant, safeguardFromScope,
+                            BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD, "");
+                    daoFactory.getDAO(CnALink.class).merge(newLink);
+                }
+            }
+        }
+    }
+
     @SuppressWarnings("unchecked")
     private Set<CnATreeElement> retrieveSafeguardGroupsFromModules() {
         Set<Integer> dbIds = requirementGroups.stream()

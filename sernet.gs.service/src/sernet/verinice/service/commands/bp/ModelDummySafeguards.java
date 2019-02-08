@@ -19,8 +19,6 @@ package sernet.verinice.service.commands.bp;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -36,9 +34,7 @@ import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.Link;
 import sernet.verinice.service.commands.CreateElement;
-import sernet.verinice.service.commands.CreateMultipleLinks;
 
 /**
  * Creates a dummy safeguard for a requirement if no safeguard is linked to
@@ -53,8 +49,6 @@ public class ModelDummySafeguards implements Runnable {
 
     private final Collection<CnATreeElement> modulesFromScope;
     private final Set<CnATreeElement> safeguardGroupsFromScope;
-
-    private List<Link> linkList;
 
     public ModelDummySafeguards(ICommandService commandService, IDAOFactory daoFactory,
             ModelingData modelingData) {
@@ -76,14 +70,10 @@ public class ModelDummySafeguards implements Runnable {
     }
 
     private void handleModule(CnATreeElement module) throws CommandException {
-        linkList = new LinkedList<>();
         for (CnATreeElement requirement : module.getChildren()) {
             handleRequirement(requirement);
         }
-        if (!linkList.isEmpty()) {
-            CreateMultipleLinks createMultipleLinks = new CreateMultipleLinks(linkList);
-            commandService.executeCommand(createMultipleLinks);
-        }
+
     }
 
     private void handleRequirement(CnATreeElement requirement) throws CommandException {
@@ -94,8 +84,9 @@ public class ModelDummySafeguards implements Runnable {
                         + requirement.getUuid() + ", will create a dummy safewguard now..."); //$NON-NLS-1$
             }
             Safeguard safeguard = createDummySafeguardForRequirement((BpRequirement) requirement);
-            linkList.add(new Link(requirement, safeguard,
-                    BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD));
+            CnALink link = new CnALink(requirement, safeguard,
+                    BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD, "");
+            daoFactory.getDAO(CnALink.class).merge(link);
         } else if (LOG.isDebugEnabled()) {
             LOG.debug("Safeguards found for requirement with UUID: " + requirement.getUuid()); //$NON-NLS-1$
             for (CnALink link : linksToSafeguard) {

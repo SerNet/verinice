@@ -22,13 +22,10 @@ package sernet.verinice.service.commands.bp;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.transform.DistinctRootEntityResultTransformer;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.gs.service.RetrieveInfo;
@@ -47,7 +44,6 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class ModelingMetaDao {
 
-    private static final String TYPE_ID = "typeId";
     private static final String UUIDS = "uuids";
 
     private static final String JOIN_PROPERTIES = "join fetch entity.typedPropertyLists as propertyList "
@@ -57,41 +53,11 @@ public class ModelingMetaDao {
             + "join fetch element.entity as entity " + JOIN_PROPERTIES
             + "where element.uuid in (:uuids)"; //$NON-NLS-1$
 
-    private static final String HQL_LOAD_ELEMENTS_OF_SCOPE = "select  safeguard from CnATreeElement safeguard "
-            + "join fetch safeguard.entity as entity " + JOIN_PROPERTIES
-            + "where safeguard.objectType = :typeId " + "and safeguard.scopeId = :scopeId"; //$NON-NLS-2$
-
-    private static final String HQL_LOAD_CHILDREN_WITH_PROPERTIES = "select requirement from CnATreeElement requirement "
-            + "join requirement.parent as module " + "join fetch requirement.entity as entity "
-            + JOIN_PROPERTIES + "where module.uuid in (:uuids)"; //$NON-NLS-1$
-
-    private static final String HQL_LOAD_TYPED_CHILDREN_WITH_PROPERTIES = HQL_LOAD_CHILDREN_WITH_PROPERTIES
-            + " and requirement.objectType = :typeId"; //$NON-NLS-1$
-
-    private static final String HQL_LOAD_LINKED_ELEMENTS_WITH_PROPERTIES = "select element from CnATreeElement element "
-            + "join element.linksUp as linksUp " + "join linksUp.dependant as requirement "
-            + "join fetch element.entity as entity " + JOIN_PROPERTIES
-            + "where element.objectType in (:typeIds) " + "and requirement.uuid = :uuid"; // $NON-NLS-2$
-
     private IBaseDao<CnATreeElement, Serializable> dao;
 
     public ModelingMetaDao(IBaseDao<CnATreeElement, Serializable> dao) {
         super();
         this.dao = dao;
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<CnATreeElement> loadElementsFromScope(final String typeId, final Integer scopeId) {
-        return getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(ModelingMetaDao.HQL_LOAD_ELEMENTS_OF_SCOPE)
-                        .setParameter("scopeId", scopeId).setParameter(TYPE_ID, typeId);
-                query.setReadOnly(true);
-                query.setResultTransformer(new DistinctRootEntityResultTransformer());
-                return query.list();
-            }
-        });
     }
 
     @SuppressWarnings("unchecked")
@@ -101,49 +67,6 @@ public class ModelingMetaDao {
             public Object doInHibernate(Session session) throws SQLException {
                 Query query = session.createQuery(HQL_LOAD_ELEMENTS_WITH_PROPERTIES)
                         .setParameterList(UUIDS, allUuids);
-                query.setReadOnly(true);
-                return query.list();
-            }
-        });
-    }
-
-    @SuppressWarnings("unchecked")
-    public Set<CnATreeElement> loadChildrenWithProperties(final Set<String> parentUuids,
-            final String typeId) {
-        final List<CnATreeElement> resultList = getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                String hql = (typeId == null) ? HQL_LOAD_CHILDREN_WITH_PROPERTIES
-                        : HQL_LOAD_TYPED_CHILDREN_WITH_PROPERTIES;
-                Query query = session.createQuery(hql).setParameterList(UUIDS, parentUuids);
-                if (typeId != null) {
-                    query.setParameter(TYPE_ID, typeId);
-                }
-                query.setReadOnly(true);
-                return query.list();
-            }
-        });
-        return new HashSet<>(resultList);
-    }
-
-    /**
-     * Loads the linked elements of an element with the given uuid. The type IDs
-     * of the linked elements are passed as parameter typeIds.
-     * 
-     * @param uuid
-     *            The UUID of an element
-     * @param typeIds
-     *            An array of type ids.
-     * @return A list with linked elements and their properties
-     */
-    @SuppressWarnings("unchecked")
-    public List<CnATreeElement> loadLinkedElementsWithProperties(final String uuid,
-            final String[] typeIds) {
-        return getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(HQL_LOAD_LINKED_ELEMENTS_WITH_PROPERTIES)
-                        .setParameter("uuid", uuid).setParameterList("typeIds", typeIds);
                 query.setReadOnly(true);
                 return query.list();
             }

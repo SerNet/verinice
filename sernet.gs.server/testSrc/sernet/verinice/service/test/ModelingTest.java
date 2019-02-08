@@ -394,6 +394,7 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
         modelCommand.setHandleDummySafeguards(true);
         commandService.executeCommand(modelCommand);
         elementDao.flush();
+        elementDao.clear();
 
         itNetwork = reloadElement(itNetwork);
         assertEquals(0, itNetwork.getLinksDown().size());
@@ -502,7 +503,6 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
         modelCommand.setHandleDummySafeguards(false);
         commandService.executeCommand(modelCommand);
         elementDao.flush();
-        elementDao.clear();
 
         itNetwork = reloadElement(itNetwork);
         assertEquals(0, itNetwork.getLinksDown().size());
@@ -747,6 +747,7 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
         modelCommand.setHandleDummySafeguards(false);
         commandService.executeCommand(modelCommand);
         elementDao.flush();
+        elementDao.clear();
 
         itNetwork = reloadElement(itNetwork);
         assertEquals(0, itNetwork.getLinksDown().size());

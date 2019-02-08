@@ -76,6 +76,36 @@ public class ModelThreatGroupTask extends ModelCopyTask {
         return null;
     }
 
+    @Override
+    protected void afterCopyElement(CnATreeElement targetObject, CnATreeElement newElement,
+            CnATreeElement compendiumElement) {
+        afterHandleElement(targetObject, newElement, compendiumElement);
+    }
+
+    @Override
+    protected void afterSkipExistingElement(CnATreeElement targetObject,
+            CnATreeElement existingElement, CnATreeElement compendiumElement) {
+        afterHandleElement(targetObject, existingElement, compendiumElement);
+    }
+
+    private void afterHandleElement(CnATreeElement targetObject, CnATreeElement threatFromScope,
+            CnATreeElement threatFromCompendium) {
+        String linkType = BpThreat.getLinkTypeToTargetObject(targetObject.getTypeId());
+        CnALink linkToTargetObject = new CnALink(threatFromScope, targetObject, linkType, "");
+        daoFactory.getDAO(CnALink.class).merge(linkToTargetObject);
+        for (CnALink link : threatFromCompendium.getLinksUp()) {
+            if (BpRequirement.REL_BP_REQUIREMENT_BP_THREAT.equals(link.getRelationId())) {
+                CnATreeElement newDependant = modelingData
+                        .getScopeElementByCompendiumElement(link.getDependant());
+                if (newDependant != null) {
+                    CnALink newLink = new CnALink(newDependant, threatFromScope,
+                            BpRequirement.REL_BP_REQUIREMENT_BP_THREAT, "");
+                    daoFactory.getDAO(CnALink.class).merge(newLink);
+                }
+            }
+        }
+    }
+
     @SuppressWarnings("unchecked")
     private Set<CnATreeElement> retrieveThreatGroupsFromModules() {
         Set<Integer> dbIds = requirementGroups.stream()

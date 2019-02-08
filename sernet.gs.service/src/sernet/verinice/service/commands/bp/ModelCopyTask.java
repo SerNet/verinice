@@ -19,6 +19,7 @@ package sernet.verinice.service.commands.bp;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,8 +28,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
@@ -36,6 +35,7 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IDAOFactory;
 import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.CnATypeMapper;
 import sernet.verinice.service.commands.CopyCommand;
 
 /**
@@ -52,6 +52,7 @@ public abstract class ModelCopyTask implements Runnable {
     protected final ModelingData modelingData;
     private final Set<CnATreeElement> targetElements;
     private final String handledGroupTypeId;
+    private final String elementTypeId;
     private final List<IPostProcessor> copyPostProcessors;
 
     // key: element from compendium, value: element from scope
@@ -65,6 +66,7 @@ public abstract class ModelCopyTask implements Runnable {
         this.modelingData = modelingData;
         this.targetElements = modelingData.getTargetElements();
         this.handledGroupTypeId = handledGroupTypeId;
+        this.elementTypeId = CnATypeMapper.getElementTypeIdFromGroupTypeId(handledGroupTypeId);
         this.copyPostProcessors = Arrays.asList(elementCopyPostProcessors);
     }
 
@@ -94,6 +96,12 @@ public abstract class ModelCopyTask implements Runnable {
 
     protected abstract String getIdentifier(CnATreeElement element);
 
+    protected abstract void afterCopyElement(CnATreeElement targetObject, CnATreeElement newElement,
+            CnATreeElement compendiumElement);
+
+    protected abstract void afterSkipExistingElement(CnATreeElement targetObject,
+            CnATreeElement existingElement, CnATreeElement compendiumElement);
+
     protected void handleExistingGroup(CnATreeElement groupFromCompendium,
             CnATreeElement groupFromScope) throws CommandException {
         Map<String, CnATreeElement> compendiumElementsByIdentifier = getIdMapOfChildren(
@@ -107,13 +115,14 @@ public abstract class ModelCopyTask implements Runnable {
             } else {
                 CnATreeElement scopeElement = scopeelementyByIdentifier.get(entry.getKey());
                 modelingData.addMappingForExistingElement(compendiumElement, scopeElement);
+                afterSkipExistingElement(groupFromScope.getParent(), scopeElement,
+                        compendiumElement);
             }
         }
         if (!missingElements.isEmpty()) {
-
-            CopyCommand copyCommand = new ModelingCopyCommand(groupFromScope.getUuid(),
-                    missingElements.stream().map(CnATreeElement::getUuid)
-                            .collect(Collectors.toList()),
+            CopyCommand copyCommand = new ModelingCopyCommand(
+                    groupFromScope.getParent(), groupFromScope.getUuid(), missingElements.stream()
+                            .map(CnATreeElement::getUuid).collect(Collectors.toList()),
                     copyPostProcessors, modelingData);
             commandService.executeCommand(copyCommand);
         }
@@ -130,21 +139,11 @@ public abstract class ModelCopyTask implements Runnable {
     private void copyMissingGroups(CnATreeElement target) throws CommandException {
         List<CnATreeElement> missingGroups = getMissingGroups(target);
         if (!missingGroups.isEmpty()) {
-            CopyCommand copyCommand = new CopyCommand(target.getUuid(), missingGroups.stream()
-                    .map(CnATreeElement::getUuid).collect(Collectors.toList()));
-            copyCommand = commandService.executeCommand(copyCommand);
-            List<String> newGroupUuids = copyCommand.getNewElements();
-            @SuppressWarnings("unchecked")
-            List<CnATreeElement> newGroups = daoFactory.getDAO(handledGroupTypeId)
-                    .findByCriteria(DetachedCriteria.forClass(CnATreeElement.class)
-                            .add(Restrictions.in(CnATreeElement.UUID, newGroupUuids)));
-            if (newGroups.size() != missingGroups.size()) {
-                throw new IllegalStateException("Expected " + missingGroups.size()
-                        + " elements to be copied but got " + newGroups.size());
-            }
-            for (int i = 0; i < newGroupUuids.size(); i++) {
-                modelingData.addMappingForNewElement(missingGroups.get(i), newGroups.get(i));
-            }
+            List<String> missingGroupUuids = missingGroups.stream().map(CnATreeElement::getUuid)
+                    .collect(Collectors.toList());
+            CopyCommand copyCommand = new ModelingCopyCommand(target, target.getUuid(),
+                    missingGroupUuids, Collections.emptyList(), modelingData);
+            commandService.executeCommand(copyCommand);
         }
     }
 
@@ -192,20 +191,27 @@ public abstract class ModelCopyTask implements Runnable {
 
     }
 
-    private static final class ModelingCopyCommand extends CopyCommand {
+    private final class ModelingCopyCommand extends CopyCommand {
         private static final long serialVersionUID = 6836616806403844422L;
 
         private transient ModelingData modelingData;
 
-        private ModelingCopyCommand(String uuidGroup, List<String> uuidList,
-                List<IPostProcessor> postProcessorList, ModelingData modelingData) {
+        private transient CnATreeElement targetElement;
+
+        private ModelingCopyCommand(CnATreeElement targetElement, String uuidGroup,
+                List<String> uuidList, List<IPostProcessor> postProcessorList,
+                ModelingData modelingData) {
             super(uuidGroup, uuidList, postProcessorList, -1);
+            this.targetElement = targetElement;
             this.modelingData = modelingData;
         }
 
         @Override
         protected void afterCopy(CnATreeElement original, CnATreeElement copy) {
             modelingData.addMappingForNewElement(original, copy);
+            if (elementTypeId.equals(copy.getTypeId())) {
+                afterCopyElement(targetElement, copy, original);
+            }
         }
     }
 

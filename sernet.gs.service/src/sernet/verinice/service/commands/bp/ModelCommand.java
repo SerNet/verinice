@@ -24,14 +24,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
-import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -81,8 +78,6 @@ public class ModelCommand extends ChangeLoggingCommand {
 
     private static final long serialVersionUID = -7021777504561600179L;
 
-    private static final Logger LOG = Logger.getLogger(ModelCommand.class);
-
     private transient ModelingMetaDao metaDao;
 
     private Set<String> moduleUuidsFromCompendium;
@@ -106,43 +101,36 @@ public class ModelCommand extends ChangeLoggingCommand {
 
     @Override
     public void execute() {
-        try {
-            @SuppressWarnings("unchecked")
-            Set<CnATreeElement> requirementGroups = new HashSet<>(
-                    getDao().findByCriteria(DetachedCriteria.forClass(CnATreeElement.class)
-                            .add(Restrictions.in(CnATreeElement.UUID, moduleUuidsFromCompendium))
-                            .setFetchMode("children", FetchMode.JOIN)
-                            .setFetchMode("children.linksDown", FetchMode.JOIN)));
-            @SuppressWarnings("unchecked")
-            Set<CnATreeElement> targetElements = new HashSet<>(
-                    getDao().findByCriteria(DetachedCriteria.forClass(CnATreeElement.class)
-                            .setFetchMode("linksUp", FetchMode.JOIN)
-                            .setFetchMode("children", FetchMode.JOIN)
-                            .setFetchMode("children.children", FetchMode.JOIN)
-                            .setFetchMode("children.children.linksDown", FetchMode.JOIN)
-                            .setFetchMode("children.entity", FetchMode.JOIN)
-                            .setFetchMode("children.entity.typedPropertyLists", FetchMode.JOIN)
-                            .setFetchMode("children.entity.typedPropertyLists.properties",
-                                    FetchMode.JOIN)
-                            .add(Restrictions.in(CnATreeElement.UUID, targetUuids))));
-            ItNetwork itNetwork = loadItNetwork(targetElements);
-            ModelingData modelingData = new ModelingData(requirementGroups, targetElements,
-                    itNetwork, handleSafeguards, handleDummySafeguards);
+        @SuppressWarnings("unchecked")
+        Set<CnATreeElement> requirementGroups = new HashSet<>(
+                getDao().findByCriteria(DetachedCriteria.forClass(CnATreeElement.class)
+                        .add(Restrictions.in(CnATreeElement.UUID, moduleUuidsFromCompendium))
+                        .setFetchMode("children", FetchMode.JOIN)
+                        .setFetchMode("children.linksDown", FetchMode.JOIN)));
+        @SuppressWarnings("unchecked")
+        Set<CnATreeElement> targetElements = new HashSet<>(getDao().findByCriteria(DetachedCriteria
+                .forClass(CnATreeElement.class).setFetchMode("linksUp", FetchMode.JOIN)
+                .setFetchMode("children", FetchMode.JOIN)
+                .setFetchMode("children.children", FetchMode.JOIN)
+                .setFetchMode("children.children.linksDown", FetchMode.JOIN)
+                .setFetchMode("children.entity", FetchMode.JOIN)
+                .setFetchMode("children.entity.typedPropertyLists", FetchMode.JOIN)
+                .setFetchMode("children.entity.typedPropertyLists.properties", FetchMode.JOIN)
+                .add(Restrictions.in(CnATreeElement.UUID, targetUuids))));
+        ItNetwork itNetwork = loadItNetwork(targetElements);
+        ModelingData modelingData = new ModelingData(requirementGroups, targetElements,
+                handleSafeguards, handleDummySafeguards);
 
-            handleModules(modelingData);
-            if (isHandleSafeguards()) {
-                handleSafeguards(modelingData);
-            }
-            handleThreats(modelingData);
-            createLinks(modelingData);
-            if (isHandleSafeguards() && isHandleDummySafeguards()) {
-                createDummySafeguards(modelingData);
-            }
-            saveReturnValues(itNetwork);
-        } catch (CommandException e) {
-            LOG.error("Error while modeling.", e);
-            throw new RuntimeCommandException("Error while modeling.", e);
+        handleModules(modelingData);
+        if (isHandleSafeguards()) {
+            handleSafeguards(modelingData);
         }
+        handleThreats(modelingData);
+        if (isHandleSafeguards() && isHandleDummySafeguards()) {
+            createDummySafeguards(modelingData);
+        }
+        saveReturnValues(itNetwork);
+
     }
 
     private void handleModules(ModelingData modelingData) {
@@ -161,11 +149,6 @@ public class ModelCommand extends ChangeLoggingCommand {
         ModelThreatGroupTask modelThreatsTask = new ModelThreatGroupTask(getCommandService(),
                 getDaoFactory(), modelingData);
         modelThreatsTask.run();
-    }
-
-    private void createLinks(ModelingData modelingData) throws CommandException {
-        ModelLinksCommand modelLinksCommand = new ModelLinksCommand(modelingData);
-        getCommandService().executeCommand(modelLinksCommand);
     }
 
     private void createDummySafeguards(ModelingData modelingData) {

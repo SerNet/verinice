@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnATreeElement;
@@ -39,13 +38,11 @@ public class ModelingData {
     private final Set<CnATreeElement> targetElements;
     private final boolean handleSafeguards;
     private final boolean handleDummySafeguards;
-    private final ItNetwork itNetwork;
-    private final Map<CnATreeElement, CnATreeElement> copiedElementsByCompendiumElement = new HashMap<>();
+    private final Map<CnATreeElement, CnATreeElement> scopeElementsByCompendiumElement = new HashMap<>();
     private final Set<CnATreeElement> existingElements = new HashSet<>();
 
     public ModelingData(Set<CnATreeElement> requirementGroups, Set<CnATreeElement> targetElements,
-            ItNetwork itNetwork, boolean handleSafeguards, boolean handleDummySafeguards) {
-        this.itNetwork = itNetwork;
+            boolean handleSafeguards, boolean handleDummySafeguards) {
         this.requirementGroups = Collections.unmodifiableSet(requirementGroups);
         this.targetElements = Collections.unmodifiableSet(targetElements);
         this.handleSafeguards = handleSafeguards;
@@ -60,10 +57,6 @@ public class ModelingData {
         return targetElements;
     }
 
-    public ItNetwork getItNetwork() {
-        return itNetwork;
-    }
-
     public boolean isHandleSafeguards() {
         return handleSafeguards;
     }
@@ -74,27 +67,32 @@ public class ModelingData {
 
     public void addMappingForExistingElement(CnATreeElement compendiumElement,
             CnATreeElement scopeElement) {
+        scopeElementsByCompendiumElement.put(compendiumElement, scopeElement);
         existingElements.add(scopeElement);
     }
 
     public void addMappingForNewElement(CnATreeElement compendiumElement,
             CnATreeElement scopeElement) {
-        copiedElementsByCompendiumElement.put(compendiumElement, scopeElement);
+        scopeElementsByCompendiumElement.put(compendiumElement, scopeElement);
 
     }
 
     public Set<CnATreeElement> getModulesFromScope() {
         return Stream
-                .concat(copiedElementsByCompendiumElement.values().stream(),
+                .concat(scopeElementsByCompendiumElement.values().stream(),
                         existingElements.stream())
                 .filter(item -> item.getTypeId().equals(BpRequirementGroup.TYPE_ID))
                 .collect(Collectors.toSet());
     }
 
     public Set<CnATreeElement> getSafeguardGroupsFromScope() {
-        return copiedElementsByCompendiumElement.values().stream()
+        return scopeElementsByCompendiumElement.values().stream()
                 .filter(item -> item.getTypeId().equals(SafeguardGroup.TYPE_ID))
                 .collect(Collectors.toSet());
+    }
+
+    public CnATreeElement getScopeElementByCompendiumElement(CnATreeElement compendiumElement) {
+        return scopeElementsByCompendiumElement.get(compendiumElement);
     }
 
 }
