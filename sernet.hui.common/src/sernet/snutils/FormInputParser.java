@@ -30,7 +30,7 @@ import java.util.Locale;
  * @author prack
  * @version $Id: FormInputParser.java,v 1.1 2005/12/27 16:41:18 aprack Exp $
  */
-public abstract class FormInputParser {
+public final class FormInputParser {
 
     private static final String DEFAULT_DATE_PATTERN = "EEE, dd.MM.yyyy"; //$NON-NLS-1$
 
@@ -107,10 +107,6 @@ public abstract class FormInputParser {
         }
     }
 
-    /**
-     * @param f
-     * @return
-     */
     public static String floatToString(float f) {
         return createNumberFormat().format(f);
     }
@@ -131,5 +127,9 @@ public abstract class FormInputParser {
         NumberFormat priceFmt = NumberFormat.getCurrencyInstance(Locale.GERMANY);
         priceFmt.setGroupingUsed(GROUPING);
         return priceFmt;
+    }
+
+    private FormInputParser() {
+
     }
 }
