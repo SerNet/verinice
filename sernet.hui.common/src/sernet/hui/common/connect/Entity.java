@@ -261,9 +261,11 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                             + getDbId());
                 }
             } catch (Exception e) {
-                String propertyValue = propertyList.getProperties().stream().map(Property::getPropertyValue).collect(Collectors.joining(", "));
+                String propertyValue = propertyList.getProperties().stream()
+                        .map(Property::getPropertyValue).collect(Collectors.joining(", "));
                 String message = "Error reading Entity:" + entityType + " uuid:" + this.uuid
-                        + " propertytype:" + propertyTypeId+" propertyValue: ["+propertyValue+"]"  ;
+                        + " propertytype:" + propertyTypeId + " propertyValue: [" + propertyValue
+                        + "]";
                 logger.error(message, e);
                 throw new RuntimeException("Error loading reference property.\n" + message, e);
             }

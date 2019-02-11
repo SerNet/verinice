@@ -40,7 +40,8 @@ public abstract class FormInputParser {
      *             reasons only.
      */
     @Deprecated
-    public static final SimpleDateFormat DATE_FORMAT_DEFAULT = createDateFormat(DEFAULT_DATE_PATTERN);
+    public static final SimpleDateFormat DATE_FORMAT_DEFAULT = createDateFormat(
+            DEFAULT_DATE_PATTERN);
     private static final boolean GROUPING = true;
 
     public static float stringToCurrency(String fieldName, String s) throws DBException {
