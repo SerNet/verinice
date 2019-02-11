@@ -180,11 +180,6 @@ permanent authorization for you to choose that version for the
 Library.
    </license>
 
-   <requires>
-      <import feature="org.eclipse.emf.common" version="2.7.0" match="compatible"/>
-      <import feature="org.eclipse.emf.ecore" version="2.7.0" match="compatible"/>
-   </requires>
-
    <plugin
          id="org.eclipse.e4.core.services"
          download-size="0"

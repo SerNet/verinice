@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="sernet.rcp.ui.feature"
-      label="RCP UI"
+      id="sernet.verinice.app.feature"
+      label="Application Feature"
       version="1.0.0.qualifier"
-      provider-name="SERNET">
+      provider-name="SerNet">
 
-   <description url="http://verinice.com">
-      The Verinice Open Source ISMS Tool.
+   <description url="http://www.verinice.com">
+      The application feature.
    </description>
 
-   <copyright url="http://www.verinice.com/">
-      Copyright 1997 - 2017 SerNet GmbH and others.
+   <copyright url="http://www.verinice.com">
+      Copyright 1997 - 2019 SerNet GmbH and others.
    </copyright>
 
    <license url="http://www.gnu.org/licenses/lgpl-3.0-standalone.html">
@@ -181,158 +181,111 @@ permanent authorization for you to choose that version for the
 Library.
    </license>
 
-   <plugin
-         id="sernet.gs.db.fragment"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="antlr"
          version="0.0.0"
-         fragment="true"
-         unpack="false"/>
+         optional="true"/>
 
-   <plugin
-         id="sernet.gs.ehcache.fragment"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="org.eclipse.e4.rcp.sernet"
          version="0.0.0"
-         fragment="true"
-         unpack="false"/>
+         optional="true"/>
 
-   <plugin
-         id="sernet.gs.hibernate.fragment"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="sernet.birt.feature"
          version="0.0.0"
-         fragment="true"
-         unpack="false"/>
+         optional="true"/>
 
-   <plugin
-         id="sernet.gs.log4j.fragment"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="sernet.gs.server.feature"
          version="0.0.0"
-         fragment="true"
-         unpack="false"/>
+         optional="true"/>
 
-   <plugin
-         id="sernet.gs.pax_web.fragment"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="sernet.thirdparty.feature"
          version="0.0.0"
-         fragment="true"
-         unpack="false"/>
+         optional="true"/>
 
-   <plugin
-         id="sernet.gs.reveng"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="sernet.localdependencies"
          version="0.0.0"
-         unpack="false"/>
+         optional="true"/>
 
-   <plugin
-         id="sernet.gs.service"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="spring"
          version="0.0.0"
-         unpack="false"/>
+         optional="true"/>
 
-   <plugin
-         id="sernet.gs.springweb.fragment"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="apache"
          version="0.0.0"
-         fragment="true"
-         unpack="false"/>
+         optional="true"/>
 
-   <plugin
-         id="sernet.gs.ui.rcp.main"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="pax"
          version="0.0.0"
-         unpack="false"/>
+         optional="true"/>
 
-   <plugin
-         id="sernet.hui.common"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="jfree"
          version="0.0.0"
-         unpack="false"/>
+         optional="true"/>
 
-   <plugin
-         id="sernet.hui.server"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="sernet.hui.swtclient"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="lowagie"
          version="0.0.0"
-         unpack="false"/>
+         optional="true"/>
 
-   <plugin
-         id="sernet.springclient"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="sernet.datatools.feature"
          version="0.0.0"
-         unpack="false"/>
+         optional="true"/>
 
-   <plugin
-         id="sernet.verinice.fei.rcp"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="sernet.eclipse.feature"
          version="0.0.0"
-         unpack="false"/>
+         optional="true"/>
 
-   <plugin
-         id="sernet.verinice.fei.service"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="com.opencsv"
          version="0.0.0"
-         unpack="false"/>
+         optional="true"/>
 
-   <plugin
-         id="sernet.verinice.oda.driver"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="threetenbp"
          version="0.0.0"
-         unpack="false"/>
+         optional="true"/>
 
-   <plugin
-         id="sernet.verinice.report.service"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="sernet.rcp.ui.feature"
          version="0.0.0"
-         unpack="false"/>
+         optional="true"/>
 
-   <plugin
-         id="sernet.verinice.samt.rcp"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="org.jgrapht"
          version="0.0.0"
-         unpack="false"/>
+         optional="true"/>
 
-   <plugin
-         id="sernet.verinice.samt.service"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="w3c"
          version="0.0.0"
-         unpack="false"/>
+         optional="true"/>
 
-   <plugin
-         id="sernet.verinice.kerberos"
-         os="win32"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="sernet.verinice.lang.feature"
          version="0.0.0"
-         unpack="false"/>
+         optional="true"/>
 
-   <plugin
-         id="sernet.verinice.desktop.integration"
-         os="linux"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="sernet.verinice.extraresources.feature"
          version="0.0.0"
-         unpack="false"/>
+         optional="true"/>
+
+   <requires>
+      <import feature="sernet.gs.server.feature" version="1.1.1.qualifier"/>
+      <import feature="sernet.rcp.ui.feature" version="1.0.0.qualifier"/>
+      <import feature="sernet.verinice.lang.feature" version="1.0.0"/>
+      <import feature="sernet.verinice.extraresources.feature" version="1.0.0.qualifier"/>
+   </requires>
 
 </feature>
