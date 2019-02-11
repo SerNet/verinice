@@ -19,13 +19,17 @@ package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.junit.After;
 import org.junit.Test;
+import org.junit.matchers.JUnitMatchers;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -112,6 +116,177 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
                 BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
         assertEquals(1, linksSafeguardRequirement.size());
         assertEquals(linksSafeguardRequirement.iterator().next().getDependency(), modeledSafeguard);
+
+        CnATreeElement modeledThreatGroup = getChildrenWithTypeId(itNetwork, BpThreatGroup.TYPE_ID)
+                .iterator().next();
+        assertEquals(threatGroup.getTitle(), modeledThreatGroup.getTitle());
+        assertEquals(1, modeledThreatGroup.getChildren().size());
+        CnATreeElement modeledThreat = modeledThreatGroup.getChildren().iterator().next();
+        assertEquals(threat.getTitle(), modeledThreat.getTitle());
+
+        Set<CnALink> linksThreatRequirement = getLinksWithType(modeledThreat,
+                BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
+        assertEquals(1, linksThreatRequirement.size());
+        assertEquals(linksThreatRequirement.iterator().next().getDependency(), modeledThreat);
+
+        Set<CnALink> linksThreatTargetObject = getLinksWithType(modeledThreat,
+                BpThreat.REL_BP_THREAT_BP_ITNETWORK);
+        assertEquals(1, linksThreatTargetObject.size());
+        assertEquals(linksThreatTargetObject.iterator().next().getDependency(), itNetwork);
+
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void modelTwoModules() throws CommandException {
+        CatalogModel catalogModel = loadCatalogModel();
+        BpRequirementGroup requirementGroup1 = createRequirementGroup(catalogModel, "R1",
+                "Requirements 1");
+        BpRequirementGroup requirementGroup2 = createRequirementGroup(catalogModel, "R2",
+                "Requirements 2");
+        BpRequirement requirement1 = createBpRequirement(requirementGroup1, "R1.1",
+                "Requirement 1");
+        BpRequirement requirement2 = createBpRequirement(requirementGroup2, "R2.1",
+                "Requirement 2");
+        SafeguardGroup safeguardGroup1 = createSafeguardGroup(catalogModel, "S1", "Safeguards");
+        Safeguard safeguard1 = createSafeguard(safeguardGroup1, "S1.1", "Safeguard");
+        createLink(requirement1, safeguard1, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
+        SafeguardGroup safeguardGroup2 = createSafeguardGroup(catalogModel, "S2", "Safeguards");
+        Safeguard safeguard2 = createSafeguard(safeguardGroup2, "S2.1", "Safeguard");
+        createLink(requirement1, safeguard1, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
+        createLink(requirement2, safeguard2, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
+
+        BpThreatGroup threatGroup = createBpThreatGroup(catalogModel, "Threats");
+        BpThreat threat = createBpThreat(threatGroup, "Threat");
+        createLink(requirement1, threat, BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
+        createLink(requirement2, threat, BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
+
+        ItNetwork itNetwork = createNewBPOrganization();
+
+        elementDao.flush();
+        elementDao.clear();
+
+        ModelCommand modelCommand = new ModelCommand(
+                Stream.of(requirementGroup1.getUuid(), requirementGroup2.getUuid()).collect(
+                        Collectors.toSet()),
+                Collections.singletonList(itNetwork.getUuid()));
+        modelCommand.setHandleSafeguards(false);
+        modelCommand.setHandleDummySafeguards(false);
+        commandService.executeCommand(modelCommand);
+        elementDao.flush();
+
+        itNetwork = reloadElement(itNetwork);
+        assertEquals(0, itNetwork.getLinksDown().size());
+        assertEquals(3, itNetwork.getLinksUp().size());
+
+        Set<CnATreeElement> modeledRequirementGroups = getChildrenWithTypeId(itNetwork,
+                BpRequirementGroup.TYPE_ID);
+        assertEquals(2, modeledRequirementGroups.size());
+
+        CnATreeElement modeledRequirementGroup1 = findChildWithTitle(itNetwork,
+                requirementGroup1.getTitle());
+        assertNotNull(modeledRequirementGroup1);
+        assertEquals(1, modeledRequirementGroup1.getChildren().size());
+        CnATreeElement modeledRequirement1 = modeledRequirementGroup1.getChildren().iterator()
+                .next();
+        assertEquals(requirement1.getTitle(), modeledRequirement1.getTitle());
+
+        assertEquals(2, modeledRequirement1.getLinksDown().size());
+        assertEquals(0, modeledRequirement1.getLinksUp().size());
+        Set<CnALink> linksRequirement1Network = getLinksWithType(modeledRequirement1,
+                BpRequirement.REL_BP_REQUIREMENT_BP_ITNETWORK);
+        assertEquals(1, linksRequirement1Network.size());
+        assertEquals(linksRequirement1Network.iterator().next().getDependency(), itNetwork);
+
+        CnATreeElement modeledRequirementGroup2 = findChildWithTitle(itNetwork,
+                requirementGroup2.getTitle());
+        assertNotNull(modeledRequirementGroup2);
+        assertEquals(1, modeledRequirementGroup2.getChildren().size());
+        CnATreeElement modeledRequirement2 = modeledRequirementGroup2.getChildren().iterator()
+                .next();
+        assertEquals(requirement2.getTitle(), modeledRequirement2.getTitle());
+
+        assertEquals(2, modeledRequirement2.getLinksDown().size());
+        assertEquals(0, modeledRequirement2.getLinksUp().size());
+        Set<CnALink> linksRequirement2Network = getLinksWithType(modeledRequirement2,
+                BpRequirement.REL_BP_REQUIREMENT_BP_ITNETWORK);
+        assertEquals(1, linksRequirement2Network.size());
+        assertEquals(linksRequirement2Network.iterator().next().getDependency(), itNetwork);
+
+        CnATreeElement modeledThreatGroup = getChildrenWithTypeId(itNetwork, BpThreatGroup.TYPE_ID)
+                .iterator().next();
+        assertEquals(threatGroup.getTitle(), modeledThreatGroup.getTitle());
+        assertEquals(1, modeledThreatGroup.getChildren().size());
+        CnATreeElement modeledThreat = modeledThreatGroup.getChildren().iterator().next();
+        assertEquals(threat.getTitle(), modeledThreat.getTitle());
+
+        Set<CnALink> linksThreatRequirement = getLinksWithType(modeledThreat,
+                BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
+        assertEquals(2, linksThreatRequirement.size());
+        Set<CnATreeElement> requirements = linksThreatRequirement.stream()
+                .map(CnALink::getDependant).collect(Collectors.toSet());
+        assertThat(requirements, JUnitMatchers.hasItems(modeledRequirement1, modeledRequirement2));
+        Set<CnATreeElement> threats = linksThreatRequirement.stream().map(CnALink::getDependency)
+                .collect(Collectors.toSet());
+        assertEquals(1, threats.size());
+        assertEquals(linksThreatRequirement.iterator().next().getDependency(), modeledThreat);
+
+        Set<CnALink> linksThreatTargetObject = getLinksWithType(modeledThreat,
+                BpThreat.REL_BP_THREAT_BP_ITNETWORK);
+        assertEquals(1, linksThreatTargetObject.size());
+        assertEquals(linksThreatTargetObject.iterator().next().getDependency(), itNetwork);
+
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void modelOneOfTwoModulesSharingAThreat() throws CommandException {
+        CatalogModel catalogModel = loadCatalogModel();
+        BpRequirementGroup requirementGroup1 = createRequirementGroup(catalogModel, "R1",
+                "Requirements");
+        BpRequirementGroup requirementGroup2 = createRequirementGroup(catalogModel, "R2",
+                "Requirements");
+        BpRequirement requirement1 = createBpRequirement(requirementGroup1, "R1.1",
+                "Requirement 1");
+        BpRequirement requirement2 = createBpRequirement(requirementGroup2, "R2.1",
+                "Requirement 2");
+        BpThreatGroup threatGroup = createBpThreatGroup(catalogModel, "Threats");
+        BpThreat threat = createBpThreat(threatGroup, "Threat");
+        createLink(requirement1, threat, BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
+        createLink(requirement2, threat, BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
+
+        ItNetwork itNetwork = createNewBPOrganization();
+
+        elementDao.flush();
+        elementDao.clear();
+
+        ModelCommand modelCommand = new ModelCommand(
+                Collections.singleton(requirementGroup1.getUuid()),
+                Collections.singletonList(itNetwork.getUuid()));
+        modelCommand.setHandleSafeguards(false);
+        modelCommand.setHandleDummySafeguards(false);
+        commandService.executeCommand(modelCommand);
+        elementDao.flush();
+
+        itNetwork = reloadElement(itNetwork);
+        assertEquals(0, itNetwork.getLinksDown().size());
+        assertEquals(2, itNetwork.getLinksUp().size());
+
+        CnATreeElement modeledRequirementGroup = getChildrenWithTypeId(itNetwork,
+                BpRequirementGroup.TYPE_ID).iterator().next();
+        assertEquals(requirementGroup1.getTitle(), modeledRequirementGroup.getTitle());
+        assertEquals(1, modeledRequirementGroup.getChildren().size());
+        CnATreeElement modeledRequirement = modeledRequirementGroup.getChildren().iterator().next();
+        assertEquals(requirement1.getTitle(), modeledRequirement.getTitle());
+
+        assertEquals(2, modeledRequirement.getLinksDown().size());
+        assertEquals(0, modeledRequirement.getLinksUp().size());
+        Set<CnALink> linksRequirementNetwork = getLinksWithType(modeledRequirement,
+                BpRequirement.REL_BP_REQUIREMENT_BP_ITNETWORK);
+        assertEquals(1, linksRequirementNetwork.size());
+        assertEquals(linksRequirementNetwork.iterator().next().getDependency(), itNetwork);
 
         CnATreeElement modeledThreatGroup = getChildrenWithTypeId(itNetwork, BpThreatGroup.TYPE_ID)
                 .iterator().next();
