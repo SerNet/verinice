@@ -236,6 +236,10 @@
             name="%command.name.1"/>
       <command
             categoryId="sernet.gs.ui.rcp.commands"
+            id="sernet.gs.ui.rcp.main.actions.showbulkeditaccountsaction"
+            name="%command.name.showbulkeditaccountsaction"/>
+      <command
+            categoryId="sernet.gs.ui.rcp.commands"
             description="%command.description.0"
             id="sernet.gs.ui.rcp.main.bausteinzuordnungaction"
             name="%command.name.2">

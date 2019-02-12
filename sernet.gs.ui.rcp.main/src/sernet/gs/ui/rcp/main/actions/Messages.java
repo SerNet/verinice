@@ -101,6 +101,7 @@ public class Messages extends NLS {
     public static String AssignResponsiblePersonAction_1;
     public static String AssignResponsiblePersonAction_2;
     public static String AssignResponsiblePersonAction_3;
+    public static String EditMultipleAccountsTogether;
 
     static {
         // initialize resource bundle
