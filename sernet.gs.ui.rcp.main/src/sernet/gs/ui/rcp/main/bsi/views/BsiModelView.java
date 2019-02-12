@@ -63,6 +63,7 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.Perspective;
 import sernet.gs.ui.rcp.main.actions.GSMBasicSecurityCheckAction;
 import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
+import sernet.gs.ui.rcp.main.actions.ShowBulkEditAccountsAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
 import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
@@ -143,6 +144,8 @@ public class BsiModelView extends RightsEnabledView
     private Action linkWithEditorAction;
 
     private ShowBulkEditAction bulkEditAction;
+
+    private ShowBulkEditAccountsAction bulkEditAccountsAction;
 
     private ShowAccessControlEditAction accessControlEditAction;
 
@@ -319,6 +322,7 @@ public class BsiModelView extends RightsEnabledView
         manager.add(new Separator());
         manager.add(new GroupMarker("special")); //$NON-NLS-1$
         manager.add(bulkEditAction);
+        manager.add(bulkEditAccountsAction);
         manager.add(accessControlEditAction);
         manager.add(naturalizeAction);
         manager.add(selectEqualsAction);
@@ -438,6 +442,9 @@ public class BsiModelView extends RightsEnabledView
 
         bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(),
                 Messages.BsiModelView_13);
+
+        bulkEditAccountsAction = new ShowBulkEditAccountsAction(getViewSite().getWorkbenchWindow(),
+                sernet.gs.ui.rcp.main.Messages.ContextMenuAccountBulkEditor);
 
         accessControlEditAction = new ShowAccessControlEditAction(
                 getViewSite().getWorkbenchWindow(), Messages.BsiModelView_14);
