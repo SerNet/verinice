@@ -255,10 +255,15 @@ public class CopyCommand extends GenericCommand {
 
     private void afterCopy(CnATreeElement original, CnATreeElement copy,
             Optional<Map<String, String>> sourceDestMap) {
+        afterCopy(original, copy);
         sourceDestMap.ifPresent(map -> map.put(original.getUuid(), copy.getUuid()));
         if (number > 0 && number % FLUSH_LEVEL == 0) {
             getDao().flush();
         }
+    }
+
+    protected void afterCopy(CnATreeElement original, CnATreeElement copy) {
+
     }
 
     private void copyChildrenIfExistant(CnATreeElement element,
