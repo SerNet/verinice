@@ -96,26 +96,18 @@ public class ClientMenuProvider {
         }
 
         public String getInformation() {
-            switch (os) {
-                case Linux:
-                    return is64bits ? "Linux, 64 bit" : "Linux, 32 bit";
-                case Windows:
-                    return is64bits ? "Windows, 64 bit" : "Windows, 32 bit";
-                default:
-                    return os.toString();
+            if (os == OS.Windows) {
+                return is64bits ? "Windows, 64 bit" : "Windows, 32 bit";
             }
+            return os.toString();
         }
 
         @Override
         public String toString() {
-            switch (os) {
-                case Linux:
-                    return is64bits ? "Linux, 64 bit" : "Linux, 32 bit";
-                case Windows:
-                    return is64bits ? "Windows, 64 bit" : "Windows, 32 bit";
-                default:
-                    return os.toString();
+            if (os == OS.Windows) {
+                return is64bits ? "Windows, 64 bit" : "Windows, 32 bit";
             }
+            return os.toString();
         }
 
         public OS getOs() {

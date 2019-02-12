@@ -34,8 +34,7 @@ public class ClientMenuProviderTest {
 
     @Test
     public void getNameForZip() {
-        Assert.assertEquals("Linux, 64 bit", ClientMenuProvider.ClientInformation.fromFileName("verinice-linux-x86_64.zip").getInformation());
-        Assert.assertEquals("Linux, 32 bit", ClientMenuProvider.ClientInformation.fromFileName("verinice-linux-x86.zip").getInformation());
+        Assert.assertEquals("Linux", ClientMenuProvider.ClientInformation.fromFileName("verinice-linux-x86_64.zip").getInformation());
         Assert.assertEquals("macOS", ClientMenuProvider.ClientInformation.fromFileName("verinice-macosx.cocoa.x86_64.zip").getInformation());
         Assert.assertEquals("Windows, 64 bit", ClientMenuProvider.ClientInformation.fromFileName("verinice-windows-x86_64.zip").getInformation());
         Assert.assertEquals("Windows, 32 bit", ClientMenuProvider.ClientInformation.fromFileName("verinice-windows-x86.zip").getInformation());
@@ -45,7 +44,6 @@ public class ClientMenuProviderTest {
     @Test
     public void getIconForZip() {
         Assert.assertEquals("fa fa-fw fa-linux", menuProvider.iconForClient(ClientMenuProvider.ClientInformation.fromFileName("verinice-linux-x86_64.zip")));
-        Assert.assertEquals("fa fa-fw fa-linux", menuProvider.iconForClient(ClientMenuProvider.ClientInformation.fromFileName("verinice-linux-x86.zip")));
         Assert.assertEquals("fa fa-fw fa-apple", menuProvider.iconForClient(ClientMenuProvider.ClientInformation.fromFileName("verinice-macosx.cocoa.x86_64.zip")));
         Assert.assertEquals("fa fa-fw fa-windows", menuProvider.iconForClient(ClientMenuProvider.ClientInformation.fromFileName("verinice-windows-x86_64.zip")));
         Assert.assertEquals("fa fa-fw fa-windows", menuProvider.iconForClient(ClientMenuProvider.ClientInformation.fromFileName("verinice-windows-x86.zip")));
