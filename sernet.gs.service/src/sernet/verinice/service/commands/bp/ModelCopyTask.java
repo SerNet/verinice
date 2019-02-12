@@ -221,7 +221,7 @@ public abstract class ModelCopyTask implements Runnable {
 
         private ModelingCopyCommand(String uuidGroup, List<String> uuidList,
                 List<IPostProcessor> postProcessorList, ModelingData modelingData) {
-            super(uuidGroup, uuidList, postProcessorList);
+            super(uuidGroup, uuidList, postProcessorList, -1);
             this.modelingData = modelingData;
         }
 
