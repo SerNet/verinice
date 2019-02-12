@@ -20,61 +20,60 @@ package sernet.verinice.service.commands.task;
 import java.io.Serializable;
 import java.util.Set;
 
-import sernet.gs.service.RetrieveInfo;
+import org.hibernate.Hibernate;
+
+import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.HydratorUtil;
 
 /**
  * Loads an element with all links (up and down) for the relation view.
  * 
  * @author koderman[at]sernet[dot]de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
 public class FindRelationsFor extends GenericCommand {
 
-	private Integer dbId;
-	private CnATreeElement elmt;
-	private String typeId;
+    private Integer dbId;
+    private CnATreeElement elmt;
+    private String typeId;
 
-	/**
-	 * @param dbId
-	 */
-	public FindRelationsFor(CnATreeElement elmt) {
-		this.dbId = elmt.getDbId();
-		this.typeId = elmt.getTypeId();
-	}
+    public FindRelationsFor(CnATreeElement elmt) {
+        this.dbId = elmt.getDbId();
+        this.typeId = elmt.getTypeId();
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
-	 */
-	public void execute() {
-		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
-		RetrieveInfo ri = new RetrieveInfo();
-		ri.setLinksDown(true).setLinksUp(true);
-		elmt = dao.retrieve(dbId, ri);
-		
-		if(elmt!=null) {
-    		Set<CnALink> linksDown = elmt.getLinksDown();
-    		for (CnALink cnALink : linksDown) {
-    			HydratorUtil.hydrateElement(dao, cnALink.getDependency(), false);
-    			
-    		}
-    		
-    		Set<CnALink> linksUp = elmt.getLinksUp();
-    		for (CnALink cnALink : linksUp) {
-    			HydratorUtil.hydrateElement(dao, cnALink.getDependant(), false);
-    			
-    		}
-		}
-	}
+    /*
+     * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
+     */
+    public void execute() {
+        IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
+        elmt = dao.findById(dbId);
 
-	public CnATreeElement getElmt() {
-		return elmt;
-	}
+        if (elmt != null) {
+            Set<CnALink> linksDown = elmt.getLinksDown();
+            for (CnALink cnALink : linksDown) {
+                for (PropertyList pl : cnALink.getDependency().getEntity().getTypedPropertyLists()
+                        .values()) {
+                    Hibernate.initialize(pl.getProperties());
+                }
+            }
+
+            Set<CnALink> linksUp = elmt.getLinksUp();
+            for (CnALink cnALink : linksUp) {
+                for (PropertyList pl : cnALink.getDependant().getEntity().getTypedPropertyLists()
+                        .values()) {
+                    Hibernate.initialize(pl.getProperties());
+                }
+            }
+        }
+    }
+
+    public CnATreeElement getElmt() {
+        return elmt;
+    }
 
 }

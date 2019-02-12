@@ -109,19 +109,25 @@ public class ModelLinksCommand extends GenericCommand {
 
     private transient Set<CnATreeElement> elementsFromScope;
     private transient Set<CnATreeElement> requirementsFromCompendium;
+    // the map's keys are requirement identifiers
     private transient Map<String, CnATreeElement> newRequirementsFromScope;
-    private transient Map<String, CnATreeElement> allRequirementsFromScope;
-    private transient Map<String, CnATreeElement> allSafeguardsFromScope;
-    private transient Map<String, CnATreeElement> allThreatsFromScope;
+    // the inner maps' keys are requirement identifiers, the outer maps' keys
+    // are target element database ids
+    private transient Map<Integer, Map<String, CnATreeElement>> allRequirementsFromScope;
+    private transient Map<Integer, Map<String, CnATreeElement>> allSafeguardsFromScope;
+    private transient Map<Integer, Map<String, CnATreeElement>> allThreatsFromScope;
+
+    private boolean handleSafeguards;
 
     public ModelLinksCommand(Set<String> moduleUuidsFromCompendium,
             Set<String> newModuleUuidsFromScope, ItNetwork itNetwork,
-            Set<CnATreeElement> targetElements) {
+            Set<CnATreeElement> targetElements, boolean handleSafeguards) {
         super();
         this.moduleUuidsFromCompendium = moduleUuidsFromCompendium;
         this.newModuleUuidsFromScope = newModuleUuidsFromScope;
         this.itNetwork = itNetwork;
         this.elementsFromScope = targetElements;
+        this.handleSafeguards = handleSafeguards;
     }
 
     @Override
@@ -132,7 +138,9 @@ public class ModelLinksCommand extends GenericCommand {
             loadAllThreatsFromScope();
             if (isNewModuleInScope()) {
                 loadNewRequirementsFromScope();
-                loadAllSafeguardsFromScope();
+                if (handleSafeguards) {
+                    loadAllSafeguardsFromScope();
+                }
             }
             createLinks();
         } catch (CommandException e) {
@@ -179,7 +187,7 @@ public class ModelLinksCommand extends GenericCommand {
 
     private Link createLinkFromRequirementToElement(CnATreeElement requirementFromCompendium,
             CnATreeElement elementFromScope) {
-        CnATreeElement requirementScope = allRequirementsFromScope
+        CnATreeElement requirementScope = allRequirementsFromScope.get(elementFromScope.getDbId())
                 .get(BpRequirement.getIdentifierOfRequirement(requirementFromCompendium));
         if (validate(requirementScope, elementFromScope)) {
             return new Link(requirementScope, elementFromScope,
@@ -212,7 +220,7 @@ public class ModelLinksCommand extends GenericCommand {
 
     private Link createLinkFromThreatToElement(CnATreeElement threatFromCompendium,
             CnATreeElement elementFromScope) {
-        CnATreeElement threatFromScope = allThreatsFromScope
+        CnATreeElement threatFromScope = allThreatsFromScope.get(elementFromScope.getDbId())
                 .get(BpThreat.getIdentifierOfThreat(threatFromCompendium));
         if (validate(threatFromScope, elementFromScope)) {
             return new Link(threatFromScope, elementFromScope,
@@ -251,7 +259,8 @@ public class ModelLinksCommand extends GenericCommand {
             Safeguard safeguardFromCompendium) {
         CnATreeElement requirementScope = newRequirementsFromScope
                 .get(BpRequirement.getIdentifierOfRequirement(requirementFromCompendium));
-        CnATreeElement safeguardScope = allSafeguardsFromScope
+        CnATreeElement elementFromScope = requirementScope.getParent().getParent();
+        CnATreeElement safeguardScope = allSafeguardsFromScope.get(elementFromScope.getDbId())
                 .get(safeguardFromCompendium.getIdentifier());
         if (validate(requirementScope, safeguardScope)) {
             return new Link(requirementScope, safeguardScope,
@@ -265,7 +274,9 @@ public class ModelLinksCommand extends GenericCommand {
             BpThreat threatFromCompendium) {
         CnATreeElement requirementScope = newRequirementsFromScope
                 .get(BpRequirement.getIdentifierOfRequirement(requirementFromCompendium));
-        CnATreeElement threatScope = allThreatsFromScope.get(threatFromCompendium.getIdentifier());
+        CnATreeElement elementFromScope = requirementScope.getParent().getParent();
+        CnATreeElement threatScope = allThreatsFromScope.get(elementFromScope.getDbId())
+                .get(threatFromCompendium.getIdentifier());
         if (validate(requirementScope, threatScope)) {
             return new Link(requirementScope, threatScope,
                     BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
@@ -294,16 +305,24 @@ public class ModelLinksCommand extends GenericCommand {
     }
 
     private List<CnATreeElement> loadLinkedElementList(final String requirementUuid) {
-        return getMetaDao().loadLinkedElementsWithProperties(requirementUuid,
-                new String[] { Safeguard.TYPE_ID, BpThreat.TYPE_ID });
+        if (handleSafeguards) {
+            return getMetaDao().loadLinkedElementsWithProperties(requirementUuid,
+                    new String[] { Safeguard.TYPE_ID, BpThreat.TYPE_ID });
+        } else {
+            return getMetaDao().loadLinkedElementsWithProperties(requirementUuid,
+                    new String[] { BpThreat.TYPE_ID });
+        }
     }
 
     protected void loadNewRequirementsFromScope() {
         newRequirementsFromScope = new HashMap<>();
         Set<CnATreeElement> requirementList = findRequirementsByModuleUuid(newModuleUuidsFromScope);
         for (CnATreeElement requirement : requirementList) {
-            newRequirementsFromScope.put(BpRequirement.getIdentifierOfRequirement(requirement),
-                    requirement);
+            String identifier = BpRequirement.getIdentifierOfRequirement(requirement);
+            CnATreeElement previousMapping = newRequirementsFromScope.put(identifier, requirement);
+            if (previousMapping != null) {
+                LOG.warn("Found multiple new requirements with identifier " + identifier);
+            }
         }
     }
 
@@ -312,8 +331,15 @@ public class ModelLinksCommand extends GenericCommand {
                 .loadElementsFromScope(BpRequirement.TYPE_ID, itNetwork.getDbId());
         allRequirementsFromScope = new HashMap<>();
         for (CnATreeElement requirement : requirements) {
-            allRequirementsFromScope.put(BpRequirement.getIdentifierOfRequirement(requirement),
-                    requirement);
+            CnATreeElement elementFromScope = requirement.getParent().getParent();
+            String identifier = BpRequirement.getIdentifierOfRequirement(requirement);
+            CnATreeElement previousMapping = allRequirementsFromScope
+                    .computeIfAbsent(elementFromScope.getDbId(), key -> new HashMap<>())
+                    .put(identifier, requirement);
+            if (previousMapping != null) {
+                LOG.warn("Found multiple requirements with identifier " + identifier
+                        + " underneath " + elementFromScope);
+            }
         }
     }
 
@@ -322,7 +348,15 @@ public class ModelLinksCommand extends GenericCommand {
                 itNetwork.getDbId());
         allSafeguardsFromScope = new HashMap<>(safeguards.size());
         for (CnATreeElement safeguard : safeguards) {
-            allSafeguardsFromScope.put(Safeguard.getIdentifierOfSafeguard(safeguard), safeguard);
+            CnATreeElement elementFromScope = safeguard.getParent().getParent();
+            String identifier = Safeguard.getIdentifierOfSafeguard(safeguard);
+            CnATreeElement previousMapping = allSafeguardsFromScope
+                    .computeIfAbsent(elementFromScope.getDbId(), key -> new HashMap<>())
+                    .put(identifier, safeguard);
+            if (previousMapping != null) {
+                LOG.warn("Found multiple safeguards with identifier " + identifier + " underneath "
+                        + elementFromScope);
+            }
         }
     }
 
@@ -331,7 +365,15 @@ public class ModelLinksCommand extends GenericCommand {
                 itNetwork.getDbId());
         allThreatsFromScope = new HashMap<>(threats.size());
         for (CnATreeElement threat : threats) {
-            allThreatsFromScope.put(BpThreat.getIdentifierOfThreat(threat), threat);
+            CnATreeElement elementFromScope = threat.getParent().getParent();
+            String identifier = BpThreat.getIdentifierOfThreat(threat);
+            CnATreeElement previousMapping = allThreatsFromScope
+                    .computeIfAbsent(elementFromScope.getDbId(), key -> new HashMap<>())
+                    .put(identifier, threat);
+            if (previousMapping != null) {
+                LOG.warn("Found multiple threats with identifier " + identifier + " underneath "
+                        + elementFromScope);
+            }
         }
     }
 

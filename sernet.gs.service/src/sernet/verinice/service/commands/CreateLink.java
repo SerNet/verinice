@@ -52,6 +52,7 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
     private CnALink link;
     private String relationId;
     private String comment;
+    private final boolean retrieveLinkedElementProperties;
 
     public CreateLink(String dependantUuid, String dependencyUuid) {
         this(dependantUuid, dependencyUuid, "", "");
@@ -59,6 +60,10 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
 
     public CreateLink(U dependant, V dependency) {
         this(dependant, dependency, "", "");
+    }
+
+    public CreateLink(U dependant, V dependency, boolean retrieveLinkedElementProperties) {
+        this(dependant, dependency, "", "", retrieveLinkedElementProperties);
     }
 
     public CreateLink(String dependantUuid, String dependencyUuid, String relationId) {
@@ -69,19 +74,31 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
         this(dependant, dependency, relationId, "");
     }
 
+    public CreateLink(U dependant, V dependency, String relationId,
+            boolean retrieveLinkedElementProperties) {
+        this(dependant, dependency, relationId, "", retrieveLinkedElementProperties);
+    }
+
+    public CreateLink(U dependant, V dependancy, String relationId, String comment) {
+        this(dependant, dependancy, relationId, comment, true);
+    }
+
     public CreateLink(String dependantUuid, String dependencyUuid, String relationId,
             String comment) {
         this.dependantUuid = dependantUuid;
         this.dependencyUuid = dependencyUuid;
         this.relationId = relationId;
         this.comment = comment;
+        this.retrieveLinkedElementProperties = true;
     }
 
-    public CreateLink(U dependant, V dependancy, String relationId, String comment) {
+    public CreateLink(U dependant, V dependancy, String relationId, String comment,
+            boolean retrieveLinkedElementProperties) {
         this.dependant = dependant;
         this.dependency = dependancy;
         this.relationId = relationId;
         this.comment = comment;
+        this.retrieveLinkedElementProperties = retrieveLinkedElementProperties;
     }
 
     @Override
@@ -93,11 +110,13 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
             IBaseDao<CnATreeElement, Serializable> dependencyDao = getDaoFactory()
                     .getDAO(CnATreeElement.class);
 
-            RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
+            RetrieveInfo ri = retrieveLinkedElementProperties ? RetrieveInfo.getPropertyInstance()
+                    : new RetrieveInfo();
             ri.setLinksUp(true);
             dependency = dependencyDao.findByUuid(getDependencyUuid(), ri);
 
-            ri = RetrieveInfo.getPropertyInstance();
+            ri = retrieveLinkedElementProperties ? RetrieveInfo.getPropertyInstance()
+                    : new RetrieveInfo();
             ri.setLinksDown(true);
             dependant = dependantDao.findByUuid(getDependantUuid(), ri);
 

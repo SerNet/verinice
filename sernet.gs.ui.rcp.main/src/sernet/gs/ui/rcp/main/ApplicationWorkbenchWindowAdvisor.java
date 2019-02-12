@@ -41,12 +41,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PerspectiveAdapter;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.ActionBarAdvisor;
@@ -327,7 +325,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             throw new UpdateNewsException("Malformed URL of updatesite", e);
         }
         Display.getDefault().syncExec(() -> {
-            Shell dialogShell = new Shell(Display.getCurrent().getActiveShell());
+            Shell dialogShell = Display.getCurrent().getActiveShell();
             UpdateNewsDialog newsDialog = new UpdateNewsDialog(dialogShell, text, updateSiteURL);
             newsDialog.open();
         });

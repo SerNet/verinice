@@ -29,6 +29,7 @@ import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.transform.DistinctRootEntityResultTransformer;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.gs.service.RetrieveInfo;
@@ -49,77 +50,61 @@ public class ModelingMetaDao {
 
     private static final String TYPE_ID = "typeId";
     private static final String UUIDS = "uuids";
-    
-    private static final String JOIN_PROPERTIES =
-    "join fetch entity.typedPropertyLists as propertyList " +
-    "join fetch propertyList.properties as props ";
 
-    private static final String HQL_LOAD_ELEMENTS_WITH_PROPERTIES = "select element from CnATreeElement element " +
-            "join fetch element.entity as entity " +
-            JOIN_PROPERTIES +
-            "where element.uuid in (:uuids)"; //$NON-NLS-1$
+    private static final String JOIN_PROPERTIES = "join fetch entity.typedPropertyLists as propertyList "
+            + "join fetch propertyList.properties as props ";
 
-    private static final String HQL_LOAD_ELEMENTS_WITH_CHILDREN_PROPERTIES = "select element from CnATreeElement element " + 
-            "left join fetch element.children as child " + "left join fetch child.entity as entity " + "left join fetch entity.typedPropertyLists as propertyList " + "left join fetch propertyList.properties as props " + 
-            "where element.uuid in (:uuids)"; // $NON-NLS-6$
+    private static final String HQL_LOAD_ELEMENTS_WITH_PROPERTIES = "select element from CnATreeElement element "
+            + "join fetch element.entity as entity " + JOIN_PROPERTIES
+            + "where element.uuid in (:uuids)"; //$NON-NLS-1$
 
-    public static final String HQL_LOAD_ELEMENTS_OF_SCOPE = "select  safeguard from CnATreeElement safeguard " +
-            "join fetch safeguard.entity as entity " +
-            JOIN_PROPERTIES +
-            "where safeguard.objectType = :typeId " +
-            "and safeguard.scopeId = :scopeId"; //$NON-NLS-1$
+    private static final String HQL_LOAD_ELEMENTS_WITH_CHILDREN_PROPERTIES = "select element from CnATreeElement element "
+            + "left join fetch element.children as child "
+            + "left join fetch child.entity as entity "
+            + "left join fetch entity.typedPropertyLists as propertyList "
+            + "left join fetch propertyList.properties as props "
+            + "where element.uuid in (:uuids)"; // $NON-NLS-6$
 
-    private static final String HQL_LOAD_ELEMENTS_WITH_PARENT = "select distinct element from CnATreeElement element " +
-            "join fetch element.parent as p1 " +
-            "where element.uuid in (:uuids)"; //$NON-NLS-1$
-    
-    private static final String HQL_LOAD_ELEMENTS_WITH_3_PARENTS = "select distinct element from CnATreeElement element " +
-            "join fetch element.parent as p1 " +
-            "join fetch p1.parent as p2 " +
-            "join fetch p2.parent as p3 " +
-            "where element.uuid in (:uuids)"; //$NON-NLS-1$
+    public static final String HQL_LOAD_ELEMENTS_OF_SCOPE = "select  safeguard from CnATreeElement safeguard "
+            + "join fetch safeguard.entity as entity " + JOIN_PROPERTIES
+            + "where safeguard.objectType = :typeId " + "and safeguard.scopeId = :scopeId"; //$NON-NLS-2$
+
+    private static final String HQL_LOAD_ELEMENTS_WITH_PARENT = "select distinct element from CnATreeElement element "
+            + "join fetch element.parent as p1 " + "where element.uuid in (:uuids)"; //$NON-NLS-2$
+
+    private static final String HQL_LOAD_ELEMENTS_WITH_3_PARENTS = "select distinct element from CnATreeElement element "
+            + "join fetch element.parent as p1 " + "join fetch p1.parent as p2 "
+            + "join fetch p2.parent as p3 " + "where element.uuid in (:uuids)"; //$NON-NLS-2$
 
     private static final String HQL_LOAD_LINKED_SAFEGUARDS_WITH_PROPERTIES_OF_MODULES = "select safeguard from CnATreeElement safeguard "
-            +
-            "join safeguard.linksUp as linksUp " +
-            "join linksUp.dependant as requirement " +
-            "join requirement.parent as module " +
-            "join fetch safeguard.entity as entity " +
-            JOIN_PROPERTIES +   
-            "where safeguard.objectType = :typeId " +
-            "and module.uuid in (:uuids)"; //$NON-NLS-1$
+            + "join safeguard.linksUp as linksUp " + "join linksUp.dependant as requirement "
+            + "join requirement.parent as module " + "join fetch safeguard.entity as entity "
+            + JOIN_PROPERTIES + "where safeguard.objectType = :typeId "
+            + "and module.uuid in (:uuids)"; //$NON-NLS-1$
 
     private static final String HQL_LOAD_CHILDREN_WITH_LINKS_DOWN = "select requirement from CnATreeElement requirement "
-            + "join requirement.parent as module "
-            + "join requirement.linksDown as linksDown "
+            + "join requirement.parent as module " + "join requirement.linksDown as linksDown "
             + "where module.uuid in (:uuids) "; // $NON-NLS-2$
 
-    private static final String HQL_LOAD_LINKED_SAFEGUARD_GROUPS_OF_MODULES = "select safeguardGroup from CnATreeElement safeguardGroup " +
-            "join fetch safeguardGroup.children as safeguard " +
-            "join safeguard.linksUp as linksUp " +
-            "join linksUp.dependant as requirement " +
-            "join requirement.parent as module " +
-            "join fetch safeguard.entity as entity " +
-            JOIN_PROPERTIES +         
-            "where safeguardGroup.objectType = :typeId " +
-            "and module.uuid in (:uuids)"; //$NON-NLS-1$
-    
-    private static final String HQL_LOAD_CHILDREN_WITH_PROPERTIES = "select requirement from CnATreeElement requirement " +
-            "join requirement.parent as module " +
-            "join fetch requirement.entity as entity " +
-            JOIN_PROPERTIES +       
-            "where module.uuid in (:uuids)"; //$NON-NLS-1$
+    private static final String HQL_LOAD_LINKED_SAFEGUARD_GROUPS_OF_MODULES = "select safeguardGroup from CnATreeElement safeguardGroup "
+            + "join fetch safeguardGroup.children as safeguard "
+            + "join safeguard.linksUp as linksUp " + "join linksUp.dependant as requirement "
+            + "join requirement.parent as module " + "join fetch safeguard.entity as entity "
+            + JOIN_PROPERTIES + "where safeguardGroup.objectType = :typeId "
+            + "and module.uuid in (:uuids)"; //$NON-NLS-1$
 
-    private static final String HQL_LOAD_TYPED_CHILDREN_WITH_PROPERTIES = HQL_LOAD_CHILDREN_WITH_PROPERTIES + 
-            " and requirement.objectType = :typeId"; //$NON-NLS-1$
-    
+    private static final String HQL_LOAD_CHILDREN_WITH_PROPERTIES = "select requirement from CnATreeElement requirement "
+            + "join requirement.parent as module " + "join fetch requirement.entity as entity "
+            + JOIN_PROPERTIES + "where module.uuid in (:uuids)"; //$NON-NLS-1$
+
+    private static final String HQL_LOAD_TYPED_CHILDREN_WITH_PROPERTIES = HQL_LOAD_CHILDREN_WITH_PROPERTIES
+            + " and requirement.objectType = :typeId"; //$NON-NLS-1$
+
     private static final String HQL_LOAD_LINKED_ELEMENTS_WITH_PROPERTIES = "select element from CnATreeElement element "
             + "join element.linksUp as linksUp " + "join linksUp.dependant as requirement "
-            + "join fetch element.entity as entity "
-            + JOIN_PROPERTIES            
-            + "where element.objectType in (:typeIds) " 
-            + "and requirement.uuid = :uuid"; //$NON-NLS-2$
-    
+            + "join fetch element.entity as entity " + JOIN_PROPERTIES
+            + "where element.objectType in (:typeIds) " + "and requirement.uuid = :uuid"; // $NON-NLS-2$
+
     private IBaseDao<CnATreeElement, Serializable> dao;
 
     public ModelingMetaDao(IBaseDao<CnATreeElement, Serializable> dao) {
@@ -135,6 +120,7 @@ public class ModelingMetaDao {
                 Query query = session.createQuery(ModelingMetaDao.HQL_LOAD_ELEMENTS_OF_SCOPE)
                         .setParameter("scopeId", scopeId).setParameter(TYPE_ID, typeId);
                 query.setReadOnly(true);
+                query.setResultTransformer(new DistinctRootEntityResultTransformer());
                 return query.list();
             }
         });
@@ -154,11 +140,13 @@ public class ModelingMetaDao {
     }
 
     @SuppressWarnings("unchecked")
-    public List<CnATreeElement> loadElementsWithChildrenProperties(final Collection<String> allUuids) {
+    public List<CnATreeElement> loadElementsWithChildrenProperties(
+            final Collection<String> allUuids) {
         return getDao().findByCallback(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(HQL_LOAD_ELEMENTS_WITH_CHILDREN_PROPERTIES).setParameterList(UUIDS, allUuids);
+                Query query = session.createQuery(HQL_LOAD_ELEMENTS_WITH_CHILDREN_PROPERTIES)
+                        .setParameterList(UUIDS, allUuids);
                 query.setReadOnly(true);
                 return query.list();
             }
@@ -207,7 +195,8 @@ public class ModelingMetaDao {
         final List<CnATreeElement> resultList = getDao().findByCallback(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) throws SQLException {
-                String hql = (typeId == null) ? HQL_LOAD_CHILDREN_WITH_PROPERTIES : HQL_LOAD_TYPED_CHILDREN_WITH_PROPERTIES;
+                String hql = (typeId == null) ? HQL_LOAD_CHILDREN_WITH_PROPERTIES
+                        : HQL_LOAD_TYPED_CHILDREN_WITH_PROPERTIES;
                 Query query = session.createQuery(hql).setParameterList(UUIDS, parentUuids);
                 if (typeId != null) {
                     query.setParameter(TYPE_ID, typeId);
@@ -234,14 +223,12 @@ public class ModelingMetaDao {
 
     @SuppressWarnings("unchecked")
     public List<CnATreeElement> loadLinkedElementsWithPropertiesOfParents(
-            final Collection<String> parentUuids,
-            final String typeId) {
+            final Collection<String> parentUuids, final String typeId) {
         return getDao().findByCallback(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) throws SQLException {
-                Query query = session
-                        .createQuery(
-                                ModelingMetaDao.HQL_LOAD_LINKED_SAFEGUARDS_WITH_PROPERTIES_OF_MODULES)
+                Query query = session.createQuery(
+                        ModelingMetaDao.HQL_LOAD_LINKED_SAFEGUARDS_WITH_PROPERTIES_OF_MODULES)
                         .setParameterList(UUIDS, parentUuids).setParameter(TYPE_ID, typeId);
                 return query.list();
             }
@@ -249,11 +236,14 @@ public class ModelingMetaDao {
     }
 
     @SuppressWarnings("unchecked")
-    public List<CnATreeElement> loadChildrenLinksParents(final Set<String> parentUuids, final String typeId) {
+    public List<CnATreeElement> loadChildrenLinksParents(final Set<String> parentUuids,
+            final String typeId) {
         return getDao().findByCallback(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(ModelingMetaDao.HQL_LOAD_LINKED_SAFEGUARD_GROUPS_OF_MODULES).setParameterList(UUIDS, parentUuids).setParameter(TYPE_ID, typeId);
+                Query query = session
+                        .createQuery(ModelingMetaDao.HQL_LOAD_LINKED_SAFEGUARD_GROUPS_OF_MODULES)
+                        .setParameterList(UUIDS, parentUuids).setParameter(TYPE_ID, typeId);
                 return query.list();
             }
         });

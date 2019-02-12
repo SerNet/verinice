@@ -51,7 +51,7 @@ public final class LinkUtil {
 
     public static void createLink(CnATreeElement source, CnATreeElement target, String relationId) {
         CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source, target,
-                relationId);
+                relationId, false);
         try {
             command = commandService.executeCommand(command);
             CnALink link = command.getLink();

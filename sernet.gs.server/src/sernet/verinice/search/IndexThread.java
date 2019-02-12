@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.search;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.FetchMode;
@@ -35,32 +36,40 @@ import sernet.verinice.model.common.CnATreeElement;
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class IndexThread extends DummyAuthenticatorCallable<List<CnATreeElement>> {
+public class IndexThread extends DummyAuthenticatorCallable<List<IndexedElementDetails>> {
 
     private IBaseDao<CnATreeElement, Integer> elementDao;
     private ISearchDao searchDao;
     private ISearchService searchService;
     private List<String> uuids;
     private IJsonBuilder jsonBuilder;
+    private boolean logIndexedElementDetails = false;
 
     /*
      * @see sernet.verinice.search.DummyAuthenticatorCallable#doCall()
      */
     @Override
-    public List<CnATreeElement> doCall() {
+    public List<IndexedElementDetails> doCall() {
         String json = null;
 
         ServerInitializer.inheritVeriniceContextState();
         List<CnATreeElement> elements = loadElements();
+        List<IndexedElementDetails> result = logIndexedElementDetails
+                ? new ArrayList<>(elements.size())
+                : null;
         for (CnATreeElement cnATreeElement : elements) {
             json = getJsonBuilder().getJson(cnATreeElement);
 
             if (json != null) {
                 getSearchDao().updateOrIndex(cnATreeElement.getUuid(), json);
+                if (logIndexedElementDetails) {
+                    result.add(new IndexedElementDetails(cnATreeElement.getUuid(),
+                            cnATreeElement.getTitle()));
+                }
             }
         }
 
-        return elements;
+        return result;
     }
 
     private List<CnATreeElement> loadElements() {
@@ -107,6 +116,11 @@ public class IndexThread extends DummyAuthenticatorCallable<List<CnATreeElement>
 
     public void setJsonBuilder(IJsonBuilder jsonBuilder) {
         this.jsonBuilder = jsonBuilder;
+    }
+
+    public void setReturnIndexedElementDetails(boolean logIndexedElementDetails) {
+        this.logIndexedElementDetails = logIndexedElementDetails;
+
     }
 
 }
