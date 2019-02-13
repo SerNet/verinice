@@ -33,7 +33,6 @@ import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.service.commands.LoadElementByTypeId;
-import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
@@ -77,18 +76,12 @@ abstract public class AbstractVNAImportHelper extends CommandServiceProvider {
 
     abstract protected SyncParameter getSyncParameter() throws SyncParameterException;
 
-    private <T extends CnATreeElement> RemoveElement<T> removeElement(T element)
-            throws CommandException {
-        RemoveElement<T> removeCommand = new RemoveElement<T>(element);
-        return commandService.executeCommand(removeCommand);
-    }
-
     private void removeAllElementsByType(String type) throws CommandException {
         LoadElementByTypeId loadElementByTypeId = new LoadElementByTypeId(type);
         loadElementByTypeId = commandService.executeCommand(loadElementByTypeId);
 
         for (CnATreeElement element : loadElementByTypeId.getElementList()) {
-            removeElement(element);
+            elementDao.delete(element);
         }
     }
 
@@ -98,8 +91,7 @@ abstract public class AbstractVNAImportHelper extends CommandServiceProvider {
             for (CnATreeElement element : importedElements) {
 
                 if (element.isScope()) {
-                    RemoveElement<?> removeCommand = new RemoveElement<>(element);
-                    commandService.executeCommand(removeCommand);
+                    elementDao.delete(element);
                 }
             }
 
