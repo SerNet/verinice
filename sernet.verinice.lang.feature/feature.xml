@@ -197,4 +197,12 @@ Library.
          id="org.eclipse.babel.nls_eclipse_it"
          version="0.0.0"/>
 
+   <includes
+         id="org.eclipse.babel.nls_datatools_cs"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_eclipse_cs"
+         version="0.0.0"/>
+
 </feature>

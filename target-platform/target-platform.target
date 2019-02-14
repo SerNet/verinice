@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="target-platform-e4" sequenceNumber="111">
+<?pde version="3.8"?><target name="target-platform-e4" sequenceNumber="112">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.equinox.sdk.feature.group" version="3.13.4.v20180322-2228"/>
@@ -28,13 +28,6 @@
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.birt.rcp.feature.group" version="4.7.0.v201706222054"/>
 <repository location="http://updates.verinice.org/pub/verinice/updatesites/birt-rcp/"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.babel.nls_datatools_de.feature.group" version="4.7.0.v20190126095834"/>
-<unit id="org.eclipse.babel.nls_datatools_it.feature.group" version="4.7.0.v20190126095834"/>
-<unit id="org.eclipse.babel.nls_eclipse_de.feature.group" version="4.7.0.v20190126095834"/>
-<unit id="org.eclipse.babel.nls_eclipse_it.feature.group" version="4.7.0.v20190126095834"/>
-<repository location="http://download.eclipse.org/technology/babel/update-site/R0.16.1/oxygen/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.birt.feature.group" version="4.7.0.v201706222054"/>
@@ -90,35 +83,44 @@
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180330011457/repository"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="pax.feature.group" version="0.6.0"/>
-<unit id="org.jdom.feature.group" version="2.0.2"/>
-<unit id="spring.feature.group" version="0.6.0"/>
-<unit id="apache.feature.group" version="0.6.0"/>
 <unit id="antlr.feature.group" version="2.7.7"/>
-<unit id="net.sf.ehcache.source.feature.group" version="2.10.4"/>
-<unit id="org.jgrapht.source.feature.group" version="1.2.0"/>
-<unit id="net.sf.ehcache.feature.group" version="2.10.4"/>
-<unit id="lowagie.source.feature.group" version="2.1.7"/>
-<unit id="pax.source.feature.group" version="0.6.0"/>
-<unit id="w3c.feature.group" version="0.6.0"/>
-<unit id="org.hibernate.source.feature.group" version="3.6.11"/>
-<unit id="org.hibernate.feature.group" version="3.6.11"/>
-<unit id="threetenbp.feature.group" version="1.3.6"/>
-<unit id="inetlib.source.feature.group" version="1.1.1"/>
 <unit id="antlr.source.feature.group" version="2.7.7"/>
-<unit id="jfree.feature.group" version="1.0.0"/>
-<unit id="org.jdom.source.feature.group" version="2.0.2"/>
-<unit id="inetlib.feature.group" version="1.1.1"/>
-<unit id="threetenbp.source.feature.group" version="1.3.6"/>
-<unit id="spring.source.feature.group" version="0.6.0"/>
-<unit id="org.jgrapht.feature.group" version="1.2.0"/>
-<unit id="lowagie.feature.group" version="2.1.7"/>
-<unit id="com.opencsv.feature.group" version="4.1.0"/>
-<unit id="jfree.source.feature.group" version="1.0.0"/>
-<unit id="com.opencsv.source.feature.group" version="4.1.0"/>
-<unit id="w3c.source.feature.group" version="0.6.0"/>
+<unit id="apache.feature.group" version="0.6.0"/>
 <unit id="apache.source.feature.group" version="0.6.0"/>
+<unit id="com.opencsv.feature.group" version="4.1.0"/>
+<unit id="com.opencsv.source.feature.group" version="4.1.0"/>
+<unit id="inetlib.feature.group" version="1.1.1"/>
+<unit id="inetlib.source.feature.group" version="1.1.1"/>
+<unit id="jfree.feature.group" version="1.0.0"/>
+<unit id="jfree.source.feature.group" version="1.0.0"/>
+<unit id="lowagie.feature.group" version="2.1.7"/>
+<unit id="lowagie.source.feature.group" version="2.1.7"/>
+<unit id="net.sf.ehcache.feature.group" version="2.10.4"/>
+<unit id="net.sf.ehcache.source.feature.group" version="2.10.4"/>
+<unit id="org.hibernate.feature.group" version="3.6.11"/>
+<unit id="org.hibernate.source.feature.group" version="3.6.11"/>
+<unit id="org.jdom.feature.group" version="2.0.2"/>
+<unit id="org.jdom.source.feature.group" version="2.0.2"/>
+<unit id="org.jgrapht.feature.group" version="1.2.0"/>
+<unit id="org.jgrapht.source.feature.group" version="1.2.0"/>
+<unit id="pax.feature.group" version="0.6.0"/>
+<unit id="pax.source.feature.group" version="0.6.0"/>
+<unit id="spring.feature.group" version="0.6.0"/>
+<unit id="spring.source.feature.group" version="0.6.0"/>
+<unit id="threetenbp.feature.group" version="1.3.6"/>
+<unit id="threetenbp.source.feature.group" version="1.3.6"/>
+<unit id="w3c.feature.group" version="0.6.0"/>
+<unit id="w3c.source.feature.group" version="0.6.0"/>
 <repository location="http://updates.verinice.org/pub/verinice/updatesites/verinice-deps-20180731162226/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.babel.nls_datatools_cs.feature.group" version="4.7.0.v20190126095834"/>
+<unit id="org.eclipse.babel.nls_datatools_de.feature.group" version="4.7.0.v20190126095834"/>
+<unit id="org.eclipse.babel.nls_datatools_it.feature.group" version="4.7.0.v20190126095834"/>
+<unit id="org.eclipse.babel.nls_eclipse_cs.feature.group" version="4.7.0.v20190126095834"/>
+<unit id="org.eclipse.babel.nls_eclipse_de.feature.group" version="4.7.0.v20190126095834"/>
+<unit id="org.eclipse.babel.nls_eclipse_it.feature.group" version="4.7.0.v20190126095834"/>
+<repository location="http://download.eclipse.org/technology/babel/update-site/R0.16.1/oxygen/"/>
 </location>
 </locations>
 </target>
