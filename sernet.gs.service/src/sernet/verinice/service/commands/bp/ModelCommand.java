@@ -28,6 +28,7 @@ import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bp.elements.ItNetwork;
@@ -77,8 +78,6 @@ import sernet.verinice.service.bp.exceptions.BpModelingException;
 public class ModelCommand extends ChangeLoggingCommand {
 
     private static final long serialVersionUID = -7021777504561600179L;
-
-    private transient ModelingMetaDao metaDao;
 
     private Set<String> moduleUuidsFromCompendium;
     private List<String> targetUuids;
@@ -172,7 +171,8 @@ public class ModelCommand extends ChangeLoggingCommand {
 
     private ItNetwork loadItNetwork(Set<CnATreeElement> targetElements) {
         Integer targetScopeId = getTargetScopeId(targetElements);
-        CnATreeElement element = getMetaDao().loadElementWithProperties(targetScopeId);
+        CnATreeElement element = getDao().retrieve(targetScopeId,
+                RetrieveInfo.getPropertyInstance());
         if (element == null) {
             throw new BpModelingException("No it network found with db id: " + targetScopeId);
         }
@@ -226,13 +226,6 @@ public class ModelCommand extends ChangeLoggingCommand {
 
     public void setHandleDummySafeguards(boolean handleDummySafeguards) {
         this.handleDummySafeguards = handleDummySafeguards;
-    }
-
-    public ModelingMetaDao getMetaDao() {
-        if (metaDao == null) {
-            metaDao = new ModelingMetaDao(getDao());
-        }
-        return metaDao;
     }
 
     private IBaseDao<CnATreeElement, Serializable> getDao() {
