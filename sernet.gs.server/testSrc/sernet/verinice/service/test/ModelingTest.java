@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.Collections;
 
+import org.hibernate.criterion.DetachedCriteria;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -40,7 +41,6 @@ import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.bp.ModelCommand;
-import sernet.verinice.service.commands.crud.CreateCatalogModel;
 
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
 @Transactional
@@ -50,10 +50,7 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     @Rollback(true)
     @Test
     public void modelModuleOnItNetwork() throws CommandException {
-        CreateCatalogModel command = new CreateCatalogModel();
-        command = commandService.executeCommand(command);
-        CatalogModel catalogModel = command.getElement();
-
+        CatalogModel catalogModel = loadCatalogModel();
         BpRequirementGroup requirementGroup = createRequirementGroup(catalogModel, "Requirements");
         BpRequirement requirement = createBpRequirement(requirementGroup, "Requirement");
         SafeguardGroup safeguardGroup = createSafeguardGroup(catalogModel, "Safeguards");
@@ -103,10 +100,7 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     @Rollback(true)
     @Test
     public void modelWithoutSafeguards() throws CommandException {
-        CreateCatalogModel command = new CreateCatalogModel();
-        command = commandService.executeCommand(command);
-        CatalogModel catalogModel = command.getElement();
-
+        CatalogModel catalogModel = loadCatalogModel();
         BpRequirementGroup requirementGroup = createRequirementGroup(catalogModel, "Requirements");
         BpRequirement requirement = createBpRequirement(requirementGroup, "Requirement");
         SafeguardGroup safeguardGroup = createSafeguardGroup(catalogModel, "Safeguards");
@@ -151,10 +145,7 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     @Rollback(true)
     @Test
     public void modelModuleOnItNetworkWithDummySafeguards() throws CommandException {
-        CreateCatalogModel command = new CreateCatalogModel();
-        command = commandService.executeCommand(command);
-        CatalogModel catalogModel = command.getElement();
-
+        CatalogModel catalogModel = loadCatalogModel();
         BpRequirementGroup requirementGroup = createRequirementGroup(catalogModel, "Requirements");
         BpRequirement requirement = createBpRequirement(requirementGroup, "Requirement");
         requirement.setSecurityLevel(SecurityLevel.BASIC);
@@ -192,6 +183,11 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
         CnATreeElement modeledSafeguard = modeledSafeguardGroup.getChildren().iterator().next();
         assertNotNull(modeledSafeguard);
 
+    }
+
+    private CatalogModel loadCatalogModel() {
+        return (CatalogModel) elementDao
+                .findByCriteria(DetachedCriteria.forClass(CatalogModel.class)).get(0);
     }
 
 }

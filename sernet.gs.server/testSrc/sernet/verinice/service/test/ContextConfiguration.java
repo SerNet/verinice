@@ -28,6 +28,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 
@@ -69,6 +70,9 @@ public abstract class ContextConfiguration  {
         }
         if (elementDao.findByCriteria(DetachedCriteria.forClass(ISO27KModel.class)).isEmpty()) {
             elementDao.merge(new ISO27KModel());
+        }
+        if (elementDao.findByCriteria(DetachedCriteria.forClass(CatalogModel.class)).isEmpty()) {
+            elementDao.merge(new CatalogModel());
         }
     }
 }
