@@ -45,11 +45,13 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bp.elements.IBpRoot;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kRoot;
@@ -260,7 +262,9 @@ public class CommandServiceTest extends CommandServiceProvider {
     protected boolean isEditable(CnATreeElement element) {
         return ! (element instanceof IBSIStrukturKategorie) &&
            ! (element instanceof IISO27kRoot) && 
+           ! (element instanceof IBpRoot) &&
            ! (element instanceof BSIModel) &&
+           ! (element instanceof CatalogModel) &&
            ! (element instanceof ImportIsoGroup) &&
            ! (element instanceof ImportBsiGroup) &&
            ! (element instanceof FinishedRiskAnalysis);
