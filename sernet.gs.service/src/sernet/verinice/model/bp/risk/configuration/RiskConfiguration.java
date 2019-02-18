@@ -29,6 +29,7 @@ import org.eclipse.jdt.annotation.NonNull;
 import sernet.verinice.model.bp.risk.Frequency;
 import sernet.verinice.model.bp.risk.Impact;
 import sernet.verinice.model.bp.risk.Risk;
+import sernet.verinice.model.bp.risk.RiskPropertyValue;
 
 public class RiskConfiguration implements Serializable {
 
@@ -264,5 +265,23 @@ public class RiskConfiguration implements Serializable {
         } else if (!Risk.deepEquals(risks, other.risks))
             return false;
         return true;
+    }
+
+    public String getLabelForFrequency(String frequencyId) {
+        return getLabelForValue(frequencies, frequencyId);
+    }
+
+    public String getLabelForImpact(String impactId) {
+        return getLabelForValue(impacts, impactId);
+    }
+
+    public String getLabelForRisk(String riskId) {
+        return getLabelForValue(risks, riskId);
+    }
+
+    private String getLabelForValue(List<? extends RiskPropertyValue> riskPropertyValues,
+            String valueId) {
+        return riskPropertyValues.stream().filter(item -> item.getId().equals(valueId)).findFirst()
+                .orElseThrow(IllegalArgumentException::new).getLabel();
     }
 }
