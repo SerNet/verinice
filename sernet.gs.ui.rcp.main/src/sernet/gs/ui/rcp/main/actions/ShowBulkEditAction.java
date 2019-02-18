@@ -408,24 +408,29 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             IProgressMonitor monitor) {
         monitor.setTaskName(Messages.ShowBulkEditAction_9);
         monitor.beginTask(Messages.ShowBulkEditAction_10, selectedElements.size() + 1);
-
+        List<CnATreeElement> elementsToSave = new ArrayList<>(selectedElements.size());
         // for every target:
         for (CnATreeElement elmt : selectedElements) {
+            boolean elementIsThreat = elmt instanceof BpThreat;
+            if (elementIsThreat) {
+                // load linked elements required for risk deduction
+                elmt = Retriever.retrieveElement(elmt,
+                        RetrieveInfo.getPropertyInstance().setLinksUp(true));
+            }
             // set values:
             Entity editEntity = elmt.getEntity();
             editEntity.copyEntity(dialogEntity);
-            if (elmt instanceof BpThreat) {
-                elmt = Retriever.retrieveElement(elmt,
-                        RetrieveInfo.getPropertyInstance().setLinksUp(true));
+            if (elementIsThreat) {
                 RiskDeductionUtil.deduceRisk((BpThreat) elmt);
             }
+            elementsToSave.add(elmt);
             monitor.worked(1);
         }
         try {
             monitor.setTaskName(Messages.ShowBulkEditAction_11);
             monitor.beginTask(Messages.ShowBulkEditAction_12, IProgressMonitor.UNKNOWN);
             UpdateMultipleElementEntities command = new UpdateMultipleElementEntities(
-                    selectedElements);
+                    elementsToSave);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             List<CnATreeElement> changedElements = command.getChangedElements();
             for (CnATreeElement cnATreeElement : changedElements) {
