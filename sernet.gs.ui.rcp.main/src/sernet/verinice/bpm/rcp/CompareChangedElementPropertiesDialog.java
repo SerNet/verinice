@@ -229,11 +229,20 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
             if (changedElementProperties.containsKey(propertyType.getId())) {
                 String oldValue = element.getPropertyValue(propertyType.getId());
                 String newValue = changedElementProperties.get(propertyType.getId());
-
+                String newValueDisplay;
+                if (propertyType.isReference()) {
+                    newValueDisplay = loadTextForReferenceProperty(propertyType, newValue);
+                } else if (propertyType.isSingleSelect() || propertyType.isMultiselect()) {
+                    newValueDisplay = loadTextForOptionProperty(propertyType, newValue);
+                } else if (propertyType.isDate()) {
+                    newValueDisplay = getDate(newValue);
+                } else {
+                    newValueDisplay = newValue;
+                }
                 if (StringUtils.isNotBlank(oldValue) || StringUtils.isNotBlank(newValue)) {
                     createLabelForProperty(parent, typeFactory, propertyType);
                     createTextForOldValue(parent, propertyType, oldValue);
-                    createTextForNewValue(parent, propertyType, newValue);
+                    createTextForNewValue(parent, propertyType, newValueDisplay);
                 }
             }
         }
@@ -264,19 +273,7 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
             String value) {
         final Text newText = new Text(parent, SWT.BORDER | SWT.WRAP);
         newText.setEditable(false);
-
-        if (propertyType.isReference()) {
-            value = loadTextForReferenceProperty(propertyType, value);
-            newText.setText(value);
-        } else if (propertyType.isSingleSelect() || propertyType.isMultiselect()) {
-            value = loadTextForOptionProperty(propertyType, value);
-            newText.setText(value);
-        } else if (propertyType.isDate()) {
-            newText.setText(getDate(value));
-        } else {
-            newText.setText(value);
-        }
-
+        newText.setText(value);
         GridData gridData = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH);
         gridData.widthHint = DIALOG_WIDTH / 3;
         newText.setLayoutData(gridData);
