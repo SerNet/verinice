@@ -17,7 +17,9 @@
  ******************************************************************************/
 package sernet.verinice.service.commands.risk;
 
+import java.io.Serializable;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,12 +35,14 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class GetLinkedRequirementsInfo extends GenericCommand {
 
-    private static final long serialVersionUID = -8535731305850760902L;
+    private static final long serialVersionUID = 8217062845243989223L;
     private transient BpThreat threat;
-    private transient LinkedRequirementsInfo result;
+    private LinkedRequirementsInfo result;
+    private final Integer threatId;
 
     public GetLinkedRequirementsInfo(BpThreat threat) {
         this.threat = threat;
+        this.threatId = threat.getDbId();
     }
 
     /*
@@ -46,6 +50,9 @@ public class GetLinkedRequirementsInfo extends GenericCommand {
      */
     @Override
     public void execute() {
+        if (threat == null) {
+            threat = findThreatById(threatId);
+        }
         Set<CnATreeElement> linkedRequirements = threat.getLinksUp().stream().filter(
                 link -> BpRequirement.REL_BP_REQUIREMENT_BP_THREAT.equals(link.getRelationId())
                         && BpRequirement.TYPE_ID.equals(link.getDependant().getTypeId()))
@@ -68,11 +75,14 @@ public class GetLinkedRequirementsInfo extends GenericCommand {
                     impacts);
             this.result = linkedRequirementsInfo;
         }
-
     }
 
     public LinkedRequirementsInfo getLinkedRequirementsInfo() {
         return result;
+    }
+
+    private BpThreat findThreatById(Integer dbId) {
+        return getDaoFactory().getDAO(BpThreat.class).findById(dbId);
     }
 
     @Override
@@ -80,25 +90,27 @@ public class GetLinkedRequirementsInfo extends GenericCommand {
         threat = null;
     }
 
-    public static final class LinkedRequirementsInfo {
+    public static final class LinkedRequirementsInfo implements Serializable {
 
-        private static final LinkedRequirementsInfo EMPTY = new LinkedRequirementsInfo(
+        private static final long serialVersionUID = -1551552188936477628L;
+
+        public static final LinkedRequirementsInfo EMPTY = new LinkedRequirementsInfo(
                 Collections.emptySet(), Collections.emptySet());
 
-        private final Set<String> frequencies;
-        private final Set<String> impacts;
+        private final HashSet<String> frequencies;
+        private final HashSet<String> impacts;
 
         public LinkedRequirementsInfo(Set<String> frequencies, Set<String> impacts) {
-            this.frequencies = Collections.unmodifiableSet(frequencies);
-            this.impacts = Collections.unmodifiableSet(impacts);
+            this.frequencies = new HashSet<>(frequencies);
+            this.impacts = new HashSet<>(impacts);
         }
 
         public Set<String> getFrequencies() {
-            return frequencies;
+            return Collections.unmodifiableSet(frequencies);
         }
 
         public Set<String> getImpacts() {
-            return impacts;
+            return Collections.unmodifiableSet(impacts);
         }
 
     }

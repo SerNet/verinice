@@ -219,7 +219,7 @@ public class RiskDeductionUtil {
         GetLinkedRequirementsInfo command = new GetLinkedRequirementsInfo(threat);
         ICommandService commandService = (ICommandService) VeriniceContext
                 .get(VeriniceContext.COMMAND_SERVICE);
-        commandService.executeCommand(command);
+        command = commandService.executeCommand(command);
         return command.getLinkedRequirementsInfo();
     }
 
