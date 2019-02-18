@@ -79,7 +79,8 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
      * @param parentShell
      * @throws CommandException
      */
-    public CompareChangedElementPropertiesDialog(Shell parentShell, ITask task) throws CommandException {
+    public CompareChangedElementPropertiesDialog(Shell parentShell, ITask task)
+            throws CommandException {
         super(parentShell);
         this.task = task;
 
@@ -171,7 +172,8 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
             GC gc = new GC(titleLabel);
             Point size = gc.textExtent(title);
             if (size.x > DIALOG_WIDTH - dialogWidthSubtrahend) {
-                title = trimTitleByWidthSize(gc, title, DIALOG_WIDTH - dialogWidthSubtrahend) + "..."; //$NON-NLS-1$
+                title = trimTitleByWidthSize(gc, title, DIALOG_WIDTH - dialogWidthSubtrahend)
+                        + "..."; //$NON-NLS-1$
             }
             titleLabel.setText(title);
         }
@@ -203,15 +205,18 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
 
     private void createGridCompositeHeader(final Composite parent) {
         final Label fealdNameHeaderLabel = new Label(parent, SWT.NONE);
-        fealdNameHeaderLabel.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH));
+        fealdNameHeaderLabel
+                .setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH));
         fealdNameHeaderLabel.setText(Messages.CompareTaskChangesAction_3);
 
         final Label fealdOldHeaderLabel = new Label(parent, SWT.NONE);
-        fealdOldHeaderLabel.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH));
+        fealdOldHeaderLabel
+                .setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH));
         fealdOldHeaderLabel.setText(Messages.CompareTaskChangesAction_4);
 
         final Label fealdNewHeaderLabel = new Label(parent, SWT.NONE);
-        fealdNewHeaderLabel.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH));
+        fealdNewHeaderLabel
+                .setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH));
         fealdNewHeaderLabel.setText(Messages.CompareTaskChangesAction_5);
     }
 
@@ -234,15 +239,18 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
         }
     }
 
-    private void createLabelForProperty(final Composite parent, HUITypeFactory typeFactory, PropertyType propertyType) {
+    private void createLabelForProperty(final Composite parent, HUITypeFactory typeFactory,
+            PropertyType propertyType) {
         final Label titleLabel = new Label(parent, SWT.NONE);
         titleLabel.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH));
         titleLabel.setText(typeFactory.getMessage(propertyType.getId()));
     }
 
-    private void createTextForOldValue(final Composite parent, PropertyType propertyType, String oldValue) {
+    private void createTextForOldValue(final Composite parent, PropertyType propertyType,
+            String oldValue) {
         if (propertyType.isSingleSelect() && StringUtils.isEmpty(oldValue)) {
-            oldValue = sernet.hui.swt.widgets.Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE);
+            oldValue = sernet.hui.swt.widgets.Messages
+                    .getString(PropertyOption.SINGLESELECTDUMMYVALUE);
         }
         final Text oldText = new Text(parent, SWT.BORDER | SWT.WRAP);
         oldText.setEditable(false);
@@ -252,7 +260,8 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
         oldText.setLayoutData(gridData);
     }
 
-    private void createTextForNewValue(final Composite parent, PropertyType propertyType, String value) {
+    private void createTextForNewValue(final Composite parent, PropertyType propertyType,
+            String value) {
         final Text newText = new Text(parent, SWT.BORDER | SWT.WRAP);
         newText.setEditable(false);
 
@@ -287,13 +296,15 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
             return sernet.hui.swt.widgets.Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE);
         } else {
             String[] propertyOptions = newValue.split(",");
-            return OptionSelectionHelper.loadOptionLabels(propertyType, Arrays.asList(propertyOptions));
+            return OptionSelectionHelper.loadOptionLabels(propertyType,
+                    Arrays.asList(propertyOptions));
         }
     }
 
     private String loadTextForReferenceProperty(PropertyType propertyType, String newValue) {
         String[] propertyOptions = newValue.split(",");
-        return OptionSelectionHelper.loadReferenceLabels(propertyType, Arrays.asList(propertyOptions));
+        return OptionSelectionHelper.loadReferenceLabels(propertyType,
+                Arrays.asList(propertyOptions));
     }
 
     private void setDialogLocation() {
@@ -305,7 +316,8 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
     }
 
     private void loadChangedElementPropertiesFromTask() {
-        changedElementProperties = (Map<String, String>) getTaskService().loadChangedElementProperties(task.getId());
+        changedElementProperties = (Map<String, String>) getTaskService()
+                .loadChangedElementProperties(task.getId());
         LOG.info("Loaded changes for element properties from task."); //$NON-NLS-1$
     }
 
