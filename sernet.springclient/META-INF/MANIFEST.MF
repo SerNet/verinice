@@ -29,7 +29,8 @@ Require-Bundle: com.springsource.org.apache.log4j;bundle-version="1.2.15",
  org.eclipse.ui.net,
  sernet.hui.common;bundle-version="1.1.1",
  com.springsource.net.sf.ehcache;bundle-version="1.6.0",
- antlr;bundle-version="2.7.7"
+ antlr;bundle-version="2.7.7",
+ org.springframework.osgi.extender;bundle-version="1.2.0"
 Import-Package: org.apache.log4j,
  org.eclipse.core.runtime;version="3.4.0",
  org.osgi.framework;version="1.5.0",
