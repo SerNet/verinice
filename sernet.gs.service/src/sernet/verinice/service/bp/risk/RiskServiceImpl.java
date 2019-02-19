@@ -24,7 +24,6 @@ import java.util.Set;
 
 import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.connect.PropertyList;
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
@@ -132,7 +131,7 @@ public class RiskServiceImpl implements RiskService {
     }
 
     @Override
-    public RiskConfiguration findRiskConfiguration(Integer itNetworkID) throws CommandException {
+    public RiskConfiguration findRiskConfiguration(Integer itNetworkID) {
         RiskConfiguration riskConfiguration = riskConfigurationCache.get(itNetworkID);
         if (riskConfiguration == null
                 // null is a valid value for a RiskConfiguration and therefore

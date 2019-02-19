@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.annotation.NonNull;
 
@@ -94,7 +95,7 @@ public class RiskDeductionUtil {
 
         String frequencyWithAdditionalSafeguards = getFrequencyWithAdditionalSafeguards(
                 Stream.of(frequency), linkedRequirementsInfo.getFrequencies());
-        if (nullOrEmpty(frequencyWithAdditionalSafeguards)) {
+        if (StringUtils.isEmpty(frequencyWithAdditionalSafeguards)) {
             threat.setFrequencyWithAdditionalSafeguards(frequency);
             threat.setImpactWithAdditionalSafeguards(impact);
             threat.setRiskWithAdditionalSafeguards(
@@ -104,7 +105,7 @@ public class RiskDeductionUtil {
 
         String impactWithAdditionalSafeguards = getImpactsWithAdditionalSafeguards(
                 Stream.of(impact), linkedRequirementsInfo.getImpacts());
-        if (nullOrEmpty(impactWithAdditionalSafeguards)) {
+        if (StringUtils.isEmpty(impactWithAdditionalSafeguards)) {
             threat.setFrequencyWithAdditionalSafeguards(frequency);
             threat.setImpactWithAdditionalSafeguards(impact);
             threat.setRiskWithAdditionalSafeguards(
@@ -157,13 +158,13 @@ public class RiskDeductionUtil {
                 .filter(s -> s.getEntity().isFlagged(Safeguard.PROP_REDUCE_RISK)
                         && isSafeGuardStrenghtBothSet(s))
                 .map(s -> s.getEntity().getRawPropertyValue(Safeguard.PROP_STRENGTH_IMPACT))
-                .filter(RiskDeductionUtil::notNullAndNotEmpty).min(String::compareTo).orElse(null);
+                .filter(StringUtils::isNotEmpty).min(String::compareTo).orElse(null);
 
         String frequencyStrength = getLinkedSafeguards(requirement)
                 .filter(s -> s.getEntity().isFlagged(Safeguard.PROP_REDUCE_RISK)
                         && isSafeGuardStrenghtBothSet(s))
                 .map(s -> s.getEntity().getRawPropertyValue(Safeguard.PROP_STRENGTH_FREQUENCY))
-                .filter(RiskDeductionUtil::notNullAndNotEmpty).min(String::compareTo).orElse(null);
+                .filter(StringUtils::isNotEmpty).min(String::compareTo).orElse(null);
         requirement.getEntity().setFlag(BpRequirement.PROP_SAFEGUARD_REDUCE_RISK, reducesRisk);
         setPropertyIfNecessary(requirement, BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT,
                 impactStrength);
@@ -194,7 +195,7 @@ public class RiskDeductionUtil {
     }
 
     private static boolean resetRiskValuesIfImpactIsUnset(BpThreat threat) {
-        if (nullOrEmpty(threat.getImpactWithoutAdditionalSafeguards())) {
+        if (StringUtils.isEmpty(threat.getImpactWithoutAdditionalSafeguards())) {
             threat.setImpactWithAdditionalSafeguards(null);
             threat.setRiskWithoutAdditionalSafeguards(null);
             threat.setRiskWithAdditionalSafeguards(null);
@@ -204,7 +205,7 @@ public class RiskDeductionUtil {
     }
 
     private static boolean resetRiskValuesIfFrequencyIsUnset(BpThreat threat) {
-        if (nullOrEmpty(threat.getFrequencyWithoutAdditionalSafeguards())) {
+        if (StringUtils.isEmpty(threat.getFrequencyWithoutAdditionalSafeguards())) {
             threat.setFrequencyWithAdditionalSafeguards(null);
             threat.setRiskWithoutAdditionalSafeguards(null);
             threat.setRiskWithAdditionalSafeguards(null);
@@ -246,25 +247,16 @@ public class RiskDeductionUtil {
                 .map(CnALink::getDependency);
     }
 
-    private static RiskConfiguration findRiskConfiguration(Integer scopeId)
-            throws CommandException {
+    private static RiskConfiguration findRiskConfiguration(Integer scopeId) {
         RiskService riskService = (RiskService) VeriniceContext
                 .get(VeriniceContext.ITBP_RISK_SERVICE);
         return riskService.findRiskConfiguration(scopeId);
     }
 
-    private static boolean notNullAndNotEmpty(String s) {
-        return s != null && !s.isEmpty();
-    }
-
-    private static boolean nullOrEmpty(String s) {
-        return s == null || s.isEmpty();
-    }
-
     private static boolean isSafeGuardStrenghtBothSet(CnATreeElement e) {
         String f = e.getEntity().getRawPropertyValue(Safeguard.PROP_STRENGTH_IMPACT);
         String i = e.getEntity().getRawPropertyValue(Safeguard.PROP_STRENGTH_FREQUENCY);
-        return notNullAndNotEmpty(i) && notNullAndNotEmpty(f);
+        return StringUtils.isNotEmpty(i) && StringUtils.isNotEmpty(f);
     }
 
 }
