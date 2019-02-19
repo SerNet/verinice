@@ -20,6 +20,7 @@ package sernet.verinice.service.bp.risk;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -55,24 +56,17 @@ public class RiskDeductionUtil {
      * scope/risk configuration.
      */
     public static BpThreat deduceRisk(BpThreat threat) {
-
-        boolean frequencyIsUnset = resetRiskValuesIfFrequencyIsUnset(threat);
-        boolean impactIsUnset = resetRiskValuesIfImpactIsUnset(threat);
-
-        if (frequencyIsUnset || impactIsUnset) {
-            return threat;
-        }
-
         try {
-            return RiskDeductionUtil.deduceRisk(threat, findRiskConfiguration(threat.getScopeId()));
+            return RiskDeductionUtil.deduceRisk(threat,
+                    () -> findRiskConfiguration(threat.getScopeId()));
         } catch (CommandException e) {
             logger.error("error fetching scope for bp_threat", e);
         }
         return threat;
     }
 
-    private static BpThreat deduceRisk(BpThreat threat, RiskConfiguration riskConfiguration)
-            throws CommandException {
+    private static BpThreat deduceRisk(BpThreat threat,
+            Supplier<RiskConfiguration> riskConfigurationSupplier) throws CommandException {
         boolean frequencyIsUnset = resetRiskValuesIfFrequencyIsUnset(threat);
         boolean impactIsUnset = resetRiskValuesIfImpactIsUnset(threat);
 
@@ -81,6 +75,7 @@ public class RiskDeductionUtil {
         }
         String frequency = threat.getFrequencyWithoutAdditionalSafeguards();
         String impact = threat.getImpactWithoutAdditionalSafeguards();
+        RiskConfiguration riskConfiguration = riskConfigurationSupplier.get();
 
         if (riskConfiguration == null) {
             riskConfiguration = DefaultRiskConfiguration.getInstance();
@@ -138,7 +133,7 @@ public class RiskDeductionUtil {
                 RiskConfiguration riskConfiguration = findRiskConfiguration(
                         requirement.getScopeId());
                 for (BpThreat threat : affectedThreats) {
-                    RiskDeductionUtil.deduceRisk(threat, riskConfiguration);
+                    RiskDeductionUtil.deduceRisk(threat, () -> riskConfiguration);
                 }
             }
         } catch (CommandException e) {
