@@ -67,14 +67,26 @@ public class RiskDeductionUtil {
 
     private static BpThreat deduceRisk(BpThreat threat,
             Supplier<RiskConfiguration> riskConfigurationSupplier) throws CommandException {
-        boolean frequencyIsUnset = resetRiskValuesIfFrequencyIsUnset(threat);
-        boolean impactIsUnset = resetRiskValuesIfImpactIsUnset(threat);
+        final String frequency = threat.getFrequencyWithoutAdditionalSafeguards();
+        final String impact = threat.getImpactWithoutAdditionalSafeguards();
 
-        if (frequencyIsUnset || impactIsUnset) {
+        boolean frequencyUnset = StringUtils.isEmpty(frequency);
+        boolean impactUnset = StringUtils.isEmpty(impact);
+
+        if (frequencyUnset) {
+            threat.setFrequencyWithAdditionalSafeguards(null);
+            threat.setImpactWithAdditionalSafeguards(impact);
+        }
+        if (impactUnset) {
+            threat.setImpactWithAdditionalSafeguards(null);
+            threat.setFrequencyWithAdditionalSafeguards(frequency);
+        }
+        if (frequencyUnset || impactUnset) {
+            threat.setRiskWithAdditionalSafeguards(null);
+            threat.setRiskWithoutAdditionalSafeguards(null);
             return threat;
         }
-        String frequency = threat.getFrequencyWithoutAdditionalSafeguards();
-        String impact = threat.getImpactWithoutAdditionalSafeguards();
+
         RiskConfiguration riskConfiguration = riskConfigurationSupplier.get();
 
         if (riskConfiguration == null) {
@@ -187,26 +199,6 @@ public class RiskDeductionUtil {
         // create a PropertyList if it does not exist, or it is null AND the
         // element already has a PropertyList for the property ID
         element.setSimpleProperty(propertyId, propertyValue);
-    }
-
-    private static boolean resetRiskValuesIfImpactIsUnset(BpThreat threat) {
-        if (StringUtils.isEmpty(threat.getImpactWithoutAdditionalSafeguards())) {
-            threat.setImpactWithAdditionalSafeguards(null);
-            threat.setRiskWithoutAdditionalSafeguards(null);
-            threat.setRiskWithAdditionalSafeguards(null);
-            return true;
-        }
-        return false;
-    }
-
-    private static boolean resetRiskValuesIfFrequencyIsUnset(BpThreat threat) {
-        if (StringUtils.isEmpty(threat.getFrequencyWithoutAdditionalSafeguards())) {
-            threat.setFrequencyWithAdditionalSafeguards(null);
-            threat.setRiskWithoutAdditionalSafeguards(null);
-            threat.setRiskWithAdditionalSafeguards(null);
-            return true;
-        }
-        return false;
     }
 
     private static LinkedRequirementsInfo getLinkedRequirementsForRiskDeduction(BpThreat threat)

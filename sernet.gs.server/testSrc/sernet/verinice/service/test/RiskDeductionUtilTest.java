@@ -314,6 +314,53 @@ public class RiskDeductionUtilTest extends AbstractModernizedBaseProtection {
 
     }
 
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void testDeductionOfFrequencyWithSafeguards() throws Exception {
+
+        ItNetwork itNetwork = createNewBPOrganization();
+        BpThreatGroup bpThreatGroup = createBpThreatGroup(itNetwork);
+        BpThreat bpThreat = createBpThreat(bpThreatGroup);
+
+        RiskConfiguration riskConfiguration = DefaultRiskConfiguration.getInstance();
+        Frequency firstFrequency = riskConfiguration.getFrequencies().get(0);
+        Impact firstImpact = riskConfiguration.getImpacts().get(0);
+
+        bpThreat.setFrequencyWithoutAdditionalSafeguards(firstFrequency.getId());
+        RiskDeductionUtil.deduceRisk(bpThreat);
+
+        assertEquals(firstFrequency.getId(), bpThreat.getFrequencyWithoutAdditionalSafeguards());
+        assertEquals(firstFrequency.getId(), bpThreat.getFrequencyWithAdditionalSafeguards());
+        assertEquals(null, bpThreat.getImpactWithoutAdditionalSafeguards());
+        assertEquals(null, bpThreat.getImpactWithAdditionalSafeguards());
+        assertEquals(null, bpThreat.getRiskWithoutAdditionalSafeguards());
+        assertEquals(null, bpThreat.getRiskWithAdditionalSafeguards());
+
+        bpThreat.setImpactWithoutAdditionalSafeguards(firstImpact.getId());
+        RiskDeductionUtil.deduceRisk(bpThreat);
+
+        Risk expectedRisk = riskConfiguration.getRisk(firstFrequency, firstImpact);
+
+        assertEquals(firstFrequency.getId(), bpThreat.getFrequencyWithoutAdditionalSafeguards());
+        assertEquals(firstFrequency.getId(), bpThreat.getFrequencyWithAdditionalSafeguards());
+        assertEquals(firstImpact.getId(), bpThreat.getImpactWithoutAdditionalSafeguards());
+        assertEquals(firstImpact.getId(), bpThreat.getImpactWithAdditionalSafeguards());
+        assertEquals(expectedRisk.getId(), bpThreat.getRiskWithoutAdditionalSafeguards());
+        assertEquals(expectedRisk.getId(), bpThreat.getRiskWithAdditionalSafeguards());
+
+        bpThreat.setImpactWithoutAdditionalSafeguards(null);
+        RiskDeductionUtil.deduceRisk(bpThreat);
+
+        assertEquals(firstFrequency.getId(), bpThreat.getFrequencyWithoutAdditionalSafeguards());
+        assertEquals(firstFrequency.getId(), bpThreat.getFrequencyWithAdditionalSafeguards());
+        assertEquals(null, bpThreat.getImpactWithoutAdditionalSafeguards());
+        assertEquals(null, bpThreat.getImpactWithAdditionalSafeguards());
+        assertEquals(null, bpThreat.getRiskWithoutAdditionalSafeguards());
+        assertEquals(null, bpThreat.getRiskWithAdditionalSafeguards());
+
+    }
+
     // private void dumpCnATreeElement(CnATreeElement e) {
     //
     // System.out.println("--"+e.getClass().getSimpleName()+"--");
