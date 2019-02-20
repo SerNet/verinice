@@ -22,6 +22,11 @@ package sernet.verinice.bpm.rcp;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -56,7 +61,13 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.BpThreat;
+import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
+import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.bp.risk.RiskService;
 import sernet.verinice.service.commands.LoadAncestors;
 
 /**
@@ -68,6 +79,23 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
 
     private static final int DIALOG_WIDTH = 1000;
     private static final int DIALOG_HEIGHT = 450;
+
+    private static final Set<String> PROPERTY_IDS_FREQUENCY_OF_OCCURRENCE = Stream
+            .of(BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY, Safeguard.PROP_STRENGTH_FREQUENCY,
+                    BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS)
+            .collect(Collectors.toSet());
+
+    private static final Set<String> PROPERTY_IDS_EFFECT = Stream
+            .of(BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT, Safeguard.PROP_STRENGTH_IMPACT,
+                    BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS)
+            .collect(Collectors.toSet());
+
+    private static final Set<String> PROPERTY_IDS_RISK_CATEGORY = Stream
+            .of(BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS)
+            .collect(Collectors.toSet());
 
     private String title;
 
@@ -227,18 +255,45 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
 
         for (PropertyType propertyType : propertyTypes) {
             if (changedElementProperties.containsKey(propertyType.getId())) {
-                String oldValue = element.getPropertyValue(propertyType.getId());
+                String propertyId = propertyType.getId();
+                String oldValue;
                 String newValue = changedElementProperties.get(propertyType.getId());
                 String newValueDisplay;
-                if (propertyType.isReference()) {
-                    newValueDisplay = loadTextForReferenceProperty(propertyType, newValue);
-                } else if (propertyType.isSingleSelect() || propertyType.isMultiselect()) {
-                    newValueDisplay = loadTextForOptionProperty(propertyType, newValue);
-                } else if (propertyType.isDate()) {
-                    newValueDisplay = getDate(newValue);
+                if (PROPERTY_IDS_FREQUENCY_OF_OCCURRENCE.contains(propertyId)) {
+                    RiskConfiguration riskConfiguration = getRiskConfiguration();
+                    oldValue = getDisplayValueForRiskPropertyValue(
+                            element.getEntity().getRawPropertyValue(propertyId),
+                            riskConfiguration::getLabelForFrequency);
+                    newValueDisplay = getDisplayValueForRiskPropertyValue(newValue,
+                            riskConfiguration::getLabelForFrequency);
+                } else if (PROPERTY_IDS_EFFECT.contains(propertyId)) {
+                    RiskConfiguration riskConfiguration = getRiskConfiguration();
+                    oldValue = getDisplayValueForRiskPropertyValue(
+                            element.getEntity().getRawPropertyValue(propertyId),
+                            riskConfiguration::getLabelForImpact);
+                    newValueDisplay = getDisplayValueForRiskPropertyValue(newValue,
+                            riskConfiguration::getLabelForImpact);
+                } else if (PROPERTY_IDS_RISK_CATEGORY.contains(propertyId)) {
+                    RiskConfiguration riskConfiguration = getRiskConfiguration();
+                    oldValue = getDisplayValueForRiskPropertyValue(
+                            element.getEntity().getRawPropertyValue(propertyId),
+                            riskConfiguration::getLabelForRisk);
+                    newValueDisplay = getDisplayValueForRiskPropertyValue(newValue,
+                            riskConfiguration::getLabelForRisk);
                 } else {
-                    newValueDisplay = newValue;
+                    oldValue = element.getPropertyValue(propertyType.getId());
+                    if (propertyType.isReference()) {
+                        newValueDisplay = loadTextForReferenceProperty(propertyType, newValue);
+                    } else if (propertyType.isSingleSelect() || propertyType.isMultiselect()) {
+                        newValueDisplay = loadTextForOptionProperty(propertyType, newValue);
+                    } else if (propertyType.isDate()) {
+                        newValueDisplay = getDate(newValue);
+                    } else {
+                        newValueDisplay = newValue;
+                    }
+
                 }
+
                 if (StringUtils.isNotBlank(oldValue) || StringUtils.isNotBlank(newValue)) {
                     createLabelForProperty(parent, typeFactory, propertyType);
                     createTextForOldValue(parent, propertyType, oldValue);
@@ -246,6 +301,14 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
                 }
             }
         }
+    }
+
+    protected String getDisplayValueForRiskPropertyValue(String rawValue,
+            UnaryOperator<String> valueMapper) {
+        if (StringUtils.isEmpty(rawValue)) {
+            return sernet.hui.swt.widgets.Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE);
+        }
+        return valueMapper.apply(rawValue);
     }
 
     private void createLabelForProperty(final Composite parent, HUITypeFactory typeFactory,
@@ -296,6 +359,15 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
             return OptionSelectionHelper.loadOptionLabels(propertyType,
                     Arrays.asList(propertyOptions));
         }
+    }
+
+    private RiskConfiguration getRiskConfiguration() {
+        RiskService riskService = (RiskService) VeriniceContext
+                .get(VeriniceContext.ITBP_RISK_SERVICE);
+        RiskConfiguration riskConfiguration = riskService
+                .findRiskConfiguration(element.getScopeId());
+        return Optional.ofNullable(riskConfiguration)
+                .orElseGet(DefaultRiskConfiguration::getInstance);
     }
 
     private String loadTextForReferenceProperty(PropertyType propertyType, String newValue) {
