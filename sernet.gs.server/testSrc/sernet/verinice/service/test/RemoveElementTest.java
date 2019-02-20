@@ -35,6 +35,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bp.elements.BpModel;
+import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.groups.BpPersonGroup;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.GebaeudeKategorie;
@@ -48,6 +52,9 @@ import sernet.verinice.model.iso27k.Document;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.iso27k.PersonGroup;
+import sernet.verinice.model.iso27k.PersonIso;
+import sernet.verinice.service.bp.LoadBpModel;
 import sernet.verinice.service.commands.CreateConfiguration;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.LoadConfiguration;
@@ -70,6 +77,8 @@ public class RemoveElementTest extends CommandServiceProvider {
 
     private Organization organization;
 
+    private ItNetwork itNetwork;
+
     private static final String VNA_FILE = "RemoveElementTest.vna";
 
     @Before
@@ -81,6 +90,10 @@ public class RemoveElementTest extends CommandServiceProvider {
         LoadModel<ISO27KModel> loadISO27Model = new LoadModel<>(ISO27KModel.class);
         ISO27KModel iSO27Model = commandService.executeCommand(loadISO27Model).getModel();
         organization = createElement(Organization.class, iSO27Model);
+
+        LoadBpModel loadBpModel = new LoadBpModel();
+        BpModel bpModel = commandService.executeCommand(loadBpModel).getModel();
+        itNetwork = createElement(ItNetwork.class, bpModel);
     }
 
     @Test
@@ -141,6 +154,36 @@ public class RemoveElementTest extends CommandServiceProvider {
     public void removePersonWithAccount() throws CommandException {
         PersonenKategorie personenKategorie = createElement(PersonenKategorie.class, itVerbund);
         Person person = createElement(Person.class, personenKategorie);
+
+        Configuration configuration = commandService.executeCommand(new CreateConfiguration(person))
+                .getConfiguration();
+        removeElement(person);
+        assertElementIsDeleted(person);
+
+        configuration = commandService.executeCommand(new LoadConfiguration(person))
+                .getConfiguration();
+        assertNull(configuration);
+    }
+
+    @Test
+    public void removeIsoPersonWithAccount() throws CommandException {
+        PersonGroup personGroup = createElement(PersonGroup.class, organization);
+        PersonIso person = createElement(PersonIso.class, personGroup);
+
+        Configuration configuration = commandService.executeCommand(new CreateConfiguration(person))
+                .getConfiguration();
+        removeElement(person);
+        assertElementIsDeleted(person);
+
+        configuration = commandService.executeCommand(new LoadConfiguration(person))
+                .getConfiguration();
+        assertNull(configuration);
+    }
+
+    @Test
+    public void removeBpPersonWithAccount() throws CommandException {
+        BpPersonGroup bpPersonGroup = createElement(BpPersonGroup.class, itNetwork);
+        BpPerson person = createElement(BpPerson.class, bpPersonGroup);
 
         Configuration configuration = commandService.executeCommand(new CreateConfiguration(person))
                 .getConfiguration();
