@@ -35,6 +35,7 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.IReevaluator;
+import sernet.verinice.model.bp.elements.BpPerson;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
@@ -42,10 +43,12 @@ import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.LinkKategorie;
+import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.Schutzbedarf;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.InheritLogger;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.model.validation.CnAValidation;
 
 /**
@@ -825,6 +828,25 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
     public boolean isItNetwork() {
         return ItNetwork.class.equals(getClass()) || ItNetwork.TYPE_ID.equals(getTypeId());
+    }
+
+    /**
+     * Indicates whether the instance is a person element.
+     */
+    public boolean isPerson() {
+        return isBpOldPerson() || isIsoPerson() || isBpPerson();
+    }
+
+    public boolean isBpOldPerson() {
+        return Person.class.equals(getClass()) || Person.TYPE_ID.equals(getTypeId());
+    }
+
+    public boolean isIsoPerson() {
+        return PersonIso.class.equals(getClass()) || PersonIso.TYPE_ID.equals(getTypeId());
+    }
+
+    public boolean isBpPerson() {
+        return BpPerson.class.equals(getClass()) || BpPerson.TYPE_ID.equals(getTypeId());
     }
 
     /**
