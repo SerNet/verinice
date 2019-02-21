@@ -60,7 +60,9 @@ public class RejectRealizationClientHandler implements ICompleteClientHandler {
     public Map<String, Object> execute(final ITask task) {
         Map<String, Object> parameter = new HashMap<String, Object>();
         try {
-            final IndividualProcessWizard wizard = new IndividualProcessWizard(Collections.singletonList(task.getUuid()), task.getElementTitle(), task.getElementType());
+            final IndividualProcessWizard wizard = new IndividualProcessWizard(
+                    Collections.singletonList(task.getUuid()), task.getElementTitle(),
+                    task.getElementType());
             // TODO: check if isGrundschutzElement?
             wizard.setPersonTypeId(Person.TYPE_ID);
             Display.getDefault().syncExec(new Runnable() {
@@ -69,7 +71,8 @@ public class RejectRealizationClientHandler implements ICompleteClientHandler {
                     WizardDialog wizardDialog = new NonModalWizardDialog(shell, wizard);
                     wizardDialog.create();
 
-                    IndividualServiceParameter individualServiceParameter = getIndividualServiceParameter(task.getId());
+                    IndividualServiceParameter individualServiceParameter = getIndividualServiceParameter(
+                            task.getId());
                     wizard.setTemplateForRejectedRealization(individualServiceParameter);
                     dialogStatus = wizardDialog.open();
                 }
@@ -77,7 +80,8 @@ public class RejectRealizationClientHandler implements ICompleteClientHandler {
 
             if (dialogStatus == Window.OK) {
                 wizard.saveTemplate();
-                parameter.putAll(ServiceFactory.lookupIndividualService().createParameterMap(wizard.getParameter()));
+                parameter.putAll(ServiceFactory.lookupIndividualService()
+                        .createParameterMap(wizard.getParameter()));
             } else {
                 throw new CompletionAbortedException("Canceled by user.");
             }
@@ -92,14 +96,22 @@ public class RejectRealizationClientHandler implements ICompleteClientHandler {
     private IndividualServiceParameter getIndividualServiceParameter(String taskId) {
         Map<String, Object> taskVariables = getTaskService().getVariables(taskId);
         final IndividualServiceParameter individualServiceParameter = new IndividualServiceParameter();
-        individualServiceParameter.setDueDate((Date) taskVariables.get(IIndividualProcess.VAR_DUEDATE));
-        individualServiceParameter.setReminderPeriodDays((Integer) taskVariables.get(IIndividualProcess.VAR_REMINDER_DAYS));
-        individualServiceParameter.setAssignee((String) taskVariables.get(IIndividualProcess.VAR_ASSIGNEE_NAME));
-        individualServiceParameter.setAssigneeRelationId((String) taskVariables.get(IIndividualProcess.VAR_RELATION_ID));
-        individualServiceParameter.setProperties((Set<String>) taskVariables.get(IIndividualProcess.VAR_PROPERTY_TYPES));
-        individualServiceParameter.setTitle((String) taskVariables.get(IIndividualProcess.VAR_TITLE));
-        individualServiceParameter.setDescription((String) taskVariables.get(IIndividualProcess.VAR_DESCRIPTION));
-        individualServiceParameter.setWithAReleaseProcess((boolean) taskVariables.get(IIndividualProcess.VAR_IS_WITH_RELEASE_PROCESS));
+        individualServiceParameter
+                .setDueDate((Date) taskVariables.get(IIndividualProcess.VAR_DUEDATE));
+        individualServiceParameter.setReminderPeriodDays(
+                (Integer) taskVariables.get(IIndividualProcess.VAR_REMINDER_DAYS));
+        individualServiceParameter
+                .setAssignee((String) taskVariables.get(IIndividualProcess.VAR_ASSIGNEE_NAME));
+        individualServiceParameter.setAssigneeRelationId(
+                (String) taskVariables.get(IIndividualProcess.VAR_RELATION_ID));
+        individualServiceParameter.setProperties(
+                (Set<String>) taskVariables.get(IIndividualProcess.VAR_PROPERTY_TYPES));
+        individualServiceParameter
+                .setTitle((String) taskVariables.get(IIndividualProcess.VAR_TITLE));
+        individualServiceParameter
+                .setDescription((String) taskVariables.get(IIndividualProcess.VAR_DESCRIPTION));
+        individualServiceParameter.setWithAReleaseProcess(
+                (boolean) taskVariables.get(IIndividualProcess.VAR_IS_WITH_RELEASE_PROCESS));
         return individualServiceParameter;
     }
 
