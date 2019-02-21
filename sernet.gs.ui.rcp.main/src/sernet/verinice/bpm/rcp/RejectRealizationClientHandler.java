@@ -52,30 +52,25 @@ public class RejectRealizationClientHandler implements ICompleteClientHandler {
     private int dialogStatus;
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.bpm.ICompleteClientHandler#execute()
      */
     @Override
     public Map<String, Object> execute(final ITask task) {
-        Map<String, Object> parameter = new HashMap<String, Object>();
+        Map<String, Object> parameter = new HashMap<>();
         try {
             final IndividualProcessWizard wizard = new IndividualProcessWizard(
                     Collections.singletonList(task.getUuid()), task.getElementTitle(),
                     task.getElementType());
             // TODO: check if isGrundschutzElement?
             wizard.setPersonTypeId(Person.TYPE_ID);
-            Display.getDefault().syncExec(new Runnable() {
-                @Override
-                public void run() {
-                    WizardDialog wizardDialog = new NonModalWizardDialog(shell, wizard);
-                    wizardDialog.create();
+            Display.getDefault().syncExec(() -> {
+                WizardDialog wizardDialog = new NonModalWizardDialog(shell, wizard);
+                wizardDialog.create();
 
-                    IndividualServiceParameter individualServiceParameter = getIndividualServiceParameter(
-                            task.getId());
-                    wizard.setTemplateForRejectedRealization(individualServiceParameter);
-                    dialogStatus = wizardDialog.open();
-                }
+                IndividualServiceParameter individualServiceParameter = getIndividualServiceParameter(
+                        task.getId());
+                wizard.setTemplateForRejectedRealization(individualServiceParameter);
+                dialogStatus = wizardDialog.open();
             });
 
             if (dialogStatus == Window.OK) {
@@ -116,8 +111,6 @@ public class RejectRealizationClientHandler implements ICompleteClientHandler {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.bpm.ICompleteClientHandler#setShell(org.eclipse.swt.
      * widgets.Shell)
      */
