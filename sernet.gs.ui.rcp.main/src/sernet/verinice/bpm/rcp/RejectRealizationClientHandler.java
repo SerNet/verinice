@@ -38,8 +38,10 @@ import sernet.verinice.interfaces.bpm.IIndividualProcess;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.interfaces.bpm.IndividualServiceParameter;
-import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.common.Domain;
+import sernet.verinice.model.common.DomainSpecificElementUtil;
 import sernet.verinice.rcp.NonModalWizardDialog;
+import sernet.verinice.service.commands.CnATypeMapper;
 
 /**
  * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
@@ -61,8 +63,9 @@ public class RejectRealizationClientHandler implements ICompleteClientHandler {
             final IndividualProcessWizard wizard = new IndividualProcessWizard(
                     Collections.singletonList(task.getUuid()), task.getElementTitle(),
                     task.getElementType());
-            // TODO: check if isGrundschutzElement?
-            wizard.setPersonTypeId(Person.TYPE_ID);
+            Domain domain = CnATypeMapper.getDomainFromTypeId(task.getElementType());
+            String type = DomainSpecificElementUtil.getPersonTypeIdFromDomain(domain);
+            wizard.setPersonTypeId(type);
             Display.getDefault().syncExec(() -> {
                 WizardDialog wizardDialog = new NonModalWizardDialog(shell, wizard);
                 wizardDialog.create();
