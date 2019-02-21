@@ -19,6 +19,10 @@
  ******************************************************************************/
 package sernet.verinice.service.test;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.annotation.Resource;
 
 import org.hibernate.criterion.DetachedCriteria;
@@ -29,6 +33,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.catalog.CatalogModel;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 
@@ -74,5 +79,34 @@ public abstract class ContextConfiguration  {
         if (elementDao.findByCriteria(DetachedCriteria.forClass(CatalogModel.class)).isEmpty()) {
             elementDao.merge(new CatalogModel());
         }
+    }
+
+    protected static Set<CnATreeElement> getChildrenWithTypeId(CnATreeElement element,
+            String typeId) {
+        return element.getChildren().stream().filter(child -> child.getTypeId().equals(typeId))
+                .collect(Collectors.toSet());
+    }
+
+    protected static CnATreeElement findChildWithTypeId(CnATreeElement element, String typeId) {
+        return element.getChildren().stream().filter(child -> child.getTypeId().equals(typeId))
+                .findFirst().orElse(null);
+    }
+
+    protected static CnATreeElement findChildWithTitle(CnATreeElement element, String title) {
+        return element.getChildren().stream().filter(child -> title.equals(child.getTitle()))
+                .findFirst().orElse(null);
+    }
+
+    protected static Set<CnALink> getLinksWithType(CnATreeElement element, String linkType) {
+        return Stream.concat(element.getLinksDown().stream(), element.getLinksUp().stream())
+                .filter(link -> link.getRelationId().equals(linkType)).collect(Collectors.toSet());
+    }
+
+    protected static Set<CnATreeElement> getDependantsFromLinks(Set<CnALink> links) {
+        return links.stream().map(CnALink::getDependant).collect(Collectors.toSet());
+    }
+
+    protected static Set<CnATreeElement> getDependenciesFromLinks(Set<CnALink> links) {
+        return links.stream().map(CnALink::getDependency).collect(Collectors.toSet());
     }
 }

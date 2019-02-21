@@ -22,9 +22,6 @@ package sernet.verinice.service.test;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 
@@ -40,7 +37,6 @@ import sernet.verinice.model.bp.groups.ApplicationGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.service.commands.CreateElement;
@@ -285,35 +281,6 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
         element.getEntity().setSimpleValue(
                 element.getEntityType().getPropertyType(identifierProperty), identifier);
         return update(element);
-    }
-
-    protected static Set<CnATreeElement> getChildrenWithTypeId(CnATreeElement element,
-            String typeId) {
-        return element.getChildren().stream().filter(child -> child.getTypeId().equals(typeId))
-                .collect(Collectors.toSet());
-    }
-
-    protected static CnATreeElement findChildWithTypeId(CnATreeElement element, String typeId) {
-        return element.getChildren().stream().filter(child -> child.getTypeId().equals(typeId))
-                .findFirst().orElse(null);
-    }
-
-    protected static CnATreeElement findChildWithTitle(CnATreeElement element, String title) {
-        return element.getChildren().stream().filter(child -> title.equals(child.getTitle()))
-                .findFirst().orElse(null);
-    }
-
-    protected static Set<CnALink> getLinksWithType(CnATreeElement element, String linkType) {
-        return Stream.concat(element.getLinksDown().stream(), element.getLinksUp().stream())
-                .filter(link -> link.getRelationId().equals(linkType)).collect(Collectors.toSet());
-    }
-
-    protected static Set<CnATreeElement> getDependantsFromLinks(Set<CnALink> links) {
-        return links.stream().map(CnALink::getDependant).collect(Collectors.toSet());
-    }
-
-    protected static Set<CnATreeElement> getDependenciesFromLinks(Set<CnALink> links) {
-        return links.stream().map(CnALink::getDependency).collect(Collectors.toSet());
     }
 
     protected <T extends CnATreeElement> T reloadElement(T element) throws CommandException {
