@@ -23,6 +23,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.StringUtils;
+
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
@@ -65,11 +67,11 @@ public class GetLinkedRequirementsInfo extends GenericCommand {
             Set<String> frequencies = linkedRequirements.stream()
                     .map(item -> item.getEntity()
                             .getRawPropertyValue(BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY))
-                    .collect(Collectors.toSet());
+                    .filter(StringUtils::isNotEmpty).collect(Collectors.toSet());
             Set<String> impacts = linkedRequirements.stream()
                     .map(item -> item.getEntity()
                             .getRawPropertyValue(BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT))
-                    .collect(Collectors.toSet());
+                    .filter(StringUtils::isNotEmpty).collect(Collectors.toSet());
 
             LinkedRequirementsInfo linkedRequirementsInfo = new LinkedRequirementsInfo(frequencies,
                     impacts);
