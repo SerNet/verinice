@@ -361,6 +361,128 @@ public class RiskDeductionUtilTest extends AbstractModernizedBaseProtection {
 
     }
 
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void testDeductionIfOnlySafeguardStrengthFrequencyIsSet() throws Exception {
+
+        ItNetwork itNetwork = createNewBPOrganization();
+        BpThreatGroup bpThreatGroup = createBpThreatGroup(itNetwork);
+        BpThreat bpThreat = createBpThreat(bpThreatGroup);
+
+        RiskConfiguration riskConfiguration = DefaultRiskConfiguration.getInstance();
+        Frequency firstFrequency = riskConfiguration.getFrequencies().get(0);
+        Impact firstImpact = riskConfiguration.getImpacts().get(0);
+        Frequency lastFrequency = riskConfiguration.getFrequencies()
+                .get(riskConfiguration.getFrequencies().size() - 1);
+        BpRequirementGroup bpRequirementGroup = createRequirementGroup(itNetwork);
+        BpRequirement bpRequirement = createBpRequirement(bpRequirementGroup);
+        createLink(bpRequirement, bpThreat, BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
+
+        bpRequirement.getEntity().setFlag(BpRequirement.PROP_SAFEGUARD_REDUCE_RISK, true);
+        bpRequirement.setSimpleProperty(BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY,
+                firstFrequency.getId());
+
+        bpThreat.setFrequencyWithoutAdditionalSafeguards(lastFrequency.getId());
+        bpThreat.setImpactWithoutAdditionalSafeguards(firstImpact.getId());
+        RiskDeductionUtil.deduceRisk(bpThreat);
+
+        Risk expectedRiskWithoutAdditionalSafeguards = riskConfiguration.getRisk(lastFrequency,
+                firstImpact);
+        Risk expectedRiskWithAdditionalSafeguards = riskConfiguration.getRisk(firstFrequency,
+                firstImpact);
+
+        assertEquals(lastFrequency.getId(), bpThreat.getFrequencyWithoutAdditionalSafeguards());
+        assertEquals(firstFrequency.getId(), bpThreat.getFrequencyWithAdditionalSafeguards());
+        assertEquals(firstImpact.getId(), bpThreat.getImpactWithoutAdditionalSafeguards());
+        assertEquals(firstImpact.getId(), bpThreat.getImpactWithAdditionalSafeguards());
+        assertEquals(expectedRiskWithoutAdditionalSafeguards.getId(),
+                bpThreat.getRiskWithoutAdditionalSafeguards());
+        assertEquals(expectedRiskWithAdditionalSafeguards.getId(),
+                bpThreat.getRiskWithAdditionalSafeguards());
+
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void testDeductionIfOnlySafeguardStrengthImpactIsSet() throws Exception {
+
+        ItNetwork itNetwork = createNewBPOrganization();
+        BpThreatGroup bpThreatGroup = createBpThreatGroup(itNetwork);
+        BpThreat bpThreat = createBpThreat(bpThreatGroup);
+
+        RiskConfiguration riskConfiguration = DefaultRiskConfiguration.getInstance();
+        Frequency firstFrequency = riskConfiguration.getFrequencies().get(0);
+        Impact firstImpact = riskConfiguration.getImpacts().get(0);
+        Impact lastImpact = riskConfiguration.getImpacts()
+                .get(riskConfiguration.getImpacts().size() - 1);
+        BpRequirementGroup bpRequirementGroup = createRequirementGroup(itNetwork);
+        BpRequirement bpRequirement = createBpRequirement(bpRequirementGroup);
+        createLink(bpRequirement, bpThreat, BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
+
+        bpRequirement.getEntity().setFlag(BpRequirement.PROP_SAFEGUARD_REDUCE_RISK, true);
+        bpRequirement.setSimpleProperty(BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT,
+                firstImpact.getId());
+
+        bpThreat.setFrequencyWithoutAdditionalSafeguards(firstFrequency.getId());
+        bpThreat.setImpactWithoutAdditionalSafeguards(lastImpact.getId());
+        RiskDeductionUtil.deduceRisk(bpThreat);
+
+        Risk expectedRiskWithoutAdditionalSafeguards = riskConfiguration.getRisk(firstFrequency,
+                lastImpact);
+        Risk expectedRiskWithAdditionalSafeguards = riskConfiguration.getRisk(firstFrequency,
+                firstImpact);
+
+        assertEquals(firstFrequency.getId(), bpThreat.getFrequencyWithoutAdditionalSafeguards());
+        assertEquals(firstFrequency.getId(), bpThreat.getFrequencyWithAdditionalSafeguards());
+        assertEquals(lastImpact.getId(), bpThreat.getImpactWithoutAdditionalSafeguards());
+        assertEquals(firstImpact.getId(), bpThreat.getImpactWithAdditionalSafeguards());
+        assertEquals(expectedRiskWithoutAdditionalSafeguards.getId(),
+                bpThreat.getRiskWithoutAdditionalSafeguards());
+        assertEquals(expectedRiskWithAdditionalSafeguards.getId(),
+                bpThreat.getRiskWithAdditionalSafeguards());
+
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void setAndUnsetRiskProperties() throws Exception {
+
+        ItNetwork itNetwork = createNewBPOrganization();
+        BpThreatGroup bpThreatGroup = createBpThreatGroup(itNetwork);
+        BpThreat bpThreat = createBpThreat(bpThreatGroup);
+
+        RiskConfiguration riskConfiguration = DefaultRiskConfiguration.getInstance();
+        Frequency firstFrequency = riskConfiguration.getFrequencies().get(0);
+        Impact lastImpact = riskConfiguration.getImpacts()
+                .get(riskConfiguration.getImpacts().size() - 1);
+
+        bpThreat.setFrequencyWithoutAdditionalSafeguards(firstFrequency.getId());
+        bpThreat.setImpactWithoutAdditionalSafeguards(lastImpact.getId());
+        RiskDeductionUtil.deduceRisk(bpThreat);
+
+        Risk expectedRisk = riskConfiguration.getRisk(firstFrequency, lastImpact);
+
+        assertEquals(firstFrequency.getId(), bpThreat.getFrequencyWithoutAdditionalSafeguards());
+        assertEquals(firstFrequency.getId(), bpThreat.getFrequencyWithAdditionalSafeguards());
+        assertEquals(lastImpact.getId(), bpThreat.getImpactWithoutAdditionalSafeguards());
+        assertEquals(lastImpact.getId(), bpThreat.getImpactWithAdditionalSafeguards());
+        assertEquals(expectedRisk.getId(), bpThreat.getRiskWithoutAdditionalSafeguards());
+        assertEquals(expectedRisk.getId(), bpThreat.getRiskWithAdditionalSafeguards());
+
+        bpThreat.setFrequencyWithoutAdditionalSafeguards(null);
+        RiskDeductionUtil.deduceRisk(bpThreat);
+        assertEquals(null, bpThreat.getFrequencyWithoutAdditionalSafeguards());
+        assertEquals(null, bpThreat.getFrequencyWithAdditionalSafeguards());
+        assertEquals(lastImpact.getId(), bpThreat.getImpactWithoutAdditionalSafeguards());
+        assertEquals(lastImpact.getId(), bpThreat.getImpactWithAdditionalSafeguards());
+        assertEquals(null, bpThreat.getRiskWithoutAdditionalSafeguards());
+        assertEquals(null, bpThreat.getRiskWithAdditionalSafeguards());
+
+    }
+
     // private void dumpCnATreeElement(CnATreeElement e) {
     //
     // System.out.println("--"+e.getClass().getSimpleName()+"--");
