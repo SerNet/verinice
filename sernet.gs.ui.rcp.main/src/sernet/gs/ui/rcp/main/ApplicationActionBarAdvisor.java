@@ -80,6 +80,7 @@ import sernet.gs.ui.rcp.main.bsi.views.TodoView;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.preferences.ShowPreferencesAction;
 import sernet.verinice.bp.rcp.BaseProtectionView;
+import sernet.verinice.bp.rcp.converter.ItNetworkConverterAction;
 import sernet.verinice.bpm.rcp.OpenTaskViewAction;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.CatalogView;
@@ -185,6 +186,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private ImportCSVAction importCSVAction;
 
     private ImportPersonFromLdap importPersonFromLdap;
+
+    private ItNetworkConverterAction itNetworkConverterAction;
 
     private OpenViewAction openDocumentViewAction;
 
@@ -297,6 +300,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                 Messages.ApplicationActionBarAdvisor_32);
         this.importGSNotesAction = new ImportGstoolNotesAction(window,
                 Messages.ApplicationActionBarAdvisor_27);
+        this.itNetworkConverterAction = new ItNetworkConverterAction(window);
         this.showPreferencesAction = new ShowPreferencesAction();
         this.bulkEditAction = new ShowBulkEditAction(window,
                 Messages.ApplicationActionBarAdvisor_16);
@@ -554,6 +558,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         myToolbar.add(this.reloadAction);
         myToolbar.add(this.runRiskAnalysisAction);
+        myToolbar.add(this.itNetworkConverterAction);
         myToolbar.add(new Separator());
         // Grundschutz items
         myToolbar.add(this.openBSIViewAction);

@@ -275,6 +275,8 @@ public final class ImageCache {
     public static final String SEARCH = "search.png";
     public static final String VLT = "document-table.png";
 
+    public static final String CONVERT = "convert.png";
+
     /*
      * *************************************************************************
      * *************************

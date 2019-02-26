@@ -110,6 +110,7 @@ public final class ActionRightIDs {
     public static final String XMLEXPORT = "xmlexport";
     public static final String XMLIMPORT = "xmlimport";
     public static final String MIGRATE_DATA_PROTECTION = "migrate_data_protection";
+    public static final String CONVERT_IT_NETWORK = "convertitnetwork";
 
 
     private  static final String[] ALL_RIGHT_IDS;

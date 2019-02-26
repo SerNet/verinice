@@ -63,6 +63,7 @@
           <action id="catalogimport" />       
 	        <action id="catalogview" />
           <action id="changeicon" />
+          <action id="convertitnetwork" />
 	        <action id="deletecatalog" />
 	        <action id="deletefile" />
 	        <action id="deleteitem" />

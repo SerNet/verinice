@@ -916,6 +916,22 @@
                tooltip="%action.tooltip.migration.dataprotection">
          </action>
       </objectContribution>
+      
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.rcp.risk.ItNetworkConverterActionDelegate"
+            objectClass="sernet.verinice.model.bsi.ITVerbund">
+         <action
+               class="sernet.verinice.bp.rcp.converter.ItNetworkConverterActionDelegate"
+               enablesFor="+"
+               icon="icons/convert.png"
+               id="sernet.verinice.bp.rcp.converter.ItNetworkConverterActionDelegate.action"
+               label="%action.label.converter.itnetwork"
+               menubarPath="special"
+               style="push"
+               tooltip="%action.tooltip.converter.itnetwork">
+         </action>
+      </objectContribution>
 
       <objectContribution
             adaptable="false"
