@@ -20,14 +20,19 @@
 package sernet.verinice.bp.rcp;
 
 import java.text.Collator;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
-import org.eclipse.jface.viewers.ViewerSorter;
 
 import sernet.gs.service.NumericStringCollator;
+import sernet.hui.common.connect.IIdentifiableElement;
+import sernet.hui.common.connect.ITitledElement;
 import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bp.elements.Application;
 import sernet.verinice.model.bp.elements.BpDocument;
@@ -69,6 +74,9 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class BaseProtectionTreeComparator extends ViewerComparator {
     private static Map<String, Integer> typeSortCategoryMap = new HashMap<>();
+
+    private static final List<String> SORT_ORDER_REQUIREMENT_AND_SAFEGUARD_GROUPS = Arrays
+            .asList("ISMS", "ORP", "CON", "OPS", "DER", "APP", "SYS", "IND", "NET", "INF");
 
     static {
         // Sort order of groups in IT network
@@ -123,7 +131,12 @@ public class BaseProtectionTreeComparator extends ViewerComparator {
     @Override
     public int compare(Viewer viewer, Object o1, Object o2) {
         int result = 0;
-        if (o1 instanceof Safeguard && o2 instanceof Safeguard) {
+        if (o1 instanceof SafeguardGroup && o2 instanceof SafeguardGroup) {
+            result = compareModulesOrImplementationHints((SafeguardGroup) o1, (SafeguardGroup) o2);
+        } else if (o1 instanceof BpRequirementGroup && o2 instanceof BpRequirementGroup) {
+            result = compareModulesOrImplementationHints((BpRequirementGroup) o1,
+                    (BpRequirementGroup) o2);
+        } else if (o1 instanceof Safeguard && o2 instanceof Safeguard) {
             SecurityLevel sl1 = ((Safeguard) o1).getSecurityLevel();
             SecurityLevel sl2 = ((Safeguard) o2).getSecurityLevel();
             result = SecurityLevel.compare(sl1, sl2);
@@ -136,5 +149,43 @@ public class BaseProtectionTreeComparator extends ViewerComparator {
             result = super.compare(viewer, o1, o2);
         }
         return result;
+    }
+
+    private static <T extends ITitledElement & IIdentifiableElement> int compareModulesOrImplementationHints(
+            @NonNull T o1, @NonNull T o2) {
+        int o1Value = -1;
+        int o2Value = -1;
+
+        String o1Identifier = o1.getIdentifier();
+        String o2Identifier = o2.getIdentifier();
+
+        String o1Title = o1.getTitle();
+        String o2Title = o2.getTitle();
+
+        if (StringUtils.isNotEmpty(o1Identifier) && StringUtils.isNotEmpty(o2Identifier)) {
+            o1Value = getValueForSorting(o1Identifier);
+            o2Value = getValueForSorting(o2Identifier);
+        } else if (StringUtils.isNotEmpty(o1Title) && StringUtils.isNotEmpty(o2Title)) {
+            o1Value = getValueForSorting(o1Title);
+            o2Value = getValueForSorting(o2Title);
+        }
+
+        if (o1Value != -1 && o2Value == -1) {
+            return -1;
+        } else if (o1Value == -1 && o2Value != -1) {
+            return 1;
+        } else {
+            return Integer.compare(o1Value, o2Value);
+        }
+    }
+
+    private static int getValueForSorting(String name) {
+        int indexOfPeriod = name.indexOf('.');
+        if (indexOfPeriod != -1) {
+            String section = name.substring(0, indexOfPeriod);
+            return SORT_ORDER_REQUIREMENT_AND_SAFEGUARD_GROUPS.indexOf(section);
+        } else {
+            return SORT_ORDER_REQUIREMENT_AND_SAFEGUARD_GROUPS.indexOf(name);
+        }
     }
 }
