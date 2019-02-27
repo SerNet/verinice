@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerSorter;
 
 import sernet.gs.service.NumericStringCollator;
@@ -66,7 +67,7 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class BaseProtectionTreeSorter extends ViewerSorter {
+public class BaseProtectionTreeComparator extends ViewerComparator {
     private static Map<String, Integer> typeSortCategoryMap = new HashMap<>();
 
     static {
@@ -103,7 +104,7 @@ public class BaseProtectionTreeSorter extends ViewerSorter {
 
     static final Collator numericStringCollator = new NumericStringCollator();
 
-    public BaseProtectionTreeSorter() {
+    public BaseProtectionTreeComparator() {
         super(numericStringCollator);
     }
 

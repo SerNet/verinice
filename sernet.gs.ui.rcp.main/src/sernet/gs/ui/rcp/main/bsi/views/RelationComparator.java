@@ -26,7 +26,7 @@ import org.eclipse.jface.viewers.ViewerComparator;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.hui.common.connect.HUITypeFactory;
-import sernet.verinice.bp.rcp.BaseProtectionTreeSorter;
+import sernet.verinice.bp.rcp.BaseProtectionTreeComparator;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.ISecurityLevelProvider;
 import sernet.verinice.model.bp.SecurityLevel;
@@ -42,7 +42,7 @@ public class RelationComparator extends ViewerComparator {
 
     private Set<String> sorterProperties;
     private NumericStringComparator numComp = new NumericStringComparator();
-    private BaseProtectionTreeSorter baseProtectionTreeSorter = new BaseProtectionTreeSorter();
+    private BaseProtectionTreeComparator baseProtectionTreeSorter = new BaseProtectionTreeComparator();
     private static HUITypeFactory huiTypeFactory = HUITypeFactory.getInstance();
 
     public RelationComparator(String... sorterProperties) {

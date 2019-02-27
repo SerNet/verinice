@@ -72,8 +72,8 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionModelingTransfer;
-import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorMultiPage;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
+import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorMultiPage;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorRegistry;
 import sernet.gs.ui.rcp.main.bsi.views.BSIModelViewLabelProvider;
@@ -81,7 +81,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.verinice.bp.rcp.BaseProtectionTreeSorter;
+import sernet.verinice.bp.rcp.BaseProtectionTreeComparator;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -170,7 +170,7 @@ public class CatalogView extends RightsEnabledView
     protected void initView(Composite parent) {
         contentProvider = new TreeContentProvider(elementManager);
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-        viewer.setSorter(new BaseProtectionTreeSorter());
+        viewer.setComparator(new BaseProtectionTreeComparator());
         drillDownAdapter = new DrillDownAdapter(viewer);
         viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
         viewer.setContentProvider(contentProvider);
@@ -377,7 +377,8 @@ public class CatalogView extends RightsEnabledView
         if (editor == null) {
             EditorFactory.getInstance().updateAndOpenObject(element, true);
         } else {
-            getSite().getPage().openEditor(editor.getEditorInput(), BSIElementEditorMultiPage.EDITOR_ID);
+            getSite().getPage().openEditor(editor.getEditorInput(),
+                    BSIElementEditorMultiPage.EDITOR_ID);
         }
     }
 
