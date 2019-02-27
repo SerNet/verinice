@@ -38,7 +38,7 @@ public class ModelingData {
     private final Set<CnATreeElement> targetElements;
     private final boolean handleSafeguards;
     private final boolean handleDummySafeguards;
-    private final Map<CnATreeElement, CnATreeElement> scopeElementsByCompendiumElement = new HashMap<>();
+    private final Map<Integer, CnATreeElement> scopeElementsByCompendiumElementId = new HashMap<>();
     private final Set<CnATreeElement> existingElements = new HashSet<>();
 
     public ModelingData(Set<CnATreeElement> requirementGroups, Set<CnATreeElement> targetElements,
@@ -67,32 +67,32 @@ public class ModelingData {
 
     public void addMappingForExistingElement(CnATreeElement compendiumElement,
             CnATreeElement scopeElement) {
-        scopeElementsByCompendiumElement.put(compendiumElement, scopeElement);
+        scopeElementsByCompendiumElementId.put(compendiumElement.getDbId(), scopeElement);
         existingElements.add(scopeElement);
     }
 
     public void addMappingForNewElement(CnATreeElement compendiumElement,
             CnATreeElement scopeElement) {
-        scopeElementsByCompendiumElement.put(compendiumElement, scopeElement);
+        scopeElementsByCompendiumElementId.put(compendiumElement.getDbId(), scopeElement);
 
     }
 
     public Set<CnATreeElement> getModulesFromScope() {
         return Stream
-                .concat(scopeElementsByCompendiumElement.values().stream(),
+                .concat(scopeElementsByCompendiumElementId.values().stream(),
                         existingElements.stream())
                 .filter(item -> item.getTypeId().equals(BpRequirementGroup.TYPE_ID))
                 .collect(Collectors.toSet());
     }
 
     public Set<CnATreeElement> getSafeguardGroupsFromScope() {
-        return scopeElementsByCompendiumElement.values().stream()
+        return scopeElementsByCompendiumElementId.values().stream()
                 .filter(item -> item.getTypeId().equals(SafeguardGroup.TYPE_ID))
                 .collect(Collectors.toSet());
     }
 
     public CnATreeElement getScopeElementByCompendiumElement(CnATreeElement compendiumElement) {
-        return scopeElementsByCompendiumElement.get(compendiumElement);
+        return scopeElementsByCompendiumElementId.get(compendiumElement.getDbId());
     }
 
 }
