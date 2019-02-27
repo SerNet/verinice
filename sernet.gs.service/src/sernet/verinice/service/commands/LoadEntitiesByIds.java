@@ -27,6 +27,7 @@ import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.transform.DistinctRootEntityResultTransformer;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.hui.common.connect.Entity;
@@ -50,7 +51,7 @@ public class LoadEntitiesByIds extends GenericCommand {
      * HQL query to load the entities. The entity and the properties are loaded
      * by a single statement with joins.
      */
-    private static final String HQL_QUERY = "select distinct entity from Entity entity "
+    private static final String HQL_QUERY = "select entity from Entity entity "
             + "join fetch entity.typedPropertyLists as propertyList "
             + "join fetch propertyList.properties as props " + "where entity.dbId in (:dbIds)"; //$NON-NLS-2$
 
@@ -86,6 +87,7 @@ public class LoadEntitiesByIds extends GenericCommand {
             public Object doInHibernate(Session session) throws HibernateException, SQLException {
                 Query query = session.createQuery(HQL_QUERY).setParameterList("dbIds", entityIds);
                 query.setReadOnly(true);
+                query.setResultTransformer(new DistinctRootEntityResultTransformer());
                 return query.list();
             }
         });
