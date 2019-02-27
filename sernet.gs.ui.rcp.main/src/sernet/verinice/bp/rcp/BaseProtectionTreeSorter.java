@@ -59,10 +59,9 @@ import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * This tree sorter sorts groups in IT networks regardless of
- * of there names. Instead of sorting by name a static order
- * based on the type is used. See Map typeSortCategoryMap
- * for the order. Elements with a smaller category id are
+ * This tree sorter sorts groups in IT networks regardless of of there names.
+ * Instead of sorting by name a static order based on the type is used. See Map
+ * typeSortCategoryMap for the order. Elements with a smaller category id are
  * preceded by elements with a higher category id.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
@@ -72,34 +71,34 @@ public class BaseProtectionTreeSorter extends ViewerSorter {
 
     static {
         // Sort order of groups in IT network
-        typeSortCategoryMap.put(BusinessProcessGroup.TYPE_ID,10);
-        typeSortCategoryMap.put(BusinessProcess.TYPE_ID,10);
-        typeSortCategoryMap.put(ApplicationGroup.TYPE_ID,20);
-        typeSortCategoryMap.put(Application.TYPE_ID,20);
-        typeSortCategoryMap.put(ItSystemGroup.TYPE_ID,30);
-        typeSortCategoryMap.put(ItSystem.TYPE_ID,30);
-        typeSortCategoryMap.put(IcsSystemGroup.TYPE_ID,40);
-        typeSortCategoryMap.put(IcsSystem.TYPE_ID,40);
-        typeSortCategoryMap.put(DeviceGroup.TYPE_ID,50);
-        typeSortCategoryMap.put(Device.TYPE_ID,50);
-        typeSortCategoryMap.put(NetworkGroup.TYPE_ID,60);
-        typeSortCategoryMap.put(Network.TYPE_ID,60);
-        typeSortCategoryMap.put(RoomGroup.TYPE_ID,70);
-        typeSortCategoryMap.put(Room.TYPE_ID,70);
-        typeSortCategoryMap.put(BpPersonGroup.TYPE_ID,80);
-        typeSortCategoryMap.put(BpPerson.TYPE_ID,80);
-        typeSortCategoryMap.put(BpRequirementGroup.TYPE_ID,90);
-        typeSortCategoryMap.put(BpRequirement.TYPE_ID,90);
-        typeSortCategoryMap.put(BpThreatGroup.TYPE_ID,100);
-        typeSortCategoryMap.put(BpThreat.TYPE_ID,100);
-        typeSortCategoryMap.put(SafeguardGroup.TYPE_ID,110);
-        typeSortCategoryMap.put(Safeguard.TYPE_ID,110);
-        typeSortCategoryMap.put(BpDocumentGroup.TYPE_ID,120);
-        typeSortCategoryMap.put(BpDocument.TYPE_ID,120);
-        typeSortCategoryMap.put(BpIncidentGroup.TYPE_ID,130);
-        typeSortCategoryMap.put(BpIncident.TYPE_ID,130);
-        typeSortCategoryMap.put(BpRecordGroup.TYPE_ID,140);
-        typeSortCategoryMap.put(BpRecord.TYPE_ID,140);
+        typeSortCategoryMap.put(BusinessProcessGroup.TYPE_ID, 10);
+        typeSortCategoryMap.put(BusinessProcess.TYPE_ID, 10);
+        typeSortCategoryMap.put(ApplicationGroup.TYPE_ID, 20);
+        typeSortCategoryMap.put(Application.TYPE_ID, 20);
+        typeSortCategoryMap.put(ItSystemGroup.TYPE_ID, 30);
+        typeSortCategoryMap.put(ItSystem.TYPE_ID, 30);
+        typeSortCategoryMap.put(IcsSystemGroup.TYPE_ID, 40);
+        typeSortCategoryMap.put(IcsSystem.TYPE_ID, 40);
+        typeSortCategoryMap.put(DeviceGroup.TYPE_ID, 50);
+        typeSortCategoryMap.put(Device.TYPE_ID, 50);
+        typeSortCategoryMap.put(NetworkGroup.TYPE_ID, 60);
+        typeSortCategoryMap.put(Network.TYPE_ID, 60);
+        typeSortCategoryMap.put(RoomGroup.TYPE_ID, 70);
+        typeSortCategoryMap.put(Room.TYPE_ID, 70);
+        typeSortCategoryMap.put(BpPersonGroup.TYPE_ID, 80);
+        typeSortCategoryMap.put(BpPerson.TYPE_ID, 80);
+        typeSortCategoryMap.put(BpRequirementGroup.TYPE_ID, 90);
+        typeSortCategoryMap.put(BpRequirement.TYPE_ID, 90);
+        typeSortCategoryMap.put(BpThreatGroup.TYPE_ID, 100);
+        typeSortCategoryMap.put(BpThreat.TYPE_ID, 100);
+        typeSortCategoryMap.put(SafeguardGroup.TYPE_ID, 110);
+        typeSortCategoryMap.put(Safeguard.TYPE_ID, 110);
+        typeSortCategoryMap.put(BpDocumentGroup.TYPE_ID, 120);
+        typeSortCategoryMap.put(BpDocument.TYPE_ID, 120);
+        typeSortCategoryMap.put(BpIncidentGroup.TYPE_ID, 130);
+        typeSortCategoryMap.put(BpIncident.TYPE_ID, 130);
+        typeSortCategoryMap.put(BpRecordGroup.TYPE_ID, 140);
+        typeSortCategoryMap.put(BpRecord.TYPE_ID, 140);
     }
 
     static final Collator numericStringCollator = new NumericStringCollator();
