@@ -34,8 +34,8 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 
 /**
- * This command loads entities by the database ids of the entities.
- * Together with the entities all properties of the entity are loaded.
+ * This command loads entities by the database ids of the entities. Together
+ * with the entities all properties of the entity are loaded.
  *
  * Hibernate configuration of an entity: Entity.hbm.xml
  *
@@ -47,53 +47,52 @@ public class LoadEntitiesByIds extends GenericCommand {
     private static final long serialVersionUID = -8570078754663705003L;
 
     /**
-     * HQL query to load the entities. The entity and the properties
-     * are loaded by a single statement with joins.
+     * HQL query to load the entities. The entity and the properties are loaded
+     * by a single statement with joins.
      */
-    private static final String HQL_QUERY = "select distinct entity from Entity entity " +
-            "join fetch entity.typedPropertyLists as propertyList " +
-            "join fetch propertyList.properties as props " +
-            "where entity.dbId in (:dbIds)"; //$NON-NLS-1$
-	
-	private final Collection<Integer> entityIds;
+    private static final String HQL_QUERY = "select distinct entity from Entity entity "
+            + "join fetch entity.typedPropertyLists as propertyList "
+            + "join fetch propertyList.properties as props " + "where entity.dbId in (:dbIds)"; //$NON-NLS-2$
+
+    private final Collection<Integer> entityIds;
     private List<Entity> entities;
 
-	/**
-	 * @param entityIds Database ids of entities
-	 */
-	public LoadEntitiesByIds(Collection<Integer> entityIds) {
-	    if(entityIds==null) {
-	        this.entityIds = Collections.emptyList();
-	    } else {
-	        this.entityIds = entityIds;
-	    }
-	}
+    /**
+     * @param entityIds
+     *            Database ids of entities
+     */
+    public LoadEntitiesByIds(Collection<Integer> entityIds) {
+        if (entityIds == null) {
+            this.entityIds = Collections.emptyList();
+        } else {
+            this.entityIds = entityIds;
+        }
+    }
 
-	@Override
-	public void execute() {		
-		if(!entityIds.isEmpty()) {
-		    loadEntities();	
-		} else {
-		    entities = Collections.emptyList();
-		}		
-	}
+    @Override
+    public void execute() {
+        if (!entityIds.isEmpty()) {
+            loadEntities();
+        } else {
+            entities = Collections.emptyList();
+        }
+    }
 
     @SuppressWarnings("unchecked")
     private void loadEntities() {
         IBaseDao<Entity, Serializable> dao = getDaoFactory().getDAO(Entity.class);
         entities = dao.findByCallback(new HibernateCallback() {
-            @Override	    
-        	public Object doInHibernate( Session session) throws HibernateException, SQLException {
-        		Query query = session.createQuery(HQL_QUERY)
-        				.setParameterList("dbIds", entityIds);
-        		query.setReadOnly(true);
-        		return query.list();
-        	}
+            @Override
+            public Object doInHibernate(Session session) throws HibernateException, SQLException {
+                Query query = session.createQuery(HQL_QUERY).setParameterList("dbIds", entityIds);
+                query.setReadOnly(true);
+                return query.list();
+            }
         });
     }
 
-	public List<Entity> getEntities() {
-		return entities;
-	}
+    public List<Entity> getEntities() {
+        return entities;
+    }
 
 }
