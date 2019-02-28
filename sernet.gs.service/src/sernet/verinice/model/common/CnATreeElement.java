@@ -76,13 +76,16 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     public static final String UUID = "uuid";
     public static final String PARENT_ID = "parent-id";
     public static final String SCOPE_ID = "scope-id";
+    public static final String EXT_ID = "ext-id";
+    public static final String SOURCE_ID = "source-id";
 
     private static final Set<String> staticProperties;
 
     static {
         staticProperties = Collections
                 .unmodifiableSet(new HashSet<>(Arrays.asList(CnATreeElement.SCOPE_ID,
-                        CnATreeElement.PARENT_ID, CnATreeElement.DBID, CnATreeElement.UUID)));
+                        CnATreeElement.PARENT_ID, CnATreeElement.DBID, CnATreeElement.UUID,
+                        CnATreeElement.EXT_ID, CnATreeElement.SOURCE_ID)));
     }
 
     private Integer dbId;
@@ -627,7 +630,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
      *            A CnATreeElement
      * @param propertyId
      *            The id of a "static" property: CnATreeElement.DBID,
-     *            .PARENT_ID, .SCOPE_ID, .UUID
+     *            .PARENT_ID, .SCOPE_ID, .UUID, .EXT_ID, .SOURCE_ID
      * @return The value of the property or null if no value exists
      */
     public static String getStaticProperty(CnATreeElement element, String propertyId) {
@@ -640,6 +643,10 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
             value = String.valueOf(element.getParentId());
         } else if (CnATreeElement.UUID.equals(propertyId)) {
             value = element.getUuid();
+        } else if (CnATreeElement.EXT_ID.equals(propertyId)) {
+            value = element.getExtId();
+        } else if (CnATreeElement.SOURCE_ID.equals(propertyId)) {
+            value = element.getSourceId();
         }
         return value;
     }
