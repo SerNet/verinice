@@ -47,75 +47,76 @@ import sernet.snutils.AssertException;
 public class NumericSelectionControl extends AbstractHuiControl {
 
     private static final Logger LOG = Logger.getLogger(NumericSelectionControl.class);
-    
-	private Entity entity;
 
-	private PropertyType fieldType;
+    private Entity entity;
 
-	private Combo combo;
+    private PropertyType fieldType;
 
-	private boolean editable = false;
+    private Combo combo;
 
-	private Property savedProp;
+    private boolean editable = false;
 
-	private int min;
+    private Property savedProp;
 
-	private int max;
+    private int min;
 
-	private String[] numericItems;
+    private int max;
+
+    private String[] numericItems;
 
     private boolean showValidationHint;
-    
+
     private boolean useValidationGUIHints;
-    
-	public Control getControl() {
-            return combo;
-	}
 
-	private static final Color GREY = SWTResourceManager.getColor(240, 240, 240);
+    public Control getControl() {
+        return combo;
+    }
 
-	/**
-	 * Constructor for DropDownBox.
-	 * 
-	 * @param dyndoc
-	 * @param type
-	 * @param composite
-	 */
-	public NumericSelectionControl(Entity dyndoc, PropertyType type,
-			Composite parent, boolean edit, boolean showValidationHint, boolean useValidationGuiHints) {
-		super(parent);
-		this.entity = dyndoc;
-		this.fieldType = type;
-		this.editable = edit;
-		this.min = type.getMinValue();
-		this.max = type.getMaxValue();
-		this.showValidationHint = showValidationHint;
-		this.useValidationGUIHints = useValidationGuiHints;
-	}
+    private static final Color GREY = SWTResourceManager.getColor(240, 240, 240);
 
-	/**
-	 * @throws AssertException
-	 * 
-	 */
-	public void create() {
-		try {
-			label = new Label(composite, SWT.NULL);
-			String labelText = fieldType.getName();
-			if(showValidationHint && useValidationGUIHints){
-			    refontLabel(true);
-			}
-			label.setText(labelText);
+    /**
+     * Constructor for DropDownBox.
+     * 
+     * @param dyndoc
+     * @param type
+     * @param composite
+     */
+    public NumericSelectionControl(Entity dyndoc, PropertyType type, Composite parent, boolean edit,
+            boolean showValidationHint, boolean useValidationGuiHints) {
+        super(parent);
+        this.entity = dyndoc;
+        this.fieldType = type;
+        this.editable = edit;
+        this.min = type.getMinValue();
+        this.max = type.getMaxValue();
+        this.showValidationHint = showValidationHint;
+        this.useValidationGUIHints = useValidationGuiHints;
+    }
 
-			List<Property> savedProps = entity.getProperties(fieldType.getId()).getProperties();
-			savedProp = savedProps != null && !savedProps.isEmpty() ? (Property) savedProps.get(0) : null;
+    /**
+     * @throws AssertException
+     * 
+     */
+    public void create() {
+        try {
+            label = new Label(composite, SWT.NULL);
+            String labelText = fieldType.getName();
+            if (showValidationHint && useValidationGUIHints) {
+                refontLabel(true);
+            }
+            label.setText(labelText);
 
-		    createCombo();
-			
-		} catch (Exception e1) {
-			LOG.error("Error while creating",e1);
-		}
+            List<Property> savedProps = entity.getProperties(fieldType.getId()).getProperties();
+            savedProp = savedProps != null && !savedProps.isEmpty() ? (Property) savedProps.get(0)
+                    : null;
 
-	}
+            createCombo();
+
+        } catch (Exception e1) {
+            LOG.error("Error while creating", e1);
+        }
+
+    }
 
     /**
      * 
@@ -127,12 +128,12 @@ public class NumericSelectionControl extends AbstractHuiControl {
         shownItems = createNumericItemsWithDisplayString();
         combo.setItems(shownItems);
         if (savedProp == null) {
-        	// create property in which to save entered value:
-        	savedProp = entity.createNewProperty(fieldType, "");
-        	combo.deselectAll();
+            // create property in which to save entered value:
+            savedProp = entity.createNewProperty(fieldType, "");
+            combo.deselectAll();
         } else {
-        	// use saved property:
-        	combo.select(indexForOption(savedProp));
+            // use saved property:
+            combo.select(indexForOption(savedProp));
         }
 
         GridData comboLData = new GridData();
@@ -140,105 +141,104 @@ public class NumericSelectionControl extends AbstractHuiControl {
         comboLData.grabExcessHorizontalSpace = false;
         combo.setLayoutData(comboLData);
         combo.setEnabled(editable);
-        if (!editable){
-        	combo.setBackground(GREY);
+        if (!editable) {
+            combo.setBackground(GREY);
         }
         combo.setToolTipText(fieldType.getTooltiptext());
 
         combo.addSelectionListener(new SelectionAdapter() {
-        	public void widgetSelected(SelectionEvent evt) {
-        		savedProp.setPropertyValue(numericItems[combo.getSelectionIndex()], true, combo);
-        		validate();
-        	}
+            public void widgetSelected(SelectionEvent evt) {
+                savedProp.setPropertyValue(numericItems[combo.getSelectionIndex()], true, combo);
+                validate();
+            }
         });
         combo.pack(true);
     }
 
-	/**
-	 * @return
-	 */
-	private String[] createNumericItems() {
-		String[] items = new String[max-min+1];
-		int j=0;
-		for(int i = min; i <= max; i++) {
-			items[j] = Integer.toString(i);
-			j++;
-		}
-		return items;
-	}
-	
-	/**
+    /**
      * @return
      */
-    private String[] createNumericItemsWithDisplayString() {
-        String[] items = new String[max-min+1];
-        int j=0;
-        for(int i = min; i <= max; i++) {
-            items[j] = fieldType.getNameForValue(i); 
+    private String[] createNumericItems() {
+        String[] items = new String[max - min + 1];
+        int j = 0;
+        for (int i = min; i <= max; i++) {
+            items[j] = Integer.toString(i);
             j++;
         }
         return items;
     }
 
+    /**
+     * @return
+     */
+    private String[] createNumericItemsWithDisplayString() {
+        String[] items = new String[max - min + 1];
+        int j = 0;
+        for (int i = min; i <= max; i++) {
+            items[j] = fieldType.getNameForValue(i);
+            j++;
+        }
+        return items;
+    }
 
     public void setFocus() {
-		this.combo.setFocus();
-	}
+        this.combo.setFocus();
+    }
 
-	public boolean validate() {
-		//FIXME bg colour not working in 3.4M4:
-	       boolean valid = true;
-           String propValue = savedProp != null ? savedProp.getPropertyValue() : null;
-	        for(Entry<String, Boolean> entry : fieldType.validate(propValue, null).entrySet()){
-	            if(!entry.getValue().booleanValue()){
-	                valid = false;
-	                break;
-	            }
-	        }
-		if (valid) {
-		    refontLabel(false);
-			return true;
-		}
-		
-		if(useValidationGUIHints){
-		    refontLabel(true);
-		}
-		return false;
-	}
+    public boolean validate() {
+        // FIXME bg colour not working in 3.4M4:
+        boolean valid = true;
+        String propValue = savedProp != null ? savedProp.getPropertyValue() : null;
+        for (Entry<String, Boolean> entry : fieldType.validate(propValue, null).entrySet()) {
+            if (!entry.getValue().booleanValue()) {
+                valid = false;
+                break;
+            }
+        }
+        if (valid) {
+            refontLabel(false);
+            return true;
+        }
 
-	public void update() {
-		PropertyList propList = entity.getProperties(fieldType.getId());
-		Property entityProp;
-			entityProp = propList != null ? propList.getProperty(0) : null;
-		if (entityProp != null) {
-			savedProp = entityProp;
+        if (useValidationGUIHints) {
+            refontLabel(true);
+        }
+        return false;
+    }
 
-			if (Display.getCurrent() != null) {
-				combo.select(indexForOption(savedProp));
-				validate();
-			} else {
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						combo.select(indexForOption(savedProp));
-						validate();
-					}
-				});
-			}
-		}
-	}
+    public void update() {
+        PropertyList propList = entity.getProperties(fieldType.getId());
+        Property entityProp;
+        entityProp = propList != null ? propList.getProperty(0) : null;
+        if (entityProp != null) {
+            savedProp = entityProp;
 
-	/**
-	 * @param savedProp2
-	 * @return
-	 */
-	private int indexForOption(Property savedProp) {
-		int i = 0;
-		for (String item : numericItems) {
-			if ( item.equals(savedProp.getPropertyValue()) ) {
-				return i;
-			}
-			i++;
-		}
-		return -1;
-	}
+            if (Display.getCurrent() != null) {
+                combo.select(indexForOption(savedProp));
+                validate();
+            } else {
+                Display.getDefault().asyncExec(new Runnable() {
+                    public void run() {
+                        combo.select(indexForOption(savedProp));
+                        validate();
+                    }
+                });
+            }
+        }
+    }
+
+    /**
+     * @param savedProp2
+     * @return
+     */
+    private int indexForOption(Property savedProp) {
+        int i = 0;
+        for (String item : numericItems) {
+            if (item.equals(savedProp.getPropertyValue())) {
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
 }

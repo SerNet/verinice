@@ -79,7 +79,7 @@ public class SingleSelectionControl extends AbstractHuiControl {
      */
     public SingleSelectionControl(Entity dyndoc, PropertyType type, Composite parent, boolean edit,
             boolean showValidationHint, boolean useValidationGuiHints) {
-    	super(parent);
+        super(parent);
         this.entity = dyndoc;
         this.fieldType = type;
         this.editable = edit;

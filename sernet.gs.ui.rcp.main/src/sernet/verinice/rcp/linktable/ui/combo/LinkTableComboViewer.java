@@ -227,7 +227,7 @@ public abstract class LinkTableComboViewer extends ComboViewer
     }
 
     protected String[] sortElementsByLabel(String[] typeIDs) {
-        String [] result = new String[typeIDs.length];
+        String[] result = new String[typeIDs.length];
         System.arraycopy(typeIDs, 0, result, 0, typeIDs.length);
 
         final Map<String, String> translations = new HashMap<>(typeIDs.length);
