@@ -19,6 +19,7 @@ package sernet.verinice.model.common;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -76,7 +77,17 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     public static final String PARENT_ID = "parent-id";
     public static final String SCOPE_ID = "scope-id";
 
+    private static final Set<String> staticProperties;
+
+    static {
+        staticProperties = Collections
+                .unmodifiableSet(new HashSet<>(Arrays.asList(CnATreeElement.SCOPE_ID,
+                        CnATreeElement.PARENT_ID, CnATreeElement.DBID, CnATreeElement.UUID)));
+    }
+
     private Integer dbId;
+
+    private String uuid;
 
     private Integer scopeId;
 
@@ -248,8 +259,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     public Set<CnATreeElement> getChildren() {
         return children;
     }
-
-    private String uuid;
 
     private transient EntityType subEntityType;
 
@@ -602,10 +611,11 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
      * @return Return true if the id is the id of a "static" property
      */
     public static boolean isStaticProperty(String propertyId) {
-        return (CnATreeElement.PARENT_ID.equals(propertyId)
-                || CnATreeElement.SCOPE_ID.equals(propertyId)
-                || CnATreeElement.DBID.equals(propertyId)
-                || CnATreeElement.UUID.equals(propertyId));
+        return staticProperties.contains(propertyId);
+    }
+
+    public static Set<String> getStaticProperties() {
+        return staticProperties;
     }
 
     /**
@@ -624,14 +634,11 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
         String value = null;
         if (CnATreeElement.SCOPE_ID.equals(propertyId)) {
             value = String.valueOf(element.getScopeId());
-        }
-        if (CnATreeElement.DBID.equals(propertyId)) {
+        } else if (CnATreeElement.DBID.equals(propertyId)) {
             value = String.valueOf(element.getDbId());
-        }
-        if (CnATreeElement.PARENT_ID.equals(propertyId)) {
+        } else if (CnATreeElement.PARENT_ID.equals(propertyId)) {
             value = String.valueOf(element.getParentId());
-        }
-        if (CnATreeElement.UUID.equals(propertyId)) {
+        } else if (CnATreeElement.UUID.equals(propertyId)) {
             value = element.getUuid();
         }
         return value;
@@ -699,8 +706,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
             }
             this.children = newElement.getChildren();
             this.setChildrenLoaded(true);
-
-            return;
         } else {
             if (log.isDebugEnabled()) {
                 log.debug("Replacing child " + this + "in parent " + getParent());
@@ -799,11 +804,11 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
     @Override
     public void validationAdded(Integer scopeId) {
-    };
+    }
 
     @Override
     public void validationRemoved(Integer scopeId) {
-    };
+    }
 
     @Override
     public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation) {
