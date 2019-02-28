@@ -139,6 +139,8 @@ public class DateSelectionControl extends AbstractHuiControl {
             }
         });
 
+        dateTime.addListener(SWT.MouseVerticalWheel, event -> event.doit = false);
+
         List<Property> savedProps = entity.getProperties(fieldType.getId()).getProperties();
         savedProp = savedProps != null && !savedProps.isEmpty() ? savedProps.get(0) : null;
 

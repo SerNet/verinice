@@ -137,6 +137,7 @@ public class NumericSelectionControl extends AbstractHuiControl {
                 validate();
             }
         });
+        combo.addListener(SWT.MouseVerticalWheel, event -> event.doit = false);
         combo.pack(true);
     }
 

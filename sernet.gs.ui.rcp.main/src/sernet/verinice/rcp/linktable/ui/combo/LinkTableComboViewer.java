@@ -70,6 +70,8 @@ public abstract class LinkTableComboViewer extends ComboViewer
             LinkTableOperationType operationType, LinkTableColumn ltrParent, Composite parent) {
 
         super(new Combo(parent, SWT.NONE | SWT.READ_ONLY));
+        getCombo().addListener(SWT.MouseVerticalWheel, event -> event.doit = false);
+
         this.parentComposite = parent;
         this.ltrColumn = ltrParent;
         this.setContentProvider(this);

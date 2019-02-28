@@ -136,6 +136,7 @@ public class SingleSelectionControl extends AbstractHuiControl {
                     validate();
                 }
             });
+            combo.addListener(SWT.MouseVerticalWheel, event -> event.doit = false);
             combo.pack(true);
         } catch (Exception e1) {
             Logger.getLogger(SingleSelectionControl.class).error(e1);
