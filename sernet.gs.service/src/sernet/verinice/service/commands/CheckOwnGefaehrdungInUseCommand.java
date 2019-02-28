@@ -89,7 +89,7 @@ public class CheckOwnGefaehrdungInUseCommand extends GenericCommand {
                     + " JOIN entity ON cnatreeelement.entity_id=entity.dbid"
                     + " JOIN propertylist ON propertylist.typedlist_id=entity.dbid"
                     + " JOIN properties ON properties.properties_id=propertylist.dbid" + " WHERE "
-                    + " properties.propertytype='gefaehrdungsumsetzung_id' AND properties.propertyvalue='"
+                    + " properties.propertytype='gefaehrdungsumsetzung_id' AND properties.propertyvalue LIKE '"
                     + id + "'");
             return query.list();
         }
