@@ -39,7 +39,6 @@ import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
-import sernet.snutils.AssertException;
 
 /**
  * The HUI version of a dropdown box.
@@ -70,13 +69,6 @@ public class SingleSelectionControl extends AbstractHuiControl {
 
     private static final Color GREY = new Color(Display.getDefault(), 240, 240, 240);
 
-    /**
-     * Constructor for DropDownBox.
-     * 
-     * @param dyndoc
-     * @param type
-     * @param composite
-     */
     public SingleSelectionControl(Entity dyndoc, PropertyType type, Composite parent, boolean edit,
             boolean showValidationHint, boolean useValidationGuiHints) {
         super(parent);
@@ -87,10 +79,6 @@ public class SingleSelectionControl extends AbstractHuiControl {
         this.useValidationGUIHints = useValidationGuiHints;
     }
 
-    /**
-     * @throws AssertException
-     * 
-     */
     public void create() {
         String[] labels;
         try {
@@ -102,8 +90,7 @@ public class SingleSelectionControl extends AbstractHuiControl {
             label.setText(labelText);
 
             List<Property> savedProps = entity.getProperties(fieldType.getId()).getProperties();
-            savedProp = savedProps != null && !savedProps.isEmpty() ? (Property) savedProps.get(0)
-                    : null;
+            savedProp = savedProps != null && !savedProps.isEmpty() ? savedProps.get(0) : null;
 
             combo = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
             options = getOptions();
@@ -135,18 +122,14 @@ public class SingleSelectionControl extends AbstractHuiControl {
             combo.setToolTipText(fieldType.getTooltiptext());
 
             combo.addSelectionListener(new SelectionAdapter() {
+                @Override
                 public void widgetSelected(SelectionEvent evt) {
                     String propertyValue = null;
                     if (combo.getSelectionIndex() != 0) {
                         PropertyOption selection = (PropertyOption) options
-                                .get(combo.getSelectionIndex() - 1); // substrate
-                                                                     // one
-                                                                     // because
-                                                                     // of
-                                                                     // former
-                                                                     // addition
-                                                                     // of dummy
-                                                                     // value
+                                // subtract one because of former addition of
+                                // dummy value
+                                .get(combo.getSelectionIndex() - 1);
                         propertyValue = selection.getId();
                     }
                     savedProp.setPropertyValue(propertyValue, true, combo);
@@ -165,13 +148,13 @@ public class SingleSelectionControl extends AbstractHuiControl {
     }
 
     private int indexForOption(String propertyValue) {
-        int i = 0;
-        for (Iterator iter = options.iterator(); iter.hasNext(); ++i) {
-            PropertyOption opt = (PropertyOption) iter.next();
+        for (int i = 0; i < options.size(); i++) {
+            PropertyOption opt = (PropertyOption) options.get(0);
             if (opt.getId().equals(propertyValue)) {
                 return i;
             }
         }
+
         return -1;
     }
 
@@ -212,11 +195,9 @@ public class SingleSelectionControl extends AbstractHuiControl {
                 combo.select(index);
                 validate();
             } else {
-                Display.getDefault().asyncExec(new Runnable() {
-                    public void run() {
-                        combo.select(index);
-                        validate();
-                    }
+                Display.getDefault().asyncExec(() -> {
+                    combo.select(index);
+                    validate();
                 });
             }
 

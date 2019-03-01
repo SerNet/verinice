@@ -37,7 +37,6 @@ import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.swt.SWTResourceManager;
-import sernet.snutils.AssertException;
 
 /**
  * The HUI version of a dropdown box for numeric values.
@@ -74,13 +73,6 @@ public class NumericSelectionControl extends AbstractHuiControl {
 
     private static final Color GREY = SWTResourceManager.getColor(240, 240, 240);
 
-    /**
-     * Constructor for DropDownBox.
-     * 
-     * @param dyndoc
-     * @param type
-     * @param composite
-     */
     public NumericSelectionControl(Entity dyndoc, PropertyType type, Composite parent, boolean edit,
             boolean showValidationHint, boolean useValidationGuiHints) {
         super(parent);
@@ -93,10 +85,6 @@ public class NumericSelectionControl extends AbstractHuiControl {
         this.useValidationGUIHints = useValidationGuiHints;
     }
 
-    /**
-     * @throws AssertException
-     * 
-     */
     public void create() {
         try {
             label = new Label(composite, SWT.NULL);
@@ -107,8 +95,7 @@ public class NumericSelectionControl extends AbstractHuiControl {
             label.setText(labelText);
 
             List<Property> savedProps = entity.getProperties(fieldType.getId()).getProperties();
-            savedProp = savedProps != null && !savedProps.isEmpty() ? (Property) savedProps.get(0)
-                    : null;
+            savedProp = savedProps != null && !savedProps.isEmpty() ? savedProps.get(0) : null;
 
             createCombo();
 
@@ -118,9 +105,6 @@ public class NumericSelectionControl extends AbstractHuiControl {
 
     }
 
-    /**
-     * 
-     */
     private void createCombo() {
         String[] shownItems;
         combo = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
@@ -147,6 +131,7 @@ public class NumericSelectionControl extends AbstractHuiControl {
         combo.setToolTipText(fieldType.getTooltiptext());
 
         combo.addSelectionListener(new SelectionAdapter() {
+            @Override
             public void widgetSelected(SelectionEvent evt) {
                 savedProp.setPropertyValue(numericItems[combo.getSelectionIndex()], true, combo);
                 validate();
@@ -217,27 +202,20 @@ public class NumericSelectionControl extends AbstractHuiControl {
                 combo.select(indexForOption(savedProp));
                 validate();
             } else {
-                Display.getDefault().asyncExec(new Runnable() {
-                    public void run() {
-                        combo.select(indexForOption(savedProp));
-                        validate();
-                    }
+                Display.getDefault().asyncExec(() -> {
+                    combo.select(indexForOption(savedProp));
+                    validate();
                 });
             }
         }
     }
 
-    /**
-     * @param savedProp2
-     * @return
-     */
     private int indexForOption(Property savedProp) {
-        int i = 0;
-        for (String item : numericItems) {
+        for (int i = 0; i < numericItems.length; i++) {
+            String item = numericItems[i];
             if (item.equals(savedProp.getPropertyValue())) {
                 return i;
             }
-            i++;
         }
         return -1;
     }

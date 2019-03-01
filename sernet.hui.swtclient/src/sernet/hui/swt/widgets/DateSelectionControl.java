@@ -34,7 +34,6 @@ import org.eclipse.swt.widgets.Label;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyType;
-import sernet.snutils.AssertException;
 
 /**
  * Custom widget to enter a date, either directly or using a date picker (SWT
@@ -64,11 +63,6 @@ public class DateSelectionControl extends AbstractHuiControl {
         return dateTime;
     }
 
-    /**
-     * @param dyndoc
-     * @param type
-     * @param composite
-     */
     public DateSelectionControl(Entity dyndoc, PropertyType type, Composite parent, boolean edit,
             boolean rules, boolean showValidationHint, boolean useValidationGuiHints) {
         super(parent);
@@ -87,10 +81,6 @@ public class DateSelectionControl extends AbstractHuiControl {
         return (os.indexOf("win") >= 0);
     }
 
-    /**
-     * @throws AssertException
-     * 
-     */
     public void create() {
         label = new Label(composite, SWT.NULL);
 
@@ -149,9 +139,8 @@ public class DateSelectionControl extends AbstractHuiControl {
             }
         });
 
-        List savedProps = entity.getProperties(fieldType.getId()).getProperties();
-        savedProp = savedProps != null && !savedProps.isEmpty() ? (Property) savedProps.get(0)
-                : null;
+        List<Property> savedProps = entity.getProperties(fieldType.getId()).getProperties();
+        savedProp = savedProps != null && !savedProps.isEmpty() ? savedProps.get(0) : null;
 
         String millis = "";
         if (savedProp != null) {
@@ -188,7 +177,7 @@ public class DateSelectionControl extends AbstractHuiControl {
         try {
             calendar.setTimeInMillis(Long.parseLong(millis));
         } catch (Exception e) {
-            // do nothing, use todays date
+            // do nothing, use today's date
         }
         dateTime.setDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH));

@@ -20,7 +20,6 @@
 package sernet.verinice.rcp.linktable.ui.combo;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -235,13 +234,7 @@ public abstract class LinkTableComboViewer extends ComboViewer
             translations.put(typeID, ltrColumn.getContentService().getLabel(typeID));
         }
 
-        Arrays.sort(result, new Comparator<String>() {
-
-            @Override
-            public int compare(String o1, String o2) {
-                return translations.get(o1).compareTo(translations.get(o2));
-            }
-        });
+        Arrays.sort(result, (o1, o2) -> translations.get(o1).compareTo(translations.get(o2)));
 
         return result;
     }
