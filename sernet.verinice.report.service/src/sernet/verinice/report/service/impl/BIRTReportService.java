@@ -64,398 +64,410 @@ import sernet.verinice.security.report.ReportClassLoader;
 
 public class BIRTReportService {
 
-	private final Logger log = LoggerFactory.getLogger(BIRTReportService.class);
+    private final Logger log = LoggerFactory.getLogger(BIRTReportService.class);
 
-	private IReportEngine engine;
+    private IReportEngine engine;
 
-	private IReportRunnable design;
+    private IReportRunnable design;
 
-	private IResourceLocator resourceLocator;
+    private IResourceLocator resourceLocator;
 
-	private static final String COULD_NOT_OPEN_DESIGN_ERR = "Could not open report design: ";
+    private static final String COULD_NOT_OPEN_DESIGN_ERR = "Could not open report design: ";
 
-	private static final int MILLIS_PER_SECOND = 1000;
+    private static final int MILLIS_PER_SECOND = 1000;
 
-	private ReportClassLoader secureClassLoader;
+    private ReportClassLoader secureClassLoader;
 
-	public BIRTReportService() {
+    public BIRTReportService() {
 
-		secureClassLoader = new ReportClassLoader(this.getClass().getClassLoader());
+        secureClassLoader = new ReportClassLoader(this.getClass().getClassLoader());
 
-		final int logMaxBackupIndex = 10;
-		final int logRollingSize = 3000000; // equals 3MB
-		EngineConfig config = new EngineConfig();
+        final int logMaxBackupIndex = 10;
+        final int logRollingSize = 3000000; // equals 3MB
+        EngineConfig config = new EngineConfig();
 
-		// Custom resource locator which tries to retrieve resources for the reports
-		// from the *package* where the BIRTReportService class resides.
-		resourceLocator = new IResourceLocator() {
-			private IResourceLocator defaultLocator = new DefaultResourceLocator();
+        // Custom resource locator which tries to retrieve resources for the
+        // reports
+        // from the *package* where the BIRTReportService class resides.
+        resourceLocator = new IResourceLocator() {
+            private IResourceLocator defaultLocator = new DefaultResourceLocator();
 
-			@Override
-			public URL findResource(ModuleHandle moduleHandle, String fileName, int type, Map appContext) {
-				URL url = findByClassloader(fileName);
-				if (url == null) {
-					url = defaultLocator.findResource(moduleHandle, fileName, type, appContext);
-				}
-				if (url == null) {
-					log.warn(String.format(
-							"Report resource '%s' could not neither be found through internal resource loader nor through the default one.",
-							fileName));
-				}
-				return url;
-			}
+            @Override
+            public URL findResource(ModuleHandle moduleHandle, String fileName, int type,
+                    Map appContext) {
+                URL url = findByClassloader(fileName);
+                if (url == null) {
+                    url = defaultLocator.findResource(moduleHandle, fileName, type, appContext);
+                }
+                if (url == null) {
+                    log.warn(String.format(
+                            "Report resource '%s' could not neither be found through internal resource loader nor through the default one.",
+                            fileName));
+                }
+                return url;
+            }
 
-			@Override
-			public URL findResource(ModuleHandle moduleHandle, String fileName, int type) {
-				URL url = findByClassloader(fileName);
-				if (url == null) {
-					url = defaultLocator.findResource(moduleHandle, fileName, type);
-				}
-				if (url == null) {
-					log.warn(String.format(
-							"Report resource '%s' could not neither be found through internal resource loader nor through the default one.",
-							fileName));
-				}
-				return url;
-			}
+            @Override
+            public URL findResource(ModuleHandle moduleHandle, String fileName, int type) {
+                URL url = findByClassloader(fileName);
+                if (url == null) {
+                    url = defaultLocator.findResource(moduleHandle, fileName, type);
+                }
+                if (url == null) {
+                    log.warn(String.format(
+                            "Report resource '%s' could not neither be found through internal resource loader nor through the default one.",
+                            fileName));
+                }
+                return url;
+            }
 
-			/**
-			 * Finds resources in package of class BIRTReportService.
-			 * 
-			 * <p>
-			 * Important: If report resource are moved into a different package this method
-			 * *must* be adjusted.
-			 * </p>
-			 * 
-			 * @param resource
-			 * @return
-			 */
-			private URL findByClassloader(String resource) {
-				return BIRTReportService.class.getResource(resource);
-			}
+            /**
+             * Finds resources in package of class BIRTReportService.
+             * 
+             * <p>
+             * Important: If report resource are moved into a different package
+             * this method *must* be adjusted.
+             * </p>
+             * 
+             * @param resource
+             * @return
+             */
+            private URL findByClassloader(String resource) {
+                return BIRTReportService.class.getResource(resource);
+            }
 
-		};
+        };
 
-		IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
-		boolean useReportLogging = odaDriver.getReportLoggingState();
+        IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
+        boolean useReportLogging = odaDriver.getReportLoggingState();
 
-		HashMap hm = config.getAppContext();
-		if (odaDriver.isSandboxEnabled()) {
-			hm.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, secureClassLoader);
-		} else {
-			hm.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, BIRTReportService.class.getClassLoader());
-		}
+        HashMap hm = config.getAppContext();
+        if (odaDriver.isSandboxEnabled()) {
+            hm.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, secureClassLoader);
+        } else {
+            hm.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY,
+                    BIRTReportService.class.getClassLoader());
+        }
 
-		config.setAppContext(hm);
+        config.setAppContext(hm);
 
-		if (useReportLogging) {
-			String pref = odaDriver.getLogFile();
-			String logDir = pref.substring(0, pref.lastIndexOf(File.separator));
-			String logFile = pref.substring(pref.lastIndexOf(File.separator) + 1);
-			config.setLogConfig(logDir, Level.parse(odaDriver.getLogLvl()));
-			config.setLogFile(logFile);
-			config.setLogMaxBackupIndex(logMaxBackupIndex);
-			config.setLogRollingSize(logRollingSize); // equals 3MB
-			if (log.isDebugEnabled()) {
-				log.debug("LogParameter:\t\tLogFile:\t" + logFile + "\tLogDir:\t" + logDir + "\tLogLvl:\t"
-						+ odaDriver.getLogLvl());
-			}
-		}
+        if (useReportLogging) {
+            String pref = odaDriver.getLogFile();
+            String logDir = pref.substring(0, pref.lastIndexOf(File.separator));
+            String logFile = pref.substring(pref.lastIndexOf(File.separator) + 1);
+            config.setLogConfig(logDir, Level.parse(odaDriver.getLogLvl()));
+            config.setLogFile(logFile);
+            config.setLogMaxBackupIndex(logMaxBackupIndex);
+            config.setLogRollingSize(logRollingSize); // equals 3MB
+            if (log.isDebugEnabled()) {
+                log.debug("LogParameter:\t\tLogFile:\t" + logFile + "\tLogDir:\t" + logDir
+                        + "\tLogLvl:\t" + odaDriver.getLogLvl());
+            }
+        }
 
-		IReportEngineFactory factory = (IReportEngineFactory) Platform
-				.createFactoryObject(IReportEngineFactory.EXTENSION_REPORT_ENGINE_FACTORY);
+        IReportEngineFactory factory = (IReportEngineFactory) Platform
+                .createFactoryObject(IReportEngineFactory.EXTENSION_REPORT_ENGINE_FACTORY);
 
-		engine = factory.createReportEngine(config);
-	}
+        engine = factory.createReportEngine(config);
+    }
 
-	public IRunAndRenderTask createTask(URL rptDesignURL) {
+    public IRunAndRenderTask createTask(URL rptDesignURL) {
 
-		if (log.isDebugEnabled()) {
-			log.debug("DesignURL:\t" + rptDesignURL);
-			log.debug("Locale:\t" + Locale.getDefault().toString());
-		}
+        if (log.isDebugEnabled()) {
+            log.debug("DesignURL:\t" + rptDesignURL);
+            log.debug("Locale:\t" + Locale.getDefault().toString());
+        }
 
-		HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<String, Object>();
 
-		map.put(ModuleOption.RESOURCE_LOCATOR_KEY, resourceLocator);
+        map.put(ModuleOption.RESOURCE_LOCATOR_KEY, resourceLocator);
 
-		IRunAndRenderTask task = null;
-		try {
-			design = engine.openReportDesign(null, rptDesignURL.openStream(), map);
-			task = engine.createRunAndRenderTask(design);
-		} catch (EngineException e) {
-			log.error(COULD_NOT_OPEN_DESIGN_ERR, e);
-			throw new IllegalStateException(e);
-		} catch (IOException e) {
-			log.error(COULD_NOT_OPEN_DESIGN_ERR, e);
-			throw new IllegalStateException(e);
-		}
-		// use client default locale
-		task.setLocale(Locale.getDefault());
+        IRunAndRenderTask task = null;
+        try {
+            design = engine.openReportDesign(null, rptDesignURL.openStream(), map);
+            task = engine.createRunAndRenderTask(design);
+        } catch (EngineException e) {
+            log.error(COULD_NOT_OPEN_DESIGN_ERR, e);
+            throw new IllegalStateException(e);
+        } catch (IOException e) {
+            log.error(COULD_NOT_OPEN_DESIGN_ERR, e);
+            throw new IllegalStateException(e);
+        }
+        // use client default locale
+        task.setLocale(Locale.getDefault());
 
-		return task;
-	}
+        return task;
+    }
 
-	public IRunTask createRunTask(URL rptDesignURL, URL rptDocumentURL) {
+    public IRunTask createRunTask(URL rptDesignURL, URL rptDocumentURL) {
 
-		if (log.isDebugEnabled()) {
-			log.debug("DesignURL:\t" + rptDesignURL + "\tDocumentURL:\t" + rptDocumentURL);
-		}
+        if (log.isDebugEnabled()) {
+            log.debug("DesignURL:\t" + rptDesignURL + "\tDocumentURL:\t" + rptDocumentURL);
+        }
 
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put(ModuleOption.RESOURCE_LOCATOR_KEY, resourceLocator);
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put(ModuleOption.RESOURCE_LOCATOR_KEY, resourceLocator);
 
-		IRunTask runTask = null;
-		try {
-			design = engine.openReportDesign(null, rptDesignURL.openStream(), map);
-			runTask = engine.createRunTask(design);
-			runTask.setReportDocument(rptDocumentURL.toString());
-		} catch (EngineException e) {
-			log.error(COULD_NOT_OPEN_DESIGN_ERR, e);
-			throw new IllegalStateException(e);
-		} catch (IOException e) {
-			log.error(COULD_NOT_OPEN_DESIGN_ERR, e);
-			throw new IllegalStateException(e);
-		}
+        IRunTask runTask = null;
+        try {
+            design = engine.openReportDesign(null, rptDesignURL.openStream(), map);
+            runTask = engine.createRunTask(design);
+            runTask.setReportDocument(rptDocumentURL.toString());
+        } catch (EngineException e) {
+            log.error(COULD_NOT_OPEN_DESIGN_ERR, e);
+            throw new IllegalStateException(e);
+        } catch (IOException e) {
+            log.error(COULD_NOT_OPEN_DESIGN_ERR, e);
+            throw new IllegalStateException(e);
+        }
 
-		return runTask;
-	}
+        return runTask;
+    }
 
-	public IRenderTask createRenderTask(URL rptDocumentURL) {
+    public IRenderTask createRenderTask(URL rptDocumentURL) {
 
-		if (log.isDebugEnabled()) {
-			log.debug("ReportDocumentURL:\t" + rptDocumentURL.toString());
-		}
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put(ModuleOption.RESOURCE_LOCATOR_KEY, resourceLocator);
+        if (log.isDebugEnabled()) {
+            log.debug("ReportDocumentURL:\t" + rptDocumentURL.toString());
+        }
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put(ModuleOption.RESOURCE_LOCATOR_KEY, resourceLocator);
 
-		IRenderTask renderTask = null;
-		try {
-			IReportDocument ird = engine.openReportDocument(rptDocumentURL.toString());
-			renderTask = engine.createRenderTask(ird);
-		} catch (EngineException e) {
-			log.error("Could not open report design: ", e);
-			throw new IllegalStateException(e);
-		}
-		return renderTask;
-	}
+        IRenderTask renderTask = null;
+        try {
+            IReportDocument ird = engine.openReportDocument(rptDocumentURL.toString());
+            renderTask = engine.createRenderTask(ird);
+        } catch (EngineException e) {
+            log.error("Could not open report design: ", e);
+            throw new IllegalStateException(e);
+        }
+        return renderTask;
+    }
 
-	public IDataExtractionTask createExtractionTask(URL rptDesignURL) {
+    public IDataExtractionTask createExtractionTask(URL rptDesignURL) {
 
-		if (log.isDebugEnabled()) {
-			log.debug("ReportDesignURL:\t" + rptDesignURL.toString());
-		}
+        if (log.isDebugEnabled()) {
+            log.debug("ReportDesignURL:\t" + rptDesignURL.toString());
+        }
 
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put(ModuleOption.RESOURCE_LOCATOR_KEY, resourceLocator);
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put(ModuleOption.RESOURCE_LOCATOR_KEY, resourceLocator);
 
-		IRunTask task = null;
-		try {
-			IReportRunnable design0 = engine.openReportDesign(null, rptDesignURL.openStream(), map);
-			task = engine.createRunTask(design0);
-		} catch (EngineException e) {
-			log.error("Could not open report design: ", e);
-			throw new IllegalStateException(e);
-		} catch (IOException e) {
-			log.error("Could not open report design: ", e);
-			throw new IllegalStateException(e);
-		}
+        IRunTask task = null;
+        try {
+            IReportRunnable design0 = engine.openReportDesign(null, rptDesignURL.openStream(), map);
+            task = engine.createRunTask(design0);
+        } catch (EngineException e) {
+            log.error("Could not open report design: ", e);
+            throw new IllegalStateException(e);
+        } catch (IOException e) {
+            log.error("Could not open report design: ", e);
+            throw new IllegalStateException(e);
+        }
 
-		task.getAppContext().put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, BIRTReportService.class.getClassLoader());
+        task.getAppContext().put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY,
+                BIRTReportService.class.getClassLoader());
 
-		File f;
-		try {
-			f = File.createTempFile("verinice", ".rptdocument");
-		} catch (IOException e) {
-			log.error("Could not create temporary file for report document.");
-			throw new IllegalStateException(e);
-		}
+        File f;
+        try {
+            f = File.createTempFile("verinice", ".rptdocument");
+        } catch (IOException e) {
+            log.error("Could not create temporary file for report document.");
+            throw new IllegalStateException(e);
+        }
 
-		try {
-			task.run(f.getAbsolutePath());
-		} catch (EngineException e) {
-			log.error("Could not create report: ", e);
-			throw new IllegalStateException(e);
-		}
+        try {
+            task.run(f.getAbsolutePath());
+        } catch (EngineException e) {
+            log.error("Could not create report: ", e);
+            throw new IllegalStateException(e);
+        }
 
-		task.close();
+        task.close();
 
-		IReportDocument document = null;
-		try {
-			document = engine.openReportDocument(f.getAbsolutePath());
-		} catch (EngineException e) {
-			log.error("Could not open report document: ", e);
-			throw new IllegalStateException(e);
-		}
+        IReportDocument document = null;
+        try {
+            document = engine.openReportDocument(f.getAbsolutePath());
+        } catch (EngineException e) {
+            log.error("Could not open report document: ", e);
+            throw new IllegalStateException(e);
+        }
 
-		return engine.createDataExtractionTask(document);
-	}
+        return engine.createDataExtractionTask(document);
+    }
 
-	@SuppressWarnings("unchecked")
-	public void extract(IDataExtractionTask task, IReportOptions options, int resultSetIndex) {
-		IDataExtractionOption extractionOptions = (IDataExtractionOption) ((AbstractOutputFormat) options
-				.getOutputFormat()).createBIRTExtractionOptions();
-		try {
-			extractionOptions.setOutputStream(new FileOutputStream(options.getOutputFile()));
-		} catch (FileNotFoundException e) {
-			log.error("Could not prepare output stream: ", e);
-			throw new IllegalStateException(e);
-		}
+    @SuppressWarnings("unchecked")
+    public void extract(IDataExtractionTask task, IReportOptions options, int resultSetIndex) {
+        IDataExtractionOption extractionOptions = (IDataExtractionOption) ((AbstractOutputFormat) options
+                .getOutputFormat()).createBIRTExtractionOptions();
+        try {
+            extractionOptions.setOutputStream(new FileOutputStream(options.getOutputFile()));
+        } catch (FileNotFoundException e) {
+            log.error("Could not prepare output stream: ", e);
+            throw new IllegalStateException(e);
+        }
 
-		// Choose first result set
-		List<IResultSetItem> resultSetList;
-		try {
-			resultSetList = (List<IResultSetItem>) task.getResultSetList();
-		} catch (EngineException e) {
-			log.error("Could not prepare extraction: ", e);
-			throw new IllegalStateException(e);
-		}
-		IResultSetItem resultItem = (IResultSetItem) resultSetList.get(resultSetIndex);
-		task.selectResultSet(resultItem.getResultSetName());
+        // Choose first result set
+        List<IResultSetItem> resultSetList;
+        try {
+            resultSetList = (List<IResultSetItem>) task.getResultSetList();
+        } catch (EngineException e) {
+            log.error("Could not prepare extraction: ", e);
+            throw new IllegalStateException(e);
+        }
+        IResultSetItem resultItem = (IResultSetItem) resultSetList.get(resultSetIndex);
+        task.selectResultSet(resultItem.getResultSetName());
 
-		try {
-			task.extract(extractionOptions);
-		} catch (EngineException e) {
-			log.error("Could not extract data: ", e);
-			throw new IllegalStateException(e);
-		} catch (BirtException e) {
-			log.error("Could not extract data: ", e);
-			throw new IllegalStateException(e);
-		}
-	}
+        try {
+            task.extract(extractionOptions);
+        } catch (EngineException e) {
+            log.error("Could not extract data: ", e);
+            throw new IllegalStateException(e);
+        } catch (BirtException e) {
+            log.error("Could not extract data: ", e);
+            throw new IllegalStateException(e);
+        }
+    }
 
-	private void destroyEngine() {
-		if (engine != null) {
-			engine.destroy();
-		}
-	}
+    private void destroyEngine() {
+        if (engine != null) {
+            engine.destroy();
+        }
+    }
 
-	@SuppressWarnings("unchecked")
-	public IRunAndRenderTask prepareTaskForRendering(IRunAndRenderTask task, IReportOptions options) {
+    @SuppressWarnings("unchecked")
+    public IRunAndRenderTask prepareTaskForRendering(IRunAndRenderTask task,
+            IReportOptions options) {
 
-		IRenderOption renderOptions = (IRenderOption) ServiceComponent.getDefault().getReportService()
-				.getRenderOptions(options.getOutputFormat().getId());
-		renderOptions.setOutputFileName(options.getOutputFile().getAbsolutePath());
-		// Makes the chosen root element available via the appContext variable
-		// 'rootElementId'
-		if (options.getRootElement() != null) {
-			task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME, options.getRootElement());
-			if (log.isDebugEnabled()) {
-				log.debug("Root-Element:\t" + options.getRootElement());
-			}
-		} else if (options.getRootElements() != null && options.getRootElements().length > 0) {
-			task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME, options.getRootElements());
-			if (log.isDebugEnabled()) {
-				log.debug("Root-Elements: " + Arrays.toString(options.getRootElements()));
-			}
-		}
-		task.setRenderOption(renderOptions);
+        IRenderOption renderOptions = (IRenderOption) ServiceComponent.getDefault()
+                .getReportService().getRenderOptions(options.getOutputFormat().getId());
+        renderOptions.setOutputFileName(options.getOutputFile().getAbsolutePath());
+        // Makes the chosen root element available via the appContext variable
+        // 'rootElementId'
+        if (options.getRootElement() != null) {
+            task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME,
+                    options.getRootElement());
+            if (log.isDebugEnabled()) {
+                log.debug("Root-Element:\t" + options.getRootElement());
+            }
+        } else if (options.getRootElements() != null && options.getRootElements().length > 0) {
+            task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME,
+                    options.getRootElements());
+            if (log.isDebugEnabled()) {
+                log.debug("Root-Elements: " + Arrays.toString(options.getRootElements()));
+            }
+        }
+        task.setRenderOption(renderOptions);
 
-		return task;
-	}
+        return task;
+    }
 
-	public void performRenderTask(IRunAndRenderTask task, ReportSecurityManager secureReportExecutionManager) {
-		try {
-			long startTime = System.currentTimeMillis();
+    public void performRenderTask(IRunAndRenderTask task,
+            ReportSecurityManager secureReportExecutionManager) {
+        try {
+            long startTime = System.currentTimeMillis();
 
-			// Load class DataTypeUtil before the secureClassLoader is set
-			preloadClasses();
+            // Load class DataTypeUtil before the secureClassLoader is set
+            preloadClasses();
 
-			// report generation is handled by a thread here which is not for
-			// reasons of concurrency BUT for reasons of security (this enables
-			// setting specific classloader for executing the report since
-			// concurrency is explicitly not wanted here, we are using
-			// thread.run() instead of thread.start()
-			IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
-			ReportExecutionThread reportExecutionThread = new ReportExecutionThread(task, secureReportExecutionManager,
-					odaDriver.isSandboxEnabled());
-			if (odaDriver.isSandboxEnabled()) {
-				reportExecutionThread.setContextClassLoader(secureClassLoader);
-			}
+            // report generation is handled by a thread here which is not for
+            // reasons of concurrency BUT for reasons of security (this enables
+            // setting specific classloader for executing the report since
+            // concurrency is explicitly not wanted here, we are using
+            // thread.run() instead of thread.start()
+            IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
+            ReportExecutionThread reportExecutionThread = new ReportExecutionThread(task,
+                    secureReportExecutionManager, odaDriver.isSandboxEnabled());
+            if (odaDriver.isSandboxEnabled()) {
+                reportExecutionThread.setContextClassLoader(secureClassLoader);
+            }
 
-			reportExecutionThread.run();
+            reportExecutionThread.run();
 
-			if (log.isDebugEnabled()) {
-				long duration = (System.currentTimeMillis() - startTime) / MILLIS_PER_SECOND;
-				log.debug("RunAndRenderTask lasts " + duration + " seconds");
-			}
-		} finally {
-			// ensure .log file is released again (.lck file will be removed)
-			destroyEngine();
-		}
-	}
+            if (log.isDebugEnabled()) {
+                long duration = (System.currentTimeMillis() - startTime) / MILLIS_PER_SECOND;
+                log.debug("RunAndRenderTask lasts " + duration + " seconds");
+            }
+        } finally {
+            // ensure .log file is released again (.lck file will be removed)
+            destroyEngine();
+        }
+    }
 
-	public void preloadClasses() {
-		try {
-			DataTypeUtil.toOdiTypeClass(1);
-		} catch (BirtException e) {
-			log.error("Error while preloading class DataTypeUtil", e);
-		}
-	}
+    public void preloadClasses() {
+        try {
+            DataTypeUtil.toOdiTypeClass(1);
+        } catch (BirtException e) {
+            log.error("Error while preloading class DataTypeUtil", e);
+        }
+    }
 
-	public void run(IRunTask task, IReportOptions options) {
-		// Makes the chosen root element available via the appContext variable
-		// 'rootElementId'
-		if (options.getRootElement() != null) {
-			task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME, options.getRootElement());
-			if (log.isDebugEnabled()) {
-				log.debug("Root-Element:\t" + options.getRootElement());
-			}
-		} else if (options.getRootElements() != null && options.getRootElements().length > 0) {
-			task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME, options.getRootElements());
-			if (log.isDebugEnabled()) {
-				log.debug("Root-Elements: " + Arrays.toString(options.getRootElements()));
-			}
-		}
-		try {
-			long startTime = System.currentTimeMillis();
-			task.run();
-			if (log.isDebugEnabled()) {
-				long duration = (System.currentTimeMillis() - startTime) / MILLIS_PER_SECOND;
-				log.debug("RunTask lasts " + duration + " seconds");
-			}
-		} catch (EngineException e) {
-			log.error("Could not run report: ", e);
-			throw new IllegalStateException(e);
-		}
-	}
+    public void run(IRunTask task, IReportOptions options) {
+        // Makes the chosen root element available via the appContext variable
+        // 'rootElementId'
+        if (options.getRootElement() != null) {
+            task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME,
+                    options.getRootElement());
+            if (log.isDebugEnabled()) {
+                log.debug("Root-Element:\t" + options.getRootElement());
+            }
+        } else if (options.getRootElements() != null && options.getRootElements().length > 0) {
+            task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME,
+                    options.getRootElements());
+            if (log.isDebugEnabled()) {
+                log.debug("Root-Elements: " + Arrays.toString(options.getRootElements()));
+            }
+        }
+        try {
+            long startTime = System.currentTimeMillis();
+            task.run();
+            if (log.isDebugEnabled()) {
+                long duration = (System.currentTimeMillis() - startTime) / MILLIS_PER_SECOND;
+                log.debug("RunTask lasts " + duration + " seconds");
+            }
+        } catch (EngineException e) {
+            log.error("Could not run report: ", e);
+            throw new IllegalStateException(e);
+        }
+    }
 
-	public void render(IRenderTask task, IReportOptions options) {
-		IRenderOption renderOptions = (IRenderOption) ((AbstractOutputFormat) options.getOutputFormat())
-				.createBIRTRenderOptions();
-		renderOptions.setOutputFileName(options.getOutputFile().getAbsolutePath());
-		// Makes the chosen root element available via the appContext variable
-		// 'rootElementId'
-		if (options.getRootElement() != null) {
-			task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME, options.getRootElement());
-			if (log.isDebugEnabled()) {
-				log.debug("Root-Element:\t" + options.getRootElement());
-			}
-		} else if (options.getRootElements() != null && options.getRootElements().length > 0) {
-			task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME, options.getRootElements());
-			if (log.isDebugEnabled()) {
-				log.debug("Root-Elements: " + Arrays.toString(options.getRootElements()));
-			}
-		}
+    public void render(IRenderTask task, IReportOptions options) {
+        IRenderOption renderOptions = (IRenderOption) ((AbstractOutputFormat) options
+                .getOutputFormat()).createBIRTRenderOptions();
+        renderOptions.setOutputFileName(options.getOutputFile().getAbsolutePath());
+        // Makes the chosen root element available via the appContext variable
+        // 'rootElementId'
+        if (options.getRootElement() != null) {
+            task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME,
+                    options.getRootElement());
+            if (log.isDebugEnabled()) {
+                log.debug("Root-Element:\t" + options.getRootElement());
+            }
+        } else if (options.getRootElements() != null && options.getRootElements().length > 0) {
+            task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME,
+                    options.getRootElements());
+            if (log.isDebugEnabled()) {
+                log.debug("Root-Elements: " + Arrays.toString(options.getRootElements()));
+            }
+        }
 
-		task.setRenderOption(renderOptions);
+        task.setRenderOption(renderOptions);
 
-		try {
-			long startTime = System.currentTimeMillis();
-			task.render();
-			if (log.isDebugEnabled()) {
-				long duration = (System.currentTimeMillis() - startTime) / 1000;
-				log.debug("RenderTask lasts " + duration + " seconds");
-			}
-		} catch (EngineException e) {
-			log.error("Could not render design: ", e);
-			throw new IllegalStateException(e);
-		} finally {
-			destroyEngine();
-		}
-	}
+        try {
+            long startTime = System.currentTimeMillis();
+            task.render();
+            if (log.isDebugEnabled()) {
+                long duration = (System.currentTimeMillis() - startTime) / 1000;
+                log.debug("RenderTask lasts " + duration + " seconds");
+            }
+        } catch (EngineException e) {
+            log.error("Could not render design: ", e);
+            throw new IllegalStateException(e);
+        } finally {
+            destroyEngine();
+        }
+    }
 
-	public String getLogfile() {
-		return Activator.getDefault().getOdaDriver().getLogFile();
-	}
+    public String getLogfile() {
+        return Activator.getDefault().getOdaDriver().getLogFile();
+    }
 }
