@@ -9136,6 +9136,7 @@ Wurden bereits weitere Stellen informiert?
     <huientity id="bp_itnetwork" name="Information Network">
         <huiproperty id="bp_itnetwork_name" name="Title" required="true" />
         <huiproperty id="bp_itnetwork_abbr" name="Abbreviation" />
+        <huiproperty id="bp_itnetwork_organization" name="Organization" />
         <huiproperty id="bp_itnetwork_tag" name="Tags" tooltip="List of tags, separated by comma or space" />
         <huiproperty id="bp_itnetwork_employee_number" name="Number of employees" />
         <huiproperty id="bp_itnetwork_description" name="Description" />
@@ -10325,6 +10326,7 @@ Wurden bereits weitere Stellen informiert?
             tooltip="List of tags, separated by comma or space" />
         <huiproperty id="bp_itsystem_description" inputtype="text" name="Description" />
         <huiproperty id="bp_itsystem_platform" name="Platform / Module" />
+        <huiproperty id="bp_itsystem_site" name="Site" />
         <huiproperty id="bp_itsystem_count" name="Anzahl" />
         <huiproperty id="bp_itsystem_status" inputtype="singleoption" name="Status">
             <option id="bp_itsystem_status_operation" name="Operation" />
@@ -10332,6 +10334,23 @@ Wurden bereits weitere Stellen informiert?
             <option id="bp_itsystem_status_test" name="Test" />
             <option id="bp_itsystem_status_reserve" name="Reserve" />
         </huiproperty>
+        <huiproperty id="bp_itsystem_net_address" name="Net addresses" />
+        <huiproperty id="bp_itsystem_interfaces" name="Interfaces" inputtype="multioption">
+            <option id="bp_itsystem_interfaces_ethernet" name="Ethernet"/>
+            <option id="bp_itsystem_interfaces_wlan" name="WLAN"/>
+            <option id="bp_itsystem_interfaces_bluetooth" name="Bluetooth"/>
+            <option id="bp_itsystem_interfaces_irda" name="IrDA"/>
+            <option id="bp_itsystem_interfaces_modem" name="Modem"/>
+            <option id="bp_itsystem_interfaces_usb" name="USB"/>
+            <option id="bp_itsystem_interfaces_ieee1394" name="IEEE 1394"/>
+            <option id="bp_itsystem_interfaces_serial" name="Serial"/>
+            <option id="bp_itsystem_interfaces_parallel" name="Parallel"/>
+            <option id="bp_itsystem_interfaces_scsi" name="Ext SCSI"/>
+            <option id="bp_itsystem_interfaces_sata" name="Ext SATA"/>
+            <option id="bp_itsystem_interfaces_ide" name="Ext IDE"/>
+            <option id="bp_itsystem_interfaces_audio" name="Audio In"/>
+            <option id="bp_itsystem_interfaces_video" name="Video In"/>
+        </huiproperty>        
          <huiproperty id="bp_itsystem_user" name="User" tooltip=""	required="true" inputtype="multioption">
 			<option	id="bp_itsystem_user_1"	name="Administration" />
 			<option	id="bp_itsystem_user_2"	name="Development" />
@@ -10502,7 +10521,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_person_email" name="Email" />
         <huiproperty id="bp_person_org_unit" name="=Org. unit" />
         <huiproperty id="bp_person_explanation" name="Explanation" />
-        <huiproperty id="bp_person_tag" name="Tags" />
+        <huiproperty id="bp_person_tag" name="Tags" />       
+        <huiproperty id="bp_person_count" name="Count" />
 		<huiproperty id="bp_person_roles" inputtype="multioption" name="Roles" required="false" >
 			<option id="bp_person_role_0" name="Administrator" />
 			<option id="bp_person_role_2" name="Anwendungsentwickler" />
@@ -10824,8 +10844,8 @@ Wurden bereits weitere Stellen informiert?
             <option id="bp_network_status_test" name="Test" />
             <option id="bp_network_status_reserve" name="Reserve" />
         </huiproperty>
-        <huiproperty id="bp_network_netadr" name="Netadresses" />
-        <huiproperty id="bp_network_coms" inputtype="multioption" name="Schnittstellen">
+        <huiproperty id="bp_network_netadr" visible="false" name="Netadresses" />
+        <huiproperty id="bp_network_coms" inputtype="multioption" visible="false" name="Schnittstellen">
             <option id="bp_network_coms_ether" name="Ethernet" />
             <option id="bp_network_coms_wlan" name="WLAN" />
             <option id="bp_network_coms_blue" name="Bluetooth" />
@@ -10863,6 +10883,19 @@ Wurden bereits weitere Stellen informiert?
 			<option	id="bp_network_user_19"	name="Accounting" />
 		</huiproperty>
         <huiproperty id="bp_network_document" isURL="true" name="Document" />
+        <huiproperty id="bp_network_cable" name="Cable / Connection Type" />
+        <huiproperty id="bp_network_capacity" name="Capacity" />
+        <huiproperty id="bp_network_protocols" name="Protocols" />
+        <huiproperty id="bp_network_external_network" name="External Network" />
+        <huiproperty id="bp_network_criticality" inputtype="multioption" name="Criticality" tooltip="Connection is critical due to...">
+            <option id="bp_network_criticality_0" name="K0: Non-Critical" />
+            <option id="bp_network_criticality_1" name="K1: External Connection" />
+            <option id="bp_network_criticality_2" name="K2: High Confidentiality" />
+            <option id="bp_network_criticality_3" name="K3: High Integrity" />
+            <option id="bp_network_criticality_4" name="K4: High Availability" />
+            <option id="bp_network_criticality_5" name="K5: No Transfer of Highly Confidential Information" />
+        </huiproperty>
+        <huiproperty id="bp_network_explanation" inputtype="text" textrows="4" name="Explanation" />
         <huipropertygroup id="bp_network_group_business_impact" name="Protection Requirement"
             tags="Risk">
 		    <huiproperty defaultValue="1" id="bp_network_value_method_confidentiality" inputtype="booleanoption" name="Deduce confidentiality with maximumpriciple" tags="Risk"/>
@@ -11076,7 +11109,7 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_room_description" inputtype="text" name="Description" />
         <huiproperty id="bp_room_platform" name="Platform / Module" />
         <huiproperty id="bp_room_count" name="Anzahl" />
-        <huiproperty id="bp_room_status" inputtype="singleoption" name="Status">
+        <huiproperty id="bp_room_status" inputtype="singleoption" visible="false" name="Status">
             <option id="bp_room_status_operation" name="Operation" />
             <option id="bp_room_status_planning" name="Planning" />
             <option id="bp_room_status_test" name="Test" />
