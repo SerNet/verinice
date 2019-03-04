@@ -166,7 +166,7 @@ public class GenericReportType implements IReportType {
         brs.performRenderTask(task, secureReportExecutionManager);
     }
     
-    private String getDepositPath(String locationConstant){
+    public static String getDepositPath(String locationConstant){
         StringBuilder sb = new StringBuilder();
         sb.append(System.getProperty(IVeriniceConstants.OSGI_INSTANCE_AREA));
         if(!(sb.toString().endsWith(String.valueOf(File.separatorChar)))){

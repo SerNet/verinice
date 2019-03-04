@@ -26,7 +26,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.logging.Level;
 
 import org.eclipse.birt.core.data.DataTypeUtil;
@@ -46,14 +45,13 @@ import org.eclipse.birt.report.engine.api.IReportRunnable;
 import org.eclipse.birt.report.engine.api.IResultSetItem;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 import org.eclipse.birt.report.engine.api.IRunTask;
-import org.eclipse.birt.report.model.api.DefaultResourceLocator;
 import org.eclipse.birt.report.model.api.IResourceLocator;
-import org.eclipse.birt.report.model.api.ModuleHandle;
 import org.eclipse.birt.report.model.api.ModuleOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sernet.gs.ui.rcp.main.ServiceComponent;
+import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.model.report.AbstractOutputFormat;
@@ -64,7 +62,7 @@ import sernet.verinice.security.report.ReportClassLoader;
 
 public class BIRTReportService {
 
-    private final Logger log = LoggerFactory.getLogger(BIRTReportService.class);
+    final Logger log = LoggerFactory.getLogger(BIRTReportService.class);
 
     private IReportEngine engine;
 
@@ -86,57 +84,7 @@ public class BIRTReportService {
         final int logRollingSize = 3000000; // equals 3MB
         EngineConfig config = new EngineConfig();
 
-        // Custom resource locator which tries to retrieve resources for the
-        // reports
-        // from the *package* where the BIRTReportService class resides.
-        resourceLocator = new IResourceLocator() {
-            private IResourceLocator defaultLocator = new DefaultResourceLocator();
-
-            @Override
-            public URL findResource(ModuleHandle moduleHandle, String fileName, int type,
-                    Map appContext) {
-                URL url = findByClassloader(fileName);
-                if (url == null) {
-                    url = defaultLocator.findResource(moduleHandle, fileName, type, appContext);
-                }
-                if (url == null) {
-                    log.warn(String.format(
-                            "Report resource '%s' could not neither be found through internal resource loader nor through the default one.",
-                            fileName));
-                }
-                return url;
-            }
-
-            @Override
-            public URL findResource(ModuleHandle moduleHandle, String fileName, int type) {
-                URL url = findByClassloader(fileName);
-                if (url == null) {
-                    url = defaultLocator.findResource(moduleHandle, fileName, type);
-                }
-                if (url == null) {
-                    log.warn(String.format(
-                            "Report resource '%s' could not neither be found through internal resource loader nor through the default one.",
-                            fileName));
-                }
-                return url;
-            }
-
-            /**
-             * Finds resources in package of class BIRTReportService.
-             * 
-             * <p>
-             * Important: If report resource are moved into a different package
-             * this method *must* be adjusted.
-             * </p>
-             * 
-             * @param resource
-             * @return
-             */
-            private URL findByClassloader(String resource) {
-                return BIRTReportService.class.getResource(resource);
-            }
-
-        };
+        resourceLocator = new ReportResourceLocator();
 
         IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
         boolean useReportLogging = odaDriver.getReportLoggingState();
