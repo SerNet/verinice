@@ -144,7 +144,18 @@ To update the version of the project
 
 1.	run
 
-		./mvnw -DnewVersion=x.y.z.qualifier tycho-versions:set-version
+		./mvnw -Dtycho.mode=maven -DnewVersion=x.y.z.qualifier tycho-versions:set-version
+
+	Note that *qualifier* is meant literately and is treated as a *magic string*
+	by tycho/osgi, i.e.
+
+		./mvnw -DnewVersion=1.19.0.qualifier tycho-versions:set-version
+
+	will write *1.19.0-SNAPSHOT* into update pom.xml files and *1.19.0.qualifier*
+	into into updated feature.xml files. The final product version gets a
+	timestamp, e.g.*1.19.0.201908011226*. See
+	(https://www.eclipse.org/tycho/sitedocs/tycho-packaging-plugin/plugin-info.html)[Plugin
+	Documentation] for details.
 
 2.	update version and codename in the about text in **Branding > About Dialog** of
 	*sernet.verinice.releng.client.product/sernet.verinice.releng.client.product* and
@@ -164,23 +175,3 @@ To update the version of the project
 
 	*sernet.verinice.oda.driver.designer/splash-screen/v.designer_splash_screen.xcf*
 
-
-### Examples
-
--	the call
-
-		./mvnw -DnewVersion=1.19.0.qualifier tycho-versions:set-version
-
-	leads to the product version like *1.19.0.201908011226*
-
--	the call
-
-		./mvnw -DnewVersion=1.19.0.beta3 tycho-versions:set-version
-
-	leads to the product version *1.19.0.beta3*
-
--	the call
-
-		./mvnw -DnewVersion=1.19.0 tycho-versions:set-version
-
-	leads to the product version *1.19.0*

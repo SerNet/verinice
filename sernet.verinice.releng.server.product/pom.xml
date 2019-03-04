@@ -51,7 +51,7 @@
 					<descriptors>
 						<descriptor>assembly.xml</descriptor>
 					</descriptors>
-					<finalName>${product.finalName}</finalName>
+					<finalName>veriniceserver-${unqualifiedVersion}</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
 				</configuration>
 				<executions>

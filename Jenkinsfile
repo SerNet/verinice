@@ -2,7 +2,6 @@ pipeline {
     agent any
     parameters {
         booleanParam(name: 'dists', defaultValue: false, description: 'Run distribution steps, i.e. build RPMs files etc.')
-        string(name: 'VERSION', defaultValue: '0.0.0.test', description: '')
     }
     environment {
         MAVEN_OPTS = "-Dmaven.repo.local=${env.MAVEN_REPOSITORY_BASE}/repository${env.EXECUTOR_NUMBER}"
@@ -27,7 +26,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh "make -C verinice-distribution VERSION=${params.VERSION} products"
+                sh "make -C verinice-distribution products"
                 archiveArtifacts artifacts: 'sernet.verinice.releng.client.product/target/products/*.zip,sernet.verinice.report.designer.product/target/products/*.zip,sernet.verinice.releng.server.product/target/*.war,sernet.verinice.releng.client.product/target/repository/**', fingerprint: true
             }
         }
@@ -38,12 +37,12 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh "make -C verinice-distribution VERSION=${params.VERSION} tests"
+                sh "make -C verinice-distribution tests"
             }
         }
         stage('Documentation') {
             steps {
-                sh "make -C verinice-distribution -j4 VERSION=${params.VERSION} docs"
+                sh "make -C verinice-distribution -j4 docs"
                 archiveArtifacts artifacts: 'doc/manual/*/*.pdf,doc/manual/*/*.zip', fingerprint: true
             }
         }
@@ -52,7 +51,7 @@ pipeline {
                 expression { params.dists && currentBuild.result in [null, 'SUCCESS'] }
             }
             steps {
-                sh "make -C verinice-distribution -j2 VERSION=${params.VERSION} dists"
+                sh "make -C verinice-distribution -j2 dists"
                 archiveArtifacts artifacts: 'verinice-distribution/rhel-?/RPMS/noarch/*', fingerprint: true
             }
         }
