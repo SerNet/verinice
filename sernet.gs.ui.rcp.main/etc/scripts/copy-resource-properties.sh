@@ -13,9 +13,10 @@ echo [enter]
 read
 
 
-find ./ ! -path '*classes*' ! -path '*.metadata*' ! -path '*bin*' \
+find ./ ! -path '*classes*' ! -path '*.metadata*' ! -path '*bin*' ! -path '*target*' \
 -iname '*messages*.properties' \
 -or -iname 'plugin*.properties' \
+-or -iname 'bundle*.properties' \
 -or -iname 'root*xhtml' \
 -or -path '*/cheatsheets/*.xml' |\
 rsync -av --files-from=- . ./temptranslate/
