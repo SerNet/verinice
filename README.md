@@ -139,3 +139,17 @@ Artifacts for the following platforms will be produced:
 * Windows 32 and 64 bit
 * Mac OS X 64 bit
 
+## Versioning
+To update the version of the project
+
+1.	run
+
+		./mvnw -DnewVersion=x.y.z.qualifier tycho-versions:set-version
+
+2.	update version and codename in the about text in **Branding > About Dialog** of
+	*sernet.verinice.releng.client.product/sernet.verinice.releng.client.product* and
+
+3.	synchronize the about text with the plugin (**Product > Overview > Testing >
+	Synchronize**) again in *sernet.verinice.releng.client.product/sernet.verinice.releng.client.product*.
+
+4.	Update the version macro in the manuals.
