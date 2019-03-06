@@ -2,7 +2,7 @@
 <feature
       id="sernet.verinice.app.feature"
       label="Application Feature"
-      version="1.0.0.qualifier"
+      version="1.19.0.qualifier"
       provider-name="SerNet">
 
    <description url="http://www.verinice.com">
@@ -284,7 +284,7 @@ Library.
    <requires>
       <import feature="sernet.gs.server.feature" version="1.1.1.qualifier"/>
       <import feature="sernet.rcp.ui.feature" version="1.0.0.qualifier"/>
-      <import feature="sernet.verinice.lang.feature" version="1.0.0"/>
+      <import feature="sernet.verinice.lang.feature" version="1.19.0.qualifier"/>
       <import feature="sernet.verinice.extraresources.feature" version="1.0.0.qualifier"/>
    </requires>
 

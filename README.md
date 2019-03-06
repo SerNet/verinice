@@ -149,7 +149,38 @@ To update the version of the project
 2.	update version and codename in the about text in **Branding > About Dialog** of
 	*sernet.verinice.releng.client.product/sernet.verinice.releng.client.product* and
 
-3.	synchronize the about text with the plugin (**Product > Overview > Testing >
+3.	synchronize the about text with the plugin (**Overview > Testing >
 	Synchronize**) again in *sernet.verinice.releng.client.product/sernet.verinice.releng.client.product*.
 
 4.	Update the version macro in the manuals.
+
+5.	Update the version in the splash screens of
+
+	-	verinice
+
+	*sernet.gs.ui.rcp.main/etc/splashscreen/splash.xcf*
+
+	-	v.Designer
+
+	*sernet.verinice.oda.driver.designer/splash-screen/v.designer_splash_screen.xcf*
+
+
+### Examples
+
+-	the call
+
+		./mvnw -DnewVersion=1.19.0.qualifier tycho-versions:set-version
+
+	leads to the product version like *1.19.0.201908011226*
+
+-	the call
+
+		./mvnw -DnewVersion=1.19.0.beta3 tycho-versions:set-version
+
+	leads to the product version *1.19.0.beta3*
+
+-	the call
+
+		./mvnw -DnewVersion=1.19.0 tycho-versions:set-version
+
+	leads to the product version *1.19.0*
