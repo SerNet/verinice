@@ -9137,6 +9137,34 @@ Wurden bereits weitere Stellen informiert?
     <!-- Modernised base protection elements -->
 
     <huientity id="bp_itnetwork" name="Information Network">
+        <huirelation to="bp_businessprocess" id="rel_bp_itnetwork_bp_businessproces"
+            name="implements"
+            reversename="implemented by" />
+        <huirelation to="bp_application" id="rel_bp_itnetwork_bp_application"
+            name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_itsystem" id="rel_bp_itnetwork_bp_itsystem"
+            name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_icssystem" id="rel_bp_itnetwork_bp_icssystem"
+            name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_device" id="rel_bp_itnetwork_bp_device"
+            name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_network" id="rel_bp_itnetwork_bp_network"
+            name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_room" id="rel_bp_itnetwork_bp_room"
+            name="includes"
+            reversename="located in" />
+        <huirelation to="bp_person" id="rel_bp_itnetwork_bp_person"
+            name="person primarily responsible"
+            reversename="primarily responsible for " />
+        <huirelation to="bp_incident" id="rel_bp_itnetwork_bp_incident"
+            name="was affected by"
+            reversename="affected" />
+
         <huiproperty id="bp_itnetwork_name" name="Title" required="true" />
         <huiproperty id="bp_itnetwork_abbr" name="Abbreviation" />
         <huiproperty id="bp_itnetwork_organization" name="Organization" />
@@ -9375,6 +9403,12 @@ Wurden bereits weitere Stellen informiert?
             reversename="necessary for" />
         <huirelation to="bp_room" id="rel_bp_application_bp_room" name="located in"
             reversename="includes" />
+        <huirelation to="bp_person" id="rel_bp_application_bp_person_accountable" name="accountable"
+            reversename="accountable for" />
+        <huirelation to="bp_person" id="rel_bp_application_bp_person_consulted" name="consulted"
+            reversename="consulted for" />
+        <huirelation to="bp_person" id="rel_bp_application_bp_person_informed" name="informed"
+            reversename="informed about" />
 
         <huiproperty id="bp_application_abbr" name="Abbreviation" required="true" />
         <huiproperty id="bp_application_name" name="Title" required="true" />
@@ -9487,6 +9521,12 @@ Wurden bereits weitere Stellen informiert?
             reversename="necessary for" />
         <huirelation to="bp_network" id="rel_bp_businessprocess_bp_network" name="depends on"
             reversename="necessary for" />
+        <huirelation to="bp_person" id="rel_bp_businessprocess_bp_person_accountable" name="accountable"
+            reversename="accountable for" />
+        <huirelation to="bp_person" id="rel_bp_businessprocess_bp_person_consulted" name="consulted"
+            reversename="consulted for" />
+        <huirelation to="bp_person" id="rel_bp_businessprocess_bp_person_informed" name="informed"
+            reversename="informed about" />
 
         <huiproperty id="bp_businessprocess_abbr" name="Abbreviation" required="true" />
         <huiproperty id="bp_businessprocess_name" name="Title" required="true" />
@@ -10314,6 +10354,8 @@ Wurden bereits weitere Stellen informiert?
     <huientity id="bp_itsystem" name="IT System">
         <huirelation to="bp_itsystem" id="rel_bp_itsystem_bp_itsystem" name="depends on"
             reversename="necessary for" />
+        <huirelation to="bp_itsystem" id="rel_bp_itsystem_bp_itsystem_virtualized" name="virtualized on"
+            reversename="VM host for" />
         <huirelation to="bp_icssystem" id="rel_bp_itsystem_bp_icssystem" name="depends on"
             reversename="necessary for" />
         <huirelation to="bp_device" id="rel_bp_itsystem_bp_device" name="depends on"
@@ -10509,6 +10551,16 @@ Wurden bereits weitere Stellen informiert?
             reversename="person primarily responsible" />
         <huirelation to="bp_record" id="rel_bp_person_record" name="maintains"
             reversename="maintained by" />
+        <huirelation to="bp_itsystem" id="rel_bp_person_bp_itsystem_user" name="User of"
+            reversename="User" />
+        <huirelation to="bp_itsystem" id="rel_bp_person_bp_itsystem_administrator" name="Administrator of"
+            reversename="Administrator" />
+        <huirelation to="bp_application" id="rel_bp_person_bp_application_user" name="User of"
+            reversename="User" />
+        <huirelation to="bp_businessprocess" id="rel_bp_person_bp_businessprocess_user" name="User of"
+            reversename="User" />
+        <huirelation to="bp_businessprocess" id="rel_bp_person_bp_businessprocess_owner" name="Owner of"
+            reversename="Owner" />
 
         <huiproperty id="bp_person_abbr" name="Abbreviation" required="true" />
         <huiproperty id="bp_person_title" inputtype="singleoption" name="Anrede">
