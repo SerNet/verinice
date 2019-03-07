@@ -9043,7 +9043,10 @@ Wurden bereits weitere Stellen informiert?
                 <option id="samt_topic_maturity_4"  value="4" />
                 <option id="samt_topic_maturity_5"  value="5" />
           </huiproperty>
-
+          <huiproperty id="samt_topic_data_protection" inputtype="singleoption" tags="VDA-ISA" name="Data Protection Fulfilled" >
+                <option id="samt_topic_data_protection_yes" name="Yes" />
+                <option id="samt_topic_data_protection_no" name="No" />
+          </huiproperty>
           <huiproperty
             id="samt_topic_weight"  visible="false" inputtype="numericoption" min="0" max="10" />
           <huiproperty
