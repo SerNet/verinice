@@ -150,7 +150,7 @@ public class SingleSelectionControl extends AbstractHuiControl {
 
     private int indexForOption(String propertyValue) {
         for (int i = 0; i < options.size(); i++) {
-            PropertyOption opt = (PropertyOption) options.get(0);
+            PropertyOption opt = (PropertyOption) options.get(i);
             if (opt.getId().equals(propertyValue)) {
                 return i;
             }
