@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<cheatsheet title="Řízení rizik podle ISO 27005">
+
+  <intro>
+    <description>
+      Tento tutoriál vám předvede, jak pomocí verinice dosáhnout posouzení rizik založeném na mezinárodních
+	  standardech ISO 27005. Pojďme začít.
+    </description>
+  </intro>
+  
+  <item title="Změňte na ISM perspektivu">
+    <description>
+      Nejprve musíte přepnout na ISM perspektivu. Pokud jste to ještě neudělali, zvolte tuto perspektivu
+	  volbou z menu přes  <b>Pohled > Ukázat Perspektivu > Řízení bezpečnosti informací</b>.
+    </description>
+  </item>
+  
+  <item title="Vytvořit nový rámec">
+    <description>
+      Vytvorte nový rámec kliknutím na ikonu "Přidat novou organizaci" v ISM panelu. Vypadá
+	  jako prázdný list se žlutou hvězdou v pravém horním rohu.
+      <br /><br />
+      Dvojklikněte na rámec. Zmente jeho jméno na "Má Organizace".
+	  Nastavte úrovne "Akceptace Rizika" na "3" pro důvěrnost, integritu a dostupnost.
+	  Uložte vaše změny kliknutím na <b>Soubor > Uložit</b>nebo stisknutím <b>Ctrl+S</b>
+      <br /><br />
+      Sjeďte dolů a pročtěte si definice Klasifikace úrovně obchodních dopadů, hrozeb a 
+	  zranitelností. Ty později nastavíte tak, aby ladily s vaší současnou organizací.
+	</description>
+  </item>
+  
+  <item title="Vytvořit nová aktiva">
+    <description>
+      Otevřte rámec objektu. Kliknete pravým tlačítkem myši na "Aktiva". Zvolte <b>Přidat Nové Aktivum...</b>.
+	  Jako název zadejte "Mail server" a změňte typ aktiva na "Fyzické". Uložte stisknutím <b>Ctrl+S</b>.
+    </description>
+  </item>
+  
+  <item title="Vytvořit nový proces">
+    <description>
+      Klikněte pravým tlačítkem myši na "Procesy". Zvolte <b>Přridat Process...</b>. Zadejte "Marketing"
+	  jako jeho název a nastavte hodnoty pro "Obchodní Dopad" na Důvěrnost: Veřejná, "Integrita: Normální",
+	  "Dostupnost: Vysoká". Uložte stisknutím <b>Ctrl+S</b
+	  <br /><br />
+      Propojte své aktivum s procesem. Jeden ze způsobů jak to udělat je umístěn v editoru. Otevřte
+	  rozbalovací menu označené názvem "Vztahy k" a vyberte "Aktivum". Klikněte na b>Přidat...</b>.
+	  Zvolte své aktivum a klikněte na b>OK</b>. Titulek nyní ukazuje "závisí na" což znamená že
+	  práce procesu "Marketing" závisí na funkčním aktivu "Mail Server".
+    </description>
+  </item>
+  
+  <item title="Vytvořit novou zranitelnost">
+    <description>
+      Klikněte pravým tlačítkem myši na kategorii "Zranitelnosti" v pohledu ISM. Zvolte b>Přidat Zranitelnost...</b>.
+	  Zadejte "Vzdálené zneužití" jako název a nastavte "Úroveň Zranitelnosti" na "1:Nízká" 
+	  Uložte stisknutím <b>Ctrl+S</b>.	 
+    </description>
+  </item>
+  
+  <item title="Vytvořit novou hrozbu">
+    <description>
+      Klikněte pravým tlačítkem myši na kategorii "Hrozby". Zvolte <b>Přidat Hrozbu...</b>. Zadejte "Vnější útočník"
+      jako název a nastavte úroveň pravděpodobnosti na "4: Denně". Uložte stisknutím <b>Ctrl+S</b>.
+    </description>
+  </item>
+  
+  <item title="Vytvořit nový scénář rizika">
+    <description>
+      Doposud jste vytvořili samostatné objekty, ale dosud jste je vzájemně nepropojili pro reprezentaci
+	  skutečného scénáře rizika. Udělejme to teď. Spojte hrozbu se zranitelností, které jste právě vytvořili,
+	  a vytvořte nový scénář rizika. Pomocí myši přetáhněte hrozbu na zranitelnost v perspektivě ISM.
+      <br /><br />
+      Když se vás verinice zeptá jestli chcete vytvořit nový scénář rizika, klikněte "Ano".
+	  Nový objekt by se měl objevit ve skupině "Scénáře rizika" Pokud ne, zmáčknětě b>Ctrl+F5</b>
+	  pro aktualizaci obrazovky.
+    </description>
+  </item>
+  
+  <item title="Spojit scénář rizika s aktivem">
+    <description>
+      Nyní musíme propojit náš scénář rizika s naším aktivem "Mail server" a prokázat že se s ním něco může stát.
+	  Přetáhněte rizikový scénář na aktivum nebo otevřete  "Mail server" a pomocí rozevírací nabídky "Vztahy k:" 
+	  jej připojte k vašemu scénáři rizika.
+    </description>
+  </item>
+  
+  <item title="Spustit výpočet rizika">
+    <description>
+      Toto je důležité: úrovně hrozeb a hodnoty rizika jsou aktualizovány pouze poté, co kliknete na 
+	  tlačítko "Spustit ISO/IEC 27005 Analýzu rizik". Pro rychlý přístup je akční tlačítko k dispozici na 
+	  horním panelu. Nyní jej zmáčkněte.
+	</description>
+  </item>
+  
+  <item title="Kontrola hodnot rizka">
+    <description>
+      Dvojklikněte na aktivum "Mail server", které podědí dopad na firemní procesy z procesu "Marketing".
+	  V oblasti vztahů v editoru okamžitě uvidíte čísla vedle scénáře rizika (přejděte na plochu vpravo, 
+	  pokud je nevidíte). Znamenají, že scénář rizika přidává k celkovému riziku pro dané aktivum. Riziko
+	  je separátně vypočítáno pro důvěrnost, integritu a dostupnost (CIA).	 
+    </description>
+  </item>
+  
+  <item title="Vytvořte další scénář rizika (zkratka)">
+    <description>
+      Nemusíte vytvořit nový objekt hrozby/zranitelnosti pro každý scénář rizika, kterému chcete
+	  ve verinice věnovat pozornost. Můžete jednoduše kliknout pravým tlačítkem na "scénáře rizika"
+	  a zvolit "Přidat scénář rizika". Můžete zadat hodnoty pro riziko a pravděpodobnost tohoto 
+	  scénáře rizika. V tomto případě vypněte užití "Odvodit z hrozby a zran." abyste předešli přepsání
+	  vašeho nastavení výpočtem rizika.	 
+      <br /><br />
+      Pokud si zakoupíte verinice.PRO, obdržíte rozsáhlý katalog běžných scánářů zranitelnosti 
+	  založených na hrozbách a zranitelnostech, které jsou zahrnuty v příloze k ISO 27005.	  
+    </description>
+  </item>
+  
+  <item title="Doladění analýzy rizik">
+    <description>
+      Scénář rizika v základním nastavení ovlivňuje všechny tři kategorie dopadu: důvěrnost, integritu a
+	  dostupnost. To můžete doladit vypnutím užití políček v editoru tohoto scénáře rizika, i. e. povodeň
+	  ovlivňuje dostupnost, ale pravděpodobně ne důvěrnost.	  
+    </description>
+  </item>
+  
+  <item title="Vytvořit zprávu posouzení rizik">
+    <description>
+      Klikněta na <b>Soubor > vytvořit zprávu...</b>. Zvolte zprávu "ISM: Risk Management Results". Zvolte
+	  váš rámec který je hlavní složkou organizace. Zvolte "PDF" jako výstupní formát a zvolte adresář a
+	  jméno souboru pro uložení zprávy. Kliknětě <b>OK</b>. Vytvořenou zprávu můžete otevřít v jakémkoli
+	  PDF prohlížeči.
+    </description>
+  </item>
+  
+  <item title="Ošetření rizik">
+    <description>
+      teď musíme něco udělat s identifikovanými riziky. Vytvořte nové bezpečnostní opatření pravým
+	  kliknutím na "Bezpečnostní opatření" a zvolte <b>Přidat Bezpečnostní opatření...</b>. Zadejte
+	  "Patch Management" jako název, nastavte "Implementováno" na "Ano". Přejděte dolů na "Síla
+	  Bezpečnostního opatření" a "Pravděpodobnost scénáře". Zde zvolte "uprvuje 1 úroveň".
+	  Uložte stisknutím <b>Ctrl+S</b>.
+    </description>
+  </item>
+  
+  <item title="Zavádění bezpečnostních opatření">
+    <description>
+      Vytvořte vztah mezi Bezpečnostním opatřením a Scénářem rizika.
+      <br /><br />
+      Bezpečnostní opatření mohou být zavedena na scénáře rizika, nebo na jednotlivá aktiva. Bezpečnostní
+	  opatření tedy snižuje dopad rizik na jednotlivá aktiva nebo na všechna aktiva, která jsou ovlivněna
+	  scénářem rizika.
+      <br /><br />
+	  Pokud dvojkliknete na scénář rizika na seznamu, uvidíte všechny vztahy z pohledu Scénářů rizika.
+	  Například ve vztahu k bezpečnostnímu opatření můžete číst "pravděpodobnost upravena" "Patch Management".
+	  Bezpečnostní opatření bude zobrazeno jako zeleně zaškrtnutě aby prokázalo že je již implementováno.
+    </description>
+  </item>
+  
+  <item title="Děkujeme">
+    <description>
+      Děkujeme, že jste zvážili verinice pro vaše posouzení informačních rizik. Pokud máte jakékoli další
+	  otázky nebo potřebu profesionální podpory, rádi vám pomůžeme! Kontaktní informace jsou dostupné na
+	  naší webové stránc <b>http://www.verinice.com</b>.
+    </description>
+  </item>
+  
+</cheatsheet>

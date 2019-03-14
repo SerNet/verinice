@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<compositeCheatsheet name="Connecting Greenbone Security Manager and verinice">
+
+  <taskGroup name="Connecting Greenbone Security Manager and verinice" skip="false">
+
+    <intro>
+      In connection with a <b>Greenbone</b> vulnerability scanner (<b>www.greenbone.net</b>) as well as an
+      OpenVAS vulnerability scanner (<b>www.openvas.org</b>) verinice enables an effective vulnerability management.
+      The connection offers two basic use cases.<br/>
+      <br/>
+      <b>IT baseline security with Greenbone and verinice</b><br/>
+      Importing the results of a vulnerability scan into verinice in the BSI Baseline Security provides the
+      functionalities structural analysis, modeling and automatic basisc security check.<br/>
+      <br/>
+      <b>Information Security Management with Greenbone and verinice</b><br/>
+      In the ISM perspective verinice supports you in performing the risk analysis and the vulnerability management
+      after importing the results of a vulnerability scan. Exclusive in verinice.PRO there is an additional task
+      workflow for the elimination of vulnerabilities implemented.
+    </intro>
+
+    <task kind="cheatsheet" name="IT Baseline Protection with Greenbone and Verinice" skip="true">
+      <param name="id" value="sernet.verinice.greenbone.cheatsheets.it_baseline_protection" />
+      <intro>
+        In connection with a <b>Greenbone</b> vulnerability scanner (<b>www.greenbone.net</b>) as well as a OpenVAS
+        vulnerability scanner (<b>www.openvas.org</b>) verinice enables an effective vulnerability management.<br />
+        <br />
+        Importing the results of a vulnerability scan into verinice in the BSI Baseline Security provides the
+        functionalities structural analysis, modeling and automatic basisc security check.
+      </intro>
+      <onCompletion>
+        Thank you for perfoming your vulnerability management in verinice.PRO. If you have further questions or are
+        interested in additional support or consultancy we will be glad to help. Visit <b>www.verinice.com/en</b> for further
+        information and contact details.
+      </onCompletion>
+    </task>
+
+    <task kind="cheatsheet" name="Information Security Management with Greenbone and verinice" skip="true">
+      <param name="id" value="sernet.verinice.greenbone.cheatsheets.ism" />
+      <intro>
+        In connection with a <b>Greenbone</b>-vulnerabilityscanner (<b>www.greenbone.net</b>) as well as an
+        OpenVAS vulnerability scanner (<b>www.openvas.org</b>) verinice enables an effective vulnerability
+        management.<br />
+        <br />
+        In the ISM-perspective verinice supports you in performing the risk analysis and the vulnerability management
+        after importing the results of a vulnerability scan. Exclusive in verinice.PRO there is an additional task
+        workflow for the elimination of vulnerabilities implemented.
+      </intro>
+      <onCompletion>
+        Thank you for perfoming your vulnerability management in verinice.PRO. If you have further questions or are
+        interested in additional support or consultancy we will be glad to help. Visit <b>www.verinice.com/en</b> for
+        further information and contact details.
+      </onCompletion>
+    </task>
+
+  </taskGroup>
+
+</compositeCheatsheet>

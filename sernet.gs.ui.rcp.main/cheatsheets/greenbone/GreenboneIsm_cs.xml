@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<cheatsheet title="Řízení bezpečnosti informací pomocí verinice a Greenbone">
+
+  <intro>
+    <description>
+      Ve spojení s <b>Greenbone</b>-skenerem zranitelnosti  (<b>www.greenbone.net</b>) stejně jako s  
+      OpenVAS skenerem zranitelnosti  (<b>www.openvas.org</b>) verinice umožňuje efektivní management  
+      zranitelnosti.<br />
+      <br />
+      V perspektivě ISM vás verinice podporuje při provádění anlýzy rizik a managementu
+	  po importování výsledků ze skenu zranitelsnosti. Exkluzivně ve verinice.PRO je další
+	  pracovní postup úkolů pro eliminaci aktuálních zranitelností.
+    </description>
+  </intro>
+
+  <item title="ISM Sken Zranitelnosti v Greenbone">
+    <description>
+      Pomocí Greenbone Security Manager můžete automaticky provádět skenování zranitelnosti vašich systémů.<br />
+      <br />
+      Přečtěte si prosím uživatelskou příručku Greenbone nebo navštivte webovou stránku Greenbonesite <b>www.greenbone.net</b> pro
+      detailní popis jak provést ISM-sken zranitelnosti. Nalezdnete zde speciální nastavení skenu s 
+      verinice-ISM report pluginem pro použití stažení pro verinice.
+    </description>
+  </item>
+
+<item title="Tvorba Záznamů pro Výsledky Skenu">
+    <description>
+      Pro zajištění že ty zranitelnosti, které byly nalezeny v Greenbone skenu budou vytvořeny jako objekty ve verinice,  
+      je potřeba si o nich udělat záznamy v Greenbone. Tento postup umožní přesné vyladění vašich zranitelností importovaných do
+      verinice.<br />
+      <br />
+      V případě, že zranitelnost nemá přiřazenou žádnou poznámku, skenovaný systém bude vytvořen ve verinice jako aktivum
+      bez odpovídající zranitelnosti!<br />
+      <br />
+      Pro vytvoření záznamů v Greenbone klikněte na tlačítko <b>Akce > Přidat záznam</b> v seznamu nalezených zranitelností.<br />
+      <br />
+      Měli byste vytvořit tolik záznamů, kolik jsou vaši administrátoři reálně schopni zpracovat v určeném 
+      časovém horizontu. Můžete vidět váš seznam všch zranitelností jako váše resty, ze kterých zvolíte   
+      ty nejdůležitější pro okamžitou nápravu.<br />
+      <br />
+      Toho dosáhnete tím, že k nim přidáte záznamy. V prvním řádku každého popisu můžete přidat klíčová slova, 
+      která verinice použije pro jejich seskupení. Obvykle se doporučuje seskupit záznamy podle postižené 
+      aplikace. Například můžete nastavit jednu skupinu pro všechny záznamy týkající se vašeho PDF Readeru. Pro provedení
+	  seskupení, zadejte na prvním řádku následující: <b>+PdfReader</b>.<br />
+      Ve druhém řádku a v následujících, můžete přidat popis úkolo pro tuto konkrétní poznámku, která může být tak dlouhá,
+	  jak budete chtít.
+    </description>
+  </item>
+
+  <item title="Export Výsledků Skenu">
+    <description>
+      Vyberte zprávu z úspěšného skenu v Greenbone menu <b>Sken management > zprávy</b>.<br />
+      <br />
+      Exportovat výsledky skenu zratnitelnosti ISM jako vna-soubor zvolením <b>verinice ISM</b> jako formátu v
+      odpovídajícím rozbalovacím menu a spusťte export kliknutím na tlačítko <b>Stáhnout filtrovanou zprávu</b>.
+      Greenbone uloží soubor vna do adresáře pro stahování ve vašem systémovém prostředí.
+    </description>
+  </item>
+
+  <item title="Import Skenu Zranitenosti ISM">
+    <description>
+      Přepněte ve verinice do Perspektivy ISM pomocí menu <b>Zobrazit > Zobrazit perspektivu > ISM Perspektiv</b>. 
+      Zahajte import kliknutím na tlačítko <b>Importovat organizaci ze souboru...</b>. Zvolte dříve exportovanou
+      Greenbonen ISM-Zprávu kliknutím na tlačítko <b>Vybrat soubor...</b>, zachovat výchozí hodnoty pro všechny ostatní 
+	  parametry v dialogu.<br />
+      <br />
+      Výsledky scenu zranitelnosti jsou dostupné ve skupině <b>Importované objekty</b> v následujících skupinách
+      objektů:<br />
+      <br />
+      GSM-Sken Aktiv = Všechny skenované systémy<br />
+      GSM-Sken Zranitelností = všechny anlezené Zranitelnosti<br />
+      GSM-Sken Bezpečnostních opatření = bezpečnostní opatření pro controls for opravu nalezených zranitelností<br />
+      GSM-Sken Scénářů = Nově vytvořené scénáře pro alokaci aktiv a zranitelností<br />
+      <br />
+      Dvojklikem myši na jakékoli importované aktivum v kapitole <b>Greenbone GSM</b> v zobrazení editoru jsou vidět
+      detaily zranitelnosti. Všimněte si prosím, že zaškrtávací pole pro kapitolu <b>Greenbone_GSM</b> musí být nastaveny
+      v menu <b>Edit > Preference > Nastavení editoru</b>.
+    </description>
+  </item>
+
+  <item title="Analýza Rizik">
+    <description>
+      Můžete převést importovaná aktiva, bezpečnostní opatření, scénáře a zranitelnosti jeden po druhém do své stávající
+      organizace nebo přesunout celou organizaci na top úroveň pomocí najetí myší na <b>importované objekty</b> a 
+      volbou možnosti <b>Vyjmout</b> z menu (pravým tlačítkem).<br />
+      <br />
+      Close the group Zavřete skupinu <b>importované objekty</b> pro ujištění že žádný další výběr není aktivní a vložte
+      oraganizaci pravím tlačítkem myši a možností <b>Vložit</b> vložte organizaci na top úroveň.
+    </description>
+  </item>
+
+  <item title="Seskupení Objektů">
+    <description>
+      Pro přehledné zobrazení a vytvoření úkolú pro importovaná aktiva a bezpečnostní opatření mohou být seskupeny podle 
+	  <b>GSM štítky</b>. Pro to zvolte skupinu <b>GSM-Sken Aktiv</b> nebo <b>GSM-Sken Bezpečnostních opatření</b> a pravým
+      tlačítkem zvolte možnost <b>Seskupit dle štítků...</b>.<br />
+      <br />
+      Navíc, ke každá skupině aktiv lze přiřadit odpovědnou osobu. Pokud jste již vytvořili osoby ve vaší organizaci, 
+	  můžete vytvořit vztah jednoduše pomocí přetažení na jednuu nebo více skupin aktiv.
+    </description>
+  </item>
+
+  <item title="Pracovní postup - Náprava zranitelností (pouze verinice.PRO)">
+    <description>
+      verinice poskytuje specifický pracovní postup, který eliminuje zranitelnosti a efektivně vám pomáhá v tomto 
+	  procesu.<br />
+      <br />
+      Chcete-li vytvořit úkoly pro odstranění zranitelností, vyberte kteroukoli organizaci a zvolte pravým kliknutím 
+	  možnost <b>Úkoly > Greenbone: Zahájit zpracování zranitelnosti...</b>.<br />
+      <br />
+      vytvoření úkolu typu <b>Napravit zranitelnost</b> zahrnuje bezpečnostní opatření, scénáře a aktiva která jsou
+      propojena s kontrolní skupinou. Jakákoli odpovědná osoba může pracovat na úkolech v jejich perspektivě, dostupné
+      v menu <b>Zobrazit > Zobrazit Panely > Úkoly</b> nebo v sekci <b>úkoly</b> na webové aplikaci.<br />
+      <br />
+      Odpovědná osoba obdrží jednou týdně upozornění emailem.
+    </description>
+  </item>
+
+  <item title="Náprava zranitelností">
+    <description>
+      Po uzavření úkolu typu <b>Napravit zranitelnost</b> budou smazány všechny vztahy mezi aktivy a scénáře, zatímco 
+	  zranitelnost jako taková zůstane v verinice ale nebude již více aktivní!<br />
+      <br />
+      Stav  provázaných bezpečnostních opatření bude nastaven na <b>Implementováno > Ano</b> jakmile žádná další aktiva 
+	  nebudou vázána na scénář. Pokud existují další vazby mezi aktivy a scénáři vyplývajícími z jiných úkolů, stav 
+	  bezpečnostních opatření bude nastaven na <b>Implementováno > částečně</b>.<br />
+      <br />
+      Tímto způsobem je zaručeno, že zranitelnost bude nastavena na stav <b>Napraveno</b>, pokud všechny
+      odpovědné osoby napraví zranitelnost ve své oblasti odpovědnosti.
+    </description>
+  </item>
+
+  <item title="Uzavření Úkolů pro Nenapravené Zranitelnosti">
+    <description>
+      Úkoly pro nevyřízené chyby zabezpečení budou v pracovním postupu zavřeny automaticky po 3 týdnech, čímž se sníží 
+	  počet otevřených úloh. Toto chování je implementováno tak, aby odráželo skutečnost, že v reálném životě není 
+	  vždy možné okamžitě napravit obrovské množství zranitelností. Vzhledem k tomu, že skenování zranitelností 
+	  se provádí na pravidelně, budou zranitelnosti, které nebyly opraveny, znovu zjištěny a budou vytvořeny odpovídající úkoly. 
+	  Proto je celý proces zaměřen na optimalizaci bezpečnosti při udržení pracnosti na co nejnižší úrovni.<br />
+      <br />
+      Greenbone skenu zranitenosti může být automaticky nastaven an přenos nalezených zranitelností do <b>verince.PRO</b>
+      V tom případě <b>verinice.PRO</b> porovná aktuální výsledky skenu se stavem implentace podle pracovního postupu 
+      a provede nezbytné úpravy. Zranitelnosti které byly nesprávně nastaveny na  <b>napraveno</b> budou znovu otevřeny
+	  - <b>verinice.PRO</b> znovuvytvoří správné vazby nezi aktivy a scénáři. recreates the correct links between assets and
+      scenarios. Verinice v tomto procesu nevytváří dvojité položky, ale rozpoznává dřívější importované aktiva a zranitelnosti
+	  a takovou organizaci zachová.
+    </description>
+  </item>
+
+</cheatsheet>
