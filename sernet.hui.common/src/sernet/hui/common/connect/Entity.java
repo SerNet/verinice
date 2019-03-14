@@ -18,6 +18,7 @@
 package sernet.hui.common.connect;
 
 import java.io.Serializable;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -360,7 +361,8 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         String dateInISO8601 = null;
         Date date = getDate(propertyTypeId);
         if (date != null) {
-            dateInISO8601 = DateTimeFormatter.ISO_LOCAL_DATE.format(date.toInstant());
+            dateInISO8601 = DateTimeFormatter.ISO_LOCAL_DATE
+                    .format(date.toInstant().atZone(ZoneId.systemDefault()));
         }
         return dateInISO8601;
     }
