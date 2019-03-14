@@ -130,8 +130,6 @@ public class BsiModelView extends RightsEnabledView
 
     private DrillDownAdapter drillDownAdapter;
 
-    private BSIModel model;
-
     private TreeViewer viewer;
 
     private BSIModelViewFilterAction filterAction;
@@ -185,14 +183,7 @@ public class BsiModelView extends RightsEnabledView
         super.dispose();
     }
 
-    public void setNullModel() {
-        model = new NullModel();
-
-        refreshModelAsync();
-
-    }
-
-    private void refreshModelAsync() {
+    private void refreshModelAsync(BSIModel model) {
 
         Display.getDefault().asyncExec(() -> {
             try {
@@ -270,7 +261,7 @@ public class BsiModelView extends RightsEnabledView
         addBSIFilter();
         fillLocalToolBar();
         getSite().getPage().addPartListener(linkWithEditorPartListener);
-        setNullModel();
+        refreshModelAsync(new NullModel());
     }
 
     protected void startInitDataJob() {
@@ -302,7 +293,7 @@ public class BsiModelView extends RightsEnabledView
                 loadedModel.addBSIModelListener(bsiModelListener);
 
             }
-            setModel(loadedModel);
+            refreshModelAsync(loadedModel);
         } else if (modelLoadListener == null) {
             // model is not loaded yet: add a listener to load data when it's
             // laoded
@@ -555,12 +546,6 @@ public class BsiModelView extends RightsEnabledView
         menuManager.add(collapseAction);
 
         menuManager.add(new Separator());
-    }
-
-    public void setModel(BSIModel newModel) {
-        this.model = newModel;
-        refreshModelAsync();
-
     }
 
     public IStructuredSelection getSelection() {
