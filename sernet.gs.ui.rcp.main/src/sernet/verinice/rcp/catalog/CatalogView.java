@@ -95,9 +95,7 @@ import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.catalog.ICatalogModelListener;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
-import sernet.verinice.rcp.bp.BaseProtectionPerspective;
 import sernet.verinice.rcp.tree.TreeContentProvider;
 import sernet.verinice.rcp.tree.TreeLabelProvider;
 import sernet.verinice.rcp.tree.TreeUpdateListener;
@@ -111,8 +109,7 @@ import sernet.verinice.service.tree.ElementManager;
  * @author Urs Zeidler uz[at]sernet.de
  * @author Daniel Murygin
  */
-public class CatalogView extends RightsEnabledView
-        implements IAttachedToPerspective, ILinkedWithEditorView {
+public class CatalogView extends RightsEnabledView implements ILinkedWithEditorView {
 
     private static final Logger logger = Logger.getLogger(CatalogView.class);
 
@@ -430,11 +427,6 @@ public class CatalogView extends RightsEnabledView
         if (logger.isDebugEnabled()) {
             logger.debug("Tree is expanded."); //$NON-NLS-1$
         }
-    }
-
-    @Override
-    public String getPerspectiveId() {
-        return BaseProtectionPerspective.ID;
     }
 
     @Override
