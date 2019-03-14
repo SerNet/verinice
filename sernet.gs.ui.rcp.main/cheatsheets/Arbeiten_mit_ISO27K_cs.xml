@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<cheatsheet title="Práce s modelem ISO 27001 ve verinice.">
+
+  <intro>
+    <description>
+      V tomto tutoriálu se naučíte základní operace při používání perspektivy ISO 27001 
+      v nástroji verinice.
+    </description>
+  </intro>
+  
+  <item title="Vytváření Aktiv">
+    <description>
+      V perspektivě "Model Bezpečnosti Informací" můžete vytvořit objekty a skupiny objektů. Předdefinované
+      kategorie objektů se zobrazí, když vytvoříte nový základní objekt (objekt organizace).
+      Klikněte na tlačítko <b>Přidat novou organizaci</b> které je umístěno v pravém horním rohu obrazovky.
+      Objekt organizace znamená rozsah, od jednoho z odděleních po celou organizaci.
+      <br /><br />
+      Nyni vytvořte skupinu aktiv. Pro vytvoření klikněte pravým tlačítkem myši na kategorii "Aktiva".
+      Uvidíte kontextovou nabídku ze které zvolíte možnost <b>Přidat Novou Skupinu Aktiv ...</b>.
+      Právě jste vytvořili novou skupinu objektů pro aktiva. Skupina objektů odpovídá složce v
+      operačním systému. Skupina objektů může obsahovat jiná aktiva nebo jiné skupiny aktiv.
+      Tímto způsobem můžete postavit kompletně vlastní hierchii skupin objektů a objektů.
+      <br /><br />
+      Přejmenujte skupinu aktiv čistě zadáním názvu textu "Klient PCs" v editoru.
+      Uložte stisknutím kombinace kláves <b>Ctrl+S</b>.
+      <br /><br />
+      Nyní vytvořte aktivum pro skupinu "Klient PCs" klepnutím pravým tlačítkem myši a výběrem <b>Přidej nové Aktivum
+      ...</b>.
+      <br /><br />
+      Nyní je objekt aktiva vytvořen a připojen ke skupině objektů kterou jste vytvořil. Editor pro
+      zadání údajů do nového aktiva se automaticky objeví na pravé straně. Zadejte tam jakékoli 
+      fiktivní údaje a uložte jej pomocí kombinace kláves <b>Ctrl+S</b> nebo uzavřením okna.
+      Při uzavírání neuloženého okna budeta automaticky dotázání zda jej chcete uložit.
+    </description>
+  </item>
+  
+  <item title="Modelování Bezpečnostních opatření">
+  	<description>
+  		Když pracujete s katalogy jako je ISO/IEC 27001 ve
+		verinice, musíte nejdříve naimportovatodpovídající bezpečnostní opatření.
+		
+		Nejjednodušší způsob, jak toho dosáhnout, je použít verinice katalog rizik který je
+		dostupný v verinice.SHOP:
+		<b>http://shop.verinice.com</b> <br />
+		
+		Případně lze improtovat požadovaná bezpečnostní opatření z
+		CSV-souboru nebo je jednoduše vytvořit manuálně ve verinice.
+		
+		CSV-import je popsán ve the verinice-manual,
+		který je také dostupný ve verinice.SHOP. <br/>
+		Také můžete získat informace zdarma na našich stránkách, ve verinice-forum
+		a z našeho Youtube kanálu.
+		<br/>
+		V tomto tutoriálu předpokládáme, že používáte verinice katalog rizik.
+		<br /><br />
+		
+		Dvojkliknutím na bezpečnostní opatření nyní můžete editovat
+		informace pro dané bezpečnsotní opatření v
+		okně editoru: otevřte "K8.1 Vedení evidence primárních aktiv".
+		
+		Nastavte pole  "Implementováno" na "ano" vybráním správného políčka v
+		rozbalovací nabídce.
+    </description>
+  </item>
+
+  <item title="Vytváření vztahů">
+    <description>
+      Ve verinice jsou možné rozmanité vztahy mezi objekty. Pro vytvoření základního vztahu,
+      jednoduše spojte nově vytvořený objekt aktiva s nově vloženým bezpečnostním opatřením pomocí přetažení.
+      Nyní můžete vidět v okně vztahů ten vztah, který jste právě vytvořili. Typ spárováného vztahu je také 
+	  viditelný. Dvojklikněte na odkazovaný objekt v zobrazení relace. Tento objekt se otevře 
+	  v zobrazení editoru.
+      <br /><br />
+      Prozkoumejte jaké typy vztahů jsou možné. Pokud nějaké typy vztahů chybí, mohou být 
+      jednoduše přidány, nebo modifikovány. Jak, to je posáno na <b>http://www.verinice.com/en</b>. Pokud máte
+      jakékoli otázky, prosím použijte naše fórum: <b>http://www.forum.verinice.com</b>.
+    </description>
+  </item>
+
+  <item title="Vkládání Dokumentů">
+    <description>
+      Představde si, že jste právě se zákazníkem podepsali non-disclosure agreement (NDA). V něm jste se zavázali
+      k vysoká penalizaci, pokud budou údaje odhaleny. Kromě toho musí být všechna data zákazníka šifrována.
+      <br /><br />
+      Nejprve načtěte tento dokument do verinice. Klikněte pravým tlačítkem myši na skupinu "Dokumenty" v okně
+      "Model Bezpečnosti Informací" (ISM). Nyní vyberte <b>Přidat  Dokument ...</b>.
+      <br /><br />
+      Prosím zadejte "NDA Zákazník1" jako název nového titulu v editoru. Změňte "Typ Dokumentu" na
+      "Smlouva". Otevřte okno souborů ze základního menu. Znovu vyberte objekt dokumentu v okně ISM 
+      pokud již není vybrán. Potom přetáhněte jakýkoli PDF dokument jako zástupný symbol našeho NDA do
+      okna souborů.
+      <br /><br />
+      Nyní můžete zadat meta informace pro připojený soubor -- například verzi dokumentu.
+      Když zmáčkente <b>Ctrl+S</b>, dokument bude načten a propojen s objektem v ISM
+      perspektivě. Můžete otevřít připojený souborkliknutím na tlačítko <b>Ukázat</b>. Pokud používáte 
+      verinice.PRO server, dokument je okamžitě dostupný ve vaší organizaci každému, 
+      kdo k němu má oprávnění.
+    </description>
+  </item>
+  
+  <item title="Modelování Požadavků">
+    <description>
+      NDA požaduje šifrování dat zákazníka. Klikněte pravým tlačítkem na skupinu "Požadavky",
+      poté na <b>Přidat Požadavek ...</b>. V editoru změňte název na "Šifrování".
+      Nyní vytvořte vztah přetažením objektu na objekt dokumentu.
+      Odkaz se objeví v zobrazení vztahů..
+    </description>
+  </item>
+  
+  <item title="Přizpůsobení Požadavkům přes Bezpečnostní opatření">
+    <description>
+      Klikněte pravým tlačítkem myši na skupinu "Bezpečnostní opatření" v ISM stromu a vyberte <b>Přidat Bezpečnostní opatření...</b>.
+      V editoru změňte název na "Data zákazníka musí být zašifrována". Uložte zmáčknutím
+      <b>Ctrl+S</b>. Bezpečnostní opatření spojte pomocí přetažení s požadavkem "Šifrování".
+      Okno vztahů ukazuje, že tento požadavek je nyní splněn bezpečnostním opatřením.
+    </description>
+  </item>
+  
+  <item title="Vytváření dalších vztahů">
+    <description>
+      Stejným způsobem jak bylo popsáno můžete vytvořit více vztahů. Například můžete dokumentovat
+      jaká osoba je zodpovědná za implementaci opatření. Měli byste také vytvořit dat zákazníka jako 
+	  objekt aktiva a dokumentovat vlastníka tohoto aktiva.
+      <br /><br />
+      Typy vztahů se generují automaticky. Pokud je typ nesprávný, můžete jej změnit v zobrazení relací. 
+	  Jednoduše klikněte na typ vztahu. Jsou-li k dispozici alternativy, budou tam uvedeny.
+    </description>
+  </item>
+
+  <item title="Děkujeme!">
+    <description>
+      A je to! Jednalo se o malý přehled funkcí verinice, který vám pomůže splnit normu ISO 27001. 
+	  Více informací naleznete na našich webových stránkách <b>http://www.verinice.com/en</b>.
+    </description>
+  </item>
+  
+</cheatsheet>
