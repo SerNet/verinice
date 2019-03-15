@@ -27,6 +27,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.Retriever;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
@@ -196,9 +197,7 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
         } else if (pElement instanceof Audit && isInheritAuditPermissions()) {
             addPermissionsForAudit((Audit) pElement);
         } else {
-            RetrieveInfo ri = new RetrieveInfo();
-            ri.setPermissions(true);
-            CnATreeElement elementPerm = getContainerDAO().retrieve(container.getDbId(), ri);
+            CnATreeElement elementPerm = Retriever.checkRetrievePermissions(container);
             pElement.setPermissions(
                     Permission.clonePermissionSet(pElement, elementPerm.getPermissions()));
         }
