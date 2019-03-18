@@ -11155,7 +11155,7 @@ Wurden bereits weitere Stellen informiert?
     </huientity>
 
     <huientity id="bp_room" name="Room">
-        <huirelation to="bp_room" id="rel_bp_room_bp_room" name="includes" reversename="located in" />
+        <huirelation to="bp_room" id="rel_bp_room_bp_room" name="located in" reversename="includes" />
 
         <huiproperty id="bp_room_abbr" name="Abbreviation" required="true" />
         <huiproperty id="bp_room_name" name="Title" required="true" />
