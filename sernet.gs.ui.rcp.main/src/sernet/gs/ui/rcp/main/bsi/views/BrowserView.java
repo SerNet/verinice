@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
-
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
@@ -66,7 +65,7 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
     private ISelectionListener selectionListener;
 
     private IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
-    
+
     private boolean linkingActive = true;
 
     private SerializeBrowserLoadingListener serializeListener;
@@ -86,9 +85,9 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
                     GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL));
 
             browser.setJavascriptEnabled(false);
-            
-			serializeListener = new SerializeBrowserLoadingListener(browser);
-			browser.addProgressListener(serializeListener);
+
+            serializeListener = new SerializeBrowserLoadingListener(browser);
+            browser.addProgressListener(serializeListener);
 
             browser.setUrl(defaultImage());
 
@@ -112,7 +111,8 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
     protected void toggleLinking(boolean checked) {
         this.linkingActive = checked;
         if (checked) {
-            Optional.ofNullable(getSite().getPage().getActiveEditor()).ifPresent(this::editorActivated);
+            Optional.ofNullable(getSite().getPage().getActiveEditor())
+                    .ifPresent(this::editorActivated);
         }
     }
 
@@ -152,10 +152,10 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
     }
 
     protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
-        
+
         if (part != this && selection instanceof IStructuredSelection) {
             Object element = ((IStructuredSelection) selection).getFirstElement();
-            
+
             if (part instanceof ISMView) {
                 setSelectedInISMView(element);
             } else if (part instanceof RelationView) {
@@ -166,7 +166,7 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
                     && isLinkingActive()) {
                 element = determineLinkedElement((CnALink) element);
             }
-            if(element != null){
+            if (element != null) {
                 elementSelected(element);
             }
         }
