@@ -49,9 +49,7 @@ import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.IControl;
-import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.rcp.RightsEnabledView;
 
 public class BrowserView extends RightsEnabledView implements ILinkedWithEditorView {
@@ -126,8 +124,6 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
     @Override
@@ -141,12 +137,7 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
     }
 
     private void hookPageSelection() {
-        selectionListener = new ISelectionListener() {
-            @Override
-            public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-                pageSelectionChanged(part, selection);
-            }
-        };
+        selectionListener = this::pageSelectionChanged;
         getSite().getPage().addPostSelectionListener(selectionListener);
         getSite().getPage().addPartListener(linkWithEditorPartListener);
     }
@@ -179,27 +170,16 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
     }
 
     private Object determineLinkedElement(CnALink link) {
-        IControl linkedElement = null;
         Object dependant = link.getDependant();
         Object dependency = link.getDependency();
 
         if (dependant instanceof IControl && !dependant.equals(selectedInISMView)) {
-            linkedElement = castToCorrectControlType((IControl) dependant);
+            return dependant;
         } else if (dependency instanceof IControl && !dependency.equals(selectedInISMView)
                 || dependant.equals(dependency)) {
-            linkedElement = castToCorrectControlType((IControl) dependency);
+            return dependency;
         }
-        return linkedElement;
-    }
-
-    private static IControl castToCorrectControlType(IControl element) {
-        IControl linkedElement = null;
-        if (element instanceof Control) {
-            linkedElement = (Control) element;
-        } else if (element instanceof SamtTopic) {
-            linkedElement = (SamtTopic) element;
-        }
-        return linkedElement;
+        return null;
     }
 
     protected void elementSelected(Object element) {
@@ -239,8 +219,6 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.
      * eclipse.ui.IEditorPart)
