@@ -75,8 +75,7 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
         super.createPartControl(parent);
         GridLayout gl = new GridLayout(1, false);
         parent.setLayout(gl);
-        toggleLinking(Activator.getDefault().getPreferenceStore()
-                .getBoolean(PreferenceConstants.LINK_TO_EDITOR));
+
         try {
             browser = new Browser(parent, SWT.NONE);
             browser.setLayoutData(new GridData(
@@ -95,6 +94,10 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
                     toggleLinking(isChecked());
                 }
             };
+
+            toggleLinking(Activator.getDefault().getPreferenceStore()
+                    .getBoolean(PreferenceConstants.LINK_TO_EDITOR));
+
             linkWithEditorAction.setImageDescriptor(
                     ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
             getViewSite().getActionBars().getToolBarManager().add(linkWithEditorAction);
