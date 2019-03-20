@@ -73,8 +73,8 @@ public class SamtProgressChart extends MaturitySpiderChart {
         chart.setBackgroundPaint(Color.white);
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
 
-        plot.getRenderer().setSeriesPaint(0, ChartColor.LIGHT_GREEN);
-        plot.getRenderer().setSeriesPaint(1, ChartColor.LIGHT_RED);
+        plot.getRenderer().setSeriesPaint(0, ChartColor.LIGHT_RED);
+        plot.getRenderer().setSeriesPaint(1, ChartColor.LIGHT_GREEN);
 
         plot.getDomainAxis().setCategoryLabelPositions(CategoryLabelPositions.STANDARD);
 
