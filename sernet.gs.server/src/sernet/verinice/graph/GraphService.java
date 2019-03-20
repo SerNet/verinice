@@ -28,7 +28,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
@@ -117,9 +116,9 @@ public class GraphService implements IGraphService, Serializable {
     private void doCreate(VeriniceGraph graph, List<? extends IGraphElementLoader> loaderList,
             String[] relationIds, boolean loadLinks) {
         long time = initRuntime();
-        Map<String, CnATreeElement> uuidMap = loadVerticesAndRelatives(graph, loaderList);
+        Map<Integer, CnATreeElement> elementsByDBId = loadVerticesAndRelatives(graph, loaderList);
         if (loadLinks) {
-            loadLinks(graph, relationIds, uuidMap);
+            loadLinks(graph, relationIds, elementsByDBId);
         } else {
             LOG.info("Loading of links is disabled.");
         }
@@ -131,7 +130,7 @@ public class GraphService implements IGraphService, Serializable {
      * Loads all vertices and adds them to the graph. An edge for each children
      * is added if the child is part of the graph.
      */
-    private Map<String, CnATreeElement> loadVerticesAndRelatives(VeriniceGraph graph,
+    private Map<Integer, CnATreeElement> loadVerticesAndRelatives(VeriniceGraph graph,
             List<? extends IGraphElementLoader> loaderList) {
         List<CnATreeElement> elementList = new LinkedList<>();
         for (IGraphElementLoader loader : loaderList) {
@@ -141,26 +140,26 @@ public class GraphService implements IGraphService, Serializable {
         if (LOG.isInfoEnabled()) {
             LOG.info(elementList.size() + " relevant elements found");
         }
-        Map<String, CnATreeElement> uuidMap = new HashMap<>(elementList.size());
+        Map<Integer, CnATreeElement> elementsByDBId = new HashMap<>(elementList.size());
         for (CnATreeElement element : elementList) {
             graph.addVertex(element);
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Vertex added: " + element.getTitle() + " [" + element.getTypeId() + "]");
             }
-            uuidMap.put(element.getUuid(), element);
+            elementsByDBId.put(element.getDbId(), element);
         }
         for (CnATreeElement parent : elementList) {
             Set<CnATreeElement> children = parent.getChildren();
             for (CnATreeElement child : children) {
-                createParentChildEdge(parent, child, graph, uuidMap);
+                createParentChildEdge(parent, child, graph, elementsByDBId);
             }
         }
-        return uuidMap;
+        return elementsByDBId;
     }
 
     protected void createParentChildEdge(CnATreeElement parent, CnATreeElement child,
-            VeriniceGraph graph, Map<String, CnATreeElement> uuidMap) {
-        CnATreeElement childWithProperties = uuidMap.get(child.getUuid());
+            VeriniceGraph graph, Map<Integer, CnATreeElement> elementsByDBId) {
+        CnATreeElement childWithProperties = elementsByDBId.get(child.getDbId());
         if (childWithProperties != null) {
             graph.addEdge(new Edge(parent, childWithProperties));
             if (LOG.isDebugEnabled()) {
@@ -174,10 +173,8 @@ public class GraphService implements IGraphService, Serializable {
     }
 
     private void loadLinks(VeriniceGraph graph, String[] relationIds,
-            Map<String, CnATreeElement> uuidMap) {
+            Map<Integer, CnATreeElement> elementsByDBId) {
         DetachedCriteria linkCrit = DetachedCriteria.forClass(CnALink.class);
-        linkCrit.setFetchMode("dependant", FetchMode.JOIN);
-        linkCrit.setFetchMode("dependency", FetchMode.JOIN);
         if (relationIds != null && relationIds.length > 0) {
             linkCrit.add(Restrictions.in("id.typeId", relationIds));
         }
@@ -188,9 +185,9 @@ public class GraphService implements IGraphService, Serializable {
             LOG.info(linkList.size() + " relevant links found");
         }
         for (CnALink link : linkList) {
-            CnATreeElement source = uuidMap.get(link.getDependant().getUuid());
-            CnATreeElement target = uuidMap.get(link.getDependency().getUuid());
-            Edge edge = createEdge(link, uuidMap);
+            CnATreeElement source = elementsByDBId.get(link.getId().getDependantId());
+            CnATreeElement target = elementsByDBId.get(link.getId().getDependencyId());
+            Edge edge = createEdge(link, source, target);
             if (edge != null) {
 
                 graph.addEdge(edge);
@@ -202,9 +199,7 @@ public class GraphService implements IGraphService, Serializable {
         }
     }
 
-    private Edge createEdge(CnALink link, Map<String, CnATreeElement> uuidMap) {
-        CnATreeElement source = uuidMap.get(link.getDependant().getUuid());
-        CnATreeElement target = uuidMap.get(link.getDependency().getUuid());
+    private Edge createEdge(CnALink link, CnATreeElement source, CnATreeElement target) {
         Edge edge = null;
         if (source != null && target != null) {
             edge = new Edge(source, target);
