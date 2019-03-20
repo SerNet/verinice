@@ -2,8 +2,6 @@ package sernet.gs.ui.rcp.main.bsi.wizards;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -26,6 +24,9 @@ import sernet.gs.service.VeriniceCharset;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.swt.SWTResourceManager;
+import sernet.verinice.model.bsi.Attachment;
+import sernet.verinice.model.bsi.Note;
+import sernet.verinice.model.common.configuration.Configuration;
 
 public class EntitySelectionPage extends WizardPage {
     private static final String[] FILTEREXTEND = { "*.csv", "*.CSV", "*.*" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -210,17 +211,14 @@ public class EntitySelectionPage extends WizardPage {
         Rectangle trim = list.computeTrim(0, 0, 0, listHeight);
         gridData.heightHint = trim.height;
         list.setLayoutData(gridData);
-        Collection<EntityType> types = HitroUtil.getInstance().getTypeFactory().getAllEntityTypes();
-        java.util.List<EntityType> allEntityTypes = new ArrayList<>(types);
-        Collections.sort(allEntityTypes, (o1, o2) -> o1.getName().compareTo(o2.getName()));
-        java.util.List<String> entityNames = new ArrayList<>();
-        for (EntityType entityType : allEntityTypes) {
-            if (!entityType.getId().toLowerCase().endsWith("group")) { //$NON-NLS-1$
-                list.add(entityType.getName());
-                entityNames.add(entityType.getId());
-            }
-        }
 
+        java.util.List<String> entityNames = new ArrayList<>();
+        HitroUtil.getInstance().getTypeFactory().getAllEntityTypes().stream()
+                .filter(EntitySelectionPage::isDomainElement)
+                .sorted((o1, o2) -> o1.getName().compareTo(o2.getName())).forEach(entityType -> {
+                    list.add(entityType.getName());
+                    entityNames.add(entityType.getId());
+                });
         list.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent event) {
@@ -229,8 +227,14 @@ public class EntitySelectionPage extends WizardPage {
                 entityNameId = entityNames.get(list.getSelectionIndex());
                 setPageComplete(validateData());
             }
-
         });
+    }
+
+    private static boolean isDomainElement(EntityType type) {
+        String typeId = type.getId();
+        return !(Attachment.TYPE_ID.equals(typeId) || Configuration.TYPE_ID.equals(typeId)
+                || Note.TYPE_ID.equals(typeId) || Configuration.ROLE_TYPE_ID.equals(typeId)
+                || typeId.toLowerCase().endsWith("group"));
     }
 
     public boolean validateData() {
