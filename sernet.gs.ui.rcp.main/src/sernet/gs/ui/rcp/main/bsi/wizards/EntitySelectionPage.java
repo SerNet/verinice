@@ -4,14 +4,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Vector;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -32,6 +29,14 @@ import sernet.hui.swt.SWTResourceManager;
 
 public class EntitySelectionPage extends WizardPage {
     private static final String[] FILTEREXTEND = { "*.csv", "*.CSV", "*.*" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    private static final int NUMBER_OF_COLUMNS_UPPER_GRID = 6;
+    private static final int NUMBER_OF_COLUMNS_BOTTOM_GRID = 3;
+    private static final int DEFAULT_GRID_DATA_VERTICAL_SPAN = 4;
+    private static final int DEFAULT_HORIZONTAL_SPACING = 30;
+    private static final int DEFAULT_LIST_HEIGHT_FACTOR = 12;
+    private static final int DEFAULT_GRID_DATA_WIDTH = 120;
+    private static final int DEFAULT_GRID_DATA_HEIGHT = 15;
+
     private File csvFile;
     private String entityName = ""; //$NON-NLS-1$
     private Text sourceIdText;
@@ -40,7 +45,6 @@ public class EntitySelectionPage extends WizardPage {
     private Text csvText;
     private Text entityText;
     private Label warningLabel;
-    private java.util.List<String> entityNames;
     private String entityNameId = ""; //$NON-NLS-1$
     private boolean insert;
     private boolean update;
@@ -50,21 +54,11 @@ public class EntitySelectionPage extends WizardPage {
         super(pageName);
         this.setTitle(Messages.EntitySelectionPage_0);
         this.setDescription(Messages.EntitySelectionPage_1);
-        entityNames = new Vector<String>();
         setPageComplete(false);
     }
 
     @Override
     public void createControl(final Composite parent) {
-
-        final int sixColumnAmount = 6;
-        final int threeColumnAmount = 3;
-        final int defaultGridDataVerticalSpan = 4;
-        final int defaultHorizontalSpacing = 30;
-        final int defaultGridDataHorizontalSpan = threeColumnAmount;
-        final int defaultListHeightFactor = 12;
-        final int defaultGridDataWidth = 120;
-        final int defaultGridDataHeight = 15;
 
         GridLayout gridLayout = new GridLayout(1, false);
         gridLayout.marginWidth = 0;
@@ -78,7 +72,7 @@ public class EntitySelectionPage extends WizardPage {
 
         Group idGroup = new Group(container, SWT.NULL);
         idGroup.setText(Messages.EntitySelectionPage_2);
-        gridLayout = new GridLayout(sixColumnAmount, false);
+        gridLayout = new GridLayout(NUMBER_OF_COLUMNS_UPPER_GRID, false);
         idGroup.setLayout(gridLayout);
         idGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -170,27 +164,24 @@ public class EntitySelectionPage extends WizardPage {
 
         final List list = new List(container, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
         GridData gridData = new GridData(GridData.FILL, GridData.FILL, true, true);
-        gridData.verticalSpan = defaultGridDataVerticalSpan;
-        int listHeight = list.getItemHeight() * defaultListHeightFactor;
+        gridData.verticalSpan = DEFAULT_GRID_DATA_VERTICAL_SPAN;
+        int listHeight = list.getItemHeight() * DEFAULT_LIST_HEIGHT_FACTOR;
         Rectangle trim = list.computeTrim(0, 0, 0, listHeight);
         gridData.heightHint = trim.height;
         list.setLayoutData(gridData);
         Collection<EntityType> types = HitroUtil.getInstance().getTypeFactory().getAllEntityTypes();
-        java.util.List<EntityType> allEntityTypes = new ArrayList<EntityType>();
-        allEntityTypes.addAll(types);
-        Collections.sort(allEntityTypes, new Comparator<EntityType>() {
-            public int compare(EntityType o1, EntityType o2) {
-                return o1.getName().compareTo(o2.getName());
-            }
-        });
+        java.util.List<EntityType> allEntityTypes = new ArrayList<>(types);
+        Collections.sort(allEntityTypes, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+        java.util.List<String> entityNames = new ArrayList<>();
         for (EntityType entityType : allEntityTypes) {
             if (!entityType.getId().toLowerCase().endsWith("group")) { //$NON-NLS-1$
                 list.add(entityType.getName());
-                this.entityNames.add(entityType.getId());
+                entityNames.add(entityType.getId());
             }
         }
 
-        list.addSelectionListener(new SelectionListener() {
+        list.addSelectionListener(new SelectionAdapter() {
+            @Override
             public void widgetSelected(SelectionEvent event) {
                 entityText.setText(list.getItem(list.getSelectionIndex()));
                 entityName = list.getItem(list.getSelectionIndex());
@@ -198,19 +189,10 @@ public class EntitySelectionPage extends WizardPage {
                 setPageComplete(validateData());
             }
 
-            public void widgetDefaultSelected(SelectionEvent event) {
-                int[] selectedItems = list.getSelectionIndices();
-                String outString = ""; //$NON-NLS-1$
-                StringBuffer buffer = new StringBuffer();
-                for (int loopIndex = 0; loopIndex < selectedItems.length; loopIndex++) {
-                    buffer.append(selectedItems[loopIndex]).append(" "); //$NON-NLS-1$ //$NON-NLS-2$
-                }
-                outString = buffer.toString();
-            }
         });
 
-        gridLayout = new GridLayout(threeColumnAmount, false);
-        gridLayout.horizontalSpacing = defaultHorizontalSpacing;
+        gridLayout = new GridLayout(NUMBER_OF_COLUMNS_BOTTOM_GRID, false);
+        gridLayout.horizontalSpacing = DEFAULT_HORIZONTAL_SPACING;
         Composite comp = new Composite(container, 0);
         comp.setLayout(gridLayout);
 
@@ -224,16 +206,17 @@ public class EntitySelectionPage extends WizardPage {
 
         this.entityText = new Text(comp, SWT.BORDER);
         this.entityText.setEnabled(false);
-        entityText.setLayoutData(new GridData(defaultGridDataWidth, defaultGridDataHeight));
+        entityText.setLayoutData(new GridData(DEFAULT_GRID_DATA_WIDTH, DEFAULT_GRID_DATA_HEIGHT));
 
         this.csvText = new Text(comp, SWT.BORDER);
         csvText.setEnabled(false);
-        csvText.setLayoutData(new GridData(defaultGridDataWidth, defaultGridDataHeight));
+        csvText.setLayoutData(new GridData(DEFAULT_GRID_DATA_WIDTH, DEFAULT_GRID_DATA_HEIGHT));
 
         final Button dataBrowse = new Button(comp, SWT.PUSH);
         dataBrowse.setText(Messages.EntitySelectionPage_18);
         dataBrowse.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
         dataBrowse.addSelectionListener(new SelectionAdapter() {
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 displayFiles(parent.getShell());
                 setPageComplete(validateData());
@@ -242,7 +225,7 @@ public class EntitySelectionPage extends WizardPage {
 
         warningLabel = new Label(comp, SWT.NONE);
         warningLabel.setLayoutData(
-                new GridData(SWT.FILL, SWT.CENTER, true, false, defaultGridDataHorizontalSpan, 1));
+                new GridData(SWT.FILL, SWT.CENTER, true, false, NUMBER_OF_COLUMNS_BOTTOM_GRID, 1));
 
     }
 
