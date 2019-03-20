@@ -40,8 +40,6 @@ import sernet.verinice.service.commands.stats.MassnahmenSummaryHome;
 
 /**
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ $LastChangedBy$
- *
  */
 public class SamtProgressChart extends MaturitySpiderChart {
 
@@ -49,11 +47,10 @@ public class SamtProgressChart extends MaturitySpiderChart {
     private static final int AXIS_UPPER_BOUND = 55;
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.gs.ui.rcp.main.bsi.views.chart.ISelectionChartGenerator#
      * createChart (sernet.gs.ui.rcp.main.common.model.CnATreeElement)
      */
+    @Override
     public JFreeChart createChart(CnATreeElement elmt) {
         if (!(elmt instanceof ControlGroup)) {
             return null;
@@ -67,10 +64,10 @@ public class SamtProgressChart extends MaturitySpiderChart {
         }
     }
 
-    protected JFreeChart createBarChart(Object dataset) {
+    protected JFreeChart createBarChart(CategoryDataset dataset) {
         JFreeChart chart = ChartFactory.createBarChart3D(null, Messages.SamtProgressChart_1,
-                Messages.SamtProgressChart_2, (CategoryDataset) dataset, PlotOrientation.HORIZONTAL,
-                true, true, false);
+                Messages.SamtProgressChart_2, dataset, PlotOrientation.HORIZONTAL, true, true,
+                false);
 
         chart.setBackgroundPaint(Color.white);
         chart.getPlot().setForegroundAlpha(CHART_FOREGROUND_ALPHA);
@@ -88,7 +85,7 @@ public class SamtProgressChart extends MaturitySpiderChart {
         return chart;
     }
 
-    protected Object createBarDataset() throws CommandException {
+    protected CategoryDataset createBarDataset() throws CommandException {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         MassnahmenSummaryHome dao = new MassnahmenSummaryHome();
         Map<String, Integer> items = dao.getSamtTopicsProgress(getElmt());
