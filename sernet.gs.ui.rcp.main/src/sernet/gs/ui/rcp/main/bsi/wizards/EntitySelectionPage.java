@@ -26,7 +26,9 @@ import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.swt.SWTResourceManager;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.Note;
+import sernet.verinice.model.common.Domain;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.commands.CnATypeMapper;
 
 public class EntitySelectionPage extends WizardPage {
     private static final String[] FILTEREXTEND = { "*.csv", "*.CSV", "*.*" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -203,6 +205,7 @@ public class EntitySelectionPage extends WizardPage {
 
     }
 
+    @SuppressWarnings("deprecation")
     protected void createTypeSelectionList(Composite container) {
         final List list = new List(container, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
         GridData gridData = new GridData(GridData.FILL, GridData.FILL, true, true);
@@ -215,6 +218,8 @@ public class EntitySelectionPage extends WizardPage {
         java.util.List<String> entityNames = new ArrayList<>();
         HitroUtil.getInstance().getTypeFactory().getAllEntityTypes().stream()
                 .filter(EntitySelectionPage::isDomainElement)
+                .filter(type -> CnATypeMapper
+                        .getDomainFromTypeId(type.getId()) != Domain.DATA_PROTECTION)
                 .sorted((o1, o2) -> o1.getName().compareTo(o2.getName())).forEach(entityType -> {
                     list.add(entityType.getName());
                     entityNames.add(entityType.getId());
