@@ -221,8 +221,12 @@ public class EntitySelectionPage extends WizardPage {
                 .filter(type -> CnATypeMapper
                         .getDomainFromTypeId(type.getId()) != Domain.DATA_PROTECTION)
                 .sorted((o1, o2) -> o1.getName().compareTo(o2.getName())).forEach(entityType -> {
-                    list.add(entityType.getName());
-                    entityNames.add(entityType.getId());
+                    String typeId = entityType.getId();
+                    Domain domain = CnATypeMapper.getDomainFromTypeId(typeId);
+                    String entityNameWithDomain = String.join("", entityType.getName(), " (",
+                            domain.getLabel(), ": ", typeId, ")");
+                    list.add(entityNameWithDomain);
+                    entityNames.add(typeId);
                 });
         list.addSelectionListener(new SelectionAdapter() {
             @Override
