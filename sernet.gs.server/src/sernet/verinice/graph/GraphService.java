@@ -118,7 +118,9 @@ public class GraphService implements IGraphService, Serializable {
         long time = initRuntime();
         Map<Integer, CnATreeElement> elementsByDBId = loadVerticesAndRelatives(graph, loaderList);
         if (loadLinks) {
-            loadLinks(graph, relationIds, elementsByDBId);
+            if (!elementsByDBId.isEmpty()) {
+                loadLinks(graph, relationIds, elementsByDBId);
+            }
         } else {
             LOG.info("Loading of links is disabled.");
         }
