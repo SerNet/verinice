@@ -44,7 +44,6 @@ import sernet.verinice.service.commands.stats.MassnahmenSummaryHome;
 public class SamtProgressChart extends MaturitySpiderChart {
 
     private static final float CHART_FOREGROUND_ALPHA = 0.6f;
-    private static final int AXIS_UPPER_BOUND = 55;
 
     /*
      * @see sernet.gs.ui.rcp.main.bsi.views.chart.ISelectionChartGenerator#
@@ -79,9 +78,18 @@ public class SamtProgressChart extends MaturitySpiderChart {
 
         plot.getDomainAxis().setCategoryLabelPositions(CategoryLabelPositions.STANDARD);
 
-        NumberAxis axis = (NumberAxis) plot.getRangeAxis();
-        axis.setUpperBound(AXIS_UPPER_BOUND);
+        int numUnanswered = dataset.getValue(0, 0).intValue();
+        int numAnswered = dataset.getValue(1, 0).intValue();
 
+        int sum = numAnswered + numUnanswered;
+        NumberAxis axis = (NumberAxis) plot.getRangeAxis();
+        if (sum == 0) {
+            axis.setTickLabelsVisible(false);
+        } else {
+            // calculate next multiple of 5
+            int upperBound = sum + (5 - sum % 5);
+            axis.setUpperBound(upperBound);
+        }
         return chart;
     }
 
