@@ -177,6 +177,8 @@ public class GraphService implements IGraphService, Serializable {
     private void loadLinks(VeriniceGraph graph, String[] relationIds,
             Map<Integer, CnATreeElement> elementsByDBId) {
         DetachedCriteria linkCrit = DetachedCriteria.forClass(CnALink.class);
+        linkCrit.add(Restrictions.and(Restrictions.in("id.dependantId", elementsByDBId.keySet()),
+                Restrictions.in("id.dependencyId", elementsByDBId.keySet())));
         if (relationIds != null && relationIds.length > 0) {
             linkCrit.add(Restrictions.in("id.typeId", relationIds));
         }
