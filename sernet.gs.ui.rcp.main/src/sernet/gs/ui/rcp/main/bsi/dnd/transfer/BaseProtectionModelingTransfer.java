@@ -17,9 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dnd.transfer;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.eclipse.swt.dnd.TransferData;
 
@@ -39,11 +36,6 @@ public final class BaseProtectionModelingTransfer extends VeriniceElementTransfe
     private static final String TYPE_NAME_BASE_PROTECTION_MODELING = "baseProtectionModeling";
     private static final int TYPE_ID_BASE_PROTECTION_MODELING = registerType(
             TYPE_NAME_BASE_PROTECTION_MODELING);
-
-    private static final List<String> CLASS_NAMES = new LinkedList<>();
-    static {
-        CLASS_NAMES.add(BpRequirementGroup.class.getName());
-    }
 
     private static BaseProtectionModelingTransfer instance = new BaseProtectionModelingTransfer();
 
@@ -70,10 +62,6 @@ public final class BaseProtectionModelingTransfer extends VeriniceElementTransfe
         return BaseProtectionModelingTransfer.isDraggedDataValid(data);
     }
 
-    public static boolean isSupportedClass(Object arrayElement) {
-        return CLASS_NAMES.contains(arrayElement.getClass().getName());
-    }
-
     public static boolean isDraggedDataValid(Object data) {
         boolean valid = true;
         Object[] dataArray = (Object[]) data;
@@ -81,7 +69,7 @@ public final class BaseProtectionModelingTransfer extends VeriniceElementTransfe
             if (log.isDebugEnabled()) {
                 log.debug("Validating dragged element: " + arrayElement + "...");
             }
-            if (!(isSupportedClass(arrayElement))) {
+            if (!(arrayElement instanceof BpRequirementGroup)) {
                 valid = false;
                 break;
             }
@@ -93,8 +81,6 @@ public final class BaseProtectionModelingTransfer extends VeriniceElementTransfe
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.swt.dnd.Transfer#getTypeNames()
      */
     @Override
@@ -103,8 +89,6 @@ public final class BaseProtectionModelingTransfer extends VeriniceElementTransfe
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.swt.dnd.Transfer#getTypeIds()
      */
     @Override
