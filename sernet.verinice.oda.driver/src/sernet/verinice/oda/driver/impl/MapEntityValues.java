@@ -28,72 +28,74 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Command to retrieve property values for the given elements, making them available
- * to BIRT reports by lazily initializing all of them.
+ * Command to retrieve property values for the given elements, making them
+ * available to BIRT reports by lazily initializing all of them.
  * 
- * Properties (normal ones but moreso: references) require an existing session to load, therefore this is a
- * command to be executed on the server.
+ * Properties (normal ones but moreso: references) require an existing session
+ * to load, therefore this is a command to be executed on the server.
  * 
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
 public class MapEntityValues extends GenericCommand {
-    
-	private List<List<Object>> result;
-	
-	private String[] propertyTypes;
-	private Class<?>[] classes;
+
+    private List<List<Object>> result;
+
+    private String[] propertyTypes;
+    private Class<?>[] classes;
 
     private List<Integer> inputIDs;
-    
-   private static final Logger log = Logger.getLogger(MapEntityValues.class);
+
+    private static final Logger log = Logger.getLogger(MapEntityValues.class);
 
     private boolean addDbId;
 
     private String typeID;
-    
+
     /**
-     * if set (by constructor), all values of huipropertytype "numericoption" will be replaced by their string values
+     * if set (by constructor), all values of huipropertytype "numericoption"
+     * will be replaced by their string values
      */
     private boolean mapNumericalOptionValues = false;
-	
-	
-	/**
+
+    /**
      * @param input
      * @param props
      * @param classes2
      * @param addDbId
      */
-    public MapEntityValues(String typeID, List<Integer> inputIDs, String[] props, Class<?>[] classes2, boolean addDbId) {
+    public MapEntityValues(String typeID, List<Integer> inputIDs, String[] props,
+            Class<?>[] classes2, boolean addDbId) {
         this.typeID = typeID;
-        this.inputIDs =inputIDs;
+        this.inputIDs = inputIDs;
         this.propertyTypes = (props != null) ? props.clone() : null;
         this.classes = (classes2 != null) ? classes2.clone() : null;
         this.addDbId = addDbId;
     }
-    
-    public MapEntityValues(String typeID, List<Integer> inputIDs, String[] props, Class<?>[] classes2, boolean addDbId, boolean mapNumericalOptionValues) {
+
+    public MapEntityValues(String typeID, List<Integer> inputIDs, String[] props,
+            Class<?>[] classes2, boolean addDbId, boolean mapNumericalOptionValues) {
         this(typeID, inputIDs, props, classes2, addDbId);
         this.mapNumericalOptionValues = mapNumericalOptionValues;
     }
-    
 
     @SuppressWarnings("unchecked")
-	public void execute() {
-        
+    public void execute() {
+
         result = new ArrayList<List<Object>>(inputIDs.size());
-        
-        for (Integer dbid : inputIDs)
-        {
-            IBaseDao<CnATreeElement, Serializable> dao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory().getDAO(typeID);
+
+        for (Integer dbid : inputIDs) {
+            IBaseDao<CnATreeElement, Serializable> dao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory()
+                    .getDAO(typeID);
             CnATreeElement e = dao.findById(dbid);
             List<Object> row = null;
-            if(!mapNumericalOptionValues){
-                row = LoadEntityValues.retrievePropertyValues(e.getEntity(), propertyTypes, classes);
+            if (!mapNumericalOptionValues) {
+                row = LoadEntityValues.retrievePropertyValues(e.getEntity(), propertyTypes,
+                        classes);
             } else {
-                row = LoadEntityValues.retrievePropertyValues(e.getEntity(), propertyTypes, classes, mapNumericalOptionValues);
+                row = LoadEntityValues.retrievePropertyValues(e.getEntity(), propertyTypes, classes,
+                        mapNumericalOptionValues);
             }
             if (addDbId) {
                 if (log.isDebugEnabled()) {
@@ -104,11 +106,9 @@ public class MapEntityValues extends GenericCommand {
             result.add(row);
         }
     }
-	
-	
-	public List<List<Object>> getResult()
-	{
-		return result;
-	}
+
+    public List<List<Object>> getResult() {
+        return result;
+    }
 
 }
