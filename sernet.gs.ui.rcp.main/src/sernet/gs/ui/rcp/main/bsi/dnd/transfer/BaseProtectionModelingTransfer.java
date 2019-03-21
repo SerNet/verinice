@@ -22,11 +22,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.dnd.TransferData;
-import org.elasticsearch.common.inject.Module;
 
-import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
-import sernet.verinice.model.bp.groups.SafeguardGroup;
 
 /**
  * This class is part of the drag and drop support for the modeling in IT base
@@ -38,7 +35,7 @@ import sernet.verinice.model.bp.groups.SafeguardGroup;
 public final class BaseProtectionModelingTransfer extends VeriniceElementTransfer {
 
     private static final Logger log = Logger.getLogger(BaseProtectionModelingTransfer.class);
-    
+
     private static final String TYPE_NAME_BASE_PROTECTION_MODELING = "baseProtectionModeling";
     private static final int TYPE_ID_BASE_PROTECTION_MODELING = registerType(
             TYPE_NAME_BASE_PROTECTION_MODELING);
@@ -47,7 +44,7 @@ public final class BaseProtectionModelingTransfer extends VeriniceElementTransfe
     static {
         CLASS_NAMES.add(BpRequirementGroup.class.getName());
     }
-    
+
     private static BaseProtectionModelingTransfer instance = new BaseProtectionModelingTransfer();
 
     public static BaseProtectionModelingTransfer getInstance() {
@@ -73,11 +70,10 @@ public final class BaseProtectionModelingTransfer extends VeriniceElementTransfe
         return BaseProtectionModelingTransfer.isDraggedDataValid(data);
     }
 
-
-    public static boolean isSupportedClass(Object arrayElement) {   
+    public static boolean isSupportedClass(Object arrayElement) {
         return CLASS_NAMES.contains(arrayElement.getClass().getName());
     }
-    
+
     public static boolean isDraggedDataValid(Object data) {
         boolean valid = true;
         Object[] dataArray = (Object[]) data;
@@ -114,11 +110,9 @@ public final class BaseProtectionModelingTransfer extends VeriniceElementTransfe
     @Override
     protected int[] getTypeIds() {
         if (log.isDebugEnabled()) {
-            log.debug(
-                    TYPE_ID_BASE_PROTECTION_MODELING + "=" + TYPE_NAME_BASE_PROTECTION_MODELING);
+            log.debug(TYPE_ID_BASE_PROTECTION_MODELING + "=" + TYPE_NAME_BASE_PROTECTION_MODELING);
         }
         return new int[] { TYPE_ID_BASE_PROTECTION_MODELING };
     }
-
 
 }
