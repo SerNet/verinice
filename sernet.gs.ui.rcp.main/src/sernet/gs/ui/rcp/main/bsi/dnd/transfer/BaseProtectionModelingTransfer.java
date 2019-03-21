@@ -20,7 +20,9 @@ package sernet.gs.ui.rcp.main.bsi.dnd.transfer;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.dnd.TransferData;
 
+import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * This class is part of the drag and drop support for the modeling in IT base
@@ -72,6 +74,12 @@ public final class BaseProtectionModelingTransfer extends VeriniceElementTransfe
             if (!(arrayElement instanceof BpRequirementGroup)) {
                 valid = false;
                 break;
+            }
+            for (CnATreeElement child : ((BpRequirementGroup) arrayElement).getChildren()) {
+                if (child instanceof IBpGroup) {
+                    valid = false;
+                    break;
+                }
             }
         }
         if (log.isDebugEnabled()) {
