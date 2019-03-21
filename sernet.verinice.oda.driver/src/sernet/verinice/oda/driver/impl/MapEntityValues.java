@@ -20,8 +20,13 @@ package sernet.verinice.oda.driver.impl;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
@@ -84,11 +89,14 @@ public class MapEntityValues extends GenericCommand {
     public void execute() {
 
         result = new ArrayList<List<Object>>(inputIDs.size());
-
+        IBaseDao<CnATreeElement, Serializable> dao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory()
+                .getDAO(typeID);
+        List<CnATreeElement> elements = dao.findByCriteria(DetachedCriteria
+                .forClass(CnATreeElement.class).add(Restrictions.in("dbId", inputIDs)));
+        Map<Integer, CnATreeElement> elementsById = elements.stream()
+                .collect(Collectors.toMap(CnATreeElement::getDbId, Function.identity()));
         for (Integer dbid : inputIDs) {
-            IBaseDao<CnATreeElement, Serializable> dao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory()
-                    .getDAO(typeID);
-            CnATreeElement e = dao.findById(dbid);
+            CnATreeElement e = elementsById.get(dbid);
             List<Object> row = null;
             if (!mapNumericalOptionValues) {
                 row = LoadEntityValues.retrievePropertyValues(e.getEntity(), propertyTypes,
