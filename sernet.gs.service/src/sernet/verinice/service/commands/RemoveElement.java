@@ -28,6 +28,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.annotation.NonNull;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.service.SecurityException;
@@ -326,10 +329,13 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     }
 
     private void removeConfiguration(CnATreeElement person) throws CommandException {
-        LoadConfiguration command = new LoadConfiguration(person);
-        command = getCommandService().executeCommand(command);
-        Configuration conf = command.getConfiguration();
-        if (conf != null) {
+        IBaseDao<@NonNull Configuration, Serializable> configurationDao = getDaoFactory()
+                .getDAO(Configuration.class);
+        @SuppressWarnings("unchecked")
+        List<Configuration> configurations = configurationDao.findByCriteria(DetachedCriteria
+                .forClass(Configuration.class).add(Restrictions.eq("person", person)));
+        if (!configurations.isEmpty()) {
+            Configuration conf = configurations.get(0);
             IBaseDao<Configuration, Serializable> confDAO = getDaoFactory()
                     .getDAO(Configuration.class);
             confDAO.delete(conf);
