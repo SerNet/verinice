@@ -120,7 +120,7 @@ Ein ISMS kann nur dann seinen Zweck erfüllen, wenn es auf die Anforderungen der
 ,,,<u>Hierzu sollte gehören:</u>,,,,,,
 ,,,"+ Die Anforderungen an die Informationssicherheit auf der Grundlage der Organisationsstrategie, Gesetzen und Verträgen sind in der Richtlinie berücksichtigt.
 + Verantwortlichkeiten für die Durchführung sind definiert.
-+ Die Richtlinie weist auf Konsequenzen bei Nichtbeachtung hin. 
++ Die Richtlinie weist auf Konsequenzen bei Nichtbeachtung hin.
 + Weitere Richtlinien/Regelungen/Informationssicherheitsstandards zur Informationssicherheit sind erstellt.
 + Ein Prozess zur regelmäßigen Prüfung und Überarbeitung der Richtlinien ist etabliert.
 + Die Richtlinien werden Mitarbeitern geeignet zur Verfügung gestellt.
@@ -310,8 +310,8 @@ Wenn kein gemeinsames Verständnis bei allen beteiligten Parteien über die Vera
 + Das Konzept wurde vom verantwortlichen Management freigegeben
  -  Für die Durchführung notwendige Ressourcen sind freigegeben
 + Schulungs- und Sensibilisierungsmaßnahmen werden sowohl regelmäßig als auch anlassbezogen durchgeführt.
-+ Die Teilnahme an Schulungs- und Sensibilisierungsmaßnahmen wird dokumentiert. 
-+ Mitarbeitern sind die Ansprechpartner zur Informationssicherheit bekannt. 
++ Die Teilnahme an Schulungs- und Sensibilisierungsmaßnahmen wird dokumentiert.
++ Mitarbeitern sind die Ansprechpartner zur Informationssicherheit bekannt.
 + Geeignete KPIs zur Sensibilisierung- und Schulung sind definiert und werden ausgewertet.",,,,,,
 ,,,,,,,,,
 ,,,<u>Hierzu kann gehören:</u>,,,,,,
@@ -340,7 +340,7 @@ Wenn kein gemeinsames Verständnis bei allen beteiligten Parteien über die Vera
  - IT unterstützende Infrastruktur
  - Information in elektronischer Form, Papierform und physischer Form
  - Personen und Personengruppen die relevante Informationen besitzen
- - Ausgelagerte Services (s. auch Control 6.4) 
+ - Ausgelagerte Services (s. auch Control 6.4)
 + Jedem Information-Asset ist ein Verantwortlicher (Einzelperson oder organisatorische Einheit) zugeordnet.
 + Information-Assets sind klassifiziert. (siehe hierzu auch Control 8.2)",,,,,,
 ,,,,,,,,,
@@ -450,7 +450,7 @@ Wenn kein gemeinsames Verständnis bei allen beteiligten Parteien über die Vera
 ,,,<b>Anforderungen:</b>,,,,,,
 ,,,,,,,,,
 ,,,<u>Hierzu muss gehören:</u>,,,,,,
-,,,"+ Die eingesetzten Verfahren zur Benutzerauthentifizierung gelten als sicher und entsprechen dem aktuellen Stand der Technik. 
+,,,"+ Die eingesetzten Verfahren zur Benutzerauthentifizierung gelten als sicher und entsprechen dem aktuellen Stand der Technik.
 + Die Auswahl der Verfahren zur Benutzerauthentifizierung wurde auf Basis einer Risikobewertung getroffen. Mögliche Angriffsszenarien wurden berücksichtigt (z. B. direkte Zugriffsmöglichkeit aus dem Internet)
 + Weitere Interaktionen dürfen nur nach einer erfolgreichen Authentifizierung möglich sein.",,,,,,
 ,,,,,,,,,
@@ -463,7 +463,7 @@ Wenn kein gemeinsames Verständnis bei allen beteiligten Parteien über die Vera
 ,,,,,,,,,
 ,,,<u>Zusätzlich bei hohem Schutzbedarf:</u>,,,,,,
 ,,,"+ Benutzer sind vor dem Zugriff auf Daten mit hohem Schutzbedarf mindestens durch starke Passworte nach Stand der Technik  zu authentifizieren.
-+ Abhängig von der Risikobewertung wurde das Authentifizierungsverfahren durch ergänzende Maßnahmen verstärkt 
++ Abhängig von der Risikobewertung wurde das Authentifizierungsverfahren durch ergänzende Maßnahmen verstärkt
 (z. B. dauerhaftes Monitoring der Zugriffe auf Unregelmäßigkeiten oder Einsatz einer starken Authentifizierung)",,,,,,
 ,,,,,,,,,
 ,,,<u>Zusätzlich bei sehr hohem Schutzbedarf:</u>,,,,,,
@@ -516,7 +516,7 @@ Wenn kein gemeinsames Verständnis bei allen beteiligten Parteien über die Vera
 ,,,<u>Hierzu muss gehören:</u>,,,,,,
 ,,,"+ Die Verwendung von eindeutigen und personalisierten administrativen Benutzerkonten ist geregelt und etabliert.
 + Eine Unterscheidung der Benutzerkonten (privilegiertes Benutzerkonto, ""Office-Benutzerkonto"") ist gewährleistet, z. B. durch den Besitz zweier oder mehrerer Benutzerkonten.
-+ Der Management-Prozess(Vergabe/Änderung/Löschung) für privilegierte Benutzerkennungen ist dokumentiert und etabliert. 
++ Der Management-Prozess(Vergabe/Änderung/Löschung) für privilegierte Benutzerkennungen ist dokumentiert und etabliert.
 + Die Vergabe von privilegierten Rechten erfolgt erst nach Genehmigung.
 + Es werden sichere Authentifizierungsverfahren für privilegierte Benutzerkonten verwendet.
 + Benutzerkonten mit privilegierten Rechten sind dokumentiert und werden regelmäßig überprüft.",,,,,,
@@ -582,8 +582,8 @@ Wenn kein gemeinsames Verständnis bei allen beteiligten Parteien über die Vera
 ,,,<u>Hierzu muss gehören:</u>,,,,,,
 ,,,"+ Die Anforderungen an den Zugriff auf Informationen und Applikationen sind ermittelt.
 + Eine Richtlinie zur Autorisierung ist erstellt und enthält mindestens folgende Aspekte:
-  - Verfahren zur Beantragung, Prüfung und Genehmigung 
-  - Verwendung von Berechtigungs-Rollen 
+  - Verfahren zur Beantragung, Prüfung und Genehmigung
+  - Verwendung von Berechtigungs-Rollen
   - Funktionstrennung
   - Anwendung des Minimalitätsprinzips (""Need-to-know"")
 + Die Richtlinie ist für alle Benutzer von Informationen und Applikationen bindend.
@@ -640,7 +640,7 @@ Wenn kein gemeinsames Verständnis bei allen beteiligten Parteien über die Vera
 ,,,<h1>Inwieweit gibt es Regeln zur Verschlüsselung inkl. der Verwaltung des Schlüsselmaterials (kompletter Lifecycle) zum Schutz von Informationen bei Speicherung und Transport und sind diese umgesetzt worden?</h1>,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel:</b>,,,,,,
-,,,"Es muss sichergestellt werden, dass die Vertraulichkeit von Informationen sowohl bei Speicherung als auch bei der Übertragung 
+,,,"Es muss sichergestellt werden, dass die Vertraulichkeit von Informationen sowohl bei Speicherung als auch bei der Übertragung
 (z. B. bei Erlangen von physischem Zugriff auf Datenträger oder Datenübertragungsinfrastruktur) gesichert wird. In der Regel wird dieses durch Verschlüsselung erreicht. Beim Umgang mit Verschlüsselung ist es wesentlich, dass diese zu jedem Zeitpunkt die erwarteten Sicherheitseigenschaften bietet und nicht gleichzeitig unangemessen hohe Verfügbarkeitsrisiken erzeugt. Hierzu ist sicherzustellen, dass Verschlüsselungsbedarf zuverlässig erkannt wird. Wenn ein Bedarf erkannt wird, müssen stets Verfahren gewählt werden, die nach Stand der Wissenschaft und Technik als sicher gelten. Zusätzlich muss sichergestellt werden, dass die Geheimnisse (Schlüsselmaterial) über die Lebenszeit hinreichend vor technischen und organisatorischen Risiken für die Vertraulichkeit, aber auch für Integrität und die Verfügbarkeit, geschützt werden.",,,,,,
 ,,,,,,,,,
 ,,,<b>Anforderungen:</b>,,,,,,
@@ -653,7 +653,7 @@ Wenn kein gemeinsames Verständnis bei allen beteiligten Parteien über die Vera
 ,,,"+ Erstellung eines Regelwerkes mit Anforderungen an die Verschlüsselung zum Schutz von Informationen gemäß ihrer Klassifizierung.
 + Ein Verschlüsselungskonzept zur Verschlüsselung mit mindestens folgenden Vorgaben ist definiert:
   - die Verschlüsselungsstärke
-  - die Verwaltung der Schlüssel 
+  - die Verwaltung der Schlüssel
   - den Verschlüsselungsalgorithmus
   - Verfahren für den kompletten Lebenszyklus, wie die Erzeugung, Speicherung, Archivierung, Abruf, Verteilung, Deaktivierung, Erneuerung und Löschung kryptographischer Schlüssel
 + Das Verschlüsselungskonzept ist etabliert.
@@ -671,7 +671,7 @@ Wenn kein gemeinsames Verständnis bei allen beteiligten Parteien über die Vera
 ,,,,,,,,,
 ,,,<u>Zusätzlich bei sehr hohem Schutzbedarf:</u>,,,,,,
 ,,,"+ Informationen mit sehr hohem Schutzbedarf werden verschlüsselt gespeichert.
-  - Wenn eine Verschlüsselung nicht möglich ist, müssen Informationen durch vergleichbar wirksame Maßnahmen geschützt werden. 
+  - Wenn eine Verschlüsselung nicht möglich ist, müssen Informationen durch vergleichbar wirksame Maßnahmen geschützt werden.
 + Bei der externen Bearbeitung bzw. Übertragung ist sicherzustellen:
   - Verpflichtende Ende-zu-Ende-Verschlüsselung (vorzugsweise mit Schlüsselmaterial aus unternehmenseigener Umgebung)",,,,,,
 ,,,,,,,,,
@@ -718,7 +718,7 @@ Wenn kein gemeinsames Verständnis bei allen beteiligten Parteien über die Vera
 ,,,,,,,,,
 ,,,<u>Hierzu muss gehören:</u>,,,,,,
 ,,,"+ Natürliche Bedrohungen, wie z. B. Überflutung, sind erfasst.
-+ Gesellschaftliche Bedrohungen, wie z. B. politische Instabilität oder Unfälle von Industrieanlagen, sind erfasst. 
++ Gesellschaftliche Bedrohungen, wie z. B. politische Instabilität oder Unfälle von Industrieanlagen, sind erfasst.
 + Potentiell betroffene Infrastruktur, Assets und IT-Systeme sind erfasst.",,,,,,
 ,,,,,,,,,
 ,,,<u>Hierzu sollte gehören:</u>,,,,,,
@@ -833,7 +833,7 @@ Wenn kein gemeinsames Verständnis bei allen beteiligten Parteien über die Vera
 ,,,"+ Die Anforderungen an Entwicklungs- und Testumgebungen sind ermittelt, z. B.:
   - Trennung von Entwicklungs-, Test- und Produktivsystemen
   - Keine Entwicklungs- und Systemwerkzeuge auf Produktivsystemen (außer solchen, die für den Betrieb relevant sind)
-  - Verwendung von unterschiedlichen Benutzerprofilen auf Test- und Produktivsystemen 
+  - Verwendung von unterschiedlichen Benutzerprofilen auf Test- und Produktivsystemen
   - Soweit möglich verwendung von nicht sensitiven bzw. anonymisierten Test-Daten
 + Vorgaben zur Überführung von Software aus dem  Entwicklungs- und Teststatus in den Produktivstatus sind festgelegt.
 + Die ermittelten Anforderungen sind umgesetzt.",,,,,,
@@ -948,7 +948,7 @@ Wenn kein gemeinsames Verständnis bei allen beteiligten Parteien über die Vera
 + Die verwendeten IT-Systeme sind bezüglich der Notwendigkeit der Protokollierung bewertet.
 + Soweit extern betriebene Dienste (z. B. Cloud-Dienste) administriert werden, sind Informationen über die Möglichkeit zur Erfassung von Ereignis-Logs eingeholt und in die Bewertung mit einbezogen.
  - z.B. Audit-Logs für Konfigurationsänderungen und Nutzung von / Zugriff auf eDiscovery-Funktionen oder Backup.
-+ Verfahren zum Umgang mit Regelverstößen sind definiert. 
++ Verfahren zum Umgang mit Regelverstößen sind definiert.
 + Eine regelmäßige Überprüfung der Protokolle auf Regelverstöße, im Rahmen der zulässigen gesetzlichen und betrieblichen Bestimmungen, wird durchgeführt.
 + Die Art der Protokollierung bezüglich Zeitpunkt, Aktivitätslevel und Aufbewahrungsfristen ist definiert und umgesetzt.",,,,,,
 ,,,,,,,,,
@@ -963,8 +963,8 @@ Wenn kein gemeinsames Verständnis bei allen beteiligten Parteien über die Vera
 ,,,+ Zugriffe beim Auf- und Abbau von externen Verbindungen (z. B. Fernwartung) werden protokolliert.,,,,,,
 ,,,,,,,,,
 ,,,<u>Zusätzlich bei sehr hohem Schutzbedarf:</u>,,,,,,
-,,,"+ Protokollierung von allen Zugriffen 
-  - soweit technisch möglich 
+,,,"+ Protokollierung von allen Zugriffen
+  - soweit technisch möglich
   - auf Daten mit sehr hohem Schutzbedarf.",,,,,,
 ,,,,,,,,,
 12.7,12.7 Verfolgung von Schwachstellen (Patch Management),3,(Referenz zu ISO 27001: Control A12.6.1 und A12.6.2),1,1,,3,4,4.0.0
@@ -982,7 +982,7 @@ Wenn kein gemeinsames Verständnis bei allen beteiligten Parteien über die Vera
 ,,,,,,,,,
 ,,,<u>Hierzu sollte gehören:</u>,,,,,,
 ,,,"+ Ein angemessenes Patch-Management ist definiert und umgesetzt. (z. B. Test- und Installation von Patches)
-+ Soweit notwendig sollten risikominimierende Maßnahmen umgesetzt werden. Hierzu zählen z. B.: 
++ Soweit notwendig sollten risikominimierende Maßnahmen umgesetzt werden. Hierzu zählen z. B.:
   - Abtrennung der betroffenen Systeme
   - Abschalten des betroffenen Service
   - Anpassung von Zugriffsmöglichkeiten wie z. B. Firewalls
@@ -1034,7 +1034,7 @@ Wenn kein gemeinsames Verständnis bei allen beteiligten Parteien über die Vera
 ,,,<h1>Inwieweit wurden Auswirkungen kritischer Funktionen von Cloud-Diensten berücksichtigt?</h1>,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel:</b>,,,,,,
-,,,"Viele Cloud-Dienste bieten Funktionen, die zu weitreichenden Änderungen in operativ genutzten Diensten führen können. Diese Funktionen können die Vertraulichkeit der Informationen gefährden oder nicht oder nur mit erheblichen Aufwand reversibel sein und damit Verfügbarkeit oder Integrität beeinträchtigen. Diese Funktionen werden administrativen Nutzern oft über eine einfach zu nutzende, automatisierte Konfigurationsschnittstelle zur Verfügung gestellt. Bei Ausführung eines administrativen Users werden solche Aktionen ohne weitere menschliche Prüfung durchgeführt. 
+,,,"Viele Cloud-Dienste bieten Funktionen, die zu weitreichenden Änderungen in operativ genutzten Diensten führen können. Diese Funktionen können die Vertraulichkeit der Informationen gefährden oder nicht oder nur mit erheblichen Aufwand reversibel sein und damit Verfügbarkeit oder Integrität beeinträchtigen. Diese Funktionen werden administrativen Nutzern oft über eine einfach zu nutzende, automatisierte Konfigurationsschnittstelle zur Verfügung gestellt. Bei Ausführung eines administrativen Users werden solche Aktionen ohne weitere menschliche Prüfung durchgeführt.
 Es muss sichergestellt sein, dass solche Funktionen weder versehentlich noch durch einen bösartigen Administrator ohne besonderen Aufwand dazu genutzt werden können, Schaden in Bezug auf Vertraulichkeit, Verfügbarkeit oder Integrität erzeugen.",,,,,,
 ,,,,,,,,,
 ,,,<b>Anforderungen:</b>,,,,,,
@@ -1080,7 +1080,7 @@ Es muss sichergestellt sein, dass solche Funktionen weder versehentlich noch dur
 ,,,<u>Hierzu sollte gehören:</u>,,,,,,
 ,,,"+ Anforderungen an die Steuerung und Verwaltung von Netzwerken sind ermittelt und umgesetzt. Hierzu zählen z. B.:
   - Beschränkungen bei der Anbindung von IT-Systemen an das Netzwerk
-  - Besondere Schutzmaßnahmen bei Netzwerkverbindungen über potentiell unsichere Netze (z.B. Verschlüsselung) 
+  - Besondere Schutzmaßnahmen bei Netzwerkverbindungen über potentiell unsichere Netze (z.B. Verschlüsselung)
   - Angemessenes Überwachen und Aufzeichnen von informationssicherheitsrelevanten Aktionen im Netzwerk
   - Einsatz von Hilfsmitteln wie z.B. Firewall-Systemen, Intrusion Detection und Prevention Systemen (IDS/IPS), Netzwerkverwaltungswerkzeugen, Sicherheitssoftware für Netzwerke
   - Bei Einsatz von aus dem Internet erreichbaren extern betriebenen Netzwerkdiensten (Cloud-Diensten) ist das hierdurch entstehende erhöhte Risiko bewertet und in den Applikationen adressiert.",,,,,,
@@ -1089,7 +1089,7 @@ Es muss sichergestellt sein, dass solche Funktionen weder versehentlich noch dur
 ,,,Keine.,,,,,,
 ,,,,,,,,,
 ,,,<u>Zusätzlich bei hohem Schutzbedarf:</u>,,,,,,
-,,,"+ Erweiterte Anforderungen an die Steuerung und Verwaltung von Netzwerken sind ermittelt und umgesetzt. 
+,,,"+ Erweiterte Anforderungen an die Steuerung und Verwaltung von Netzwerken sind ermittelt und umgesetzt.
 Hierzu zählen z. B.:
   - Authentifizierung von IT-Systemen im Netzwerk",,,,,,
 ,,,,,,,,,
@@ -1157,7 +1157,7 @@ Hierzu zählen z. B.:
 ,,,<b>Anforderungen:</b>,,,,,,
 ,,,,,,,,,
 ,,,<u>Hierzu muss gehören:</u>,,,,,,
-,,,"+ Die verwendeten Dienste (z. B. E-Mail, EDI, Voice over IP) zur Übertragung sind ermittelt. 
+,,,"+ Die verwendeten Dienste (z. B. E-Mail, EDI, Voice over IP) zur Übertragung sind ermittelt.
 + Regeln und Verfahren gemäß den Vorgaben der Klassifizierung zur Nutzung der Dienste sind definiert und umgesetzt.
 + Maßnahmen zum Schutz der übertragenen Inhalte vor unberechtigtem Zugriff sind umgesetzt.",,,,,,
 ,,,,,,,,,
@@ -1192,11 +1192,11 @@ Hierzu zählen z. B.:
 ,,,,,,,,,
 ,,,<u>Hierzu sollte gehören:</u>,,,,,,
 ,,,"+ Vorlagen für Geheimhaltungsvereinbarungen sind vorhanden und auf rechtliche Anwendbarkeit geprüft.
-+ Die Vorlagen sehen klare Angaben zu: 
++ Die Vorlagen sehen klare Angaben zu:
   - den beteiligte Personen/Firmen
-  - der Art der von der Vereinbarung umfassten Informationen, 
+  - der Art der von der Vereinbarung umfassten Informationen,
   - den Gegenstand der Vereinbarung
-  - die Gültigkeitsdauer der Vereinbarung (befristet oder dauerhaft) 
+  - die Gültigkeitsdauer der Vereinbarung (befristet oder dauerhaft)
   - den Verantwortlichkeiten des Verpflichteten
 + Die Vorlagen enthalten Bestimmungen zu den Nutzungsrechten an Informationen über das Vertragsverhältnis hinaus.
 + Mögliche Nachweise zur Einhaltung von Vorgaben (z. B. Prüfung eines unabhängigen Dritten oder Auditrechte) sind definiert.
@@ -1296,13 +1296,13 @@ Hierzu zählen z. B.:
 ,,,,,,,,,
 ,,,<u>Zusätzlich bei hohem Schutzbedarf:</u>,,,,,,
 ,,,"+ Das Kopieren von Informationen aus der Produktivumgebung muss im Vorfeld über einen definierten Genehmigungsprozess freigegeben werden.
-+ Betriebsrelevante Informationen werden mit Abschluss des Tests aus dem Testsystem umgehend entfernt. 
++ Betriebsrelevante Informationen werden mit Abschluss des Tests aus dem Testsystem umgehend entfernt.
 + Der Kopiervorgang und die Nutzung von organisationsrelevanten Informationen als Testdaten werden zur späteren Prüfung aufgezeichnet (Audit Trail).",,,,,,
 ,,,,,,,,,
 ,,,<u>Zusätzlich bei sehr hohem Schutzbedarf:</u>,,,,,,
 ,,,Keine.,,,,,,
 ,,,,,,,,,
-14.4,14.4 Freigabe von externen IT-Diensten,3,-,1,1,,2,3,4.0.0
+14.4,14.4 Freigabe von externen IT-Diensten,3,(Referenz zu ISO 27017: CLD.14.1.1),1,1,,2,3,4.0.0
 ,,,,,,,,,
 ,,,"<h1>Inwieweit wird sichergestellt, dass nur evaluierte und freigegebene externe IT-Dienste (insbes. Cloud-Dienste) zum Verarbeiten von Unternehmensdaten eingesetzt werden?</h1>",,,,,,
 ,,,,,,,,,
@@ -1407,12 +1407,12 @@ Es muss daher sichergestellt sein, dass eine Inbetriebnahme von externen IT-Dien
 ,,,<b>Anforderungen:</b>,,,,,,
 ,,,,,,,,,
 ,,,<u>Hierzu muss gehören:</u>,,,,,,
-,,,"+ Eine Richtlinie zur Meldung von Informationssicherheitsereignissen oder -schwachstellen, welche mindestens die folgenden Vorgaben enthält, ist erstellt: 
+,,,"+ Eine Richtlinie zur Meldung von Informationssicherheitsereignissen oder -schwachstellen, welche mindestens die folgenden Vorgaben enthält, ist erstellt:
   - Verhalten bei Informationssicherheitsereignissen gemäß definierter Kritikalitätsstufen
-  - Meldeformular 
+  - Meldeformular
   - Meldeweg
   - bearbeitende Organisation
-  - Vorgaben für ein Feedbackverfahren 
+  - Vorgaben für ein Feedbackverfahren
   - Hinweise auf technische und organisatorische Maßnahmen (u. a. Disziplinarmaßnahmen)",,,,,,
 ,,,,,,,,,
 ,,,<u>Hierzu sollte gehören:</u>,,,,,,
@@ -1465,7 +1465,7 @@ Es muss daher sichergestellt sein, dass eine Inbetriebnahme von externen IT-Dien
 ,,,<b>Anforderungen:</b>,,,,,,
 ,,,,,,,,,
 ,,,<u>Hierzu muss gehören:</u>,,,,,,
-,,,"+ Potenziell betroffene IT-Systeme und Software sind identifiziert. 
+,,,"+ Potenziell betroffene IT-Systeme und Software sind identifiziert.
 + Für den Krisenfall sind informationssicherheitsrelevante Verfahren, Prozesse und Abläufe berücksichtigt.",,,,,,
 ,,,,,,,,,
 ,,,<u>Hierzu sollte gehören:</u>,,,,,,
@@ -1497,7 +1497,7 @@ Es muss daher sichergestellt sein, dass eine Inbetriebnahme von externen IT-Dien
 + Regelungen bzgl. der Erfüllung von gesetzlichen, regulatorischen und vertraglichen Anforderungen sind definiert, umgesetzt und an die beauftragten Personen kommuniziert.",,,,,,
 ,,,,,,,,,
 ,,,<u>Hierzu sollte gehören:</u>,,,,,,
-,,,"+ Maßnahmen zur Erfüllung der Anforderungen mit Bezug auf geistige Eigentumsrechte und der Verwendung von urheberrechtlich geschützten Softwareprodukten (Beschaffung und Lizenzmanagement) sind definiert und umgesetzt. 
+,,,"+ Maßnahmen zur Erfüllung der Anforderungen mit Bezug auf geistige Eigentumsrechte und der Verwendung von urheberrechtlich geschützten Softwareprodukten (Beschaffung und Lizenzmanagement) sind definiert und umgesetzt.
 + Sensibilisierungsmaßnahmen zu Compliance-Themen der Informationssicherheit für Mitarbeiter werden regelmäßig durchgeführt.
 + Die Integrität von Aufzeichnungen gemäß vertraglicher, regulatorischer oder gesetzlicher Verpflichtungen und Geschäftsanforderungen sowie der Klassifizierung (Zugriffsschutz, Aufbewahrung) ist berücksichtigt.",,,,,,
 ,,,,,,,,,
@@ -1512,7 +1512,7 @@ Es muss daher sichergestellt sein, dass eine Inbetriebnahme von externen IT-Dien
 ,,,,,,,,,
 18.2,18.2 Vertraulichkeit und Schutz von personenbezogenen Daten,3,(Referenz zu ISO 27001: Control A18.1.4),1,1,,3,3,4.1.0
 ,,,,,,,,,
-,,,"<h1>Inwieweit werden Vertraulichkeit und Schutz von personenbezogenen Informationen gewährleistet (abhängig von nationalen Gesetzgebungen)? 
+,,,"<h1>Inwieweit werden Vertraulichkeit und Schutz von personenbezogenen Informationen gewährleistet (abhängig von nationalen Gesetzgebungen)?
 </h1>",,,,,,
 ,,,,,,,,,
 ,,,"<b><i>Hinweis: Bei Vorliegen einer Auftragsverarbeitung nach Art. 28 DSGVO ist das Modul ""Datenschutz (24)""  aufzunehmen und zu bewerten.</i></b>",,,,,,
@@ -1722,7 +1722,7 @@ Es muss daher sichergestellt sein, dass eine Inbetriebnahme von externen IT-Dien
     - Interner oder externer Datenschutzbeauftragter
     - Unterstützung des Datenschutzbeauftragten durch ihm direkt zugeordnete Mitarbeiter (Abteilung ""Datenschutz"") abhängig
       von der Unternehmensgröße
-    - Unterstützung des Datenschutzbeauftragten durch Datenschutzkoordinatoren in den Unternehmensbereichen 
+    - Unterstützung des Datenschutzbeauftragten durch Datenschutzkoordinatoren in den Unternehmensbereichen
       abhängig von der Unternehmensgröße (z.B. Marketing, Vertrieb, Personal, Logistik, Entwicklung etc.)",,,,,,
 ,,,,,,,,,
 24.2,24.2 Verarbeitung,3,,,,,,,4.1.0
@@ -1732,10 +1732,10 @@ Es muss daher sichergestellt sein, dass eine Inbetriebnahme von externen IT-Dien
 ,,,<b><i>Hinweise</i></b>,,,,,,
 ,,,"+ Festlegung von Grundsätzen zum Datenschutz (Verarbeitung personenbezogener Daten) in einer unternehmensinternen dokumentierten Datenschutz-Strategie (z.B. unternehmensinternen Richtlinie).
 + Implementierung von unternehmensinternen Gremien oder Verantwortlichkeiten - unter Mitarbeit des Datenschutzbeauftragten -, in denen datenschutzrelevante Themen behandelt werden.
-+ Implementierung eines Prozesses, der bei datenschutzrelevanten Themen (z. B. im Rahmen einer Datenschutzfolgenabschätzung) die Involvierung des Datenschutzbeauftragten sicherstellt. 
++ Implementierung eines Prozesses, der bei datenschutzrelevanten Themen (z. B. im Rahmen einer Datenschutzfolgenabschätzung) die Involvierung des Datenschutzbeauftragten sicherstellt.
 + Dokumentation von Verarbeitungsvorgängen bei der Verarbeitung personenbezogener Daten.
 + Dokumentation von Stellungnahmen und Kommentaren des Datenschutzbeauftragten hinsichtlich datenschutzrechtlicher Bewertungen.
-+ Implementierung eines Prozesses mittels dem - bei Beauftragung eines Unterauftragsverarbeiters - im Wege eines Vertrages oder eines anderen Rechtsinstrumentes dem Auftragsverarbeiter entsprechende Datenschutzpflichten auferlegt werden, wie sie im Vertrag zwischen dem Verantwortlichen und dem Auftragsverarbeiter festgelegt sind. 
++ Implementierung eines Prozesses mittels dem - bei Beauftragung eines Unterauftragsverarbeiters - im Wege eines Vertrages oder eines anderen Rechtsinstrumentes dem Auftragsverarbeiter entsprechende Datenschutzpflichten auferlegt werden, wie sie im Vertrag zwischen dem Verantwortlichen und dem Auftragsverarbeiter festgelegt sind.
 + Unternehmensinterne Arbeitsanweisungen oder Handbücher in speziellen Aufgabengebieten bzgl. der Verarbeitung personenbezogener Daten.
 + Verpflichtung der Mitarbeiter (inkl. evtl. Unterauftragnehmer) zur Vertraulichkeit.
 + Implementierung technisch-organisatorischer Maßnahmen zur Unterstützung des Verantwortlichen beim Umgang mit Betroffenenrechten, soweit dies möglich und der Verarbeitung angemessen ist.
@@ -1761,7 +1761,7 @@ Es muss daher sichergestellt sein, dass eine Inbetriebnahme von externen IT-Dien
 ,,,<h1>Inwieweit sind die einschlägigen Verarbeitungen hinsichtlich datenschutzrechtlicher Zulässigkeit dokumentiert?</h1>,,,,,,
 ,,,,,,,,,
 ,,,<b><i>Hinweise</i></b>,,,,,,
-,,,"+ Dokumentation wesentlicher Tätigkeiten bzgl. der Verarbeitung personenbezogener Daten gem. gesetzlicher Anforderungen 
+,,,"+ Dokumentation wesentlicher Tätigkeiten bzgl. der Verarbeitung personenbezogener Daten gem. gesetzlicher Anforderungen
 + Unterstützung des Auftraggebers bei der Durchführung von Datenschutzfolgenabschätzungen und der Dokumentation der daraus resultierenden Ergebnisse.
 + Information an den Auftraggeber bei Feststellung rechtswidriger Datenverarbeitung, ggf. unter Berücksichtigung unterschiedlicher nationaler Gesetzgebungen.",,,,,,
 ,,,,,,,,,
@@ -1782,7 +1782,7 @@ Der auftraggebende Fachbereich des OEMs ist für die Klassifizierung der Schutzb
 ,,,<b>Anforderungen:</b>,,,,,,
 ,,,,,,,,,
 ,,,<u>Hierzu muss gehören:</u>,,,,,,
-,,,"+ Ein Sicherheitskonzept unter Berücksichtigung der folgenden Aspekte ist erstellt: 
+,,,"+ Ein Sicherheitskonzept unter Berücksichtigung der folgenden Aspekte ist erstellt:
  - Stabilität der Außenhaut
  - Sicht- und Einblickschutz
  - Schutz vor unbefugtem Betreten und Kontrolle des Zugangs
@@ -1974,7 +1974,7 @@ Der auftraggebende Fachbereich des OEMs ist für die Klassifizierung der Schutzb
 ,,,<b>Anforderungen:</b>,,,,,,
 ,,,,,,,,,
 ,,,<u>Hierzu muss gehören:</u>,,,,,,
-,,,"+ eine Geheimhaltungsvereinbarung: 
+,,,"+ eine Geheimhaltungsvereinbarung:
   - zwischen Auftragnehmer und Auftraggeber (auf Firmen-Ebene)
   - von allen Mitarbeitern und Projektbeteiligten (persönliche Verpflichtung)
 + Länderspezifische gesetzliche Vorgaben zum Datenschutz sind einzuhalten.",,,,,,
@@ -2027,7 +2027,7 @@ Der auftraggebende Fachbereich des OEMs ist für die Klassifizierung der Schutzb
 + regelmäßige (min. jährlich) Schulung von Mitarbeitern im Umgang mit Prototypen
 + Sicherstellung der Kenntnis über die jeweiligen Schutzbedarfe und den daraus resultierenden Maßnahmen im Unternehmen bei den Mitarbeitern und Projektbeteiligten
 + verpflichtende Teilnahme an den Schulungen und Sensibilisierungsmaßnahmen für jeden Mitarbeiter und Projektbeteiligten
-+ Die erfolgten Durchführungen sind zu dokumentieren. 
++ Die erfolgten Durchführungen sind zu dokumentieren.
 + das Schulungskonzept für den Prototypenschutz ist in dem allgemeinen Schulungskonzept verankert (siehe auch Control 7.2 Informationssicherheit) ",,,,,,
 ,,,,,,,,,
 ,,,<u>Hierzu sollte gehören:</u>,,,,,,
@@ -2043,13 +2043,13 @@ Der auftraggebende Fachbereich des OEMs ist für die Klassifizierung der Schutzb
 ,,,<h1>In wie weit sind die Sicherheitseinstufungen des Projekts und die daraus resultierenden Maßnahmen zur Absicherung bekannt?</h1>,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel:</b>,,,,,,
-,,,"Es muss sichergestellt sein, dass jedem Projektbeteiligtem die Sicherheitseinstufung und die Sicherheitsvorgaben je nach 
+,,,"Es muss sichergestellt sein, dass jedem Projektbeteiligtem die Sicherheitseinstufung und die Sicherheitsvorgaben je nach
 Projektfortschritt bekannt sind und eingehalten werden.",,,,,,
 ,,,,,,,,,
 ,,,<b>Anforderungen:</b>,,,,,,
 ,,,,,,,,,
 ,,,<u>Hierzu muss gehören:</u>,,,,,,
-,,,"+ Sicherstellung, dass jedem Projektbeteiligtem die Sicherheitseinstufung und die Sicherheitsvorgaben je nach 
+,,,"+ Sicherstellung, dass jedem Projektbeteiligtem die Sicherheitseinstufung und die Sicherheitsvorgaben je nach
    Projektfortschritt bekannt gemacht sind.
 + Berücksichtigung von Stufenplänen, Maßnahmen zur Geheimhaltung und Tarnung, Entwicklungsrichtlinien.
 + Die Anforderungen werden als Anforderung für die Informationssicherheit des Projektes berücksichtigt (siehe Controls 6.2 und 18.1 Informationssicherheit).",,,,,,
@@ -2138,7 +2138,7 @@ Projektfortschritt bekannt sind und eingehalten werden.",,,,,,
 ,,,<b>Anforderungen:</b>,,,,,,
 ,,,,,,,,,
 ,,,<u>Hierzu muss gehören:</u>,,,,,,
-,,,"+ Es ist ein Prozess zur Einholung von auftraggeberspezifischen Anforderungen für den Transport von als schutzbedürftig klassifizierten Fahrzeugen, Komponenten und Bauteilen beschrieben und implementiert. 
+,,,"+ Es ist ein Prozess zur Einholung von auftraggeberspezifischen Anforderungen für den Transport von als schutzbedürftig klassifizierten Fahrzeugen, Komponenten und Bauteilen beschrieben und implementiert.
 + Die vom Auftraggeber definierten Sicherheitsvorgaben sind bekannt und werden eingehalten.
 + Die vom Auftraggeber speziell freigegebenen Logistik-/Transportunternehmen werden verwendet.
 + Es ist ein Prozess zur Meldung aller sicherheitsrelevanten Vorfälle an den Auftraggeber beschrieben und implementiert.",,,,,,
@@ -2204,7 +2204,7 @@ Bei der Nutzung von eigenen Liegenschaften sind die Controls 25.1, 25.2 und 25.3
 ,,,<b>Anforderungen:</b>,,,,,,
 ,,,,,,,,,
 ,,,<u>Hierzu muss gehören:</u>,,,,,,
-,,,"+ Es ist ein Prozess zur Einholung von auftraggeberspezifischen Anforderungen zur Nutzung von als schutzbedürftig klassifizierten Erprobungsfahrzeugen auf Test- und Erprobungsgelände beschrieben und implementiert. 
+,,,"+ Es ist ein Prozess zur Einholung von auftraggeberspezifischen Anforderungen zur Nutzung von als schutzbedürftig klassifizierten Erprobungsfahrzeugen auf Test- und Erprobungsgelände beschrieben und implementiert.
 + Folgende Aspekte müssen Nutzern von Test- und Erprobungsgelände bekannt sein:
  - Eine aktuelle Auflistung der vom Auftraggeber freigegebenen Test-, Erprobungsgelände.
  - Verhaltensregeln zur Absicherung des störungsfreien Versuchsbetriebs.
@@ -2240,7 +2240,7 @@ Bei der Nutzung von eigenen Liegenschaften sind die Controls 25.1, 25.2 und 25.3
 ,,,Keine.,,,,,,
 ,,,,,,,,,
 25.5,25.5 Anforderungen für Veranstaltungen und Shootings,,,,,,,,
-25.5.1,25.5.1 Ausstellungen und Veranstaltungen,3,(PT-Modul - keine Referenz zu ISO 27001),1,1,,2,3,4.1.0
+25.5.1,25.5.1 Ausstellungen und Veranstaltungen,3,(Referenz zu ISO 27001: Control A11.1.5),1,1,,2,3,4.1.0
 ,,,,,,,,,
 ,,,"<i>Auftraggeberspezifische Sicherheitsvorgaben für Veranstaltungen oder Shootings mit als schutzbedürftig klassifizierten Fahrzeugen, Komponenten oder Bauteilen sind allen Projektbeteiligten bekannt. Dies ist von allen Unternehmen nachzuweisen, die mit der Planung, Vorbereitung oder Durchführung von Veranstaltungen oder Shootings beauftragt sind.
 Bei der Nutzung von eigenen Liegenschaften sind die Controls 25.1, 25.2 und 25.3 mitzuprüfen. Sofern keine eigenen Liegenschaften genutzt werden, sind lediglich die Anforderungen aus den Controls 25.2 und 25.3 zu erfüllen.</i>",,,,,,
@@ -2254,7 +2254,7 @@ Bei der Nutzung von eigenen Liegenschaften sind die Controls 25.1, 25.2 und 25.3
 ,,,,,,,,,
 ,,,<u>Hierzu muss gehören:</u>,,,,,,
 ,,,"+ Es ist ein Prozess zur Einholung von auftraggeberspezifischen Anforderungen für Ausstellungen und Veranstaltungen mit als schutzbedürftig klassifizierten Fahrzeugen, Komponenten oder Bauteilen beschrieben und implementiert.
-+ Erstellte und mit dem Auftraggeber abgestimmte und freigegebene Sicherheitskonzepte (organisatorisch, technisch, 
++ Erstellte und mit dem Auftraggeber abgestimmte und freigegebene Sicherheitskonzepte (organisatorisch, technisch,
    personell).
 + Verhaltensregeln bei besonderen Vorkommnissen.",,,,,,
 ,,,,,,,,,
@@ -2298,7 +2298,7 @@ personell).
 - Stufe 0: Unvollständig
 - Stufe 1: Durchgeführt
 - Stufe 2: Gesteuert
-- Stufe 3: Etabliert 
+- Stufe 3: Etabliert
 - Stufe 4: Vorhersagbar
 - Stufe 5: Optimierend
 
@@ -2349,7 +2349,7 @@ Ausbringung/Verbreitung/Verteilung des Prozesses (PA 3.2):
 - Das Personal, welches den definierten Prozess durchführt, ist kompetent bzw. fachkundig, was auf einer geeigneten Ausbildung, Training und Erfahrung beruht.
 - Erforderliche Ressourcen und Informationen, die zur Durchführung des definierten Prozesses erforderlich sind, sind verfügbar, zugewiesen und werden genutzt.
 -  Erforderliche Infrastruktur und eine Arbeitsumsumgebung, die zur Durchführung des definierten Prozesses erforderlich sind, sind verfügbar, werden gemaneged und gewartet.
-- Geeignete Daten werden gesammelt und analysiert, um ein grundlegendes Verständnis für das Verhalten des Prozesses zu gewinnen, seine Angemessenheit und Wirksamkeit zu zeigen und zu bewerten, wo eine kontinuierliche Prozessverbesserung (KVP) gemacht werden kann. 
+- Geeignete Daten werden gesammelt und analysiert, um ein grundlegendes Verständnis für das Verhalten des Prozesses zu gewinnen, seine Angemessenheit und Wirksamkeit zu zeigen und zu bewerten, wo eine kontinuierliche Prozessverbesserung (KVP) gemacht werden kann.
 
 Hierzu gehören u.a. folgende Dokumente (GWP):
 + Prozessdokumentation
@@ -2380,6 +2380,7 @@ Hierzu gehören u.a. folgende Dokumente (GWP):
 + Prozessverbesserungsplan
 + Prozessmessplan
 + Prozessdurchführungsaufzeichnungen",,,,,,
+,,,,,,,,,
 ,,,"<b>Level 5:  Optimierend</b>
 Prozessinnovation (PA 5.1):
 - Ziele zur Prozessverbesserung sind für den jeweiligen Prozess definiert, welcher die relevanten Geschäftsziele unterstützt.
@@ -2450,7 +2451,7 @@ Anforderungen der Kategorie ""Zusätzlich bei sehr hohem Schutzbedarf"" müssen 
 ,,,"individuell zu bestimmen (z. B. Grün: > 90%, Gelb: 70-90%, Rot: < 70%)",,,,,,
 ,,,,,,,,,
 ,,,<b>Messung:</b>,,,,,,
-,,,"Auswertung Schulungsmanagement 
+,,,"Auswertung Schulungsmanagement
 Quotient: Anzahl Teilnehmer / Gesamtzahl der Mitarbeiter",,,,,,
 ,,,,,,,,,
 ,,,<b>Frequenz (Messung):</b>,,,,,,
@@ -2780,7 +2781,7 @@ Grün: > 90%, Gelb: 70-90%, Rot: <70%)",,,,,,
 ,,,Abdeckung,,,,,,
 ,,,,,,,,,
 ,,,<b>Beschreibung:</b>,,,,,,
-,,,"Eine regelmäßige und vollständige Erstellung von Datensicherungen dient dem Schutz vor Datenverlust z.B. im Falle eines Systemausfalles oder einem Befall der Systeme durch Schadsoftware. 
+,,,"Eine regelmäßige und vollständige Erstellung von Datensicherungen dient dem Schutz vor Datenverlust z.B. im Falle eines Systemausfalles oder einem Befall der Systeme durch Schadsoftware.
 Der KPI misst den Abdeckungsgrad  der Datensicherung.",,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel (Vision):</b>,,,,,,
@@ -2858,7 +2859,7 @@ Der KPI misst den Abdeckungsgrad  der Datenrücksicherungstests.",,,,,,
 ,,,Effektivität,,,,,,
 ,,,,,,,,,
 ,,,<b>Beschreibung:</b>,,,,,,
-,,,"Die Qualität einer Datensicherung muss durch Kontrolle der Backups sichergestellt werden. Maßnahmen sind z.B. Datenrücksicherungen,  System-Wiederherstellungen. 
+,,,"Die Qualität einer Datensicherung muss durch Kontrolle der Backups sichergestellt werden. Maßnahmen sind z.B. Datenrücksicherungen,  System-Wiederherstellungen.
 Der KPI misst die Anzahl fehlerhafter Datenrücksicherungen",,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel (Vision):</b>,,,,,,
@@ -3943,12 +3944,13 @@ Rot: > 0, Grün = 0",,,,,,
 ,,,ggf. Kameraüberwachung (Prävention Sachbeschädigung),,,,,,
 ,,,,,,,,,
 ,,,<b>Widerstandswerte</b>,,,,,,
-,,,,,,,,,
+,,,-,,,,,,
 ,,,,,,,,,
 ,,,<b>Reaktionszeiten (Alarm bis Augenscheinnahme und Quittierung</b>,,,,,,
-,,,,,,,,,
+,,,-,,,,,,
 ,,,,,,,,,
 ,,,<b>Fotografieren/Optiknutzung</b>,,,,,,
+,,,-,,,,,,
 ,,,,,,,,,
 100.4.1.2,100.4.1.2 Grün (Kontrollierte Zone),3,"Bereich mit technischen oder organisatorisch gesteuerten Sicherheitsmaßnahmen, nicht frei zugänglich, üblicherweise interne Umfänge",,,,,,
 ,,,,,,,,,
@@ -4190,7 +4192,6 @@ Remote Access: stark authentifiziert & stark Transport-verschlüsselt, Integrit�
 100.4.4.2,100.4.4.2 reguläre alternative Arbeitsumgebung (insb. Home-Office),3,,,,,,,
 ,,,,,,,,,
 ,,,<b>Vertraulichkeit der Information</b>,,,,,,
-,,,,,,,,,
 ,,,,,,,,,
 ,,,"<b>höchste Schutzklasse ""geheim""</b>",,,,,,
 ,,,"Papier: grundsätzlich nicht
