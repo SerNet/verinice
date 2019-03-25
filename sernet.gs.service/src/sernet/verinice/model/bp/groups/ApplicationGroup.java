@@ -65,11 +65,6 @@ public class ApplicationGroup extends Group<Application> implements IBpGroup {
     }
 
     @Override
-    public boolean canContain(Object object) {
-        return object instanceof Application;
-    }
-
-    @Override
     public String[] getChildTypes() {
         return CHILD_TYPES;
     }
