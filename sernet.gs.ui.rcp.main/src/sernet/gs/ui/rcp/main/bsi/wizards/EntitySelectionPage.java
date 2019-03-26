@@ -162,34 +162,7 @@ public class EntitySelectionPage extends WizardPage {
         deleteText.setText(Messages.EntitySelectionPage_14);
         deleteText.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
 
-        final List list = new List(container, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
-        GridData gridData = new GridData(GridData.FILL, GridData.FILL, true, true);
-        gridData.verticalSpan = DEFAULT_GRID_DATA_VERTICAL_SPAN;
-        int listHeight = list.getItemHeight() * DEFAULT_LIST_HEIGHT_FACTOR;
-        Rectangle trim = list.computeTrim(0, 0, 0, listHeight);
-        gridData.heightHint = trim.height;
-        list.setLayoutData(gridData);
-        Collection<EntityType> types = HitroUtil.getInstance().getTypeFactory().getAllEntityTypes();
-        java.util.List<EntityType> allEntityTypes = new ArrayList<>(types);
-        Collections.sort(allEntityTypes, (o1, o2) -> o1.getName().compareTo(o2.getName()));
-        java.util.List<String> entityNames = new ArrayList<>();
-        for (EntityType entityType : allEntityTypes) {
-            if (!entityType.getId().toLowerCase().endsWith("group")) { //$NON-NLS-1$
-                list.add(entityType.getName());
-                entityNames.add(entityType.getId());
-            }
-        }
-
-        list.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent event) {
-                entityText.setText(list.getItem(list.getSelectionIndex()));
-                entityName = list.getItem(list.getSelectionIndex());
-                entityNameId = entityNames.get(list.getSelectionIndex());
-                setPageComplete(validateData());
-            }
-
-        });
+        createTypeSelectionList(container);
 
         gridLayout = new GridLayout(NUMBER_OF_COLUMNS_BOTTOM_GRID, false);
         gridLayout.horizontalSpacing = DEFAULT_HORIZONTAL_SPACING;
@@ -227,6 +200,37 @@ public class EntitySelectionPage extends WizardPage {
         warningLabel.setLayoutData(
                 new GridData(SWT.FILL, SWT.CENTER, true, false, NUMBER_OF_COLUMNS_BOTTOM_GRID, 1));
 
+    }
+
+    protected void createTypeSelectionList(Composite container) {
+        final List list = new List(container, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
+        GridData gridData = new GridData(GridData.FILL, GridData.FILL, true, true);
+        gridData.verticalSpan = DEFAULT_GRID_DATA_VERTICAL_SPAN;
+        int listHeight = list.getItemHeight() * DEFAULT_LIST_HEIGHT_FACTOR;
+        Rectangle trim = list.computeTrim(0, 0, 0, listHeight);
+        gridData.heightHint = trim.height;
+        list.setLayoutData(gridData);
+        Collection<EntityType> types = HitroUtil.getInstance().getTypeFactory().getAllEntityTypes();
+        java.util.List<EntityType> allEntityTypes = new ArrayList<>(types);
+        Collections.sort(allEntityTypes, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+        java.util.List<String> entityNames = new ArrayList<>();
+        for (EntityType entityType : allEntityTypes) {
+            if (!entityType.getId().toLowerCase().endsWith("group")) { //$NON-NLS-1$
+                list.add(entityType.getName());
+                entityNames.add(entityType.getId());
+            }
+        }
+
+        list.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent event) {
+                entityText.setText(list.getItem(list.getSelectionIndex()));
+                entityName = list.getItem(list.getSelectionIndex());
+                entityNameId = entityNames.get(list.getSelectionIndex());
+                setPageComplete(validateData());
+            }
+
+        });
     }
 
     public boolean validateData() {
