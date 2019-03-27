@@ -55,6 +55,10 @@ import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("unchecked")
+@org.springframework.test.context.ContextConfiguration(locations={
+        "classpath:/sernet/gs/server/spring/veriniceserver-search-base.xml", //NON-NLS-1$
+        "classpath:/sernet/gs/server/spring/veriniceserver-search.xml", //NON-NLS-1$
+})
 public class ElasticsearchTest extends BeforeEachVNAImportHelper {
 
     private static final Logger LOG = Logger.getLogger(ElasticsearchTest.class);

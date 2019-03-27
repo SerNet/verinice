@@ -55,8 +55,7 @@ import sernet.verinice.model.iso27k.ISO27KModel;
         "classpath:/sernet/verinice/service/test/spring/veriniceserver-rightmanagement.xml", //NON-NLS-1$
         "classpath:/sernet/verinice/service/test/spring/veriniceserver-reportdeposit.xml", //NON-NLS-1$
         "classpath:/sernet/verinice/service/test/spring/veriniceserver-account.xml",
-        "classpath:/sernet/gs/server/spring/veriniceserver-search-base.xml", //NON-NLS-1$
-        "classpath:/sernet/gs/server/spring/veriniceserver-search.xml", //NON-NLS-1$
+        "classpath:/sernet/gs/server/spring/veriniceserver-search-dummy.xml", //NON-NLS-1$
         "classpath:/sernet/gs/server/spring/veriniceserver-updatenews-dummy.xml", //NON-NLS-1$
         "classpath:/sernet/gs/server/spring/veriniceserver-licensemanagement.xml", //NON-NLS-1$
         "classpath:/sernet/gs/server/spring/veriniceserver-risk-analysis-standalone.xml", //NON-NLS-1$
