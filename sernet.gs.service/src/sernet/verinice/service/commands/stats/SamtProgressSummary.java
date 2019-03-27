@@ -51,8 +51,9 @@ public class SamtProgressSummary extends GenericCommand {
         for (CnATreeElement e : cg.getChildren()) {
             if (e instanceof SamtTopic) {
                 SamtTopic st = (SamtTopic) e;
-                // ignore chapters 0.x (Copyright et al):
-                if (!st.getTitle().startsWith("0")) { //$NON-NLS-1$
+                String title = st.getTitle();
+                // ignore chapters 0.x (Copyright et al) and 100.x (addendum):
+                if (!title.startsWith("0") && !title.startsWith("100")) { //$NON-NLS-1$
                     if (IControl.IMPLEMENTED_NOTEDITED.equals(maturityService.getIsaState(st))) {
                         result.put(UNANSWERED, (Integer) result.get(UNANSWERED) + 1);
                     } else {
