@@ -18,17 +18,16 @@ import sernet.verinice.service.iso27k.ControlMaturityService;
 
 @SuppressWarnings("serial")
 /**
- * Returns two values: total topics and answered topics (state != default value).
- * 
+ * Returns two values: total topics and answered topics (state != default
+ * value).
  */
 public class SamtProgressSummary extends GenericCommand implements IAuthAwareCommand {
-   
+
     private static final Logger log = Logger.getLogger(SamtProgressSummary.class);
-    
+
     public static final String ANSWERED = Messages.SamtProgressSummary_0;
 
     public static final String UNANSWERED = Messages.SamtProgressSummary_1;
-
 
     private transient IAuthService authService;
 
@@ -52,7 +51,7 @@ public class SamtProgressSummary extends GenericCommand implements IAuthAwareCom
     }
 
     private void loadSamtTopics(ControlGroup cg) {
-        if (cg == null){
+        if (cg == null) {
             return;
         }
         ControlMaturityService maturityService = new ControlMaturityService();
@@ -63,10 +62,9 @@ public class SamtProgressSummary extends GenericCommand implements IAuthAwareCom
                 // ignore chapters 0.x (Copyright et al):
                 if (!st.getTitle().startsWith("0")) { //$NON-NLS-1$
                     if (maturityService.getIsaState(st) == IControl.IMPLEMENTED_NOTEDITED) {
-                        result.put(UNANSWERED, (Integer)result.get(UNANSWERED)+1);
-                    }
-                    else {
-                        result.put(ANSWERED, (Integer)result.get(ANSWERED)+1);
+                        result.put(UNANSWERED, (Integer) result.get(UNANSWERED) + 1);
+                    } else {
+                        result.put(ANSWERED, (Integer) result.get(ANSWERED) + 1);
                     }
                 }
             } else if (e instanceof ControlGroup) {
@@ -102,5 +100,4 @@ public class SamtProgressSummary extends GenericCommand implements IAuthAwareCom
     public void setAuthService(IAuthService service) {
         this.authService = service;
     }
-
 }
