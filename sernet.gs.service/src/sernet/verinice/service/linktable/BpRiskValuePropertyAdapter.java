@@ -173,7 +173,7 @@ public class BpRiskValuePropertyAdapter implements IPropertyAdapter {
             throw new RuntimeException(message, e);
         }
         RiskConfiguration riskConfiguration = ((ItNetwork) retrieveCommand.getElement())
-                .getRiskConfiguration();
+                .getRiskConfigurationOrDefault();
         if (log.isDebugEnabled()) {
             log.debug("Risk configuration of scope with id: " + scopeId + " is: "
                     + riskConfiguration);
