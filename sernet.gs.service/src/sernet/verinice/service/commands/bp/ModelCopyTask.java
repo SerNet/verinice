@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -51,16 +52,19 @@ public abstract class ModelCopyTask implements Runnable {
     private final String handledGroupTypeId;
     private final String elementTypeId;
     private final Set<CnATreeElement> targetElements;
+    private final Predicate<CnATreeElement> elementFilter;
 
     // key: element from compendium, value: element from scope
     private Map<CnATreeElement, CnATreeElement> existingGroupsByCompendiumGroup;
 
     public ModelCopyTask(ICommandService commandService, IDAOFactory daoFactory,
-            ModelingData modelingData, String handledGroupTypeId) {
+            ModelingData modelingData, String handledGroupTypeId,
+            Predicate<CnATreeElement> elementFilter) {
         this.commandService = commandService;
         this.daoFactory = daoFactory;
         this.modelingData = modelingData;
         this.handledGroupTypeId = handledGroupTypeId;
+        this.elementFilter = elementFilter;
         this.elementTypeId = CnATypeMapper.getElementTypeIdFromGroupTypeId(handledGroupTypeId);
         this.targetElements = modelingData.getTargetElements();
     }
@@ -106,7 +110,9 @@ public abstract class ModelCopyTask implements Runnable {
         for (Map.Entry<String, CnATreeElement> entry : compendiumElementsByIdentifier.entrySet()) {
             CnATreeElement compendiumElement = entry.getValue();
             if (!scopeelementyByIdentifier.containsKey(entry.getKey())) {
-                missingElements.add(compendiumElement);
+                if (elementFilter == null || elementFilter.test(compendiumElement)) {
+                    missingElements.add(compendiumElement);
+                }
             } else {
                 CnATreeElement scopeElement = scopeelementyByIdentifier.get(entry.getKey());
                 modelingData.addMappingForExistingElement(compendiumElement, scopeElement);
@@ -206,6 +212,11 @@ public abstract class ModelCopyTask implements Runnable {
             if (elementTypeId.equals(copy.getTypeId())) {
                 afterCopyElement(targetElement, copy, original);
             }
+        }
+
+        @Override
+        protected boolean copyDescendant(CnATreeElement descendant, CnATreeElement groupToCopyTo) {
+            return elementFilter == null || elementFilter.test(descendant);
         }
     }
 

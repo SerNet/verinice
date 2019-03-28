@@ -20,6 +20,7 @@
 package sernet.verinice.service.commands.bp;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -51,7 +52,10 @@ public class ModelThreatGroupTask extends ModelCopyTask {
 
     public ModelThreatGroupTask(ICommandService commandService, IDAOFactory daoFactory,
             ModelingData modelingData) {
-        super(commandService, daoFactory, modelingData, BpThreatGroup.TYPE_ID);
+        super(commandService, daoFactory, modelingData, BpThreatGroup.TYPE_ID,
+                element -> element.getLinksUp().stream().map(CnALink::getDependant)
+                        .map(modelingData::getScopeElementByCompendiumElement)
+                        .anyMatch(Objects::nonNull));
         this.requirementGroups = modelingData.getRequirementGroups();
     }
 

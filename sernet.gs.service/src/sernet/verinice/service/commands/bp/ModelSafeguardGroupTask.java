@@ -51,7 +51,7 @@ public class ModelSafeguardGroupTask extends ModelCopyTask {
 
     public ModelSafeguardGroupTask(ICommandService commandService, IDAOFactory daoFactory,
             ModelingData modelingData) {
-        super(commandService, daoFactory, modelingData, SafeguardGroup.TYPE_ID);
+        super(commandService, daoFactory, modelingData, SafeguardGroup.TYPE_ID, null);
         this.requirementGroups = modelingData.getRequirementGroups();
     }
 
