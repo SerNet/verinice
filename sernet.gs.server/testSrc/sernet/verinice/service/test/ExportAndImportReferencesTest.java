@@ -44,6 +44,7 @@ import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
 import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
+import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
 
 /**
  * Tests the import and export of SNCA properties of type references.
@@ -145,7 +146,7 @@ public class ExportAndImportReferencesTest extends BeforeEachVNAImportHelper {
         removeITVerbund(itVerbund1);
 
         LOG.info(IMPORT_REFERENCES_PREFIX + " from file " + filePath);
-        importFile(filePath, getSyncParameter());
+        VNAImportHelper.importFile(filePath, getSyncParameter());
 
         LOG.info(IMPORT_REFERENCES_PREFIX + " delete file " + filePath);
         File vnaArchive = new File(filePath);

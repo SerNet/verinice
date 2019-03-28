@@ -145,7 +145,7 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws IOException, CommandException, SyncParameterException {
         super.setUp();
         createTestOrganization();
     }

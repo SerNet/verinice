@@ -57,6 +57,7 @@ import sernet.verinice.service.test.helper.util.BFSTravers;
 import sernet.verinice.service.test.helper.util.CnATreeTraverser;
 import sernet.verinice.service.test.helper.util.CnATreeTraverser.CallBack;
 import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
+import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -101,7 +102,8 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
 
         SyncParameter syncParameter = new SyncParameter(true, false, false, false,
                 SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
-        SyncCommand syncCommand = importFile(getAbsoluteFilePath(VNA_FILE_INSERT), syncParameter);
+        SyncCommand syncCommand = VNAImportHelper.importFile(getAbsoluteFilePath(VNA_FILE_INSERT),
+                syncParameter);
 
         Anwendung anwendung1 = (Anwendung) loadElement(SOURCE_ID, ANWENDUNG_1_EXT_ID);
         Anwendung anwendung2 = (Anwendung) loadElement(SOURCE_ID, ANWENDUNG_INSERT_2_EXT_ID);
@@ -120,7 +122,8 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
 
         SyncParameter syncParameter = new SyncParameter(true, false, false, false,
                 SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
-        SyncCommand syncCommand = importFile(getAbsoluteFilePath(VNA_FILE_INSERT), syncParameter);
+        SyncCommand syncCommand = VNAImportHelper.importFile(getAbsoluteFilePath(VNA_FILE_INSERT),
+                syncParameter);
 
         assertEquals("only one object should have been inserted", 6, syncCommand.getInserted());
     }
@@ -131,8 +134,8 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
 
         SyncParameter syncParameter = new SyncParameter(true, false, false, false,
                 SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
-        SyncCommand syncCommand = importFile(getAbsoluteFilePath(VNA_FILE_INSERT_CLIENT),
-                syncParameter);
+        SyncCommand syncCommand = VNAImportHelper
+                .importFile(getAbsoluteFilePath(VNA_FILE_INSERT_CLIENT), syncParameter);
 
         assertEquals("only one object should have been inserted", 1, syncCommand.getInserted());
     }
@@ -143,7 +146,8 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
 
         SyncParameter syncParameter = new SyncParameter(true, false, false, false,
                 SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
-        SyncCommand syncCommand = importFile(getAbsoluteFilePath(VNA_FILE_UPDATE), syncParameter);
+        SyncCommand syncCommand = VNAImportHelper.importFile(getAbsoluteFilePath(VNA_FILE_UPDATE),
+                syncParameter);
 
         assertEquals("updated flag is set to false", 0, syncCommand.getPotentiallyUpdated());
     }
@@ -157,7 +161,8 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
 
         SyncParameter syncParameter = new SyncParameter(false, true, false, false,
                 SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
-        SyncCommand syncCommand = importFile(getAbsoluteFilePath(VNA_FILE_UPDATE), syncParameter);
+        SyncCommand syncCommand = VNAImportHelper.importFile(getAbsoluteFilePath(VNA_FILE_UPDATE),
+                syncParameter);
 
         assertEquals("only " + " elements can be updated", OBJECTS_IN_VNA_ARCHIV,
                 syncCommand.getPotentiallyUpdated());
@@ -172,7 +177,7 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
 
         SyncParameter syncParameter = new SyncParameter(false, true, false, false,
                 SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
-        importFile(getAbsoluteFilePath(VNA_FILE_UPDATE), syncParameter);
+        VNAImportHelper.importFile(getAbsoluteFilePath(VNA_FILE_UPDATE), syncParameter);
 
         Anwendung anwendungAfterImport = (Anwendung) loadElement(SOURCE_ID, ANWENDUNG_1_EXT_ID);
 
@@ -201,7 +206,7 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
 
         SyncParameter syncParameter = new SyncParameter(true, true, false, false,
                 SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
-        importFile(getAbsoluteFilePath(VNA_FILE_UPDATE_INSERT), syncParameter);
+        VNAImportHelper.importFile(getAbsoluteFilePath(VNA_FILE_UPDATE_INSERT), syncParameter);
 
         Anwendung anwendung1 = (Anwendung) loadElement(SOURCE_ID, ANWENDUNG_1_EXT_ID);
         Anwendung anwendung2 = (Anwendung) loadElement(SOURCE_ID, ANWENDUNG_2_EXT_ID);
@@ -225,7 +230,7 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
 
         SyncParameter syncParameter = new SyncParameter(true, true, false, false,
                 SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
-        importFile(getAbsoluteFilePath(VNA_FILE_RELATION), syncParameter);
+        VNAImportHelper.importFile(getAbsoluteFilePath(VNA_FILE_RELATION), syncParameter);
 
         Anwendung anwendungWithLink = (Anwendung) loadElement(SOURCE_ID, ANWENDUNG_1_EXT_ID);
         validateImportExtId(anwendungWithLink);
@@ -252,7 +257,7 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
 
         SyncParameter syncParameter = new SyncParameter(false, false, true, false,
                 SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
-        importFile(getAbsoluteFilePath(VNA_FILE_DELETE), syncParameter);
+        VNAImportHelper.importFile(getAbsoluteFilePath(VNA_FILE_DELETE), syncParameter);
 
         try {
             anwendung = (Anwendung) loadElement(SOURCE_ID, ANWENDUNG_1_EXT_ID);
@@ -271,7 +276,7 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
 
         SyncParameter syncParameter = new SyncParameter(false, false, true, false,
                 SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
-        importFile(getAbsoluteFilePath(VNA_FILE_DELETE), syncParameter);
+        VNAImportHelper.importFile(getAbsoluteFilePath(VNA_FILE_DELETE), syncParameter);
 
         LoadElementByUuid<Anwendung> loadElementByUuid = new LoadElementByUuid<Anwendung>(
                 anwendung.getUuid());
@@ -293,7 +298,7 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
         setSourceId(organization);
 
         SyncParameter syncParameter = new SyncParameter(false, false, true, false);
-        importFile(getAbsoluteFilePath(VNA_FILE_DELETE), syncParameter);
+        VNAImportHelper.importFile(getAbsoluteFilePath(VNA_FILE_DELETE), syncParameter);
 
         for (String uuid : victims) {
             LoadElementByUuid<CnATreeElement> loadElementByUuid = new LoadElementByUuid<CnATreeElement>(

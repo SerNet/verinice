@@ -33,13 +33,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import junit.framework.Assert;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.service.commands.SyncCommand;
+import sernet.verinice.service.commands.SyncParameter;
+import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
 
 /**
  *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class LinkTableCreateTest extends ContextConfiguration {
+public class LinkTableCreateTest extends CommandServiceProvider {
 
     @Autowired
     ObjectFactory loadDataFactory;
@@ -47,9 +50,9 @@ public class LinkTableCreateTest extends ContextConfiguration {
     @Autowired
     HUITypeFactory huiTypeFactory;
 
-    private LoadData loadData;
-
     private final Logger log = Logger.getLogger(LinkTableCreateTest.class);
+
+    private SyncCommand syncCommand;
 
     @Test
     public void testChildRelation() throws Exception {
@@ -254,18 +257,26 @@ public class LinkTableCreateTest extends ContextConfiguration {
 
     public List<List<String>> loadTestData(String vltFile, String vnaFile, String sourceId,
             List<String> orgExtIds) throws Exception {
-        loadData = (LoadData) loadDataFactory.getObject();
+        String filePath = this.getClass().getResource(vnaFile).getPath();
+        SyncParameter syncParameter = new SyncParameter(true, true, true, false,
+                SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
+        syncCommand = VNAImportHelper.importFile(filePath, syncParameter);
+        LoadData loadData = (LoadData) loadDataFactory.getObject();
         loadData.setVltFile(vltFile);
-        loadData.setVnaFile(vnaFile);
         loadData.setSourceId(sourceId);
         loadData.setOrgExtIds(orgExtIds);
-        loadData.setUp();
-        return loadData.loadAndExecuteVLT();
+        return loadData.loadAndExecuteVLT((t, u) -> {
+            try {
+                return loadElement(t, u);
+            } catch (CommandException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @After
     public void deleteTestData() throws CommandException {
-        loadData.tearDown();
+        VNAImportHelper.tearDown(syncCommand, elementDao);
     }
 
     private void prettyPrint(String msg, List<List<String>> list) {
