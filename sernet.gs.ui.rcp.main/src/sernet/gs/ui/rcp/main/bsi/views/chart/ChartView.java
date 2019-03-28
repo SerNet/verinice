@@ -48,12 +48,10 @@ import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.catalog.CatalogModel;
-import sernet.verinice.model.common.ChangeLogEntry;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.NullListener;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.validation.CnAValidation;
 
 /**
  * Displays charts to visualize progress and other data.
@@ -107,13 +105,6 @@ public class ChartView extends ViewPart {
     private Action chooseMaturityBarDiagramAction;
 
     private MaturityBarChart maturityBarChart;
-
-    /**
-     * Creates a new view.
-     */
-    public ChartView() {
-        super();
-    }
 
     @Override
     public void createPartControl(Composite parent) {
@@ -260,7 +251,7 @@ public class ChartView extends ViewPart {
     }
 
     private WorkspaceJob createDrawChartJob() {
-        WorkspaceJob job = new WorkspaceJob(Messages.ChartView_6) {
+        return new WorkspaceJob(Messages.ChartView_6) {
             @Override
             public IStatus runInWorkspace(IProgressMonitor monitor) {
                 Activator.inheritVeriniceContextState();
@@ -299,49 +290,37 @@ public class ChartView extends ViewPart {
                 return Status.OK_STATUS;
             }
         };
-        return job;
     }
 
     private void createSelectionListeners() {
         loadListener = new IModelLoadListener() {
 
             public void closed(BSIModel model) {
-                Display.getDefault().asyncExec(new Runnable() {
-                    public void run() {
-                        currentChartGenerator = emptyChart;
-                        drawChart();
-                    }
+                Display.getDefault().asyncExec(() -> {
+                    currentChartGenerator = emptyChart;
+                    drawChart();
                 });
             }
 
             public void loaded(final BSIModel model) {
-                Display.getDefault().asyncExec(new Runnable() {
-                    public void run() {
-                        CnAElementFactory.getLoadedModel().addBSIModelListener(changeListener);
-                    }
-                });
+                Display.getDefault().asyncExec(() -> CnAElementFactory.getLoadedModel()
+                        .addBSIModelListener(changeListener));
             }
 
             public void loaded(ISO27KModel model) {
-                Display.getDefault().asyncExec(new Runnable() {
-                    public void run() {
-                        CnAElementFactory.getInstance().getISO27kModel()
-                                .addISO27KModelListener(changeListener);
-                        currentChartGenerator = getDefaultChartGenerator();
-                        drawChart();
-                    }
+                Display.getDefault().asyncExec(() -> {
+                    CnAElementFactory.getInstance().getISO27kModel()
+                            .addISO27KModelListener(changeListener);
+                    currentChartGenerator = getDefaultChartGenerator();
+                    drawChart();
                 });
 
             }
 
             @Override
             public void loaded(BpModel model) {
-                Display.getDefault().asyncExec(new Runnable() {
-                    public void run() {
-                        CnAElementFactory.getInstance().getBpModel()
-                                .addModITBOModelListener(changeListener);
-                    }
-                });
+                Display.getDefault().asyncExec(() -> CnAElementFactory.getInstance().getBpModel()
+                        .addModITBOModelListener(changeListener));
             }
 
             @Override
@@ -358,11 +337,7 @@ public class ChartView extends ViewPart {
     }
 
     private void hookPageSelection() {
-        selectionListener = new ISelectionListener() {
-            public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-                pageSelectionChanged(part, selection);
-            }
-        };
+        selectionListener = this::pageSelectionChanged;
         getSite().getPage().addPostSelectionListener(selectionListener);
     }
 
@@ -400,17 +375,12 @@ public class ChartView extends ViewPart {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.part.WorkbenchPart#dispose()
      */
     @Override
     public void dispose() {
         getSite().getPage().removePostSelectionListener(selectionListener);
         CnAElementFactory.getInstance().removeLoadListener(loadListener);
-        if (CnAElementFactory.getLoadedModel() != null) {
-            CnAElementFactory.getLoadedModel().removeBSIModelListener(changeListener);
-        }
         if (CnAElementFactory.getLoadedModel() != null) {
             CnAElementFactory.getLoadedModel().removeBSIModelListener(changeListener);
         }
@@ -445,81 +415,24 @@ public class ChartView extends ViewPart {
         return null;
     }
 
-    protected class ChangeListener
+    protected class ChangeListener extends NullListener
             implements IBSIModelListener, IISO27KModelListener, IBpModelListener {
-        public void childAdded(CnATreeElement category, CnATreeElement child) {
-            // do nothing
-        }
 
-        public void childChanged(CnATreeElement child) {
-            // do nothing
-        }
-
-        public void childRemoved(CnATreeElement category, CnATreeElement child) {
-            // do nothing
-        }
-
-        public void linkChanged(CnALink old, CnALink link, Object source) {
-            // do nothing
-        }
-
-        public void linkRemoved(CnALink link) {
-            // do nothing
-
-        }
-
+        @Override
         public void modelRefresh(Object source) {
             drawChart();
         }
 
-        public void linkAdded(CnALink link) {
-        }
-
-        public void databaseChildAdded(CnATreeElement child) {
-        }
-
-        public void databaseChildChanged(CnATreeElement child) {
-        }
-
-        public void databaseChildRemoved(CnATreeElement child) {
-        }
-
-        public void modelRefresh() {
-        }
-
-        public void modelReload(BSIModel newModel) {
-        }
-
-        public void modelReload(ISO27KModel newModel) {
-        }
-
-        public void databaseChildRemoved(ChangeLogEntry entry) {
-        }
-
-        @Override
-        public void validationAdded(Integer scopeId) {
-        };
-
-        @Override
-        public void validationRemoved(Integer scopeId) {
-        };
-
-        @Override
-        public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation) {
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see
-         * sernet.verinice.model.iso27k.IBpModelListener#modelReload(sernet.
-         * verinice.model.bp.elements.BpModel)
-         */
         @Override
         public void modelReload(BpModel newModel) {
-            // TODO Auto-generated method stub
+            // do nothing
+        }
 
-        };
+        @Override
+        public void modelReload(ISO27KModel newModel) {
+            // do nothing
+        }
+
     }
 
 }

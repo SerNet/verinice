@@ -68,12 +68,6 @@ public class MassnahmenSummaryHome {
         return command.getSummary();
     }
 
-    /**
-     * @param elmt
-     * @param level
-     * @return
-     * @throws CommandException
-     */
     public Map<String, Double> getControlGroups(ControlGroup elmt) throws CommandException {
         MaturitySummary command = new MaturitySummary(elmt.getEntity().getEntityType(),
                 elmt.getEntity().getDbId(), MaturitySummary.TYPE_IMPLEMENTATION);
@@ -102,11 +96,6 @@ public class MassnahmenSummaryHome {
         return command.getSummary();
     }
 
-    /**
-     * @param elmt
-     * @return
-     * @throws CommandException
-     */
     public Map<String, Double> getControlGoal1Groups(ControlGroup elmt) throws CommandException {
         MaturitySummary command = new MaturitySummary(elmt.getEntity().getEntityType(),
                 elmt.getEntity().getDbId(), MaturitySummary.TYPE_THRESHOLD1);
@@ -122,11 +111,6 @@ public class MassnahmenSummaryHome {
     // STring, change query in "LoadConfiguration", allow accounts for
     // iso-persons as well as bsimodel-persons, test if that works
 
-    /**
-     * @param elmt
-     * @return
-     * @throws CommandException
-     */
     public Map<String, Double> getControlGoal2Groups(ControlGroup elmt) throws CommandException {
         MaturitySummary command = new MaturitySummary(elmt.getEntity().getEntityType(),
                 elmt.getEntity().getDbId(), MaturitySummary.TYPE_THRESHOLD2);
@@ -135,11 +119,6 @@ public class MassnahmenSummaryHome {
 
     }
 
-    /**
-     * @param controlGroup
-     * @return
-     * @throws CommandException
-     */
     public Map<String, Integer> getSamtTopicsProgress(ControlGroup controlGroup)
             throws CommandException {
         SamtProgressSummary command = new SamtProgressSummary(controlGroup);

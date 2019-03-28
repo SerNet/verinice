@@ -37,7 +37,6 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.common.ChangeLogEntry;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Control;
@@ -61,16 +60,11 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
 
     private ICommandService commandService;
 
-    public SpiderChartView() {
-        super();
-    }
-
     public String getRightID() {
         return ActionRightIDs.SHOWCHARTVIEW;
     }
 
     /*
-     * (non-Javadoc)
      * 
      * @see
      * sernet.gs.ui.rcp.main.bsi.views.chart.ChartView#getDefaultChartGenerator
@@ -82,7 +76,6 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
     }
 
     /*
-     * (non-Javadoc)
      * 
      * @see sernet.gs.ui.rcp.main.bsi.views.chart.ChartView#createMenus()
      */
@@ -92,16 +85,15 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
     }
 
     /*
-     * (non-Javadoc)
      * 
      * @see sernet.gs.ui.rcp.main.bsi.views.chart.ChartView#setDescription()
      */
+    @Override
     protected void setDescription() {
         // no description
     }
 
     /*
-     * (non-Javadoc)
      * 
      * @see sernet.gs.ui.rcp.main.bsi.views.chart.ChartView#getDefaultElement()
      */
@@ -159,11 +151,7 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
         }
 
         Object firstSelection = ((IStructuredSelection) selection).getFirstElement();
-
-        if (!(firstSelection instanceof CnATreeElement)) {
-            return false;
-        }
-        return true;
+        return firstSelection instanceof CnATreeElement;
     }
 
     private ControlGroup getChartControlGroup(CnATreeElement selection) {
@@ -219,7 +207,6 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
     }
 
     /*
-     * (non-Javadoc)
      * 
      * @see sernet.verinice.rcp.IAttachedToPerspective#getPerspectiveId()
      */
@@ -227,6 +214,7 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
         return SamtPerspective.ID;
     }
 
+    @Override
     protected ChartView.ChangeListener createChangeListener() {
         return new SamtChartListener();
     }
@@ -235,7 +223,6 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
             implements IBSIModelListener, IISO27KModelListener {
 
         /*
-         * (non-Javadoc)
          * 
          * @see
          * sernet.verinice.model.iso27k.IISO27KModelListener#childAdded(sernet.
@@ -248,7 +235,6 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
         }
 
         /*
-         * (non-Javadoc)
          * 
          * @see
          * sernet.verinice.model.iso27k.IISO27KModelListener#childChanged(sernet
@@ -261,7 +247,6 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
         }
 
         /*
-         * (non-Javadoc)
          * 
          * @see
          * sernet.verinice.model.iso27k.IISO27KModelListener#childRemoved(sernet
@@ -274,7 +259,6 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
         }
 
         /*
-         * (non-Javadoc)
          * 
          * @see
          * sernet.verinice.model.iso27k.IISO27KModelListener#databaseChildAdded(
@@ -286,7 +270,6 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
         }
 
         /*
-         * (non-Javadoc)
          * 
          * @see sernet.verinice.model.iso27k.IISO27KModelListener#
          * databaseChildChanged(sernet.verinice.model.common.CnATreeElement)
@@ -297,7 +280,6 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
         }
 
         /*
-         * (non-Javadoc)
          * 
          * @see sernet.verinice.model.iso27k.IISO27KModelListener#
          * databaseChildRemoved(sernet.verinice.model.common.CnATreeElement)
@@ -308,7 +290,6 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
         }
 
         /*
-         * (non-Javadoc)
          * 
          * @see sernet.verinice.model.iso27k.IISO27KModelListener#
          * databaseChildRemoved(sernet.verinice.model.common.ChangeLogEntry)
@@ -319,43 +300,6 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
         }
 
         /*
-         * (non-Javadoc)
-         * 
-         * @see
-         * sernet.verinice.model.iso27k.IISO27KModelListener#linkAdded(sernet.
-         * verinice.model.common.CnALink)
-         */
-        @Override
-        public void linkAdded(CnALink link) {
-
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see
-         * sernet.verinice.model.iso27k.IISO27KModelListener#linkChanged(sernet.
-         * verinice.model.common.CnALink, sernet.verinice.model.common.CnALink,
-         * java.lang.Object)
-         */
-        @Override
-        public void linkChanged(CnALink old, CnALink link, Object source) {
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see
-         * sernet.verinice.model.iso27k.IISO27KModelListener#linkRemoved(sernet.
-         * verinice.model.common.CnALink)
-         */
-        @Override
-        public void linkRemoved(CnALink link) {
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
          * @see
          * sernet.verinice.model.iso27k.IISO27KModelListener#modelRefresh(java.
          * lang.Object)
@@ -366,7 +310,6 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
         }
 
         /*
-         * (non-Javadoc)
          * 
          * @see
          * sernet.verinice.model.iso27k.IISO27KModelListener#modelReload(sernet.
@@ -378,7 +321,6 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
         }
 
         /*
-         * (non-Javadoc)
          * 
          * @see sernet.verinice.model.bsi.IBSIModelListener#modelRefresh()
          */
@@ -388,7 +330,6 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
         }
 
         /*
-         * (non-Javadoc)
          * 
          * @see sernet.verinice.model.bsi.IBSIModelListener#modelReload(sernet.
          * verinice.model.bsi.BSIModel)
