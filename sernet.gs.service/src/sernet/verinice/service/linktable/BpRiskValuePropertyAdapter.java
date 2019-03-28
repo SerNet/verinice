@@ -164,8 +164,7 @@ public class BpRiskValuePropertyAdapter implements IPropertyAdapter {
                     "Loading scope with id: " + scopeId + ". Element with scope id is: " + element);
         }
         RetrieveCnATreeElement retrieveCommand = new RetrieveCnATreeElement(ItNetwork.TYPE_ID,
-                scopeId,
-                RetrieveInfo.getPropertyInstance());
+                scopeId, RetrieveInfo.getPropertyInstance());
         try {
             retrieveCommand = getCommandService().executeCommand(retrieveCommand);
         } catch (CommandException e) {

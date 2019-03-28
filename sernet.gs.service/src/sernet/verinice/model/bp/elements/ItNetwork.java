@@ -168,8 +168,8 @@ public class ItNetwork extends CnATreeElement
     public String getAbbreviation() {
         return getEntity().getPropertyValue(PROP_ABBR);
     }
-    
-   public RiskConfiguration getRiskConfiguration() {
+
+    public RiskConfiguration getRiskConfiguration() {
         String rawPropertyValue = getEntity().getRawPropertyValue(PROP_RISK_CONFIGURATION);
         if (rawPropertyValue == null) {
             return null;

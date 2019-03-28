@@ -188,7 +188,8 @@ public class RiskMatrixConfigurator extends Composite {
             RGB riskColor = ColorConverter.toRGB(risk.getColor());
             if (riskColor != null) {
                 backgroundColor = SWTResourceManager.getColor(riskColor);
-                textColor = SWTResourceManager.getColor(determineOptimalTextColor(riskColor, WHITE, BLACK));
+                textColor = SWTResourceManager
+                        .getColor(determineOptimalTextColor(riskColor, WHITE, BLACK));
             }
         }
 
