@@ -42,7 +42,7 @@ public class ModelModulesTask extends ModelCopyTask {
 
     public ModelModulesTask(ICommandService commandService, IDAOFactory daoFactory,
             ModelingData modelingData) {
-        super(commandService, daoFactory, modelingData, BpRequirementGroup.TYPE_ID);
+        super(commandService, daoFactory, modelingData, BpRequirementGroup.TYPE_ID, null);
         this.modulesCompendium = modelingData.getRequirementGroups();
     }
 
