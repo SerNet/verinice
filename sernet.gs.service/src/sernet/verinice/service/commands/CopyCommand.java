@@ -62,7 +62,8 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class CopyCommand extends GenericCommand {
 
-    private static final long serialVersionUID = -269076325994387265L;
+    private static final long serialVersionUID = 6584744904579507661L;
+
     private static final Logger logger = Logger.getLogger(CopyCommand.class);
 
     private static final int DEFAULT_FLUSH_LEVEL = 50;
@@ -279,9 +280,28 @@ public class CopyCommand extends GenericCommand {
             throws CommandException, IOException {
         if (element.getChildren() != null) {
             for (CnATreeElement child : element.getChildren()) {
-                copy(elementCopy, child, sourceDestMap);
+                if (copyDescendant(child, elementCopy)) {
+                    copy(elementCopy, child, sourceDestMap);
+                }
             }
         }
+    }
+
+    /**
+     * By default, all descendants are copied recursively. Overwrite this method
+     * to filter, which descendants to include in the copying process.
+     * 
+     * @param descendant
+     *            the current descendant that is to be copied (the original
+     *            element in the source tree)
+     * @param groupToCopyTo
+     *            the target group that the element would be copied to (in the
+     *            destination tree)
+     * @return {@code true} to copy the element, {@code false} to ignore it (and
+     *         its descendants, if applicable)
+     */
+    protected boolean copyDescendant(CnATreeElement descendant, CnATreeElement groupToCopyTo) {
+        return true;
     }
 
     private CnATreeElement saveCopy(CnATreeElement toGroup, CnATreeElement copyElement)
