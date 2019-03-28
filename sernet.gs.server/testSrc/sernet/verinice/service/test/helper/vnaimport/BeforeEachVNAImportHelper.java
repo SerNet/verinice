@@ -23,8 +23,6 @@ import org.junit.After;
 import org.junit.Before;
 
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.service.commands.SyncParameter;
-import sernet.verinice.service.commands.SyncParameterException;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -33,15 +31,12 @@ import sernet.verinice.service.commands.SyncParameterException;
 public abstract class BeforeEachVNAImportHelper extends AbstractVNAImportHelper {
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         super.setUp();
     }
 
-    
     @After
-    public void tearDown() throws CommandException
-    {
+    public void tearDown() throws CommandException {
         super.tearDown();
     }
 }

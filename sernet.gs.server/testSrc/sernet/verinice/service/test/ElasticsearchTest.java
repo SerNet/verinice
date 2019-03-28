@@ -76,7 +76,7 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
 
     @Resource(name = "jsonBuilder")
     protected IJsonBuilder jsonBuilder;
-    
+
     final String NEW_TITEL = "SerNet NOT defined yet";
     final String TITEL = "Cryptography";
 
@@ -89,23 +89,28 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
         findAllElementsFromVna(true);
         searchDao.clear();
         findAllElementsFromVna(false);
-        
+
     }
-    
+
     @Test
     public void findLongWord() {
         searchIndexer.blockingIndexing();
         String longWord = "automatically";
 
-        VeriniceSearchResult result = searchService.query(new VeriniceQuery(longWord, VeriniceQuery.MAX_LIMIT));
+        VeriniceSearchResult result = searchService
+                .query(new VeriniceQuery(longWord, VeriniceQuery.MAX_LIMIT));
         VeriniceSearchResultTable entity = result.getVeriniceSearchObject(SamtTopic.TYPE_ID);
         assertNotNull("Token \"" + longWord + "\" not found in " + VNA_FILENAME, entity);
 
-        VeriniceSearchResultRow element = result.getVeriniceSearchObject(SamtTopic.TYPE_ID).getRows().iterator().next();
-        assertNotNull(element.getValueFromResultString(SamtTopic.PROP_DESC), "Token \"" + longWord + "\" is not in the right column " + SamtTopic.PROP_DESC);
+        VeriniceSearchResultRow element = result.getVeriniceSearchObject(SamtTopic.TYPE_ID)
+                .getRows().iterator().next();
+        assertNotNull(element.getValueFromResultString(SamtTopic.PROP_DESC),
+                "Token \"" + longWord + "\" is not in the right column " + SamtTopic.PROP_DESC);
 
         String propertyId = element.getOccurence().getColumnIds().first();
-        assertThat("Token \"" + longWord + "\" is not in the right column " + propertyId, element.getValueFromResultString(propertyId), JUnitMatchers.containsString(longWord));
+        assertThat("Token \"" + longWord + "\" is not in the right column " + propertyId,
+                element.getValueFromResultString(propertyId),
+                JUnitMatchers.containsString(longWord));
     }
 
     @Test
@@ -116,64 +121,74 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
         assertEquals("Element found with string: " + NEW_TITEL, 0, result.getHits());
 
         result = findByTitle(TITEL);
-        assertThat("No element found with ' "+ TITEL + "' in title", result.getHits(), CoreMatchers.not(CoreMatchers.equalTo(0)));
+        assertThat("No element found with ' " + TITEL + "' in title", result.getHits(),
+                CoreMatchers.not(CoreMatchers.equalTo(0)));
 
-        VeriniceSearchResultRow row = result.getAllVeriniceSearchTables().iterator().next().getRows().iterator().next();
+        VeriniceSearchResultRow row = result.getAllVeriniceSearchTables().iterator().next()
+                .getRows().iterator().next();
         String uuid = getUuid(row);
-        CnATreeElement element = elementDao.findByUuid(uuid, RetrieveInfo.getPropertyInstance().setPermissions(true));
+        CnATreeElement element = elementDao.findByUuid(uuid,
+                RetrieveInfo.getPropertyInstance().setPermissions(true));
         assertNotNull("No element found with uuid: " + uuid, element);
 
         element.setTitel(NEW_TITEL);
         String json = jsonBuilder.getJson(element);
-        assertThat("JSON does not contain " + NEW_TITEL + ":VNA_FILENAME " + json, json, JUnitMatchers.containsString(NEW_TITEL));
+        assertThat("JSON does not contain " + NEW_TITEL + ":VNA_FILENAME " + json, json,
+                JUnitMatchers.containsString(NEW_TITEL));
 
         searchDao.update(uuid, json);
         result = findByTitle(NEW_TITEL);
-        assertThat("No element found with string: " + NEW_TITEL, result.getHits(), CoreMatchers.not(CoreMatchers.equalTo(0)));
+        assertThat("No element found with string: " + NEW_TITEL, result.getHits(),
+                CoreMatchers.not(CoreMatchers.equalTo(0)));
     }
 
     @Test
     public void testDelete() {
         searchIndexer.blockingIndexing();
         VeriniceSearchResult result = findByTitle(TITEL);
-        assertThat("No element found with ' "+ TITEL + "' in title", result.getHits(), CoreMatchers.not(CoreMatchers.equalTo(0)));
+        assertThat("No element found with ' " + TITEL + "' in title", result.getHits(),
+                CoreMatchers.not(CoreMatchers.equalTo(0)));
         delete(result);
         result = findByTitle(NEW_TITEL);
-        assertEquals("Element found with ' "+ TITEL + "' in title", 0, result.getHits());
+        assertEquals("Element found with ' " + TITEL + "' in title", 0, result.getHits());
     }
-    
+
     @Test
     public void findPhrases() {
         searchIndexer.blockingIndexing();
         String phrase = "Protection from malware";
 
-        VeriniceSearchResult result = searchService.query(new VeriniceQuery(phrase, VeriniceQuery.MAX_LIMIT));
+        VeriniceSearchResult result = searchService
+                .query(new VeriniceQuery(phrase, VeriniceQuery.MAX_LIMIT));
         VeriniceSearchResultTable entity = result.getVeriniceSearchObject(SamtTopic.TYPE_ID);
         assertNotNull("Phrase \"" + phrase + "\" not found in " + VNA_FILENAME, entity);
 
-        
-        
-        Set<VeriniceSearchResultRow> entities = result.getVeriniceSearchObject(SamtTopic.TYPE_ID).getRows();
-        assertEquals("Phrase \"" + phrase + "\" should only match one time in " + VNA_FILENAME, 1, entities.size());
+        Set<VeriniceSearchResultRow> entities = result.getVeriniceSearchObject(SamtTopic.TYPE_ID)
+                .getRows();
+        assertEquals("Phrase \"" + phrase + "\" should only match one time in " + VNA_FILENAME, 1,
+                entities.size());
 
-        
-        VeriniceSearchResultRow element = result.getVeriniceSearchObject(SamtTopic.TYPE_ID).getRows().iterator().next();
+        VeriniceSearchResultRow element = result.getVeriniceSearchObject(SamtTopic.TYPE_ID)
+                .getRows().iterator().next();
         String propertyId = element.getOccurence().getColumnIds().first();
-        
-        assertNotNull(element.getValueFromResultString(propertyId), "Phrase \"" + phrase + "\" is not in the right column " + propertyId);
-        assertThat("Phrase \"" + phrase + "\" is not in the right column " + propertyId, element.getValueFromResultString(propertyId), JUnitMatchers.containsString(phrase));
+
+        assertNotNull(element.getValueFromResultString(propertyId),
+                "Phrase \"" + phrase + "\" is not in the right column " + propertyId);
+        assertThat("Phrase \"" + phrase + "\" is not in the right column " + propertyId,
+                element.getValueFromResultString(propertyId), JUnitMatchers.containsString(phrase));
     }
-    
+
     @After
     public void tearDown() throws CommandException {
         searchDao.clear();
         super.tearDown();
     }
-    
+
     private void findAllElementsFromVna(boolean expectedResult) {
-        List<Object> elementList = elementDao.findByQuery("select e.uuid from CnATreeElement e where e.sourceId = '1460b5'", new String[] {});
+        List<Object> elementList = elementDao.findByQuery(
+                "select e.uuid from CnATreeElement e where e.sourceId = '1460b5'", new String[] {});
         if (LOG.isInfoEnabled()) {
-            LOG.info("Number of elements to test: "+ elementList.size());
+            LOG.info("Number of elements to test: " + elementList.size());
         }
         for (Object uuid : elementList) {
             findElement((String) uuid, expectedResult);
@@ -204,16 +219,18 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
         LOG.debug(element.getUuid() + ", hits: " + result.getHits());
         boolean found = isElementInResult(result, element);
         String message = (expectedResult) ? "Element not found" : "Element found";
-        assertEquals(message + ", title: " + element.getTitle() + ", uuid: " + element.getUuid(), expectedResult, found);
+        assertEquals(message + ", title: " + element.getTitle() + ", uuid: " + element.getUuid(),
+                expectedResult, found);
     }
-    
+
     private void testFindByTitle(CnATreeElement element, boolean expectedResult) {
         VeriniceQuery query = new VeriniceQuery(element.getTitle(), 200);
         VeriniceSearchResult result = searchService.query(query, element.getTypeId());
         LOG.debug(element.getTitle() + ", hits: " + result.getHits());
         boolean found = isElementInResult(result, element);
         String message = (expectedResult) ? "Element not found" : "Element found";
-        assertEquals(message + ", title: " + element.getTitle() + ", uuid: " + element.getUuid(), expectedResult, found);      
+        assertEquals(message + ", title: " + element.getTitle() + ", uuid: " + element.getUuid(),
+                expectedResult, found);
     }
 
     private boolean isElementInResult(VeriniceSearchResult result, CnATreeElement element) {
@@ -228,14 +245,15 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
     }
 
     private VeriniceSearchResultRow getResultRow(VeriniceSearchResult result, String uuid) {
-        for (VeriniceSearchResultTable resultTable : result.getAllVeriniceSearchTables()) {         
+        for (VeriniceSearchResultTable resultTable : result.getAllVeriniceSearchTables()) {
             Set<VeriniceSearchResultRow> resultRows = resultTable.getRows();
             for (VeriniceSearchResultRow resultRow : resultRows) {
-                String uuidFromResult = resultRow.getValueFromResultString(ISearchService.ES_FIELD_UUID);
+                String uuidFromResult = resultRow
+                        .getValueFromResultString(ISearchService.ES_FIELD_UUID);
                 if (uuid.equals(uuidFromResult)) {
                     return resultRow;
                 }
-            }  
+            }
         }
         return null;
     }
@@ -257,7 +275,8 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
 
     @Override
     protected SyncParameter getSyncParameter() throws SyncParameterException {
-        return new SyncParameter(true, true, true, false, SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
+        return new SyncParameter(true, true, true, false,
+                SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
     }
 
 }

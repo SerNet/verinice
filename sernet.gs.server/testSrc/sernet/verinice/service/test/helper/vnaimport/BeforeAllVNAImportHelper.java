@@ -31,15 +31,12 @@ import sernet.verinice.interfaces.CommandException;
 public abstract class BeforeAllVNAImportHelper extends AbstractVNAImportHelper {
 
     @BeforeClass
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         super.setUp();
     }
 
-    
     @AfterClass
-    public void tearDown() throws CommandException
-    {
+    public void tearDown() throws CommandException {
         super.tearDown();
     }
 

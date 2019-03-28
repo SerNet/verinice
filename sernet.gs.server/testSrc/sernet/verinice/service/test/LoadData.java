@@ -61,7 +61,7 @@ class LoadData extends AbstractVNAImportHelper {
     private void writeScopeAndExtIdToLinkTableConfiguration() throws CommandException {
 
         LinkTableConfiguration changedConfiguration = cloneConfiguration(configuration);
-        for(String extId : getOrgExtIds()){
+        for (String extId : getOrgExtIds()) {
             CnATreeElement org = loadElement(getSourceId(), extId);
             changedConfiguration.addScopeId(org.getScopeId());
         }
@@ -71,7 +71,8 @@ class LoadData extends AbstractVNAImportHelper {
 
     private LinkTableConfiguration cloneConfiguration(ILinkTableConfiguration configuration) {
         LinkTableConfiguration.Builder builder = new LinkTableConfiguration.Builder();
-        builder.setColumnPathes(configuration.getColumnPaths()).setLinkTypeIds(configuration.getLinkTypeIds());
+        builder.setColumnPathes(configuration.getColumnPaths())
+                .setLinkTypeIds(configuration.getLinkTypeIds());
         if (configuration.getScopeIdArray() != null) {
             builder.setScopeIds(new HashSet<>(Arrays.asList(configuration.getScopeIdArray())));
         }
@@ -85,7 +86,8 @@ class LoadData extends AbstractVNAImportHelper {
 
     @Override
     protected SyncParameter getSyncParameter() throws SyncParameterException {
-        return new SyncParameter(true, true, true, false, SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
+        return new SyncParameter(true, true, true, false,
+                SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
     }
 
     public String getVltFile() {
