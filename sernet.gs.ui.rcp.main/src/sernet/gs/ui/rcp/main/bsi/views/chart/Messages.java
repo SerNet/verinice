@@ -26,26 +26,26 @@ import org.eclipse.osgi.util.NLS;
  *
  */
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "sernet.gs.ui.rcp.main.bsi.views.chart.messages"; //$NON-NLS-1$
-	public static String ChartView_0;
-	public static String ChartView_1;
-	public static String ChartView_10;
-	public static String ChartView_11;
-	public static String ChartView_2;
-	public static String ChartView_3;
-	public static String ChartView_4;
-	public static String ChartView_5;
-	public static String ChartView_6;
-	public static String ChartView_7;
-	public static String ChartView_8;
-	public static String ChartView_9;
-	public static String LebenszyklusBarChart_0;
-	public static String LebenszyklusBarChart_1;
-	public static String LebenszyklusBarChart_2;
-	public static String LebenszyklusBarChart_3;
-	public static String LebenszyklusBarChart_4;
-	public static String LebenszyklusBarChart_5;
-	public static String LebenszyklusBarChart_6;
+    private static final String BUNDLE_NAME = "sernet.gs.ui.rcp.main.bsi.views.chart.messages"; //$NON-NLS-1$
+    public static String ChartView_0;
+    public static String ChartView_1;
+    public static String ChartView_10;
+    public static String ChartView_11;
+    public static String ChartView_2;
+    public static String ChartView_3;
+    public static String ChartView_4;
+    public static String ChartView_5;
+    public static String ChartView_6;
+    public static String ChartView_7;
+    public static String ChartView_8;
+    public static String ChartView_9;
+    public static String LebenszyklusBarChart_0;
+    public static String LebenszyklusBarChart_1;
+    public static String LebenszyklusBarChart_2;
+    public static String LebenszyklusBarChart_3;
+    public static String LebenszyklusBarChart_4;
+    public static String LebenszyklusBarChart_5;
+    public static String LebenszyklusBarChart_6;
     public static String MaturityBarChart_0;
     public static String MaturityBarChart_1;
     public static String MaturityBarChart_2;
@@ -62,38 +62,38 @@ public class Messages extends NLS {
     public static String ISRSpiderChart_3;
     public static String ISRSpiderChart_4;
     public static String ISRSpiderChart_5;
-	public static String RealisierungLineChart_0;
-	public static String RealisierungLineChart_1;
-	public static String RealisierungLineChart_2;
-	public static String RealisierungLineChart_3;
-	public static String RealisierungLineChart_4;
-	public static String RealisierungLineChart_6;
-	public static String RealisierungLineChart_7;
-	public static String RealisierungLineChart_8;
-	public static String SamtProgressChart_0;
+    public static String RealisierungLineChart_0;
+    public static String RealisierungLineChart_1;
+    public static String RealisierungLineChart_2;
+    public static String RealisierungLineChart_3;
+    public static String RealisierungLineChart_4;
+    public static String RealisierungLineChart_6;
+    public static String RealisierungLineChart_7;
+    public static String RealisierungLineChart_8;
+    public static String SamtProgressChart_0;
     public static String SamtProgressChart_1;
     public static String SamtProgressChart_2;
     public static String SchichtenBarChart_0;
-	public static String SchichtenBarChart_1;
-	public static String SchichtenBarChart_2;
-	public static String SchichtenBarChart_3;
-	public static String SchichtenBarChart_4;
-	public static String SchichtenBarChart_5;
-	public static String StufenBarChart_0;
-	public static String StufenBarChart_1;
-	public static String StufenBarChart_2;
-	public static String StufenBarChart_3;
-	public static String StufenBarChart_4;
-	public static String StufenBarChart_5;
-	public static String UmsetzungBarChart_0;
-	public static String UmsetzungBarChart_1;
-	public static String UmsetzungBarChart_2;
-	public static String UmsetzungBarChart_3;
-	static {
-		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	}
+    public static String SchichtenBarChart_1;
+    public static String SchichtenBarChart_2;
+    public static String SchichtenBarChart_3;
+    public static String SchichtenBarChart_4;
+    public static String SchichtenBarChart_5;
+    public static String StufenBarChart_0;
+    public static String StufenBarChart_1;
+    public static String StufenBarChart_2;
+    public static String StufenBarChart_3;
+    public static String StufenBarChart_4;
+    public static String StufenBarChart_5;
+    public static String UmsetzungBarChart_0;
+    public static String UmsetzungBarChart_1;
+    public static String UmsetzungBarChart_2;
+    public static String UmsetzungBarChart_3;
+    static {
+        // initialize resource bundle
+        NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+    }
 
-	private Messages() {
-	}
+    private Messages() {
+    }
 }

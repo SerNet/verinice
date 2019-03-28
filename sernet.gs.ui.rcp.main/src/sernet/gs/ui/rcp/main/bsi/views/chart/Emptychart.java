@@ -22,22 +22,21 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import sernet.verinice.model.common.CnATreeElement;
 
-public class Emptychart extends UmsetzungBarChart implements ISelectionChartGenerator{
+public class Emptychart extends UmsetzungBarChart implements ISelectionChartGenerator {
 
-	@Override
-	public JFreeChart createChart() {
-		return createBarChart(createEmptyBarDataset());
-	}
-	
-	private Object createEmptyBarDataset() {
-		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		return dataset;
-	}
+    @Override
+    public JFreeChart createChart() {
+        return createBarChart(createEmptyBarDataset());
+    }
 
-	@Override
-	public JFreeChart createChart(CnATreeElement elmt) {
-		return createBarChart(createEmptyBarDataset());
-	}
-	
-	
+    private Object createEmptyBarDataset() {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        return dataset;
+    }
+
+    @Override
+    public JFreeChart createChart(CnATreeElement elmt) {
+        return createBarChart(createEmptyBarDataset());
+    }
+
 }

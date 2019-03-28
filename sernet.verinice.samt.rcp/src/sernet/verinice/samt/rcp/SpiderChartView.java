@@ -60,16 +60,15 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
     public static final String ID = "sernet.verinice.samt.rcp.SpiderChartView"; //$NON-NLS-1$
 
     private ICommandService commandService;
-    
+
     public SpiderChartView() {
-        super();     
+        super();
     }
-    
-    
-    public String getRightID(){
+
+    public String getRightID() {
         return ActionRightIDs.SHOWCHARTVIEW;
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -92,20 +91,22 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
         // Toolbar and Viewmenu of SpiderChartView must be empty
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.gs.ui.rcp.main.bsi.views.chart.ChartView#setDescription()
      */
     protected void setDescription() {
         // no description
     }
-    
+
     /*
      * (non-Javadoc)
      * 
      * @see sernet.gs.ui.rcp.main.bsi.views.chart.ChartView#getDefaultElement()
      */
     @Override
-    protected CnATreeElement getDefaultElement() {    
+    protected CnATreeElement getDefaultElement() {
         FindSamtGroup command = new FindSamtGroup();
         try {
             command = getCommandService().executeCommand(command);
@@ -134,7 +135,8 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
 
         if (isCnATreeElement(selection)) {
 
-            CnATreeElement selectedElement = (CnATreeElement) ((IStructuredSelection) selection).getFirstElement();
+            CnATreeElement selectedElement = (CnATreeElement) ((IStructuredSelection) selection)
+                    .getFirstElement();
 
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Selection changed, selected element: " + selectedElement); //$NON-NLS-1$
@@ -163,25 +165,25 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
         }
         return true;
     }
-    
+
     private ControlGroup getChartControlGroup(CnATreeElement selection) {
         ControlGroup group = null;
-        if(isControlType(selection)) {
-           if(Audit.TYPE_ID.equals(selection.getParent().getTypeId())
-              && ControlGroup.TYPE_ID.equals(selection.getTypeId())) {
-               group = (ControlGroup) selection; 
-           } else {
-               RetrieveInfo ri = new RetrieveInfo();
-               ri.setParent(true);
-               CnATreeElement parent = Retriever.retrieveElement(selection.getParent(), ri);
-               group = getChartControlGroup(parent); 
-           }
-        } else if(selection!=null && Audit.TYPE_ID.equals(selection.getTypeId())) {
+        if (isControlType(selection)) {
+            if (Audit.TYPE_ID.equals(selection.getParent().getTypeId())
+                    && ControlGroup.TYPE_ID.equals(selection.getTypeId())) {
+                group = (ControlGroup) selection;
+            } else {
+                RetrieveInfo ri = new RetrieveInfo();
+                ri.setParent(true);
+                CnATreeElement parent = Retriever.retrieveElement(selection.getParent(), ri);
+                group = getChartControlGroup(parent);
+            }
+        } else if (selection != null && Audit.TYPE_ID.equals(selection.getTypeId())) {
             group = getControlGroup(selection);
         }
         return group;
     }
-    
+
     private ControlGroup getControlGroup(CnATreeElement selfAssessment) {
         ControlGroup controlGroup = null;
         Set<CnATreeElement> elementSet = selfAssessment.getChildren();
@@ -200,11 +202,9 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
      * @return
      */
     private boolean isControlType(CnATreeElement selection) {
-        return( selection!=null &&
-                (ControlGroup.TYPE_ID.equals(selection.getTypeId()) ||
-                 Control.TYPE_ID.equals(selection.getTypeId()) ||
-                 SamtTopic.TYPE_ID.equals(selection.getTypeId()))
-        );
+        return (selection != null && (ControlGroup.TYPE_ID.equals(selection.getTypeId())
+                || Control.TYPE_ID.equals(selection.getTypeId())
+                || SamtTopic.TYPE_ID.equals(selection.getTypeId())));
     }
 
     public ICommandService getCommandService() {
@@ -226,108 +226,160 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
     public String getPerspectiveId() {
         return SamtPerspective.ID;
     }
-    
+
     protected ChartView.ChangeListener createChangeListener() {
         return new SamtChartListener();
     }
 
-    class SamtChartListener extends ChartView.ChangeListener implements IBSIModelListener,IISO27KModelListener {
-       
-        /* (non-Javadoc)
-         * @see sernet.verinice.model.iso27k.IISO27KModelListener#childAdded(sernet.verinice.model.common.CnATreeElement, sernet.verinice.model.common.CnATreeElement)
+    class SamtChartListener extends ChartView.ChangeListener
+            implements IBSIModelListener, IISO27KModelListener {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * sernet.verinice.model.iso27k.IISO27KModelListener#childAdded(sernet.
+         * verinice.model.common.CnATreeElement,
+         * sernet.verinice.model.common.CnATreeElement)
          */
         @Override
-        public void childAdded(CnATreeElement category, CnATreeElement child) { 
+        public void childAdded(CnATreeElement category, CnATreeElement child) {
             // call drawChart() if user can change the ISA somedays
         }
-    
-        /* (non-Javadoc)
-         * @see sernet.verinice.model.iso27k.IISO27KModelListener#childChanged(sernet.verinice.model.common.CnATreeElement, sernet.verinice.model.common.CnATreeElement)
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * sernet.verinice.model.iso27k.IISO27KModelListener#childChanged(sernet
+         * .verinice.model.common.CnATreeElement,
+         * sernet.verinice.model.common.CnATreeElement)
          */
         @Override
         public void childChanged(CnATreeElement child) {
-            drawChart();     
+            drawChart();
         }
-    
-        /* (non-Javadoc)
-         * @see sernet.verinice.model.iso27k.IISO27KModelListener#childRemoved(sernet.verinice.model.common.CnATreeElement, sernet.verinice.model.common.CnATreeElement)
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * sernet.verinice.model.iso27k.IISO27KModelListener#childRemoved(sernet
+         * .verinice.model.common.CnATreeElement,
+         * sernet.verinice.model.common.CnATreeElement)
          */
         @Override
-        public void childRemoved(CnATreeElement category, CnATreeElement child) {  
+        public void childRemoved(CnATreeElement category, CnATreeElement child) {
             // call drawChart() if user can change the ISA somedays
         }
-    
-        /* (non-Javadoc)
-         * @see sernet.verinice.model.iso27k.IISO27KModelListener#databaseChildAdded(sernet.verinice.model.common.CnATreeElement)
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * sernet.verinice.model.iso27k.IISO27KModelListener#databaseChildAdded(
+         * sernet.verinice.model.common.CnATreeElement)
          */
         @Override
-        public void databaseChildAdded(CnATreeElement child) { 
+        public void databaseChildAdded(CnATreeElement child) {
             // call drawChart() if user can change the ISA somedays
         }
-    
-        /* (non-Javadoc)
-         * @see sernet.verinice.model.iso27k.IISO27KModelListener#databaseChildChanged(sernet.verinice.model.common.CnATreeElement)
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see sernet.verinice.model.iso27k.IISO27KModelListener#
+         * databaseChildChanged(sernet.verinice.model.common.CnATreeElement)
          */
         @Override
         public void databaseChildChanged(CnATreeElement child) {
-            drawChart();   
+            drawChart();
         }
-    
-        /* (non-Javadoc)
-         * @see sernet.verinice.model.iso27k.IISO27KModelListener#databaseChildRemoved(sernet.verinice.model.common.CnATreeElement)
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see sernet.verinice.model.iso27k.IISO27KModelListener#
+         * databaseChildRemoved(sernet.verinice.model.common.CnATreeElement)
          */
         @Override
-        public void databaseChildRemoved(CnATreeElement child) { 
+        public void databaseChildRemoved(CnATreeElement child) {
             // call drawChart() if user can change the ISA somedays
         }
-    
-        /* (non-Javadoc)
-         * @see sernet.verinice.model.iso27k.IISO27KModelListener#databaseChildRemoved(sernet.verinice.model.common.ChangeLogEntry)
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see sernet.verinice.model.iso27k.IISO27KModelListener#
+         * databaseChildRemoved(sernet.verinice.model.common.ChangeLogEntry)
          */
         @Override
         public void databaseChildRemoved(ChangeLogEntry entry) {
             // call drawChart() if user can change the ISA somedays
         }
-    
-        /* (non-Javadoc)
-         * @see sernet.verinice.model.iso27k.IISO27KModelListener#linkAdded(sernet.verinice.model.common.CnALink)
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * sernet.verinice.model.iso27k.IISO27KModelListener#linkAdded(sernet.
+         * verinice.model.common.CnALink)
          */
         @Override
         public void linkAdded(CnALink link) {
-    
+
         }
-    
-        /* (non-Javadoc)
-         * @see sernet.verinice.model.iso27k.IISO27KModelListener#linkChanged(sernet.verinice.model.common.CnALink, sernet.verinice.model.common.CnALink, java.lang.Object)
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * sernet.verinice.model.iso27k.IISO27KModelListener#linkChanged(sernet.
+         * verinice.model.common.CnALink, sernet.verinice.model.common.CnALink,
+         * java.lang.Object)
          */
         @Override
-        public void linkChanged(CnALink old, CnALink link, Object source) {       
+        public void linkChanged(CnALink old, CnALink link, Object source) {
         }
-    
-        /* (non-Javadoc)
-         * @see sernet.verinice.model.iso27k.IISO27KModelListener#linkRemoved(sernet.verinice.model.common.CnALink)
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * sernet.verinice.model.iso27k.IISO27KModelListener#linkRemoved(sernet.
+         * verinice.model.common.CnALink)
          */
         @Override
-        public void linkRemoved(CnALink link) {   
+        public void linkRemoved(CnALink link) {
         }
-    
-        /* (non-Javadoc)
-         * @see sernet.verinice.model.iso27k.IISO27KModelListener#modelRefresh(java.lang.Object)
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * sernet.verinice.model.iso27k.IISO27KModelListener#modelRefresh(java.
+         * lang.Object)
          */
         @Override
         public void modelRefresh(Object object) {
             drawChart();
         }
-    
-        /* (non-Javadoc)
-         * @see sernet.verinice.model.iso27k.IISO27KModelListener#modelReload(sernet.verinice.model.iso27k.ISO27KModel)
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * sernet.verinice.model.iso27k.IISO27KModelListener#modelReload(sernet.
+         * verinice.model.iso27k.ISO27KModel)
          */
         @Override
         public void modelReload(ISO27KModel newModel) {
             drawChart();
         }
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see sernet.verinice.model.bsi.IBSIModelListener#modelRefresh()
          */
         @Override
@@ -335,8 +387,11 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
             drawChart();
         }
 
-        /* (non-Javadoc)
-         * @see sernet.verinice.model.bsi.IBSIModelListener#modelReload(sernet.verinice.model.bsi.BSIModel)
+        /*
+         * (non-Javadoc)
+         * 
+         * @see sernet.verinice.model.bsi.IBSIModelListener#modelReload(sernet.
+         * verinice.model.bsi.BSIModel)
          */
         @Override
         public void modelReload(BSIModel newModel) {
@@ -344,4 +399,3 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
         }
     }
 }
-    

@@ -64,49 +64,49 @@ import sernet.verinice.model.validation.CnAValidation;
  */
 public class ChartView extends ViewPart {
 
-	public static final String ID = "sernet.gs.ui.rcp.main.chartview"; //$NON-NLS-1$
-	private static final Logger LOG = Logger.getLogger(ChartView.class);
+    public static final String ID = "sernet.gs.ui.rcp.main.chartview"; //$NON-NLS-1$
+    private static final Logger LOG = Logger.getLogger(ChartView.class);
 
-	private IModelLoadListener loadListener;
+    private IModelLoadListener loadListener;
 
-	private ChangeListener changeListener;
+    private ChangeListener changeListener;
 
-	private Composite parent;
+    private Composite parent;
 
-	private ChartComposite frame;
+    private ChartComposite frame;
 
-	private Action chooseBarDiagramAction;
+    private Action chooseBarDiagramAction;
 
-	private Action chooseProgressDiagramAction;
+    private Action chooseProgressDiagramAction;
 
-	private IChartGenerator currentChartGenerator;
+    private IChartGenerator currentChartGenerator;
 
-	private UmsetzungBarChart barChart;
+    private UmsetzungBarChart barChart;
 
-	private RealisierungLineChart progressChart;
+    private RealisierungLineChart progressChart;
 
-	private Emptychart emptyChart;
+    private Emptychart emptyChart;
 
-	private StufenBarChart stufenChart;
+    private StufenBarChart stufenChart;
 
-	private LebenszyklusBarChart zyklusChart;
+    private LebenszyklusBarChart zyklusChart;
 
-	private SchichtenBarChart schichtenChart;
+    private SchichtenBarChart schichtenChart;
 
-	private MaturitySpiderChart maturitySpiderChart;
-	
-	protected SamtProgressChart samtProgressChart;
+    private MaturitySpiderChart maturitySpiderChart;
 
-	private Action chooseMaturityDiagramAction;
+    protected SamtProgressChart samtProgressChart;
 
-	private ISelectionListener selectionListener;
+    private Action chooseMaturityDiagramAction;
 
-	// use getElement()!
-	protected CnATreeElement element = null;
+    private ISelectionListener selectionListener;
+
+    // use getElement()!
+    protected CnATreeElement element = null;
 
     private Action chooseMaturityBarDiagramAction;
 
-	private MaturityBarChart maturityBarChart;
+    private MaturityBarChart maturityBarChart;
 
     /**
      * Creates a new view.
@@ -114,154 +114,150 @@ public class ChartView extends ViewPart {
     public ChartView() {
         super();
     }
-	
-	@Override
-	public void createPartControl(Composite parent) {
-		initView(parent);		
-		startInitDataJob();
-	}
+
+    @Override
+    public void createPartControl(Composite parent) {
+        initView(parent);
+        startInitDataJob();
+    }
 
     private void initView(Composite parent) {
         this.parent = parent;
-		frame = new ChartComposite(parent, SWT.NONE, null, true);
-		createChartGenerators();
-		createSelectionListeners();
-		hookSelectionListeners();
-		hookPageSelection();
-		createMenus();
-		setDescription();
+        frame = new ChartComposite(parent, SWT.NONE, null, true);
+        createChartGenerators();
+        createSelectionListeners();
+        hookSelectionListeners();
+        hookPageSelection();
+        createMenus();
+        setDescription();
 
-		currentChartGenerator = getDefaultChartGenerator();
+        currentChartGenerator = getDefaultChartGenerator();
     }
-    
+
     protected void setDescription() {
         this.setContentDescription(Messages.ChartView_0);
     }
-    
+
     protected synchronized void startInitDataJob() {
-        if(CnAElementFactory.isModelLoaded()) {
+        if (CnAElementFactory.isModelLoaded()) {
             JobScheduler.scheduleInitJob(createDrawChartJob());
-        } 
+        }
         // if models are not loaded yet: loadListener does this job
     }
-	
-	protected IChartGenerator getDefaultChartGenerator() {
-	    return barChart;
-	}
 
-	private void createChartGenerators() {
-		barChart = new UmsetzungBarChart();
-		progressChart = new RealisierungLineChart();
-		emptyChart = new Emptychart();
-		stufenChart = new StufenBarChart();
-		zyklusChart = new LebenszyklusBarChart();
-		schichtenChart = new SchichtenBarChart();
-		maturitySpiderChart = new MaturitySpiderChart();
-		maturityBarChart = new MaturityBarChart();
-		samtProgressChart = new SamtProgressChart();
+    protected IChartGenerator getDefaultChartGenerator() {
+        return barChart;
+    }
 
-	}
+    private void createChartGenerators() {
+        barChart = new UmsetzungBarChart();
+        progressChart = new RealisierungLineChart();
+        emptyChart = new Emptychart();
+        stufenChart = new StufenBarChart();
+        zyklusChart = new LebenszyklusBarChart();
+        schichtenChart = new SchichtenBarChart();
+        maturitySpiderChart = new MaturitySpiderChart();
+        maturityBarChart = new MaturityBarChart();
+        samtProgressChart = new SamtProgressChart();
 
-	protected void createMenus() {
-	    Action chooseStufenDiagramAction;
-	    Action chooseZyklusDiagramAction;
-	    Action chooseSchichtDiagramAction;
-		IMenuManager menuManager = getViewSite().getActionBars()
-				.getMenuManager();
-		chooseBarDiagramAction = new Action(Messages.ChartView_1, SWT.CHECK) {
-			@Override
-			public void run() {
-				currentChartGenerator = barChart;
-				drawChart();
-			}
-		};
-		chooseBarDiagramAction.setImageDescriptor(ImageCache.getInstance()
-				.getImageDescriptor(ImageCache.CHART_BAR));
+    }
 
-		chooseProgressDiagramAction = new Action(Messages.ChartView_2,
-				SWT.CHECK) {
-			@Override
-			public void run() {
-				currentChartGenerator = progressChart;
-				drawChart();
-			}
-		};
-		chooseProgressDiagramAction.setImageDescriptor(ImageCache.getInstance()
-				.getImageDescriptor(ImageCache.CHART_CURVE));
+    protected void createMenus() {
+        Action chooseStufenDiagramAction;
+        Action chooseZyklusDiagramAction;
+        Action chooseSchichtDiagramAction;
+        IMenuManager menuManager = getViewSite().getActionBars().getMenuManager();
+        chooseBarDiagramAction = new Action(Messages.ChartView_1, SWT.CHECK) {
+            @Override
+            public void run() {
+                currentChartGenerator = barChart;
+                drawChart();
+            }
+        };
+        chooseBarDiagramAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.CHART_BAR));
 
-		chooseStufenDiagramAction = new Action(Messages.ChartView_3, SWT.CHECK) {
-			@Override
-			public void run() {
-				currentChartGenerator = stufenChart;
-				drawChart();
-			}
-		};
+        chooseProgressDiagramAction = new Action(Messages.ChartView_2, SWT.CHECK) {
+            @Override
+            public void run() {
+                currentChartGenerator = progressChart;
+                drawChart();
+            }
+        };
+        chooseProgressDiagramAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.CHART_CURVE));
 
-		chooseZyklusDiagramAction = new Action(Messages.ChartView_4, SWT.CHECK) {
-			@Override
-			public void run() {
-				currentChartGenerator = zyklusChart;
-				drawChart();
-			}
-		};
+        chooseStufenDiagramAction = new Action(Messages.ChartView_3, SWT.CHECK) {
+            @Override
+            public void run() {
+                currentChartGenerator = stufenChart;
+                drawChart();
+            }
+        };
 
-		chooseSchichtDiagramAction = new Action(Messages.ChartView_5, SWT.CHECK) {
-			@Override
-			public void run() {
-				currentChartGenerator = schichtenChart;
-				drawChart();
-			}
-		};
+        chooseZyklusDiagramAction = new Action(Messages.ChartView_4, SWT.CHECK) {
+            @Override
+            public void run() {
+                currentChartGenerator = zyklusChart;
+                drawChart();
+            }
+        };
 
-		chooseMaturityDiagramAction = new Action(Messages.ChartView_7,
-				SWT.CHECK) {
-			@Override
-			public void run() {
-				currentChartGenerator = maturitySpiderChart;
-				drawChart();
-				setContentDescription(Messages.ChartView_8);
-			}
-		};
-		chooseMaturityDiagramAction.setImageDescriptor(ImageCache.getInstance()
-				.getImageDescriptor(ImageCache.CHART_PIE));
+        chooseSchichtDiagramAction = new Action(Messages.ChartView_5, SWT.CHECK) {
+            @Override
+            public void run() {
+                currentChartGenerator = schichtenChart;
+                drawChart();
+            }
+        };
 
-		chooseMaturityBarDiagramAction = new Action(Messages.ChartView_9,
-				SWT.CHECK) {
-			@Override
-			public void run() {
-				currentChartGenerator = maturityBarChart;
-				drawChart();
-				setContentDescription(Messages.ChartView_10);
-			}
-		};
-		chooseMaturityBarDiagramAction.setImageDescriptor(ImageCache
-				.getInstance().getImageDescriptor(ImageCache.CHART_BAR));
+        chooseMaturityDiagramAction = new Action(Messages.ChartView_7, SWT.CHECK) {
+            @Override
+            public void run() {
+                currentChartGenerator = maturitySpiderChart;
+                drawChart();
+                setContentDescription(Messages.ChartView_8);
+            }
+        };
+        chooseMaturityDiagramAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.CHART_PIE));
 
-		menuManager.add(chooseBarDiagramAction);
-		menuManager.add(chooseProgressDiagramAction);
-		menuManager.add(chooseStufenDiagramAction);
-		menuManager.add(chooseZyklusDiagramAction);
-		menuManager.add(chooseSchichtDiagramAction);
-		menuManager.add(new Separator());
-		menuManager.add(chooseMaturityDiagramAction);
-		menuManager.add(chooseMaturityBarDiagramAction);
+        chooseMaturityBarDiagramAction = new Action(Messages.ChartView_9, SWT.CHECK) {
+            @Override
+            public void run() {
+                currentChartGenerator = maturityBarChart;
+                drawChart();
+                setContentDescription(Messages.ChartView_10);
+            }
+        };
+        chooseMaturityBarDiagramAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.CHART_BAR));
 
-		fillLocalToolBar();
-	}
+        menuManager.add(chooseBarDiagramAction);
+        menuManager.add(chooseProgressDiagramAction);
+        menuManager.add(chooseStufenDiagramAction);
+        menuManager.add(chooseZyklusDiagramAction);
+        menuManager.add(chooseSchichtDiagramAction);
+        menuManager.add(new Separator());
+        menuManager.add(chooseMaturityDiagramAction);
+        menuManager.add(chooseMaturityBarDiagramAction);
 
-	private void fillLocalToolBar() {
-		IActionBars bars = getViewSite().getActionBars();
-		IToolBarManager manager = bars.getToolBarManager();
-		manager.add(chooseBarDiagramAction);
-		manager.add(chooseProgressDiagramAction);
-		manager.add(new Separator());
-		manager.add(chooseMaturityDiagramAction);
-		manager.add(chooseMaturityBarDiagramAction);
-	}
+        fillLocalToolBar();
+    }
 
-	protected synchronized void drawChart() {
-		createDrawChartJob().schedule();
-	}
+    private void fillLocalToolBar() {
+        IActionBars bars = getViewSite().getActionBars();
+        IToolBarManager manager = bars.getToolBarManager();
+        manager.add(chooseBarDiagramAction);
+        manager.add(chooseProgressDiagramAction);
+        manager.add(new Separator());
+        manager.add(chooseMaturityDiagramAction);
+        manager.add(chooseMaturityBarDiagramAction);
+    }
+
+    protected synchronized void drawChart() {
+        createDrawChartJob().schedule();
+    }
 
     private WorkspaceJob createDrawChartJob() {
         WorkspaceJob job = new WorkspaceJob(Messages.ChartView_6) {
@@ -269,24 +265,25 @@ public class ChartView extends ViewPart {
             public IStatus runInWorkspace(IProgressMonitor monitor) {
                 Activator.inheritVeriniceContextState();
 
-                if (parent != null && !parent.isDisposed() && frame != null && !frame.isDisposed()) {
+                if (parent != null && !parent.isDisposed() && frame != null
+                        && !frame.isDisposed()) {
                     final JFreeChart chart;
                     CnATreeElement currentElement = null;
                     if (currentChartGenerator instanceof ISelectionChartGenerator) {
                         currentElement = getElement();
-                        if(currentElement==null) {
+                        if (currentElement == null) {
                             currentElement = getDefaultElement();
                         }
-                        chart = ((ISelectionChartGenerator) currentChartGenerator).createChart(currentElement);
-                    }
-                    else {
+                        chart = ((ISelectionChartGenerator) currentChartGenerator)
+                                .createChart(currentElement);
+                    } else {
                         chart = currentChartGenerator.createChart();
                     }
                     if (chart != null) {
                         Display.getDefault().syncExec(new Runnable() {
                             public void run() {
                                 try {
-                                    if (frame.isDisposed()){
+                                    if (frame.isDisposed()) {
                                         return;
                                     }
                                     frame.setChart(chart);
@@ -305,43 +302,44 @@ public class ChartView extends ViewPart {
         return job;
     }
 
+    private void createSelectionListeners() {
+        loadListener = new IModelLoadListener() {
 
-	private void createSelectionListeners() {
-		loadListener = new IModelLoadListener() {
+            public void closed(BSIModel model) {
+                Display.getDefault().asyncExec(new Runnable() {
+                    public void run() {
+                        currentChartGenerator = emptyChart;
+                        drawChart();
+                    }
+                });
+            }
 
-			public void closed(BSIModel model) {
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						currentChartGenerator = emptyChart;
-						drawChart();
-					}
-				});
-			}
-
-			public void loaded(final BSIModel model) {
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						CnAElementFactory.getLoadedModel().addBSIModelListener(changeListener);
-					}
-				});
-			}
+            public void loaded(final BSIModel model) {
+                Display.getDefault().asyncExec(new Runnable() {
+                    public void run() {
+                        CnAElementFactory.getLoadedModel().addBSIModelListener(changeListener);
+                    }
+                });
+            }
 
             public void loaded(ISO27KModel model) {
                 Display.getDefault().asyncExec(new Runnable() {
                     public void run() {
-                        CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(changeListener);
+                        CnAElementFactory.getInstance().getISO27kModel()
+                                .addISO27KModelListener(changeListener);
                         currentChartGenerator = getDefaultChartGenerator();
                         drawChart();
                     }
                 });
-                
+
             }
 
             @Override
             public void loaded(BpModel model) {
                 Display.getDefault().asyncExec(new Runnable() {
                     public void run() {
-                        CnAElementFactory.getInstance().getBpModel().addModITBOModelListener(changeListener);
+                        CnAElementFactory.getInstance().getBpModel()
+                                .addModITBOModelListener(changeListener);
                     }
                 });
             }
@@ -350,33 +348,33 @@ public class ChartView extends ViewPart {
             public void loaded(CatalogModel model) {
                 // nothing to do
             }
-		};
+        };
 
-		changeListener = createChangeListener();
-	}
+        changeListener = createChangeListener();
+    }
 
     protected ChangeListener createChangeListener() {
         return new ChangeListener();
     }
 
-	private void hookPageSelection() {
-		selectionListener = new ISelectionListener() {
-			public void selectionChanged(IWorkbenchPart part,
-					ISelection selection) {
-				pageSelectionChanged(part, selection);
-			}
-		};
-		getSite().getPage().addPostSelectionListener(selectionListener);
-	}
+    private void hookPageSelection() {
+        selectionListener = new ISelectionListener() {
+            public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+                pageSelectionChanged(part, selection);
+            }
+        };
+        getSite().getPage().addPostSelectionListener(selectionListener);
+    }
 
-	/**
-	 * Method is called if the selection in the GUI is changed.
+    /**
+     * Method is called if the selection in the GUI is changed.
      * 
      * @param part
-     * @param selection the newly selected GUI element
-	 */
-	protected synchronized void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
-        if (!(selection instanceof IStructuredSelection)){ 
+     * @param selection
+     *            the newly selected GUI element
+     */
+    protected synchronized void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
+        if (!(selection instanceof IStructuredSelection)) {
             return;
         }
         Object firstSelection = ((IStructuredSelection) selection).getFirstElement();
@@ -384,72 +382,72 @@ public class ChartView extends ViewPart {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Selection changed, selected element: " + selectedElement); //$NON-NLS-1$
         }
-        
+
         if (firstSelection instanceof CnATreeElement) {
-            if (this.element != null && selectedElement == this.element){
-                return;             		
+            if (this.element != null && selectedElement == this.element) {
+                return;
             }
             this.element = selectedElement;
             drawChart();
         }
     }
 
-	protected void hookSelectionListeners() {
-		CnAElementFactory.getInstance().addLoadListener(loadListener);
-		if (CnAElementFactory.getLoadedModel() != null){
-			CnAElementFactory.getLoadedModel().addBSIModelListener(
-					changeListener);
-		}
-	}
+    protected void hookSelectionListeners() {
+        CnAElementFactory.getInstance().addLoadListener(loadListener);
+        if (CnAElementFactory.getLoadedModel() != null) {
+            CnAElementFactory.getLoadedModel().addBSIModelListener(changeListener);
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.part.WorkbenchPart#dispose()
-	 */
-	@Override
-	public void dispose() {
-		getSite().getPage().removePostSelectionListener(selectionListener);
-		CnAElementFactory.getInstance().removeLoadListener(loadListener);
-		if (CnAElementFactory.getLoadedModel() != null) {
-			CnAElementFactory.getLoadedModel().removeBSIModelListener(
-					changeListener);
-		}
-		if (CnAElementFactory.getLoadedModel() != null){
-			CnAElementFactory.getLoadedModel().removeBSIModelListener(
-					changeListener);
-		}
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Disposing chart view " + this); //$NON-NLS-1$
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.part.WorkbenchPart#dispose()
+     */
+    @Override
+    public void dispose() {
+        getSite().getPage().removePostSelectionListener(selectionListener);
+        CnAElementFactory.getInstance().removeLoadListener(loadListener);
+        if (CnAElementFactory.getLoadedModel() != null) {
+            CnAElementFactory.getLoadedModel().removeBSIModelListener(changeListener);
+        }
+        if (CnAElementFactory.getLoadedModel() != null) {
+            CnAElementFactory.getLoadedModel().removeBSIModelListener(changeListener);
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Disposing chart view " + this); //$NON-NLS-1$
+        }
+    }
 
-	/**
+    /**
      * Passing the focus request to the viewer's control.
      */
     @Override
     public void setFocus() {
         frame.setFocus();
     }
-	
-	/**
-	 * Currently selected  element for which a chart is generated
-	 * 
-	 * @return currently selected element or null if nothing is selected
-	 */
-	protected CnATreeElement getElement() {
+
+    /**
+     * Currently selected element for which a chart is generated
+     * 
+     * @return currently selected element or null if nothing is selected
+     */
+    protected CnATreeElement getElement() {
         return element;
     }
-	
-	/**
-	 * The default element for which a chart is generated or null
-	 * 
-	 * @return the default element or null
-	 */
-	protected CnATreeElement getDefaultElement() {
+
+    /**
+     * The default element for which a chart is generated or null
+     * 
+     * @return the default element or null
+     */
+    protected CnATreeElement getDefaultElement() {
         return null;
     }
-	
-	protected class ChangeListener implements IBSIModelListener,IISO27KModelListener, IBpModelListener {
-	    public void childAdded(CnATreeElement category, CnATreeElement child) {
+
+    protected class ChangeListener
+            implements IBSIModelListener, IISO27KModelListener, IBpModelListener {
+        public void childAdded(CnATreeElement category, CnATreeElement child) {
             // do nothing
         }
 
@@ -457,8 +455,7 @@ public class ChartView extends ViewPart {
             // do nothing
         }
 
-        public void childRemoved(CnATreeElement category,
-                CnATreeElement child) {
+        public void childRemoved(CnATreeElement category, CnATreeElement child) {
             // do nothing
         }
 
@@ -492,31 +489,37 @@ public class ChartView extends ViewPart {
 
         public void modelReload(BSIModel newModel) {
         }
-        
+
         public void modelReload(ISO27KModel newModel) {
         }
 
         public void databaseChildRemoved(ChangeLogEntry entry) {
         }
-        
-        
-        @Override
-        public void validationAdded(Integer scopeId){};
-        
-        @Override
-        public void validationRemoved(Integer scopeId){};
-        
-        @Override
-        public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){}
 
-        /* (non-Javadoc)
-         * @see sernet.verinice.model.iso27k.IBpModelListener#modelReload(sernet.verinice.model.bp.elements.BpModel)
+        @Override
+        public void validationAdded(Integer scopeId) {
+        };
+
+        @Override
+        public void validationRemoved(Integer scopeId) {
+        };
+
+        @Override
+        public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation) {
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * sernet.verinice.model.iso27k.IBpModelListener#modelReload(sernet.
+         * verinice.model.bp.elements.BpModel)
          */
         @Override
         public void modelReload(BpModel newModel) {
             // TODO Auto-generated method stub
-            
+
         };
-	}
+    }
 
 }
