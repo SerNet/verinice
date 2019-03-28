@@ -135,7 +135,7 @@ public class EncryptionDialog extends TitleAreaDialog {
                 certificatePathField.setEnabled(false);
                 browseX509CertificateButton.setEnabled(false);
                 selectedEncryptionMethod = EncryptionMethod.PASSWORD;
-                
+
             }
         });
 
@@ -325,7 +325,8 @@ public class EncryptionDialog extends TitleAreaDialog {
             passwordField.getText();
             super.okPressed();
         } else {
-            MessageDialog.openWarning(this.getShell(), Messages.EncryptionDialog_7, Messages.EncryptionDialog_8);
+            MessageDialog.openWarning(this.getShell(), Messages.EncryptionDialog_7,
+                    Messages.EncryptionDialog_8);
         }
     }
 
