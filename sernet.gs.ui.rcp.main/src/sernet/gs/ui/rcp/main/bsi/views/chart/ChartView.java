@@ -75,21 +75,9 @@ public class ChartView extends ViewPart {
 
     private Action chooseBarDiagramAction;
 
-    private Action chooseProgressDiagramAction;
-
     private IChartGenerator currentChartGenerator;
 
-    private UmsetzungBarChart barChart;
-
-    private RealisierungLineChart progressChart;
-
     private Emptychart emptyChart;
-
-    private StufenBarChart stufenChart;
-
-    private LebenszyklusBarChart zyklusChart;
-
-    private SchichtenBarChart schichtenChart;
 
     private MaturitySpiderChart maturitySpiderChart;
 
@@ -137,16 +125,11 @@ public class ChartView extends ViewPart {
     }
 
     protected IChartGenerator getDefaultChartGenerator() {
-        return barChart;
+        return samtProgressChart;
     }
 
     private void createChartGenerators() {
-        barChart = new UmsetzungBarChart();
-        progressChart = new RealisierungLineChart();
         emptyChart = new Emptychart();
-        stufenChart = new StufenBarChart();
-        zyklusChart = new LebenszyklusBarChart();
-        schichtenChart = new SchichtenBarChart();
         maturitySpiderChart = new MaturitySpiderChart();
         maturityBarChart = new MaturityBarChart();
         samtProgressChart = new SamtProgressChart();
@@ -154,53 +137,16 @@ public class ChartView extends ViewPart {
     }
 
     protected void createMenus() {
-        Action chooseStufenDiagramAction;
-        Action chooseZyklusDiagramAction;
-        Action chooseSchichtDiagramAction;
         IMenuManager menuManager = getViewSite().getActionBars().getMenuManager();
         chooseBarDiagramAction = new Action(Messages.ChartView_1, SWT.CHECK) {
             @Override
             public void run() {
-                currentChartGenerator = barChart;
+                currentChartGenerator = samtProgressChart;
                 drawChart();
             }
         };
         chooseBarDiagramAction.setImageDescriptor(
                 ImageCache.getInstance().getImageDescriptor(ImageCache.CHART_BAR));
-
-        chooseProgressDiagramAction = new Action(Messages.ChartView_2, SWT.CHECK) {
-            @Override
-            public void run() {
-                currentChartGenerator = progressChart;
-                drawChart();
-            }
-        };
-        chooseProgressDiagramAction.setImageDescriptor(
-                ImageCache.getInstance().getImageDescriptor(ImageCache.CHART_CURVE));
-
-        chooseStufenDiagramAction = new Action(Messages.ChartView_3, SWT.CHECK) {
-            @Override
-            public void run() {
-                currentChartGenerator = stufenChart;
-                drawChart();
-            }
-        };
-
-        chooseZyklusDiagramAction = new Action(Messages.ChartView_4, SWT.CHECK) {
-            @Override
-            public void run() {
-                currentChartGenerator = zyklusChart;
-                drawChart();
-            }
-        };
-
-        chooseSchichtDiagramAction = new Action(Messages.ChartView_5, SWT.CHECK) {
-            @Override
-            public void run() {
-                currentChartGenerator = schichtenChart;
-                drawChart();
-            }
-        };
 
         chooseMaturityDiagramAction = new Action(Messages.ChartView_7, SWT.CHECK) {
             @Override
@@ -225,10 +171,6 @@ public class ChartView extends ViewPart {
                 ImageCache.getInstance().getImageDescriptor(ImageCache.CHART_BAR));
 
         menuManager.add(chooseBarDiagramAction);
-        menuManager.add(chooseProgressDiagramAction);
-        menuManager.add(chooseStufenDiagramAction);
-        menuManager.add(chooseZyklusDiagramAction);
-        menuManager.add(chooseSchichtDiagramAction);
         menuManager.add(new Separator());
         menuManager.add(chooseMaturityDiagramAction);
         menuManager.add(chooseMaturityBarDiagramAction);
@@ -240,7 +182,6 @@ public class ChartView extends ViewPart {
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
         manager.add(chooseBarDiagramAction);
-        manager.add(chooseProgressDiagramAction);
         manager.add(new Separator());
         manager.add(chooseMaturityDiagramAction);
         manager.add(chooseMaturityBarDiagramAction);

@@ -26,48 +26,6 @@ import sernet.verinice.model.iso27k.ControlGroup;
 
 public class MassnahmenSummaryHome {
 
-    public Map<String, Integer> getNotCompletedZyklusSummary() throws CommandException {
-        IncompleteZyklusSummary command = new IncompleteZyklusSummary();
-        command = getCommandService().executeCommand(command);
-        return command.getSummary();
-    }
-
-    public Map<String, Integer> getCompletedZyklusSummary() throws CommandException {
-        CompletedZyklusSummary command = new CompletedZyklusSummary();
-        command = getCommandService().executeCommand(command);
-        return command.getSummary();
-    }
-
-    public Map<String, Integer> getSchichtenSummary() throws CommandException {
-        LayerSummary command = new LayerSummary();
-        command = getCommandService().executeCommand(command);
-        return command.getSummary();
-    }
-
-    public Map<String, Integer> getCompletedSchichtenSummary() throws CommandException {
-        CompletedLayerSummary command = new CompletedLayerSummary();
-        command = getCommandService().executeCommand(command);
-        return command.getSummary();
-    }
-
-    public Map<String, Integer> getNotCompletedStufenSummary() throws CommandException {
-        IncompleteStepsSummary command = new IncompleteStepsSummary();
-        command = getCommandService().executeCommand(command);
-        return command.getSummary();
-    }
-
-    public Map<String, Integer> getCompletedStufenSummary() throws CommandException {
-        CompletedStepsSummary command = new CompletedStepsSummary();
-        command = getCommandService().executeCommand(command);
-        return command.getSummary();
-    }
-
-    public Map<String, Integer> getUmsetzungenSummary() throws CommandException {
-        UmsetzungSummary command = new UmsetzungSummary();
-        command = getCommandService().executeCommand(command);
-        return command.getSummary();
-    }
-
     public Map<String, Double> getControlGroups(ControlGroup elmt) throws CommandException {
         MaturitySummary command = new MaturitySummary(elmt.getEntity().getEntityType(),
                 elmt.getEntity().getDbId(), MaturitySummary.TYPE_IMPLEMENTATION);
