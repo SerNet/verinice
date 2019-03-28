@@ -19,8 +19,6 @@
 package sernet.verinice.iso27k.rcp.action;
 
 import java.io.File;
-import java.io.IOException;
-import java.security.cert.CertificateException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,7 +47,6 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog;
-import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -82,15 +79,12 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
 
     public static final String EXTENSION_XML = ".xml"; //$NON-NLS-1$
     public static final String EXTENSION_PASSWORD_ENCRPTION = ".pcr"; //$NON-NLS-1$
-    public static final String EXTENSION_CERTIFICATE_ENCRPTION = ".ccr"; //$NON-NLS-1$
 
     private ExportDialog dialog;
 
     private String filePath;
 
     private char[] password = null;
-    private File x509CertificateFile = null;
-    private String keyAlias = null;
 
     private static ISchedulingRule iSchedulingRule = new Mutex();
 
@@ -130,9 +124,7 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
             if (password != null) {
                 filePath = addExtension(filePath, EXTENSION_PASSWORD_ENCRPTION);
             }
-            if (x509CertificateFile != null) {
-                filePath = addExtension(filePath, EXTENSION_CERTIFICATE_ENCRPTION);
-            }
+
             WorkspaceJob exportJob = new WorkspaceJob("Exporting...") {
                 @Override
                 public IStatus runInWorkspace(final IProgressMonitor monitor) {
@@ -147,8 +139,6 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
                                 "Error while exporting data.", e);
                     } finally {
                         password = null;
-                        x509CertificateFile = null;
-                        keyAlias = null;
                         monitor.done();
                         this.done(status);
                     }
@@ -226,35 +216,19 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
     private int openEncryptionDialog() {
         EncryptionDialog encDialog = new EncryptionDialog(Display.getDefault().getActiveShell());
         if (encDialog.open() == Window.OK) {
-            EncryptionMethod encMethod = encDialog.getSelectedEncryptionMethod();
-            switch (encMethod) {
-            case PASSWORD:
-                password = encDialog.getEnteredPassword();
-                break;
-            case X509_CERTIFICATE:
-                x509CertificateFile = encDialog.getSelectedX509CertificateFile();
-                break;
-            case PKCS11_KEY:
-                keyAlias = encDialog.getSelectedKeyAlias();
-            }
+            password = encDialog.getEnteredPassword();
             return Window.OK;
         } else {
             return Window.CANCEL;
         }
     }
 
-    private byte[] encrypt(byte[] result, byte[] salt)
-            throws CertificateException, EncryptionException, IOException {
+    private byte[] encrypt(byte[] result, byte[] salt) throws EncryptionException {
         IEncryptionService service = ServiceFactory.lookupEncryptionService();
         byte[] cypherTextBytes;
-        if (keyAlias != null) {
-            cypherTextBytes = service.encrypt(result, keyAlias);
-        } else if (password != null) {
+        if (password != null) {
             // Encrypt message
             cypherTextBytes = service.encrypt(result, password, salt);
-
-        } else if (x509CertificateFile != null) {
-            cypherTextBytes = service.encrypt(result, x509CertificateFile);
         } else {
             cypherTextBytes = result;
         }

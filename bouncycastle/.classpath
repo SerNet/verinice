@@ -6,7 +6,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry exported="true" kind="lib" path="lib/bcmail-jdk16-146.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/bcprov-jdk16-146.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

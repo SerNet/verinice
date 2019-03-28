@@ -2639,9 +2639,9 @@ Um die Datenquelle für den Export mit einem Namen zu versehen, kann in das Feld
 um evtl. bereits vorhandene Elemente lediglich zu aktualisieren anstatt neu zu importieren.
 \newline\\
 Des Weiteren besteht die Möglichkeit, die Dateien zu verschlüsseln. Möchten Sie die Dateien verschlüsseln, erklären Sie dies durch Markierung der
-entsprechenden Checkbox. Mit Klick auf \textit{OK} gelangen Sie zur Auswahl der Verschlüsselungsmethoden.
+entsprechenden Checkbox. Mit Klick auf \textit{OK} gelangen Sie zur Eingabe des Verschlüsselungspassworts.
 \newline\\
-verinice bietet zwei Verschlüsselungsmethoden an:
+verinice bietet folgende Verschlüsselungsmethode an:
 \begin{itemize}
 \item Passwort: Absender und Adressat des Exports einigen sich auf ein
   zum
@@ -2652,7 +2652,6 @@ verinice bietet zwei Verschlüsselungsmethoden an:
     eine frühere verinice Version importiert werden. Exporte aus
     früheren Versionen können jedoch jederzeit mit neueren Versionen
     importiert werden.}
- \item Zertifikat: Absender und Adressat des Exports tauschen einen Public-Key (in Form eines Zertifikats) aus.
 \end{itemize}
 Mit Klick auf den \textbf{OK}-Button wird der Export-Vorgang ausgelöst.
 
@@ -2941,14 +2940,9 @@ im Kapitel {\em \ref{Exportieren von verinice-Daten} \nameref{Exportieren von ve
 Zusätzlich kann auch die Option \textbf{integrieren} ausgewählt werden. Dadurch werden importierte Objekte automatisch integriert und sind so
 nicht mehr als externe Objekte erkennbar. Weitere Details zu der Funktion \textbf{Integrieren} finden Sie im Abschnitt {\em \ref{Importiere Daten integrieren} \nameref{Importiere Daten integrieren}}.
 \newline\\
-Handelt es sich um verschlüsselte Objekte, kann je nach (beim Export gewählter) Verschlüsselungsmethode eine Entschlüsselung mit einem symmetrischem Passwort oder
-einem Zertifikat (Typ X.509) vorgenommen werden. Bitte beachten Sie den Hinweis
+Handelt es sich um verschlüsselte Objekte, kann die Entschlüsselung mit einem symmetrischem Passwort vorgenommen werden. Bitte beachten Sie den Hinweis
 zur Passwort-Verschlüsselung im Kapitel {\em \ref{Exportieren von
-verinice-Daten} \nameref{Exportieren von verinice-Daten}}. Soll ein Import
-einer vna-Datei erfolgen, die per X.509-Zertifikat verschlüsselt wurde, müssen
-Sie zwingend die
-zum Zertifikat gehörende Privatkey-Datei im Import-Fenster mit angeben. Wenn dieser private Schlüssel per Passwort geschützt ist, ist auch dieses im Import-Dialog einzugeben.
-\newline\\
+verinice-Daten} \nameref{Exportieren von verinice-Daten}}. \newline\\
 Die importierten Objekte befinden sich nach erfolgreichem Import immer im zusätzlich angelegten Wurzelobjekt ``importierte Objekte''. Von dort
 können diese per Ausschneiden-Funktion an den gewünschten Zielort verschoben werden. Beim nächsten Import werden sie dort aktualisiert.
 Neue Objekte werden wieder in der Wurzelgruppe ``importierte Objekte'' erzeugt. Voraussetzung für das Wiedererkennen der Objekte über mehrere Imports ist die Angabe derselben \textit{Source-ID}.

@@ -43,7 +43,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -52,7 +51,6 @@ import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -104,15 +102,9 @@ public class XMLImportDialog extends Dialog {
 
     private ISchedulingRule iSchedulingRule = new Mutex();
 
-    private EncryptionMethod selectedEncryptionMethod = null;
-
-    private File x509CertificateFile;
-    private File privateKeyPemFile;
-    private String privateKeyPassword = null;
+    private boolean usePasswordEncryption = false;
 
     private String password = ""; //$NON-NLS-1$
-
-    private Text certificatePathField;
 
     private boolean useDefaultFolder;
     private String defaultFolder;
@@ -122,7 +114,6 @@ public class XMLImportDialog extends Dialog {
     private int fileDialogFilterIndex = 0;
 
     private static final int PASSWORD_INDEX = 2;
-    private static final int CERTIFICATE_INDEX = 3;
     private static final int NOCRYPT_INDEX = 0;
 
     private SyncCommand syncCommand;
@@ -139,9 +130,6 @@ public class XMLImportDialog extends Dialog {
     @Override
     public void okPressed() {
 
-        if (!validateUserSelection()) {
-            return;
-        }
         final SyncParameter syncParameter = tryCreateSyncParameter();
 
         if (!dataPathFlag && syncParameter == null) {
@@ -228,28 +216,6 @@ public class XMLImportDialog extends Dialog {
         }
     }
 
-    private boolean validateUserSelection() {
-        if (selectedEncryptionMethod == EncryptionMethod.X509_CERTIFICATE) {
-            StringBuilder stringBuilder = new StringBuilder();
-            if (x509CertificateFile == null) {
-                stringBuilder.append(Messages.XMLImportDialog_39 + "\n");
-            } else if (!x509CertificateFile.exists()) {
-                stringBuilder.append(Messages.XMLImportDialog_40 + "\n");
-            }
-            if (privateKeyPemFile == null) {
-                stringBuilder.append(Messages.XMLImportDialog_41 + "\n");
-            } else if (!privateKeyPemFile.exists()) {
-                stringBuilder.append(Messages.XMLImportDialog_42 + "\n");
-            }
-            if (stringBuilder.length() != 0) {
-                MessageDialog.openError(getParentShell(), Messages.XMLImportDialog_18,
-                        stringBuilder.toString());
-                return false;
-            }
-        }
-        return true;
-    }
-
     private SyncParameter tryCreateSyncParameter() {
         try {
             return new SyncParameter(insert, update, delete, integrate, importAsCatalog,
@@ -317,13 +283,10 @@ public class XMLImportDialog extends Dialog {
         final int pbeNumColumns = 3;
         final int cryptGroupHorizontalSpan = 5;
         final int passwordWidthHint = 280;
-        final int certificateWidthHint = 280;
         final int dataGroupHorizontalSpan = 5;
         final int dataGroupNumColumns = 4;
         final int dataIntroHorizontalSpan = 4;
         final int dataPathHorizontalSpan = 3;
-        final int privateKeyPathWidthHint = 280;
-        final int privateKeyPasswordWidthHint = 280;
 
         initDefaultFolder();
         final Composite container = (Composite) super.createDialogArea(parent);
@@ -476,153 +439,34 @@ public class XMLImportDialog extends Dialog {
         // FocusListener is added to passwordField afterwards
         new Label(cryptGroup, SWT.NONE);
 
-        SelectionAdapter certificateEncryptionAdapter = new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                if (e.getSource() instanceof Button) {
-                    selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
-                    ((Button) e.getSource()).setSelection(true);
-                    passwordEncryptionRadio.setSelection(false);
-                    useNoEncryptionRadio.setSelection(false);
-                    fileDialogFilterIndex = CERTIFICATE_INDEX;
-                }
-            }
-        };
-
-        // ==== Certificate Based Encryption controls
-        // by default, no encryption is selected
-        final Button certificateEncryptionRadio = SWTElementFactory.generateRadioButton(cryptGroup,
-                Messages.XMLImportDialog_28, false, certificateEncryptionAdapter);
-
         passwordField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
                 passwordEncryptionRadio.setSelection(true);
-                certificateEncryptionRadio.setSelection(false);
                 useNoEncryptionRadio.setSelection(false);
-                selectedEncryptionMethod = EncryptionMethod.PASSWORD;
+                usePasswordEncryption = true;
             }
 
         });
         passwordField.addModifyListener(e -> password = passwordField.getText());
 
-        certificatePathField = new Text(cryptGroup, SWT.SINGLE | SWT.BORDER);
-        data = new GridData();
-        data.widthHint = certificateWidthHint;
-        certificatePathField.setLayoutData(data);
-        certificatePathField.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
-                certificateEncryptionRadio.setSelection(true);
-                passwordEncryptionRadio.setSelection(false);
-                useNoEncryptionRadio.setSelection(false);
-            }
-        });
-
-        SelectionAdapter browseX509CertificateListener = new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
-                certificateEncryptionRadio.setSelection(true);
-                passwordEncryptionRadio.setSelection(false);
-                useNoEncryptionRadio.setSelection(false);
-                FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
-                dialog.setFilterExtensions(new String[] { "*.pem", }); //$NON-NLS-1$
-                String certificatePath = dialog.open();
-                if (certificatePath != null) {
-                    x509CertificateFile = new File(certificatePath);
-                    certificatePathField.setText(certificatePath);
-                } else {
-                    certificatePathField.setText(""); //$NON-NLS-1$
-                }
-            }
-        };
-
-        SWTElementFactory.generateButton(cryptGroup, Messages.XMLImportDialog_29, null,
-                browseX509CertificateListener);
-
         useNoEncryptionRadio.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                selectedEncryptionMethod = null;
+                usePasswordEncryption = false;
                 useNoEncryptionRadio.setSelection(true);
                 passwordEncryptionRadio.setSelection(false);
-                certificateEncryptionRadio.setSelection(false);
             }
         });
 
         passwordEncryptionRadio.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                selectedEncryptionMethod = EncryptionMethod.PASSWORD;
+                usePasswordEncryption = true;
                 passwordEncryptionRadio.setSelection(true);
-                certificateEncryptionRadio.setSelection(false);
                 useNoEncryptionRadio.setSelection(false);
             }
         });
-
-        final Text privateKeyPathField = new Text(cryptGroup, SWT.SINGLE | SWT.BORDER);
-        data = new GridData();
-        data.widthHint = privateKeyPathWidthHint;
-        data.horizontalSpan = 2;
-        data.horizontalAlignment = SWT.RIGHT;
-        privateKeyPathField.setLayoutData(data);
-        privateKeyPathField.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
-                certificateEncryptionRadio.setSelection(true);
-                passwordEncryptionRadio.setSelection(false);
-                useNoEncryptionRadio.setSelection(false);
-            }
-        });
-
-        SelectionAdapter browsePrivateKeyListener = new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
-                dialog.setFilterExtensions(new String[] { "*.pem", }); //$NON-NLS-1$
-                String path = dialog.open();
-                if (path != null) {
-                    privateKeyPemFile = new File(path);
-                    privateKeyPathField.setText(path);
-                } else {
-                    privateKeyPathField.setText(""); //$NON-NLS-1$
-                }
-                passwordEncryptionRadio.setSelection(false);
-                certificateEncryptionRadio.setSelection(true);
-                selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
-            }
-
-        };
-
-        SWTElementFactory.generateButton(cryptGroup, Messages.XMLImportDialog_32, null,
-                browsePrivateKeyListener);
-
-        Label privateKeyPasswordLabel = new Label(cryptGroup, SWT.NONE);
-        data = new GridData();
-        data.horizontalAlignment = SWT.RIGHT;
-        privateKeyPasswordLabel.setLayoutData(data);
-        privateKeyPasswordLabel.setText(Messages.XMLImportDialog_0);
-
-        Text privateKeyPasswordField = new Text(cryptGroup, SWT.PASSWORD | SWT.BORDER);
-        data = new GridData();
-        data.widthHint = privateKeyPasswordWidthHint;
-        privateKeyPasswordField.setLayoutData(data);
-        // FocusListener is added to passwordField afterwards
-        new Label(cryptGroup, SWT.NONE);
-        privateKeyPasswordField.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                certificateEncryptionRadio.setSelection(true);
-                passwordEncryptionRadio.setSelection(false);
-                selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
-            }
-
-        });
-        privateKeyPasswordField
-                .addModifyListener(e -> privateKeyPassword = privateKeyPasswordField.getText());
 
         cryptGroup.pack();
 
@@ -756,13 +600,17 @@ public class XMLImportDialog extends Dialog {
 
     private void displayFiles(Shell shell, Text pathText) {
         FileDialog dialog = new FileDialog(shell, SWT.NULL);
-        dialog.setFilterExtensions(new String[] { "*" + VeriniceArchive.EXTENSION_VERINICE_ARCHIVE, //$NON-NLS-1$
-                "*" + ExportAction.EXTENSION_XML, //$NON-NLS-1$
-                "*" + ExportAction.EXTENSION_PASSWORD_ENCRPTION, //$NON-NLS-1$
-                "*" + ExportAction.EXTENSION_CERTIFICATE_ENCRPTION }); //$NON-NLS-1$
-        dialog.setFilterNames(
-                new String[] { Messages.XMLImportDialog_30, Messages.XMLImportDialog_33,
-                        Messages.XMLImportDialog_34, Messages.XMLImportDialog_35 });
+        if (usePasswordEncryption) {
+            dialog.setFilterExtensions(
+                    new String[] { "*" + ExportAction.EXTENSION_PASSWORD_ENCRPTION }); //$NON-NLS-1$
+            dialog.setFilterNames(new String[] { Messages.XMLImportDialog_34 });
+        } else {
+            dialog.setFilterExtensions(
+                    new String[] { "*" + VeriniceArchive.EXTENSION_VERINICE_ARCHIVE, //$NON-NLS-1$
+                            "*" + ExportAction.EXTENSION_XML }); //$NON-NLS-1$
+            dialog.setFilterNames(
+                    new String[] { Messages.XMLImportDialog_30, Messages.XMLImportDialog_33 });
+        }
 
         if (isFilePath()) {
             dialog.setFilterPath(getOldFolderPath());
@@ -834,17 +682,12 @@ public class XMLImportDialog extends Dialog {
         IEncryptionService service = ServiceFactory.lookupEncryptionService();
 
         try {
-            if (selectedEncryptionMethod != null) {
+            if (usePasswordEncryption) {
                 fileData = FileUtils.readFileToByteArray(dataFile);
-                if (selectedEncryptionMethod == EncryptionMethod.PASSWORD) {
-                    try {
-                        fileData = decryptWithGenericSalt(fileData, service);
-                    } catch (EncryptionException e) {
-                        fileData = decryptWithStaticSalt(fileData, service);
-                    }
-                } else if (selectedEncryptionMethod == EncryptionMethod.X509_CERTIFICATE) {
-                    fileData = service.decrypt(fileData, x509CertificateFile, privateKeyPemFile,
-                            privateKeyPassword);
+                try {
+                    fileData = decryptWithGenericSalt(fileData, service);
+                } catch (EncryptionException e) {
+                    fileData = decryptWithStaticSalt(fileData, service);
                 }
                 // data is encrypted, guess format
                 format = guessFormat(fileData);

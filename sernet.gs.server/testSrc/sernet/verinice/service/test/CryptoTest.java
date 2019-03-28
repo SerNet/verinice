@@ -18,34 +18,20 @@
 package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Security;
-import java.security.cert.X509Certificate;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.RSAPrivateKeySpec;
-import java.security.spec.RSAPublicKeySpec;
-import java.util.Calendar;
 
 import javax.annotation.Resource;
 import javax.crypto.BadPaddingException;
@@ -56,19 +42,13 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
-import javax.security.auth.x500.X500Principal;
-import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
-import org.bouncycastle.asn1.x509.BasicConstraints;
-import org.bouncycastle.asn1.x509.X509Extensions;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.encoders.Base64;
-import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import sernet.gs.service.VeriniceCharset;
@@ -122,44 +102,6 @@ public class CryptoTest extends ContextConfiguration {
     }
 
     @Test
-    public void certificateByteBasedCryptoTest() throws GeneralSecurityException, IOException {
-        KeyPair keyPair = generateKeyPair();
-        assertNotNull("Keypair is null", keyPair);
-        String distinguishedName = "CN=Test, L=Berlin, C=DE";
-        int days = 365;
-        X509Certificate cert = generateCertificate(distinguishedName, keyPair, days);
-        String certPEM = convertToPem(cert.getEncoded(), false, true);
-        assertNotNull(certPEM);
-        File certFile = File.createTempFile("veriniceCert", "PEM");
-        assertNotNull(certFile);
-        Files.write(certFile.toPath(), certPEM.getBytes());
-        certFile.deleteOnExit();
-        byte[] encryptedData = getEncryptionService().encrypt(SECRET.getBytes(), certFile);
-        byte[] privateKey = keyPair.getPrivate().getEncoded();
-        String privateKeyString = convertToPem(privateKey, true, false);
-        File keyFile = File.createTempFile("veriniceKey", "PEM");
-        assertNotNull(keyFile);
-        Files.write(keyFile.toPath(), privateKeyString.getBytes());
-        certFile.deleteOnExit();
-        byte[] decryptedData = getEncryptionService().decrypt(encryptedData, certFile, keyFile,
-                null);
-        assertEquals(SECRET, new String(decryptedData));
-    }
-
-    @Test
-    @Ignore
-    // FIXME: this test does not work. See VN-1950
-    public void certificateByteBasedCryptoTestWithProtectedKey()
-            throws GeneralSecurityException, IOException {
-        File certFile = new File("testSrc/sernet/verinice/service/test/cert.pem").getAbsoluteFile();
-        byte[] encryptedData = getEncryptionService().encrypt(SECRET.getBytes(), certFile);
-        File keyFile = new File("testSrc/sernet/verinice/service/test/key.pem").getAbsoluteFile();
-        byte[] decryptedData = getEncryptionService().decrypt(encryptedData, certFile, keyFile,
-                "verinice");
-        assertEquals(SECRET, new String(decryptedData));
-    }
-
-    @Test
     public void VNAPBCryptoTest() throws SyncParameterException, IOException, CommandException {
         byte[] plainContent = Files.readAllBytes(Paths.get(getAbsoluteFilePath(VNA_FILE)));
         char[] password = getPassword(10);
@@ -178,74 +120,6 @@ public class CryptoTest extends ContextConfiguration {
 
     public void setEncryptionService(IEncryptionService service) {
         this.encryptionService = service;
-    }
-
-    X509Certificate generateCertificate(String dn, KeyPair pair, int days)
-            throws GeneralSecurityException, IOException {
-        PublicKey publicKey = pair.getPublic();
-        PrivateKey privateKey = pair.getPrivate();
-        if (publicKey instanceof RSAPublicKey) {
-            RSAPublicKey rsaPk = (RSAPublicKey) publicKey;
-            RSAPublicKeySpec rsaPkSpec = new RSAPublicKeySpec(rsaPk.getModulus(),
-                    rsaPk.getPublicExponent());
-            try {
-                publicKey = KeyFactory.getInstance("RSA").generatePublic(rsaPkSpec);
-            } catch (InvalidKeySpecException e) {
-                publicKey = pair.getPublic();
-            }
-        }
-        if (privateKey instanceof RSAPrivateKey) {
-            RSAPrivateKey rsaPk = (RSAPrivateKey) privateKey;
-            RSAPrivateKeySpec rsaPkSpec = new RSAPrivateKeySpec(rsaPk.getModulus(),
-                    rsaPk.getPrivateExponent());
-            try {
-                privateKey = KeyFactory.getInstance("RSA").generatePrivate(rsaPkSpec);
-            } catch (InvalidKeySpecException e) {
-                privateKey = pair.getPrivate();
-            }
-        }
-
-        X509V3CertificateGenerator certGen = new X509V3CertificateGenerator();
-        String commonName = "CN=" + dn + ", OU=None, O=None L=None, C=None";
-        X500Principal dnName = new X500Principal(commonName);
-        certGen.setSerialNumber(BigInteger.valueOf(System.currentTimeMillis()));
-        certGen.setIssuerDN(dnName);
-        certGen.addExtension(X509Extensions.BasicConstraints, true, new BasicConstraints(true));
-        Calendar cal = Calendar.getInstance();
-        certGen.setNotBefore(cal.getTime());
-        cal.add(Calendar.YEAR, 5);
-        certGen.setNotAfter(cal.getTime());
-        certGen.setSubjectDN(dnName);
-        certGen.setPublicKey(publicKey);
-        certGen.setSignatureAlgorithm("MD5WithRSA");
-        return certGen.generate(privateKey, BouncyCastleProvider.PROVIDER_NAME);
-    }
-
-    KeyPair generateKeyPair() throws NoSuchAlgorithmException, NoSuchProviderException {
-        KeyPairGenerator keyGen;
-        keyGen = org.bouncycastle.jce.provider.asymmetric.ec.KeyPairGenerator.getInstance("RSA",
-                BouncyCastleProvider.PROVIDER_NAME);
-        keyGen.initialize(1024, new SecureRandom());
-        return keyGen.generateKeyPair();
-    }
-
-    private String convertToPem(byte[] data, boolean isKey, boolean isCert) {
-        String prefix = "";
-        String suffix = "";
-        if (isCert && !isKey) {
-            prefix = "-----BEGIN CERTIFICATE-----\n";
-            suffix = "\n-----END CERTIFICATE-----";
-        }
-        if (!isCert && isKey) {
-            prefix = "-----BEGIN PRIVATE KEY-----\n";
-            suffix = "\n-----END PRIVATE KEY-----";
-        }
-        try {
-            return prefix + DatatypeConverter.printBase64Binary(data) + suffix;
-        } catch (Exception e) {
-            LOG.error("Error converting cert", e);
-        }
-        return null;
     }
 
     private String getAbsoluteFilePath(String path) {

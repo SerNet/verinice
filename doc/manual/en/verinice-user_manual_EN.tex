@@ -2588,9 +2588,9 @@ To name the data source for the export, you can type a string in the \textit{Sou
 is used during the import to identify a data source across multiple imports.
 \newline\\
 Additionally, you have the option of encrypting the files. If you want to encrypt the files, check the
-box to do so. Then click \textbf{OK} to select an encryption method.
+box to do so. Then click \textbf{OK} to choose an encryption password.
 \newline\\
-Verinice offers two encryption methods:
+Verinice offers the following encryption method:
 \begin{itemize}
  \item Password: You need to give the password to the recipient.\\
  \textbf{Important!! version 1.14 introduces a new password-encryption. It is
@@ -2598,7 +2598,6 @@ Verinice offers two encryption methods:
  using password-encryption, into older versions of verinice. In reverse the
  data exported with older versions of verinice can still be imported into
  verinice 1.14 and higher.}
- \item Certificate: You need an X.509 standard certificate for this. You will typically receive the certificate from the recipient.
 \end{itemize}
 Click the \textbf{OK} button to start the export process.
 \newline\\
@@ -2868,13 +2867,8 @@ If a database object’s source ID is not found in the data to be imported, it i
 You can also select the \textbf{Integrate} options. This automatically integrates the imported objects, which are then no longer
 identifiable as external objects. You can find further details on the function \textbf{Integrate} in the section {\em \ref{Integrating imported data} \nameref{Integrating imported data}}.
 \newline\\
-If the objects are encrypted, depending on the encryption method, you may need to decrypt them with a symmetric password or a certificate
-(type X.509). Please refer to the note for password-encryption in section {\em
-\ref{sec:exporting-verinice-data} \nameref{sec:exporting-verinice-data}}. If
-you import a vna file encrypted via X.509 certificate, you must specify the
-private key file of this certificate in the import window. If this private key
-is password-protected, this password is also entered in the import dialog.
-\newline\\
+If the objects are encrypted, you may need to decrypt them with a symmetric password. Please refer to the note for password-encryption in section {\em
+\ref{sec:exporting-verinice-data} \nameref{sec:exporting-verinice-data}}.\newline\\
 The imported objects are initially always located in the root object additionally created by this process and named
 ``Imported Objects''. From here you can use cut and paste to move the objects to the desired target location. They are
 updated there during the next import. New objects are created in the root object ``Imported Objects''. To identify these objects across several

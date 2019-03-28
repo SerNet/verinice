@@ -1,9 +1,6 @@
 package sernet.verinice.service.crypto;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.security.cert.CertificateException;
 
 import org.bouncycastle.util.encoders.Base64;
 
@@ -44,26 +41,6 @@ public class EncryptionService implements IEncryptionService {
     public byte[] decrypt(byte[] encryptedByteData, char[] password, byte[] salt)
             throws EncryptionException {
         return PasswordBasedEncryption.decrypt(encryptedByteData, password, salt, true);
-    }
-
-    @Override
-    public byte[] encrypt(byte[] unencryptedByteData, File x509CertificateFile)
-            throws CertificateException, EncryptionException, IOException {
-        return SMIMEBasedEncryption.encrypt(unencryptedByteData, x509CertificateFile);
-    }
-
-    @Override
-    public byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile,
-            File privateKeyPemFile, final String privateKeyPassword)
-            throws IOException, CertificateException, EncryptionException {
-        return SMIMEBasedEncryption.decrypt(encryptedByteData, x509CertificateFile,
-                privateKeyPemFile, privateKeyPassword);
-    }
-
-    @Override
-    public byte[] encrypt(byte[] unencryptedByteData, String keyAlias)
-            throws CertificateException, EncryptionException, IOException {
-        return SMIMEBasedEncryption.encrypt(unencryptedByteData, keyAlias);
     }
 
     @Override
