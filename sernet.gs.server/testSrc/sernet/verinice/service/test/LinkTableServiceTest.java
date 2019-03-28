@@ -52,12 +52,13 @@ import sernet.verinice.service.linktable.LinkTableConfiguration;
 import sernet.verinice.service.linktable.LinkTableService;
 import sernet.verinice.service.linktable.generator.GraphLinkedTableCreator;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
+import sernet.verinice.service.test.helper.vnaimport.BeforeAllVNAImportHelper;
 import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class LinkTableServiceTest extends BeforeEachVNAImportHelper {
+public class LinkTableServiceTest extends BeforeAllVNAImportHelper {
 
     private static final Logger LOG = Logger.getLogger(LinkTableServiceTest.class);
 

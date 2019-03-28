@@ -44,12 +44,12 @@ import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
-import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
+import sernet.verinice.service.test.helper.vnaimport.BeforeAllVNAImportHelper;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class GraphServiceTest extends BeforeEachVNAImportHelper {
+public class GraphServiceTest extends BeforeAllVNAImportHelper {
 
     private static final Logger LOG = Logger.getLogger(GraphServiceTest.class);
 
