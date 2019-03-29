@@ -475,6 +475,12 @@ public final class CnAElementHome {
             }
 
             CnATreeElement elemntWithPermissions = Retriever.checkRetrievePermissions(cte);
+            if (elemntWithPermissions == null) {
+                if (log.isInfoEnabled()) {
+                    log.info("Element " + cte + " not found when checking write permissions");
+                }
+                return false;
+            }
             for (Permission p : elemntWithPermissions.getPermissions()) {
                 if (p.isWriteAllowed() && roles.contains(p.getRole())) {
                     return true;
