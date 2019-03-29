@@ -124,8 +124,7 @@ public abstract class MigrateCompendiumElementJob {
     private String copyElementAndReturnUuid(CnATreeElement group, CnATreeElement element)
             throws CommandException {
         List<String> uuidList = Collections.singletonList(element.getUuid());
-        CopyCommand copyCommand = new CopyCommand(group.getUuid(), uuidList);
-        copyCommand.setCopyChildren(false);
+        CopyCommand copyCommand = new NonRecursiveCopyCommand(group.getUuid(), uuidList);
         copyCommand = commandService.executeCommand(copyCommand);
         return copyCommand.getNewElements().get(0);
     }
@@ -264,5 +263,19 @@ public abstract class MigrateCompendiumElementJob {
 
     public void setLinkDao(IBaseDao<CnALink, Serializable> linkDao) {
         this.linkDao = linkDao;
+    }
+
+    private static class NonRecursiveCopyCommand extends CopyCommand {
+
+        private static final long serialVersionUID = 4836866320583618153L;
+
+        public NonRecursiveCopyCommand(final String uuidGroup, final List<String> uuidList) {
+            super(uuidGroup, uuidList);
+        }
+
+        @Override
+        protected boolean copyDescendant(CnATreeElement descendant, CnATreeElement groupToCopyTo) {
+            return false;
+        }
     }
 }

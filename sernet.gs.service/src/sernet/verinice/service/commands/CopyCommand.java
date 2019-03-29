@@ -62,7 +62,7 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class CopyCommand extends GenericCommand {
 
-    private static final long serialVersionUID = 6584744904579507661L;
+    private static final long serialVersionUID = 4810890094775605851L;
 
     private static final Logger logger = Logger.getLogger(CopyCommand.class);
 
@@ -85,8 +85,6 @@ public class CopyCommand extends GenericCommand {
     private List<String> newElements;
 
     private boolean copyAttachments = false;
-
-    private boolean copyChildren = true;
 
     /**
      * @param uuidGroup
@@ -180,9 +178,7 @@ public class CopyCommand extends GenericCommand {
                 elementCopy = saveCopy(groupToCopyTo, elementToCopy);
                 number++;
                 afterCopy(elementToCopy, elementCopy, sourceDestMap);
-                if (copyChildren) {
-                    copyChildrenIfExistant(elementToCopy, sourceDestMap, elementCopy);
-                }
+                copyChildrenIfExistant(elementToCopy, sourceDestMap, elementCopy);
             }
         } else if (elementToCopy != null) {
             logger.warn("Can not copy element with pk: " + elementToCopy.getDbId() //$NON-NLS-1$
@@ -486,14 +482,6 @@ public class CopyCommand extends GenericCommand {
 
     public List<String> getNewElements() {
         return newElements;
-    }
-
-    public boolean isCopyChildren() {
-        return copyChildren;
-    }
-
-    public void setCopyChildren(boolean copyChildren) {
-        this.copyChildren = copyChildren;
     }
 
     /**
