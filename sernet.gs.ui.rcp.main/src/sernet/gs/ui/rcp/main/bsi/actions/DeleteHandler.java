@@ -403,10 +403,8 @@ public class DeleteHandler extends RightsEnabledHandler {
                                 Messages.DeleteActionDelegate_13);
                         return;
                     }
-
-                    CnATreeElement el = sel;
-                    removeElement(el);
-                    reloadBpModel |= el instanceof IBpElement;
+                    removeElement(sel);
+                    reloadBpModel |= sel instanceof IBpElement;
                 }
                 if (reloadBpModel) {
                     BpModel bpModel = CnAElementFactory.getInstance().getBpModel();
