@@ -106,14 +106,12 @@ public abstract class MigrateCompendiumElementJob {
     }
 
     protected boolean isSameElement(CnATreeElement element, CnATreeElement element2) {
-        if (element == null || getIdentifier(element) == null
-                || element.getTypeId() == null) {
+        if (element == null || getIdentifier(element) == null || element.getTypeId() == null) {
             return false;
         }
         return element.getTypeId().equals(element2.getTypeId())
                 && getIdentifier(element).equals(getIdentifier(element2));
     }
-
 
     protected CnATreeElement copyElement(CnATreeElement group, CnATreeElement element)
             throws CommandException {
@@ -132,8 +130,7 @@ public abstract class MigrateCompendiumElementJob {
         return copyCommand.getNewElements().get(0);
     }
 
-    private CnATreeElement loadElement(String uuid)
-            throws CommandException {
+    private CnATreeElement loadElement(String uuid) throws CommandException {
         LoadElementByUuid<CnATreeElement> loadCommand = new LoadElementByUuid<>(uuid,
                 RetrieveInfo.getPropertyInstance());
         loadCommand = commandService.executeCommand(loadCommand);
@@ -153,7 +150,8 @@ public abstract class MigrateCompendiumElementJob {
         Set<CnATreeElement> requirementsOfTargetElement = getRequirementOfTargetElement();
         for (CnATreeElement requirementSource : linkedRequirementsOfSource) {
             for (CnATreeElement requirement : requirementsOfTargetElement) {
-                if (isSameElement(requirement, requirementSource) && (!isLink(compendiumElementCopy, requirement, linkTypeId))) {
+                if (isSameElement(requirement, requirementSource)
+                        && (!isLink(compendiumElementCopy, requirement, linkTypeId))) {
                     createLinkDataSet.add(new CreateLinkData(requirement.getDbId(),
                             compendiumElementCopy.getDbId(), linkTypeId));
                     veriniceGraph.addEdge(new Edge(compendiumElementCopy, requirement, linkTypeId));
@@ -267,5 +265,4 @@ public abstract class MigrateCompendiumElementJob {
     public void setLinkDao(IBaseDao<CnALink, Serializable> linkDao) {
         this.linkDao = linkDao;
     }
-
 }
