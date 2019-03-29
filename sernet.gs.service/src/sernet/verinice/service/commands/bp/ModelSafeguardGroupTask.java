@@ -73,7 +73,7 @@ public class ModelSafeguardGroupTask extends ModelCopyTask {
         if (element instanceof SafeguardGroup) {
             return ((SafeguardGroup) element).getTitle();
         }
-        return null;
+        throw new IllegalArgumentException("Cannot handle " + element);
     }
 
     @Override

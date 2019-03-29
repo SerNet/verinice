@@ -108,13 +108,8 @@ public class ModelCommand extends ChangeLoggingCommand {
                         .setFetchMode("children.linksDown", FetchMode.JOIN)));
         @SuppressWarnings("unchecked")
         Set<CnATreeElement> targetElements = new HashSet<>(getDao().findByCriteria(DetachedCriteria
-                .forClass(CnATreeElement.class).setFetchMode("linksUp", FetchMode.JOIN)
-                .setFetchMode("children", FetchMode.JOIN)
+                .forClass(CnATreeElement.class).setFetchMode("children", FetchMode.JOIN)
                 .setFetchMode("children.children", FetchMode.JOIN)
-                .setFetchMode("children.children.linksDown", FetchMode.JOIN)
-                .setFetchMode("children.entity", FetchMode.JOIN)
-                .setFetchMode("children.entity.typedPropertyLists", FetchMode.JOIN)
-                .setFetchMode("children.entity.typedPropertyLists.properties", FetchMode.JOIN)
                 .add(Restrictions.in(CnATreeElement.UUID, targetUuids))));
         ItNetwork itNetwork = loadItNetwork(targetElements);
         ModelingData modelingData = new ModelingData(requirementGroups, targetElements,
