@@ -1,0 +1,42 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Element-Name: branding
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _wt2pkIrEEeiq0rZadDcOnQ
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 8/6/18 9:49 AM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Check the branding.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+get-about-menu | click
+get-window "About BIRT Report Designer" | get-editbox | get-property text 
+    | equals "Business Intelligence and Reporting Tools" | verify-true
+with [get-window "About BIRT Report Designer"] {
+    get-button "Installation Details" | click
+    get-window "BIRT Report Designer Installation Details" | get-tree | select "verinice Report Designer"
+}
+get-window "About BIRT Report Designer" | get-window "BIRT Report Designer Installation Details" | get-tree | get-item 
+    -path "verinice Report Designer" | get-property caption | equals "verinice Report Designer" | verify-true
+with [get-window "About BIRT Report Designer"] {
+    with [get-window "BIRT Report Designer Installation Details"] {
+        get-button Properties | click
+        with [get-window "Properties for sernet.verinice.report.designer"] {
+            get-tree | select "License Agreement"
+            get-button "Apply and Close" | click
+        }
+        get-button Close | click
+    }
+    get-button Close | click
+}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

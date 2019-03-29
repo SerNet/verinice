@@ -1,0 +1,47 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Context-Type: org.eclipse.rcptt.ctx.ecl
+Element-Name: iso
+Element-Type: context
+Element-Version: 2.0
+Id: _mCQwkI9ZEeic2YXgdvyDUQ
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 11/7/18 10:00 AM
+
+------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
+Content-Type: text/ecl
+Entry-Name: .ecl.context
+
+proc "create-iso-element" [val path] [val elementname] [val elementtype] [val newname] {
+	get-view ISM | get-tree | select $path | get-menu -path $elementtype | click
+	with [get-editor $newname | get-section "" | get-editbox -after [get-label Titel]] {
+		set-text $elementname
+		key-type "M1+s"
+	}
+}
+
+proc "create-iso-asset" [val path] [val elementname] {
+	create-iso-element $path $elementname "Neues Asset..." Asset
+}
+
+proc "create-iso-org" [val elementname] {
+	get-view ISM | get-button "Neue Organisation hinzufügen..." | click
+	with [get-editor "Organisation / Scope" | get-section "" | get-editbox -after [get-label "Organisation / Scope"]] {
+		set-text $elementname
+		key-type "M1+s"
+	}
+}
+
+proc "delete-iso-model" [val elementpath] {
+	get-view "ISM" | get-tree | select $elementpath | get-menu -path "Löschen" | click
+	get-window "Wirklich löschen?" | get-button Ja | click
+}
+proc "ism-import-vna" [val filename] {
+	get-view ISM | get-button "Importiere Organisation aus Datei..." | click
+	set-dialog-result File [concat $datadir [get-java-property "file.separator"] $filename]
+	with [get-window Import] {
+	    get-group Datei | get-button "Datei auswählen..." | click
+	    get-button OK | click
+	}
+}
+------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998--

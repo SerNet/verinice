@@ -1,0 +1,94 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _TFXtsMMrEei5b6pcMYmFfw,_kD9CUIxPEei2UKUDmonytQ,_4GRncI0bEei2UKUDmonytQ,_lGnj8Ix1Eei2UKUDmonytQ
+Element-Name: test-vn-2027-add-risk-matrix-configurer-threads
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _WFrI4MMeEei5b6pcMYmFfw
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 11/30/18 2:15 PM
+Tags: bp, risk
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Test if the threats get updated after a change.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+log "test-vn-2027-add-risk-matrix-configurer-threads"
+//
+
+get-view Objektbrowser | close
+get-view Kataloge | close
+
+create-bpmodel "risk-matrix-test"
+//get-window "Konfiguration der Risikoanalyse" | get-button OK | click
+//get-eclipse-window | key-type "M1+s"
+
+create-bpthreatgroup "risk-matrix-test" "GG"
+// create and configure threats
+create-bpthreat "risk-matrix-test/GG" "G-1"
+get-editor "G-1" | get-section "" | get-section "Risiko ohne zusätzliche Maßnahmen" | get-combo 
+    -after [get-label "Eintrittshäufigkeit"] | select "sehr häufig"
+get-eclipse-window | key-type "M1+s"
+
+create-bpthreat "risk-matrix-test/GG" "G-2"
+get-editor "G-2" | get-section "" | get-section "Risiko ohne zusätzliche Maßnahmen" | get-combo 
+    -after [get-label "Eintrittshäufigkeit"] | select "sehr häufig"
+get-eclipse-window | key-type "M1+s"
+
+create-bpthreat "risk-matrix-test/GG" "G-3"
+get-editor "G-3" | get-section "" | get-section "Risiko ohne zusätzliche Maßnahmen" | get-combo 
+    -after [get-label "Eintrittshäufigkeit"] | select "sehr häufig"
+get-eclipse-window | key-type "M1+s"
+
+///////
+
+
+get-view "Modernisierter IT-Grundschutz" | get-tree | select "risk-matrix-test" | double-click
+with [get-editor "risk-matrix-test"] {
+    with [get-tab-folder] {
+        get-tab-item Risikomatrix | click
+        get-tab-item "Eintrittshäufigkeit" | click
+    }
+    get-button "-" | click
+    with [get-tab-folder] {
+        get-tab-item "Verknüpfungen" | click
+        get-tab-item Daten | click
+    }
+    get-section "" | get-editbox -after [get-label Titel] | key-type "M1+s"
+}
+get-window "Konfiguration der Risikoanalyse" 
+    | get-label "Die Änderung der Konfiguration der Risikoanalyse ist abgeschlossen. Es wurden 3 Gefährdung(en), 0 Anforderung(en) und 0 Maßnahme(n) verändert." 
+    | get-property caption 
+    | equals "Die Änderung der Konfiguration der Risikoanalyse ist abgeschlossen. Es wurden 3 Gefährdung(en), 0 Anforderung(en) und 0 Maßnahme(n) verändert." 
+    | verify-true
+get-window "Konfiguration der Risikoanalyse" | get-button OK | click
+
+
+
+get-view "Modernisierter IT-Grundschutz" | get-tree | select "risk-matrix-test/GG/G-1" | double-click
+get-editor "G-1" | get-section "" | get-section "Risiko ohne zusätzliche Maßnahmen" |
+    get-combo 
+    -after [get-label "Eintrittshäufigkeit"] | get-property selection | equals unbearbeitet | verify-true
+    
+get-view "Modernisierter IT-Grundschutz" | get-tree | select "risk-matrix-test/GG/G-2" | double-click
+get-editor "G-2" | get-section "" | get-section "Risiko ohne zusätzliche Maßnahmen" |
+    get-combo 
+    -after [get-label "Eintrittshäufigkeit"] | get-property selection | equals unbearbeitet | verify-true
+    
+get-view "Modernisierter IT-Grundschutz" | get-tree | select "risk-matrix-test/GG/G-3" | double-click
+get-editor "G-3" | get-section "" | get-section "Risiko ohne zusätzliche Maßnahmen" |
+    get-combo 
+    -after [get-label "Eintrittshäufigkeit"] | get-property selection | equals unbearbeitet | verify-true
+    
+delete-bpelement "risk-matrix-test"
+
+    
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

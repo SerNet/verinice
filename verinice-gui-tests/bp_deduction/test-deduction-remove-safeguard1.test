@@ -1,0 +1,275 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _kD9CUIxPEei2UKUDmonytQ
+Element-Name: test-deduction-remove-safeguard1
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _pnnd0IwQEei2UKUDmonytQ
+Runtime-Version: 2.4.1.201903190000
+Save-Time: 4/12/19 1:02 PM
+Tags: bp, deduction, skipExecution
+Testcase-Type: ecl
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+wait 1000
+get-view Objektbrowser | close
+get-view "Modernisierter IT-Grundschutz" | get-tree | select "Informationsverbund-1/Anwendungen" | get-menu 
+    -path "Neue Anwendung..." | click
+get-editor Anwendung | get-section "" | get-editbox -after [get-label Titel] | set-text "Anwendung-remove-safeguard"
+get-button "Speichern (M1+S)" | click
+with [get-view "Modernisierter IT-Grundschutz" | get-tree] {
+    select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard" | get-menu -path "Neuer Baustein..." | click
+    select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein(e)" | get-menu 
+        -path "Neue Anforderung..." | click
+    select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard" | get-menu -path "Neue Maßnahmen-Gruppe..." 
+        | click
+    select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen" | get-menu -path "Neue Maßnahme..." 
+        | click
+}
+get-editor "Maßnahme" | get-section "" | get-editbox -after [get-label Titel] | set-text "Maßnahme-1"
+get-button "Speichern (M1+S)" | click
+get-view "Modernisierter IT-Grundschutz" | get-tree 
+    | select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen" | get-menu 
+    -path "Neue Maßnahme..." | click
+get-editor "Maßnahme" | get-section "" | get-editbox -after [get-label Titel] | set-text "Maßnahme-2"
+get-button "Speichern (M1+S)" | click
+get-view "Modernisierter IT-Grundschutz" | get-tree 
+    | select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen" | get-menu 
+    -path "Neue Maßnahme..." | click
+get-editor "Maßnahme" | get-section "" | get-editbox -after [get-label Titel] | set-text "Maßnahme-3"
+get-button "Speichern (M1+S)" | click
+get-view "Modernisierter IT-Grundschutz" | get-tree 
+    | select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen" | get-menu 
+    -path "Neue Maßnahme..." | click
+get-editor "Maßnahme" | get-section "" | get-editbox -after [get-label Titel] | set-text "Maßnahme-4"
+get-button "Speichern (M1+S)" | click
+get-view "Modernisierter IT-Grundschutz" | get-tree 
+    | select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen" | get-menu 
+    -path "Neue Maßnahme..." | click
+get-editor "Maßnahme" | get-section "" | get-editbox -after [get-label Titel] | set-text "Maßnahme-5"
+get-button "Speichern (M1+S)" | click
+with [get-view "Modernisierter IT-Grundschutz" | get-tree] {
+    select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-1" | get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-1" 
+        | drag-start 33 9
+    get-item -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-1" 
+        | drag-enter 34 2 -detail move
+    get-item -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-5" 
+        | drag-over 37 0 -detail move
+    drag-over 150 336 -detail move
+    get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+        | drag-over 38 13 -detail move
+    get-item -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-1" 
+        | drag-exit
+    get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+        | drag-accept 38 13 -detail move
+    drag-set-data
+    get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+        | drop 38 13 -detail move
+    drag-end -detail move
+    select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-2" | get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-2" 
+        | drag-start 40 9
+    get-item -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-2" 
+        | drag-enter 41 4 -detail move
+    get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+        | drag-over 54 17 -detail move
+    get-item -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-2" 
+        | drag-exit
+    get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+        | drag-accept 54 17 -detail move
+    drag-set-data
+    get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+        | drop 54 17 -detail move
+    drag-end -detail move
+    select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-3" | get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-3" 
+        | drag-start 47 18
+    get-item -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-3" 
+        | drag-enter 49 11 -detail move
+    get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+        | drag-over 31 4 -detail move
+    get-item -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-3" 
+        | drag-exit
+    get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+        | drag-accept 31 4 -detail move
+    drag-set-data
+    get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+        | drop 31 4 -detail move
+    drag-end -detail move
+    select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-4" | get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-4" 
+        | drag-start 48 15
+    get-item -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-4" 
+        | drag-enter 49 10 -detail move
+    get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+        | drag-over 46 15 -detail move
+    get-item -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-4" 
+        | drag-exit
+    get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+        | drag-accept 46 15 -detail move
+    drag-set-data
+    get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+        | drop 46 15 -detail move
+    drag-end -detail move
+    select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-5" | get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-5" 
+        | drag-start 51 17
+    get-item -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-5" 
+        | drag-enter 50 11 -detail move
+    get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+        | drag-over 41 10 -detail move
+    get-item -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-5" 
+        | drag-exit
+    get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+        | drag-accept 41 10 -detail move
+    drag-set-data
+    get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+        | drop 41 10 -detail move
+    drag-end -detail move
+    select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-5" | double-click
+}
+get-editor "Maßnahme-5" | get-section "" | get-section "Umsetzung (Maßnahmenstärke)" | get-combo -after [get-label Umsetzungsstatus] 
+    | select Ja
+get-button "Speichern (M1+S)" | click
+get-view "Modernisierter IT-Grundschutz" | get-tree | get-item 
+    -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+    | get-property "image.path" | equals "sernet.gs.ui.rcp.main/icons/16-clock.png" | verify-true
+get-view "Modernisierter IT-Grundschutz" | get-tree 
+    | select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-1" | double-click
+get-editor "Maßnahme-1" | get-section "" | get-section "Umsetzung (Maßnahmenstärke)" | get-combo -after [get-label Umsetzungsstatus] 
+    | select Ja
+get-button "Speichern (M1+S)" | click
+get-view "Modernisierter IT-Grundschutz" | get-tree 
+    | select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-2" | double-click
+get-editor "Maßnahme-2" | get-section "" | get-section "Umsetzung (Maßnahmenstärke)" | get-combo -after [get-label Umsetzungsstatus] 
+    | select Ja
+get-button "Speichern (M1+S)" | click
+get-view "Modernisierter IT-Grundschutz" | get-tree 
+    | select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-3" | double-click
+get-editor "Maßnahme-3" | get-section "" | get-section "Umsetzung (Maßnahmenstärke)" | get-combo -after [get-label Umsetzungsstatus] 
+    | select Ja
+get-button "Speichern (M1+S)" | click
+get-view "Modernisierter IT-Grundschutz" | get-tree 
+    | select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-4" | double-click
+get-editor "Maßnahme-4" | get-section "" | get-section "Umsetzung (Maßnahmenstärke)" | get-combo -after [get-label Umsetzungsstatus] 
+    | select Ja
+get-button "Speichern (M1+S)" | click
+get-view "Modernisierter IT-Grundschutz" | get-tree | get-item 
+    -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+    | get-property "image.path" | equals "sernet.gs.ui.rcp.main/icons/16-em-check.png" | verify-true
+get-editor "Maßnahme-4" | get-section "" | get-section "Umsetzung (Maßnahmenstärke)" | get-combo -after [get-label Umsetzungsstatus] 
+    | select Nein
+get-button "Speichern (M1+S)" | click
+get-view "Modernisierter IT-Grundschutz" | get-tree | get-item 
+    -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+    | get-property "image.path" | equals "sernet.gs.ui.rcp.main/icons/16-clock.png" | verify-true
+get-view "Modernisierter IT-Grundschutz" | click
+get-editor "Maßnahme-4" | close
+get-view "Modernisierter IT-Grundschutz" | get-tree 
+    | select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-4" | get-menu 
+    -path "Löschen" | click
+get-window "Wirklich löschen?" | get-button Ja | click
+get-view "Modernisierter IT-Grundschutz" | get-tree | get-item 
+    -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+    | get-property "image.path" | equals "sernet.gs.ui.rcp.main/icons/16-em-check.png" | verify-true
+
+get-view "Modernisierter IT-Grundschutz" | get-tree 
+    | select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen" | get-menu 
+    -path "Neue Maßnahme..." | click
+get-editor "Maßnahme" | get-section "" | get-editbox -after [get-label Titel] | set-text "Maßnahme-6"
+get-button "Speichern (M1+S)" | click
+get-view "Modernisierter IT-Grundschutz" | get-tree 
+    | select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen" | get-menu 
+    -path "Neue Maßnahme..." | click
+get-editor "Maßnahme" | get-section "" | get-editbox -after [get-label Titel] | set-text "Maßnahme-7"
+get-button "Speichern (M1+S)" | click
+with [get-view "Modernisierter IT-Grundschutz" | get-tree] {
+    select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-6" | get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-6" 
+        | drag-start 42 12
+    get-item -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-6" 
+        | drag-enter 43 6 -detail move
+    drag-over 155 480 -detail move
+    get-item -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-5" 
+        | drag-over 43 0 -detail move
+    get-item -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-3" 
+        | drag-over 43 1 -detail move
+    get-item -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-2" 
+        | drag-over 43 0 -detail move
+    get-item -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-1" 
+        | drag-over 45 0 -detail move
+    get-item -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-7" 
+        | drag-over 45 0 -detail move
+    drag-over 154 336 -detail move
+    get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+        | drag-over 39 10 -detail move
+    get-item -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-6" 
+        | drag-exit
+    get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+        | drag-accept 39 10 -detail move
+    drag-set-data
+    get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+        | drop 39 10 -detail move
+    drag-end -detail move
+}
+get-view "Modernisierter IT-Grundschutz" | get-tree | get-item 
+    -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+    | get-property "image.path" | equals "sernet.gs.ui.rcp.main/icons/16-clock.png" | verify-true
+with [get-view "Modernisierter IT-Grundschutz" | get-tree] {
+    select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-7" | get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-7" 
+        | drag-start 39 9
+    get-item -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-7" 
+        | drag-enter 40 2 -detail move
+    drag-over 152 360 -detail move
+    get-item -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen" | drag-over 55 0 
+        -detail move
+    get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+        | drag-over 34 10 -detail move
+    get-item -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-7" 
+        | drag-exit
+    get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+        | drag-accept 34 10 -detail move
+    drag-set-data
+    get-item 
+        -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+        | drop 34 10 -detail move
+    drag-end -detail move
+    select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-6" "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Maßnahmen/.*Maßnahme-7"
+    get-menu -path "Löschen" | click
+}
+get-window "Wirklich löschen?" | get-button Ja | click
+get-view "Modernisierter IT-Grundschutz" | get-tree 
+    | select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein(e)/.*Baustein-Anforderung"
+get-view "Modernisierter IT-Grundschutz" | get-tree | get-item 
+    -path "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard/Baustein\\(e\\)/.*Baustein-Anforderung" 
+    | get-property "image.path" | equals "sernet.gs.ui.rcp.main/icons/16-em-check.png" | verify-true
+get-view "Modernisierter IT-Grundschutz" | get-tree 
+    | select "Informationsverbund-1/Anwendungen/Anwendung-remove-safeguard" | get-menu -path "Löschen" | click
+get-window "Wirklich löschen?" | get-button Ja | click
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

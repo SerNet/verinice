@@ -1,0 +1,33 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _HQDeEI9NEeic2YXgdvyDUQ,_mCQwkI9ZEeic2YXgdvyDUQ
+Element-Name: test_2_9
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _koyFoNapEei2hNb8h7sUBw
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 1/21/19 2:44 PM
+Testcase-Type: ecl
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+log "test_2.9"
+
+create-iso-org y
+try -command {
+	with [get-view ISM | get-tree] {
+		select y | get-menu -path "Unterelemente aufklappen" | click
+		select "y/Assets" | get-menu -path "Neue Asset-Gruppe..." | click
+		select "y/Assets/Assets" | get-menu -path "Neues Asset..." | click
+		select "y/Assets" | get-menu -path "Neues Asset..." | click
+		select "y/Assets/Assets" | get-menu -path "Unterelemente zuklappen" | click
+		select "y/Assets" | get-menu -path "Unterelemente zuklappen" | click
+		select y | get-menu -path "Unterelemente zuklappen" | click
+	}
+} -finally {
+	delete-iso-model y
+}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

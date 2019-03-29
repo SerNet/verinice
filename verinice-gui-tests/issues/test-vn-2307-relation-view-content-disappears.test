@@ -1,0 +1,33 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _lGnj8Ix1Eei2UKUDmonytQ,_4GRncI0bEei2UKUDmonytQ
+Element-Name: test-vn-2307-relation-view-content-disappears
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _K7ivkNajEei2hNb8h7sUBw
+Runtime-Version: 2.4.1.201903190000
+Save-Time: 4/16/19 10:46 AM
+Tags: bp, issue
+Testcase-Type: ecl
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+bp-import-vna "Informationsverbund-1.vna"
+//TODO better check for task completion
+wait-for-import "Modernisierter IT-Grundschutz" "importierte Objekte/Informationsverbund-1 \\[b71753\\]"
+
+get-button "Verknüpfungen" | click
+
+get-view "Modernisierter IT-Grundschutz" | get-tree | select "importierte Objekte/Informationsverbund-1 \\[b71753\\]/Maßnahmen \\[b71753\\]/.*Maßnahme \\[b71753\\]"
+get-view "Verknüpfungen" | get-table | get-item "erfüllt" -column "Verknüpfung"
+
+get-menu -path "Ansicht/View neu laden" | click
+
+wait 1000 //TODO better check for task completion
+
+get-view "Verknüpfungen" | get-table | get-item "erfüllt" -column "Verknüpfung"
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

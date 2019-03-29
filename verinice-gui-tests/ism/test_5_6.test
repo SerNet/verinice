@@ -1,0 +1,94 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _CqjpUMI0EeiBGdyBeGVxCg,_HQDeEI9NEeic2YXgdvyDUQ,_mCQwkI9ZEeic2YXgdvyDUQ
+Element-Name: test_5_6
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _3yYV4MVUEei4p80S5TXbug
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 11/20/18 5:49 PM
+Testcase-Type: ecl
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+log "test_5.6"
+create-iso-org "xOrganisation / Scope"
+get-view ISM | get-tree | select "xOrganisation \\/ Scope/Assets" | get-menu -path "Neues Asset..." | click
+with [get-editor Asset | get-section "" | get-editbox -after [get-label Titel]] {
+    set-text xAsset
+    key-type "M1+s"
+}
+get-view ISM | get-tree | select "xOrganisation \\/ Scope/Prozesse" | get-menu -path "Neuer Prozess..." | click
+with [get-editor Prozess | get-section "" | get-editbox -after [get-label Titel]] {
+    set-text xProzess
+    key-type "M1+s"
+}
+with [get-view ISM | get-tree] {
+    select "xOrganisation \\/ Scope/Prozesse/xProzess"
+    get-item -path "xOrganisation \\/ Scope/Prozesse/xProzess" | drag-start 22 13
+    get-item -path "xOrganisation \\/ Scope/Prozesse/xProzess" | drag-enter 23 8 -detail move
+    get-item -path "xOrganisation \\/ Scope/Assets/xAsset" | drag-over 29 8 -detail move
+    get-item -path "xOrganisation \\/ Scope/Prozesse/xProzess" | drag-exit
+    get-item -path "xOrganisation \\/ Scope/Assets/xAsset" | drag-accept 29 8 -detail move
+    drag-set-data
+    get-item -path "xOrganisation \\/ Scope/Assets/xAsset" | drop 29 8 -detail move
+    drag-end -detail move
+}
+get-view ISM | get-tree | select "xOrganisation \\/ Scope/Prozesse/xProzess" | double-click
+with [get-editor xProzess | get-section "" | get-section "Business Impact"] {
+    get-combo -after [get-label Vertraulichkeit] | select "2 Interner Gebrauch"
+    get-combo -after [get-label "Integrität"] | select "2 Hoch"
+    get-combo -after [get-label "Verfügbarkeit"] | select "2 Hoch"
+}
+get-eclipse-window | key-type "M1+s"
+
+get-view ISM | get-tree | select "xOrganisation \\/ Scope/Assets/xAsset" | double-click
+with [get-editor xAsset | get-section "" | get-section "Business Impact"] {
+    with [get-combo -after [get-label Vertraulichkeit]] {
+        get-property selection | equals "2 Interner Gebrauch" | verify-true
+        get-property "isEnabled()" | equals false | verify-true
+    }
+    with [get-combo -after [get-label "Integrität"]] {
+        get-property selection | equals "2 Hoch" | verify-true
+        get-property "isEnabled()" | equals false | verify-true
+    }
+    with [get-combo -after [get-label "Verfügbarkeit"]] {
+        get-property selection | equals "2 Hoch" | verify-true
+        get-property "isEnabled()" | equals false | verify-true
+    }
+}
+with [get-editor xAsset | get-section "" | get-section "Business Impact"] {
+    get-checkbox -after [get-label "Vertraulichkeit ableiten"] | uncheck
+    get-combo -after [get-label "Vertraulichkeit"] | get-property "getEnabled()" | equals true | verify-true
+    get-checkbox -after [get-label "Integrität ableiten"] | uncheck
+    get-combo -after [get-label "Integrität"] | get-property "getEnabled()" | equals true | verify-true
+    get-checkbox -after [get-label "Verfügbarkeit ableiten"] | uncheck
+}
+get-eclipse-window | key-type "M1+s"
+
+with [get-view "Verknüpfungen" | get-table] {
+    select "nötig für" -column "Verknüpfung" | get-menu -path "Verknüpfung entfernen" | click
+}
+get-window "Wirklich entfernen?" | get-button Ja | click
+
+get-view ISM | get-tree | select "xOrganisation \\/ Scope/Assets/xAsset" | double-click
+with [get-editor xAsset | get-section "" | get-section "Business Impact"] {
+    with [get-combo -after [get-label Vertraulichkeit]] {
+        get-property selection | equals "2 Interner Gebrauch" | verify-true
+        get-property "isEnabled()" | equals true | verify-true
+    }
+    with [get-combo -after [get-label "Integrität"]] {
+        get-property selection | equals "2 Hoch" | verify-true
+        get-property "isEnabled()" | equals true | verify-true
+    }
+    with [get-combo -after [get-label "Verfügbarkeit"]] {
+        get-property selection | equals "2 Hoch" | verify-true
+        get-property "isEnabled()" | equals true | verify-true
+    }
+}
+get-view ISM | get-tree | select "xOrganisation \\/ Scope" | key-type Del
+get-window "Wirklich löschen?" | get-button Ja | click
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

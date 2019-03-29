@@ -1,0 +1,39 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _74j9YLaIEeiiZL0aNB5Nyg,_kD9CUIxPEei2UKUDmonytQ,_lGnj8Ix1Eei2UKUDmonytQ,_4GRncI0bEei2UKUDmonytQ,_K06wgI0fEei2UKUDmonytQ,_9AEX8Pk3EeiLXcsCitNBjg
+Element-Name: bp_delete-performance-import
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _aQ-IUOGhEeioAPI0X-6m9A
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 1/8/19 8:27 AM
+Tags: bp, performance
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Test the mass editor in the modernized base protection.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+log "delete-performance-import"
+
+list a1 a2 a3 a4 a5|  each [val name] {
+	bp-import-vna "Informationsverbund-1.vna"
+	wait-for-import "Modernisierter IT-Grundschutz" "importierte Objekte/Informationsverbund-1 [b71753]"
+	measure-delete "delete-simple-verbund" "importierte Objekte/Informationsverbund-1 [b71753]"
+}
+
+list a1 a2 a3 a4| each [val name] {
+	bp-import-vna "modplast-1.1.vna"
+	wait-for-import "Modernisierter IT-Grundschutz" "importierte Objekte/MODPLAST \\[SerNet-DM\\]"
+	measure-delete "delete-modplast" "importierte Objekte/MODPLAST \\[SerNet-DM\\]"
+}
+
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

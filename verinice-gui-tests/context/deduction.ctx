@@ -1,0 +1,79 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Context-Type: org.eclipse.rcptt.ctx.ecl
+Element-Name: deduction
+Element-Type: context
+Element-Version: 2.0
+Id: _K06wgI0fEei2UKUDmonytQ
+Runtime-Version: 2.4.1.201903190000
+Save-Time: 4/16/19 10:43 AM
+
+------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
+Content-Type: text/ecl
+Entry-Name: .ecl.context
+
+global [val state_yes "sernet.gs.ui.rcp.main/icons/16-em-check.png"]
+[val state_unedited "sernet.gs.ui.rcp.main/icons/exclamation.png"]
+[val state_partial "sernet.gs.ui.rcp.main/icons/16-clock.png"]
+[val state_no "sernet.gs.ui.rcp.main/icons/16-em-cross.png"]
+[val state_ignored "sernet.gs.ui.rcp.main/icons/progress_rem.gif"]
+
+
+/**
+* Link the 'sourcename' in the 'path' to the 'targetname'. The target has to be a safeguard.
+**/
+proc linksafeguard [val sourcepath] [val targetname] {
+	log -message [concat $sourcepath]
+	let [ val sourcetitle [get-last $sourcepath] ] {
+		get-view "Modernisierter IT-Grundschutz" | get-tree | select $sourcepath | double-click
+		with [get-editor $sourcetitle] {
+			click
+			get-tab-folder | get-tab-item "Verknüpfungen" | click
+			get-combo -after [get-label "Verknüpfungen"] | select "Maßnahme"
+			get-button "Hinzufügen" | click
+		}
+		with [get-window "Elemente auswählen:"] {
+			get-table | select [ concat "(?:\[\] )?" $targetname ] -column Element
+			get-button OK | click
+		}
+	}
+}
+
+proc "set-implementation-status" [val targetpath] [val state] {
+	let [ val targettitle [get-last $targetpath] ] {
+		get-view "Modernisierter IT-Grundschutz" | get-tree | select $targetpath | double-click
+		get-editor $targettitle | get-section "" | get-section "Umsetzung (Maßnahmenstärke)" | get-combo -after [get-label Umsetzungsstatus]
+			| select $state
+		get-eclipse-window | key-type "M1+s"	
+	}
+}
+
+proc "set-implementation-status-deduction" [val targetpath] [val state] {
+	get-view "Modernisierter IT-Grundschutz" | get-tree | select $targetpath | double-click
+	let [ val targettitle [get-last $targetpath] ] {
+		get-editor $targettitle | get-tab-folder | get-tab-item "Daten" | click
+		with [get-editor $targettitle | get-section "" | get-section "Umsetzung (Maßnahmenstärke)" | get-button ] {
+			if [$state] {
+				check
+			} -else {
+				uncheck
+			}
+		}
+	}
+	get-eclipse-window | key-type "M1+s"
+}
+
+proc "assert-implementation-status" [val itempath] [val state] {
+	get-view "Modernisierter IT-Grundschutz" | get-tree | get-item -path $itempath | get-property "image.path" | equals $state | verify-true
+}
+
+proc "remove-link-via-linkmaker" [val path] [val index] {
+	get-view "Modernisierter IT-Grundschutz" | get-tree | select $path | double-click
+	with [get-editor [get-last $path]] {
+		get-tab-folder | get-tab-item "Verknüpfungen" | click
+		get-table | select [get-item -path "erfüllt durch" -column "Verknüpfung" -index $index]
+		get-button Entfernen | click
+	}
+	get-window "Verknüpfungen entfernen?" | get-button OK | click
+}
+------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998--

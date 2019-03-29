@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     project  verinice rcptt tests  
+     description: prepares and executes rcptt tests for verinice
+
+     (c) 2018-2019 urszeidler
+     ====================================================================== -->
+<project name="rcptt-project" default="init.dev.enviorment" basedir="../">
+	<property name="runner-project-path" value="${basedir}/gui-test-runner"/>
+	
+	<available file="${runner-project-path}/local/gui-test.properties" property="local-suffix" value="/local"/>
+	<condition property="local-suffix" value="">
+		<not>
+			<available file="${runner-project-path}/local/gui-test.properties" />
+		</not>
+	</condition>
+	
+	<property name="gui-test-properties" value="${runner-project-path}${local-suffix}/gui-test.properties" />
+
+	<loadproperties srcfile="${gui-test-properties}" />
+	<!-- Set properties below -->
+
+	<property name="verinice.test.path" location="${basedir}/verinice-gui-tests" />
+	<property name="org-wrks-path" location="${runner-project-path}/wrks" />
+
+	<property name="test-data" location="${runner-project-path}/test-data" />
+	<!-- result dirs -->
+	<property name="test-results" location="${runner-project-path}/result" />
+	<property name="images" value="${test-results}/screen-shot-images" />
+	<property name="reports" value="${test-results}/reports" />
+	<property name="log" value="${test-results}/log" />
+	<property name="junit-report" location="${test-results}/results.xml" />
+	<property name="html-report" location="${test-results}/results.html" />
+	<property name="auts" location="${test-results}/aut" />
+	<property name="verinice-aut-path" location="${auts}/verinice" />
+	<property name="v-designer-aut-path" location="${auts}/v.Designer" />
+	<!-- workspaces -->
+	<property name="wrks-path" location="${test-results}/wrks" />
+	<property name="runner-workspace" location="${wrks-path}/runner-workspace" />
+	<property name="verinice-aut-workspace" location="${wrks-path}/aut-workspace-" />
+	<property name="v-designer-aut-workspace" location="${wrks-path}/v-designer-aut-workspace-" />
+	<property name="verinice-workspace" location="${wrks-path}/verinice-workspace" />
+	<property name="aut-stdout" location="${log}/aut-out-" />
+
+	<condition property="isWindows" value="true">
+		<os family="windows" />
+	</condition>
+	<condition property="isLinux" value="true">
+		<os family="unix" />
+	</condition>
+	
+	<!--
+	<property name="verinice.dir" location="${aut-path}" />
+	<property name="verince.program" location="${verinice.dir}/verinice" />
+	<property name="java" value="${verinice.dir}/verinice/jre/bin/java" /> -->
+
+	<target name="init" depends="clean, configure.linux, configure.windows">
+		<mkdir dir="${test-results}" />
+		<mkdir dir="${auts}" />
+		<mkdir dir="${images}" />
+		<mkdir dir="${log}" />
+		<mkdir dir="${reports}" />
+
+		<echo>
+---
+basedir     : ${basedir}
+test        : ${verinice.test.path} 
+result      : ${test-results} 
+aut         : ${auts}
+wrks        : ${wrks-path} 
+v-wrk       : ${verinice-workspace}
+a-wrk       : ${verinice-aut-workspace}
+zip         : ${verinice.zip}
+skip-tags   : ${skip-tags}	
+runner-path : ${runner-path}
+test-options: ${test-options}
+lang        : ${verinice.lang}
+---		
+		</echo>
+		
+		
+	</target>
+
+	<target name="configure.windows" unless="isLinux">
+		<property name="starterPlugin" value="plugins/org.eclipse.equinox.launcher.win32.win32.x86_64_${rcptt.laucher.version}"/>
+	</target>
+	<target name="configure.linux" unless="isWindows">
+		<property name="starterPlugin" value="plugins/org.eclipse.equinox.launcher.gtk.linux.x86_64_${rcptt.laucher.version}"/>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: unzip.archive                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="unzip.v-designer.archive" depends="find.current.v-designer.zip">
+		<echo>unzip ${v-designer.zip} to  ${auts}</echo>
+
+		<exec executable="unzip">
+			<arg line="-q -o ${v-designer.zip} -d ${auts}" />
+		</exec>
+		<antcall target="delete.zip"/>
+		<copy todir="${test-results}/wrks" verbose="false">
+			<fileset dir="${org-wrks-path}">
+				<include name="**/*.*" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: delete.zip                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="delete.v-designer.zip" unless="no-zip-delete">
+		<delete file="${v-designer.zip}" />
+	</target>
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: find.current.zip                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="find.current.v-designer.zip" unless="v-designer.zip">
+		<path id="v-designer-zip-file">
+			<fileset dir="${basedir}">
+				<include name="${v-designer.zip.selector}" />
+			</fileset>
+		</path>
+
+		<pathconvert targetos="unix" property="v-designer.zip" refid="v-designer-zip-file">
+		</pathconvert>
+
+		<echo>found:  ${v-designer.zip}</echo>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: unzip.archive.linux                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="unzip.archive.linux" depends="find.current.zip" unless="isWindows">
+		<echo>unzip ${verinice.zip} to  ${auts}</echo>
+
+		<exec executable="unzip">
+			<arg line="-q -o ${verinice.zip} -d ${auts}" />
+		</exec>
+		<antcall target="delete.zip" />
+		<copy todir="${test-results}/wrks" verbose="false">
+			<fileset dir="${org-wrks-path}">
+				<include name="**/*.*" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="unzip.archive.windows" depends="find.current.zip" unless="isLinux">
+		<echo>unzip ${verinice.zip} to  ${auts}</echo>
+		<unzip src="${verinice.zip}" dest="${auts}" />
+		<antcall target="delete.zip" />
+		<copy todir="${test-results}/wrks" verbose="false">
+			<fileset dir="${org-wrks-path}">
+				<include name="**/*.*" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="copy.workspace">
+		<copy todir="${test-results}/wrks" verbose="false">
+			<fileset dir="${org-wrks-path}">
+				<include name="**/*.*" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: delete.zip                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="delete.zip" unless="no-zip-delete">
+		<delete file="${verinice.zip}" />
+	</target>
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: find.current.zip                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="find.current.zip" unless="verinice.zip">
+		<path id="verinice-zip-file">
+			<fileset dir="${basedir}">
+				<include name="${verinice.zip.selector}" />
+			</fileset>
+		</path>
+
+		<pathconvert targetos="unix" property="verinice.zip" refid="verinice-zip-file">
+		</pathconvert>
+
+		<echo>found:  ${verinice.zip}</echo>
+	</target>
+
+
+
+	<!-- ================================= 
+          target: clean              
+         ================================= -->
+	<target name="clean" unless="no-clean" description="clean the resources">
+
+		<delete dir="${test-results}" quiet="true" />
+		<!--		<delete dir="${auts}" quiet="true" />
+		<delete dir="${images}" quiet="true" />
+		<delete dir="${reports}" quiet="true" />
+	<delete dir="${log}" quiet="true" />
+        -->
+	</target>
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: configure-aut                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="configure-aut">
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: configure-aut                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="configure-v-designer-aut" depends="unzip.v-designer.archive">
+		<delete file="${v-designer-aut-path}/v-designer.ini" />
+		<echo file="${v-designer-aut-path}/v-designer.ini">-startup
+plugins/org.eclipse.equinox.launcher_${verinice.launcher.version}.jar
+--launcher.library
+${starterPlugin}
+-data
+workspace
+-vmargs
+-Xms256m
+-Xmx2048m
+-Dimage.folder=${images}
+-Dimages=${images}
+-Dbasepath=${test-results}
+-Dtest-data=${test-data}
+</echo>
+	</target>
+
+
+	<!-- ================================= 
+          target: start.verinice.client              
+         ================================= -->
+	<target name="start.verinice.client" depends="configure.verinice" description="start a verinice instance">
+		<echo>Start verinice: ${verince.program} on ${os.name}</echo>
+		<exec executable="${verince.program}" dir="${verinice.dir}" spawn="true" osfamily="unix"/>
+		<exec executable="${verince.program}.exe" dir="${verinice.dir}" spawn="true" osfamily="windows"/>
+		<echo>wait for verinice ...</echo>
+		<waitfor maxwait="${verinice.timeout}" maxwaitunit="second" timeoutproperty="timeout">
+			<http url="http://localhost:${verinice.server.port}/GetHitroConfig" />
+		</waitfor>
+	</target>
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: configure.verinice                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="configure.verinice" depends="unzip.archive.linux, unzip.archive.windows">
+		<delete file="${verinice.dir}/verinice.ini" />
+		<echo>${verinice-workspace}</echo>
+		<echo file="${verinice.dir}/verinice.ini">-startup
+plugins/org.eclipse.equinox.launcher_${verinice.launcher.version}.jar
+--launcher.library
+${starterPlugin}
+-nl
+${verinice.lang}
+-data
+${verinice-workspace}
+-debug
+-consolelog
+-vmargs
+-Xms512m
+-Xmx2048m
+-Dorg.osgi.service.http.port=${verinice.server.port}
+-Dorg.ops4j.pax.web.listening.addresses=localhost
+-Djavax.activation.debug=true
+-Dosgi.parentClassloader=ext
+-Djavax.xml.soap.SOAPFactory=org.apache.axis.soap.SOAPFactoryImpl
+-Djavax.xml.soap.MessageFactory=org.apache.axis.soap.MessageFactoryImpl
+-Djavax.xml.soap.SOAPConnectionFactory=org.apache.axis.soap.SOAPConnectionFactoryImpl
+-Dimages=${images}
+-Dbasepath=${test-results}
+-Dtest-data=${test-data}
+</echo>
+	</target>
+
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: starts the rcptt testrunner and executes all test not skipped by the skip-tags property
+         - - - - - - - - - - - - - - - - - -->
+	<target name="start-test-runner">
+		<echo>  
+		starting aut:${aut-path}
+		Skipping    :${skip-tags}	
+		</echo>
+
+		<java jar="${runner-path}/plugins/${erunner}" fork="true">
+			<arg value="-application" />
+			<arg value="org.eclipse.rcptt.runner.headless" />
+
+			<arg value="-data" />
+			<arg value="${runner-workspace}" />
+
+			<arg value="-aut" />
+			<arg value="${aut-path}" />
+
+			<arg value="-autArgs" />
+			<arg value="'-nl;${verinice.lang}'" />
+
+			<arg value="-autWsPrefix" />
+			<arg value="${aut-workspace}" />
+
+			<arg value="-autConsolePrefix" />
+			<arg value="${aut-stdout}" />
+
+			<arg value="-htmlReport" />
+			<arg value="${html-report}" />
+
+			<arg value="-junitReport" />
+			<arg value="${junit-report}" />
+
+			<arg value="-import" />
+			<arg value="${test-path}" />
+
+			<arg value="-skipTags" />
+			<arg value="${skip-tags}" />
+
+			<arg value="-testOptions" />
+			<arg value="${test-options}" />
+
+			<arg value="-memoryUsage" />
+			<arg value="-reuseExistingWorkspace" />
+		</java>
+	</target>
+
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: starts the rcptt testrunner and executes all test in the property test-list
+         - - - - - - - - - - - - - - - - - -->
+	<target name="start-test-runner-customtest">
+		<echo>  
+		starting aut:${aut-path}
+		tests       :${test-list}	
+		</echo>
+
+		<java jar="${runner-path}/plugins/${erunner}" fork="true">
+			<arg value="-application" />
+			<arg value="org.eclipse.rcptt.runner.headless" />
+
+			<arg value="-data" />
+			<arg value="${runner-workspace}" />
+
+			<arg value="-aut" />
+			<arg value="${aut-path}" />
+
+			<arg value="-autArgs" />
+			<arg value="'-nl;${verinice.lang}'" />
+
+			<arg value="-autWsPrefix" />
+			<arg value="${aut-workspace}" />
+
+			<arg value="-autConsolePrefix" />
+			<arg value="${aut-stdout}" />
+
+            <arg value="-skipTags" />
+            <arg value="${skip-tags}" />
+
+			<arg value="-htmlReport" />
+			<arg value="${html-report}" />
+
+			<arg value="-junitReport" />
+			<arg value="${junit-report}" />
+
+			<arg value="-import" />
+			<arg value="${test-path}" />
+
+			<arg value="-tests" />
+			<arg value="${test-list}" />
+
+			<arg value="-testOptions" />
+			<arg value="${test-options}" />
+
+			<arg value="-memoryUsage" />
+			<arg value="-reuseExistingWorkspace" />
+		</java>
+	</target>
+
+	<!-- ================================= 
+          target: test              
+         ================================= 
+	<target name="test" depends="start-test-runner, move.log.files" description="runs the tasks">
+
+	</target>
+-->
+
+	<!-- ================================= 
+          target: test-verinice-client              
+         ================================= -->
+	<target name="test-verinice-client" depends="init" description="Runs the gui tests for verinice in client mode.">
+		
+		
+		<property name="verinice.dir" location="${auts}/verinice" />
+		<property name="verince.program" location="${verinice.dir}/verinice" />
+
+
+		<antcall target="configure-aut" />
+		<antcall target="start.verinice.client" />
+		<antcall target="start-test-runner">
+			<param name="aut-path" value="${verinice-aut-path}" />
+			<param name="aut-workspace" value="${verinice-aut-workspace}" />
+			<param name="test-path" value="${verinice.test.path}" />
+		</antcall>
+		<antcall target="move.log.files">
+			<param name="aut-workspace" value="${verinice-aut-workspace}" />
+		</antcall>
+	</target>
+
+	<!-- ================================= 
+          target: test-verinice-client              
+         ================================= -->
+	<target name="test-verinice-client-test-custom" depends="init" description="Runs the gui tests for verinice only executes the tests in the test-list property.">
+		
+		
+		<property name="verinice.dir" location="${auts}/verinice" />
+		<property name="verince.program" location="${verinice.dir}/verinice" />
+
+
+		<antcall target="configure-aut" />
+		<antcall target="start.verinice.client" />
+		<antcall target="start-test-runner-customtest">
+			<param name="aut-path" value="${verinice-aut-path}" />
+			<param name="aut-workspace" value="${verinice-aut-workspace}" />
+			<param name="test-path" value="${verinice.test.path}" />
+		</antcall>
+		<antcall target="move.log.files">
+			<param name="aut-workspace" value="${verinice-aut-workspace}" />
+		</antcall>
+	</target>
+
+	<!-- ================================= 
+          target: test-v-designer             
+         ================================= -->
+	<target name="test-v-designer" depends="init" description="Runs the gui tests for v-designer.">
+		<property name="verinice.dir" location="${auts}/verinice" />
+		<property name="verince.program" location="${verinice.dir}/verinice" />
+
+		<antcall target="configure-v-designer-aut">
+		</antcall>
+		<antcall target="start.verinice.client">
+		</antcall>
+		<antcall target="start-test-runner">
+			<param name="aut-path" value="${v-designer-aut-path}" />
+			<param name="aut-workspace" value="${v-designer-aut-workspace}" />
+			<param name="test-path" value="${v-designer.test.path}" />
+		</antcall>
+
+	</target>
+
+
+	<!-- ================================= 
+          target: move.log.files              
+         ================================= -->
+	<target name="move.log.files" description="Copy the logfiles to the log dir.">
+		<fileset dir="${verinice-workspace}/log" id="verinice-logs">
+			<include name="*.log*" />
+		</fileset>
+		<fileset dir="${verinice-workspace}/.metadata" id="verinice-app-logs">
+			<include name="*.log*" />
+		</fileset>
+		<fileset dir="${aut-workspace}/log" id="verinice-aut-logs">
+			<include name="*.log*" />
+		</fileset>
+		<fileset dir="${aut-workspace}/.metadata" id="verinice-app-aut-logs">
+			<include name="*.log*" />
+		</fileset>
+
+		<move todir="${log}/verinice" failonerror="false">
+			<fileset refid="verinice-logs" />
+			<fileset refid="verinice-app-logs" />
+		</move>
+		<move todir="${log}/verinice-aut" failonerror="false">
+			<fileset refid="verinice-aut-logs" />
+			<fileset refid="verinice-app-aut-logs" />
+		</move>
+		<antcall target="fix-junit-result-xml"/>
+		<delete dir="${auts}" failonerror="false"/>
+		<delete dir="${runner-workspace}" failonerror="false" />
+		<delete dir="${wrks-path}" failonerror="false" />
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: initalize.verinice                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="initalize.verinice" depends="init">
+		<delete dir="${verinice-workspace}" />
+		<mkdir dir="${verinice-workspace}" />
+		<antcall target="start.verinice.client" />
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: fix-junit-result-xml                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="fix-junit-result-xml">
+    	<replaceregexp file="${test-results}/results.junit.xml" flags="g"
+    		match='testcase[ \n\r\t]name="([^"]*)"'
+    		replace='testcase classname="${os.name}TEST" name="\1"' 	/>
+    </target>
+
+    <target name="fix-metric-csv">
+    	<concat destfile="${test-results}/performance-metric.csv" append="true">
+    		<fileset dir="${test-results}" includes="*.csv" />
+    	<filterchain>
+     	   <replaceregex pattern=".*name:" replace="" />
+      	   <replaceregex pattern="duration:" replace="" />
+      	   <replaceregex pattern="\)" replace="" />
+  
+    	   </filterchain>
+    	</concat>
+    </target>
+
+
+	<!-- ================================= 
+          target: init.dev.enviorment              
+         ================================= -->
+	<target name="init.dev.enviorment" depends="init" description="Creates the inital workspace and some startconfigs.">
+		<fileset id="lauchconfigs" dir="${runner-project-path}/etc/launchconfig">
+			<include name="**/*.launch.template" />
+		</fileset>
+
+		<property name="local.path" value="${runner-project-path}/local" />
+		<mkdir dir="${local.path}" />
+
+		<copy todir="${local.path}">
+			<fileset refid="lauchconfigs" />
+			<globmapper from="*.launch.template" to="*.launch" />
+		</copy>
+		
+		<copy file="${runner-project-path}/gui-test.properties" tofile="${local.path}/gui-test.properties" overwrite="false" />
+		
+		<antcall target="copy.workspace" />
+	</target>
+
+
+</project>

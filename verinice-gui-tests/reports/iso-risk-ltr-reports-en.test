@@ -1,0 +1,73 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _HQDeEI9NEeic2YXgdvyDUQ,_lGnj8Ix1Eei2UKUDmonytQ,_9AEX8Pk3EeiLXcsCitNBjg,_tlZuIIx1Eei2UKUDmonytQ,_mCQwkI9ZEeic2YXgdvyDUQ
+Element-Name: iso-risk-ltr-reports-en
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _mEARsE-jEemuCsPaiy5gOQ
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 3/26/19 1:15 PM
+Tags: report
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Create risk reports based on ltr. Uses "verinice_Risk_Catalogue_EN.vna".
+These tests also makes a risk analysis. 
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+global [val selectedObject "Imported Objects/verinice Risk Catalogue pursuant to ISO IEC 27001:2013 EN [VRC20160829]"]
+
+proc "gen-rep-ism" [val report] [val quallifier ""]{
+	try {
+	    start-time-measure [concat $quallifier $report]
+		gen-rep-com-en $report "Information Security Model" $selectedObject $quallifier
+		stop-time-measure [concat $quallifier $report] | write-lines [concat "file:" $basedir "/report-measure.csv"] true
+	} -catch {
+		log [concat "ERROR creating report " $report " for " $quallifier]
+		get-window "Error" | get-button OK | click
+	}
+}
+
+proc "gen-rep-com-en" [val report] [val view] [val object] [val quallifier ""] {
+    get-view $view | get-tree | select $object | get-menu -path "Create Report..." | click
+    log [concat "create report: " $report]
+
+    get-window Report | get-group "" | get-combo -after [get-label "Choose Report:"] | select $report
+    set-dialog-result File [concat $reportdir [get-java-property "file.separator"] $quallifier $report ".pdf"]
+    with [get-window Report] {
+        get-group "" -index 0 | get-button "Browse..." | click
+        get-button OK | click
+    }
+    get-window "Report generation successful" | get-button OK | click
+}
+
+
+log "Start report testing en-risk-ISM-ltr"
+
+get-button "Refresh view" | click
+
+get-view "Information Security Model" | get-button "Import organization from File..." | click
+set-dialog-result File [concat $datadir [get-java-property "file.separator"] "verinice_Risk_Catalogue_EN.vna"]
+get-window Import | get-group File | get-button "Select file..." | click
+get-window Import | get-button OK | click
+
+gen-rep-ism "(S) ISM: Risk Assessment (en)" "en-Verinice_Risk_Catalogue"
+gen-rep-ism "(S) ISM: Risk Treatment (en)" "en-Verinice_Risk_Catalogue"
+
+get-view "Information Security Model" | get-tree 
+    | select $selectedObject | get-menu 
+    -path Delete | click
+get-window "Really delete?" | get-button Yes | click
+
+log "stop report testing en-risk-ISM-ltr" 
+
+
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

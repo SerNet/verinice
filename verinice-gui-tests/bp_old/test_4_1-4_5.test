@@ -1,0 +1,64 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _IAiN8Lp9EeiXpMYvKv_wWQ,_UlFDQMI2EeiBGdyBeGVxCg
+Element-Name: test_4_1-4_5
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _5qhxsLp8EeiXpMYvKv_wWQ
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 11/21/18 1:04 PM
+Tags: bp_old
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+4.1-4.5
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+log "test_4.1-4.5"
+
+create-it-verbund "IT-Verbund 1"
+delete-bp-old-element "  IT-Verbund 1"
+create-it-verbund "IT-Verbund-1"
+
+get-view Grundschutzmodell | get-tree | select "  IT-Verbund-1/Anwendungen" | get-menu -path "Neue Anwendung" | click
+with [get-editor Anwendung | get-section "" | get-editbox -after [get-label Name]] {
+    set-text "Anwendung-1"
+    key-type "M1+s"
+}
+get-editor "Anwendung-1" | get-section "" | get-editbox -after [get-label Name] | key-type "M1+w"
+with [get-view Grundschutzmodell | get-tree] {
+    select "  IT-Verbund-1/Anwendungen/A- Anwendung-1" | get-menu -path Kopieren | click
+    select "  IT-Verbund-1/Anwendungen" | get-menu -path "Einfügen" | click
+}
+try{
+	get-window "Status Information" | get-button OK | click
+} -catch {
+log "no status information windows"
+}
+
+delete-bp-old-element "  IT-Verbund-1/Anwendungen/A- Anwendung-1 (Kopie 1) "
+delete-bp-old-element "  IT-Verbund-1"
+
+with [get-view Grundschutzmodell] {
+    get-button "Neuer IT-Verbund" | click
+    get-tree | select "  IT-Verbund/Mitarbeiter" | get-menu -path "Neuer Mitarbeiter" | click
+}
+
+get-editor Mitarbeiter | get-section "" | get-button "Ändern..." | click
+with [get-window "Optionen für Feld: Rollen" | get-group Rollen] {
+    get-button "Änderungsmanager" | check
+    get-button Anwendungsentwickler | check
+}
+get-window "Optionen für Feld: Rollen" | get-button Fertig | click
+get-editor Mitarbeiter | key-type "M1+s"
+
+delete-bp-old-element "  IT-Verbund"
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

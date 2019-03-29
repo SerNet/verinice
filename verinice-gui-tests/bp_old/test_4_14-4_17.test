@@ -1,0 +1,102 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _IAiN8Lp9EeiXpMYvKv_wWQ,_lGnj8Ix1Eei2UKUDmonytQ,_UlFDQMI2EeiBGdyBeGVxCg
+Element-Name: test_4_14-4_17
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _iasnQLs7EeiYFqx4KkjVdQ
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 10/9/18 5:12 PM
+Tags: bp_old
+Testcase-Type: ecl
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+log "test_4.14-4.17"
+
+import-bp-katalog
+
+create-it-verbund "IT-Verbund-1"
+
+get-view Grundschutzmodell | get-tree | select "  IT-Verbund-1/Anwendungen" | get-menu -path "Neue Anwendung" | click
+with [get-editor Anwendung | get-section ""] {
+    with [get-section Schutzbedarf] {
+        get-combo -after [get-label Vertraulichkeit] | select Normal
+        get-combo -after [get-label "Verfügbarkeit"] | select Hoch
+        get-combo -after [get-label "Integrität"] | select "Sehr Hoch"
+    }
+    with [get-section Managementbewertung] {
+        get-combo -after [get-label "Erg. Sicherheitsanalyse"] | select "lt. Schutzbedarf"
+        get-combo -after [get-label Risikoanalyse] | select entbehrlich
+    }
+}
+get-editor Anwendung | close
+get-window "Ressource speichern" | get-button Speichern | click
+with [get-view "IT-Grundschutz" | get-tree] {
+    select "B 1.9 Hard- und Software-Management"
+    get-item -path "B 1.9 Hard- und Software-Management" | drag-start 70 12
+}
+with [get-view Grundschutzmodell | get-tree] {
+    get-item -path "  IT-Verbund-1/IT-Systeme: TK-Komponenten" | drag-enter "-43" 3 -detail move
+    get-item -path "  IT-Verbund-1/IT-Systeme: TK-Komponenten" | drag-over "-21" 0
+    drag-over 152 138
+    get-item -path "  IT-Verbund-1/IT-Systeme: Netzkomponenten \\/ sonstige" | drag-over 120 1
+    drag-over 164 92
+    drag-over 144 69
+    get-item -path "  IT-Verbund-1/Anwendungen/A- Anwendung" | drag-over 59 1 -detail move
+    get-item -path "  IT-Verbund-1/IT-Systeme: TK-Komponenten" | drag-exit
+    get-item -path "  IT-Verbund-1/Anwendungen/A- Anwendung" | drag-accept 59 1 -detail move
+}
+get-view "IT-Grundschutz" | get-tree | drag-set-data
+get-view Grundschutzmodell | get-tree | get-item -path "  IT-Verbund-1/Anwendungen/A- Anwendung" | drop 59 1 -detail move
+get-window "Baustein passt nicht zum Zielobjekt" | get-button Ja | click
+get-view "IT-Grundschutz" | get-tree | drag-end -detail move
+get-view Grundschutzmodell | get-tree | select "  IT-Verbund-1/Anwendungen/A- Anwendung" | get-menu 
+    -path "Risikoanalyse ..." | click
+  
+with [get-window "Risikoanalyse auf Basis von IT-Grundschutz"] {
+    with [get-table] {
+        select "G 1.1" -column Nummer | get-item -path "G 1.1" -column Nummer | check
+    }
+    get-button "Weiter >" | click
+    with [get-table] {
+        get-item -path "G 1.1" -column Nummer | check
+    }
+    get-button "Weiter >" | click
+    get-button Fertigstellen | click
+}
+get-button "Realisierungsplan (IT-Grundschutz alt)" | click
+with [get-view Realisierungsplan] {
+    get-combo | select "IT-Verbund-1"
+    get-button "mit Termin" | click
+    with [get-table] {
+        get-column-header Titel | click
+        select "M 1.29 [Z] Geeignete Aufstellung eines IT-Systems" -column Titel | double-click
+    }
+}
+get-editor "M 1.29 [Z] Geeignet…" | get-section "" | get-section Umsetzung | get-combo -after [get-label Umsetzung] 
+    | select Ja
+get-editor "M 1.29 [Z] Geeignet…" | close
+get-window "Ressource speichern" | get-button Speichern | click
+
+
+
+get-button "Prüfplan (IT-Grundschutz alt)" | click
+with [get-view "Prüfplan"] {
+    get-combo | select "IT-Verbund-1"
+    get-button "mit Termin" | click
+    get-table | select "M 1.29 [Z] Geeignete Aufstellung eines IT-Systems" -column Titel | double-click
+}
+get-editor "M 1.29 [Z] Geeignet…" | get-section "" | get-section Umsetzung | get-combo -after [get-label Umsetzung] 
+    | select Teilweise
+get-editor "M 1.29 [Z] Geeignet…" | close
+get-window "Ressource speichern" | get-button Speichern | click
+
+delete-bp-old-element "  IT-Verbund-1/Anwendungen/A- Anwendung"
+delete-bp-old-element "  IT-Verbund-1"
+
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
