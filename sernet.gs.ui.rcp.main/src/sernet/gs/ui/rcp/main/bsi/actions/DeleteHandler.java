@@ -395,14 +395,6 @@ public class DeleteHandler extends RightsEnabledHandler {
                 boolean reloadBpModel = false;
                 for (Iterator<CnATreeElement> iter = deleteList.iterator(); iter.hasNext();) {
                     sel = iter.next();
-
-                    // do not delete last ITVerbund:
-                    if (sel instanceof ITVerbund
-                            && CnAElementHome.getInstance().getItverbuende().size() < 2) {
-                        ExceptionUtil.log(new Exception(Messages.DeleteActionDelegate_12),
-                                Messages.DeleteActionDelegate_13);
-                        return;
-                    }
                     removeElement(sel);
                     reloadBpModel |= sel instanceof IBpElement;
                 }

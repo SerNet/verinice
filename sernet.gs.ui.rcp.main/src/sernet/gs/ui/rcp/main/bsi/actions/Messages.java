@@ -61,8 +61,6 @@ public class Messages extends NLS {
     public static String DeleteActionDelegate_8;
     public static String DeleteActionDelegate_9;
     public static String DeleteActionDelegate_11;
-    public static String DeleteActionDelegate_12;
-    public static String DeleteActionDelegate_13;
     public static String DeleteActionDelegate_14;
     public static String DeleteActionDelegate_15;
     public static String DeleteActionDelegate_16;
