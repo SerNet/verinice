@@ -5,6 +5,8 @@ import java.util.Collections;
 import javax.annotation.Resource;
 
 import org.junit.Test;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import junit.framework.Assert;
 import sernet.verinice.interfaces.CommandException;
@@ -14,6 +16,8 @@ import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateContext;
 import sernet.verinice.service.test.AbstractModernizedBaseProtection;
 
+@TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
+@Transactional
 public class RiskServiceImplTest extends AbstractModernizedBaseProtection {
 
     @Resource(name = "itbpRiskService")
