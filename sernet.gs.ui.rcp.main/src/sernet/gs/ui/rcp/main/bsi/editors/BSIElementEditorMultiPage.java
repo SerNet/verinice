@@ -622,12 +622,7 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
                 && rightsService.isEnabled(ActionRightIDs.EDITRISKCONFIGURATION)) {
             ItNetwork itn = (ItNetwork) cnAElement;
 
-            RiskConfiguration config = itn.getRiskConfiguration();
-            if (config == null) {
-                riskConfigurationState = DefaultRiskConfiguration.getInstance();
-            } else {
-                riskConfigurationState = config;
-            }
+            riskConfigurationState = itn.getRiskConfigurationOrDefault();
 
             ScrolledComposite scrolledComposite;
             scrolledComposite = createScrollableComposite(getContainer());
