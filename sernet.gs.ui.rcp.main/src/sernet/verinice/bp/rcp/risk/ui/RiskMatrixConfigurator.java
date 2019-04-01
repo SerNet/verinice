@@ -20,7 +20,6 @@ package sernet.verinice.bp.rcp.risk.ui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
@@ -43,7 +42,6 @@ import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.risk.Frequency;
 import sernet.verinice.model.bp.risk.Impact;
 import sernet.verinice.model.bp.risk.Risk;
-import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -73,8 +71,7 @@ public class RiskMatrixConfigurator extends Composite {
             throw new IllegalArgumentException("Cannot retrieve risk configuration for " + element
                     + " as it is not part of an IT network");
         }
-        return Optional.ofNullable(itNetwork.getRiskConfiguration())
-                .orElseGet(DefaultRiskConfiguration::getInstance);
+        return itNetwork.getRiskConfigurationOrDefault();
     }
 
     public void setEditorState(RiskConfiguration riskConfiguration) {
