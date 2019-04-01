@@ -102,8 +102,8 @@ public class DateCheckerTest {
         gregorianCalendar.add(Calendar.MINUTE, -30);
         Date time = gregorianCalendar.getTime();
 
-        Date oneWeekAndHalfAnHourAgo = Date
-                .from(now.minus(Duration.ofMinutes(30l)).minus(Duration.ofDays(7l)));
+        Date oneWeekAndHalfAnHourAgo = Date.from(
+                now.atZone(ZoneId.systemDefault()).minusMinutes(30l).minusDays(7l).toInstant());
         Assert.assertEquals(time, dateChecker.checkIfDateIsPast(oneWeekAndHalfAnHourAgo, "7"));
     }
 
@@ -115,8 +115,8 @@ public class DateCheckerTest {
         gregorianCalendar.add(Calendar.MINUTE, 30);
         Date time = gregorianCalendar.getTime();
 
-        Date oneWeekMinusHalfAnHourAgo = Date
-                .from(now.plus(Duration.ofMinutes(30l)).minus(Duration.ofDays(7l)));
+        Date oneWeekMinusHalfAnHourAgo = Date.from(
+                now.atZone(ZoneId.systemDefault()).plusMinutes(30l).minusDays(7l).toInstant());
         Assert.assertEquals(time, dateChecker.checkIfDateIsPast(oneWeekMinusHalfAnHourAgo, "7"));
     }
 
