@@ -98,8 +98,10 @@ public class RiskServiceImpl implements RiskService {
             RiskConfigurationUpdateContext updateContext) {
         itNetwork.setRiskConfiguration(updateContext.getRiskConfiguration());
         getMetaDao().updateItNetwork(itNetwork);
-        riskConfigurationCache.computeIfPresent(itNetwork.getDbId(),
-                (id, oldValue) -> updateContext.getRiskConfiguration());
+        Integer itNetworkId = itNetwork.getDbId();
+        if (riskConfigurationCache.containsKey(itNetworkId)) {
+            riskConfigurationCache.put(itNetworkId, updateContext.getRiskConfiguration());
+        }
     }
 
     private RiskConfigurationUpdateResult updateRiskValuesInThreats(Integer scopeId,
