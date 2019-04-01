@@ -981,23 +981,20 @@ verinice.\textsc{PRO} server.}
 \section{Changing the language}
 \label{sec:changing-language}
 
-The settings for changing language are not available in the
-application's settings menu. The language settings are configured
-elsewhere. Read in the following subsections how you can change the
-language setting.
+If no other language has been configured, verinice uses the language of the operating system. If you want to use a different language, you select this language in configuration files. The language settings cannot be found in the verinice settings menu.
 
 \subsection{In standalone mode}
-By default verinice uses the operating system language. However, you can specify the language manually.
+If you are using verinice in standalone mode and want to set a different language, edit the configuration file:
+\newline 
+\textbf{\textless VERINICE\_HOME\textgreater/verinice.ini}
 \newline\\
-If you are using verinice in \textbf{standalone mode}, you only need to modify the configuration in one place:
-add in the
-\newline \textbf{\textless VERINICE\_HOME\textgreater/verinice.ini} configuration file:
+To change the language, add a new line at the end of the file. If you want to use verinice in English, enter this line:
 \newline\\
 \colorbox{lightgray}{\parbox{\textwidth}{
 {\tt -Dosgi.nl=en}
 }}
 \newline\\
-To use verinice in German again, enter the following:
+If verinice is to be used in German, this line must be entered instead:
 \newline\\
 \colorbox{lightgray}{\parbox{\textwidth}{
 {\tt -Dosgi.nl=de}
@@ -1006,28 +1003,26 @@ To use verinice in German again, enter the following:
 You need to stop and restart the application to apply these changes.
 
 \subsection{In multi-user mode}
-You can configure {\em English} or {\em German} as the language on the verinice.\textsc{PRO} server.
-To do so, edit the \textbf{/usr/share/tomcat6/conf/tomcat6.conf} file. These changes need to be made by the system administrator.
+
+If you run verinice in server mode, the same file must be configured on the client as in standalone mode. In addition, the desired language must be configured on the verinice.\textsc{PRO} server. The same language must be selected on the client and on the server. The change on the server must be made by a system administrator. The following file must be changed depending on the operating system on the server.\newline\\ 
+RHEL or CentOS 6:
+\textbf{/usr/share/tomcat6/conf/tomcat6.conf} \newline\\
+RHEL or CentOS 7:
+\textbf{/usr/share/tomcat/conf/tomcat.conf} 
 \newline\\
-Set the following for English:
-\newline\\
-\colorbox{lightgray}{\parbox{\textwidth}{
-{\tt JAVA\_OPTS="-Xms512M -Xmx16G -Duser.language=en -Duser.region=EN"}
-}}
-\newline\\
-Set the following for German:
+Set the following to configure the English language:
 \newline\\
 \colorbox{lightgray}{\parbox{\textwidth}{
-{\tt JAVA\_OPTS="-Xms512M -Xmx16g -Duser.language=de -Duser.region=DE"}
+{\tt JAVA\_OPTS="-Duser.language=en -Duser.region=EN"}
 }}
 \newline\\
-Regardless of this, you can configure each client individually for English or German.
-The user interface on the client is displayed in the local language. The setting on the server affects,
-for example, the language in which new database objects are created (e.g., employees, with the title
-``Neue Person'' or ``New Person'').
-\newline
-In everyday use, it makes sense to configure a language for the data to be input, and configure this
-as a mandatory setting on the server.
+Set the following to configure the German language:
+\newline\\
+\colorbox{lightgray}{\parbox{\textwidth}{
+{\tt JAVA\_OPTS="-Duser.language=de -Duser.region=DE"}
+}}
+\newline\\
+
 
 \section{Log File}
 \label{sec:log-file}

@@ -1068,48 +1068,47 @@ so vorzunehmen, dass verinice die Updates nicht aus dem Internet bezieht, sonder
 
 \section{Sprachumschaltung}
 \label{sec:sprachumschaltung}
-Die Einstellungen zur Sprachumschaltung finden Sie nicht im Einstellungsmenü der Applikation. Die Umstellung der Sprache wird an einer anderen
-Stelle konfiguriert. Lesen Sie in den nun folgenden Unterabschnitten, wie Sie eine Sprachumschaltung bewerkstelligen können.
+Wenn keine andere Sprache konfiguriert wurde, verwendet verinice die Sprache des Betriebssystems.
+Wenn Sie eine andere Sprache verwendet wollen, müssen Sie diese Sprache in Konfigurationsdateien auswählen. Die Spracheinstellungen finden Sie \textit{nicht} im Einstellungsmenü von verinice. 
 
 \subsection{Im Standalone-Modus}
-verinice verwendet standardmäßig die Sprache des Betriebssystems. Ein manuelles Festlegen der Sprache ist jedoch möglich.
+Wenn Sie verinice im \textbf{Standalone-Modus} verwenden und eine andere Sprache einstellen wollen, bearbeiten Sie die Konfigurationsdatei:
 \newline\\
-Wenn verinice im \textbf{Standalone-Modus} verwendet wird, muss die Konfiguration nur an einer Stelle angepasst werden: in der
-Konfigurationsdatei \newline \textbf{\textless VERINICE\_HOME\textgreater/verinice.ini}:
+\textbf{\textless VERINICE\_HOME\textgreater/verinice.ini}
+\newline\\
+Um eine andere Sprache einzustellen, fügen Sie am Ende der Datei eine neue Zeile ein. Wenn Sie verinice in Englisch benutzen wollen, tragen Sie diese Zeile ein:
 \newline\\
 \colorbox{lightgray}{\parbox{\textwidth}{
 {\tt -Dosgi.nl=en}
 }}
 \newline\\
-Wenn verinice wieder in deutscher Sprache benutzt werden soll, muss Folgendes eingetragen sein:
+Wenn verinice in deutscher Sprache benutzt werden soll, muss stattdessen diese Zeile eingetragen werden:
 \newline\\
 \colorbox{lightgray}{\parbox{\textwidth}{
 {\tt -Dosgi.nl=de}
 }}
 \newline\\
-Die Applikation muss beendet und neu gestartet werden, bevor diese Änderungen aktiv werden.
+Die Applikation muss beendet und neu gestartet werden, damit diese Änderungen aktiv werden.
 
 \subsection{Im Servermodus}
-Auf dem verinice.\textsc{PRO} Server kann als Sprache {\em Englisch} oder {\em Deutsch} eingestellt werden. Dazu ist die Datei
-\textbf{/usr/share/tomcat6/conf/tomcat6.conf} zu bearbeiten. Lassen Sie diese Änderung durch ihren Systemadministrator vornehmen.
+Wenn Sie verinice im Servermodus betreiben, muss auf dem Client die gleiche Datei wir im Standalone-Modus konfiguriert werden. Zusätzlich muss die gewünschte Sprache auf dem verinice.\textsc{PRO} Server konfiguriert werden. Auf dem Client und auf dem Server muss die gleiche Sprache ausgewählt werden. Die Änderung auf dem Server muss von einem Systemadministrator durchgeführt werden. Geändert werden muss abhängig vom Betriebssystem auf dem Server folgende Datei.
+\newline\\ 
+RHEL oder CentOS 6:
+\textbf{/usr/share/tomcat6/conf/tomcat6.conf} 
+\newline\\
+RHEL oder CentOS 7:
+\textbf{/usr/share/tomcat/conf/tomcat.conf} 
 \newline\\
 Stellen Sie folgendes ein, um die englische Sprache zu erhalten:
 \newline\\
 \colorbox{lightgray}{\parbox{\textwidth}
-{\tt JAVA\_OPTS=\dq-Xms512M -Xmx16G -Duser.language=en -Duser.region=EN\dq}}
+{\tt JAVA\_OPTS=\dq-Duser.language=en -Duser.region=EN\dq}}
 \newline\\
 Stellen Sie folgendes ein, um die deutsche Sprache zu erhalten:
 \newline\\
 \colorbox{lightgray}{\parbox{\textwidth}
-{\tt JAVA\_OPTS=\dq-Xms512M -Xmx16G -Duser.language=de -Duser.region=DE\dq}}
+{\tt JAVA\_OPTS=\dq-Duser.language=de -Duser.region=DE\dq}}
 \newline\\
-Unabhängig davon kann jeder Client individuell auf Deutsch oder Englisch umgestellt werden.
-Die Benutzeroberfläche auf dem Client wird in der lokal eingestellten Sprache angezeigt, die Einstellung auf
-dem Server hat z.B. Auswirkungen darauf, in welcher Sprache neue Datenbankobjekte angelegt werden. (z.B. Mitarbeiter mit
-dem Titel ``Neue Person'' oder ``New Person'').
-\newline\\
-Für den praktischen Betrieb empfiehlt es sich, vorab eine Sprache für die einzugebenden Daten vorzugeben und diese auch auf
-dem Server verbindlich einzustellen.
 
 \section{Log-Datei}
 \label{sec:log-datei}
