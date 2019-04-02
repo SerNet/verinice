@@ -17,28 +17,41 @@
 \usepackage{enumitem}
 \newcommand*{\descrfont}[1]{\textit{#1 -}}
 
-%define xml for code examples
+%define languages for code examples
 \usepackage{listings}
 \definecolor{lightgray}{rgb}{0.97,0.97,0.97}
 \lstdefinelanguage{XML}
 {
-  basicstyle=\ttfamily\color{gray}\bfseries\scriptsize,
-  backgroundcolor=\color{lightgray}, 
-  captionpos=b,
-  frame=single,	
+  frame=single,
   morestring=[b]",
   morestring=[b]{"}{"},
   moredelim=[s][\color{orange}]{>}{<},
   morecomment=[s]{<?}{?>},
   morecomment=[s]{<!--}{-->},
-  stringstyle=\color{orange},
+  morekeywords={xmlns,version,type,soapenv,sync,data,map},
+}
+\lstdefinelanguage{Plain}
+{
+  numbers=none,
+  keywords={}
+  keywordstyle=\color{black},
+  identifierstyle=\color{black},
+  commentstyle=\color{black},
+  stringstyle=\color{black},
+}
+\lstset{
+  backgroundcolor=\color{lightgray},
+  basicstyle=\ttfamily\color{black}\bfseries\small,
+  captionpos=b,
   identifierstyle=\color{blue},
   keywordstyle=\color{cyan},
+  language=XML,
   numbers=left,
+  numbersep=5pt,
   numberstyle=\tiny,
   showstringspaces=false,
-  numbersep=5pt,
-  morekeywords={xmlns,version,type,soapenv,sync,data,map}
+  stringstyle=\color{orange},
+  tabsize=2,
 }
 
 \newcommand{\zB}{\mbox{z.\,B.}\xspace}
@@ -1069,29 +1082,44 @@ so vorzunehmen, dass verinice die Updates nicht aus dem Internet bezieht, sonder
 \section{Sprachumschaltung}
 \label{sec:sprachumschaltung}
 Wenn keine andere Sprache konfiguriert wurde, verwendet verinice die Sprache des Betriebssystems.
-Wenn Sie eine andere Sprache verwendet wollen, müssen Sie diese Sprache in Konfigurationsdateien auswählen. Die Spracheinstellungen finden Sie \textit{nicht} im Einstellungsmenü von verinice. 
+Wenn Sie eine andere Sprache verwendet wollen, müssen Sie diese Sprache in Konfigurationsdateien auswählen. Die Spracheinstellungen finden Sie \textit{nicht} im Einstellungsmenü von verinice.
+
+Verinice kann in diesen Sprachen verwendet werden:
+\begin{itemize}
+ \item Deutsch
+ \item Englisch
+ \item Italienisch
+ \item Tschechisch
+\end{itemize}
 
 \subsection{Im Standalone-Modus}
 Wenn Sie verinice im \textbf{Standalone-Modus} verwenden und eine andere Sprache einstellen wollen, bearbeiten Sie die Konfigurationsdatei:
 \newline\\
 \textbf{\textless VERINICE\_HOME\textgreater/verinice.ini}
-\newline\\
-Um eine andere Sprache einzustellen, fügen Sie am Ende der Datei eine neue Zeile ein. Wenn Sie verinice in Englisch benutzen wollen, tragen Sie diese Zeile ein:
-\newline\\
-\colorbox{lightgray}{\parbox{\textwidth}{
-{\tt -Dosgi.nl=en}
-}}
-\newline\\
-Wenn verinice in deutscher Sprache benutzt werden soll, muss stattdessen diese Zeile eingetragen werden:
-\newline\\
-\colorbox{lightgray}{\parbox{\textwidth}{
-{\tt -Dosgi.nl=de}
-}}
-\newline\\
+
+Um eine andere Sprache einzustellen, fügen Sie am Ende der Datei eine neue Zeile
+entsprechend der gewünschten Sprache ein.
+
+\begin{lstlisting}[language=Plain, caption={verinice.ini Englisch}]
+-Dosgi.nl=en
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={verinice.ini Deutsch}]
+-Dosgi.nl=de
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={verinice.ini Tschechisch}]
+-Dosgi.nl=cs
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={verinice.ini Italienisch}]
+-Dosgi.nl=it
+\end{lstlisting}
+
 Die Applikation muss beendet und neu gestartet werden, damit diese Änderungen aktiv werden.
 
 \subsection{Im Servermodus}
-Wenn Sie verinice im Servermodus betreiben, muss auf dem Client die gleiche Datei wir im Standalone-Modus konfiguriert werden. Zusätzlich muss die gewünschte Sprache auf dem verinice.\textsc{PRO} Server konfiguriert werden. Auf dem Client und auf dem Server muss die gleiche Sprache ausgewählt werden. Die Änderung auf dem Server muss von einem Systemadministrator durchgeführt werden. Geändert werden muss abhängig vom Betriebssystem auf dem Server folgende Datei.
+Wenn Sie verinice im Servermodus betreiben, muss auf dem Client die gleiche Datei wir im Standalone-Modus konfiguriert werden. Zusätzlich muss die gewünschte Sprache auf dem verinice.\textsc{PRO} Server konfiguriert werden. Auf dem Client und auf dem Server muss die gleiche Sprache ausgewählt werden. Die Änderung auf dem Server muss von einem Systemadministrator durchgeführt werden. Auf dem Server muss abhängig vom Betriebssystem folgende Datei geändert werden:
 \newline\\ 
 RHEL oder CentOS 6:
 \textbf{/usr/share/tomcat6/conf/tomcat6.conf} 
@@ -1099,16 +1127,23 @@ RHEL oder CentOS 6:
 RHEL oder CentOS 7:
 \textbf{/usr/share/tomcat/conf/tomcat.conf} 
 \newline\\
-Stellen Sie folgendes ein, um die englische Sprache zu erhalten:
-\newline\\
-\colorbox{lightgray}{\parbox{\textwidth}
-{\tt JAVA\_OPTS=\dq-Duser.language=en -Duser.region=EN\dq}}
-\newline\\
-Stellen Sie folgendes ein, um die deutsche Sprache zu erhalten:
-\newline\\
-\colorbox{lightgray}{\parbox{\textwidth}
-{\tt JAVA\_OPTS=\dq-Duser.language=de -Duser.region=DE\dq}}
-\newline\\
+Stellen Sie folgendes ein, um die gewünschte Sprache zu erhalten:
+
+\begin{lstlisting}[language=Plain, caption={tomcat.conf Englisch}]
+JAVA_OPTS="-Duser.language=en -Duser.region=EN"
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={tomcat.conf Deutsch}]
+JAVA_OPTS="-Duser.language=de -Duser.region=DE"
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={tomcat.conf Tschechisch}]
+JAVA_OPTS="-Duser.language=cs -Duser.region=CS"
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={tomcat.conf Italienisch}]
+JAVA_OPTS="-Duser.language=it -Duser.region=IT"
+\end{lstlisting}
 
 \section{Log-Datei}
 \label{sec:log-datei}

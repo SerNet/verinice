@@ -16,28 +16,41 @@
 \usepackage{enumitem}
 \newcommand*{\descrfont}[1]{\textit{#1 -}}
 
-%define xml for code examples
+%define languages for code examples
 \usepackage{listings}
 \definecolor{lightgray}{rgb}{0.97,0.97,0.97}
 \lstdefinelanguage{XML}
 {
-  basicstyle=\ttfamily\color{gray}\bfseries\scriptsize,
-  backgroundcolor=\color{lightgray}, 
-  captionpos=b,
-  frame=single,	
+  frame=single,
   morestring=[b]",
   morestring=[b]{"}{"},
   moredelim=[s][\color{orange}]{>}{<},
   morecomment=[s]{<?}{?>},
   morecomment=[s]{<!--}{-->},
-  stringstyle=\color{orange},
+  morekeywords={xmlns,version,type,soapenv,sync,data,map},
+}
+\lstdefinelanguage{Plain}
+{
+  numbers=none,
+  keywords={}
+  keywordstyle=\color{black},
+  identifierstyle=\color{black},
+  commentstyle=\color{black},
+  stringstyle=\color{black},
+}
+\lstset{
+  backgroundcolor=\color{lightgray},
+  basicstyle=\ttfamily\color{black}\bfseries\small,
+  captionpos=b,
   identifierstyle=\color{blue},
   keywordstyle=\color{cyan},
+  language=XML,
   numbers=left,
+  numbersep=5pt,
   numberstyle=\tiny,
   showstringspaces=false,
-  numbersep=5pt,
-  morekeywords={xmlns,version,type,soapenv,sync,data,map}
+  stringstyle=\color{orange},
+  tabsize=2,
 }
 
 
@@ -983,26 +996,41 @@ verinice.\textsc{PRO} server.}
 
 If no other language has been configured, verinice uses the language of the operating system. If you want to use a different language, you select this language in configuration files. The language settings cannot be found in the verinice settings menu.
 
+Verinice can be used in these languages:
+\begin{itemize}
+ \item Czech
+ \item English
+ \item German
+ \item Italian
+\end{itemize}
+
 \subsection{In standalone mode}
 If you are using verinice in standalone mode and want to set a different language, edit the configuration file:
 \newline 
 \textbf{\textless VERINICE\_HOME\textgreater/verinice.ini}
-\newline\\
-To change the language, add a new line at the end of the file. If you want to use verinice in English, enter this line:
-\newline\\
-\colorbox{lightgray}{\parbox{\textwidth}{
-{\tt -Dosgi.nl=en}
-}}
-\newline\\
-If verinice is to be used in German, this line must be entered instead:
-\newline\\
-\colorbox{lightgray}{\parbox{\textwidth}{
-{\tt -Dosgi.nl=de}
-}}
-\newline\\
+
+To set a different language, add a new line at the end of the file.
+according to the desired language:
+
+\begin{lstlisting}[language=Plain, caption={verinice.ini English}]
+-Dosgi.nl=en
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={verinice.ini German}]
+-Dosgi.nl=de
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={verinice.ini Czech}]
+-Dosgi.nl=cs
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={verinice.ini Italian}]
+-Dosgi.nl=it
+\end{lstlisting}
+
 You need to stop and restart the application to apply these changes.
 
-\subsection{In multi-user mode}
+\subsection{In server mode}
 
 If you run verinice in server mode, the same file must be configured on the client as in standalone mode. In addition, the desired language must be configured on the verinice.\textsc{PRO} server. The same language must be selected on the client and on the server. The change on the server must be made by a system administrator. The following file must be changed depending on the operating system on the server.\newline\\ 
 RHEL or CentOS 6:
@@ -1010,19 +1038,23 @@ RHEL or CentOS 6:
 RHEL or CentOS 7:
 \textbf{/usr/share/tomcat/conf/tomcat.conf} 
 \newline\\
-Set the following to configure the English language:
-\newline\\
-\colorbox{lightgray}{\parbox{\textwidth}{
-{\tt JAVA\_OPTS="-Duser.language=en -Duser.region=EN"}
-}}
-\newline\\
-Set the following to configure the German language:
-\newline\\
-\colorbox{lightgray}{\parbox{\textwidth}{
-{\tt JAVA\_OPTS="-Duser.language=de -Duser.region=DE"}
-}}
-\newline\\
+Set the following to configure the desired language:
 
+\begin{lstlisting}[language=Plain, caption={tomcat.conf English}]
+JAVA_OPTS="-Duser.language=en -Duser.region=EN"
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={tomcat.conf German}]
+JAVA_OPTS="-Duser.language=de -Duser.region=DE"
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={tomcat.conf Czech}]
+JAVA_OPTS="-Duser.language=cs -Duser.region=CS"
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={tomcat.conf Italian}]
+JAVA_OPTS="-Duser.language=it -Duser.region=IT"
+\end{lstlisting}
 
 \section{Log File}
 \label{sec:log-file}
