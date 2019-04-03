@@ -224,7 +224,7 @@ public class LinkMaker extends Composite implements IRelationTable {
 
     private void initLinkTableViewer() {
         viewer = new RelationTableViewer(this, this, SWT.FULL_SELECTION | SWT.MULTI, true);
-        viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
+        viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
         viewer.getTable().setEnabled(writeable);
         relationViewContentProvider = new RelationViewContentProvider(this, viewer);
         viewer.setContentProvider(relationViewContentProvider);
