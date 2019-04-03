@@ -21,7 +21,7 @@ package sernet.verinice.web;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +49,7 @@ import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.LoadElementByUuid;
 
 /**
- * JSF managed bean for view and edit Tasks, template: todo/task.xhtml
+ * JSF managed bean for view and edit Tasks, template: edit/tasks.xhtml
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -236,12 +236,12 @@ public class TaskBean {
         if (nameAuditMap == null) {
             nameAuditMap = createNameAuditMap();
         }
-        return new ArrayList<String>(nameAuditMap.keySet());
+        return new ArrayList<>(nameAuditMap.keySet());
     }
 
     private Map<String, CnATreeElement> createNameAuditMap() {
         List<CnATreeElement> audits = getAuditList();
-        nameAuditMap = new Hashtable<String, CnATreeElement>(audits.size());
+        nameAuditMap = new HashMap<>(audits.size());
         for (CnATreeElement audit : audits) {
             if (audit != null) {
                 String name = getUniqueName(audit.getTitle(), 0);
@@ -292,9 +292,9 @@ public class TaskBean {
 
     private void loadAuditList() throws CommandException {
         List<String> uuidAuditList = getTaskService().getElementList();
-        auditList = new ArrayList<CnATreeElement>(uuidAuditList.size());
+        auditList = new ArrayList<>(uuidAuditList.size());
         for (String uuid : uuidAuditList) {
-            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuid,
+            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<>(uuid,
                     RetrieveInfo.getPropertyInstance());
             command = getCommandService().executeCommand(command);
             auditList.add(command.getElement());
