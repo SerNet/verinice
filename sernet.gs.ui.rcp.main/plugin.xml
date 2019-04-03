@@ -757,6 +757,9 @@
                         <objectClass
                               name="sernet.verinice.model.bsi.Person">
                         </objectClass>
+                        <objectClass
+                              name="sernet.verinice.model.bsi.ImportBsiGroup">
+                        </objectClass>
                      </or>
                   </not>
                </and>
