@@ -19,7 +19,6 @@ package sernet.gs.ui.rcp.main.preferences;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.apache.log4j.Logger;
@@ -35,7 +34,6 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
@@ -58,7 +56,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 public class GSImportPreferencePage extends FieldEditorPreferencePage
         implements IWorkbenchPreferencePage {
 
-    private static final Logger LOG = Logger.getLogger(GSImportRestorePreferencePage.class);
+    private static final Logger LOG = Logger.getLogger(GSImportPreferencePage.class);
 
     public static final String ID = "sernet.gs.ui.rcp.main.page5"; //$NON-NLS-1$
 

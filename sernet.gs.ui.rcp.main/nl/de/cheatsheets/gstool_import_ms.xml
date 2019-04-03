@@ -8,19 +8,6 @@
     </description>
   </intro>
 
-  <item title="Drei Möglichkeiten">
-    <description>
-      Es gibt drei verschiedene Möglichkeiten, Daten aus dem GSTOOL in verinice zu importieren.
-      <br /><br />
-      Die erste Möglichkeit, der direkte Import, wird in diesem Tutorial erläutert.
-      <br /><br />
-      Die zweite Möglichkeit ist der Import über zuvor in GSTOOL exportierte BAK-Dateien
-      -- konsultieren Sie sich dazu bitte zusätzlich das Tutorial "Import via BAK-Exportdatei" an.
-      <br /><br />
-      Die dritte Möglichkeit ist ein Import über die MDF-Dateien. Für diese Variante lesen Sie bitte
-      zusätzlich die Beschreibung im Tutorial "Import via MDF-Exportdatei".
-    </description>
-  </item>
   
   <item title="Erster Schritt -- Einstellungen für den Import vornehmen">
     <description>

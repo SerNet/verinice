@@ -784,8 +784,7 @@ Derby stores the database in a folder on your local hard disc; specify the URL i
 \newline\\
 If you will be creating a new database, select the following option: {\em create=true}
 \section{GSTOOL Import} \label{GSTOOL Import}
-Verinice supports three options for importing \textsc{GSTOOL} data. The differences between these three
-options are described in the following sections. The individual procedures are detailed in the section
+Verinice supports importing \textsc{GSTOOL} data. The procedure is detailed in the section
 {\em \ref{Importing from GSTOOL} \nameref{Importing from GSTOOL}}.
 
 \subsection{GSTOOL Import Mapping View} \label{GSTOOL Import Mapping View}
@@ -806,26 +805,6 @@ When importing from one host to another, make sure that the \textsc{GSTOOL} impo
 ``\textsc{GSTOOL CB JDBC URL}''. If you are importing the database from a different computer (another host), you must not keep the default
 hostname entry of ``localhost''. Enter the correct hostname here. Because \textsc{GSTOOL} 4.X only runs on Windows,
 additionally ensure that the Windows firewall (if enabled) does not block your requests to this computer.
-
-\subsection{Importing from a backup file that is to be restored}
-The \textbf{Backup file to restore} sub-menu item lets you configure the settings for importing existing BAK files.
-Enter the name of the BAK file you created previously in \textsc{GSTOOL}. Make sure the file and the correct
-path are entered in the first field, \textbf{File backup from \textsc{GSTOOL}}.
-\newline\\
-\textbf{Important!}: There are no problems importing files located on the local computer. However, if the BAK file is located on a remote host,
-you must ensure that this file can be accessed, for example, on a network share. In other words, the
-\textbf{Browse} button only works if a network share exists for this file, or if it resides locally.
-Now enter an arbitrary new database name in the second and third field and complete the path details.
-The path is only important for the import process. After completing the import process, the data is stored in
-the verinice database and the files containing the restored database are no longer required.
-
-\subsection{Importing from a database backup}
-Another sub-menu item \textbf{Attach database} allows you to add data to the existing verinice database. Configure the
-settings on the right-hand side of the window. If you do not fill out the first field, this will append the \textsc{GSTOOL}
-database whose connection details are set in the \textbf{\textsc{GSTOOL} Import} menu. If the first field is filled with the file name of the
-database you want to append, the data from this database file is added. In this case, you need an MDF format file.
-You can also press the \textbf{Browse...} button. Enter the name of the database you want to attach in the second field.
-You can now press the \textbf{Attach database} button to append the database.
 
 \section{Editor Settings}
 You can hide and display fields in input forms by topic in this area. These could be, e.g.: risk management, finance, or ISA (VDA Information Security
@@ -3269,10 +3248,8 @@ migration tables are provided by the BSI.
   \includegraphics[scale=.5]{Screenshot/gstool-import-dialog.png}
   \caption{\label{Dialog GSTOOL Import} Dialog GSTOOL Import}
 \end{figure}
-There are basically three approaches to
-importing data from GSTOOL:
-\newline\\
-\textbf{1. \textsc{GSTOOL} direct import:} After configuring the settings for the import (see \textbf{Edit
+
+After configuring the settings for the import (see \textbf{Edit
 \textgreater}{\textbf{Preferences \textgreater}}\textbf{\textsc{GSTOOL} Import}), you can launch the import process.
 In the menu bar, first click \textbf{File} and then \textbf{Import data from GSTOOL}.
 The import process starts when you press \textbf{OK}. Before doing so, you can select which objects to import.
@@ -3293,32 +3270,6 @@ must have loaded the BSI IT baseline catalog in verinice – otherwise the impor
   \includegraphics[scale=.43]{Screenshot/Gstool_import_portsettings-en.png}
   \caption{\label{Import settings for GSTOOL import} Import settings for GSTOOL import}
 \end{figure}
-\newline
-\textbf{2. Importing a BAK file:} First, you need a BAK file; create this in GSTOOL. To do so, proceed as follows:
-In the GSTOOL menu, select \textbf{Database \textgreater Backup and Restore Data...}. You can specify the filename
-and location in this window. Click the \textbf{Backup} button to create a backup. This process creates a BAK database
-file. The next step is to import this file into verinice.
-\newline\\
-You now need to enter the import settings in \textbf{Edit \textgreater Preferences \textgreater \textsc{GSTOOL} Import
-\textgreater Backup file to restore}.
-\newline\\
-After completing all the settings in the previous step, you can click the \textbf{Restore database} button.
-This starts the restore process. Now you need to import the restored data into verinice. To do this, you again need
-to click on the parent tab \textbf{GSTOOL Import}. Instead of the original database name, now type the new name (the
-name you chose for the restore) of the database (following the last slash). Now press the \textbf{Apply} button.
-You can test the connectivity by pressing the \textbf{Testing connection} button. If all of the settings have been made
-correctly, the test will be successful. Now you only need to trigger the import process. To do this, again, select
-\textbf{File \textgreater Import data from GSTOOL...}, and confirm. After completing the import process, you will see
-another IT network named ``BSI''  in your Baseline Protection Model window.
-\newline\\
-\textbf{3. Import the MDF files:} This section describes how to import a database file backed up in GSTOOL in MDF
-format into verinice. This process is basically similar to importing the data from a BAK file, with the exception
-that you already have an MDF file. After configuring all the settings in \textbf{Edit \textgreater Preferences \textgreater
-GSTOOL Import \textgreater Attach database}, you can attach the database by pressing the \textbf{Attach database} button.
-Below \textbf{GSTOOL import} in the Preferences window, specify the new file name for the attached database. In the first
-field, replace the previous database name with a new name (following the last slash). It is recommended that you test the
-connectivity again by pressing \textbf{Testing connection}. The last step is the actual import process, which has already
-been described.
 
 \subsection{Help with defining the port for the GSTOOL import}
 You need the SQL Server port number to import data from GSTOOL. You must enter this port number in the GSTOOL import

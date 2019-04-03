@@ -867,8 +867,7 @@ Bei Derby wird die Datenbank in einem Ordner auf Ihrer lokalen Festplatte gespei
 Als Option sollten man für eine neu zu erzeugende Datenbank Folgendes setzen: {\em create=true}.
 
 \section{GSTOOL-Import}
-Verinice unterstützt drei Möglichkeiten für den Import von \textsc{GSTOOL}-Daten. Die Unterschiede dieser drei Möglichkeiten werden in den
-nachfolgenden Abschnitten dargestellt. Die einzelnen Vorgehensweisen werden im Abschnitt {\em \ref{Import aus dem GSTOOL} \nameref{Import aus dem GSTOOL}} beschrieben.
+Verinice unterstützt den Import von \textsc{GSTOOL}-Daten. Die Vorgehensweise wird im Abschnitt {\em \ref{Import aus dem GSTOOL} \nameref{Import aus dem GSTOOL}} beschrieben.
 
 \subsection{GSTOOL-Import-Mapping-View}
 Im View \textbf{GSTOOL-Import-Mapping-View} kann die Zuordnung zwischen den Subtypen der Zielobjekte im GSTOOL und den Objekttypen in verinice bearbeitet werden.
@@ -889,27 +888,6 @@ unter ``\textsc{GSTOOL CB JDBC URL}'' korrekt vorgenommen wurden. Wenn die Daten
 darf als Hostname natürlich nicht mehr der standardmäßige ``localhost'' eingetragen sein. Hier muss der korrekte Hostname eintragen werden.
 Da das \textsc{GSTOOL} 4.X ausschließlich unter Windows läuft, ist zusätzlich darauf zu achten, dass eine eventuell vorhandene Firewall unter Windows Ihre
 Zugriffe auf diesen Rechner nicht abblocken darf.
-
-\subsection{Import aus einer wiederherzustellenden Backup-Datei}
-Ein Untermenüpunkt ist als \textbf{Wiederherzustellende Backup-Datei} eingerichtet, um die Einstellungen zum Importieren von bestehenden
-BAK-Dateien vorzunehmen. Dort wird der Dateiname der BAK-Datei eingetragen, der im \textsc{GSTOOL} vorher erzeugt wurden. Dieser muss samt
-korrektem Pfad im ersten Feld \textbf{Datei mit Sicherung aus \textsc{GSTOOL}} stehen.
-\newline\\
-\textbf{Achtung!} Solange diese Datei auf dem Rechner liegt, auf
-dem der Import durchgeführt wird, besteht kein Problem. Wenn die BAK-Datei auf einem entfernten Host liegt, muss dafür Sorge
-getragen werden, dass z.B. per Netzwerkfreigabe auf diese Datei zugegriffen werden kann. Der \textbf{Durchsuchen}-Button funktioniert
-also nur dann, wenn eine Netzwerkfreigabe auf diese Datei besteht oder diese Datei lokal zu finden ist. Jetzt können Sie das
-zweite und dritte Feld mit einem beliebigen neuen Datenbanknamen und dessen Pfad ausfüllen. Der Pfad ist nur für den Import-Vorgang
-wichtig. Nach dem Import-Vorgang sind die Daten in der verinice-Datenbank enthalten und die Dateien der wiederhergestellten
-Datenbank werden nicht mehr benötigt.
-
-\subsection{Import aus einer Datenbanksicherung}
-Ein weiterer Untermenüpunkt \textbf{Datenbank verbinden} erlaubt das Anhängen von Daten an die bestehende verinice-Datenbank. Hier nehmen
-Sie auf der rechten Seite des Menüfensters die Einstellungen vor. Sollte das erste Feld nicht ausgefüllt werden, so wird die
-Datenbank des \textsc{GSTOOL}s angehängt, deren Konnektivität über den Menüpunkt \textbf{\textsc{GSTOOL}-Import} eingestellt wurde. Wenn das erste Feld
-mit dem Dateinamen der anzuhängenden Datenbank gefüllt ist, werden die Daten aus dieser Datenbankdatei angehängt. Diese Datei
-muss dann im MDF-Format vorliegen. Es kann dazu auch der \textbf{Durchsuchen...}-Button verwendet werden. Im zweiten Feld muss ein
-Name der anzuhängenden Datenbank angegeben werden. Nun kann durch das Betätigen des Buttons \textbf{Datenbank anhängen} die Datenbank angehängt werden.
 
 \section{Editor-Einstellungen}
 In diesem Bereich können Felder der Eingabeformulare nach Themen ein- und ausgeblendet werden. Dies können z.B. sein: Risk Management,
@@ -3322,14 +3300,13 @@ späteren Release bereitgestellt, sobald die erforderlichen Migrationstabellen
 des BSI vorliegen.
 
 Zuerst müssen die Einstellungen zum Import aus dem \textsc{GSTOOL} konfiguriert werden. Die grund\-sätzlichen Einstellungen sind im Abschnitt \textbf{Grundkonfiguration} erläutert.
+
 \begin{figure}[htb!]
   \centering
   \includegraphics[scale=.5]{Screenshot/gstool-import-dialog_de.png}
   \caption{\label{Dialog GSTOOL Import} Dialog GSTOOL Import}
 \end{figure}
-Daten aus dem \textsc{GSTOOL} können auf drei Arten importiert werden:
-\newline\\
-\textbf{1. \textsc{GSTOOL}-Direkt-Import:}
+
 Nachdem die Einstellungen für einen Import vorgenommen worden sind (zu finden unter \textbf{Bearbeiten \textgreater} \textbf{ Einstellungen \textgreater}\textbf{ \textsc{GSTOOL}-Import}),
 kann der eigentliche Import-Vorgang stattfinden. Wählen Sie dazu aus dem Menü \textbf{Datei} die Funktion \textbf{Daten aus dem \textsc{GSTOOL} laden...} aus.
 Der Import-Vorgang wird nach Klicken des \textbf{OK}-Buttons gestartet. Vorher kann noch ausgewählt werden, welche Objekte importiert werden sollen.
@@ -3345,38 +3322,6 @@ Der Import aus dem \textsc{GSTOOL} überschreibt keine bereits erfassten Daten, 
 durchgeführt worden ist, erscheint eine Erfolgsmeldung.
 \newline\\
 \textbf{Achtung! Es müssen für einen \textsc{GSTOOL}-Import die Grundschutzkataloge in verinice geladen sein - andernfalls wird der Import nicht funktionieren.}
-\newline\\
-\textbf{2. Import der BAK-Dateien:}
-Innerhalb des \textsc{GSTOOL} können BAK-Dateien erzeugt werden, welche von verinice eingelesen werden können.
-Eine solche Datei wird erzeugt, indem im \textsc{GSTOOL} aus dem Menü
-\textbf{Datenbank} die Funktion \textbf{Daten sichern und wiederherstellen...} ausgewählt wird. In diesem Fenster kann der Dateiname und der Ort der Datei angegeben werden. Der Klick auf
-den Button \textbf{Sichern} erzeugt eine Sicherung. Nach diesem Durchlauf ist eine BAK-Datenbank-Datei erzeugt worden. Anschließend kann diese in verinice importiert werden.
-\newline\\
-Nun müssen die Einstellungen zum Import unter \textbf{Bearbeiten \textgreater Einstellungen \textgreater \textsc{GSTOOL}-Import \textgreater Wiederherzustellendes Backup} eingetragen werden.
-
-Nachdem alle Einstellungen des vorherigen Schritts vorgenommen worden sind,
-können Sie auf den Button \textbf{Datenbank wiederherstellen} klicken. Nun
-startet der Wiederherstellungsprozess. Anschließend müssen die
-wiederhergestellten Daten in verinice importiert werden. Dazu muss wieder der
-übergeordneten Reiter \textbf{\textsc{GSTOOL}-Import} aktiviert werden. Dort
-müssen Sie statt der ursprünglichen Datenbankbezeichnung den neuen Namen (der,
-der bei der Wiederherstellung ausgesucht wurde) der Datenbank eintragen (hinter
-dem letzten Slash-Zeichen). Nun kann der \textbf{Anwenden}-Button geklickt
-werden. Die Konnektivität kann mit Hilfe des Buttons \textbf{Teste Verbindung}
-geprüft werden. Wenn alle Einstellungen korrekt vorgenommen worden sind, ist der
-Test erfolgreich. Jetzt muss lediglich der Import-Prozess angestoßen werden.
-Dazu ist wieder \textbf{Datei \textgreater Daten aus dem \textsc{GSTOOL}
-laden...} auszuwählen und zu bestätigen. Nach dem Import-Prozess erscheint ein
-weiterer IT-Verbund mit dem Namen ``BSI'' in Ihrem GS-Modell-View.
-
-\textbf{3. Import der MDF-Dateien:}
-Eine weitere Importmöglichkeit stellt der Datenaustausch über eine MDF-Datei (GSTOOL-Datenbank) dar.
-Dieser Prozess ist prinzipiell analog zum Importieren von Daten aus einer BAK-Datei, nur dass in dem Fall bereits eine MDF-Datei vorliegt.
-Nachdem alle Einstellungen unter \textbf{Bearbeiten \textgreater Einstellungen \textgreater \textsc{GSTOOL}-Import \textgreater Datenbank verbinden} vorgenommen worden sind, kann die
-Datenbank mit dem Betätigen der Schaltfläche \textbf{Datenbank anhängen} angehängt werden.
-Im Einstellungsfenster muss unter \textbf{\textsc{GSTOOL}-Import} der neue Dateiname der angehängten Datenbank angegeben werden. Im ersten
-Feld ersetzt man den vorherigen Datenbanknamen gegen den neuen (nach dem letzten Slash). Es empfiehlt sich nochmal die Konnektivität mit Hilfe
-des Buttons \textbf{Teste Verbindung} zu überprüfen. Der letzte Schritt ist der eigentliche Import-Prozess, der bereits beschrieben worden ist.
 
 \subsection{Hilfe bei Port-Feststellung für den GSTOOL-Import}
 Um einen Datenimport aus dem \textsc{GSTOOL} vorzunehmen, wird die Portnummer des SQL-Server-Dienstes benötigt. Diese Portnummer müssen Sie bei den

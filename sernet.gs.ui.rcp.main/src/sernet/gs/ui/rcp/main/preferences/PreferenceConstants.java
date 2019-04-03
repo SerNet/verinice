@@ -92,13 +92,6 @@ public class PreferenceConstants {
     // gstool uses port 1135, not 1433:
     public static final String GS_DB_URL_LOCALHOST = "jdbc:jtds:sqlserver://localhost:1135/BSIDB_V45"; //$NON-NLS-1$
 
-    public static final String GSTOOL_FILE = "gs_cna_attachfile";
-    public static final String GS_DB_ATTACHDB = "gs_cna_attachdb";
-
-    public static final String GSTOOL_RESTOREDB_FILE = "gs_cna_restoredb_file";
-    public static final String GS_DB_RESTOREDB_NAME = "gs_cna_restoredb_name";
-    public static final String GS_DB_RESTOREDB_TODIR = "gs_cna_restoredb_todir";
-
     public static final String BP_MODEL_SAFEGUARDS = "bp_model_safeguards";
     public static final String BP_MODEL_DUMMY_SAFEGUARDS = "bp_model_dummy_safeguards";
 

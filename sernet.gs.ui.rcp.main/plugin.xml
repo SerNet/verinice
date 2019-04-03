@@ -1745,18 +1745,6 @@
             name="%page.name.4">
       </page>
       <page
-            category="sernet.gs.ui.rcp.main.page5"
-            class="sernet.gs.ui.rcp.main.preferences.GSImportRestorePreferencePage"
-            id="sernet.gs.ui.rcp.main.preferences.gsimportrestorepreferencepage"
-            name="%page.name.5">
-      </page>
-      <page
-            category="sernet.gs.ui.rcp.main.page5"
-            class="sernet.gs.ui.rcp.main.preferences.GSImportAttachPreferencePage"
-            id="sernet.gs.ui.rcp.main.page6"
-            name="%page.name.6">
-      </page>
-      <page
             class="sernet.gs.ui.rcp.main.preferences.EditorPreferencePage"
             id="sernet.gs.ui.rcp.main.preferences.editorpreferencepage"
             name="%page.name.7">
@@ -1880,22 +1868,6 @@
               id="sernet.gs.ui.rcp.main.gstool1"
               name="%cheatsheets.12">
            <description>%cheatsheets.description.11</description>
-        </cheatsheet>
-        <cheatsheet
-              category="sernet.gs.ui.rcp.main.cheatSheets2"
-              composite="false"
-              contentFile="$nl$/cheatsheets/GSTOOL-BAK-Datei-Import.xml"
-              id="sernet.gs.ui.rcp.main.gstool2"
-              name="%cheatsheets.13">
-           <description>%cheatsheets.description.12</description>
-        </cheatsheet>
-        <cheatsheet
-              category="sernet.gs.ui.rcp.main.cheatSheets2"
-              composite="false"
-              contentFile="$nl$/cheatsheets/MDF-Datei-Import.xml"
-              id="sernet.gs.ui.rcp.main.gstool3"
-              name="%cheatsheets.14">
-           <description>%cheatsheets.description.13</description>
         </cheatsheet>
         <category
               id="sernet.gs.ui.rcp.main.cheatSheets3"
