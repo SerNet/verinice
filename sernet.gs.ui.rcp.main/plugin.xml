@@ -1750,11 +1750,6 @@
             name="%page.name.7">
       </page>
       <page
-            class="sernet.gs.ui.rcp.main.preferences.CryptoPreferencePage"
-            id="sernet.gs.ui.rcp.main.preferences.cryptopreferencepage"
-            name="%page.name.8">
-      </page>
-      <page
             class="sernet.gs.ui.rcp.main.preferences.MessageDialogWithTogglePreferencePage"
             id="sernet.gs.ui.rcp.main.preferences.messagedialogwithtogglepreferencepage"
             name="%page.name.9">
@@ -2682,10 +2677,6 @@
             <objectClass name="sernet.verinice.rcp.linktable.LinkTableEditor"/>
           </enablement>
        </decorator>
-   </extension>
-   <extension point="org.eclipse.core.net.authenticator">
-     <authenticator class="sernet.gs.ui.rcp.main.security.VeriniceAuthenticator">
-     </authenticator>
    </extension>
    <extension
          point="org.eclipse.ui.splashHandlers">

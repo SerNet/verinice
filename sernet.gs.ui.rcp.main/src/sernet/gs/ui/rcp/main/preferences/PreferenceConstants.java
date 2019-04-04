@@ -107,24 +107,6 @@ public class PreferenceConstants {
     public static final String VNSERVER_USER = "gs_cna_serveruser";
     public static final String VNSERVER_PASS = "gs_cna_serverpass";
 
-    // all things crypto
-    public static final String CRYPTO_VERINICE_SSL_SECURITY_ENABLED = "gs_cna_verinice_ssl_security_enabled";
-    public static final String CRYPTO_PKCS11_LIBRARY_PATH = "gs_cna_pkcs11_library_path";
-    public static final String CRYPTO_TRUSTSTORE_FILE = "gs_cna_truststore_file";
-    public static final String CRYPTO_TRUSTSTORE_PASSWORD = "javax.net.ssl.trustStorePassword";
-    public static final String CRYPTO_TRUSTSTORE_SOURCE = "gs_cna_truststore_source";
-    public static final String CRYPTO_TRUSTSTORE_SOURCE_FROM_FILE = "file";
-    public static final String CRYPTO_TRUSTSTORE_SOURCE_FROM_PKCS11_LIBRARY = "pkcs11";
-    public static final String CRYPTO_KEYSTORE_FILE = "gs_cna_keystore_file";
-    public static final String CRYPTO_KEYSTORE_PASSWORD = "javax.net.ssl.keyStorePassword";
-    public static final String CRYPTO_KEYSTORE_SOURCE = "gs_cna_keystore_source";
-    public static final String CRYPTO_KEYSTORE_SOURCE_NONE = "none";
-    public static final String CRYPTO_KEYSTORE_SOURCE_FROM_FILE = "file";
-    public static final String CRYPTO_KEYSTORE_SOURCE_FROM_PKCS11_LIBRARY = "pkcs11";
-    public static final String CRYPTO_PKCS11_LIBRARY_ENABLED = "gs_cna_pkcs11_library_enabled";
-    public static final String CRYPTO_SERVER_AUTHENTICATION_VIA_CERTIFICATE_ENABLED = "gs_cna_server_authentication_via_certificate_enabled";
-    public static final String CRYPTO_PKCS11_CERTIFICATE_ALIAS = "gs_cna_pkcs11_certificate_alias";
-
     public static final String DEFAULT_FOLDER_IMPORT = "default_folder_import";
     public static final String DEFAULT_FOLDER_EXPORT = "default_folder_export";
     public static final String DEFAULT_FOLDER_REPORT = "default_folder_report";

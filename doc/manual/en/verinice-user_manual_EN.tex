@@ -840,24 +840,6 @@ Possible editor areas include:
 	\item[Web] Only fields with that tag are displayed in the web frontend.  ``origin'', ``legal basis'', ``deadline for deletion'' und ``DSB statement''.
 \end{description}
 
-\section{Cryptography}
-These settings are only relevant for verinice.\textsc{PRO} servers operations.
-\newline\\
-The settings described here relate to cases where internal certificates or keys are used to encrypt
-communication between the verinice clients and the server. If this is not the case, but SSL encrypted
-connections are still desired, follow the instructions in the verinice server installation and integration guide
-(see the guide provided with verinice.\textsc{PRO}).
-\newline\\
-To enable global use of an individual encryption configuration, enable the
-\textbf{Use verinice infrastructure for SSL connections} option.
-You can additionally enable certificate-based authentication by enabling the
-\textbf{Use certificate for authentication} option. You can also use a PKCS\#11 (Cryptographic Token Interface).
-\newline\\
-In \textbf{Source for certificates} and/or \textbf{Source for keys} select the source type.
-\newline\\
-In the last section you can enter the key store file, trust store file or PKCS driver locations.
-You can enter one of several existing key entries in \textbf{Certificate alias for authentication}.
-
 \section{Advice dialog}
 In the menu item \textbf{Advice dialog} you can control whether you receive confirmation advice for executed and upcoming activities. When operating verinice in the standard configuration you get advice for the following activities that can be switched off by activating the appropriate check boxes:
 \begin{itemize}
