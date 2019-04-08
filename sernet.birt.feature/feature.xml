@@ -434,6 +434,13 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+    <!-- contains the radar series -->
+   <plugin
+         id="org.eclipse.birt.chart.examples.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.w3c.dom.svg.extension"
