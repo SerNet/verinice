@@ -181,17 +181,13 @@ public abstract class ReportAction extends RightsEnabledActionDelegate
 
     private void provideUserFeedback() {
         if (isGenerationSuccessful()) {
-            Display.getDefault().asyncExec(new Runnable() {
-
-                @Override
-                public void run() {
-                    String path = dialog.getOutputFile().getAbsolutePath();
-                    String reportName = dialog.getReportMetaData().getOutputname();
-                    MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
-                            Messages.GenerateReportDialog_30,
-                            Messages.bind(Messages.GenerateReportDialog_31,
-                                    new Object[] { reportName, path }));
-                }
+            Display.getDefault().asyncExec(() -> {
+                String path = dialog.getOutputFile().getAbsolutePath();
+                String reportName = dialog.getReportMetaData().getOutputname();
+                MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+                        Messages.GenerateReportDialog_30,
+                        Messages.bind(Messages.GenerateReportDialog_31,
+                                new Object[] { reportName, path }));
             });
         }
     }
