@@ -27,10 +27,12 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeSelection;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -49,6 +51,7 @@ import sernet.verinice.interfaces.report.ReportTypeException;
 import sernet.verinice.rcp.RightsEnabledActionDelegate;
 import sernet.verinice.report.rcp.GenerateReportDialog;
 import sernet.verinice.report.rcp.Messages;
+import sernet.verinice.ui.DesktopUtil;
 
 /**
  * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
@@ -184,10 +187,26 @@ public abstract class ReportAction extends RightsEnabledActionDelegate
             Display.getDefault().asyncExec(() -> {
                 String path = dialog.getOutputFile().getAbsolutePath();
                 String reportName = dialog.getReportMetaData().getOutputname();
-                MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
-                        Messages.GenerateReportDialog_30,
+                String[] dialogButtons = new String[] { IDialogConstants.OPEN_LABEL,
+                        IDialogConstants.OK_LABEL };
+                ;
+                MessageDialog reportGeneratedDialog = new MessageDialog(
+                        Display.getCurrent().getActiveShell(), Messages.GenerateReportDialog_30,
+                        null,
                         Messages.bind(Messages.GenerateReportDialog_31,
-                                new Object[] { reportName, path }));
+                                new Object[] { reportName, path }),
+                        MessageDialog.INFORMATION, dialogButtons, 1) {
+                    @Override
+                    protected int getShellStyle() {
+                        return super.getShellStyle() | SWT.SHEET;
+                    }
+
+                };
+                int result = reportGeneratedDialog.open();
+                if (result == 0 && !DesktopUtil.open(new File(path))) {
+                    ExceptionUtil.log(new UnsupportedOperationException("Failed to open report"),
+                            Messages.ErrorOpeningGenereratedReport);
+                }
             });
         }
     }
