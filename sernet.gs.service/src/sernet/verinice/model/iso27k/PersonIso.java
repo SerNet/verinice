@@ -20,6 +20,7 @@ package sernet.verinice.model.iso27k;
 import java.util.Collection;
 
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.IPerson;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -27,7 +28,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class PersonIso extends CnATreeElement implements IISO27kElement {
+public class PersonIso extends CnATreeElement implements IISO27kElement, IPerson {
 
     public static final String TYPE_ID = "person-iso"; //$NON-NLS-1$
     public static final String PROP_ABBR = "person_abbr"; //$NON-NLS-1$
@@ -151,6 +152,26 @@ public class PersonIso extends CnATreeElement implements IISO27kElement {
 
     public String getAnrede() {
         return getEntity().getSimpleValue(PROP_ANREDE);
+    }
+
+    @Override
+    public String getFirstName() {
+        return getEntity().getRawPropertyValue(PROP_NAME);
+    }
+
+    @Override
+    public String getLastName() {
+        return getEntity().getRawPropertyValue(PROP_SURNAME);
+    }
+
+    @Override
+    public String getSalutation() {
+        return getEntity().getRawPropertyValue(PROP_ANREDE);
+    }
+
+    @Override
+    public String getEMailAddress() {
+        return getEntity().getRawPropertyValue(PROP_EMAIL);
     }
 
 }

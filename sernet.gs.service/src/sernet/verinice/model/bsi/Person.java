@@ -26,13 +26,14 @@ import org.apache.log4j.Logger;
 
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.IPerson;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.verinice.model.common.CnATreeElement;
 
-public class Person extends CnATreeElement implements IBSIStrukturElement {
+public class Person extends CnATreeElement implements IBSIStrukturElement, IPerson {
 
     private static final Logger log = Logger.getLogger(Person.class);
 
@@ -218,5 +219,25 @@ public class Person extends CnATreeElement implements IBSIStrukturElement {
     public String toString() {
         return "Person [getFullName()=" + getFullName() + ", getKuerzel()=" + getKuerzel()
                 + ", getId()=" + getId() + "]";
+    }
+
+    @Override
+    public String getFirstName() {
+        return getEntity().getRawPropertyValue(P_VORNAME);
+    }
+
+    @Override
+    public String getLastName() {
+        return getEntity().getRawPropertyValue(P_NAME);
+    }
+
+    @Override
+    public String getSalutation() {
+        return getEntity().getRawPropertyValue(P_ANREDE);
+    }
+
+    @Override
+    public String getEMailAddress() {
+        return getEntity().getRawPropertyValue(P_EMAIL);
     }
 }
