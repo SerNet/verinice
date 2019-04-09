@@ -88,8 +88,10 @@ public class RiskServiceImplTest extends AbstractModernizedBaseProtection {
         riskService.updateRiskConfiguration(riskConfigurationUpdateContext);
 
         threat = reloadElement(threat);
+        Assert.assertEquals(null, threat.getFrequencyWithoutSafeguards());
         Assert.assertEquals(null, threat.getFrequencyWithoutAdditionalSafeguards());
         Assert.assertEquals(null, threat.getFrequencyWithAdditionalSafeguards());
+        Assert.assertEquals(null, threat.getRiskWithoutSafeguards());
         Assert.assertEquals(null, threat.getRiskWithoutAdditionalSafeguards());
         Assert.assertEquals(null, threat.getRiskWithAdditionalSafeguards());
     }
@@ -120,6 +122,7 @@ public class RiskServiceImplTest extends AbstractModernizedBaseProtection {
         riskService.updateRiskConfiguration(riskConfigurationUpdateContext);
 
         threat = reloadElement(threat);
+        Assert.assertEquals(null, threat.getRiskWithoutSafeguards());
         Assert.assertEquals(null, threat.getRiskWithoutAdditionalSafeguards());
         Assert.assertEquals(null, threat.getRiskWithAdditionalSafeguards());
     }
@@ -147,6 +150,7 @@ public class RiskServiceImplTest extends AbstractModernizedBaseProtection {
         riskService.updateRiskConfiguration(riskConfigurationUpdateContext);
 
         threat = reloadElement(threat);
+        Assert.assertEquals(null, threat.getRiskWithoutSafeguards());
         Assert.assertEquals(null, threat.getRiskWithoutAdditionalSafeguards());
         Assert.assertEquals(null, threat.getRiskWithAdditionalSafeguards());
     }
@@ -175,6 +179,8 @@ public class RiskServiceImplTest extends AbstractModernizedBaseProtection {
         riskService.updateRiskConfiguration(riskConfigurationUpdateContext);
 
         threat = reloadElement(threat);
+        Assert.assertEquals(newRiskConfiguration.getRisks().get(0).getId(),
+                threat.getRiskWithoutSafeguards());
         Assert.assertEquals(newRiskConfiguration.getRisks().get(0).getId(),
                 threat.getRiskWithoutAdditionalSafeguards());
         Assert.assertEquals(newRiskConfiguration.getRisks().get(0).getId(),
@@ -210,17 +216,21 @@ public class RiskServiceImplTest extends AbstractModernizedBaseProtection {
 
         threat = reloadElement(threat);
         Assert.assertEquals(highestRiskCategoryInDefaultConfig.getId(),
+                threat.getRiskWithoutSafeguards());
+        Assert.assertEquals(highestRiskCategoryInDefaultConfig.getId(),
                 threat.getRiskWithoutAdditionalSafeguards());
         Assert.assertEquals(highestRiskCategoryInDefaultConfig.getId(),
                 threat.getRiskWithAdditionalSafeguards());
     }
 
     private void setFrequencyValues(BpThreat threat, Frequency frequency) {
+        threat.setFrequencyWithoutSafeguards(frequency.getId());
         threat.setFrequencyWithoutAdditionalSafeguards(frequency.getId());
         threat.setFrequencyWithAdditionalSafeguards(frequency.getId());
     }
 
     private void setImpactValues(BpThreat threat, Impact impact) {
+        threat.setImpactWithoutSafeguards(impact.getId());
         threat.setImpactWithoutAdditionalSafeguards(impact.getId());
         threat.setImpactWithAdditionalSafeguards(impact.getId());
 

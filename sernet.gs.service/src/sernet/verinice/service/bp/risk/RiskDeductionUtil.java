@@ -39,10 +39,12 @@ public class RiskDeductionUtil {
      * scope/risk configuration.
      */
     public static BpThreat deduceRisk(BpThreat threat) {
+        final String frequencyWithoutSafeguards = threat.getFrequencyWithoutSafeguards();
         final String frequencyWithoutAdditionalSafeguards = threat
                 .getFrequencyWithoutAdditionalSafeguards();
         final String frequencyWithAdditionalSafeguards = threat
                 .getFrequencyWithAdditionalSafeguards();
+        final String impactWithoutSafeguards = threat.getImpactWithoutSafeguards();
         final String impactWithoutAdditionalSafeguards = threat
                 .getImpactWithoutAdditionalSafeguards();
         final String impactWithAdditionalSafeguards = threat.getImpactWithAdditionalSafeguards();
@@ -50,6 +52,11 @@ public class RiskDeductionUtil {
         RiskConfiguration riskConfiguration = Optional
                 .ofNullable(findRiskConfiguration(threat.getScopeId()))
                 .orElseGet(DefaultRiskConfiguration::getInstance);
+
+        String riskWithoutSafeguards = calculateRisk(riskConfiguration, frequencyWithoutSafeguards,
+                impactWithoutSafeguards).orElse(null);
+        setPropertyIfNecessary(threat, BpThreat.PROP_RISK_WITHOUT_SAFEGUARDS,
+                riskWithoutSafeguards);
 
         String riskWithoutAdditionalSafeguards = calculateRisk(riskConfiguration,
                 frequencyWithoutAdditionalSafeguards, impactWithoutAdditionalSafeguards)

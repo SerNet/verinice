@@ -45,17 +45,20 @@ public final class RiskUiUtils {
             CnATreeElement element) {
         Map<String, IHuiControlFactory> overrides = new HashMap<>();
         if (element instanceof BpThreat) {
-            Stream.of(BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
+            Stream.of(BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS)
                     .forEach(property -> overrides.put(property,
                             new DynamicRiskPropertiesControlFactory(element,
                                     RiskConfiguration::getFrequencies)));
-            Stream.of(BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
+            Stream.of(BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS)
                     .forEach(property -> overrides.put(property,
                             new DynamicRiskPropertiesControlFactory(element,
                                     RiskConfiguration::getImpacts)));
-            Stream.of(BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
+            Stream.of(BpThreat.PROP_RISK_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS)
                     .forEach(property -> overrides.put(property,
                             new DynamicRiskPropertiesControlFactory(element,
@@ -72,6 +75,10 @@ public final class RiskUiUtils {
             BpThreat threat = (BpThreat) element;
             huiComposite.addSelectionListener(BpThreat.PROP_RISK_TREATMENT_OPTION,
                     new ResetRiskPropertiesWithAdditionalSafeguards(threat));
+            addRiskComputeListeners(huiComposite, threat,
+                    BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS, BpThreat.PROP_RISK_WITHOUT_SAFEGUARDS);
+
             addRiskComputeListeners(huiComposite, threat,
                     BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,

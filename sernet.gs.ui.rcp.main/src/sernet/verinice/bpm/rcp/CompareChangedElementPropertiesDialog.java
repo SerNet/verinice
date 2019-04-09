@@ -79,19 +79,20 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
     private static final int DIALOG_HEIGHT = 450;
 
     private static final Set<String> PROPERTY_IDS_FREQUENCY_OF_OCCURRENCE = Stream
-            .of(BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
+            .of(BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS)
             .collect(Collectors.toSet());
 
     private static final Set<String> PROPERTY_IDS_EFFECT = Stream
-            .of(BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
+            .of(BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS)
             .collect(Collectors.toSet());
 
-    private static final Set<String> PROPERTY_IDS_RISK_CATEGORY = Stream
-            .of(BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
-                    BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS)
-            .collect(Collectors.toSet());
+    private static final Set<String> PROPERTY_IDS_RISK_CATEGORY = Stream.of(
+            BpThreat.PROP_RISK_WITHOUT_SAFEGUARDS, BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
+            BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS).collect(Collectors.toSet());
 
     private String title;
 

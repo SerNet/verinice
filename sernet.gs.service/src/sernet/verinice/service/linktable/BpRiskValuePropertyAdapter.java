@@ -42,7 +42,9 @@ public class BpRiskValuePropertyAdapter implements IPropertyAdapter {
     private static final Logger log = Logger.getLogger(BpRiskValuePropertyAdapter.class);
 
     public static final Collection<String> riskPropertiesThreat = Collections
-            .unmodifiableList(Arrays.asList(BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
+            .unmodifiableList(Arrays.asList(BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS, BpThreat.PROP_RISK_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS,
@@ -64,16 +66,22 @@ public class BpRiskValuePropertyAdapter implements IPropertyAdapter {
     @Override
     public String getPropertyValue(String propertyId) {
         switch (propertyId) {
+        case BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS:
+            return getLabelForFrequency(threat.getFrequencyWithoutSafeguards(), threat);
         case BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS:
             return getLabelForFrequency(threat.getFrequencyWithoutAdditionalSafeguards(), threat);
-        case BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS:
-            return getLabelForImpact(threat.getImpactWithoutAdditionalSafeguards(), threat);
-        case BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS:
-            return getLabelForRisk(threat.getRiskWithoutAdditionalSafeguards(), threat);
         case BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS:
             return getLabelForFrequency(threat.getFrequencyWithAdditionalSafeguards(), threat);
+        case BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS:
+            return getLabelForImpact(threat.getImpactWithoutSafeguards(), threat);
+        case BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS:
+            return getLabelForImpact(threat.getImpactWithoutAdditionalSafeguards(), threat);
         case BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS:
             return getLabelForImpact(threat.getImpactWithAdditionalSafeguards(), threat);
+        case BpThreat.PROP_RISK_WITHOUT_SAFEGUARDS:
+            return getLabelForRisk(threat.getRiskWithoutSafeguards(), threat);
+        case BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS:
+            return getLabelForRisk(threat.getRiskWithoutAdditionalSafeguards(), threat);
         case BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS:
             return getLabelForRisk(threat.getRiskWithAdditionalSafeguards(), threat);
         default:

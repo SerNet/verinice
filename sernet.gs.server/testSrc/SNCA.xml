@@ -10848,6 +10848,20 @@ Wurden bereits weitere Stellen informiert?
             name="Affects Integrity" tags="Risk" />
         <huiproperty defaultValue="1" id="bp_threat_value_method_availability"
             inputtype="booleanoption" name="Affects Availability" tags="Risk" />
+        <huipropertygroup id="bp_threat_risk_without_safeguards" name="Risk without safeguards" tags="BSI-200-3-without-safeguards">
+            <huiproperty id="bp_threat_risk_without_safeguards_frequency" name="Frequency of occurrence"
+                inputtype="singleoption">
+                <!-- options will be populated dynamically in the application -->
+            </huiproperty>
+            <huiproperty id="bp_threat_risk_without_safeguards_impact" name="Potential extent of damage"
+                inputtype="singleoption">
+                <!-- options will be populated dynamically in the application -->
+            </huiproperty>
+            <huiproperty id="bp_threat_risk_without_safeguards_risk" name="Risk"
+                inputtype="singleoption" editable="false">
+                <!-- options will be populated dynamically in the application -->
+            </huiproperty>
+        </huipropertygroup>
         <huipropertygroup id="bp_threat_risk_without_additional_safeguards" name="Risk without additional safeguards" tags="BSI-200-3">
             <huiproperty id="bp_threat_risk_without_additional_safeguards_frequency" name="Frequency of occurrence"
                 required="true" inputtype="singleoption">

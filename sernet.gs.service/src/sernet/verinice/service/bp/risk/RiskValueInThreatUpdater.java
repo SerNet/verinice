@@ -83,18 +83,21 @@ public class RiskValueInThreatUpdater {
 
     private Collection<BpThreat> removeFrequencies() {
         return removeDeletedValues(updateContext.getDeletedFrequencies(),
+                BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS,
                 BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
                 BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS);
     }
 
     private Collection<BpThreat> removeImpacts() {
         return removeDeletedValues(updateContext.getDeletedImpacts(),
+                BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS,
                 BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
                 BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS);
     }
 
     private Collection<BpThreat> removeRisks() {
         return removeDeletedValues(updateContext.getDeletedRisks(),
+                BpThreat.PROP_RISK_WITHOUT_SAFEGUARDS,
                 BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
                 BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS);
     }
@@ -128,6 +131,7 @@ public class RiskValueInThreatUpdater {
         Set<BpThreat> result = new HashSet<>(threatsFromScope.size());
         for (BpThreat threat : threatsFromScope) {
             boolean valueChanged = false;
+            valueChanged |= checkAndFixRiskWithoutSafeguards(threat);
             valueChanged |= checkAndFixRiskWithoutAdditionalSafeguards(threat);
             valueChanged |= checkAndFixRiskWithAdditionalSafeguards(threat);
             if (valueChanged) {
@@ -136,6 +140,15 @@ public class RiskValueInThreatUpdater {
         }
         return result;
 
+    }
+
+    private boolean checkAndFixRiskWithoutSafeguards(BpThreat threat) {
+        String impactIdInThreat = threat.getImpactWithoutSafeguards();
+        String frequencyIdInThreat = threat.getFrequencyWithoutSafeguards();
+        String riskIdInThreat = threat.getRiskWithoutSafeguards();
+        String propertyId = BpThreat.PROP_RISK_WITHOUT_SAFEGUARDS;
+        return checkAndFixRisk(threat, impactIdInThreat, frequencyIdInThreat, riskIdInThreat,
+                propertyId);
     }
 
     private boolean checkAndFixRiskWithoutAdditionalSafeguards(BpThreat threat) {

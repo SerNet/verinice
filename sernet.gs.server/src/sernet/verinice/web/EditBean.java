@@ -256,7 +256,10 @@ public class EditBean {
 
     private void initRiskComputations(BpThreat threat, Map<String, HuiProperty> key2HuiProperty) {
         RiskValueChangeListener listener = new RiskValueChangeListener(threat, key2HuiProperty);
-
+        key2HuiProperty.get(BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS)
+                .addValueChangeListener(listener);
+        key2HuiProperty.get(BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS)
+                .addValueChangeListener(listener);
         key2HuiProperty.get(BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS)
                 .addValueChangeListener(listener);
         key2HuiProperty.get(BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS)
@@ -301,12 +304,20 @@ public class EditBean {
     private PropertyType adaptTypeIfRiskProperty(PropertyType propertyType) {
         String propertyId = propertyType.getId();
         switch (propertyId) {
+        case BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS:
+            return new OverrideOptionsPropertyType(propertyType, getFrequencyValues());
+        case BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS:
+            return new OverrideOptionsPropertyType(propertyType, getImpactValues());
+        case BpThreat.PROP_RISK_WITHOUT_SAFEGUARDS:
+            return new OverrideOptionsPropertyType(propertyType, getRiskValues());
+
         case BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS:
             return new OverrideOptionsPropertyType(propertyType, getFrequencyValues());
         case BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS:
             return new OverrideOptionsPropertyType(propertyType, getImpactValues());
         case BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS:
             return new OverrideOptionsPropertyType(propertyType, getRiskValues());
+
         case BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS:
             return new OverrideOptionsPropertyType(propertyType, getFrequencyValues());
         case BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS:
@@ -1028,7 +1039,9 @@ public class EditBean {
         public RiskValueChangeListener(BpThreat threat, Map<String, HuiProperty> key2HuiProperty) {
             this.key2HuiProperty = key2HuiProperty;
 
-            Stream.of(BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
+            Stream.of(BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS).forEach(propertyName -> {
@@ -1044,6 +1057,9 @@ public class EditBean {
             String newValue = huiProperty.getValue();
             recordNewValueIfChanged(propertyName, newValue);
             RiskConfiguration riskConfiguration = getRiskConfiguration();
+            String riskWithoutSafeguardsNew = calculateRisk(
+                    BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS, riskConfiguration);
             String riskWithoutAdditionalSafeguardsNew = calculateRisk(
                     BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS, riskConfiguration);
@@ -1051,6 +1067,8 @@ public class EditBean {
                     BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS, riskConfiguration);
 
+            recordNewValueIfChanged(BpThreat.PROP_RISK_WITHOUT_SAFEGUARDS,
+                    riskWithoutSafeguardsNew);
             recordNewValueIfChanged(BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
                     riskWithoutAdditionalSafeguardsNew);
             recordNewValueIfChanged(BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS,
