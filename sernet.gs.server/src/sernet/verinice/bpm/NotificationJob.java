@@ -30,7 +30,6 @@ import java.util.Optional;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
 import org.eclipse.osgi.util.NLS;
@@ -47,8 +46,10 @@ import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import sernet.gs.server.security.DummyAuthentication;
+import sernet.gs.service.StringUtil;
 import sernet.gs.service.VeriniceCharset;
 import sernet.hui.common.VeriniceContext;
+import sernet.hui.common.connect.IPerson;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.bpm.ITask;
@@ -56,10 +57,8 @@ import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bpm.Messages;
 import sernet.verinice.model.bpm.TaskParameter;
-import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.iso27k.PersonIso;
 
 /**
  * Quartz job configured by Spring in veriniceserver-jbpm.xml,
@@ -341,26 +340,13 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
             List<Configuration> configurationList = getConfigurationDao().findByQuery(hql, params);
             for (Configuration configuration : configurationList) {
                 CnATreeElement element = configuration.getPerson();
-                if (element instanceof PersonIso) {
-                    PersonIso person = (PersonIso) element;
-                    model.put(TEMPLATE_NAME, person.getSurname());
-                    String anrede = person.getAnrede();
-                    if (anrede != null && !anrede.isEmpty()) {
-                        model.put(TEMPLATE_ADDRESS, person.getAnrede());
-                    } else {
-                        model.put(TEMPLATE_ADDRESS, DEFAULT_ADDRESS);
-                    }
-                    // handling for bsi persons
-                } else if (element instanceof Person) {
-                    Person person = (Person) element;
-                    String nachname = Optional.ofNullable(person.getEntity())
-                            .map(entity -> entity.getPropertyValue(Person.P_NAME))
-                            .orElse(StringUtils.EMPTY);
-                    model.put(TEMPLATE_NAME, nachname);
-                    String anrede = Optional.ofNullable(person.getEntity())
-                            .map(entity -> entity.getPropertyValue(Person.P_ANREDE))
-                            .orElse(DEFAULT_ADDRESS);
-                    model.put(TEMPLATE_ADDRESS, anrede);
+                if (element instanceof IPerson) {
+                    IPerson person = (IPerson) element;
+                    model.put(TEMPLATE_NAME, person.getLastName());
+                    model.put(TEMPLATE_ADDRESS, Optional.ofNullable(person.getSalutation())
+                            .map(StringUtil::replaceEmptyStringByNull).orElse(DEFAULT_ADDRESS));
+                } else {
+                    log.warn("Failed to handle " + element + ", unsupported type");
                 }
             }
         }

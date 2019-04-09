@@ -13,6 +13,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.RuntimeCommandException;
+import sernet.hui.common.connect.IPerson;
 import sernet.hui.common.connect.Property;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
@@ -25,7 +26,6 @@ import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ImportBsiGroup;
-import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Domain;
@@ -33,7 +33,6 @@ import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
-import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.service.commands.CnATypeMapper;
 import sernet.verinice.service.commands.CreateConfiguration;
 import sernet.verinice.service.commands.SaveConfiguration;
@@ -104,15 +103,17 @@ public class SaveLdapUser extends ChangeLoggingCommand
 
     }
 
-    private static void setUserAndEMail(PersonInfo personInfo, CnATreeElement person,
+    private static void setUserAndEMail(PersonInfo personInfo, CnATreeElement element,
             Configuration configuration) {
         configuration.setUser(personInfo.getLoginName());
         String email = "";
-        if (person != null) {
-            if (person instanceof Person) {
-                email = ((Person) person).getEntity().getPropertyValue(Person.P_EMAIL);
-            } else if (person instanceof PersonIso) {
-                email = ((PersonIso) person).getEmail();
+        if (element != null) {
+            if (element instanceof IPerson) {
+                IPerson person = (IPerson) element;
+                email = person.getEMailAddress();
+            } else {
+                log.warn(
+                        "Failed to retrieve e-mail address from " + element + ", unsupported type");
             }
             if (email != null && !email.isEmpty()) {
                 configuration.setNotificationEmail(email);

@@ -35,13 +35,12 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.VeriniceCharset;
+import sernet.hui.common.connect.IPerson;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bpm.Messages;
 import sernet.verinice.model.bpm.MissingParameterException;
-import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.iso27k.PersonIso;
 
 /**
  *
@@ -192,15 +191,10 @@ public class RemindService implements IRemindService {
                 CnATreeElement element = configuration.getPerson();
                 String anrede = null;
                 String name = null;
-                if (element instanceof PersonIso) {
-                    PersonIso person = (PersonIso) element;
-                    name = person.getSurname();
-                    anrede = person.getAnrede();
-                }
-                if (element instanceof Person) {
-                    Person person = (Person) element;
-                    name = person.getEntity().getSimpleValue(P_NAME);
-                    anrede = person.getEntity().getSimpleValue(P_ANREDE);
+                if (element instanceof IPerson) {
+                    IPerson person = (IPerson) element;
+                    name = person.getLastName();
+                    anrede = person.getSalutation();
                 }
                 if (anrede != null && !anrede.isEmpty()) {
                     model.put(TEMPLATE_ADDRESS, anrede);

@@ -33,7 +33,6 @@ import java.util.concurrent.ThreadFactory;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -44,15 +43,15 @@ import org.threeten.bp.LocalDate;
 import org.threeten.bp.format.DateTimeFormatter;
 
 import sernet.gs.server.security.DummyAuthenticationRunnable;
+import sernet.gs.service.StringUtil;
 import sernet.gs.service.VeriniceCharset;
+import sernet.hui.common.connect.IPerson;
 import sernet.verinice.bpm.NotificationJob;
 import sernet.verinice.concurrency.CustomNamedThreadGroupFactory;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
-import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.model.licensemanagement.LicenseManagementEntry;
 import sernet.verinice.model.licensemanagement.LicenseManagementException;
 
@@ -253,43 +252,14 @@ public class LicenseRemover {
          */
         private void prepareEmailViaConfiguration(Configuration configuration) {
             CnATreeElement element = configuration.getPerson();
-            if (element instanceof PersonIso) {
-                preparePersonIso(element);
-                // handling for bsi persons
-            } else if (element instanceof Person) {
-                prepareGSPerson(element);
-            }
-        }
-
-        /**
-         * Extracts properties for sending email from a ITGS-Person
-         * {@link Person}
-         */
-        private void prepareGSPerson(CnATreeElement element) {
-            Person person = (Person) element;
-            String nachname = Optional.ofNullable(person.getEntity())
-                    .map(entity -> entity.getPropertyValue(Person.P_NAME))
-                    .orElse(StringUtils.EMPTY);
-            emailParam.put(NotificationJob.TEMPLATE_NAME, nachname);
-            String anrede = Optional.ofNullable(person.getEntity())
-                    .map(entity -> entity.getRawPropertyValue(Person.P_ANREDE))
-                    .orElse(DEFAULT_ADDRESS);
-            emailParam.put(NotificationJob.TEMPLATE_ADDRESS, anrede);
-        }
-
-        /**
-         * Extracts properties for sending email from a {@link PersonIso}
-         * {@link CnATreeElement}
-         * 
-         */
-        private void preparePersonIso(CnATreeElement element) {
-            PersonIso person = (PersonIso) element;
-            emailParam.put(NotificationJob.TEMPLATE_NAME, person.getSurname());
-            String anrede = person.getAnrede();
-            if (anrede != null && !anrede.isEmpty()) {
-                emailParam.put(NotificationJob.TEMPLATE_ADDRESS, person.getAnrede());
+            if (element instanceof IPerson) {
+                IPerson person = (IPerson) element;
+                emailParam.put(NotificationJob.TEMPLATE_NAME, person.getLastName());
+                emailParam.put(NotificationJob.TEMPLATE_ADDRESS,
+                        Optional.ofNullable(person.getSalutation())
+                                .map(StringUtil::replaceEmptyStringByNull).orElse(DEFAULT_ADDRESS));
             } else {
-                emailParam.put(NotificationJob.TEMPLATE_ADDRESS, DEFAULT_ADDRESS);
+                LOG.warn("Failed to handle " + element + ", unsupported type");
             }
         }
 
