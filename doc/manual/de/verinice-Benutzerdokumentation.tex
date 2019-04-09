@@ -17,28 +17,41 @@
 \usepackage{enumitem}
 \newcommand*{\descrfont}[1]{\textit{#1 -}}
 
-%define xml for code examples
+%define languages for code examples
 \usepackage{listings}
 \definecolor{lightgray}{rgb}{0.97,0.97,0.97}
 \lstdefinelanguage{XML}
 {
-  basicstyle=\ttfamily\color{gray}\bfseries\scriptsize,
-  backgroundcolor=\color{lightgray}, 
-  captionpos=b,
-  frame=single,	
+  frame=single,
   morestring=[b]",
   morestring=[b]{"}{"},
   moredelim=[s][\color{orange}]{>}{<},
   morecomment=[s]{<?}{?>},
   morecomment=[s]{<!--}{-->},
-  stringstyle=\color{orange},
+  morekeywords={xmlns,version,type,soapenv,sync,data,map},
+}
+\lstdefinelanguage{Plain}
+{
+  numbers=none,
+  keywords={}
+  keywordstyle=\color{black},
+  identifierstyle=\color{black},
+  commentstyle=\color{black},
+  stringstyle=\color{black},
+}
+\lstset{
+  backgroundcolor=\color{lightgray},
+  basicstyle=\ttfamily\color{black}\bfseries\small,
+  captionpos=b,
   identifierstyle=\color{blue},
   keywordstyle=\color{cyan},
+  language=XML,
   numbers=left,
+  numbersep=5pt,
   numberstyle=\tiny,
   showstringspaces=false,
-  numbersep=5pt,
-  morekeywords={xmlns,version,type,soapenv,sync,data,map}
+  stringstyle=\color{orange},
+  tabsize=2,
 }
 
 \newcommand{\zB}{\mbox{z.\,B.}\xspace}
@@ -47,7 +60,7 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
-\newcommand*{\vnversion}{1.17}
+\newcommand*{\vnversion}{1.18}
 \title{verinice Benutzerhandbuch \vnversion{}}
 \author{SerNet GmbH}
 
@@ -594,8 +607,7 @@ Verfügung. Die Betätigung dieses Buttons löst ein Zurücksetzen eines
 internen Speichers (Cache) aus,
 der die bei der Reportgenerierung erzeugten Zwischenergebnisse zur
 Wiederverwendung vorhält. Dies hat zur Folge, dass bei Generierung von
-mehreren Reports in Reihe nicht jede abzubildende Information aus der Datenbank geladen und
-berechnet werden muss, sondern unter Umständen bereits im
+mehreren Reports in Reihe nicht jede abzubildende Information aus der Datenbank geladen und berechnet werden muss, sondern unter Umständen bereits im
 Zwischenspeicher vorliegt, das beschleunigt die Generierung des Reports. Ist seit
 dem letzten Report allerdings der Datenbestand verändert worden, so ist
 es notwendig den Reportcache zu leeren um eine Abbildung der aktuellen
@@ -613,7 +625,7 @@ Weitere Informationen zum Report-Cache finden Sie im Kapitel {\em \ref{Reports} 
 Wenn Sie Reports für die BSI-Grundschutz-Perspektive benötigen, lesen Sie im Unterkapitel {\em \ref {Reports erstellen} \nameref{Reports erstellen}} des Kapitels
 {\em \ref{Arbeiten in der Grundschutz-Perspektive} \nameref{Arbeiten in der Grundschutz-Perspektive}}, welche Ausgaben möglich sind.
 \newline\\
-Wenn Sie Reports für die ISM-Perspektive benötigen, lesen Sie im Unterkapitel {\em \ref{Reports erstellen} \nameref{Reports erstellen}} des Kapitels
+Wenn Sie Reports für die ISM-Perspektive benötigen, lesen Sie im Unterkapitel {\em \ref{ISM-Reports erstellen} \nameref{ISM-Reports erstellen}} des Kapitels
 {\em \ref{Arbeiten in der ISM-Perspektive} \nameref{Arbeiten in der ISM-Perspektive}}, welche Ausgaben möglich sind.
 \newline\\
 Wenn Sie Reports für die VDA-Security-Assessment-Perspektive benötigen, lesen Sie im Unterkapitel {\em \ref{Report erstellen} \nameref{Report erstellen}} des
@@ -1068,48 +1080,69 @@ so vorzunehmen, dass verinice die Updates nicht aus dem Internet bezieht, sonder
 
 \section{Sprachumschaltung}
 \label{sec:sprachumschaltung}
-Die Einstellungen zur Sprachumschaltung finden Sie nicht im Einstellungsmenü der Applikation. Die Umstellung der Sprache wird an einer anderen
-Stelle konfiguriert. Lesen Sie in den nun folgenden Unterabschnitten, wie Sie eine Sprachumschaltung bewerkstelligen können.
+Wenn keine andere Sprache konfiguriert wurde, verwendet verinice die Sprache des Betriebssystems.
+Wenn Sie eine andere Sprache verwendet wollen, müssen Sie diese Sprache in Konfigurationsdateien auswählen. Die Spracheinstellungen finden Sie \textit{nicht} im Einstellungsmenü von verinice.
+
+Verinice kann in diesen Sprachen verwendet werden:
+\begin{itemize}
+ \item Deutsch
+ \item Englisch
+ \item Italienisch
+ \item Tschechisch
+\end{itemize}
 
 \subsection{Im Standalone-Modus}
-verinice verwendet standardmäßig die Sprache des Betriebssystems. Ein manuelles Festlegen der Sprache ist jedoch möglich.
+Wenn Sie verinice im \textbf{Standalone-Modus} verwenden und eine andere Sprache einstellen wollen, bearbeiten Sie die Konfigurationsdatei:
 \newline\\
-Wenn verinice im \textbf{Standalone-Modus} verwendet wird, muss die Konfiguration nur an einer Stelle angepasst werden: in der
-Konfigurationsdatei \newline \textbf{\textless VERINICE\_HOME\textgreater/verinice.ini}:
-\newline\\
-\colorbox{lightgray}{\parbox{\textwidth}{
-{\tt -Dosgi.nl=en}
-}}
-\newline\\
-Wenn verinice wieder in deutscher Sprache benutzt werden soll, muss Folgendes eingetragen sein:
-\newline\\
-\colorbox{lightgray}{\parbox{\textwidth}{
-{\tt -Dosgi.nl=de}
-}}
-\newline\\
-Die Applikation muss beendet und neu gestartet werden, bevor diese Änderungen aktiv werden.
+\textbf{\textless VERINICE\_HOME\textgreater/verinice.ini}
+
+Um eine andere Sprache einzustellen, fügen Sie am Ende der Datei eine neue Zeile
+entsprechend der gewünschten Sprache ein.
+
+\begin{lstlisting}[language=Plain, caption={verinice.ini Englisch}]
+-Dosgi.nl=en
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={verinice.ini Deutsch}]
+-Dosgi.nl=de
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={verinice.ini Tschechisch}]
+-Dosgi.nl=cs
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={verinice.ini Italienisch}]
+-Dosgi.nl=it
+\end{lstlisting}
+
+Die Applikation muss beendet und neu gestartet werden, damit diese Änderungen aktiv werden.
 
 \subsection{Im Servermodus}
-Auf dem verinice.\textsc{PRO} Server kann als Sprache {\em Englisch} oder {\em Deutsch} eingestellt werden. Dazu ist die Datei
-\textbf{/usr/share/tomcat6/conf/tomcat6.conf} zu bearbeiten. Lassen Sie diese Änderung durch ihren Systemadministrator vornehmen.
+Wenn Sie verinice im Servermodus betreiben, muss auf dem Client die gleiche Datei wir im Standalone-Modus konfiguriert werden. Zusätzlich muss die gewünschte Sprache auf dem verinice.\textsc{PRO} Server konfiguriert werden. Auf dem Client und auf dem Server muss die gleiche Sprache ausgewählt werden. Die Änderung auf dem Server muss von einem Systemadministrator durchgeführt werden. Auf dem Server muss abhängig vom Betriebssystem folgende Datei geändert werden:
+\newline\\ 
+RHEL oder CentOS 6:
+\textbf{/usr/share/tomcat6/conf/tomcat6.conf} 
 \newline\\
-Stellen Sie folgendes ein, um die englische Sprache zu erhalten:
+RHEL oder CentOS 7:
+\textbf{/usr/share/tomcat/conf/tomcat.conf} 
 \newline\\
-\colorbox{lightgray}{\parbox{\textwidth}
-{\tt JAVA\_OPTS=\dq-Xms512M -Xmx16G -Duser.language=en -Duser.region=EN\dq}}
-\newline\\
-Stellen Sie folgendes ein, um die deutsche Sprache zu erhalten:
-\newline\\
-\colorbox{lightgray}{\parbox{\textwidth}
-{\tt JAVA\_OPTS=\dq-Xms512M -Xmx16G -Duser.language=de -Duser.region=DE\dq}}
-\newline\\
-Unabhängig davon kann jeder Client individuell auf Deutsch oder Englisch umgestellt werden.
-Die Benutzeroberfläche auf dem Client wird in der lokal eingestellten Sprache angezeigt, die Einstellung auf
-dem Server hat z.B. Auswirkungen darauf, in welcher Sprache neue Datenbankobjekte angelegt werden. (z.B. Mitarbeiter mit
-dem Titel ``Neue Person'' oder ``New Person'').
-\newline\\
-Für den praktischen Betrieb empfiehlt es sich, vorab eine Sprache für die einzugebenden Daten vorzugeben und diese auch auf
-dem Server verbindlich einzustellen.
+Stellen Sie folgendes ein, um die gewünschte Sprache zu erhalten:
+
+\begin{lstlisting}[language=Plain, caption={tomcat.conf Englisch}]
+JAVA_OPTS="-Duser.language=en -Duser.region=EN"
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={tomcat.conf Deutsch}]
+JAVA_OPTS="-Duser.language=de -Duser.region=DE"
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={tomcat.conf Tschechisch}]
+JAVA_OPTS="-Duser.language=cs -Duser.region=CS"
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={tomcat.conf Italienisch}]
+JAVA_OPTS="-Duser.language=it -Duser.region=IT"
+\end{lstlisting}
 
 \section{Log-Datei}
 \label{sec:log-datei}
@@ -2520,14 +2553,13 @@ Eintrittswahrscheinlichkeit eines Szenarios und somit das Risiko für alle Asset
 die von diesem Szenario betroffen sind. In der Anzeige des Restrisikos wird
 zusätzlich zwischen implementierten und geplanten Controls unterschieden.
 
-\section{Reports erstellen}
+\section{ISM-Reports erstellen}
+\label{ISM-Reports erstellen}
 
 Für die eingegebenen Daten in der ISM-Perspektive stehen folgende Reports als
 zusammengefasste Dokumentationsmöglichkeiten zur Verfügung:
 
 \begin{itemize}
-\item \textbf{Risikobewertung (de)}
-\item \textbf{Risikobehandlungsplan}
 \item \textbf{Erklärung zur Anwendbarkeit}
 \item \textbf{Export: Aufgaben}
 \item \textbf{Sofortmeldung (VV BSIG)}
@@ -2646,13 +2678,12 @@ Assessment geändert werden kann und sollte. Sie können Ihre Eingaben jederzeit
 Die Wurzelobjekte sind nun aufzuklappen, bis die einzelnen Control-Kategorien zu sehen sind. Das sind z.B. {\em Security Policy,
 Organisation of Information, Assessment Management} usw. Sie klappen die darunter liegenden Controls auf (durch Zahlen wie 5.1 und 6.1 usw. gekennzeichnet).
 Es erscheint im Editor ein Formularfenster, das Ihnen ermöglicht, Daten zu diesem Control einzutragen. Ein \textbf{Reifegrad} ist auszuwählen,
-der der Anforderung entspricht. Dazu muss die Drop-Down-Box angeklickt werden. Anschließend kann ein Freitext im Bereich \textbf{Öffentlicher Kommentar}
-eingetragen werden. Dieser Kommentar wird später im Report ausgegeben. Falls nicht gewünscht wird, dass Kommentare im Report erscheinen,
+der der Anforderung entspricht. Sie sollten außerdem auswählen, ob der \textbf{Datenschutz erfüllt} ist. Anschließend kann ein Freitext im Bereich \textbf{Öffentlicher Kommentar} eingetragen werden. Dieser Kommentar wird später im Report ausgegeben. Falls nicht gewünscht wird, dass Kommentare im Report erscheinen,
 so sind sie als Text im Feld \textbf{Privater Kommentar} einzutragen.
 \newline\\
 Beim Abarbeiten der Controls, sieht man den Fortschritt (unten links) im Fenster/View mit dem Namen \textbf{ISA Fortschritt}.
 Dort wird die absolute Anzahl der bearbeiteten und unbearbeiteten Controls angezeigt. Diese Übersicht zeigt \textbf{nicht} die Reifegrad-Qualität des ISMS an.
-Der grüne Balken zeigt die Anzahl von unbearbeiteten Controls an. Der rote Balken zeigt die bearbeiteten Controls an. Damit ein Control als beantwortet markiert werden kann,
+Der rote Balken zeigt die Anzahl von unbearbeiteten Controls an. Der grüne Balken zeigt die bearbeiteten Controls an. Damit ein Control als beantwortet markiert werden kann,
 muss der Reifegradstatus eines Controls verändert werden. Das Forschritts-Balkendiagramm kann in der Darstellung angepasst, ausgedruckt oder in einem Bildformat gespeichert werden.
 Um die Darstellungs-Eigenschaften und Optionen aufzurufen, muss das Diagramm mit der rechten Maustaste angeklickt werden.
 
@@ -3389,8 +3420,7 @@ Die voreingestellte Zeichencodierung für importierte Dateien ist \textit{UTF-8}
 Unter dem Punkt \textbf{Operation} ist das geplante Vorhaben zu konkretisieren. Wenn mit dem Import der CSV-Datei ein neues Element erzeugt
 werden und Aktualisierungen berücksichtigt werden sollen, müssen Sie die Funktionen \textbf{einfügen} und \textbf{aktualisieren} auswählen.
 \newline\\
-Anschließend kann aus der Übersicht der verinice-Element-Typen der geeignete Objekttyp zur importierten Datei zugeordnet werden. Wählen
-Sie diesen mit der linken Maustaste aus.
+Anschließend kann aus der Übersicht der verinice-Element-Typen der geeignete Typ für die importierte Datei ausgewählt werden. In der Liste steht der Name des Objekttyps. In Klammern wird die Abkürzung des Standards, zu der der Typ gehört und die ID des Typs angezeigt. Wählen Sie mit der linken Maustaste den gewünschten Typ aus.
 \newline\\
 Mit dem \textbf{Weiter}-Button gelangen Sie zum letzten Schritt des CSV-Importes. An dieser Stelle müssen die Spalten der CSV-Tabelle den verinice
 Attributen zugeordnet werden. verinice ordnet die Attribute automatisch zu, wenn die Feldbezeichnungen in der aktuell verwendeten Sprache identisch

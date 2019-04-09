@@ -54,7 +54,8 @@ public class ModelModulesTask extends ModelCopyTask {
         if (element instanceof BpRequirement) {
             return ((BpRequirement) element).getIdentifier();
         }
-        return null;
+        throw new IllegalArgumentException("Cannot handle " + element);
+
     }
 
     @Override

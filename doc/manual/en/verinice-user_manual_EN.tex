@@ -16,35 +16,48 @@
 \usepackage{enumitem}
 \newcommand*{\descrfont}[1]{\textit{#1 -}}
 
-%define xml for code examples
+%define languages for code examples
 \usepackage{listings}
 \definecolor{lightgray}{rgb}{0.97,0.97,0.97}
 \lstdefinelanguage{XML}
 {
-  basicstyle=\ttfamily\color{gray}\bfseries\scriptsize,
-  backgroundcolor=\color{lightgray}, 
-  captionpos=b,
-  frame=single,	
+  frame=single,
   morestring=[b]",
   morestring=[b]{"}{"},
   moredelim=[s][\color{orange}]{>}{<},
   morecomment=[s]{<?}{?>},
   morecomment=[s]{<!--}{-->},
-  stringstyle=\color{orange},
+  morekeywords={xmlns,version,type,soapenv,sync,data,map},
+}
+\lstdefinelanguage{Plain}
+{
+  numbers=none,
+  keywords={}
+  keywordstyle=\color{black},
+  identifierstyle=\color{black},
+  commentstyle=\color{black},
+  stringstyle=\color{black},
+}
+\lstset{
+  backgroundcolor=\color{lightgray},
+  basicstyle=\ttfamily\color{black}\bfseries\small,
+  captionpos=b,
   identifierstyle=\color{blue},
   keywordstyle=\color{cyan},
+  language=XML,
   numbers=left,
+  numbersep=5pt,
   numberstyle=\tiny,
   showstringspaces=false,
-  numbersep=5pt,
-  morekeywords={xmlns,version,type,soapenv,sync,data,map}
+  stringstyle=\color{orange},
+  tabsize=2,
 }
 
 
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
-\newcommand*{\vnversion}{1.17}
+\newcommand*{\vnversion}{1.18}
 \title{verinice User Guide \vnversion{}}
 \author{SerNet GmbH}
 
@@ -981,53 +994,67 @@ verinice.\textsc{PRO} server.}
 \section{Changing the language}
 \label{sec:changing-language}
 
-The settings for changing language are not available in the
-application's settings menu. The language settings are configured
-elsewhere. Read in the following subsections how you can change the
-language setting.
+If no other language has been configured, verinice uses the language of the operating system. If you want to use a different language, you select this language in configuration files. The language settings cannot be found in the verinice settings menu.
+
+Verinice can be used in these languages:
+\begin{itemize}
+ \item Czech
+ \item English
+ \item German
+ \item Italian
+\end{itemize}
 
 \subsection{In standalone mode}
-By default verinice uses the operating system language. However, you can specify the language manually.
-\newline\\
-If you are using verinice in \textbf{standalone mode}, you only need to modify the configuration in one place:
-add in the
-\newline \textbf{\textless VERINICE\_HOME\textgreater/verinice.ini} configuration file:
-\newline\\
-\colorbox{lightgray}{\parbox{\textwidth}{
-{\tt -Dosgi.nl=en}
-}}
-\newline\\
-To use verinice in German again, enter the following:
-\newline\\
-\colorbox{lightgray}{\parbox{\textwidth}{
-{\tt -Dosgi.nl=de}
-}}
-\newline\\
+If you are using verinice in standalone mode and want to set a different language, edit the configuration file:
+\newline 
+\textbf{\textless VERINICE\_HOME\textgreater/verinice.ini}
+
+To set a different language, add a new line at the end of the file.
+according to the desired language:
+
+\begin{lstlisting}[language=Plain, caption={verinice.ini English}]
+-Dosgi.nl=en
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={verinice.ini German}]
+-Dosgi.nl=de
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={verinice.ini Czech}]
+-Dosgi.nl=cs
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={verinice.ini Italian}]
+-Dosgi.nl=it
+\end{lstlisting}
+
 You need to stop and restart the application to apply these changes.
 
-\subsection{In multi-user mode}
-You can configure {\em English} or {\em German} as the language on the verinice.\textsc{PRO} server.
-To do so, edit the \textbf{/usr/share/tomcat6/conf/tomcat6.conf} file. These changes need to be made by the system administrator.
+\subsection{In server mode}
+
+If you run verinice in server mode, the same file must be configured on the client as in standalone mode. In addition, the desired language must be configured on the verinice.\textsc{PRO} server. The same language must be selected on the client and on the server. The change on the server must be made by a system administrator. The following file must be changed depending on the operating system on the server.\newline\\ 
+RHEL or CentOS 6:
+\textbf{/usr/share/tomcat6/conf/tomcat6.conf} \newline\\
+RHEL or CentOS 7:
+\textbf{/usr/share/tomcat/conf/tomcat.conf} 
 \newline\\
-Set the following for English:
-\newline\\
-\colorbox{lightgray}{\parbox{\textwidth}{
-{\tt JAVA\_OPTS="-Xms512M -Xmx16G -Duser.language=en -Duser.region=EN"}
-}}
-\newline\\
-Set the following for German:
-\newline\\
-\colorbox{lightgray}{\parbox{\textwidth}{
-{\tt JAVA\_OPTS="-Xms512M -Xmx16g -Duser.language=de -Duser.region=DE"}
-}}
-\newline\\
-Regardless of this, you can configure each client individually for English or German.
-The user interface on the client is displayed in the local language. The setting on the server affects,
-for example, the language in which new database objects are created (e.g., employees, with the title
-``Neue Person'' or ``New Person'').
-\newline
-In everyday use, it makes sense to configure a language for the data to be input, and configure this
-as a mandatory setting on the server.
+Set the following to configure the desired language:
+
+\begin{lstlisting}[language=Plain, caption={tomcat.conf English}]
+JAVA_OPTS="-Duser.language=en -Duser.region=EN"
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={tomcat.conf German}]
+JAVA_OPTS="-Duser.language=de -Duser.region=DE"
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={tomcat.conf Czech}]
+JAVA_OPTS="-Duser.language=cs -Duser.region=CS"
+\end{lstlisting}
+
+\begin{lstlisting}[language=Plain, caption={tomcat.conf Italian}]
+JAVA_OPTS="-Duser.language=it -Duser.region=IT"
+\end{lstlisting}
 
 \section{Log File}
 \label{sec:log-file}
@@ -2497,8 +2524,6 @@ The following reports are available as summarized documentation options for the
 data entered in the ISM perspective:
 
 \begin{itemize}
-\item \textbf{Risk assessment}
-\item \textbf{Risk treatment}
 \item \textbf{Statement of applicability}
 \item \textbf{ISM: Export: Tasks}
 \item \textbf{ISM: Immediately Announcement(VV BSIG)}
@@ -2608,13 +2633,13 @@ or press \textbf{Ctrl+S}.
 \section{Performing a security assessment}
 Now expand the root objects until you can see the individual control categories. They include {\em security policy, organization of information security, asset management,}
 etc. Then expand the subordinate controls (which are enumerated by figures such as 5.1 and 6.1, etc.). A form appears where you can enter data for the control. Select a
-\textbf{maturity level} that matches the requirement. To do so, click on the drop-down box. You can then enter a free text in the
+\textbf{maturity level} that matches the requirement. You should also choose whether or not the \textbf{data protection is fulfilled}. You can then enter a free text in the
 \textbf{Public comment} box. This comment will be output later on in the report. If you do want the comment to be published in the report, enter it in the
 \textbf{Private comment} box.
 \newline\\
 As you work through the controls, you can see your progress (bottom left) in the window titled \textbf{ISA progress}.
 This shows you the numbers of processed and unprocessed controls. This overview does not show you the maturity level of the ISMS.
-The green bar inidcates the number of unanswered contorls. The red bar indicates the answered controls. So that a Control can be marked as answered,
+The red bar inidcates the number of unanswered contorls. The green bar indicates the answered controls. So that a Control can be marked as answered,
 the maturity level status of a controls should be changed. The progress bar chart can be customized in the representation, be printed out or be saved as a picture format.
 To use representation properties and options, the bar chart with the right mouse key should be clicked.
 
@@ -3329,7 +3354,7 @@ depends on the separator used in the CSV file. The default character encoding fo
 Now configure the details of the project below Operations. If you want the CSV file import to create a new
 element and take updates into account, select \textbf{Insert} and \textbf{Update}.
 \newline\\
-You can then select the type appropriate for the imported file from the overview of verinice element types. Select it with the left mouse button.
+The suitable type for the imported file can then be selected from the overview of verinice element types. The list contains the name of the object type. The abbreviation of the standard to which the type belongs and the ID of the type are displayed in brackets. Use the left mouse button to select the desired type.
 \newline\\
 Pressing \textbf{Next} takes you to the last step of the CSV import. At this point you need to map the
 columns in the CSV table with the corresponding verinice attributes. verinice automatically assigns the

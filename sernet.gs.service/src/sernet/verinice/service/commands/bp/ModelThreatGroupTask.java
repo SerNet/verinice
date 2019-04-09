@@ -77,7 +77,8 @@ public class ModelThreatGroupTask extends ModelCopyTask {
         if (element instanceof BpThreatGroup) {
             return ((BpThreatGroup) element).getTitle();
         }
-        return null;
+        throw new IllegalArgumentException("Cannot handle " + element);
+
     }
 
     @Override
