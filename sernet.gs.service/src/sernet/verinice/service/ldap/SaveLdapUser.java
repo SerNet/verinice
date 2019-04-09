@@ -2,7 +2,7 @@ package sernet.verinice.service.ldap;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +56,7 @@ public class SaveLdapUser extends ChangeLoggingCommand
 
     private CnATreeElement importRootObject;
 
-    private Map<Domain, CnATreeElement> containerMap = new HashMap<>(3);
+    private Map<Domain, CnATreeElement> containerMap = new EnumMap<>(Domain.class);
 
     public SaveLdapUser() {
         super();
@@ -275,7 +275,9 @@ public class SaveLdapUser extends ChangeLoggingCommand
         DetachedCriteria criteria = DetachedCriteria.forClass(Property.class);
         criteria.add(Restrictions.eq("propertyType", Configuration.PROP_USERNAME));
         criteria.add(Restrictions.like("propertyValue", username));
+        @SuppressWarnings("unchecked")
         IBaseDao<Property, Integer> dao = getDaoFactory().getDAO(Property.TYPE_ID);
+        @SuppressWarnings("unchecked")
         List<Property> resultList = dao.findByCriteria(criteria);
 
         if (resultList == null || resultList.isEmpty()) {

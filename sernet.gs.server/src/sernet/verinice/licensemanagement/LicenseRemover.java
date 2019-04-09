@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -32,6 +33,7 @@ import java.util.concurrent.ThreadFactory;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -106,6 +108,7 @@ public class LicenseRemover {
          * check for all of them
          */
         private void removeLicenses() {
+            @SuppressWarnings("unchecked")
             List<Configuration> confs = (List) configurationDao.findByQuery(HQL, new Object[] {});
             for (Configuration configuration : confs) {
                 checkConfigurationForLicenseRemoval(configuration);
@@ -127,9 +130,6 @@ public class LicenseRemover {
         /**
          * Triggers removal check for a single pair of a given licenseId and
          * {@link Configuration}
-         * 
-         * @param configuration
-         * @param licenseId
          */
         private void checkLicenseIdForRemoval(Configuration configuration, String licenseId) {
             LicenseManagementEntry entry = null;
@@ -147,10 +147,6 @@ public class LicenseRemover {
         /**
          * Checks if a {@link LicenseManagementEntry} is invalid by time and
          * triggers removal of license and sending of email, if needed
-         * 
-         * @param configuration
-         * @param licenseId
-         * @param entry
          */
         private void validateByDate(Configuration configuration, String licenseId,
                 LicenseManagementEntry entry) {
@@ -167,11 +163,6 @@ public class LicenseRemover {
         /**
          * Removes given licenseId from given Configuration and sends email to
          * user, if configured
-         * 
-         * @param configuration
-         * @param licenseId
-         * @param entry
-         * @param validUntil
          */
         private void removeLicenseFromConfigurationAndSendEmail(Configuration configuration,
                 String licenseId, LicenseManagementEntry entry, LocalDate validUntil) {
@@ -186,13 +177,6 @@ public class LicenseRemover {
             }
         }
 
-        /**
-         * @param configuration
-         * @param licenseId
-         * @param entry
-         * @param validUntil
-         * @return
-         */
         private MimeMessagePreparator prepareEmail(Configuration configuration, String licenseId,
                 LicenseManagementEntry entry, LocalDate validUntil) {
             loadPerson(configuration.getDbId());
@@ -223,10 +207,6 @@ public class LicenseRemover {
         /**
          * Sets the properties for sending an email on basis of a
          * {@link MimeMessageHelper}
-         * 
-         * @param subject
-         * @param message
-         * @throws MessagingException
          */
         private void setMessageProperties(final String subject, MimeMessageHelper message)
                 throws MessagingException {
@@ -246,6 +226,73 @@ public class LicenseRemover {
                 message.setBcc(getEmailBcc());
             }
         }
+
+        private void loadPerson(Integer dbId) {
+            if (dbId != null) {
+                String hql = "from Configuration as conf " + //$NON-NLS-1$
+                        "inner join fetch conf.person as person " + //$NON-NLS-1$
+                        "inner join fetch person.entity as entity " + //$NON-NLS-1$
+                        "inner join fetch entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
+                        "inner join fetch propertyList.properties as props " + //$NON-NLS-1$
+                        "where conf.dbId = ? "; //$NON-NLS-1$
+
+                Object[] params = new Object[] { dbId };
+                @SuppressWarnings("unchecked")
+                List<Configuration> configurationList = getConfigurationDao().findByQuery(hql,
+                        params);
+                for (Configuration configuration : configurationList) {
+                    prepareEmailViaConfiguration(configuration);
+                }
+            }
+        }
+
+        /**
+         * Retrieves person-Object of {@link Configuration} and extracts values
+         * needed for sending mail out of person object to set it to global
+         * attribute emailParam
+         */
+        private void prepareEmailViaConfiguration(Configuration configuration) {
+            CnATreeElement element = configuration.getPerson();
+            if (element instanceof PersonIso) {
+                preparePersonIso(element);
+                // handling for bsi persons
+            } else if (element instanceof Person) {
+                prepareGSPerson(element);
+            }
+        }
+
+        /**
+         * Extracts properties for sending email from a ITGS-Person
+         * {@link Person}
+         */
+        private void prepareGSPerson(CnATreeElement element) {
+            Person person = (Person) element;
+            String nachname = Optional.ofNullable(person.getEntity())
+                    .map(entity -> entity.getPropertyValue(Person.P_NAME))
+                    .orElse(StringUtils.EMPTY);
+            emailParam.put(NotificationJob.TEMPLATE_NAME, nachname);
+            String anrede = Optional.ofNullable(person.getEntity())
+                    .map(entity -> entity.getRawPropertyValue(Person.P_ANREDE))
+                    .orElse(DEFAULT_ADDRESS);
+            emailParam.put(NotificationJob.TEMPLATE_ADDRESS, anrede);
+        }
+
+        /**
+         * Extracts properties for sending email from a {@link PersonIso}
+         * {@link CnATreeElement}
+         * 
+         */
+        private void preparePersonIso(CnATreeElement element) {
+            PersonIso person = (PersonIso) element;
+            emailParam.put(NotificationJob.TEMPLATE_NAME, person.getSurname());
+            String anrede = person.getAnrede();
+            if (anrede != null && !anrede.isEmpty()) {
+                emailParam.put(NotificationJob.TEMPLATE_ADDRESS, person.getAnrede());
+            } else {
+                emailParam.put(NotificationJob.TEMPLATE_ADDRESS, DEFAULT_ADDRESS);
+            }
+        }
+
     }
 
     public void runNonBlocking() {
@@ -284,214 +331,74 @@ public class LicenseRemover {
         return path;
     }
 
-    /**
-     * @param dbId
-     * @param result
-     */
-    private void loadPerson(Integer dbId) {
-        if (dbId != null) {
-            String hql = "from Configuration as conf " + //$NON-NLS-1$
-                    "inner join fetch conf.person as person " + //$NON-NLS-1$
-                    "inner join fetch person.entity as entity " + //$NON-NLS-1$
-                    "inner join fetch entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
-                    "inner join fetch propertyList.properties as props " + //$NON-NLS-1$
-                    "where conf.dbId = ? "; //$NON-NLS-1$
-
-            Object[] params = new Object[] { dbId };
-            List<Configuration> configurationList = getConfigurationDao().findByQuery(hql, params);
-            for (Configuration configuration : configurationList) {
-                prepareEmailViaConfiguration(configuration);
-            }
-        }
-
-    }
-
-    /**
-     * Retrieves person-Object of {@link Configuration} and extracts values
-     * needed for sending mail out of person object to set it to global
-     * attribute emailParam
-     * 
-     * @param configuration
-     */
-    private void prepareEmailViaConfiguration(Configuration configuration) {
-        CnATreeElement element = configuration.getPerson();
-        if (element instanceof PersonIso) {
-            preparePersonIso(element);
-            // handling for bsi persons
-        } else if (element instanceof Person) {
-            prepareGSPerson(element);
-        }
-    }
-
-    /**
-     * Extracts properties for sending email from a ITGS-Person {@link Person}
-     * 
-     * @param element
-     */
-    private void prepareGSPerson(CnATreeElement element) {
-        Person person = (Person) element;
-        String nachname = person.getEntity() != null
-                ? (person.getEntity().getSimpleValue("nachname") != null
-                        ? person.getEntity().getSimpleValue("nachname")
-                        : "Kein Name")
-                : "Kein Name";
-        emailParam.put(NotificationJob.TEMPLATE_NAME, nachname);
-        String anrede = person.getEntity() != null
-                ? (person.getEntity().getSimpleValue("person_anrede") != null
-                        ? person.getEntity().getSimpleValue("person_anrede")
-                        : DEFAULT_ADDRESS)
-                : DEFAULT_ADDRESS;
-        emailParam.put(NotificationJob.TEMPLATE_ADDRESS, anrede);
-    }
-
-    /**
-     * Extracts properties for sending email from a {@link PersonIso}
-     * {@link CnATreeElement}
-     * 
-     * @param element
-     */
-    private void preparePersonIso(CnATreeElement element) {
-        PersonIso person = (PersonIso) element;
-        emailParam.put(NotificationJob.TEMPLATE_NAME, person.getSurname());
-        String anrede = person.getAnrede();
-        if (anrede != null && !anrede.isEmpty()) {
-            emailParam.put(NotificationJob.TEMPLATE_ADDRESS, person.getAnrede());
-        } else {
-            emailParam.put(NotificationJob.TEMPLATE_ADDRESS, DEFAULT_ADDRESS);
-        }
-    }
-
-    /**
-     * @return the configurationDao
-     */
     public IBaseDao<Configuration, Serializable> getConfigurationDao() {
         return configurationDao;
     }
 
-    /**
-     * @param configurationDao
-     *            the configurationDao to set
-     */
     public void setConfigurationDao(IBaseDao<Configuration, Serializable> configurationDao) {
         this.configurationDao = configurationDao;
     }
 
-    /**
-     * @return the licenseService
-     */
     public ILicenseManagementService getLicenseService() {
         return licenseService;
     }
 
-    /**
-     * @param licenseService
-     *            the licenseService to set
-     */
     public void setLicenseService(ILicenseManagementService licenseService) {
         this.licenseService = licenseService;
     }
 
-    /**
-     * @return the mailSender
-     */
     public JavaMailSender getMailSender() {
         return mailSender;
     }
 
-    /**
-     * @param mailSender
-     *            the mailSender to set
-     */
     public void setMailSender(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
 
-    /**
-     * @return the velocityEngine
-     */
     public VelocityEngine getVelocityEngine() {
         return velocityEngine;
     }
 
-    /**
-     * @param velocityEngine
-     *            the velocityEngine to set
-     */
     public void setVelocityEngine(VelocityEngine velocityEngine) {
         this.velocityEngine = velocityEngine;
     }
 
-    /**
-     * @return the emailFrom
-     */
     public String getEmailFrom() {
         return emailFrom;
     }
 
-    /**
-     * @param emailFrom
-     *            the emailFrom to set
-     */
     public void setEmailFrom(String emailFrom) {
         this.emailFrom = emailFrom;
     }
 
-    /**
-     * @return the replyTo
-     */
     public String getReplyTo() {
         return replyTo;
     }
 
-    /**
-     * @param replyTo
-     *            the replyTo to set
-     */
     public void setReplyTo(String replyTo) {
         this.replyTo = replyTo;
     }
 
-    /**
-     * @return the emailCc
-     */
     public String getEmailCc() {
         return emailCc;
     }
 
-    /**
-     * @param emailCc
-     *            the emailCc to set
-     */
     public void setEmailCc(String emailCc) {
         this.emailCc = emailCc;
     }
 
-    /**
-     * @return the emailBcc
-     */
     public String getEmailBcc() {
         return emailBcc;
     }
 
-    /**
-     * @param emailBcc
-     *            the emailBcc to set
-     */
     public void setEmailBcc(String emailBcc) {
         this.emailBcc = emailBcc;
     }
 
-    /**
-     * @return the emailParam
-     */
     public Map<String, String> getEmailParam() {
         return emailParam;
     }
 
-    /**
-     * @param emailParam
-     *            the emailParam to set
-     */
     public void setEmailParam(Map<String, String> emailParam) {
         this.emailParam = emailParam;
     }

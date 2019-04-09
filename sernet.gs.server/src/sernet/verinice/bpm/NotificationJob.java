@@ -24,10 +24,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
 import org.eclipse.osgi.util.NLS;
@@ -116,7 +119,7 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
 
     private String url;
 
-    private Map<String, String> model = new HashMap<String, String>();
+    private Map<String, String> model = new HashMap<>();
 
     // NotificationJob can not do a real login
     // authentication is a fake instance to run secured commands and dao actions
@@ -235,8 +238,8 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
                 };
                 if (log.isDebugEnabled()) {
                     log.debug("Sending email... parameter: ");
-                    for (String key : model.keySet()) {
-                        log.debug(key + ": " + model.get(key));
+                    for (Entry<String, String> entry : model.entrySet()) {
+                        log.debug(entry.getKey() + ": " + entry.getValue());
                     }
                 }
                 this.mailSender.send(preparator);
@@ -278,6 +281,7 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
      *            context
      * @return a list with user login names
      */
+    @SuppressWarnings("unchecked")
     private List<String> getUserList(JobExecutionContext context) {
         StringBuilder sb = new StringBuilder(
                 "select distinct task.assignee from org.jbpm.pvm.internal.task.TaskImpl task where createTime >= ?"); //$NON-NLS-1$
@@ -293,8 +297,7 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
             params = new Object[] { yesterday.getTime() };
         }
         final String hql = sb.toString();
-        List nameList = getJbpmTaskDao().findByQuery(hql, params);
-        return nameList;
+        return getJbpmTaskDao().findByQuery(hql, params);
     }
 
     private void loadUserData(String name) {
@@ -313,6 +316,7 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
             String escaped = name.replace("\\", "\\\\");
             Object[] params = new Object[] { Configuration.PROP_USERNAME, escaped,
                     Configuration.PROP_NOTIFICATION_EMAIL };
+            @SuppressWarnings("unchecked")
             List<Object[]> configurationList = getConfigurationDao().findByQuery(hql, params);
             Integer dbId = null;
             if (configurationList != null && configurationList.size() == 1) {
@@ -323,10 +327,6 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
         }
     }
 
-    /**
-     * @param dbId
-     * @param result
-     */
     private void loadPerson(Integer dbId) {
         if (dbId != null) {
             String hql = "from Configuration as conf " + //$NON-NLS-1$
@@ -337,6 +337,7 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
                     "where conf.dbId = ? "; //$NON-NLS-1$
 
             Object[] params = new Object[] { dbId };
+            @SuppressWarnings("unchecked")
             List<Configuration> configurationList = getConfigurationDao().findByQuery(hql, params);
             for (Configuration configuration : configurationList) {
                 CnATreeElement element = configuration.getPerson();
@@ -352,17 +353,13 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
                     // handling for bsi persons
                 } else if (element instanceof Person) {
                     Person person = (Person) element;
-                    String nachname = (person.getEntity() != null
-                            ? (person.getEntity().getSimpleValue("nachname") != null
-                                    ? person.getEntity().getSimpleValue("nachname")
-                                    : "Kein Name")
-                            : "Kein Name");
+                    String nachname = Optional.ofNullable(person.getEntity())
+                            .map(entity -> entity.getPropertyValue(Person.P_NAME))
+                            .orElse(StringUtils.EMPTY);
                     model.put(TEMPLATE_NAME, nachname);
-                    String anrede = (person.getEntity() != null
-                            ? (person.getEntity().getSimpleValue("person_anrede") != null
-                                    ? person.getEntity().getSimpleValue("person_anrede")
-                                    : DEFAULT_ADDRESS)
-                            : DEFAULT_ADDRESS);
+                    String anrede = Optional.ofNullable(person.getEntity())
+                            .map(entity -> entity.getPropertyValue(Person.P_ANREDE))
+                            .orElse(DEFAULT_ADDRESS);
                     model.put(TEMPLATE_ADDRESS, anrede);
                 }
             }
