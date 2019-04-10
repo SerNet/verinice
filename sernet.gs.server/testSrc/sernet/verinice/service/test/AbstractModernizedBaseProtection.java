@@ -176,11 +176,11 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
     }
 
     /**
-	 * Create a {@link SafeguardGroup} in the given container.
-	 */
-	protected BpRequirement createBpRequirement(CnATreeElement container) throws CommandException {
-	    return createElement(container, BpRequirement.class);
-	}
+     * Create a {@link SafeguardGroup} in the given container.
+     */
+    protected BpRequirement createBpRequirement(CnATreeElement container) throws CommandException {
+        return createElement(container, BpRequirement.class);
+    }
 
     /**
      * Create a {@link SafeguardGroup} in the given container.
@@ -190,7 +190,7 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
         return createElement(container, BpRequirement.class, title);
     }
 
-	/**
+    /**
      * Create a {@link BpRequirementGroup} in the given container.
      */
     protected ApplicationGroup createBpApplicationGroup(CnATreeElement container)
@@ -235,11 +235,59 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
         return createElement(container, BpThreat.class, title);
     }
 
+    protected BpRequirementGroup createRequirementGroup(CnATreeElement container, String identifier,
+            String title) throws CommandException {
+        BpRequirementGroup element = setIdentifier(createRequirementGroup(container, title),
+                "bp_requirement_group_id", identifier);
+        log.debug("Created: " + element);
+        return element;
+    }
+
+    protected BpRequirement createBpRequirement(CnATreeElement container, String identifier,
+            String title) throws CommandException {
+        BpRequirement element = setIdentifier(createBpRequirement(container, title),
+                BpRequirement.PROP_ID, identifier);
+        log.debug("Created: " + element);
+        return element;
+    }
+
+    protected SafeguardGroup createSafeguardGroup(CnATreeElement container, String identifier,
+            String title) throws CommandException {
+        SafeguardGroup element = setIdentifier(createSafeguardGroup(container, title),
+                "bp_safeguard_group_id", identifier);
+        log.debug("Created: " + element);
+        return element;
+    }
+
+    protected Safeguard createSafeguard(CnATreeElement container, String identifier, String title)
+            throws CommandException {
+        Safeguard element = setIdentifier(createSafeguard(container, title), "bp_safeguard_id",
+                identifier);
+        log.debug("Created: " + element);
+        return element;
+
+    }
+
+    protected BpThreat createThreat(CnATreeElement container, String identifier, String title)
+            throws CommandException {
+        BpThreat element = setIdentifier(createBpThreat(container, title), "bp_threat_id",
+                identifier);
+        log.debug("Created: " + element);
+        return element;
+    }
+
+    protected <T extends CnATreeElement, IIdentifiable> T setIdentifier(T element,
+            String identifierProperty, String identifier) throws CommandException {
+        element.getEntity().setSimpleValue(
+                element.getEntityType().getPropertyType(identifierProperty), identifier);
+        return update(element);
+    }
+
     protected <T extends CnATreeElement> T reloadElement(T element) throws CommandException {
         RetrieveInfo ri = new RetrieveInfo().setProperties(true).setLinksUp(true)
                 .setLinksDown(true);
         LoadElementByUuid<CnATreeElement> loadElementByUuid = new LoadElementByUuid<>(
-                Objects.requireNonNull(element).getUuid(), ri);
+                element.getTypeId(), Objects.requireNonNull(element).getUuid(), ri);
         LoadElementByUuid<CnATreeElement> executeCommand = commandService
                 .executeCommand(loadElementByUuid);
         return (T) executeCommand.getElement();

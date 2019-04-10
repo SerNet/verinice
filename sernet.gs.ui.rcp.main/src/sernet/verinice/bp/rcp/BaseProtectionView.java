@@ -174,7 +174,7 @@ public class BaseProtectionView extends RightsEnabledView
         viewer.setContentProvider(contentProvider);
         viewer.setLabelProvider(new DecoratingLabelProvider(new TreeLabelProvider(),
                 workbench.getDecoratorManager()));
-        viewer.setComparator(new BaseProtectionTreeSorter());
+        viewer.setComparator(new BaseProtectionTreeComparator());
         Collection<ViewerFilter> filters = BaseProtectionFilterBuilder
                 .makeFilters(defaultFilterParams);
         viewer.setFilters(filters.toArray(new ViewerFilter[filters.size()]));

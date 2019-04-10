@@ -110,6 +110,7 @@ import sernet.verinice.model.iso27k.EvidenceGroup;
 import sernet.verinice.model.iso27k.ExceptionGroup;
 import sernet.verinice.model.iso27k.Finding;
 import sernet.verinice.model.iso27k.FindingGroup;
+import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.Incident;
 import sernet.verinice.model.iso27k.IncidentGroup;
@@ -268,6 +269,29 @@ public final class CnATypeMapper {
         descriptionPropertyMap.put(BausteinUmsetzung.TYPE_ID, BausteinUmsetzung.P_ERLAEUTERUNG);
         descriptionPropertyMap.put(MassnahmenUmsetzung.TYPE_ID, MassnahmenUmsetzung.P_ERLAEUTERUNG);
 
+        // ISM
+        elementTypeIdToGroupTypeId.put(Asset.TYPE_ID, AssetGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(Audit.TYPE_ID, AuditGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(Control.TYPE_ID, ControlGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(Document.TYPE_ID, DocumentGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(Evidence.TYPE_ID, EvidenceGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(sernet.verinice.model.iso27k.Exception.TYPE_ID,
+                ExceptionGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(Finding.TYPE_ID, FindingGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(Incident.TYPE_ID, IncidentGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(IncidentScenario.TYPE_ID, IncidentScenarioGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(Interview.TYPE_ID, InterviewGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(PersonIso.TYPE_ID, PersonGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(sernet.verinice.model.iso27k.Process.TYPE_ID,
+                ProcessGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(Record.TYPE_ID, RecordGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(Requirement.TYPE_ID, RequirementGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(Response.TYPE_ID, ResponseGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(SamtTopic.TYPE_ID, ControlGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(Threat.TYPE_ID, ThreatGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(Vulnerability.TYPE_ID, VulnerabilityGroup.TYPE_ID);
+
+        // modernized BP
         elementTypeIdToGroupTypeId.put(Application.TYPE_ID, ApplicationGroup.TYPE_ID);
         elementTypeIdToGroupTypeId.put(BpPerson.TYPE_ID, BpPersonGroup.TYPE_ID);
         elementTypeIdToGroupTypeId.put(BpThreat.TYPE_ID, BpThreatGroup.TYPE_ID);
@@ -381,7 +405,10 @@ public final class CnATypeMapper {
     public static String getElementTypeIdFromGroupTypeId(String typeId) {
         return (String) Optional.ofNullable(elementTypeIdToGroupTypeId.getKey(typeId))
                 .orElseThrow(IllegalArgumentException::new);
+    }
 
+    public static boolean isGroupTypeId(String typeId) {
+        return Group.class.isAssignableFrom(CnATypeMapper.getClassFromTypeId(typeId));
     }
 
     private CnATypeMapper() {

@@ -70,8 +70,9 @@ public abstract class UpdatingAddGroupHandler extends AddGroupHandler implements
             if (selectedElement instanceof Asset) {
                 childTypeId = Control.TYPE_ID;
             }
-            menu.setIcon(ImageDescriptor
-                    .createFromImage(ImageCache.getInstance().getImageForTypeId(childTypeId)));
+            String imageUrl = ImageCache.getInstance().getImageURL(childTypeId);
+            ImageDescriptor imageDescriptor = ImageCache.getInstance().getImageDescriptor(imageUrl);
+            menu.setIcon(imageDescriptor);
             menu.setText(Optional
                     .ofNullable(AddGroupMessageHelper.getMessageForAddGroup(group.getTypeId()))
                     .orElse(Messages.AddGroupHandler_new_group));

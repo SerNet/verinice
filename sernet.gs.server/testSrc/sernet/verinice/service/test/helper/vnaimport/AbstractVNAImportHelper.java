@@ -28,13 +28,11 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
-import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.LoadElementByTypeId;
-import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
@@ -59,35 +57,31 @@ abstract public class AbstractVNAImportHelper extends CommandServiceProvider {
         try {
             this.vnaFilePath = getFilePath();
             this.syncParameter = getSyncParameter();
-            this.syncCommand = importFile(vnaFilePath, syncParameter);            
+            this.syncCommand = importFile(vnaFilePath, syncParameter);
         } catch (Exception e) {
             log.error("import of " + vnaFilePath + " aborted", e);
             throw e;
         }
     }
 
-    final protected SyncCommand importFile(String path, SyncParameter syncParameter) throws IOException, CommandException {
-        
+    final protected SyncCommand importFile(String path, SyncParameter syncParameter)
+            throws IOException, CommandException {
+
         byte[] it_network_vna = FileUtils.readFileToByteArray(new File(path));
         SyncCommand syncCommand = new SyncCommand(syncParameter, it_network_vna);
-        return commandService.executeCommand(syncCommand);        
+        return commandService.executeCommand(syncCommand);
     }
 
     abstract protected String getFilePath();
 
     abstract protected SyncParameter getSyncParameter() throws SyncParameterException;
-    
-    private <T extends CnATreeElement> RemoveElement<T> removeElement(T element) throws CommandException {
-        RemoveElement<T> removeCommand = new RemoveElement<T>(element);
-        return commandService.executeCommand(removeCommand);
-    }
-    
+
     private void removeAllElementsByType(String type) throws CommandException {
         LoadElementByTypeId loadElementByTypeId = new LoadElementByTypeId(type);
         loadElementByTypeId = commandService.executeCommand(loadElementByTypeId);
 
         for (CnATreeElement element : loadElementByTypeId.getElementList()) {
-            removeElement(element);
+            elementDao.delete(element);
         }
     }
 
@@ -96,32 +90,27 @@ abstract public class AbstractVNAImportHelper extends CommandServiceProvider {
             Set<CnATreeElement> importedElements = this.syncCommand.getElementSet();
             for (CnATreeElement element : importedElements) {
 
-                if (element instanceof Organization) {
-                    RemoveElement<Organization> removeCommand = new RemoveElement<Organization>((Organization) element);
-                    commandService.executeCommand(removeCommand);
-                }
-
-                else if (element instanceof ITVerbund) {
-                    RemoveElement<ITVerbund> removeCommand = new RemoveElement<ITVerbund>((ITVerbund) element);
-                    commandService.executeCommand(removeCommand);
+                if (element.isScope()) {
+                    elementDao.delete(element);
                 }
             }
-            
+
             // clean up the parents of imported cnatreeelements
             removeAllElementsByType(ImportBsiGroup.TYPE_ID);
-            removeAllElementsByType(ImportIsoGroup.TYPE_ID);            
-            
+            removeAllElementsByType(ImportIsoGroup.TYPE_ID);
+            removeAllElementsByType(ImportBpGroup.TYPE_ID);
+
         } catch (CommandException e) {
             log.error("deleting element of " + vnaFilePath + " failed", e);
             throw e;
         }
     }
-    
+
     public Set<Integer> getScopeIds() {
         Set<CnATreeElement> importedScopes = syncCommand.getImportRootObject();
         Set<Integer> scopeIds = new HashSet<Integer>(importedScopes.size());
         for (CnATreeElement scope : importedScopes) {
-            scopeIds.add(scope.getDbId());         
+            scopeIds.add(scope.getDbId());
         }
         return scopeIds;
     }

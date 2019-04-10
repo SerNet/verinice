@@ -23,6 +23,8 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import sernet.hui.swt.SWTResourceManager;
+
 /**
  * Collect some basic behavior like resource managing.
  *
@@ -36,30 +38,21 @@ public abstract class AbstractHuiControl implements IHuiControl {
 	public AbstractHuiControl(Composite composite) {
 		super();
 		this.composite = composite;
-		this.composite.addDisposeListener(l->{
-			if (currentFont != null && !currentFont.isDisposed()) {
-				currentFont.dispose();
-			}
-		});
 	}
 
 	protected void refontLabel(boolean showValidationHint) {
 		if (showValidationHint) {
 			FontData fontData = label.getFont().getFontData()[0];
-			if (currentFont != null && !currentFont.isDisposed()) {
-				currentFont.dispose();
-			}
-			Font newFont = new Font(composite.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), SWT.BOLD));
-			label.setForeground(composite.getDisplay().getSystemColor(SWT.COLOR_RED));
+			Font newFont = SWTResourceManager.getFont(fontData.getName(), fontData.getHeight(), SWT.BOLD);
+			label.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
 			label.setFont(newFont);
 			currentFont = newFont;
 		} else  if (currentFont != null && !currentFont.isDisposed()) {
 			FontData fontData = label.getFont().getFontData()[0];
-	    	currentFont.dispose();
-	    	Font newFont = new Font(composite.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), SWT.NONE));
-	        label.setForeground(composite.getDisplay().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND));
+	    	Font newFont = SWTResourceManager.getFont(fontData.getName(), fontData.getHeight(), SWT.NONE);
+	        label.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 	        label.setFont(newFont);
-	        currentFont = newFont;
+	        currentFont = null;
 	    }
 	}
 

@@ -23,6 +23,7 @@
         <!-- missing actions: 
             "accountsettings"
             "accesscontrol"
+            "convertitnetwork"
             "editprofile"
             "taskdelete"
             "taskshowall"
@@ -115,6 +116,7 @@
             "additverbund"
             "additnetwork"
             "addsecurityassessment"
+            "convertitnetwork"
             "editprofile"
             "showallfiles"
             "searchreindex"
@@ -287,6 +289,7 @@
           <action id="catalogimport" />       
 	        <action id="catalogview" />
           <action id="changeicon" />
+          <action id="convertitnetwork" />
 	        <action id="cnavalidation" />
           <action id="creategreenbonetasks" />
           <action id="createindividualtasks" />
@@ -373,7 +376,8 @@
             <action id="catalogimport" />       
 	          <action id="catalogview" />
           	<action id="changeicon" /> 
-            <action id="cnavalidation" /> 
+            <action id="cnavalidation" />
+            <action id="convertitnetwork" /> 
           	<action id="creategreenbonetasks" /> 
           	<action id="createindividualtasks" /> 
             <action id="createisatasks" /> 
@@ -457,6 +461,7 @@
 	        <action id="catalogview" />
           <action id="changeicon" />
 	        <action id="cnavalidation" />
+          <action id="convertitnetwork" />
           <action id="creategreenbonetasks" />
           <action id="createindividualtasks" />
 	        <action id="createisatasks" />

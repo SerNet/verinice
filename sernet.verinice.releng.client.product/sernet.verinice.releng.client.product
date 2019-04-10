@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="verinice" uid="sernet.verinice.releng.client" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.15.0.full" useFeatures="true" includeLaunchers="true">
+<product name="verinice" uid="sernet.verinice.releng.client" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.18.0.full" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/sernet.gs.ui.rcp.main/verinice_icons/about_img.png"/>
       <text>
-         SerNet verinice 1.15.0 - Codename &apos;Miyazaki&apos;
+         SerNet verinice 1.18.0 - Codename &apos;Mangalore&apos;
 
 (c) SerNet Service Network GmbH and others
-1996-2018
+1996–2019
 
 Contact the authors:
 verinice@sernet.de
@@ -46,6 +46,7 @@ Urs Zeidler
 Alexander Ben Nasrallah
 Jochen Kemnade
 Antonio Marino
+Finn Westendorf
 
 Artwork:
 Blackbit						www.blackbit.de
@@ -785,27 +786,11 @@ Public License instead of this License.  But first, please read
          </text>
    </license>
 
+   <plugins>
+   </plugins>
+
    <features>
-      <feature id="org.eclipse.e4.rcp.sernet" version="1.6.100.qualifier"/>
-      <feature id="sernet.birt.feature" version="1.0.0"/>
-      <feature id="sernet.gs.server.feature"/>
-      <feature id="sernet.thirdparty.feature" version="1.0.0"/>
-      <feature id="sernet.localdependencies"/>
-      <feature id="spring" version="0.6.0"/>
-      <feature id="pax" version="0.6.0"/>
-      <feature id="antlr" version="2.7.7"/>
-      <feature id="apache" version="0.6.0"/>
-      <feature id="jfree" version="1.0.0"/>
-      <feature id="lowagie" version="2.1.7"/>
-      <feature id="w3c" version="0.6.0"/>
-      <feature id="sernet.datatools.feature" version="1.0.0"/>
-      <feature id="sernet.eclipse.feature" version="1.0.0"/>
-      <feature id="com.opencsv" version="4.1.0"/>
-      <feature id="threetenbp" version="1.3.6"/>
-      <feature id="sernet.rcp.ui.feature" version="1.0.0.qualifier"/>
-      <feature id="sernet.verinice.lang.feature" version="1.0.0"/>
-      <feature id="org.jgrapht" version="1.2.0"/>
-      <feature id="sernet.verinice.extraresources.feature" version="1.0.0.qualifier"/>
+      <feature id="sernet.verinice.app.feature" version="1.0.0.qualifier"/>
    </features>
 
    <configurations>
@@ -813,7 +798,9 @@ Public License instead of this License.  But first, please read
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="2" />
-      <plugin id="sernet.verinice.kerberos" autoStart="true" startLevel="1" />
+      <plugin id="sernet.verinice.kerberos" autoStart="true" startLevel="1" />      
+      <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="0" />
       <property name="org.eclipse.update.reconcile" value="false" />
    </configurations>
 

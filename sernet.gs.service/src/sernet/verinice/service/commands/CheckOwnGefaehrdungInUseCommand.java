@@ -56,8 +56,7 @@ public class CheckOwnGefaehrdungInUseCommand extends GenericCommand {
     public void execute() {
 
         IBaseDao<ChangeLogEntry, Serializable> dao = getDaoFactory().getDAO(ChangeLogEntry.class);
-        List<?> entries = (List<?>) dao
-                .findByCallback(new Callback(ownGefaehrdung.getId()));
+        List<?> entries = (List<?>) dao.findByCallback(new Callback(ownGefaehrdung.getId()));
         isInUse = !entries.isEmpty();
         if (log.isInfoEnabled()) {
             if (isInUse) {
@@ -84,17 +83,14 @@ public class CheckOwnGefaehrdungInUseCommand extends GenericCommand {
 
         public Object doInHibernate(Session session) throws HibernateException, SQLException {
 
-            Query query = session.createSQLQuery(
-                    "SELECT cnatreeelement.uuid,"
-                            + " properties.propertytype,"
-                            + " properties.propertyvalue "
-                            + " FROM cnatreeelement"
-                            + " JOIN entity ON cnatreeelement.entity_id=entity.dbid"
-                            + " JOIN propertylist ON propertylist.typedlist_id=entity.dbid"
-                            + " JOIN properties ON properties.properties_id=propertylist.dbid"
-                            + " WHERE "
-                            + " properties.propertytype='gefaehrdungsumsetzung_id' AND properties.propertyvalue='"
-                            + id + "'");
+            Query query = session.createSQLQuery("SELECT cnatreeelement.uuid,"
+                    + " properties.propertytype," + " properties.propertyvalue "
+                    + " FROM cnatreeelement"
+                    + " JOIN entity ON cnatreeelement.entity_id=entity.dbid"
+                    + " JOIN propertylist ON propertylist.typedlist_id=entity.dbid"
+                    + " JOIN properties ON properties.properties_id=propertylist.dbid" + " WHERE "
+                    + " properties.propertytype='gefaehrdungsumsetzung_id' AND properties.propertyvalue LIKE '"
+                    + id + "'");
             return query.list();
         }
 

@@ -20,7 +20,6 @@
 <listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#10;&lt;runtimeClasspathEntry internalArchive=&quot;/sernet.gs.server/WebContent/WEB-INF/lib/com.springsource.org.dom4j-1.6.1.jar&quot; path=&quot;3&quot; type=&quot;2&quot;/&gt;&#10;"/>
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
-<stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre1.7.0_51"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="sernet.verinice.service.test.ElasticsearchTest"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="sernet.gs.server"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dlog4j.configuration=log4j-test-server.xml"/>

@@ -20,9 +20,11 @@ package sernet.verinice.service.bp.risk;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.annotation.NonNull;
 
@@ -54,71 +56,70 @@ public class RiskDeductionUtil {
      * scope/risk configuration.
      */
     public static BpThreat deduceRisk(BpThreat threat) {
-
-        boolean frequencyIsUnset = resetRiskValuesIfFrequencyIsUnset(threat);
-        boolean impactIsUnset = resetRiskValuesIfImpactIsUnset(threat);
-
-        if (frequencyIsUnset || impactIsUnset) {
-            return threat;
-        }
-
         try {
-            return RiskDeductionUtil.deduceRisk(threat, findRiskConfiguration(threat.getScopeId()));
+            return RiskDeductionUtil.deduceRisk(threat,
+                    () -> findRiskConfiguration(threat.getScopeId()));
         } catch (CommandException e) {
             logger.error("error fetching scope for bp_threat", e);
         }
         return threat;
     }
 
-    private static BpThreat deduceRisk(BpThreat threat, RiskConfiguration riskConfiguration)
-            throws CommandException {
-        boolean frequencyIsUnset = resetRiskValuesIfFrequencyIsUnset(threat);
-        boolean impactIsUnset = resetRiskValuesIfImpactIsUnset(threat);
+    private static BpThreat deduceRisk(BpThreat threat,
+            Supplier<RiskConfiguration> riskConfigurationSupplier) throws CommandException {
+        final String frequencyWithoutAdditionalSafeguards = threat
+                .getFrequencyWithoutAdditionalSafeguards();
+        final String impactWithoutAdditionalSafeguards = threat
+                .getImpactWithoutAdditionalSafeguards();
 
-        if (frequencyIsUnset || impactIsUnset) {
+        if (StringUtils.isEmpty(frequencyWithoutAdditionalSafeguards)
+                && StringUtils.isEmpty(impactWithoutAdditionalSafeguards)) {
+            setPropertyIfNecessary(threat, BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS,
+                    frequencyWithoutAdditionalSafeguards);
+            setPropertyIfNecessary(threat, BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS,
+                    impactWithoutAdditionalSafeguards);
+            setPropertyIfNecessary(threat, BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS, null);
+            setPropertyIfNecessary(threat, BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS, null);
             return threat;
         }
-        String frequency = threat.getFrequencyWithoutAdditionalSafeguards();
-        String impact = threat.getImpactWithoutAdditionalSafeguards();
 
-        if (riskConfiguration == null) {
-            riskConfiguration = DefaultRiskConfiguration.getInstance();
-        }
+        RiskConfiguration riskConfiguration = Optional.ofNullable(riskConfigurationSupplier.get())
+                .orElseGet(DefaultRiskConfiguration::getInstance);
 
-        Risk risk = riskConfiguration.getRisk(frequency, impact);
+        String riskWithoutAdditionalSafeguards = calculateRisk(riskConfiguration,
+                frequencyWithoutAdditionalSafeguards, impactWithoutAdditionalSafeguards)
+                        .orElse(null);
         setPropertyIfNecessary(threat, BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
-                Optional.ofNullable(risk).map(Risk::getId).orElse(null));
+                riskWithoutAdditionalSafeguards);
 
         LinkedRequirementsInfo linkedRequirementsInfo = getLinkedRequirementsForRiskDeduction(
                 threat);
-
         String frequencyWithAdditionalSafeguards = getFrequencyWithAdditionalSafeguards(
-                Stream.of(frequency), linkedRequirementsInfo.getFrequencies());
-        if (nullOrEmpty(frequencyWithAdditionalSafeguards)) {
-            threat.setFrequencyWithAdditionalSafeguards(frequency);
-            threat.setImpactWithAdditionalSafeguards(impact);
-            threat.setRiskWithAdditionalSafeguards(
-                    riskConfiguration.getRisk(frequency, impact).getId());
-            return threat;
-        }
-
+                Stream.of(frequencyWithoutAdditionalSafeguards),
+                linkedRequirementsInfo.getFrequencies());
         String impactWithAdditionalSafeguards = getImpactsWithAdditionalSafeguards(
-                Stream.of(impact), linkedRequirementsInfo.getImpacts());
-        if (nullOrEmpty(impactWithAdditionalSafeguards)) {
-            threat.setFrequencyWithAdditionalSafeguards(frequency);
-            threat.setImpactWithAdditionalSafeguards(impact);
-            threat.setRiskWithAdditionalSafeguards(
-                    riskConfiguration.getRisk(frequency, impact).getId());
-            return threat;
+                Stream.of(impactWithoutAdditionalSafeguards), linkedRequirementsInfo.getImpacts());
+        String riskWithAdditionalSafeguards = calculateRisk(riskConfiguration,
+                frequencyWithAdditionalSafeguards, impactWithAdditionalSafeguards)
+                        .orElse(riskWithoutAdditionalSafeguards);
+        setPropertyIfNecessary(threat, BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS,
+                frequencyWithAdditionalSafeguards);
+        setPropertyIfNecessary(threat, BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS,
+                impactWithAdditionalSafeguards);
+        setPropertyIfNecessary(threat, BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS,
+                riskWithAdditionalSafeguards);
+
+        return threat;
+    }
+
+    private static Optional<String> calculateRisk(RiskConfiguration riskConfiguration,
+            String frequency, String impact) {
+
+        if (StringUtils.isEmpty(frequency) || StringUtils.isEmpty(impact)) {
+            return Optional.empty();
         }
 
-        threat.setFrequencyWithAdditionalSafeguards(frequencyWithAdditionalSafeguards);
-        threat.setImpactWithAdditionalSafeguards(impactWithAdditionalSafeguards);
-        Risk riskWithAdditionalSafeguards = riskConfiguration
-                .getRisk(frequencyWithAdditionalSafeguards, impactWithAdditionalSafeguards);
-        setPropertyIfNecessary(threat, BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS,
-                Optional.ofNullable(riskWithAdditionalSafeguards).map(Risk::getId).orElse(null));
-        return threat;
+        return Optional.ofNullable(riskConfiguration.getRisk(frequency, impact)).map(Risk::getId);
     }
 
     /**
@@ -137,7 +138,7 @@ public class RiskDeductionUtil {
                 RiskConfiguration riskConfiguration = findRiskConfiguration(
                         requirement.getScopeId());
                 for (BpThreat threat : affectedThreats) {
-                    RiskDeductionUtil.deduceRisk(threat, riskConfiguration);
+                    RiskDeductionUtil.deduceRisk(threat, () -> riskConfiguration);
                 }
             }
         } catch (CommandException e) {
@@ -150,17 +151,21 @@ public class RiskDeductionUtil {
             return requirement;
         }
 
+        boolean reducesRisk = getLinkedSafeguards(requirement)
+                .anyMatch(s -> s.getEntity().isFlagged(Safeguard.PROP_REDUCE_RISK));
+
         String impactStrength = getLinkedSafeguards(requirement)
                 .filter(s -> s.getEntity().isFlagged(Safeguard.PROP_REDUCE_RISK)
                         && isSafeGuardStrenghtBothSet(s))
                 .map(s -> s.getEntity().getRawPropertyValue(Safeguard.PROP_STRENGTH_IMPACT))
-                .filter(RiskDeductionUtil::notNullAndNotEmpty).min(String::compareTo).orElse(null);
+                .filter(StringUtils::isNotEmpty).min(String::compareTo).orElse(null);
 
         String frequencyStrength = getLinkedSafeguards(requirement)
                 .filter(s -> s.getEntity().isFlagged(Safeguard.PROP_REDUCE_RISK)
                         && isSafeGuardStrenghtBothSet(s))
                 .map(s -> s.getEntity().getRawPropertyValue(Safeguard.PROP_STRENGTH_FREQUENCY))
-                .filter(RiskDeductionUtil::notNullAndNotEmpty).min(String::compareTo).orElse(null);
+                .filter(StringUtils::isNotEmpty).min(String::compareTo).orElse(null);
+        requirement.getEntity().setFlag(BpRequirement.PROP_SAFEGUARD_REDUCE_RISK, reducesRisk);
         setPropertyIfNecessary(requirement, BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT,
                 impactStrength);
         setPropertyIfNecessary(requirement, BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY,
@@ -189,33 +194,13 @@ public class RiskDeductionUtil {
         element.setSimpleProperty(propertyId, propertyValue);
     }
 
-    private static boolean resetRiskValuesIfImpactIsUnset(BpThreat threat) {
-        if (nullOrEmpty(threat.getImpactWithoutAdditionalSafeguards())) {
-            threat.setImpactWithAdditionalSafeguards(null);
-            threat.setRiskWithoutAdditionalSafeguards(null);
-            threat.setRiskWithAdditionalSafeguards(null);
-            return true;
-        }
-        return false;
-    }
-
-    private static boolean resetRiskValuesIfFrequencyIsUnset(BpThreat threat) {
-        if (nullOrEmpty(threat.getFrequencyWithoutAdditionalSafeguards())) {
-            threat.setFrequencyWithAdditionalSafeguards(null);
-            threat.setRiskWithoutAdditionalSafeguards(null);
-            threat.setRiskWithAdditionalSafeguards(null);
-            return true;
-        }
-        return false;
-    }
-
     private static LinkedRequirementsInfo getLinkedRequirementsForRiskDeduction(BpThreat threat)
             throws CommandException {
 
         GetLinkedRequirementsInfo command = new GetLinkedRequirementsInfo(threat);
         ICommandService commandService = (ICommandService) VeriniceContext
                 .get(VeriniceContext.COMMAND_SERVICE);
-        commandService.executeCommand(command);
+        command = commandService.executeCommand(command);
         return command.getLinkedRequirementsInfo();
     }
 
@@ -242,25 +227,16 @@ public class RiskDeductionUtil {
                 .map(CnALink::getDependency);
     }
 
-    private static RiskConfiguration findRiskConfiguration(Integer scopeId)
-            throws CommandException {
+    private static RiskConfiguration findRiskConfiguration(Integer scopeId) {
         RiskService riskService = (RiskService) VeriniceContext
                 .get(VeriniceContext.ITBP_RISK_SERVICE);
         return riskService.findRiskConfiguration(scopeId);
     }
 
-    private static boolean notNullAndNotEmpty(String s) {
-        return s != null && !s.isEmpty();
-    }
-
-    private static boolean nullOrEmpty(String s) {
-        return s == null || s.isEmpty();
-    }
-
     private static boolean isSafeGuardStrenghtBothSet(CnATreeElement e) {
         String f = e.getEntity().getRawPropertyValue(Safeguard.PROP_STRENGTH_IMPACT);
         String i = e.getEntity().getRawPropertyValue(Safeguard.PROP_STRENGTH_FREQUENCY);
-        return notNullAndNotEmpty(i) && notNullAndNotEmpty(f);
+        return StringUtils.isNotEmpty(i) && StringUtils.isNotEmpty(f);
     }
 
 }

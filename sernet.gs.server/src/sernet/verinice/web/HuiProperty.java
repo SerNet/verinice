@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.faces.model.SelectItem;
 
@@ -334,6 +335,14 @@ public class HuiProperty implements Serializable {
 
     public String getValue() {
         return value;
+    }
+
+    public String getDisplayValue() {
+        if (getIsSingleSelect()) {
+            return Optional.ofNullable(getSelectedOption())
+                    .orElse(Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE));
+        }
+        return getValue();
     }
 
     public void setValue(String value) {

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<cheatsheet title="IT Baseline Protection with Greenbone and verince">
+
+  <intro>
+    <description>
+      In connection with a <b>Greenbone</b> vulnerability scanner (<b>www.greenbone.net</b>) as well as a OpenVAS
+      vulnerability scanner (<b>www.openvas.org</b>) verinice enables an effective vulnerability management.<br />
+      <br />
+      Importing the results of a vulnerability scan into verinice in the BSI Baseline Security provides the
+      functionalities structural analysis, modeling and automatic basisc security check.
+    </description>
+  </intro>
+
+  <item title="Performing IT Baseline Protection Scans in Greenbone">
+    <description>
+      The Greenbone Security Manager allows automatic checks according to the IT-baseline catalogues by the German
+      authority "Bundesamt für Sicherheit in der Informationstechnik (BSI)".<br />
+      <br />
+      For a detailled description how to perform an IT-baseline scan in Greenbone please refer to the user manual or
+      visit the <b>Greenbone Learning Center</b> (<b>www.greenbone.net/learningcenter/task_it_grundschutz.de</b>).<br />
+      <br />
+      You will find a special scan configuration and an IT baseline protection report plugin to use in verinice for
+      download.
+    </description>
+  </item>
+
+  <item title="Exporting the Scan Results">
+    <description>
+      Select <b>Scan Management > Reports</b> from the Greenbone Security Assistant menu to export the results of a
+      successful scan.<br />
+      <br />
+      Export the results of an IT-baseline scan as vna-file by choosing the format <b>verinice ITG</b> in the
+      corresponding drop-down-box and start the export by pressing the button <b>Download Filtered Report</b>.
+      Greenbone will save the vna-file in the download directory in your system environment.
+    </description>
+  </item>
+
+  <item title="Importing the IT Baseline Protection Scan">
+    <description>
+      Switch to the IT-baseline perspective in verinice using menu <b>View > Show perspective > BSI IT Baseline
+      Perspective</b>. Start the import by clicking the button <b>Import organisation from file...</b>. Select the
+      previously exported Greenbone ITG-Report by clicking the button <b>Select file...</b>, keep the default values
+      for all other parameters in the dialogue.<br />
+      <br />
+      The imported objects can be found in the group <b>Imported objects > GSM ITGS Import > IT-Systems: Server</b>.
+      All scan targets have been imported as server with a description in the field <b>Tags</b>. Each of the imported
+      objects has a child object <b>GSM Result</b> with the resulting controls of the scan.
+    </description>
+  </item>
+
+  <item title="Structural Analysis">
+    <description>
+	  Transfer the imported objects in your organisation by navigating to <b>imported objects > GSM ITGS import >
+    IT-systems: Server</b>. Select the server objects and choose <b>Cut</b> from the context menu.<br />
+    <br />
+	  Nvaigate now to your organisation i.e. <b>IT Network > IT-Systems: Server</b> and insert the systems there by
+    right mouseclick <b>Insert</b>.
+    </description>
+  </item>
+
+  <item title="Greenbone: Automatically Add a Module">
+    <description>
+      Open the view <b>BSI Baseline Protection Catalog</b> in the menu <b>View > Show View > BSI Baseline
+      Protection Catalog</b>. Attention - without active BSI Baseline Protection Catalog the automatic adding of
+      modules will not be performed!<br />
+      <br />
+      Navigate to one of the mooved objects (server) in your organisation an right-klick <b>Greenbone: Automatically
+      add module...</b>. Refresh the view by clicking the Button <b>Refresh view (Strg+F5)</b>.<br />
+      <br />
+      The BSI baseline modules will be assigned to the corresponding objects based on the tags.
+    </description>
+  </item>
+
+  <item title="Greenbone: Automatic Basic Security Check">
+    <description>
+      With right mouseclick on one of the objects choose the option <b>Greenbone: Automatic basic security check</b>.
+      verinice transfers all controls as well as the implementation status from the imported GSM-scan onto the
+      previously added modules.<br />
+      <br />
+      The automatic basic security check transfers only those controls from BSI module layers 4 an 5, due to the
+      reason that non technical controls can not be scanned by the vulnerability scanner.
+    </description>
+  </item>
+
+</cheatsheet>

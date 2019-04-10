@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.model.Gefaehrdung;
+import sernet.hui.swt.SWTResourceManager;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
@@ -256,7 +257,7 @@ public abstract class RiskAnalysisDialog<T> extends Dialog {
                     textDescription.setBackground(defaultBackground);
                 } else {
                     textDescription
-                            .setBackground(new Color(Display.getCurrent(), red, green, blue));
+                            .setBackground(SWTResourceManager.getColor(red, green, blue));
                 }
             }
         });

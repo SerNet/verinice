@@ -33,52 +33,57 @@ import sernet.verinice.service.auth.AuthenticationHelper;
 import sernet.verinice.service.commands.crud.ChangeOwnPassword;
 
 /**
- * Action to allow users to change their own password if stored in the verinice DB.
+ * Action to allow users to change their own password if stored in the verinice
+ * DB.
  * 
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
-public class ChangeOwnPasswordAction extends Action  {
+public class ChangeOwnPasswordAction extends Action {
 
     public static final String ID = "sernet.gs.ui.rcp.main.actions.changeownpasswordaction"; //$NON-NLS-1$
     private final IWorkbenchWindow window;
 
-    
     public ChangeOwnPasswordAction(IWorkbenchWindow window, String label) {
         this.window = window;
         setText(label);
         setId(ID);
-        //setActionDefinitionId(ID);
+        // setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.PERSON));
         setToolTipText(Messages.ChangeOwnPasswordAction_0);
-        setEnabled(true);
+        setEnabled(!Activator.getDefault().isStandalone());
     }
-    
-    /* (non-Javadoc)
+
+    /*
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
     public void run() {
-        
-        // if the user clicks this action as the first thing he does in verinice, the auth service, might not have been enabled
+
+        // if the user clicks this action as the first thing he does in
+        // verinice, the auth service, might not have been enabled
         // because no object was accessed yet. Make sure it is there:
         ServiceFactory.lookupAuthService();
         if (!ServiceFactory.isPermissionHandlingNeeded()) {
             setEnabled(false);
             return;
         }
-        
-        // this action works for normal users, admins are supposed to change their password differently, since admin acounts can also be defined in the config file
+
+        // this action works for normal users, admins are supposed to change
+        // their password differently, since admin acounts can also be defined
+        // in the config file
         // where they cannot be edited from within the application.
-        // (admins can change the passwords for anybody, this action here only works for the currently logged in user)
-        boolean isAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
+        // (admins can change the passwords for anybody, this action here only
+        // works for the currently logged in user)
+        boolean isAdmin = AuthenticationHelper.getInstance()
+                .currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
         if (isAdmin) {
-            MessageDialog.openInformation(window.getShell(), Messages.ChangeOwnPasswordAction_1, Messages.ChangeOwnPasswordAction_2);
+            MessageDialog.openInformation(window.getShell(), Messages.ChangeOwnPasswordAction_1,
+                    Messages.ChangeOwnPasswordAction_2);
             return;
         }
-        
+
         Activator.inheritVeriniceContextState();
         PasswordDialog passwordDialog = new PasswordDialog(this.window.getShell());
         if (passwordDialog.open() == Window.OK) {
@@ -90,6 +95,5 @@ public class ChangeOwnPasswordAction extends Action  {
             }
         }
     }
-
 
 }

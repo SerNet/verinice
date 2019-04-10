@@ -3,6 +3,7 @@
 	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/javax.faces-2.2.8.jar"/>
 	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/com.springsource.org.apache.velocity-1.6.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/org.springframework.ldap-1.3.0.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/h2-1.4.197.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
 		<accessrules>
 			<accessrule kind="accessible" pattern="javax/faces/**"/>

@@ -21,6 +21,12 @@ import java.sql.Date;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
 /**
@@ -30,9 +36,13 @@ import java.util.Locale;
  * @author prack
  * @version $Id: FormInputParser.java,v 1.1 2005/12/27 16:41:18 aprack Exp $
  */
-public abstract class FormInputParser {
+public final class FormInputParser {
 
     private static final String DEFAULT_DATE_PATTERN = "EEE, dd.MM.yyyy"; //$NON-NLS-1$
+    private static final DateTimeFormatter DEFAULT_DATE_FORMATTER = DateTimeFormatter
+            .ofPattern(DEFAULT_DATE_PATTERN);// $NON-NLS-1$
+    private static final DateTimeFormatter GERMAN_DATE_FORMATTER = DateTimeFormatter
+            .ofPattern("dd.MM.yyyy");
 
     /**
      * @deprecated This instance is not thread-safe and should not be used
@@ -40,7 +50,8 @@ public abstract class FormInputParser {
      *             reasons only.
      */
     @Deprecated
-    public static final SimpleDateFormat DATE_FORMAT_DEFAULT = createDateFormat(DEFAULT_DATE_PATTERN);
+    public static final SimpleDateFormat DATE_FORMAT_DEFAULT = createDateFormat(
+            DEFAULT_DATE_PATTERN);
     private static final boolean GROUPING = true;
 
     public static float stringToCurrency(String fieldName, String s) throws DBException {
@@ -81,8 +92,9 @@ public abstract class FormInputParser {
             if (date == null) {
                 return ""; //$NON-NLS-1$
             }
-            return createDateFormat(DEFAULT_DATE_PATTERN).format(date);
-        } catch (IllegalArgumentException e) {
+            return DEFAULT_DATE_FORMATTER
+                    .format(Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()));
+        } catch (DateTimeException e) {
             throw new AssertException("Wrong / missing date: " + date.toString()); //$NON-NLS-1$
         }
     }
@@ -91,25 +103,22 @@ public abstract class FormInputParser {
         if (string == null || string.length() < 5) {
             throw new AssertException("Wrong / missing date: " + string);
         }
-        String datePattern;
+        DateTimeFormatter formatter;
         if (string.charAt(2) == '.') {
-            datePattern = "dd.MM.yyyy"; //$NON-NLS-1$
+            formatter = GERMAN_DATE_FORMATTER;
         } else if (string.charAt(4) == '-') {
-            datePattern = "yyyy-MM-dd"; //$NON-NLS-1$
+            formatter = DateTimeFormatter.ISO_LOCAL_DATE;
         } else {
-            datePattern = DEFAULT_DATE_PATTERN;
+            formatter = DEFAULT_DATE_FORMATTER;
         }
         try {
-            return new Date(createDateFormat(datePattern).parse(string).getTime());
-        } catch (ParseException e) {
+            return new Date(formatter.parse(string, LocalDate::from)
+                    .atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        } catch (DateTimeParseException e) {
             throw new AssertException("Wrong / missing date: " + string); //$NON-NLS-1$
         }
     }
 
-    /**
-     * @param f
-     * @return
-     */
     public static String floatToString(float f) {
         return createNumberFormat().format(f);
     }
@@ -130,5 +139,9 @@ public abstract class FormInputParser {
         NumberFormat priceFmt = NumberFormat.getCurrencyInstance(Locale.GERMANY);
         priceFmt.setGroupingUsed(GROUPING);
         return priceFmt;
+    }
+
+    private FormInputParser() {
+
     }
 }

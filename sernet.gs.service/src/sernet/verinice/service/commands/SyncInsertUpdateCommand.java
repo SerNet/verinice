@@ -339,7 +339,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                     final String message = "Could not find mapObjectType-"
                             + "Element for XML attribute type: " + attrExtId + " of type: "
                             + extObjectType + ". Using extern-id.";
-                    log.warn(message);
+                    log.info(message);
                     attrIntId = attrExtId;
                 } else {
                     attrIntId = mat.getIntId();
@@ -607,7 +607,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         if (dependant == null) {
             dependant = findDbElement(this.sourceId, dependantId, true, true);
             if (dependant == null) {
-                log.error("Can not import link. dependant not found in "
+                log.warn("Can not import link. dependant not found in "
                         + "xml file and db, dependant ext-id: " + dependantId
                         + " dependency ext-id: " + dependencyId);
                 return;
@@ -619,7 +619,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         if (dependency == null) {
             dependency = findDbElement(this.sourceId, dependencyId, true, true);
             if (dependency == null) {
-                log.error("Can not import link. dependency not found in "
+                log.warn("Can not import link. dependency not found in "
                         + "xml file and db, dependency ext-id: " + dependencyId
                         + " dependant ext-id: " + dependantId);
                 return;

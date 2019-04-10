@@ -613,7 +613,7 @@ public final class CnAElementFactory {
         CnATreeElement child = builder.build(container, input);
 
         if (inheritIcon) {
-            inheritIcon(container.getIconPath(), container.getTypeId(), inheritIcon, child);
+            inheritIcon(container, child);
         }
 
         // notify all listeners:
@@ -624,12 +624,10 @@ public final class CnAElementFactory {
         return child;
     }
 
-    private CnATreeElement inheritIcon(String iconPath, String containerTypeId, boolean inheritIcon,
-            CnATreeElement child) throws CommandException {
-        if (inheritIcon && !(ITVerbund.TYPE_ID.equals(containerTypeId)
-                || Organization.TYPE_ID.equals(containerTypeId)
-                || ItNetwork.TYPE_ID.equals(containerTypeId)
-                || Audit.TYPE_ID.equals(containerTypeId))) {
+    private CnATreeElement inheritIcon(CnATreeElement container, CnATreeElement child)
+            throws CommandException {
+        if (!(container.isScope() || Audit.TYPE_ID.equals(container.getTypeId()))) {
+            String iconPath = container.getIconPath();
             child.setIconPath(iconPath);
             Activator.inheritVeriniceContextState();
             UpdateElement<CnATreeElement> updateCommand = new UpdateElement<>(child, false,
@@ -1103,15 +1101,14 @@ public final class CnAElementFactory {
 
     public static boolean selectionOnlyContainsScopes(IStructuredSelection selection) {
         for (Object selectedEl : selection.toList()) {
-            if (!isScope(selectedEl)) {
+            if (!(selectedEl instanceof CnATreeElement)) {
+                return false;
+            }
+            if (!((CnATreeElement) selectedEl).isScope()) {
                 return false;
             }
         }
         return true;
     }
 
-    public static boolean isScope(Object element) {
-        return element instanceof ItNetwork || element instanceof Organization
-                || element instanceof ITVerbund;
-    }
 }

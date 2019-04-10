@@ -19,9 +19,10 @@
  ******************************************************************************/
 package sernet.verinice.bpm;
 
+import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -51,7 +52,12 @@ public class DateChecker {
      * @return a date that is after the current instant
      */
     public Date checkIfDateIsPast(Date date, String daysDeltaString) {
-        Instant now = Instant.now();
+        return checkIfDateIsPast(date, daysDeltaString, Clock.systemUTC());
+
+    }
+
+    Date checkIfDateIsPast(Date date, String daysDeltaString, Clock clock) {
+        Instant now = Instant.now(clock);
         Instant dateAsInstant = date.toInstant();
         if (!dateAsInstant.isBefore(now)) {
             return date;
@@ -62,11 +68,11 @@ public class DateChecker {
             throw new IllegalArgumentException("Invalid value specified for days delta: "
                     + daysDeltaString + ", must be greater than 0.");
         }
-        long daysPassed = ChronoUnit.DAYS.between(dateAsInstant, now);
-        long deltaIterations = daysPassed / daysDelta + 1l;
-        dateAsInstant = dateAsInstant.atZone(ZoneId.systemDefault())
-                .plusDays(deltaIterations * daysDelta).toInstant();
-        return Date.from(dateAsInstant);
+        ZonedDateTime dateAsZDT = dateAsInstant.atZone(ZoneId.systemDefault());
+        while (dateAsZDT.toInstant().isBefore(now)) {
+            dateAsZDT = dateAsZDT.plusDays(daysDelta);
+        }
+        return Date.from(dateAsZDT.toInstant());
     }
 
     /**

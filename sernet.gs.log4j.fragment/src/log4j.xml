@@ -28,6 +28,16 @@
 	<logger name="org.ops4j.pax.web.service.internal.ConfigurationImpl">
 		<level value="ERROR" />
 	</logger>
+	<!-- Avoid a lot of warnings (An item was expired by the cache while it
+		was locked) -->
+	<logger name="org.hibernate.cache.ReadWriteCache">
+		<level value="ERROR" />
+	</logger>
+	<!-- Avoid harmless warning :
+		Narrowing proxy to class - this operation breaks) -->
+	<logger name="org.hibernate.engine.StatefulPersistenceContext.ProxyWarnLog">
+		<level value="ERROR" />
+	</logger>
 
 	<!-- Logs system configuration on startup -->
 	<logger name="sernet.gs.ui.rcp.main.ConfigurationLogger">

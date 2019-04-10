@@ -50,8 +50,32 @@ public interface IBaseDao<T, ID extends Serializable> extends IDao<T, ID> {
 
 	Class<T> getType();
 	
+    /**
+     * Checks if the user calling the function has write permissions for the
+     * element with the given ID and scopeId.
+     * 
+     * Throws a sernet.gs.service.SecurityException if no write permissions are
+     * granted.
+     */
+    default void checkRights(ID id, ID scopeId) {
+    }
+
+    /**
+     * Checks if the user calling the function has write permissions for the
+     * given entity.
+     * 
+     * Throws a sernet.gs.service.SecurityException if no write permissions are
+     * granted.
+     */
 	void checkRights(T entity) /*throws SecurityException*/ ;
 	
+    /**
+     * Checks if the user with the given user name has write permissions for the
+     * given entity.
+     * 
+     * Throws a sernet.gs.service.SecurityException if no write permissions are
+     * granted.
+     */
 	void checkRights(T entity, String username) /*throws SecurityException*/ ;
 	
 	void clear();

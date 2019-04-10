@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -31,8 +32,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -41,7 +47,6 @@ import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.MultiPageEditorPart;
-import org.hibernate.StaleObjectStateException;
 
 import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.Activator;
@@ -67,13 +72,26 @@ import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.hui.swt.widgets.IHuiControlFactory;
 import sernet.snutils.AssertException;
 import sernet.snutils.FormInputParser;
-import sernet.verinice.bp.rcp.risk.ui.RiskConfigurationUtil;
+import sernet.springclient.RightsServiceClient;
+import sernet.verinice.bp.rcp.risk.ui.FrequencyConfigurator;
+import sernet.verinice.bp.rcp.risk.ui.ImpactConfigurator;
+import sernet.verinice.bp.rcp.risk.ui.RiskConfigurationUpdateResultDialog;
+import sernet.verinice.bp.rcp.risk.ui.RiskMatrixConfigurator;
 import sernet.verinice.bp.rcp.risk.ui.RiskUiUtils;
+import sernet.verinice.bp.rcp.risk.ui.RiskValuesConfigurator;
+import sernet.verinice.bp.rcp.risk.ui.StackConfigurator;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.risk.RiskPropertyValue;
+import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
+import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
+import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateContext;
+import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateResult;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.bp.risk.RiskService;
 import sernet.verinice.service.commands.crud.LoadElementForEditor;
 
 /**
@@ -95,13 +113,26 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
     private boolean isModelModified = false;
     private ITask task;
     private Map<String, String> changedElementProperties = new HashMap<>();
+    private @NonNull RiskConfiguration riskConfigurationState = DefaultRiskConfiguration
+            .getInstance();
 
+    private RiskService riskService;
+    private RightsServiceClient rightsService;
     private Boolean isWriteAllowed = null;
 
     public static final String SAMT_PERSPECTIVE_ID = "sernet.verinice.samt.rcp.SamtPerspective"; //$NON-NLS-1$
     // limit display in SAMT perspective to properties tagged as "VDA-ISA"
     // (simplified view):
     private static final String SAMT_PERSPECTIVE_DEFAULT_TAGS = "VDA-ISA"; //$NON-NLS-1$
+
+    private ImpactConfigurator impactsConfigurator;
+    private FrequencyConfigurator frequenciesConfigurator;
+    private RiskValuesConfigurator riskValuesConfigurator;
+    private RiskMatrixConfigurator riskMatrixConfigurator;
+    private int matrixPageIndex = -1;
+    private int riskCategoriesPageIndex = -1;
+    private int impactsPageIndex = -1;
+    private int frequenciesPageIndex = -1;
 
     private IEntityChangedListener modelListener = new IEntityChangedListener() {
 
@@ -174,13 +205,14 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
     private CnATreeElement cnAElement;
     private LinkMaker linkMaker;
 
-    private RiskConfigurationUtil riskConfigurationUtil;
-
     @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
         if (!(input instanceof BSIElementEditorInput)) {
             throw new PartInitException("invalid input"); //$NON-NLS-1$
         }
+
+        Activator.inheritVeriniceContextState();
+        rightsService = (RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
 
         setSite(site);
         setInput(input);
@@ -256,7 +288,16 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
         } catch (Exception e) {
             ExceptionUtil.log(e, Messages.BSIElementEditor_8);
         }
+    }
 
+    @Override
+    protected void pageChange(int newPageIndex) {
+        if (matrixPageIndex == newPageIndex) {
+            riskMatrixConfigurator.setEditorState(riskConfigurationState);
+            riskMatrixConfigurator.refresh();
+        }
+
+        super.pageChange(newPageIndex);
     }
 
     private boolean isTaskEditorContext() {
@@ -277,53 +318,51 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
 
     @Override
     public void doSave(IProgressMonitor monitor) {
-        if (isModelModified || (riskConfigurationUtil != null && riskConfigurationUtil.isDirty())) {
-            Activator.inheritVeriniceContextState();
-            if (isTaskEditorContext()) {
-                updateTaskWithChangedElementProperties();
-                LOG.info("Sciped save cnAElement."); //$NON-NLS-1$
-            } else {
-                monitor.beginTask(Messages.BSIElementEditor_1, IProgressMonitor.UNKNOWN);
-                save();
-                if (linkMaker != null) {
-                    linkMaker.viewer.refresh();
-                }
-                // Refresh other views in background
-                Job job = new RefreshJob("Refresh application...",
-                        EditorUtil.getRelatedObjects(cnAElement));
-                job.setRule(new RefreshJobRule());
-                job.schedule();
-
-                IEditorReference[] editorReferences = PlatformUI.getWorkbench()
-                        .getActiveWorkbenchWindow().getActivePage().getEditorReferences();
-                ArrayList<IEditorReference> closeOthers = new ArrayList<>();
-                BSIElementEditorInput myInput = (BSIElementEditorInput) getEditorInput();
-
-                for (IEditorReference editorReference : editorReferences) {
-                    IEditorInput input;
-                    try {
-                        if (editorReference.isPinned() || editorReference.isDirty()) {
-                            continue;
-                        }
-                        input = editorReference.getEditorInput();
-                        if (input instanceof BSIElementEditorInput) {
-                            BSIElementEditorInput bsiInput = (BSIElementEditorInput) input;
-                            if (!bsiInput.getId().equals(myInput.getId())) {
-                                closeOthers.add(editorReference);
-                            }
-                        }
-                    } catch (PartInitException e) {
-                        ExceptionUtil.log(e, Messages.BSIElementEditor_2);
-                    }
-                }
-
-                IEditorReference[] closeArray = closeOthers
-                        .toArray(new IEditorReference[closeOthers.size()]);
-                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                        .closeEditors(closeArray, true);
-
-                monitor.done();
+        Activator.inheritVeriniceContextState();
+        if (isTaskEditorContext()) {
+            updateTaskWithChangedElementProperties();
+            LOG.info("Sciped save cnAElement."); //$NON-NLS-1$
+        } else {
+            monitor.beginTask(Messages.BSIElementEditor_1, IProgressMonitor.UNKNOWN);
+            save();
+            if (linkMaker != null) {
+                linkMaker.viewer.refresh();
             }
+            // Refresh other views in background
+            Job job = new RefreshJob("Refresh application...",
+                    EditorUtil.getRelatedObjects(cnAElement));
+            job.setRule(new RefreshJobRule());
+            job.schedule();
+
+            IEditorReference[] editorReferences = PlatformUI.getWorkbench()
+                    .getActiveWorkbenchWindow().getActivePage().getEditorReferences();
+            ArrayList<IEditorReference> closeOthers = new ArrayList<>();
+            BSIElementEditorInput myInput = (BSIElementEditorInput) getEditorInput();
+
+            for (IEditorReference editorReference : editorReferences) {
+                IEditorInput input;
+                try {
+                    if (editorReference.isPinned() || editorReference.isDirty()) {
+                        continue;
+                    }
+                    input = editorReference.getEditorInput();
+                    if (input instanceof BSIElementEditorInput) {
+                        BSIElementEditorInput bsiInput = (BSIElementEditorInput) input;
+                        if (!bsiInput.getId().equals(myInput.getId())) {
+                            closeOthers.add(editorReference);
+                        }
+                    }
+                } catch (PartInitException e) {
+                    ExceptionUtil.log(e, Messages.BSIElementEditor_2);
+                }
+            }
+
+            IEditorReference[] closeArray = closeOthers
+                    .toArray(new IEditorReference[closeOthers.size()]);
+            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                    .closeEditors(closeArray, true);
+
+            monitor.done();
         }
     }
 
@@ -333,8 +372,21 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
             return;
         }
         try {
-            if (riskConfigurationUtil != null && riskConfigurationUtil.isDirty()) {
-                riskConfigurationUtil.doSave();
+            if (cnAElement.isItNetwork()
+                    && riskConfigurationState != DefaultRiskConfiguration.getInstance()) {
+                validateAllLabelsUniqueAndNonEmpty(riskConfigurationState);
+
+                ItNetwork itNetwork = (ItNetwork) cnAElement;
+                itNetwork.setRiskConfiguration(riskConfigurationState);
+                RiskConfigurationUpdateContext updateContext = new RiskConfigurationUpdateContext(
+                        cnAElement.getUuid(), riskConfigurationState,
+                        frequenciesConfigurator.getDeleted(), impactsConfigurator.getDeleted(),
+                        riskValuesConfigurator.getDeleted());
+                RiskConfigurationUpdateResult updateResult = getRiskService()
+                        .updateRiskConfiguration(updateContext);
+                RiskConfigurationUpdateResultDialog.openUpdateResultDialog(updateResult);
+                Stream.of(frequenciesConfigurator, impactsConfigurator, riskValuesConfigurator)
+                        .forEach(StackConfigurator::reset);
             }
 
             // save element, refresh etc:
@@ -345,12 +397,44 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
             this.setTitleToolTip(EditorUtil.getEditorToolTipText(cnAElement));
             setIcon();
             firePropertyChange(IEditorPart.PROP_DIRTY);
-        } catch (StaleObjectStateException se) {
+        } catch (RiskPropertyValueLabelNotUniqueException e) {
+            setActivePage(e.indexOfFirstErrorPage);
+            MessageDialog.openError(Display.getCurrent().getActiveShell(),
+                    Messages.BSIElementEditorMultiPage_risk_configuration_invalid,
+                    Messages.BSIElementEditorMultiPage_risk_property_value_labels_not_unique);
+
+        } catch (Exception se) {
             // close editor, loosing changes:
-            ExceptionUtil.log(se, Messages.BSIElementEditor_0);
-        } catch (Exception e) {
-            ExceptionUtil.log(e, Messages.BSIElementEditor_5);
+            ExceptionUtil.log(se, Messages.BSIElementEditor_5);
         }
+    }
+
+    private void validateAllLabelsUniqueAndNonEmpty(@NonNull RiskConfiguration riskConfiguration)
+            throws RiskPropertyValueLabelNotUniqueException {
+        if (!allLabelsUniqueAndNonEmpty(riskConfiguration.getFrequencies())) {
+            throw new RiskPropertyValueLabelNotUniqueException(frequenciesPageIndex);
+        }
+        if (!allLabelsUniqueAndNonEmpty(riskConfiguration.getImpacts())) {
+            throw new RiskPropertyValueLabelNotUniqueException(impactsPageIndex);
+        }
+        if (!allLabelsUniqueAndNonEmpty(riskConfiguration.getRisks())) {
+            throw new RiskPropertyValueLabelNotUniqueException(riskCategoriesPageIndex);
+        }
+
+    }
+
+    private static boolean allLabelsUniqueAndNonEmpty(
+            List<? extends RiskPropertyValue> riskPropertyValues) {
+        int numberOfUniqueNonEmptyLabels = (int) riskPropertyValues.stream()
+                .map(RiskPropertyValue::getLabel).filter(s -> !s.isEmpty()).distinct().count();
+        return numberOfUniqueNonEmptyLabels == riskPropertyValues.size();
+    }
+
+    private RiskService getRiskService() {
+        if (riskService == null) {
+            riskService = (RiskService) VeriniceContext.get(VeriniceContext.ITBP_RISK_SERVICE);
+        }
+        return riskService;
     }
 
     private void updateTaskWithChangedElementProperties() {
@@ -397,10 +481,13 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
 
     @Override
     public boolean isDirty() {
-        if (riskConfigurationUtil != null && riskConfigurationUtil.isDirty()) {
+        if (isModelModified) {
             return true;
         }
-        return isModelModified;
+        return cnAElement.isItNetwork()
+                && riskConfigurationState != DefaultRiskConfiguration.getInstance()
+                && !riskConfigurationState
+                        .deepEquals(((ItNetwork) cnAElement).getRiskConfiguration());
     }
 
     @Override
@@ -531,27 +618,54 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
         createBsiPage();
         createLinkMakerPage();
 
-        if (cnAElement instanceof ItNetwork && RiskConfigurationUtil.checkRights()) {
+        if (cnAElement.isItNetwork()
+                && rightsService.isEnabled(ActionRightIDs.EDITRISKCONFIGURATION)) {
             ItNetwork itn = (ItNetwork) cnAElement;
-            riskConfigurationUtil = new RiskConfigurationUtil(itn,
-                    () -> firePropertyChange(PROP_DIRTY));
 
-            addNewPage(riskConfigurationUtil.createRiskMatrixPage(getContainer()),
+            riskConfigurationState = itn.getRiskConfigurationOrDefault();
+
+            ScrolledComposite scrolledComposite;
+            scrolledComposite = createScrollableComposite(getContainer());
+            riskMatrixConfigurator = new RiskMatrixConfigurator(scrolledComposite,
+                    riskConfigurationState, this::riskConfigurationChanged);
+            scrolledComposite.setContent(riskMatrixConfigurator);
+            matrixPageIndex = addNewPage(scrolledComposite,
                     Messages.BSIElementEditorMultiPage_page_name_risk_matrix);
-            addNewPage(riskConfigurationUtil.createRiskValuePage(getContainer()),
-                    Messages.BSIElementEditorMultiPage_page_name_risk_values);
-            addNewPage(riskConfigurationUtil.createRiskImpact(getContainer()),
-                    Messages.BSIElementEditorMultiPage_page_name_risk_impact);
-            addNewPage(riskConfigurationUtil.createRiskFrequency(getContainer()),
-                    Messages.BSIElementEditorMultiPage_page_name_risk_frequency);
 
-            riskConfigurationUtil.updateConfiguration();
+            scrolledComposite = createScrollableComposite(getContainer());
+            riskValuesConfigurator = new RiskValuesConfigurator(scrolledComposite,
+                    riskConfigurationState.getRisks(), this::riskConfigurationChanged);
+            scrolledComposite.setContent(riskValuesConfigurator);
+            riskCategoriesPageIndex = addNewPage(scrolledComposite,
+                    Messages.BSIElementEditorMultiPage_page_name_risk_values);
+
+            scrolledComposite = createScrollableComposite(getContainer());
+            impactsConfigurator = new ImpactConfigurator(scrolledComposite,
+                    riskConfigurationState.getImpacts(), this::riskConfigurationChanged);
+            scrolledComposite.setContent(impactsConfigurator);
+            impactsPageIndex = addNewPage(scrolledComposite,
+                    Messages.BSIElementEditorMultiPage_page_name_risk_impact);
+
+            scrolledComposite = createScrollableComposite(getContainer());
+            frequenciesConfigurator = new FrequencyConfigurator(scrolledComposite,
+                    riskConfigurationState.getFrequencies(), this::riskConfigurationChanged);
+            scrolledComposite.setContent(frequenciesConfigurator);
+            frequenciesPageIndex = addNewPage(scrolledComposite,
+                    Messages.BSIElementEditorMultiPage_page_name_risk_frequency);
         }
     }
 
-    private void addNewPage(Composite matrixPage, String titel) {
-        int index = addPage(matrixPage);
-        setPageText(index, titel);
+    private void riskConfigurationChanged() {
+        riskConfigurationState = riskMatrixConfigurator.getEditorState().withValues(
+                frequenciesConfigurator.getEditorState(), impactsConfigurator.getEditorState(),
+                riskValuesConfigurator.getEditorState());
+        firePropertyChange(PROP_DIRTY);
+    }
+
+    private int addNewPage(Composite page, String title) {
+        int index = addPage(page);
+        setPageText(index, title);
+        return index;
     }
 
     private void createLinkMakerPage() {
@@ -573,4 +687,23 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
         addNewPage(huiComposite, Messages.BSIElementEditorMultiPage_page_name_data);
     }
 
+    private static ScrolledComposite createScrollableComposite(Composite parent) {
+        ScrolledComposite scrolledComposite = new ScrolledComposite(parent,
+                SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+        scrolledComposite.setExpandHorizontal(true);
+        scrolledComposite.setExpandVertical(true);
+        return scrolledComposite;
+    }
+
+    private static class RiskPropertyValueLabelNotUniqueException extends Exception {
+
+        private static final long serialVersionUID = 4147192368139573141L;
+
+        private final int indexOfFirstErrorPage;
+
+        private RiskPropertyValueLabelNotUniqueException(int indexOfFirstErrorPage) {
+            this.indexOfFirstErrorPage = indexOfFirstErrorPage;
+        }
+
+    }
 }

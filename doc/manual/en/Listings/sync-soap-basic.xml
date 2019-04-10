@@ -1,0 +1,18 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
+	xmlns:sync="http://www.sernet.de/sync/sync" 
+	xmlns:data="http://www.sernet.de/sync/data" 
+	xmlns:map="http://www.sernet.de/sync/mapping">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <sync:syncRequest sourceId="mySource" 
+      	insert="true" update="true" delete="false">
+         <data:syncData>
+            [<data:syncObject />]*
+          </data:syncData>
+         <map:syncMapping>
+            [<map:mapObjectType />]*
+         </map:syncMapping>
+         <sync:syncVnaSchemaVersion />
+      </sync:syncRequest>
+   </soapenv:Body>
+</soapenv:Envelope>

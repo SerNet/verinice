@@ -20,6 +20,8 @@
 package sernet.verinice.model.bp.elements;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import sernet.gs.service.StringUtil;
 import sernet.hui.common.connect.IIdentifiableElement;
@@ -69,6 +71,24 @@ public class BpThreat extends CnATreeElement
     public static final String REL_BP_THREAT_BP_ITSYSTEM = "rel_bp_threat_bp_itsystem"; //$NON-NLS-1$
     public static final String REL_BP_THREAT_BP_NETWORK = "rel_bp_threat_bp_network"; //$NON-NLS-1$
     public static final String REL_BP_THREAT_BP_ROOM = "rel_bp_threat_bp_room"; //$NON-NLS-1$
+
+    private static final Map<String, String> RELATION_TYPES_BY_TARGET_OBJECT_TYPE = new HashMap<>();
+    static {
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(Application.TYPE_ID,
+                BpThreat.REL_BP_THREAT_BP_APPLICATION);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(BusinessProcess.TYPE_ID,
+                BpThreat.REL_BP_THREAT_BP_BUSINESSPROCESS);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(Device.TYPE_ID, BpThreat.REL_BP_THREAT_BP_DEVICE);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(IcsSystem.TYPE_ID,
+                BpThreat.REL_BP_THREAT_BP_ICSSYSTEM);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(ItNetwork.TYPE_ID,
+                BpThreat.REL_BP_THREAT_BP_ITNETWORK);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(ItSystem.TYPE_ID,
+                BpThreat.REL_BP_THREAT_BP_ITSYSTEM);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(Network.TYPE_ID,
+                BpThreat.REL_BP_THREAT_BP_NETWORK);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(Room.TYPE_ID, BpThreat.REL_BP_THREAT_BP_ROOM);
+    }
 
     private final IReevaluator reevaluator = new Reevaluator(this);
     private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
@@ -172,6 +192,10 @@ public class BpThreat extends CnATreeElement
 
     public static String getIdentifierOfThreat(CnATreeElement requirement) {
         return requirement.getEntity().getPropertyValue(PROP_ID);
+    }
+
+    public static String getLinkTypeToTargetObject(String objectType) {
+        return RELATION_TYPES_BY_TARGET_OBJECT_TYPE.get(objectType);
     }
 
     @Override

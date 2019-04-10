@@ -34,7 +34,6 @@ import org.eclipse.swt.widgets.Label;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyType;
-import sernet.snutils.AssertException;
 
 /**
  * Custom widget to enter a date, either directly or using a date picker (SWT
@@ -44,179 +43,167 @@ import sernet.snutils.AssertException;
  */
 public class DateSelectionControl extends AbstractHuiControl {
 
-	private Entity entity;
+    private Entity entity;
 
-	private PropertyType fieldType;
+    private PropertyType fieldType;
 
-	private boolean editable = false;
+    private boolean editable = false;
 
-	private Property savedProp;
+    private Property savedProp;
 
-	private DateTime dateTime;
+    private DateTime dateTime;
 
-	private boolean useRule;
-	
-	private boolean showValidationHint;
+    private boolean useRule;
 
-	private boolean useValidationGUIHints;
+    private boolean showValidationHint;
 
-	
-	public Control getControl() {
-		return dateTime;
-	}
+    private boolean useValidationGUIHints;
 
-	/**
-	 * @param dyndoc
-	 * @param type
-	 * @param composite
-	 */
-	public DateSelectionControl(Entity dyndoc, PropertyType type,
-			Composite parent, boolean edit, boolean rules, boolean showValidationHint, boolean useValidationGuiHints) {
-		super(parent);
-		this.entity = dyndoc;
-		this.fieldType = type;
-		this.editable = edit;
-		this.useRule = rules;
-		this.showValidationHint = showValidationHint;
-		this.useValidationGUIHints = useValidationGuiHints;
-
-	}
-	
-	public static boolean isWindows(){
-        String os = System.getProperty("os.name").toLowerCase();
-        //windows
-        return (os.indexOf( "win" ) >= 0); 
+    public Control getControl() {
+        return dateTime;
     }
 
+    public DateSelectionControl(Entity dyndoc, PropertyType type, Composite parent, boolean edit,
+            boolean rules, boolean showValidationHint, boolean useValidationGuiHints) {
+        super(parent);
+        this.entity = dyndoc;
+        this.fieldType = type;
+        this.editable = edit;
+        this.useRule = rules;
+        this.showValidationHint = showValidationHint;
+        this.useValidationGUIHints = useValidationGuiHints;
 
-	/**
-	 * @throws AssertException
-	 * 
-	 */
-	public void create() {
-		label = new Label(composite, SWT.NULL);
+    }
 
-		Composite container = new Composite(composite, SWT.NULL);
-		GridLayout contLayout = new GridLayout(1, false);
-		contLayout.horizontalSpacing = 0;
-		contLayout.marginHeight = 0;
-		contLayout.marginLeft = 0;
-		contLayout.marginWidth = 0;
-		container.setLayout(contLayout);
+    public static boolean isWindows() {
+        String os = System.getProperty("os.name").toLowerCase();
+        // windows
+        return (os.indexOf("win") >= 0);
+    }
 
-		GridData containerLData = new GridData();
-		containerLData.horizontalAlignment = GridData.FILL;
-		containerLData.grabExcessHorizontalSpace = true;
-		container.setLayoutData(containerLData);
+    public void create() {
+        label = new Label(composite, SWT.NULL);
 
-		if (isWindows()) {
-		    dateTime = new DateTime(container, SWT.DATE | SWT.MEDIUM | SWT.DROP_DOWN);
-		} else {
-		    dateTime = new DateTime(container, SWT.CALENDAR | SWT.MEDIUM | SWT.DROP_DOWN);
-		}
+        Composite container = new Composite(composite, SWT.NULL);
+        GridLayout contLayout = new GridLayout(1, false);
+        contLayout.horizontalSpacing = 0;
+        contLayout.marginHeight = 0;
+        contLayout.marginLeft = 0;
+        contLayout.marginWidth = 0;
+        container.setLayout(contLayout);
 
-		GridData label36LData = new GridData();
-		label36LData.verticalAlignment = GridData.CENTER;
-		label36LData.horizontalAlignment = GridData.BEGINNING;
-		label36LData.widthHint = -1;
-		label36LData.heightHint = -1;
-		label36LData.horizontalIndent = 0;
-		label36LData.horizontalSpan = 1;
-		label36LData.verticalSpan = 1;
-		label36LData.grabExcessHorizontalSpace = false;
-		label36LData.grabExcessVerticalSpace = false;
-		label.setLayoutData(label36LData);
-		String labelText = fieldType.getName();
-		if(showValidationHint && useValidationGUIHints){
-		    refontLabel(true);
-		}
-		label.setText(labelText);
+        GridData containerLData = new GridData();
+        containerLData.horizontalAlignment = GridData.FILL;
+        containerLData.grabExcessHorizontalSpace = true;
+        container.setLayoutData(containerLData);
 
-		GridData startWvTextLData = new GridData();
-		startWvTextLData.horizontalAlignment = GridData.FILL;
-		startWvTextLData.horizontalSpan = 1;
-		startWvTextLData.grabExcessHorizontalSpace = true;
-		dateTime.setLayoutData(startWvTextLData);
-		dateTime.setEnabled(editable);
-		if (!editable){
-			dateTime.setBackground(Colors.GREY);
-		}
-		dateTime.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-			    Calendar calendar = getCalendar();
-				if (!isSameDay(savedProp.getPropertyValue(), calendar.getTimeInMillis())){				
-					savedProp.setPropertyValue(calendar, true, dateTime);
-				}
-			}
-		});
+        if (isWindows()) {
+            dateTime = new DateTime(container, SWT.DATE | SWT.MEDIUM | SWT.DROP_DOWN);
+        } else {
+            dateTime = new DateTime(container, SWT.CALENDAR | SWT.MEDIUM | SWT.DROP_DOWN);
+        }
 
-		List savedProps = entity.getProperties(fieldType.getId()).getProperties();
-		savedProp = savedProps!=null &&  !savedProps.isEmpty() ? (Property) savedProps.get(0) : null;
+        GridData label36LData = new GridData();
+        label36LData.verticalAlignment = GridData.CENTER;
+        label36LData.horizontalAlignment = GridData.BEGINNING;
+        label36LData.widthHint = -1;
+        label36LData.heightHint = -1;
+        label36LData.horizontalIndent = 0;
+        label36LData.horizontalSpan = 1;
+        label36LData.verticalSpan = 1;
+        label36LData.grabExcessHorizontalSpace = false;
+        label36LData.grabExcessVerticalSpace = false;
+        label.setLayoutData(label36LData);
+        String labelText = fieldType.getName();
+        if (showValidationHint && useValidationGUIHints) {
+            refontLabel(true);
+        }
+        label.setText(labelText);
 
-		String millis = "";
-		if (savedProp != null) {
-			millis = savedProp.getPropertyValue();
-		} else {
-			if (useRule){
-				millis = fieldType.getDefaultRule().getValue();
-			}
-			savedProp = entity.createNewProperty(fieldType, millis);
-		}
+        GridData startWvTextLData = new GridData();
+        startWvTextLData.horizontalAlignment = GridData.FILL;
+        startWvTextLData.horizontalSpan = 1;
+        startWvTextLData.grabExcessHorizontalSpace = true;
+        dateTime.setLayoutData(startWvTextLData);
+        dateTime.setEnabled(editable);
+        if (!editable) {
+            dateTime.setBackground(Colors.GREY);
+        }
+        dateTime.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                Calendar calendar = getCalendar();
+                if (!isSameDay(savedProp.getPropertyValue(), calendar.getTimeInMillis())) {
+                    savedProp.setPropertyValue(calendar, true, dateTime);
+                }
+            }
+        });
 
-		setDisplayedTime(millis);
-		dateTime.setToolTipText(fieldType.getTooltiptext());
-	}
+        dateTime.addListener(SWT.MouseVerticalWheel, event -> event.doit = false);
 
-	protected boolean isSameDay(String propertyValue, long dateInMillis2) {
-		try {
-			long dateInMillis1 = Long.parseLong(propertyValue);
-			Calendar cal1 = Calendar.getInstance();
-			Calendar cal2 = Calendar.getInstance();
-			cal1.setTimeInMillis(dateInMillis1);
-			cal2.setTimeInMillis(dateInMillis2);
-			return (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
-					&& cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)
-					&& cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH)
-					);
-			
-		} catch (Exception e) {
-			return false;
-		}
-	}
+        List<Property> savedProps = entity.getProperties(fieldType.getId()).getProperties();
+        savedProp = savedProps != null && !savedProps.isEmpty() ? savedProps.get(0) : null;
 
-	private void setDisplayedTime(String millis) {
-		Calendar calendar = Calendar.getInstance();
-		try {
-			calendar.setTimeInMillis(Long.parseLong(millis));
-		} catch (Exception e) {
-			// do nothing, use todays date
-		}
-		dateTime.setDate(calendar.get(Calendar.YEAR), calendar
-				.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-	}
+        String millis = "";
+        if (savedProp != null) {
+            millis = savedProp.getPropertyValue();
+        } else {
+            if (useRule) {
+                millis = fieldType.getDefaultRule().getValue();
+            }
+            savedProp = entity.createNewProperty(fieldType, millis);
+        }
 
-	protected Calendar getCalendar() {
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
-		return calendar;
-	}
+        setDisplayedTime(millis);
+        dateTime.setToolTipText(fieldType.getTooltiptext());
+    }
 
-	public void setFocus() {
-	}
+    protected boolean isSameDay(String propertyValue, long dateInMillis2) {
+        try {
+            long dateInMillis1 = Long.parseLong(propertyValue);
+            Calendar cal1 = Calendar.getInstance();
+            Calendar cal2 = Calendar.getInstance();
+            cal1.setTimeInMillis(dateInMillis1);
+            cal2.setTimeInMillis(dateInMillis2);
+            return (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+                    && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)
+                    && cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH));
 
-	public void update() {
-	      validate();
-	}
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
-	public boolean validate() {
+    private void setDisplayedTime(String millis) {
+        Calendar calendar = Calendar.getInstance();
+        try {
+            calendar.setTimeInMillis(Long.parseLong(millis));
+        } catch (Exception e) {
+            // do nothing, use today's date
+        }
+        dateTime.setDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH));
+    }
+
+    protected Calendar getCalendar() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
+        return calendar;
+    }
+
+    public void setFocus() {
+    }
+
+    public void update() {
+        validate();
+    }
+
+    public boolean validate() {
         boolean valid = true;
-        for(Entry<String, Boolean> entry : fieldType.validate(
-                String.valueOf(dateTime.getDay() +
-                "." + (dateTime.getMonth() + 1) +
-                "." + dateTime.getYear()),
-                null).entrySet()){
-            if(!entry.getValue().booleanValue()){
+        for (Entry<String, Boolean> entry : fieldType.validate(String.valueOf(
+                dateTime.getDay() + "." + (dateTime.getMonth() + 1) + "." + dateTime.getYear()),
+                null).entrySet()) {
+            if (!entry.getValue().booleanValue()) {
                 valid = false;
                 break;
             }
@@ -226,9 +213,9 @@ public class DateSelectionControl extends AbstractHuiControl {
             return true;
         }
 
-        if(useValidationGUIHints){
+        if (useValidationGUIHints) {
             refontLabel(true);
         }
         return false;
-	}
+    }
 }

@@ -60,6 +60,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.PasswordException;
 import sernet.verinice.model.bp.DeductionImplementationUtil;
+import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bpm.TodoViewItem;
 import sernet.verinice.model.bsi.DocumentReference;
@@ -71,6 +72,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.PersonIso;
+import sernet.verinice.service.bp.risk.RiskDeductionUtil;
 import sernet.verinice.service.commands.CreateConfiguration;
 import sernet.verinice.service.commands.LoadConfiguration;
 import sernet.verinice.service.commands.UpdateMultipleElementEntities;
@@ -133,11 +135,10 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
         readSelection(selection);
         Dialog dialog = null;
 
-        Map<String, IHuiControlFactory> overrides = RiskUiUtils
-                .createHuiControlFactories(selectedElements.get(0));
-
         if (entType != null && !(entType.getId().equals(Person.TYPE_ID)
                 || entType.getId().equals(PersonIso.TYPE_ID))) {
+            Map<String, IHuiControlFactory> overrides = RiskUiUtils
+                    .createHuiControlFactories(selectedElements.get(0));
             dialog = new BulkEditDialog(window.getShell(), entType, overrides);
         } else {
             dialog = new PersonBulkEditDialog(window.getShell(), Messages.ShowBulkEditAction_14);
@@ -407,19 +408,29 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             IProgressMonitor monitor) {
         monitor.setTaskName(Messages.ShowBulkEditAction_9);
         monitor.beginTask(Messages.ShowBulkEditAction_10, selectedElements.size() + 1);
-
+        List<CnATreeElement> elementsToSave = new ArrayList<>(selectedElements.size());
         // for every target:
         for (CnATreeElement elmt : selectedElements) {
+            boolean elementIsThreat = elmt instanceof BpThreat;
+            if (elementIsThreat) {
+                // load linked elements required for risk deduction
+                elmt = Retriever.retrieveElement(elmt,
+                        RetrieveInfo.getPropertyInstance().setLinksUp(true));
+            }
             // set values:
             Entity editEntity = elmt.getEntity();
             editEntity.copyEntity(dialogEntity);
+            if (elementIsThreat) {
+                RiskDeductionUtil.deduceRisk((BpThreat) elmt);
+            }
+            elementsToSave.add(elmt);
             monitor.worked(1);
         }
         try {
             monitor.setTaskName(Messages.ShowBulkEditAction_11);
             monitor.beginTask(Messages.ShowBulkEditAction_12, IProgressMonitor.UNKNOWN);
             UpdateMultipleElementEntities command = new UpdateMultipleElementEntities(
-                    selectedElements);
+                    elementsToSave);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             List<CnATreeElement> changedElements = command.getChangedElements();
             for (CnATreeElement cnATreeElement : changedElements) {

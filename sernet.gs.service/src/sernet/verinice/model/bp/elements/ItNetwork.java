@@ -20,6 +20,7 @@
 package sernet.verinice.model.bp.elements;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.hui.common.connect.ITaggableElement;
@@ -41,6 +42,7 @@ import sernet.verinice.model.bp.groups.NetworkGroup;
 import sernet.verinice.model.bp.groups.RoomGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.bp.risk.configuration.ConfigurationSerializer;
+import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
@@ -168,13 +170,31 @@ public class ItNetwork extends CnATreeElement
     public String getAbbreviation() {
         return getEntity().getPropertyValue(PROP_ABBR);
     }
-    
-   public RiskConfiguration getRiskConfiguration() {
+
+    /**
+     * Gets the explicitly configured risk configuration for this IT network,
+     * will return {@code null} if there is no explicit configuration.
+     *
+     * @see #getRiskConfigurationOrDefault()
+     */
+    public RiskConfiguration getRiskConfiguration() {
         String rawPropertyValue = getEntity().getRawPropertyValue(PROP_RISK_CONFIGURATION);
         if (rawPropertyValue == null) {
             return null;
         }
         return ConfigurationSerializer.configurationFromString(rawPropertyValue);
+    }
+
+    /**
+     * Gets the <em>effective</em> risk configuration for this IT network, be it
+     * an explicitly configured or the default one.
+     *
+     * @see #getRiskConfiguration()
+     * @see DefaultRiskConfiguration
+     */
+    public RiskConfiguration getRiskConfigurationOrDefault() {
+        return Optional.ofNullable(getRiskConfiguration())
+                .orElseGet(DefaultRiskConfiguration::getInstance);
     }
 
     public void setRiskConfiguration(RiskConfiguration riskConfiguration) {

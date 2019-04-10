@@ -62,14 +62,13 @@ import java.util.Locale;
 import org.apache.log4j.Logger;
 
 /**
- * A Comparator which deals with alphabet characters 'naturally', but 
- * deals with numerics numerically. Leading 0's are ignored numerically,
- * but do come into play if the number is equal. Thus aaa119yyyy comes before 
- * aaa0119xxxx regardless of x or y.
+ * A Comparator which deals with alphabet characters 'naturally', but deals with
+ * numerics numerically. Leading 0's are ignored numerically, but do come into
+ * play if the number is equal. Thus aaa119yyyy comes before aaa0119xxxx
+ * regardless of x or y.
  *
- * The comparison should be very performant as it only ever deals with 
- * issues at a character level and never tries to consider the 
- * numerics as numbers.
+ * The comparison should be very performant as it only ever deals with issues at
+ * a character level and never tries to consider the numerics as numbers.
  * 
  * @see Test class: sernet.verinice.service.test.NumericStringComparatorTest
  * @author bayard@generationjava.com
@@ -78,200 +77,192 @@ import org.apache.log4j.Logger;
 public abstract class AbstractNumericStringComparator<T> implements Comparator<T>, Serializable {
 
     private static final long serialVersionUID = -9196544676244562514L;
-    
+
     private static final Logger log = Logger.getLogger(AbstractNumericStringComparator.class);
-    
+
     // Collator for basic string comparison
-    private transient Collator collator = Collator.getInstance(Locale.getDefault()); 
-    
+    private transient Collator collator = Collator.getInstance(Locale.getDefault());
+
     /**
-     * Returns a collator for the default locale for this instance
-     * of the Java Virtual Machine.
+     * Returns a collator for the default locale for this instance of the Java
+     * Virtual Machine.
      * 
-     * For a German / Germany locale the sorting is done according to
-     * DIN 5007 Var.1. 
-     * See: https://de.wikipedia.org/wiki/Alphabetische_Sortierung#Deutschland
-     * for a definition of DIN 5007 Var.1
+     * For a German / Germany locale the sorting is done according to DIN 5007
+     * Var.1. See:
+     * https://de.wikipedia.org/wiki/Alphabetische_Sortierung#Deutschland for a
+     * definition of DIN 5007 Var.1
      * 
      * @see Test class: sernet.verinice.service.test.NumericStringComparatorTest
      * @return A collator
      */
-    private Collator getCollator(){
+    private Collator getCollator() {
         if (collator == null)
             collator = Collator.getInstance(Locale.getDefault());
         return collator;
     }
-	
-	public AbstractNumericStringComparator() {
-	}
-	
-	public abstract String convertToString(T o);
 
-	/* (non-Javadoc)
-	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-	 */
-	public int compare(T o1, T o2) {
-		if (o1 == null) {
-			return 1;
-		} else if (o2 == null) {
-			return -1;
-		}
-		String s1 = convertToString(o1);
+    public AbstractNumericStringComparator() {
+    }
+
+    public abstract String convertToString(T o);
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+     */
+    public int compare(T o1, T o2) {
+        if (o1 == null) {
+            return 1;
+        } else if (o2 == null) {
+            return -1;
+        }
+        String s1 = convertToString(o1);
         String s2 = convertToString(o2);
-        
-		return compareString(s1, s2);
-	}
+
+        return compareString(s1, s2);
+    }
 
     private int compareString(String string1, String string2) {
         string1 = string1.toLowerCase();
         string2 = string2.toLowerCase();
-        
-		// find the first digit.
-		int idx1 = getFirstDigitIndex(string1);
-		int idx2 = getFirstDigitIndex(string2);
 
-		// no digits found, compare string the ordinary way 
-		if ((idx1 == -1) || (idx2 == -1)
-				|| (!string1.substring(0, idx1).equals(string2.substring(0, idx2)))) {
-			return compareStringOrdinary(string1, string2);
-		}
+        // find the first digit.
+        int idx1 = getFirstDigitIndex(string1);
+        int idx2 = getFirstDigitIndex(string2);
 
-		// find the last digit
-		int edx1 = getLastDigitIndex(string1, idx1);
-		int edx2 = getLastDigitIndex(string2, idx2);
+        // no digits found, compare string the ordinary way
+        if ((idx1 == -1) || (idx2 == -1)
+                || (!string1.substring(0, idx1).equals(string2.substring(0, idx2)))) {
+            return compareStringOrdinary(string1, string2);
+        }
 
-		String sub1 = null;
-		String sub2 = null;
+        // find the last digit
+        int edx1 = getLastDigitIndex(string1, idx1);
+        int edx2 = getLastDigitIndex(string2, idx2);
 
-		if (edx1 == -1) {
-			sub1 = string1.substring(idx1);
-		} else {
-			sub1 = string1.substring(idx1, edx1);
-		}
+        String sub1 = null;
+        String sub2 = null;
 
-		if (edx2 == -1) {
-			sub2 = string2.substring(idx2);
-		} else {
-			sub2 = string2.substring(idx2, edx2);
-		}
+        if (edx1 == -1) {
+            sub1 = string1.substring(idx1);
+        } else {
+            sub1 = string1.substring(idx1, edx1);
+        }
 
-		// deal with zeros at start of each number
-		int zero1 = countZeroes(sub1);
-		int zero2 = countZeroes(sub2);
+        if (edx2 == -1) {
+            sub2 = string2.substring(idx2);
+        } else {
+            sub2 = string2.substring(idx2, edx2);
+        }
 
-		sub1 = sub1.substring(zero1);
-		sub2 = sub2.substring(zero2);
+        // deal with zeros at start of each number
+        int zero1 = countZeroes(sub1);
+        int zero2 = countZeroes(sub2);
 
-		// if equal, then recurse with the rest of the string
-		// need to deal with zeroes so that 00119 appears after 119
-		if (sub1.equals(sub2)) {
-			int ret = 0;
-			if (zero1 > zero2) {
-				ret = 1;
-			} else if (zero1 < zero2) {
-				ret = -1;
-			}
-			
-			if (edx1 != -1) {
-				if(edx2 > -1) {
-					try {
-						int comp = compareString(string1.substring(edx1), string2.substring(edx2));
-						if (comp != 0) {
-							ret = comp;
-						}
-					} catch (Exception e) {
-						log.error("Fehler bei Stringvergleich: " + string1 + " : " + string2,e);
-					}
-				} else {
-					ret = 1;
-				}
-			} else if (edx2 != -1) {
-				ret = -1;
-			}
-			return ret;
-		} else {
-			// if a numerical string is smaller in length than another
-			// then it must be less.
-			if (sub1.length() != sub2.length()) {
-				return (sub1.length() < sub2.length()) ? -1 : 1;
-			}
-		}
+        sub1 = sub1.substring(zero1);
+        sub2 = sub2.substring(zero2);
 
-		// now we get to do the string based numerical thing :)
-		// going to assume that the individual character for the
-		// number has the right order. ie) '9' > '0'
-		// possibly bad in i18n.
-		char[] chr1 = sub1.toCharArray();
-		char[] chr2 = sub2.toCharArray();
+        // if equal, then recurse with the rest of the string
+        // need to deal with zeroes so that 00119 appears after 119
+        if (sub1.equals(sub2)) {
+            int ret = 0;
+            if (zero1 > zero2) {
+                ret = 1;
+            } else if (zero1 < zero2) {
+                ret = -1;
+            }
 
-		int sz = chr1.length;
-		for (int i = 0; i < sz; i++) {
-			// this should give better speed
-			if (chr1[i] != chr2[i]) {
-				return (chr1[i] < chr2[i]) ? -1 : 1;
-			}
-		}
+            if (edx1 != -1) {
+                if (edx2 > -1) {
+                    try {
+                        int comp = compareString(string1.substring(edx1), string2.substring(edx2));
+                        if (comp != 0) {
+                            ret = comp;
+                        }
+                    } catch (Exception e) {
+                        log.error("Fehler bei Stringvergleich: " + string1 + " : " + string2, e);
+                    }
+                } else {
+                    ret = 1;
+                }
+            } else if (edx2 != -1) {
+                ret = -1;
+            }
+            return ret;
+        } else {
+            // if a numerical string is smaller in length than another
+            // then it must be less.
+            if (sub1.length() != sub2.length()) {
+                return (sub1.length() < sub2.length()) ? -1 : 1;
+            }
+        }
 
-		return 0;
+        // now we get to do the string based numerical thing :)
+        // going to assume that the individual character for the
+        // number has the right order. ie) '9' > '0'
+        // possibly bad in i18n.
+        for (int i = 0; i < sub1.length(); i++) {
+            // this should give better speed
+            char char1 = sub1.charAt(i);
+            char char2 = sub2.charAt(i);
+            if (char1 != char2) {
+                return (char1 < char2) ? -1 : 1;
+            }
+        }
+
+        return 0;
     }
 
     /**
-     * Compares string1 to string2 according to the
-     * collation rules for the Collator. See the Collator
-     * class description for more details.
+     * Compares string1 to string2 according to the collation rules for the
+     * Collator. See the Collator class description for more details.
      * 
      * @param string1
      * @param string2
-     * @return Returns an integer less than, equal to or greater than zero 
-     * depending on whether string1 is less than, equal to or greater 
-     * than string2.
+     * @return Returns an integer less than, equal to or greater than zero
+     *         depending on whether string1 is less than, equal to or greater
+     *         than string2.
      */
     protected int compareStringOrdinary(String string1, String string2) {
         return getCollator().compare(string1, string2);
     }
 
-	private static int getFirstDigitIndex(String str) {
-		return getFirstDigitIndex(str, 0);
-	}
+    private static int getFirstDigitIndex(String str) {
+        return getFirstDigitIndex(str, 0);
+    }
 
-	private static int getFirstDigitIndex(String str, int start) {
+    private static int getFirstDigitIndex(String str, int start) {
         for (int i = start; i < str.length(); i++) {
             if (Character.isDigit(str.charAt(i))) {
                 return i;
             }
         }
         return -1;
-	}
+    }
 
-	private static int getLastDigitIndex(String str, int start) {
-		return getLastDigitIndex(str.toCharArray(), start);
-	}
+    private static int getLastDigitIndex(String str, int start) {
+        for (int i = start; i < str.length(); i++) {
+            if (!Character.isDigit(str.charAt(i))) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
-	private static int getLastDigitIndex(char[] chrs, int start) {
-		int sz = chrs.length;
+    private static int countZeroes(String str) {
+        int count = 0;
 
-		for (int i = start; i < sz; i++) {
-			if (!Character.isDigit(chrs[i])) {
-				return i;
-			}
-		}
+        // assuming str is small...
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == '0') {
+                count++;
+            } else {
+                break;
+            }
+        }
 
-		return -1;
-	}
-
-	private static int countZeroes(String str) {
-		int count = 0;
-
-		// assuming str is small...
-		for (int i = 0; i < str.length(); i++) {
-			if (str.charAt(i) == '0') {
-				count++;
-			} else {
-				break;
-			}
-		}
-
-		return count;
-	}
+        return count;
+    }
 
 }

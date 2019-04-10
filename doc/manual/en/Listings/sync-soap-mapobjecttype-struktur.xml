@@ -1,0 +1,5 @@
+<map:mapObjectType extId="Person" intId="person">
+    <map:mapAttributeType extId="Name" intId="nachname"/>
+    <map:mapAttributeType extId="Vorname" intId="vorname"/>
+    <map:mapAttributeType extId="Email" intId="person_email"/>
+</map:mapObjectType>

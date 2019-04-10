@@ -19,7 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.bpm;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,12 +34,15 @@ import sernet.verinice.bpm.rcp.CompletionAbortedException;
 import sernet.verinice.interfaces.bpm.IIsaQmProcess;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Domain;
+import sernet.verinice.model.common.DomainSpecificElementUtil;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.commands.CnATypeMapper;
 import sernet.verinice.service.commands.LoadConfiguration;
 
 /**
- * Task complete client handler for task IIsaQmProcess.TASK_IQM_SET_ASSIGNEE 
- * and transition IIsaQmProcess.TRANS_IQM_COMPLETE.
+ * Task complete client handler for task IIsaQmProcess.TASK_IQM_SET_ASSIGNEE and
+ * transition IIsaQmProcess.TRANS_IQM_COMPLETE.
  * 
  * This handler opens a dialog to choose a person. Login name of the person is
  * returned as parameter IIsaQmProcess.VAR_IQM_ASSIGNEE in the parameter map.
@@ -52,75 +55,58 @@ import sernet.verinice.service.commands.LoadConfiguration;
 public class SetAssigneeClientHandler implements ICompleteClientHandler {
 
     private static final Logger LOG = Logger.getLogger(SetAssigneeClientHandler.class);
-    
+
     private Shell shell;
-    
+
     private int dialogStatus;
-    
+
     /**
-     * Opens a dialog to choose a person. Login name of the person is
-     * returned as parameter IIsaQmProcess.VAR_IQM_ASSIGNEE in the parameter map.
+     * Opens a dialog to choose a person. Login name of the person is returned
+     * as parameter IIsaQmProcess.VAR_IQM_ASSIGNEE in the parameter map.
      * 
      * @see sernet.verinice.interfaces.bpm.ICompleteClientHandler#execute()
      */
     @Override
     public Map<String, Object> execute(ITask task) {
         Map<String, Object> parameter = null;
-        try {  
-            String type = selectElementType();                           
-            final CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(shell, type, null);            
+        try {
+            Domain domain = CnATypeMapper.getDomainFromTypeId(task.getElementType());
+            String type = DomainSpecificElementUtil.getPersonTypeIdFromDomain(domain);
+            final CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(shell,
+                    type, null);
             dialog.setScopeOnly(false);
             dialog.setShowScopeCheckbox(false);
-            Display.getDefault().syncExec(new Runnable() {
-                @Override
-                public void run() {
-                    dialogStatus = dialog.open();
-                }
-            });
-            if (dialogStatus == Window.OK) {         
+            Display.getDefault().syncExec(() -> dialogStatus = dialog.open());
+            if (dialogStatus == Window.OK) {
                 List<CnATreeElement> userList = dialog.getSelectedElements();
-                if(userList.size()==1) {
-                    CnATreeElement element = userList.get(0);                
+                if (userList.size() == 1) {
+                    CnATreeElement element = userList.get(0);
                     LoadConfiguration command = new LoadConfiguration(element);
                     command = ServiceFactory.lookupCommandService().executeCommand(command);
                     Configuration configuration = command.getConfiguration();
-                    if(configuration!=null) {
-                        parameter = new Hashtable<String, Object>();
+                    if (configuration != null) {
+                        parameter = new HashMap<>();
                         parameter.put(IIsaQmProcess.VAR_IQM_ASSIGNEE, configuration.getUser());
-                    }                           
+                    }
                 }
             } else {
                 throw new CompletionAbortedException("Canceled by user.");
-            }          
-        } catch(CompletionAbortedException e) {
+            }
+        } catch (CompletionAbortedException e) {
             throw e;
-        } catch(Exception e) {
+        } catch (Exception e) {
             LOG.error("Error while assigning user to task.", e);
         }
         return parameter;
     }
-    
-    private String selectElementType() {
-        final PersonTypeSelectDialog typeDialog = new PersonTypeSelectDialog(shell);
-        Display.getDefault().syncExec(new Runnable() {
-            @Override
-            public void run() {
-                dialogStatus = typeDialog.open();
-            }
-        });
-        if (dialogStatus == Window.OK) { 
-            return typeDialog.getElementType();
-        } else {
-            throw new CompletionAbortedException("Canceled by user.");
-        }
-    }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.ICompleteClientHandler#setShell(org.eclipse.swt.widgets.Shell)
+    /*
+     * @see sernet.verinice.interfaces.bpm.ICompleteClientHandler#setShell(org.
+     * eclipse.swt.widgets.Shell)
      */
     @Override
     public void setShell(Shell shell) {
-        this.shell = shell;      
+        this.shell = shell;
     }
 
 }

@@ -23,6 +23,8 @@ import static sernet.verinice.model.bp.DeductionImplementationUtil.isDeductiveIm
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import sernet.gs.service.StringUtil;
@@ -94,36 +96,57 @@ public class BpRequirement extends CnATreeElement
     public static final String REL_BP_REQUIREMENT_BP_NETWORK = "rel_bp_requirement_bp_network"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_ROOM = "rel_bp_requirement_bp_room"; //$NON-NLS-1$
 
-	private final IReevaluator protectionRequirementsProvider = new Reevaluator(this) {
-		private static final long serialVersionUID = -2522374396559298793L;
+    private static final Map<String, String> RELATION_TYPES_BY_TARGET_OBJECT_TYPE = new HashMap<>();
 
-		@Override
-		protected void findBottomNodes(CnATreeElement downwardElement, Set<CnATreeElement> bottomNodes,
-				CascadingTransaction downwardsTA) {
-			if (downwardsTA.hasBeenVisited(downwardElement)) {
-				return;
-			}
+    static {
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(Application.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_APPLICATION);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(BusinessProcess.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_BUSINESSPROCESS);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(Device.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_DEVICE);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(IcsSystem.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_ICSSYSTEM);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(ItNetwork.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_ITNETWORK);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(ItSystem.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_ITSYSTEM);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(Network.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_NETWORK);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(Room.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_ROOM);
+    }
 
-			try {
-				downwardsTA.enter(downwardElement);
-			} catch (TransactionAbortedException e) {
-				return;
-			}
-			 if (downwardElement.isProtectionRequirementsProvider()) {
-				 bottomNodes.add(downwardElement);
-			 }
-			downwardElement.getLinksDown().stream().map(CnALink::getDependency)//
-				.map(HibernateUtil::unproxy)//
-				.forEach(l -> {
-						if (bottomNodes.add(l)) {
-							findBottomNodes(l, bottomNodes, downwardsTA);
-						}
-				});
-		}
+    private final IReevaluator protectionRequirementsProvider = new Reevaluator(this) {
+        private static final long serialVersionUID = -2522374396559298793L;
 
-	};
+        @Override
+        protected void findBottomNodes(CnATreeElement downwardElement,
+                Set<CnATreeElement> bottomNodes, CascadingTransaction downwardsTA) {
+            if (downwardsTA.hasBeenVisited(downwardElement)) {
+                return;
+            }
 
-	private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
+            try {
+                downwardsTA.enter(downwardElement);
+            } catch (TransactionAbortedException e) {
+                return;
+            }
+            if (downwardElement.isProtectionRequirementsProvider()) {
+                bottomNodes.add(downwardElement);
+            }
+            downwardElement.getLinksDown().stream().map(CnALink::getDependency)//
+                    .map(HibernateUtil::unproxy)//
+                    .forEach(l -> {
+                        if (bottomNodes.add(l)) {
+                            findBottomNodes(l, bottomNodes, downwardsTA);
+                        }
+                    });
+        }
+
+    };
+
+    private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
 
         private static final long serialVersionUID = -3220319074711927103L;
 
@@ -369,6 +392,10 @@ public class BpRequirement extends CnATreeElement
             return false;
         }
         return TYPE_ID.equals(element.getTypeId());
+    }
+
+    public static String getLinkTypeToTargetObject(String objectType) {
+        return RELATION_TYPES_BY_TARGET_OBJECT_TYPE.get(objectType);
     }
 
     @Override

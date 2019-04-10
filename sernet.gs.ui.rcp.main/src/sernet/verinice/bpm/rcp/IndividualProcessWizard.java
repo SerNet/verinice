@@ -19,8 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.bpm.rcp;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -94,16 +97,10 @@ public class IndividualProcessWizard extends Wizard {
         addPage(templatePage);
     }
 
-    @SuppressWarnings("deprecation")
     public void setTemplate(IndividualServiceParameter template) {
-        final int calYearPadding = 1900;
         Date dueDate = template.getDueDate();
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, dueDate.getYear() + calYearPadding);
-        cal.set(Calendar.MONTH, dueDate.getMonth());
-        cal.set(Calendar.DAY_OF_MONTH, dueDate.getDate());
-        datePage.setDueDate(cal);
-        datePage.setPeriod(String.valueOf(template.getReminderPeriodDays()));
+        datePage.setDueDate(dueDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        datePage.setPeriod(template.getReminderPeriodDays());
         if (template.getAssignee() != null || !relationPage.isRelation()) {
             datePage.setAssigneeSelectionMode(DatePage.ASSIGNEE_SELECTION_DIRECT);
             relationPage.setActive(false);
@@ -186,19 +183,17 @@ public class IndividualProcessWizard extends Wizard {
 
     public Date getDueDate() {
         Date dueDate = null;
-        Calendar cal = datePage.getDueDate();
-        if (cal != null) {
-            dueDate = cal.getTime();
+        LocalDate localDate = datePage.getDueDate();
+        if (localDate != null) {
+            ZonedDateTime zonedDateTime = localDate.atTime(LocalTime.now())
+                    .atZone(ZoneId.systemDefault());
+            dueDate = Date.from(zonedDateTime.toInstant());
         }
         return dueDate;
     }
 
     public Integer getPeriod() {
-        Integer period = null;
-        if (datePage.getPeriod() != null) {
-            period = Integer.valueOf(datePage.getPeriod());
-        }
-        return period;
+        return datePage.getPeriod();
     }
 
     public boolean overwriteTemplate() {

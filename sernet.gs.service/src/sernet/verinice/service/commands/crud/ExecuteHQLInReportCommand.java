@@ -27,7 +27,7 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.interfaces.IReportHQLService;
-import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.report.HQLSecurityException;
 import sernet.verinice.service.commands.CnATypeMapper;
 
@@ -50,20 +50,21 @@ public class ExecuteHQLInReportCommand extends GenericCommand implements ICached
 
     private String[] paramNames;
 
-    private Class<CnATreeElement> typeClass;
+    private Class<?> typeClass;
 
     private Object results;
 
     public ExecuteHQLInReportCommand(String hql, Object[] params, String typeId) {
-        this(hql, params, CnATypeMapper.getClassFromTypeId(typeId));
+        this(hql, params, CnALink.TYPE_ID.equals(typeId) ? CnALink.class
+                : CnATypeMapper.getClassFromTypeId(typeId));
     }
 
-    public ExecuteHQLInReportCommand(String hql, Object[] params, Class<CnATreeElement> typeClass) {
+    public ExecuteHQLInReportCommand(String hql, Object[] params, Class<?> typeClass) {
         this(hql, null, params, typeClass);
     }
 
     public ExecuteHQLInReportCommand(String hql, String[] paramNames, Object[] params,
-            Class<CnATreeElement> typeClass) {
+            Class<?> typeClass) {
         this.hql = hql;
         setHqlParams(params);
         this.typeClass = typeClass;

@@ -1,0 +1,16 @@
+<data:syncObject>
+   <data:extId>Person4711</data:extId>
+   <data:extObjectType>Person</data:extObjectType>
+   <data:syncAttribute>
+      <data:name>Name</data:name>
+      <data:value>Mustermann</data:value>
+   </data:syncAttribute>
+   <data:syncAttribute>
+      <data:name>Vorname</data:name>
+      <data:value>Hans-Hubertus</data:value>
+   </data:syncAttribute>
+   <data:syncAttribute>
+      <data:name>Email</data:name>
+      <data:value>hhm@example.org</data:value>
+   </data:syncAttribute>
+</data:syncObject>

@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search.tables;
 
+import java.util.Optional;
+
 import org.apache.log4j.Logger;
 import org.eclipse.swt.graphics.Image;
 
@@ -31,6 +33,7 @@ import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.rcp.search.column.IconColumn;
+import sernet.verinice.service.commands.CnATypeMapper;
 
 /**
  * Provides image path for the {@link SearchResultsTableViewer} icon column.
@@ -55,15 +58,18 @@ public class TableImageProvider {
         LOG.debug("seach image for type id: " + typeId);
 
         if (SamtTopic.TYPE_ID.equals(typeId)) {
-            return imgCache.getControlImplementationImage(getSamtTopicOptionStatus(row.getValueFromResultString(SamtTopic.PROP_MATURITY)));
+            return imgCache.getControlImplementationImage(getSamtTopicOptionStatus(
+                    row.getValueFromResultString(SamtTopic.PROP_MATURITY)));
         }
 
         else if (Control.TYPE_ID.equals(typeId)) {
-            return imgCache.getControlImplementationImage(retrieveOptionStatus(row.getValueFromResultString(IControl.PROP_IMPL)));
+            return imgCache.getControlImplementationImage(
+                    retrieveOptionStatus(row.getValueFromResultString(IControl.PROP_IMPL)));
         }
 
         else if (MassnahmenUmsetzung.TYPE_ID.equals(typeId)) {
-            return imgCache.getImage(getMassnahmenUmsetzungsOptionStatus(row.getValueFromResultString(MassnahmenUmsetzung.P_UMSETZUNG)));
+            return imgCache.getImage(getMassnahmenUmsetzungsOptionStatus(
+                    row.getValueFromResultString(MassnahmenUmsetzung.P_UMSETZUNG)));
         }
 
         else if (GefaehrdungsUmsetzung.TYPE_ID.equals(typeId)) {
@@ -71,12 +77,15 @@ public class TableImageProvider {
         }
 
         // retrieve default images
-        else if (imgCache.isBSITypeElement(typeId)) {
-            return imgCache.getBSITypeImage(typeId);
+        else if (imgCache.hasDefaultImage(typeId)) {
+            return imgCache.getImageForTypeId(typeId);
         }
 
-        else if (imgCache.isISO27kTypeElement(typeId)) {
-            return imgCache.getImageForTypeId(typeId);
+        // if the type is a group, try to find an image for the respective
+        // element type
+        Optional<String> elementTypeId = findElementTypeIdWithDefaultImageByGroupTypeId(typeId);
+        if (elementTypeId.isPresent()) {
+            return imgCache.getImageForTypeId(elementTypeId.get());
         }
 
         return imgCache.getImage(ImageCache.UNKNOWN);
@@ -103,19 +112,33 @@ public class TableImageProvider {
         }
 
         else if (MassnahmenUmsetzung.TYPE_ID.equals(typeId)) {
-            return getMassnahmenUmsetzungsOptionStatus(row.getValueFromResultString(MassnahmenUmsetzung.P_UMSETZUNG));
+            return getMassnahmenUmsetzungsOptionStatus(
+                    row.getValueFromResultString(MassnahmenUmsetzung.P_UMSETZUNG));
         }
 
         // retrieve default images
-        else if (imgCache.isBSITypeElement(typeId)) {
-            return imgCache.getBSITypeImageURL(typeId);
+        else if (imgCache.hasDefaultImage(typeId)) {
+            return imgCache.getImageURL(typeId);
         }
 
-        else if (imgCache.isISO27kTypeElement(typeId)) {
-            return imgCache.getISO27kTypeImageURL(typeId);
+        // if the type is a group, try to find an URL for the respective
+        // element type
+        Optional<String> elementTypeId = findElementTypeIdWithDefaultImageByGroupTypeId(typeId);
+        if (elementTypeId.isPresent()) {
+            return imgCache.getImageURL(elementTypeId.get());
         }
 
         return ImageCache.UNKNOWN;
+    }
+
+    private static Optional<String> findElementTypeIdWithDefaultImageByGroupTypeId(String typeId) {
+        if (CnATypeMapper.isGroupTypeId(typeId)) {
+            String elementTypeId = CnATypeMapper.getElementTypeIdFromGroupTypeId(typeId);
+            if (ImageCache.getInstance().hasDefaultImage(elementTypeId)) {
+                return Optional.of(elementTypeId);
+            }
+        }
+        return Optional.empty();
     }
 
     /**

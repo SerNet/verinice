@@ -135,21 +135,17 @@ public class ReportDepositService extends AbstractReportTemplateService
 
     private void updateSafe(ReportTemplateMetaData metadata, String locale)
             throws IOException, ReportDepositException {
-        String filename = metadata.getFilename();
-        if (filename.contains(String.valueOf(File.separatorChar))) {
-            filename = filename.substring(filename.lastIndexOf(File.separatorChar) + 1);
-        }
-        if (checkReportMetaDataFile(new File(getDepositLocation() + metadata.getFilename()),
-                locale)) {
-            File propFile = getPropertiesFile(getDepositLocation() + metadata.getFilename(),
-                    locale);
-            Properties props = parseAndExtendMetaData(propFile, locale);
+        File propertiesFile = getPropertiesFile(getDepositLocation() + metadata.getFilename(),
+                locale);
+        if (propertiesFile.exists()) {
+
+            Properties props = parseAndExtendMetaData(propertiesFile, locale);
             props.setProperty(PROPERTIES_OUTPUTFORMATS,
                     StringUtils.join(metadata.getOutputFormats(), ','));
             props.setProperty(PROPERTIES_OUTPUTNAME, metadata.getOutputname());
             props.setProperty(PROPERTIES_MULTIPLE_ROOT_OBJECTS,
                     Boolean.toString(metadata.isMultipleRootObjects()));
-            writePropertiesFile(props, propFile, "");
+            writePropertiesFile(props, propertiesFile, "");
         } else {
             writePropertiesFile(convertToProperties(metadata),
                     getPropertiesFile(metadata.getFilename(), locale),

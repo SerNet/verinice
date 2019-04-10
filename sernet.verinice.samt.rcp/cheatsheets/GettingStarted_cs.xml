@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cheatsheet title="Zacínáme s posouzením informační bezpečnosti">
+
+  <intro>
+    <description>
+      <b>Vítejte v posouzení informační bezpečnosti verinice!</b>
+      <br /><br />
+      Tento tutoriál vám pomůže provést vaše první posouzení informační bezpečnosti!
+    </description>
+  </intro>
+
+  <item title="Přepnout do perspektivy posouzení bezpečnosti">
+    <description>
+      Nejdříve musíte vytvorit nové posouzení bezpečnosti. Měli by jste být v perspektivě posouzení 
+	  bezpečnosti. Pokud ne, můžete ji otevřít pres <b>Zobrazit -> Ukázat Perspektivu... -> Posouzení
+	  bezpečnosti</b>.
+      <br /><br />
+      Perspektivu posouzení bezpečnosti najdete na levé straně obrazovky.
+    </description>
+  </item>
+
+  <item title="Vytvorit nové posouzení bezpečnosti">
+    <description>
+      Klikněte na <b>Nová</b> v okne posouzení bezpečnosti nebo vyberte z <b>Soubor > Přidat nové 
+	  posouzení bezpečnosti</b> z menu.
+      <br /><br />
+      Nové posouzení bezpečnosti se zobrazí v okně. Dvojklikem jej přepnete do zobrazení editoru.
+      Změňte název z "[Má Společnost]" na jméno vaší společnosti.
+      <br /><br />
+      Uložte kliknutím na <b>Soubor > Uložit</b> nebo stisknutím <b>Ctrl+S</b> na vaší klávesnici.
+    </description>
+  </item>
+
+  <item title="Otevřít první kategorii">
+    <description>
+      Rozbalte posouzení bezpečnosti kliknutím na malou šipku vlevo od ikony uzlu.
+	  Rozbalte "Bezpečnostní opatření" a poté první kategorii kliknutím na malou šipku vlevo.
+      <br /><br />
+      Meli byste být schopni vidět několik kategorií od "Bezpecnostní Politika" po "Řízení přístupu".
+	  Tyto kategorie obsahují otázky, které vám pomohou ohodnotit vaši současnou úroven informační bezpečnosti
+	  z pohledu nejdůležitějších témat.
+    </description>
+  </item>
+
+  <item title="Zodpovezení otázek">
+    <description>
+      Dvojklikem na první otázku otevřete editor. Zároveň vám Prohlížeč Objektu položí otázku
+	  a výber z úrovní zralosti.
+      <br /><br />
+      Prečtěte si popisy, aby jste se rozhodli, jaké úrovne zralosti dosahuje vaše organizace.
+	  Možná budete muset konzultovat s ostatními zaměstnanci nebo provést příslušný interní výzkum, 
+	  abyste správně odpověděli na tuto otázku.	 
+      <br /><br />
+      Zvolte odpovídající úroveň zralosti v editoru pod oknem prohlížece. Můžete přidat veřejný
+	  a soukromý komentář. Veřejné komentáře budou zahrnuty v exportu databáze. Soukromé komentáře
+	  jsou jenom pro vás. Nikdy neopustí lokální databázi.
+      <br /><br />
+      Uložte vaše změny stisknutím <b>Ctrl+S</b> nebo volbou <b>Soubor -> Uložit</b>.
+    </description>
+  </item>
+
+  <item title="Vytvořit zprávu">
+    <description>
+      Pokračujte stejným způsobem u další otázky. Jak budete pokračovat, zjistíte, že graf
+      v levém dolním rohu obrazovky začíná reflektovat vaše odpovědi.
+      <br /><br />
+      Jakmile máte zodpovězeny všechny otázky, můžete vytvořit zprávu pro management nebo
+	  jinou osobu. Zprávu můžete zaslat emailem nebo jiným způsobem. Můžete ji vytvořit zvolením
+	  <b>Soubor > Vytvořit Zprávu...</b>.
+	  <br /><br />
+      Vyberte "Zpráva Posouzení Informační bezpečnosti" a zadejte jméno souboru pod kterým
+	  chcete zprávu uložit, potom klikněte b>OK</b>.
+    </description>
+  </item>
+
+  <item title="Exportovat výsledky">
+    <description>
+      Když jste odpovědeli na všechny otázky, můžete exportovat vaše výsledky pro zaslání další osobě.
+      Toho dosáhnete kliknutím na tlačítko <b>Export</b> v okně posouzení bezpečnosti nebo vybráním 
+      <b>Soubor> Posouzení bezpečnosti > Exportovat soubor</b>.
+      <br /><br />
+      Musíte si vybrat jméno souboru pod kterým bude zpráva uložena. Exporotvané soubory jsou vždy 
+	  šifrovány, takže také musíte zvolit heslo nebo certifikát pro šifrování. Jakmile máte hotovo,
+	  zmáčkněte <b>OK</b>.
+    </description>
+  </item>
+
+  <item title="Dokončeno">
+    <description>
+      Gratulujeme vám k provedení vašeho prvního posouzení tavu vaší informační bezpečnosti.
+	  Pokud chcete dále pokračovat a skutečne přemýšlíte o ustanovení Systému řízení bezpečnosti informací
+	  (ISMS) ve vaší společnosti, můžete se přesunout zpět na úvodní obrazovku zvolením 
+      <b>Nápověda > Vítejte</b>.
+      <br /><br />
+      Tentokrát zvolte možnost "Ustanovit systém řízení bezpečnosti informací (ISMS)".
+	  Budete přesunuti do ISM Perpektivy s dalším pro vás určeným tutoriálem.
+	</description>
+    <onCompletion>
+      To uzavírá tento tutoriál. Nezapomeňte navštívit <b>http://www.verinice.com/en</b> pro více informací
+	  a novinek!
+    </onCompletion>
+  </item>
+  
+</cheatsheet>

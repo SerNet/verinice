@@ -20,7 +20,6 @@ package sernet.verinice.model.bp.risk.configuration;
 import java.io.Serializable;
 import java.util.List;
 
-import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.risk.Frequency;
 import sernet.verinice.model.bp.risk.Impact;
 import sernet.verinice.model.bp.risk.Risk;
@@ -31,69 +30,42 @@ import sernet.verinice.model.bp.risk.Risk;
  */
 public class RiskConfigurationUpdateContext implements Serializable {
 
-    private static final long serialVersionUID = -779219773426955378L;
+    private static final long serialVersionUID = 7482643391068945935L;
+    private final String uuidItNetwork;
+    private final RiskConfiguration riskConfiguration;
 
-    private String uuidItNetwork;
-    private transient ItNetwork itNetwork;
-    private RiskConfiguration riskConfiguration;
+    private final List<Frequency> deletedFrequencies;
+    private final List<Impact> deletedImpacts;
+    private final List<Risk> deletedRisks;
 
-    private List<Frequency> deletedFrequencies;
-    private List<Impact> deletedImpacts;
-    private List<Risk> deletedRisks;
-
-    public RiskConfigurationUpdateContext(String uuidItNetwork,
-            RiskConfiguration riskConfiguration) {
-        super();
+    public RiskConfigurationUpdateContext(String uuidItNetwork, RiskConfiguration riskConfiguration,
+            List<Frequency> deletedFrequencies, List<Impact> deletedImpacts,
+            List<Risk> deletedRisks) {
         this.uuidItNetwork = uuidItNetwork;
         this.riskConfiguration = riskConfiguration;
+        this.deletedFrequencies = deletedFrequencies;
+        this.deletedImpacts = deletedImpacts;
+        this.deletedRisks = deletedRisks;
     }
 
     public String getUuidItNetwork() {
         return uuidItNetwork;
     }
 
-    public void setUuidItNetwork(String uuidItNetwork) {
-        this.uuidItNetwork = uuidItNetwork;
-    }
-
     public RiskConfiguration getRiskConfiguration() {
         return riskConfiguration;
-    }
-
-    public void setRiskConfiguration(RiskConfiguration riskConfiguration) {
-        this.riskConfiguration = riskConfiguration;
     }
 
     public List<Frequency> getDeletedFrequencies() {
         return deletedFrequencies;
     }
 
-    public void setDeletedFrequencies(List<Frequency> deletedFrequencies) {
-        this.deletedFrequencies = deletedFrequencies;
-    }
-
     public List<Impact> getDeletedImpacts() {
         return deletedImpacts;
     }
 
-    public void setDeletedImpacts(List<Impact> deletedImpacts) {
-        this.deletedImpacts = deletedImpacts;
-    }
-
     public List<Risk> getDeletedRisks() {
         return deletedRisks;
-    }
-
-    public void setDeletedRisks(List<Risk> deletedRisks) {
-        this.deletedRisks = deletedRisks;
-    }
-
-    public ItNetwork getItNetwork() {
-        return itNetwork;
-    }
-
-    public void setItNetwork(ItNetwork itNetwork) {
-        this.itNetwork = itNetwork;
     }
 
 }

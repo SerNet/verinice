@@ -35,6 +35,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bp.elements.BpModel;
+import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.groups.BpPersonGroup;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.GebaeudeKategorie;
@@ -48,6 +52,9 @@ import sernet.verinice.model.iso27k.Document;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.iso27k.PersonGroup;
+import sernet.verinice.model.iso27k.PersonIso;
+import sernet.verinice.service.bp.LoadBpModel;
 import sernet.verinice.service.commands.CreateConfiguration;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.LoadConfiguration;
@@ -70,11 +77,12 @@ public class RemoveElementTest extends CommandServiceProvider {
 
     private Organization organization;
 
+    private ItNetwork itNetwork;
+
     private static final String VNA_FILE = "RemoveElementTest.vna";
 
     @Before
     public void setUp() throws CommandException {
-
         LoadModel<BSIModel> loadBSIModel = new LoadModel<>(BSIModel.class);
         BSIModel bSIModel = commandService.executeCommand(loadBSIModel).getModel();
         itVerbund = createElement(ITVerbund.class, bSIModel);
@@ -82,25 +90,26 @@ public class RemoveElementTest extends CommandServiceProvider {
         LoadModel<ISO27KModel> loadISO27Model = new LoadModel<>(ISO27KModel.class);
         ISO27KModel iSO27Model = commandService.executeCommand(loadISO27Model).getModel();
         organization = createElement(Organization.class, iSO27Model);
+
+        LoadBpModel loadBpModel = new LoadBpModel();
+        BpModel bpModel = commandService.executeCommand(loadBpModel).getModel();
+        itNetwork = createElement(ItNetwork.class, bpModel);
     }
 
     @Test
     public void removeITVerbund() throws CommandException {
-
         removeElement(itVerbund);
         assertElementIsDeleted(itVerbund);
     }
 
     @Test
     public void removeOrganization() throws CommandException {
-
         removeElement(organization);
         assertElementIsDeleted(organization);
     }
 
     @Test
     public void removeKategorieFromVerbund() throws CommandException {
-
         GebaeudeKategorie gebaeudeKategorie = createElement(GebaeudeKategorie.class, itVerbund);
         removeElement(gebaeudeKategorie);
         assertElementIsDeleted(gebaeudeKategorie);
@@ -110,7 +119,6 @@ public class RemoveElementTest extends CommandServiceProvider {
     public void removeElementFromKategorie() throws CommandException {
         GebaeudeKategorie gebaeudeKategorie = createElement(GebaeudeKategorie.class, itVerbund);
         Gebaeude gebaeude = createElement(Gebaeude.class, gebaeudeKategorie);
-
         removeElement(gebaeude);
         assertElementIsDeleted(gebaeude);
     }
@@ -119,17 +127,13 @@ public class RemoveElementTest extends CommandServiceProvider {
     public void removeParentKategorie() throws CommandException {
         GebaeudeKategorie gebaeudeKategorie = createElement(GebaeudeKategorie.class, itVerbund);
         Gebaeude gebaeude = createElement(Gebaeude.class, gebaeudeKategorie);
-
         removeElement(gebaeudeKategorie);
-
         assertElementIsDeleted(gebaeude);
     }
 
     @Test
     public void removeParentElementFromGroup() throws CommandException {
-
         for (Entry<String, Class> entry : GROUP_TYPE_MAP.entrySet()) {
-
             CnATreeElement element = createElement(entry.getValue(), organization);
 
             int documents = new SecureRandom().nextInt(20);
@@ -137,27 +141,57 @@ public class RemoveElementTest extends CommandServiceProvider {
             for (int i = documents; i > 0; i--) {
                 createElement(Document.class, element);
             }
-
             RemoveElement<CnATreeElement> removeCommand = removeElement(element);
 
             for (Document doc : documentList) {
                 assertElementIsDeleted(doc);
             }
-
             assertElementIsDeleted(element);
         }
     }
 
     @Test
-    public void removePerson() throws CommandException {
-        PersonenKategorie personenKategorie = createElement(PersonenKategorie.class, organization);
+    public void removePersonWithAccount() throws CommandException {
+        PersonenKategorie personenKategorie = createElement(PersonenKategorie.class, itVerbund);
         Person person = createElement(Person.class, personenKategorie);
 
-        Configuration configuration = commandService.executeCommand(new CreateConfiguration(person)).getConfiguration();
+        Configuration configuration = commandService.executeCommand(new CreateConfiguration(person))
+                .getConfiguration();
         removeElement(person);
         assertElementIsDeleted(person);
 
-        configuration = commandService.executeCommand(new LoadConfiguration(person)).getConfiguration();
+        configuration = commandService.executeCommand(new LoadConfiguration(person))
+                .getConfiguration();
+        assertNull(configuration);
+    }
+
+    @Test
+    public void removeIsoPersonWithAccount() throws CommandException {
+        PersonGroup personGroup = createElement(PersonGroup.class, organization);
+        PersonIso person = createElement(PersonIso.class, personGroup);
+
+        Configuration configuration = commandService.executeCommand(new CreateConfiguration(person))
+                .getConfiguration();
+        removeElement(person);
+        assertElementIsDeleted(person);
+
+        configuration = commandService.executeCommand(new LoadConfiguration(person))
+                .getConfiguration();
+        assertNull(configuration);
+    }
+
+    @Test
+    public void removeBpPersonWithAccount() throws CommandException {
+        BpPersonGroup bpPersonGroup = createElement(BpPersonGroup.class, itNetwork);
+        BpPerson person = createElement(BpPerson.class, bpPersonGroup);
+
+        Configuration configuration = commandService.executeCommand(new CreateConfiguration(person))
+                .getConfiguration();
+        removeElement(person);
+        assertElementIsDeleted(person);
+
+        configuration = commandService.executeCommand(new LoadConfiguration(person))
+                .getConfiguration();
         assertNull(configuration);
     }
 
@@ -187,10 +221,11 @@ public class RemoveElementTest extends CommandServiceProvider {
      * they imported from a {@link VeriniceArchive}.
      */
     @Test
-    public void removeVNAImportedBSIVerbund() throws IOException, CommandException, SyncParameterException {
-
+    public void removeVNAImportedBSIVerbund()
+            throws IOException, CommandException, SyncParameterException {
         String path = getClass().getResource(VNA_FILE).getPath();
-        SyncParameter syncParameter = new SyncParameter(true, true, true, false, SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
+        SyncParameter syncParameter = new SyncParameter(true, true, true, false,
+                SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
         byte[] it_network_vna = FileUtils.readFileToByteArray(new File(path));
 
         SyncCommand syncCommand = new SyncCommand(syncParameter, it_network_vna);
@@ -211,20 +246,24 @@ public class RemoveElementTest extends CommandServiceProvider {
     }
 
     private void assertElementIsDeleted(CnATreeElement element) throws CommandException {
-        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(element.getUuid());
+        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(
+                element.getUuid());
         command = commandService.executeCommand(command);
         CnATreeElement loadByUUid = command.getElement();
         assertNull("element " + element.getUuid() + " was not deleted.", loadByUUid);
     }
 
-    private <T extends CnATreeElement> T createElement(Class<T> type, CnATreeElement element) throws CommandException {
-        CreateElement<T> createElementCommand = new CreateElement<T>(element, type, RemoveElementTest.class.getSimpleName() + " [" + UUID.randomUUID() + "]");
+    private <T extends CnATreeElement> T createElement(Class<T> type, CnATreeElement element)
+            throws CommandException {
+        CreateElement<T> createElementCommand = new CreateElement<T>(element, type,
+                RemoveElementTest.class.getSimpleName() + " [" + UUID.randomUUID() + "]");
         createElementCommand = commandService.executeCommand(createElementCommand);
 
         return createElementCommand.getNewElement();
     }
 
-    private <T extends CnATreeElement> RemoveElement<T> removeElement(T element) throws CommandException {
+    private <T extends CnATreeElement> RemoveElement<T> removeElement(T element)
+            throws CommandException {
         RemoveElement<T> removeCommand = new RemoveElement<T>(element);
         return commandService.executeCommand(removeCommand);
     }

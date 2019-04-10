@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
-
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
@@ -50,9 +49,7 @@ import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.IControl;
-import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.rcp.RightsEnabledView;
 
 public class BrowserView extends RightsEnabledView implements ILinkedWithEditorView {
@@ -66,7 +63,7 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
     private ISelectionListener selectionListener;
 
     private IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
-    
+
     private boolean linkingActive = true;
 
     private SerializeBrowserLoadingListener serializeListener;
@@ -78,17 +75,16 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
         super.createPartControl(parent);
         GridLayout gl = new GridLayout(1, false);
         parent.setLayout(gl);
-        toggleLinking(Activator.getDefault().getPreferenceStore()
-                .getBoolean(PreferenceConstants.LINK_TO_EDITOR));
+
         try {
             browser = new Browser(parent, SWT.NONE);
             browser.setLayoutData(new GridData(
                     GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL));
 
             browser.setJavascriptEnabled(false);
-            
-			serializeListener = new SerializeBrowserLoadingListener(browser);
-			browser.addProgressListener(serializeListener);
+
+            serializeListener = new SerializeBrowserLoadingListener(browser);
+            browser.addProgressListener(serializeListener);
 
             browser.setUrl(defaultImage());
 
@@ -98,6 +94,10 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
                     toggleLinking(isChecked());
                 }
             };
+
+            toggleLinking(Activator.getDefault().getPreferenceStore()
+                    .getBoolean(PreferenceConstants.LINK_TO_EDITOR));
+
             linkWithEditorAction.setImageDescriptor(
                     ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
             getViewSite().getActionBars().getToolBarManager().add(linkWithEditorAction);
@@ -112,7 +112,8 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
     protected void toggleLinking(boolean checked) {
         this.linkingActive = checked;
         if (checked) {
-            Optional.ofNullable(getSite().getPage().getActiveEditor()).ifPresent(this::editorActivated);
+            Optional.ofNullable(getSite().getPage().getActiveEditor())
+                    .ifPresent(this::editorActivated);
         }
     }
 
@@ -126,8 +127,6 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
     @Override
@@ -141,21 +140,16 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
     }
 
     private void hookPageSelection() {
-        selectionListener = new ISelectionListener() {
-            @Override
-            public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-                pageSelectionChanged(part, selection);
-            }
-        };
+        selectionListener = this::pageSelectionChanged;
         getSite().getPage().addPostSelectionListener(selectionListener);
         getSite().getPage().addPartListener(linkWithEditorPartListener);
     }
 
     protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
-        
+
         if (part != this && selection instanceof IStructuredSelection) {
             Object element = ((IStructuredSelection) selection).getFirstElement();
-            
+
             if (part instanceof ISMView) {
                 setSelectedInISMView(element);
             } else if (part instanceof RelationView) {
@@ -166,7 +160,7 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
                     && isLinkingActive()) {
                 element = determineLinkedElement((CnALink) element);
             }
-            if(element != null){
+            if (element != null) {
                 elementSelected(element);
             }
         }
@@ -179,27 +173,16 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
     }
 
     private Object determineLinkedElement(CnALink link) {
-        IControl linkedElement = null;
         Object dependant = link.getDependant();
         Object dependency = link.getDependency();
 
         if (dependant instanceof IControl && !dependant.equals(selectedInISMView)) {
-            linkedElement = castToCorrectControlType((IControl) dependant);
+            return dependant;
         } else if (dependency instanceof IControl && !dependency.equals(selectedInISMView)
                 || dependant.equals(dependency)) {
-            linkedElement = castToCorrectControlType((IControl) dependency);
+            return dependency;
         }
-        return linkedElement;
-    }
-
-    private static IControl castToCorrectControlType(IControl element) {
-        IControl linkedElement = null;
-        if (element instanceof Control) {
-            linkedElement = (Control) element;
-        } else if (element instanceof SamtTopic) {
-            linkedElement = (SamtTopic) element;
-        }
-        return linkedElement;
+        return null;
     }
 
     protected void elementSelected(Object element) {
@@ -239,8 +222,6 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.
      * eclipse.ui.IEditorPart)

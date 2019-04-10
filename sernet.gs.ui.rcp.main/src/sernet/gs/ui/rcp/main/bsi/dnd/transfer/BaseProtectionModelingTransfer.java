@@ -17,16 +17,12 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dnd.transfer;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.eclipse.swt.dnd.TransferData;
-import org.elasticsearch.common.inject.Module;
 
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
-import sernet.verinice.model.bp.groups.SafeguardGroup;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * This class is part of the drag and drop support for the modeling in IT base
@@ -38,16 +34,11 @@ import sernet.verinice.model.bp.groups.SafeguardGroup;
 public final class BaseProtectionModelingTransfer extends VeriniceElementTransfer {
 
     private static final Logger log = Logger.getLogger(BaseProtectionModelingTransfer.class);
-    
+
     private static final String TYPE_NAME_BASE_PROTECTION_MODELING = "baseProtectionModeling";
     private static final int TYPE_ID_BASE_PROTECTION_MODELING = registerType(
             TYPE_NAME_BASE_PROTECTION_MODELING);
 
-    private static final List<String> CLASS_NAMES = new LinkedList<>();
-    static {
-        CLASS_NAMES.add(BpRequirementGroup.class.getName());
-    }
-    
     private static BaseProtectionModelingTransfer instance = new BaseProtectionModelingTransfer();
 
     public static BaseProtectionModelingTransfer getInstance() {
@@ -73,11 +64,6 @@ public final class BaseProtectionModelingTransfer extends VeriniceElementTransfe
         return BaseProtectionModelingTransfer.isDraggedDataValid(data);
     }
 
-
-    public static boolean isSupportedClass(Object arrayElement) {   
-        return CLASS_NAMES.contains(arrayElement.getClass().getName());
-    }
-    
     public static boolean isDraggedDataValid(Object data) {
         boolean valid = true;
         Object[] dataArray = (Object[]) data;
@@ -85,9 +71,15 @@ public final class BaseProtectionModelingTransfer extends VeriniceElementTransfe
             if (log.isDebugEnabled()) {
                 log.debug("Validating dragged element: " + arrayElement + "...");
             }
-            if (!(isSupportedClass(arrayElement))) {
+            if (!(arrayElement instanceof BpRequirementGroup)) {
                 valid = false;
                 break;
+            }
+            for (CnATreeElement child : ((BpRequirementGroup) arrayElement).getChildren()) {
+                if (child instanceof IBpGroup) {
+                    valid = false;
+                    break;
+                }
             }
         }
         if (log.isDebugEnabled()) {
@@ -97,8 +89,6 @@ public final class BaseProtectionModelingTransfer extends VeriniceElementTransfe
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.swt.dnd.Transfer#getTypeNames()
      */
     @Override
@@ -107,18 +97,14 @@ public final class BaseProtectionModelingTransfer extends VeriniceElementTransfe
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.swt.dnd.Transfer#getTypeIds()
      */
     @Override
     protected int[] getTypeIds() {
         if (log.isDebugEnabled()) {
-            log.debug(
-                    TYPE_ID_BASE_PROTECTION_MODELING + "=" + TYPE_NAME_BASE_PROTECTION_MODELING);
+            log.debug(TYPE_ID_BASE_PROTECTION_MODELING + "=" + TYPE_NAME_BASE_PROTECTION_MODELING);
         }
         return new int[] { TYPE_ID_BASE_PROTECTION_MODELING };
     }
-
 
 }

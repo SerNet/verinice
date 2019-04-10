@@ -81,7 +81,6 @@ public class HUIObjectModelService implements IObjectModelService {
 
     private Set<String> allTypeIds = null;
     private Set<String> allBSICategories = null;
-    private Set<String> allStaticProperties = null;
     private Set<String> allBpCategories = null;
 
     private Map<String, Set<String>> possibleChildren = null;
@@ -146,7 +145,6 @@ public class HUIObjectModelService implements IObjectModelService {
         removeNonCnaTreeElementTypeIDs();
         addAllBSIElements();
         addBpCategories();
-        addAllStaticProperties();
     }
 
     public void removeNonCnaTreeElementTypeIDs() {
@@ -190,14 +188,6 @@ public class HUIObjectModelService implements IObjectModelService {
         allBpCategories.add(BpRecordGroup.TYPE_ID);
 
         allTypeIds.addAll(allBpCategories);
-    }
-
-    private void addAllStaticProperties() {
-        allStaticProperties = new HashSet<>();
-        allStaticProperties.add(CnATreeElement.SCOPE_ID);
-        allStaticProperties.add(CnATreeElement.PARENT_ID);
-        allStaticProperties.add(CnATreeElement.DBID);
-        allStaticProperties.add(CnATreeElement.UUID);
     }
 
     /*
@@ -282,7 +272,7 @@ public class HUIObjectModelService implements IObjectModelService {
         if (isBSICategory(typeID)) {
             HashSet<String> set = new HashSet<>();
             set.add(typeID + "_name"); //$NON-NLS-1$
-            set.addAll(allStaticProperties);
+            set.addAll(CnATreeElement.getStaticProperties());
             return set;
         }
         if (getHuiTypeFactory().getEntityType(typeID) == null) {
@@ -290,7 +280,7 @@ public class HUIObjectModelService implements IObjectModelService {
         }
         HashSet<String> set = new HashSet<>(
                 Arrays.asList(getHuiTypeFactory().getEntityType(typeID).getAllPropertyTypeIds()));
-        set.addAll(allStaticProperties);
+        set.addAll(CnATreeElement.getStaticProperties());
         return set;
     }
 

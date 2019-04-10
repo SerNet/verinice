@@ -33,6 +33,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.hui.swt.SWTResourceManager;
+
 /**
  * Dialog to let user enter a password, twice for confirmation.
  * 
@@ -101,7 +103,7 @@ public class PasswordDialog extends Dialog {
                 final int green = red;
                 final int blue = 120;
                 if (!text.getText().equals(text2.getText())) {
-                    text2.setBackground(new Color(Display.getCurrent(), red, green, blue));
+                    text2.setBackground(SWTResourceManager.getColor(red, green, blue));
                 } else {
                     text2.setBackground(oldBackground);
                 }
