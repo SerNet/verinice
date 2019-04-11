@@ -39,6 +39,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElementLabelGenerator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnALink;
@@ -288,12 +289,12 @@ public class RelationTableViewer extends TableViewer {
 
                 // build object path
                 StringBuilder sb = new StringBuilder();
-                sb.insert(0, current.getTitle());
+                sb.insert(0, CnATreeElementLabelGenerator.getElementTitle(current));
 
                 while (current.getParent() != null) {
                     current = current.getParent();
                     sb.insert(0, "/"); //$NON-NLS-1$
-                    sb.insert(0, current.getTitle());
+                    sb.insert(0, CnATreeElementLabelGenerator.getElementTitle(current));
                 }
 
                 // crop the root element, which is always ISO .. or BSI ...

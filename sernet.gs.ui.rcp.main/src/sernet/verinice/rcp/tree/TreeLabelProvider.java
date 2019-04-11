@@ -17,9 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.rcp.tree;
 
-import java.util.Locale;
-
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -27,11 +24,7 @@ import org.eclipse.swt.graphics.Image;
 import sernet.gs.service.StringUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
-import sernet.hui.common.connect.IAbbreviatedElement;
-import sernet.hui.common.connect.IIdentifiableElement;
-import sernet.verinice.model.bp.SecurityLevel;
-import sernet.verinice.model.bp.elements.BpRequirement;
-import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElementLabelGenerator;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -68,7 +61,7 @@ public class TreeLabelProvider extends LabelProvider {
         }
         try {
             CnATreeElement element = (CnATreeElement) obj;
-            String title = getElementTitle(element);
+            String title = CnATreeElementLabelGenerator.getElementTitle(element);
             text = StringUtil.truncate(title, MAX_TEXT_WIDTH);
             if (LOG.isDebugEnabled()) {
                 text = text + " (db: " + element.getDbId() + ", uu: " + element.getUuid()
@@ -80,37 +73,4 @@ public class TreeLabelProvider extends LabelProvider {
         return text;
     }
 
-    private static String getElementTitle(CnATreeElement element) {
-        if (element instanceof Safeguard) {
-            Safeguard safeguard = (Safeguard) element;
-            return createTitleForElementWithSecurityLevel(safeguard.getIdentifier(),
-                    safeguard.getSecurityLevel(), safeguard.getTitle());
-        } else if (element instanceof BpRequirement) {
-            BpRequirement requirement = (BpRequirement) element;
-            return createTitleForElementWithSecurityLevel(requirement.getIdentifier(),
-                    requirement.getSecurityLevel(), requirement.getTitle());
-        } else if (element instanceof IIdentifiableElement) {
-            return ((IIdentifiableElement) element).getFullTitle();
-        }
-        StringBuilder sb = new StringBuilder();
-        if (element instanceof IAbbreviatedElement) {
-            String abbreviation = ((IAbbreviatedElement) element).getAbbreviation();
-            if (!StringUtils.isEmpty(abbreviation)) {
-                sb.append(abbreviation);
-                sb.append(" ");
-            }
-        }
-        String title = element.getTitle();
-        if (title != null) {
-            sb.append(title);
-        }
-        return sb.toString();
-    }
-
-    private static String createTitleForElementWithSecurityLevel(String identifier,
-            SecurityLevel level, String title) {
-        String qualifier = level == null ? "" : level.getLabel().toUpperCase(Locale.getDefault());
-        return StringUtils.join(new Object[] { identifier, " [", qualifier, "] ", title });
-
-    }
 }

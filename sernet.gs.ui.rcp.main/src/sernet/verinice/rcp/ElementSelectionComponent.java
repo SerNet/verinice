@@ -60,11 +60,11 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.CnaTreeElementTitleFilter;
 import sernet.gs.ui.rcp.main.bsi.dialogs.Messages;
 import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElementLabelGenerator;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
 import sernet.verinice.service.commands.LoadElementTitles;
 
@@ -262,16 +262,7 @@ public class ElementSelectionComponent {
     }
 
     private static String makeTitle(CnATreeElement elmt) {
-        StringBuilder sb = new StringBuilder();
-        if (elmt instanceof IISO27kElement) {
-            String abbreviation = ((IISO27kElement) elmt).getAbbreviation();
-            if (abbreviation != null && !abbreviation.isEmpty()) {
-                sb.append(abbreviation).append(" ");
-            }
-        }
-
-        sb.append(elmt.getTitle());
-        return sb.toString();
+        return CnATreeElementLabelGenerator.getElementTitle(elmt);
     }
 
     public List<CnATreeElement> getSelectedElements() {

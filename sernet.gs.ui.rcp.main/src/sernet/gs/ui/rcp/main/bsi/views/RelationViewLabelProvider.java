@@ -25,15 +25,10 @@ import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElementLabelGenerator;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
-import sernet.hui.common.connect.IIdentifiableElement;
-import sernet.verinice.model.bp.elements.BpRequirement;
-import sernet.verinice.model.bp.elements.BpThreat;
-import sernet.verinice.model.bp.elements.Safeguard;
-import sernet.verinice.model.bp.groups.BpRequirementGroup;
-import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.ElementTitleCache;
@@ -161,12 +156,8 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
     public static String getLinkTargetTitleIncludingPotentialIdentifier(CnATreeElement linkSource,
             CnALink link) {
         CnATreeElement linkTarget = getElementOnOtherSide(linkSource, link);
-        if (linkTarget instanceof BpRequirement || linkTarget instanceof BpRequirementGroup
-                || linkTarget instanceof Safeguard || linkTarget instanceof SafeguardGroup
-                || linkTarget instanceof BpThreat) {
-            return ((IIdentifiableElement) linkTarget).getFullTitle();
-        }
-        return CnALink.getRelationObjectTitle(linkSource, link);
+        return CnATreeElementLabelGenerator.getElementTitle(linkTarget);
+
     }
 
     public static void replaceLinkEntities(CnALink link) {

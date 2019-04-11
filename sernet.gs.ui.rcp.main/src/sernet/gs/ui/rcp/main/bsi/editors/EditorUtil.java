@@ -34,7 +34,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.service.StringUtil;
-import sernet.hui.common.connect.IIdentifiableElement;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElementLabelGenerator;
 import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
@@ -142,10 +142,7 @@ public final class EditorUtil {
     }
 
     private static String getElementTitle(CnATreeElement cnATreeElement) {
-        if (cnATreeElement instanceof IIdentifiableElement) {
-            return ((IIdentifiableElement) cnATreeElement).getFullTitle();
-        }
-        return cnATreeElement.getTitle();
+        return CnATreeElementLabelGenerator.getElementTitle(cnATreeElement);
     }
 
     /**
