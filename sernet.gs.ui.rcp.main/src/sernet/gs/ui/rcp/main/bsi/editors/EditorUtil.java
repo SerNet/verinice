@@ -51,7 +51,7 @@ public final class EditorUtil {
     private static final Logger logger = Logger.getLogger(EditorUtil.class);
 
     private static final int MAX_TITLE_LENGTH = 20;
-	public static final String EMPTY_EDITOR_ID = "org.eclipse.ui.internal.emptyEditorTab"; //$NON-NLS-1$
+    public static final String EMPTY_EDITOR_ID = "org.eclipse.ui.internal.emptyEditorTab"; //$NON-NLS-1$
 
     private EditorUtil() {
         super();
@@ -65,7 +65,6 @@ public final class EditorUtil {
                 .forEach(window -> Stream.of(window.getPages()).forEach(
                         page -> Stream.of(page.getEditorReferences()).forEach(editorReference -> {
                             try {
-
                                 if (editorReference
                                         .getEditorInput() instanceof BSIElementEditorInput) {
                                     CnATreeElement element = ((BSIElementEditorInput) editorReference
@@ -150,28 +149,29 @@ public final class EditorUtil {
     }
 
     /**
-     * Cleans the old editorref. A patch for https://bugs.eclipse.org/bugs/show_bug.cgi?id=386648 .
+     * Cleans the old editorref. A patch for
+     * https://bugs.eclipse.org/bugs/show_bug.cgi?id=386648 .
      */
-   	public static void cleanOldEditors() {
-   		try {
-   			IWorkbench wb = PlatformUI.getWorkbench();
-   			IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
-   			if (win == null)
-   				return;
+    public static void cleanOldEditors() {
+        try {
+            IWorkbench wb = PlatformUI.getWorkbench();
+            IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
+            if (win == null)
+                return;
 
-   			IWorkbenchWindow[] workbenchWindows = wb.getWorkbenchWindows();
-   			Arrays.stream(workbenchWindows).forEach(ww -> {
-   				IWorkbenchPage page = ww.getActivePage();
-   				Arrays.stream(page.getEditorReferences()).forEach(ref -> {
-   					String editorId = ref.getId();
-   					if (EMPTY_EDITOR_ID.equals(editorId)) {
-   						page.closeEditors(new IEditorReference[] { ref }, false);
-   					}
-   				});
-   			});
-   		} catch (Exception e) {
-   			logger.error("Error closing editors", e);
-   		}
-   	}
+            IWorkbenchWindow[] workbenchWindows = wb.getWorkbenchWindows();
+            Arrays.stream(workbenchWindows).forEach(ww -> {
+                IWorkbenchPage page = ww.getActivePage();
+                Arrays.stream(page.getEditorReferences()).forEach(ref -> {
+                    String editorId = ref.getId();
+                    if (EMPTY_EDITOR_ID.equals(editorId)) {
+                        page.closeEditors(new IEditorReference[] { ref }, false);
+                    }
+                });
+            });
+        } catch (Exception e) {
+            logger.error("Error closing editors", e);
+        }
+    }
 
 }
