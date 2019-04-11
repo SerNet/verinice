@@ -1,7 +1,5 @@
 # verinice
 
-[![Build Status](https://travis-ci.org/SimonScholz/verinice.svg?branch=master)](https://travis-ci.org/SimonScholz/verinice)
-
 verinice helps you to build and operate your management system for
 information security (ISMS). Whether you base it on ISO 27001, BSI IT
 Baseline Protection, IDW PS 330 or another standard: verinice supports
