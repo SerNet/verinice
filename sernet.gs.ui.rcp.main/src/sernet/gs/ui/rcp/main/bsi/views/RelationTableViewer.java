@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
@@ -72,10 +73,6 @@ public class RelationTableViewer extends TableViewer {
     private TableViewerColumn colIWithControls;
     private TableViewerColumn colAWithControls;
 
-    /**
-     * @param parent
-     * @param i
-     */
     public RelationTableViewer(IRelationTable relationView, Composite parent, int style,
             boolean showRisk) {
         super(parent, style);
@@ -222,12 +219,6 @@ public class RelationTableViewer extends TableViewer {
      */
     public static class PathCellLabelProvider extends CellLabelProvider {
 
-        /**
-         * Caches the object pathes. Key is the title of the target
-         * CnaTreeElement which is listed in the title column.
-         */
-        private Map<String, String> cache;
-
         /** the current width of the verinice window */
         private int shellWidth;
 
@@ -249,7 +240,6 @@ public class RelationTableViewer extends TableViewer {
             this.relationViewLabelProvider = relationViewLabelProvider;
             this.parent = parent;
             this.column = column;
-            cache = new HashMap<>();
 
             // calc text width
             GC gc = new GC(parent);
@@ -286,14 +276,10 @@ public class RelationTableViewer extends TableViewer {
                 cnATreeElement = link.getDependant();
             }
 
-            if (cache.containsKey(link.getId())) {
-                return cropToolTip(cache.get(link.getId().toString() + isDownwardLink), mouseX);
-            }
-
             try {
 
                 RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
-                relationViewLabelProvider.replaceLinkEntities(link);
+                RelationViewLabelProvider.replaceLinkEntities(link);
 
                 LoadAncestors command = new LoadAncestors(cnATreeElement.getTypeId(),
                         cnATreeElement.getUuid(), ri);
@@ -320,13 +306,13 @@ public class RelationTableViewer extends TableViewer {
                 // delete root slash
                 sb.deleteCharAt(0);
 
-                cache.put(link.getId().toString() + isDownwardLink, sb.toString());
+                return cropToolTip(sb.toString(), mouseX);
 
             } catch (CommandException e) {
                 LOG.debug("loading ancestors failed", e); //$NON-NLS-1$
+                return StringUtils.EMPTY;
             }
 
-            return cropToolTip(cache.get(link.getId().toString() + isDownwardLink), mouseX);
         }
 
         /**
