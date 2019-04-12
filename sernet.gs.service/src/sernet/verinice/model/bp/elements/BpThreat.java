@@ -26,16 +26,9 @@ import java.util.Map;
 import sernet.gs.service.StringUtil;
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITaggableElement;
-import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.IBpElement;
-import sernet.verinice.model.bp.Reevaluator;
 import sernet.verinice.model.bsi.TagHelper;
-import sernet.verinice.model.common.AbstractLinkChangeListener;
-import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.ILinkChangeListener;
-import sernet.verinice.model.common.TransactionAbortedException;
-import sernet.verinice.service.bp.risk.RiskDeductionUtil;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -89,17 +82,6 @@ public class BpThreat extends CnATreeElement
         RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(Room.TYPE_ID, BpThreat.REL_BP_THREAT_BP_ROOM);
     }
 
-    private final IReevaluator reevaluator = new Reevaluator(this);
-    private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
-
-        private static final long serialVersionUID = 3053406771575607534L;
-
-        @Override
-        public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
-            RiskDeductionUtil.deduceRisk(BpThreat.this);
-        }
-    };
-
     protected BpThreat() {
     }
 
@@ -130,16 +112,6 @@ public class BpThreat extends CnATreeElement
     @Override
     public void setTitel(String name) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
-    }
-
-    @Override
-    public ILinkChangeListener getLinkChangeListener() {
-        return linkChangeListener;
-    }
-
-    @Override
-    public IReevaluator getProtectionRequirementsProvider() {
-        return reevaluator;
     }
 
     @Override

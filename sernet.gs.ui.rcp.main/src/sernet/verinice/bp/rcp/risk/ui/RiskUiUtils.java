@@ -75,10 +75,24 @@ public final class RiskUiUtils {
      */
     public static void addSelectionListener(HitroUIComposite huiComposite, CnATreeElement element) {
         if (element instanceof BpThreat) {
-            huiComposite.addSelectionListener(BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
-                    new RiskInputValueChanged(element));
-            huiComposite.addSelectionListener(BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
-                    new RiskInputValueChanged(element));
+            BpThreat threat = (BpThreat) element;
+            addRiskComputeListeners(huiComposite, threat,
+                    BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS);
+
+            addRiskComputeListeners(huiComposite, threat,
+                    BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS);
         }
+    }
+
+    private static void addRiskComputeListeners(HitroUIComposite huiComposite, BpThreat threat,
+            String frequencyProperty, String impactProperty, String riskProperty) {
+        ComputeRisk listener = new ComputeRisk(threat, frequencyProperty, impactProperty,
+                riskProperty);
+        huiComposite.addSelectionListener(frequencyProperty, listener);
+        huiComposite.addSelectionListener(impactProperty, listener);
     }
 }

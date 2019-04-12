@@ -44,7 +44,6 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 import sernet.verinice.model.common.TransactionAbortedException;
-import sernet.verinice.service.bp.risk.RiskDeductionUtil;
 import sernet.verinice.service.hibernate.HibernateUtil;
 
 /**
@@ -155,9 +154,6 @@ public class BpRequirement extends CnATreeElement
                     && !ta.hasBeenVisited(BpRequirement.this)) {
                 DeductionImplementationUtil
                         .setImplementationStatusToRequirement(BpRequirement.this);
-            }
-            if (BpRequirement.this.getEntity().isFlagged(PROP_SAFEGUARD_REDUCE_RISK)) {
-                RiskDeductionUtil.deduceRiskForLinkedThreats(BpRequirement.this);
             }
         }
     };

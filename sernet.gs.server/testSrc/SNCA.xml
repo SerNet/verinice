@@ -10892,11 +10892,11 @@ Wurden bereits weitere Stellen informiert?
         </huipropertygroup>
         <huipropertygroup id="bp_threat_risk_with_additional_safeguards" name="Risk with additional safeguards" tags="BSI-200-3">
             <huiproperty id="bp_threat_risk_with_additional_safeguards_frequency" name="Frequency of occurrence"
-                inputtype="singleoption" editable="false">
+                inputtype="singleoption">
                <!-- options will be populated dynamically in the application -->
             </huiproperty>
             <huiproperty id="bp_threat_risk_with_additional_safeguards_impact" name="Potential extent of damage"
-                inputtype="singleoption" editable="false">
+                inputtype="singleoption">
                 <!-- options will be populated dynamically in the application -->
             </huiproperty>
             <huiproperty id="bp_threat_risk_with_additional_safeguards_risk" name="Risk"

@@ -67,8 +67,8 @@ public class RiskServiceImplTest extends AbstractModernizedBaseProtection {
         ItNetwork itNetwork = createNewBPOrganization();
         BpThreatGroup threatGroup = createBpThreatGroup(itNetwork);
         BpThreat threat = createBpThreat(threatGroup);
-        threat.setFrequencyWithoutAdditionalSafeguards(highestFrequencyInDefaultConfig.getId());
-        threat.setImpactWithoutAdditionalSafeguards(highestImpactInDefaultConfig.getId());
+        setFrequencyValues(threat, highestFrequencyInDefaultConfig);
+        setImpactValues(threat, highestImpactInDefaultConfig);
         RiskDeductionUtil.deduceRisk(threat);
         threat = update(threat);
         Assert.assertEquals(highestRiskCategoryInDefaultConfig.getId(),
@@ -99,8 +99,8 @@ public class RiskServiceImplTest extends AbstractModernizedBaseProtection {
         ItNetwork itNetwork = createNewBPOrganization();
         BpThreatGroup threatGroup = createBpThreatGroup(itNetwork);
         BpThreat threat = createBpThreat(threatGroup);
-        threat.setFrequencyWithoutAdditionalSafeguards(highestFrequencyInDefaultConfig.getId());
-        threat.setImpactWithoutAdditionalSafeguards(highestImpactInDefaultConfig.getId());
+        setFrequencyValues(threat, highestFrequencyInDefaultConfig);
+        setImpactValues(threat, highestImpactInDefaultConfig);
         RiskDeductionUtil.deduceRisk(threat);
         threat = update(threat);
         Assert.assertEquals(highestRiskCategoryInDefaultConfig.getId(),
@@ -129,8 +129,8 @@ public class RiskServiceImplTest extends AbstractModernizedBaseProtection {
         ItNetwork itNetwork = createNewBPOrganization();
         BpThreatGroup threatGroup = createBpThreatGroup(itNetwork);
         BpThreat threat = createBpThreat(threatGroup);
-        threat.setFrequencyWithoutAdditionalSafeguards(highestFrequencyInDefaultConfig.getId());
-        threat.setImpactWithoutAdditionalSafeguards(highestImpactInDefaultConfig.getId());
+        setFrequencyValues(threat, highestFrequencyInDefaultConfig);
+        setImpactValues(threat, highestImpactInDefaultConfig);
         RiskDeductionUtil.deduceRisk(threat);
         threat = update(threat);
         Assert.assertEquals(highestRiskCategoryInDefaultConfig.getId(),
@@ -156,8 +156,8 @@ public class RiskServiceImplTest extends AbstractModernizedBaseProtection {
         ItNetwork itNetwork = createNewBPOrganization();
         BpThreatGroup threatGroup = createBpThreatGroup(itNetwork);
         BpThreat threat = createBpThreat(threatGroup);
-        threat.setFrequencyWithoutAdditionalSafeguards(highestFrequencyInDefaultConfig.getId());
-        threat.setImpactWithoutAdditionalSafeguards(highestImpactInDefaultConfig.getId());
+        setFrequencyValues(threat, highestFrequencyInDefaultConfig);
+        setImpactValues(threat, highestImpactInDefaultConfig);
         RiskDeductionUtil.deduceRisk(threat);
         threat = update(threat);
         Assert.assertEquals(highestRiskCategoryInDefaultConfig.getId(),
@@ -195,8 +195,8 @@ public class RiskServiceImplTest extends AbstractModernizedBaseProtection {
 
         BpThreatGroup threatGroup = createBpThreatGroup(itNetwork);
         BpThreat threat = createBpThreat(threatGroup);
-        threat.setFrequencyWithoutAdditionalSafeguards(highestFrequencyInDefaultConfig.getId());
-        threat.setImpactWithoutAdditionalSafeguards(highestImpactInDefaultConfig.getId());
+        setFrequencyValues(threat, highestFrequencyInDefaultConfig);
+        setImpactValues(threat, highestImpactInDefaultConfig);
         RiskDeductionUtil.deduceRisk(threat);
         threat = update(threat);
         Assert.assertEquals(null, threat.getRiskWithoutAdditionalSafeguards());
@@ -214,4 +214,16 @@ public class RiskServiceImplTest extends AbstractModernizedBaseProtection {
         Assert.assertEquals(highestRiskCategoryInDefaultConfig.getId(),
                 threat.getRiskWithAdditionalSafeguards());
     }
+
+    private void setFrequencyValues(BpThreat threat, Frequency frequency) {
+        threat.setFrequencyWithoutAdditionalSafeguards(frequency.getId());
+        threat.setFrequencyWithAdditionalSafeguards(frequency.getId());
+    }
+
+    private void setImpactValues(BpThreat threat, Impact impact) {
+        threat.setImpactWithoutAdditionalSafeguards(impact.getId());
+        threat.setImpactWithAdditionalSafeguards(impact.getId());
+
+    }
+
 }
