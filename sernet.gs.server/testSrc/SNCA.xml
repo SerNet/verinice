@@ -10822,6 +10822,39 @@ Wurden bereits weitere Stellen informiert?
             name="Elemental Threat Content" showInObjectBrowser="true" visible="false" />
         <huiproperty id="bp_threat_desc" inputtype="text" name="Description"
             showInObjectBrowser="false" visible="true" />
+        <huiproperty id="bp_threat_vulnerability" inputtype="singleoption" name="Vulnerability">
+            <option id="bp_threat_vulnerability_organisational_deficiencies" name="Organisational deficiencies"/>
+            <option id="bp_threat_vulnerability_technical_vulnerabilities" name="Technical vulnerabilities"/>
+            <option id="bp_threat_vulnerability_technical_breakdown" name="Technical breakdown"/>
+            <option id="bp_threat_vulnerability_human_mistakes" name="Human mistakes"/>
+            <option id="bp_threat_vulnerability_infrastructure_lack" name="Lack of infrastructure"/>
+            <option id="bp_threat_vulnerability_network_defects" name="Network defects"/>
+            <option id="bp_threat_vulnerability_service_coupling" name="Coupling of services"/>
+            <option id="bp_threat_vulnerability_intentional_action" name="Intentional action"/>
+        </huiproperty>
+        <huiproperty id="bp_threat_threat" inputtype="singleoption" name="Threat">
+            <option id="bp_threat_threat_undirected_attacks" name="Undirected attacks"/>
+            <option id="bp_threat_threat_criminal_act" name="Criminal act"/>
+            <option id="bp_threat_threat_force_majeure" name="Force majeure"/>
+            <option id="bp_threat_threat_identity_abuse" name="Identity abuse"/>
+            <option id="bp_threat_threat_internal_offender" name="Internal offender"/>
+            <option id="bp_threat_threat_third_parties_dependency" name="Dependency on third parties"/>
+            <option id="bp_threat_threat_unauthorized_access" name="Unauthorized access"/>
+            <option id="bp_threat_threat_it_damage" name="Damage to IT equipment"/>
+            <option id="bp_threat_threat_malware" name="Malware"/>
+            <option id="bp_threat_threat_social_engineering" name="Social engineering"/>
+            <option id="bp_threat_threat_targeted_attacks" name="Targeted attacks"/>
+            <option id="bp_threat_threat_verlust_information_loss" name="Loss of stored information"/>
+            <option id="bp_threat_threat_process_equipment_damage" name="Damage to process equipment"/>
+            <option id="bp_threat_threat_overload" name="Overload"/>
+            <option id="bp_threat_threat_criminal_prosecution" name="Criminal prosecution / disciplinary measures"/>
+            <option id="bp_threat_threat_confidentiality_loss" name="Loss of confidentiality"/>
+            <option id="bp_threat_threat_liability_loss" name="Loss of liability"/>
+            <option id="bp_threat_threat_administration_loss" name="Loss of administration possibilities"/>
+            <option id="bp_threat_threat_vulnerability_exploitation " name="Exploitation of security vulnerabilities"/>
+            <option id="bp_threat_threat_system_failure" name="System failure"/>
+            <option id="bp_threat_threat_wlan_failure" name="WLAN failure"/>
+        </huiproperty>
         <huiproperty id="bp_threat_document" isURL="true" name="Document" />
         <huiproperty defaultValue="1" id="bp_threat_value_method_confidentiality"
             inputtype="booleanoption" name="Affects Confidentiality" tags="Risk" />
