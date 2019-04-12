@@ -96,13 +96,12 @@ public class Safeguard extends CnATreeElement
                     .filter(link -> BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD
                             .equals(link.getRelationId()))
                     .map(CnALink::getDependant).map(HibernateUtil::unproxy)
-                    .map(BpRequirement.class::cast)
-                    .forEach(r -> {
+                    .map(BpRequirement.class::cast).forEach(r -> {
                         try {
                             RiskDeductionUtil.deduceSafeguardStrength(r);
                             r.getLinkChangeListener().determineValue(ta);
                         } catch (TransactionAbortedException e) {
-                            //swallow this exception
+                            // swallow this exception
                         }
                     });
         }
