@@ -34,6 +34,7 @@ import javax.faces.bean.SessionScoped;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.StringUtil;
 import sernet.gs.service.TimeFormatter;
 import sernet.gs.web.Util;
 import sernet.hui.common.VeriniceContext;
@@ -42,6 +43,9 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.BpThreat;
+import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
@@ -78,11 +82,25 @@ public class TaskBean {
 
     private ITask selectedTask;
 
+    private String elementDescription;
+
     private String outcomeId;
 
     private boolean showRead = true;
 
     private boolean showUnread = true;
+
+    private static final Map<String, String> DESCRIPTION_PROPERTY_BY_ELEMENT_TYPE;
+
+    static {
+        Map<String, String> descriptionPropertyByElementType = new HashMap<>();
+        descriptionPropertyByElementType.put(BpRequirement.TYPE_ID,
+                BpRequirement.PROP_OBJECTBROWSER);
+        descriptionPropertyByElementType.put(Safeguard.TYPE_ID, Safeguard.PROP_OBJECTBROWSER_DESC);
+        descriptionPropertyByElementType.put(BpThreat.TYPE_ID, BpThreat.PROP_OBJECTBROWSER_DESC);
+        DESCRIPTION_PROPERTY_BY_ELEMENT_TYPE = Collections
+                .unmodifiableMap(descriptionPropertyByElementType);
+    }
 
     public List<ITask> loadTasks() {
         long start = 0;
@@ -161,8 +179,28 @@ public class TaskBean {
             getLinkBean().setSelectedLink(null);
             getLinkBean().setSelectedLinkTargetName(null);
             getLinkBean().setSelectedLinkType(null);
+            elementDescription = null;
+
+            if (selectedTask != null) {
+                loadElementDescription();
+            }
+
         } catch (Exception t) {
             LOG.error("Error while opening task", t); //$NON-NLS-1$
+        }
+    }
+
+    private void loadElementDescription() throws CommandException {
+        String elementType = selectedTask.getElementType();
+        String descriptionPropertyName = DESCRIPTION_PROPERTY_BY_ELEMENT_TYPE.get(elementType);
+        if (descriptionPropertyName != null) {
+            String elementUUID = selectedTask.getUuid();
+            RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
+            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<>(elementType,
+                    elementUUID, ri);
+            command = getCommandService().executeCommand(command);
+            elementDescription = StringUtil.replaceEmptyStringByNull(
+                    command.getElement().getPropertyValue(descriptionPropertyName));
         }
     }
 
@@ -358,6 +396,10 @@ public class TaskBean {
 
     public void setShowUnread(boolean showUnread) {
         this.showUnread = showUnread;
+    }
+
+    public String getElementDescription() {
+        return elementDescription;
     }
 
     public TimeZone getTimeZone() {

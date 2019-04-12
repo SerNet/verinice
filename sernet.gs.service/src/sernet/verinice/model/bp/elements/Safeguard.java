@@ -52,7 +52,7 @@ public class Safeguard extends CnATreeElement
 
     public static final String TYPE_ID = "bp_safeguard"; //$NON-NLS-1$
     private static final String PROP_ABBR = "bp_safeguard_abbr"; //$NON-NLS-1$
-    private static final String PROP_OBJECTBROWSER_DESC = "bp_safeguard_objectbrowser_content"; //$NON-NLS-1$
+    public static final String PROP_OBJECTBROWSER_DESC = "bp_safeguard_objectbrowser_content"; //$NON-NLS-1$
     private static final String PROP_NAME = "bp_safeguard_name"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_safeguard_id"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_safeguard_tag"; //$NON-NLS-1$

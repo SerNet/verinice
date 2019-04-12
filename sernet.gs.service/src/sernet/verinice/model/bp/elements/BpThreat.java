@@ -46,7 +46,7 @@ public class BpThreat extends CnATreeElement
     private static final long serialVersionUID = -7182966153863832177L;
 
     private static final String PROP_ABBR = "bp_threat_abbr"; //$NON-NLS-1$
-    private static final String PROP_OBJECTBROWSER_DESC = "bp_threat_objectbrowser_content"; //$NON-NLS-1$
+    public static final String PROP_OBJECTBROWSER_DESC = "bp_threat_objectbrowser_content"; //$NON-NLS-1$
     private static final String PROP_NAME = "bp_threat_name"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_threat_id"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_threat_tag"; //$NON-NLS-1$
