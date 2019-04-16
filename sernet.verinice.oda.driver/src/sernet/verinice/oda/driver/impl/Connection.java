@@ -104,10 +104,10 @@ public class Connection implements IConnection {
             // Retrieves the root element's id from the appContext. Find the
             // corresponding part of this
             // code by looking up the references to the used name.
-            Map ctx = (Map) appContext;
+            Map<?, ?> ctx = (Map<?, ?>) appContext;
             if (ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME) != null) {
-                rootElementIds = new Integer[1];
-                rootElementIds[0] = (Integer) ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME);
+                rootElementIds = new Integer[] {
+                        (Integer) ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME) };
             } else if (ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME) != null
                     && ((Integer[]) ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME)).length > 0) {
                 rootElementIds = (Integer[]) ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME);
@@ -138,8 +138,6 @@ public class Connection implements IConnection {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.datatools.connectivity.oda.IConnection#setLocale(com.ibm.
      * icu.util.ULocale)

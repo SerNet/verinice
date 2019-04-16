@@ -23,8 +23,9 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.datatools.connectivity.oda.IParameterMetaData;
@@ -57,25 +58,17 @@ public class Query implements IQuery {
 
     private String vlt = null;
 
-    private List<String> columnList;
-
     private IResultSetMetaData resultSetMetaData;
 
     private Integer[] scopeIds;
 
     private int maxRows = DEFAULT_MAX_ROWS;
 
-    /**
-     * @param rootElementIds
-     */
     public Query(Integer[] rootElementIds) {
-        columnList = new LinkedList<String>();
         this.scopeIds = rootElementIds;
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.datatools.connectivity.oda.IQuery#cancel()
      */
     @Override
@@ -84,8 +77,6 @@ public class Query implements IQuery {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.datatools.connectivity.oda.IQuery#clearInParameters()
      */
     @Override
@@ -94,8 +85,6 @@ public class Query implements IQuery {
     }
 
     /*
-     * (non-Javadoc)
-     *
      * @see org.eclipse.datatools.connectivity.oda.IQuery#close()
      */
     @Override
@@ -104,8 +93,6 @@ public class Query implements IQuery {
     }
 
     /*
-     * (non-Javadoc)
-     *
      * @see org.eclipse.datatools.connectivity.oda.IQuery#executeQuery()
      */
     @Override
@@ -142,8 +129,6 @@ public class Query implements IQuery {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.datatools.connectivity.oda.IQuery#findInParameter(java.lang.
      * String)
@@ -154,8 +139,6 @@ public class Query implements IQuery {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.datatools.connectivity.oda.IQuery#getEffectiveQueryText()
      */
@@ -165,8 +148,6 @@ public class Query implements IQuery {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.datatools.connectivity.oda.IQuery#getMaxRows()
      */
     @Override
@@ -175,8 +156,6 @@ public class Query implements IQuery {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.datatools.connectivity.oda.IQuery#getMetaData()
      */
     @Override
@@ -185,61 +164,48 @@ public class Query implements IQuery {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.datatools.connectivity.oda.IQuery#getParameterMetaData()
      */
     @Override
     public IParameterMetaData getParameterMetaData() throws OdaException {
-
         return null;
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.datatools.connectivity.oda.IQuery#getSortSpec()
      */
     @Override
     public SortSpec getSortSpec() throws OdaException {
-        // TODO Auto-generated method stub
         return null;
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.datatools.connectivity.oda.IQuery#getSpecification()
      */
     @Override
     public QuerySpecification getSpecification() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.datatools.connectivity.oda.IQuery#prepare(java.lang.String)
      */
     @Override
     public void prepare(String queryText) throws OdaException {
         this.vlt = queryText;
-        columnList = getColumnList(this.vlt);
+        List<String> columnList = getColumnList(this.vlt);
         resultSetMetaData = new ResultSetMetaData(
                 columnList.toArray(new String[columnList.size()]));
     }
 
     public static List<String> getColumnList(String queryText) {
-        List<String> columnList = new LinkedList<String>();
         VeriniceLinkTable vltFile = VeriniceLinkTableIO.readContent(queryText);
         ILinkTableConfiguration linkTableConfiguration = VeriniceLinkTableIO
                 .createLinkTableConfiguration(vltFile);
-        for (String columnPath : linkTableConfiguration.getColumnPaths()) {
-            columnList.add(ColumnPathParser.extractAlias(columnPath));
-        }
-        return columnList;
+        Set<String> columnPaths = linkTableConfiguration.getColumnPaths();
+        return columnPaths.stream().map(ColumnPathParser::extractAlias)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -333,8 +299,7 @@ public class Query implements IQuery {
     }
 
     @Override
-    public void setSpecification(QuerySpecification arg0)
-            throws OdaException, UnsupportedOperationException {
+    public void setSpecification(QuerySpecification arg0) throws OdaException {
         throw new UnsupportedOperationException();
     }
 
