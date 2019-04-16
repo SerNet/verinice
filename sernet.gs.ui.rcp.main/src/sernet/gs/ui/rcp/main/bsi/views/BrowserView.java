@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.util.Optional;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -186,13 +187,17 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
     }
 
     protected void elementSelected(Object element) {
+        String html = null;
         try {
             StatusLine.setErrorMessage(""); //$NON-NLS-1$
-            setText(HtmlWriter.getHtml(element));
-
+            html = HtmlWriter.getHtml(element);
         } catch (GSServiceException e) {
             StatusLine.setErrorMessage(Messages.BrowserView_4 + Messages.BrowserView_5);
             LOG.error(Messages.BrowserView_4 + Messages.BrowserView_5, e);
+        }
+        if (!StringUtils.isEmpty(html)) {
+            setText(html);
+        } else {
             browser.setUrl(defaultImage());
         }
     }
