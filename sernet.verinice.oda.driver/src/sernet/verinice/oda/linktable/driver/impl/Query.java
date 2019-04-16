@@ -24,6 +24,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -64,8 +65,15 @@ public class Query implements IQuery {
 
     private int maxRows = DEFAULT_MAX_ROWS;
 
+    private Map<String, List<List<String>>> queryCache;
+
     public Query(Integer[] rootElementIds) {
         this.scopeIds = rootElementIds;
+    }
+
+    public Query(Integer[] rootElementIds, Map<String, List<List<String>>> queryCache) {
+        this(rootElementIds);
+        this.queryCache = queryCache;
     }
 
     /*
@@ -98,12 +106,19 @@ public class Query implements IQuery {
     @Override
     public IResultSet executeQuery() throws OdaException {
         try {
-            return new LinkTableResultSet(createTable(), resultSetMetaData);
+            return new LinkTableResultSet(createMappedTable(), resultSetMetaData);
         } catch (RemoteConnectFailureException remoteConnectFailureException) {
             log.error(Messages.query_connection_error_title, remoteConnectFailureException);
             throw new OdaException(Messages.query_connection_error_msg);
         }
 
+    }
+
+    private List<List<String>> createMappedTable() {
+        if (queryCache != null) {
+            return queryCache.computeIfAbsent(vlt, (k) -> createTable());
+        }
+        return createTable();
     }
 
     private List<List<String>> createTable() {
@@ -295,7 +310,6 @@ public class Query implements IQuery {
     @Override
     public void setSortSpec(SortSpec arg0) throws OdaException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override

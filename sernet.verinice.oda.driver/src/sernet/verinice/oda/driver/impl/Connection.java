@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.verinice.oda.driver.impl;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -39,6 +41,8 @@ public class Connection implements IConnection {
 
     private Object appContext;
 
+    private Map<String, List<List<String>>> queryCache;
+
     /*
      * @see org.eclipse.datatools.connectivity.oda.IConnection#open(java.util.
      * Properties )
@@ -48,6 +52,7 @@ public class Connection implements IConnection {
 
         Activator.getDefault().getMain().updateServerURI(uri);
         isOpen = true;
+        queryCache = new HashMap<>();
     }
 
     public void setAppContext(Object context) throws OdaException {
@@ -59,6 +64,7 @@ public class Connection implements IConnection {
      */
     public void close() throws OdaException {
         isOpen = false;
+        queryCache = null;
     }
 
     /*
@@ -90,11 +96,11 @@ public class Connection implements IConnection {
         IQuery query = null;
 
         if (sernet.verinice.oda.linktable.driver.impl.Query.ODA_DATA_SET_ID.equals(dataSetType)) {
-            query = new sernet.verinice.oda.linktable.driver.impl.Query(rootElementIds);
+            query = new sernet.verinice.oda.linktable.driver.impl.Query(rootElementIds,
+                    queryCache);
         } else {
             query = new Query(rootElementIds);
         }
-
         return query;
     }
 
