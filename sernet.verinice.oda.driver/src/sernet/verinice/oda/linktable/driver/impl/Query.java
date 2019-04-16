@@ -73,7 +73,9 @@ public class Query implements IQuery {
         this.scopeIds = rootElementIds;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.datatools.connectivity.oda.IQuery#cancel()
      */
     @Override
@@ -81,7 +83,9 @@ public class Query implements IQuery {
         // nothing to do
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.datatools.connectivity.oda.IQuery#clearInParameters()
      */
     @Override
@@ -125,8 +129,9 @@ public class Query implements IQuery {
 
     public ILinkTableConfiguration createLinkTableConfiguration() {
         VeriniceLinkTable vltFile = VeriniceLinkTableIO.readContent(vlt);
-        ILinkTableConfiguration linkTableConfiguration = VeriniceLinkTableIO.createLinkTableConfiguration(vltFile);
-        if(scopeIds==null || scopeIds.length == 0) {
+        ILinkTableConfiguration linkTableConfiguration = VeriniceLinkTableIO
+                .createLinkTableConfiguration(vltFile);
+        if (scopeIds == null || scopeIds.length == 0) {
             linkTableConfiguration.removeAllScopeIds();
         } else {
             for (Integer scopeId : scopeIds) {
@@ -136,31 +141,42 @@ public class Query implements IQuery {
         return linkTableConfiguration;
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#findInParameter(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.datatools.connectivity.oda.IQuery#findInParameter(java.lang.
+     * String)
      */
     @Override
     public int findInParameter(String arg0) throws OdaException {
         throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#getEffectiveQueryText()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.datatools.connectivity.oda.IQuery#getEffectiveQueryText()
      */
     @Override
     public String getEffectiveQueryText() {
         return vlt;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.datatools.connectivity.oda.IQuery#getMaxRows()
      */
     @Override
-    public int getMaxRows() throws OdaException {   
+    public int getMaxRows() throws OdaException {
         return maxRows;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.datatools.connectivity.oda.IQuery#getMetaData()
      */
     @Override
@@ -168,16 +184,20 @@ public class Query implements IQuery {
         return resultSetMetaData;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.datatools.connectivity.oda.IQuery#getParameterMetaData()
      */
     @Override
     public IParameterMetaData getParameterMetaData() throws OdaException {
-        
+
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.datatools.connectivity.oda.IQuery#getSortSpec()
      */
     @Override
@@ -186,7 +206,9 @@ public class Query implements IQuery {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.datatools.connectivity.oda.IQuery#getSpecification()
      */
     @Override
@@ -195,20 +217,25 @@ public class Query implements IQuery {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#prepare(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.datatools.connectivity.oda.IQuery#prepare(java.lang.String)
      */
     @Override
-    public void prepare(String queryText) throws OdaException {    
+    public void prepare(String queryText) throws OdaException {
         this.vlt = queryText;
         columnList = getColumnList(this.vlt);
-        resultSetMetaData = new ResultSetMetaData(columnList.toArray(new String[columnList.size()]));
+        resultSetMetaData = new ResultSetMetaData(
+                columnList.toArray(new String[columnList.size()]));
     }
 
     public static List<String> getColumnList(String queryText) {
         List<String> columnList = new LinkedList<String>();
         VeriniceLinkTable vltFile = VeriniceLinkTableIO.readContent(queryText);
-        ILinkTableConfiguration linkTableConfiguration = VeriniceLinkTableIO.createLinkTableConfiguration(vltFile);
+        ILinkTableConfiguration linkTableConfiguration = VeriniceLinkTableIO
+                .createLinkTableConfiguration(vltFile);
         for (String columnPath : linkTableConfiguration.getColumnPaths()) {
             columnList.add(ColumnPathParser.extractAlias(columnPath));
         }
@@ -302,13 +329,13 @@ public class Query implements IQuery {
     @Override
     public void setSortSpec(SortSpec arg0) throws OdaException {
         throw new UnsupportedOperationException();
-        
+
     }
 
     @Override
     public void setSpecification(QuerySpecification arg0)
             throws OdaException, UnsupportedOperationException {
-        throw new UnsupportedOperationException();       
+        throw new UnsupportedOperationException();
     }
 
     @Override

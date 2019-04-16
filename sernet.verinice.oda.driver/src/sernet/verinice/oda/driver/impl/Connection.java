@@ -25,128 +25,127 @@ import org.eclipse.datatools.connectivity.oda.IDataSetMetaData;
 import org.eclipse.datatools.connectivity.oda.IQuery;
 import org.eclipse.datatools.connectivity.oda.OdaException;
 
+import com.ibm.icu.util.ULocale;
+
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.oda.driver.Activator;
-
-import com.ibm.icu.util.ULocale;
 
 /**
  * Implementation class of IConnection for an ODA runtime driver.
  */
 public class Connection implements IConnection {
 
-	private boolean isOpen = false;
-	
-	private Object appContext;
+    private boolean isOpen = false;
 
-	
+    private Object appContext;
 
-	/*
-	 * @see
-	 * org.eclipse.datatools.connectivity.oda.IConnection#open(java.util.Properties
-	 * )
-	 */
-	public void open(Properties connProperties) throws OdaException {
-		String uri = connProperties.getProperty("serverURI");
+    /*
+     * @see org.eclipse.datatools.connectivity.oda.IConnection#open(java.util.
+     * Properties )
+     */
+    public void open(Properties connProperties) throws OdaException {
+        String uri = connProperties.getProperty("serverURI");
 
-		Activator.getDefault().getMain().updateServerURI(uri);
-		isOpen = true;
-	}
+        Activator.getDefault().getMain().updateServerURI(uri);
+        isOpen = true;
+    }
 
-	public void setAppContext(Object context) throws OdaException {
-		appContext = context;
-	}
+    public void setAppContext(Object context) throws OdaException {
+        appContext = context;
+    }
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IConnection#close()
-	 */
-	public void close() throws OdaException {
-		isOpen = false;
-	}
+    /*
+     * @see org.eclipse.datatools.connectivity.oda.IConnection#close()
+     */
+    public void close() throws OdaException {
+        isOpen = false;
+    }
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IConnection#isOpen()
-	 */
-	public boolean isOpen() throws OdaException {
-		return isOpen;
-	}
+    /*
+     * @see org.eclipse.datatools.connectivity.oda.IConnection#isOpen()
+     */
+    public boolean isOpen() throws OdaException {
+        return isOpen;
+    }
 
-	/*
-	 * @see
-	 * org.eclipse.datatools.connectivity.oda.IConnection#getMetaData(java.lang
-	 * .String)
-	 */
-	public IDataSetMetaData getMetaData(String dataSetType) throws OdaException {
-		// assumes that this driver supports only one type of data set,
-		// ignores the specified dataSetType
-		return new DataSetMetaData(this);
-	}
+    /*
+     * @see
+     * org.eclipse.datatools.connectivity.oda.IConnection#getMetaData(java.lang
+     * .String)
+     */
+    public IDataSetMetaData getMetaData(String dataSetType) throws OdaException {
+        // assumes that this driver supports only one type of data set,
+        // ignores the specified dataSetType
+        return new DataSetMetaData(this);
+    }
 
-	/*
-	 * @see
-	 * org.eclipse.datatools.connectivity.oda.IConnection#newQuery(java.lang
-	 * .String)
-	 */
-	@Override
-	public IQuery newQuery(String dataSetType) throws OdaException {	
-		Integer[] rootElementIds = getRootElementIds();
-		IQuery query = null;
-		
-		if (sernet.verinice.oda.linktable.driver.impl.Query.ODA_DATA_SET_ID.equals(dataSetType)) {
-		    query = new sernet.verinice.oda.linktable.driver.impl.Query(rootElementIds);
-		} else {
-		    query = new Query(rootElementIds);
-		}
-		
-		return query;
-	}
+    /*
+     * @see
+     * org.eclipse.datatools.connectivity.oda.IConnection#newQuery(java.lang
+     * .String)
+     */
+    @Override
+    public IQuery newQuery(String dataSetType) throws OdaException {
+        Integer[] rootElementIds = getRootElementIds();
+        IQuery query = null;
+
+        if (sernet.verinice.oda.linktable.driver.impl.Query.ODA_DATA_SET_ID.equals(dataSetType)) {
+            query = new sernet.verinice.oda.linktable.driver.impl.Query(rootElementIds);
+        } else {
+            query = new Query(rootElementIds);
+        }
+
+        return query;
+    }
 
     private Integer[] getRootElementIds() {
         Integer[] rootElementIds = null;
-		if (appContext != null) {
-			// Retrieves the root element's id from the appContext. Find the corresponding part of this
-			// code by looking up the references to the used name.
-			Map ctx = (Map) appContext;
-			if(ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME) != null) {
-			    rootElementIds = new Integer[1];
-			    rootElementIds[0] = (Integer) ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME);
-			} else if(ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME) != null && ((Integer[])ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME)).length > 0) {
-				rootElementIds = (Integer[]) ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME);
-			}
-		}
+        if (appContext != null) {
+            // Retrieves the root element's id from the appContext. Find the
+            // corresponding part of this
+            // code by looking up the references to the used name.
+            Map ctx = (Map) appContext;
+            if (ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME) != null) {
+                rootElementIds = new Integer[1];
+                rootElementIds[0] = (Integer) ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME);
+            } else if (ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME) != null
+                    && ((Integer[]) ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME)).length > 0) {
+                rootElementIds = (Integer[]) ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME);
+            }
+        }
         return rootElementIds;
     }
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IConnection#getMaxQueries()
-	 */
-	public int getMaxQueries() throws OdaException {
-		return 0; // no limit
-	}
+    /*
+     * @see org.eclipse.datatools.connectivity.oda.IConnection#getMaxQueries()
+     */
+    public int getMaxQueries() throws OdaException {
+        return 0; // no limit
+    }
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IConnection#commit()
-	 */
-	public void commit() throws OdaException {
-		// do nothing; assumes no transaction support needed
-	}
+    /*
+     * @see org.eclipse.datatools.connectivity.oda.IConnection#commit()
+     */
+    public void commit() throws OdaException {
+        // do nothing; assumes no transaction support needed
+    }
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IConnection#rollback()
-	 */
-	public void rollback() throws OdaException {
-		// do nothing; assumes no transaction support needed
-	}
+    /*
+     * @see org.eclipse.datatools.connectivity.oda.IConnection#rollback()
+     */
+    public void rollback() throws OdaException {
+        // do nothing; assumes no transaction support needed
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.datatools.connectivity.oda.IConnection#setLocale(com.ibm.
-	 * icu.util.ULocale)
-	 */
-	public void setLocale(ULocale locale) throws OdaException {
-		// do nothing; assumes no locale support
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.datatools.connectivity.oda.IConnection#setLocale(com.ibm.
+     * icu.util.ULocale)
+     */
+    public void setLocale(ULocale locale) throws OdaException {
+        // do nothing; assumes no locale support
+    }
 
 }
