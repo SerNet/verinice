@@ -133,7 +133,7 @@ public class RemoveElementTest extends CommandServiceProvider {
 
     @Test
     public void removeParentElementFromGroup() throws CommandException {
-        for (Entry<String, Class> entry : GROUP_TYPE_MAP.entrySet()) {
+        for (Entry<String, Class<? extends CnATreeElement>> entry : GROUP_TYPE_MAP.entrySet()) {
             CnATreeElement element = createElement(entry.getValue(), organization);
 
             int documents = new SecureRandom().nextInt(20);

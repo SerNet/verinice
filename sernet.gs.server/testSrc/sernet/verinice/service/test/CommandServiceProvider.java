@@ -93,10 +93,10 @@ public abstract class CommandServiceProvider extends UuidLoader {
 
     private static final Logger LOG = Logger.getLogger(CommandServiceProvider.class);
 
-    public static final Map<String, Class> GROUP_TYPE_MAP;
+    public static final Map<String, Class<? extends CnATreeElement>> GROUP_TYPE_MAP;
 
     static {
-        GROUP_TYPE_MAP = new HashMap<String, Class>();
+        GROUP_TYPE_MAP = new HashMap<>();
         GROUP_TYPE_MAP.put(AssetGroup.TYPE_ID, Asset.class); // $NON-NLS-1$
         GROUP_TYPE_MAP.put(AuditGroup.TYPE_ID, Audit.class); // $NON-NLS-1$
         GROUP_TYPE_MAP.put(ControlGroup.TYPE_ID, Control.class); // $NON-NLS-1$
@@ -134,8 +134,8 @@ public abstract class CommandServiceProvider extends UuidLoader {
             name = getClass().getSimpleName();
         }
 
-        CreateElement<Organization> saveCommand = new CreateElement<Organization>(model,
-                Organization.class, name);
+        CreateElement<Organization> saveCommand = new CreateElement<>(model, Organization.class,
+                name);
         saveCommand.setInheritAuditPermissions(true);
         saveCommand = commandService.executeCommand(saveCommand);
         Organization organization = saveCommand.getNewElement();
@@ -146,24 +146,27 @@ public abstract class CommandServiceProvider extends UuidLoader {
 
     protected List<String> createElementsInGroups(Organization organization, int numberPerGroup)
             throws CommandException {
-        List<String> uuidList = new LinkedList<String>();
+        List<String> uuidList = new LinkedList<>();
         Set<CnATreeElement> children = organization.getChildren();
         for (CnATreeElement child : children) {
             uuidList.add(child.getUuid());
             assertTrue("Child of organization is not a group", child instanceof Group);
-            Group<CnATreeElement> group = (Group) child;
+            @SuppressWarnings("unchecked")
+            Group<CnATreeElement> group = (Group<CnATreeElement>) child;
             for (int i = 0; i < numberPerGroup; i++) {
                 CnATreeElement newElement = createNewElement(group, i);
                 uuidList.add(newElement.getUuid());
-                LOG.debug(newElement.getTypeId() + ": " + newElement.getTitle() + " created.");
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug(newElement.getTypeId() + ": " + newElement.getTitle() + " created.");
+                }
             }
         }
         return uuidList;
     }
 
-    protected Collection<? extends String> createInOrganisation(Organization organization,
-            Class clazz, int i) throws CommandException {
-        List<String> uuidList = new LinkedList<String>();
+    protected Collection<String> createInOrganisation(Organization organization, Class<?> clazz,
+            int i) throws CommandException {
+        List<String> uuidList = new LinkedList<>();
         Group<CnATreeElement> group;
         if (clazz == SamtTopic.class) {
             group = getGroupForClass(organization, Control.class);
@@ -176,31 +179,34 @@ public abstract class CommandServiceProvider extends UuidLoader {
         return uuidList;
     }
 
-    protected Group<CnATreeElement> getGroupForClass(Organization organization, Class clazz) {
-        Group<CnATreeElement> group = null;
+    protected Group<CnATreeElement> getGroupForClass(Organization organization, Class<?> clazz) {
         Set<CnATreeElement> children = organization.getChildren();
         for (CnATreeElement child : children) {
             assertTrue("Child of organization is not a group", child instanceof Group);
             if (clazz.equals(GROUP_TYPE_MAP.get(child.getTypeId()))) {
-                group = (Group) child;
-                break;
+                @SuppressWarnings("unchecked")
+                Group<CnATreeElement> group = (Group<CnATreeElement>) child;
+                return group;
             }
         }
-        return group;
+        return null;
     }
 
     protected List<String> createGroupsInGroups(Organization organization, int numberPerGroup)
             throws CommandException {
-        List<String> uuidList = new LinkedList<String>();
+        List<String> uuidList = new LinkedList<>();
         Set<CnATreeElement> children = organization.getChildren();
         for (CnATreeElement child : children) {
             uuidList.add(child.getUuid());
             assertTrue("Child of organization is not a group", child instanceof Group);
-            Group<CnATreeElement> group = (Group) child;
+            @SuppressWarnings("unchecked")
+            Group<CnATreeElement> group = (Group<CnATreeElement>) child;
             for (int i = 0; i < numberPerGroup; i++) {
                 CnATreeElement newGroup = createNewNamedGroup(group, i);
                 uuidList.add(newGroup.getUuid());
-                LOG.debug(newGroup.getTypeId() + ": " + newGroup.getTitle() + " created.");
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug(newGroup.getTypeId() + ": " + newGroup.getTitle() + " created.");
+                }
             }
         }
         return uuidList;
@@ -218,8 +224,7 @@ public abstract class CommandServiceProvider extends UuidLoader {
 
     private CnATreeElement createNewGroup(Group<CnATreeElement> group, String name)
             throws CommandException {
-        CreateElement<CnATreeElement> command = new CreateElement<CnATreeElement>(group,
-                group.getTypeId(), name);
+        CreateElement<CnATreeElement> command = new CreateElement<>(group, group.getTypeId(), name);
         command.setInheritAuditPermissions(true);
         command = commandService.executeCommand(command);
         CnATreeElement newElement = command.getNewElement();
@@ -229,11 +234,11 @@ public abstract class CommandServiceProvider extends UuidLoader {
 
     protected CnATreeElement createNewElement(Group<CnATreeElement> group, int n)
             throws CommandException {
-        Class clazz = GROUP_TYPE_MAP.get(group.getTypeId());
+        Class<? extends CnATreeElement> clazz = GROUP_TYPE_MAP.get(group.getTypeId());
         return createNewElement(group, clazz, n);
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "rawtypes" })
     protected CnATreeElement createNewElement(Group<CnATreeElement> group, Class clazz)
             throws CommandException {
         return createNewElement(group, clazz, (int) Math.round(Math.random() * 1000.0));
@@ -242,7 +247,7 @@ public abstract class CommandServiceProvider extends UuidLoader {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     protected CnATreeElement createNewElement(Group<CnATreeElement> group, Class clazz, int n)
             throws CommandException {
-        CreateElement<CnATreeElement> command = new CreateElement<CnATreeElement>(group, clazz,
+        CreateElement<CnATreeElement> command = new CreateElement<>(group, clazz,
                 getClass().getSimpleName() + "_" + n);
         command.setInheritAuditPermissions(true);
         command = commandService.executeCommand(command);
@@ -254,11 +259,13 @@ public abstract class CommandServiceProvider extends UuidLoader {
 
     protected CnALink createLink(CnATreeElement source, CnATreeElement destination, String linkType)
             throws CommandException {
-        CreateLink command = new CreateLink(source, destination, linkType,
-                this.getClass().getSimpleName());
+        CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source, destination,
+                linkType, this.getClass().getSimpleName());
         command = commandService.executeCommand(command);
         CnALink link = command.getLink();
-        LOG.debug("Created: " + link);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Created: " + link);
+        }
         return link;
     }
 
@@ -282,7 +289,7 @@ public abstract class CommandServiceProvider extends UuidLoader {
     protected void checkProperty(CnATreeElement element, String propertyId, String value,
             boolean equals) {
         assertTrue("Unexpected value of property: " + propertyId,
-                equals && value.equals(element.getEntity().getSimpleValue(propertyId)));
+                equals && value.equals(element.getEntity().getPropertyValue(propertyId)));
     }
 
     protected void checkProperty(CnATreeElement element, String propertyId, int expectedValue) {
