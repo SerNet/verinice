@@ -97,23 +97,23 @@ public abstract class CommandServiceProvider extends UuidLoader {
 
     static {
         GROUP_TYPE_MAP = new HashMap<String, Class>();
-        GROUP_TYPE_MAP.put(AssetGroup.TYPE_ID, Asset.class); //$NON-NLS-1$
-        GROUP_TYPE_MAP.put(AuditGroup.TYPE_ID, Audit.class); //$NON-NLS-1$
-        GROUP_TYPE_MAP.put(ControlGroup.TYPE_ID, Control.class); //$NON-NLS-1$
-        GROUP_TYPE_MAP.put(DocumentGroup.TYPE_ID, Document.class); //$NON-NLS-1$
-        GROUP_TYPE_MAP.put(EvidenceGroup.TYPE_ID, Evidence.class); //$NON-NLS-1$
-        GROUP_TYPE_MAP.put(ExceptionGroup.TYPE_ID, sernet.verinice.model.iso27k.Exception.class); //$NON-NLS-1$
-        GROUP_TYPE_MAP.put(FindingGroup.TYPE_ID, Finding.class); //$NON-NLS-1$
-        GROUP_TYPE_MAP.put(IncidentGroup.TYPE_ID, Incident.class); //$NON-NLS-1$
-        GROUP_TYPE_MAP.put(IncidentScenarioGroup.TYPE_ID, IncidentScenario.class); //$NON-NLS-1$
-        GROUP_TYPE_MAP.put(InterviewGroup.TYPE_ID, Interview.class); //$NON-NLS-1$
-        GROUP_TYPE_MAP.put(PersonGroup.TYPE_ID, PersonIso.class); //$NON-NLS-1$
-        GROUP_TYPE_MAP.put(ProcessGroup.TYPE_ID, sernet.verinice.model.iso27k.Process.class); //$NON-NLS-1$
-        GROUP_TYPE_MAP.put(RecordGroup.TYPE_ID, Record.class); //$NON-NLS-1$
-        GROUP_TYPE_MAP.put(RequirementGroup.TYPE_ID, Requirement.class); //$NON-NLS-1$
-        GROUP_TYPE_MAP.put(ResponseGroup.TYPE_ID, Response.class); //$NON-NLS-1$
-        GROUP_TYPE_MAP.put(ThreatGroup.TYPE_ID, Threat.class); //$NON-NLS-1$
-        GROUP_TYPE_MAP.put(VulnerabilityGroup.TYPE_ID, Vulnerability.class); //$NON-NLS-1$
+        GROUP_TYPE_MAP.put(AssetGroup.TYPE_ID, Asset.class); // $NON-NLS-1$
+        GROUP_TYPE_MAP.put(AuditGroup.TYPE_ID, Audit.class); // $NON-NLS-1$
+        GROUP_TYPE_MAP.put(ControlGroup.TYPE_ID, Control.class); // $NON-NLS-1$
+        GROUP_TYPE_MAP.put(DocumentGroup.TYPE_ID, Document.class); // $NON-NLS-1$
+        GROUP_TYPE_MAP.put(EvidenceGroup.TYPE_ID, Evidence.class); // $NON-NLS-1$
+        GROUP_TYPE_MAP.put(ExceptionGroup.TYPE_ID, sernet.verinice.model.iso27k.Exception.class); // $NON-NLS-1$
+        GROUP_TYPE_MAP.put(FindingGroup.TYPE_ID, Finding.class); // $NON-NLS-1$
+        GROUP_TYPE_MAP.put(IncidentGroup.TYPE_ID, Incident.class); // $NON-NLS-1$
+        GROUP_TYPE_MAP.put(IncidentScenarioGroup.TYPE_ID, IncidentScenario.class); // $NON-NLS-1$
+        GROUP_TYPE_MAP.put(InterviewGroup.TYPE_ID, Interview.class); // $NON-NLS-1$
+        GROUP_TYPE_MAP.put(PersonGroup.TYPE_ID, PersonIso.class); // $NON-NLS-1$
+        GROUP_TYPE_MAP.put(ProcessGroup.TYPE_ID, sernet.verinice.model.iso27k.Process.class); // $NON-NLS-1$
+        GROUP_TYPE_MAP.put(RecordGroup.TYPE_ID, Record.class); // $NON-NLS-1$
+        GROUP_TYPE_MAP.put(RequirementGroup.TYPE_ID, Requirement.class); // $NON-NLS-1$
+        GROUP_TYPE_MAP.put(ResponseGroup.TYPE_ID, Response.class); // $NON-NLS-1$
+        GROUP_TYPE_MAP.put(ThreatGroup.TYPE_ID, Threat.class); // $NON-NLS-1$
+        GROUP_TYPE_MAP.put(VulnerabilityGroup.TYPE_ID, Vulnerability.class); // $NON-NLS-1$
     }
 
     @Resource(name = "commandService")
@@ -134,7 +134,8 @@ public abstract class CommandServiceProvider extends UuidLoader {
             name = getClass().getSimpleName();
         }
 
-        CreateElement<Organization> saveCommand = new CreateElement<Organization>(model, Organization.class, name);
+        CreateElement<Organization> saveCommand = new CreateElement<Organization>(model,
+                Organization.class, name);
         saveCommand.setInheritAuditPermissions(true);
         saveCommand = commandService.executeCommand(saveCommand);
         Organization organization = saveCommand.getNewElement();
@@ -143,7 +144,8 @@ public abstract class CommandServiceProvider extends UuidLoader {
         return organization;
     }
 
-    protected List<String> createElementsInGroups(Organization organization, int numberPerGroup) throws CommandException {
+    protected List<String> createElementsInGroups(Organization organization, int numberPerGroup)
+            throws CommandException {
         List<String> uuidList = new LinkedList<String>();
         Set<CnATreeElement> children = organization.getChildren();
         for (CnATreeElement child : children) {
@@ -159,7 +161,8 @@ public abstract class CommandServiceProvider extends UuidLoader {
         return uuidList;
     }
 
-    protected Collection<? extends String> createInOrganisation(Organization organization, Class clazz, int i) throws CommandException {
+    protected Collection<? extends String> createInOrganisation(Organization organization,
+            Class clazz, int i) throws CommandException {
         List<String> uuidList = new LinkedList<String>();
         Group<CnATreeElement> group;
         if (clazz == SamtTopic.class) {
@@ -186,7 +189,8 @@ public abstract class CommandServiceProvider extends UuidLoader {
         return group;
     }
 
-    protected List<String> createGroupsInGroups(Organization organization, int numberPerGroup) throws CommandException {
+    protected List<String> createGroupsInGroups(Organization organization, int numberPerGroup)
+            throws CommandException {
         List<String> uuidList = new LinkedList<String>();
         Set<CnATreeElement> children = organization.getChildren();
         for (CnATreeElement child : children) {
@@ -202,17 +206,20 @@ public abstract class CommandServiceProvider extends UuidLoader {
         return uuidList;
     }
 
-    protected CnATreeElement createNewNamedGroup(Group<CnATreeElement> group, String name) throws CommandException {
+    protected CnATreeElement createNewNamedGroup(Group<CnATreeElement> group, String name)
+            throws CommandException {
         return createNewGroup(group, name);
-    }    
-    
-    protected CnATreeElement createNewNamedGroup(Group<CnATreeElement> group, int n) throws CommandException {
+    }
+
+    protected CnATreeElement createNewNamedGroup(Group<CnATreeElement> group, int n)
+            throws CommandException {
         return createNewGroup(group, getClass().getSimpleName() + "_" + n);
     }
-    
-    private  CnATreeElement createNewGroup(Group<CnATreeElement> group, String name) throws CommandException
-    {
-        CreateElement<CnATreeElement> command = new CreateElement<CnATreeElement>(group, group.getTypeId(), name);
+
+    private CnATreeElement createNewGroup(Group<CnATreeElement> group, String name)
+            throws CommandException {
+        CreateElement<CnATreeElement> command = new CreateElement<CnATreeElement>(group,
+                group.getTypeId(), name);
         command.setInheritAuditPermissions(true);
         command = commandService.executeCommand(command);
         CnATreeElement newElement = command.getNewElement();
@@ -220,19 +227,23 @@ public abstract class CommandServiceProvider extends UuidLoader {
         return newElement;
     }
 
-    protected CnATreeElement createNewElement(Group<CnATreeElement> group, int n) throws CommandException {
+    protected CnATreeElement createNewElement(Group<CnATreeElement> group, int n)
+            throws CommandException {
         Class clazz = GROUP_TYPE_MAP.get(group.getTypeId());
         return createNewElement(group, clazz, n);
     }
-    
+
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    protected CnATreeElement createNewElement(Group<CnATreeElement> group, Class clazz) throws CommandException {
-      return createNewElement(group, clazz, (int)Math.round(Math.random()*1000.0));
+    protected CnATreeElement createNewElement(Group<CnATreeElement> group, Class clazz)
+            throws CommandException {
+        return createNewElement(group, clazz, (int) Math.round(Math.random() * 1000.0));
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    protected CnATreeElement createNewElement(Group<CnATreeElement> group, Class clazz, int n) throws CommandException {
-        CreateElement<CnATreeElement> command = new CreateElement<CnATreeElement>(group, clazz, getClass().getSimpleName() + "_" + n);
+    protected CnATreeElement createNewElement(Group<CnATreeElement> group, Class clazz, int n)
+            throws CommandException {
+        CreateElement<CnATreeElement> command = new CreateElement<CnATreeElement>(group, clazz,
+                getClass().getSimpleName() + "_" + n);
         command.setInheritAuditPermissions(true);
         command = commandService.executeCommand(command);
         CnATreeElement newElement = command.getNewElement();
@@ -241,8 +252,10 @@ public abstract class CommandServiceProvider extends UuidLoader {
         return newElement;
     }
 
-    protected CnALink createLink(CnATreeElement source, CnATreeElement destination, String linkType) throws CommandException {
-        CreateLink command = new CreateLink(source, destination, linkType, this.getClass().getSimpleName());
+    protected CnALink createLink(CnATreeElement source, CnATreeElement destination, String linkType)
+            throws CommandException {
+        CreateLink command = new CreateLink(source, destination, linkType,
+                this.getClass().getSimpleName());
         command = commandService.executeCommand(command);
         CnALink link = command.getLink();
         LOG.debug("Created: " + link);
@@ -261,21 +274,25 @@ public abstract class CommandServiceProvider extends UuidLoader {
         assertNotNull("Db-id of element is null.", element.getDbId());
         checkScopeId(element);
     }
-    
+
     protected void checkProperty(CnATreeElement element, String propertyId, String expectedValue) {
-        checkProperty(element,propertyId,expectedValue,true);
+        checkProperty(element, propertyId, expectedValue, true);
     }
-    
-    protected void checkProperty(CnATreeElement element, String propertyId, String value, boolean equals) {
-        assertTrue("Unexpected value of property: " + propertyId, equals && value.equals(element.getEntity().getSimpleValue(propertyId)));        
+
+    protected void checkProperty(CnATreeElement element, String propertyId, String value,
+            boolean equals) {
+        assertTrue("Unexpected value of property: " + propertyId,
+                equals && value.equals(element.getEntity().getSimpleValue(propertyId)));
     }
-    
+
     protected void checkProperty(CnATreeElement element, String propertyId, int expectedValue) {
-        checkProperty(element,propertyId,expectedValue,true);     
+        checkProperty(element, propertyId, expectedValue, true);
     }
-    
-    protected void checkProperty(CnATreeElement element, String propertyId, int value, boolean equals) {
-        assertTrue("Unexpected value of property: " + propertyId, (equals) == (value==element.getEntity().getInt(propertyId)));        
+
+    protected void checkProperty(CnATreeElement element, String propertyId, int value,
+            boolean equals) {
+        assertTrue("Unexpected value of property: " + propertyId,
+                (equals) == (value == element.getEntity().getInt(propertyId)));
     }
 
     /**
@@ -295,17 +312,21 @@ public abstract class CommandServiceProvider extends UuidLoader {
     }
 
     protected CnATreeElement updateElement(CnATreeElement element) throws CommandException {
-        UpdateElementEntity<CnATreeElement> updateElementCommand = new UpdateElementEntity<>(element, ChangeLogEntry.STATION_ID);
+        UpdateElementEntity<CnATreeElement> updateElementCommand = new UpdateElementEntity<>(
+                element, ChangeLogEntry.STATION_ID);
         updateElementCommand = commandService.executeCommand(updateElementCommand);
         return updateElementCommand.getMergedElement();
     }
 
     protected CnATreeElement loadElement(String sourceId, String extId) throws CommandException {
-        LoadCnAElementByExternalID command = new LoadCnAElementByExternalID(sourceId, extId, false, true);
+        LoadCnAElementByExternalID command = new LoadCnAElementByExternalID(sourceId, extId, false,
+                true);
         command.setProperties(true);
         command = commandService.executeCommand(command);
         List<CnATreeElement> elementList = command.getElements();
-        assertEquals("Element with source-id " + sourceId + " and ext-id" + extId + " was not found.", elementList.size(), 1);
+        assertEquals(
+                "Element with source-id " + sourceId + " and ext-id" + extId + " was not found.",
+                elementList.size(), 1);
         return elementList.get(0);
     }
 
