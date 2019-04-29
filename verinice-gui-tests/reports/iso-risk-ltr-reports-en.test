@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _mEARsE-jEemuCsPaiy5gOQ
 Runtime-Version: 2.3.0.201806262310
-Save-Time: 3/26/19 1:15 PM
+Save-Time: 5/20/19 3:48 PM
 Tags: report
 Testcase-Type: ecl
 
@@ -59,7 +59,7 @@ get-window Import | get-group File | get-button "Select file..." | click
 get-window Import | get-button OK | click
 
 gen-rep-ism "(S) ISM: Risk Assessment (en)" "en-Verinice_Risk_Catalogue"
-gen-rep-ism "(S) ISM: Risk Treatment (en)" "en-Verinice_Risk_Catalogue"
+//gen-rep-ism "(S) ISM: Risk Treatment (en)" "en-Verinice_Risk_Catalogue"
 
 get-view "Information Security Model" | get-tree 
     | select $selectedObject | get-menu 

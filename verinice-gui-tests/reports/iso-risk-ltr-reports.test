@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _IY3Q0E7aEemuCsPaiy5gOQ
 Runtime-Version: 2.3.0.201806262310
-Save-Time: 3/27/19 1:48 PM
+Save-Time: 5/20/19 3:46 PM
 Tags: report
 Testcase-Type: ecl
 
@@ -46,8 +46,8 @@ get-view ISM | get-tree
 get-window "ISO/IEC 27005 Risikoanalyse" | get-button Fertigstellen | click
 get-window "ISO/IEC 27005 Risikoanalyse" | get-button OK | click
 
-gen-rep "(S) ISM: IS-Risikobeurteilung (en)" "Verinice_Risk_Catalogue"
-gen-rep "(S) ISM: Risk Treatment (en)" "Verinice_Risk_Catalogue"
+gen-rep "(S) ISM: ISM-Risikobeurteilung (de)" "Verinice_Risk_Catalogue"
+//gen-rep "(S) ISM: Risk Treatment (en)" "Verinice_Risk_Catalogue"
 
 measure-delete "Verinice_Risk_Catalogue" $selectedObject
 
