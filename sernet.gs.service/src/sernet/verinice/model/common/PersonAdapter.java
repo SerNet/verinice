@@ -19,13 +19,10 @@
  ******************************************************************************/
 package sernet.verinice.model.common;
 
-import sernet.verinice.model.bp.elements.BpPerson;
-import sernet.verinice.model.bsi.Person;
-import sernet.verinice.model.iso27k.PersonIso;
+import sernet.hui.common.connect.IPerson;
 
 /**
- * PersonAdapter adapts methods for
- * {@link PersonIso} and {@link Person} objects.
+ * PersonAdapter adapts methods for {@link IPerson} objects.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -34,70 +31,34 @@ public final class PersonAdapter {
     private PersonAdapter() {
         // do not instantiate this class
     }
-    
+
     /**
-     * @param person A person
-     * @return the name of a person in the form: "SURNAME, FIRST NAME"
+     * @param person
+     *            A person
+     * @return the name of a person in the form: "LAST NAME, FIRST NAME"
      */
     public static String getFullName(CnATreeElement person) {
         String name = null;
-        if(person instanceof PersonIso) {
-            name = getFullName((PersonIso)person);
-        }
-        if(person instanceof Person) {
-            name = getFullName((Person)person);
-        }
-        if (person instanceof BpPerson) {
-            name = getFullName((BpPerson) person);
+        if (person instanceof IPerson) {
+            name = getFullName((IPerson) person);
         }
         return name;
     }
-    
-    private static String getFullName(PersonIso person) {
+
+    private static String getFullName(IPerson person) {
         StringBuilder sb = new StringBuilder();
-        final String surname = person.getEntity().getPropertyValue(PersonIso.PROP_SURNAME);
-        if(surname!=null && !surname.isEmpty()) {
-            sb.append(surname);
+        final String lastName = person.getLastName();
+        if (lastName != null && !lastName.isEmpty()) {
+            sb.append(lastName);
         }
-        final String name = person.getEntity().getPropertyValue(PersonIso.PROP_NAME);
-        if(name!=null && !name.isEmpty()) {
-            if(sb.length()>0) {
+        final String firstName = person.getFirstName();
+        if (firstName != null && !firstName.isEmpty()) {
+            if (sb.length() > 0) {
                 sb.append(", ");
             }
-            sb.append(name);
-        }
-        return sb.toString();
-    }
-    
-    private static String getFullName(Person person) {
-        StringBuilder sb = new StringBuilder();
-        final String surname = person.getNachname();
-        if(surname!=null && !surname.isEmpty()) {
-            sb.append(surname);
-        }
-        final String name = person.getEntity().getPropertyValue(Person.P_VORNAME);
-        if(name!=null && !name.isEmpty()) {
-            if(sb.length()>0) {
-                sb.append(", ");
-            }
-            sb.append(name);
+            sb.append(firstName);
         }
         return sb.toString();
     }
 
-    private static String getFullName(BpPerson person) {
-        StringBuilder sb = new StringBuilder();
-        final String surname = person.getEntity().getPropertyValue(BpPerson.PROP_LAST_NAME);
-        if (surname != null && !surname.isEmpty()) {
-            sb.append(surname);
-        }
-        final String name = person.getEntity().getPropertyValue(BpPerson.PROP_FIRST_NAME);
-        if (name != null && !name.isEmpty()) {
-            if (sb.length() > 0) {
-                sb.append(", ");
-            }
-            sb.append(name);
-        }
-        return sb.toString();
-    }
 }
