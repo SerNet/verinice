@@ -22,9 +22,8 @@ package sernet.verinice.rcp.linktable.ui.combo;
 import sernet.verinice.rcp.linktable.ui.LinkTableComposite;
 
 /**
- * Interface for Operation Types used by the UI
- * 
- * Ensures generic usability of {@link LinkTableComposite}.
+ * Interface for operation types used by the UI Ensures generic usability of
+ * {@link LinkTableComposite}.
  * 
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */

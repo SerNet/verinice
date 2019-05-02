@@ -59,15 +59,14 @@ import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 
 /**
  * Dialog which opens when "selected scopes" is chosen in
- * {@link LinkTableComposite}. The dialog displays a list of all 
- * organizations and IT networks (German:IT-Verbuende). The user
- * can select one or more organizations and IT networks which
- * are used for executing the link table query.
+ * {@link LinkTableComposite}. The dialog displays a list of all organizations
+ * and IT networks (German:IT-Verbuende). The user can select one or more
+ * organizations and IT networks which are used for executing the link table
+ * query.
  * 
  * @author Ruth Motza <rm[at]sernet[dot]de>
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@SuppressWarnings("restriction")
 public class CsvExportDialog extends TitleAreaDialog {
     private static final Logger LOG = Logger.getLogger(CsvExportDialog.class);
 
@@ -116,7 +115,7 @@ public class CsvExportDialog extends TitleAreaDialog {
         GridLayout layout = (GridLayout) composite.getLayout();
         layout.marginWidth = layoutMargin;
         layout.marginHeight = layoutMargin;
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true,true);
+        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         composite.setLayoutData(gd);
 
         try {
@@ -132,10 +131,10 @@ public class CsvExportDialog extends TitleAreaDialog {
         addOrganizationelectionListener();
 
         final Composite sourceIdComposite = new Composite(composite, SWT.NONE);
-        sourceIdComposite.setLayout(new GridLayout(sourceIdCompositeNumColumns,false));
+        sourceIdComposite.setLayout(new GridLayout(sourceIdCompositeNumColumns, false));
         ((GridLayout) sourceIdComposite.getLayout()).marginTop = sourceIdCompositeMarginTop;
-        gd = new GridData(SWT.FILL, SWT.BOTTOM, true,false);
-        gd.grabExcessHorizontalSpace=true;
+        gd = new GridData(SWT.FILL, SWT.BOTTOM, true, false);
+        gd.grabExcessHorizontalSpace = true;
         sourceIdComposite.setLayoutData(gd);
 
         /*
@@ -145,8 +144,8 @@ public class CsvExportDialog extends TitleAreaDialog {
         final Label labelLocation = new Label(sourceIdComposite, SWT.NONE);
         labelLocation.setText(Messages.CsvExportDialog_6);
         txtLocation = new Text(sourceIdComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
-        gd = new GridData(SWT.FILL, SWT.TOP, true,false);
-        gd.grabExcessHorizontalSpace=true;
+        gd = new GridData(SWT.FILL, SWT.TOP, true, false);
+        gd.grabExcessHorizontalSpace = true;
         gd.minimumWidth = txtLocationMinimumWidth;
         txtLocation.setLayoutData(gd);
         txtLocation.addKeyListener(new KeyListener() {
@@ -154,6 +153,7 @@ public class CsvExportDialog extends TitleAreaDialog {
             public void keyReleased(KeyEvent e) {
                 filePath = txtLocation.getText();
             }
+
             @Override
             public void keyPressed(KeyEvent e) {
                 // nothing to do
@@ -171,8 +171,8 @@ public class CsvExportDialog extends TitleAreaDialog {
             }
 
         });
-     
-        if(organizationWidget.getSelectedElement()!=null) {
+
+        if (organizationWidget.getSelectedElement() != null) {
             filePath = defaultFolder + organizationTitle + getDefaultExtension();
             txtLocation.setText(filePath);
         }
@@ -186,21 +186,22 @@ public class CsvExportDialog extends TitleAreaDialog {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 Button checkbox = (Button) e.getSource();
-                if(checkbox.getSelection()) {
+                if (checkbox.getSelection()) {
                     changeFilePathToCurrentSelection();
                 }
                 super.widgetSelected(e);
-            }   
+            }
         };
 
         organizationWidget.addSelectionListener(organizationListener);
     }
-    
+
     private void changeFilePathToCurrentSelection() {
         setOrgTitle();
-        if(txtLocation!=null) {
-            if(isFilepath()) {
-                filePath = FileUtil.getFolderFromPath(txtLocation.getText()) + organizationTitle + getDefaultExtension();
+        if (txtLocation != null) {
+            if (isFilepath()) {
+                filePath = FileUtil.getFolderFromPath(txtLocation.getText()) + organizationTitle
+                        + getDefaultExtension();
             } else {
                 filePath = defaultFolder + organizationTitle + getDefaultExtension();
             }
@@ -210,10 +211,10 @@ public class CsvExportDialog extends TitleAreaDialog {
 
     private void setOrgTitle() {
         String title = null;
-        if(organizationWidget.getSelectedElement()!=null) {
+        if (organizationWidget.getSelectedElement() != null) {
             title = organizationWidget.getSelectedElement().getTitle();
         }
-        if(title!=null) {
+        if (title != null) {
             organizationTitle = StringUtil.convertToFileName(title);
         } else {
             organizationTitle = DEFAULT_ORGANIZATION_TITLE;
@@ -221,13 +222,14 @@ public class CsvExportDialog extends TitleAreaDialog {
     }
 
     private boolean isFilepath() {
-        return txtLocation!=null && txtLocation.getText()!=null && !txtLocation.getText().isEmpty();
+        return txtLocation != null && txtLocation.getText() != null
+                && !txtLocation.getText().isEmpty();
     }
 
     private String initDefaultFolder() {
         IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
         defaultFolder = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_CSV_EXPORT);
-        if(defaultFolder==null || defaultFolder.isEmpty()) {
+        if (defaultFolder == null || defaultFolder.isEmpty()) {
             defaultFolder = System.getProperty("user.home"); //$NON-NLS-1$
         }
         if (!defaultFolder.endsWith(System.getProperty("file.separator"))) { //$NON-NLS-1$
@@ -248,7 +250,7 @@ public class CsvExportDialog extends TitleAreaDialog {
     @Override
     protected void okPressed() {
         String errorMessage = createErrorMessage();
-        if (errorMessage!=null && !errorMessage.isEmpty()) {
+        if (errorMessage != null && !errorMessage.isEmpty()) {
             showErrorMessage(errorMessage);
         } else {
             checkIfFileExistAndSave();
@@ -257,10 +259,9 @@ public class CsvExportDialog extends TitleAreaDialog {
 
     private void checkIfFileExistAndSave() {
         File file = new File(filePath);
-        if(file.exists() && !file.isDirectory()) { 
-            MessageDialog mDialog = new MessageDialog(
-                    getShell(), NLS.bind(Messages.CsvExportDialog_9, file.getName()),
-                    null,
+        if (file.exists() && !file.isDirectory()) {
+            MessageDialog mDialog = new MessageDialog(getShell(),
+                    NLS.bind(Messages.CsvExportDialog_9, file.getName()), null,
                     NLS.bind(Messages.CsvExportDialog_14, file.getParentFile().getName()),
                     MessageDialog.WARNING,
                     new String[] { Messages.CsvExportDialog_16, Messages.CsvExportDialog_17 }, 0);
@@ -280,7 +281,7 @@ public class CsvExportDialog extends TitleAreaDialog {
         }
         super.okPressed();
     }
-    
+
     private String createErrorMessage() {
         StringBuilder sb = new StringBuilder();
         if (filePath == null || filePath.isEmpty()) {
@@ -291,15 +292,15 @@ public class CsvExportDialog extends TitleAreaDialog {
         }
         return sb.toString();
     }
-    
+
     private void showErrorMessage(String message) {
         StringBuilder sb = new StringBuilder(message);
         sb.append("\n"); //$NON-NLS-1$
         sb.append(Messages.CsvExportDialog_13);
-        setMessage(sb.toString(), IMessageProvider.ERROR); 
+        setMessage(sb.toString(), IMessageProvider.ERROR);
     }
 
-	public String getFilePath() {
+    public String getFilePath() {
         return filePath;
     }
 

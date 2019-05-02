@@ -23,17 +23,14 @@ import sernet.verinice.rcp.linktable.LinkTableEditorInput;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 
 /**
- *
+ * Handler class for opening new report queries. This handler is configured in
+ * plugin.xml.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
 public class CreateLinkTableHandler extends LinkTableHandler {
 
-    public CreateLinkTableHandler() {
-        super();
-    }
-
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.rcp.linktable.LinkTableHandler#createLinkTable()
      */
     @Override

@@ -22,7 +22,9 @@ package sernet.verinice.rcp.linktable.handlers;
 import org.apache.log4j.Logger;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
@@ -32,22 +34,25 @@ import org.eclipse.ui.progress.UIJob;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.rcp.RightsEnabledHandler;
-import sernet.verinice.rcp.linktable.*;
-import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
+import sernet.verinice.rcp.linktable.EditorCloseException;
+import sernet.verinice.rcp.linktable.LinkTableEditorInput;
+import sernet.verinice.rcp.linktable.LinkTableUtil;
+import sernet.verinice.rcp.linktable.Messages;
 
 /**
+ * Base handler class for opening new and existing report queries.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
 public abstract class LinkTableHandler extends RightsEnabledHandler {
 
     private static final Logger LOG = Logger.getLogger(LinkTableHandler.class);
-    
+
     public LinkTableHandler() {
-       super(false);
+        super(false);
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override
@@ -55,29 +60,26 @@ public abstract class LinkTableHandler extends RightsEnabledHandler {
         return ActionRightIDs.EXPORT_LINK_TABLE;
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+    /*
+     * @see
+     * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
+     * ExecutionEvent)
      */
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        if(checkRights()){
+        if (checkRights()) {
             final LinkTableEditorInput veriniceLinkTable = createLinkTable();
             if (veriniceLinkTable != null) {
-
                 UIJob job = new UIJob(PlatformUI.getWorkbench().getDisplay(),
                         Messages.LinkTableHandler_0) {
-
                     @Override
                     public IStatus runInUIThread(IProgressMonitor monitor) {
                         IStatus status = Status.OK_STATUS;
-
                         try {
                             monitor.beginTask(Messages.LinkTableHandler_0,
                                     IProgressMonitor.UNKNOWN);
                             validateInputAndOpenEditor(veriniceLinkTable);
-
                         } catch (Exception e) {
-
                             LOG.error("Error while running job " + this.getName(), e);
                             status = new Status(Status.ERROR, "sernet.verinice.samt.rcp",
                                     "Error opening vlt-file", e);
@@ -87,50 +89,42 @@ public abstract class LinkTableHandler extends RightsEnabledHandler {
                         }
                         return status;
                     }
-
                 };
                 job.schedule();
-
             }
         } else {
             MessageDialog.openError(HandlerUtil.getActiveShell(event), "Error", //$NON-NLS-1$
                     Messages.ExportLinkTableHandler_1);
         }
-        
         return null;
     }
 
-    private void validateInputAndOpenEditor(
-            final LinkTableEditorInput veriniceLinkTable) {
+    private void validateInputAndOpenEditor(final LinkTableEditorInput veriniceLinkTable) {
         try {
             if (!LinkTableUtil.isValidVeriniceLinkTable(veriniceLinkTable.getInput()).isValid()) {
                 MessageDialog confirmInvalidInput = new MessageDialog(
-                        Display.getCurrent().getActiveShell(),
-                        Messages.LinkTableHandler_1,
-                        null,
-                        Messages.LinkTableHandler_2
-                                + Messages.LinkTableHandler_3,
+                        Display.getCurrent().getActiveShell(), Messages.LinkTableHandler_1, null,
+                        Messages.LinkTableHandler_2 + Messages.LinkTableHandler_3,
                         MessageDialog.QUESTION,
-                        new String[] { Messages.LinkTableHandler_4, Messages.LinkTableHandler_5 }, 0);
-
+                        new String[] { Messages.LinkTableHandler_4, Messages.LinkTableHandler_5 },
+                        0);
                 int open = confirmInvalidInput.open();
                 if (open != 0) {
-
                     return;
                 }
             }
             EditorFactory.getInstance().updateAndOpenObject(veriniceLinkTable);
         } catch (Exception e) {
             if (e.getCause() instanceof EditorCloseException) {
-
                 EditorCloseException ex = (EditorCloseException) e.getCause();
-                PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-                        .getActivePage().closeEditor(ex.getEditor(), true);
+                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                        .closeEditor(ex.getEditor(), true);
             } else {
                 throw e;
             }
         }
     }
+
     protected abstract LinkTableEditorInput createLinkTable();
 
 }

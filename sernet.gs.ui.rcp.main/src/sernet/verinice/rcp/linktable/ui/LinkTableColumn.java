@@ -17,13 +17,13 @@
  * Contributors:
  *     Ruth Motza <rm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-
 package sernet.verinice.rcp.linktable.ui;
+
+import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -40,11 +40,8 @@ import sernet.verinice.service.linktable.ColumnPathParser;
 import sernet.verinice.service.model.HUIObjectModelService;
 import sernet.verinice.service.model.IObjectModelService;
 
-import java.util.List;
-import java.util.regex.Pattern;
-
 /**
- * Container for all widgets needed for a vlt-table column.
+ * Container for all widgets needed for a report query column.
  * 
  * @see LinkTableComboViewer
  * @see LinkTableComposite
@@ -70,7 +67,6 @@ public class LinkTableColumn {
     private static final Pattern COLUMN_NAVIGATOR_TOKEN = Pattern.compile("[.<>/:]");
 
     public LinkTableColumn(LinkTableColumn copy, int number) {
-
         this.ltrParent = copy.ltrParent;
         this.columnNumber = number;
         this.contentService = copy.getContentService();
@@ -80,7 +76,6 @@ public class LinkTableColumn {
     }
 
     public LinkTableColumn(LinkTableComposite parent, int style, int number) {
-
         this.ltrParent = parent;
         this.columnNumber = number;
         this.contentService = parent.getContentService();
@@ -89,32 +84,13 @@ public class LinkTableColumn {
     }
 
     public LinkTableColumn(List<String> path, LinkTableComposite parent, int number) {
-
         this.ltrParent = parent;
         this.columnNumber = number;
         this.contentService = parent.getContentService();
 
         createColumn();
-
         addFirstCombo();
-        firstCombo.setInput(new Object());
         firstCombo.setColumnPath(ColumnPathParser.removeAlias(path));
-    }
-
-    public LinkTableColumn(ISelection selection, List<String> path, LinkTableComposite parent,
-            int number) {
-
-        this.ltrParent = parent;
-        this.columnNumber = number;
-        this.contentService = parent.getContentService();
-
-        createColumn();
-
-        addFirstCombo();
-        firstCombo.setInput(new Object());
-        StructuredSelection element = (StructuredSelection) selection;
-        firstCombo.setColumnPath(element.getFirstElement().toString(),
-                ColumnPathParser.removeAlias(path));
     }
 
     private void addFirstCombo() {
@@ -124,14 +100,11 @@ public class LinkTableColumn {
         comboData.top = new FormAttachment(selectButton, 0, SWT.CENTER);
         firstCombo.getCombo().setLayoutData(comboData);
         columnContainer.layout(true);
-
     }
 
     private void createColumn() {
-
         columnContainer = new Composite(ltrParent.getColumnsContainer(),
                 SWT.NONE | SWT.NO_RADIO_GROUP);
-
         FormLayout layoutColumn = new FormLayout();
         layoutColumn.marginHeight = 5;
         layoutColumn.marginWidth = 0;
@@ -143,25 +116,6 @@ public class LinkTableColumn {
         FormData selectButtonFormData = new FormData();
         selectButton.setLayoutData(selectButtonFormData);
         selectButton.addListener(SWT.Selection, radioGroup);
-    }
-
-    private final class SelectColumnListener implements Listener {
-
-        private LinkTableColumn selectedColumn;
-
-        public SelectColumnListener(LinkTableColumn selectedColumn) {
-            this.selectedColumn = selectedColumn;
-        }
-
-        @Override
-        public void handleEvent(Event event) {
-            for (LinkTableColumn column : ltrParent.getColumns()) {
-                column.getSelectButton().setSelection(false);
-            }
-            Button selectedButton = (Button) event.widget;
-            selectedButton.setSelection(true);
-            ltrParent.setSelectedColumn(selectedColumn);
-        }
     }
 
     public void setColumnNumber(int num) {
@@ -271,7 +225,6 @@ public class LinkTableColumn {
 
         int numberOfTokens = columnPathElements.length;
         if (numberOfTokens >= 2) {
-
             String propertyId = columnPathElements[numberOfTokens - 1];
             String element = columnPathElements[numberOfTokens - 2];
             if (logger.isDebugEnabled()) {
@@ -299,15 +252,32 @@ public class LinkTableColumn {
                 message = getContentService().getLabel(propertyId);
             }
         }
-
         message = StringUtils.replaceEachRepeatedly(message,
                 new String[] { "/", ":", ".", "<", ">" }, new String[] { "", "", "", "", "" });
         message = message.replaceAll(" ", "__");
-
         return columnPath + " AS " + message;
     }
 
     public Button getSelectButton() {
         return selectButton;
+    }
+
+    private final class SelectColumnListener implements Listener {
+
+        private LinkTableColumn selectedColumn;
+
+        public SelectColumnListener(LinkTableColumn selectedColumn) {
+            this.selectedColumn = selectedColumn;
+        }
+
+        @Override
+        public void handleEvent(Event event) {
+            for (LinkTableColumn column : ltrParent.getColumns()) {
+                column.getSelectButton().setSelection(false);
+            }
+            Button selectedButton = (Button) event.widget;
+            selectedButton.setSelection(true);
+            ltrParent.setSelectedColumn(selectedColumn);
+        }
     }
 }

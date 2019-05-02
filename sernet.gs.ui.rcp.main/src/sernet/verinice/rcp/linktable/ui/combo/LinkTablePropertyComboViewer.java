@@ -19,7 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.rcp.linktable.ui.combo;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Set;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -35,49 +37,42 @@ import sernet.verinice.service.model.IObjectModelService;
 public class LinkTablePropertyComboViewer extends LinkTableComboViewer {
 
     public LinkTablePropertyComboViewer(LinkTableComboViewer leftCombo, String relatedID,
-            LinkTableOperationType operationType,
-            LinkTableColumn ltrParent, Composite parent) {
+            LinkTableOperationType operationType, LinkTableColumn ltrParent, Composite parent) {
         super(leftCombo, relatedID, operationType, ltrParent, parent);
-
-
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.
      * lang.Object)
      */
     @Override
     public Object[] getElements(Object inputElement) {
-
         ArrayList<String> list = new ArrayList<>();
-        if (leftCombo.leftCombo.operationType == LinkTableOperationType.RELATION) {
-
-        } else if (relatedID != null && !relatedID.isEmpty()) {
+        if (leftCombo.leftCombo.operationType != LinkTableOperationType.RELATION
+                && relatedID != null && !relatedID.isEmpty()) {
             list.addAll(ltrColumn.getContentService().getPossibleProperties(relatedID));
         }
         return sortElementsByLabel(list.toArray(new String[0]));
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.rcp.linktable.ui.combo.LTRComboViewer#copy()
+     * @see
+     * sernet.verinice.rcp.linktable.ui.combo.LinkTableComboViewer#createCopy(
+     * sernet.verinice.rcp.linktable.ui.combo.LinkTableComboViewer,
+     * sernet.verinice.rcp.linktable.ui.LinkTableColumn,
+     * org.eclipse.swt.widgets.Composite)
      */
     @Override
-    public LinkTableComboViewer createCopy(LinkTableComboViewer leftCombo, LinkTableColumn ltrParent,
-            Composite newParent) {
-
+    public LinkTableComboViewer createCopy(LinkTableComboViewer leftCombo,
+            LinkTableColumn ltrParent, Composite newParent) {
         return new LinkTablePropertyComboViewer(leftCombo, relatedID, operationType, ltrParent,
                 newParent);
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.rcp.linktable.ui.combo.LTRComboViewer#doSelectionChanged()
+     * @see sernet.verinice.rcp.linktable.ui.combo.LinkTableComboViewer#
+     * doSelectionChanged()
      */
     @Override
     protected void doSelectionChanged() {
@@ -85,10 +80,9 @@ public class LinkTablePropertyComboViewer extends LinkTableComboViewer {
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.rcp.linktable.ui.combo.LTRComboViewer#getLabelText(java.lang.
-     * Object)
+     * @see
+     * sernet.verinice.rcp.linktable.ui.combo.LinkTableComboViewer#getLabelText(
+     * java.lang.Object)
      */
     @Override
     protected String getLabelText(Object element) {
@@ -100,34 +94,27 @@ public class LinkTablePropertyComboViewer extends LinkTableComboViewer {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
-     * sernet.verinice.rcp.linktable.ui.combo.LTRComboViewer#select(java.lang.String)
+     * sernet.verinice.rcp.linktable.ui.combo.LinkTableComboViewer#select(java.
+     * lang.String)
      */
     @Override
     protected void select(String string) {
-
         ISelection selection = new StructuredSelection(string);
         setSelection(selection);
 
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.rcp.linktable.ui.combo.
-     * LinkTableComboViewer#doGetAllRelationTypes()
+     * @see sernet.verinice.rcp.linktable.ui.combo.LinkTableComboViewer#
+     * doGetAllRelationTypes()
      */
     @Override
     protected Set<String> doGetAllRelationTypes() {
-
         return Collections.emptySet();
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.rcp.linktable.ui.combo.LinkTableComboViewer#createChild(
      * org.eclipse.swt.widgets.Composite)
