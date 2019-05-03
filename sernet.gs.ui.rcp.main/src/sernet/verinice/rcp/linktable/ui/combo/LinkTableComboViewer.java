@@ -64,6 +64,8 @@ public abstract class LinkTableComboViewer extends ComboViewer
     protected String relatedID;
     protected LinkTableOperationType operationType;
 
+    protected boolean interactive = true;
+
     public LinkTableComboViewer(LinkTableComboViewer leftCombo, String relatedID,
             LinkTableOperationType operationType, LinkTableColumn ltrParent, Composite parent) {
         super(new Combo(parent, SWT.NONE | SWT.READ_ONLY));
@@ -75,7 +77,9 @@ public abstract class LinkTableComboViewer extends ComboViewer
         this.relatedID = relatedID;
         this.operationType = operationType;
         this.leftCombo = leftCombo;
-
+        if (leftCombo != null) {
+            this.interactive = leftCombo.interactive;
+        }
         this.addSelectionChangedListener(this);
 
         this.setLabelProvider(new LabelProvider() {
@@ -85,7 +89,6 @@ public abstract class LinkTableComboViewer extends ComboViewer
                 return getLabelText(element).replaceAll("\n", "");
             }
         });
-
         this.setInput(new Object());
         refreshCombo();
     }
@@ -121,7 +124,7 @@ public abstract class LinkTableComboViewer extends ComboViewer
         doSelectionChanged();
         if (rightCombo != null) {
             rightCombo.selectionChanged(event);
-        } else {
+        } else if (interactive) {
             Control newComposite = createRightCombo();
             refreshViewer();
             ltrColumn.getLtrParent().showComposite(newComposite);
@@ -254,7 +257,7 @@ public abstract class LinkTableComboViewer extends ComboViewer
         if (!path.isEmpty()) {
             select(path.get(0));
             if (path.size() > 1) {
-                selectionChanged(null);
+                createRightCombo();
                 rightCombo.setColumnPath(path.subList(1, path.size()));
             }
         }
@@ -264,7 +267,7 @@ public abstract class LinkTableComboViewer extends ComboViewer
         if (!path.isEmpty()) {
             select(firstElement);
             if (path.size() > 1) {
-                selectionChanged(null);
+                createRightCombo();
                 rightCombo.setColumnPath(path.subList(1, path.size()));
             }
         }
@@ -285,4 +288,11 @@ public abstract class LinkTableComboViewer extends ComboViewer
     }
 
     protected abstract Set<String> doGetAllRelationTypes();
+
+    public void setInteractive(boolean interactive) {
+        this.interactive = interactive;
+        if (rightCombo != null) {
+            rightCombo.setInteractive(interactive);
+        }
+    }
 }

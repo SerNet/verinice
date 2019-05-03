@@ -90,7 +90,9 @@ public class LinkTableColumn {
 
         createColumn();
         addFirstCombo();
+        firstCombo.setInteractive(false);
         firstCombo.setColumnPath(ColumnPathParser.removeAlias(path));
+        firstCombo.setInteractive(true);
     }
 
     private void addFirstCombo() {
