@@ -37,6 +37,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.elasticsearch.common.collect.Sets;
 
 import sernet.verinice.rcp.linktable.ui.multiselectiondialog.LinkTableMultiSelectionControl;
@@ -97,8 +98,6 @@ public class LinkTableComposite extends Composite {
         createFilterArea(rootContainer);
         createToolbar(rootContainer);
         createBody(rootContainer);
-
-        refresh(UpdateLinkTable.COLUMN_PATHS);
 
         rootContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
         getDefaultLayoutFactory().generateLayout(rootContainer);
@@ -265,12 +264,31 @@ public class LinkTableComposite extends Composite {
     }
 
     private void addColumnsWithContent() {
-        for (String column : veriniceLinkTable.getColumnPaths()) {
-            List<String> path = ColumnPathParser.getColumnPathAsList(column, true);
-            if (logger.isDebugEnabled()) {
-                logger.debug("Element " + path); //$NON-NLS-1$
+        Thread addColumnThread = new Thread() {
+            @Override
+            public void run() {
+                for (String column : veriniceLinkTable.getColumnPaths()) {
+                    List<String> path = ColumnPathParser.getColumnPathAsList(column, true);
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Element " + path); //$NON-NLS-1$
+                    }
+                    addColumn(path);
+                }
+                Display.getDefault().asyncExec(() -> {
+                    refresh(UpdateLinkTable.COLUMN_PATHS);
+                    disableFirstCombos();
+                });
             }
-            addColumn(path);
+        };
+        addColumnThread.start();
+    }
+
+    private void disableFirstCombos() {
+        if (columns == null) {
+            return;
+        }
+        if (columns.size() > 1) {
+            columns.stream().forEach(column -> column.getFirstCombo().getCombo().setEnabled(false));
         }
     }
 
@@ -284,10 +302,12 @@ public class LinkTableComposite extends Composite {
             isNewColumn = false;
         }
         columns.add(column);
-        handleMoreThanOneColumn(isNewColumn);
+        if (isNewColumn) {
+            configureColumns(true);
+        }
     }
 
-    private void handleMoreThanOneColumn(boolean isNewColumn) {
+    private void configureColumns(boolean isNewColumn) {
         boolean oneColumn = columns.size() <= 1;
         LinkTableColumn firstColumn = columns.get(0);
         firstColumn.getFirstCombo().getCombo().setEnabled(oneColumn);
@@ -327,6 +347,7 @@ public class LinkTableComposite extends Composite {
         columnsContainer.pack(true);
         subBody.pack(true);
         mainBody.pack(true);
+        subBody.pack(true);
         scrolledBody.setMinSize(subBody.getClientArea().width, subBody.getClientArea().height);
 
         mainBody.layout(true);
@@ -460,7 +481,7 @@ public class LinkTableComposite extends Composite {
         LinkTableColumn lastColumn = columns.get(columns.size() - 1);
         LinkTableColumn duplicatedColumn = new LinkTableColumn(lastColumn, ++numCols);
         columns.add(duplicatedColumn);
-        handleMoreThanOneColumn(false);
+        configureColumns(false);
         refresh(UpdateLinkTable.COLUMN_PATHS);
     }
 
@@ -469,7 +490,7 @@ public class LinkTableComposite extends Composite {
             return;
         }
         boolean delete = columns.remove(selectedColumn);
-        handleMoreThanOneColumn(false);
+        configureColumns(false);
         if (logger.isDebugEnabled()) {
             logger.debug("Deleted " + delete); //$NON-NLS-1$
         }

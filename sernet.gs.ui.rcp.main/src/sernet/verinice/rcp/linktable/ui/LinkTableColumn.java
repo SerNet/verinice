@@ -30,6 +30,7 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
@@ -87,12 +88,13 @@ public class LinkTableColumn {
         this.ltrParent = parent;
         this.columnNumber = number;
         this.contentService = parent.getContentService();
-
-        createColumn();
-        addFirstCombo();
-        firstCombo.setInteractive(false);
-        firstCombo.setColumnPath(ColumnPathParser.removeAlias(path));
-        firstCombo.setInteractive(true);
+        Display.getDefault().asyncExec(() -> {
+            createColumn();
+            addFirstCombo();
+            firstCombo.setInteractive(false);
+            firstCombo.setColumnPath(ColumnPathParser.removeAlias(path));
+            firstCombo.setInteractive(true);
+        });
     }
 
     private void addFirstCombo() {
