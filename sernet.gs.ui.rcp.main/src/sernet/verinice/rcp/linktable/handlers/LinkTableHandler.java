@@ -22,15 +22,12 @@ package sernet.verinice.rcp.linktable.handlers;
 import org.apache.log4j.Logger;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.ui.progress.UIJob;
 
+import sernet.gs.ui.rcp.main.StatusLine;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.rcp.RightsEnabledHandler;
@@ -69,28 +66,12 @@ public abstract class LinkTableHandler extends RightsEnabledHandler {
     public Object execute(ExecutionEvent event) throws ExecutionException {
         if (checkRights()) {
             final LinkTableEditorInput veriniceLinkTable = createLinkTable();
+            StatusLine.setMessage("Opening report query " + veriniceLinkTable.getName() + "...");
             if (veriniceLinkTable != null) {
-                UIJob job = new UIJob(PlatformUI.getWorkbench().getDisplay(),
-                        Messages.LinkTableHandler_0) {
-                    @Override
-                    public IStatus runInUIThread(IProgressMonitor monitor) {
-                        IStatus status = Status.OK_STATUS;
-                        try {
-                            monitor.beginTask(Messages.LinkTableHandler_0,
-                                    IProgressMonitor.UNKNOWN);
-                            validateInputAndOpenEditor(veriniceLinkTable);
-                        } catch (Exception e) {
-                            LOG.error("Error while running job " + this.getName(), e);
-                            status = new Status(Status.ERROR, "sernet.verinice.samt.rcp",
-                                    "Error opening vlt-file", e);
-                        } finally {
-                            monitor.done();
-                            this.done(status);
-                        }
-                        return status;
-                    }
-                };
-                job.schedule();
+                Display.getDefault().asyncExec(() -> {
+                    validateInputAndOpenEditor(veriniceLinkTable);
+                    StatusLine.setMessage("");
+                });
             }
         } else {
             MessageDialog.openError(HandlerUtil.getActiveShell(event), "Error", //$NON-NLS-1$
