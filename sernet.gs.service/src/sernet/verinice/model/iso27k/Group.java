@@ -33,47 +33,51 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 @SuppressWarnings("serial")
 public abstract class Group<T> extends CnATreeElement implements ITaggableElement {
-	
-	public Group() {
-		super();
-	}
-	
+
+    public Group() {
+        super();
+    }
+
     public String getAbbreviation() {
-	    return "";
-	}
-	
-	/**
-	 * @param parent
-	 */
-	public Group(CnATreeElement parent) {
-		super(parent);
-	}
+        return "";
+    }
 
     /**
-	 * Returns a array of child-type-ids of this group.
-	 * Implemnt this and use TYPE_ID of childs
-	 * 
-	 * @return array of child-type-ids
-	 */
+     * @param parent
+     */
+    public Group(CnATreeElement parent) {
+        super(parent);
+    }
+
+    /**
+     * Returns a array of child-type-ids of this group. Implemnt this and use
+     * TYPE_ID of childs
+     * 
+     * @return array of child-type-ids
+     */
     public abstract String[] getChildTypes();
-	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#canContain(java.lang.Object)
-	 */
-	@Override
-	public boolean canContain(Object obj) {
-		boolean canContain = false;
-		if(obj instanceof CnATreeElement) {
-			CnATreeElement element = (CnATreeElement)obj;
-			canContain = Arrays.asList(getChildTypes()).contains(element.getTypeId()) 
-						 || this.getTypeId().equals(element.getTypeId());
-		}
-		return canContain;
-	}
-	
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.common.model.CnATreeElement#canContain(java.lang.
+     * Object)
+     */
+    @Override
+    public boolean canContain(Object obj) {
+        boolean canContain = false;
+        if (obj instanceof CnATreeElement) {
+            CnATreeElement element = (CnATreeElement) obj;
+            canContain = Arrays.asList(getChildTypes()).contains(element.getTypeId())
+                    || this.getTypeId().equals(element.getTypeId());
+        }
+        return canContain;
+    }
+
     public Collection<String> getTags() {
-		// empty, override this to add tags to groups
-		// dont't forget to add a huiproperty to your SNCA.xml
-		return Collections.emptyList();
-	}
+        // empty, override this to add tags to groups
+        // dont't forget to add a huiproperty to your SNCA.xml
+        return Collections.emptyList();
+    }
 }
