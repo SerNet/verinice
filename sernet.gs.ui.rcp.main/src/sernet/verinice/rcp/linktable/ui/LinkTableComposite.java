@@ -38,6 +38,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ProgressBar;
 import org.elasticsearch.common.collect.Sets;
 
 import sernet.verinice.rcp.linktable.ui.multiselectiondialog.LinkTableMultiSelectionControl;
@@ -69,6 +71,8 @@ public class LinkTableComposite extends Composite {
     private Composite subBody;
     private ScrolledComposite scrolledBody;
     private LinkTableMultiSelectionControl multiControl;
+    private Label loadingLabel;
+    private ProgressBar progressBar;
 
     private IObjectModelService objectModelService;
 
@@ -145,7 +149,7 @@ public class LinkTableComposite extends Composite {
             public void widgetSelected(SelectionEvent event) {
                 Button selected = (Button) event.widget;
                 if (logger.isDebugEnabled()) {
-                    logger.debug(selected.getText() + " is selected");
+                    logger.debug(selected.getText() + " is selected"); //$NON-NLS-1$
                 }
 
                 useAllScopes = selected == useAllScopesButton;
@@ -253,6 +257,7 @@ public class LinkTableComposite extends Composite {
 
         if (veriniceLinkTable.getColumnPaths() != null
                 && !veriniceLinkTable.getColumnPaths().isEmpty()) {
+            addProgressBar();
             addColumnsWithContent();
         } else {
             addColumn(null);
@@ -263,7 +268,22 @@ public class LinkTableComposite extends Composite {
         getDefaultLayoutFactory().margins(DEFAULT_MARGIN).generateLayout(scrolledBody);
     }
 
+    public void addProgressBar() {
+        loadingLabel = new Label(columnsContainer, SWT.NULL);
+        loadingLabel.setText(Messages.LinkTableComposite_loading);
+        progressBar = new ProgressBar(columnsContainer, SWT.NULL);
+        progressBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        progressBar.setMinimum(0);
+        progressBar.setMaximum(veriniceLinkTable.getColumnPaths().size());
+    }
+
+    public void removeProgressBar() {
+        loadingLabel.dispose();
+        progressBar.dispose();
+    }
+
     private void addColumnsWithContent() {
+        progressBar.setSelection(0);
         Thread addColumnThread = new Thread() {
             @Override
             public void run() {
@@ -273,8 +293,12 @@ public class LinkTableComposite extends Composite {
                         logger.debug("Element " + path); //$NON-NLS-1$
                     }
                     addColumn(path);
+                    Display.getDefault().asyncExec(() -> {
+                        progressBar.setSelection(progressBar.getSelection() + 1);
+                    });
                 }
                 Display.getDefault().asyncExec(() -> {
+                    removeProgressBar();
                     refresh(UpdateLinkTable.COLUMN_PATHS);
                     disableFirstCombos();
                 });
