@@ -83,7 +83,6 @@ import sernet.verinice.bp.rcp.BaseProtectionView;
 import sernet.verinice.bp.rcp.converter.ItNetworkConverterAction;
 import sernet.verinice.bpm.rcp.OpenTaskViewAction;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.iso27k.rcp.CatalogView;
 import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 import sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap;
@@ -154,8 +153,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private OpenViewAction openGroupViewAction;
 
     private OpenMultipleViewAction openSearchViewAction;
-
-    private OpenMultipleViewAction openCatalogAction;
 
     private OpenTaskViewAction openTaskViewAction;
 
@@ -253,9 +250,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                 NoteView.ID, ImageCache.VIEW_NOTE, ActionRightIDs.NOTES);
         this.openFileAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_2,
                 FileView.ID, ImageCache.ATTACH, ActionRightIDs.FILES);
-        this.openCatalogAction = new OpenMultipleViewAction(window,
-                Messages.ApplicationActionBarAdvisor_3, CatalogView.ID, ImageCache.WRENCH,
-                ActionRightIDs.ISMCATALOG);
         this.openRelationViewAction = new OpenViewAction(window,
                 Messages.ApplicationActionBarAdvisor_4, RelationView.ID, ImageCache.LINKS,
                 ActionRightIDs.RELATIONS);
@@ -333,18 +327,18 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         Stream.of(this.exitAction, this.copyAction, this.pasteAction, this.aboutAction,
                 this.newWindowAction, this.saveAction, this.saveAsAction, this.closeAction,
                 this.closeAllAction, this.closeOthersAction, this.openBSIBrowserAction,
-                this.openNoteAction, this.openFileAction, this.openCatalogAction,
-                this.openRelationViewAction, this.openBSIViewAction, this.openBSIModelViewAction,
-                this.openISMViewAction, this.openTodoViewAction, this.openAuditViewAction,
-                this.openTaskViewAction, this.openValidationViewAction, this.reloadAction,
-                this.importGstoolAction, this.importCSVAction, this.importPersonFromLdap,
-                this.importGSNotesAction, this.showPreferencesAction, this.bulkEditAction,
-                this.runRiskAnalysisAction, this.accessControlEditAction, this.profileEditAction,
-                this.konsolidatorAction, gsmbasicsecuritycheckAction, bausteinZuordnungAction,
-                gsmbausteinZuordnungAction, this.openDocumentViewAction, this.introAction,
-                this.openGroupViewAction, this.openReportdepositViewAction,
-                this.openSearchViewAction, this.openGSToolMappingViewAction, this.openBpViewAction,
-                this.openCatalogViewAction).forEach(this::register);
+                this.openNoteAction, this.openFileAction, this.openRelationViewAction,
+                this.openBSIViewAction, this.openBSIModelViewAction, this.openISMViewAction,
+                this.openTodoViewAction, this.openAuditViewAction, this.openTaskViewAction,
+                this.openValidationViewAction, this.reloadAction, this.importGstoolAction,
+                this.importCSVAction, this.importPersonFromLdap, this.importGSNotesAction,
+                this.showPreferencesAction, this.bulkEditAction, this.runRiskAnalysisAction,
+                this.accessControlEditAction, this.profileEditAction, this.konsolidatorAction,
+                gsmbasicsecuritycheckAction, bausteinZuordnungAction, gsmbausteinZuordnungAction,
+                this.openDocumentViewAction, this.introAction, this.openGroupViewAction,
+                this.openReportdepositViewAction, this.openSearchViewAction,
+                this.openGSToolMappingViewAction, this.openBpViewAction, this.openCatalogViewAction)
+                .forEach(this::register);
 
         Optional.ofNullable(window.getActivePage()).map(IWorkbenchPage::getPerspective)
                 .ifPresent(this::enableOrDisableActionsForPerspective);
@@ -472,7 +466,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         // ISM
 
         viewsMenu.add(this.openISMViewAction);
-        viewsMenu.add(this.openCatalogAction);
         viewsMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
         // marker for including views from samt-plugin
 

@@ -28,7 +28,6 @@ public final class ActionRightIDs {
     public static final String ACCOUNTSETTINGS = "accountsettings";
     public static final String ADDBPGROUP = "addbpgroup";
     public static final String ADDBSIELEMENT = "addbsielement";
-    public static final String ADDCATALOG = "addcatalog";
     public static final String ADDFILE = "addfile";
     public static final String ADDISMELEMENT = "addismelement";
     public static final String ADDISMGROUP = "addismgroup";
@@ -56,7 +55,6 @@ public final class ActionRightIDs {
     public static final String CREATE_GREENBONE_TASKS = "creategreenbonetasks";
     public static final String CREATE_INDIVIDUAL_TASKS = "createindividualtasks";
     public static final String CREATEISATASKS = "createisatasks";
-    public static final String DELETECATALOG = "deletecatalog";
     public static final String DELETEFILE = "deletefile";
     public static final String DELETEITEM = "deleteitem";
     public static final String DERIVESTATUS = "derivestatus";
@@ -72,7 +70,6 @@ public final class ActionRightIDs {
     public static final String GSTOOLIMPORT = "gstoolimport";
     public static final String IMPORTCSV = "importcsv";
     public static final String IMPORTLDAP = "importldap";
-    public static final String ISMCATALOG = "ismcatalog";
     public static final String ISMCUT = "ismcut";
     public static final String ISMCOPY = "ismcopy";
     public static final String ISMVIEW = "ismview";

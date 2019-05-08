@@ -61,7 +61,7 @@ public class RightsServiceTest extends UuidLoader {
             ActionRightIDs.TASKWITHRELEASEPROCESS, };
 
     public static final String[] newProfileActionIds = { ActionRightIDs.IMPORTCSV,
-            ActionRightIDs.IMPORTLDAP, ActionRightIDs.ISMCATALOG, ActionRightIDs.XMLIMPORT };
+            ActionRightIDs.IMPORTLDAP, ActionRightIDs.XMLIMPORT };
 
     public static final String NEW_ACTION_ID = "RightsServiceTestAction";
 

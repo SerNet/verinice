@@ -132,15 +132,6 @@
             restorable="true">
       </view>
       <view
-            allowMultiple="true"
-            category="sernet.verinice.iso27k.rcp"
-            class="sernet.verinice.iso27k.rcp.CatalogView"
-            icon="icons/wrench.png"
-            id="sernet.verinice.iso27k.rcp.CatalogView"
-            name="%view.name.10"
-            restorable="true">
-      </view>
-      <view
             allowMultiple="false"
             category="sernet.verinice.iso27k.rcp"
             class="sernet.verinice.iso27k.rcp.ISMView"
@@ -1622,39 +1613,6 @@
                label="%command.label.delete"
                tooltip="%command.tooltip.delete"/>
       </menuContribution>
-      <menuContribution
-        locationURI="menu:sernet.verinice.iso27k.rcp.CatalogView?after=additions">
-		    <command
-		            commandId="sernet.verinice.iso27k.rcp.commands.charset"
-		            id="sernet.verinice.iso27k.rcp.commands.charset.utf-8"
-		            label="%command.label.5"
-		            style="radio">
-		        <parameter
-		            name="org.eclipse.ui.commands.radioStateParameter"
-		            value="UTF-8">
-		        </parameter>
-		    </command>
-		    <command
-		            commandId="sernet.verinice.iso27k.rcp.commands.charset"
-		            id="sernet.verinice.iso27k.rcp.commands.charset.iso-8859-1"
-		            label="%command.label.6"
-		            style="radio">
-		        <parameter
-		            name="org.eclipse.ui.commands.radioStateParameter"
-		            value="ISO-8859-15">
-		        </parameter>
-		    </command>
-		    <command
-		            commandId="sernet.verinice.iso27k.rcp.commands.charset"
-		            id="sernet.verinice.iso27k.rcp.commands.charset.windows-1252"
-		            label="%command.label.7"
-		            style="radio">
-		        <parameter
-		            name="org.eclipse.ui.commands.radioStateParameter"
-		            value="WINDOWS-1252">
-		        </parameter>
-		    </command>
-		</menuContribution>
 		<menuContribution locationURI="popup:sernet.verinice.bpm.rcp.TaskView">
         	<command commandId="sernet.verinice.bpm.rcp.assign"
                disabledIcon="icons/user_edit.png"
@@ -2436,14 +2394,6 @@
 	                </iterate>
             	</with>
 		 </enabledWhen>
-      </handler>
-      <handler class="sernet.verinice.iso27k.rcp.action.CharsetHandler"
-            commandId="sernet.verinice.iso27k.rcp.commands.charset">
-      	 <activeWhen>
-     		<with variable="activePartId">
-     			<equals value="sernet.verinice.iso27k.rcp.CatalogView" />
-    		</with>
-         </activeWhen>
       </handler>
       <handler class="sernet.verinice.rcp.unify.UnifyHandler"
             commandId="sernet.verinice.rcp.unify">

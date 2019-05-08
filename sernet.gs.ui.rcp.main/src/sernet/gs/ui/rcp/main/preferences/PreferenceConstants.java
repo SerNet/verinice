@@ -123,9 +123,6 @@ public class PreferenceConstants {
     public static final String COPY_ATTACHMENTS_WITH_OBJECTS = "copy_attachments_with_objects";
     public static final String ENABLE_RELEASE_PROCESS = "enable_release_process"; //$NON-NLS-1$
 
-    // catalog import preferences
-    public static final String CHARSET_CATALOG = "org.verinice.iso27k.rcp.charset";
-
     // tags to filter HitroUI Editor fields / strict filter mode setting:
     public static final String HUI_TAGS = "hui_tags";
     public static final String HUI_TAGS_ALL = "hui_tags_all";

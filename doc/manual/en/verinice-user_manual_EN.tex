@@ -332,7 +332,6 @@ The basic icons are divided into four groups:
 \textbf{Icon} & \textbf{Meaning} \\[10pt]
 \hline\hline
 \raisebox{-0.7\height}{\includegraphics{Icon/Informationssicherheitsmodell.png}} & Information security model \\[10pt] \hline
-\raisebox{-0.6\height}{\includegraphics{Icon/Control_Kataloge.png}} & Control catalogs \\[10pt] \hline
 \raisebox{-0.6\height}{\includegraphics{Icon/16-paper-calculate-percent.png}} & Run risk analysis \\[10pt] \hline
 \raisebox{-0.6\height}{\includegraphics{Icon/Tasks.png}} & Edit tasks \\[10pt] \hline
 \raisebox{-0.6\height}{\includegraphics{Icon/Chart_pie.png}} & Information security assessment progress \\[10pt] \hline
@@ -711,12 +710,6 @@ This gives you option of setting basic configurations in verinice.
    This option activates or deactivates the validation function.
 \item \textbf{Inherit Group-Icon:}
    All newly (via context-menu) created objects inherit the icon of their parent object, if it differs from the standard icon.
-\item \textbf{Encoding of new catalogs: }
-   The Character encoding for new control catalogs option is set by default to {\em UTF-8}.
-   This is about setting the character encoding when importing CSV data (see the {\em \ref{sec:generic-csv-import} \nameref{sec:generic-csv-import}} section.)
-   Keeping the default setting is recommended. You should not change this value unless you experience problems
-   with the rendering of non-standard characters in imported objects. If the import files were created on a
-   Windows system, you can select {\em ISO-8859-1} or {\em Windows-1252} here.
 \item \textbf{Image thumbnail size in view ``Files'':}
    The preview for attached files can be turned off or the picture size can be set to \textbf{small (20px), normal (50px), big (80px),
    very big (110px) and huge (150px)}.
@@ -2115,14 +2108,14 @@ series, you can use this perspective generically for other standards or your own
 As explained in the subsection {\em \ref{Using different perspectives}  \nameref{Using different perspectives}},
 it is useful to select \textbf{View \textgreater Show Perspective \textgreater ISM Perspective}
 when you need to work with the ISO 27000 series, and configure a special view layout for all further control.
-Above all, this shifts the focus to the \textbf{Control catalogs} \icon{Icon/Control_Kataloge.png},
+Above all, this shifts the focus to the \textbf{Catalogs} \icon{Icon/bp_catalog},
 and especially the individual objects of the organization, thus simplifying the process of creating the desired
 relations.
 
 \section{Views}
 Opening the \textbf{ISM perspective} automatically opens the following views:
 \begin{itemize}
-\item \icon{Icon/Control_Kataloge.png} Catalogs - Configure the encoding for each catalog individually in the Catalog view for importing your own catalogs.
+\item \icon{Icon/bp_catalog} Catalogs
 \item \icon{Icon/Informationssicherheitsmodell.png} Information Security Model (referred to as the "ISM view" in the following)
 \item \icon{Icon/Hinzufuegen.png} Files
 \item \icon{Icon/Cheatsheet_view.png} Cheat sheets
@@ -2321,67 +2314,58 @@ free text explanation.
 You can import catalogs into verinice as needed.
 
 \subsection{Catalog view}
-In View \textbf{Control catalogs}
-\icon{Icon/Control_Kataloge.png} you can import controls
-and threats from CSV files. However, you can also import other supported
-specifications. Ready-to-use catalog files are available from the
-\url{https://verinice.com/produkt/#_download} website. These catalogs are used
-in a similar way to the \textbf{BSI IT baseline catalogs}
-\icon{Icon/GS_Kataloge.png} and can therefore be added to
-the appropriate objects in the \textbf{ISM View}
-\icon{Icon/Informationssicherheitsmodell.png} using drag
-and drop.
+In the view \textbf{Catalogs} \icon{Icon/bp_catalog} you can import controls
+and threats from VNA files. However, you can also import other supported
+specifications. These catalogs can be added to the appropriate objects in the
+\textbf{ISM View} \icon{Icon/Informationssicherheitsmodell.png} using copy and
+paste.
 
-\subsection{Importing catalogs}
-You can import a catalog by clicking on the \icon{Icon/Oeffnen.png} icon (in the \textbf{Catalog view} toolbar).
-Then select the desired catalog from the browse dialog. Press \textbf{OK} The catalog is now displayed
-in the catalog window (see figure \ref{View of the catalogs}). If you import multiple catalogs, you can toggle between the individual
-catalogs in the Catalog selection box (see figure \ref{View of the catalogs}). The catalog entries are either controls (see figure),
-threats (see figure), or vulnerabilities. The catalog content is displayed when you click on the headings
-in the object browser.
+\subsection{Importing catalogs}\label{Importing Catalogs}
+You can import a catalog by clicking on the \icon{Icon/Import.png} icon (in the
+\textbf{Catalog View}'s toolbar). Then select the desired catalog from the
+browse dialog. Press \textbf{OK} The catalog is now displayed in the catalog
+window (see figure \ref{View of the catalogs}).
+
 \begin{figure}[htb!]
   \centering
-  \includegraphics[scale=.25]{Screenshot/Kataloge_screenshot-en.png}
+  \includegraphics[width=0.9\textwidth]{Screenshot/Kataloge_screenshot-en.png}
   \caption{\label{View of the catalogs} View of the catalogs}
 \end{figure}
-\newline
-The Catalog view \icon{Icon/Control_Kataloge.png} is also organized as a tree structure.
-You can click on the arrow to the left of the catalog to expand or collapse the subfolders. The plus and
-minus buttons (figure \ref{View of the catalogs}) in the Catalog view toolbar offer the same function. Note that this function expands
-or collapses the subfolders for all catalog entries.
-\newline\\
-You can delete a catalog by clicking on the \icon{Icon/Delete.png} icon. The filter function
-\icon{Icon/Filter.png} lets you perform a keyword search in the headers and texts. The search starts
-automatically while you are typing the search key. The matches are displayed directly in the tree structure.
-\newline\\
-The Catalogs view \icon{Icon/Control_Kataloge.png}
-toolbar contains a menu for setting the character set for the catalog file (figure).
-The default character encoding for imported files is \textbf{UTF-8}.
 
-\subsection{Applying controls}
-To add \textbf{controls} \icon{Icon/Controls.png} in the \textbf{Information Security Model}
-\icon{Icon/Informationssicherheitsmodell.png} drag and drop the desired control from Catalog view
-\icon{Icon/Control_Kataloge.png} into the Controls group in the ISM View \icon{Icon/Informationssicherheitsmodell.png}.
-After double-clicking the inserted control you can edit the details for the control in the editor that
-appears, for example, by selecting the implementation status (figure). To save, either press the keyboard shortcut
+The Catalog view \icon{Icon/bp_catalog} is also organized as a tree structure.
+You can click on the arrow to the left of the catalog to expand or collapse the
+subfolders. The plus and minus buttons (figure \ref{View of the catalogs}) in
+the Catalog view toolbar can be used to expand or collapse the catalog. Note
+that this function expands or collapses the subfolders for all catalog entries.
+
+You can delete a catalog by right click > \icon{Icon/delete-cross} Delete.
+
+\subsection{Working with Catalogs in the ISM View}
+Elements --- like Controls, Threats, Vulnerabilities an Risk-Scenarios --- can
+be imported per copy and paste.  After double-clicking the inserted element the
+detail can be edited in the editor that appears, for example, by selecting the
+implementation status of controls. To save, either press the keyboard shortcut
 Ctrl+S, or click the floppy disc icon in the toolbar.
-\newline\\
-You can select multiple controls (using the \textbf{Shift} or \textbf{Ctrl} keys in the normal way) and then drag and drop these controls into the
-\textbf{Information Security Model} \icon{Icon/Informationssicherheitsmodell.png} view.
-Using this method, you can also add a whole control group to the ISM view \icon{Icon/Informationssicherheitsmodell.png}
-while keeping its group structure.
-\newline\\
-In addition, you can create enterprise-specific controls. To do this, right-click \textbf{Controls} \icon{Icon/Controls.png}
-\textbf{\textgreater Add control group} or \textbf{Add control}. Edit the information displayed in the editor. Assign a unique name to the new control.
-To save the new control, either press keyboard shortcut Ctrl-S or click on the floppy disc symbol
-\icon{Icon/Disk.png} in the toolbar.
 
-\subsection{Using threats/vulnerabilities/risk scenarios}
-In a similar way to \textbf{Controls} \icon{Icon/Controls.png}, \textbf{vulnerabilities} \icon{Icon/Schwachstellen.png} and
-\textbf{threats} can be drag and dropped from the catalog entries and into the appropriate \textbf{Information Security Model} \icon{Icon/Informationssicherheitsmodell.png}
-groups.
-Threats \icon{Icon/Lightening.png}, vulnerabilities \icon{Icon/Schwachstellen.png} or scenarios \icon{Icon/Szenarios.png}
-can also be created individually within the respective groups. There is no need to retrieve them from catalogs.
+You can select multiple elements (using the \textbf{Shift} or \textbf{Ctrl}
+keys in the normal way) and then copy and paste them into the
+\textbf{Information Security Model}
+\icon{Icon/Informationssicherheitsmodell.png} view.
+Using this method, you can also add a whole control group to the ISM view
+\icon{Icon/Informationssicherheitsmodell.png}
+while keeping its group structure.
+
+In addition, you can create enterprise-specific elements, e.\,g. controls. To
+do this, right-click \textbf{Controls} \icon{Icon/Controls.png}
+\textbf{\textgreater Add control group} or \textbf{Add control}. Edit the
+information displayed in the editor. Assign a unique name to the new control.
+To save the new control, either press keyboard shortcut Ctrl-S or click on the
+floppy disc symbol \icon{Icon/Disk.png} in the toolbar.
+
+\subsection{Create a Catalog}
+You can create a catalog by simply exporting an organization from the ISM-View
+by clicking the export button \icon{Icon/Export}. This VNA file can then be
+imported as described in Section \ref{Importing Catalogs}.
 
 \subsection{Using the baseline catalog in the ISM perspective}
 You can additionally use the baseline catalog in the ISM perspective. This gives you the opportunity to combine these requirements with, for example,

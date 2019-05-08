@@ -77,7 +77,7 @@ public class RightManagementTest extends CommandServiceProvider {
 
     // some example actions
     private static final String[] noDeleteProfileActionIds = { ActionRightIDs.IMPORTCSV, //
-            ActionRightIDs.IMPORTLDAP, ActionRightIDs.ISMCATALOG, ActionRightIDs.XMLIMPORT };
+            ActionRightIDs.IMPORTLDAP, ActionRightIDs.XMLIMPORT };
 
     @Resource(name = "rightsService")
     protected IRightsService rightsService;

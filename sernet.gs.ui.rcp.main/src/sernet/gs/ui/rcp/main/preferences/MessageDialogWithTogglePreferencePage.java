@@ -25,7 +25,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.verinice.iso27k.rcp.CatalogView;
 import sernet.verinice.iso27k.rcp.ISMView;
 
 public class MessageDialogWithTogglePreferencePage extends FieldEditorPreferencePage
@@ -107,12 +106,6 @@ public class MessageDialogWithTogglePreferencePage extends FieldEditorPreference
                 Messages.getString("GeneralSettingsPage.SwitchPerspectiveIsm"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(switchPerspectiveIsmView);
-
-        BooleanFieldEditor switchPerspectiveCatalogView = new BooleanFieldEditor(
-                PreferenceConstants.getDontAskBeforeSwitch(CatalogView.class),
-                Messages.getString("GeneralSettingsPage.SwitchPerspectiveCatalog"), //$NON-NLS-1$
-                getFieldEditorParent());
-        addField(switchPerspectiveCatalogView);
 
         BooleanFieldEditor showValidationReportWarning = new BooleanFieldEditor(
                 PreferenceConstants.SHOW_REPORT_VALIDATION_WARNING,

@@ -38,7 +38,6 @@
 	        <action id="addbsielement" />
 	        <action id="addbpelement"/>
           <action id="addbpgroup"/>  
-	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />
 	        <action id="addismgroup" />
@@ -64,7 +63,6 @@
 	        <action id="catalogview" />
           <action id="changeicon" />
           <action id="convertitnetwork" />
-	        <action id="deletecatalog" />
 	        <action id="deletefile" />
 	        <action id="deleteitem" />
 	        <action id="derivestatus"/>
@@ -79,7 +77,6 @@
 	        <action id="gsnotesimport" />
 	        <action id="gstoolimport" />
 	        <action id="importcsv" />
-	        <action id="ismcatalog" />
 	        <action id="ismcopy" />
 	        <action id="ismcut" />
 	        <action id="ismview" />

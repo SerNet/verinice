@@ -391,7 +391,6 @@ dieses Symbol; die Zahl hinter dem Doppelpfeil zeigt die Anzahl der versteckten 
 \textbf{Symbol} & \textbf{Bedeutung} \\[10pt]
 \hline\hline
 \raisebox{-0.7\height}{\includegraphics{Icon/Informationssicherheitsmodell.png}} & Informationssicherheitsmodell \\[10pt] \hline
-\raisebox{-0.6\height}{\includegraphics{Icon/Control_Kataloge.png}} & Control Kataloge \\[10pt] \hline
 \raisebox{-0.6\height}{\includegraphics{Icon/16-paper-calculate-percent.png}} & Risikoanalyse durchführen \\[10pt] \hline
 \raisebox{-0.6\height}{\includegraphics{Icon/Tasks.png}} & Aufgaben bearbeiten \\[10pt] \hline
 \raisebox{-0.6\height}{\includegraphics{Icon/Chart_pie.png}} & Information-Security-Assessment-Fortschritt \\[10pt] \hline
@@ -776,16 +775,6 @@ Konfigurationen an verinice einzustellen.
 \item \textbf{Vererbe Gruppen-Icon:} Beim Anlegen eines Elements über
   das Kontextmenü erbt das Element das Icon des übergeordneten
   Elements, so sich dieses vom Standard-Icon unterscheidet.
-\item \textbf{Zeichenkodierung (Encoding) neuer Control Kataloge:}
-  Hier ist standardmäßig {\em UTF-8} eingestellt. Es geht um die
-  Einstellung der Zeichenkodierung beim Importieren von CSV-Daten
-  (siehe Abschnitt {\em \ref{Generischer CSV-Import}
-    \nameref{Generischer CSV-Import}}). Es wird empfohlen, die
-  Einstellung zu so zu belassen. Sie sollten diesen Wert dann ändern,
-  wenn Probleme mit der Darstellung von Umlauten in importierten
-  Objekten auftreten. Wenn die Import-Dateien auf einem Windows-System
-  erstellt wurden, kann hier die Auswahl {\em ISO-8859-1} oder {\em
-    Windows-1252} eingestellt werden.
 \item \textbf{Bildvorschaugröße im View ``Dateien'':} Die Vorschau für
   angehängte Dateien kann entweder ausgeschaltet oder zwischen den
   Größen \textbf{klein (20px), normal (50px), groß (80px), sehr groß
@@ -2134,13 +2123,13 @@ durchgeführt - sie kann generisch für andere Standards oder eigene Vorgaben be
 Wie schon im Unterkapitel {\em \ref{Verwendung verschiedener Perspektiven} \nameref{Verwendung verschiedener Perspektiven}} beschrieben wurde, bietet es sich für die Arbeiten z.B. mit der
 ISO 27000-Reihe an, über \textbf{Ansicht \textgreater Zeige Perspektive \textgreater ISM Perspektive }eine spezielle
 Fensteranordnung für das weitere Vorgehen einzustellen. Diese Perspektive zeigt die passenden Views  - vor allem die
-\textbf{Control-Kataloge} \icon{Icon/Control_Kataloge.png} und die einzelnen Objekte der Organisation - an,
+\textbf{Kataloge} \icon{Icon/bp_catalog} und die einzelnen Objekte der Organisation - an,
 was z.B. das Verknüpfen von Zielobjekten vereinfacht.
 
 \section{Views}
 Mit dem Öffnen der \textbf{ISM Perspektive} öffnen sich automatisch folgende Views:
 \begin{itemize}
-\item \icon{Icon/Control_Kataloge.png} Kataloge - Für den Import eigener Kataloge wird das Encoding für jeden Katalog einzeln im Katalog-View eingestellt.
+\item \icon{Icon/bp_catalog} Kataloge
 \item \icon{Icon/Informationssicherheitsmodell.png} Information Security Model (im Folgenden \textbf{ISM-View} genannt)
 \item \icon{Icon/Hinzufuegen.png} Dateien
 \item \icon{Icon/Cheatsheet_view.png} Spickzettel
@@ -2358,67 +2347,65 @@ nicht mehr verändert werden, da das Befüllen nun automatisiert und nach dem Ma
 In verinice können bei Bedarf unternehmensspezifische Kataloge importiert werden.
 
 \subsection{Katalog-View}
-Im View \textbf{Control Kataloge}
-\icon{Icon/Control_Kataloge.png} ist es möglich, z.B.
-Maßnahmen, Gefährdungen oder Controls aus CSV-Dateien als Katalog zu
-importieren. Es können aber auch andere denkbare Vorgaben eingelesen werden.
-Vorbereitete Katalog-Dateien sind auf der Webseite
-\url{https://verinice.com/produkt/#_download} zu finden. Diese Kataloge sind
-ähnlich wie die \textbf{IT-Grundschutz-Kataloge}
-\icon{Icon/GS_Kataloge.png} zu behandeln und können daher
-per Drag \& Drop an die passenden Objekte im \textbf{ISM View}
+Im View \textbf{Kataloge} \icon{Icon/bp_catalog} ist es
+möglich, z.\,B.  Maßnahmen, Gefährdungen oder Controls aus vna-Dateien als
+Katalog zu importieren. Es können aber auch andere denkbare Vorgaben eingelesen
+werden.  Diese Kataloge können per Copy~\&~Paste an die passenden Objekte im
+\textbf{ISM View}
 \icon{Icon/Informationssicherheitsmodell.png} angehängt
 werden.
 
-\subsection{Einlesen von Katalogen}
+\subsection{Einlesen von Katalogen}\label{Einlesen von Katalogen}
 Ein Katalog kann mit Klick auf das (in der Werkzeugleiste des Views
 \textbf{Kataloge} befindliche) Symbol
-\icon{Icon/Oeffnen.png} importiert werden. Sie
+\icon{Icon/Import.png} importiert werden. Sie
 selektieren den gewünschten Katalog aus dem Dateiauswahldialog. Die Auswahl wird
 mit OK bestätigt. Der Katalog wird nun im Katalogfenster (siehe Abbildung
-\ref{Ansicht der Kataloge}) angezeigt. Wurden mehrere Kataloge importiert, kann
-in der Katalog-Combobox (siehe Abbildung \ref{Ansicht der Kataloge}) zwischen
-den einzelnen Katalogen gewechselt werden. Die Katalogeinträge stellen entweder
-Controls (siehe Abbildung \ref{Ansicht der Kataloge}), Bedrohungen (siehe
-Abbildung \ref{Ansicht der Kataloge}) oder Schwachstellen dar. Die Inhalte des
-Kataloges erscheinen beim Klick auf die Überschriften im Objektbrowser.
+\ref{Ansicht der Kataloge}) angezeigt.
+
 \begin{figure}[htb!]
   \centering
-  \includegraphics[scale=.25]{Screenshot/Kataloge_screenshot.jpg}
+  \includegraphics[width=0.9\textwidth]{Screenshot/Kataloge_screenshot}
   \caption{\label{Ansicht der Kataloge} Ansicht der Kataloge}
 \end{figure}
-\newline
-Auch der Katalog-View \icon{Icon/Control_Kataloge.png} ist als Baumstruktur organisiert. Sie können mit Klick auf den Pfeil links neben dem Katalog die
-Unterordner auf- bzw. zuklappen. Dieselbe Funktion bieten der Plus - und Minus-Button (Abbildung \ref{Ansicht der Kataloge}) in der Werkzeugleiste des Katalog-Views.
-Zu beachten ist hierbei jedoch, dass durch diese Funktion die Unterordner sämtlicher Katalogeinträge auf- bzw. zugeklappt werden.
-\newline\\
-Das Löschen von Katalogen erfolgt über das Symbol \icon{Icon/Delete.png}. Über die Filterfunktion \icon{Icon/Filter.png} wird Ihnen die Wortsuche in
-Überschrift und Text ermöglicht. Gesucht wird automatisch während der Eingabe des Suchbegriffes. Die Suchergebnisse werden direkt in der Baumstruktur angezeigt.
-\newline\\
-In der Werkzeugleiste des Katalog-Views \icon{Icon/Control_Kataloge.png} befindet sich ein Menü für die Einstellung des Zeichensatzes der Katalogdatei (Abbildung).
-Die voreingestellte Zeichencodierung für importierte Dateien ist \textbf{UTF-8}.
 
-\subsection{Anwenden von Controls}
-Um \textbf{Controls} \icon{Icon/Controls.png} in das \textbf{Information Security Model} \icon{Icon/Informationssicherheitsmodell.png} zu übernehmen,
-ziehen Sie das gewünschte Control per Drag \& Drop aus dem Katalog-View Control \icon{Icon/Control_Kataloge.png} in die Gruppe
-\textbf{Controls} einer Organisation im ISM-View \icon{Icon/Informationssicherheitsmodell.png}. Durch Doppelklicken des eingefügten
-Controls können Sie im angezeigten Editor die Angaben des Controls bearbeiten (z.B. den Implementierungsstand auswählen).
-Die Speicherung erfolgt über die Tastenkombination Strg+S oder mit Klick auf das Diskettensymbol in der Werkzeugleiste.
-\newline\\
-Durch die Markierung (Markierungen erfolgen wie gewohnt mit Hilfe der Tasten \textbf{Shift} oder \textbf{Strg}) mehrerer Controls können
-per Drag \& Drop auch eine Vielzahl von Controls in den \textbf{View Information Security Model} \icon{Icon/Informationssicherheitsmodell.png} integriert werden.
-Auf diese Weise kann auch eine ganze Control-Gruppe unter Beibehaltung ihrer Gruppenstruktur
-in den ISM-View \icon{Icon/Informationssicherheitsmodell.png} übernommen werden.
-\newline\\
-Zudem können Sie beliebige weitere Controls anlegen. Dazu müssen Sie einen Rechtsklick auf
-\textbf{Controls} \icon{Icon/Controls.png} -\textgreater \textbf{Neue Control-Gruppe...} oder \textbf{Neues Control...} ausführen. Im angezeigten Editor sind die Angaben zu bearbeiten.
-Das neue Control sollte einen eindeutigen Titel tragen. Speichern Sie wie gewohnt die Eingaben.
+Auch der Katalog-View \icon{Icon/bp_catalog} ist als Baumstruktur organisiert.
+Sie können mit Klick auf die Plus- und Minus-Buttons (Abbildung \ref{Ansicht
+der Kataloge}) die Unterordner auf- bzw. zuklappen.  Zu beachten ist hierbei
+jedoch, dass durch diese Funktion die Unterordner sämtlicher Katalogeinträge
+auf- bzw. zugeklappt werden.
 
-\subsection{Anwenden von Bedrohungen / Schwachstellen / Risiko-Szenarien}
-Analog zu den \textbf{Controls} \icon{Icon/Controls.png} können \textbf{Schwachstellen} \icon{Icon/Schwachstellen.png} und \textbf{Bedrohungen} \icon{Icon/Lightening.png} aus den
-Katalogeinträgen per Drag \& Drop in die dazugehörigen Gruppen im \textbf{Information Security Model} \icon{Icon/Informationssicherheitsmodell.png} übernommen werden.
-\newline\\
-Bedrohungen, Schwachstellen oder Szenarien lassen sich aber auch individuell innerhalb der jeweiligen Gruppen erstellen. Erzeugen Sie individuelle Objekte über das Kontextmenü.
+Das Löschen von Katalogen erfolgt über rechte Maustaste >
+\icon{Icon/delete-cross} Löschen.
+
+\subsection{Arbeiten mit Katalogen im ISM View}
+Elemente -- wie Controls, Bedrohungen, Schwachstellen und Risiko-Szenarien --
+können aus dem importierten Katalog per Copy \& Paste in den ISM-View
+\icon{Icon/Informationssicherheitsmodell} übernommen werden. Durch
+Doppelklicken des eingefügten Element können Sie im angezeigten Editor die
+Angaben des Controls bearbeiten (z.\,B. den Implementierungsstand eines
+Controls auswählen).  Die Speicherung erfolgt über die Tastenkombination Strg+S
+oder mit Klick auf das Diskettensymbol in der Werkzeugleiste.
+
+Durch die Markierung (mit Hilfe der Tasten \textbf{Shift} oder \textbf{Strg}
+zusammen mit einem Mausklick) mehrerer Elemente können per Copy \& Paste auch
+eine Vielzahl von Elemente in den \textbf{View Information Security Model}
+\icon{Icon/Informationssicherheitsmodell.png} integriert werden.  Auf diese
+Weise kann auch eine ganze Control-Gruppe unter Beibehaltung ihrer
+Gruppenstruktur in den ISM-View \icon{Icon/Informationssicherheitsmodell.png}
+übernommen werden.
+
+Zudem können Sie beliebige weitere Elemente, wie z.\,B. Controls, anlegen. Dazu
+müssen Sie einen Rechtsklick auf \textbf{Controls}
+\icon{Icon/Controls.png} -\textgreater \textbf{Neue
+Control-Gruppe...} oder \textbf{Neues Control...} ausführen. Im angezeigten
+Editor sind die Angaben zu bearbeiten.  Das neue Control sollte einen
+eindeutigen Titel tragen. Speichern Sie wie gewohnt die Eingaben.
+
+\subsection{Erstellen von Katalogen}
+Ein Katalog kann erstellt werden, indem eine Organization aus der ISM-View
+exportiert wird (\icon{Icon/Export} Button). Die exportierte VNA-Datei kann
+anschließend wie in Abschnitt \ref{Einlesen von Katalogen} importierte werden.
 
 \subsection[Verwendung der Grundschutz-Kataloge \\ in der ISM-Perspektive]{Verwendung der Grundschutz-Kataloge in der ISM-Perspektive}
 Sie können zusätzlich auch die Grundschutzkataloge in der ISM-Perspektive verwenden. Damit haben Sie die Möglichkeit, diese Anforderungen mit z.B.
