@@ -64,13 +64,11 @@ This variant:
 	<bean id="hitroUtil" class="sernet.hui.common.connect.HitroUtil"
 		init-method="initForServer">
   -->
-  <bean id="hitroUtil" class="sernet.hui.common.connect.HitroUtil">
+  <bean id="hitroUtil" class="sernet.hui.common.connect.HitroUtil" init-method="initForServer">
 		<property name="typeFactory" ref="huiTypeFactory" />
-    <!--
 		<property name="entityResolverFactory">
 			<bean class="sernet.gs.ui.rcp.main.bsi.model.BSIEntityResolverFactory"/>
 		</property>
-    -->
 	</bean>
     
   <bean id="layoutConfig" class="sernet.verinice.service.model.WebLayoutConfig"/>
