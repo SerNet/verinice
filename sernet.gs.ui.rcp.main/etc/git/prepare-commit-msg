@@ -1,0 +1,14 @@
+#!/bin/sh
+# Insert the issue number from the branch name into the commit message, if not
+# already present.
+
+COMMIT_MSG_FILE=$1
+COMMIT_SOURCE=$2
+SHA1=$3
+
+if ! (grep -q 'VN-[0-9]*' "$COMMIT_MSG_FILE")
+then
+	issuenr=$(git branch  | sed -n '/^*/ s/.*\(vn-[0-9]*\).*/\1/ p' | tr [a-z] [A-Z])
+	sed -i "1i$issuenr" "$COMMIT_MSG_FILE"
+fi
+
