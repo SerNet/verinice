@@ -20,7 +20,9 @@ package sernet.verinice.model.iso27k;
 import java.util.Collection;
 
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.hui.common.connect.IPerson;
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -28,7 +30,8 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class PersonIso extends CnATreeElement implements IISO27kElement, IPerson {
+public class PersonIso extends CnATreeElement
+        implements IISO27kElement, IPerson, IAbbreviatedElement, ITaggableElement {
 
     public static final String TYPE_ID = "person-iso"; //$NON-NLS-1$
     public static final String PROP_ABBR = "person_abbr"; //$NON-NLS-1$
@@ -122,10 +125,12 @@ public class PersonIso extends CnATreeElement implements IISO27kElement, IPerson
         return sb.toString();
     }
 
+    @Override
     public Collection<String> getTags() {
         return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
     }
 
+    @Override
     public String getAbbreviation() {
         return getEntity().getSimpleValue(PROP_ABBR);
     }

@@ -34,7 +34,6 @@ import sernet.verinice.interfaces.IFilter;
 import sernet.verinice.interfaces.IParameter;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27Scope;
-import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.Organization;
 
 /**
@@ -195,9 +194,9 @@ public abstract class ElementFilter {
                 } else {
                     return true;
                 }
-            } else if (element instanceof IISO27kElement && !(element instanceof Group)
+            } else if (element instanceof ITaggableElement && !(element instanceof Group)
                     && !(element instanceof IISO27Scope)) {
-                return checkTags(tagArray, (IISO27kElement) element);
+                return checkTags(tagArray, (ITaggableElement) element);
             } else {
                 return true;
             }

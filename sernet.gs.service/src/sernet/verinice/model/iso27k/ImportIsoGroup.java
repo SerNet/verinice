@@ -17,14 +17,12 @@
  ******************************************************************************/
 package sernet.verinice.model.iso27k;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.common.CnATreeElement;
 
 @SuppressWarnings("serial")
-public class ImportIsoGroup extends Group<Organization> implements IISO27kGroup,IISO27Scope {
+public class ImportIsoGroup extends Group<Organization>
+        implements IISO27kGroup, IISO27Scope {
 	
 	public static final String TYPE_ID = ImportIsoGroup.class.getSimpleName();
 
@@ -73,22 +71,6 @@ public class ImportIsoGroup extends Group<Organization> implements IISO27kGroup,
     @Override
     public String[] getChildTypes() {
         return CHILD_TYPES;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.iso27k.IISO27kElement#getAbbreviation()
-     */
-    @Override
-    public String getAbbreviation() {
-        return "";
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.iso27k.IISO27kElement#getTags()
-     */
-    @Override
-    public Collection<String> getTags() {
-        return Collections.emptyList();
     }
 
 }

@@ -20,8 +20,9 @@ package sernet.gs.ui.rcp.main.reports;
 import java.util.Comparator;
 
 import sernet.gs.service.NumericStringComparator;
+import sernet.hui.common.connect.IAbbreviatedElement;
+import sernet.hui.common.connect.ITitledElement;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.IISO27kElement;
 
 /**
  * @author koderman@sernet.de
@@ -38,16 +39,17 @@ public class ISMItemComparator implements Comparator<CnATreeElement> {
         if (o1 == null || o2 == null){
             return 0;
         }
-        if (o1 instanceof IISO27kElement && o2 instanceof IISO27kElement ) {
+        String title1 = o1.getTitle();
+        String title2 = o2.getTitle();
+        if (o1 instanceof IAbbreviatedElement && o2 instanceof IAbbreviatedElement
+                && o1 instanceof ITitledElement && o2 instanceof ITitledElement) {
             NumericStringComparator numericStringComparator = new NumericStringComparator();
             
-            IISO27kElement isoelmt1 = (IISO27kElement) o1;
-            IISO27kElement isoelmt2 = (IISO27kElement) o2;
-            String title1 = isoelmt1.getAbbreviation() + isoelmt1.getTitle();
-            String title2 = isoelmt2.getAbbreviation() + isoelmt2.getTitle();
+            title1 = ((IAbbreviatedElement) o1).getAbbreviation() + title1;
+            title2 = ((IAbbreviatedElement) o2).getAbbreviation() + title2;
             return numericStringComparator.compare(title1, title2);
         }
-        return o1.getTitle().compareTo(o2.getTitle());
+        return title1.compareTo(title2);
     }
 
 

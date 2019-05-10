@@ -23,6 +23,8 @@ import java.util.Collection;
 import java.util.Date;
 
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.IAbbreviatedElement;
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IControl;
@@ -32,7 +34,8 @@ import sernet.verinice.model.iso27k.IISO27kElement;
  * @author Daniel Murygin <dm@sernet.de>
  *
  */
-public class SamtTopic extends CnATreeElement implements IISO27kElement, IControl {
+public class SamtTopic extends CnATreeElement
+        implements IISO27kElement, IControl, IAbbreviatedElement, ITaggableElement {
     
     public static final String TYPE_ID = "samt_topic"; //$NON-NLS-1$
     public static final String PROP_ABBR = "samt_topic_abbr"; //$NON-NLS-1$
@@ -92,9 +95,7 @@ public class SamtTopic extends CnATreeElement implements IISO27kElement, IContro
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
     
-    /* (non-Javadoc)
-     * @see sernet.verinice.iso27k.model.IISO27kElement#getAbbreviation()
-     */
+    @Override
     public String getAbbreviation() {
         return getEntity().getSimpleValue(PROP_ABBR);
     }
@@ -103,9 +104,7 @@ public class SamtTopic extends CnATreeElement implements IISO27kElement, IContro
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
     }
     
-    /*
-     * @see sernet.hui.common.connect.ITaggableElement#getTags()
-     */
+    @Override
     public Collection<String> getTags() {
         return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
     }

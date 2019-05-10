@@ -20,6 +20,8 @@ package sernet.verinice.model.iso27k;
 import java.util.Collection;
 
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.IAbbreviatedElement;
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
@@ -29,7 +31,8 @@ import sernet.verinice.model.common.ILinkChangeListener;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class Process extends CnATreeElement implements IISO27kElement {
+public class Process extends CnATreeElement
+        implements IISO27kElement, IAbbreviatedElement, ITaggableElement {
 
 	public static final String TYPE_ID = "process"; //$NON-NLS-1$
 	public static final String PROP_ABBR = "process_abbr"; //$NON-NLS-1$

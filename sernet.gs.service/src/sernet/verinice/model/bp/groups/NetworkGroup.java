@@ -21,6 +21,7 @@ package sernet.verinice.model.bp.groups;
 
 import java.util.Collection;
 
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.elements.Network;
 import sernet.verinice.model.bsi.TagHelper;
@@ -31,9 +32,9 @@ import sernet.verinice.model.iso27k.Group;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class NetworkGroup extends Group<Network> implements IBpGroup {
+public class NetworkGroup extends Group<Network> implements IBpGroup, ITaggableElement {
     
-    private static final long serialVersionUID = 6166611011332324047L;
+    private static final long serialVersionUID = 6166611011332324049L;
     
     public static final String TYPE_ID = "bp_network_group"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_network_group_name"; //$NON-NLS-1$

@@ -20,8 +20,6 @@
 package sernet.verinice.model.iso27k;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.common.CnATreeElement;
@@ -32,14 +30,10 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public abstract class Group<T> extends CnATreeElement implements ITaggableElement {
+public abstract class Group<T> extends CnATreeElement {
 
     public Group() {
         super();
-    }
-
-    public String getAbbreviation() {
-        return "";
     }
 
     /**
@@ -73,11 +67,5 @@ public abstract class Group<T> extends CnATreeElement implements ITaggableElemen
                     || this.getTypeId().equals(element.getTypeId());
         }
         return canContain;
-    }
-
-    public Collection<String> getTags() {
-        // empty, override this to add tags to groups
-        // dont't forget to add a huiproperty to your SNCA.xml
-        return Collections.emptyList();
     }
 }
