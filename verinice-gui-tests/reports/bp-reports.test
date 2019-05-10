@@ -44,6 +44,7 @@ gen-rep "(S) Modernisierter BSI IT-Grundschutz: A.2 Schutzbedarfsfeststellung"
 //gen-rep "(S) Modernisierter BSI IT-Grundschutz: A.3 Modellierung"
 //gen-rep "(S) Modernisierter BSI IT-Grundschutz: A.4 Grundschutz-Check"
 gen-rep "(S) Modernisierter BSI IT-Grundschutz: A.5 Risikoanalyse"
+gen-rep "(S) Modernisierter BSI IT-Grundschutz: A.6 Realisierungsplan"
 gen-rep "(S) Modernisierter BSI IT-Grundschutz: Risikomatrix"
 
 delete-bpelement "importierte Objekte/Informationsverbund-1 [b71753]"
