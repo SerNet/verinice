@@ -40,7 +40,10 @@
 	<property name="verinice-aut-workspace" location="${wrks-path}/aut-workspace-" />
 	<property name="v-designer-aut-workspace" location="${wrks-path}/v-designer-aut-workspace-" />
 	<property name="verinice-workspace" location="${wrks-path}/verinice-workspace" />
+	<property name="verinice-sever-workspace" location="${wrks-path}/aut-server-workspace-" />
 	<property name="aut-stdout" location="${log}/aut-out-" />
+	<property name="server-work-dir" location="${wrks-path}/tomcat" />
+	<property name="server.test.url" value="http://${server-host}:${server-port}/verinice" />
 
 	<condition property="isWindows" value="true">
 		<os family="windows" />
@@ -48,11 +51,139 @@
 	<condition property="isLinux" value="true">
 		<os family="unix" />
 	</condition>
+	<condition property="no-war-copy">
+		<isset property="no-server-deployment"/>
+	</condition>
+
+    <target name="patch-properties">
+        <replace file="${server-work-dir}/verinice/WEB-INF/veriniceserver-plain.properties.local" summary="true">
+            <replacefilter token="# jdbc.url=jdbc:postgresql://127.0.0.1:5432/verinicedb" 
+					value="jdbc.url=${server-database-url}" />
+        	<replacefilter token="# admin.username=admin" value="admin.username=verinice"/>
+        	<replacefilter token="# veriniceserver.grundschutzKataloge=/WEB-INF/it-grundschutz_el14_html_de.zip" 
+        		value="veriniceserver.grundschutzKataloge=${test-data}/it-grundschutz_el14_html_de.zip"/>
+        </replace>
+        <replace file="${server-work-dir}/verinice/WEB-INF/classes/log4j.xml" summary="true">
+            <replacefilter token="${catalina.home}/logs/verinice-server.log" 
+					value="${log}/verinice-server.log" />
+        </replace>
+        <replace file="${server-work-dir}/conf/logging.properties" summary="true">
+            <replacefilter token="${catalina.base}/logs" 
+					value="${log}" />
+        </replace>
+    </target>
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: patch-server-web-xml                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="patch-server-web-xml">
+        <replace file="${server-work-dir}/verinice/WEB-INF/web.xml" summary="true">
+            <replacefilter token="classpath:sernet/gs/server/spring/veriniceserver-security-plain-internal.xml" 
+                value="classpath:sernet/gs/server/spring/veriniceserver-security-preauth.xml" />
+        </replace>
+
+        <replace file="${server-work-dir}/verinice/WEB-INF/web.xml" summary="true">
+            <replacetoken><![CDATA[<!-- JSF and PrimeFaces config -->]]></replacetoken>
+            <replacevalue>
+                <![CDATA[
+            <context-param>
+                <param-name>iv-user</param-name>
+                <param-value>verinice</param-value>
+            </context-param>
+            <!-- JSF and PrimeFaces config -->]]></replacevalue>
+    </replace>
+
+    <replace file="${server-work-dir}/verinice/WEB-INF/web.xml" summary="true">
+        <replacetoken><![CDATA[<listener-class>com.sun.faces.config.ConfigureListener</listener-class>
+	</listener>]]></replacetoken>
+    <replacevalue><![CDATA[<listener-class>com.sun.faces.config.ConfigureListener</listener-class>
+    </listener>
+
+    <filter>
+        <filter-name>preauthMockFilter</filter-name>
+        <filter-class>sernet.gs.server.security.PreAuthMockFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>preauthMockFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>]]></replacevalue>
+</replace>
+</target>
+
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: patch-auth-default                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="patch-auth-default">
+        <replace file="${server-work-dir}/verinice/WEB-INF/verinice-auth-default.xml" summary="true" >
+       <replacetoken><![CDATA[<userprofile login="admin" origin="default">]]></replacetoken>
+           <replacevalue><![CDATA[<userprofile login="verinice" origin="default">]]></replacevalue>
+        </replace>
+    </target>
+
+    
+<!-- - - - - - - - - - - - - - - - - - 
+          target: copy.war.file                      
+         - - - - - - - - - - - - - - - - - -->
+<target name="copy.war.file" unless="no-war-copy">
+    <unzip dest="${server-work-dir}/verinice" src="${war-file}" />
+    <mkdir dir="${server-work-dir}/verinice/WEB-INF/elasticsearch" />
+    <mkdir dir="${server-work-dir}/verinice/WEB-INF/vnl" />
+
+    <copy todir="${server-work-dir}">
+        <fileset dir="${tomcat-dir}">
+            <include name="conf/*.*" />
+        </fileset>
+    </copy>
+    <echoxml file="${server-work-dir}/conf/server.xml">
+<Server port="8005" shutdown="SHUTDOWN">
+
+    <!--APR library loader. Documentation at /docs/apr.html -->
+    <Listener SSLEngine="on" className="org.apache.catalina.core.AprLifecycleListener"/>
+    <!-- Prevent memory leaks due to use of particular java/javax APIs-->
+    <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener"/>
+
+    <Service name="Catalina">
+        <Connector connectionTimeout="20000" port="${server-port}" protocol="HTTP/1.1" redirectPort="8443"/>
+        <Engine defaultHost="localhost" name="Catalina">
+            <Host appBase="webapps" autoDeploy="true" name="localhost" unpackWARs="true" xmlNamespaceAware="false" xmlValidation="false">
+                <Context docBase="${server-work-dir}/verinice" path="/verinice" reloadable="true"/>
+            </Host>
+        </Engine>
+    </Service>
+</Server></echoxml>
 	
-	<!--
-	<property name="verinice.dir" location="${aut-path}" />
-	<property name="verince.program" location="${verinice.dir}/verinice" />
-	<property name="java" value="${verinice.dir}/verinice/jre/bin/java" /> -->
+    <antcall target="patch-properties" />
+    <antcall target="patch-server-web-xml" />
+    <antcall target="patch-auth-default"/>
+</target>
+
+
+<target name="start-tomcat-server" unless="no-server-deployment" depends="copy.war.file">
+	<echo>
+catalina.home : ${tomcat-dir}
+catalina.base : ${server-work-dir}
+	</echo>
+	
+    <java classname="org.apache.catalina.startup.Bootstrap" fork="true" spawn="true">
+    	<classpath path="${tomcat-classpath}" />
+        <jvmarg value="-Dcatalina.home=${tomcat-dir}" />
+        <jvmarg value="-Dcatalina.base=${server-work-dir}" />
+    	<arg value="start"/>
+    </java>
+
+    <echo>wait for Tomcat server ${server.test.url}</echo>
+    <waitfor maxwait="40" maxwaitunit="second" timeoutproperty="timeout">
+        <http url="${server.test.url}" />
+    </waitfor>
+    <echo>Tomcat server started</echo>
+</target>
+
+<target name="stop-tomcat-server" unless="no-server-deployment">
+	<java classname="org.apache.catalina.startup.Bootstrap" fork="true">
+		<classpath path="${tomcat-classpath}" />
+		<jvmarg value="-Dcatalina.home=${tomcat-dir}" />
+		<arg line="stop" />
+	</java>
+</target>
 
 	<target name="init" depends="clean, configure.linux, configure.windows">
 		<mkdir dir="${test-results}" />
@@ -77,9 +208,7 @@ test-options: ${test-options}
 lang        : ${verinice.lang}
 ---		
 		</echo>
-		
-		
-	</target>
+</target>
 
 	<target name="configure.windows" unless="isLinux">
 		<property name="starterPlugin" value="plugins/org.eclipse.equinox.launcher.win32.win32.x86_64_${rcptt.laucher.version}"/>
@@ -123,8 +252,7 @@ lang        : ${verinice.lang}
 			</fileset>
 		</path>
 
-		<pathconvert targetos="unix" property="v-designer.zip" refid="v-designer-zip-file">
-		</pathconvert>
+		<pathconvert targetos="unix" property="v-designer.zip" refid="v-designer-zip-file"/>
 
 		<echo>found:  ${v-designer.zip}</echo>
 	</target>
@@ -172,7 +300,6 @@ lang        : ${verinice.lang}
 		<delete file="${verinice.zip}" />
 	</target>
 
-
 	<!-- - - - - - - - - - - - - - - - - - 
           target: find.current.zip                      
          - - - - - - - - - - - - - - - - - -->
@@ -183,9 +310,7 @@ lang        : ${verinice.lang}
 			</fileset>
 		</path>
 
-		<pathconvert targetos="unix" property="verinice.zip" refid="verinice-zip-file">
-		</pathconvert>
-
+		<pathconvert targetos="unix" property="verinice.zip" refid="verinice-zip-file"/>
 		<echo>found:  ${verinice.zip}</echo>
 	</target>
 
@@ -195,13 +320,7 @@ lang        : ${verinice.lang}
           target: clean              
          ================================= -->
 	<target name="clean" unless="no-clean" description="clean the resources">
-
 		<delete dir="${test-results}" quiet="true" />
-		<!--		<delete dir="${auts}" quiet="true" />
-		<delete dir="${images}" quiet="true" />
-		<delete dir="${reports}" quiet="true" />
-	<delete dir="${log}" quiet="true" />
-        -->
 	</target>
 
 
@@ -212,7 +331,7 @@ lang        : ${verinice.lang}
 	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - 
-          target: configure-aut                      
+          target: configure-vdesigner-aut                      
          - - - - - - - - - - - - - - - - - -->
 	<target name="configure-v-designer-aut" depends="unzip.v-designer.archive">
 		<delete file="${v-designer-aut-path}/v-designer.ini" />
@@ -252,7 +371,7 @@ workspace
          - - - - - - - - - - - - - - - - - -->
 	<target name="configure.verinice" depends="unzip.archive.linux, unzip.archive.windows">
 		<delete file="${verinice.dir}/verinice.ini" />
-		<echo>${verinice-workspace}</echo>
+		<echo>${verinice-workspace}::${verinice.dir}</echo>
 		<echo file="${verinice.dir}/verinice.ini">-startup
 plugins/org.eclipse.equinox.launcher_${verinice.launcher.version}.jar
 --launcher.library
@@ -285,7 +404,8 @@ ${verinice-workspace}
 	<target name="start-test-runner">
 		<echo>  
 		starting aut:${aut-path}
-		Skipping    :${skip-tags}	
+		Skipping    :${skip-tags}
+		workspace   :${aut-workspace}
 		</echo>
 
 		<java jar="${runner-path}/plugins/${erunner}" fork="true">
@@ -333,7 +453,8 @@ ${verinice-workspace}
 	<target name="start-test-runner-customtest">
 		<echo>  
 		starting aut:${aut-path}
-		tests       :${test-list}	
+		tests       :${test-list}
+		workspace   :${aut-workspace}
 		</echo>
 
 		<java jar="${runner-path}/plugins/${erunner}" fork="true">
@@ -378,56 +499,79 @@ ${verinice-workspace}
 		</java>
 	</target>
 
-	<!-- ================================= 
-          target: test              
-         ================================= 
-	<target name="test" depends="start-test-runner, move.log.files" description="runs the tasks">
+    <!-- ================================= 
+          target: test-verinice-server              
+         ================================= -->
+    <target name="test-verinice-server-test-custom" depends="init, start-tomcat-server" description="Deploys the webapp, start the server and the client.">
+		<run-server-tests target="start-test-runner-customtest"/>
+    </target>
+	
+    <!-- ================================= 
+          target: test-verinice-server              
+         ================================= -->
+    <target name="test-verinice-server" depends="init, start-tomcat-server" description="Deploys the webapp, start the server and the client.">
+		<run-server-tests target="start-test-runner"/>
+    </target>
 
-	</target>
--->
+	<macrodef name="run-server-tests">
+		<attribute name="target" />
+		<sequential>
+			<echo>running server tests with target: @{target}</echo>
+	    	<property name="verinice.dir" location="${auts}/verinice" />
+	        <antcall target="configure.verinice" />
+	        <antcall target="configure-aut" />
+	        <echo file="${verinice-sever-workspace}/.metadata/.plugins/org.eclipse.core.runtime/.settings/sernet.gs.ui.rcp.main.prefs" >
+	eclipse.preferences.version=1
+	cna_derbywarning=true
+	gs_cna_vnserver_uri=${server.test.url}
+	gs_cna_operationmode=gs_cna_operationmode_withserver
+	</echo>
+	        <antcall target="@{target}">
+	            <param name="aut-path" value="${verinice-aut-path}" />
+	            <param name="aut-workspace" value="${verinice-sever-workspace}" />
+	            <param name="test-path" value="${verinice.test.path}" />
+	        </antcall>
+	        <antcall target="stop-tomcat-server"/>
+	    	<antcall target="move.log.files">
+	    		<param name="aut-workspace" value="${verinice-sever-workspace}" />
+	    	</antcall>
+			</sequential>
+		</macrodef>
+			
+			
+	<macrodef name="run-client-tests">
+		<attribute name="target" />
+		<sequential>
+			<echo>running client tests with target: @{target}</echo>
+			<property name="verinice.dir" location="${auts}/verinice" />
+			<property name="verince.program" location="${verinice.dir}/verinice" />
 
-	<!-- ================================= 
+			<antcall target="configure-aut" />
+			<antcall target="start.verinice.client" />
+			<antcall target="@{target}">
+				<param name="aut-path" value="${verinice-aut-path}" />
+				<param name="aut-workspace" value="${verinice-aut-workspace}" />
+				<param name="test-path" value="${verinice.test.path}" />
+			</antcall>
+			<antcall target="move.log.files">
+				<param name="aut-workspace" value="${verinice-aut-workspace}" />
+			</antcall>
+		</sequential>
+	</macrodef>
+	
+	
+<!-- ================================= 
           target: test-verinice-client              
          ================================= -->
 	<target name="test-verinice-client" depends="init" description="Runs the gui tests for verinice in client mode.">
-		
-		
-		<property name="verinice.dir" location="${auts}/verinice" />
-		<property name="verince.program" location="${verinice.dir}/verinice" />
-
-
-		<antcall target="configure-aut" />
-		<antcall target="start.verinice.client" />
-		<antcall target="start-test-runner">
-			<param name="aut-path" value="${verinice-aut-path}" />
-			<param name="aut-workspace" value="${verinice-aut-workspace}" />
-			<param name="test-path" value="${verinice.test.path}" />
-		</antcall>
-		<antcall target="move.log.files">
-			<param name="aut-workspace" value="${verinice-aut-workspace}" />
-		</antcall>
+		<run-client-tests target="start-test-runner" />
 	</target>
 
 	<!-- ================================= 
           target: test-verinice-client              
          ================================= -->
 	<target name="test-verinice-client-test-custom" depends="init" description="Runs the gui tests for verinice only executes the tests in the test-list property.">
-		
-		
-		<property name="verinice.dir" location="${auts}/verinice" />
-		<property name="verince.program" location="${verinice.dir}/verinice" />
-
-
-		<antcall target="configure-aut" />
-		<antcall target="start.verinice.client" />
-		<antcall target="start-test-runner-customtest">
-			<param name="aut-path" value="${verinice-aut-path}" />
-			<param name="aut-workspace" value="${verinice-aut-workspace}" />
-			<param name="test-path" value="${verinice.test.path}" />
-		</antcall>
-		<antcall target="move.log.files">
-			<param name="aut-workspace" value="${verinice-aut-workspace}" />
-		</antcall>
+		<run-client-tests target="start-test-runner-customtest"/>
 	</target>
 
 	<!-- ================================= 
@@ -446,7 +590,6 @@ ${verinice-workspace}
 			<param name="aut-workspace" value="${v-designer-aut-workspace}" />
 			<param name="test-path" value="${v-designer.test.path}" />
 		</antcall>
-
 	</target>
 
 
@@ -506,7 +649,6 @@ ${verinice-workspace}
      	   <replaceregex pattern=".*name:" replace="" />
       	   <replaceregex pattern="duration:" replace="" />
       	   <replaceregex pattern="\)" replace="" />
-  
     	   </filterchain>
     	</concat>
     </target>
@@ -529,9 +671,6 @@ ${verinice-workspace}
 		</copy>
 		
 		<copy file="${runner-project-path}/gui-test.properties" tofile="${local.path}/gui-test.properties" overwrite="false" />
-		
 		<antcall target="copy.workspace" />
 	</target>
-
-
 </project>
