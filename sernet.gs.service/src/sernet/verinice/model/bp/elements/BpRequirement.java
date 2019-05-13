@@ -58,7 +58,6 @@ public class BpRequirement extends CnATreeElement
 
     public static final String TYPE_ID = "bp_requirement"; //$NON-NLS-1$
 
-    public static final String PROP_ABBR = "bp_requirement_abbr"; //$NON-NLS-1$
     public static final String PROP_OBJECTBROWSER = "bp_requirement_objectbrowser_content"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_requirement_name"; //$NON-NLS-1$
     public static final String PROP_ID = "bp_requirement_id"; //$NON-NLS-1$
@@ -198,14 +197,6 @@ public class BpRequirement extends CnATreeElement
     public void setObjectBrowserDescription(String description) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER),
                 description);
-    }
-
-    public String getAbbreviation() {
-        return getEntity().getPropertyValue(PROP_ABBR);
-    }
-
-    public void setAbbreviation(String abbreviation) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
     }
 
     @Override
