@@ -315,14 +315,6 @@ public final class CnATypeMapper {
                     Gebaeude.TYPE_ID, ITVerbund.TYPE_ID, NetzKomponente.TYPE_ID, Person.TYPE_ID,
                     Raum.TYPE_ID, Server.TYPE_ID, SonstIT.TYPE_ID, TelefonKomponente.TYPE_ID));
 
-    public static final List<String> IISO27K_ELEMENT_TYPES = Collections.unmodifiableList(
-            Arrays.asList(ResponseGroup.TYPE_ID, ExceptionGroup.TYPE_ID, VulnerabilityGroup.TYPE_ID,
-                    PersonGroup.TYPE_ID, IncidentGroup.TYPE_ID, ThreatGroup.TYPE_ID,
-                    Organization.TYPE_ID, ProcessGroup.TYPE_ID, AuditGroup.TYPE_ID,
-                    IncidentScenarioGroup.TYPE_ID, RecordGroup.TYPE_ID, RequirementGroup.TYPE_ID,
-                    ControlGroup.TYPE_ID, DocumentGroup.TYPE_ID, AssetGroup.TYPE_ID,
-                    EvidenceGroup.TYPE_ID, InterviewGroup.TYPE_ID, FindingGroup.TYPE_ID));
-
     public static final List<String> BP_ELEMENT_TYPES = Collections
             .unmodifiableList(Arrays.asList(BusinessProcessGroup.TYPE_ID, ApplicationGroup.TYPE_ID,
                     ItSystemGroup.TYPE_ID, IcsSystemGroup.TYPE_ID, DeviceGroup.TYPE_ID,
@@ -336,14 +328,6 @@ public final class CnATypeMapper {
             return false;
         }
         return STRUKTUR_ELEMENT_TYPES.contains(entityType.getId());
-    }
-
-    public static boolean isIiso27kElement(CnATreeElement child) {
-        EntityType entityType = child.getEntityType();
-        if (entityType == null) {
-            return false;
-        }
-        return IISO27K_ELEMENT_TYPES.contains(entityType.getId());
     }
 
     public static boolean isBpElement(CnATreeElement child) {
