@@ -43,7 +43,7 @@ import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 public class CatalogDragListener implements DragSourceListener {
 
     private static final Logger log = Logger.getLogger(CatalogDragListener.class);
-    
+
     private TreeViewer treeViewer;
 
     public CatalogDragListener(TreeViewer viewer) {
@@ -61,9 +61,10 @@ public class CatalogDragListener implements DragSourceListener {
             if (log.isDebugEnabled()) {
                 log.debug("Can not start dragging. No element in tree is selected.");
             }
-            event.doit = false;      
+            event.doit = false;
         } else {
-            boolean isValid = BaseProtectionModelingTransfer.isDraggedDataValid(getTreeSelection().toArray());
+            boolean isValid = BaseProtectionModelingTransfer
+                    .isDraggedDataValid(getTreeSelection().toArray());
             if (log.isDebugEnabled()) {
                 log.debug("Dragged data validation state: " + isValid);
             }
@@ -105,7 +106,7 @@ public class CatalogDragListener implements DragSourceListener {
     protected VeriniceElementTransfer getTransfer() {
         return BaseProtectionModelingTransfer.getInstance();
     }
-    
+
     private void logData(Object[] dataArray) {
         for (Object object : dataArray) {
             log.debug(object);

@@ -29,26 +29,28 @@ import sernet.gs.ui.rcp.main.bsi.views.RelationView;
 public class Iso27kPerspective implements IPerspectiveFactory {
 
     public static final String ID = "sernet.verinice.iso27k.rcp.Iso27kPerspective";
-	
-	public void createInitialLayout(IPageLayout layout) {
-	    final float catalogRatio = 0.20f;
-	    final float ismRatio = 0.35f;
-	    final float relationRatio = 0.7f;
-	    final float folderRatio = 0.75f;
-		String editorArea = layout.getEditorArea();
-		layout.setEditorAreaVisible(true);
-		
-		layout.addView(sernet.verinice.rcp.catalog.CatalogView.ID,  IPageLayout.LEFT, catalogRatio, editorArea);
-		
-		layout.addView(ISMView.ID,  IPageLayout.LEFT, ismRatio, editorArea);
-		layout.addView(RelationView.ID,  IPageLayout.BOTTOM, relationRatio, ISMView.ID);
-		
-		IFolderLayout folder = layout.createFolder("information", IPageLayout.BOTTOM, folderRatio, editorArea);
-		folder.addView(BrowserView.ID);
-		folder.addView(FileView.ID);
-		folder.addPlaceholder(NoteView.ID + ":*");
-		
-		layout.getViewLayout(sernet.verinice.rcp.catalog.CatalogView.ID).setCloseable(true);
-		layout.getViewLayout(ISMView.ID).setCloseable(true);
-	}
+
+    public void createInitialLayout(IPageLayout layout) {
+        final float catalogRatio = 0.20f;
+        final float ismRatio = 0.35f;
+        final float relationRatio = 0.7f;
+        final float folderRatio = 0.75f;
+        String editorArea = layout.getEditorArea();
+        layout.setEditorAreaVisible(true);
+
+        layout.addView(sernet.verinice.rcp.catalog.CatalogView.ID, IPageLayout.LEFT, catalogRatio,
+                editorArea);
+
+        layout.addView(ISMView.ID, IPageLayout.LEFT, ismRatio, editorArea);
+        layout.addView(RelationView.ID, IPageLayout.BOTTOM, relationRatio, ISMView.ID);
+
+        IFolderLayout folder = layout.createFolder("information", IPageLayout.BOTTOM, folderRatio,
+                editorArea);
+        folder.addView(BrowserView.ID);
+        folder.addView(FileView.ID);
+        folder.addPlaceholder(NoteView.ID + ":*");
+
+        layout.getViewLayout(sernet.verinice.rcp.catalog.CatalogView.ID).setCloseable(true);
+        layout.getViewLayout(ISMView.ID).setCloseable(true);
+    }
 }

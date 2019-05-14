@@ -112,15 +112,14 @@ public final class ActionRightIDs {
     public static final String MIGRATE_DATA_PROTECTION = "migrate_data_protection";
     public static final String CONVERT_IT_NETWORK = "convertitnetwork";
 
-
-    private  static final String[] ALL_RIGHT_IDS;
+    private static final String[] ALL_RIGHT_IDS;
 
     static {
         ALL_RIGHT_IDS = Stream.of(ActionRightIDs.class.getDeclaredFields()).map(field -> {
             try {
                 return field.get(null);
             } catch (IllegalArgumentException | IllegalAccessException e) {
-               throw new ExceptionInInitializerError(e);
+                throw new ExceptionInInitializerError(e);
             }
         }).filter(String.class::isInstance).toArray(String[]::new);
     }
@@ -129,7 +128,7 @@ public final class ActionRightIDs {
         super();
     }
 
-    public static String[] getAllRightIDs(){
+    public static String[] getAllRightIDs() {
         return ALL_RIGHT_IDS.clone();
     }
 }

@@ -343,8 +343,9 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
     private void showModelingError(final String causeMessage) {
         final String message = String.join("", causeMessage, " ",
                 Messages.BbModelingDropPerformer_ModelingAborted, causeMessage);
-        Display.getDefault().asyncExec(() -> MessageDialog.openError(Display.getDefault().getActiveShell(),
-                Messages.BbModelingDropPerformerModelingError, message));
+        Display.getDefault()
+                .asyncExec(() -> MessageDialog.openError(Display.getDefault().getActiveShell(),
+                        Messages.BbModelingDropPerformerModelingError, message));
     }
 
     protected VeriniceElementTransfer getTransfer() {
