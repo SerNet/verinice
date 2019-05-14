@@ -16,6 +16,7 @@
 \usepackage[parfill]{parskip} % Blank line between paragraphs
 \usepackage{enumitem}
 \newcommand*{\descrfont}[1]{\textit{#1 -}}
+\newcommand{\icon}[1]{\includegraphics[height=2ex]{#1}}
 
 %define languages for code examples
 \usepackage{listings}
@@ -542,9 +543,9 @@ oder zur Aktivierung der Schnellansicht führen.
   \caption{\label{Standardansicht in der ISM-Perspektive} Standardansicht in der ISM-Perspektive}
 \end{figure}
 Jede offene Sicht wird bei Bedarf aktualisiert. Durch die offenen Perspektiven und Views können Sie mit \textbf{Strg+F8} für Perspektiven und mit \textbf{Strg+F7} für Views wechseln.
-Eine Aktualisierung lässt sich gegebenenfalls mit dem Button \includegraphics[height=2ex]{Icon/Aktualisieren.png} forcieren, um z.B. das Modell der Infrastruktur in ihrer Darstellung zu aktualisieren.
+Eine Aktualisierung lässt sich gegebenenfalls mit dem Button \icon{Icon/Aktualisieren.png} forcieren, um z.B. das Modell der Infrastruktur in ihrer Darstellung zu aktualisieren.
 \newline\\
-Einzelne Views weisen den Button \includegraphics[height=2ex]{Icon/Verinice_linked.png} \textbf{Verknüpfe mit Editor} auf.
+Einzelne Views weisen den Button \icon{Icon/Verinice_linked.png} \textbf{Verknüpfe mit Editor} auf.
 Das Aktivieren dieser Funktion sorgt dafür, dass in dem entsprechenden View immer die Informationen des ausgewählten Editors
 angezeigt werden. Das ist besonders beim gleichzeitigen Arbeiten mit mehreren offenen Editoren hilfreich. Die Funktion kann in
 den betroffenen Views jeweils ein- oder ausgeschaltet werden. Sollten Sie beispielsweise mehrere Editoren geöffnet haben und
@@ -563,13 +564,13 @@ In vielen Situationen lassen sich die Eingaben oder Menüfenster abbrechen, so d
 letzten Aufruf der Fenster oder Menüs unwirksam bleiben. Klicken Sie dazu den Button \textbf{Abbrechen}.
 
 \section{Speichern}
-Diese Funktion sichert die Eingaben des Benutzers in einem Eingabeformular und wird aktiviert durch das Betätigen von \includegraphics[height=2ex]{Icon/Disk.png}
+Diese Funktion sichert die Eingaben des Benutzers in einem Eingabeformular und wird aktiviert durch das Betätigen von \icon{Icon/Disk.png}
 (alternativ durch die Tastenkombination: \textbf{Strg+S}). Beim Schließen eines
 Editors nach vorheriger Dateneingabe oder \mbox{-veränderung} werden Sie in einem Popup-Menü gefragt, ob die Änderungen gespeichert werden sollen.
 
 \section{Reports erzeugen} \label{Reports erzeugen}
 Daten aus verinice können als Reports in unterschiedlichen Formaten ausgegeben werden. Häufig werden die Reports als
-Statusinformation und Entscheidungshilfe für die Leitungsebene oder Auditberichte verwendet. Über das Symbol \includegraphics[height=2ex]{Icon/Report.png}
+Statusinformation und Entscheidungshilfe für die Leitungsebene oder Auditberichte verwendet. Über das Symbol \icon{Icon/Report.png}
 (oder alternativ über das Menü: \textbf{Datei \textgreater  Report erstellen...}) können Sie die Ausgabe von Reports konfigurieren. Um einen Report
 für einen bestimmten Geltungsbereich zu erzeugen, können Sie auch mit der rechten Maustaste auf das oberste Wurzelobjekt
 klicken und die Option \textbf{Erzeuge Report...} auswählen. Damit wird die Auswahl des Geltungsbereichs ausschließlich auf das selektierte Wurzelobjekt
@@ -670,14 +671,14 @@ Kapitel {\em \ref{reportdeposit} \nameref{reportdeposit}} beschrieben.
 
 \section{Gleichartige Elemente gemeinsam editieren}
 Mit dem sogenannten \textbf{Masseneditor} können mehrere gleichartige Objekte zusammen bearbeitet werden. Markieren Sie dazu die zu
-verändernden Objekte und betätigen anschließend \includegraphics[height=2ex]{Icon/Masseneditor.png} (alternativ: \textbf{Strg+Umschalttaste+B} oder über das
+verändernden Objekte und betätigen anschließend \icon{Icon/Masseneditor.png} (alternativ: \textbf{Strg+Umschalttaste+B} oder über das
 Menü \textbf{Bearbeiten \textgreater Alle editieren \textgreater Rechtsklick \textgreater Masseneditor}). So erscheint ein Popup-Fenster mit den Eingaben,
 wie sie im Editor erscheinen würden. Tragen Sie hier alle gewünschten Daten ein. Alle abgespeicherten Veränderungen
 werden dann auch für alle ausgewählten Objekte an gleicher Stelle übernommen. Felder, die Sie leer belassen, werden
 nicht verändert (auch nicht, wenn sie vorher bereits befüllt waren).
 
 \section{View neu laden}
-Diese Funktion entspricht dem \textbf{Aktualisieren} und wird durch das Betätigen von \includegraphics[height=2ex]{Icon/Aktualisieren.png} (alternativ: Strg+F5) aktiviert.
+Diese Funktion entspricht dem \textbf{Aktualisieren} und wird durch das Betätigen von \icon{Icon/Aktualisieren.png} (alternativ: Strg+F5) aktiviert.
 
 \section{Verschieben und Kopieren von Objekten}
 Für das Kopieren und Verschieben eines Objektes, wählen Sie das konkrete Objekt (im Modell-View) mit der rechten Maustaste aus. Daraufhin wählen Sie die gewünschte Funktion aus
@@ -1217,18 +1218,18 @@ oder im Link-Maker-Bereich des Editors eine Verknüpfung selektiert ist, die ein
 Beschreibung im Objektbrowser angezeigt.
 
 \section{Notizen}
-Zu jedem Objekt in verinice können beliebige Notizen erfasst werden. Um diesen View anzuzeigen, klicken Sie auf den Button \includegraphics[height=2ex]{Icon/Notizen.png}
+Zu jedem Objekt in verinice können beliebige Notizen erfasst werden. Um diesen View anzuzeigen, klicken Sie auf den Button \icon{Icon/Notizen.png}
 oder über das Menü \textbf{Ansicht \textgreater Zeige View ... \textgreater Notizen}. Sobald Sie ein Objekt im Modell-View durch einfachen Mausklick selektieren/aktivieren,
 werden die Notizen zu diesem Objekt im View \textbf{Notizen} angezeigt.
 \begin{itemize}
  \item Um Notizen zu erstellen gehen Sie wie folgt vor: Aktivieren Sie mit Linksklick das Objekt aus dem Modell-View, welches mit
-zusätzlichen Notizen versehen werden soll. Nun gehen Sie in den Notizen-View und klicken dort den Neu-Button \includegraphics[height=2ex]{Icon/Oeffnen.png}. Es erscheint ein
+zusätzlichen Notizen versehen werden soll. Nun gehen Sie in den Notizen-View und klicken dort den Neu-Button \icon{Icon/Oeffnen.png}. Es erscheint ein
 Editor mit dem Namen \textbf{neue Notiz}. Dort tragen Sie nun einen Titel in das erste Feld \textbf{Überschrift} und die Notiz in das zweite Feld \textbf{Notiz} ein.
 Speichern Sie die Eingaben. Der Eintrag erscheint nun im Notizen-View. Sie können durch Klicken auf das Pfeil-Symbol links neben der Überschrift
 den Notizentext einblenden.
 \item Um bereits eingetragene Notizen zu bearbeiten: Klappen Sie im Notizen-View die zu bearbeitenden Notiz aus und klicken Sie auf den
-Bearbeiten-Button \includegraphics[height=2ex]{Icon/Edit.png}. Speichern Sie nach Beendigung der Änderungen.
-\item Um Notizen zu löschen: Klappen Sie die zu löschende Notiz auf, um den Löschen-Button anzuzeigen. Betätigen Sie nun den Löschen-Button \includegraphics[height=2ex]{Icon/Delete.png}.
+Bearbeiten-Button \icon{Icon/Edit.png}. Speichern Sie nach Beendigung der Änderungen.
+\item Um Notizen zu löschen: Klappen Sie die zu löschende Notiz auf, um den Löschen-Button anzuzeigen. Betätigen Sie nun den Löschen-Button \icon{Icon/Delete.png}.
 Ein Popup-Fenster erscheint, indem Sie den Löschvorgang mit \textbf{Ja} bestätigen müssen.
 \end{itemize}
 
@@ -1244,7 +1245,7 @@ die Funktion von Dateianhängen zu verwenden: siehe Abschnitt {\em \ref{Dateien}
 \newline\\
 Der Link wird blau hinterlegt im Editor angezeigt. Wenn Sie diesen anklicken, wird er durch die verknüpfte Standardapplikation geöffnet.
 \newline\\
-Um alle eingegebene Links in einer Übersicht zu sehen, klicken Sie bitte auf das Symbol \includegraphics[height=2ex]{Icon/Richtlinien.png} oder wählen im Menü
+Um alle eingegebene Links in einer Übersicht zu sehen, klicken Sie bitte auf das Symbol \icon{Icon/Richtlinien.png} oder wählen im Menü
 \textbf{Ansicht \textgreater Zeige View... \textgreater Externe Links} aus. In dieser Sicht werden zuvor angelegte Links angezeigt. Klicken Sie auf das Pfeilsymbol um
 den Link aufzuklappen. Dann werden alle Objekte angezeigt, bei denen dieser Link auftaucht (zu sehen in der Spalte \textbf{Referenziert in}).
 Durch Doppelklick auf eins dieser Objekt gelangt man in den Editor dieses Objekts.
@@ -1256,26 +1257,26 @@ Tabellen, Grafiken usw. zu einem Objekt abzulegen. Die Dateien werden direkt in 
 mehrfach an das selbe Objekt anhängen (zum Beispiel in unterschiedlichen Versionen).
 \newline\\
 Aktivieren sie den Datei-View. Das ist über die Menüauswahl \textbf{Ansicht \textgreater Zeige View... \textgreater Dateien} oder alternativ
-über den Button \includegraphics[height=2ex]{Icon/Hinzufuegen.png} möglich.
+über den Button \icon{Icon/Hinzufuegen.png} möglich.
 \newline\\
 Um Dateien anzuhängen, gehen Sie bitte wie folgt vor: Aktivieren Sie im Modell-View das Objekt, welchem eine Datei beigefügt werden soll.
-Im Datei-View wird nun der Neu-Button \includegraphics[height=2ex]{Icon/Oeffnen.png} anklickbar angezeigt. Klicken Sie diesen an, um eine Datei auszuwählen. Es erscheint ein
+Im Datei-View wird nun der Neu-Button \icon{Icon/Oeffnen.png} anklickbar angezeigt. Klicken Sie diesen an, um eine Datei auszuwählen. Es erscheint ein
 Dateiauswahlfenster, das Sie in gewohnter Art und Weise bedienen können. Wählen Sie die anzuhängende Datei aus und klicken Sie auf \textbf{OK}.
 Es wird ein Editor geöffnet, in dem Sie Informationen zu der Datei eintragen können. So können Sie hier in den Feldern \textbf{Titel}, \textbf{Beschreibung},
 \textbf{Version} und \textbf{Dokumentenstatus} Ihre Eingaben machen. Speichern Sie die Eingaben. Die Datei wird nun im Datei-View aufgelistet. Die Größe einer angehängten Datei ist auf 100 MB beschränkt. Dieses Limit kann auf dem verinice.PRO-Server in der Konfiguration verändert werden.
 \newline\\
 Um Dateianhänge eines Objektes im Datei-View angezeigt zu bekommen, muss stets das passende Objekt im Modell-View aktiviert sein (einfacher Linksklick). Wählen Sie anschließend die Datei durch einfachen Linksklick im Datei-View aus. Für die angehängte Datei stehen Ihnen nun weitere Funktionen zur Verfügung:
 \begin{itemize}
- \item Mit \includegraphics[height=2ex]{Icon/Delete.png} können Sie eine Datei entfernen. Dabei wird diese vollständig aus der Datenbank entfernt.
- \item Mit \includegraphics[height=2ex]{Icon/Save.png} können Sie ausgewählte Dateien lokal nochmal abspeichern.
- \item Durch Betätigen des Buttons \includegraphics[height=2ex]{Icon/Suchen.png} wird die Datei durch das Betriebssystem geöffnet.
+ \item Mit \icon{Icon/Delete.png} können Sie eine Datei entfernen. Dabei wird diese vollständig aus der Datenbank entfernt.
+ \item Mit \icon{Icon/Save.png} können Sie ausgewählte Dateien lokal nochmal abspeichern.
+ \item Durch Betätigen des Buttons \icon{Icon/Suchen.png} wird die Datei durch das Betriebssystem geöffnet.
 \end{itemize}
 Sollte die angehängte Datei ein Bild sein, haben Sie die Möglichkeit sich das Bild in der ersten Spalte des Dateien-Views in einer Bildvorschau anzeigen zu lassen. Um die Bildvorschau zu aktivieren, gehen Sie bitte wie folgt vor: \textbf{Bearbeiten} \textgreater \textbf{Einstellungen...},
 \textgreater \textbf{Allgemeine Einstellungen}, \textgreater \textbf{Bildvorschaugröße im View ``Dateien''} und wählen Sie durch das Anklicken des Drop-Down-Menüs
 die entsprechende Bildvorschaugröße: \textbf{keine Vorschaubilder}, \textbf{klein (20px)}, \textbf{normal (50px)}, \textbf{groß (80px)}, \textbf{sehr groß (110px)},
 \textbf{riesig (150px)}. Bestätigen Sie abschließend Ihre Auswahl mit den Buttons \textbf{Anwenden} und \textbf{OK}.
 
-Um alle Dateianhänge anzuzeigen (nicht nur die eines Objektes), deaktivieren Sie die Bindung an den Modell-View durch Klick auf den Button \includegraphics[height=2ex]{Icon/Mitarbeiter.png}. Jetzt werden alle Dateianhänge aus der Datenbank angezeigt. In verinice.PRO wird eine Datei nur dann angezeigt, wenn der eingeloggte Benutzer Leserechte für das Objekt hat, an das die Datei angehängt ist.
+Um alle Dateianhänge anzuzeigen (nicht nur die eines Objektes), deaktivieren Sie die Bindung an den Modell-View durch Klick auf den Button \icon{Icon/Mitarbeiter.png}. Jetzt werden alle Dateianhänge aus der Datenbank angezeigt. In verinice.PRO wird eine Datei nur dann angezeigt, wenn der eingeloggte Benutzer Leserechte für das Objekt hat, an das die Datei angehängt ist.
 
 \section{Verknüpfungen}
 Der Objektbaum in den Modell-Views bietet eine hierarchische Gliederung der
@@ -1291,7 +1292,7 @@ entsprechenden Kapiteln der jeweiligen Perspektiven entnommen werden.
 \newline\\
 Die Art der Verknüpfungen können Sie nachträglich verändern, sofern
 mehrere Verknüpfungsarten existieren. Hierfür klicken Sie im View
-\textbf{Verknüpfungen} \includegraphics[height=2ex]{Icon/Relationen.png}
+\textbf{Verknüpfungen} \icon{Icon/Relationen.png}
 oder im Editor-Link-Maker-Bereich auf das entsprechenden Feld (siehe
 Abbildung \ref{Auswahl des Verknuepfungstyps}), das die Verknüpfung
 beschreibt.  \newline
@@ -1302,7 +1303,7 @@ beschreibt.  \newline
 \end{figure}
 \newline
 Klicken Sie die Relation doppelt an, um direkt zum verknüpften Objekt zu gelangen. Alternativ kann der Zielsprung auch mit
-Klick auf \includegraphics[height=2ex]{Icon/Ziel.png} durchgeführt werden. Für eine eindeutige Bezeichnung der Relation steht die Spalte
+Klick auf \icon{Icon/Ziel.png} durchgeführt werden. Für eine eindeutige Bezeichnung der Relation steht die Spalte
 \textbf{Beschreibung} zur Verfügung - hinter den Spalten \textbf{Verknüpfung}, \textbf{Titel} und \textbf{Scope}. Diese Spalte ist sowohl im Verknüpfungs-View
 als auch im Editor-Link-Maker Bereich verfügbar. Um die Relation mit einem Kommentar zu versehen, klicken Sie direkt in das entsprechende Feld
 \textbf{Beschreibung} hinter der jeweiligen Relation. Die Spalte \textbf{Scope} zeigt den Namen der Organisation bzw. des IT-Verbunds, zu dem das verknüpfte Objekt gehört.
@@ -1324,7 +1325,7 @@ Die Regeln der Validierung werden in der SNCA.xml-Datei definiert, so dass in je
 Ausgeführt wird die Validierung rekursiv für alle Kinderobjekte mit dem Kontextmenü des obersten Wurzelobjekts. Klicken Sie dazu mit der rechten
 Maustaste auf die Organisation oder den IT-Verbund und wählen Sie im Kontextmenü die Option \textbf{Validiere Element}.
 Die Validierungsergebnisse werden tabellarisch im Validierungs-View angezeigt. Um den Validierungs-View zu aktivieren, klicken Sie
-in der Werkzeugleiste auf den Validierungs-View-Button \includegraphics[height=2ex]{Icon/quickfix_warning_obj.png}. Der View zeigt in einer Tabelle
+in der Werkzeugleiste auf den Validierungs-View-Button \icon{Icon/quickfix_warning_obj.png}. Der View zeigt in einer Tabelle
 die gescheiterten Validierungsergebnisse mit den dazu gehörenden Objekttypen, Objektnamen, Feldern und Hinweisen an. Ein Doppelklick auf den Eintrag
 öffnet das Objekt im Editor-Bereich. Im Editor des entsprechenden Objekts werden die nicht erfüllten Validierungsregeln optisch angezeigt.
 Zum Einen werden die Textfelder in gelb markiert und zum Anderen werden die Feldbeschreibungen bzw. Drop-Down-Menü-Beschreibungen in rot markiert.
@@ -1428,7 +1429,7 @@ ermöglicht dem Benutzer, über alle Attribute der Elemente aus den
 Modellierungen innerhalb der IT-Grundschutzt und ISO-27001-Perspektive
 Abfragen durchzuführen. Erreichbar ist die Suche im Menü unter
 \textbf{Ansicht -> Zeige View -> Suche} oder mit dem Klick auf das
-Icon \includegraphics[height=2ex]{Icon/search.png} in der Menüzeile.
+Icon \icon{Icon/search.png} in der Menüzeile.
 
 \subsection{Suchbegriffe}
 \label{sec:suchbegriffe}
@@ -1524,7 +1525,7 @@ Funktionsweise ist dabei analog zum Verlinken innerhalb der einzelnen Views
 \label{sec:csv-export}
 
 Das Suchergebnis kann als CSV-Datei durch Klick auf das
-Icon \includegraphics[height=2ex]{Icon/Export.png} exportiert
+Icon \icon{Icon/Export.png} exportiert
 werden. Dabei werden, ausgenommen die Icon-Spalte, alle als sichtbar
 konfigurierten Spalten exportiert.  Die Limitierung der Größe des
 Suchergebnisses wird dabei berücksichtigt. Sollte die Größe des
@@ -1542,7 +1543,7 @@ Verfügung. Die Textkodierung kann in \texttt{UTF-8},
 \label{sec:indizierung}
 
 Die Indizierung kann auch manuell über den
-Aktualisierungs-Button \includegraphics[height=2ex]{Icon/Aktualisieren.png}
+Aktualisierungs-Button \icon{Icon/Aktualisieren.png}
 im Suche-View ausgelöst werden. Dies ist sinnvoll, wenn der Index
 durch beispielsweise das Löschen von größeren Organisationen nicht
 mehr konsistent mit den tatsächlich in verinice gespeicherten Daten
@@ -1560,13 +1561,13 @@ Um diese Perspektive zu aktivieren, wählen Sie über das Menü: \textbf{Ansicht
 Alternativ können Sie den Button \textbf{BSI Grundschutz Perspektive} oben rechts in der Perspektiven-Auswahl betätigen.
 
 \section{Grundlagen zu den Grundschutzkatalogen}
-Die inhaltlichen Bestandteile der \textbf{IT-Grundschutz-Kataloge} \includegraphics[height=2ex]{Icon/GS_Kataloge.png} setzen sich
+Die inhaltlichen Bestandteile der \textbf{IT-Grundschutz-Kataloge} \icon{Icon/GS_Kataloge.png} setzen sich
 aus den Bausteinen, den Gefährdungs- und Maßnahmenkatalogen zusammen. Das Grundschutzkonzept ist auf
 den \href{https://www.bsi.bund.de/cln_156/DE/Themen/weitereThemen/ITGrundschutzKataloge/itgrundschutzkataloge_node.html}{Webseiten des BSI}
 ganzheitlich erklärt.
 
 \subsection{Bausteine}
-Die obersten Strukturierungseinheiten in den \textbf{GS-Katalogen} \includegraphics[height=2ex]{Icon/GS_Kataloge.png} sind die \href{https://www.bsi.bund.de/cln_156/DE/Themen/weitereThemen/ITGrundschutzKataloge/Inhalt/Bausteine/bausteine_node.html}{Bausteine}. Sie werden in folgende Hauptgruppen eingeteilt:
+Die obersten Strukturierungseinheiten in den \textbf{GS-Katalogen} \icon{Icon/GS_Kataloge.png} sind die \href{https://www.bsi.bund.de/cln_156/DE/Themen/weitereThemen/ITGrundschutzKataloge/Inhalt/Bausteine/bausteine_node.html}{Bausteine}. Sie werden in folgende Hauptgruppen eingeteilt:
 \begin{itemize}
 \item B1 -
   \href{https://www.bsi.bund.de/cln_156/DE/Themen/weitereThemen/ITGrundschutzKataloge/Inhalt/Bausteine/B1uebergeordneteAspekte/b1uebergeordneteaspekte_node.html}{Übergreifende
@@ -1591,7 +1592,7 @@ Eine der Strukturierungseinheiten, die den Bausteinen untergeordnet ist, sind di
 \label{sec_eigene_gefaehrdung}
 Innerhalb von verinice ist es möglich eigene (/benutzerdefinierte) Gefährdungen zu erstellen. Um eigene Gefährdung anzulegen, gehen Sie wie folgt vor:
 
-Klicken Sie auf \textbf{Grundschutz Modell} \includegraphics[height=2ex]{Icon/GS_Modell.png} \textgreater \textbf{entsprechendes Gruppenzielobjekt}
+Klicken Sie auf \textbf{Grundschutz Modell} \icon{Icon/GS_Modell.png} \textgreater \textbf{entsprechendes Gruppenzielobjekt}
 \textgreater\ \textbf{entsprechendes Zielobjekt} \textgreater\ \textbf{Rechtsklick} \textgreater\ \textbf{neuer benutzerdefinierter Baustein} \textgreater\
 \textbf{neue benutzerdefinierte Gefährdung} oder Sie klicken mit rechts auf einen bereits existierenden Baustein und wählen im Kontextmenü
 die Option \textbf{neue benutzerdefinierte Gefährdung}.
@@ -1611,7 +1612,7 @@ Die andere Strukturierungseinheit, die den Bausteinen zugeordnet ist, sind die \
 
 \subsection{Eigene Maßnahmen}
 Innerhalb von verinice ist es möglich eigene Maßnahmen zu definieren. Um eigene Maßnahmen anzulegen, sollten Sie wie folgt vorgehen:
-Klicken Sie dazu auf \textbf{Grundschutz Modell} \includegraphics[height=2ex]{Icon/GS_Modell.png} \textgreater \textbf{entsprechendes Gruppenzielobjekt}
+Klicken Sie dazu auf \textbf{Grundschutz Modell} \icon{Icon/GS_Modell.png} \textgreater \textbf{entsprechendes Gruppenzielobjekt}
 \textgreater\ \textbf{entsprechendes Zielobjekt} \textgreater\ \textbf{Rechtsklick} \textgreater\ \textbf{neuer benutzerdefinierter Baustein} \textgreater\
 \textbf{neue benutzerdefinierte Maßnahme} oder Sie klicken mit rechts auf einen bereits existierenden Baustein und wählen im Kontextmenü
 die Option \textbf{neue benutzerdefinierte Maßnahme}.
@@ -1630,7 +1631,7 @@ Prioritätsangaben. Weitere Informationen können der
 Verantwortliche werden für die Umsetzung einer jeweiligen Maßnahme bestimmt und müssen deshalb vorher eine oder mehrere Rollen
 zugewiesen bekommen haben. Eine genaue Beschreibung solcher Rollen ist auf der
 \href{https://www.bsi.bund.de/cln_156/DE/Themen/weitereThemen/ITGrundschutzKataloge/Inhalt/Rollendefinitionen/rollendefinitionen_node.html}{Webseite des BSI} aufgeführt.
-In verinice sind diese im Bereich \textbf{Grundschutz Modell \includegraphics[height=2ex]{Icon/GS_Modell.png} \textgreater Mitarbeiter \includegraphics[height=2ex]{Icon/Mitarbeiter.png} \textgreater  Mitarbeitername}
+In verinice sind diese im Bereich \textbf{Grundschutz Modell \icon{Icon/GS_Modell.png} \textgreater Mitarbeiter \icon{Icon/Mitarbeiter.png} \textgreater  Mitarbeitername}
 zu finden und bei \textbf{Rollen \textgreater Ändern} einzustellen.
 
 \section{IT-Grundschutz-View}
@@ -1644,7 +1645,7 @@ In diesem View werden die Inhalte des eingebundenen Grundschutzkatalogs angezeig
 \newline
 
 \subsection{Filtern}
-Das \textbf{Filtern} im Katalog-View ist über das Betätigen des Symbols \includegraphics[height=2ex]{Icon/Filter.png} möglich.
+Das \textbf{Filtern} im Katalog-View ist über das Betätigen des Symbols \icon{Icon/Filter.png} möglich.
 Anschließend definieren Sie in dem Fenster die Filter-Einstellungen (siehe Abb. \ref{Filtern der GS-Kataloge}).
 \newline
 \begin{figure}[htb!]
@@ -1663,14 +1664,14 @@ und diese anschließend ausgegeben. Klicken Sie auf \textbf{OK}, um ihr Filterer
 \section{Grundschutz-Modell-View}
 
 Im View \textbf{Grundschutz Modell}
-\includegraphics[height=2ex]{Icon/GS_Modell.png} erhalten Sie die
+\icon{Icon/GS_Modell.png} erhalten Sie die
 Möglichkeit, die gewünschte Infrastruktur in einer Baumstruktur
 abzubilden (siehe
 Abb. \ref{fig:beispiel-einer-infrastruktur-im-grundschutz-modell-view}).
 
 
 \subsection{Filtern}
-Das Filtern im View ist über das Symbol \includegraphics[height=2ex]{Icon/Filter.png} möglich, wobei das folgende Menü angezeigt wird:
+Das Filtern im View ist über das Symbol \icon{Icon/Filter.png} möglich, wobei das folgende Menü angezeigt wird:
 \newline
 \begin{figure}[htb!]
   \centering
@@ -1678,14 +1679,14 @@ Das Filtern im View ist über das Symbol \includegraphics[height=2ex]{Icon/Filte
   \caption{\label{Filtern im Grundschutz-Modell-View} Filtern im Grundschutz-Modell-View}
 \end{figure}
 \newline
-Die angezeigten Objekte im View \textbf{Grundschutz Modell} \includegraphics[height=2ex]{Icon/GS_Modell.png} können so angepasst werden.
+Die angezeigten Objekte im View \textbf{Grundschutz Modell} \icon{Icon/GS_Modell.png} können so angepasst werden.
 Haken Sie die gewünschte \textbf{Siegelstufe}
 der Maßnahmen an, um ausschließlich diese angezeigt zu bekommen. Verfahren Sie analog mit \textbf{Umsetzung}. Weiterhin haben Sie die Möglichkeit,
 nach Lebenszyklen zu filtern. Durch das Selektieren der existierenden Tags im Bereich \textbf{Nach Tag selektieren} können Sie sich nur die
 Objekte anzeigen lassen, die das entsprechende Tag tragen.
 
 \section{Strukturanalyse} \label{Strukturanalyse}
-Für die Erstellung eines IT-Sicherheitskonzeptes ist es notwendig, die vorliegende Infrastruktur zu analysieren und zu dokumentieren. Dies erfolgt im View \textbf{Grundschutz Modell}. Hierbei werden Objekte eines \textbf{IT-Verbundes} erfasst. Der IT-Verbund ist das Wurzelelement. Konkret heißt es, dass die jeweiligen Elemente über \textbf{Grundschutz Modell \includegraphics[height=2ex]{Icon/GS_Modell.png} \textgreater (entsprechender) IT-Verbund \includegraphics[height=2ex]{Icon/GS_Modell.png} \textgreater (entsprechendes) Objekt \textgreater Rechtsklick \textgreater Neues (entsprechendes) Objekt} angelegt werden. Beim Anlege-Vorgang erscheint der Editor, in dem Sie weitere Daten zum Objekt eintragen können. Speichern Sie abschließend Ihre Eingaben (Strg+S oder über \includegraphics[height=2ex]{Icon/Disk.png}).
+Für die Erstellung eines IT-Sicherheitskonzeptes ist es notwendig, die vorliegende Infrastruktur zu analysieren und zu dokumentieren. Dies erfolgt im View \textbf{Grundschutz Modell}. Hierbei werden Objekte eines \textbf{IT-Verbundes} erfasst. Der IT-Verbund ist das Wurzelelement. Konkret heißt es, dass die jeweiligen Elemente über \textbf{Grundschutz Modell \icon{Icon/GS_Modell.png} \textgreater (entsprechender) IT-Verbund \icon{Icon/GS_Modell.png} \textgreater (entsprechendes) Objekt \textgreater Rechtsklick \textgreater Neues (entsprechendes) Objekt} angelegt werden. Beim Anlege-Vorgang erscheint der Editor, in dem Sie weitere Daten zum Objekt eintragen können. Speichern Sie abschließend Ihre Eingaben (Strg+S oder über \icon{Icon/Disk.png}).
 \newline
 \begin{figure}[htb!]
   \centering
@@ -1695,15 +1696,15 @@ Für die Erstellung eines IT-Sicherheitskonzeptes ist es notwendig, die vorliege
 \newline
 Es existieren folgende Objekttypen für jeden IT-Verbund:
 \begin{itemize}
- \item \includegraphics[height=2ex]{Icon/Anwendung.png} Anwendungen
- \item \includegraphics[height=2ex]{Icon/Clients.png} Clients
- \item \includegraphics[height=2ex]{Icon/Gebaeude.png} Gebäude
- \item \includegraphics[height=2ex]{Icon/Server.png} IT-Systeme: Server
- \item \includegraphics[height=2ex]{Icon/Sonstige.png} IT-Systeme: sonstige
- \item \includegraphics[height=2ex]{Icon/Tk_komponenten.png} IT-Systeme: TK-Komponenten
- \item \includegraphics[height=2ex]{Icon/Mitarbeiter.png} Mitarbeiter (inklusive Rollen)
- \item \includegraphics[height=2ex]{Icon/Netzwerkverbindungen.png} Netzwerkverbindungen
- \item \includegraphics[height=2ex]{Icon/Raeume.png} Räume
+ \item \icon{Icon/Anwendung.png} Anwendungen
+ \item \icon{Icon/Clients.png} Clients
+ \item \icon{Icon/Gebaeude.png} Gebäude
+ \item \icon{Icon/Server.png} IT-Systeme: Server
+ \item \icon{Icon/Sonstige.png} IT-Systeme: sonstige
+ \item \icon{Icon/Tk_komponenten.png} IT-Systeme: TK-Komponenten
+ \item \icon{Icon/Mitarbeiter.png} Mitarbeiter (inklusive Rollen)
+ \item \icon{Icon/Netzwerkverbindungen.png} Netzwerkverbindungen
+ \item \icon{Icon/Raeume.png} Räume
 \end{itemize}
 \begin{figure}[htb!]
   \centering
@@ -1713,7 +1714,7 @@ Es existieren folgende Objekttypen für jeden IT-Verbund:
 \end{figure}
 Das Ergebnis der Strukturanalyse ist die vollständige Abbildung der Infrastruktur im Grundschutz-View.
 \newline\\
-Um weitere IT-Verbünde zu erstellen, klicken Sie auf \includegraphics[height=2ex]{Icon/Oeffnen.png}.
+Um weitere IT-Verbünde zu erstellen, klicken Sie auf \icon{Icon/Oeffnen.png}.
 
 \subsection{Erstellen von Tags}
 Sie setzen einen Tag, indem sie mit Doppelklick ein beliebiges Objekt
@@ -1768,18 +1769,18 @@ Verknüpfungsliste im Link-Maker-Bereich.
 Die organisationsweiten und für alle Zielobjekte gültigen Schutzbedarfskategorien \textit{normal, hoch} und \textit{sehr} hoch werden beim entsprechenden \textbf{IT-Verbund-Objekt} (Wurzelobjekt) definiert. Klicken Sie dazu das Objekt \textbf{IT-Verbund} (Wurzelobjekt) doppelt an. Dabei wird der Objekt-Editor geöffnet und erlaubt so, Eingaben zu dem Objekt vorzunehmen. Scrollen Sie nach unten bis zu den Eingabebereichen \textbf{Schutzbedarfskategorie: normal}, \textbf{Schutzbedarfskategorie: hoch} und \textbf{Schutzbedarfskategorie: sehr hoch}. In jedem Bereich können Sie nun eine Freitext-Definition für die Anforderungen aus den Bereichen \textbf{Gesetze / Vorschriften / Verträge},  \textbf{Selbstbestimmungsrecht}, \textbf{Unversehrtheit}, \textbf{Aufgabenerfüllung}, \textbf{Innen- / Außenwirkung} und \textbf{Finanzielle Auswirkungen} eingeben.
 
 \section{Feststellung des Schutzbedarfs}
-Innerhalb eines \textbf{IT-Verbunds} \includegraphics[height=2ex]{Icon/GS_Modell.png} lässt sich für folgende Zielobjekte der Schutzbedarf festlegen und  dokumentieren:
+Innerhalb eines \textbf{IT-Verbunds} \icon{Icon/GS_Modell.png} lässt sich für folgende Zielobjekte der Schutzbedarf festlegen und  dokumentieren:
 \begin{itemize}
- \item \includegraphics[height=2ex]{Icon/Anwendung.png} Anwendungen
- \item \includegraphics[height=2ex]{Icon/Gebaeude.png} Gebäude
- \item \includegraphics[height=2ex]{Icon/Raeume.png} Räume
- \item \includegraphics[height=2ex]{Icon/Clients.png} IT-Systeme: Clients
- \item \includegraphics[height=2ex]{Icon/Sonstige.png} IT-Systeme: Sonstige
- \item \includegraphics[height=2ex]{Icon/Server.png} IT-Systeme: Server
- \item \includegraphics[height=2ex]{Icon/Tk_komponenten.png} IT-Systeme: TK-Komponenten
- \item \includegraphics[height=2ex]{Icon/Netzwerkverbindungen.png} Netzwerkverbindungen
+ \item \icon{Icon/Anwendung.png} Anwendungen
+ \item \icon{Icon/Gebaeude.png} Gebäude
+ \item \icon{Icon/Raeume.png} Räume
+ \item \icon{Icon/Clients.png} IT-Systeme: Clients
+ \item \icon{Icon/Sonstige.png} IT-Systeme: Sonstige
+ \item \icon{Icon/Server.png} IT-Systeme: Server
+ \item \icon{Icon/Tk_komponenten.png} IT-Systeme: TK-Komponenten
+ \item \icon{Icon/Netzwerkverbindungen.png} Netzwerkverbindungen
 \end{itemize}
-Die Festlegung des Schutzbedarfs für die Zielobjekte erfolgt über \textbf{Grundschutz Modell \includegraphics[height=2ex]{Icon/GS_Modell.png} \textgreater (entsprechender) IT-Verbund \includegraphics[height=2ex]{Icon/GS_Modell.png} \textgreater (entsprechendes) Zielobjekt \textgreater Doppelklick.} Scrollen Sie im Editor bis zum Abschnitt \textbf{Schutzbedarf} und wählen Sie dort im Drop-Down-Menü den entsprechenden Schutzbedarf \textit{normal}, \textit{hoch} oder \textit{sehr hoch} für die drei Grundwerte \textbf{Vertraulichkeit}, \textbf{Verfügbarkeit} und \textbf{Integrität} aus.
+Die Festlegung des Schutzbedarfs für die Zielobjekte erfolgt über \textbf{Grundschutz Modell \icon{Icon/GS_Modell.png} \textgreater (entsprechender) IT-Verbund \icon{Icon/GS_Modell.png} \textgreater (entsprechendes) Zielobjekt \textgreater Doppelklick.} Scrollen Sie im Editor bis zum Abschnitt \textbf{Schutzbedarf} und wählen Sie dort im Drop-Down-Menü den entsprechenden Schutzbedarf \textit{normal}, \textit{hoch} oder \textit{sehr hoch} für die drei Grundwerte \textbf{Vertraulichkeit}, \textbf{Verfügbarkeit} und \textbf{Integrität} aus.
 \newline
 \begin{figure}[htb!]
   \centering
@@ -1798,7 +1799,7 @@ Eine Ausnahme bezüglich der Schutzbedarfsfeststellung stellen die Zielobjekte v
  \item K5: keine Übertragung hochschutzbedürftiger Informationen
 \end{itemize}
 Sie sollten dazu im Grundschutzmodellbaum wie folgt navigieren: \textbf{Grundschutz Modell
-\includegraphics[height=2ex]{Icon/GS_Modell.png} \textgreater (entsprechender) IT-Verbund \includegraphics[height=2ex]{Icon/GS_Modell.png}
+\icon{Icon/GS_Modell.png} \textgreater (entsprechender) IT-Verbund \icon{Icon/GS_Modell.png}
 \textgreater Netzwerkverbindung \textgreater (entsprechendes) Netzobjekt}. Durch Doppelklick auf das Netzobjekt erscheint der Editor.
 Hier ist im Bereich \textbf{Schutzbedarf} die \textbf{Kritikalität} durch den \textbf{Ändern...}-Button auswählbar.
 Haken sie die gewünschten Checkboxen an, die der Kritikalitätseinstufung entsprechen.
@@ -1817,15 +1818,15 @@ Sollte die Anzeige für abgeleitete Schutzbedarfe nicht sofort das erwartete Erg
 Die Zuordnung von Maßnahmen zu Verantwortlichkeiten kann in verinice auf zwei unterschiedlichen Arten durchgeführt werden. Beide Vorgehensweisen setzen eine Modellierung nach IT-Grundschutz voraus und, dass alle betroffenen Personen im \textbf{Grundschutz-Modell} angelegt, die Rollen definiert und die Rollen an die Personen vergeben wurden.
 
 \subsection{Manuelle Zuordnung von Maßnahmen zu Verantwortlichkeiten}
-Eine Möglichkeiten ist es, die Verantwortlichkeiten für jede Maßnahme einzeln oder mit Hilfe des \textbf{Masseneditors} (für mehrere Maßnahmen) bestimmten Personen zuzuweisen. Um festzulegen, welche Person die Verantwortlichkeit zur Umsetzung von Maßnahmen inne hat, gehen Sie bitte wie folgt vor: Gehen Sie in den View \textbf{Grundschutz Modell \includegraphics[height=2ex]{Icon/GS_Modell.png} \textgreater entsprechender IT-Verbund \includegraphics[height=2ex]{Icon/GS_Modell.png} \textgreater übergeordnete Zielobjektgruppe \textgreater entsprechendes Zielobjekt \textgreater entsprechender Baustein \textgreater entsprechende Maßnahme}. Klicken Sie hier doppelt auf die Maßnahme. Scrollen Sie im Eingabeformular runter bis zum Bereich \textbf{Umsetzung} und wählen Sie im Eingabefeld \textbf{Umsetzung durch} den \textbf{Ändern...}-Button. Im erscheinenden Menü haken Sie die entsprechenden Verantwortlichen an. Bestätigen Sie die Auswahl mit dem \textbf{Fertig}-Button.
+Eine Möglichkeiten ist es, die Verantwortlichkeiten für jede Maßnahme einzeln oder mit Hilfe des \textbf{Masseneditors} (für mehrere Maßnahmen) bestimmten Personen zuzuweisen. Um festzulegen, welche Person die Verantwortlichkeit zur Umsetzung von Maßnahmen inne hat, gehen Sie bitte wie folgt vor: Gehen Sie in den View \textbf{Grundschutz Modell \icon{Icon/GS_Modell.png} \textgreater entsprechender IT-Verbund \icon{Icon/GS_Modell.png} \textgreater übergeordnete Zielobjektgruppe \textgreater entsprechendes Zielobjekt \textgreater entsprechender Baustein \textgreater entsprechende Maßnahme}. Klicken Sie hier doppelt auf die Maßnahme. Scrollen Sie im Eingabeformular runter bis zum Bereich \textbf{Umsetzung} und wählen Sie im Eingabefeld \textbf{Umsetzung durch} den \textbf{Ändern...}-Button. Im erscheinenden Menü haken Sie die entsprechenden Verantwortlichen an. Bestätigen Sie die Auswahl mit dem \textbf{Fertig}-Button.
 \newline\\
 Für die Bearbeitung mehrerer Maßnahmen und die Festlegung von Verantwortlichkeiten für die Umsetzung der Maßnahmen kann auch mit Hilfe des \textbf{Masseneditors} vorgenommen werden. Wählen Sie dazu alle \textbf{Maßnahmen} aus, die Sie bearbeiten wollen (z.B. durch Mehrfachauswahl). Klicken Sie mit der rechten Maustaste auf die markierten Maßnahmen und wählen Sie im Kontextmenü den \textbf{Masseneditor...}. Setzen Sie im Menüfenster des Masseneditors das Feld \textbf{Umsetzung durch} analog wie oben beschrieben auf die verantwortliche(n) Person(en).
 
 \subsection{Automatisierte Zuordnung von Maßnahmen zu Verantwortlichkeiten}
-Um die automatisierte Zuordnung von Maßnahmen zu Verantwortlichkeiten durchführen zu können, ist es im ersten Schritt erforderlich, dass die Rollen den angelegten Personen zugewiesen werden. Gehen Sie dazu wie folgt vor: \textbf{Grundschutz Modell \includegraphics[height=2ex]{Icon/GS_Modell.png} \textgreater entsprechender IT-Verbund \includegraphics[height=2ex]{Icon/GS_Modell.png} \textgreater Mitarbeiter \textgreater entsprechender Mitarbeiter}. Klicken Sie hier doppelt auf das Personenobjekt. Scrollen im Eingabeformular runter und wählen Sie im Eingabefeld \textbf{Rollen} den \textbf{Ändern...}-Button. Im erscheinenden Menü haken Sie die entsprechenden Rollen an und bestätigen Ihre Auswahl mit dem \textbf{Fertig}-Button. Wenn mehrere Personen eine Rolle tragen sollen, dann können Sie auch an dieser Stelle von der Funktion des \textbf{Masseneditors} profitieren und mehreren Personen die gleiche Rolle zuweisen.
+Um die automatisierte Zuordnung von Maßnahmen zu Verantwortlichkeiten durchführen zu können, ist es im ersten Schritt erforderlich, dass die Rollen den angelegten Personen zugewiesen werden. Gehen Sie dazu wie folgt vor: \textbf{Grundschutz Modell \icon{Icon/GS_Modell.png} \textgreater entsprechender IT-Verbund \icon{Icon/GS_Modell.png} \textgreater Mitarbeiter \textgreater entsprechender Mitarbeiter}. Klicken Sie hier doppelt auf das Personenobjekt. Scrollen im Eingabeformular runter und wählen Sie im Eingabefeld \textbf{Rollen} den \textbf{Ändern...}-Button. Im erscheinenden Menü haken Sie die entsprechenden Rollen an und bestätigen Ihre Auswahl mit dem \textbf{Fertig}-Button. Wenn mehrere Personen eine Rolle tragen sollen, dann können Sie auch an dieser Stelle von der Funktion des \textbf{Masseneditors} profitieren und mehreren Personen die gleiche Rolle zuweisen.
 \newline\\
-Nach der Zuordnung der Rollen, können im zweiten Schritt die Maßnahmen den Verantwortlichkeiten automatisiert zugewiesen werden. Wählen Sie dazu in ihrem \textbf{Grundschutz-Modell} eine oder mehrere Personen aus und ziehen Sie die Person/en per Drag-and-Drop auf das oberste Wurzelobjekt (entsprechender \textbf{IT-Verbund} \includegraphics[height=2ex]{Icon/GS_Modell.png} ). Damit erfolgt eine automatische Zuordnung. Welche Verantwortlichkeit einer Maßnahme zugeordnet wird, ist im Text der Maßnahmen enthalten.
-Die Zuordnung von Verantwortlichkeiten zu Maßnahmen kann im \textbf{Realisierungsplan} \includegraphics[height=2ex]{Icon/Okay.png} abgefragt werden. Klicken Sie dazu das Symbol \includegraphics[height=2ex]{Icon/Okay.png} in der Menüleiste an oder rufen Sie den View über \textbf{Absicht \textgreater Zeige View... \textgreater Realisierungsplan} auf.
+Nach der Zuordnung der Rollen, können im zweiten Schritt die Maßnahmen den Verantwortlichkeiten automatisiert zugewiesen werden. Wählen Sie dazu in ihrem \textbf{Grundschutz-Modell} eine oder mehrere Personen aus und ziehen Sie die Person/en per Drag-and-Drop auf das oberste Wurzelobjekt (entsprechender \textbf{IT-Verbund} \icon{Icon/GS_Modell.png} ). Damit erfolgt eine automatische Zuordnung. Welche Verantwortlichkeit einer Maßnahme zugeordnet wird, ist im Text der Maßnahmen enthalten.
+Die Zuordnung von Verantwortlichkeiten zu Maßnahmen kann im \textbf{Realisierungsplan} \icon{Icon/Okay.png} abgefragt werden. Klicken Sie dazu das Symbol \icon{Icon/Okay.png} in der Menüleiste an oder rufen Sie den View über \textbf{Absicht \textgreater Zeige View... \textgreater Realisierungsplan} auf.
 
 \section{Modellierung}
 
@@ -1868,7 +1869,7 @@ Dafür gibt es zwei Möglichkeiten, diese in verinice einzubinden:
    \item Import einer VNA-Datei, die aus dem GSM extrahiert wurde. Die Datei muss deswegen manuell vom Benutzer
    über einen Import-Vorgang eingelesen werden.
  \end{itemize}
- Das Ergebnis aus dem GSM-Scan findet sich im \textbf{Grundschutz Modell \includegraphics[height=2ex]{Icon/GS_Modell.png}} wieder als eine Reihe von Objekten.
+ Das Ergebnis aus dem GSM-Scan findet sich im \textbf{Grundschutz Modell \icon{Icon/GS_Modell.png}} wieder als eine Reihe von Objekten.
  \newline\\
  \textbf{Hinweis:} Die Bearbeitung von GSM-Scan-Ergebnissen in der ISM-Perspektive zur Nachverfolgung von Schwachstellen
  ist im Kapitel {\em \ref{sec:workflow:greenbone-schwachstellenverfolgung} \newline \nameref{sec:workflow:greenbone-schwachstellenverfolgung}} beschrieben.
@@ -1904,8 +1905,8 @@ Lesen Sie dazu den Abschnitt {\em \ref{Reports erstellen} \nameref{Reports erste
 \section{Ergänzende Sicherheitsanalyse}
 Im Laufe der Arbeit nach der Grundschutz-Vorgehensweise müssen eventuell bestimmte Zielobjekte einer ergänzenden Sicherheitsanalyse unterzogen werden
 (z.B. wenn sie einen hohen Schutzbedarf aufweisen). Sie dokumentieren die Informationen zur ergänzenden Sicherheitsanalyse an folgender Stelle:
-\textbf{Grundschutz Modell \includegraphics[height=2ex]{Icon/GS_Modell.png} \textgreater (entsprechender) IT-Verbund
-\includegraphics[height=2ex]{Icon/GS_Modell.png} \textgreater (entsprechendes) Zielobjekt}. Klicken Sie das Objekt doppelt an, um das Editor-Fenster zu diesem
+\textbf{Grundschutz Modell \icon{Icon/GS_Modell.png} \textgreater (entsprechender) IT-Verbund
+\icon{Icon/GS_Modell.png} \textgreater (entsprechendes) Zielobjekt}. Klicken Sie das Objekt doppelt an, um das Editor-Fenster zu diesem
 Objekt aufzurufen. Im Editor im Bereich \textbf{Managementbewertung} können Sie nun  an der Stelle \textbf{Erg. Sicherheitsanalyse}
 dokumentieren, ob sich eine entsprechende Sicherheitsanalyse \textbf{laut Schutzbedarf} ergibt oder \textbf{zusätzlich vorzumerken} ist. Um die korrekte
 Einstellung vorzunehmen, sehen Sie bitte in den \href{https://www.bsi.bund.de/DE/Themen/ITGrundschutz/ITGrundschutzStandards/ITGrundschutzStandards_node.html#doc471418bodyText2}{Standard 100-2}
@@ -1921,7 +1922,7 @@ Risikoanalyse nötig ist, können Sie im nachfolgenden Abschnitt {\em \ref{Risik
 \newline
 
 \section{Risikoanalyse} \label{Risikoanalyse}
-In verinice ist es möglich, für beliebige Zielobjekte eine geführte Risikoanalyse durchzuführen. Durch einen Rechtsklick auf das betreffende Zielobjekt (z.B. Server oder Anwendung) erscheint das Kontextmenü, in dem Sie \textbf{Risikoanalyse ...} auswählen. Es wird das Wizard-Fenster zur Risikoanalyse eingeblendet, das Sie Schritt für Schritt bei der Durchführung der Risikoanalyse begleitet. Alle Objekte, die eine Risikoanalyse erfahren haben, sind mit dem Symbol \includegraphics[height=2ex]{Icon/Risikoanalyse.png} gekennzeichnet. Es geht darum, eine objektbezogene Gefährdungsübersicht und die eigentliche Risikobehandlung zu erstellen und somit zu dokumentieren. Eventuell ergeben sich aus diesen Schritten zusätzliche Maßnahmen, die sich nach Abschluss der Risikoanalyse in der Baumstruktur erscheinen und wie gewohnt abarbeiten lassen. In der nachfolgenden Abbildung sehen Sie das Fenster zur Risikoanalyse.
+In verinice ist es möglich, für beliebige Zielobjekte eine geführte Risikoanalyse durchzuführen. Durch einen Rechtsklick auf das betreffende Zielobjekt (z.B. Server oder Anwendung) erscheint das Kontextmenü, in dem Sie \textbf{Risikoanalyse ...} auswählen. Es wird das Wizard-Fenster zur Risikoanalyse eingeblendet, das Sie Schritt für Schritt bei der Durchführung der Risikoanalyse begleitet. Alle Objekte, die eine Risikoanalyse erfahren haben, sind mit dem Symbol \icon{Icon/Risikoanalyse.png} gekennzeichnet. Es geht darum, eine objektbezogene Gefährdungsübersicht und die eigentliche Risikobehandlung zu erstellen und somit zu dokumentieren. Eventuell ergeben sich aus diesen Schritten zusätzliche Maßnahmen, die sich nach Abschluss der Risikoanalyse in der Baumstruktur erscheinen und wie gewohnt abarbeiten lassen. In der nachfolgenden Abbildung sehen Sie das Fenster zur Risikoanalyse.
 \newline
 \begin{figure}[H]
   \centering
@@ -1980,30 +1981,30 @@ mehreren Gefährdungen zuzuordnen, sollten Sie die Maßnahmen per {Drag\&Drop} a
 Dadurch wird im linken Bereich des Fensters eine Abhängigkeitsstruktur erkennbar. Um einer Gefährdung zugeordnete
 Maßnahmen wieder zu entfernen, betätigen Sie den darunterliegenden Button \textbf{Entfernen} und bestätigen den Vorgang.
 \newline\\
-Mit dem Anklicken des Buttons \textbf{Fertigstellen} wird die Risikoanalyse beendet, das Wizard-Fenster geschlossen und das Grundschutzmodell erhält ein weiteres Objekt (\includegraphics[height=2ex]{Icon/Risikoanalyse.png} \textbf{Risikoanalyse}). Darunter in der Baumorganisation sehen Sie nun die ausgewählten bzw. definierten Gefährdungen und die eventuell zugeordneten Maßnahmen für das entsprechende Zielobjekt.
+Mit dem Anklicken des Buttons \textbf{Fertigstellen} wird die Risikoanalyse beendet, das Wizard-Fenster geschlossen und das Grundschutzmodell erhält ein weiteres Objekt (\icon{Icon/Risikoanalyse.png} \textbf{Risikoanalyse}). Darunter in der Baumorganisation sehen Sie nun die ausgewählten bzw. definierten Gefährdungen und die eventuell zugeordneten Maßnahmen für das entsprechende Zielobjekt.
 
 \section{Realisierungsplan}
-Aktivieren Sie den View \textbf{Realisierungsplan} durch das Anklicken von \includegraphics[height=2ex]{Icon/Okay.png}.Im \textbf{Realisierungsplan} \includegraphics[height=2ex]{Icon/Okay.png} werden dem jeweils ausgewählten \textbf{IT-Verbund} \includegraphics[height=2ex]{Icon/GS_Modell.png} eine Reihe von Angaben zur Verfügung gestellt, die sich auf die Maßnahmen beziehen, welche zuvor durch die Modellierung bzw. durch die Verknüpfung der Bausteine mit den jeweiligen Elementen des \textbf{IT-Verbundes} \includegraphics[height=2ex]{Icon/GS_Modell.png} hinterlegt wurden. Dazu gehören Fälligkeitstermine, verantwortliches Personal, Siegelstufen, Zielobjekte, die Maßnahmenkurzbeschreibung bzw. der Titel sowie die komplette Maßnahmenbeschreibung, wenn Sie in die entsprechende Zeile klicken und die Sicht Maßnahmenbrowser geöffnet hat. Die automatisch bestimmten Verantwortlichen werden nicht bei den individuellen Zuordnungen angezeigt, können aber dort bei Bedarf hineingeschrieben werden. Weiterhin wird der
+Aktivieren Sie den View \textbf{Realisierungsplan} durch das Anklicken von \icon{Icon/Okay.png}.Im \textbf{Realisierungsplan} \icon{Icon/Okay.png} werden dem jeweils ausgewählten \textbf{IT-Verbund} \icon{Icon/GS_Modell.png} eine Reihe von Angaben zur Verfügung gestellt, die sich auf die Maßnahmen beziehen, welche zuvor durch die Modellierung bzw. durch die Verknüpfung der Bausteine mit den jeweiligen Elementen des \textbf{IT-Verbundes} \icon{Icon/GS_Modell.png} hinterlegt wurden. Dazu gehören Fälligkeitstermine, verantwortliches Personal, Siegelstufen, Zielobjekte, die Maßnahmenkurzbeschreibung bzw. der Titel sowie die komplette Maßnahmenbeschreibung, wenn Sie in die entsprechende Zeile klicken und die Sicht Maßnahmenbrowser geöffnet hat. Die automatisch bestimmten Verantwortlichen werden nicht bei den individuellen Zuordnungen angezeigt, können aber dort bei Bedarf hineingeschrieben werden. Weiterhin wird der
 Umsetzungsstatus der jeweiligen Maßnahmen angezeigt, der folgende Ausprägungen haben kann:
 \begin{itemize}
- \item Unbearbeitet \includegraphics[height=2ex]{Icon/Unbearbeitet.png} (verbleibt im Realisierungsplan)
- \item Nein \includegraphics[height=2ex]{Icon/Nein.png} (verbleibt im Realisierungsplan)
- \item Teilweise \includegraphics[height=2ex]{Icon/Teilweise.png} (verbleibt im Realisierungsplan)
- \item Ja \includegraphics[height=2ex]{Icon/Okay.png} (wird jetzt im Prüfplan angezeigt)
- \item Entbehrlich \includegraphics[height=2ex]{Icon/Entbehrlich.png} (wird jetzt im Prüfplan angezeigt)
+ \item Unbearbeitet \icon{Icon/Unbearbeitet.png} (verbleibt im Realisierungsplan)
+ \item Nein \icon{Icon/Nein.png} (verbleibt im Realisierungsplan)
+ \item Teilweise \icon{Icon/Teilweise.png} (verbleibt im Realisierungsplan)
+ \item Ja \icon{Icon/Okay.png} (wird jetzt im Prüfplan angezeigt)
+ \item Entbehrlich \icon{Icon/Entbehrlich.png} (wird jetzt im Prüfplan angezeigt)
 \end{itemize}
 \begin{figure}[htb!]
   \centering
   \includegraphics[scale=.36]{Screenshot/Realisierungsplan.jpg}
   \caption{\label{Realisierungs- und Pruefplan mit Massnahmenbeschreibung} Realisierungs- und Prüfplan mit Maßnahmenbeschreibung}
 \end{figure}
-Der \textbf{Realisierungsplan} \includegraphics[height=2ex]{Icon/Okay.png} entspricht den Schritten \textit{PLAN} und \textit{DO} des PDCA-Modells im ISO-Standard 27001 und im \href{https://www.bsi.bund.de/DE/Themen/ITGrundschutz/ITGrundschutzStandards/ITGrundschutzStandards_node.html#doc471418bodyText1}{BSI-Standard 100-1}.
+Der \textbf{Realisierungsplan} \icon{Icon/Okay.png} entspricht den Schritten \textit{PLAN} und \textit{DO} des PDCA-Modells im ISO-Standard 27001 und im \href{https://www.bsi.bund.de/DE/Themen/ITGrundschutz/ITGrundschutzStandards/ITGrundschutzStandards_node.html#doc471418bodyText1}{BSI-Standard 100-1}.
 
 \section{Prüfplan}
-Der \textbf{Prüfplan}-View (Button: \includegraphics[height=2ex]{Icon/page_find.png}) ist ähnlich aufgebaut wie der \textbf{Realisierungsplan} \includegraphics[height=2ex]{Icon/Okay.png}. Sind Maßnahmen im \textbf{IT-Verbund} \includegraphics[height=2ex]{Icon/GS_Modell.png} umgesetzt oder entbehrlich, kommt es dort zu einer Überprüfung.  Es soll ein Soll-Ist-Vergleich durchgeführt und dokumentiert werden, um den Status der Maßnahmen neu zu bewerten. Dafür klicken Sie wieder in die betreffenden Zeilen und können die jeweiligen Aspekte ansteuern. Im PDCA-Modell entspricht der Prüfplan dem \textit{CHECK}- und \textit{ACT}-Prozess.
+Der \textbf{Prüfplan}-View (Button: \icon{Icon/page_find.png}) ist ähnlich aufgebaut wie der \textbf{Realisierungsplan} \icon{Icon/Okay.png}. Sind Maßnahmen im \textbf{IT-Verbund} \icon{Icon/GS_Modell.png} umgesetzt oder entbehrlich, kommt es dort zu einer Überprüfung.  Es soll ein Soll-Ist-Vergleich durchgeführt und dokumentiert werden, um den Status der Maßnahmen neu zu bewerten. Dafür klicken Sie wieder in die betreffenden Zeilen und können die jeweiligen Aspekte ansteuern. Im PDCA-Modell entspricht der Prüfplan dem \textit{CHECK}- und \textit{ACT}-Prozess.
 
 \section{Gleiche Bausteine und ihre Maßnahmen konsolidieren}
-Um gleiche Bausteine zu konsolidieren, müssen Sie über \textbf{Grundschutz Modell \includegraphics[height=2ex]{Icon/GS_Modell.png} \textgreater (entsprechender) IT-Verbund \includegraphics[height=2ex]{Icon/GS_Modell.png} \textgreater (entsprechendes) Objekt \textgreater (entsprechender) Baustein \includegraphics[height=2ex]{Icon/Baustein.png} \textgreater Rechtsklick \textgreater Gleiche Bausteine selektieren} die benötigten Bausteine wählen und somit die markierten Elemente zur weiteren Bearbeitung vorbereiten. Dann betätigen Sie \includegraphics[height=2ex]{Icon/Konsolidator.png} (alternativ über Menü: \textbf{Bearbeiten \textgreater Konsolidator \textgreater Rechtsklick \textgreater Konsolidator}) und wählen einen Baustein als Vorlage aus, womit dann alle Werte der Zielbausteine mit der gewählten Vorlage überschrieben werden.
+Um gleiche Bausteine zu konsolidieren, müssen Sie über \textbf{Grundschutz Modell \icon{Icon/GS_Modell.png} \textgreater (entsprechender) IT-Verbund \icon{Icon/GS_Modell.png} \textgreater (entsprechendes) Objekt \textgreater (entsprechender) Baustein \icon{Icon/Baustein.png} \textgreater Rechtsklick \textgreater Gleiche Bausteine selektieren} die benötigten Bausteine wählen und somit die markierten Elemente zur weiteren Bearbeitung vorbereiten. Dann betätigen Sie \icon{Icon/Konsolidator.png} (alternativ über Menü: \textbf{Bearbeiten \textgreater Konsolidator \textgreater Rechtsklick \textgreater Konsolidator}) und wählen einen Baustein als Vorlage aus, womit dann alle Werte der Zielbausteine mit der gewählten Vorlage überschrieben werden.
 
 
 \section{Business Impact Analyse\\ nach BSI IT-Grund\-schutz 100-4}
@@ -2112,7 +2113,7 @@ Für die eingegebenen Daten in der BSI-Grundschutz-Perspektive stehen folgende R
 
 Das Menü für die Reporterstellung erreichen Sie über \textbf{Datei
   \textgreater Reports erstellen...} oder über das Symbol
-\includegraphics[height=2ex]{Icon/Report.png}. Durch das Anklicken des
+\icon{Icon/Report.png}. Durch das Anklicken des
 Drop-Down-Feldes für den Menüpunkt \textbf{Report auswählen:} erhalten
 Sie die Auflistung aller Reports, die aus Vorlagen und den
 eingegebenen Daten in verinice generiert werden können (siehe
@@ -2133,59 +2134,59 @@ durchgeführt - sie kann generisch für andere Standards oder eigene Vorgaben be
 Wie schon im Unterkapitel {\em \ref{Verwendung verschiedener Perspektiven} \nameref{Verwendung verschiedener Perspektiven}} beschrieben wurde, bietet es sich für die Arbeiten z.B. mit der
 ISO 27000-Reihe an, über \textbf{Ansicht \textgreater Zeige Perspektive \textgreater ISM Perspektive }eine spezielle
 Fensteranordnung für das weitere Vorgehen einzustellen. Diese Perspektive zeigt die passenden Views  - vor allem die
-\textbf{Control-Kataloge} \includegraphics[height=2ex]{Icon/Control_Kataloge.png} und die einzelnen Objekte der Organisation - an,
+\textbf{Control-Kataloge} \icon{Icon/Control_Kataloge.png} und die einzelnen Objekte der Organisation - an,
 was z.B. das Verknüpfen von Zielobjekten vereinfacht.
 
 \section{Views}
 Mit dem Öffnen der \textbf{ISM Perspektive} öffnen sich automatisch folgende Views:
 \begin{itemize}
-\item \includegraphics[height=2ex]{Icon/Control_Kataloge.png} Kataloge - Für den Import eigener Kataloge wird das Encoding für jeden Katalog einzeln im Katalog-View eingestellt.
-\item \includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png} Information Security Model (im Folgenden \textbf{ISM-View} genannt)
-\item \includegraphics[height=2ex]{Icon/Hinzufuegen.png} Dateien
-\item \includegraphics[height=2ex]{Icon/Cheatsheet_view.png} Spickzettel
-\item \includegraphics[height=2ex]{Icon/Verknuepfungen.png} Verknüpfungen
+\item \icon{Icon/Control_Kataloge.png} Kataloge - Für den Import eigener Kataloge wird das Encoding für jeden Katalog einzeln im Katalog-View eingestellt.
+\item \icon{Icon/Informationssicherheitsmodell.png} Information Security Model (im Folgenden \textbf{ISM-View} genannt)
+\item \icon{Icon/Hinzufuegen.png} Dateien
+\item \icon{Icon/Cheatsheet_view.png} Spickzettel
+\item \icon{Icon/Verknuepfungen.png} Verknüpfungen
 \end{itemize}
 Views sind integrierte Fenster zur Lösung einer Teilaufgabe. Sie können innerhalb einer Perspektive beliebig angeordnet werden.
 Wenn die aufgeführten Views in der \textbf{ISM Perspektive} nicht erscheinen, haben Sie die Möglichkeit die Views einzeln einzublenden oder die
 \textbf{ISM Perspektive} vollständig auf die Standardansicht zurückzusetzen. Klicken Sie dazu mit der rechten Maustaste auf \textbf{ISM Perspektive}
-\includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png} und anschließend auf \textbf{Zurücksetzen}.
+\icon{Icon/Informationssicherheitsmodell.png} und anschließend auf \textbf{Zurücksetzen}.
 
 \section{ISM-View}
 
 \subsection{Anlegen von Objekten} \label{Anlegen von Objekten}
-Eine neue \textbf{Organisation / Scope} wird mit einem Klick auf das Symbol \includegraphics[height=2ex]{Icon/Oeffnen.png},
-das sich in der oberen Werkzeugleiste des \textbf{ISM Information Security Model} \includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png} Views befindet, angelegt.
+Eine neue \textbf{Organisation / Scope} wird mit einem Klick auf das Symbol \icon{Icon/Oeffnen.png},
+das sich in der oberen Werkzeugleiste des \textbf{ISM Information Security Model} \icon{Icon/Informationssicherheitsmodell.png} Views befindet, angelegt.
 Im daraufhin erscheinenden Editor können Sie die Organisation mit einem Namen versehen oder die Bezeichnung des Geltungsbereichs eintragen.
 
 \subsection{Objekttypen im ISM-View}
-Das Organisationsmodell im \textbf{ISM Information Security Model}-View \includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png}
+Das Organisationsmodell im \textbf{ISM Information Security Model}-View \icon{Icon/Informationssicherheitsmodell.png}
 ist als Baumstruktur implementiert.
 Mit Klick auf den kleinen Pfeil links neben Organisation / Scope werden die untergeordneten Zielobjekte, in diesem Fall die Objekttypen-Gruppen wie
 z.B. Anforderungen, Assets, Audits, Controls usw. eingeblendet.
 \newline\\
 Für eine Behörde bzw. ein Unternehmen ist die Erarbeitung eines Informationssicherheitsmodells notwendig, um die infrastrukturellen
 Informationssicherheitskomponenten zu analysieren, zu strukturieren und zu dokumentieren. Hierbei werden einzelne Objekte einer Organisation erfasst,
-das heißt die jeweiligen Elemente werden über \textbf {Information Security Model \includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png} \textgreater
+das heißt die jeweiligen Elemente werden über \textbf {Information Security Model \icon{Icon/Informationssicherheitsmodell.png} \textgreater
 (entsprechende) Organisation \textgreater (entsprechendes) Objekt \textgreater Rechtsklick \textgreater Neues (entsprechendes)
 Objekt bzw. Neue (entsprechende) Objektgruppe} angelegt. Es werden standardmäßig folgende Objektgruppen angelegt:
 \begin{itemize}
-\item \includegraphics[height=2ex]{Icon/16-paper-gavel-alt.png} Anforderungen
-\item \includegraphics[height=2ex]{Icon/Asset.png} Assets
-\item \includegraphics[height=2ex]{Icon/Clipboard_comment.png} Audit: Befragungen
-\item \includegraphics[height=2ex]{Icon/Clipboard_report.png} Audit: Findings
-\item \includegraphics[height=2ex]{Icon/Clipboard_eye.png} Audit: Nachweise
-\item \includegraphics[height=2ex]{Icon/Clipboard_audit.png} Audits
-\item \includegraphics[height=2ex]{Icon/Text.png} Aufzeichnungen
-\item \includegraphics[height=2ex]{Icon/16-paper-excerpt-yellow.png} Ausnahmen
-\item \includegraphics[height=2ex]{Icon/Lightening.png} Bedrohungen
-\item \includegraphics[height=2ex]{Icon/Controls.png} Controls
-\item \includegraphics[height=2ex]{Icon/Document.png} Dokumente
-\item \includegraphics[height=2ex]{Icon/Incident.png} Incidents
-\item \includegraphics[height=2ex]{Icon/Mitarbeiter.png} Personen
-\item \includegraphics[height=2ex]{Icon/Prozesse.png} Prozesse
-\item \includegraphics[height=2ex]{Icon/Reaktionen.png} Reaktionen
-\item \includegraphics[height=2ex]{Icon/Schwachstellen.png} Schwachstellen
-\item \includegraphics[height=2ex]{Icon/Szenarios.png} Szenarios
+\item \icon{Icon/16-paper-gavel-alt.png} Anforderungen
+\item \icon{Icon/Asset.png} Assets
+\item \icon{Icon/Clipboard_comment.png} Audit: Befragungen
+\item \icon{Icon/Clipboard_report.png} Audit: Findings
+\item \icon{Icon/Clipboard_eye.png} Audit: Nachweise
+\item \icon{Icon/Clipboard_audit.png} Audits
+\item \icon{Icon/Text.png} Aufzeichnungen
+\item \icon{Icon/16-paper-excerpt-yellow.png} Ausnahmen
+\item \icon{Icon/Lightening.png} Bedrohungen
+\item \icon{Icon/Controls.png} Controls
+\item \icon{Icon/Document.png} Dokumente
+\item \icon{Icon/Incident.png} Incidents
+\item \icon{Icon/Mitarbeiter.png} Personen
+\item \icon{Icon/Prozesse.png} Prozesse
+\item \icon{Icon/Reaktionen.png} Reaktionen
+\item \icon{Icon/Schwachstellen.png} Schwachstellen
+\item \icon{Icon/Szenarios.png} Szenarios
 \end{itemize}
 Alle Objektgruppen können beliebig im \textbf{ISM Information Security}-View strukturiert und in Gruppen zusammengefasst werden.
 Es ist z.B. möglich alle Anforderungen zur Behebung von Sicherheitsvorfällen zu erfassen und zu verwalten (siehe nachfolgende Abbildung \ref{Ausschnitt einer Baumstruktur im ISM}).
@@ -2218,9 +2219,9 @@ darauf zu achten, dass der korrekte / gewünschte Tag ausgewählt wird. Bestäti
 Dort hinein werden alle Objekte verschoben, die den ausgewählten Tag eingetragen haben.
 
 \subsection{Filtern im View}
-Die Zielobjekte im \textbf{Information Security Modell} \includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png} können
+Die Zielobjekte im \textbf{Information Security Modell} \icon{Icon/Informationssicherheitsmodell.png} können
 anhand ihrer Kriterien für mehrere Wurzelobjekte (d.h. Organisationen oder Scopes) gefiltert werden.
-Das Filtern von Zielobjekten erfolgt über das Symbol \includegraphics[height=2ex]{Icon/Filter.png} in der Symbolleiste des \textbf{Information Security Model} Views.
+Das Filtern von Zielobjekten erfolgt über das Symbol \icon{Icon/Filter.png} in der Symbolleiste des \textbf{Information Security Model} Views.
 Das Anklicken dieses Symbols öffnet folgendes Fenster (siehe Abbildung \ref{Filter fuer den ISM View}):
 \newline
 \begin{figure}[htb!]
@@ -2229,7 +2230,7 @@ Das Anklicken dieses Symbols öffnet folgendes Fenster (siehe Abbildung \ref{Fil
   \caption{\label{Filter fuer den ISM View} Filter für den ISM View}
 \end{figure}
 \newline
-Die Darstellung der Zielobjekte des \textbf{Information Security Model} Views \includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png} kann
+Die Darstellung der Zielobjekte des \textbf{Information Security Model} Views \icon{Icon/Informationssicherheitsmodell.png} kann
 mit diesem Filter angepasst werden.
 \newline\\
 Unter \textbf{Element Typen} können bestimmte Arten von Zielobjekten vollständig von der Anzeige ausgeschlossen werden. Zielobjekte,
@@ -2245,7 +2246,7 @@ Gruppen, die keinerlei Elemente enthalten, können ebenfalls ausgeblendet werden
 Für alle Objekttypen können Gruppen gebildet werden. Durch Auswahl des jeweiligen Objektes z.B. \textbf{Anforderungen} erscheint mit rechtem
 Mausklick das Kontextmenü. Mit Doppelklick auf \textbf{Neue Anforderungs-Gruppe} wird der Editor angezeigt, in welchem ein Titel für die
 Objektgruppe angegeben werden kann. Die Speicherung erfolgt entweder über die Tastenkombination Strg+S oder mit Klick auf das Symbol
-\includegraphics[height=2ex]{Icon/Disk.png} in der oberen Werkzeugleiste.
+\icon{Icon/Disk.png} in der oberen Werkzeugleiste.
 \newline\\
 Anstelle einer Gruppe können Sie zu jedem Objekttyp auch direkt ein Objekt anlegen. Hier ist im Kontextmenü dann z.B. \textbf{Neue Anforderung}
 auszuwählen, im angezeigten Editor zu betiteln und über die Tastenkombination Strg+S oder mit Klick auf das Diskettensymbol in der Werkzeugleiste zu speichern.
@@ -2268,7 +2269,7 @@ möglich und für viele weitere Funktionen vonnöten.  Prinzipiell können
 Sie auch hier die beiden Arten der Verknüpfungserstellung benutzen:
 Drag \& Drop von zu verknüpfenden Objekten im Fenster
 \textbf{Information Security
-  Model} \includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png}
+  Model} \icon{Icon/Informationssicherheitsmodell.png}
 oder über den \textbf{Link-Maker} im Editor-View.
 \newline\\
 Für die Erstellung von Verknüpfungen mit der ersten Methode ist ein
@@ -2312,7 +2313,7 @@ Die organisationsweiten oder anwendungsbereichsbezogenen
 Business-Impact-Klassifizierungen für Vertraulichkeit (0--3), Integrität (0--2)
 und Verfügbarkeit (0--4) werden im Wurzelobjekt der entsprechenden Organisation
 definiert. Klicken Sie dazu das Objekt
-\includegraphics[height=2ex]{Icon/GS_Modell.png} \textbf{Organisation / Scope}
+\icon{Icon/GS_Modell.png} \textbf{Organisation / Scope}
 doppelt an. Dabei wird der Objekt-Editor geöffnet und erlaubt Eingaben zum
 Objekt vorzunehmen. Scrollen Sie nach unten bis zu dem Eingabebereich
 \textbf{Business Impact Klassifizierung}. In jedem der drei Freitextfelder für
@@ -2326,13 +2327,13 @@ für folgende Zielobjekte der Business Impact festlegen und
 dokumentieren:
 
 \begin{itemize}
-\item \includegraphics[height=2ex]{Icon/Prozesse.png} Prozesse
-\item \includegraphics[height=2ex]{Icon/Asset.png} Assets
+\item \icon{Icon/Prozesse.png} Prozesse
+\item \icon{Icon/Asset.png} Assets
 \end{itemize}
 
 Die Festlegung der Business-Impact-Werte für einzelne Assets oder
 Prozesse erfolgt im View \textbf{Information Security Model}
-\includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png} und dort
+\icon{Icon/Informationssicherheitsmodell.png} und dort
 für das entsprechende Objekt. Nach einem Doppelklick auf das Zielobjekt,
 scrollen Sie im Editor bis zum Abschnitt \textbf{Business Impact} und wählen
 dort im Drop-Down-Menü den entsprechenden Business-Impact-Wert für
@@ -2358,21 +2359,21 @@ In verinice können bei Bedarf unternehmensspezifische Kataloge importiert werde
 
 \subsection{Katalog-View}
 Im View \textbf{Control Kataloge}
-\includegraphics[height=2ex]{Icon/Control_Kataloge.png} ist es möglich, z.B.
+\icon{Icon/Control_Kataloge.png} ist es möglich, z.B.
 Maßnahmen, Gefährdungen oder Controls aus CSV-Dateien als Katalog zu
 importieren. Es können aber auch andere denkbare Vorgaben eingelesen werden.
 Vorbereitete Katalog-Dateien sind auf der Webseite
 \url{https://verinice.com/produkt/#_download} zu finden. Diese Kataloge sind
 ähnlich wie die \textbf{IT-Grundschutz-Kataloge}
-\includegraphics[height=2ex]{Icon/GS_Kataloge.png} zu behandeln und können daher
+\icon{Icon/GS_Kataloge.png} zu behandeln und können daher
 per Drag \& Drop an die passenden Objekte im \textbf{ISM View}
-\includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png} angehängt
+\icon{Icon/Informationssicherheitsmodell.png} angehängt
 werden.
 
 \subsection{Einlesen von Katalogen}
 Ein Katalog kann mit Klick auf das (in der Werkzeugleiste des Views
 \textbf{Kataloge} befindliche) Symbol
-\includegraphics[height=2ex]{Icon/Oeffnen.png} importiert werden. Sie
+\icon{Icon/Oeffnen.png} importiert werden. Sie
 selektieren den gewünschten Katalog aus dem Dateiauswahldialog. Die Auswahl wird
 mit OK bestätigt. Der Katalog wird nun im Katalogfenster (siehe Abbildung
 \ref{Ansicht der Kataloge}) angezeigt. Wurden mehrere Kataloge importiert, kann
@@ -2387,35 +2388,35 @@ Kataloges erscheinen beim Klick auf die Überschriften im Objektbrowser.
   \caption{\label{Ansicht der Kataloge} Ansicht der Kataloge}
 \end{figure}
 \newline
-Auch der Katalog-View \includegraphics[height=2ex]{Icon/Control_Kataloge.png} ist als Baumstruktur organisiert. Sie können mit Klick auf den Pfeil links neben dem Katalog die
+Auch der Katalog-View \icon{Icon/Control_Kataloge.png} ist als Baumstruktur organisiert. Sie können mit Klick auf den Pfeil links neben dem Katalog die
 Unterordner auf- bzw. zuklappen. Dieselbe Funktion bieten der Plus - und Minus-Button (Abbildung \ref{Ansicht der Kataloge}) in der Werkzeugleiste des Katalog-Views.
 Zu beachten ist hierbei jedoch, dass durch diese Funktion die Unterordner sämtlicher Katalogeinträge auf- bzw. zugeklappt werden.
 \newline\\
-Das Löschen von Katalogen erfolgt über das Symbol \includegraphics[height=2ex]{Icon/Delete.png}. Über die Filterfunktion \includegraphics[height=2ex]{Icon/Filter.png} wird Ihnen die Wortsuche in
+Das Löschen von Katalogen erfolgt über das Symbol \icon{Icon/Delete.png}. Über die Filterfunktion \icon{Icon/Filter.png} wird Ihnen die Wortsuche in
 Überschrift und Text ermöglicht. Gesucht wird automatisch während der Eingabe des Suchbegriffes. Die Suchergebnisse werden direkt in der Baumstruktur angezeigt.
 \newline\\
-In der Werkzeugleiste des Katalog-Views \includegraphics[height=2ex]{Icon/Control_Kataloge.png} befindet sich ein Menü für die Einstellung des Zeichensatzes der Katalogdatei (Abbildung).
+In der Werkzeugleiste des Katalog-Views \icon{Icon/Control_Kataloge.png} befindet sich ein Menü für die Einstellung des Zeichensatzes der Katalogdatei (Abbildung).
 Die voreingestellte Zeichencodierung für importierte Dateien ist \textbf{UTF-8}.
 
 \subsection{Anwenden von Controls}
-Um \textbf{Controls} \includegraphics[height=2ex]{Icon/Controls.png} in das \textbf{Information Security Model} \includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png} zu übernehmen,
-ziehen Sie das gewünschte Control per Drag \& Drop aus dem Katalog-View Control \includegraphics[height=2ex]{Icon/Control_Kataloge.png} in die Gruppe
-\textbf{Controls} einer Organisation im ISM-View \includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png}. Durch Doppelklicken des eingefügten
+Um \textbf{Controls} \icon{Icon/Controls.png} in das \textbf{Information Security Model} \icon{Icon/Informationssicherheitsmodell.png} zu übernehmen,
+ziehen Sie das gewünschte Control per Drag \& Drop aus dem Katalog-View Control \icon{Icon/Control_Kataloge.png} in die Gruppe
+\textbf{Controls} einer Organisation im ISM-View \icon{Icon/Informationssicherheitsmodell.png}. Durch Doppelklicken des eingefügten
 Controls können Sie im angezeigten Editor die Angaben des Controls bearbeiten (z.B. den Implementierungsstand auswählen).
 Die Speicherung erfolgt über die Tastenkombination Strg+S oder mit Klick auf das Diskettensymbol in der Werkzeugleiste.
 \newline\\
 Durch die Markierung (Markierungen erfolgen wie gewohnt mit Hilfe der Tasten \textbf{Shift} oder \textbf{Strg}) mehrerer Controls können
-per Drag \& Drop auch eine Vielzahl von Controls in den \textbf{View Information Security Model} \includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png} integriert werden.
+per Drag \& Drop auch eine Vielzahl von Controls in den \textbf{View Information Security Model} \icon{Icon/Informationssicherheitsmodell.png} integriert werden.
 Auf diese Weise kann auch eine ganze Control-Gruppe unter Beibehaltung ihrer Gruppenstruktur
-in den ISM-View \includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png} übernommen werden.
+in den ISM-View \icon{Icon/Informationssicherheitsmodell.png} übernommen werden.
 \newline\\
 Zudem können Sie beliebige weitere Controls anlegen. Dazu müssen Sie einen Rechtsklick auf
-\textbf{Controls} \includegraphics[height=2ex]{Icon/Controls.png} -\textgreater \textbf{Neue Control-Gruppe...} oder \textbf{Neues Control...} ausführen. Im angezeigten Editor sind die Angaben zu bearbeiten.
+\textbf{Controls} \icon{Icon/Controls.png} -\textgreater \textbf{Neue Control-Gruppe...} oder \textbf{Neues Control...} ausführen. Im angezeigten Editor sind die Angaben zu bearbeiten.
 Das neue Control sollte einen eindeutigen Titel tragen. Speichern Sie wie gewohnt die Eingaben.
 
 \subsection{Anwenden von Bedrohungen / Schwachstellen / Risiko-Szenarien}
-Analog zu den \textbf{Controls} \includegraphics[height=2ex]{Icon/Controls.png} können \textbf{Schwachstellen} \includegraphics[height=2ex]{Icon/Schwachstellen.png} und \textbf{Bedrohungen} \includegraphics[height=2ex]{Icon/Lightening.png} aus den
-Katalogeinträgen per Drag \& Drop in die dazugehörigen Gruppen im \textbf{Information Security Model} \includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png} übernommen werden.
+Analog zu den \textbf{Controls} \icon{Icon/Controls.png} können \textbf{Schwachstellen} \icon{Icon/Schwachstellen.png} und \textbf{Bedrohungen} \icon{Icon/Lightening.png} aus den
+Katalogeinträgen per Drag \& Drop in die dazugehörigen Gruppen im \textbf{Information Security Model} \icon{Icon/Informationssicherheitsmodell.png} übernommen werden.
 \newline\\
 Bedrohungen, Schwachstellen oder Szenarien lassen sich aber auch individuell innerhalb der jeweiligen Gruppen erstellen. Erzeugen Sie individuelle Objekte über das Kontextmenü.
 
@@ -2437,7 +2438,7 @@ verinice implementiert eine Risikoanalyse, die den Vorgaben des Standards ISO 27
 
 Die Risikoanalyse kann auf drei Arten gestartet werden:
 \begin{itemize}
- \item Drücken Sie den Button \includegraphics[height=2ex]{Icon/16-paper-calculate-percent.png} in der Toolbar.
+ \item Drücken Sie den Button \icon{Icon/16-paper-calculate-percent.png} in der Toolbar.
  \item Wählen Sie aus dem Menu den Eintrag \textbf {Bearbeiten -\textgreater ISO/IEC 27005 Risikoanalyse durchführen...}
  \item Wählen Sie aus dem Context-Menu einer Organisation den Eintrag \textbf {Risikoanalyse durchführen...}
 \end{itemize}
@@ -2530,7 +2531,7 @@ zusammengefasste Dokumentationsmöglichkeiten zur Verfügung:
 
 Das Menü für die Reporterstellung erreichen Sie über \textbf{Datei \textgreater
 Reports erstellen...} oder über Klick auf das Symbol
-\includegraphics[height=2ex]{Icon/Report.png}. Es erscheint das Auswahlfenster
+\icon{Icon/Report.png}. Es erscheint das Auswahlfenster
 für Reports. Durch das Anklicken des Drop-Down-Feldes für den Menüpunkt
 \textbf{Report auswählen:} erhalten Sie die Auflistung aller Reports, die aus
 Report-Vorlagen und den eingegebenen Daten in verinice generiert werden können.
@@ -2623,16 +2624,16 @@ weiter verarbeiten zu können.
 Beim ersten Start von verinice wird der Benutzer nach der gewünschten Perspektive gefragt.
 Der Benutzer wählt: \textbf{VDA: Ein VDA Information Security Assessment durchführen.}
 \newline\\
-Um später in die VDA-Perspektive zu wechseln, kann das über den Button \includegraphics[height=2ex]{Icon/Vda-persp-btn.png} erfolgen,
+Um später in die VDA-Perspektive zu wechseln, kann das über den Button \icon{Icon/Vda-persp-btn.png} erfolgen,
 der standardmäßig oben rechts in verinice angezeigt wird oder über die Perspektiven-Auswahl,
-die über den Button Perspektiven \includegraphics[height=2ex]{Icon/New_persp.png} erreichbar ist.
+die über den Button Perspektiven \icon{Icon/New_persp.png} erreichbar ist.
 Alternativ kann die entsprechende Perspektive über das Menü \textbf{Ansicht \textgreater Zeige Perspektive ... \textgreater Security Assessment Perspektive} aufgerufen werden.
 
 \section{Anlegen eines neuen Security Assessments}
 Als Erstes müssen Sie ein neues Security Assessment anlegen. Dies erfolgt durch Klick auf:
 \textbf{Datei \textgreater Neues Security Assessment}. Nun wir ein neues Assessment angelegt. Mit einem Doppelklick auf das Wurzelelement
 \textbf{Mein Unternehmen} öffnet sich der Editor, in welchem der Standardname durch Eingabe eines Namens für das neue Security
-Assessment geändert werden kann und sollte. Sie können Ihre Eingaben jederzeit speichern: mit dem Button \includegraphics[height=2ex]{Icon/Disk.png},
+Assessment geändert werden kann und sollte. Sie können Ihre Eingaben jederzeit speichern: mit dem Button \icon{Icon/Disk.png},
 über das \textbf{Menü Datei \textgreater Speichern} oder mit der Tastenkombination \textbf{Strg + S}.
 
 \section{Durchführen eines Security Assessments}
@@ -2740,7 +2741,7 @@ Reifegrad und den Anmerkungstexten für jede ISA-Frage.
 \section {Export der Ergebnisse}
 Wird ein Export der Ergebnisse des Assessments gewünscht, um eine Sicherung zu erhalten oder die Möglichkeit zu nutzen,
 diese Daten später wieder einzuspielen, so können die Daten exportiert werden. Um die Daten zu exportieren kann
-entweder der \textbf{Export}-Button \includegraphics[height=2ex]{Icon/Export.png} im Security-Assessment-Fenster
+entweder der \textbf{Export}-Button \icon{Icon/Export.png} im Security-Assessment-Fenster
 (siehe Abbildung ``Buttons für den XML-Import / Export'' im Kapitel {\em \ref{Exportieren von verinice-Daten} \nameref{Exportieren von verinice-Daten}}) betätigt
 werden oder der Export erfolgt über das Menü: \textbf{Datei \textgreater Security Assessment \textgreater Export in Datei}.
 \newline\\
@@ -2848,15 +2849,15 @@ Um die ISA-Aufgabe/n einer oder mehreren Person/en zu übertragen (übertragen u
 \textbf{verantwortlich}, \textbf{implementiert} und \textbf{hält aufrecht}) stehen Ihnen innerhalb der Applikation mehrere Möglichkeiten zur Verfügung:
 \begin{itemize}
 \item \textbf{Alle ISA-Aufgaben einer Person zuweisen:} Klicken Sie dazu auf \textbf{Information Security Model
-\includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png} \textgreater (entsprechende) Organisation \textgreater Audits \textgreater Security Assessment \textgreater Rechtsklick \textgreater
+\icon{Icon/Informationssicherheitsmodell.png} \textgreater (entsprechende) Organisation \textgreater Audits \textgreater Security Assessment \textgreater Rechtsklick \textgreater
 Verantwortliche für alle Controls zuweisen...}, deaktivieren Sie in dem neuen Fenster die Checkbox für \textbf{Nur aktueller Scope},
 wählen Sie aus der Liste eine Person aus und klicken Sie abschließend auf \textbf{OK}. Damit werden alle ISA-Aufgaben an die ausgewählte Person übertragen.
 \item \textbf{Eine Gruppe von ISA-Aufgaben einer Person zuweisen:} Klicken Sie dazu auf \textbf{Information Security Model
-\includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png} \textgreater (entsprechende) Organisation \textgreater Audits \textgreater Security Assessment \textgreater Controls \textgreater
+\icon{Icon/Informationssicherheitsmodell.png} \textgreater (entsprechende) Organisation \textgreater Audits \textgreater Security Assessment \textgreater Controls \textgreater
 (entsprechende) Control-Gruppe \textgreater Mehrfachselektion von Controls} und ziehen Sie alle markierten Controls per Drag\&Drop auf die entsprechende Person
 einer Organisation.
 \item \textbf{Einzelne ISA-Aufgaben einer Person zuweisen:} Klicken Sie dazu auf \textbf{Information Security Model
-\includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png} \textgreater (entsprechende) Organisation \textgreater Audits \textgreater Security Assessment \textgreater Controls \textgreater
+\icon{Icon/Informationssicherheitsmodell.png} \textgreater (entsprechende) Organisation \textgreater Audits \textgreater Security Assessment \textgreater Controls \textgreater
 (entsprechende) Control-Gruppe \textgreater Doppelklick (entsprechendes) Control}. Im Editor (im Verknüpfungsbereich) haben Sie jetzt die Möglichkeit mit
 dem Anlegen einer neuen Verknüpfung, die ISA-Aufgabe einer Person zu übertragen. Wählen Sie dazu im Drop-Down-Menü als Verknüpfungs-Typ \textbf{Person} aus,
 klicken Sie auf \textbf{Hinzufügen...}, deaktivieren Sie die Checkbox für \textbf{Nur aktueller Scope}, klicken die entsprechende Person an und bestätigen
@@ -2869,11 +2870,11 @@ anlegen und bearbeiten möchten, dann führen Sie folgende Schritte in verinice 
 Neues Security Assessment}. Damit wird eine neue Organisation (Wurzelobjekt) innerhalb des ISM-Views angelegt (standardmäßig mit dem Namen
 \textbf{[Mein Unternehmen]}), die unter \textbf{Audits \textgreater Security Assessment \textgreater Controls} unbearbeitete Controls beinhaltet.
 Die ISA-Aufgaben für das neu angelegte Security-Assessment werden unter \textbf{Information Security Model
-\includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png} \textgreater (entsprechende) Organisation \textgreater Audits \textgreater Security Assessment \textgreater Rechtsklick \textgreater
+\icon{Icon/Informationssicherheitsmodell.png} \textgreater (entsprechende) Organisation \textgreater Audits \textgreater Security Assessment \textgreater Rechtsklick \textgreater
 Erzeuge ISA Aufgaben} generiert. Im Anschluss erhalten Sie eine Informations-Meldung über die
 Anzahl der angelegten ISA-Aufgaben, die Sie mit dem \textbf{OK}-Button bestätigen und schließen.
 Die Auflistung aller generierten ISA-Aufgaben wird angezeigt, wenn Sie den Aufgaben-View
-\includegraphics[height=2ex]{Icon/Tasks.png} in der Taskleiste aktivieren und das entsprechende Security-Assessment-Wurzelobjekt mit
+\icon{Icon/Tasks.png} in der Taskleiste aktivieren und das entsprechende Security-Assessment-Wurzelobjekt mit
 dem Pfeil-Symbol aufklappen. Jetzt können Sie die ISA-Aufgaben, wie in den Abschnitten zuvor beschrieben, an die entsprechenden Personen verteilt werden.
 
 \chapter{Import / Export / Synchronisierung}
@@ -2881,7 +2882,7 @@ dem Pfeil-Symbol aufklappen. Jetzt können Sie die ISA-Aufgaben, wie in den Absc
 \section{Exportieren von verinice-Daten} \label{Exportieren von verinice-Daten}
 Der zentrale Ort zum Ex- und Importieren ist der Modell-View, da sich hier die Verwaltung des Modells befindet, dessen Elemente über die vna-Schnittstelle ausgetauscht werden können.
 Sie können einen IT-Verbund / eine Organisation als Ganzes mit einem Klick exportieren. Klicken Sie dazu in der Werkzeugleiste des BSI-
-\includegraphics[height=2ex]{Icon/GS_Modell.png} bzw. des ISM-Views \includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png} auf den
+\icon{Icon/GS_Modell.png} bzw. des ISM-Views \icon{Icon/Informationssicherheitsmodell.png} auf den
 \textbf{Export}-Button (Abbildung), um den IT-Verbund / die Organisation in eine Datei zu exportieren.
 \newline
 \begin{figure}[htb!]
@@ -3220,8 +3221,8 @@ sind.
 
 \section{Importieren von verinice-Daten}
 verinice bietet die Möglichkeit, Objekte zu importieren. Klicken Sie dafür auf den in dem Werkzeugfenster des BSI-
-\includegraphics[height=2ex]{Icon/GS_Modell.png} bzw. ISM-View \includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png}
-befindlichen Button \textbf{Import} \includegraphics[height=2ex]{Icon/Import.png} (siehe Abbildung \ref{Buttons fuer den XML- oder VNA-Import / -Export} ``Buttons für den XML- oder VNA-Import / -Export''
+\icon{Icon/GS_Modell.png} bzw. ISM-View \icon{Icon/Informationssicherheitsmodell.png}
+befindlichen Button \textbf{Import} \icon{Icon/Import.png} (siehe Abbildung \ref{Buttons fuer den XML- oder VNA-Import / -Export} ``Buttons für den XML- oder VNA-Import / -Export''
 im Kapitel {\em \ref{Exportieren von verinice-Daten} \nameref{Exportieren von verinice-Daten}}). Im daraufhin angezeigten Fenster ist der Importvorgang zu konfigurieren. Durch Auswahl der Option
 \textbf{einfügen} und \textbf{aktualisieren}  können neue Objekte in verinice angelegt oder bei Bedarf bestehende Objekte aktualisiert werden. Wenn die Option
 \textbf{löschen} ausgewählt ist, werden vor dem Import Objekte in der Datenbank gesucht, die die gleiche \textit{Source-ID} haben wie die importierten Daten. Wenn ein Objekt mit der \textit{Source-ID} in der Datenbank gefunden wird, das nicht in den importieren Daten enthalten ist, wird es nach dem Import aus der Datenbank gelöscht.
@@ -3504,7 +3505,7 @@ gesucht. \textit{Nein}: Es wird nach Accounts gesucht, die nicht Scope-Only
 sind.
 \end{itemize}
 
-Nach Eingabe der Parameter wird die Suche gestartet durch Klick auf den Button \textbf{Suchen} oder auf \includegraphics[height=2ex]{Icon/search.png} in der Toolbar. Das Suchergebnis wird in einer Tabelle angezeigt. Die Tabelle hat die folgenden Spalten:
+Nach Eingabe der Parameter wird die Suche gestartet durch Klick auf den Button \textbf{Suchen} oder auf \icon{Icon/search.png} in der Toolbar. Das Suchergebnis wird in einer Tabelle angezeigt. Die Tabelle hat die folgenden Spalten:
 \begin{itemize}
 \item \textbf{Scope} - Die Organisation bzw. der IT-Verbund zu dem der Account gehört
 \item \textbf{Gruppe} - Die Gruppe zu dem der Account gehört aus dem ISM- bzw. IT-Grundschutz-View
@@ -3518,9 +3519,9 @@ Nach Eingabe der Parameter wird die Suche gestartet durch Klick auf den Button \
 \item \textbf{Deaktiviert} - Wenn der Account deaktiviert ist, wird ein \textit{X} angezeigt.
 \end{itemize}
 
-Wenn ein Account in der Tabelle mit der Maus ausgewählt wurde, kann der Account mit den Toolbar-Buttons \includegraphics[height=2ex]{Icon/Edit.png} \textbf{bearbeitet} oder mit \includegraphics[height=2ex]{Icon/user_disabled.png} \textbf{deaktiviert} werden.
+Wenn ein Account in der Tabelle mit der Maus ausgewählt wurde, kann der Account mit den Toolbar-Buttons \icon{Icon/Edit.png} \textbf{bearbeitet} oder mit \icon{Icon/user_disabled.png} \textbf{deaktiviert} werden.
 \newline\\
-Mit dem Toolbar-Button \includegraphics[height=2ex]{Icon/user_add.png} kann ein neuer Account angelegt werden.
+Mit dem Toolbar-Button \icon{Icon/user_add.png} kann ein neuer Account angelegt werden.
 
 \subsection{Accounts manuell anlegen oder bearbeiten} \label{sec:accounts-anlegen}
 Accounts können auf zwei Arten eingerichtet werden:
@@ -3530,9 +3531,9 @@ Accounts können auf zwei Arten eingerichtet werden:
 {\em \ref{Automatisiertes Anlegen von Accounts mit einem Active-Directory-Import} \nameref{Automatisiertes Anlegen von Accounts mit einem Active-Directory-Import}} beschrieben.
 \end{itemize}
 Um einen neuen Account für einen Benutzer einzurichten, muss ein Personenobjekt existieren. Dabei ist es unerheblich, ob Sie das Personen-Objekt in der Grundschutz- oder der ISM-Perspektive anlegen. Beide Typen von Personen können mit Accounts verknüpft werden. Sie legen ein Personenobjekt in der Grundschutz-Perspektive im View \textbf{Grundschutz Modell} unter \textbf{IT-Verbund-Objekt
-\includegraphics[height=2ex]{Icon/GS_Modell.png} \textgreater Mitarbeiter \includegraphics[height=2ex]{Icon/Mitarbeiter.png}} an. In der
+\icon{Icon/GS_Modell.png} \textgreater Mitarbeiter \icon{Icon/Mitarbeiter.png}} an. In der
 ISM-Perspektive finden Sie die dazu analoge Gruppierung im Fenster \textbf{Information Security Model} unter
-\textbf{Organisation/Scope \includegraphics[height=2ex]{Icon/GS_Modell.png} \textgreater Personen} \includegraphics[height=2ex]{Icon/Mitarbeiter.png}. Das Anlegen von Objekten wird in den Kapiteln {\em \ref{Strukturanalyse} \nameref{Strukturanalyse}} und
+\textbf{Organisation/Scope \icon{Icon/GS_Modell.png} \textgreater Personen} \icon{Icon/Mitarbeiter.png}. Das Anlegen von Objekten wird in den Kapiteln {\em \ref{Strukturanalyse} \nameref{Strukturanalyse}} und
 {\em \ref{Anlegen von Objekten} \nameref{Anlegen von Objekten}} beschrieben. Sämtliche Felder, die Sie dabei im Editor-Bereich befüllen, dienen der Dokumentation des Objekts, haben aber noch keinerlei Auswirkung auf Accounts.
 \newline\\
 
@@ -3551,7 +3552,7 @@ Objekte vom Typ \textbf{Person} können allerdings sowohl einzelne in der Realit
 
 Um einen neuen Account anzulegen, öffnen Sie den View \textit{Accounts} und
 klicken Sie in der Toolbar des Views auf den Button
-\includegraphics[height=2ex]{Icon/user_add.png}. Sie können auch im View
+\icon{Icon/user_add.png}. Sie können auch im View
 \textbf{Grundschutz Modell} oder im \textbf{ISM-View} eine Person im Baum
 auswählen und danach aus dem Kontextmenü den Eintrag \textbf{Account
 Einstellungen}. Auf ähnliche Weise können Sie vorhandene Accounts bearbeiten.
@@ -3637,7 +3638,7 @@ werden.
 \section{Reportablage \label{reportdeposit}}
 Die View Reportablage erlaubt dem Benutzer den Inhalt der im Reportdialog zur Auswahl angebotenen Report-Templates zu steuern und zu konfigurieren.
 Um die Reportablage-View zu aktivieren, klicken Sie
-in der Werkzeugleiste auf den Reportablage-View-Button \includegraphics[height=2ex]{Icon/folder_table.png}.
+in der Werkzeugleiste auf den Reportablage-View-Button \icon{Icon/folder_table.png}.
 Nach dem ersten Start enthält die im View dargestellte Tabelle alle Reports, die verinice von Haus aus mitbringt.
 Die View erlaubt es drei verschiedene Aktionen auszuführen:
 
@@ -3698,7 +3699,7 @@ alle Ausgabeformate und als Reportname wird der Dateiname verwendet.
 		Reports löschen
 	\end{minipage}
 	\begin{minipage}{0.6\textwidth}
-	  \includegraphics[height=2ex]{Icon/Delete.png}
+	  \icon{Icon/Delete.png}
 	\end{minipage}
 }Zum Entfernen eines oder mehrerer Reports markieren Sie diese in der
 Tabelle der View ``Reportablage'' und betätigen anschließend die
@@ -3709,7 +3710,7 @@ Ihrem verinice.PRO-Server gelöscht.
 		Aktualisieren
 	\end{minipage}
 	\begin{minipage}{0.6\textwidth}
-	  \includegraphics[height=2ex]{Icon/Aktualisieren.png}
+	  \icon{Icon/Aktualisieren.png}
 	\end{minipage}
 	}
 Sollten Sie eine Änderung durchgeführt haben, die sich nicht direkt in der Tabelle der View ``Reportablage'' widerspiegelt, so erlaubt Ihnen die Schaltfläche ``Aktualisieren''
@@ -3780,7 +3781,7 @@ Die Einstellungen der Berechtigungsprofile wirken sich ausschließlich auf die v
 Wenn Sie dem Profil eines Benutzers die Möglichkeit entziehen, die standardmäßig geöffneten Fenster (Views) oder Perspektiven zu öffnen, kann dies dazu führen, dass ihm nach der ersten Anmeldung nur ein \textit{leeres Fenster} angezeigt wird, was bei den meisten Benutzern zu Verwirrung führt. Weisen Sie in diesem Fall also den Benutzer auf die Einschränkungen seines Accounts hin. \\[10pt] \hline
 Es ist möglich, sich aus der Profilverwaltung ``auszusperren'' indem Sie ihrem eigenen Benutzer das Recht entziehen, Profile zu bearbeiten. In diesem Fall können Sie über den Standard-``admin''-Account die Rechte wieder setzen oder auf dem Server die Datei \textit{verinice-auth.xml} direkt editieren. Weitere Hinweise finden Sie in der Installationsanleitung. \\[10pt] \hline
 \end{longtable}
-Um die Änderungen an den Berechtigungsprofilen vorzunehmen, klicken Sie auf das Symbol \includegraphics[height=2ex]{Icon/Berechtigungsprofile.png}
+Um die Änderungen an den Berechtigungsprofilen vorzunehmen, klicken Sie auf das Symbol \icon{Icon/Berechtigungsprofile.png}
 oder gehen Sie über das Menü \textbf{Bearbeiten \textgreater Berechtigungsprofile...}. Es erscheint das Fenster zum Einstellen der Berechtigungsprofile.
 Die Auswahl für \textbf{Benutzer/Gruppe} ist per Drop-Down-Menü auszuwählen. Hier werden nun alle Accounts und alle Berechtigungsgruppen angezeigt,
 die angelegt sind. Wählen Sie einen passenden Eintrag aus. Sie können ein Berechtigungsprofil direkt einem Benutzeraccount zuweisen oder einer
@@ -4048,7 +4049,7 @@ ihre Berechtigungsgruppen angelegt und die Accounts diesen bereits zugewiesen ha
 Um anschließend die Lese- und Schreibrechte der Berechtigungsgruppe für einzelne Objekte zu setzen, markieren Sie die Objekte in der
 Baumdarstellung (Mehrfachselektion ist dabei möglich) und verfahren dann wie folgt.
 \newline\\
-Nach dem Auswählen eines Objektes und dem Betätigen des Symbols \includegraphics[height=2ex]{Icon/Zugriffsrechte.png} (alternativ:
+Nach dem Auswählen eines Objektes und dem Betätigen des Symbols \icon{Icon/Zugriffsrechte.png} (alternativ:
 über das Menü \textbf{Bearbeiten \textgreater Zugriffsrechte...} oder aus dem Kontextmenü des Objekts \textbf{Zugriffsrechte...})
 öffnet sich der Dialog \textit{Zugriffsrechte}. Im weiteren Vorgehen können dann Lese- und Schreibrechte erteilt und die Vererbung festgelegt werden. Sie können auch Rechte direkt für einzelne Accounts vergeben, davon raten wir jedoch ab, weil die Rechtevergabe über
 Gruppenmitgliedschaften mächtiger und vor allem auch übersichtlicher ist.
@@ -4384,7 +4385,7 @@ An dieser Stelle sollte auch eine verantwortliche Person
 für die Durchführung der Aufgabe ausgewählt werden. Um einen Verantwortlichen auszuwählen, stehen zwei Möglichkeiten zur Verfügung:
 \begin{itemize}
  \item Die erste Möglichkeit ist \textbf{Wähle Verantwortlichen direkt}. Damit können Personen direkt aus einer Liste ausgewählt werden,
-die im Informations-Sicherheits-Modell \includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png} erfasst wurden aber
+die im Informations-Sicherheits-Modell \icon{Icon/Informationssicherheitsmodell.png} erfasst wurden aber
 keine Beziehung (bzw. Verknüpfung) zum ausgewählten Objekt besitzen.
   \item Die zweite Möglichkeit ist \textbf{Wähle Verantwortlichen durch Verknüpfung}. Mit Hilfe dieser Option wird ein Verantwortlicher automatisch
 ausgewählt, der eine Verknüpfung zu dem ausgewählten Objekt besitzt. Damit eine Aufgabe automatisch der verantwortlichen Person zugewiesen werden kann, sollte
@@ -4400,22 +4401,22 @@ Das Erzeugen einer eigenen Aufgabe wird mit dem \textbf{Fertigstellen}-Button be
 \newline\\
 Eine weitere worklowspezifische Eigenschaft ist auch, dass nur eine Aufgabe pro Objekt und Person erzeugt werden kann.
 \newline\\
-Nach dem Erzeugen aller Aufgaben steht dem Initiator der Aufgaben-View \includegraphics[height=2ex]{Icon/Tasks.png} zur Verfügung. Der View liefert die Übersicht über alle Aufgaben und dient der Aufgaben-Verwaltung.  Der Aufgaben-View bietet folgende Funktionen:
+Nach dem Erzeugen aller Aufgaben steht dem Initiator der Aufgaben-View \icon{Icon/Tasks.png} zur Verfügung. Der View liefert die Übersicht über alle Aufgaben und dient der Aufgaben-Verwaltung.  Der Aufgaben-View bietet folgende Funktionen:
 \begin{itemize}
-\item \includegraphics[height=2ex]{Icon/Nein.png} Die ausgewählte
+\item \icon{Icon/Nein.png} Die ausgewählte
   Aufgabe wird mit dem Abbrechen-Button abgebrochen.
-\item \includegraphics[height=2ex]{Icon/history_rep.png} Öffnet einen
+\item \icon{Icon/history_rep.png} Öffnet einen
   Vergleichsdialog, der Änderungen im Task gegenüber dem Objekt in
   verinice darstellt. Dieser Button ist nur aktiv, wenn der
   Freigabeprozess aktiviert wurde.
-  \item \includegraphics[height=2ex]{Icon/16-em-check.png} \textbf{Nicht verantwortlich} - Die Erledigung der Aufgabe wird abgelehnt.
-  \item \includegraphics[height=2ex]{Icon/16-em-check.png} \textbf{Erledigt} - Die Aufgabe wurde abgeschlossen.
-  \item \includegraphics[height=2ex]{Icon/16-em-check.png} \textbf{Verlängerung beantragen} - Eine Verlängerung der Frist zur Umsetzung wird beantragt.
+  \item \icon{Icon/16-em-check.png} \textbf{Nicht verantwortlich} - Die Erledigung der Aufgabe wird abgelehnt.
+  \item \icon{Icon/16-em-check.png} \textbf{Erledigt} - Die Aufgabe wurde abgeschlossen.
+  \item \icon{Icon/16-em-check.png} \textbf{Verlängerung beantragen} - Eine Verlängerung der Frist zur Umsetzung wird beantragt.
 \end{itemize}
 Wie in der Abb. \ref{fig:view-aufgaben} zu sehen ist, gliedert sich der Aufgaben-View in zwei Bereiche. Der obere Bereich enthält Informationen zu den erstellten Aufgaben. Der untere Bereiche listet tabellarisch alle Aufgaben auf, die mit den oben genannten Buttons und der Rechtsklick-Option verwaltet werden können.
 
 Die verantwortliche Person, an die eine Aufgabe übertragen wurde, kann, die entsprechenden Rechte vorausgesetzt, die Aufgaben entweder im verinice-Client oder mit Hilfe des Webfrontends bearbeiten (siehe Kapitel {\em \ref{Account-Management} \nameref{Account-Management}}). Aufgaben können, wenn sie abgeschlossen wurden, mit dem \textbf{Erledigt}-Button bestätigt werden. Der Initiator muss den erfolgreichen Abschluss der Aufgabe
-überprüfen. Für ihn wird eine neue Aufgabe vom Typ \textbf{Prüfe Umsetzung} erzeugt. Mit dem Button \includegraphics[height=2ex]{Icon/Akzeptieren.png} kann er die Umsetzung bestätigen. Wenn der Freigabeprozess aktiviert wurde, werden die Änderungen im Task dadurch im Objekt gespeichert. Mit dem Button \includegraphics[height=2ex]{Icon/Zurueckweisen.png} lehnt er die Umsetzung ab und gibt die Aufgabe zurück an die verantwortliche Person.
+überprüfen. Für ihn wird eine neue Aufgabe vom Typ \textbf{Prüfe Umsetzung} erzeugt. Mit dem Button \icon{Icon/Akzeptieren.png} kann er die Umsetzung bestätigen. Wenn der Freigabeprozess aktiviert wurde, werden die Änderungen im Task dadurch im Objekt gespeichert. Mit dem Button \icon{Icon/Zurueckweisen.png} lehnt er die Umsetzung ab und gibt die Aufgabe zurück an die verantwortliche Person.
 
 Mit dem \textbf{Nicht verantwortlich}-Button kann die verantwortliche Person die Erledigung einer Aufgabe ablehnen. In diesem Fall geht die Aufgabe an den Initiator zurück, der den Verantwortungsbereich überprüfen und ggf. die Aufgabe neu zuweisen sollte.
 
@@ -4423,7 +4424,7 @@ Mit dem Button \textbf{Verlängerung beantragen} kann das Ändern der Frist bean
 
 \subsection{Qualitätsmanagement-Workflow}
 Der QM-Workflow ist, wie der generischer Workflow, vielseitig innerhalb von verinice.\textsc{PRO} einsetzbar. Der QM-Prozess kann für jedes Objekt des
-Grundschutzmodells \includegraphics[height=2ex]{Icon/GS_Modell.png} und des Information-Security-Modells \includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png}
+Grundschutzmodells \icon{Icon/GS_Modell.png} und des Information-Security-Modells \icon{Icon/Informationssicherheitsmodell.png}
 eingesetzt werden. Der Workflow kann mit Hilfe des Kontextmenüs für beliebige Objekte in der Baumstruktur gestartet werden.
 Die möglichen Abläufe des Workflows werden in der Abb. \ref{Flussdiagramm: QM-Workflow} mit Hilfe eines Flussdiagramms dargestellt.
 \begin{figure}[htb!]
@@ -4434,9 +4435,9 @@ Die möglichen Abläufe des Workflows werden in der Abb. \ref{Flussdiagramm: QM-
 Wie in der Abb. \ref{Flussdiagramm: QM-Workflow} dargestellt, können spezifische QM-Aufgaben angestoßen werden, die automatisch einem QM-Verantwortlichen zugewiesen
 werden. Der QM-Verantwortliche hat 3 Möglichkeiten, wie er mit der Aufgabe umgeht:
 \begin{itemize}
-\item \includegraphics[height=2ex]{Icon/Akzeptieren.png}: Er akzeptiert die Aufgabe und setzt die Aufgabe entsprechend um.
-\item \includegraphics[height=2ex]{Icon/Ablehnen.png}: Er lehnt die Aufgabe ab und ein mögliches Problem bleibt bestehen.
-\item \includegraphics[height=2ex]{Icon/waehle_person.png}: Er delegiert die Aufgabe an eine weitere Person.
+\item \icon{Icon/Akzeptieren.png}: Er akzeptiert die Aufgabe und setzt die Aufgabe entsprechend um.
+\item \icon{Icon/Ablehnen.png}: Er lehnt die Aufgabe ab und ein mögliches Problem bleibt bestehen.
+\item \icon{Icon/waehle_person.png}: Er delegiert die Aufgabe an eine weitere Person.
 \end{itemize}
 Sollte die QM-Aufgabe an eine weitere Person delegiert werden, so hat diese Person auch die Möglichkeit die Aufgabe zu akzeptieren oder sie
 abzulehnen. Sowohl im abgelehnten als auch im akzeptierten Fall erfolgt ein automatischer E-Mail-Versand an den QM-Verantwortlichen.
@@ -4520,7 +4521,7 @@ Maßnahmen, die einer weiteren Prüfung unterliegen werden einem Nachfolgeaudit 
 werden. Der Auditor wird 6 Wochen vor der Prüfung auf seine Aufgabe hingewiesen und kann nach der Überprüfung den Prozess für ausgewählte Maßnahmen beenden.
 \newline\\
 \textbf{Achtung: Damit die Maßnahmen einem Nachfolgeaudit zugewiesen werden können, müssen sich die Maßnahmen schon vorher innerhalb einer Audit-Gruppe befinden,
-unter: \textbf {\includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png} Information Security Model \textgreater Organisation/Scope \textgreater Audits
+unter: \textbf {\icon{Icon/Informationssicherheitsmodell.png} Information Security Model \textgreater Organisation/Scope \textgreater Audits
 \textgreater (entsprechende Auditgruppe)}}.
 
 \subsection{Greenbone-Schwachstellenverfolgung}
@@ -4536,7 +4537,7 @@ einzubinden, gibt es zwei Möglichkeiten:
  \item Automatische Übertragung mit einem GSM Alert ("Benachrichtigung")
  \item Manueller Import der VNA-Datei, die aus dem GSM exportiert wurde
 \end{itemize}
-Das Ergebnis aus dem GSM-Scan befindet sich anschließend im \textbf{ISM Information Security Model} \includegraphics[height=2ex]{Icon/Informationssicherheitsmodell.png}.
+Das Ergebnis aus dem GSM-Scan befindet sich anschließend im \textbf{ISM Information Security Model} \icon{Icon/Informationssicherheitsmodell.png}.
 \newline\\
 \textbf{Hinweis:} Die Bearbeitung von GSM-Scan-Ergebnissen in der BSI-IT-Grundschutz-Perspektive ist im Kapitel {\em \ref{Arbeiten mit Daten aus einer Greenbone-Security-Manager-Kopplung} \nameref{Arbeiten mit Daten aus einer Greenbone-Security-Manager-Kopplung}} beschrieben.
 \newline\\
@@ -4575,7 +4576,7 @@ Auch die Controls müssen gruppiert werden. Da die Controls die Arbeitsanweisung
 der Prozess zum Beheben von Schwachstellen gestartet werden. Wählen Sie aus dem Kontextmenü einer Organisation \textbf{Aufgaben \textgreater Greenbone: Start Schwachstellenverfolgung}. Zuerst wird geprüft, ob allen Asset-Gruppen eine Person zugeordnet und ob Assets und Controls gruppiert sind. Das Ergebnis der Überprüfung wird in einem Dialog angezeigt. Der Benutzer kann fortfahren und Aufgaben erzeugen oder die Erzeugung abbrechen.
 
 \subsubsection{Beheben von Schwachstellen}
-Die erzeugten Aufgaben können mit Hilfe des Aufgaben-Views \includegraphics[height=2ex]{Icon/Tasks.png} oder des Webfrontends
+Die erzeugten Aufgaben können mit Hilfe des Aufgaben-Views \icon{Icon/Tasks.png} oder des Webfrontends
 (unter: \textbf{Aufgaben}) bearbeitet werden. Die Aufgabe zum Beheben von Schwachstellen hat den Titel \textbf{Schwachstellen beheben}. Eine Aufgabe enthält Controls, Szenarien und Assets, die mit einer Control-Gruppe verknüpft sind und zu einer verantwortlichen Person gehören.
 \newline\\
 {[}A{]} Die verantwortliche Person muss nun die Schwachstelle für alle Assets beheben.
