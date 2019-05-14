@@ -25,6 +25,7 @@ import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
 import sernet.gs.ui.rcp.main.bsi.views.FileView;
 import sernet.gs.ui.rcp.main.bsi.views.NoteView;
 import sernet.gs.ui.rcp.main.bsi.views.RelationView;
+import sernet.verinice.rcp.catalog.CatalogView;
 
 public class Iso27kPerspective implements IPerspectiveFactory {
 
@@ -38,8 +39,7 @@ public class Iso27kPerspective implements IPerspectiveFactory {
         String editorArea = layout.getEditorArea();
         layout.setEditorAreaVisible(true);
 
-        layout.addView(sernet.verinice.rcp.catalog.CatalogView.ID, IPageLayout.LEFT, catalogRatio,
-                editorArea);
+        layout.addView(CatalogView.ID, IPageLayout.LEFT, catalogRatio, editorArea);
 
         layout.addView(ISMView.ID, IPageLayout.LEFT, ismRatio, editorArea);
         layout.addView(RelationView.ID, IPageLayout.BOTTOM, relationRatio, ISMView.ID);
@@ -50,7 +50,7 @@ public class Iso27kPerspective implements IPerspectiveFactory {
         folder.addView(FileView.ID);
         folder.addPlaceholder(NoteView.ID + ":*");
 
-        layout.getViewLayout(sernet.verinice.rcp.catalog.CatalogView.ID).setCloseable(true);
+        layout.getViewLayout(CatalogView.ID).setCloseable(true);
         layout.getViewLayout(ISMView.ID).setCloseable(true);
     }
 }

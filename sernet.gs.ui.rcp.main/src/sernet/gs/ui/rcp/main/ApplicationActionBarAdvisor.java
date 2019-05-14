@@ -91,6 +91,7 @@ import sernet.verinice.rcp.ServerConnectionToggleAction;
 import sernet.verinice.rcp.account.AccountView;
 import sernet.verinice.rcp.accountgroup.AccountGroupView;
 import sernet.verinice.rcp.bp.BaseProtectionPerspective;
+import sernet.verinice.rcp.catalog.CatalogView;
 import sernet.verinice.rcp.risk.RiskAnalysisAction;
 import sernet.verinice.report.rcp.ReportDepositView;
 import sernet.verinice.validation.CnAValidationView;
@@ -320,9 +321,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         this.introAction = ActionFactory.INTRO.create(window);
 
         this.openCatalogViewAction = new OpenViewAction(window,
-                Messages.ApplicationActionBarAdvisor_CatalogView,
-                sernet.verinice.rcp.catalog.CatalogView.ID, ImageCache.VIEW_CATALOG,
-                ActionRightIDs.CATALOGVIEW);
+                Messages.ApplicationActionBarAdvisor_CatalogView, CatalogView.ID,
+                ImageCache.VIEW_CATALOG, ActionRightIDs.CATALOGVIEW);
 
         Stream.of(this.exitAction, this.copyAction, this.pasteAction, this.aboutAction,
                 this.newWindowAction, this.saveAction, this.saveAsAction, this.closeAction,

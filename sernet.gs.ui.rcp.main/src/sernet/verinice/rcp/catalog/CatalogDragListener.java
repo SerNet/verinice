@@ -31,7 +31,7 @@ import sernet.gs.ui.rcp.main.bsi.dnd.transfer.VeriniceElementTransfer;
 /**
  * This DragSourceListener class selects modules for the modeling process of IT
  * base protection while one or more modules are dragged from
- * sernet.verinice.rcp.catalog.CatalogView and dropped on an element in
+ * {@link sernet.verinice.rcp.catalog.CatalogView} and dropped on an element in
  * BaseProtectionView.
  * 
  * @see sernet.verinice.bp.rcp.BbModelingDropPerformer
