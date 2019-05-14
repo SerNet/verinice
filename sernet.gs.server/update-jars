@@ -21,3 +21,4 @@ jar_cmd sernet.verinice.samt.service
 jar_cmd sernet.verinice.oda.driver
 jar_cmd sernet.verinice.report.service
 jar_cmd sernet.verinice.fei.service
+jar_cmd sernet.gs.ui.rcp.main
