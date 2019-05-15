@@ -18,18 +18,14 @@
 package sernet.verinice.service.bp.risk;
 
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
 
 import sernet.hui.common.VeriniceContext;
-import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
-import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.risk.Risk;
 import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
 public class RiskDeductionUtil {
@@ -79,33 +75,6 @@ public class RiskDeductionUtil {
         return Optional.ofNullable(riskConfiguration.getRisk(frequency, impact)).map(Risk::getId);
     }
 
-    public static CnATreeElement deduceSafeguardStrength(CnATreeElement requirement) {
-        if (!requirement.getEntity().isFlagged(BpRequirement.PROP_IMPLEMENTATION_DEDUCE)) {
-            return requirement;
-        }
-
-        boolean reducesRisk = getLinkedSafeguards(requirement)
-                .anyMatch(s -> s.getEntity().isFlagged(Safeguard.PROP_REDUCE_RISK));
-
-        String impactStrength = getLinkedSafeguards(requirement)
-                .filter(s -> s.getEntity().isFlagged(Safeguard.PROP_REDUCE_RISK)
-                        && isSafeGuardStrenghtBothSet(s))
-                .map(s -> s.getEntity().getRawPropertyValue(Safeguard.PROP_STRENGTH_IMPACT))
-                .filter(StringUtils::isNotEmpty).min(String::compareTo).orElse(null);
-
-        String frequencyStrength = getLinkedSafeguards(requirement)
-                .filter(s -> s.getEntity().isFlagged(Safeguard.PROP_REDUCE_RISK)
-                        && isSafeGuardStrenghtBothSet(s))
-                .map(s -> s.getEntity().getRawPropertyValue(Safeguard.PROP_STRENGTH_FREQUENCY))
-                .filter(StringUtils::isNotEmpty).min(String::compareTo).orElse(null);
-        requirement.getEntity().setFlag(BpRequirement.PROP_SAFEGUARD_REDUCE_RISK, reducesRisk);
-        setPropertyIfNecessary(requirement, BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT,
-                impactStrength);
-        setPropertyIfNecessary(requirement, BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY,
-                frequencyStrength);
-        return requirement;
-    }
-
     /**
      * Set a property in an entity with a special handling for null values to
      * avoid creating unnecessary {@link sernet.hui.common.connect.PropertyList}
@@ -127,22 +96,10 @@ public class RiskDeductionUtil {
         element.setSimpleProperty(propertyId, propertyValue);
     }
 
-    private static Stream<CnATreeElement> getLinkedSafeguards(CnATreeElement requirement) {
-        return requirement.getLinksDown().stream().filter(
-                link -> BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD.equals(link.getRelationId()))
-                .map(CnALink::getDependency);
-    }
-
     private static RiskConfiguration findRiskConfiguration(Integer scopeId) {
         RiskService riskService = (RiskService) VeriniceContext
                 .get(VeriniceContext.ITBP_RISK_SERVICE);
         return riskService.findRiskConfiguration(scopeId);
-    }
-
-    private static boolean isSafeGuardStrenghtBothSet(CnATreeElement e) {
-        String f = e.getEntity().getRawPropertyValue(Safeguard.PROP_STRENGTH_IMPACT);
-        String i = e.getEntity().getRawPropertyValue(Safeguard.PROP_STRENGTH_FREQUENCY);
-        return StringUtils.isNotEmpty(i) && StringUtils.isNotEmpty(f);
     }
 
 }

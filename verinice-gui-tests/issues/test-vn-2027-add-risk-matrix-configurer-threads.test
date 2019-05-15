@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _WFrI4MMeEei5b6pcMYmFfw
-Runtime-Version: 2.3.0.201806262310
-Save-Time: 11/30/18 2:15 PM
+Runtime-Version: 2.4.1.201903190000
+Save-Time: 5/20/19 3:18 PM
 Tags: bp, risk
 Testcase-Type: ecl
 
@@ -65,9 +65,9 @@ with [get-editor "risk-matrix-test"] {
     get-section "" | get-editbox -after [get-label Titel] | key-type "M1+s"
 }
 get-window "Konfiguration der Risikoanalyse" 
-    | get-label "Die Änderung der Konfiguration der Risikoanalyse ist abgeschlossen. Es wurden 3 Gefährdung(en), 0 Anforderung(en) und 0 Maßnahme(n) verändert." 
+    | get-label "Die Änderung der Konfiguration der Risikoanalyse ist abgeschlossen. Es wurden 3 Gefährdung(en) verändert." 
     | get-property caption 
-    | equals "Die Änderung der Konfiguration der Risikoanalyse ist abgeschlossen. Es wurden 3 Gefährdung(en), 0 Anforderung(en) und 0 Maßnahme(n) verändert." 
+    | equals "Die Änderung der Konfiguration der Risikoanalyse ist abgeschlossen. Es wurden 3 Gefährdung(en) verändert." 
     | verify-true
 get-window "Konfiguration der Risikoanalyse" | get-button OK | click
 

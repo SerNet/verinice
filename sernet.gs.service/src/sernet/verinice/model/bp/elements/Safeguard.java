@@ -38,8 +38,6 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 import sernet.verinice.model.common.TransactionAbortedException;
-import sernet.verinice.service.bp.risk.RiskDeductionUtil;
-import sernet.verinice.service.hibernate.HibernateUtil;
 
 /**
  * @author Daniel Murygin dm[at]sernet.de
@@ -70,9 +68,6 @@ public class Safeguard extends CnATreeElement
     public static final String PROP_IMPLEMENTATION_STATUS_YES = "bp_safeguard_implementation_status_yes"; //$NON-NLS-1$
     public static final String PROP_IMPLEMENTATION_STATUS_PARTIALLY = "bp_safeguard_implementation_status_partially"; //$NON-NLS-1$
     public static final String PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE = "bp_safeguard_implementation_status_na"; //$NON-NLS-1$
-    public static final String PROP_STRENGTH_FREQUENCY = "bp_safeguard_safeguard_strength_frequency"; //$NON-NLS-1$
-    public static final String PROP_STRENGTH_IMPACT = "bp_safeguard_safeguard_strength_impact"; //$NON-NLS-1$
-    public static final String PROP_REDUCE_RISK = "bp_safeguard_reduce_risk";
 
     private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
     private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
@@ -91,18 +86,6 @@ public class Safeguard extends CnATreeElement
                     .filter(DeductionImplementationUtil::isDeductiveImplementationEnabled)
                     .forEach(DeductionImplementationUtil::setImplementationStatusToRequirement);
 
-            Safeguard.this.getLinksUp().stream()
-                    .filter(link -> BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD
-                            .equals(link.getRelationId()))
-                    .map(CnALink::getDependant).map(HibernateUtil::unproxy)
-                    .map(BpRequirement.class::cast).forEach(r -> {
-                        try {
-                            RiskDeductionUtil.deduceSafeguardStrength(r);
-                            r.getLinkChangeListener().determineValue(ta);
-                        } catch (TransactionAbortedException e) {
-                            // swallow this exception
-                        }
-                    });
         }
     };
 

@@ -12,10 +12,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
-import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.risk.Frequency;
 import sernet.verinice.model.bp.risk.Impact;
@@ -97,77 +95,6 @@ public class RiskDeductionUtilTest extends AbstractModernizedBaseProtection {
         assertEquals(null, bpThreat.getImpactWithoutAdditionalSafeguards());
         assertEquals(null, bpThreat.getRiskWithoutAdditionalSafeguards());
 
-    }
-
-    @Transactional
-    @Rollback(true)
-    @Test
-    public void testDeductionIfOnlySafeguardStrengthFrequencyIsSet() throws Exception {
-
-        ItNetwork itNetwork = createNewBPOrganization();
-        BpThreatGroup bpThreatGroup = createBpThreatGroup(itNetwork);
-        BpThreat bpThreat = createBpThreat(bpThreatGroup);
-
-        RiskConfiguration riskConfiguration = DefaultRiskConfiguration.getInstance();
-        Frequency firstFrequency = riskConfiguration.getFrequencies().get(0);
-        Impact firstImpact = riskConfiguration.getImpacts().get(0);
-        Frequency lastFrequency = riskConfiguration.getFrequencies()
-                .get(riskConfiguration.getFrequencies().size() - 1);
-        BpRequirementGroup bpRequirementGroup = createRequirementGroup(itNetwork);
-        BpRequirement bpRequirement = createBpRequirement(bpRequirementGroup);
-        createLink(bpRequirement, bpThreat, BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
-
-        bpRequirement.getEntity().setFlag(BpRequirement.PROP_SAFEGUARD_REDUCE_RISK, true);
-        bpRequirement.setSimpleProperty(BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY,
-                firstFrequency.getId());
-
-        bpThreat.setFrequencyWithoutAdditionalSafeguards(lastFrequency.getId());
-        bpThreat.setImpactWithoutAdditionalSafeguards(firstImpact.getId());
-        RiskDeductionUtil.deduceRisk(bpThreat);
-
-        Risk expectedRiskWithoutAdditionalSafeguards = riskConfiguration.getRisk(lastFrequency,
-                firstImpact);
-
-        assertEquals(lastFrequency.getId(), bpThreat.getFrequencyWithoutAdditionalSafeguards());
-        assertEquals(firstImpact.getId(), bpThreat.getImpactWithoutAdditionalSafeguards());
-        assertEquals(expectedRiskWithoutAdditionalSafeguards.getId(),
-                bpThreat.getRiskWithoutAdditionalSafeguards());
-
-    }
-
-    @Transactional
-    @Rollback(true)
-    @Test
-    public void testDeductionIfOnlySafeguardStrengthImpactIsSet() throws Exception {
-
-        ItNetwork itNetwork = createNewBPOrganization();
-        BpThreatGroup bpThreatGroup = createBpThreatGroup(itNetwork);
-        BpThreat bpThreat = createBpThreat(bpThreatGroup);
-
-        RiskConfiguration riskConfiguration = DefaultRiskConfiguration.getInstance();
-        Frequency firstFrequency = riskConfiguration.getFrequencies().get(0);
-        Impact firstImpact = riskConfiguration.getImpacts().get(0);
-        Impact lastImpact = riskConfiguration.getImpacts()
-                .get(riskConfiguration.getImpacts().size() - 1);
-        BpRequirementGroup bpRequirementGroup = createRequirementGroup(itNetwork);
-        BpRequirement bpRequirement = createBpRequirement(bpRequirementGroup);
-        createLink(bpRequirement, bpThreat, BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
-
-        bpRequirement.getEntity().setFlag(BpRequirement.PROP_SAFEGUARD_REDUCE_RISK, true);
-        bpRequirement.setSimpleProperty(BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT,
-                firstImpact.getId());
-
-        bpThreat.setFrequencyWithoutAdditionalSafeguards(firstFrequency.getId());
-        bpThreat.setImpactWithoutAdditionalSafeguards(lastImpact.getId());
-        RiskDeductionUtil.deduceRisk(bpThreat);
-
-        Risk expectedRiskWithoutAdditionalSafeguards = riskConfiguration.getRisk(firstFrequency,
-                lastImpact);
-
-        assertEquals(firstFrequency.getId(), bpThreat.getFrequencyWithoutAdditionalSafeguards());
-        assertEquals(lastImpact.getId(), bpThreat.getImpactWithoutAdditionalSafeguards());
-        assertEquals(expectedRiskWithoutAdditionalSafeguards.getId(),
-                bpThreat.getRiskWithoutAdditionalSafeguards());
     }
 
     @Transactional

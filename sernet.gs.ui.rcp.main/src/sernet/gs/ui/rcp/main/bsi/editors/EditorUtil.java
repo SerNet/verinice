@@ -40,7 +40,6 @@ import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.bp.risk.RiskDeductionUtil;
 
 /**
  * A collection of useful editor related method. Like calling update on
@@ -115,7 +114,6 @@ public final class EditorUtil {
         }
         if (BpRequirement.TYPE_ID.equals(cnAElement.getTypeId())) {
             updateRequirementImplementationStatus(cnAElement);
-            RiskDeductionUtil.deduceSafeguardStrength(cnAElement);
         }
     }
 

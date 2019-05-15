@@ -19,7 +19,6 @@ package sernet.verinice.bp.rcp.risk.ui;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.eclipse.swt.widgets.Composite;
 
@@ -36,11 +35,9 @@ import sernet.verinice.model.common.CnATreeElement;
 
 public final class ImpactControlFactory implements IHuiControlFactory {
     private final CnATreeElement element;
-    private final boolean excludeMaximumValue;
 
-    public ImpactControlFactory(CnATreeElement element, boolean excludeMaximumValue) {
+    public ImpactControlFactory(CnATreeElement element) {
         this.element = element;
-        this.excludeMaximumValue = excludeMaximumValue;
     }
 
     @Override
@@ -51,14 +48,11 @@ public final class ImpactControlFactory implements IHuiControlFactory {
                 showValidationHint, useValidationGuiHints) {
             @Override
             protected List<IMLPropertyOption> getOptions() {
-                RiskConfiguration riskConfiguration = RiskMatrixConfigurator.getRiskConfiguration(element);
-                List<Impact> impactValues = riskConfiguration
-                        .getImpacts();
-                Stream<Impact> stream = impactValues.stream();
-                if (excludeMaximumValue) {
-                    stream = stream.limit(impactValues.size() - 1l);
-                }
-                return stream.map(item -> new PropertyOption(item.getId(), item.getLabel()))
+                RiskConfiguration riskConfiguration = RiskMatrixConfigurator
+                        .getRiskConfiguration(element);
+                List<Impact> impactValues = riskConfiguration.getImpacts();
+                return impactValues.stream()
+                        .map(item -> new PropertyOption(item.getId(), item.getLabel()))
                         .collect(Collectors.toList());
             }
         };

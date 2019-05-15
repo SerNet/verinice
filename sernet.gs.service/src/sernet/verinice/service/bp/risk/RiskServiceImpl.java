@@ -30,7 +30,6 @@ import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateContext;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateResult;
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Service implementation to run and configure an IT base protection (ITBP) risk
@@ -78,20 +77,7 @@ public class RiskServiceImpl implements RiskService {
         Integer itNetworkDBId = itNetwork.getDbId();
 
         updateItNetwork(itNetwork, updateContext);
-        RiskConfigurationUpdateResult updateResult = updateRiskValuesInThreats(itNetworkDBId,
-                updateContext);
-
-        RiskConfigurationUpdateResult updateRequirementsResult = removeRiskValuesFromRequirements(
-                itNetworkDBId, updateContext);
-        updateResult.setNumberOfChangedRequirements(
-                updateRequirementsResult.getNumberOfChangedRequirements());
-
-        RiskConfigurationUpdateResult updateSafeguardsResult = removeRiskValuesFromSafeguards(
-                itNetworkDBId, updateContext);
-        updateResult.setNumberOfChangedSafeguards(
-                updateSafeguardsResult.getNumberOfChangedSafeguards());
-
-        return updateResult;
+        return updateRiskValuesInThreats(itNetworkDBId, updateContext);
     }
 
     private void updateItNetwork(ItNetwork itNetwork,
@@ -112,24 +98,6 @@ public class RiskServiceImpl implements RiskService {
         riskValueUpdater.setPropertyListDao(propertyListDao);
         riskValueUpdater.execute();
         return riskValueUpdater.getRiskConfigurationUpdateResult();
-    }
-
-    private RiskConfigurationUpdateResult removeRiskValuesFromRequirements(Integer scopeId,
-            RiskConfigurationUpdateContext updateContext) {
-        Set<CnATreeElement> requirementsFromScope = getMetaDao().loadRequirementsFromScope(scopeId);
-        RiskValueRemover riskValueRemover = new RiskValueFromRequirementRemover(updateContext,
-                requirementsFromScope);
-        riskValueRemover.execute();
-        return riskValueRemover.getRiskConfigurationUpdateResult();
-    }
-
-    private RiskConfigurationUpdateResult removeRiskValuesFromSafeguards(Integer scopeId,
-            RiskConfigurationUpdateContext updateContext) {
-        Set<CnATreeElement> safeguardsFromScope = getMetaDao().loadSafeguardsFromScope(scopeId);
-        RiskValueRemover riskValueRemover = new RiskValueFromSafeguardRemover(updateContext,
-                safeguardsFromScope);
-        riskValueRemover.execute();
-        return riskValueRemover.getRiskConfigurationUpdateResult();
     }
 
     @Override

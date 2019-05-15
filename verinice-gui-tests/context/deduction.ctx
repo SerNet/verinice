@@ -6,7 +6,7 @@ Element-Type: context
 Element-Version: 2.0
 Id: _K06wgI0fEei2UKUDmonytQ
 Runtime-Version: 2.4.1.201903190000
-Save-Time: 4/16/19 10:43 AM
+Save-Time: 5/20/19 2:29 PM
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
 Content-Type: text/ecl
@@ -42,7 +42,7 @@ proc linksafeguard [val sourcepath] [val targetname] {
 proc "set-implementation-status" [val targetpath] [val state] {
 	let [ val targettitle [get-last $targetpath] ] {
 		get-view "Modernisierter IT-Grundschutz" | get-tree | select $targetpath | double-click
-		get-editor $targettitle | get-section "" | get-section "Umsetzung (Maßnahmenstärke)" | get-combo -after [get-label Umsetzungsstatus]
+		get-editor $targettitle | get-section "" | get-section Umsetzung | get-combo -after [get-label Umsetzungsstatus]
 			| select $state
 		get-eclipse-window | key-type "M1+s"	
 	}
@@ -52,7 +52,7 @@ proc "set-implementation-status-deduction" [val targetpath] [val state] {
 	get-view "Modernisierter IT-Grundschutz" | get-tree | select $targetpath | double-click
 	let [ val targettitle [get-last $targetpath] ] {
 		get-editor $targettitle | get-tab-folder | get-tab-item "Daten" | click
-		with [get-editor $targettitle | get-section "" | get-section "Umsetzung (Maßnahmenstärke)" | get-button ] {
+		with [get-editor $targettitle | get-section "" | get-section Umsetzung | get-button ] {
 			if [$state] {
 				check
 			} -else {

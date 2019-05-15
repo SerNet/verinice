@@ -67,9 +67,7 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
-import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
-import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.risk.Frequency;
 import sernet.verinice.model.bp.risk.Impact;
 import sernet.verinice.model.bp.risk.Risk;
@@ -303,25 +301,16 @@ public class EditBean {
     private PropertyType adaptTypeIfRiskProperty(PropertyType propertyType) {
         String propertyId = propertyType.getId();
         switch (propertyId) {
-        case BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY:
-            return new OverrideOptionsPropertyType(propertyType, getFrequencyValues(true));
-        case BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT:
-            return new OverrideOptionsPropertyType(propertyType, getImpactValues(true));
-        case Safeguard.PROP_STRENGTH_FREQUENCY:
-            return new OverrideOptionsPropertyType(propertyType, getFrequencyValues(true));
-        case Safeguard.PROP_STRENGTH_IMPACT:
-            return new OverrideOptionsPropertyType(propertyType, getImpactValues(true));
-
         case BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS:
-            return new OverrideOptionsPropertyType(propertyType, getFrequencyValues(false));
+            return new OverrideOptionsPropertyType(propertyType, getFrequencyValues());
         case BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS:
-            return new OverrideOptionsPropertyType(propertyType, getImpactValues(false));
+            return new OverrideOptionsPropertyType(propertyType, getImpactValues());
         case BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS:
             return new OverrideOptionsPropertyType(propertyType, getRiskValues());
         case BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS:
-            return new OverrideOptionsPropertyType(propertyType, getFrequencyValues(false));
+            return new OverrideOptionsPropertyType(propertyType, getFrequencyValues());
         case BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS:
-            return new OverrideOptionsPropertyType(propertyType, getImpactValues(false));
+            return new OverrideOptionsPropertyType(propertyType, getImpactValues());
         case BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS:
             return new OverrideOptionsPropertyType(propertyType, getRiskValues());
         default:
@@ -336,25 +325,19 @@ public class EditBean {
                 .collect(Collectors.toList());
     }
 
-    private List<IMLPropertyOption> getImpactValues(boolean excludeLastValue) {
+    private List<IMLPropertyOption> getImpactValues() {
         RiskConfiguration riskConfiguration = getRiskConfiguration();
         List<Impact> impactValues = riskConfiguration.getImpacts();
-        Stream<Impact> stream = impactValues.stream();
-        if (excludeLastValue) {
-            stream = stream.limit(impactValues.size() - 1l);
-        }
-        return stream.map(impact -> new PropertyOption(impact.getId(), impact.getLabel()))
+        return impactValues.stream()
+                .map(impact -> new PropertyOption(impact.getId(), impact.getLabel()))
                 .collect(Collectors.toList());
     }
 
-    private List<IMLPropertyOption> getFrequencyValues(boolean excludeMaximumValue) {
+    private List<IMLPropertyOption> getFrequencyValues() {
         RiskConfiguration riskConfiguration = getRiskConfiguration();
         List<Frequency> frequencyValues = riskConfiguration.getFrequencies();
-        Stream<Frequency> stream = frequencyValues.stream();
-        if (excludeMaximumValue) {
-            stream = stream.limit(riskConfiguration.getFrequencies().size() - 1l);
-        }
-        return stream.map(frequency -> new PropertyOption(frequency.getId(), frequency.getLabel()))
+        return frequencyValues.stream()
+                .map(frequency -> new PropertyOption(frequency.getId(), frequency.getLabel()))
                 .collect(Collectors.toList());
     }
 

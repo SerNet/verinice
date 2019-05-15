@@ -19,7 +19,6 @@ package sernet.verinice.bp.rcp.risk.ui;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.eclipse.swt.widgets.Composite;
 
@@ -36,12 +35,9 @@ import sernet.verinice.model.common.CnATreeElement;
 
 public final class FrequencyControlFactory implements IHuiControlFactory {
     private final CnATreeElement element;
-    private final boolean excludeMaximumValue;
 
-    public FrequencyControlFactory(CnATreeElement element,
-            boolean excludeMaximumValue) {
+    public FrequencyControlFactory(CnATreeElement element) {
         this.element = element;
-        this.excludeMaximumValue = excludeMaximumValue;
     }
 
     @Override
@@ -52,14 +48,11 @@ public final class FrequencyControlFactory implements IHuiControlFactory {
                 showValidationHint, useValidationGuiHints) {
             @Override
             protected List<IMLPropertyOption> getOptions() {
-                RiskConfiguration riskConfiguration = RiskMatrixConfigurator.getRiskConfiguration(element);
-                List<Frequency> frequencyValues = riskConfiguration
-                        .getFrequencies();
-                Stream<Frequency> stream = frequencyValues.stream();
-                if (excludeMaximumValue) {
-                    stream = stream.limit(frequencyValues.size() - 1l);
-                }
-                return stream.map(item -> new PropertyOption(item.getId(), item.getLabel()))
+                RiskConfiguration riskConfiguration = RiskMatrixConfigurator
+                        .getRiskConfiguration(element);
+                List<Frequency> frequencyValues = riskConfiguration.getFrequencies();
+                return frequencyValues.stream()
+                        .map(item -> new PropertyOption(item.getId(), item.getLabel()))
                         .collect(Collectors.toList());
             }
         };
