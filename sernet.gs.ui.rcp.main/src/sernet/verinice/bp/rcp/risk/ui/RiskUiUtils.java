@@ -19,10 +19,12 @@ package sernet.verinice.bp.rcp.risk.ui;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.hui.swt.widgets.IHuiControlFactory;
 import sernet.verinice.model.bp.elements.BpThreat;
+import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -43,18 +45,21 @@ public final class RiskUiUtils {
             CnATreeElement element) {
         Map<String, IHuiControlFactory> overrides = new HashMap<>();
         if (element instanceof BpThreat) {
-            overrides.put(BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
-                    new FrequencyControlFactory(element));
-            overrides.put(BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
-                    new ImpactControlFactory(element));
-            overrides.put(BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
-                    new RiskValueControlFactory(element));
-            overrides.put(BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS,
-                    new FrequencyControlFactory(element));
-            overrides.put(BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS,
-                    new ImpactControlFactory(element));
-            overrides.put(BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS,
-                    new RiskValueControlFactory(element));
+            Stream.of(BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS)
+                    .forEach(property -> overrides.put(property,
+                            new DynamicRiskPropertiesControlFactory(element,
+                                    RiskConfiguration::getFrequencies)));
+            Stream.of(BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS)
+                    .forEach(property -> overrides.put(property,
+                            new DynamicRiskPropertiesControlFactory(element,
+                                    RiskConfiguration::getImpacts)));
+            Stream.of(BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS)
+                    .forEach(property -> overrides.put(property,
+                            new DynamicRiskPropertiesControlFactory(element,
+                                    RiskConfiguration::getRisks)));
         }
         return overrides;
     }

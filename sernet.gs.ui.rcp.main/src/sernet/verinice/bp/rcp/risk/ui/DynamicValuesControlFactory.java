@@ -18,25 +18,23 @@
 package sernet.verinice.bp.rcp.risk.ui;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.function.Supplier;
 
 import org.eclipse.swt.widgets.Composite;
 
 import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.swt.widgets.IHuiControl;
 import sernet.hui.swt.widgets.IHuiControlFactory;
 import sernet.hui.swt.widgets.SingleSelectionControl;
-import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
-import sernet.verinice.model.common.CnATreeElement;
 
-public final class RiskValueControlFactory implements IHuiControlFactory {
-    private final CnATreeElement element;
+public class DynamicValuesControlFactory implements IHuiControlFactory {
 
-    public RiskValueControlFactory(CnATreeElement element) {
-        this.element = element;
+    private final Supplier<List<IMLPropertyOption>> optionsSupplier;
+
+    public DynamicValuesControlFactory(Supplier<List<IMLPropertyOption>> optionsSupplier) {
+        this.optionsSupplier = optionsSupplier;
     }
 
     @Override
@@ -47,12 +45,7 @@ public final class RiskValueControlFactory implements IHuiControlFactory {
                 showValidationHint, useValidationGuiHints) {
             @Override
             protected List<IMLPropertyOption> getOptions() {
-                RiskConfiguration riskConfiguration = RiskMatrixConfigurator
-                        .getRiskConfiguration(element);
-                return riskConfiguration.getRisks().stream()
-                        .map(risk -> new PropertyOption(risk.getId(),
-                                risk.getLabel()))
-                        .collect(Collectors.toList());
+                return optionsSupplier.get();
             }
         };
     }
