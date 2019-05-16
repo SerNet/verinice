@@ -88,6 +88,18 @@ public final class RiskUiUtils {
                     BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS);
+
+            ValidateRiskPropertyValues changeListener = new ValidateRiskPropertyValues(huiComposite,
+                    threat);
+            Stream.of(BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS)
+                    .forEach(property -> huiComposite.addSelectionListener(property,
+                            changeListener));
+
         }
     }
 

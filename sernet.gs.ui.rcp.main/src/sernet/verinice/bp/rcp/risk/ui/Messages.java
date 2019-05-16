@@ -37,6 +37,8 @@ public class Messages extends NLS {
     public static String errorUniqueImpactLabels;
     public static String errorUniqueRiskCategoryLabels;
 
+    public static String warningRiskPropertyExceedance;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
