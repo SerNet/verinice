@@ -70,6 +70,8 @@ public final class RiskUiUtils {
     public static void addSelectionListener(HitroUIComposite huiComposite, CnATreeElement element) {
         if (element instanceof BpThreat) {
             BpThreat threat = (BpThreat) element;
+            huiComposite.addSelectionListener(BpThreat.PROP_RISK_TREATMENT_OPTION,
+                    new ResetRiskPropertiesWithAdditionalSafeguards(threat));
             addRiskComputeListeners(huiComposite, threat,
                     BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
