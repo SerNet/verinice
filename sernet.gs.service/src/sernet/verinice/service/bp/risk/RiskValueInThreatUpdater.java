@@ -25,12 +25,12 @@ import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.StringUtil;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bp.elements.BpThreat;
-import sernet.verinice.model.bp.risk.Frequency;
-import sernet.verinice.model.bp.risk.Impact;
 import sernet.verinice.model.bp.risk.Risk;
+import sernet.verinice.model.bp.risk.RiskPropertyValue;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateContext;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateResult;
@@ -88,48 +88,37 @@ public class RiskValueInThreatUpdater {
     }
 
     private void removeFrequencies() {
-        List<Frequency> removedFrequencies = updateContext.getDeletedFrequencies();
-        List<String> removedFrequencyIds = removedFrequencies.stream().map(Frequency::getId)
-                .collect(Collectors.toList());
-        if (removedFrequencyIds.isEmpty()) {
-            return;
-        }
-        for (BpThreat threat : threatsFromScope) {
-            String selectedId = threat.getFrequencyWithoutAdditionalSafeguards();
-            if (removedFrequencyIds.contains(selectedId)) {
-                removeProperty(threat, BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS);
-                removeProperty(threat, BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS);
-            }
-        }
+        removeDeletedValues(updateContext.getDeletedFrequencies(),
+                BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS);
     }
 
     private void removeImpacts() {
-        List<Impact> removedImpacts = updateContext.getDeletedImpacts();
-        List<String> removedImpactIds = removedImpacts.stream().map(Impact::getId)
-                .collect(Collectors.toList());
-        if (removedImpactIds.isEmpty()) {
-            return;
-        }
-        for (BpThreat threat : threatsFromScope) {
-            String selectedId = threat.getImpactWithoutAdditionalSafeguards();
-            if (removedImpactIds.contains(selectedId)) {
-                removeProperty(threat, BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS);
-                removeProperty(threat, BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS);
-            }
-        }
+        removeDeletedValues(updateContext.getDeletedImpacts(),
+                BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS);
     }
 
     private void removeRisks() {
-        List<Risk> removedRisks = updateContext.getDeletedRisks();
-        List<String> removedRiskIds = removedRisks.stream().map(Risk::getId)
-                .collect(Collectors.toList());
-        if (removedRiskIds.isEmpty()) {
+        removeDeletedValues(updateContext.getDeletedRisks(),
+                BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS);
+    }
+
+    private void removeDeletedValues(List<? extends RiskPropertyValue> deletedValues,
+            String... propertyIds) {
+        if (deletedValues.isEmpty() || propertyIds.length == 0) {
             return;
         }
+        List<String> deletedValuesIDs = deletedValues.stream().map(RiskPropertyValue::getId)
+                .collect(Collectors.toList());
         for (BpThreat threat : threatsFromScope) {
-            String selectedId = threat.getRiskWithoutAdditionalSafeguards();
-            if (removedRiskIds.contains(selectedId)) {
-                removeProperty(threat, BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS);
+            for (String propertyId : propertyIds) {
+                String valueFromThreat = StringUtil.replaceEmptyStringByNull(
+                        threat.getEntity().getRawPropertyValue(propertyId));
+                if (deletedValuesIDs.contains(valueFromThreat)) {
+                    removeProperty(threat, propertyId);
+                }
             }
         }
     }
@@ -137,6 +126,7 @@ public class RiskValueInThreatUpdater {
     private void checkAndFixRisks() {
         for (BpThreat threat : threatsFromScope) {
             checkAndFixRiskWithoutAdditionalSafeguards(threat);
+            checkAndFixRiskWithAdditionalSafeguards(threat);
         }
     }
 
@@ -145,6 +135,14 @@ public class RiskValueInThreatUpdater {
         String frequencyIdInThreat = threat.getFrequencyWithoutAdditionalSafeguards();
         String riskIdInThreat = threat.getRiskWithoutAdditionalSafeguards();
         String propertyId = BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS;
+        checkAndFixRisk(threat, impactIdInThreat, frequencyIdInThreat, riskIdInThreat, propertyId);
+    }
+
+    private void checkAndFixRiskWithAdditionalSafeguards(BpThreat threat) {
+        String impactIdInThreat = threat.getImpactWithAdditionalSafeguards();
+        String frequencyIdInThreat = threat.getFrequencyWithAdditionalSafeguards();
+        String riskIdInThreat = threat.getRiskWithAdditionalSafeguards();
+        String propertyId = BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS;
         checkAndFixRisk(threat, impactIdInThreat, frequencyIdInThreat, riskIdInThreat, propertyId);
     }
 
