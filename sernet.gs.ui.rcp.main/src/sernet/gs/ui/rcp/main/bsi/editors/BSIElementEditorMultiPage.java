@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.bsi.editors;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -277,7 +278,9 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
                             .getBoolean(PreferenceConstants.USE_VALIDATION_GUI_HINTS),
                     overrides);
             InputHelperFactory.setInputHelpers(entityType, huiComposite);
-            RiskUiUtils.addSelectionListener(huiComposite, cnAElement);
+            if (Arrays.stream(tags).anyMatch("BSI-200-3"::equals)) {
+                RiskUiUtils.addSelectionListener(huiComposite, cnAElement);
+            }
             huiComposite.resetInitialFocus();
 
             // create in place editor for links to other objects

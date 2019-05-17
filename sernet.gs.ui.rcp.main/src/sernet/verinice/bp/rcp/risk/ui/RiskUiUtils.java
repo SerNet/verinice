@@ -74,9 +74,11 @@ public final class RiskUiUtils {
      * Add selection listeners to a HUI composite for a given element.
      */
     public static void addSelectionListener(HitroUIComposite huiComposite, CnATreeElement element) {
-        huiComposite.addSelectionListener(BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
-                new RiskInputValueChanged(element));
-        huiComposite.addSelectionListener(BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
-                new RiskInputValueChanged(element));
+        if (element instanceof BpThreat) {
+            huiComposite.addSelectionListener(BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    new RiskInputValueChanged(element));
+            huiComposite.addSelectionListener(BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    new RiskInputValueChanged(element));
+        }
     }
 }
