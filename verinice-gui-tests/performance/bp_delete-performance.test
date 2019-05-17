@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _kcmhAOEAEeioAPI0X-6m9A
 Runtime-Version: 2.4.1.201903190000
-Save-Time: 4/15/19 11:29 AM
+Save-Time: 5/20/19 8:53 AM
 Tags: bp, performance
 Testcase-Type: ecl
 
@@ -41,10 +41,10 @@ proc "create-simple-model" [val m] [val name] {
 	create-bpsafeguard [concat $m "/Anwendungen/" $name "/safeguardgroup-1"] [concat "safeguard-2" $name]
 	create-bpsafeguard [concat $m "/Anwendungen/" $name "/safeguardgroup-1"] [concat "safeguard-3" $name]
 
-	let [val requirementpath [concat $m "/Anwendungen/" $name "/modulegroup-1/.*" "module-1" $name] {
-		linksafeguard requirementpath [concat "safeguard-1" $name]
-		linksafeguard requirementpath [concat "safeguard-2" $name]
-		linksafeguard requirementpath [concat "safeguard-3" $name]
+	let [val requirementpath [concat $m "/Anwendungen/" $name "/modulegroup-1/.*" "module-1" $name]] {
+		linksafeguard $requirementpath [concat "safeguard-1" $name]
+		linksafeguard $requirementpath [concat "safeguard-2" $name]
+		linksafeguard $requirementpath [concat "safeguard-3" $name]
 	}
 }
 
