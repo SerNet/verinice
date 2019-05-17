@@ -41,7 +41,8 @@ public final class RiskUiUtils {
      * @return A map of IHuiControlFactories for the given element. The key is a
      *         property ID from SNCA.xml.
      */
-    public static Map<String, IHuiControlFactory> createHuiControlFactories(CnATreeElement element) {
+    public static Map<String, IHuiControlFactory> createHuiControlFactories(
+            CnATreeElement element) {
         Map<String, IHuiControlFactory> overrides = new HashMap<>();
         if (element instanceof BpRequirement) {
             overrides.put(BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY,
@@ -51,8 +52,7 @@ public final class RiskUiUtils {
         } else if (element instanceof Safeguard) {
             overrides.put(Safeguard.PROP_STRENGTH_FREQUENCY,
                     new FrequencyControlFactory(element, true));
-            overrides.put(Safeguard.PROP_STRENGTH_IMPACT,
-                    new ImpactControlFactory(element, true));
+            overrides.put(Safeguard.PROP_STRENGTH_IMPACT, new ImpactControlFactory(element, true));
         } else if (element instanceof BpThreat) {
             overrides.put(BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
                     new FrequencyControlFactory(element, false));
@@ -74,11 +74,9 @@ public final class RiskUiUtils {
      * Add selection listeners to a HUI composite for a given element.
      */
     public static void addSelectionListener(HitroUIComposite huiComposite, CnATreeElement element) {
-        huiComposite.addSelectionListener(
-                BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
+        huiComposite.addSelectionListener(BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
                 new RiskInputValueChanged(element));
-        huiComposite.addSelectionListener(
-                BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
+        huiComposite.addSelectionListener(BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
                 new RiskInputValueChanged(element));
     }
 }

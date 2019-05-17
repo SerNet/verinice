@@ -23,14 +23,16 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.connect.HitroUtil;
 
-public class EditorPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+public class EditorPreferencePage extends FieldEditorPreferencePage
+        implements IWorkbenchPreferencePage {
 
     private CheckboxTableViewer viewer;
 
     public EditorPreferencePage() {
         super(GRID);
         setPreferenceStore(Activator.getDefault().getPreferenceStore());
-        setDescription(sernet.gs.ui.rcp.main.preferences.Messages.getString("EditorPreferencePage.0")); //$NON-NLS-1$
+        setDescription(
+                sernet.gs.ui.rcp.main.preferences.Messages.getString("EditorPreferencePage.0")); //$NON-NLS-1$
     }
 
     /*
@@ -42,7 +44,10 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
      */
     @Override
     protected void createFieldEditors() {
-        BooleanFieldEditor booleanFieldEditor = new BooleanFieldEditor(PreferenceConstants.HUI_TAGS_STRICT, sernet.gs.ui.rcp.main.preferences.Messages.getString("EditorPreferencePage.1"), getFieldEditorParent()); //$NON-NLS-1$
+        BooleanFieldEditor booleanFieldEditor = new BooleanFieldEditor(
+                PreferenceConstants.HUI_TAGS_STRICT,
+                sernet.gs.ui.rcp.main.preferences.Messages.getString("EditorPreferencePage.1"), //$NON-NLS-1$
+                getFieldEditorParent());
         addField(booleanFieldEditor);
         createTagList();
     }
@@ -53,7 +58,8 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
     private void createTagList() {
         final int checkboxColumnWidth = 35;
         final int tagColumnWidth = 200;
-        viewer = CheckboxTableViewer.newCheckList(getFieldEditorParent(), SWT.BORDER | SWT.V_SCROLL);
+        viewer = CheckboxTableViewer.newCheckList(getFieldEditorParent(),
+                SWT.BORDER | SWT.V_SCROLL);
         Table table = viewer.getTable();
         table.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
         table.setHeaderVisible(false);
@@ -64,7 +70,8 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
         checkboxColumn.setWidth(checkboxColumnWidth);
 
         TableColumn tagColumn = new TableColumn(table, SWT.LEFT);
-        tagColumn.setText(sernet.gs.ui.rcp.main.preferences.Messages.getString("EditorPreferencePage.2")); //$NON-NLS-1$
+        tagColumn.setText(
+                sernet.gs.ui.rcp.main.preferences.Messages.getString("EditorPreferencePage.2")); //$NON-NLS-1$
         tagColumn.setWidth(tagColumnWidth);
 
         viewer.setContentProvider(new ArrayContentProvider());
@@ -158,7 +165,8 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
         }
 
         Object[] prefTagsArr = allTagsArray;
-        String prefTags = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.HUI_TAGS);
+        String prefTags = Activator.getDefault().getPluginPreferences()
+                .getString(PreferenceConstants.HUI_TAGS);
 
         if (!PreferenceConstants.HUI_TAGS_ALL.equals(prefTags)) {
             prefTagsArr = split(prefTags);

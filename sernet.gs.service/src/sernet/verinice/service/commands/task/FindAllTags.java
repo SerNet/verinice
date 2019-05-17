@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -34,61 +33,60 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.TagHelper;
 
-/** Retrieves all the tags used in the model.
+/**
+ * Retrieves all the tags used in the model.
  * 
- * <p>The resulting list contains unique, non-empty value.</p> 
+ * <p>
+ * The resulting list contains unique, non-empty value.
+ * </p>
  * 
  */
 @SuppressWarnings("serial")
 public class FindAllTags extends GenericCommand {
-	
-	private List<String> tags;
-	
-	private static HibernateCallback hcb = new FindTagsCallback();
 
-	@SuppressWarnings("unchecked")
-	public void execute() {
-		// TODO rschuster: Sorting and creating distinct value is something the database could do on its
-		// own if the data model would allow this. Unfortunately it is not done this way.
-		
-		List<String> tempTags = (List<String>) getDaoFactory().getDAO(BSIModel.class).findByCallback(hcb);
-		
-		HashSet<String> uniqueTags = new HashSet<String>();
-		for (String elem : tempTags)
-		{
-			TagHelper.putInTags(uniqueTags, elem);
-		}
-		
-		tags = new ArrayList<String>(uniqueTags);
-		Collections.sort(tags);
-	}
+    private List<String> tags;
 
-	public List<String> getTags() {
-		return tags;
-	}
-	
-	private static class FindTagsCallback implements HibernateCallback, Serializable
-	{
+    private static HibernateCallback hcb = new FindTagsCallback();
 
-		public Object doInHibernate(Session session) throws HibernateException,
-				SQLException {
-			/* Retrieves all tags. The resulting entries are non-empty and distinct.
-			 * Unfortunately they are still in the CSV format, e.g. "foo, baz, bar"
-			 */
-			
-			// TODO: Implicitly we assume that all propertytypes that denote a tag
-			// have the common suffix '_tag'.
-			return session
-			.createSQLQuery(
-					"select propertyValue " +
-					"from properties " +
-					"where propertytype like '%_tag'")
-			.addScalar("propertyValue", sernet.gs.reveng.type.Types.STRING_TYPE)
-			.list();
-		}
-		
-	}
+    @SuppressWarnings("unchecked")
+    public void execute() {
+        // TODO rschuster: Sorting and creating distinct value is something the
+        // database could do on its
+        // own if the data model would allow this. Unfortunately it is not done
+        // this way.
 
-	
-	
+        List<String> tempTags = (List<String>) getDaoFactory().getDAO(BSIModel.class)
+                .findByCallback(hcb);
+
+        HashSet<String> uniqueTags = new HashSet<String>();
+        for (String elem : tempTags) {
+            TagHelper.putInTags(uniqueTags, elem);
+        }
+
+        tags = new ArrayList<String>(uniqueTags);
+        Collections.sort(tags);
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    private static class FindTagsCallback implements HibernateCallback, Serializable {
+
+        public Object doInHibernate(Session session) throws HibernateException, SQLException {
+            /*
+             * Retrieves all tags. The resulting entries are non-empty and
+             * distinct. Unfortunately they are still in the CSV format, e.g.
+             * "foo, baz, bar"
+             */
+
+            // TODO: Implicitly we assume that all propertytypes that denote a
+            // tag
+            // have the common suffix '_tag'.
+            return session
+                    .createSQLQuery("select propertyValue " + "from properties "
+                            + "where propertytype like '%_tag'")
+                    .addScalar("propertyValue", sernet.gs.reveng.type.Types.STRING_TYPE).list();
+        }
+    }
 }
