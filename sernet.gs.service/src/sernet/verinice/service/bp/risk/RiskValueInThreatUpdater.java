@@ -18,6 +18,7 @@
 package sernet.verinice.service.bp.risk;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,8 +27,6 @@ import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.StringUtil;
-import sernet.hui.common.connect.PropertyList;
-import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.risk.Risk;
 import sernet.verinice.model.bp.risk.RiskPropertyValue;
@@ -59,117 +58,132 @@ public class RiskValueInThreatUpdater {
     private RiskConfigurationUpdateContext updateContext;
     private RiskConfigurationUpdateResult updateResult;
 
-    private Set<String> uuidsOfChangedThreats = new HashSet<>();
-
-    private IBaseDao<PropertyList, Integer> propertyListDao;
-
     public RiskValueInThreatUpdater(RiskConfigurationUpdateContext updateContext,
             Set<BpThreat> threatsFromScope) {
-        super();
         this.updateContext = updateContext;
         this.threatsFromScope = threatsFromScope;
     }
 
-    public void execute() {
-        uuidsOfChangedThreats.clear();
-        removeFrequencies();
-        removeImpacts();
-        removeRisks();
-        checkAndFixRisks();
+    public Set<BpThreat> execute() {
+        Set<BpThreat> changedThreats = new HashSet<>();
+        changedThreats.addAll(removeFrequencies());
+        changedThreats.addAll(removeImpacts());
+        changedThreats.addAll(removeRisks());
+        changedThreats.addAll(checkAndFixRisks());
         updateResult = new RiskConfigurationUpdateResult();
-        updateResult.setNumberOfChangedThreats(getNumberOfChangedThreats());
+        updateResult.setNumberOfChangedThreats(changedThreats.size());
         updateResult.setNumberOfRemovedFrequencies(updateContext.getDeletedFrequencies().size());
         updateResult.setNumberOfRemovedImpacts(updateContext.getDeletedImpacts().size());
         updateResult.setNumberOfRemovedRisks(updateContext.getDeletedRisks().size());
         if (log.isInfoEnabled()) {
             logStatistic(updateResult);
         }
-        uuidsOfChangedThreats.clear();
+        return Collections.unmodifiableSet(changedThreats);
     }
 
-    private void removeFrequencies() {
-        removeDeletedValues(updateContext.getDeletedFrequencies(),
+    private Collection<BpThreat> removeFrequencies() {
+        return removeDeletedValues(updateContext.getDeletedFrequencies(),
                 BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
                 BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS);
     }
 
-    private void removeImpacts() {
-        removeDeletedValues(updateContext.getDeletedImpacts(),
+    private Collection<BpThreat> removeImpacts() {
+        return removeDeletedValues(updateContext.getDeletedImpacts(),
                 BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
                 BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS);
     }
 
-    private void removeRisks() {
-        removeDeletedValues(updateContext.getDeletedRisks(),
+    private Collection<BpThreat> removeRisks() {
+        return removeDeletedValues(updateContext.getDeletedRisks(),
                 BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
                 BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS);
     }
 
-    private void removeDeletedValues(List<? extends RiskPropertyValue> deletedValues,
-            String... propertyIds) {
+    private Collection<BpThreat> removeDeletedValues(
+            List<? extends RiskPropertyValue> deletedValues, String... propertyIds) {
         if (deletedValues.isEmpty() || propertyIds.length == 0) {
-            return;
+            return Collections.emptySet();
         }
         List<String> deletedValuesIDs = deletedValues.stream().map(RiskPropertyValue::getId)
                 .collect(Collectors.toList());
+        Set<BpThreat> result = new HashSet<>(threatsFromScope.size());
         for (BpThreat threat : threatsFromScope) {
+            boolean valueRemoved = false;
             for (String propertyId : propertyIds) {
                 String valueFromThreat = StringUtil.replaceEmptyStringByNull(
                         threat.getEntity().getRawPropertyValue(propertyId));
                 if (deletedValuesIDs.contains(valueFromThreat)) {
                     removeProperty(threat, propertyId);
+                    valueRemoved = true;
                 }
             }
+            if (valueRemoved) {
+                result.add(threat);
+            }
         }
+        return result;
     }
 
-    private void checkAndFixRisks() {
+    private Collection<BpThreat> checkAndFixRisks() {
+        Set<BpThreat> result = new HashSet<>(threatsFromScope.size());
         for (BpThreat threat : threatsFromScope) {
-            checkAndFixRiskWithoutAdditionalSafeguards(threat);
-            checkAndFixRiskWithAdditionalSafeguards(threat);
+            boolean valueChanged = false;
+            valueChanged |= checkAndFixRiskWithoutAdditionalSafeguards(threat);
+            valueChanged |= checkAndFixRiskWithAdditionalSafeguards(threat);
+            if (valueChanged) {
+                result.add(threat);
+            }
         }
+        return result;
+
     }
 
-    private void checkAndFixRiskWithoutAdditionalSafeguards(BpThreat threat) {
+    private boolean checkAndFixRiskWithoutAdditionalSafeguards(BpThreat threat) {
         String impactIdInThreat = threat.getImpactWithoutAdditionalSafeguards();
         String frequencyIdInThreat = threat.getFrequencyWithoutAdditionalSafeguards();
         String riskIdInThreat = threat.getRiskWithoutAdditionalSafeguards();
         String propertyId = BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS;
-        checkAndFixRisk(threat, impactIdInThreat, frequencyIdInThreat, riskIdInThreat, propertyId);
+        return checkAndFixRisk(threat, impactIdInThreat, frequencyIdInThreat, riskIdInThreat,
+                propertyId);
     }
 
-    private void checkAndFixRiskWithAdditionalSafeguards(BpThreat threat) {
+    private boolean checkAndFixRiskWithAdditionalSafeguards(BpThreat threat) {
         String impactIdInThreat = threat.getImpactWithAdditionalSafeguards();
         String frequencyIdInThreat = threat.getFrequencyWithAdditionalSafeguards();
         String riskIdInThreat = threat.getRiskWithAdditionalSafeguards();
         String propertyId = BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS;
-        checkAndFixRisk(threat, impactIdInThreat, frequencyIdInThreat, riskIdInThreat, propertyId);
+        return checkAndFixRisk(threat, impactIdInThreat, frequencyIdInThreat, riskIdInThreat,
+                propertyId);
     }
 
-    private void checkAndFixRisk(BpThreat threat, String impactIdInThreat,
+    private boolean checkAndFixRisk(BpThreat threat, String impactIdInThreat,
             String frequencyIdInThreat, String riskIdInThreat, String riskPropertyId) {
         if (impactIdInThreat == null || frequencyIdInThreat == null) {
             if (riskIdInThreat != null) {
                 removeProperty(threat, riskPropertyId);
+                return true;
             }
         } else {
             Risk riskInConfiguration = getConfiguration().getRisk(frequencyIdInThreat,
                     impactIdInThreat);
             if (riskIdInThreat == null && riskInConfiguration == null) {
-                return;
+                return false;
             }
             if (riskIdInThreat != null && riskInConfiguration == null) {
                 removeProperty(threat, riskPropertyId);
+                return true;
             } else if (riskIdInThreat == null
                     || !riskIdInThreat.equals(riskInConfiguration.getId())) {
                 setPropertyValue(threat, riskPropertyId, riskInConfiguration.getId());
+                return true;
             }
         }
+        return false;
+
     }
 
     private void removeProperty(CnATreeElement element, String propertyId) {
         element.getEntity().getTypedPropertyLists().remove(propertyId);
-        uuidsOfChangedThreats.add(element.getUuid());
         if (log.isDebugEnabled()) {
             log.debug("Property " + propertyId + " removed from " + element.getTypeId()
                     + " with uuid " + element.getUuid());
@@ -179,29 +193,8 @@ public class RiskValueInThreatUpdater {
     private void setPropertyValue(CnATreeElement element, String propertyId, String value) {
         element.getEntity().setSimpleValue(element.getEntityType().getPropertyType(propertyId),
                 value);
-        savePropertylistsManually(element);
-        uuidsOfChangedThreats.add(element.getUuid());
         if (log.isDebugEnabled()) {
             log.debug(propertyId + "=" + value + " set in " + element.getTypeId());
-        }
-    }
-
-    /**
-     * This method is a work around for a suspected error in Hibernate.
-     * 
-     * Manually saves the PropertyList instances contained in the
-     * CnATreeElement. If this method is not called, then a Hibernate exception
-     * is thrown when saving the threats after changing the RiskConfiguration:
-     * 
-     * org.hibernate.TransientObjectException: object references an unsaved
-     * transient instance - save the transient instance before flushing:
-     * sernet.hui.common.connect.PropertyList
-     */
-    private void savePropertylistsManually(CnATreeElement element) {
-        Collection<PropertyList> propertyListCollection = element.getEntity()
-                .getTypedPropertyLists().values();
-        for (PropertyList propertyList : propertyListCollection) {
-            getPropertyListDao().saveOrUpdate(propertyList);
         }
     }
 
@@ -209,20 +202,8 @@ public class RiskValueInThreatUpdater {
         return updateContext.getRiskConfiguration();
     }
 
-    private int getNumberOfChangedThreats() {
-        return uuidsOfChangedThreats.size();
-    }
-
     public RiskConfigurationUpdateResult getRiskConfigurationUpdateResult() {
         return updateResult;
-    }
-
-    public IBaseDao<PropertyList, Integer> getPropertyListDao() {
-        return propertyListDao;
-    }
-
-    public void setPropertyListDao(IBaseDao<PropertyList, Integer> propertyListDao) {
-        this.propertyListDao = propertyListDao;
     }
 
     private static void logStatistic(RiskConfigurationUpdateResult updateResult) {

@@ -23,8 +23,6 @@ import java.util.Map;
 import java.util.Set;
 
 import sernet.gs.service.ServerInitializer;
-import sernet.hui.common.connect.PropertyList;
-import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
@@ -50,7 +48,6 @@ import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateResult
 public class RiskServiceImpl implements RiskService {
 
     private RiskServiceMetaDao metaDao;
-    private IBaseDao<PropertyList, Integer> propertyListDao;
 
     private Map<Integer, RiskConfiguration> riskConfigurationCache = Collections
             .synchronizedMap(new LinkedHashMap<Integer, RiskConfiguration>() {
@@ -95,8 +92,10 @@ public class RiskServiceImpl implements RiskService {
         Set<BpThreat> threatsFromScope = getMetaDao().loadThreatsFromScope(scopeId);
         RiskValueInThreatUpdater riskValueUpdater = new RiskValueInThreatUpdater(updateContext,
                 threatsFromScope);
-        riskValueUpdater.setPropertyListDao(propertyListDao);
-        riskValueUpdater.execute();
+        Set<BpThreat> changedThreats = riskValueUpdater.execute();
+        for (BpThreat bpThreat : changedThreats) {
+            metaDao.getElementDao().merge(bpThreat);
+        }
         return riskValueUpdater.getRiskConfigurationUpdateResult();
     }
 
@@ -120,14 +119,6 @@ public class RiskServiceImpl implements RiskService {
 
     public void setMetaDao(RiskServiceMetaDao metaDao) {
         this.metaDao = metaDao;
-    }
-
-    public IBaseDao<PropertyList, Integer> getPropertyListDao() {
-        return propertyListDao;
-    }
-
-    public void setpropertyListDao(IBaseDao<PropertyList, Integer> propertyListDao) {
-        this.propertyListDao = propertyListDao;
     }
 
 }
