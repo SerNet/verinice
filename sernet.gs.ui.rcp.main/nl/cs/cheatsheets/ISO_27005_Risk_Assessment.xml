@@ -41,18 +41,18 @@
     <description>
       Klikněte pravým tlačítkem myši na "Procesy". Zvolte <b>Přridat Process...</b>. Zadejte "Marketing"
 	  jako jeho název a nastavte hodnoty pro "Obchodní Dopad" na Důvěrnost: Veřejná, "Integrita: Normální",
-	  "Dostupnost: Vysoká". Uložte stisknutím <b>Ctrl+S</b
+	  "Dostupnost: Vysoká". Uložte stisknutím <b>Ctrl+S</b>
 	  <br /><br />
       Propojte své aktivum s procesem. Jeden ze způsobů jak to udělat je umístěn v editoru. Otevřte
-	  rozbalovací menu označené názvem "Vztahy k" a vyberte "Aktivum". Klikněte na b>Přidat...</b>.
-	  Zvolte své aktivum a klikněte na b>OK</b>. Titulek nyní ukazuje "závisí na" což znamená že
+	  rozbalovací menu označené názvem "Vztahy k" a vyberte "Aktivum". Klikněte na <b>Přidat...</b>.
+	  Zvolte své aktivum a klikněte na <b>OK</b>. Titulek nyní ukazuje "závisí na" což znamená že
 	  práce procesu "Marketing" závisí na funkčním aktivu "Mail Server".
     </description>
   </item>
   
   <item title="Vytvořit novou zranitelnost">
     <description>
-      Klikněte pravým tlačítkem myši na kategorii "Zranitelnosti" v pohledu ISM. Zvolte b>Přidat Zranitelnost...</b>.
+      Klikněte pravým tlačítkem myši na kategorii "Zranitelnosti" v pohledu ISM. Zvolte <b>Přidat Zranitelnost...</b>.
 	  Zadejte "Vzdálené zneužití" jako název a nastavte "Úroveň Zranitelnosti" na "1:Nízká" 
 	  Uložte stisknutím <b>Ctrl+S</b>.	 
     </description>
@@ -72,7 +72,7 @@
 	  a vytvořte nový scénář rizika. Pomocí myši přetáhněte hrozbu na zranitelnost v perspektivě ISM.
       <br /><br />
       Když se vás verinice zeptá jestli chcete vytvořit nový scénář rizika, klikněte "Ano".
-	  Nový objekt by se měl objevit ve skupině "Scénáře rizika" Pokud ne, zmáčknětě b>Ctrl+F5</b>
+	  Nový objekt by se měl objevit ve skupině "Scénáře rizika" Pokud ne, zmáčknětě <b>Ctrl+F5</b>
 	  pro aktualizaci obrazovky.
     </description>
   </item>
