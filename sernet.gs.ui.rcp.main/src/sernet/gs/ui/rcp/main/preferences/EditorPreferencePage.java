@@ -22,6 +22,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.connect.HitroUtil;
+import sernet.snutils.TagHelper;
 
 public class EditorPreferencePage extends FieldEditorPreferencePage
         implements IWorkbenchPreferencePage {
@@ -169,25 +170,12 @@ public class EditorPreferencePage extends FieldEditorPreferencePage
                 .getString(PreferenceConstants.HUI_TAGS);
 
         if (!PreferenceConstants.HUI_TAGS_ALL.equals(prefTags)) {
-            prefTagsArr = split(prefTags);
+            prefTagsArr = TagHelper.getTags(prefTags).stream().toArray(String[]::new);
         }
 
         if (prefTagsArr != null) {
             viewer.setCheckedElements(prefTagsArr);
         }
-    }
-
-    /**
-     * @param tags
-     * @return
-     */
-    private String[] split(String tags) {
-        if (tags == null) {
-            return new String[] {};
-        }
-
-        String returnTags = tags.replaceAll("\\s+", ""); //$NON-NLS-1$ //$NON-NLS-2$
-        return returnTags.split(","); //$NON-NLS-1$
     }
 
 }

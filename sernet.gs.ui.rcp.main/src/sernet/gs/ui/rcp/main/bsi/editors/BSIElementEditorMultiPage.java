@@ -72,6 +72,7 @@ import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.hui.swt.widgets.IHuiControlFactory;
 import sernet.snutils.AssertException;
 import sernet.snutils.FormInputParser;
+import sernet.snutils.TagHelper;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.bp.rcp.risk.ui.FrequencyConfigurator;
 import sernet.verinice.bp.rcp.risk.ui.ImpactConfigurator;
@@ -458,19 +459,6 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
         // not supported
     }
 
-    /**
-     * @param tags
-     * @return
-     */
-    private static String[] split(String tags) {
-        if (tags == null) {
-            return new String[] {};
-        }
-
-        String tags0 = tags.replaceAll("\\s+", ""); //$NON-NLS-1$ //$NON-NLS-2$
-        return tags0.split(","); //$NON-NLS-1$
-    }
-
     private void setIcon() {
         Image icon = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
         if (cnAElement != null) {
@@ -549,7 +537,7 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
             tags = new String[allTagsSet.size()];
             tags = allTagsSet.toArray(tags);
         } else {
-            tags = split(tagString);
+            tags = TagHelper.getTags(tagString).stream().toArray(String[]::new);
         }
         return tags;
     }

@@ -28,9 +28,9 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
+import sernet.snutils.TagHelper;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.bsi.TagHelper;
 
 /**
  * Retrieves all the tags used in the model.

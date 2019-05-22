@@ -15,27 +15,30 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.model.bsi;
+package sernet.snutils;
 
 import java.util.Collection;
-import java.util.Set;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-/**
- * @deprecated use {@link sernet.snutils.TagHelper} instead
- */
-@Deprecated
 public final class TagHelper {
 
+    private static final Pattern PATTERN = Pattern.compile("[^, ]+"); //$NON-NLS-1$
+
     public static Collection<String> getTags(String simpleValue) {
-        return sernet.snutils.TagHelper.getTags(simpleValue);
+        List<String> strings = new LinkedList<>();
+        addTagsToCollection(simpleValue, strings);
+        return Collections.unmodifiableList(strings);
     }
 
-    /**
-     * Takes a comma and/or space separated string of tag value (e.g. "foo,
-     * bar") and puts each tag into the given set.
-     */
-    public static void putInTags(Set<String> set, String simpleValue) {
-        set.addAll(sernet.snutils.TagHelper.getTags(simpleValue));
+    private static void addTagsToCollection(String simpleValue, Collection<String> strings) {
+        Matcher m = PATTERN.matcher(simpleValue);
+        while (m.find()) {
+            strings.add(m.group());
+        }
     }
 
     private TagHelper() {
