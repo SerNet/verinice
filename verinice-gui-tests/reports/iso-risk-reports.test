@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _XwXG4Nt5EeiRF6bz1CFgwg
 Runtime-Version: 2.4.1.201903190000
-Save-Time: 5/22/19 4:12 PM
+Save-Time: 5/23/19 1:04 PM
 Tags: report
 Testcase-Type: ecl
 
@@ -39,10 +39,6 @@ enable-reporting-log
 
 ism-import-vna "Risk_Test.vna"
 
-gen-rep "(S) ISM: Risikobehandlung (de)"
-gen-rep "(S) ISM: Risk Treatment (en)"
-gen-rep "(S) ISM: IS-Risikobeurteilung (de)"
-gen-rep "(S) ISM: IS-Risikobeurteilung (en)"
 gen-rep "(S) Risikoberechnung - Detaillierte Auflistung numerisch (de)"
 gen-rep "(S) Risikoberechnung - Detaillierte Auflistung numerisch (en)"
 
