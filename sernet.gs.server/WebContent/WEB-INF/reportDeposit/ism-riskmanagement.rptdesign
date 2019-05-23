@@ -12655,8 +12655,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                         <property name="contentType">html</property>
                         <text-property name="content" key="risk_category_explanation"><![CDATA[<B><U>Confidentiality</U></B>: property that information is not made available or disclosed to unauthorized individuals, entities, or processes<br/>
 <B><U>Integrity</U></B>: property of protecting the accuracy and completeness of assets<br/>
-<B><U>Availability</U></B>: property of information being accessible and usable upon demand by an authorized entity<br/>
-(ISO/IEC 27000:2009)]]></text-property>
+<B><U>Availability</U></B>: property of information being accessible and usable upon demand by an authorized entity<br/>]]></text-property>
                     </text>
                 </cell>
             </row>
@@ -23431,6 +23430,7 @@ reportContext.setGlobalVariable("asset_impl_control", Total.count());]]></method
             <row id="7012">
                 <property name="verticalAlign">bottom</property>
                 <property name="pageBreakAfter">avoid</property>
+                <property name="pageBreakBefore">always</property>
                 <property name="height">100%</property>
                 <cell id="7013">
                     <property name="textAlign">center</property>
@@ -30675,7 +30675,7 @@ reportContext.setGlobalVariable("remaining-high-risk-with-controls", Total.count
             </row>
         </grid>
         <label id="835">
-            <property name="fontSize">xx-large</property>
+            <property name="fontSize">x-large</property>
             <property name="fontWeight">bold</property>
             <property name="textUnderline">underline</property>
             <property name="marginTop">20pt</property>
@@ -32228,19 +32228,6 @@ reportContext.setGlobalVariable("risks_threats", Total.count());]]></method>
                 <cell id="8037">
                     <label id="8043">
                         <text-property name="text" key="report_error_no_linked_assets">No processes are linked with assets.</text-property>
-                    </label>
-                </cell>
-            </row>
-            <row id="8038">
-                <list-property name="visibility">
-                    <structure>
-                        <property name="format">all</property>
-                        <expression name="valueExpr" type="javascript">reportContext.getGlobalVariable("risks_threats")!=0</expression>
-                    </structure>
-                </list-property>
-                <cell id="8039">
-                    <label id="8104">
-                        <text-property name="text" key="report_error_no_linked_threats">No scenario is linked with threats.</text-property>
                     </label>
                 </cell>
             </row>
