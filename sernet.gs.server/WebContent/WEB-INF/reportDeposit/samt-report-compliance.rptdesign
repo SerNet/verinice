@@ -2150,6 +2150,9 @@ else 0</expression>
     <body>
         <grid id="796">
             <property name="width">100%</property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">reportContext.getMessage("isa1")</expression>
+            </structure>
             <column id="797"/>
             <column id="798"/>
             <row id="799">
@@ -3312,6 +3315,9 @@ else &#13;
                     <property name="allowExport">true</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">reportContext.getMessage("resultOverview")</expression>
+            </structure>
             <column id="3657">
                 <property name="width">30%</property>
             </column>
@@ -7519,6 +7525,9 @@ function beforeDrawAxisLabel( axis, label, icsc )
         </grid>
         <grid id="3670">
             <property name="width">100%</property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">reportContext.getMessage("title1")</expression>
+            </structure>
             <column id="3671"/>
             <column id="3672"/>
             <row id="3673">
@@ -8250,6 +8259,9 @@ if(locale.contains("de")){
         <grid name="headlineAnbindungDritter" id="2862">
             <property name="width">100%</property>
             <property name="dataBindingRef">overviewAnbindungDritter</property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">reportContext.getMessage("titleAnbindungDritter")</expression>
+            </structure>
             <column id="2863"/>
             <column id="2864"/>
             <row id="2865">
@@ -8784,9 +8796,6 @@ if(locale.contains("de")){
             <group id="2976">
                 <property name="groupName">tg23</property>
                 <expression name="keyExpr" type="javascript">row["nr_header"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["nr_header"]</expression>
-                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
@@ -8931,6 +8940,9 @@ if(locale.contains("de")){
         <grid name="headlinePrototypenschutz" id="2957">
             <property name="width">100%</property>
             <property name="dataBindingRef">overviewPrototypenschutz</property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">reportContext.getMessage("titlePrototypenschutz")</expression>
+            </structure>
             <column id="2958"/>
             <column id="2959"/>
             <row id="2960">
@@ -9450,11 +9462,19 @@ if(locale.contains("de")){
                     </cell>
                 </row>
             </header>
+            <group id="3734">
+                <property name="groupName">primary</property>
+                <expression name="keyExpr" type="javascript">""</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">reportContext.getMessage("prototypeProtectionDetail")</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+            </group>
             <group id="2911">
                 <property name="groupName">NewTableGroup1</property>
                 <expression name="keyExpr" type="javascript">row["nr_header"]</expression>
                 <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["nr_header"]</expression>
+                    <expression name="expressionValue" type="javascript">row["cbHeader"]</expression>
                 </structure>
                 <property name="hideDetail">false</property>
                 <header>
