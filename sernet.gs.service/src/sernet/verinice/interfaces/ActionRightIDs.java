@@ -65,7 +65,6 @@ public final class ActionRightIDs {
     public static final String EXPORT_LINK_TABLE = "exportlinktable";
     public static final String FILES = "files";
     public static final String GENERATEORGREPORT = "generateorgreport";
-    public static final String GENERATEAUDITREPORT = "generateauditreport";
     public static final String GROUP_BY_TAG = "groupbytag";
     public static final String GSNOTESIMPORT = "gsnotesimport";
     public static final String GSTOOLIMPORT = "gstoolimport";

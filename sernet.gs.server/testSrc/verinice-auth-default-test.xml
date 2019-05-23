@@ -72,7 +72,6 @@
             <action id="editriskconfiguration" />
             <action id="exportlinktable" />
             <action id="files" />
-            <action id="generateauditreport" />
             <action id="generateorgreport" />
             <action id="groupbytag"/>
             <action id="gsnotesimport" />
@@ -163,7 +162,6 @@
             <action id="editlinks" />
           <action id="exportlinktable" />
             <action id="files" />
-            <action id="generateauditreport" />
             <action id="generateorgreport" />
           <action id="groupbytag"/>
             <action id="gsnotesimport" />
@@ -208,7 +206,6 @@
             <action id="editlinks" />
             <action id="exportlinktable" />
             <action id="files" />
-            <action id="generateauditreport" />
             <action id="generateorgreport" />
             <action id="groupbytag"/>
             <action id="gsnotesimport" />
@@ -291,7 +288,6 @@
             <action id="editlinks" />
           <action id="exportlinktable" />
             <action id="files" />
-            <action id="generateauditreport" />
             <action id="generateorgreport" />
           <action id="groupbytag"/>
             <action id="importcsv" />
@@ -374,8 +370,7 @@
             <action id="editlinks" /> 
             <action id="editprofile" /> 
             <action id="exportlinktable" /> 
-            <action id="files" /> 
-            <action id="generateauditreport" /> 
+            <action id="files" />
             <action id="generateorgreport" /> 
             <action id="groupbytag"/> 
             <action id="importcsv" /> 
@@ -456,7 +451,6 @@
             <action id="editriskconfiguration" />
             <action id="exportlinktable" />
             <action id="files" />
-            <action id="generateauditreport" />
             <action id="generateorgreport" />
           <action id="groupbytag"/>
             <action id="gsnotesimport" />
