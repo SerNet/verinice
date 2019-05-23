@@ -27,16 +27,15 @@ import org.eclipse.swt.dnd.DragSourceListener;
 
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionModelingTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.VeriniceElementTransfer;
-import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 
 /**
- * This DragSourceListener class selects modules for the modeling process
- * of IT base protection while one or more modules
- * are dragged from sernet.verinice.rcp.catalog.CatalogView 
- * and dropped on an element in BaseProtectionView.
+ * This DragSourceListener class selects modules for the modeling process of IT
+ * base protection while one or more modules are dragged from
+ * sernet.verinice.rcp.catalog.CatalogView and dropped on an element in
+ * BaseProtectionView.
  * 
- * @see BbModelingDropPerformer
- * @see MetaDropAdapter
+ * @see sernet.verinice.bp.rcp.BbModelingDropPerformer
+ * @see sernet.verinice.iso27k.rcp.action.MetaDropAdapter
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
