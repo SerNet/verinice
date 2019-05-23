@@ -819,22 +819,6 @@
       </objectContribution>
       <objectContribution
             adaptable="false"
-            id="sernet.gs.ui.rcp.main.auditreport"
-            objectClass="sernet.verinice.model.iso27k.Audit">
-         <action
-               class="sernet.verinice.report.actions.AuditReportAction"
-
-               enablesFor="+"
-               icon="icons/report.png"
-               id="sernet.verinice.report.actions.AuditReportAction.action"
-               label="%action.label.27"
-               menubarPath="special"
-               style="push"
-               tooltip="%action.tooltip.26">
-         </action>
-      </objectContribution>
-      <objectContribution
-            adaptable="false"
             id="sernet.gs.ui.rcp.main.itverbundreport"
             objectClass="sernet.verinice.model.bsi.ITVerbund">
          <action
