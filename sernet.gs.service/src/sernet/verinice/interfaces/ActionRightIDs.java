@@ -20,7 +20,8 @@ package sernet.verinice.interfaces;
 import java.util.stream.Stream;
 
 /**
- * List of all possible actions that should be controlable by right-management
+ * List of all possible actions that should be controllable by the rights
+ * management.
  */
 public final class ActionRightIDs {
 

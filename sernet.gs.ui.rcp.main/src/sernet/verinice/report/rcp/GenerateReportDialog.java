@@ -659,30 +659,30 @@ public class GenerateReportDialog extends TitleAreaDialog {
         super.okPressed();
     }
 
-	private List<Integer> collectScopeIds() {
-		List<Integer> scopeIds = new ArrayList<>();
-		if (getRootElement() != null) {
-		    scopeIds.add(getRootElement());
-		}
-		if (getRootElements() != null) {
-		    for (Integer scopeId : getRootElements()) {
-		        if (scopeId != null) {
-		            scopeIds.add(scopeId);
-		        }
-		    }
-		}
-		return scopeIds;
-	}
-	
-	private boolean validateScopes(List<Integer> scopeIds) {
-		IValidationService vService = ServiceFactory.lookupValidationService();
-		for (Integer scopeId : scopeIds) {
-		    if (!vService.getValidations(scopeId, (Integer) null).isEmpty()) {
-		        return true;
-		    }
-		}
-		return false;
-	}
+    private List<Integer> collectScopeIds() {
+        List<Integer> scopeIds = new ArrayList<>();
+        if (getRootElement() != null) {
+            scopeIds.add(getRootElement());
+        }
+        if (getRootElements() != null) {
+            for (Integer scopeId : getRootElements()) {
+                if (scopeId != null) {
+                    scopeIds.add(scopeId);
+                }
+            }
+        }
+        return scopeIds;
+    }
+
+    private boolean validateScopes(List<Integer> scopeIds) {
+        IValidationService vService = ServiceFactory.lookupValidationService();
+        for (Integer scopeId : scopeIds) {
+            if (!vService.getValidations(scopeId, (Integer) null).isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Override
     protected void cancelPressed() {
@@ -874,27 +874,27 @@ public class GenerateReportDialog extends TitleAreaDialog {
             return nsc.compare(o1.getOutputname(), o2.getOutputname());
         });
     }
-    
+
     /**
      * Select the scope aka root element.
      */
-	private void selectScope() {
-		getButton(IDialogConstants.OK_ID).setEnabled(true);
-		int s = scopeCombo.getSelectionIndex();
-		if (chosenReportMetaData != null && chosenReportMetaData.isMultipleRootObjects()) {
-		    if (s == 0) {
-		        Integer[] roots = new Integer[scopes.size()];
-		        for (int i = 0; i < scopes.size(); i++) {
-		            roots[i] = scopes.get(i).getDbId();
-		        }
-		        rootElements = roots;
-		        rootElement = null;
-		    } else {
-		        rootElement = scopes.get(s - 1).getDbId();
-		    }
-		} else {
-		    rootElement = scopes.get(s).getDbId();
-		}
-	}
+    private void selectScope() {
+        getButton(IDialogConstants.OK_ID).setEnabled(true);
+        int s = scopeCombo.getSelectionIndex();
+        if (chosenReportMetaData != null && chosenReportMetaData.isMultipleRootObjects()) {
+            if (s == 0) {
+                Integer[] roots = new Integer[scopes.size()];
+                for (int i = 0; i < scopes.size(); i++) {
+                    roots[i] = scopes.get(i).getDbId();
+                }
+                rootElements = roots;
+                rootElement = null;
+            } else {
+                rootElement = scopes.get(s - 1).getDbId();
+            }
+        } else {
+            rootElement = scopes.get(s).getDbId();
+        }
+    }
 
 }
