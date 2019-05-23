@@ -21,8 +21,6 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
 
 public interface IReportType {
 
-    // reports only applicable to audits
-    public final static String USE_CASE_ID_AUDIT_REPORT = "use_case_report_audit";
     // reports only applicable to organizations / it networks
     public final static String USE_CASE_ID_GENERAL_REPORT = "use_case_report_general";
     // reports applicable to both of the cases above

@@ -53,7 +53,6 @@ import sernet.verinice.interfaces.validation.IValidationService;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.service.commands.crud.LoadCnATreeElementTitles;
@@ -154,9 +153,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
      */
     public GenerateReportDialog(Shell shell, Object reportScope) {
         this(shell);
-        if (reportScope instanceof Audit) {
-            this.useCase = IReportType.USE_CASE_ID_AUDIT_REPORT;
-        } else if (reportScope instanceof Organization || reportScope instanceof ITVerbund) {
+        if (reportScope instanceof Organization || reportScope instanceof ITVerbund) {
             this.useCase = IReportType.USE_CASE_ID_GENERAL_REPORT;
         } else {
             this.useCase = IReportType.USE_CASE_ID_ALWAYS_REPORT;
