@@ -592,6 +592,7 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
         @Override
         protected IStatus run(IProgressMonitor monitor) {
             monitor.setTaskName("Refresh application...");
+            Activator.inheritVeriniceContextState();
             refresh();
             return Status.OK_STATUS;
         }
