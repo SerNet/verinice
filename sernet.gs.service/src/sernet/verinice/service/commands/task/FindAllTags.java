@@ -20,11 +20,10 @@ package sernet.verinice.service.commands.task;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -57,14 +56,8 @@ public class FindAllTags extends GenericCommand {
 
         List<String> tempTags = (List<String>) getDaoFactory().getDAO(BSIModel.class)
                 .findByCallback(hcb);
-
-        HashSet<String> uniqueTags = new HashSet<String>();
-        for (String elem : tempTags) {
-            TagHelper.putInTags(uniqueTags, elem);
-        }
-
-        tags = new ArrayList<String>(uniqueTags);
-        Collections.sort(tags);
+        tags = tempTags.stream().flatMap(tagList -> TagHelper.getTags(tagList).stream()).distinct()
+                .sorted().collect(Collectors.toList());
     }
 
     public List<String> getTags() {
@@ -83,10 +76,13 @@ public class FindAllTags extends GenericCommand {
             // TODO: Implicitly we assume that all propertytypes that denote a
             // tag
             // have the common suffix '_tag'.
-            return session
-                    .createSQLQuery("select propertyValue " + "from properties "
-                            + "where propertytype like '%_tag'")
+            @SuppressWarnings("unchecked")
+            List<String> list = session
+                    .createSQLQuery(
+                            "select propertyValue from properties where propertytype like '%_tag'")
                     .addScalar("propertyValue", sernet.gs.reveng.type.Types.STRING_TYPE).list();
+            return list.stream().filter(StringUtils::isNotBlank).distinct()
+                    .collect(Collectors.toList());
         }
     }
 }
