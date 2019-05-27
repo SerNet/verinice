@@ -19,6 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view.menu.menuitem;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.menu.DefaultMenuItem;
 
@@ -46,17 +49,21 @@ public class ControlsIsoMenuItem extends DefaultMenuItem {
     }
 
     private String createUrl() {
-        String param = StringUtils.join(new String[] { getScopeId(), getCatalogId(),
-                getCatalogName(), getOrganizationName() }, "&");
-        return templateFile + "?" + param;
+        try {
+            String param = StringUtils.join(new String[] { getScopeId(), getCatalogId(),
+                    getCatalogName(), getOrganizationName() }, "&");
+            return templateFile + "?" + param;
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private String getOrganizationName() {
-        return "organizationName=" + organization.getTitle();
+    private String getOrganizationName() throws UnsupportedEncodingException {
+        return "organizationName=" + URLEncoder.encode(organization.getTitle(), "UTF-8");
     }
 
-    private String getCatalogName() {
-        return "catalogName=" + controlGroup.getTitle();
+    private String getCatalogName() throws UnsupportedEncodingException {
+        return "catalogName=" + URLEncoder.encode(controlGroup.getTitle(), "UTF-8");
     }
 
     private String getCatalogId() {
