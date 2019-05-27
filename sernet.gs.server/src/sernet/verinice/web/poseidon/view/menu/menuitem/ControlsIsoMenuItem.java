@@ -45,8 +45,9 @@ public class ControlsIsoMenuItem extends DefaultMenuItem {
         setIcon("fa fa-fw fa-area-chart");
     }
 
-    private String createUrl(){
-        String param = StringUtils.join(new String[]{getScopeId(), getCatalogId(), getCatalogName(), getOrganizationName()}, "&");
+    private String createUrl() {
+        String param = StringUtils.join(new String[] { getScopeId(), getCatalogId(),
+                getCatalogName(), getOrganizationName() }, "&");
         return templateFile + "?" + param;
     }
 
