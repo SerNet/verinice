@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _e9TvABNOEemg775CWW9MAw
 Runtime-Version: 2.3.0.201806262310
-Save-Time: 3/22/19 11:13 AM
+Save-Time: 6/4/19 2:41 PM
 Tags: skipExecution
 Testcase-Type: ecl
 
@@ -23,9 +23,39 @@ Entry-Name: .content
 
 log "start update test"
 
+proc "info-screenshots" [val suffix] {
+	get-about-menu | click
+	screen-shot "Info über verinice" [concat "verinice-info-" $suffix "-0.png"]
+	get-window "Info über verinice" | get-button Installationsdetails | click
+	screen-shot "Installationsdetails für verinice" [concat "verinice-info-" $suffix "-1.png"]
+	get-window "Installationsdetails für verinice" | get-tab-folder | get-tab-item Installationsprotokoll | click
+	screen-shot "Installationsdetails für verinice" [concat "verinice-info-" $suffix "-2.png"]
+	get-window "Installationsdetails für verinice" | get-tab-folder | get-tab-item Funktionen | click
+	screen-shot "Installationsdetails für verinice" [concat "verinice-info-" $suffix "-3.png"]
+	get-window "Installationsdetails für verinice" | get-tab-folder | get-tab-item "Plug-ins" | click
+	screen-shot "Installationsdetails für verinice" [concat "verinice-info-" $suffix "-4.png"]
+	get-window "Installationsdetails für verinice" | get-tab-folder | get-tab-item Konfiguration | click
+	wait 2000 // wait for the text to load
+	screen-shot "Installationsdetails für verinice" [concat "verinice-info-" $suffix "-5.png"]
+	get-window "Installationsdetails für verinice" | get-button "Schließen" | click
+	get-window "Info über verinice" | get-button "Schließen" | click
+}
+info-screenshots "before"
 list-install-units | write-lines [concat "file:" $basedir "/before-instalable-units.txt"] true
 list-plugins | write-lines [concat "file:" $basedir "/before-instalable-units.txt"] true
 list-features | write-lines [concat "file:" $basedir "/before-instalable-units.txt"] true
+
+get-menu -path "Bearbeiten/Einstellungen..." | click
+with [get-window Benutzervorgaben] {
+    get-tree | select "Installieren\\/Aktualisieren/Websites mit verfügbarer Software"
+    with [get-table] {
+        select "Öffentlicher Update-Server" | activate-cell-edit -type MouseClickSelection
+        apply-cell-edit -deactivate
+    }
+    get-button Entfernen | click
+    get-window "Entferne Sites" | get-button Ja | click
+    get-button "Anwenden und Schließen" | click
+}
 
 try {
 	get-menu -path "Hilfe/Install New Software..." | click
@@ -90,7 +120,7 @@ try -times 12 -delay 10000 -command {
 	throw-error "could not find 'Software-Aktualisierungen' dialog"
 }
 
-//restart-aut
+// restart-aut
 
 wait-until-eclipse-is-ready
 
@@ -98,14 +128,5 @@ list-install-units | write-lines [concat "file:" $basedir "/after-instalable-uni
 list-plugins | write-lines [concat "file:" $basedir "/after-instalable-units.txt"] true
 list-features | write-lines [concat "file:" $basedir "/after-instalable-units.txt"] true
 
-get-about-menu | click
-with [get-window "Info über verinice"] {
-	screen-shot "Info über verinice" "verinice-info.png"
-	get-button Installationsdetails | click
-	wait 2000
-	screen-shot "Info über verinice" "verinice-info1.png"
-
-	// get-window "Installationsdetails für verinice" | get-button "Schließen" | click
-	// get-button "Schließen" | click
-}
+info-screenshots "after"
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
