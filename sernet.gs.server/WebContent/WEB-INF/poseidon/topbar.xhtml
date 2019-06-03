@@ -44,6 +44,11 @@
           <p:submenu
             icon="fa fa-globe">
             <p:menuitem
+              value="Czech"
+              icon="#{message.getIcon('cs')}"
+              action="#{message.czech}"
+              ajax="false" />
+            <p:menuitem
               value="English"
               icon="#{message.getIcon('en')}"
               action="#{message.english}"
@@ -52,6 +57,11 @@
               value="German"
               icon="#{message.getIcon('de')}"
               action="#{message.german}"
+              ajax="false" />
+            <p:menuitem
+              value="Italian"
+              icon="#{message.getIcon('it')}"
+              action="#{message.italian}"
               ajax="false" />
           </p:submenu>
 

@@ -57,12 +57,20 @@ public class MessageBean {
         Util.repeatMessage();
     }
 
+    public void czech() {
+        setLocale(new Locale("cs"));
+    }
+
     public void english() {
         setLocale(Locale.ENGLISH);
     }
 
     public void german() {
         setLocale(Locale.GERMAN);
+    }
+
+    public void italian() {
+        setLocale(Locale.ITALIAN);
     }
 
     public void setLocale(Locale locale) {
