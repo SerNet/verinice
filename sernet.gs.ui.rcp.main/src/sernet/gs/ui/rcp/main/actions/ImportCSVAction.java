@@ -52,7 +52,8 @@ public class ImportCSVAction extends RightsEnabledAction {
     public void doRun() {
         // Display.getCurrent().getActiveShell()
         ImportCSVWizard wizard = new ImportCSVWizard();
-        final WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard);
+        final WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(),
+                wizard);
         int resultFromWizardDialog = wizardDialog.open();
         if (resultFromWizardDialog == WizardDialog.CANCEL) {
             return;
@@ -63,25 +64,29 @@ public class ImportCSVAction extends RightsEnabledAction {
         delete = wizard.getDeleteState();
 
         try {
-            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-                @Override
-                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    try {
-                        monitor.beginTask(Messages.ImportCSVAction_1, IProgressMonitor.UNKNOWN);
-                        Activator.inheritVeriniceContextState();
-                        try {
-                            doImport();
-                        } catch (Exception e) {
-                            LOG.error("Error while importing CSV data.", e); //$NON-NLS-1$
-                            throw new RuntimeException("Error while importing CSV data.", e); //$NON-NLS-1$
+            PlatformUI.getWorkbench().getProgressService()
+                    .busyCursorWhile(new IRunnableWithProgress() {
+                        @Override
+                        public void run(IProgressMonitor monitor)
+                                throws InvocationTargetException, InterruptedException {
+                            try {
+                                monitor.beginTask(Messages.ImportCSVAction_1,
+                                        IProgressMonitor.UNKNOWN);
+                                Activator.inheritVeriniceContextState();
+                                try {
+                                    doImport();
+                                } catch (Exception e) {
+                                    LOG.error("Error while importing CSV data.", e); //$NON-NLS-1$
+                                    throw new RuntimeException("Error while importing CSV data.", //$NON-NLS-1$
+                                            e);
+                                }
+                            } finally {
+                                if (monitor != null) {
+                                    monitor.done();
+                                }
+                            }
                         }
-                    } finally {
-                        if (monitor != null) {
-                            monitor.done();
-                        }
-                    }
-                }
-            });
+                    });
         } catch (Exception e) {
             LOG.error("Error while importing CSV data.", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.ImportCSVWizard_1);
@@ -89,27 +94,33 @@ public class ImportCSVAction extends RightsEnabledAction {
     }
 
     protected void doImport() throws CommandException, SyncParameterException {
-        SyncCommand command = new SyncCommand(new SyncParameter(insert, update, delete, false, SyncParameter.EXPORT_FORMAT_XML_PURE), sr);
+        SyncCommand command = new SyncCommand(new SyncParameter(insert, update, delete, false,
+                SyncParameter.EXPORT_FORMAT_XML_PURE), sr);
 
         command = ServiceFactory.lookupCommandService().executeCommand(command);
 
         Set<CnATreeElement> importRootObjectSet = command.getImportRootObject();
         Set<CnATreeElement> changedElement = command.getElementSet();
         updateModel(importRootObjectSet, changedElement);
-        if (Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)) {
+        if (Activator.getDefault().getPreferenceStore()
+                .getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)) {
             createValidations(changedElement);
         }
     }
 
-    private void updateModel(Set<CnATreeElement> importRootObjectSet, Set<CnATreeElement> changedElement) {
+    private void updateModel(Set<CnATreeElement> importRootObjectSet,
+            Set<CnATreeElement> changedElement) {
         if (importRootObjectSet != null && !importRootObjectSet.isEmpty()) {
             for (CnATreeElement importRootObject : importRootObjectSet) {
-                CnAElementFactory.getModel(importRootObject).childAdded(importRootObject.getParent(), importRootObject);
+                CnAElementFactory.getModel(importRootObject)
+                        .childAdded(importRootObject.getParent(), importRootObject);
                 CnAElementFactory.getModel(importRootObject).databaseChildAdded(importRootObject);
                 if (changedElement != null) {
                     for (CnATreeElement cnATreeElement : changedElement) {
-                        CnAElementFactory.getModel(cnATreeElement).childAdded(cnATreeElement.getParent(), cnATreeElement);
-                        CnAElementFactory.getModel(cnATreeElement).databaseChildAdded(cnATreeElement);
+                        CnAElementFactory.getModel(cnATreeElement)
+                                .childAdded(cnATreeElement.getParent(), cnATreeElement);
+                        CnAElementFactory.getModel(cnATreeElement)
+                                .databaseChildAdded(cnATreeElement);
                     }
                 }
             }
@@ -128,7 +139,8 @@ public class ImportCSVAction extends RightsEnabledAction {
             ServiceFactory.lookupValidationService().createValidationForSingleElement(elmt);
         }
         if (!elmts.isEmpty()) {
-            CnAElementFactory.getModel(((CnATreeElement) elmts.toArray()[0])).validationAdded(((CnATreeElement) elmts.toArray()[0]).getScopeId());
+            CnAElementFactory.getModel(((CnATreeElement) elmts.toArray()[0]))
+                    .validationAdded(((CnATreeElement) elmts.toArray()[0]).getScopeId());
         }
     }
 }
