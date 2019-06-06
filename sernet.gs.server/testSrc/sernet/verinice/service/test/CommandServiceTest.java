@@ -87,7 +87,6 @@ public class CommandServiceTest extends CommandServiceProvider {
     @Resource(name = "huiTypeFactory")
     private HUITypeFactory huiTypeFactory;
 
-    private Set<CnATreeElement> importedElements;
     private List<String> uuidList;
     private String currentDate;
 
@@ -306,17 +305,9 @@ public class CommandServiceTest extends CommandServiceProvider {
 
     }
 
-    /**
-     * Vna import does not work in Junit-Test. After importing only the
-     * organization is saved in DB. Probably this is a spring-junit-transaction
-     * issue.
-     * 
-     * This method is not annotated with @Test anymore. To activate it activate
-     * the annotation again.
-     */
-    // @Test
-    // @Transactional
-    // @Rollback(false)
+    @Test
+    @Transactional
+    @Rollback(true)
     public void testVnaImport() throws Exception {
         importVna();
 
@@ -332,7 +323,6 @@ public class CommandServiceTest extends CommandServiceProvider {
         // Links 40 / 20
         // Dateien 2
 
-        removeImport();
     }
 
     public void importVna() throws Exception {
@@ -342,19 +332,10 @@ public class CommandServiceTest extends CommandServiceProvider {
 
         SyncCommand command = new SyncCommand(parameter, vnaUrl.getPath());
         command = commandService.executeCommand(command);
-        importedElements = command.getElementSet();
 
         // sessionFactory.getCurrentSession().flush();
 
         LOG.info("VNA imported: " + vnaUrl.getPath());
-    }
-
-    public void removeImport() throws Exception {
-        for (CnATreeElement element : importedElements) {
-            RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(
-                    element);
-            commandService.executeCommand(removeCommand);
-        }
     }
 
 }
