@@ -891,9 +891,9 @@ public class XMLImportDialog extends Dialog {
     }
 
     private void updateModelAndValidate(SyncCommand command) {
-        Set<CnATreeElement> importRootObjectSet = command.getImportRootObject();
-        final Set<CnATreeElement> changedElement = command.getElementSet();
-        updateModel(importRootObjectSet, changedElement);
+        Set<CnATreeElement> importRootObjectSet = command.getImportRootObjects();
+        final Set<CnATreeElement> changedElements = command.getElementSet();
+        updateModels(importRootObjectSet, changedElements);
         if (Activator.getDefault().getPreferenceStore()
                 .getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)) {
             WorkspaceJob validationCreationJob = new WorkspaceJob(Messages.XMLImportDialog_4) {
@@ -905,7 +905,7 @@ public class XMLImportDialog extends Dialog {
                                 NLS.bind(Messages.XMLImportDialog_5,
                                         new Object[] { dataFile.getName() }),
                                 IProgressMonitor.UNKNOWN);
-                        createValidations(changedElement);
+                        createValidations(changedElements);
                     } catch (Exception e) {
                         LOG.error("Exception while executing createValidationsJob", e); //$NON-NLS-1$
                     } finally {
@@ -940,10 +940,10 @@ public class XMLImportDialog extends Dialog {
         return result;
     }
 
-    private void updateModel(Set<CnATreeElement> importRootObjectSet,
-            Set<CnATreeElement> changedElement) {
+    private void updateModels(Set<CnATreeElement> importRootObjectSet,
+            Set<CnATreeElement> changedElements) {
         final int maxChangedElements = 9;
-        if (changedElement != null && changedElement.size() > maxChangedElements) {
+        if (changedElements != null && changedElements.size() > maxChangedElements) {
             // if more than 9 elements changed or added do a complete reload
             CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
         } else {
@@ -953,8 +953,8 @@ public class XMLImportDialog extends Dialog {
                             .childAdded(importRootObject.getParent(), importRootObject);
                     CnAElementFactory.getModel(importRootObject)
                             .databaseChildAdded(importRootObject);
-                    if (changedElement != null) {
-                        for (CnATreeElement cnATreeElement : changedElement) {
+                    if (changedElements != null) {
+                        for (CnATreeElement cnATreeElement : changedElements) {
                             CnAElementFactory.getModel(cnATreeElement)
                                     .childAdded(cnATreeElement.getParent(), cnATreeElement);
                             CnAElementFactory.getModel(cnATreeElement)
@@ -963,8 +963,8 @@ public class XMLImportDialog extends Dialog {
                     }
                 }
             }
-            if (changedElement != null) {
-                for (CnATreeElement cnATreeElement : changedElement) {
+            if (changedElements != null) {
+                for (CnATreeElement cnATreeElement : changedElements) {
                     CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement);
                     CnAElementFactory.getModel(cnATreeElement).databaseChildChanged(cnATreeElement);
                 }

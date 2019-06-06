@@ -290,7 +290,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         this.reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
         this.importGstoolAction = new ImportGstoolAction(window,
                 Messages.ApplicationActionBarAdvisor_15);
-        this.importCSVAction = new ImportCSVAction(window, Messages.ApplicationActionBarAdvisor_30);
+        this.importCSVAction = new ImportCSVAction(Messages.ApplicationActionBarAdvisor_30);
         this.importPersonFromLdap = new ImportPersonFromLdap(window,
                 Messages.ApplicationActionBarAdvisor_32);
         this.importGSNotesAction = new ImportGstoolNotesAction(window,

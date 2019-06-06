@@ -23,7 +23,6 @@ package sernet.verinice.service.commands;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -66,11 +65,13 @@ public class SyncCommand extends ChangeLoggingCommand
 
     private SyncParameter parameter;
 
-    private int inserted, potentiallyUpdated, deleted;
+    private int inserted;
+    private int potentiallyUpdated;
+    private int deleted;
 
-    private List<String> errors = new ArrayList<String>();
+    private List<String> errors = new ArrayList<>();
 
-    private Set<CnATreeElement> importRootObject;
+    private Set<CnATreeElement> importRootObjects;
 
     private Set<CnATreeElement> elementSet = null;
 
@@ -82,7 +83,7 @@ public class SyncCommand extends ChangeLoggingCommand
 
     public enum Status {
         OK, FAILED
-    };
+    }
 
     /**
      * Creates an instance of the SyncCommand where the {@link SyncRequest}
@@ -94,11 +95,6 @@ public class SyncCommand extends ChangeLoggingCommand
      * done to the {@link SyncRequest} object which unfortunately is not
      * possible (through default Spring HttpInvoker mechanism at least).
      * </p>
-     * 
-     * @param insert
-     * @param update
-     * @param delete
-     * @param syncRequestSerialized
      */
     public SyncCommand(SyncParameter parameter, byte[] syncRequestSerialized) {
         this.parameter = parameter;
@@ -118,11 +114,6 @@ public class SyncCommand extends ChangeLoggingCommand
      * the JAXB serialization under the hood automatically.
      * 
      * Called by ImportCSVWizard
-     * 
-     * @param insert
-     * @param update
-     * @param delete
-     * @param sr
      */
     public SyncCommand(SyncParameter parameter, SyncRequest sr) {
         this.parameter = parameter;
@@ -136,10 +127,6 @@ public class SyncCommand extends ChangeLoggingCommand
 
     /**
      * Called by soap web-service
-     * 
-     * @param sr
-     *            SyncRequest
-     * @throws SyncParameterException
      */
     public SyncCommand(SyncRequest sr) throws SyncParameterException {
         PureXml pureXml = new PureXml();
@@ -203,7 +190,7 @@ public class SyncCommand extends ChangeLoggingCommand
         }
     }
 
-    private void doInsertAndUpdate() throws CommandException, IOException {
+    private void doInsertAndUpdate() throws CommandException {
         SyncInsertUpdateCommand cmdInsertUpdate = new SyncInsertUpdateCommand(
                 veriniceArchive.getSourceId(), veriniceArchive.getSyncData(),
                 veriniceArchive.getSyncMapping(), getAuthService().getUsername(), parameter,
@@ -215,7 +202,7 @@ public class SyncCommand extends ChangeLoggingCommand
             cmdInsertUpdate.importFileData(veriniceArchive);
         }
 
-        importRootObject = new HashSet<CnATreeElement>(cmdInsertUpdate.getContainerMap().values());
+        importRootObjects = new HashSet<>(cmdInsertUpdate.getContainerMap().values());
         elementSet = cmdInsertUpdate.getElementSet();
 
         inserted += cmdInsertUpdate.getInserted();
@@ -232,8 +219,6 @@ public class SyncCommand extends ChangeLoggingCommand
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.GenericCommand#clear()
      */
     @Override
@@ -242,6 +227,7 @@ public class SyncCommand extends ChangeLoggingCommand
         if (veriniceArchive != null) {
             veriniceArchive.clear();
         }
+        fileData = null;
     }
 
     private long getStartTimestamp() {
@@ -279,13 +265,8 @@ public class SyncCommand extends ChangeLoggingCommand
         return errors;
     }
 
-    /**
-     * See {@link SyncInsertUpdateCommand#getImportRootObject()}.
-     * 
-     * @return
-     */
-    public Set<CnATreeElement> getImportRootObject() {
-        return importRootObject;
+    public Set<CnATreeElement> getImportRootObjects() {
+        return importRootObjects;
     }
 
     public Set<CnATreeElement> getElementSet() {
@@ -306,9 +287,9 @@ public class SyncCommand extends ChangeLoggingCommand
      */
     @Override
     public List<CnATreeElement> getChangedElements() {
-        List<CnATreeElement> changedElements = new LinkedList<CnATreeElement>();
-        if (importRootObject != null) {
-            changedElements.addAll(importRootObject);
+        List<CnATreeElement> changedElements = new LinkedList<>();
+        if (importRootObjects != null) {
+            changedElements.addAll(importRootObjects);
         }
         if (elementSet != null) {
             changedElements.addAll(elementSet);
@@ -348,14 +329,12 @@ public class SyncCommand extends ChangeLoggingCommand
     }
 
     private void logXml() {
-        if (log.isDebugEnabled()) {
-            if (veriniceArchive.getVeriniceXml() != null) {
-                String xml = new String(veriniceArchive.getVeriniceXml(),
-                        VeriniceCharset.CHARSET_UTF_8);
-                log.debug("### Importing data begin ###");
-                log.debug(xml);
-                log.debug("### Importing data end ####");
-            }
+        if (log.isDebugEnabled() && veriniceArchive.getVeriniceXml() != null) {
+            String xml = new String(veriniceArchive.getVeriniceXml(),
+                    VeriniceCharset.CHARSET_UTF_8);
+            log.debug("### Importing data begin ###");
+            log.debug(xml);
+            log.debug("### Importing data end ####");
         }
     }
 

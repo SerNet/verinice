@@ -8,7 +8,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import de.sernet.sync.sync.SyncRequest;
@@ -38,14 +37,12 @@ public class ImportCSVAction extends RightsEnabledAction {
     private boolean update;
     private boolean delete;
 
-    public ImportCSVAction(IWorkbenchWindow window, String label) {
+    public ImportCSVAction(String label) {
         super(ActionRightIDs.IMPORTCSV, label);
         setId(ID);
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
      */
     @Override
@@ -99,24 +96,24 @@ public class ImportCSVAction extends RightsEnabledAction {
 
         command = ServiceFactory.lookupCommandService().executeCommand(command);
 
-        Set<CnATreeElement> importRootObjectSet = command.getImportRootObject();
-        Set<CnATreeElement> changedElement = command.getElementSet();
-        updateModel(importRootObjectSet, changedElement);
+        Set<CnATreeElement> importRootObjectSet = command.getImportRootObjects();
+        Set<CnATreeElement> changedElements = command.getElementSet();
+        updateModels(importRootObjectSet, changedElements);
         if (Activator.getDefault().getPreferenceStore()
                 .getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)) {
-            createValidations(changedElement);
+            createValidations(changedElements);
         }
     }
 
-    private void updateModel(Set<CnATreeElement> importRootObjectSet,
-            Set<CnATreeElement> changedElement) {
+    private void updateModels(Set<CnATreeElement> importRootObjectSet,
+            Set<CnATreeElement> changedElements) {
         if (importRootObjectSet != null && !importRootObjectSet.isEmpty()) {
             for (CnATreeElement importRootObject : importRootObjectSet) {
                 CnAElementFactory.getModel(importRootObject)
                         .childAdded(importRootObject.getParent(), importRootObject);
                 CnAElementFactory.getModel(importRootObject).databaseChildAdded(importRootObject);
-                if (changedElement != null) {
-                    for (CnATreeElement cnATreeElement : changedElement) {
+                if (changedElements != null) {
+                    for (CnATreeElement cnATreeElement : changedElements) {
                         CnAElementFactory.getModel(cnATreeElement)
                                 .childAdded(cnATreeElement.getParent(), cnATreeElement);
                         CnAElementFactory.getModel(cnATreeElement)
@@ -125,8 +122,8 @@ public class ImportCSVAction extends RightsEnabledAction {
                 }
             }
         } else {
-            if (changedElement != null) {
-                for (CnATreeElement cnATreeElement : changedElement) {
+            if (changedElements != null) {
+                for (CnATreeElement cnATreeElement : changedElements) {
                     CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement);
                     CnAElementFactory.getModel(cnATreeElement).databaseChildChanged(cnATreeElement);
                 }
