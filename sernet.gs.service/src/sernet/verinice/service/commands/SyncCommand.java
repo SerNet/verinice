@@ -24,10 +24,12 @@ package sernet.verinice.service.commands;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXB;
 
@@ -71,9 +73,13 @@ public class SyncCommand extends ChangeLoggingCommand
 
     private List<String> errors = new ArrayList<>();
 
-    private Set<CnATreeElement> importRootObjects;
+    private transient Set<CnATreeElement> importRootObjects;
 
-    private Set<CnATreeElement> elementSet = null;
+    private transient Set<CnATreeElement> elementSet = null;
+
+    private Set<String> importedElementUUIDs;
+
+    private Set<String> importRootObjectUUIDs;
 
     private transient IVeriniceArchive veriniceArchive = null;
 
@@ -178,8 +184,6 @@ public class SyncCommand extends ChangeLoggingCommand
             log.error("Error while importing", e);
             errors.add("Insert/Update failed.");
             throw new RuntimeCommandException(e);
-        } finally {
-            clear();
         }
     }
 
@@ -204,7 +208,10 @@ public class SyncCommand extends ChangeLoggingCommand
 
         importRootObjects = new HashSet<>(cmdInsertUpdate.getContainerMap().values());
         elementSet = cmdInsertUpdate.getElementSet();
-
+        importedElementUUIDs = Collections.unmodifiableSet(
+                elementSet.stream().map(CnATreeElement::getUuid).collect(Collectors.toSet()));
+        importRootObjectUUIDs = Collections.unmodifiableSet(importRootObjects.stream()
+                .map(CnATreeElement::getUuid).collect(Collectors.toSet()));
         inserted += cmdInsertUpdate.getInserted();
         potentiallyUpdated += cmdInsertUpdate.getUpdated();
     }
@@ -228,6 +235,8 @@ public class SyncCommand extends ChangeLoggingCommand
             veriniceArchive.clear();
         }
         fileData = null;
+        elementSet = null;
+        importRootObjects = null;
     }
 
     private long getStartTimestamp() {
@@ -265,12 +274,12 @@ public class SyncCommand extends ChangeLoggingCommand
         return errors;
     }
 
-    public Set<CnATreeElement> getImportRootObjects() {
-        return importRootObjects;
+    public Set<String> getImportRootObjectUUIDs() {
+        return importRootObjectUUIDs;
     }
 
-    public Set<CnATreeElement> getElementSet() {
-        return elementSet;
+    public Set<String> getImportedElementUUIDs() {
+        return importedElementUUIDs;
     }
 
     /*
@@ -354,4 +363,5 @@ public class SyncCommand extends ChangeLoggingCommand
     public Exception getErrorCause() {
         return errorCause;
     }
+
 }

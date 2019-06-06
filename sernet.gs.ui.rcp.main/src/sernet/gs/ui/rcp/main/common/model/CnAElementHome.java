@@ -19,8 +19,10 @@ package sernet.gs.ui.rcp.main.common.model;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -28,6 +30,7 @@ import org.eclipse.swt.widgets.Display;
 import org.hibernate.StaleObjectStateException;
 
 import sernet.gs.model.Baustein;
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -67,6 +70,7 @@ import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.CreateLink;
 import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
+import sernet.verinice.service.commands.LoadElementsByUuid;
 import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.RemoveLink;
 import sernet.verinice.service.commands.SaveElement;
@@ -323,6 +327,14 @@ public final class CnAElementHome {
         LoadCnAElementById command = new LoadCnAElementById(typeId, id);
         command = getCommandService().executeCommand(command);
         return command.getFound();
+    }
+
+    public Set<CnATreeElement> loadElementsByUUID(Collection<String> elementUUIDs,
+            RetrieveInfo retrieveInfo) throws CommandException {
+        LoadElementsByUuid<CnATreeElement> elementLoader = new LoadElementsByUuid<>(
+                elementUUIDs.stream().collect(Collectors.toList()), retrieveInfo);
+        elementLoader = getCommandService().executeCommand(elementLoader);
+        return elementLoader.getElements();
     }
 
     /**

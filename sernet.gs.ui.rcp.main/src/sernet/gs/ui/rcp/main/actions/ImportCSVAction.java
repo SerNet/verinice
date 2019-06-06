@@ -11,11 +11,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
 import de.sernet.sync.sync.SyncRequest;
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.wizards.ImportCSVWizard;
 import sernet.gs.ui.rcp.main.bsi.wizards.Messages;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
@@ -96,8 +98,15 @@ public class ImportCSVAction extends RightsEnabledAction {
 
         command = ServiceFactory.lookupCommandService().executeCommand(command);
 
-        Set<CnATreeElement> importRootObjectSet = command.getImportRootObjects();
-        Set<CnATreeElement> changedElements = command.getElementSet();
+        Set<String> importedElementUUIDs = command.getImportedElementUUIDs();
+        Set<String> importRootObjectUUIDs = command.getImportRootObjectUUIDs();
+
+        Set<CnATreeElement> importRootObjectSet = CnAElementHome.getInstance().loadElementsByUUID(
+                importRootObjectUUIDs, new RetrieveInfo().setParent(true).setChildren(true));
+        Set<CnATreeElement> changedElements = CnAElementHome.getInstance().loadElementsByUUID(
+                importedElementUUIDs,
+                new RetrieveInfo().setProperties(true).setParent(true).setChildren(true));
+
         updateModels(importRootObjectSet, changedElements);
         if (Activator.getDefault().getPreferenceStore()
                 .getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)) {
