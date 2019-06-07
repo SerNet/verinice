@@ -18,7 +18,6 @@
 package sernet.gs.ui.rcp.main.bsi.actions;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -69,8 +68,6 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
      */
     @Override
@@ -133,11 +130,9 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
         }
     }
 
-    @SuppressWarnings("rawtypes")
     protected List<IBSIStrukturElement> getSelectedElements(IStructuredSelection selection) {
         final List<IBSIStrukturElement> selectedElements = new ArrayList<>(selection.size());
-        for (Iterator iter = selection.iterator(); iter.hasNext();) {
-            Object o = iter.next();
+        for (Object o : selection.toList()) {
             if (o instanceof IBSIStrukturElement) {
                 selectedElements.add((IBSIStrukturElement) o);
             }
@@ -146,7 +141,6 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
     }
 
     @Override
-    @SuppressWarnings("rawtypes")
     public void selectionChanged(IWorkbenchPart part, ISelection input) {
         if (isServerRunning()) {
             setEnabled(checkRights());
@@ -157,8 +151,7 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
                 setEnabled(false);
                 return;
             }
-            for (Iterator iter = selection.iterator(); iter.hasNext();) {
-                Object o = iter.next();
+            for (Object o : selection.toList()) {
                 if (!(o instanceof IBSIStrukturElement)) {
                     setEnabled(false);
                     return;
