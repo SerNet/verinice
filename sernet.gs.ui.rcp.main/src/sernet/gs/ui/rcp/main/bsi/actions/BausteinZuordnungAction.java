@@ -117,6 +117,7 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
         if (!element.getChildren().isEmpty()) {
             RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance();
             ri.setChildrenProperties(true);
+            ri.setParent(true);
             elementInitialized = Retriever.retrieveElement(element, ri);
         }
         if (!elementInitialized.containsBausteinUmsetzung(nodule.getId())) {
