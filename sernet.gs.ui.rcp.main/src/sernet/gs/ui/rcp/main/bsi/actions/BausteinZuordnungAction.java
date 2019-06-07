@@ -57,7 +57,7 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
     public static final String ID = "sernet.gs.ui.rcp.main.bausteinzuordnungaction"; //$NON-NLS-1$
 
     private final IWorkbenchWindow window;
-    
+
     public BausteinZuordnungAction(IWorkbenchWindow window) {
         super(ActionRightIDs.BAUSTEINZUORDNUNG, Messages.BausteinZuordnungAction_1);
         this.window = window;
@@ -68,12 +68,15 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
         setToolTipText(Messages.BausteinZuordnungAction_2);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
      */
     @Override
     public void doRun() {
-        IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection(BsiModelView.ID);
+        IStructuredSelection selection = (IStructuredSelection) window.getSelectionService()
+                .getSelection(BsiModelView.ID);
         if (selection == null) {
             return;
         }
@@ -85,10 +88,11 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
             return;
         }
 
-        try {          
+        try {
             String[] modulesNumberArray = dialog.getSelectedSubtype().getSplitBausteine();
             for (String moduleNumber : modulesNumberArray) {
-                Baustein module = BSIKatalogInvisibleRoot.getInstance().getBausteinByKapitel(moduleNumber);
+                Baustein module = BSIKatalogInvisibleRoot.getInstance()
+                        .getBausteinByKapitel(moduleNumber);
                 if (module == null) {
                     LOG.debug("No mudule found for nr.: " + moduleNumber); //$NON-NLS-1$
                 } else {
@@ -128,7 +132,7 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
             }
         }
     }
-    
+
     @SuppressWarnings("rawtypes")
     protected List<IBSIStrukturElement> getSelectedElements(IStructuredSelection selection) {
         final List<IBSIStrukturElement> selectedElements = new ArrayList<>(selection.size());
@@ -160,7 +164,7 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
                     return;
                 }
             }
-            if(checkRights()){
+            if (checkRights()) {
                 setEnabled(true);
             }
             return;
