@@ -6764,6 +6764,9 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             <huirelation to="samt_topic" id="rel_requirement_samt_topic_fullfilled"
             name="fullfilled by" reversename="fullfills" tooltip="" />
 
+        <huirelation to="requirement" id="rel_requirement_requirement"
+            name="depends on" reversename="necessary for"/>
+
         <huiproperty
             name="Title"
             id="requirement_name"
