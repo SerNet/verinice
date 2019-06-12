@@ -22,21 +22,20 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -77,11 +76,9 @@ public class LdapImportDialog extends TitleAreaDialog {
 
     private static final Logger LOG = Logger.getLogger(LdapImportDialog.class);
 
-    private TableViewer viewer;
+    private CheckboxTableViewer viewer;
 
     private Text surname, givenName, title, department, company;
-
-    private Set<PersonInfo> personSet;
 
     private Button[] radioButtonTargetPerspective = new Button[3];
 
@@ -90,7 +87,6 @@ public class LdapImportDialog extends TitleAreaDialog {
     public LdapImportDialog(Shell parent) {
         super(parent);
         setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
-        personSet = new HashSet<>();
         ldapQueryCache = new HashMap<>();
     }
 
@@ -107,8 +103,6 @@ public class LdapImportDialog extends TitleAreaDialog {
     protected Control createDialogArea(Composite parent) {
 
         final int gridDataHorizontalSpan = 5;
-
-        Button buttonRemove;
 
         setTitle(Messages.LdapImportDialog_30);
 
@@ -204,36 +198,47 @@ public class LdapImportDialog extends TitleAreaDialog {
         gridData.horizontalAlignment = SWT.RIGHT;
         gridData.horizontalSpan = 2;
         buttonLoadAccounts.setLayoutData(gridData);
+
+        createViewer(container);
+        Composite buttonRow = new Composite(container, SWT.NONE);
+        GridData gdButtonRow = new GridData(SWT.FILL, SWT.TOP, true, false);
+        gdButtonRow.horizontalSpan = 2;
+        buttonRow.setLayoutData(gdButtonRow);
+        buttonRow.setLayout(new GridLayout(3, false));
+
+        Button selectAll = new Button(buttonRow, SWT.PUSH | SWT.BORDER);
+        selectAll.setText(sernet.gs.ui.rcp.main.Messages.Select_All);
+        selectAll.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                viewer.setAllChecked(true);
+            }
+        });
+        selectAll.setEnabled(false);
+        Button selectNone = new Button(buttonRow, SWT.PUSH | SWT.BORDER);
+        selectNone.setText(sernet.gs.ui.rcp.main.Messages.Select_None);
+        selectNone.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                viewer.setAllChecked(false);
+            }
+        });
+        selectNone.setEnabled(false);
         buttonLoadAccounts.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 if (ldapQueryCache.containsKey(getParameter())) {
-                    personSet.clear();
-                    personSet.addAll(getFromCache(getParameter()));
-                    refreshTable();
+                    viewer.setInput(getFromCache(getParameter()));
                 } else {
                     loadLdapUser();
                 }
+                selectAll.setEnabled(viewer.getTable().getItemCount() > 0);
+                selectNone.setEnabled(viewer.getTable().getItemCount() > 0);
             }
 
         });
-
-        createViewer(container);
-
-        buttonRemove = new Button(container, SWT.PUSH | SWT.BORDER);
-        buttonRemove.setText(Messages.LdapImportDialog_36);
-        buttonRemove.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                removePerson();
-            }
-
-        });
-        gridData = new GridData();
-        gridData.horizontalSpan = gridDataHorizontalSpan;
-        gridData.horizontalAlignment = SWT.RIGHT;
-        buttonRemove.setLayoutData(gridData);
-
         return container;
     }
 
@@ -247,29 +252,14 @@ public class LdapImportDialog extends TitleAreaDialog {
 
     @Override
     protected void createButtonsForButtonBar(Composite parent) {
-        createButton(parent, IDialogConstants.OK_ID, Messages.LdapImportDialog_37, false);
+        createButton(parent, IDialogConstants.OK_ID, Messages.LdapImportDialog_37, false)
+                .setEnabled(false);
         createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
     }
 
     protected void showInformation() {
         setMessage(Messages.LdapImportDialog_38);
 
-    }
-
-    @SuppressWarnings("unchecked")
-    protected void removePerson() {
-        StructuredSelection selection = (StructuredSelection) viewer.getSelection();
-        if (selection != null && !selection.isEmpty()) {
-            for (Iterator<PersonInfo> iterator = selection.iterator(); iterator.hasNext();) {
-                PersonInfo permission = iterator.next();
-                this.personSet.remove(permission);
-            }
-            try {
-                refreshTable();
-            } catch (Exception t) {
-                LOG.error("Error while setting table data", t); //$NON-NLS-1$
-            }
-        }
     }
 
     private void loadLdapUser() {
@@ -284,46 +274,26 @@ public class LdapImportDialog extends TitleAreaDialog {
             }
             LoadLdapUser loadLdapUser = new LoadLdapUser(getParameter(), domain);
             loadLdapUser = ServiceFactory.lookupCommandService().executeCommand(loadLdapUser);
-            personSet.clear();
             List<PersonInfo> personList = loadLdapUser.getPersonList();
             if (personList != null) {
                 List<PersonInfo> accountList = new ArrayList<>(personList);
-                personSet.addAll(accountList);
                 ldapQueryCache.put(getParameter(), accountList);
             }
-            // Get the content for the viewer, setInput will call getElements in
-            // the
-            // contentProvider
-            refreshTable();
+
+            viewer.setInput(personList);
+
         } catch (SizeLimitExceededException sizeLimitExceededException) {
             LOG.warn("Too many results when searching for LDAP users."); //$NON-NLS-1$
             if (LOG.isDebugEnabled()) {
                 LOG.debug("stacktrace: ", sizeLimitExceededException); //$NON-NLS-1$
             }
-            personSet.clear();
-            refreshTable();
             MessageDialog.openInformation(getShell(), Messages.LdapImportDialog_6,
                     Messages.LdapImportDialog_7);
         } catch (Exception t) {
             LOG.error("Error while setting table data", t); //$NON-NLS-1$
-            personSet.clear();
-            refreshTable();
             MessageDialog.openError(getShell(), Messages.LdapImportDialog_45,
                     Messages.LdapImportDialog_1);
         }
-    }
-
-    private void refreshTable() {
-        PersonInfo[] personArray = personSet.toArray(new PersonInfo[personSet.size()]);
-        Arrays.sort(personArray, new Comparator<PersonInfo>() {
-            NumericStringComparator comparator = new NumericStringComparator();
-
-            @Override
-            public int compare(PersonInfo o1, PersonInfo o2) {
-                return comparator.compare(o1.getLoginName(), o2.getLoginName());
-            }
-        });
-        viewer.setInput(personArray);
     }
 
     private PersonParameter getParameter() {
@@ -334,14 +304,26 @@ public class LdapImportDialog extends TitleAreaDialog {
     private void createViewer(Composite parent) {
         int style = SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL;
         style = style | SWT.FULL_SELECTION | SWT.BORDER;
-        viewer = new TableViewer(parent, style);
+        viewer = CheckboxTableViewer.newCheckList(parent, style);
 
         createColumns();
         final Table table = viewer.getTable();
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
-
+        final NumericStringComparator numericStringComparator = new NumericStringComparator();
+        Comparator<PersonInfo> personInfoComparator = (o1, o2) -> numericStringComparator
+                .compare(o1.getLoginName(), o2.getLoginName());
+        viewer.setComparator(new ViewerComparator() {
+            @Override
+            public int compare(Viewer viewer, Object e1, Object e2) {
+                return personInfoComparator.compare((PersonInfo) e1, (PersonInfo) e2);
+            }
+        });
         viewer.setContentProvider(new ArrayContentProvider());
+        viewer.addCheckStateListener(event -> {
+            Button button = getButton(IDialogConstants.OK_ID);
+            button.setEnabled(viewer.getCheckedElements().length != 0);
+        });
 
         // Layout the viewer
         GridData gridData = new GridData();
@@ -413,7 +395,8 @@ public class LdapImportDialog extends TitleAreaDialog {
 
     @Override
     protected void okPressed() {
-        SaveLdapUser saveLdapUser = new SaveLdapUser(personSet);
+        SaveLdapUser saveLdapUser = new SaveLdapUser(Arrays.stream(viewer.getCheckedElements())
+                .map(PersonInfo.class::cast).collect(Collectors.toSet()));
         try {
             saveLdapUser = ServiceFactory.lookupCommandService().executeCommand(saveLdapUser);
         } catch (UsernameExistsException e) {
