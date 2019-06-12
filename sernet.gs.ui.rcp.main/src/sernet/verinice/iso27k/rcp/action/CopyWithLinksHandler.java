@@ -30,14 +30,16 @@ import sernet.verinice.iso27k.rcp.CnPItems;
  */
 public class CopyWithLinksHandler extends CopyHandler {
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-	 */
-	@Override
+    /*
+     * @see
+     * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
+     * ExecutionEvent)
+     */
+    @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-	    Object result = super.execute(event);
-	    CnPItems.setCopyLinks(true);
-		return result;
-	}
+        Object result = super.execute(event);
+        CnPItems.setCopyLinks(true);
+        return result;
+    }
 
 }
