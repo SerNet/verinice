@@ -310,7 +310,5 @@ public class PersonDaoImpl implements IPersonDao {
             throw new UnsupportedOperationException(
                     "Cannot handle person with unsupported type " + person.getClass());
         }
-
     }
-
 }
