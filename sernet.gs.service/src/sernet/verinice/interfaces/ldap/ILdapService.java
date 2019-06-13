@@ -11,5 +11,8 @@ public interface ILdapService {
 
     List<PersonInfo> getPersonList(PersonParameter parameter);
 
-    List<PersonInfo> getPersonList(PersonParameter parameter, Domain importDomain);
+    @Deprecated
+    default List<PersonInfo> getPersonList(PersonParameter parameter, Domain importDomain) {
+        return getPersonList(parameter);
+    }
 }

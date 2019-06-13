@@ -2,40 +2,33 @@ package sernet.verinice.service.ldap;
 
 import java.io.Serializable;
 
-import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.PersonIso;
+public class PersonInfo implements Serializable {
 
-public class PersonInfo implements Serializable, Comparable<PersonInfo> {
+    private static final long serialVersionUID = 4591313031491466231L;
 
-    private CnATreeElement person;
-    private String loginName;
+    private final String loginName;
+    private final String title;
+    private final String department;
+    private final String company;
+    private final String givenName;
+    private final String surname;
+    private final String eMail;
+    private final String phone;
 
-    private String title, department, company;
-
-    public PersonInfo(CnATreeElement person, String loginName, String title, String department,
-            String company) {
-        super();
-        this.person = person;
+    public PersonInfo(String loginName, String title, String department, String company,
+            String givenName, String surname, String eMail, String phone) {
         this.loginName = loginName;
         this.title = title;
         this.department = department;
         this.company = company;
-    }
-
-    public CnATreeElement getPerson() {
-        return person;
-    }
-
-    public void setPerson(PersonIso person) {
-        this.person = person;
+        this.givenName = givenName;
+        this.surname = surname;
+        this.eMail = eMail;
+        this.phone = phone;
     }
 
     public String getLoginName() {
         return loginName;
-    }
-
-    public void setLoginName(String loginName) {
-        this.loginName = loginName;
     }
 
     /**
@@ -46,26 +39,10 @@ public class PersonInfo implements Serializable, Comparable<PersonInfo> {
     }
 
     /**
-     * @param title
-     *            the title to set
-     */
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    /**
      * @return the department
      */
     public String getDepartment() {
         return department;
-    }
-
-    /**
-     * @param department
-     *            the department to set
-     */
-    public void setDepartment(String department) {
-        this.department = department;
     }
 
     /**
@@ -75,58 +52,45 @@ public class PersonInfo implements Serializable, Comparable<PersonInfo> {
         return company;
     }
 
-    /**
-     * @param company
-     *            the company to set
-     */
-    public void setCompany(String company) {
-        this.company = company;
-    }
-
-    @Override
-    public int compareTo(PersonInfo o) {
-        int result;
-        if (this.getPerson() != null && this.getPerson().getTitle() != null
-                && !this.getPerson().getTitle().trim().isEmpty() && o.getPerson() != null
-                && o.getPerson().getTitle() != null && !o.getPerson().getTitle().trim().isEmpty()) {
-            result = this.getPerson().getTitle().compareTo(o.getPerson().getTitle());
-        } else if (this.getPerson() != null && this.getPerson().getTitle() != null
-                && !this.getPerson().getTitle().trim().isEmpty()) {
-            result = -1;
-        } else {
-            result = 1;
-        }
-        return result;
-    }
-
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((person == null) ? 0 : person.hashCode());
+        result = prime * result + ((loginName == null) ? 0 : loginName.hashCode());
         return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
+        if (this == obj)
             return true;
-        }
-        if (obj == null) {
+        if (obj == null)
             return false;
-        }
-        if (getClass() != obj.getClass()) {
+        if (getClass() != obj.getClass())
             return false;
-        }
         PersonInfo other = (PersonInfo) obj;
-        if (person == null) {
-            if (other.person != null) {
+        if (loginName == null) {
+            if (other.loginName != null)
                 return false;
-            }
-        } else if (!person.equals(other.person)) {
+        } else if (!loginName.equals(other.loginName))
             return false;
-        }
         return true;
+    }
+
+    public String getGivenName() {
+        return givenName;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public String getEMail() {
+        return eMail;
+    }
+
+    public String getPhone() {
+        return phone;
     }
 
 }

@@ -8,7 +8,6 @@ import org.springframework.ldap.SizeLimitExceededException;
 import sernet.verinice.interfaces.ldap.ILdapService;
 import sernet.verinice.interfaces.ldap.IPersonDao;
 import sernet.verinice.interfaces.ldap.PersonParameter;
-import sernet.verinice.model.common.Domain;
 import sernet.verinice.service.ldap.PersonInfo;
 
 public class LdapService implements ILdapService {
@@ -42,24 +41,4 @@ public class LdapService implements ILdapService {
     public void setPersonDao(IPersonDao personDao) {
         this.personDao = personDao;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.interfaces.ldap.ILdapService#getPersonList(sernet.
-     * verinice.interfaces.ldap.PersonParameter, sernet.verinice.model.common.Domain)
-     */
-    @Override
-    public List<PersonInfo> getPersonList(PersonParameter parameter, Domain importDomain) {
-        try {
-            return getPersonDao().getPersonList(parameter, importDomain);
-        } catch (SizeLimitExceededException sizeLimitException) {
-            LOG.warn("Too many results when searching for LDAP users.");
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("stacktrace: ", sizeLimitException);
-            }
-            throw new sernet.verinice.interfaces.ldap.SizeLimitExceededException();
-        }
-    }
-
 }
