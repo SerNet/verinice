@@ -25,9 +25,6 @@
       <property name="filter" value="${ldap.import.filter}" />
    </bean>
    
-   <bean id="personLdapMock" class="sernet.verinice.server.ldap.PersonDaoMock">
-   </bean>
-   
    <bean id="ldapService" class="sernet.verinice.server.ldap.LdapService">
       <property name="personDao" ref="personLdapDao" />
    </bean>

@@ -126,7 +126,7 @@ public class LdapImportDialog extends TitleAreaDialog {
 
         showInformation();
 
-        final Composite containerRoles = new Composite(composite, SWT.NONE | SWT.BORDER);
+        final Composite container = new Composite(composite, SWT.NONE | SWT.BORDER);
         GridLayout layout = new GridLayout(2, false);
         layout.marginWidth = defaultMarginHeight;
         layout.marginHeight = defaultMarginHeight;
@@ -136,45 +136,45 @@ public class LdapImportDialog extends TitleAreaDialog {
         containerGd.horizontalAlignment = GridData.FILL;
         containerGd.verticalAlignment = GridData.FILL;
         containerGd.horizontalSpan = 2;
-        containerRoles.setLayout(layout);
-        containerRoles.setLayoutData(containerGd);
+        container.setLayout(layout);
+        container.setLayoutData(containerGd);
 
-        Label givenNameLabel = new Label(containerRoles, SWT.NONE);
+        Label givenNameLabel = new Label(container, SWT.NONE);
         givenNameLabel.setText(Messages.LdapImportDialog_0);
-        givenName = new Text(containerRoles, SWT.BORDER);
+        givenName = new Text(container, SWT.BORDER);
         GridData gridData = new GridData();
         gridData.horizontalAlignment = GridData.FILL;
         givenName.setLayoutData(gridData);
 
-        Label nameLabel = new Label(containerRoles, SWT.NONE);
+        Label nameLabel = new Label(container, SWT.NONE);
         nameLabel.setText(Messages.LdapImportDialog_31);
-        surname = new Text(containerRoles, SWT.BORDER);
+        surname = new Text(container, SWT.BORDER);
         gridData = new GridData();
         gridData.horizontalAlignment = GridData.FILL;
         surname.setLayoutData(gridData);
 
-        Label titleLabel = new Label(containerRoles, SWT.NONE);
+        Label titleLabel = new Label(container, SWT.NONE);
         titleLabel.setText(Messages.LdapImportDialog_2);
-        title = new Text(containerRoles, SWT.BORDER);
+        title = new Text(container, SWT.BORDER);
         gridData = new GridData();
         gridData.horizontalAlignment = GridData.FILL;
         title.setLayoutData(gridData);
 
-        Label departmentLabel = new Label(containerRoles, SWT.NONE);
+        Label departmentLabel = new Label(container, SWT.NONE);
         departmentLabel.setText(Messages.LdapImportDialog_3);
-        department = new Text(containerRoles, SWT.BORDER);
+        department = new Text(container, SWT.BORDER);
         gridData = new GridData();
         gridData.horizontalAlignment = GridData.FILL;
         department.setLayoutData(gridData);
 
-        Label companyLabel = new Label(containerRoles, SWT.NONE);
+        Label companyLabel = new Label(container, SWT.NONE);
         companyLabel.setText(Messages.LdapImportDialog_4);
-        company = new Text(containerRoles, SWT.BORDER);
+        company = new Text(container, SWT.BORDER);
         gridData = new GridData();
         gridData.horizontalAlignment = GridData.FILL;
         company.setLayoutData(gridData);
 
-        Composite targetComposite = new Composite(containerRoles, SWT.NONE);
+        Composite targetComposite = new Composite(container, SWT.NONE);
         GridLayout targetLayout = new GridLayout(radioButtonTargetPerspective.length + 1, false);
         targetLayout.marginWidth = defaultMarginHeight;
         targetLayout.marginHeight = defaultMarginHeight;
@@ -190,20 +190,20 @@ public class LdapImportDialog extends TitleAreaDialog {
         Label targetLabel = new Label(targetComposite, SWT.LEFT);
         targetLabel.setText(Messages.LdapImportDialog_47);
         radioButtonTargetPerspective[0] = generateButton(targetComposite, SWT.RADIO,
-                Messages.LdapImportDialog_48, Boolean.FALSE);
+                Messages.LdapImportDialog_48, false);
         radioButtonTargetPerspective[1] = generateButton(targetComposite, SWT.RADIO,
-                Messages.LdapImportDialog_49, Boolean.TRUE);
+                Messages.LdapImportDialog_49, true);
         radioButtonTargetPerspective[2] = generateButton(targetComposite, SWT.RADIO,
-                Messages.Modernized_IT_Baseline_Protection, Boolean.FALSE);
+                Messages.Modernized_IT_Baseline_Protection, false);
 
-        Button buttonAdd = new Button(containerRoles, SWT.PUSH | SWT.BORDER);
-        buttonAdd.setText(Messages.LdapImportDialog_35);
+        Button buttonLoadAccounts = new Button(container, SWT.PUSH | SWT.BORDER);
+        buttonLoadAccounts.setText(Messages.LdapImportDialog_35);
         gridData = new GridData();
         gridData.grabExcessHorizontalSpace = true;
         gridData.horizontalAlignment = SWT.RIGHT;
         gridData.horizontalSpan = 2;
-        buttonAdd.setLayoutData(gridData);
-        buttonAdd.addSelectionListener(new SelectionAdapter() {
+        buttonLoadAccounts.setLayoutData(gridData);
+        buttonLoadAccounts.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 if (ldapQueryCache.containsKey(getParameter())) {
@@ -217,9 +217,9 @@ public class LdapImportDialog extends TitleAreaDialog {
 
         });
 
-        createViewer(containerRoles);
+        createViewer(container);
 
-        buttonRemove = new Button(containerRoles, SWT.PUSH | SWT.BORDER);
+        buttonRemove = new Button(container, SWT.PUSH | SWT.BORDER);
         buttonRemove.setText(Messages.LdapImportDialog_36);
         buttonRemove.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -233,33 +233,21 @@ public class LdapImportDialog extends TitleAreaDialog {
         gridData.horizontalAlignment = SWT.RIGHT;
         buttonRemove.setLayoutData(gridData);
 
-        return containerRoles;
+        return container;
     }
 
     private Button generateButton(Composite composite, Integer style, String text,
-            Boolean selection) {
+            boolean selection) {
         Button button = new Button(composite, style);
         button.setText((text != null) ? text : button.getText());
-        button.setSelection((selection != null) ? selection.booleanValue() : button.getSelection());
+        button.setSelection(selection);
         return button;
     }
 
     @Override
     protected void createButtonsForButtonBar(Composite parent) {
-        super.createButtonsForButtonBar(parent);
-
-        Button ok = getButton(IDialogConstants.OK_ID);
-        ok.setText(Messages.LdapImportDialog_37);
-        setButtonLayoutData(ok);
-    }
-
-    /**
-     * disables the assignment of a default button, so <enter> don't causes a
-     * click on the ok button
-     */
-    @Override
-    protected Button createButton(Composite parent, int id, String label, boolean defaultButton) {
-        return super.createButton(parent, id, label, false);
+        createButton(parent, IDialogConstants.OK_ID, Messages.LdapImportDialog_37, false);
+        createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
     }
 
     protected void showInformation() {
@@ -385,8 +373,7 @@ public class LdapImportDialog extends TitleAreaDialog {
         final int[] bounds = { 80, 90, 130, 100, 100, 120 };
 
         // First column: login name
-        TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0]);
-        col.setLabelProvider(new ColumnLabelProvider() {
+        createTableViewerColumn(titles[0], bounds[0], new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
                 return ((PersonInfo) element).getLoginName();
@@ -394,8 +381,7 @@ public class LdapImportDialog extends TitleAreaDialog {
         });
 
         // 2. column: name
-        col = createTableViewerColumn(titles[1], bounds[1]);
-        col.setLabelProvider(new ColumnLabelProvider() {
+        createTableViewerColumn(titles[1], bounds[1], new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
                 return getPersonName(((PersonInfo) element).getPerson());
@@ -403,8 +389,7 @@ public class LdapImportDialog extends TitleAreaDialog {
         });
 
         // 3. column: surname
-        col = createTableViewerColumn(titles[2], bounds[2]);
-        col.setLabelProvider(new ColumnLabelProvider() {
+        createTableViewerColumn(titles[2], bounds[2], new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
                 return getPersonSurname(((PersonInfo) element).getPerson());
@@ -416,8 +401,7 @@ public class LdapImportDialog extends TitleAreaDialog {
         final int constant5 = 5;
 
         // 4. column: tile
-        col = createTableViewerColumn(titles[constant3], bounds[constant3]);
-        col.setLabelProvider(new ColumnLabelProvider() {
+        createTableViewerColumn(titles[constant3], bounds[constant3], new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
                 return ((PersonInfo) element).getTitle();
@@ -425,8 +409,7 @@ public class LdapImportDialog extends TitleAreaDialog {
         });
 
         // 5. column: department
-        col = createTableViewerColumn(titles[constant4], bounds[constant4]);
-        col.setLabelProvider(new ColumnLabelProvider() {
+        createTableViewerColumn(titles[constant4], bounds[constant4], new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
                 return ((PersonInfo) element).getDepartment();
@@ -434,8 +417,7 @@ public class LdapImportDialog extends TitleAreaDialog {
         });
 
         // 6. column: company
-        col = createTableViewerColumn(titles[constant5], bounds[constant5]);
-        col.setLabelProvider(new ColumnLabelProvider() {
+        createTableViewerColumn(titles[constant5], bounds[constant5], new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
                 return ((PersonInfo) element).getCompany();
@@ -443,13 +425,15 @@ public class LdapImportDialog extends TitleAreaDialog {
         });
     }
 
-    private TableViewerColumn createTableViewerColumn(String title, int bound) {
+    private TableViewerColumn createTableViewerColumn(String title, int bound,
+            ColumnLabelProvider labelProvider) {
         final TableViewerColumn viewerColumn = new TableViewerColumn(viewer, SWT.NONE);
         final TableColumn column = viewerColumn.getColumn();
         column.setText(title);
         column.setWidth(bound);
         column.setResizable(true);
         column.setMoveable(true);
+        viewerColumn.setLabelProvider(labelProvider);
         return viewerColumn;
 
     }
