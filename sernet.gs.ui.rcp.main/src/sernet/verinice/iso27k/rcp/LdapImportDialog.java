@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -373,67 +374,39 @@ public class LdapImportDialog extends TitleAreaDialog {
         final int[] bounds = { 80, 90, 130, 100, 100, 120 };
 
         // First column: login name
-        createTableViewerColumn(titles[0], bounds[0], new ColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                return ((PersonInfo) element).getLoginName();
-            }
-        });
+        createTableViewerColumn(titles[0], bounds[0], PersonInfo::getLoginName);
 
         // 2. column: name
-        createTableViewerColumn(titles[1], bounds[1], new ColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                return getPersonName(((PersonInfo) element).getPerson());
-            }
-        });
+        createTableViewerColumn(titles[1], bounds[1],
+                personInfo -> getPersonName(personInfo.getPerson()));
 
         // 3. column: surname
-        createTableViewerColumn(titles[2], bounds[2], new ColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                return getPersonSurname(((PersonInfo) element).getPerson());
-            }
-        });
+        createTableViewerColumn(titles[2], bounds[2],
+                personInfo -> getPersonSurname(personInfo.getPerson()));
 
         final int constant3 = 3;
         final int constant4 = 4;
         final int constant5 = 5;
 
         // 4. column: tile
-        createTableViewerColumn(titles[constant3], bounds[constant3], new ColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                return ((PersonInfo) element).getTitle();
-            }
-        });
+        createTableViewerColumn(titles[constant3], bounds[constant3], PersonInfo::getTitle);
 
         // 5. column: department
-        createTableViewerColumn(titles[constant4], bounds[constant4], new ColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                return ((PersonInfo) element).getDepartment();
-            }
-        });
+        createTableViewerColumn(titles[constant4], bounds[constant4], PersonInfo::getDepartment);
 
         // 6. column: company
-        createTableViewerColumn(titles[constant5], bounds[constant5], new ColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                return ((PersonInfo) element).getCompany();
-            }
-        });
+        createTableViewerColumn(titles[constant5], bounds[constant5], PersonInfo::getCompany);
     }
 
     private TableViewerColumn createTableViewerColumn(String title, int bound,
-            ColumnLabelProvider labelProvider) {
+            Function<PersonInfo, String> labelRetriever) {
         final TableViewerColumn viewerColumn = new TableViewerColumn(viewer, SWT.NONE);
         final TableColumn column = viewerColumn.getColumn();
         column.setText(title);
         column.setWidth(bound);
         column.setResizable(true);
         column.setMoveable(true);
-        viewerColumn.setLabelProvider(labelProvider);
+        viewerColumn.setLabelProvider(new PersonInfoLabelProvider(labelRetriever));
         return viewerColumn;
 
     }
@@ -495,5 +468,20 @@ public class LdapImportDialog extends TitleAreaDialog {
             return ldapQueryCache.get(parameter);
         }
         return Collections.emptyList();
+    }
+
+    private static class PersonInfoLabelProvider extends ColumnLabelProvider {
+
+        private final Function<PersonInfo, String> labelRetriever;
+
+        private PersonInfoLabelProvider(Function<PersonInfo, String> labelRetriever) {
+            this.labelRetriever = labelRetriever;
+        }
+
+        @Override
+        public String getText(Object element) {
+            return labelRetriever.apply(((PersonInfo) element));
+        }
+
     }
 }

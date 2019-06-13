@@ -3,6 +3,7 @@ package sernet.verinice.server.ldap;
 import java.util.List;
 
 import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 
 import org.springframework.ldap.core.AttributesMapper;
@@ -131,48 +132,23 @@ public class PersonDaoImpl implements IPersonDao {
                 throw new IllegalArgumentException("Unknown domain " + importDomain);
             }
 
-            String login = determineLogin(attrs);
+            String login = getFirstMatchOrNull(attrs, "sAMAccountName", "userPrincipalName", /*
+                                                                                              * pre
+                                                                                              * windows
+                                                                                              * 2000
+                                                                                              */
+                    "uid" /* OpenLDAP */ );
             setGivenName(attrs, person);
             setSurname(attrs, person);
             setEmailPhone(attrs, person);
-            String title = determineTitle(attrs);
-            String department = determineDepartment(attrs);
-            String company = determineCompany(attrs);
+            String title = getFirstMatchOrNull(attrs, "title" /* AD */ );
+            String department = getFirstMatchOrNull(attrs, "department" /* AD */,
+                    "subDepartment"/* LDAP */ );
+            String company = getFirstMatchOrNull(attrs, "company" /* AD */,
+                    "companyCode" /* LDAP */
+            );
 
             return new PersonInfo(person, login, title, department, company);
-        }
-
-        private String determineCompany(Attributes attrs) throws NamingException {
-            String company = null;
-            if (attrs.get("company") != null) {
-                // AD
-                company = (String) attrs.get("company").get();
-            } else if (attrs.get("companyCode") != null) {
-                // LDAP
-                company = (String) attrs.get("companyCode").get();
-            }
-            return company;
-        }
-
-        private String determineDepartment(Attributes attrs) throws NamingException {
-            String department = null;
-            if (attrs.get("department") != null) {
-                // AD
-                department = (String) attrs.get("department").get();
-            } else if (attrs.get("subDepartment") != null) {
-                // LDAP
-                department = (String) attrs.get("subDepartment").get();
-            }
-            return department;
-        }
-
-        private String determineTitle(Attributes attrs) throws NamingException {
-            String title = null;
-            if (attrs.get("title") != null) {
-                // AD
-                title = (String) attrs.get("title").get();
-            }
-            return title;
         }
 
         private void setEmailPhone(Attributes attrs, CnATreeElement person) throws NamingException {
@@ -213,20 +189,6 @@ public class PersonDaoImpl implements IPersonDao {
             }
         }
 
-        private String determineLogin(Attributes attrs) throws NamingException {
-            String login = null;
-            if (attrs.get("sAMAccountName") != null) {
-                login = (String) attrs.get("sAMAccountName").get();
-            } else if (attrs.get("userPrincipalName") != null) {
-                // pre windows 2000:
-                login = (String) attrs.get("userPrincipalName").get();
-            } else if (attrs.get("uid") != null) {
-                // OpenLDAP
-                login = (String) attrs.get("uid").get();
-            }
-            return login;
-        }
-
         private String getForename(String fullName) {
             String forename = null;
             if (fullName != null) {
@@ -248,6 +210,17 @@ public class PersonDaoImpl implements IPersonDao {
                 }
             }
             return surname;
+        }
+
+        private static String getFirstMatchOrNull(Attributes attrs, String... attributeNames)
+                throws NamingException {
+            for (String attributeName : attributeNames) {
+                Attribute attribute = attrs.get(attributeName);
+                if (attribute != null) {
+                    return (String) attribute.get();
+                }
+            }
+            return null;
         }
 
         private void setPersonEmail(CnATreeElement person, String data) {
