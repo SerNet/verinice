@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -81,13 +82,17 @@ public class ValidationService implements IValidationService {
         HashMap<PropertyType, List<String>> hintsOfFailedValidationsMap = new HashMap<>();
         EntityType eType = getHuiTypeFactory().getEntityType(elmt.getTypeId());
         if (eType != null) {
+            List<CnAValidation> existingValidationsForElement = getValidations(elmt.getScopeId(),
+                    elmt.getDbId());
             for (Object pElement : eType.getAllPropertyTypes()) {
                 if (pElement instanceof PropertyType) {
-                    updateValueMap(hintsOfFailedValidationsMap, (PropertyType) pElement, elmt);
+                    updateValueMap(hintsOfFailedValidationsMap, (PropertyType) pElement, elmt,
+                            existingValidationsForElement);
                 } else if (pElement instanceof PropertyGroup) {
                     PropertyGroup pGroup = (PropertyGroup) pElement;
                     for (PropertyType pType : pGroup.getPropertyTypes()) {
-                        updateValueMap(hintsOfFailedValidationsMap, pType, elmt);
+                        updateValueMap(hintsOfFailedValidationsMap, pType, elmt,
+                                existingValidationsForElement);
                     }
                 }
             }
@@ -247,29 +252,33 @@ public class ValidationService implements IValidationService {
         return deleteValidation(validation);
     }
 
-    private List<String> getInvalidPropertyHints(PropertyType type, CnATreeElement elmt) {
+    private List<String> getInvalidPropertyHints(PropertyType type, CnATreeElement elmt,
+            List<CnAValidation> existingValidationsForType) {
         ArrayList<String> hintsOfFailedValidations = new ArrayList<>();
         List<Property> savedProperties = elmt.getEntity().getProperties(type.getId())
                 .getProperties();
         // iterate(validate) all existing properties
         for (Property savedProp : savedProperties) {
-            hintsOfFailedValidations.addAll(processValidationMap(
-                    type.validate(savedProp.getPropertyValue(), null), elmt, type));
+            hintsOfFailedValidations
+                    .addAll(processValidationMap(type.validate(savedProp.getPropertyValue(), null),
+                            elmt, type, existingValidationsForType));
         }
         // no property exists yet
         if (savedProperties.isEmpty()) {
-            hintsOfFailedValidations
-                    .addAll(processValidationMap(type.validate(null, null), elmt, type));
+            hintsOfFailedValidations.addAll(processValidationMap(type.validate(null, null), elmt,
+                    type, existingValidationsForType));
         }
         return hintsOfFailedValidations;
     }
 
     private List<String> processValidationMap(Map<String, Boolean> validationMap,
-            CnATreeElement elmt, PropertyType type) {
+            CnATreeElement elmt, PropertyType type,
+            List<CnAValidation> existingValidationsForType) {
         ArrayList<String> hintsOfFailedValidations = new ArrayList<>();
         for (Entry<String, Boolean> entry : validationMap.entrySet()) {
-            boolean validationExists = isValidationExistant(elmt.getDbId(), type.getId(),
-                    entry.getKey(), elmt.getScopeId());
+            boolean validationExists = existingValidationsForType.stream()
+                    .anyMatch(validation -> validation.getHintId().equals(entry.getKey()));
+
             boolean elmtIsValid = entry.getValue().booleanValue();
             if (!elmtIsValid) {
                 if (!validationExists) {
@@ -295,7 +304,7 @@ public class ValidationService implements IValidationService {
         // defined)
         // ===> delete existing validations for type
         if (validationMap.isEmpty()) { // no negative validations exist
-            for (CnAValidation validation : getValidations(elmt.getDbId(), type.getId())) {
+            for (CnAValidation validation : existingValidationsForType) {
                 deleteValidation(validation);
             }
         }
@@ -303,8 +312,12 @@ public class ValidationService implements IValidationService {
     }
 
     private void updateValueMap(Map<PropertyType, List<String>> map, PropertyType type,
-            CnATreeElement elmt) {
-        List<String> invalidHints = getInvalidPropertyHints(type, elmt);
+            CnATreeElement elmt, List<CnAValidation> existingValidationsForElement) {
+        List<CnAValidation> existingValidationsForType = existingValidationsForElement.stream()
+                .filter(validation -> validation.getPropertyId().equals(type.getId()))
+                .collect(Collectors.toList());
+
+        List<String> invalidHints = getInvalidPropertyHints(type, elmt, existingValidationsForType);
         if (map.containsKey(type)) {
             List<String> listWithNewValues = map.get(type);
             listWithNewValues.addAll(invalidHints);
