@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -943,15 +944,15 @@ public class XMLImportDialog extends Dialog {
     private void createValidations(Set<String> uuids) {
         try {
             Activator.inheritVeriniceContextState();
-            Set<CnATreeElement> elements = CnAElementHome.getInstance().loadElementsByUUID(uuids,
-                    new RetrieveInfo().setProperties(true));
-
-            for (CnATreeElement elmt : elements) {
-                ServiceFactory.lookupValidationService().createValidationForSingleElement(elmt);
-            }
-            if (!elements.isEmpty()) {
-                CnAElementFactory.getModel(((CnATreeElement) elements.toArray()[0]))
-                        .validationAdded(((CnATreeElement) elements.toArray()[0]).getScopeId());
+            if (!uuids.isEmpty()) {
+                // all the elements have been imported into a single
+                // perspective, so we take an arbitrary entry
+                ServiceFactory.lookupValidationService().createValidationsByUuids(uuids);
+                String oneUUID = uuids.iterator().next();
+                CnATreeElement element = CnAElementHome.getInstance()
+                        .loadElementsByUUID(Collections.singleton(oneUUID), new RetrieveInfo())
+                        .iterator().next();
+                CnAElementFactory.getModel(element).validationAdded(element.getScopeId());
             }
         } catch (CommandException e) {
             LOG.error("Error while executing validation creation command", e); //$NON-NLS-1$
