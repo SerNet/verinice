@@ -479,9 +479,12 @@ public class ValidationService implements IValidationService {
         LoadSubtreeIds loadSubtreeIdsCommand = new LoadSubtreeIds(elmt);
         loadSubtreeIdsCommand = getCommandService().executeCommand(loadSubtreeIdsCommand);
         Set<Integer> dbIdsOfSubtree = loadSubtreeIdsCommand.getDbIdsOfSubtree();
-
-        for (Integer elementId : dbIdsOfSubtree) {
-            deleteValidations(elmt.getScopeId(), elementId);
+        DetachedCriteria criteria = DetachedCriteria.forClass(CnAValidation.class)
+                .add(Restrictions.in("elmtDbId", dbIdsOfSubtree))
+                .add(createScopeIdRestriction(elmt.getScopeId()));
+        for (CnAValidation validation : (List<CnAValidation>) getCnaValidationDAO()
+                .findByCriteria(criteria)) {
+            getCnaValidationDAO().delete(validation);
         }
     }
 
