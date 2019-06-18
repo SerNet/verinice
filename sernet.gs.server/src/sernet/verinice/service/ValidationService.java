@@ -18,6 +18,7 @@
 package sernet.verinice.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -79,27 +80,32 @@ public class ValidationService implements IValidationService {
             throw new RuntimeCommandException("validated element not existent");
         }
         ServerInitializer.inheritVeriniceContextState();
-        HashMap<PropertyType, List<String>> hintsOfFailedValidationsMap = new HashMap<>();
         EntityType eType = getHuiTypeFactory().getEntityType(elmt.getTypeId());
         if (eType != null) {
             List<CnAValidation> existingValidationsForElement = getValidations(elmt.getScopeId(),
                     elmt.getDbId());
-            for (Object pElement : eType.getAllPropertyTypes()) {
-                if (pElement instanceof PropertyType) {
-                    updateValueMap(hintsOfFailedValidationsMap, (PropertyType) pElement, elmt,
+            createValidationForSingleElement(elmt, eType, existingValidationsForElement);
+        }
+    }
+
+    protected void createValidationForSingleElement(CnATreeElement element, EntityType entityType,
+            List<CnAValidation> existingValidationsForElement) {
+        HashMap<PropertyType, List<String>> hintsOfFailedValidationsMap = new HashMap<>();
+        for (Object pElement : entityType.getAllPropertyTypes()) {
+            if (pElement instanceof PropertyType) {
+                updateValueMap(hintsOfFailedValidationsMap, (PropertyType) pElement, element,
+                        existingValidationsForElement);
+            } else if (pElement instanceof PropertyGroup) {
+                PropertyGroup pGroup = (PropertyGroup) pElement;
+                for (PropertyType pType : pGroup.getPropertyTypes()) {
+                    updateValueMap(hintsOfFailedValidationsMap, pType, element,
                             existingValidationsForElement);
-                } else if (pElement instanceof PropertyGroup) {
-                    PropertyGroup pGroup = (PropertyGroup) pElement;
-                    for (PropertyType pType : pGroup.getPropertyTypes()) {
-                        updateValueMap(hintsOfFailedValidationsMap, pType, elmt,
-                                existingValidationsForElement);
-                    }
                 }
             }
-            for (Entry<PropertyType, List<String>> entry : hintsOfFailedValidationsMap.entrySet()) {
-                for (String hint : entry.getValue()) {
-                    createCnAValidationObject(elmt, entry, hint);
-                }
+        }
+        for (Entry<PropertyType, List<String>> entry : hintsOfFailedValidationsMap.entrySet()) {
+            for (String hint : entry.getValue()) {
+                createCnAValidationObject(element, entry, hint);
             }
         }
     }
@@ -499,6 +505,31 @@ public class ValidationService implements IValidationService {
                 new RetrieveInfo().setProperties(true));
         elementLoader = getCommandService().executeCommand(elementLoader);
         createValidationForSingleElement(elementLoader.getElement());
+    }
+
+    @Override
+    public void createValidationsByUuids(Collection<String> uuids) throws CommandException {
+        DetachedCriteria criteriaElements = DetachedCriteria.forClass(CnATreeElement.class)
+                .add(Restrictions.in("uuid", uuids));
+        new RetrieveInfo().setProperties(true).configureCriteria(criteriaElements);
+        @SuppressWarnings("unchecked")
+        List<CnATreeElement> elements = getCnaTreeElementDAO().findByCriteria(criteriaElements);
+
+        DetachedCriteria criteriaValidations = DetachedCriteria.forClass(CnAValidation.class);
+        criteriaValidations.add(Restrictions.in("elmtDbId",
+                elements.stream().map(CnATreeElement::getDbId).collect(Collectors.toSet())));
+        @SuppressWarnings("unchecked")
+        List<CnAValidation> existingValidations = getCnaValidationDAO()
+                .findByCriteria(criteriaValidations);
+        Map<Integer, List<CnAValidation>> existingValidationsByElementId = existingValidations
+                .stream().collect(Collectors.groupingBy(CnAValidation::getElmtDbId));
+        ServerInitializer.inheritVeriniceContextState();
+
+        for (CnATreeElement element : elements) {
+            createValidationForSingleElement(element, element.getEntityType(),
+                    existingValidationsByElementId.getOrDefault(element.getDbId(),
+                            Collections.emptyList()));
+        }
     }
 
     /*

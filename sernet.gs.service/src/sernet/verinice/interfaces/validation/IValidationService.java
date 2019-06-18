@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.verinice.interfaces.validation;
 
+import java.util.Collection;
 import java.util.List;
 
 import sernet.hui.common.connect.Entity;
@@ -39,6 +40,8 @@ public interface IValidationService {
     void createValidationForSingleElement(CnATreeElement elmt);
 
     void createValidationByUuid(String uuid) throws CommandException;
+
+    void createValidationsByUuids(Collection<String> uuids) throws CommandException;
 
     /**
      * validates a whole scope own thread, supplies feedback to user via monitor
