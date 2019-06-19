@@ -74,7 +74,6 @@ import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.ILogPathService;
 import sernet.verinice.interfaces.IMain;
 import sernet.verinice.interfaces.IReportLocalTemplateDirectoryService;
-import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.interfaces.VersionConstants;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
@@ -116,8 +115,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
     public static final String DERBY_LOG_FILE_PROPERTY = "derby.stream.error.file"; //$NON-NLS-1$
 
-    public static final String DERBY_LOG_FILE = "verinice" + File.separatorChar //$NON-NLS-1$
-            + "verinice-derby.log"; //$NON-NLS-1$
+    public static final String DERBY_LOG_FILE = "verinice-derby.log"; //$NON-NLS-1$
 
     // The shared instance
     private static Activator plugin;
@@ -176,8 +174,12 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
         // Makes a representation of this bundle as a service available.
         context.registerService(IMain.class.getName(), this, null);
-        context.registerService(ILogPathService.class.getName(),
-                LoggerInitializer.setupLogFilePath(), null);
+        LoggerInitializer loggerInitializer = LoggerInitializer.setupLogFilePath();
+        context.registerService(ILogPathService.class.getName(), loggerInitializer, null);
+
+        // Set the derby log file path
+        System.setProperty(DERBY_LOG_FILE_PROPERTY,
+                loggerInitializer.getLogDirectory() + File.separatorChar + DERBY_LOG_FILE); // $NON-NLS-1$
 
         templateDirTracker = new ServiceTracker(context,
                 IReportLocalTemplateDirectoryService.class.getName(), null);
@@ -232,10 +234,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
         initializeInternalServer();
 
         setGSDSCatalog(prefs);
-
-        // Set the derby log file path
-        System.setProperty(DERBY_LOG_FILE_PROPERTY, System.getProperty(IVeriniceConstants.USER_HOME)
-                + File.separatorChar + DERBY_LOG_FILE); // $NON-NLS-1$
 
         // Provide initial DB connection details to server.
         internalServer.configureDatabase(prefs.getString(PreferenceConstants.DB_URL),
