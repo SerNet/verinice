@@ -116,7 +116,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
     public static final String DERBY_LOG_FILE_PROPERTY = "derby.stream.error.file"; //$NON-NLS-1$
 
-    public static final String DERBY_LOG_FILE = "verinice" + File.separatorChar + "verinice-derby.log"; //$NON-NLS-1$ //$NON-NLS-2$
+    public static final String DERBY_LOG_FILE = "verinice" + File.separatorChar //$NON-NLS-1$
+            + "verinice-derby.log"; //$NON-NLS-1$
 
     // The shared instance
     private static Activator plugin;
@@ -134,7 +135,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
     private boolean standalone = false;
 
     private ServiceTracker templateDirTracker;
-    
+
     private WorkspaceJob reindexJob;
 
     /**
@@ -175,11 +176,13 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
         // Makes a representation of this bundle as a service available.
         context.registerService(IMain.class.getName(), this, null);
-        context.registerService(ILogPathService.class.getName(), LoggerInitializer.setupLogFilePath(), null);
+        context.registerService(ILogPathService.class.getName(),
+                LoggerInitializer.setupLogFilePath(), null);
 
-        templateDirTracker = new ServiceTracker(context, IReportLocalTemplateDirectoryService.class.getName(), null);
+        templateDirTracker = new ServiceTracker(context,
+                IReportLocalTemplateDirectoryService.class.getName(), null);
         templateDirTracker.open();
-        
+
     }
 
     /**
@@ -215,7 +218,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
         if (!prepareReportDirs()) {
             LOG.warn("ReportDirs are not created correclty");
         }
-        if(!prepareVNLDir()){
+        if (!prepareVNLDir()) {
             LOG.warn("VNL-Dir was not created correctly");
         }
         setProxy();
@@ -231,14 +234,17 @@ public class Activator extends AbstractUIPlugin implements IMain {
         setGSDSCatalog(prefs);
 
         // Set the derby log file path
-        System.setProperty(DERBY_LOG_FILE_PROPERTY, 
-                System.getProperty(IVeriniceConstants.USER_HOME) + 
-                File.separatorChar + 
-                DERBY_LOG_FILE); //$NON-NLS-1$
+        System.setProperty(DERBY_LOG_FILE_PROPERTY, System.getProperty(IVeriniceConstants.USER_HOME)
+                + File.separatorChar + DERBY_LOG_FILE); // $NON-NLS-1$
 
         // Provide initial DB connection details to server.
-        internalServer.configureDatabase(prefs.getString(PreferenceConstants.DB_URL), prefs.getString(PreferenceConstants.DB_USER), prefs.getString(PreferenceConstants.DB_PASS), prefs.getString(PreferenceConstants.DB_DRIVER), prefs.getString(PreferenceConstants.DB_DIALECT));
-        internalServer.configureSearch(prefs.getBoolean(PreferenceConstants.SEARCH_DISABLE), prefs.getBoolean(PreferenceConstants.SEARCH_INDEX_ON_STARTUP));
+        internalServer.configureDatabase(prefs.getString(PreferenceConstants.DB_URL),
+                prefs.getString(PreferenceConstants.DB_USER),
+                prefs.getString(PreferenceConstants.DB_PASS),
+                prefs.getString(PreferenceConstants.DB_DRIVER),
+                prefs.getString(PreferenceConstants.DB_DIALECT));
+        internalServer.configureSearch(prefs.getBoolean(PreferenceConstants.SEARCH_DISABLE),
+                prefs.getBoolean(PreferenceConstants.SEARCH_INDEX_ON_STARTUP));
 
         // prepare client's workspace:
         CnAWorkspace.getInstance().prepare();
@@ -247,9 +253,10 @@ public class Activator extends AbstractUIPlugin implements IMain {
             ServiceFactory.openCommandService();
         } catch (Exception e) {
             // if this fails, try rewriting config:
-            LOG.error("Exception while connection to command service, forcing recreation of " + "service factory configuration from preferences.", e); //$NON-NLS-1$ //$NON-NLS-2$
+            LOG.error("Exception while connection to command service, forcing recreation of " //$NON-NLS-1$
+                    + "service factory configuration from preferences.", e); //$NON-NLS-1$
             CnAWorkspace.getInstance().prepare(true);
-        }       
+        }
 
         // When the service factory is initialized the client's work objects can
         // be accessed.
@@ -258,13 +265,14 @@ public class Activator extends AbstractUIPlugin implements IMain {
         VeriniceContext.setState(state);
 
         // Make command service available as an OSGi service
-        context.registerService(ICommandService.class.getName(), VeriniceContext.get(VeriniceContext.COMMAND_SERVICE), null);
-        
+        context.registerService(ICommandService.class.getName(),
+                VeriniceContext.get(VeriniceContext.COMMAND_SERVICE), null);
+
         configureItbpCatalogLoader();
 
         GSScraperUtil.getInstance().getModel().setLayoutConfig(new RcpLayoutConfig());
         ResolverFactoryRegistry.setResolverFactory(new BSIEntityResolverFactory());
-        
+
         Job repositoryJob = new Job("add-repository") { //$NON-NLS-1$
             /*
              * (non-Javadoc)
@@ -289,7 +297,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
         StartupImporter.importVna();
 
         ReportTemplateSync.sync();
-
 
         // Log the system and application configuration
         ConfigurationLogger.logSystemProperties();
@@ -364,24 +371,28 @@ public class Activator extends AbstractUIPlugin implements IMain {
         };
         JobScheduler.scheduleInitJob(job);
     }
-    
+
     private void setGSDSCatalog(Preferences prefs) {
-        if (prefs.getString(PreferenceConstants.GSACCESS).equals(PreferenceConstants.GSACCESS_DIR)) {
+        if (prefs.getString(PreferenceConstants.GSACCESS)
+                .equals(PreferenceConstants.GSACCESS_DIR)) {
             try {
-                internalServer.setGSCatalogURL(new File(prefs.getString(PreferenceConstants.BSIDIR)).toURI().toURL());
+                internalServer.setGSCatalogURL(
+                        new File(prefs.getString(PreferenceConstants.BSIDIR)).toURI().toURL());
             } catch (MalformedURLException mfue) {
                 LOG.warn("Stored GS catalog dir is an invalid URL."); //$NON-NLS-1$
             }
         } else {
             try {
-                internalServer.setGSCatalogURL(new File(prefs.getString(PreferenceConstants.BSIZIPFILE)).toURI().toURL());
+                internalServer.setGSCatalogURL(
+                        new File(prefs.getString(PreferenceConstants.BSIZIPFILE)).toURI().toURL());
             } catch (MalformedURLException mfue) {
                 LOG.warn("Stored GS catalog zip file path is an invalid URL."); //$NON-NLS-1$
             }
 
         }
         try {
-            internalServer.setDSCatalogURL(new File(prefs.getString(PreferenceConstants.DSZIPFILE)).toURI().toURL());
+            internalServer.setDSCatalogURL(
+                    new File(prefs.getString(PreferenceConstants.DSZIPFILE)).toURI().toURL());
         } catch (MalformedURLException mfue) {
             LOG.warn("Stored DS catalog zip file path is an invalid URL."); //$NON-NLS-1$
         }
@@ -393,8 +404,10 @@ public class Activator extends AbstractUIPlugin implements IMain {
         if (standalone) {
             bundle = Platform.getBundle("sernet.gs.server"); //$NON-NLS-1$
             if (bundle == null) {
-                LOG.warn("verinice server bundle is not available. Assuming it is started separately."); //$NON-NLS-1$
-            } else if (bundle.getState() == Bundle.INSTALLED || bundle.getState() == Bundle.RESOLVED) {
+                LOG.warn(
+                        "verinice server bundle is not available. Assuming it is started separately."); //$NON-NLS-1$
+            } else if (bundle.getState() == Bundle.INSTALLED
+                    || bundle.getState() == Bundle.RESOLVED) {
                 LOG.debug("Manually starting GS Server"); //$NON-NLS-1$
                 bundle.start();
             }
@@ -472,9 +485,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
-     * )
+     * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.
+     * BundleContext )
      */
     @Override
     public void stop(BundleContext context) throws Exception {
@@ -573,7 +585,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
                     if (e.getCause() != null && e.getCause().getLocalizedMessage() != null) {
                         setName(e.getCause().getLocalizedMessage());
                     }
-                    status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", Messages.Activator_31, e); //$NON-NLS-1$
+                    status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
+                            Messages.Activator_31, e);
                 } finally {
                     monitor.done();
                 }
@@ -597,7 +610,9 @@ public class Activator extends AbstractUIPlugin implements IMain {
                         sleep(sleepTime);
                         long now = System.currentTimeMillis();
                         if (now - startTime > maxStartTime) {
-                            ExceptionUtil.log(new Exception(sernet.gs.ui.rcp.main.Messages.Activator_8), sernet.gs.ui.rcp.main.Messages.Activator_10);
+                            ExceptionUtil.log(
+                                    new Exception(sernet.gs.ui.rcp.main.Messages.Activator_8),
+                                    sernet.gs.ui.rcp.main.Messages.Activator_10);
                             return;
                         }
                     } catch (InterruptedException e) {
@@ -625,7 +640,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
             Preferences prefs = getDefault().getPluginPreferences();
             prefs.setValue(PreferenceConstants.FIRSTSTART, false);
 
-            if (getDefault().getPluginPreferences().getString(PreferenceConstants.DB_DRIVER).equals(PreferenceConstants.DB_DRIVER_DERBY)) {
+            if (getDefault().getPluginPreferences().getString(PreferenceConstants.DB_DRIVER)
+                    .equals(PreferenceConstants.DB_DRIVER_DERBY)) {
 
                 // Do not show dialog if remote server is configured instead of
                 // internal server.
@@ -633,7 +649,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
                     return;
                 }
 
-                MessageDialog.openInformation(new Shell(shell), Messages.Activator_26, Messages.Activator_27);
+                MessageDialog.openInformation(new Shell(shell), Messages.Activator_26,
+                        Messages.Activator_27);
 
             }
         }
@@ -644,7 +661,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
         URI repoUri = null;
         String name = null;
         if (sernet.verinice.rcp.Preferences.isServerMode()) {
-            repoUri = new URI(createUpdateSiteUrl(prefs.getString(PreferenceConstants.VNSERVER_URI)));
+            repoUri = new URI(
+                    createUpdateSiteUrl(prefs.getString(PreferenceConstants.VNSERVER_URI)));
             name = Messages.Activator_4;
         } else {
             repoUri = new URI(UPDATE_SITE_URL);
@@ -655,13 +673,15 @@ public class Activator extends AbstractUIPlugin implements IMain {
         // Load repo
         try {
             getMetadataRepositoryManager().addRepository(repoUri);
-            getMetadataRepositoryManager().setRepositoryProperty(repoUri, IRepository.PROP_NAME, name);
-            
+            getMetadataRepositoryManager().setRepositoryProperty(repoUri, IRepository.PROP_NAME,
+                    name);
+
             if (LOG.isDebugEnabled()) {
                 LOG.debug("MetadataRepository added: " + repoUri); //$NON-NLS-1$
             }
             getArtifactRepositoryManager().addRepository(repoUri);
-            getArtifactRepositoryManager().setRepositoryProperty(repoUri, IRepository.PROP_NAME, name);
+            getArtifactRepositoryManager().setRepositoryProperty(repoUri, IRepository.PROP_NAME,
+                    name);
             if (LOG.isDebugEnabled()) {
                 LOG.debug("ArtifactRepository added: " + repoUri); //$NON-NLS-1$
             }
@@ -687,11 +707,13 @@ public class Activator extends AbstractUIPlugin implements IMain {
     }
 
     private void removeRepository() {
-        URI[] uriArray = getMetadataRepositoryManager().getKnownRepositories(IArtifactRepositoryManager.REPOSITORIES_ALL);
+        URI[] uriArray = getMetadataRepositoryManager()
+                .getKnownRepositories(IArtifactRepositoryManager.REPOSITORIES_ALL);
         if (uriArray != null) {
             for (int i = 0; i < uriArray.length; i++) {
                 URI uri = uriArray[i];
-                if (uri.toString().endsWith(LOCAL_UPDATE_SITE_URL) || UPDATE_SITE_URL.equals(uri.toString())) {
+                if (uri.toString().endsWith(LOCAL_UPDATE_SITE_URL)
+                        || UPDATE_SITE_URL.equals(uri.toString())) {
                     getArtifactRepositoryManager().removeRepository(uri);
                     getMetadataRepositoryManager().removeRepository(uri);
                 }
@@ -737,14 +759,16 @@ public class Activator extends AbstractUIPlugin implements IMain {
                         result.status = Status.OK_STATUS;
                     } catch (Exception e) {
                         ExceptionUtil.log(e, Messages.Activator_2);
-                        result.status = new Status(IStatus.ERROR, PLUGIN_ID, Messages.Activator_3, e);
+                        result.status = new Status(IStatus.ERROR, PLUGIN_ID, Messages.Activator_3,
+                                e);
                     } finally {
                         monitor.done();
                     }
                     return result.status;
                 }
             };
-            JobScheduler.scheduleJob(job, JobScheduler.getInitMutex(), JobScheduler.getInitProgressMonitor());
+            JobScheduler.scheduleJob(job, JobScheduler.getInitMutex(),
+                    JobScheduler.getInitProgressMonitor());
         } else {
             result.status = Status.OK_STATUS;
         }
@@ -790,10 +814,11 @@ public class Activator extends AbstractUIPlugin implements IMain {
     private static class ServerDummy implements IInternalServer {
 
         @Override
-        public void configureDatabase(String url, String user, String pass, String driver, String dialect) {
+        public void configureDatabase(String url, String user, String pass, String driver,
+                String dialect) {
             // Intentionally do nothing.
         }
-        
+
         @Override
         public void configureSearch(boolean disable, boolean indexOnStartup) {
             // Intentionally do nothing.
@@ -856,7 +881,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
     @Override
     public void updateServerURI(String uri) {
         if (!runsAsApplication) {
-            LOG.info("verinice runs in designer mode - retrieving server configuration from ODA driver."); //$NON-NLS-1$
+            LOG.info(
+                    "verinice runs in designer mode - retrieving server configuration from ODA driver."); //$NON-NLS-1$
             ClientPropertyPlaceholderConfigurer.setRemoteServerMode(uri);
             try {
                 ServiceFactory.openCommandService();
@@ -867,8 +893,10 @@ public class Activator extends AbstractUIPlugin implements IMain {
             VeriniceContext.setState(state);
 
             // Make command and model service available as an OSGi service
-            context.registerService(ICommandService.class.getName(), VeriniceContext.get(VeriniceContext.COMMAND_SERVICE), null);
-            context.registerService(IObjectModelService.class.getName(), VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE), null);
+            context.registerService(ICommandService.class.getName(),
+                    VeriniceContext.get(VeriniceContext.COMMAND_SERVICE), null);
+            context.registerService(IObjectModelService.class.getName(),
+                    VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE), null);
         }
     }
 
@@ -885,19 +913,24 @@ public class Activator extends AbstractUIPlugin implements IMain {
      */
     private ServiceTracker getProxyTracker() {
         if (proxyTracker == null) {
-            proxyTracker = new ServiceTracker(FrameworkUtil.getBundle(this.getClass()).getBundleContext(), IProxyService.class.getName(), null);
+            proxyTracker = new ServiceTracker(
+                    FrameworkUtil.getBundle(this.getClass()).getBundleContext(),
+                    IProxyService.class.getName(), null);
             proxyTracker.open();
         }
         return proxyTracker;
     }
 
     private boolean prepareReportDirs() {
-        return CnAWorkspace.getInstance().createLocalReportTemplateDir(IReportService.VERINICE_REPORTS_LOCAL) && CnAWorkspace.getInstance().createReportTemplateDir(IReportService.VERINICE_REPORTS_REMOTE);
+        return CnAWorkspace.getInstance()
+                .createLocalReportTemplateDir(IReportService.VERINICE_REPORTS_LOCAL)
+                && CnAWorkspace.getInstance()
+                        .createReportTemplateDir(IReportService.VERINICE_REPORTS_REMOTE);
     }
-    
-    private boolean prepareVNLDir(){
+
+    private boolean prepareVNLDir() {
         String workspace = System.getProperty("osgi.instance.area");
-        String vnlPath = FilenameUtils.concat(workspace, 
+        String vnlPath = FilenameUtils.concat(workspace,
                 ILicenseManagementService.VNL_FILE_EXTENSION);
         if (vnlPath.startsWith("file:")) {
             vnlPath = vnlPath.substring(5);
@@ -908,9 +941,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
     public IReportLocalTemplateDirectoryService getIReportTemplateDirectoryService() {
         return (IReportLocalTemplateDirectoryService) templateDirTracker.getService();
     }
-    
+
     public void setReindexJob(WorkspaceJob reindexJob) {
         this.reindexJob = reindexJob;
     }
-    
 }
