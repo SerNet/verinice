@@ -395,6 +395,8 @@ ${verinice-workspace}
 -Dimages=${images}
 -Dbasepath=${test-results}
 -Dtest-data=${test-data}
+-Dderby.locks.monitor=true
+-Dderby.locks.deadlockTrace=true
 </echo>
 	</target>
 
