@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -40,6 +41,7 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -92,6 +94,7 @@ import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateContext;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateResult;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.bp.risk.RiskService;
 import sernet.verinice.service.commands.crud.LoadElementForEditor;
@@ -206,6 +209,7 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
     };
     private CnATreeElement cnAElement;
     private LinkMaker linkMaker;
+    private ChangeMetadata changeMetadata;
 
     @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
@@ -344,6 +348,7 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
             if (linkMaker != null) {
                 linkMaker.viewer.refresh();
             }
+            Optional.ofNullable(changeMetadata).ifPresent(value -> value.setElement(cnAElement));
             // Refresh other views in background
             Job job = new RefreshJob("Refresh application...",
                     EditorUtil.getRelatedObjects(cnAElement));
@@ -559,6 +564,7 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
         if (linkMaker != null) {
             linkMaker.dispose();
         }
+        Optional.ofNullable(changeMetadata).ifPresent(Widget::dispose);
         huiComposite.closeView();
         cnAElement.getEntity().removeListener(modelListener);
         EditorRegistry.getInstance()
@@ -682,11 +688,21 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
             frequenciesPageIndex = addNewPage(scrolledComposite,
                     Messages.BSIElementEditorMultiPage_page_name_risk_frequency);
         }
+        if (!isCatalogElement(cnAElement)) {
+            createChangeMetadataPage();
+        }
 
         // if opened the first time, save initialized entity:
         if (isDirty()) {
             save(false);
         }
+
+    }
+
+    private boolean isCatalogElement(CnATreeElement element) {
+        CatalogModel catalogModel = CnAElementFactory.getInstance().getCatalogModel();
+        return catalogModel.getChildren().stream().map(CnATreeElement::getDbId)
+                .anyMatch(element.getScopeId()::equals);
     }
 
     private void riskConfigurationChanged() {
@@ -727,6 +743,12 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
         initContent();
         setIcon();
         addNewPage(huiComposite, Messages.BSIElementEditorMultiPage_page_name_data);
+    }
+
+    private void createChangeMetadataPage() {
+        changeMetadata = new ChangeMetadata(getContainer());
+        changeMetadata.setElement(cnAElement);
+        addNewPage(changeMetadata, Messages.BSIElementEditorMultiPage_page_name_change_metadata);
     }
 
     private static ScrolledComposite createScrollableComposite(Composite parent) {
