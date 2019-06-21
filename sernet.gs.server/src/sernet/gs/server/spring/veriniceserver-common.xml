@@ -111,14 +111,14 @@ This variant:
 		<property name="jdbcUrl" value="${jdbc.url}" />
 		<property name="user" value="${jdbc.username}" />
 		<property name="password" value="${jdbc.password}" />
-		<property name="minPoolSize" value="10" />
-		<property name="initialPoolSize" value="10" />
-		<property name="maxPoolSize" value="60" />
-		<property name="acquireIncrement" value="5" />
-		<property name="maxStatements" value="100" />
-		<property name="checkoutTimeout" value="10000" />
-		<property name="idleConnectionTestPeriod" value="180" />
-        <property name="numHelperThreads" value="6" />
+		<property name="minPoolSize" value="${jdbc.ds.pool.minPoolSize}" />
+		<property name="initialPoolSize" value="${jdbc.ds.pool.initialPoolSize}" />
+		<property name="maxPoolSize" value="${jdbc.ds.pool.maxPoolSize}" />
+		<property name="acquireIncrement" value="${jdbc.ds.pool.acquireIncrement}" />
+		<property name="maxStatementsPerConnection" value="${jdbc.ds.pool.maxStatementsPerConnection}" />
+		<property name="checkoutTimeout" value="${jdbc.ds.pool.checkoutTimeout}" />
+		<property name="idleConnectionTestPeriod" value="${jdbc.ds.pool.idleConnectionTestPeriod}" />
+        <property name="numHelperThreads" value="${jdbc.ds.pool.numHelperThreads}" />
 	</bean>
 
 	<bean id="sessionFactory" depends-on="schemaCreator" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">

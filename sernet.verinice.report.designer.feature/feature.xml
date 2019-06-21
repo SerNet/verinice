@@ -65,12 +65,6 @@
          version="4.1.0"/>
 
    <plugin
-         id="com.springsource.com.mchange.v2.c3p0"
-         download-size="0"
-         install-size="0"
-         version="0.9.1.2"/>
-
-   <plugin
          id="com.springsource.com.sun.xml.messaging.saaj"
          download-size="0"
          install-size="0"
@@ -1858,5 +1852,12 @@
          install-size="0"
          version="1.1.1"
          fragment="true"/>
+
+   <plugin
+         id="com.mchange.c3p0"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>

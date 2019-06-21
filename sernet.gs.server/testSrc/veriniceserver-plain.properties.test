@@ -12,6 +12,14 @@ hibernate.config.resource=classpath:/server_hibernate_test.cfg.xml
 jdbc.driverClass=org.h2.Driver
 jdbc.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 jdbc.url=jdbc:h2:mem:verinicedb;MODE=PostgreSQL
+jdbc.ds.pool.minPoolSize=2
+jdbc.ds.pool.initialPoolSize=2
+jdbc.ds.pool.maxPoolSize=2
+jdbc.ds.pool.acquireIncrement=1
+jdbc.ds.pool.numHelperThreads=3
+jdbc.ds.pool.maxStatementsPerConnection=200
+jdbc.ds.pool.checkoutTimeout=0
+jdbc.ds.pool.idleConnectionTestPeriod=0
 
 ##################################################
 #Alternative database: connection settings for PostgreSQL
