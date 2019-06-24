@@ -300,6 +300,18 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
             riskMatrixConfigurator.setEditorState(riskConfigurationState);
             riskMatrixConfigurator.refresh();
         }
+        if (riskCategoriesPageIndex == newPageIndex) {
+            riskValuesConfigurator.setEditorState(riskConfigurationState.getRisks());
+            riskValuesConfigurator.refresh();
+        }
+        if (frequenciesPageIndex == newPageIndex) {
+            frequenciesConfigurator.setEditorState(riskConfigurationState.getFrequencies());
+            frequenciesConfigurator.refresh();
+        }
+        if (impactsPageIndex == newPageIndex) {
+            impactsConfigurator.setEditorState(riskConfigurationState.getImpacts());
+            impactsConfigurator.refresh();
+        }
 
         super.pageChange(newPageIndex);
     }
@@ -376,19 +388,21 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
             return;
         }
         try {
-            if (cnAElement.isItNetwork()
-                    && riskConfigurationState != DefaultRiskConfiguration.getInstance()) {
-                validateAllLabelsUniqueAndNonEmpty(riskConfigurationState);
-
+            if (cnAElement.isItNetwork() && riskConfiguationIsDirty()) {
                 ItNetwork itNetwork = (ItNetwork) cnAElement;
-                itNetwork.setRiskConfiguration(riskConfigurationState);
+                if (riskConfiguationWasReset()) {
+                    itNetwork.setRiskConfiguration(null);
+                } else {
+                    validateAllLabelsUniqueAndNonEmpty(riskConfigurationState);
+                    itNetwork.setRiskConfiguration(riskConfigurationState);
+                }
                 RiskConfigurationUpdateContext updateContext = new RiskConfigurationUpdateContext(
                         cnAElement.getUuid(), riskConfigurationState,
                         frequenciesConfigurator.getDeleted(), impactsConfigurator.getDeleted(),
                         riskValuesConfigurator.getDeleted());
                 RiskConfigurationUpdateResult updateResult = getRiskService()
                         .updateRiskConfiguration(updateContext);
-                RiskConfigurationUpdateResultDialog.openUpdateResultDialog(updateResult);
+                    RiskConfigurationUpdateResultDialog.openUpdateResultDialog(updateResult);
                 Stream.of(frequenciesConfigurator, impactsConfigurator, riskValuesConfigurator)
                         .forEach(StackConfigurator::reset);
             }
@@ -475,10 +489,29 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
         if (isModelModified) {
             return true;
         }
-        return cnAElement.isItNetwork()
-                && riskConfigurationState != DefaultRiskConfiguration.getInstance()
-                && !riskConfigurationState
-                        .deepEquals(((ItNetwork) cnAElement).getRiskConfiguration());
+        if (!cnAElement.isItNetwork()) {
+            return false;
+        }
+        return riskConfiguationIsDirty();
+    }
+
+    private boolean riskConfiguationIsDirty() {
+        RiskConfiguration storedRiskConfiguration = ((ItNetwork) cnAElement).getRiskConfiguration();
+        return !keptDefaultRiskConfiguation()
+                && (riskConfiguationWasReset()
+                        || !riskConfigurationState.deepEquals(storedRiskConfiguration));
+    }
+
+    private boolean keptDefaultRiskConfiguation() {
+        RiskConfiguration storedRiskConfiguration = ((ItNetwork) cnAElement).getRiskConfiguration();
+        return storedRiskConfiguration == null
+                && riskConfigurationState == DefaultRiskConfiguration.getInstance();
+    }
+
+    private boolean riskConfiguationWasReset() {
+        RiskConfiguration storedRiskConfiguration = ((ItNetwork) cnAElement).getRiskConfiguration();
+        return storedRiskConfiguration != null
+                && riskConfigurationState == DefaultRiskConfiguration.getInstance();
     }
 
     @Override
@@ -619,7 +652,8 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
             ScrolledComposite scrolledComposite;
             scrolledComposite = createScrollableComposite(getContainer());
             riskMatrixConfigurator = new RiskMatrixConfigurator(scrolledComposite,
-                    riskConfigurationState, this::riskConfigurationChanged);
+                    riskConfigurationState, this::riskConfigurationChanged,
+                    this::restoreRiskConfiguration);
             scrolledComposite.setContent(riskMatrixConfigurator);
             matrixPageIndex = addNewPage(scrolledComposite,
                     Messages.BSIElementEditorMultiPage_page_name_risk_matrix);
@@ -656,6 +690,19 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
         riskConfigurationState = riskMatrixConfigurator.getEditorState().withValues(
                 frequenciesConfigurator.getEditorState(), impactsConfigurator.getEditorState(),
                 riskValuesConfigurator.getEditorState());
+        firePropertyChange(PROP_DIRTY);
+    }
+
+    private void restoreRiskConfiguration() {
+        riskConfigurationState = DefaultRiskConfiguration.getInstance();
+        riskMatrixConfigurator.setEditorState(riskConfigurationState);
+        riskValuesConfigurator.setEditorState(riskConfigurationState.getRisks());
+        frequenciesConfigurator.setEditorState(riskConfigurationState.getFrequencies());
+        impactsConfigurator.setEditorState(riskConfigurationState.getImpacts());
+        // The configuration can only be reset in RiskMatrixConfigurator,
+        // therefore we know this is the only composite we need no refresh here.
+        // The others get refreshed on pageChange.
+        riskMatrixConfigurator.refresh();
         firePropertyChange(PROP_DIRTY);
     }
 

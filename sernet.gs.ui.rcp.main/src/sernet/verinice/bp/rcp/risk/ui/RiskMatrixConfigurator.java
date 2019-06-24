@@ -22,16 +22,21 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -48,6 +53,7 @@ import sernet.verinice.model.common.CnATreeElement;
 public class RiskMatrixConfigurator extends Composite {
 
     private static final int SELECTOR_SIZE = 100;
+    public static final int ELEMENT_SPACING = 10;
 
     private static final RGB WHITE = new RGB(255, 255, 255);
     private static final RGB BLACK = new RGB(0, 0, 0);
@@ -56,11 +62,13 @@ public class RiskMatrixConfigurator extends Composite {
 
     private RiskConfiguration editorState;
     private final Runnable firePropertyChanged;
+    private final Runnable fireRestore;
 
     public RiskMatrixConfigurator(Composite parent, RiskConfiguration riskConfiguration,
-            Runnable firePropertyChanged) {
+            Runnable firePropertyChanged, Runnable fireRestore) {
         super(parent, SWT.NONE);
         this.firePropertyChanged = firePropertyChanged;
+        this.fireRestore = fireRestore;
         editorState = riskConfiguration;
         refresh();
     }
@@ -130,6 +138,11 @@ public class RiskMatrixConfigurator extends Composite {
         helpText.setLayoutData(
                 GridDataFactory.swtDefaults().span(frequencyValues.size() + 1, 1).create());
         helpText.setText(Messages.riskConfigurationMatrixUsage);
+
+        Composite extraComposite = new Composite(pane, SWT.NONE);
+        extraComposite.setLayout(RowLayoutFactory.createFrom(new RowLayout(SWT.HORIZONTAL))
+                .spacing(ELEMENT_SPACING).create());
+        addRestoreButton(extraComposite);
 
         pack(true);
         if (getParent() instanceof ScrolledComposite) {
@@ -242,5 +255,17 @@ public class RiskMatrixConfigurator extends Composite {
             c[i] = col;
         }
         return (0.2126 * c[0]) + (0.7152 * c[1]) + (0.0722 * c[2]);
+    }
+
+    private void addRestoreButton(Composite parent) {
+        Button restore = new Button(parent, SWT.RIGHT);
+        restore.setText(Messages.riskConfigurationResetAll);
+        restore.setToolTipText(Messages.riskConfigurationResetTooltip);
+        restore.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                fireRestore.run();
+            }
+        });
     }
 }
