@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyList;
+import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
@@ -52,72 +53,64 @@ public class ProtectionRequirementsAdapter implements IReevaluator, Serializable
 
     @Override
     public int getIntegrity() {
-        PropertyList properties = cnaTreeElement.getEntity()
-                .getProperties(cnaTreeElement.getTypeId() + Schutzbedarf.INTEGRITAET);
-        if (hasValue(properties)) {
-            return Schutzbedarf.toInt(properties.getProperty(0).getPropertyValue());
-        } else {
-            return Schutzbedarf.UNDEF;
-        }
+        return getSelectedOptionAsNumericValue(
+                cnaTreeElement.getTypeId() + Schutzbedarf.INTEGRITAET);
     }
 
     @Override
     public int getAvailability() {
-        PropertyList properties = cnaTreeElement.getEntity()
-                .getProperties(cnaTreeElement.getTypeId() + Schutzbedarf.VERFUEGBARKEIT);
-        if (hasValue(properties)) {
-            return Schutzbedarf.toInt(properties.getProperty(0).getPropertyValue());
-        } else {
-            return Schutzbedarf.UNDEF;
-        }
+        return getSelectedOptionAsNumericValue(
+                cnaTreeElement.getTypeId() + Schutzbedarf.VERFUEGBARKEIT);
     }
 
     @Override
     public int getConfidentiality() {
-        PropertyList properties = cnaTreeElement.getEntity()
-                .getProperties(cnaTreeElement.getTypeId() + Schutzbedarf.VERTRAULICHKEIT);
-        if (hasValue(properties)) {
-            return Schutzbedarf.toInt(properties.getProperty(0).getPropertyValue());
-        } else {
-            return Schutzbedarf.UNDEF;
-        }
+        return getSelectedOptionAsNumericValue(
+                cnaTreeElement.getTypeId() + Schutzbedarf.VERTRAULICHKEIT);
     }
 
-    public boolean hasValue(PropertyList properties) {
+    public static boolean hasValue(PropertyList properties) {
         return properties != null && !properties.getProperties().isEmpty()
                 && properties.getProperty(0).getPropertyValue() != null;
     }
 
+    private int getSelectedOptionAsNumericValue(String propertyId) {
+        PropertyList properties = cnaTreeElement.getEntity().getProperties(propertyId);
+        if (hasValue(properties)) {
+            String value = properties.getProperty(0).getPropertyValue();
+            if (!value.isEmpty()) {
+                return Schutzbedarf.toInt(cnaTreeElement.getTypeId(), propertyId, value);
+            }
+        }
+        return Schutzbedarf.UNDEF;
+    }
+
     @Override
     public void setIntegrity(int i) {
-        EntityType entityType = HUITypeFactory.getInstance()
-                .getEntityType(cnaTreeElement.getEntity().getEntityType());
-        String option = Schutzbedarf.toOption(cnaTreeElement.getTypeId(), Schutzbedarf.INTEGRITAET,
-                i);
-
-        cnaTreeElement.getEntity().setSimpleValue(
-                entityType.getPropertyType(cnaTreeElement.getTypeId() + Schutzbedarf.INTEGRITAET),
-                option);
+        setSelectedOptionFromNumericValue(cnaTreeElement.getTypeId() + Schutzbedarf.INTEGRITAET, i);
     }
 
     @Override
     public void setAvailability(int i) {
-        EntityType entityType = HUITypeFactory.getInstance()
-                .getEntityType(cnaTreeElement.getEntity().getEntityType());
-        String option = Schutzbedarf.toOption(cnaTreeElement.getTypeId(),
-                Schutzbedarf.VERFUEGBARKEIT, i);
-        cnaTreeElement.getEntity().setSimpleValue(entityType
-                .getPropertyType(cnaTreeElement.getTypeId() + Schutzbedarf.VERFUEGBARKEIT), option);
+        setSelectedOptionFromNumericValue(cnaTreeElement.getTypeId() + Schutzbedarf.VERFUEGBARKEIT,
+                i);
     }
 
     @Override
     public void setConfidentiality(int i) {
+        setSelectedOptionFromNumericValue(cnaTreeElement.getTypeId() + Schutzbedarf.VERTRAULICHKEIT,
+                i);
+    }
+
+    private void setSelectedOptionFromNumericValue(String propertyId, int numericValue) {
+        String optionId = null;
         EntityType entityType = HUITypeFactory.getInstance()
                 .getEntityType(cnaTreeElement.getEntity().getEntityType());
-        String option = Schutzbedarf.toOption(cnaTreeElement.getTypeId(),
-                Schutzbedarf.VERTRAULICHKEIT, i);
-        cnaTreeElement.getEntity().setSimpleValue(entityType.getPropertyType(
-                cnaTreeElement.getTypeId() + Schutzbedarf.VERTRAULICHKEIT), option);
+        PropertyType propertyType = entityType.getPropertyType(propertyId);
+        if (numericValue != Schutzbedarf.UNDEF) {
+            optionId = propertyType.getOptions().get(numericValue - 1).getId();
+        }
+        cnaTreeElement.getEntity().setSimpleValue(propertyType, optionId);
     }
 
     @Override

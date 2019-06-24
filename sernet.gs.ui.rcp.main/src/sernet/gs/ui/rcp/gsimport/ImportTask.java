@@ -667,13 +667,19 @@ public class ImportTask extends AbstractGstoolImportTask {
         MSchutzbedarfkategTxt integ = getGstoolDao()
                 .findSchutzbedarfNameForId(schubeda.getZsbIntegSbkId());
 
-        int vertraulichkeit = (vertr != null) ? TransferData.translateSchutzbedarf(vertr.getName())
+        int vertraulichkeit = (vertr != null)
+                ? Schutzbedarf.toInt(element.getTypeId(),
+                        element.getTypeId() + Schutzbedarf.VERTRAULICHKEIT, vertr.getName())
                 : Schutzbedarf.UNDEF;
 
-        int verfuegbarkeit = (verfu != null) ? TransferData.translateSchutzbedarf(verfu.getName())
+        int verfuegbarkeit = (verfu != null)
+                ? Schutzbedarf.toInt(element.getTypeId(),
+                        element.getTypeId() + Schutzbedarf.VERFUEGBARKEIT, verfu.getName())
                 : Schutzbedarf.UNDEF;
 
-        int integritaet = (integ != null) ? TransferData.translateSchutzbedarf(integ.getName())
+        int integritaet = (integ != null)
+                ? Schutzbedarf.toInt(element.getTypeId(),
+                        element.getTypeId() + Schutzbedarf.INTEGRITAET, integ.getName())
                 : Schutzbedarf.UNDEF;
 
         String vertrBegruendung = schubeda.getZsbVertrBegr();

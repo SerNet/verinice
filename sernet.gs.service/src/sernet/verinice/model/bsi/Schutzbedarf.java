@@ -17,9 +17,14 @@
  ******************************************************************************/
 package sernet.verinice.model.bsi;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
+import sernet.hui.common.connect.EntityType;
+import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.Property;
+import sernet.hui.common.connect.PropertyType;
+import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 
 public final class Schutzbedarf {
 
@@ -36,28 +41,25 @@ public final class Schutzbedarf {
     public static final String INTEGRITAET_BEGRUENDUNG = "_integritaet_begruendung"; //$NON-NLS-1$
 
     public static final String SUFFIX_NONE = ""; //$NON-NLS-1$
-    public static final String SUFFIX_NORMAL = "_normal"; //$NON-NLS-1$
-    public static final String SUFFIX_HOCH = "_hoch"; //$NON-NLS-1$
-    public static final String SUFFIX_SEHRHOCH = "_sehrhoch"; //$NON-NLS-1$
 
     public static final int UNDEF = 0;
-    public static final int NORMAL = 1;
-    public static final int HOCH = 2;
-    public static final int SEHRHOCH = 3;
 
     public static final String MAXIMUM = "Maximumprinzip"; //$NON-NLS-1$
 
     public static final String ERGAENZENDEANALYSE = "_ergaenzendeanalyse"; //$NON-NLS-1$
     private static final String ERGAENZENDEANALYSE_NOETIG = "_modell"; //$NON-NLS-1$
 
-    public static int toInt(String option) {
-        if (option.indexOf(SUFFIX_SEHRHOCH) > -1) {
-            return SEHRHOCH;
+    public static int toInt(String entityTypeId, String propertyId, String value) {
+        EntityType entityType = HUITypeFactory.getInstance().getEntityType(entityTypeId);
+        PropertyType propertyType = entityType.getPropertyType(propertyId);
+        List<IMLPropertyOption> options = propertyType.getOptions();
+        for (int i = 0; i < options.size(); i++) {
+            IMLPropertyOption option = options.get(i);
+            if (option.getId().equals(value)) {
+                return i + 1;
+            }
         }
-        if (option.indexOf(SUFFIX_HOCH) > -1) {
-            return HOCH;
-        }
-        return NORMAL;
+        return Schutzbedarf.UNDEF;
     }
 
     public static boolean isMaximumPrinzip(String description) {
@@ -74,27 +76,6 @@ public final class Schutzbedarf {
 
     public static boolean isIntegritaet(Property prop) {
         return patIntegritaet.matcher(prop.getPropertyTypeID()).matches();
-    }
-
-    public static String toOption(String typeId, String schutzbedarf, int level) {
-        StringBuffer buf = new StringBuffer();
-        buf.append(typeId);
-        buf.append(schutzbedarf);
-        buf.append(getLevel(level));
-        return buf.toString();
-    }
-
-    private static String getLevel(int i) {
-        switch (i) {
-        case NORMAL:
-            return SUFFIX_NORMAL;
-        case HOCH:
-            return SUFFIX_HOCH;
-        case SEHRHOCH:
-            return SUFFIX_SEHRHOCH;
-        default:
-            return SUFFIX_NONE;
-        }
     }
 
     public static boolean isVerfuegbarkeitBegruendung(Property prop) {
