@@ -21,9 +21,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
 import java.util.Stack;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -59,15 +62,14 @@ public abstract class StackConfigurator<T extends RiskPropertyValue> extends Com
     private int maxValues;
     private int numberOfNewElements;
     private Stack<T> deletedRows;
-    protected Map<String, T> editorState;
+    protected LinkedHashMap<String, T> editorState;
     private final Runnable fireProperyChange;
 
     public StackConfigurator(Composite parent, int maxValues, List<T> values,
             Runnable fireProperyChange) {
         super(parent, SWT.NONE);
         this.maxValues = maxValues;
-        this.editorState = new LinkedHashMap<>(values.size());
-        values.stream().forEach(value -> editorState.put(value.getId(), value));
+        setEditorState(values);
         this.fireProperyChange = fireProperyChange;
         reset();
         refresh();
@@ -88,6 +90,19 @@ public abstract class StackConfigurator<T extends RiskPropertyValue> extends Com
 
     public List<T> getEditorState() {
         return new ArrayList<>(editorState.values());
+    }
+
+    public void setEditorState(List<T> values) {
+        if (this.editorState != null) {
+            Set<String> newKeys = values.stream().map(T::getId).collect(Collectors.toSet());
+
+            List<T> cutEntries = editorState.entrySet().stream()
+                    .filter(x -> !newKeys.contains(x.getKey())).map(Entry::getValue)
+                    .collect(Collectors.toList());
+            deletedRows.addAll(cutEntries);
+        }
+        this.editorState = new LinkedHashMap<>(values.size());
+        values.stream().forEach(value -> editorState.put(value.getId(), value));
     }
 
     public void refresh() {
@@ -120,6 +135,16 @@ public abstract class StackConfigurator<T extends RiskPropertyValue> extends Com
                     addAddButton(buttonComposite);
                 }
             }
+        }
+        Composite extraComposite = new Composite(pane, SWT.NONE);
+        extraComposite.setLayout(RowLayoutFactory.createFrom(new RowLayout(SWT.HORIZONTAL))
+                .spacing(ELEMENT_SPACING).create());
+        getDefault().ifPresent(value -> addRestoreButton(extraComposite, value));
+
+        // The introduction of default data, allows rowData to be empty.
+        // In this case a fallback add button is needed.
+        if (rowData.isEmpty()) {
+            addAddButton(extraComposite);
         }
         pane.requestLayout();
         redraw();
@@ -174,6 +199,21 @@ public abstract class StackConfigurator<T extends RiskPropertyValue> extends Com
         });
     }
 
+    private void addRestoreButton(Composite parent, List<T> defaultValues) {
+        Button restore = new Button(parent, SWT.NONE);
+        restore.setText(Messages.riskConfigurationReset);
+        restore.setToolTipText(Messages.riskConfigurationResetTooltip);
+        restore.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                setEditorState(defaultValues);
+                numberOfNewElements = 0;
+                refresh();
+                fireProperyChange.run();
+            }
+        });
+    }
+
     protected static ControlDecoration createLabelFieldDecoration(Text labelField,
             String descriptionText) {
         ControlDecoration txtDecorator = new ControlDecoration(labelField, SWT.TOP | SWT.RIGHT);
@@ -193,6 +233,14 @@ public abstract class StackConfigurator<T extends RiskPropertyValue> extends Com
             txtDecorator.hide();
         }
 
+    }
+
+    /**
+     * Can be overwritten to add a reset button, which sets the
+     * {@code editorState} to the default value.
+     */
+    protected Optional<List<T>> getDefault() {
+        return Optional.empty();
     }
 
     private static boolean isUniqueAndNonEmpty(String id, String label,
