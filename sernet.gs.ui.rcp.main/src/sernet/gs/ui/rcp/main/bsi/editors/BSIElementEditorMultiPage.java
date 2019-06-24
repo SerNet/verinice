@@ -645,6 +645,11 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
             frequenciesPageIndex = addNewPage(scrolledComposite,
                     Messages.BSIElementEditorMultiPage_page_name_risk_frequency);
         }
+
+        // if opened the first time, save initialized entity:
+        if (isDirty()) {
+            save();
+        }
     }
 
     private void riskConfigurationChanged() {
@@ -671,11 +676,6 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
         huiComposite = new HitroUIComposite(getContainer(), false);
         initContent();
         setIcon();
-
-        // if opened the first time, save initialized entity:
-        if (isDirty()) {
-            save();
-        }
         addNewPage(huiComposite, Messages.BSIElementEditorMultiPage_page_name_data);
     }
 
