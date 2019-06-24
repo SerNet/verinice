@@ -33,127 +33,120 @@ import sernet.verinice.model.common.TransactionAbortedException;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
-public class MaximumProtectionRequirementsListener implements ILinkChangeListener,
-		Serializable {
+public class MaximumProtectionRequirementsListener implements ILinkChangeListener, Serializable {
 
-	private CnATreeElement sbTarget;
+    private CnATreeElement sbTarget;
 
-	public MaximumProtectionRequirementsListener(CnATreeElement item) {
-		this.sbTarget = item;
-	}
+    public MaximumProtectionRequirementsListener(CnATreeElement item) {
+        this.sbTarget = item;
+    }
 
-	@Override
-    public void determineIntegrity(CascadingTransaction ta)
-			throws TransactionAbortedException {
-		if (hasBeenVisited(ta)){
-			return;
-		}
-		ta.enter(sbTarget);
+    @Override
+    public void determineIntegrity(CascadingTransaction ta) throws TransactionAbortedException {
+        if (hasBeenVisited(ta)) {
+            return;
+        }
+        ta.enter(sbTarget);
 
-		// get protection level from upward links:
-		int highestValue = 0;
-		allLinks: for (CnALink link : sbTarget.getLinksUp()) {
-			CnATreeElement upwardElmt = link.getDependant();
-			if (upwardElmt.isProtectionRequirementsProvider()) {
-				// upwardElement might depend on maximum level itself, so
-				// recurse up:
-				upwardElmt.getLinkChangeListener().determineIntegrity(ta);
+        // get protection level from upward links:
+        int highestValue = 0;
+        allLinks: for (CnALink link : sbTarget.getLinksUp()) {
+            CnATreeElement upwardElmt = link.getDependant();
+            if (upwardElmt.isProtectionRequirementsProvider()) {
+                // upwardElement might depend on maximum level itself, so
+                // recurse up:
+                upwardElmt.getLinkChangeListener().determineIntegrity(ta);
 
-				int value = upwardElmt.getProtectionRequirementsProvider()
-						.getIntegrity();
-				if (value > highestValue){
-					highestValue = value;
-				}
-			}
-		}
-		
-		// if we dont use the maximum principle, keep current level:
-		if (!Schutzbedarf.isMaximumPrinzip(sbTarget.getProtectionRequirementsProvider()
-				.getIntegrityDescription())){
-			return;
-		}
-		sbTarget.getProtectionRequirementsProvider().setIntegrity(highestValue);
-	}
+                int value = upwardElmt.getProtectionRequirementsProvider().getIntegrity();
+                if (value > highestValue) {
+                    highestValue = value;
+                }
+            }
+        }
 
-	/**
-	 * @param ta
-	 * @return
-	 */
-	private boolean hasBeenVisited(CascadingTransaction ta) {
-		if (ta.hasBeenVisited(sbTarget)) {
-			return true; // we have already been down this path
-		}
-		return false;
-	}
+        // if we dont use the maximum principle, keep current level:
+        if (!Schutzbedarf.isMaximumPrinzip(
+                sbTarget.getProtectionRequirementsProvider().getIntegrityDescription())) {
+            return;
+        }
+        sbTarget.getProtectionRequirementsProvider().setIntegrity(highestValue);
+    }
 
-	@Override
-    public void determineAvailability(CascadingTransaction ta)
-			throws TransactionAbortedException {
-		if (hasBeenVisited(ta)){
-			return;
-		}
-		ta.enter(sbTarget);
+    /**
+     * @param ta
+     * @return
+     */
+    private boolean hasBeenVisited(CascadingTransaction ta) {
+        if (ta.hasBeenVisited(sbTarget)) {
+            return true; // we have already been down this path
+        }
+        return false;
+    }
 
+    @Override
+    public void determineAvailability(CascadingTransaction ta) throws TransactionAbortedException {
+        if (hasBeenVisited(ta)) {
+            return;
+        }
+        ta.enter(sbTarget);
 
-		// otherwise get protection level from upward links:
-		int highestValue = 0;
-		allLinks: for (CnALink link : sbTarget.getLinksUp()) {
-			CnATreeElement upwardElmt = link.getDependant();
-			if (upwardElmt.isProtectionRequirementsProvider()) {
+        // otherwise get protection level from upward links:
+        int highestValue = 0;
+        allLinks: for (CnALink link : sbTarget.getLinksUp()) {
+            CnATreeElement upwardElmt = link.getDependant();
+            if (upwardElmt.isProtectionRequirementsProvider()) {
 
-				// upwardElement might depend on maximum level itself, so
-				// recurse up:
-				upwardElmt.getLinkChangeListener().determineAvailability(ta);
+                // upwardElement might depend on maximum level itself, so
+                // recurse up:
+                upwardElmt.getLinkChangeListener().determineAvailability(ta);
 
-				int value = upwardElmt.getProtectionRequirementsProvider()
-						.getAvailability();
-				if (value > highestValue){
-					highestValue = value;
-				}
-			}
-		}
+                int value = upwardElmt.getProtectionRequirementsProvider().getAvailability();
+                if (value > highestValue) {
+                    highestValue = value;
+                }
+            }
+        }
 
-		// if we dont use the maximum principle, keep current level:
-		if (!Schutzbedarf.isMaximumPrinzip(sbTarget.getProtectionRequirementsProvider()
-				.getAvailabilityDescription())){
-			return;
-		}
-		sbTarget.getProtectionRequirementsProvider().setAvailability(highestValue);
-	}
+        // if we dont use the maximum principle, keep current level:
+        if (!Schutzbedarf.isMaximumPrinzip(
+                sbTarget.getProtectionRequirementsProvider().getAvailabilityDescription())) {
+            return;
+        }
+        sbTarget.getProtectionRequirementsProvider().setAvailability(highestValue);
+    }
 
-	@Override
+    @Override
     public void determineConfidentiality(CascadingTransaction ta)
-			throws TransactionAbortedException {
+            throws TransactionAbortedException {
 
-		if (hasBeenVisited(ta)){
-			return;
-		}
-		ta.enter(sbTarget);
+        if (hasBeenVisited(ta)) {
+            return;
+        }
+        ta.enter(sbTarget);
 
-		// otherwise get protection level from upward links:
-		int highestValue = 0;
-		allLinks: for (CnALink link : sbTarget.getLinksUp()) {
-			CnATreeElement upwardElmt = link.getDependant();
-			if (upwardElmt.isProtectionRequirementsProvider()) {
+        // otherwise get protection level from upward links:
+        int highestValue = 0;
+        allLinks: for (CnALink link : sbTarget.getLinksUp()) {
+            CnATreeElement upwardElmt = link.getDependant();
+            if (upwardElmt.isProtectionRequirementsProvider()) {
 
-				// upwardElement might depend on maximum level itself, so
-				// recurse up:
-				upwardElmt.getLinkChangeListener().determineConfidentiality(ta);
+                // upwardElement might depend on maximum level itself, so
+                // recurse up:
+                upwardElmt.getLinkChangeListener().determineConfidentiality(ta);
 
-				int value = upwardElmt.getProtectionRequirementsProvider()
-						.getConfidentiality();
-				if (value > highestValue){
-					highestValue = value;
-				}
-			}
-		}
-		// if we dont use the maximum principle, keep current level:
-		if (!Schutzbedarf.isMaximumPrinzip(sbTarget.getProtectionRequirementsProvider()
-				.getConfidentialityDescription())){
-			return;
-		}
-		sbTarget.getProtectionRequirementsProvider().setConfidentiality(highestValue);
-	}
+                int value = upwardElmt.getProtectionRequirementsProvider().getConfidentiality();
+                if (value > highestValue) {
+                    highestValue = value;
+                }
+            }
+        }
+        // if we dont use the maximum principle, keep current level:
+        if (!Schutzbedarf.isMaximumPrinzip(
+                sbTarget.getProtectionRequirementsProvider().getConfidentialityDescription())) {
+            return;
+        }
+        sbTarget.getProtectionRequirementsProvider().setConfidentiality(highestValue);
+    }
 
     @Override
     public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
