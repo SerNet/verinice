@@ -38,5 +38,13 @@
 			<one-to-many class="PropertyList" />
 		</map>
 
+        <property name="createdBy" update="false" />
+
+        <property name="createdAt" update="false" />
+
+        <property name="changedBy" />
+
+        <property name="changedAt" />
+
 	</class>
 </hibernate-mapping>

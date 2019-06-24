@@ -88,6 +88,14 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
      */
     private Map<String, String> referenceValueCache;
 
+    private String createdBy;
+
+    private Date createdAt;
+
+    private String changedBy;
+
+    private Date changedAt;
+
     protected Entity() {
         uuid = UUID.randomUUID().toString();
     }
@@ -1005,6 +1013,38 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
             referenceValueCache = new HashMap<>();
         }
         return referenceValueCache;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getChangedBy() {
+        return changedBy;
+    }
+
+    public void setChangedBy(String changedBy) {
+        this.changedBy = changedBy;
+    }
+
+    public Date getChangedAt() {
+        return changedAt;
+    }
+
+    public void setChangedAt(Date changedAt) {
+        this.changedAt = changedAt;
     }
 
     @Override
