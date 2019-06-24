@@ -855,7 +855,8 @@ public class TaskService implements ITaskService {
                 for (Map.Entry<String, String> entry : changedElementProperties.entrySet()) {
                     cnAElement.setPropertyValue(entry.getKey(), entry.getValue());
                 }
-
+                String assignee = (String) variables.get(IGenericProcess.VAR_ASSIGNEE_NAME);
+                cnAElement.getEntity().trackChange(assignee);
                 UpdateElementEntity<? extends CnATreeElement> updateCommand = new UpdateElementEntity<>(
                         cnAElement, ChangeLogEntry.STATION_ID);
                 getCommandService().executeCommand(updateCommand);

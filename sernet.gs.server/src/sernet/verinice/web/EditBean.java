@@ -63,6 +63,7 @@ import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.bpm.ITask;
@@ -489,6 +490,8 @@ public class EditBean {
             throw new SecurityException("write is not allowed");
         }
         setPropertyValues();
+        IAuthService authService = (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
+        element.getEntity().trackChange(authService.getUsername());
         SaveElement<CnATreeElement> command = new SaveElement<>(getElement());
         command = getCommandService().executeCommand(command);
         setElement(command.getElement());

@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -477,23 +478,27 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
      * the SNCA.xml
      * </p>
      */
-    public void importProperties(HUITypeFactory huiTypeFactory, String propertyTypeId,
+    public boolean importProperties(HUITypeFactory huiTypeFactory, String propertyTypeId,
             List<String> foreignProperties, List<Boolean> foreignLimitedLicense,
             List<String> foreignContentId, boolean licenseManagement) {
+        boolean propertyValueChanged = false;
         PropertyList pl = typedPropertyLists.get(propertyTypeId);
         if (pl == null) {
             pl = new PropertyList();
             typedPropertyLists.put(propertyTypeId, pl);
+            propertyValueChanged = true;
         }
 
         List<Property> properties = pl.getProperties();
         int oldSize = properties.size();
         int newSize = foreignProperties.size();
         if (oldSize > newSize) {
+            propertyValueChanged = true;
             for (int i = oldSize; i > newSize; i--) {
                 properties.remove(i - 1);
             }
         } else if (newSize > oldSize) {
+            propertyValueChanged = true;
             for (int i = oldSize; i < newSize; i++) {
                 Property p = new Property();
                 p.setParent(this);
@@ -512,7 +517,10 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
             String value = foreignProperties.get(i);
             Property p = properties.get(i);
             checkPropertyValue(propertyTypeId, propertyType, value);
-            p.setPropertyValue(value);
+            if (!Objects.equals(value, p.getPropertyValue())) {
+                propertyValueChanged = true;
+                p.setPropertyValue(value);
+            }
 
             Boolean limitedLicense = Boolean.FALSE;
             String licenseContentId = null;
@@ -525,6 +533,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
             p.setLimitedLicense(limitedLicense);
             p.setLicenseContentId(licenseContentId);
         }
+        return propertyValueChanged;
     }
 
     private void checkPropertyValue(String propertyTypeId, PropertyType propertyType,
@@ -1045,6 +1054,16 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 
     public void setChangedAt(Date changedAt) {
         this.changedAt = changedAt;
+    }
+
+    public void trackCreation(String userName) {
+        createdAt = new Date();
+        createdBy = userName;
+    }
+
+    public void trackChange(String userName) {
+        changedAt = new Date();
+        changedBy = userName;
     }
 
     @Override

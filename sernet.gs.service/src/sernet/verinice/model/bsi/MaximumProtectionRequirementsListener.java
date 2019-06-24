@@ -18,6 +18,8 @@
 package sernet.verinice.model.bsi;
 
 import java.io.Serializable;
+import java.util.function.IntConsumer;
+import java.util.function.IntSupplier;
 
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
@@ -69,7 +71,8 @@ public class MaximumProtectionRequirementsListener implements ILinkChangeListene
                 sbTarget.getProtectionRequirementsProvider().getIntegrityDescription())) {
             return;
         }
-        sbTarget.getProtectionRequirementsProvider().setIntegrity(highestValue);
+        updateValue(sbTarget.getProtectionRequirementsProvider()::getIntegrity,
+                sbTarget.getProtectionRequirementsProvider()::setIntegrity, highestValue);
     }
 
     private boolean hasBeenVisited(CascadingTransaction ta) {
@@ -105,7 +108,8 @@ public class MaximumProtectionRequirementsListener implements ILinkChangeListene
                 sbTarget.getProtectionRequirementsProvider().getAvailabilityDescription())) {
             return;
         }
-        sbTarget.getProtectionRequirementsProvider().setAvailability(highestValue);
+        updateValue(sbTarget.getProtectionRequirementsProvider()::getAvailability,
+                sbTarget.getProtectionRequirementsProvider()::setAvailability, highestValue);
     }
 
     @Override
@@ -138,7 +142,16 @@ public class MaximumProtectionRequirementsListener implements ILinkChangeListene
                 sbTarget.getProtectionRequirementsProvider().getConfidentialityDescription())) {
             return;
         }
-        sbTarget.getProtectionRequirementsProvider().setConfidentiality(highestValue);
+        updateValue(sbTarget.getProtectionRequirementsProvider()::getConfidentiality,
+                sbTarget.getProtectionRequirementsProvider()::setConfidentiality, highestValue);
+    }
+
+    private void updateValue(IntSupplier getter, IntConsumer setter, int newValue) {
+        int oldValue = getter.getAsInt();
+        if (oldValue != newValue) {
+            setter.accept(newValue);
+            sbTarget.getEntity().trackChange("system");
+        }
     }
 
     @Override

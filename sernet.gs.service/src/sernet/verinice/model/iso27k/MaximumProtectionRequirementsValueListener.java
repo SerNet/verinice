@@ -19,6 +19,8 @@
 package sernet.verinice.model.iso27k;
 
 import java.io.Serializable;
+import java.util.function.IntConsumer;
+import java.util.function.IntSupplier;
 
 import sernet.verinice.model.common.AbstractLinkChangeListener;
 import sernet.verinice.model.common.CascadingTransaction;
@@ -92,7 +94,8 @@ public class MaximumProtectionRequirementsValueListener extends AbstractLinkChan
             LOG_INHERIT.info("Setting maximum integrity " + highestValue + STRING_CONNECTOR_FOR //$NON-NLS-1$
                     + sbTarget.getTitle()); // $NON-NLS-2$
         }
-        sbTarget.getProtectionRequirementsProvider().setIntegrity(highestValue);
+        updateValue(sbTarget.getProtectionRequirementsProvider()::getIntegrity,
+                sbTarget.getProtectionRequirementsProvider()::setIntegrity, highestValue);
     }
 
     @Override
@@ -138,7 +141,8 @@ public class MaximumProtectionRequirementsValueListener extends AbstractLinkChan
             LOG_INHERIT.info("Setting maximum availability " + highestValue + STRING_CONNECTOR_FOR //$NON-NLS-1$
                     + sbTarget.getTitle()); // $NON-NLS-2$
         }
-        sbTarget.getProtectionRequirementsProvider().setAvailability(highestValue);
+        updateValue(sbTarget.getProtectionRequirementsProvider()::getAvailability,
+                sbTarget.getProtectionRequirementsProvider()::setAvailability, highestValue);
     }
 
     @Override
@@ -184,8 +188,17 @@ public class MaximumProtectionRequirementsValueListener extends AbstractLinkChan
             LOG_INHERIT.info("Setting maximum confidentiality " + highestValue //$NON-NLS-1$
                     + STRING_CONNECTOR_FOR + sbTarget.getTitle()); // $NON-NLS-2$
         }
-        sbTarget.getProtectionRequirementsProvider().setConfidentiality(highestValue);
+        updateValue(sbTarget.getProtectionRequirementsProvider()::getConfidentiality,
+                sbTarget.getProtectionRequirementsProvider()::setConfidentiality, highestValue);
 
+    }
+
+    private void updateValue(IntSupplier getter, IntConsumer setter, int newValue) {
+        int oldValue = getter.getAsInt();
+        if (oldValue != newValue) {
+            setter.accept(newValue);
+            sbTarget.getEntity().trackChange("system");
+        }
     }
 
     private boolean hasBeenVisited(CascadingTransaction ta) {

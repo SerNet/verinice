@@ -340,7 +340,7 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
             LOG.info("Sciped save cnAElement."); //$NON-NLS-1$
         } else {
             monitor.beginTask(Messages.BSIElementEditor_1, IProgressMonitor.UNKNOWN);
-            save();
+            save(true);
             if (linkMaker != null) {
                 linkMaker.viewer.refresh();
             }
@@ -382,7 +382,7 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
         }
     }
 
-    private void save() {
+    private void save(boolean trackChange) {
         if (!getIsWriteAllowed()) {
             ExceptionUtil.log(new IllegalStateException(), Messages.BSIElementEditor_3);
             return;
@@ -402,12 +402,16 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
                         riskValuesConfigurator.getDeleted());
                 RiskConfigurationUpdateResult updateResult = getRiskService()
                         .updateRiskConfiguration(updateContext);
-                    RiskConfigurationUpdateResultDialog.openUpdateResultDialog(updateResult);
+                RiskConfigurationUpdateResultDialog.openUpdateResultDialog(updateResult);
                 Stream.of(frequenciesConfigurator, impactsConfigurator, riskValuesConfigurator)
                         .forEach(StackConfigurator::reset);
             }
 
             // save element, refresh etc:
+            if (trackChange) {
+                cnAElement.getEntity()
+                        .trackChange(ServiceFactory.lookupAuthService().getUsername());
+            }
             CnAElementHome.getInstance().updateEntity(cnAElement);
             EditorUtil.updateDependentObjects(cnAElement);
             isModelModified = false;
@@ -497,9 +501,8 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
 
     private boolean riskConfiguationIsDirty() {
         RiskConfiguration storedRiskConfiguration = ((ItNetwork) cnAElement).getRiskConfiguration();
-        return !keptDefaultRiskConfiguation()
-                && (riskConfiguationWasReset()
-                        || !riskConfigurationState.deepEquals(storedRiskConfiguration));
+        return !keptDefaultRiskConfiguation() && (riskConfiguationWasReset()
+                || !riskConfigurationState.deepEquals(storedRiskConfiguration));
     }
 
     private boolean keptDefaultRiskConfiguation() {
@@ -682,7 +685,7 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
 
         // if opened the first time, save initialized entity:
         if (isDirty()) {
-            save();
+            save(false);
         }
     }
 

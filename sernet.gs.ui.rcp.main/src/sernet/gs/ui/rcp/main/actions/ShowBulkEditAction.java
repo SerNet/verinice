@@ -320,6 +320,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
                 RiskDeductionUtil.deduceRisk((BpThreat) elmt);
             }
             elementsToSave.add(elmt);
+            elmt.getEntity().trackChange(ServiceFactory.lookupAuthService().getUsername());
             monitor.worked(1);
         }
         try {
