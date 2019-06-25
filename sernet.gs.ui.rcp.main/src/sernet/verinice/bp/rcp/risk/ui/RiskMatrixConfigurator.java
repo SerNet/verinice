@@ -174,14 +174,17 @@ public class RiskMatrixConfigurator extends Composite {
 
     private void fillSelector(CLabel selector, Risk risk) {
         String text;
+        String longText;
         Color backgroundColor = null;
         Color textColor = null;
         if (risk == null) {
             text = sernet.hui.swt.widgets.Messages.getString("SingleSelectDummyValue");
+            longText = text;
             textColor = SWTResourceManager.getColor(BLACK);
         } else {
             text = cutLabel(risk.getLabel(), selector,
                     SELECTOR_SIZE - StackConfigurator.ELEMENT_MARGINS);
+            longText = risk.getLabel();
             RGB riskColor = ColorConverter.toRGB(risk.getColor());
             if (riskColor != null) {
                 backgroundColor = SWTResourceManager.getColor(riskColor);
@@ -191,6 +194,7 @@ public class RiskMatrixConfigurator extends Composite {
         }
 
         selector.setText(text);
+        selector.setToolTipText(longText);
         selector.getBackground().dispose();
         selector.setBackground(backgroundColor);
         selector.getForeground().dispose();
