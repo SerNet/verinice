@@ -6,7 +6,7 @@ Element-Type: context
 Element-Version: 2.0
 Id: _4GRncI0bEei2UKUDmonytQ
 Runtime-Version: 2.3.0.201806262310
-Save-Time: 6/27/19 10:43 AM
+Save-Time: 7/1/19 11:07 AM
 Tags: bp
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
@@ -171,3 +171,28 @@ proc "get-risk-matrix-width"  [val editor -input] {
 	      | minus 1
     }
 }
+
+// row and col start at the top left, 0-based
+proc "get-matrix-button" [val row] [val col] [val editor -input] { 
+    with $editor {
+	  let [val nCols [get-risk-matrix-width $editor]]
+	      [val offset 2]
+	      [val nLabelsBeforeMatrixRow 1] {
+	    // index = first matrix button index (offset) + col + (width + 1) * row
+	  	get-label -index [int [plus $offset [plus $col [mult [plus $nLabelsBeforeMatrixRow $nCols] $row]]]]
+	  }
+    }
+}
+
+proc "shift-click-matrix" [val row] [val col] [val editor -input] { 
+   with $editor {
+     get-matrix-button $row $col | mouse down -with M3
+   }
+}
+
+proc "click-matrix" [val row] [val col] [val editor -input] { 
+   with $editor {
+     get-matrix-button $row $col | mouse down
+   }
+}
+------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998--
