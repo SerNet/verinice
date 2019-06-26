@@ -43,205 +43,209 @@ import sernet.verinice.model.validation.CnAValidation;
  * Content Provider for document view.
  * 
  * @author koderman[at]sernet[dot]de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
 public class DocumentContentProvider implements ITreeContentProvider, IBSIModelListener {
 
+    private TreeViewer viewer;
 
+    private static final int ADD = 0;
+    private static final int UPDATE = 1;
+    private static final int REMOVE = 2;
+    private static final int REFRESH = 3;
 
-	private TreeViewer viewer;
-	
-	private static final int ADD     = 0;
-	private static final int UPDATE  = 1;
-	private static final int REMOVE  = 2;
-	private static final int REFRESH = 3;
-	
-	private static final String DOCUMENT_PROPERTY_SUFFIX_GERMAN = "_dokument";
-	private static final String DOCUMENT_PROPERTY_SUFFIX_ENGLISH = "_document";
-	
-	public DocumentContentProvider(TreeViewer viewer) {
-		this.viewer = viewer;
-	}
+    private static final String DOCUMENT_PROPERTY_SUFFIX_GERMAN = "_dokument";
+    private static final String DOCUMENT_PROPERTY_SUFFIX_ENGLISH = "_document";
 
-	public Object[] getChildren(Object parentElement) {
-		if (parentElement instanceof DocumentLink) {
-			DocumentLink doclink = (DocumentLink) parentElement;
-			Set<DocumentReference> children = doclink.getChildren();
-			return (DocumentReference[]) children
-					.toArray(new DocumentReference[children.size()]);
-		}
-		else if (parentElement instanceof DocumentLinkRoot) {
-			DocumentLinkRoot root = (DocumentLinkRoot) parentElement;
-			return root.getChildren();
-		}
-		return new Object[0];
-	}
+    public DocumentContentProvider(TreeViewer viewer) {
+        this.viewer = viewer;
+    }
 
-	public Object getParent(Object element) {
-	    if (element instanceof DocumentReference) {
-			DocumentReference ref = (DocumentReference) element;
-			return ref.getParent();
-		}
-		return null;
-	}
+    public Object[] getChildren(Object parentElement) {
+        if (parentElement instanceof DocumentLink) {
+            DocumentLink doclink = (DocumentLink) parentElement;
+            Set<DocumentReference> children = doclink.getChildren();
+            return (DocumentReference[]) children.toArray(new DocumentReference[children.size()]);
+        } else if (parentElement instanceof DocumentLinkRoot) {
+            DocumentLinkRoot root = (DocumentLinkRoot) parentElement;
+            return root.getChildren();
+        }
+        return new Object[0];
+    }
 
-	public boolean hasChildren(Object element) {
-	    if (element instanceof DocumentLink) {
-			DocumentLink doclink = (DocumentLink) element;
-			return doclink.getChildren().size() > 0;
-		}
-		return false;
-	}
+    public Object getParent(Object element) {
+        if (element instanceof DocumentReference) {
+            DocumentReference ref = (DocumentReference) element;
+            return ref.getParent();
+        }
+        return null;
+    }
 
-	public void dispose() {
-		if (CnAElementFactory.getLoadedModel() != null){
-			CnAElementFactory.getLoadedModel().removeBSIModelListener(this);
-		}
-	}
+    public boolean hasChildren(Object element) {
+        if (element instanceof DocumentLink) {
+            DocumentLink doclink = (DocumentLink) element;
+            return doclink.getChildren().size() > 0;
+        }
+        return false;
+    }
 
-	public void inputChanged(Viewer viewer, Object oldInput,
-			Object newInput) {
-		if (CnAElementFactory.getLoadedModel() != null) {
-		    CnAElementFactory.getLoadedModel().removeBSIModelListener(this);
-			CnAElementFactory.getLoadedModel().addBSIModelListener(this);
-		}
-		
-		modelRefresh(null);
-	}
+    public void dispose() {
+        if (CnAElementFactory.getLoadedModel() != null) {
+            CnAElementFactory.getLoadedModel().removeBSIModelListener(this);
+        }
+    }
 
-	public Object[] getElements(Object inputElement) {
-		return getChildren(inputElement);
-	}
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        if (CnAElementFactory.getLoadedModel() != null) {
+            CnAElementFactory.getLoadedModel().removeBSIModelListener(this);
+            CnAElementFactory.getLoadedModel().addBSIModelListener(this);
+        }
 
-	public void childAdded(CnATreeElement category, CnATreeElement child) {
-		if(hasDocumentProperty(child) && !getDocumentPropertyId(child).isEmpty()){
-		    updateViewer(ADD, child, category );
-		    modelRefresh(null);
-		}
-	}
-	
-	private boolean hasDocumentProperty(CnATreeElement element){
-	    Activator.inheritVeriniceContextState();
-	    for(String id : HUITypeFactory.getInstance().getEntityType(element.getEntityType().getId()).getAllPropertyTypeIds()){
-	        if(isDocumentProperty(id)){
-	            return true;
-	        }
-	    }
-	    return false;
-	}
-	
-	private String getDocumentPropertyId(CnATreeElement element){
-        for(String id : HUITypeFactory.getInstance().getEntityType(element.getEntityType().getId()).getAllPropertyTypeIds()){
-            if(isDocumentProperty(id)){
+        modelRefresh(null);
+    }
+
+    public Object[] getElements(Object inputElement) {
+        return getChildren(inputElement);
+    }
+
+    public void childAdded(CnATreeElement category, CnATreeElement child) {
+        if (hasDocumentProperty(child) && !getDocumentPropertyId(child).isEmpty()) {
+            updateViewer(ADD, child, category);
+            modelRefresh(null);
+        }
+    }
+
+    private boolean hasDocumentProperty(CnATreeElement element) {
+        Activator.inheritVeriniceContextState();
+        for (String id : HUITypeFactory.getInstance().getEntityType(element.getEntityType().getId())
+                .getAllPropertyTypeIds()) {
+            if (isDocumentProperty(id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String getDocumentPropertyId(CnATreeElement element) {
+        for (String id : HUITypeFactory.getInstance().getEntityType(element.getEntityType().getId())
+                .getAllPropertyTypeIds()) {
+            if (isDocumentProperty(id)) {
                 return id;
             }
         }
         return null;
-	}
-	
-	private boolean isDocumentProperty(String id){
-	    if(id != null && (id.contains(DOCUMENT_PROPERTY_SUFFIX_ENGLISH) || id.contains(DOCUMENT_PROPERTY_SUFFIX_GERMAN))){
-	        return true;
-	    }
-	    return false;
-	}
+    }
 
-	public void childChanged(CnATreeElement child) {
-	    try{
-	        if(hasDocumentProperty(child)){
-	            DocumentLinkRoot dlr = (DocumentLinkRoot)viewer.getInput();
-	            if(!getDocumentPropertyId(child).isEmpty()){
-	                setThreadSetViewerInput(addInputElement(dlr, child));
-	            } else { // documentProperty is existant but empty, remove link if necessary
+    private boolean isDocumentProperty(String id) {
+        if (id != null && (id.contains(DOCUMENT_PROPERTY_SUFFIX_ENGLISH)
+                || id.contains(DOCUMENT_PROPERTY_SUFFIX_GERMAN))) {
+            return true;
+        }
+        return false;
+    }
+
+    public void childChanged(CnATreeElement child) {
+        try {
+            if (hasDocumentProperty(child)) {
+                DocumentLinkRoot dlr = (DocumentLinkRoot) viewer.getInput();
+                if (!getDocumentPropertyId(child).isEmpty()) {
+                    setThreadSetViewerInput(addInputElement(dlr, child));
+                } else { // documentProperty is existant but empty, remove link
+                         // if necessary
                     setThreadSetViewerInput(removeInputElement(dlr, child));
-	            }
-	            modelRefresh(null);
-	        }
-	    } catch (Exception t){
-	        Logger.getLogger(DocumentContentProvider.class).error("Error in changing documentlinkroot children:", t);
-	    }
-	      
-	}
-	
-	public void linkChanged(CnALink old, CnALink link, Object source) {
-		// do nothing
-	}
-	
-	public void linkRemoved(CnALink link) {
-	    // do nothing
-		
-	}
-	
-	public void linkAdded(CnALink link) {
-		// do nothing
-	}
+                }
+                modelRefresh(null);
+            }
+        } catch (Exception t) {
+            Logger.getLogger(DocumentContentProvider.class)
+                    .error("Error in changing documentlinkroot children:", t);
+        }
 
-	public void childRemoved(CnATreeElement category, CnATreeElement child) {
-		modelRefresh(null);
-	}
+    }
 
-	/**
-	 * @deprecated Es soll stattdessen {@link #modelRefresh(Object)} verwendet werden
-	 */
-	public void modelRefresh() {
-		modelRefresh(null);
-	}
+    public void linkChanged(CnALink old, CnALink link, Object source) {
+        // do nothing
+    }
 
-	public void modelRefresh(Object source) {
-		if (Display.getCurrent() != null) {
-			viewer.refresh();
-		}
-		else {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					viewer.refresh();
-				}
-			});
-		}
-	}
+    public void linkRemoved(CnALink link) {
+        // do nothing
 
-	public void databaseChildAdded(CnATreeElement child) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
-	public void databaseChildChanged(CnATreeElement child) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void linkAdded(CnALink link) {
+        // do nothing
+    }
 
-	public void databaseChildRemoved(CnATreeElement child) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void childRemoved(CnATreeElement category, CnATreeElement child) {
+        modelRefresh(null);
+    }
 
-	
-	public void modelReload(BSIModel newModel) {
-		
-	}
+    /**
+     * @deprecated Es soll stattdessen {@link #modelRefresh(Object)} verwendet
+     *             werden
+     */
+    public void modelRefresh() {
+        modelRefresh(null);
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(java.lang.Integer)
-	 */
-	public void databaseChildRemoved(ChangeLogEntry id) {
-		// TODO Auto-generated method stub
-	    
-		
-	}
-	
+    public void modelRefresh(Object source) {
+        if (Display.getCurrent() != null) {
+            viewer.refresh();
+        } else {
+            Display.getDefault().asyncExec(new Runnable() {
+                public void run() {
+                    viewer.refresh();
+                }
+            });
+        }
+    }
+
+    public void databaseChildAdded(CnATreeElement child) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void databaseChildChanged(CnATreeElement child) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void databaseChildRemoved(CnATreeElement child) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void modelReload(BSIModel newModel) {
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(
+     * java.lang.Integer)
+     */
+    public void databaseChildRemoved(ChangeLogEntry id) {
+        // TODO Auto-generated method stub
+
+    }
+
     @Override
-    public void validationAdded(Integer scopeId){};
-    
+    public void validationAdded(Integer scopeId) {
+    };
+
     @Override
-    public void validationRemoved(Integer scopeId){};
-    
+    public void validationRemoved(Integer scopeId) {
+    };
+
     @Override
-    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
-    
+    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation) {
+    };
+
     void updateViewer(final int type, final Object child, final Object parent) {
-        
+
         if (Display.getCurrent() != null) {
             doUpdateViewer(type, child, parent);
             return;
@@ -252,15 +256,15 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
             }
         });
     }
-    
-    private void doUpdateViewer(int type, Object child, Object parent){
-        
+
+    private void doUpdateViewer(int type, Object child, Object parent) {
+
         switch (type) {
         case ADD:
             viewer.add(child, parent);
             return;
         case UPDATE:
-            viewer.update(child, new String[] { getDocumentPropertyId((CnATreeElement)child) });
+            viewer.update(child, new String[] { getDocumentPropertyId((CnATreeElement) child) });
             viewer.refresh(true);
             viewer.refresh();
             return;
@@ -272,46 +276,47 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
             return;
         }
     }
-    
-    private DocumentLink getDocumentLink(CnATreeElement elmt){
+
+    private DocumentLink getDocumentLink(CnATreeElement elmt) {
         String rawURL = elmt.getEntity().getSimpleValue(getDocumentPropertyId(elmt));
 
         String name = URLUtil.getName(rawURL);
         String url = URLUtil.getHref(rawURL);
-        if(!name.isEmpty() && !url.isEmpty()){
+        if (!name.isEmpty() && !url.isEmpty()) {
             return new DocumentLink(name, url);
         }
         return null;
     }
-    
-    private DocumentLinkRoot addInputElement(DocumentLinkRoot root, CnATreeElement elmt){
+
+    private DocumentLinkRoot addInputElement(DocumentLinkRoot root, CnATreeElement elmt) {
         DocumentLink link = getDocumentLink(elmt);
-        if(!isLinkContainedInRoot(root, link)){
+        if (!isLinkContainedInRoot(root, link)) {
             root.addChild(link);
         }
         return root;
     }
-    
-    private DocumentLinkRoot removeInputElement(DocumentLinkRoot root, CnATreeElement elmt){
+
+    private DocumentLinkRoot removeInputElement(DocumentLinkRoot root, CnATreeElement elmt) {
         DocumentLink link = getDocumentLink(elmt);
-        if(isLinkContainedInRoot(root, link)){
+        if (isLinkContainedInRoot(root, link)) {
             root.removeChild(link);
         }
         return root;
     }
-    
-    private boolean isLinkContainedInRoot(DocumentLinkRoot root, DocumentLink link){
-        for(DocumentLink child : root.getChildren()){
-            if(child!=null && child.equals(link)){
+
+    private boolean isLinkContainedInRoot(DocumentLinkRoot root, DocumentLink link) {
+        for (DocumentLink child : root.getChildren()) {
+            if (child != null && child.equals(link)) {
                 return true;
             }
-            
+
         }
         return false;
     }
-    
-    private void setThreadSetViewerInput(final DocumentLinkRoot dlr){
-        Display display = (Display.getCurrent() != null) ? Display.getCurrent() : Display.getDefault();
+
+    private void setThreadSetViewerInput(final DocumentLinkRoot dlr) {
+        Display display = (Display.getCurrent() != null) ? Display.getCurrent()
+                : Display.getDefault();
         display.asyncExec(new Runnable() {
             @Override
             public void run() {
@@ -319,5 +324,5 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
             }
         });
     }
-    
+
 }
