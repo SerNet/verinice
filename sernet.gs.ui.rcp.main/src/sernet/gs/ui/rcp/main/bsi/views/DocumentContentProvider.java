@@ -290,7 +290,7 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
 
     private DocumentLinkRoot addInputElement(DocumentLinkRoot root, CnATreeElement elmt) {
         DocumentLink link = getDocumentLink(elmt);
-        if (!isLinkContainedInRoot(root, link)) {
+        if (link != null && !isLinkContainedInRoot(root, link)) {
             root.addChild(link);
         }
         return root;
