@@ -5,8 +5,8 @@ Element-Name: bp
 Element-Type: context
 Element-Version: 2.0
 Id: _4GRncI0bEei2UKUDmonytQ
-Runtime-Version: 2.4.1.201903190000
-Save-Time: 4/16/19 10:41 AM
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 6/27/19 10:43 AM
 Tags: bp
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
@@ -162,4 +162,12 @@ proc "bp-import-vna" [val vna] {
 		get-button OK | click
 	}
 }
-------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998--
+
+// has to be called with risk configuration matrix opened.
+proc "get-risk-matrix-width"  [val editor -input] {
+    with $editor {
+	    get-label "Klicken um Werte zu erhöhen, Shift und klicken um Werte zu verkleinern"
+	      | get-property "getLayoutData().horizontalSpan" -raw
+	      | minus 1
+    }
+}
