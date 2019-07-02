@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.verinice.model.iso27k;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import sernet.hui.common.connect.Entity;
@@ -85,7 +86,8 @@ public class Organization extends CnATreeElement
 
     @Override
     public boolean canContain(Object child) {
-        return (child instanceof Group);
+        return child instanceof CnATreeElement
+                && Arrays.asList(CHILD_TYPES).contains(((CnATreeElement) child).getTypeId());
     }
 
     /*
