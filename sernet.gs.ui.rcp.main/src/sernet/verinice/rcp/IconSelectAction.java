@@ -51,8 +51,6 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.UpdateElement;
 
 /**
- *
- *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class IconSelectAction
@@ -67,8 +65,6 @@ public class IconSelectAction
     private static ISchedulingRule iSchedulingRule = new Mutex();
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.
      * IWorkbenchWindow)
      */
@@ -78,8 +74,6 @@ public class IconSelectAction
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
     @Override
@@ -87,7 +81,7 @@ public class IconSelectAction
         try {
             final IconSelectDialog dialog = new IconSelectDialog(shell);
             if (Dialog.OK == dialog.open() && dialog.isSomethingSelected()) {
-                WorkspaceJob importJob = new WorkspaceJob(Messages.IconSelectAction_0) {
+                WorkspaceJob updateIconJob = new WorkspaceJob(Messages.IconSelectAction_0) {
                     @Override
                     public IStatus runInWorkspace(final IProgressMonitor monitor) {
                         IStatus status = Status.OK_STATUS;
@@ -98,7 +92,7 @@ public class IconSelectAction
                                 iconPath = null;
                             }
                             for (CnATreeElement element : selectedElments) {
-                                element = updateIcon(element, iconPath);
+                                updateIcon(element, iconPath);
                             }
                         } catch (Exception e) {
                             LOG.error("Error while changing icons.", e); //$NON-NLS-1$
@@ -108,7 +102,7 @@ public class IconSelectAction
                         return status;
                     }
                 };
-                JobScheduler.scheduleJob(importJob, iSchedulingRule);
+                JobScheduler.scheduleJob(updateIconJob, iSchedulingRule);
             }
         } catch (Exception e) {
             LOG.error(Messages.IconSelectAction_4, e);
@@ -119,8 +113,8 @@ public class IconSelectAction
             throws CommandException {
         element.setIconPath(iconPath);
         Activator.inheritVeriniceContextState();
-        UpdateElement<CnATreeElement> updateCommand = new UpdateElement<CnATreeElement>(element,
-                false, ChangeLogEntry.STATION_ID);
+        UpdateElement<CnATreeElement> updateCommand = new UpdateElement<>(element, false,
+                ChangeLogEntry.STATION_ID);
         getCommandService().executeCommand(updateCommand);
         // notify all views of change:
         CnAElementFactory.getModel(element).childChanged(element);
@@ -128,8 +122,6 @@ public class IconSelectAction
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.
      * IAction, org.eclipse.jface.viewers.ISelection)
@@ -142,8 +134,8 @@ public class IconSelectAction
 
         if (selection instanceof ITreeSelection) {
             ITreeSelection treeSelection = (ITreeSelection) selection;
-            List<Object> selectionList = treeSelection.toList();
-            selectedElments = new ArrayList<CnATreeElement>(selectionList.size());
+            List<?> selectionList = treeSelection.toList();
+            selectedElments = new ArrayList<>(selectionList.size());
             for (Object object : selectionList) {
                 if (object instanceof CnATreeElement) {
                     selectedElments.add((CnATreeElement) object);
@@ -153,19 +145,14 @@ public class IconSelectAction
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
      */
     @Override
     public void dispose() {
-        // TODO Auto-generated method stub
-
+        // nothing to do here
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
@@ -177,8 +164,6 @@ public class IconSelectAction
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override
