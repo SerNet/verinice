@@ -55,32 +55,38 @@ import sernet.verinice.service.commands.UpdateElement;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class IconSelectAction implements IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {
+public class IconSelectAction
+        implements IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {
 
     private static final Logger LOG = Logger.getLogger(IconSelectAction.class);
-    
+
     private Shell shell;
-    
+
     private List<CnATreeElement> selectedElments;
-    
+
     private static ISchedulingRule iSchedulingRule = new Mutex();
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.
+     * IWorkbenchWindow)
      */
     @Override
     public void init(IWorkbenchWindow window) {
-        this.shell = window.getShell();     
+        this.shell = window.getShell();
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
     @Override
     public void run(IAction arg0) {
         try {
             final IconSelectDialog dialog = new IconSelectDialog(shell);
-            if(Dialog.OK==dialog.open() && dialog.isSomethingSelected()) {
+            if (Dialog.OK == dialog.open() && dialog.isSomethingSelected()) {
                 WorkspaceJob importJob = new WorkspaceJob(Messages.IconSelectAction_0) {
                     @Override
                     public IStatus runInWorkspace(final IProgressMonitor monitor) {
@@ -88,15 +94,16 @@ public class IconSelectAction implements IWorkbenchWindowActionDelegate, RightEn
                         try {
                             monitor.setTaskName(Messages.IconSelectAction_1);
                             String iconPath = dialog.getSelectedPath();
-                            if(dialog.isDefaultIcon()) {
+                            if (dialog.isDefaultIcon()) {
                                 iconPath = null;
                             }
-                            for (CnATreeElement element : selectedElments) {                  
+                            for (CnATreeElement element : selectedElments) {
                                 element = updateIcon(element, iconPath);
                             }
                         } catch (Exception e) {
                             LOG.error("Error while changing icons.", e); //$NON-NLS-1$
-                            status = new Status(IStatus.ERROR, "sernet.verinice.rcp", Messages.IconSelectAction_3, e); //$NON-NLS-1$
+                            status = new Status(IStatus.ERROR, "sernet.verinice.rcp", //$NON-NLS-1$
+                                    Messages.IconSelectAction_3, e);
                         }
                         return status;
                     }
@@ -108,64 +115,77 @@ public class IconSelectAction implements IWorkbenchWindowActionDelegate, RightEn
         }
     }
 
-    private CnATreeElement updateIcon(CnATreeElement element, String iconPath) throws CommandException {
+    private CnATreeElement updateIcon(CnATreeElement element, String iconPath)
+            throws CommandException {
         element.setIconPath(iconPath);
         Activator.inheritVeriniceContextState();
-        UpdateElement<CnATreeElement> updateCommand = new UpdateElement<CnATreeElement>(element, false, ChangeLogEntry.STATION_ID);
+        UpdateElement<CnATreeElement> updateCommand = new UpdateElement<CnATreeElement>(element,
+                false, ChangeLogEntry.STATION_ID);
         getCommandService().executeCommand(updateCommand);
         // notify all views of change:
         CnAElementFactory.getModel(element).childChanged(element);
         return element;
     }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.
+     * IAction, org.eclipse.jface.viewers.ISelection)
      */
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
         if (action.isEnabled()) {
             action.setEnabled(checkRights());
         }
-        
-        if(selection instanceof ITreeSelection) {
+
+        if (selection instanceof ITreeSelection) {
             ITreeSelection treeSelection = (ITreeSelection) selection;
             List<Object> selectionList = treeSelection.toList();
             selectedElments = new ArrayList<CnATreeElement>(selectionList.size());
             for (Object object : selectionList) {
-                if(object instanceof CnATreeElement) {
+                if (object instanceof CnATreeElement) {
                     selectedElments.add((CnATreeElement) object);
                 }
             }
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
      */
     @Override
     public void dispose() {
         // TODO Auto-generated method stub
-        
+
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
     public boolean checkRights() {
         Activator.inheritVeriniceContextState();
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override
     public String getRightID() {
         return ActionRightIDs.CHANGEICON;
     }
-    
+
     private ICommandService getCommandService() {
         return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
     }
