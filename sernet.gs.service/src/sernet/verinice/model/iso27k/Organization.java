@@ -22,7 +22,7 @@ import java.util.Collection;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.hui.common.connect.ITaggableElement;
-import sernet.verinice.model.bsi.TagHelper;
+import sernet.snutils.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -40,7 +40,7 @@ public class Organization extends CnATreeElement
     public static final String PROP_RISKACCEPT_INTEG = "org_riskaccept_integ"; //$NON-NLS-1$
     public static final String PROP_RISKACCEPT_AVAIL = "org_riskaccept_avail"; //$NON-NLS-1$
 
-    public static final String[] CHILD_TYPES = new String[] { AssetGroup.TYPE_ID,
+    private static final String[] CHILD_TYPES = new String[] { AssetGroup.TYPE_ID,
             ControlGroup.TYPE_ID, AuditGroup.TYPE_ID, ExceptionGroup.TYPE_ID, PersonGroup.TYPE_ID,
             RequirementGroup.TYPE_ID, IncidentGroup.TYPE_ID, IncidentScenarioGroup.TYPE_ID,
             ResponseGroup.TYPE_ID, ThreatGroup.TYPE_ID, VulnerabilityGroup.TYPE_ID,
@@ -89,8 +89,6 @@ public class Organization extends CnATreeElement
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.model.iso27k.IISO27kGroup#getChildTypes()
      */
     @Override
@@ -99,8 +97,6 @@ public class Organization extends CnATreeElement
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.model.common.CnATreeElement#inheritIcon(sernet.verinice.
      * model.common.CnATreeElement)
@@ -111,8 +107,6 @@ public class Organization extends CnATreeElement
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
      */
     @Override
@@ -121,18 +115,14 @@ public class Organization extends CnATreeElement
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitle()
      */
     @Override
     public String getTitle() {
-        return getEntity().getSimpleValue(PROP_NAME);
+        return getEntity().getPropertyValue(PROP_NAME);
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.gs.ui.rcp.main.common.model.CnATreeElement#setTitel(java.lang.
      * String)
@@ -142,16 +132,13 @@ public class Organization extends CnATreeElement
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
 
-    /**
-     * @param name
-     */
     public void setTitle(String name) {
         setTitel(name);
     }
 
     @Override
     public String getAbbreviation() {
-        return getEntity().getSimpleValue(PROP_ABBR);
+        return getEntity().getPropertyValue(PROP_ABBR);
     }
 
     public void setAbbreviation(String abbreviation) {
@@ -160,7 +147,7 @@ public class Organization extends CnATreeElement
 
     @Override
     public Collection<String> getTags() {
-        return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
     public void setTags(Collection<? extends String> tags) {
@@ -168,16 +155,7 @@ public class Organization extends CnATreeElement
             getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_TAG), null);
             return;
         }
-        StringBuilder sb = new StringBuilder();
-        boolean first = true;
-        for (String tag : tags) {
-            if (!first) {
-                sb.append(",");
-            } else {
-                first = false;
-            }
-            sb.append(tag);
-        }
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_TAG), sb.toString());
+        String joinedTags = String.join(",", tags);
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_TAG), joinedTags);
     }
 }
