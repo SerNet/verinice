@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _jj-yUIwOEei2UKUDmonytQ
-Runtime-Version: 2.4.2.201905080442
-Save-Time: 6/14/19 9:43 AM
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 7/2/19 1:06 PM
 Tags: report
 Testcase-Type: ecl
 
@@ -44,7 +44,7 @@ gen-rep "(S) Modernisierter BSI IT-Grundschutz: A.1 Strukturanalyse"
 gen-rep "(S) Modernisierter BSI IT-Grundschutz: A.1 Strukturanalyse-Abhängigkeiten"
 gen-rep "(S) Modernisierter BSI IT-Grundschutz: A.2 Schutzbedarfsfeststellung"
 gen-rep "(S) Modernisierter BSI IT-Grundschutz: A.3 Modellierung"
-//gen-rep "(S) Modernisierter BSI IT-Grundschutz: A.4 Grundschutz-Check"
+gen-rep "(S) Modernisierter BSI IT-Grundschutz: A.4 Grundschutz-Check"
 gen-rep "(S) Modernisierter BSI IT-Grundschutz: A.5 Risikoanalyse"
 gen-rep "(S) Modernisierter BSI IT-Grundschutz: A.6 Realisierungsplan"
 gen-rep "(S) Modernisierter BSI IT-Grundschutz: Risikomatrix"
