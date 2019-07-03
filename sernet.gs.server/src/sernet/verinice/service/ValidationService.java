@@ -103,9 +103,19 @@ public class ValidationService implements IValidationService {
                 }
             }
         }
+
+        Map<String, List<CnAValidation>> existingValidationsByPropertyType = existingValidationsForElement
+                .stream().collect(Collectors.groupingBy(CnAValidation::getPropertyId));
         for (Entry<PropertyType, List<String>> entry : hintsOfFailedValidationsMap.entrySet()) {
+            String propertyType = entry.getKey().getId();
+            List<CnAValidation> existingValidationsForPropertyType = existingValidationsByPropertyType
+                    .getOrDefault(propertyType, Collections.emptyList());
             for (String hint : entry.getValue()) {
-                createCnAValidationObject(element, entry, hint);
+                boolean validationExists = existingValidationsForPropertyType.stream()
+                        .anyMatch(validation -> validation.getHintId().equals(hint));
+                if (!validationExists) {
+                    createCnAValidationObject(element, entry, hint);
+                }
             }
         }
     }
@@ -120,10 +130,7 @@ public class ValidationService implements IValidationService {
         validation.setElmtTitle(StringUtils.abbreviate(elmt.getTitle(), MAXLENGTH_DBSTRING));
         validation.setScopeId(elmt.getScopeId());
         validation.setElementType(StringUtils.abbreviate(elmt.getTypeId(), MAXLENGTH_DBSTRING));
-        if (!isValidationExistant(elmt.getDbId(), entry.getKey().getId(), hint,
-                elmt.getScopeId())) {
-            getCnaValidationDAO().saveOrUpdate(validation);
-        }
+        getCnaValidationDAO().saveOrUpdate(validation);
         if (log.isDebugEnabled()) {
             log.debug("Created Validation for : " + elmt.getTitle() + "(" + entry.getKey().getId()
                     + ")\tHint:\t" + hint);
