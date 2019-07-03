@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cheatsheet title="Přečtěte si instrukce k ISO 27000">
+
+  <intro>
+    <description>
+      Vzhledem k tomu, že používáte český jazyk, předpokládáme, že chcete použít perspektivu ISM. 
+	  Tento výukový program je určen především pro standard IT-Základní Ochrana (IT-Grundschutz) německé BSI, 
+	  který se obvykle nepoužívá v českém jazyce.
+      <br /><br />
+      Pokračujte v tutoriálech z části "3 ISO 27000 Instructions", které jsou navrženy tak, aby vysvětlovaly 
+	  použití verinice pro standard ISO 27001.
+    </description>
+  </intro>
+
+  <item title="Tutoriály">
+    <description>
+      Chcete-li pokračovat v českojazyčné části, klikněte na nabídku <b>Nápověda > Tutoriály ...</b>.
+    </description>
+  </item>
+
+</cheatsheet>

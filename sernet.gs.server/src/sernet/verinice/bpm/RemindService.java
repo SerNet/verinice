@@ -35,13 +35,12 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.VeriniceCharset;
+import sernet.hui.common.connect.IPerson;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bpm.Messages;
 import sernet.verinice.model.bpm.MissingParameterException;
-import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.iso27k.PersonIso;
 
 /**
  *
@@ -51,118 +50,123 @@ import sernet.verinice.model.iso27k.PersonIso;
 public class RemindService implements IRemindService {
 
     private static final Logger LOG = Logger.getLogger(RemindService.class);
-    
+
     public static final String P_ANREDE = "person_anrede"; //$NON-NLS-1$
     public static final String P_NAME = "nachname"; //$NON-NLS-1$
-    
+
     private static final String DEFAULT_ADDRESS = Messages.getString("NotificationJob.0"); //$NON-NLS-1$
-    
+
     private static final String EMAIL_CC_PROPERTY = "${veriniceserver.notification.email.cc}";
     private static final String EMAIL_BCC_PROPERTY = "${veriniceserver.notification.email.bcc}";
-    
-    private JavaMailSender mailSender;   
-    
+
+    private JavaMailSender mailSender;
+
     private VelocityEngine velocityEngine;
-    
+
     private boolean enabled = false;
-    
+
     private String emailFrom;
-    
+
     private String replyTo;
-    
+
     private String emailCc;
-    
+
     private String emailBcc;
-    
+
     private String url;
-    
+
     private IBaseDao<CnATreeElement, Integer> elementDao;
-    
+
     private IBaseDao<Configuration, Integer> configurationDao;
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.bpm.IRemindService#sendEmail(java.util.Map)
      */
     @Override
     @SuppressWarnings("restriction")
-    public void sendEmail(final Map<String,String> parameter, final boolean html) {
-        if(!isEnabled()){
-            LOG.info("Sending emails is disabled in the in the properties.(veriniceserver.notification.enabled in veriniceserver-plain.properties[.local])");
+    public void sendEmail(final Map<String, String> parameter, final boolean html) {
+        if (!isEnabled()) {
+            LOG.info(
+                    "Sending emails is disabled in the in the properties.(veriniceserver.notification.enabled in veriniceserver-plain.properties[.local])");
             return;
         }
 
         MimeMessagePreparator preparator = new MimeMessagePreparator() {
             @Override
             public void prepare(MimeMessage mimeMessage) throws MessagingException {
-               parameter.put(TEMPLATE_URL, getUrl());
-               MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
-               message.setTo(parameter.get(TEMPLATE_EMAIL));         
-               message.setFrom(getEmailFrom());
-               if(getEmailCc()!=null) {
-                   message.setCc(getEmailCc());
-               }
-               if(getEmailBcc()!=null) {
-                   message.setBcc(getEmailBcc());
-               }
-               String replyTo0 = getReplyTo();
-               if(replyTo0!=null && !replyTo0.isEmpty()) {
-                   message.setReplyTo(replyTo0);
-               }
-               message.setSubject(parameter.get(TEMPLATE_SUBJECT)); //$NON-NLS-1$
-               String text = VelocityEngineUtils.mergeTemplateIntoString(
-                       getVelocityEngine(), 
-                       parameter.get(TEMPLATE_PATH), 
-                       VeriniceCharset.CHARSET_UTF_8.name(), 
-                       parameter);
-               message.setText(text, html);
+                parameter.put(TEMPLATE_URL, getUrl());
+                MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+                message.setTo(parameter.get(TEMPLATE_EMAIL));
+                message.setFrom(getEmailFrom());
+                if (getEmailCc() != null) {
+                    message.setCc(getEmailCc());
+                }
+                if (getEmailBcc() != null) {
+                    message.setBcc(getEmailBcc());
+                }
+                String replyTo0 = getReplyTo();
+                if (replyTo0 != null && !replyTo0.isEmpty()) {
+                    message.setReplyTo(replyTo0);
+                }
+                message.setSubject(parameter.get(TEMPLATE_SUBJECT)); // $NON-NLS-1$
+                String text = VelocityEngineUtils.mergeTemplateIntoString(getVelocityEngine(),
+                        parameter.get(TEMPLATE_PATH), VeriniceCharset.CHARSET_UTF_8.name(),
+                        parameter);
+                message.setText(text, html);
             }
-         };
-         if (LOG.isDebugEnabled()) {
-             LOG.debug("Sending email... parameter: ");
-             for (String key : parameter.keySet()) {
-                 LOG.debug( key + ": "+ parameter.get(key));
-             }
-         }
-         
-         getMailSender().send(preparator);
-         
-         if (LOG.isDebugEnabled()) {
-             LOG.debug("Email was send successfully.");
-             LOG.debug("Email send, parameter: ");
-             for (String key : parameter.keySet()) {
-                 LOG.debug( key + ": "+ parameter.get(key));
-             }
-             LOG.debug("CC: " + getEmailCc());
-             LOG.debug("BCC: "+ getEmailBcc() );
-         }
+        };
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Sending email... parameter: ");
+            for (String key : parameter.keySet()) {
+                LOG.debug(key + ": " + parameter.get(key));
+            }
+        }
+
+        getMailSender().send(preparator);
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Email was send successfully.");
+            LOG.debug("Email send, parameter: ");
+            for (String key : parameter.keySet()) {
+                LOG.debug(key + ": " + parameter.get(key));
+            }
+            LOG.debug("CC: " + getEmailCc());
+            LOG.debug("BCC: " + getEmailBcc());
+        }
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.bpm.IRemindService#loadUserData(java.lang.String)
      */
     @Override
-    public Map<String,String> loadUserData(String name) throws MissingParameterException {
-        Map<String,String> model = new HashMap<String,String>();
+    public Map<String, String> loadUserData(String name) throws MissingParameterException {
+        Map<String, String> model = new HashMap<String, String>();
         if (name != null) {
             String hql = "select conf.dbId,emailprops.propertyValue from Configuration as conf " + //$NON-NLS-1$
-            "inner join conf.entity as entity " + //$NON-NLS-1$
-            "inner join entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
-            "inner join propertyList.properties as props " + //$NON-NLS-1$
-            "inner join conf.entity as entity2 " + //$NON-NLS-1$
-            "inner join entity2.typedPropertyLists as propertyList2 " + //$NON-NLS-1$
-            "inner join propertyList2.properties as emailprops " + //$NON-NLS-1$
-            "where props.propertyType = ? " + //$NON-NLS-1$
-            "and props.propertyValue like ? " + //$NON-NLS-1$
-            "and emailprops.propertyType = ?";          //$NON-NLS-1$
-            
+                    "inner join conf.entity as entity " + //$NON-NLS-1$
+                    "inner join entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
+                    "inner join propertyList.properties as props " + //$NON-NLS-1$
+                    "inner join conf.entity as entity2 " + //$NON-NLS-1$
+                    "inner join entity2.typedPropertyLists as propertyList2 " + //$NON-NLS-1$
+                    "inner join propertyList2.properties as emailprops " + //$NON-NLS-1$
+                    "where props.propertyType = ? " + //$NON-NLS-1$
+                    "and props.propertyValue like ? " + //$NON-NLS-1$
+                    "and emailprops.propertyType = ?"; //$NON-NLS-1$
+
             String escaped = name.replace("\\", "\\\\");
-            Object[] params = new Object[]{Configuration.PROP_USERNAME,escaped,Configuration.PROP_NOTIFICATION_EMAIL};        
-            List<Object[]> configurationList = getConfigurationDao().findByQuery(hql,params);
+            Object[] params = new Object[] { Configuration.PROP_USERNAME, escaped,
+                    Configuration.PROP_NOTIFICATION_EMAIL };
+            List<Object[]> configurationList = getConfigurationDao().findByQuery(hql, params);
             Integer dbId = null;
             if (configurationList != null && configurationList.size() == 1) {
                 String email = (String) configurationList.get(0)[1];
-                if(email==null || email.trim().isEmpty()) {
-                    throw new MissingParameterException("Email address of user " + name + " not set.");
+                if (email == null || email.trim().isEmpty()) {
+                    throw new MissingParameterException(
+                            "Email address of user " + name + " not set.");
                 }
                 model.put(TEMPLATE_EMAIL, email);
                 dbId = (Integer) configurationList.get(0)[0];
@@ -172,51 +176,46 @@ public class RemindService implements IRemindService {
         return model;
     }
 
-    private void loadPerson(Integer dbId, Map<String,String> model) {
-        if(dbId!=null) {
+    private void loadPerson(Integer dbId, Map<String, String> model) {
+        if (dbId != null) {
             String hql = "from Configuration as conf " + //$NON-NLS-1$
-            "inner join fetch conf.person as person " + //$NON-NLS-1$
-            "inner join fetch person.entity as entity " + //$NON-NLS-1$
-            "inner join fetch entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
-            "inner join fetch propertyList.properties as props " + //$NON-NLS-1$
-            "where conf.dbId = ? "; //$NON-NLS-1$
-            
-            Object[] params = new Object[]{dbId};        
-            List<Configuration> configurationList = getConfigurationDao().findByQuery(hql,params);
+                    "inner join fetch conf.person as person " + //$NON-NLS-1$
+                    "inner join fetch person.entity as entity " + //$NON-NLS-1$
+                    "inner join fetch entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
+                    "inner join fetch propertyList.properties as props " + //$NON-NLS-1$
+                    "where conf.dbId = ? "; //$NON-NLS-1$
+
+            Object[] params = new Object[] { dbId };
+            List<Configuration> configurationList = getConfigurationDao().findByQuery(hql, params);
             for (Configuration configuration : configurationList) {
                 CnATreeElement element = configuration.getPerson();
                 String anrede = null;
                 String name = null;
-                if(element instanceof PersonIso) {
-                    PersonIso person = (PersonIso) element;
-                    name = person.getSurname();
-                    anrede = person.getAnrede();              
+                if (element instanceof IPerson) {
+                    IPerson person = (IPerson) element;
+                    name = person.getLastName();
+                    anrede = person.getSalutation();
                 }
-                if(element instanceof Person) {
-                    Person person = (Person) element;
-                    name = person.getEntity().getSimpleValue(P_NAME);
-                    anrede = person.getEntity().getSimpleValue(P_ANREDE);                  
-                }              
-                if(anrede!=null && !anrede.isEmpty()) {
+                if (anrede != null && !anrede.isEmpty()) {
                     model.put(TEMPLATE_ADDRESS, anrede);
                 } else {
                     model.put(TEMPLATE_ADDRESS, DEFAULT_ADDRESS);
                 }
-                if(name!=null ) {
+                if (name != null) {
                     model.put(TEMPLATE_NAME, name);
                 } else {
                     model.put(TEMPLATE_NAME, "");
                 }
             }
-        }   
-        
+        }
+
     }
-    
+
     @Override
     public CnATreeElement retrieveElement(String uuid, RetrieveInfo ri) {
         return getElementDao().findByUuid(uuid, ri);
     }
-    
+
     public JavaMailSender getMailSender() {
         return mailSender;
     }
@@ -250,7 +249,7 @@ public class RemindService implements IRemindService {
     }
 
     public void setEmailCc(String emailCc) {
-        if(!EMAIL_CC_PROPERTY.equals(emailCc)) {
+        if (!EMAIL_CC_PROPERTY.equals(emailCc)) {
             this.emailCc = emailCc;
         }
     }
@@ -260,7 +259,7 @@ public class RemindService implements IRemindService {
     }
 
     public void setEmailBcc(String emailBcc) {
-        if(!EMAIL_BCC_PROPERTY.equals(emailBcc)) {
+        if (!EMAIL_BCC_PROPERTY.equals(emailBcc)) {
             this.emailBcc = emailBcc;
         }
     }

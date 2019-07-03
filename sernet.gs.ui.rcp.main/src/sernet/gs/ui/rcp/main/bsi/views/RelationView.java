@@ -44,6 +44,7 @@ import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.views.RelationTableViewer.PathCellLabelProvider;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElementLabelGenerator;
 import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
@@ -113,7 +114,8 @@ public class RelationView extends RightsEnabledView
         }
 
         Display.getDefault().syncExec(() -> {
-            setContentDescription(Messages.RelationView_9 + " " + elmt.getTitle());
+            setContentDescription(Messages.RelationView_9 + " "
+                    + CnATreeElementLabelGenerator.getElementTitle(elmt));
             viewer.setInput(new PlaceHolder(Messages.RelationView_0));
         });
         // if we already scheduled a loading job but another element is

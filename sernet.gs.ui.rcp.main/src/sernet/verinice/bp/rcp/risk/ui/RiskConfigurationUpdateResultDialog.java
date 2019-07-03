@@ -41,13 +41,11 @@ public class RiskConfigurationUpdateResultDialog {
 
     private static String createMessage(RiskConfigurationUpdateResult updateResult) {
         int changedThreats = updateResult.getNumberOfChangedThreats();
-        int changedRequirements = updateResult.getNumberOfChangedRequirements();
-        int changedSafeguards = updateResult.getNumberOfChangedSafeguards();
         String message = Messages.riskConfigurationUpdateResultDialogComplete;
-        if (changedThreats > 0 || changedRequirements > 0 || changedSafeguards > 0) {
+        if (changedThreats > 0) {
             message = Messages.bind(
                     Messages.riskConfigurationUpdateResultDialogCompleteThreatsChanged,
-                    new Integer[] { changedThreats, changedRequirements, changedSafeguards });
+                    new Integer[] { changedThreats });
         }
         return message;
     }

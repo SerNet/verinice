@@ -132,15 +132,6 @@
             restorable="true">
       </view>
       <view
-            allowMultiple="true"
-            category="sernet.verinice.iso27k.rcp"
-            class="sernet.verinice.iso27k.rcp.CatalogView"
-            icon="icons/wrench.png"
-            id="sernet.verinice.iso27k.rcp.CatalogView"
-            name="%view.name.10"
-            restorable="true">
-      </view>
-      <view
             allowMultiple="false"
             category="sernet.verinice.iso27k.rcp"
             class="sernet.verinice.iso27k.rcp.ISMView"
@@ -419,7 +410,7 @@
             name="verinice">
          <property
                name="aboutText"
-               value="SerNet verinice 1.18.0 - Codename &apos;Mangalore&apos;&#x0A;&#x0A;(c) SerNet Service Network GmbH and others&#x0A;1996–2019&#x0A;&#x0A;Contact the authors:&#x0A;verinice@sernet.de&#x0A;&#x0A;or&#x0A;&#x0A;Visit our homepage:&#x0A;http://www.verinice.org&#x0A;&#x0A;Contributors:&#x0A;Alexander Koderman&#x0A;Anne Hanekop&#x0A;Marek Seeger&#x0A;Andreas Becker&#x0A;Robert Schuster&#x0A;Daniel Murygin&#x0A;Sebastian Engel&#x0A;Markus Joos&#x0A;Gregorio Levano&#x0A;Christian Ganzmann&#x0A;Carmen Probst&#x0A;Sebastian Hagedorn&#x0A;Johannes Stillig&#x0A;Christian Eschenlohr&#x0A;Benjamin Weißenfels&#x0A;Joachim Seifert&#x0A;Moritz Reiter&#x0A;Alexander von Ossowski&#x0A;Ruth Motza&#x0A;Viktor Schmidt&#x0A;Tatjana Anisow&#x0A;Michael Flürenbrock&#x0A;Urs Zeidler&#x0A;Alexander Ben Nasrallah&#x0A;Jochen Kemnade&#x0A;Antonio Marino&#x0A;Finn Westendorf&#x0A;&#x0A;Artwork:&#x0A;Blackbit						www.blackbit.de&#x0A;Icons by Axialis Team		    http://www.axialis.com&#x0A;Icons by Yusuke Kamiyamane      http://p.yusukekamiyamane.com&#x0A;Icons by FAMFAMFAM              http://www.famfamfam.com&#x0A;Joseph North					&lt;north@sublink.ca&gt;&#x0A;Agentur Roeder					www.agentur-roeder.de&#x0A;&#x0A;&#x0A;This program comes with ABSOLUTELY NO WARRANTY.&#x0A;This is free software, and you are welcome to redistribute it under certain conditions.&#x0A;Verinice is licensed to you under the conditions of the GPLv3, the Apache license, the Eclipse Public License and others.&#x0A;See the LICENSE.txt contained in the program folder, the verinice Plugin-Details in the help menu and the copyright and license header in each source file for details.&#x0A;&#x0A;VDA Information Security Assessment&#x0A;(c) Arbeitskreis Informationsschutz des Verband der Automobilindustrie e. V. (VDA)&#x0A;Lizenz: http://creativecommons.org/licenses/by-nd/3.0/de/&#x0A;VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilindustrie e. V. (VDA), die zur Nutzung in verinice lizenziert sind. Alle Rechte vorbehalten."/>
+               value="SerNet verinice 1.18.1 - Codename &apos;Mangalore&apos;&#x0A;&#x0A;(c) SerNet Service Network GmbH and others&#x0A;1996–2019&#x0A;&#x0A;Contact the authors:&#x0A;verinice@sernet.de&#x0A;&#x0A;or&#x0A;&#x0A;Visit our homepage:&#x0A;http://www.verinice.org&#x0A;&#x0A;Contributors:&#x0A;Alexander Koderman&#x0A;Anne Hanekop&#x0A;Marek Seeger&#x0A;Andreas Becker&#x0A;Robert Schuster&#x0A;Daniel Murygin&#x0A;Sebastian Engel&#x0A;Markus Joos&#x0A;Gregorio Levano&#x0A;Christian Ganzmann&#x0A;Carmen Probst&#x0A;Sebastian Hagedorn&#x0A;Johannes Stillig&#x0A;Christian Eschenlohr&#x0A;Benjamin Weißenfels&#x0A;Joachim Seifert&#x0A;Moritz Reiter&#x0A;Alexander von Ossowski&#x0A;Ruth Motza&#x0A;Viktor Schmidt&#x0A;Tatjana Anisow&#x0A;Michael Flürenbrock&#x0A;Urs Zeidler&#x0A;Alexander Ben Nasrallah&#x0A;Jochen Kemnade&#x0A;Antonio Marino&#x0A;Finn Westendorf&#x0A;&#x0A;Artwork:&#x0A;Blackbit						www.blackbit.de&#x0A;Icons by Axialis Team		    http://www.axialis.com&#x0A;Icons by Yusuke Kamiyamane      http://p.yusukekamiyamane.com&#x0A;Icons by FAMFAMFAM              http://www.famfamfam.com&#x0A;Joseph North					&lt;north@sublink.ca&gt;&#x0A;Agentur Roeder					www.agentur-roeder.de&#x0A;&#x0A;&#x0A;This program comes with ABSOLUTELY NO WARRANTY.&#x0A;This is free software, and you are welcome to redistribute it under certain conditions.&#x0A;Verinice is licensed to you under the conditions of the GPLv3, the Apache license, the Eclipse Public License and others.&#x0A;See the LICENSE.txt contained in the program folder, the verinice Plugin-Details in the help menu and the copyright and license header in each source file for details.&#x0A;&#x0A;VDA Information Security Assessment&#x0A;(c) Arbeitskreis Informationsschutz des Verband der Automobilindustrie e. V. (VDA)&#x0A;Lizenz: http://creativecommons.org/licenses/by-nd/3.0/de/&#x0A;VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilindustrie e. V. (VDA), die zur Nutzung in verinice lizenziert sind. Alle Rechte vorbehalten."/>
          <property
                name="windowImages"
                value="verinice_icons/v-16.png,verinice_icons/v-32.png,verinice_icons/v-48.png,verinice_icons/v-64.png,verinice_icons/v-128.png"/>
@@ -757,6 +748,9 @@
                         <objectClass
                               name="sernet.verinice.model.bsi.Person">
                         </objectClass>
+                        <objectClass
+                              name="sernet.verinice.model.bsi.ImportBsiGroup">
+                        </objectClass>
                      </or>
                   </not>
                </and>
@@ -821,22 +815,6 @@
                menubarPath="content"
                style="push"
                tooltip="Create a new ISA control...">
-         </action>
-      </objectContribution>
-      <objectContribution
-            adaptable="false"
-            id="sernet.gs.ui.rcp.main.auditreport"
-            objectClass="sernet.verinice.model.iso27k.Audit">
-         <action
-               class="sernet.verinice.report.actions.AuditReportAction"
-
-               enablesFor="+"
-               icon="icons/report.png"
-               id="sernet.verinice.report.actions.AuditReportAction.action"
-               label="%action.label.27"
-               menubarPath="special"
-               style="push"
-               tooltip="%action.tooltip.26">
          </action>
       </objectContribution>
       <objectContribution
@@ -1619,39 +1597,6 @@
                label="%command.label.delete"
                tooltip="%command.tooltip.delete"/>
       </menuContribution>
-      <menuContribution
-        locationURI="menu:sernet.verinice.iso27k.rcp.CatalogView?after=additions">
-		    <command
-		            commandId="sernet.verinice.iso27k.rcp.commands.charset"
-		            id="sernet.verinice.iso27k.rcp.commands.charset.utf-8"
-		            label="%command.label.5"
-		            style="radio">
-		        <parameter
-		            name="org.eclipse.ui.commands.radioStateParameter"
-		            value="UTF-8">
-		        </parameter>
-		    </command>
-		    <command
-		            commandId="sernet.verinice.iso27k.rcp.commands.charset"
-		            id="sernet.verinice.iso27k.rcp.commands.charset.iso-8859-1"
-		            label="%command.label.6"
-		            style="radio">
-		        <parameter
-		            name="org.eclipse.ui.commands.radioStateParameter"
-		            value="ISO-8859-15">
-		        </parameter>
-		    </command>
-		    <command
-		            commandId="sernet.verinice.iso27k.rcp.commands.charset"
-		            id="sernet.verinice.iso27k.rcp.commands.charset.windows-1252"
-		            label="%command.label.7"
-		            style="radio">
-		        <parameter
-		            name="org.eclipse.ui.commands.radioStateParameter"
-		            value="WINDOWS-1252">
-		        </parameter>
-		    </command>
-		</menuContribution>
 		<menuContribution locationURI="popup:sernet.verinice.bpm.rcp.TaskView">
         	<command commandId="sernet.verinice.bpm.rcp.assign"
                disabledIcon="icons/user_edit.png"
@@ -1742,26 +1687,9 @@
             name="%page.name.4">
       </page>
       <page
-            category="sernet.gs.ui.rcp.main.page5"
-            class="sernet.gs.ui.rcp.main.preferences.GSImportRestorePreferencePage"
-            id="sernet.gs.ui.rcp.main.preferences.gsimportrestorepreferencepage"
-            name="%page.name.5">
-      </page>
-      <page
-            category="sernet.gs.ui.rcp.main.page5"
-            class="sernet.gs.ui.rcp.main.preferences.GSImportAttachPreferencePage"
-            id="sernet.gs.ui.rcp.main.page6"
-            name="%page.name.6">
-      </page>
-      <page
             class="sernet.gs.ui.rcp.main.preferences.EditorPreferencePage"
             id="sernet.gs.ui.rcp.main.preferences.editorpreferencepage"
             name="%page.name.7">
-      </page>
-      <page
-            class="sernet.gs.ui.rcp.main.preferences.CryptoPreferencePage"
-            id="sernet.gs.ui.rcp.main.preferences.cryptopreferencepage"
-            name="%page.name.8">
       </page>
       <page
             class="sernet.gs.ui.rcp.main.preferences.MessageDialogWithTogglePreferencePage"
@@ -1797,7 +1725,7 @@
       <cheatsheet
             category="sernet.gs.ui.rcp.main.cheatSheets"
             composite="false"
-            contentFile="%cheatsheets.content.2"
+            contentFile="$nl$/cheatsheets/ErsteSchritte.xml"
             id="sernet.gs.ui.rcp.main.cheatsheet1"
             name="%cheatsheets.2">
          <description>%cheatsheets.description.2</description>
@@ -1805,7 +1733,7 @@
       <cheatsheet
             category="sernet.gs.ui.rcp.main.cheatSheets"
             composite="false"
-            contentFile="%cheatsheets.content.3"
+            contentFile="$nl$/cheatsheets/Strukturanalyse.xml"
             id="sernet.gs.ui.rcp.main.cheatsheet2"
             name="%cheatsheets.3">
             <description>%cheatsheets.description.3</description>
@@ -1813,7 +1741,7 @@
       <cheatsheet
             category="sernet.gs.ui.rcp.main.cheatSheets"
             composite="false"
-            contentFile="%cheatsheets.content.4"
+            contentFile="$nl$/cheatsheets/Schutzbedarfsanalyse.xml"
             id="sernet.gs.ui.rcp.main.schutzbedarf"
             name="%cheatsheets.4">
             <description>%cheatsheets.description.4</description>
@@ -1821,7 +1749,7 @@
       <cheatsheet
             category="sernet.gs.ui.rcp.main.cheatSheets"
             composite="false"
-            contentFile="%cheatsheets.content.5"
+            contentFile="$nl$/cheatsheets/Modellierung.xml"
             id="sernet.gs.ui.rcp.main.modellierung"
             name="%cheatsheets.5">
             <description>%cheatsheets.description.5</description>
@@ -1829,7 +1757,7 @@
         <cheatsheet
             category="sernet.gs.ui.rcp.main.cheatSheets"
             composite="false"
-            contentFile="%cheatsheets.content.6"
+            contentFile="$nl$/cheatsheets/BasisSicherheitscheck.xml"
             id="sernet.gs.ui.rcp.main.basischeck"
             name="%cheatsheets.6">
             <description>%cheatsheets.description.6</description>
@@ -1837,7 +1765,7 @@
         <cheatsheet
             category="sernet.gs.ui.rcp.main.cheatSheets"
             composite="false"
-            contentFile="%cheatsheets.content.7"
+            contentFile="$nl$/cheatsheets/ErgaenzendeAnalyse.xml"
             id="sernet.gs.ui.rcp.main.ergaenzendeanalyse"
             name="%cheatsheets.7">
             <description>%cheatsheets.description.7</description>
@@ -1845,7 +1773,7 @@
         <cheatsheet
             category="sernet.gs.ui.rcp.main.cheatSheets"
             composite="false"
-            contentFile="%cheatsheets.content.8"
+            contentFile="$nl$/cheatsheets/Risikoanalyse.xml"
             id="sernet.gs.ui.rcp.main.risikoanalyse"
             name="%cheatsheets.8">
             <description>%cheatsheets.description.8</description>
@@ -1853,7 +1781,7 @@
         <cheatsheet
             category="sernet.gs.ui.rcp.main.cheatSheets"
             composite="false"
-            contentFile="%cheatsheets.content.9"
+            contentFile="$nl$/cheatsheets/Reports.xml"
             id="sernet.gs.ui.rcp.main.reports"
             name="%cheatsheets.9">
             <description>%cheatsheets.description.9</description>
@@ -1861,7 +1789,7 @@
         <cheatsheet
             category="sernet.gs.ui.rcp.main.cheatSheets"
             composite="false"
-            contentFile="%cheatsheets.content.10"
+            contentFile="$nl$/cheatsheets/Datenschutz.xml"
             id="sernet.gs.ui.rcp.main.datenschutz"
             name="%cheatsheets.10">
             <description>%cheatsheets.description.10</description>
@@ -1873,26 +1801,10 @@
         <cheatsheet
               category="sernet.gs.ui.rcp.main.cheatSheets2"
               composite="false"
-              contentFile="%cheatsheets.content.12"
+              contentFile="$nl$/cheatsheets/gstool_import_ms.xml"
               id="sernet.gs.ui.rcp.main.gstool1"
               name="%cheatsheets.12">
            <description>%cheatsheets.description.11</description>
-        </cheatsheet>
-        <cheatsheet
-              category="sernet.gs.ui.rcp.main.cheatSheets2"
-              composite="false"
-              contentFile="%cheatsheets.content.13"
-              id="sernet.gs.ui.rcp.main.gstool2"
-              name="%cheatsheets.13">
-           <description>%cheatsheets.description.12</description>
-        </cheatsheet>
-        <cheatsheet
-              category="sernet.gs.ui.rcp.main.cheatSheets2"
-              composite="false"
-              contentFile="%cheatsheets.content.14"
-              id="sernet.gs.ui.rcp.main.gstool3"
-              name="%cheatsheets.14">
-           <description>%cheatsheets.description.13</description>
         </cheatsheet>
         <category
               id="sernet.gs.ui.rcp.main.cheatSheets3"
@@ -1901,7 +1813,7 @@
         <cheatsheet
               category="sernet.gs.ui.rcp.main.cheatSheets3"
               composite="false"
-              contentFile="%cheatsheets.content.16"
+              contentFile="$nl$/cheatsheets/Arbeiten_mit_ISO27K.xml"
               id="sernet.verinice.iso27k.cheatsheet1"
               name="%cheatsheets.16">
            <description>%cheatsheets.description.16</description>
@@ -1909,7 +1821,7 @@
         <cheatsheet
               category="sernet.gs.ui.rcp.main.cheatSheets3"
               composite="false"
-              contentFile="%cheatsheets.content.17"
+              contentFile="$nl$/cheatsheets/ISO_27005_Risk_Assessment.xml"
               id="sernet.verinice.iso27k.cheatsheet_27005"
               name="%cheatsheets.17">
            <description>
@@ -1923,7 +1835,7 @@
         <cheatsheet
               category="sernet.verinice.greenbone.cheatsheets"
               composite="true"
-              contentFile="%CheatSheets.Greenbone.Overview.ContentFile"
+              contentFile="$nl$/cheatsheets/greenbone/GreenboneOverview.xml"
               id="sernet.verinice.greenbone.cheatsheets.overview"
               name="%CheatSheets.Greenbone.Overview.Name">
            <description>
@@ -1933,7 +1845,7 @@
         <cheatsheet
               category="sernet.verinice.greenbone.cheatsheets"
               composite="false"
-              contentFile="%CheatSheets.Greenbone.ItBaselineProtection.ContentFile"
+              contentFile="$nl$/cheatsheets/greenbone/GreenboneItBaselineProtection.xml"
               id="sernet.verinice.greenbone.cheatsheets.it_baseline_protection"
               name="%CheatSheets.Greenbone.ItBaselineProtection.Name">
            <description>
@@ -1943,7 +1855,7 @@
         <cheatsheet
               category="sernet.verinice.greenbone.cheatsheets"
               composite="false"
-              contentFile="%CheatSheets.Greenbone.Ism.ContentFile"
+              contentFile="$nl$/cheatsheets/greenbone/GreenboneIsm.xml"
               id="sernet.verinice.greenbone.cheatsheets.ism"
               name="%CheatSheets.Greenbone.Ism.Name">
            <description>
@@ -1957,7 +1869,7 @@
             category="sernet.verinice.cheatsheets.mogs"
             id="sernet.verinice.cheatsheets.mogs.intro"
             composite="false"
-            contentFile="%cheatsheets.mogs.intro.file"
+            contentFile="$nl$/cheatsheets/mogs/first-steps.xml"
             name="%cheatsheets.mogs.intro.name">
             <description></description>
         </cheatsheet>
@@ -1965,7 +1877,7 @@
             category="sernet.verinice.cheatsheets.mogs"
             id="sernet.verinice.cheatsheets.mogs.analysis"
             composite="false"
-            contentFile="%cheatsheets.mogs.analysis.file"
+            contentFile="$nl$/cheatsheets/mogs/analysis.xml"
             name="%cheatsheets.mogs.analysis.name">
             <description></description>
         </cheatsheet>
@@ -1973,7 +1885,7 @@
             category="sernet.verinice.cheatsheets.mogs"
             id="sernet.verinice.cheatsheets.mogs.detection"
             composite="false"
-            contentFile="%cheatsheets.mogs.detection.file"
+            contentFile="$nl$/cheatsheets/mogs/detection.xml"
             name="%cheatsheets.mogs.detection.name">
             <description></description>
         </cheatsheet>
@@ -1981,7 +1893,7 @@
             category="sernet.verinice.cheatsheets.mogs"
             id="sernet.verinice.cheatsheets.mogs.modelling"
             composite="false"
-            contentFile="%cheatsheets.mogs.modelling.file"
+            contentFile="$nl$/cheatsheets/mogs/modelling.xml"
             name="%cheatsheets.mogs.modelling.name">
             <description></description>
         </cheatsheet>
@@ -1989,7 +1901,7 @@
             category="sernet.verinice.cheatsheets.mogs"
             id="sernet.verinice.cheatsheets.mogs.check"
             composite="false"
-            contentFile="%cheatsheets.mogs.check.file"
+            contentFile="$nl$/cheatsheets/mogs/check.xml"
             name="%cheatsheets.mogs.check.name">
             <description></description>
         </cheatsheet>
@@ -1997,7 +1909,7 @@
             category="sernet.verinice.cheatsheets.mogs"
             id="sernet.verinice.cheatsheets.mogs.workflow-engine"
             composite="false"
-            contentFile="%cheatsheets.mogs.workflow-engine.file"
+            contentFile="$nl$/cheatsheets/mogs/workflow-engine.xml"
             name="%cheatsheets.mogs.workflow-engine.name">
             <description></description>
         </cheatsheet>
@@ -2005,7 +1917,7 @@
             category="sernet.verinice.cheatsheets.mogs"
             id="sernet.verinice.cheatsheets.mogs.risk-analysis"
             composite="false"
-            contentFile="%cheatsheets.mogs.risk-analysis.file"
+            contentFile="$nl$/cheatsheets/mogs/risk-analysis.xml"
             name="%cheatsheets.mogs.risk-analysis.name">
             <description></description>
         </cheatsheet>
@@ -2013,7 +1925,7 @@
             category="sernet.verinice.cheatsheets.mogs"
             id="sernet.verinice.cheatsheets.mogs.documents"
             composite="false"
-            contentFile="%cheatsheets.mogs.documents.file"
+            contentFile="$nl$/cheatsheets/mogs/documents.xml"
             name="%cheatsheets.mogs.documents.name">
             <description></description>
         </cheatsheet>
@@ -2021,7 +1933,7 @@
             category="sernet.verinice.cheatsheets.mogs"
             id="sernet.verinice.cheatsheets.mogs.reports"
             composite="false"
-            contentFile="%cheatsheets.mogs.reports.file"
+            contentFile="$nl$/cheatsheets/mogs/reports.xml"
             name="%cheatsheets.mogs.reports.name">
             <description></description>
         </cheatsheet>
@@ -2467,14 +2379,6 @@
             	</with>
 		 </enabledWhen>
       </handler>
-      <handler class="sernet.verinice.iso27k.rcp.action.CharsetHandler"
-            commandId="sernet.verinice.iso27k.rcp.commands.charset">
-      	 <activeWhen>
-     		<with variable="activePartId">
-     			<equals value="sernet.verinice.iso27k.rcp.CatalogView" />
-    		</with>
-         </activeWhen>
-      </handler>
       <handler class="sernet.verinice.rcp.unify.UnifyHandler"
             commandId="sernet.verinice.rcp.unify">
          <activeWhen>
@@ -2707,10 +2611,6 @@
             <objectClass name="sernet.verinice.rcp.linktable.LinkTableEditor"/>
           </enablement>
        </decorator>
-   </extension>
-   <extension point="org.eclipse.core.net.authenticator">
-     <authenticator class="sernet.gs.ui.rcp.main.security.VeriniceAuthenticator">
-     </authenticator>
    </extension>
    <extension
          point="org.eclipse.ui.splashHandlers">

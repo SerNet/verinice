@@ -50,7 +50,6 @@
     <bean name="itbpRiskServiceImpl"
         class="sernet.verinice.service.bp.risk.RiskServiceImpl">
         <property name="metaDao" ref="itbpRiskServiceMetaDao" />
-        <property name="propertyListDao" ref="propertyListDao" />
         <!-- Security configuration:                               -->
         <!-- Accounts with associated action id "riskanalysis"     -->
         <!-- are authorized to call all methods of this service.   -->

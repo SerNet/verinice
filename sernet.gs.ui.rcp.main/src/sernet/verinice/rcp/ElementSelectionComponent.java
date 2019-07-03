@@ -20,6 +20,7 @@
 package sernet.verinice.rcp;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,20 +32,17 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellLabelProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
@@ -62,11 +60,11 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.CnaTreeElementTitleFilter;
 import sernet.gs.ui.rcp.main.bsi.dialogs.Messages;
 import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElementLabelGenerator;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
 import sernet.verinice.service.commands.LoadElementTitles;
 
@@ -117,6 +115,7 @@ public class ElementSelectionComponent {
         showScopeCheckbox = true;
     }
 
+    @SuppressWarnings("unchecked")
     public void init() {
 
         final int formAttachmentDefaultOffset = 5;
@@ -143,19 +142,15 @@ public class ElementSelectionComponent {
         formData2.right = new FormAttachment(formData2Numerator,
                 (-1) * formAttachmentDefaultOffset);
         text.setLayoutData(formData2);
-        text.addKeyListener(new KeyListener() {
+        text.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 filter.setPattern(text.getText());
             }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-            }
         });
 
         if (isShowScopeCheckbox()) {
-            SelectionListener listener = new SelectionListener() {
+            SelectionListener listener = new SelectionAdapter() {
                 @Override
                 public void widgetSelected(SelectionEvent e) {
                     Button button = (e.getSource() instanceof Button) ? (Button) e.getSource()
@@ -166,9 +161,6 @@ public class ElementSelectionComponent {
                     }
                 }
 
-                @Override
-                public void widgetDefaultSelected(SelectionEvent e) {
-                }
             };
             checkbox = SWTElementFactory.generateCheckboxButton(container,
                     Messages.CnATreeElementSelectionDialog_4, true, listener);
@@ -222,35 +214,27 @@ public class ElementSelectionComponent {
         viewer.setColumnProperties(new String[] { COLUMN_IMG, COLUMN_SCOPE_ID, COLUMN_LABEL });
         viewer.setContentProvider(new ArrayContentProvider());
         filter = new CnaTreeElementTitleFilter(viewer);
-        viewer.setSorter(new ElementTableViewerSorter());
+        viewer.setComparator(new ElementTableViewerSorter());
 
-        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                selectedElements = ((IStructuredSelection) viewer.getSelection()).toList();
-            }
-        });
+        viewer.addSelectionChangedListener(
+                event -> selectedElements = ((IStructuredSelection) viewer.getSelection())
+                        .toList());
 
-        viewer.addDoubleClickListener(new IDoubleClickListener() {
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                selectedElements = ((IStructuredSelection) viewer.getSelection()).toList();
-            }
-        });
+        viewer.addDoubleClickListener(
+                event -> selectedElements = ((IStructuredSelection) viewer.getSelection())
+                        .toList());
     }
 
     public void loadElements() {
         loadElementsAndSelect(null);
     }
 
-    @SuppressWarnings("unchecked")
     public void loadElementsAndSelect(final CnATreeElement selected) {
         if (typeId == null || typeId.length() == 0) {
             return;
         }
-        ArrayList temp = new ArrayList(1);
-        temp.add(new PlaceHolder(Messages.CnATreeElementSelectionDialog_6));
-        viewer.setInput(temp);
+        viewer.setInput(Collections
+                .singletonList(new PlaceHolder(Messages.CnATreeElementSelectionDialog_6)));
 
         WorkspaceJob job = new WorkspaceJob(Messages.CnATreeElementSelectionDialog_7) {
             @Override
@@ -271,9 +255,6 @@ public class ElementSelectionComponent {
         job.schedule();
     }
 
-    /**
-     * 
-     */
     protected void setSelection() {
         if (selectedElements != null && !selectedElements.isEmpty()) {
             getViewer().setSelection(new StructuredSelection(selectedElements));
@@ -281,16 +262,7 @@ public class ElementSelectionComponent {
     }
 
     private static String makeTitle(CnATreeElement elmt) {
-        StringBuilder sb = new StringBuilder();
-        if (elmt instanceof IISO27kElement) {
-            String abbreviation = ((IISO27kElement) elmt).getAbbreviation();
-            if (abbreviation != null && !abbreviation.isEmpty()) {
-                sb.append(abbreviation).append(" ");
-            }
-        }
-
-        sb.append(elmt.getTitle());
-        return sb.toString();
+        return CnATreeElementLabelGenerator.getElementTitle(elmt);
     }
 
     public List<CnATreeElement> getSelectedElements() {
@@ -336,42 +308,33 @@ public class ElementSelectionComponent {
     }
 
     private void showElementsInTable(final List<CnATreeElement> list) {
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                if (list != null) {
-                    viewer.setInput(list);
-                } else {
-                    ArrayList temp = new ArrayList(0);
-                    viewer.setInput(temp);
-                }
+        Display.getDefault().asyncExec(() -> {
+            if (list != null) {
+                viewer.setInput(list);
+            } else {
+                viewer.setInput(Collections.emptyList());
             }
         });
         elementList = list;
     }
 
     public void deselectElements() {
-        Display.getDefault().syncExec(new Runnable() {
-            @Override
-            public void run() {
-                getViewer().getTable().deselectAll();
-                getViewer().setSelection(new StructuredSelection());
-                selectedElements.clear();
-            }
+        Display.getDefault().syncExec(() -> {
+            getViewer().getTable().deselectAll();
+            getViewer().setSelection(new StructuredSelection());
+            selectedElements.clear();
         });
     }
 
+    @SuppressWarnings("unchecked")
     public void setSelectedElement(final CnATreeElement selectedElement) {
         if (selectedElement != null) {
             int i = elementList.indexOf(selectedElement);
             if (i != -1) {
-                Display.getDefault().syncExec(new Runnable() {
-                    @Override
-                    public void run() {
-                        getViewer().getTable().deselectAll();
-                        getViewer().setSelection(new StructuredSelection(selectedElement));
-                        selectedElements = ((IStructuredSelection) viewer.getSelection()).toList();
-                    }
+                Display.getDefault().syncExec(() -> {
+                    getViewer().getTable().deselectAll();
+                    getViewer().setSelection(new StructuredSelection(selectedElement));
+                    selectedElements = ((IStructuredSelection) viewer.getSelection()).toList();
                 });
             }
         }
@@ -409,7 +372,7 @@ public class ElementSelectionComponent {
         this.height = height;
     }
 
-    private static final class ElementTableViewerSorter extends ViewerSorter {
+    private static final class ElementTableViewerSorter extends ViewerComparator {
         @Override
         public int compare(Viewer viewer, Object e1, Object e2) {
 

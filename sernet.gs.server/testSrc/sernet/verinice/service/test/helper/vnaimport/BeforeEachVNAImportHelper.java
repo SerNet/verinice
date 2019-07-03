@@ -19,29 +19,36 @@
  ******************************************************************************/
 package sernet.verinice.service.test.helper.vnaimport;
 
+import java.io.IOException;
+
 import org.junit.After;
 import org.junit.Before;
 
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
+import sernet.verinice.service.test.CommandServiceProvider;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public abstract class BeforeEachVNAImportHelper extends AbstractVNAImportHelper {
+public abstract class BeforeEachVNAImportHelper extends CommandServiceProvider {
+
+    private SyncCommand syncCommand;
 
     @Before
-    public void setUp() throws Exception
-    {
-        super.setUp();
+    public void setUp() throws IOException, CommandException, SyncParameterException {
+        syncCommand = VNAImportHelper.importFile(getFilePath(), getSyncParameter());
     }
 
-    
     @After
-    public void tearDown() throws CommandException
-    {
-        super.tearDown();
+    public void tearDown() throws CommandException {
+        VNAImportHelper.tearDown(syncCommand, elementDao);
     }
+
+    protected abstract String getFilePath();
+
+    protected abstract SyncParameter getSyncParameter() throws SyncParameterException;
 }

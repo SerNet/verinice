@@ -1,0 +1,54 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Context-Type: org.eclipse.rcptt.ctx.ecl
+Element-Name: bp_old
+Element-Type: context
+Element-Version: 2.0
+Id: _UlFDQMI2EeiBGdyBeGVxCg
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 11/7/18 10:40 AM
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Some functions for the old bp.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
+Content-Type: text/ecl
+Entry-Name: .ecl.context
+
+proc "create-it-verbund" [val name] {
+	get-view Grundschutzmodell | get-button "Neuer IT-Verbund" | click
+	with [get-editor "IT-Verbund" | get-section "" | get-editbox -after [get-label Name]] {
+		set-text $name
+		key-type "M1+s"
+	}
+}
+
+/* Delete a model element by the given path. */
+proc "delete-bp-old-element" [val elementpath] {
+	get-view Grundschutzmodell | get-tree | select $elementpath | get-menu -path "Löschen" | click
+	get-window "Wirklich löschen?" | get-button Ja | click
+}
+
+proc "import-bp-katalog" {
+	get-menu -path "Bearbeiten/Einstellungen..." | click
+	get-window Benutzervorgaben | get-tree | select "BSI IT-Grundschutz"
+	set-dialog-result File  [concat $datadir "/it-grundschutz_el14_html_de.zip"]
+	with [get-window Benutzervorgaben] {
+	    get-group "BSI-Grundschutz-Kataloge" | get-button "Durchsuchen..." | click
+	    get-button "Anwenden und Schließen" | click
+	}
+	wait 5000//TODO don't wait, check when its ready....
+}
+proc "import-vna-bp-old" [val vna] {
+	get-view Grundschutzmodell | get-button "Importiere IT-Verbund aus Datei..." | click
+	log [concat "import vna: " $vna]
+	set-dialog-result File [concat $datadir [get-java-property "file.separator"] $vna]
+	with [get-window Import] {
+		get-group Datei | get-button "Datei auswählen..." | click
+		get-button OK | click
+	}
+}
+------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998--

@@ -25,17 +25,15 @@ import org.hibernate.Query;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
-import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * RiskServiceMetaDao contains methods for reading data in the database. The
  * methods in this class are only intended for use when executing a risk
  * analysis in IT base protection (ITBP).
- * 
+ *
  * This class is no ordinary verinice DAO. But it uses other DAOs and is
  * therefore called MetaDao. This class wraps accesses to the ordinary DAOs.
  *
@@ -51,9 +49,9 @@ public class RiskServiceMetaDao {
             + "join fetch propertyList.properties as props ";
 
     private static final String HQL_LOAD_BY_TYPE_AND_SCOPE = "select element from CnATreeElement element "
-            + "join fetch element.entity as entity " 
+            + "join fetch element.entity as entity "
             + JOIN_PROPERTIES
-            + "where element.objectType = :" + TYPE_ID + " " 
+            + "where element.objectType = :" + TYPE_ID + " "
             + "and element.scopeId = :" + SCOPE_ID; // $NON-NLS-2$
     // @formatter:on
 
@@ -69,25 +67,10 @@ public class RiskServiceMetaDao {
     }
 
     @SuppressWarnings("unchecked")
-    public Set<CnATreeElement> loadRequirementsFromScope(Integer scopeId) {
-        return (Set<CnATreeElement>) loadElementsFromScope(scopeId, BpRequirement.TYPE_ID);
-    }
-
-    @SuppressWarnings("unchecked")
-    public Set<CnATreeElement> loadSafeguardsFromScope(Integer scopeId) {
-        return (Set<CnATreeElement>) loadElementsFromScope(scopeId, Safeguard.TYPE_ID);
-    }
-
-    @SuppressWarnings("unchecked")
     public Set<BpThreat> loadThreatsFromScope(Integer scopeId) {
-        return (Set<BpThreat>) loadElementsFromScope(scopeId, BpThreat.TYPE_ID);
-    }
-
-    @SuppressWarnings("unchecked")
-    public Set<? extends CnATreeElement> loadElementsFromScope(Integer scopeId, String typeId) {
         List<BpThreat> resultList = getElementDao().findByCallback(session -> {
             Query query = session.createQuery(HQL_LOAD_BY_TYPE_AND_SCOPE)
-                    .setParameter(TYPE_ID, typeId).setParameter(SCOPE_ID, scopeId);
+                    .setParameter(TYPE_ID, BpThreat.TYPE_ID).setParameter(SCOPE_ID, scopeId);
             query.setReadOnly(true);
             return query.list();
         });
@@ -109,7 +92,5 @@ public class RiskServiceMetaDao {
     public void setItNetworkDao(IBaseDao<ItNetwork, Integer> itNetworkDao) {
         this.itNetworkDao = itNetworkDao;
     }
-
-
 
 }

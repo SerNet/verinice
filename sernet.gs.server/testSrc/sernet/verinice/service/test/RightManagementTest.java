@@ -74,10 +74,10 @@ public class RightManagementTest extends CommandServiceProvider {
     private static final String TEST_USER_LOGIN = "testUser-login";
     private static final String DEFAULT_USER_LOGIN = "defaultUser-login";
     private static final String USER_DEFAULT_GROUP = "user-default-group";
-    
+
     // some example actions
     private static final String[] noDeleteProfileActionIds = { ActionRightIDs.IMPORTCSV, //
-            ActionRightIDs.IMPORTLDAP, ActionRightIDs.ISMCATALOG, ActionRightIDs.XMLIMPORT };
+            ActionRightIDs.IMPORTLDAP, ActionRightIDs.XMLIMPORT };
 
     @Resource(name = "rightsService")
     protected IRightsService rightsService;
@@ -90,7 +90,8 @@ public class RightManagementTest extends CommandServiceProvider {
     @After
     public void tearDown() {
         if (authService instanceof TestAuthenticationService) {
-            ((TestAuthenticationService) authService).setUsername(TestAuthenticationService.INTERNAL_ADMIN);
+            ((TestAuthenticationService) authService)
+                    .setUsername(TestAuthenticationService.INTERNAL_ADMIN);
         }
 
         Auth conf = rightsService.getConfiguration();
@@ -124,21 +125,25 @@ public class RightManagementTest extends CommandServiceProvider {
         Organization organization = createOrganization();
         PersonIso person = createIsoPerson(organization);
         createUserConfiguration(TEST_USER_LOGIN, person, true);
-        createCustomConfigurationProfile(TEST_USER_LOGIN, RIGHTMANAGEMENT_TEST_PROFILE, noDeleteProfileActionIds);
+        createCustomConfigurationProfile(TEST_USER_LOGIN, RIGHTMANAGEMENT_TEST_PROFILE,
+                noDeleteProfileActionIds);
 
         if (authService instanceof TestAuthenticationService) {
             ((TestAuthenticationService) authService).setUsername(TEST_USER_LOGIN);
         }
-        assertEquals("The configured user need to be the testuser, setUpWrong.", TEST_USER_LOGIN, authService.getUsername());
+        assertEquals("The configured user need to be the testuser, setUpWrong.", TEST_USER_LOGIN,
+                authService.getUsername());
 
         List<Userprofile> userprofiles = rightsService.getUserprofile(TEST_USER_LOGIN);
         assertEquals("Only one Profile need to be active, setUpWrong.", 1, userprofiles.size());
 
         Userprofile userprofile = userprofiles.get(0);
         List<ProfileRef> profileRefs = userprofile.getProfileRef();
-        assertEquals("Only one ProfileReference need to be active, setUpWrong.", 1, profileRefs.size());
+        assertEquals("Only one ProfileReference need to be active, setUpWrong.", 1,
+                profileRefs.size());
         ProfileRef profileRef = profileRefs.get(0);
-        assertEquals("Not the right profile active, setUpWrong.", RIGHTMANAGEMENT_TEST_PROFILE, profileRef.getName());
+        assertEquals("Not the right profile active, setUpWrong.", RIGHTMANAGEMENT_TEST_PROFILE,
+                profileRef.getName());
 
         RemoveElement<Organization> removeElement = new RemoveElement<>(organization);
         commandService.executeCommand(removeElement);
@@ -156,21 +161,25 @@ public class RightManagementTest extends CommandServiceProvider {
         Organization organization = createOrganization();
         PersonIso person = createIsoPerson(organization);
         createUserConfiguration(TEST_USER_LOGIN, person, true);
-        createCustomConfigurationProfile(TEST_USER_LOGIN, RIGHTMANAGEMENT_TEST_PROFILE, ActionRightIDs.DELETEITEM);
+        createCustomConfigurationProfile(TEST_USER_LOGIN, RIGHTMANAGEMENT_TEST_PROFILE,
+                ActionRightIDs.DELETEITEM);
 
         if (authService instanceof TestAuthenticationService) {
             ((TestAuthenticationService) authService).setUsername(TEST_USER_LOGIN);
         }
-        assertEquals("The configured user need to be the testuser, setUpWrong.", TEST_USER_LOGIN, authService.getUsername());
+        assertEquals("The configured user need to be the testuser, setUpWrong.", TEST_USER_LOGIN,
+                authService.getUsername());
 
         List<Userprofile> userprofiles = rightsService.getUserprofile(TEST_USER_LOGIN);
         assertEquals("Only one Profile need to be active, setUpWrong.", 1, userprofiles.size());
 
         Userprofile userprofile = userprofiles.get(0);
         List<ProfileRef> profileRefs = userprofile.getProfileRef();
-        assertEquals("Only one ProfileReference need to be active, setUpWrong.", 1, profileRefs.size());
+        assertEquals("Only one ProfileReference need to be active, setUpWrong.", 1,
+                profileRefs.size());
         ProfileRef profileRef = profileRefs.get(0);
-        assertEquals("Not the right profile active, setUpWrong.", RIGHTMANAGEMENT_TEST_PROFILE, profileRef.getName());
+        assertEquals("Not the right profile active, setUpWrong.", RIGHTMANAGEMENT_TEST_PROFILE,
+                profileRef.getName());
 
         RemoveElement<Organization> removeElement = new RemoveElement<>(organization);
         commandService.executeCommand(removeElement);
@@ -195,16 +204,19 @@ public class RightManagementTest extends CommandServiceProvider {
         if (authService instanceof TestAuthenticationService) {
             ((TestAuthenticationService) authService).setUsername(DEFAULT_USER_LOGIN);
         }
-        assertEquals("The configured user need to be the testuser, setUpWrong.", DEFAULT_USER_LOGIN, authService.getUsername());
+        assertEquals("The configured user need to be the testuser, setUpWrong.", DEFAULT_USER_LOGIN,
+                authService.getUsername());
 
         List<Userprofile> userprofiles = rightsService.getUserprofile(DEFAULT_USER_LOGIN);
         assertEquals("One Profiles need to be active, setUpWrong.", 1, userprofiles.size());
 
         Userprofile userprofile = userprofiles.get(0);
         List<ProfileRef> profileRefs = userprofile.getProfileRef();
-        assertEquals("Only one ProfileReference need to be active, setUpWrong.", 1, profileRefs.size());
+        assertEquals("Only one ProfileReference need to be active, setUpWrong.", 1,
+                profileRefs.size());
         ProfileRef profileRef = profileRefs.get(0);
-        assertEquals("Not the right profile active, setUpWrong.", "user-default-profile", profileRef.getName());
+        assertEquals("Not the right profile active, setUpWrong.", "user-default-profile",
+                profileRef.getName());
 
         RemoveElement<Organization> removeElement = new RemoveElement<>(organization);
         commandService.executeCommand(removeElement);
@@ -223,7 +235,8 @@ public class RightManagementTest extends CommandServiceProvider {
     public void testAdminUserAllowedToDelete() throws CommandException {
         Organization organization = createOrganization();
 
-        assertEquals("The configured user need to be the adminuser, setUpWrong.", TestAuthenticationService.INTERNAL_ADMIN, authService.getUsername());
+        assertEquals("The configured user need to be the adminuser, setUpWrong.",
+                TestAuthenticationService.INTERNAL_ADMIN, authService.getUsername());
 
         RemoveElement<Organization> removeElement = new RemoveElement<>(organization);
         commandService.executeCommand(removeElement);
@@ -242,7 +255,8 @@ public class RightManagementTest extends CommandServiceProvider {
      *            an array of action set to the profile
      * 
      */
-    protected void createCustomConfigurationProfile(String userLogin, String profileName, String... actionList) {
+    protected void createCustomConfigurationProfile(String userLogin, String profileName,
+            String... actionList) {
         Auth conf = rightsService.getConfiguration();
         List<Profile> profileList = conf.getProfiles().getProfile();
         Profile profile = new Profile();
@@ -272,11 +286,13 @@ public class RightManagementTest extends CommandServiceProvider {
      *            the login for the user
      * @param personIso
      *            the person object to create the configuration for
-     * @param deleteUserDefaultGroup should the default group removed from the configuration
+     * @param deleteUserDefaultGroup
+     *            should the default group removed from the configuration
      * @return the created configuration should the default-usergroup removed
      *         for the user
      */
-    protected Configuration createUserConfiguration(String userLogIn, PersonIso personIso, boolean deleteUserDefaultGroup) {
+    protected Configuration createUserConfiguration(String userLogIn, PersonIso personIso,
+            boolean deleteUserDefaultGroup) {
         CreateConfiguration createConfiguration = new CreateConfiguration(personIso);
         try {
             createConfiguration = commandService.executeCommand(createConfiguration);
@@ -288,11 +304,13 @@ public class RightManagementTest extends CommandServiceProvider {
         if (deleteUserDefaultGroup)
             configuration.deleteRole(USER_DEFAULT_GROUP);
 
-        SaveConfiguration<Configuration> saveConfiguration = new SaveConfiguration<Configuration>(configuration, false);
+        SaveConfiguration<Configuration> saveConfiguration = new SaveConfiguration<Configuration>(
+                configuration, false);
         try {
             saveConfiguration = commandService.executeCommand(saveConfiguration);
         } catch (CommandException e) {
-            LOG.error("Error while saving username in configuration for user: " + configuration.getUser(), e);
+            LOG.error("Error while saving username in configuration for user: "
+                    + configuration.getUser(), e);
         }
         return saveConfiguration.getElement();
     }
@@ -305,7 +323,8 @@ public class RightManagementTest extends CommandServiceProvider {
     protected PersonIso createIsoPerson(Organization organization) throws CommandException {
         CnATreeElement group = organization.getGroup(PersonGroup.TYPE_ID);
 
-        CreateElement<PersonIso> createElement = new CreateElement<>(group, PersonIso.class, "testPerson1");
+        CreateElement<PersonIso> createElement = new CreateElement<>(group, PersonIso.class,
+                "testPerson1");
         commandService.executeCommand(createElement);
         PersonIso personIso = createElement.getNewElement();
         personIso.setName("TestPersonName");
@@ -319,12 +338,16 @@ public class RightManagementTest extends CommandServiceProvider {
      * 
      * @param removeElement
      */
-    private void satisfyRemoveOperation(RemoveElement<Organization> removeElement, CnATreeElement element) {
+    private void satisfyRemoveOperation(RemoveElement<Organization> removeElement,
+            CnATreeElement element) {
         String uuid = element.getUuid();
-//        assertNull("Entity need to be null, as it was deleted.", element.getEntity());
-// TODO : enable this assert when deletion of the entity works again
-        assertEquals("Only one element should be changed.", 1, removeElement.getChangedElements().size());
-        assertNull("Changed Element should be null, as it was deleted from the database.", removeElement.getChangedElements().get(0));
+        // assertNull("Entity need to be null, as it was deleted.",
+        // element.getEntity());
+        // TODO : enable this assert when deletion of the entity works again
+        assertEquals("Only one element should be changed.", 1,
+                removeElement.getChangedElements().size());
+        assertNull("Changed Element should be null, as it was deleted from the database.",
+                removeElement.getChangedElements().get(0));
 
         LoadElementByUuid<CnATreeElement> loadElementByUuid = null;
         try {
@@ -333,7 +356,8 @@ public class RightManagementTest extends CommandServiceProvider {
         } catch (Exception e) {
             assertTrue(e.getClass().equals(CommandException.class));
         }
-        assertNull("Loaded element should be null, as it was deleted.", loadElementByUuid.getElement());
+        assertNull("Loaded element should be null, as it was deleted.",
+                loadElementByUuid.getElement());
     }
 
 }

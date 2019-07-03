@@ -444,4 +444,5 @@ Import-Package: com.google.gson;version="2.6.2",
  org.springframework.scheduling.quartz,
  org.springframework.ws.server.endpoint,
  org.springframework.xml.transform,
+ sernet.gs.ui.rcp.main.bsi.model,
  sernet.verinice.interfaces

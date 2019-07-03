@@ -1,0 +1,50 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Context-Type: org.eclipse.rcptt.ctx.ecl
+Element-Name: reports
+Element-Type: context
+Element-Version: 2.0
+Id: _tlZuIIx1Eei2UKUDmonytQ
+Runtime-Version: 2.4.1.201903190000
+Save-Time: 5/23/19 12:55 PM
+
+------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
+Content-Type: text/ecl
+Entry-Name: .ecl.context
+
+global [val reportdir [concat [get-java-property basepath] [get-java-property "file.separator"] "reports"]]
+
+proc "gen-rep-com" [val report] [val view] [val object] [val quallifier ""] {
+	get-view $view | get-tree | select $object | get-menu -path "Erzeuge Report..." | click
+	log [concat "create report: " $report]
+	try {
+		with [get-window Report] {
+			get-group "" | get-combo -after [get-label "Report auswählen:"] | select $report
+			set-dialog-result File [concat $reportdir [get-java-property "file.separator"] $quallifier $report ".pdf"]
+			get-group "" -index 0 | get-button "Auswählen..." | click
+			get-button OK | click
+		}
+		get-window "Report erfolgreich erzeugt" | get-button OK | click
+	} -catch {
+		log [concat "ERROR configuring report creation dialog for " $report " on " $object]
+		try {
+			get-window Report | get-button Abbrechen | click
+		} -catch {}
+	}
+}
+
+/* enable the logging for the reporting * */
+proc "enable-reporting-log" {
+	get-menu -path "Bearbeiten/Einstellungen..." | click
+	with [get-window Benutzervorgaben] {
+		get-tree | select Reports
+		if [not[get-window Benutzervorgaben | get-button "Reportlogging benutzen" | get-property selected -raw ] ]{
+		get-window Benutzervorgaben | get-button "Reportlogging benutzen" | check
+		get-window Benutzervorgaben | get-combo -after [get-label "Log-Level"] | select Alles
+		set-dialog-result Folder [concat $basedir [get-java-property "file.separator"] "log"]
+		get-button "Durchsuchen..." | click
+		}
+		get-button "Anwenden und Schließen" | click
+	}
+}
+------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998--

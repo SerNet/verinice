@@ -153,9 +153,11 @@ public class CopyLinksCommand extends GenericCommand {
         }
 
         if (linkInformation.direction == Direction.FROM_COPIED_ELEMENT) {
-            createLink(copyTargetUUID, otherElementUUID, linkInformation.type);
+            createLink(copyTargetUUID, otherElementUUID, linkInformation.type,
+                    linkInformation.comment);
         } else {
-            createLink(otherElementUUID, copyTargetUUID, linkInformation.type);
+            createLink(otherElementUUID, copyTargetUUID, linkInformation.type,
+                    linkInformation.comment);
         }
     }
 
@@ -167,9 +169,9 @@ public class CopyLinksCommand extends GenericCommand {
         getDao().clear();
     }
 
-    private void createLink(String sourceUuid, String destUuid, String type) {
+    private void createLink(String sourceUuid, String destUuid, String type, String comment) {
         CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<>(sourceUuid,
-                destUuid, type);
+                destUuid, type, comment);
         try {
             getCommandService().executeCommand(createLink);
         } catch (CommandException e) {
@@ -188,23 +190,26 @@ public class CopyLinksCommand extends GenericCommand {
             String dependantUUID = (String) entry[0];
             String dependencyUUID = (String) entry[1];
             String typeId = (String) entry[2];
+            String comment = (String) entry[3];
             if (copiedElementUUIDs.contains(dependantUUID)) {
-                cacheLink(dependantUUID, dependencyUUID, typeId, Direction.FROM_COPIED_ELEMENT);
+                cacheLink(dependantUUID, dependencyUUID, typeId, Direction.FROM_COPIED_ELEMENT,
+                        comment);
             } else {
-                cacheLink(dependencyUUID, dependantUUID, typeId, Direction.TO_COPIED_ELEMENT);
+                cacheLink(dependencyUUID, dependantUUID, typeId, Direction.TO_COPIED_ELEMENT,
+                        comment);
             }
         }
     }
 
     public void cacheLink(String copiedElementUUID, String destinationUUID, String type,
-            Direction direction) {
+            Direction direction, String comment) {
         List<LinkInformation> destinations = existingLinksByCopiedElementUUID
                 .get(copiedElementUUID);
         if (destinations == null) {
             destinations = new LinkedList<>();
             existingLinksByCopiedElementUUID.put(copiedElementUUID, destinations);
         }
-        destinations.add(new LinkInformation(destinationUUID, type, direction));
+        destinations.add(new LinkInformation(destinationUUID, type, direction, comment));
     }
 
     private IBaseDao<CnATreeElement, Serializable> getDao() {
@@ -224,7 +229,7 @@ public class CopyLinksCommand extends GenericCommand {
         @Override
         public Object doInHibernate(Session session) throws SQLException {
             Query query = session
-                    .createQuery("select l.dependant.uuid,l.dependency.uuid,l.id.typeId "
+                    .createQuery("select l.dependant.uuid,l.dependency.uuid,l.id.typeId,l.comment "
                             + "from sernet.verinice.model.common.CnALink l "
                             + "where l.dependant.uuid in (:sourceUUIDs) or l.dependency.uuid in (:sourceUUIDs)");
             query.setParameterList("sourceUUIDs", sourceUUIDs);
@@ -237,15 +242,18 @@ public class CopyLinksCommand extends GenericCommand {
      */
     private static final class LinkInformation {
 
-        LinkInformation(String destinationUUID, String type, Direction direction) {
+        LinkInformation(String destinationUUID, String type, Direction direction, String comment) {
             this.otherElementUUID = destinationUUID;
             this.type = type;
             this.direction = direction;
+            this.comment = comment;
         }
 
         private final String otherElementUUID;
         private final String type;
         private final Direction direction;
+        private final String comment;
+
     }
 
     private enum Direction {

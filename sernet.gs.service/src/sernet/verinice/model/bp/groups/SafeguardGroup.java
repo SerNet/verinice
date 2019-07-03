@@ -22,6 +22,7 @@ package sernet.verinice.model.bp.groups;
 import java.util.Collection;
 
 import sernet.hui.common.connect.IIdentifiableElement;
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bsi.TagHelper;
@@ -32,9 +33,10 @@ import sernet.verinice.model.iso27k.Group;
  * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
-public class SafeguardGroup extends Group<Safeguard> implements IBpGroup, IIdentifiableElement {
+public class SafeguardGroup extends Group<Safeguard>
+        implements IBpGroup, IIdentifiableElement, ITaggableElement {
     
-    private static final long serialVersionUID = -6689926582876183791L;
+    private static final long serialVersionUID = -6689926582876183790L;
     
     public static final String TYPE_ID = "bp_safeguard_group";
     

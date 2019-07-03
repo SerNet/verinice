@@ -44,6 +44,7 @@ import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
 import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
+import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
 
 /**
  * Tests the import and export of SNCA properties of type references.
@@ -72,9 +73,7 @@ import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
  * The dotted lines are the references.
  * </p>
  * 
- * <h2>
- * The test algorithm works as follows:
- * </h2>
+ * <h2>The test algorithm works as follows:</h2>
  * 
  * <ol>
  * <li>Set the reference by hand (dotted lines).</li>
@@ -88,24 +87,25 @@ import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
  *
  */
 public class ExportAndImportReferencesTest extends BeforeEachVNAImportHelper {
-    
+
     private static final String SOURCE_ELEMENT_EXTERNAL_ID = "ENTITY_262147";
     private static final String IT_VERBUND_1_EXTERNAL_ID = "ENTITY_262144";
     private static final String TARGET_PERSON_1_EXTERNAL_ID = "ENTITY_262145";
     private static final String TARGET_PERSON_2_EXTERNAL_ID = "ENTITY_262146";
-    
+
     private static final String SERVER_ANWENDER_LINK = "server_anwender_link";
-    
-    private static final String SOURCE_ID = "b3305b";   
-   
+
+    private static final String SOURCE_ID = "b3305b";
+
     private static final String VNA_FILENAME_WITH_COMPLETE_REFERENCES = "export_import_references_test.vna";
-   
+
     private static final String IMPORT_REFERENCES_PREFIX = "[import references]";
     private static final String EXPORT_REFERENCES_PREFIX = "[export references]";
     private final Logger LOG = Logger.getLogger(ExportAndImportReferencesTest.class);
 
     @Test
-    public void testExportAndImportOfHuiReferences() throws CommandException, IOException, SyncParameterException {
+    public void testExportAndImportOfHuiReferences()
+            throws CommandException, IOException, SyncParameterException {
 
         /** Set references */
         CnATreeElement itVerbund1 = loadElement(SOURCE_ID, IT_VERBUND_1_EXTERNAL_ID);
@@ -122,7 +122,8 @@ public class ExportAndImportReferencesTest extends BeforeEachVNAImportHelper {
         Integer targetPerson2EntityId = targetPerson2.getEntity().getDbId();
 
         Entity sourceEntity = source.getEntity();
-        PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(source.getTypeId(), SERVER_ANWENDER_LINK);
+        PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(source.getTypeId(),
+                SERVER_ANWENDER_LINK);
 
         sourceEntity.createNewProperty(propertyType, String.valueOf(targetPerson1EntityId));
         sourceEntity.createNewProperty(propertyType, String.valueOf(targetPerson2EntityId));
@@ -134,9 +135,8 @@ public class ExportAndImportReferencesTest extends BeforeEachVNAImportHelper {
         List<CnATreeElement> toExport = new ArrayList<>();
         toExport.add(itVerbund1);
         ExportCommand exportCommand = new ExportCommand(toExport, SOURCE_ID, true);
-        String filePath = FilenameUtils.concat(
-                System.getProperty(IVeriniceConstants.JAVA_IO_TMPDIR),
-                "export-test.vna");
+        String filePath = FilenameUtils
+                .concat(System.getProperty(IVeriniceConstants.JAVA_IO_TMPDIR), "export-test.vna");
         exportCommand.setFilePath(filePath);
 
         LOG.info(EXPORT_REFERENCES_PREFIX + " export vna file " + filePath);
@@ -146,7 +146,7 @@ public class ExportAndImportReferencesTest extends BeforeEachVNAImportHelper {
         removeITVerbund(itVerbund1);
 
         LOG.info(IMPORT_REFERENCES_PREFIX + " from file " + filePath);
-        importFile(filePath, getSyncParameter());
+        VNAImportHelper.importFile(filePath, getSyncParameter());
 
         LOG.info(IMPORT_REFERENCES_PREFIX + " delete file " + filePath);
         File vnaArchive = new File(filePath);
@@ -159,24 +159,33 @@ public class ExportAndImportReferencesTest extends BeforeEachVNAImportHelper {
         CnATreeElement targetPerson2Imported = loadElement(SOURCE_ID, TARGET_PERSON_2_EXTERNAL_ID);
 
         Entity sourceEntityImported = sourceImported.getEntity();
-        PropertyType propertyTypeImported = HUITypeFactory.getInstance().getPropertyType(source.getTypeId(), SERVER_ANWENDER_LINK);
+        PropertyType propertyTypeImported = HUITypeFactory.getInstance()
+                .getPropertyType(source.getTypeId(), SERVER_ANWENDER_LINK);
 
         int targetPerson1ImportedEntityId = targetPerson1Imported.getEntity().getDbId();
         int targetPerson2ImportedEntityId = targetPerson2Imported.getEntity().getDbId();
 
         PropertyList properties = sourceEntityImported.getProperties(propertyTypeImported.getId());
 
-        Assert.assertFalse(IMPORT_REFERENCES_PREFIX + " the list of referneces may not be null.", properties.getProperties() == null);
-        Assert.assertFalse(IMPORT_REFERENCES_PREFIX + " the list of references may not be empty.", properties.getProperties().isEmpty());
+        Assert.assertFalse(IMPORT_REFERENCES_PREFIX + " the list of referneces may not be null.",
+                properties.getProperties() == null);
+        Assert.assertFalse(IMPORT_REFERENCES_PREFIX + " the list of references may not be empty.",
+                properties.getProperties().isEmpty());
         int numberOfReferences = 2;
-        Assert.assertTrue(IMPORT_REFERENCES_PREFIX + " should only conatain 2 values", properties.getProperties().size() == numberOfReferences);
+        Assert.assertTrue(IMPORT_REFERENCES_PREFIX + " should only conatain 2 values",
+                properties.getProperties().size() == numberOfReferences);
 
         for (Property prop : properties.getProperties()) {
             int entityDbId = prop.getNumericPropertyValue();
-            Assert.assertTrue(IMPORT_REFERENCES_PREFIX + " the reference " + entityDbId + " was not correctly imported", validateReferences(targetPerson1ImportedEntityId, targetPerson2ImportedEntityId, entityDbId));
+            Assert.assertTrue(
+                    IMPORT_REFERENCES_PREFIX + " the reference " + entityDbId
+                            + " was not correctly imported",
+                    validateReferences(targetPerson1ImportedEntityId, targetPerson2ImportedEntityId,
+                            entityDbId));
         }
 
-        LOG.info(IMPORT_REFERENCES_PREFIX + "delete the imported it-verbund" + itverbundImported.getTitle());
+        LOG.info(IMPORT_REFERENCES_PREFIX + "delete the imported it-verbund"
+                + itverbundImported.getTitle());
         removeITVerbund(itverbundImported);
     }
 
@@ -185,8 +194,10 @@ public class ExportAndImportReferencesTest extends BeforeEachVNAImportHelper {
         commandService.executeCommand(removeCommand);
     }
 
-    private boolean validateReferences(int targetPerson1ImportedEntityId, int targetPerson2ImportedEntityId, int numericPropertyValue) {
-        return numericPropertyValue == targetPerson1ImportedEntityId || numericPropertyValue == targetPerson2ImportedEntityId;
+    private boolean validateReferences(int targetPerson1ImportedEntityId,
+            int targetPerson2ImportedEntityId, int numericPropertyValue) {
+        return numericPropertyValue == targetPerson1ImportedEntityId
+                || numericPropertyValue == targetPerson2ImportedEntityId;
     }
 
     /*
@@ -211,6 +222,7 @@ public class ExportAndImportReferencesTest extends BeforeEachVNAImportHelper {
      */
     @Override
     protected SyncParameter getSyncParameter() throws SyncParameterException {
-        return new SyncParameter(true, true, true, false, SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
+        return new SyncParameter(true, true, true, false,
+                SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
     }
 }

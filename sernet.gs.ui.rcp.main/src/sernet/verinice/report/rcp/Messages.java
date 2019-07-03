@@ -89,6 +89,7 @@ public class Messages extends NLS {
     public static String ReportDepositView_7;
     public static String ReportDepositView_8;
     public static String ReportDepositView_9;
+    public static String ErrorOpeningGenereratedReport;
 
     static {
         // initialize resource bundle

@@ -27,23 +27,22 @@ import org.eclipse.swt.dnd.DragSourceListener;
 
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionModelingTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.VeriniceElementTransfer;
-import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 
 /**
- * This DragSourceListener class selects modules for the modeling process
- * of IT base protection while one or more modules
- * are dragged from sernet.verinice.rcp.catalog.CatalogView 
- * and dropped on an element in BaseProtectionView.
+ * This DragSourceListener class selects modules for the modeling process of IT
+ * base protection while one or more modules are dragged from
+ * {@link sernet.verinice.rcp.catalog.CatalogView} and dropped on an element in
+ * BaseProtectionView.
  * 
- * @see BbModelingDropPerformer
- * @see MetaDropAdapter
+ * @see sernet.verinice.bp.rcp.BbModelingDropPerformer
+ * @see sernet.verinice.iso27k.rcp.action.MetaDropAdapter
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
 public class CatalogDragListener implements DragSourceListener {
 
     private static final Logger log = Logger.getLogger(CatalogDragListener.class);
-    
+
     private TreeViewer treeViewer;
 
     public CatalogDragListener(TreeViewer viewer) {
@@ -61,9 +60,10 @@ public class CatalogDragListener implements DragSourceListener {
             if (log.isDebugEnabled()) {
                 log.debug("Can not start dragging. No element in tree is selected.");
             }
-            event.doit = false;      
+            event.doit = false;
         } else {
-            boolean isValid = BaseProtectionModelingTransfer.isDraggedDataValid(getTreeSelection().toArray());
+            boolean isValid = BaseProtectionModelingTransfer
+                    .isDraggedDataValid(getTreeSelection().toArray());
             if (log.isDebugEnabled()) {
                 log.debug("Dragged data validation state: " + isValid);
             }
@@ -105,7 +105,7 @@ public class CatalogDragListener implements DragSourceListener {
     protected VeriniceElementTransfer getTransfer() {
         return BaseProtectionModelingTransfer.getInstance();
     }
-    
+
     private void logData(Object[] dataArray) {
         for (Object object : dataArray) {
             log.debug(object);

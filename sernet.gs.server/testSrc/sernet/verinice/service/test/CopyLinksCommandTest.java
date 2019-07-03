@@ -35,8 +35,8 @@ import sernet.verinice.model.bp.groups.RoomGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CopyLinksCommand;
-import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.CopyLinksCommand.CopyLinksMode;
+import sernet.verinice.service.commands.RemoveElement;
 
 public class CopyLinksCommandTest extends AbstractModernizedBaseProtection {
 
@@ -67,7 +67,8 @@ public class CopyLinksCommandTest extends AbstractModernizedBaseProtection {
         assertEquals(0, safeguard2.getLinksUp().size());
 
         CopyLinksCommand copyLinksCommand = new CopyLinksCommand(
-                Collections.singletonMap(safeguard1.getUuid(), safeguard2.getUuid()), CopyLinksMode.ALL);
+                Collections.singletonMap(safeguard1.getUuid(), safeguard2.getUuid()),
+                CopyLinksMode.ALL);
         commandService.executeCommand(copyLinksCommand);
         requirement1 = reloadElement(requirement1);
         safeguard1 = reloadElement(safeguard1);
@@ -94,7 +95,8 @@ public class CopyLinksCommandTest extends AbstractModernizedBaseProtection {
         assertEquals(0, requirement2.getLinksDown().size());
 
         CopyLinksCommand copyLinksCommand = new CopyLinksCommand(
-                Collections.singletonMap(requirement1.getUuid(), requirement2.getUuid()), CopyLinksMode.ALL);
+                Collections.singletonMap(requirement1.getUuid(), requirement2.getUuid()),
+                CopyLinksMode.ALL);
         commandService.executeCommand(copyLinksCommand);
         requirement1 = reloadElement(requirement1);
         safeguard1 = reloadElement(safeguard1);
@@ -129,6 +131,37 @@ public class CopyLinksCommandTest extends AbstractModernizedBaseProtection {
         assertEquals(1, room2.getLinksDown().size());
         assertEquals(1, room2.getLinksUp().size());
         assertEquals(room2, room2.getLinksDown().iterator().next().getDependency());
+    }
+
+    @Test
+    public void copyLinkWithComment() throws Exception {
+        network = createNewBPOrganization();
+        SafeguardGroup safeguards = createGroup(network, SafeguardGroup.class);
+        BpRequirementGroup requirements = createGroup(network, BpRequirementGroup.class);
+        BpRequirement requirement1 = createBpRequirement(requirements);
+        Safeguard safeguard1 = createSafeguard(safeguards);
+        createLink(requirement1, safeguard1, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD,
+                "Important link");
+        Safeguard safeguard2 = createSafeguard(safeguards);
+        requirement1 = reloadElement(requirement1);
+        safeguard1 = reloadElement(safeguard1);
+        safeguard2 = reloadElement(safeguard2);
+        assertEquals(1, requirement1.getLinksDown().size());
+        assertEquals(1, safeguard1.getLinksUp().size());
+        assertEquals(0, safeguard2.getLinksUp().size());
+
+        CopyLinksCommand copyLinksCommand = new CopyLinksCommand(
+                Collections.singletonMap(safeguard1.getUuid(), safeguard2.getUuid()),
+                CopyLinksMode.ALL);
+        commandService.executeCommand(copyLinksCommand);
+        requirement1 = reloadElement(requirement1);
+        safeguard1 = reloadElement(safeguard1);
+        safeguard2 = reloadElement(safeguard2);
+        assertEquals(2, requirement1.getLinksDown().size());
+        assertEquals(1, safeguard1.getLinksUp().size());
+        assertEquals(1, safeguard2.getLinksUp().size());
+        assertEquals(safeguard1.getLinksUp().iterator().next().getComment(),
+                safeguard2.getLinksUp().iterator().next().getComment());
     }
 
 }

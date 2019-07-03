@@ -60,7 +60,6 @@ public class LinkTableElementComboViewer extends LinkTableComboViewer {
             LinkTableOperationType operationType, LinkTableColumn ltrParent, Composite parent,
             boolean isFirstElement) {
         super(leftCombo, relatedID, operationType, ltrParent, parent);
-
         if (isFirstElement || isDefault) {
             selectFirstElement(!isDefault);
         }
@@ -73,7 +72,6 @@ public class LinkTableElementComboViewer extends LinkTableComboViewer {
      */
     @Override
     public LinkTableComboViewer createChild(Composite parent) {
-
         if (operationType == LinkTableOperationType.PROPERTY) {
             return null;
         } else if (operationType == LinkTableOperationType.RELATION) {
@@ -88,7 +86,6 @@ public class LinkTableElementComboViewer extends LinkTableComboViewer {
             return new LinkTableOperationTypeComboViewer(this, getCurrentSelection(), operationType,
                     ltrColumn, parent);
         }
-
     }
 
     /*
@@ -121,12 +118,10 @@ public class LinkTableElementComboViewer extends LinkTableComboViewer {
             default:
                 throw new IllegalArgumentException("not supported type " + operationType);
             }
-
             if (typeIDs.length == 0) {
                 typeIDs = new String[] { operationType.getDefaultMessage() };
                 isDefault = true;
             }
-
         }
         return sortElementsByLabel(typeIDs);
     }
@@ -137,7 +132,6 @@ public class LinkTableElementComboViewer extends LinkTableComboViewer {
     @Override
     public LinkTableComboViewer createCopy(LinkTableComboViewer leftCombo,
             LinkTableColumn ltrParent, Composite newParent) {
-
         return new LinkTableElementComboViewer(leftCombo, relatedID, operationType, ltrParent,
                 newParent, false);
     }
@@ -155,7 +149,6 @@ public class LinkTableElementComboViewer extends LinkTableComboViewer {
         if (rightCombo != null) {
             rightCombo.relatedID = getCurrentSelection();
         }
-
     }
 
     /*
@@ -185,7 +178,6 @@ public class LinkTableElementComboViewer extends LinkTableComboViewer {
             sb.append(typeLabel).append(" (").append(domainLabel).append(": ").append(typeId)
                     .append(")");
         }
-
         return sb.toString();
     }
 
@@ -205,10 +197,8 @@ public class LinkTableElementComboViewer extends LinkTableComboViewer {
      */
     @Override
     protected void select(String string) {
-
         ISelection selection = new StructuredSelection(string);
         setSelection(selection);
-
     }
 
     /*
@@ -217,7 +207,6 @@ public class LinkTableElementComboViewer extends LinkTableComboViewer {
      */
     @Override
     protected Set<String> doGetAllRelationTypes() {
-
         HashSet<String> relationIDs = new HashSet<>();
         if (LinkTableOperationType.isRelation(operationType)) {
             relationIDs.addAll(
@@ -225,5 +214,4 @@ public class LinkTableElementComboViewer extends LinkTableComboViewer {
         }
         return relationIDs;
     }
-
 }

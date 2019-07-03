@@ -361,12 +361,6 @@ public final class CnAElementHome {
         cnAElement.setEntity(refreshedElement.getEntity());
     }
 
-    public List<ITVerbund> getItverbuende() throws CommandException {
-        LoadCnAElementByType<ITVerbund> command = new LoadCnAElementByType<>(ITVerbund.class);
-        command = getCommandService().executeCommand(command);
-        return command.getElements();
-    }
-
     public List<Person> getPersonen() throws CommandException {
         LoadCnAElementByType<Person> command = new LoadCnAElementByType<>(Person.class);
         command = getCommandService().executeCommand(command);
@@ -475,6 +469,12 @@ public final class CnAElementHome {
             }
 
             CnATreeElement elemntWithPermissions = Retriever.checkRetrievePermissions(cte);
+            if (elemntWithPermissions == null) {
+                if (log.isInfoEnabled()) {
+                    log.info("Element " + cte + " not found when checking write permissions");
+                }
+                return false;
+            }
             for (Permission p : elemntWithPermissions.getPermissions()) {
                 if (p.isWriteAllowed() && roles.contains(p.getRole())) {
                     return true;

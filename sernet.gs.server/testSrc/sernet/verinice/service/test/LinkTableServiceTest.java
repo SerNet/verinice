@@ -52,12 +52,13 @@ import sernet.verinice.service.linktable.LinkTableConfiguration;
 import sernet.verinice.service.linktable.LinkTableService;
 import sernet.verinice.service.linktable.generator.GraphLinkedTableCreator;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
+import sernet.verinice.service.test.helper.vnaimport.BeforeAllVNAImportHelper;
 import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class LinkTableServiceTest extends BeforeEachVNAImportHelper {
+public class LinkTableServiceTest extends BeforeAllVNAImportHelper {
 
     private static final Logger LOG = Logger.getLogger(LinkTableServiceTest.class);
 
@@ -66,52 +67,34 @@ public class LinkTableServiceTest extends BeforeEachVNAImportHelper {
 
     private static final String SOURCE_ID = "dm_20160303";
     private static final String EXT_ID_ORG = "ENTITY_37737";
-    
-    private static String ALIAS1 = "auditgroup-name"; 
-    private static String ALIAS2 = "person_relation"; 
-    private static String ALIAS3 = "controlPerson"; 
 
-    @Resource(name="cnaTreeElementDao")
+    private static String ALIAS1 = "auditgroup-name";
+    private static String ALIAS2 = "person_relation";
+    private static String ALIAS3 = "controlPerson";
+
+    @Resource(name = "cnaTreeElementDao")
     protected IBaseDao<CnATreeElement, Long> elementDao;
 
     ILinkTableService service = new LinkTableService();
 
-    
-    private static final String[] COLUMN_PATHES_ARRAY  = { 
-            "auditgroup>audit.audit_name AS " + ALIAS1, 
-            "incident_scenario/threat.threat_name", 
-            "asset:person-iso.person-iso_name AS " + ALIAS2, 
-            "samt_topic<controlgroup.controlgroup_name", 
-            "threat.threat_name", 
-            "incident_scenario/asset/control/person-iso.person-iso_name AS " + ALIAS3 
-    }; 
- 
- 
-    private static final String[] EXPECTED_OBJECT_TYPES = { 
-      "asset", 
-      "audit", 
-      "auditgroup", 
-      "control", 
-      "controlgroup", 
-      "incident_scenario", 
-      "person-iso", 
-      "samt_topic", 
-      "threat" 
-    }; 
-     
-    private static final String[] EXPECTED_PROPERTY_TYPES = { 
-            "audit_name", 
-            "controlgroup_name", 
-            "person-iso_name", 
-            "threat_name" 
-          }; 
- 
-    private static final Set<String> COLUMN_PATHES; 
- 
-    static { 
-        COLUMN_PATHES = new LinkedHashSet<>(Arrays.asList(COLUMN_PATHES_ARRAY)); 
-    } 
-    
+    private static final String[] COLUMN_PATHES_ARRAY = {
+            "auditgroup>audit.audit_name AS " + ALIAS1, "incident_scenario/threat.threat_name",
+            "asset:person-iso.person-iso_name AS " + ALIAS2,
+            "samt_topic<controlgroup.controlgroup_name", "threat.threat_name",
+            "incident_scenario/asset/control/person-iso.person-iso_name AS " + ALIAS3 };
+
+    private static final String[] EXPECTED_OBJECT_TYPES = { "asset", "audit", "auditgroup",
+            "control", "controlgroup", "incident_scenario", "person-iso", "samt_topic", "threat" };
+
+    private static final String[] EXPECTED_PROPERTY_TYPES = { "audit_name", "controlgroup_name",
+            "person-iso_name", "threat_name" };
+
+    private static final Set<String> COLUMN_PATHES;
+
+    static {
+        COLUMN_PATHES = new LinkedHashSet<>(Arrays.asList(COLUMN_PATHES_ARRAY));
+    }
+
     @Test
     public void testGetElementTypes() {
         LinkTableConfiguration.Builder builder = new LinkTableConfiguration.Builder();
@@ -121,7 +104,7 @@ public class LinkTableServiceTest extends BeforeEachVNAImportHelper {
         LinkTableConfiguration configuration = builder.build();
         checkObjectTypes(new LinkedList<>(configuration.getObjectTypeIds()));
     }
-    
+
     @Test
     public void testGetPropertyTypes() {
         LinkTableConfiguration.Builder builder = new LinkTableConfiguration.Builder();
@@ -131,29 +114,25 @@ public class LinkTableServiceTest extends BeforeEachVNAImportHelper {
         LinkTableConfiguration configuration = builder.build();
         checkPropertyTypes(new LinkedList<>(configuration.getPropertyTypeIds()));
     }
-    
-    private void checkObjectTypes(List<String> objectTypeIds) { 
-        Collections.sort(objectTypeIds); 
-        assertArrayEquals(EXPECTED_OBJECT_TYPES, objectTypeIds.toArray()); 
-    } 
-     
-    private void checkPropertyTypes(List<String> propertyTypeIds) { 
-        Collections.sort(propertyTypeIds); 
-        assertArrayEquals(EXPECTED_PROPERTY_TYPES, propertyTypeIds.toArray()); 
-    } 
 
-    
-    
-    
+    private void checkObjectTypes(List<String> objectTypeIds) {
+        Collections.sort(objectTypeIds);
+        assertArrayEquals(EXPECTED_OBJECT_TYPES, objectTypeIds.toArray());
+    }
+
+    private void checkPropertyTypes(List<String> propertyTypeIds) {
+        Collections.sort(propertyTypeIds);
+        assertArrayEquals(EXPECTED_PROPERTY_TYPES, propertyTypeIds.toArray());
+    }
+
     @Test
     public void testChildParentReport() throws CommandException {
         service.setLinkTableCreator(new GraphLinkedTableCreator());
         CnATreeElement org = loadElement(SOURCE_ID, EXT_ID_ORG);
 
         LinkTableConfiguration.Builder builder = new LinkTableConfiguration.Builder();
-        builder.addScopeId(org.getScopeId())
-        .addColumnPath("asset<assetgroup.assetgroup_name")
-        .addColumnPath("asset.asset_name");
+        builder.addScopeId(org.getScopeId()).addColumnPath("asset<assetgroup.assetgroup_name")
+                .addColumnPath("asset.asset_name");
 
         List<List<String>> resultTable = service.createTable(builder.build());
 
@@ -162,20 +141,21 @@ public class LinkTableServiceTest extends BeforeEachVNAImportHelper {
             assetNames.add(row.get(1));
         }
 
-        LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(Asset.TYPE_ID,org.getDbId());
+        LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(Asset.TYPE_ID,
+                org.getDbId());
         command = commandService.executeCommand(command);
         List<CnATreeElement> assetList = command.getElements();
 
         int expectedSize = resultTable.size() - 1;
-        
-        assertEquals("Result table has not " + assetList.size() + " rows", expectedSize, assetList.size());
+
+        assertEquals("Result table has not " + assetList.size() + " rows", expectedSize,
+                assetList.size());
 
         for (CnATreeElement asset : assetList) {
-            assertTrue("Asset: " + asset.getTitle() + " not in result list",assetNames.contains(asset.getTitle()));
+            assertTrue("Asset: " + asset.getTitle() + " not in result list",
+                    assetNames.contains(asset.getTitle()));
         }
     }
-    
-    
 
     @Test
     public void testSzenarioReport() throws CommandException {
@@ -183,18 +163,18 @@ public class LinkTableServiceTest extends BeforeEachVNAImportHelper {
 
         LinkTableConfiguration.Builder builder = new LinkTableConfiguration.Builder();
         builder.addScopeId(org.getScopeId())
-        .addColumnPath("incident_scenario.incident_scenario_name")
-        .addColumnPath("incident_scenario:person-iso.title")
-        .addColumnPath("incident_scenario/person-iso.person-iso_name")
-        .addColumnPath("incident_scenario/person-iso.person-iso_surname")
-        .addColumnPath("incident_scenario/asset.asset_name")
-        .addColumnPath("incident_scenario/asset:person-iso.title")
-        .addColumnPath("incident_scenario/asset/person-iso.person-iso_name")
-        .addColumnPath("incident_scenario/asset/person-iso.person-iso_surname")
-        .addColumnPath("incident_scenario/control.control_name")
-        .addColumnPath("incident_scenario/control:person-iso.title")
-        .addColumnPath("incident_scenario/control/person-iso.person-iso_name")
-        .addColumnPath("incident_scenario/control/person-iso.person-iso_surname");
+                .addColumnPath("incident_scenario.incident_scenario_name")
+                .addColumnPath("incident_scenario:person-iso.title")
+                .addColumnPath("incident_scenario/person-iso.person-iso_name")
+                .addColumnPath("incident_scenario/person-iso.person-iso_surname")
+                .addColumnPath("incident_scenario/asset.asset_name")
+                .addColumnPath("incident_scenario/asset:person-iso.title")
+                .addColumnPath("incident_scenario/asset/person-iso.person-iso_name")
+                .addColumnPath("incident_scenario/asset/person-iso.person-iso_surname")
+                .addColumnPath("incident_scenario/control.control_name")
+                .addColumnPath("incident_scenario/control:person-iso.title")
+                .addColumnPath("incident_scenario/control/person-iso.person-iso_name")
+                .addColumnPath("incident_scenario/control/person-iso.person-iso_surname");
 
         List<List<String>> resultTable = service.createTable(builder.build());
 
@@ -205,11 +185,13 @@ public class LinkTableServiceTest extends BeforeEachVNAImportHelper {
     @Test
     public void testCreateWithVltFile() throws CommandException, IOException {
         CnATreeElement org = loadElement(SOURCE_ID, EXT_ID_ORG);
-        ILinkTableConfiguration configuration = VeriniceLinkTableIO.readLinkTableConfiguration(getVltFilePath());
+        ILinkTableConfiguration configuration = VeriniceLinkTableIO
+                .readLinkTableConfiguration(getVltFilePath());
         LinkTableConfiguration changedConfiguration = cloneConfiguration(configuration);
         changedConfiguration.addScopeId(org.getScopeId());
 
-        String tempVltPath = File.createTempFile(this.getClass().getSimpleName(), ".vlt").getAbsolutePath();
+        String tempVltPath = File.createTempFile(this.getClass().getSimpleName(), ".vlt")
+                .getAbsolutePath();
         VeriniceLinkTableIO.write(changedConfiguration, tempVltPath);
 
         List<List<String>> resultTable = service.createTable(tempVltPath);
@@ -218,10 +200,11 @@ public class LinkTableServiceTest extends BeforeEachVNAImportHelper {
     }
 
     private void checkTable(List<List<String>> resultTable) {
-        //assertEquals(325, resultTable.size());
+        // assertEquals(325, resultTable.size());
         assertEquals(12, resultTable.get(0).size());
 
-        assertEquals("Abuse of rights possible due to well-known software flaws", resultTable.get(28).get(0));
+        assertEquals("Abuse of rights possible due to well-known software flaws",
+                resultTable.get(28).get(0));
         assertEquals("modelliert durch", resultTable.get(28).get(1));
         assertEquals("Thomas", resultTable.get(28).get(2));
         assertEquals("Test", resultTable.get(28).get(3));
@@ -254,8 +237,8 @@ public class LinkTableServiceTest extends BeforeEachVNAImportHelper {
     private LinkTableConfiguration cloneConfiguration(ILinkTableConfiguration configuration) {
         LinkTableConfiguration.Builder builder = new LinkTableConfiguration.Builder();
         builder.setColumnPathes(configuration.getColumnPaths())
-        .setLinkTypeIds(configuration.getLinkTypeIds());
-        if(configuration.getScopeIdArray()!=null) {
+                .setLinkTypeIds(configuration.getLinkTypeIds());
+        if (configuration.getScopeIdArray() != null) {
             builder.setScopeIds(new HashSet<>(Arrays.asList(configuration.getScopeIdArray())));
         }
         return builder.build();
@@ -276,6 +259,7 @@ public class LinkTableServiceTest extends BeforeEachVNAImportHelper {
 
     @Override
     protected SyncParameter getSyncParameter() throws SyncParameterException {
-       return new SyncParameter(true, true, true, false, SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
+        return new SyncParameter(true, true, true, false,
+                SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
     }
 }

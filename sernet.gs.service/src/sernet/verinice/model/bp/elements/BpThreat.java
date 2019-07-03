@@ -26,16 +26,9 @@ import java.util.Map;
 import sernet.gs.service.StringUtil;
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITaggableElement;
-import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.IBpElement;
-import sernet.verinice.model.bp.Reevaluator;
 import sernet.verinice.model.bsi.TagHelper;
-import sernet.verinice.model.common.AbstractLinkChangeListener;
-import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.ILinkChangeListener;
-import sernet.verinice.model.common.TransactionAbortedException;
-import sernet.verinice.service.bp.risk.RiskDeductionUtil;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -45,8 +38,7 @@ public class BpThreat extends CnATreeElement
 
     private static final long serialVersionUID = -7182966153863832177L;
 
-    private static final String PROP_ABBR = "bp_threat_abbr"; //$NON-NLS-1$
-    private static final String PROP_OBJECTBROWSER_DESC = "bp_threat_objectbrowser_content"; //$NON-NLS-1$
+    public static final String PROP_OBJECTBROWSER_DESC = "bp_threat_objectbrowser_content"; //$NON-NLS-1$
     private static final String PROP_NAME = "bp_threat_name"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_threat_id"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_threat_tag"; //$NON-NLS-1$
@@ -54,12 +46,16 @@ public class BpThreat extends CnATreeElement
     private static final String PROP_CONFIDENIALITY = "bp_threat_value_method_confidentiality"; //$NON-NLS-1$
     private static final String PROP_INTEGRITY = "bp_threat_value_method_integrity"; //$NON-NLS-1$
     private static final String PROP_AVAILABILITY = "bp_threat_value_method_availability"; //$NON-NLS-1$
+    public static final String PROP_FREQUENCY_WITHOUT_SAFEGUARDS = "bp_threat_risk_without_safeguards_frequency";//$NON-NLS-1$
+    public static final String PROP_IMPACT_WITHOUT_SAFEGUARDS = "bp_threat_risk_without_safeguards_impact";//$NON-NLS-1$
+    public static final String PROP_RISK_WITHOUT_SAFEGUARDS = "bp_threat_risk_without_safeguards_risk";//$NON-NLS-1$
     public static final String PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS = "bp_threat_risk_without_additional_safeguards_frequency";//$NON-NLS-1$
     public static final String PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS = "bp_threat_risk_without_additional_safeguards_impact";//$NON-NLS-1$
     public static final String PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS = "bp_threat_risk_without_additional_safeguards_risk";//$NON-NLS-1$
     public static final String PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS = "bp_threat_risk_with_additional_safeguards_frequency";//$NON-NLS-1$
     public static final String PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS = "bp_threat_risk_with_additional_safeguards_impact";//$NON-NLS-1$
     public static final String PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS = "bp_threat_risk_with_additional_safeguards_risk";//$NON-NLS-1$
+    public static final String PROP_RISK_TREATMENT_OPTION = "bp_threat_risk_treatment_option";//$NON-NLS-1$
 
     public static final String TYPE_ID = "bp_threat"; //$NON-NLS-1$
 
@@ -90,17 +86,6 @@ public class BpThreat extends CnATreeElement
         RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(Room.TYPE_ID, BpThreat.REL_BP_THREAT_BP_ROOM);
     }
 
-    private final IReevaluator reevaluator = new Reevaluator(this);
-    private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
-
-        private static final long serialVersionUID = 3053406771575607534L;
-
-        @Override
-        public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
-            RiskDeductionUtil.deduceRisk(BpThreat.this);
-        }
-    };
-
     protected BpThreat() {
     }
 
@@ -123,14 +108,6 @@ public class BpThreat extends CnATreeElement
                 description);
     }
 
-    public String getAbbreviation() {
-        return getEntity().getPropertyValue(PROP_ABBR);
-    }
-
-    public void setAbbreviation(String abbreviation) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
-    }
-
     @Override
     public String getTitle() {
         return getEntity().getPropertyValue(PROP_NAME);
@@ -139,16 +116,6 @@ public class BpThreat extends CnATreeElement
     @Override
     public void setTitel(String name) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
-    }
-
-    @Override
-    public ILinkChangeListener getLinkChangeListener() {
-        return linkChangeListener;
-    }
-
-    @Override
-    public IReevaluator getProtectionRequirementsProvider() {
-        return reevaluator;
     }
 
     @Override
@@ -208,6 +175,11 @@ public class BpThreat extends CnATreeElement
         return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
+    public String getFrequencyWithoutSafeguards() {
+        return StringUtil.replaceEmptyStringByNull(
+                getEntity().getRawPropertyValue(PROP_FREQUENCY_WITHOUT_SAFEGUARDS));
+    }
+
     public String getFrequencyWithAdditionalSafeguards() {
         return StringUtil.replaceEmptyStringByNull(
                 getEntity().getRawPropertyValue(PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS));
@@ -216,6 +188,11 @@ public class BpThreat extends CnATreeElement
     public String getFrequencyWithoutAdditionalSafeguards() {
         return StringUtil.replaceEmptyStringByNull(
                 getEntity().getRawPropertyValue(PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS));
+    }
+
+    public String getImpactWithoutSafeguards() {
+        return StringUtil.replaceEmptyStringByNull(
+                getEntity().getRawPropertyValue(PROP_IMPACT_WITHOUT_SAFEGUARDS));
     }
 
     public String getImpactWithAdditionalSafeguards() {
@@ -229,6 +206,11 @@ public class BpThreat extends CnATreeElement
                 getEntity().getRawPropertyValue(PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS));
     }
 
+    public String getRiskWithoutSafeguards() {
+        return StringUtil.replaceEmptyStringByNull(
+                getEntity().getRawPropertyValue(PROP_RISK_WITHOUT_SAFEGUARDS));
+    }
+
     public String getRiskWithoutAdditionalSafeguards() {
         return StringUtil.replaceEmptyStringByNull(
                 getEntity().getRawPropertyValue(PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS));
@@ -237,6 +219,21 @@ public class BpThreat extends CnATreeElement
     public String getRiskWithAdditionalSafeguards() {
         return StringUtil.replaceEmptyStringByNull(
                 getEntity().getRawPropertyValue(PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS));
+    }
+
+    public void setRiskWithoutSafeguards(String risk) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_RISK_WITHOUT_SAFEGUARDS),
+                risk);
+    }
+
+    public void setFrequencyWithoutSafeguards(String frequency) {
+        getEntity().setSimpleValue(
+                getEntityType().getPropertyType(PROP_FREQUENCY_WITHOUT_SAFEGUARDS), frequency);
+    }
+
+    public void setImpactWithoutSafeguards(String impact) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_IMPACT_WITHOUT_SAFEGUARDS),
+                impact);
     }
 
     public void setRiskWithoutAdditionalSafeguards(String risk) {

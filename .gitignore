@@ -1,7 +1,14 @@
 **/bin
 **/target
-**/build
+*/**/build
 **/.gradle
+
+gui-test-runner/result
+gui-test-runner/local
+gui-test-runner/wrks/runner-workspace
+gui-test-runner/wrks/**/report_templates_remote
+gui-test-runner/wrks/**/elasticsearch/
+**/org.eclipse.rcptt.logging/
 
 sernet.gs.server/WebContent/WEB-INF/lib/sernet.gs.reveng.jar
 sernet.gs.server/WebContent/WEB-INF/lib/sernet.gs.service.jar
@@ -20,7 +27,7 @@ sernet.gs.server/WebContent/WEB-INF/lib/sernet.verinice.report.service.jar
 sernet.gs.server/WebContent/WEB-INF/lib/sernet.verinice.samt.service.jar
 
 #regex for all catalouges, hopefully they do not change the name
-it-grundschutz_el*_html_de.zip
+sernet.gs.server/**/it-grundschutz_el*_html_de.zip
 
 # exclude the datenschutz baustein
 B1.5-Datenschutz-2008-08-26.zip

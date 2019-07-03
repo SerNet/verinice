@@ -15,6 +15,7 @@ import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.ImmutableSettings.Builder;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.indices.IndexAlreadyExistsException;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.node.NodeBuilder;
 import org.springframework.beans.factory.DisposableBean;
@@ -90,9 +91,15 @@ public class ElasticsearchClientFactory implements DisposableBean {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Creating index " + ISearchDao.INDEX_NAME + "...");
             }
-            client.admin().indices().prepareCreate(ISearchDao.INDEX_NAME)
-                    .setSettings(getAnylysisConf()).addMapping(ElementDao.TYPE_NAME, getMapping())
-                    .execute().actionGet();
+            try {
+                client.admin().indices().prepareCreate(ISearchDao.INDEX_NAME)
+                        .setSettings(getAnylysisConf())
+                        .addMapping(ElementDao.TYPE_NAME, getMapping()).execute().actionGet();
+            } catch (IndexAlreadyExistsException e) {
+                // https://github.com/elastic/elasticsearch/issues/8105
+                LOG.warn("Index " + ISearchDao.INDEX_NAME
+                        + " already existed when trying to create it, trying to use it.");
+            }
         } else if (LOG.isDebugEnabled()) {
             LOG.debug("Index " + ISearchDao.INDEX_NAME + " exists");
         }
@@ -157,7 +164,11 @@ public class ElasticsearchClientFactory implements DisposableBean {
                 // EXPERIMENTAL, could cause perfomance issues, TEST
                 .put("index.store.compress.stored", true)
                 // EXPERIMENTAL, as above;
-                .put("index.store.compress.tv", true);
+                .put("index.store.compress.tv", true)
+                // disable the REST API since it has security vulnerabilities
+                // and we don't use it anyway
+                .put("http.enabled", false);
+
         setOSDependentFileSystem(builder);
 
         return builder.build();

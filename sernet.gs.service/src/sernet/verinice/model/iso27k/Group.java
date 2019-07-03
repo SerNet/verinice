@@ -20,8 +20,6 @@
 package sernet.verinice.model.iso27k;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.common.CnATreeElement;
@@ -32,48 +30,42 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public abstract class Group<T> extends CnATreeElement implements ITaggableElement {
-	
-	public Group() {
-		super();
-	}
-	
-    public String getAbbreviation() {
-	    return "";
-	}
-	
-	/**
-	 * @param parent
-	 */
-	public Group(CnATreeElement parent) {
-		super(parent);
-	}
+public abstract class Group<T> extends CnATreeElement {
+
+    public Group() {
+        super();
+    }
 
     /**
-	 * Returns a array of child-type-ids of this group.
-	 * Implemnt this and use TYPE_ID of childs
-	 * 
-	 * @return array of child-type-ids
-	 */
+     * @param parent
+     */
+    public Group(CnATreeElement parent) {
+        super(parent);
+    }
+
+    /**
+     * Returns a array of child-type-ids of this group. Implemnt this and use
+     * TYPE_ID of childs
+     * 
+     * @return array of child-type-ids
+     */
     public abstract String[] getChildTypes();
-	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#canContain(java.lang.Object)
-	 */
-	@Override
-	public boolean canContain(Object obj) {
-		boolean canContain = false;
-		if(obj instanceof CnATreeElement) {
-			CnATreeElement element = (CnATreeElement)obj;
-			canContain = Arrays.asList(getChildTypes()).contains(element.getTypeId()) 
-						 || this.getTypeId().equals(element.getTypeId());
-		}
-		return canContain;
-	}
-	
-    public Collection<String> getTags() {
-		// empty, override this to add tags to groups
-		// dont't forget to add a huiproperty to your SNCA.xml
-		return Collections.emptyList();
-	}
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.common.model.CnATreeElement#canContain(java.lang.
+     * Object)
+     */
+    @Override
+    public boolean canContain(Object obj) {
+        boolean canContain = false;
+        if (obj instanceof CnATreeElement) {
+            CnATreeElement element = (CnATreeElement) obj;
+            canContain = Arrays.asList(getChildTypes()).contains(element.getTypeId())
+                    || this.getTypeId().equals(element.getTypeId());
+        }
+        return canContain;
+    }
 }

@@ -49,6 +49,8 @@ public class Messages extends NLS{
 
     public static String CsvExportDialog_9;
 
+    public static String LinkTableComposite_loading;
+
     public static String LinkTableComposite_moveDownButton;
 
     public static String LinkTableComposite_moveUpButton;

@@ -25,6 +25,7 @@ import sernet.gs.service.Retriever;
 import sernet.gs.service.StringUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
+import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
@@ -115,8 +116,8 @@ public class ISMViewLabelProvider extends LabelProvider  {
 					}
 				}
 				
-				if(element instanceof IISO27kElement) {
-                    String abbreviation = ((IISO27kElement)element).getAbbreviation();
+                if (element instanceof IISO27kElement && element instanceof IAbbreviatedElement) {
+                    String abbreviation = ((IAbbreviatedElement) element).getAbbreviation();
                     if(abbreviation!=null && !abbreviation.isEmpty()) {
                         sb.append(abbreviation).append(" ");
                     }

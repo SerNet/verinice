@@ -38,7 +38,6 @@ public enum LinkTableOperationType implements ILinkTableOperationType {
     CHILD(">", Messages.VeriniceLinkTableOperationType_40,
             Messages.VeriniceLinkTableOperationType_41);
 
-
     private final String output;
     private final String label;
     private final String defaultMessage;
@@ -71,7 +70,6 @@ public enum LinkTableOperationType implements ILinkTableOperationType {
 
     public static LinkTableOperationType getOperationType(String value) {
         for (LinkTableOperationType type : LinkTableOperationType.values()) {
-
             if (type.output.equalsIgnoreCase(value)) {
                 return type;
             }
@@ -87,12 +85,11 @@ public enum LinkTableOperationType implements ILinkTableOperationType {
         return type.equals(RELATION_OBJECT.getOutput()) || type.equals(RELATION.getOutput());
     }
 
-    public static String toolTip(){
+    public static String toolTip() {
         StringBuilder builder = new StringBuilder();
         for (LinkTableOperationType type : values()) {
             builder.append(type.getLabel() + "\n");
         }
         return builder.toString();
     }
-
 }

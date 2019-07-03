@@ -1,0 +1,67 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Context-Type: org.eclipse.rcptt.ctx.ecl
+Element-Name: performance
+Element-Type: context
+Element-Version: 2.0
+Id: _9AEX8Pk3EeiLXcsCitNBjg
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 3/25/19 10:11 AM
+
+------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
+Content-Type: text/ecl
+Entry-Name: .ecl.context
+
+proc "measure-delete" [val measurement] [val target] {
+	try {
+		start-time-measure $measurement
+		delete-bpelement $target
+		stop-time-measure $measurement | write-lines [concat "file:" $basedir [get-java-property "file.separator"] "delete-measure.csv"] true
+	} -catch {
+	try	{
+			get-window Fehler | get-button OK | click
+		} -catch {
+		 log [concat "no dialog :" $target "  <-> " $measurement]
+		}
+		log [concat "error deleting :" $target "  <-> " $measurement]
+	}
+}
+
+
+proc "measure-ism-import-vna" [val measurement] [val filename] {
+    try {
+        start-time-measure $measurement
+        ism-import-vna $filename
+        stop-time-measure $measurement | write-lines [concat "file:" $basedir [get-java-property "file.separator"] "import-measure.csv"] true
+    } -catch {
+    try {
+            get-window Fehler | get-button OK | click
+        } -catch {
+         log [concat "no dialog :" $filename "  <-> " $measurement]
+        }
+        log [concat "error importing :" $filename "  <-> " $measurement]
+    }
+}
+
+
+/**
+
+proc "measure-delete" [val measurement] [val target] {
+	try {
+		start-time-measure $measurement
+		delete-catalog-element $target
+		stop-time-measure $measurement | write-lines [concat "file:" $basedir "/delete-measure.csv"] true
+	} -catch {
+	try	{
+			get-window Fehler | get-button OK | click
+		} -catch {
+		 log [concat "no dialog :" $target]
+		}
+		log [concat "error deleting :" $target]
+	}
+}
+*/
+
+
+
+------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998--

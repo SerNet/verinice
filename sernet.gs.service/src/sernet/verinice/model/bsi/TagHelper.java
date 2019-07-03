@@ -18,50 +18,26 @@
 package sernet.verinice.model.bsi;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+/**
+ * @deprecated use {@link sernet.snutils.TagHelper} instead
+ */
+@Deprecated
 public final class TagHelper {
 
-    private static final Pattern PATTERN = Pattern.compile("[^, ]+"); //$NON-NLS-1$
-
     public static Collection<String> getTags(String simpleValue) {
-        List<String> strings = new LinkedList<>();
-        addTagsToCollection(simpleValue, strings);
-        return Collections.unmodifiableList(strings);
+        return sernet.snutils.TagHelper.getTags(simpleValue);
     }
 
     /**
-     * Takes a comma separated string of tag value (e.g. "foo, bar") and puts
-     * each tag into the given set.
-     * 
-     * <p>
-     * It is expected that the set is a {@link HashSet} since you usually want
-     * distinct values.
-     * </p>
-     * 
-     * @param set
-     * @param simpleValue
+     * Takes a comma and/or space separated string of tag value (e.g. "foo,
+     * bar") and puts each tag into the given set.
      */
     public static void putInTags(Set<String> set, String simpleValue) {
-        if (simpleValue != null) {
-            addTagsToCollection(simpleValue, set);
-        }
-    }
-
-    private static void addTagsToCollection(String simpleValue, Collection<String> strings) {
-        Matcher m = PATTERN.matcher(simpleValue);
-        while (m.find()) {
-            strings.add(m.group());
-        }
+        set.addAll(sernet.snutils.TagHelper.getTags(simpleValue));
     }
 
     private TagHelper() {
     }
-
 }

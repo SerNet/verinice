@@ -117,12 +117,6 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
                 getFieldEditorParent());
         addField(enableReleaseProcess);
         
-		final ComboFieldEditor encodingFieldEditor = new ComboFieldEditor(PreferenceConstants.CHARSET_CATALOG, 
-		        Messages.getString("GeneralSettingsPage.6"),  //$NON-NLS-1$
-				ENCODING_COMBO_VALUES, 
-				getFieldEditorParent());
-        addField(encodingFieldEditor);
-        
         final ComboFieldEditor thumbnailSizeEditor = new ComboFieldEditor(PreferenceConstants.THUMBNAIL_SIZE, 
                 Messages.getString("GeneralSettingsPage.7"),  //$NON-NLS-1$
                 THUMBNAIL_SIZE_VALUES, 

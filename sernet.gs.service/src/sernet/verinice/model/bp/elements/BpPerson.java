@@ -22,6 +22,7 @@ package sernet.verinice.model.bp.elements;
 import java.util.Collection;
 
 import sernet.hui.common.connect.IAbbreviatedElement;
+import sernet.hui.common.connect.IPerson;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bsi.TagHelper;
@@ -32,7 +33,7 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  */
 public class BpPerson extends CnATreeElement
-        implements IBpElement, IAbbreviatedElement, ITaggableElement {
+        implements IBpElement, IAbbreviatedElement, ITaggableElement, IPerson {
 
     private static final long serialVersionUID = -1764245620965365934L;
 
@@ -43,6 +44,7 @@ public class BpPerson extends CnATreeElement
     public static final String PROP_EMAIL = "bp_person_email"; //$NON-NLS-1$
     public static final String PROP_PHONE = "bp_person_phone"; //$NON-NLS-1$
     public static final String PROP_ABBR = "bp_person_abbr"; //$NON-NLS-1$
+    public static final String PROP_TITLE = "bp_person_title"; //$NON-NLS-1$
 
     protected BpPerson() {
     }
@@ -87,5 +89,25 @@ public class BpPerson extends CnATreeElement
     @Override
     public String getAbbreviation() {
         return getEntity().getPropertyValue(PROP_ABBR);
+    }
+
+    @Override
+    public String getFirstName() {
+        return getEntity().getRawPropertyValue(PROP_FIRST_NAME);
+    }
+
+    @Override
+    public String getLastName() {
+        return getEntity().getRawPropertyValue(PROP_LAST_NAME);
+    }
+
+    @Override
+    public String getSalutation() {
+        return getEntity().getRawPropertyValue(PROP_TITLE);
+    }
+
+    @Override
+    public String getEMailAddress() {
+        return getEntity().getRawPropertyValue(PROP_EMAIL);
     }
 }

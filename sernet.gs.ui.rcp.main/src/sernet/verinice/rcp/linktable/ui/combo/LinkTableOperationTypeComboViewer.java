@@ -44,33 +44,34 @@ public class LinkTableOperationTypeComboViewer extends LinkTableComboViewer {
     private static final Logger LOG = Logger.getLogger(LinkTableOperationTypeComboViewer.class);
 
     public LinkTableOperationTypeComboViewer(LinkTableComboViewer leftCombo, String relatedID,
-            LinkTableOperationType operationType,
-            LinkTableColumn ltrParent, Composite parent) {
+            LinkTableOperationType operationType, LinkTableColumn ltrParent, Composite parent) {
         this(leftCombo, relatedID, operationType, ltrParent, parent, false);
     }
 
     public LinkTableOperationTypeComboViewer(LinkTableComboViewer leftCombo, String relatedID,
-            LinkTableOperationType operationType,
-            LinkTableColumn ltrParent, Composite parent, boolean isCopy) {
+            LinkTableOperationType operationType, LinkTableColumn ltrParent, Composite parent,
+            boolean isCopy) {
         super(leftCombo, relatedID, operationType, ltrParent, parent);
-
         if (!isCopy) {
             selectFirstElement(true);
         }
         getCombo().setToolTipText(LinkTableOperationType.toolTip());
-
     }
 
+    /*
+     * @see
+     * sernet.verinice.rcp.linktable.ui.combo.LinkTableComboViewer#createChild(
+     * org.eclipse.swt.widgets.Composite)
+     */
     @Override
     public LinkTableComboViewer createChild(Composite parent) {
-
         if (getSelectedElement() == LinkTableOperationType.PROPERTY) {
-            if(leftCombo.operationType == LinkTableOperationType.RELATION){
+            if (leftCombo.operationType == LinkTableOperationType.RELATION) {
                 return new LinkTableRelationPropertyComboViewer(this, relatedID,
                         getSelectedElement(), ltrColumn, parent);
             }
-            return new LinkTablePropertyComboViewer(this, relatedID, getSelectedElement(), ltrColumn,
-                    parent);
+            return new LinkTablePropertyComboViewer(this, relatedID, getSelectedElement(),
+                    ltrColumn, parent);
         } else {
             return new LinkTableElementComboViewer(this, relatedID, getSelectedElement(), ltrColumn,
                     parent);
@@ -78,8 +79,6 @@ public class LinkTableOperationTypeComboViewer extends LinkTableComboViewer {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.
      * lang.Object)
@@ -90,18 +89,17 @@ public class LinkTableOperationTypeComboViewer extends LinkTableComboViewer {
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.rcp.linktable.ui.combo.LTRComboViewer#copy()
+     * @see
+     * sernet.verinice.rcp.linktable.ui.combo.LinkTableComboViewer#createCopy(
+     * sernet.verinice.rcp.linktable.ui.combo.LinkTableComboViewer,
+     * sernet.verinice.rcp.linktable.ui.LinkTableColumn,
+     * org.eclipse.swt.widgets.Composite)
      */
     @Override
-    public LinkTableComboViewer createCopy(LinkTableComboViewer leftCombo, LinkTableColumn ltrParent,
-            Composite newParent) {
-
+    public LinkTableComboViewer createCopy(LinkTableComboViewer leftCombo,
+            LinkTableColumn ltrParent, Composite newParent) {
         return new LinkTableOperationTypeComboViewer(leftCombo, relatedID, getSelectedElement(),
-                ltrParent,
-                newParent, true);
-
+                ltrParent, newParent, true);
     }
 
     public LinkTableOperationType getSelectedElement() {
@@ -110,13 +108,11 @@ public class LinkTableOperationTypeComboViewer extends LinkTableComboViewer {
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.rcp.linktable.ui.combo.LTRComboViewer#doSelectionChanged()
+     * @see sernet.verinice.rcp.linktable.ui.combo.LinkTableComboViewer#
+     * doSelectionChanged()
      */
     @Override
     protected void doSelectionChanged() {
-
         if (LOG.isDebugEnabled()) {
             if (operationType != null) {
                 LOG.debug("operationType changed from " + operationType.getLabel() + " to "
@@ -130,14 +126,12 @@ public class LinkTableOperationTypeComboViewer extends LinkTableComboViewer {
             this.rightCombo.dispose();
             this.rightCombo = null;
         }
-
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.rcp.linktable.ui.combo.LTRComboViewer#getLabelText(java.lang.
-     * Object)
+     * @see
+     * sernet.verinice.rcp.linktable.ui.combo.LinkTableComboViewer#getLabelText(
+     * java.lang.Object)
      */
     @Override
     protected String getLabelText(Object element) {
@@ -149,45 +143,44 @@ public class LinkTableOperationTypeComboViewer extends LinkTableComboViewer {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
-     * sernet.verinice.rcp.linktable.ui.combo.LTRComboViewer#select(java.lang.String)
+     * sernet.verinice.rcp.linktable.ui.combo.LinkTableComboViewer#select(java.
+     * lang.String)
      */
     @Override
     protected void select(String string) {
-
-        ISelection selection = new StructuredSelection(LinkTableOperationType.getOperationType(string));
+        ISelection selection = new StructuredSelection(
+                LinkTableOperationType.getOperationType(string));
         setSelection(selection);
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.rcp.linktable.ui.combo.
-     * LinkTableComboViewer#doGetAllRelationTypes()
+     * @see sernet.verinice.rcp.linktable.ui.combo.LinkTableComboViewer#
+     * doGetAllRelationTypes()
      */
     @Override
     protected Set<String> doGetAllRelationTypes() {
         return Collections.emptySet();
     }
 
+    /*
+     * @see
+     * sernet.verinice.rcp.linktable.ui.combo.LinkTableComboViewer#copy(sernet.
+     * verinice.rcp.linktable.ui.combo.LinkTableComboViewer,
+     * org.eclipse.swt.widgets.Composite, org.eclipse.swt.widgets.Control)
+     */
     @Override
     public LinkTableComboViewer copy(LinkTableComboViewer leftCombo, Composite newParent,
             Control formerElement) {
-
         if (operationType == LinkTableOperationType.RELATION) {
-
             Composite newParentComposite = new Composite(newParent, SWT.NONE);
             newParentComposite.setLayout(new FormLayout());
             newParentComposite.setLayoutData(getDefaultFormData(formerElement));
 
-            LinkTableComboViewer newViewer = createCopy(leftCombo, ltrColumn,
-                    newParentComposite);
+            LinkTableComboViewer newViewer = createCopy(leftCombo, ltrColumn, newParentComposite);
 
             newViewer.getCombo().select(this.getCombo().getSelectionIndex());
             if (rightCombo != null) {
-
                 newViewer.selectionChanged(null);
                 newViewer.rightCombo.getCombo()
                         .select(this.rightCombo.getCombo().getSelectionIndex());
@@ -201,7 +194,5 @@ public class LinkTableOperationTypeComboViewer extends LinkTableComboViewer {
         } else {
             return super.copy(leftCombo, newParent, formerElement);
         }
-
     }
-
 }

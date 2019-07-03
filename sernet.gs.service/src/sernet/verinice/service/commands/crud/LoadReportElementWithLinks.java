@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import sernet.gs.service.RuntimeCommandException;
+import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
@@ -16,7 +17,6 @@ import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.service.commands.CnATypeMapper;
 
 /**
@@ -156,18 +156,18 @@ public class LoadReportElementWithLinks extends GenericCommand implements ICache
      */
     @SuppressWarnings("unchecked")
     private String getAbbreviation(CnATreeElement relationObject) {
-        if (CnATypeMapper.isStrukturElement(relationObject) ) {
+        if (CnATypeMapper.isStrukturElement(relationObject)) {
             IBaseDao dao = getDaoFactory().getDAO(relationObject.getTypeId());
             IBSIStrukturElement elmt = (IBSIStrukturElement) dao.findById(relationObject.getDbId());
             return elmt.getKuerzel();
         }
-        if (CnATypeMapper.isIiso27kElement(relationObject)) {
+        if (relationObject instanceof IAbbreviatedElement) {
             IBaseDao dao = getDaoFactory().getDAO(relationObject.getTypeId());
-            IISO27kElement elmt = (IISO27kElement) dao.findById(relationObject.getDbId());
+            IAbbreviatedElement elmt = (IAbbreviatedElement) dao.findById(relationObject.getDbId());
             return elmt.getAbbreviation();
         }
         return "";
-        
+
     }
 
     /**

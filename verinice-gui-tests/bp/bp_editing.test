@@ -1,0 +1,67 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _74j9YLaIEeiiZL0aNB5Nyg,_kD9CUIxPEei2UKUDmonytQ,_lGnj8Ix1Eei2UKUDmonytQ,_K06wgI0fEei2UKUDmonytQ,_4GRncI0bEei2UKUDmonytQ
+Element-Name: bp_editing
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _Cso8MJAcEeiCTbb54-xhBQ
+Runtime-Version: 2.4.1.201903190000
+Save-Time: 4/12/19 1:49 PM
+Tags: bp
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+A basic test for editing in the modernized base protection view.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+log "start test bp_editing"
+
+// create the model
+create-bpmodel testname
+create-bpprocess "testname/Geschäftsprozesse" process1
+create-bpprocess "testname/Geschäftsprozesse" process2
+create-bpapplication "testname/Anwendungen" testapp1
+create-bpapplication "testname/Anwendungen" testapp2
+create-bpitsystem "testname/IT-Systeme" testitsystem1
+create-bpitsystem "testname/IT-Systeme" testitsystem2
+create-bpicssystem "testname/ICS-Systeme" testicssystem1
+create-bpicssystem "testname/ICS-Systeme" testicssystem2
+create-bpiotsystem "testname/Andere\\/IoT-Systeme" testiotsystem1
+create-bpiotsystem "testname/Andere\\/IoT-Systeme" testiotsystem2
+create-bpnetwork "testname/Kommunikationsverbindungen" testnetwork1
+create-bpnetwork "testname/Kommunikationsverbindungen" testnetwork2
+create-bproom "testname/Räume" testroom1
+create-bproom "testname/Räume" testroom2
+
+copy-bpelement "testname/Geschäftsprozesse/process1" "testname/Geschäftsprozesse"
+copy-bpelement "testname/Geschäftsprozesse/process2" "testname/Geschäftsprozesse"
+copy-bpelement "testname/Anwendungen/testapp1" "testname/Anwendungen"
+
+link-bp-elements "testname/Geschäftsprozesse/process1" testapp1 Anwendung
+link-bp-elements "testname/Geschäftsprozesse/process1" testapp2 Anwendung
+link-bp-elements "testname/Geschäftsprozesse/process2" testitsystem1 "IT-System"
+link-bp-elements "testname/Geschäftsprozesse/process2" testitsystem2 "IT-System"
+
+// prepare verification
+//get-menu -path "Alle schließen" | click
+//get-view "Modernisierter IT-Grundschutz" | click
+get-view Objektbrowser | close
+
+
+verify-link "testname/Geschäftsprozesse/process1" 0 "testapp1"
+verify-link "testname/Geschäftsprozesse/process1" 1 "testapp2"
+verify-link "testname/Geschäftsprozesse/process2" 0 "testitsystem1"
+verify-link "testname/Geschäftsprozesse/process2" 1 "testitsystem2"
+
+verify-link-type "testname/Anwendungen/testapp1" 0 "process1" "nötig für"
+verify-link-type "testname/Anwendungen/testapp2" 0 "process1" "nötig für"
+
+delete-bpelement "testname"
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

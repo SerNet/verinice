@@ -18,68 +18,58 @@
 package sernet.verinice.interfaces.report;
 
 import sernet.verinice.model.report.ReportTemplateMetaData;
-import sernet.verinice.security.report.ReportSecurityException;
-
 
 public interface IReportType {
-	
-    // reports only applicable to audits
-	public final static String USE_CASE_ID_AUDIT_REPORT = "use_case_report_audit";
-	// reports only applicable to organizations / it networks
-	public final static String USE_CASE_ID_GENERAL_REPORT = "use_case_report_general";
-	// reports applicable to both of the cases above
-	public final static String USE_CASE_ID_ALWAYS_REPORT = "use_case_report_always";
-	
-	public static final String USER_REPORT_ID = "user"; //$NON-NLS-1$
-	
-    
-	/**
-	 * Returns an application usable id.
-	 * 
-	 * @return
-	 */
-	String getId();
 
-	/**
-	 * Returns a human-readable name for this report type.
-	 * 
-	 * @return
-	 */
-	String getLabel();
+    // reports only applicable to organizations / it networks
+    public final static String USE_CASE_ID_GENERAL_REPORT = "use_case_report_general";
+    // reports applicable to both of the cases above
+    public final static String USE_CASE_ID_ALWAYS_REPORT = "use_case_report_always";
 
-	/**
-	 * Returns a human-readable description of this report type.
-	 * 
-	 * @return
-	 */
-	String getDescription();
+    public static final String USER_REPORT_ID = "user"; //$NON-NLS-1$
 
-	/**
-	 * Retrieves the possible output formats.
-	 * 
-	 * @return
-	 */
-	IOutputFormat[] getOutputFormats();
-	
-	void createReport(IReportOptions reportOptions);
-	
-	void createReport(ReportTemplateMetaData metadata);
-	
-	/**
-	 * Return the selected report file or empty string.
-	 * Reports that do not support file selection should return null.
-	 * 
-	 * @return file String or null if not supported (i.e. internal reports contained in JAR file).
-	 */
-	String getReportFile();
-	
-	void setReportFile(String file);
-	
-	/**
-	 * some Reports should only be used with a particular type of root element (e.g. csr only with audits)
-	 * this id should determine which report belongs to which type of action 
-	 * @return
-	 */
-	String getUseCaseID();
-	
+    /**
+     * @return an application usable id
+     */
+    String getId();
+
+    /**
+     * @return a human-readable name for this report type
+     */
+    String getLabel();
+
+    /**
+     * @return a human-readable description of this report type
+     */
+    String getDescription();
+
+    /**
+     * @return possible output formats
+     */
+    IOutputFormat[] getOutputFormats();
+
+    void createReport(IReportOptions reportOptions);
+
+    void createReport(ReportTemplateMetaData metadata);
+
+    /**
+     * Return the selected report file or empty string. Reports that do not
+     * support file selection should return null.
+     * 
+     * @return file String or null if not supported (i.e. internal reports
+     *         contained in JAR file).
+     */
+    String getReportFile();
+
+    void setReportFile(String file);
+
+    /**
+     * Some Reports should only be used with a particular type of root element
+     * (e.g. csr only with audits) this id should determine which report belongs
+     * to which type of action
+     * 
+     * @return The use case ID
+     */
+    String getUseCaseID();
+
 }

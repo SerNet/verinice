@@ -130,8 +130,6 @@ public class BsiModelView extends RightsEnabledView
 
     private DrillDownAdapter drillDownAdapter;
 
-    private BSIModel model;
-
     private TreeViewer viewer;
 
     private BSIModelViewFilterAction filterAction;
@@ -179,20 +177,13 @@ public class BsiModelView extends RightsEnabledView
      */
     @Override
     public void dispose() {
-        model.removeBSIModelListener(bsiModelListener);
+        CnAElementFactory.getLoadedModel().removeBSIModelListener(bsiModelListener);
         CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
         getSite().getPage().removePartListener(linkWithEditorPartListener);
         super.dispose();
     }
 
-    public void setNullModel() {
-        model = new NullModel();
-
-        refreshModelAsync();
-
-    }
-
-    private void refreshModelAsync() {
+    private void refreshModelAsync(BSIModel model) {
 
         Display.getDefault().asyncExec(() -> {
             try {
@@ -270,7 +261,7 @@ public class BsiModelView extends RightsEnabledView
         addBSIFilter();
         fillLocalToolBar();
         getSite().getPage().addPartListener(linkWithEditorPartListener);
-        setNullModel();
+        refreshModelAsync(new NullModel());
     }
 
     protected void startInitDataJob() {
@@ -296,7 +287,13 @@ public class BsiModelView extends RightsEnabledView
 
     private void initData() {
         if (CnAElementFactory.isModelLoaded()) {
-            setModel(CnAElementFactory.getLoadedModel());
+            BSIModel loadedModel = CnAElementFactory.getLoadedModel();
+            if (bsiModelListener == null) {
+                bsiModelListener = new TreeUpdateListener(viewer, elementManager);
+                loadedModel.addBSIModelListener(bsiModelListener);
+
+            }
+            refreshModelAsync(loadedModel);
         } else if (modelLoadListener == null) {
             // model is not loaded yet: add a listener to load data when it's
             // laoded
@@ -549,25 +546,6 @@ public class BsiModelView extends RightsEnabledView
         menuManager.add(collapseAction);
 
         menuManager.add(new Separator());
-    }
-
-    public void setModel(BSIModel newModel) {
-
-        // create listener only once:
-        if (bsiModelListener == null) {
-            bsiModelListener = new TreeUpdateListener(viewer, elementManager);
-        }
-
-        if (model != null) {
-            // remove listener from old model:
-            model.removeBSIModelListener(bsiModelListener);
-        }
-
-        this.model = newModel;
-        model.addBSIModelListener(bsiModelListener);
-
-        refreshModelAsync();
-
     }
 
     public IStructuredSelection getSelection() {

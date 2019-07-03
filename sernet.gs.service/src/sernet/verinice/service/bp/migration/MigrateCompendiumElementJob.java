@@ -106,14 +106,12 @@ public abstract class MigrateCompendiumElementJob {
     }
 
     protected boolean isSameElement(CnATreeElement element, CnATreeElement element2) {
-        if (element == null || getIdentifier(element) == null
-                || element.getTypeId() == null) {
+        if (element == null || getIdentifier(element) == null || element.getTypeId() == null) {
             return false;
         }
         return element.getTypeId().equals(element2.getTypeId())
                 && getIdentifier(element).equals(getIdentifier(element2));
     }
-
 
     protected CnATreeElement copyElement(CnATreeElement group, CnATreeElement element)
             throws CommandException {
@@ -126,14 +124,12 @@ public abstract class MigrateCompendiumElementJob {
     private String copyElementAndReturnUuid(CnATreeElement group, CnATreeElement element)
             throws CommandException {
         List<String> uuidList = Collections.singletonList(element.getUuid());
-        CopyCommand copyCommand = new CopyCommand(group.getUuid(), uuidList);
-        copyCommand.setCopyChildren(false);
+        CopyCommand copyCommand = new NonRecursiveCopyCommand(group.getUuid(), uuidList);
         copyCommand = commandService.executeCommand(copyCommand);
         return copyCommand.getNewElements().get(0);
     }
 
-    private CnATreeElement loadElement(String uuid)
-            throws CommandException {
+    private CnATreeElement loadElement(String uuid) throws CommandException {
         LoadElementByUuid<CnATreeElement> loadCommand = new LoadElementByUuid<>(uuid,
                 RetrieveInfo.getPropertyInstance());
         loadCommand = commandService.executeCommand(loadCommand);
@@ -153,7 +149,8 @@ public abstract class MigrateCompendiumElementJob {
         Set<CnATreeElement> requirementsOfTargetElement = getRequirementOfTargetElement();
         for (CnATreeElement requirementSource : linkedRequirementsOfSource) {
             for (CnATreeElement requirement : requirementsOfTargetElement) {
-                if (isSameElement(requirement, requirementSource) && (!isLink(compendiumElementCopy, requirement, linkTypeId))) {
+                if (isSameElement(requirement, requirementSource)
+                        && (!isLink(compendiumElementCopy, requirement, linkTypeId))) {
                     createLinkDataSet.add(new CreateLinkData(requirement.getDbId(),
                             compendiumElementCopy.getDbId(), linkTypeId));
                     veriniceGraph.addEdge(new Edge(compendiumElementCopy, requirement, linkTypeId));
@@ -268,4 +265,17 @@ public abstract class MigrateCompendiumElementJob {
         this.linkDao = linkDao;
     }
 
+    private static class NonRecursiveCopyCommand extends CopyCommand {
+
+        private static final long serialVersionUID = 4836866320583618153L;
+
+        public NonRecursiveCopyCommand(final String uuidGroup, final List<String> uuidList) {
+            super(uuidGroup, uuidList);
+        }
+
+        @Override
+        protected boolean copyDescendant(CnATreeElement descendant, CnATreeElement groupToCopyTo) {
+            return false;
+        }
+    }
 }

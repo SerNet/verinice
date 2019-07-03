@@ -1,0 +1,67 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _74j9YLaIEeiiZL0aNB5Nyg,_kD9CUIxPEei2UKUDmonytQ,_4GRncI0bEei2UKUDmonytQ
+Element-Name: test_3_1-3_3
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _jBFPUNdqEei2hNb8h7sUBw
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 1/24/19 10:45 AM
+Tags: bp
+Testcase-Type: ecl
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+log "test_3.1-3.3"//TODO discuss if this isn't just wasting time, we could test CRUD by the way
+create-bpmodel XInformationsverbund
+try -command {//TODO detect catch -> let test fail
+	with [get-view "Modernisierter IT-Grundschutz" | get-tree] {
+		select "XInformationsverbund/Geschäftsprozesse" | get-menu -path "Neuer Geschäftsprozess..." | click
+		select "XInformationsverbund/Anwendungen" | get-menu -path "Neue Anwendung..." | click
+		select "XInformationsverbund/IT-Systeme" | get-menu -path "Neues IT-System..." | click
+		select "XInformationsverbund/Personen" | get-menu -path "Neue Person..." | click
+		select "XInformationsverbund/Dokumente" | get-menu -path "Neues Dokument..." | click
+		select "XInformationsverbund/Aufzeichnungen" | get-menu -path "Neue Aufzeichnung..." | click
+		select "XInformationsverbund/Personen" | get-menu -path "Neue Personen-Gruppe..." | click
+		select "XInformationsverbund/Personen/Personen" | get-menu -path "Neue Person..." | click
+		select "XInformationsverbund/Personen/Personen" | get-menu -path "Neue Person..." | click
+		select "XInformationsverbund/IT-Systeme/IT-System" | get-menu -path "Neuer Baustein..." | click
+		select "XInformationsverbund/IT-Systeme/IT-System" | get-menu -path "Neue Gefährdungen-Gruppe..." | click
+		select "XInformationsverbund/IT-Systeme/IT-System/Gefährdungen" | get-menu -path "Neue Gefährdung..." | click
+		select "XInformationsverbund/IT-Systeme/IT-System/Gefährdungen" | get-menu -path "Neue Gefährdung..." | click
+		select "XInformationsverbund/Personen/Personen/" | double-click
+	}
+	with [get-editor "" -index 2] {
+		get-tab-folder | get-tab-item "Verknüpfungen" | click
+		get-combo -after [get-label "Verknüpfungen"] | select "IT-System"
+		get-button "Hinzufügen" | click
+	}
+	get-window "Elemente auswählen:" | get-table | select "IT-System" -column Element | double-click
+	get-view "Modernisierter IT-Grundschutz" | get-tree | select [get-item -path "XInformationsverbund/IT-Systeme/IT-" +
+		"System/Gefährdungen" | get-item -path "Gefährdung" -index 1] | double-click
+	with [get-editor "Gefährdung" -index 1] {
+		get-tab-folder | get-tab-item "Verknüpfungen" | click
+		get-combo -after [get-label "Verknüpfungen"] | select Person
+		get-button "Hinzufügen" | click
+	}
+	get-window "Elemente auswählen:" | get-table | select [get-item -path XInformationsverbund -column Geltungsbereich
+		-index 1] | double-click
+	get-view "Modernisierter IT-Grundschutz" | get-tree | select "XInformationsverbund/Geschäftsprozesse/Geschäftspro" +
+		"zess" | double-click
+	with [get-editor "Geschäftsprozess"] {
+		get-tab-folder | get-tab-item "Verknüpfungen" | click
+		get-combo -after [get-label "Verknüpfungen"] | select "Gefährdung"
+		get-button "Hinzufügen" | click
+	}
+	get-window "Elemente auswählen:" | get-table | select "Gefährdung" -column Element | double-click
+
+	delete-bpelement "XInformationsverbund/IT-Systeme/IT-System/Gefährdungen"
+	delete-bpelement "XInformationsverbund/Personen/Personen"
+	delete-bpelement "XInformationsverbund/IT-Systeme/IT-System"
+} -finally {
+	delete-bpelement XInformationsverbund
+}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

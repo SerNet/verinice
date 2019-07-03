@@ -5,7 +5,7 @@
 ## Save this file UTF-8 encoded.
 ##
 ## Notifications service sets variables:
-## ${address}: Mr, Mrs or if not set Mrs/Mr
+## ${address}: Mr, Ms or if not set Ms/Mr
 ## ${name}: Surname
 ## ${n}: Number of new tasks
 ## ${url}: Url to task site of verinice.WEB

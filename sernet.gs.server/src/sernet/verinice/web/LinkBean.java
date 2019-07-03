@@ -19,10 +19,12 @@
  ******************************************************************************/
 package sernet.verinice.web;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
@@ -188,7 +190,10 @@ public class LinkBean {
                     for (CnATreeElement linkTarget : linkTargetList) {
                         linkTargetNameList.add(linkTarget.getTitle());
                     }
-                    Collections.sort(linkTargetNameList);
+                    Collator coll = Collator.getInstance(Locale.getDefault());
+                    coll.setStrength(Collator.PRIMARY);
+
+                    Collections.sort(linkTargetNameList, coll);
                 }
             }
         } catch (Exception t) {

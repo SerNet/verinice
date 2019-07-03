@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import sernet.hui.common.connect.IIdentifiableElement;
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bsi.TagHelper;
@@ -33,9 +34,10 @@ import sernet.verinice.model.iso27k.Group;
  * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
-public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup, IIdentifiableElement {
+public class BpRequirementGroup extends Group<BpRequirement>
+        implements IBpGroup, IIdentifiableElement, ITaggableElement {
 
-    private static final long serialVersionUID = 7752776589962581995L;
+    private static final long serialVersionUID = 7752776589962581996L;
 
     public static final String TYPE_ID = "bp_requirement_group";
     public static final String PROP_NAME = "bp_requirement_group_name"; //$NON-NLS-1$

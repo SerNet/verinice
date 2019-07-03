@@ -61,9 +61,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
-import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
-import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.common.CnATreeElement;
@@ -81,21 +79,20 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
     private static final int DIALOG_HEIGHT = 450;
 
     private static final Set<String> PROPERTY_IDS_FREQUENCY_OF_OCCURRENCE = Stream
-            .of(BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY, Safeguard.PROP_STRENGTH_FREQUENCY,
+            .of(BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS,
                     BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS)
             .collect(Collectors.toSet());
 
     private static final Set<String> PROPERTY_IDS_EFFECT = Stream
-            .of(BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT, Safeguard.PROP_STRENGTH_IMPACT,
+            .of(BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS,
                     BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS)
             .collect(Collectors.toSet());
 
-    private static final Set<String> PROPERTY_IDS_RISK_CATEGORY = Stream
-            .of(BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
-                    BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS)
-            .collect(Collectors.toSet());
+    private static final Set<String> PROPERTY_IDS_RISK_CATEGORY = Stream.of(
+            BpThreat.PROP_RISK_WITHOUT_SAFEGUARDS, BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
+            BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS).collect(Collectors.toSet());
 
     private String title;
 

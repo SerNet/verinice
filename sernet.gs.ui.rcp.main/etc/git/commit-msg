@@ -1,0 +1,18 @@
+#!/bin/sh
+# Checks if the commit message contains an issue number.
+
+exec 1>&2
+
+if [ `wc $1 | awk '{print $1}'` -le 1 ]
+then
+    exit 0 # if the message has only one line, we assume the number has been left out on purpose.
+fi
+
+if ! (sed -n 3p "$1" | grep ^VN-[1-9][0-9]*);
+then
+    echo Missing jira number in line 3.
+    exit 1
+fi
+
+exit 0
+

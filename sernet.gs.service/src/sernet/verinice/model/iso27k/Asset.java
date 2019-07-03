@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.IAbbreviatedElement;
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
@@ -33,7 +35,8 @@ import sernet.verinice.model.common.ILinkChangeListener;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class Asset extends CnATreeElement implements IISO27kElement, IISO27kGroup {
+public class Asset extends CnATreeElement
+        implements IISO27kElement, IISO27kGroup, IAbbreviatedElement, ITaggableElement {
 
 	public static final String TYPE_ID = "asset"; //$NON-NLS-1$
 	public static final String UNSECURE_TYPE_ID = "unsecureAssetDAO"; //$NON-NLS-1$

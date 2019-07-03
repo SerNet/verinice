@@ -21,6 +21,7 @@ package sernet.verinice.model.bp.groups;
 
 import java.util.Collection;
 
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.elements.IcsSystem;
 import sernet.verinice.model.bsi.TagHelper;
@@ -31,9 +32,9 @@ import sernet.verinice.model.iso27k.Group;
  * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
-public class IcsSystemGroup extends Group<IcsSystem> implements IBpGroup {
+public class IcsSystemGroup extends Group<IcsSystem> implements IBpGroup, ITaggableElement {
     
-    private static final long serialVersionUID = -5366579759422543907L;
+    private static final long serialVersionUID = -5366579759422543906L;
     
     public static final String TYPE_ID = "bp_icssystem_group"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_icssystem_group_name"; //$NON-NLS-1$

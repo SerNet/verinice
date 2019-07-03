@@ -23,14 +23,11 @@ import java.util.Map;
 import java.util.Set;
 
 import sernet.gs.service.ServerInitializer;
-import sernet.hui.common.connect.PropertyList;
-import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateContext;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateResult;
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Service implementation to run and configure an IT base protection (ITBP) risk
@@ -51,7 +48,6 @@ import sernet.verinice.model.common.CnATreeElement;
 public class RiskServiceImpl implements RiskService {
 
     private RiskServiceMetaDao metaDao;
-    private IBaseDao<PropertyList, Integer> propertyListDao;
 
     private Map<Integer, RiskConfiguration> riskConfigurationCache = Collections
             .synchronizedMap(new LinkedHashMap<Integer, RiskConfiguration>() {
@@ -78,20 +74,7 @@ public class RiskServiceImpl implements RiskService {
         Integer itNetworkDBId = itNetwork.getDbId();
 
         updateItNetwork(itNetwork, updateContext);
-        RiskConfigurationUpdateResult updateResult = updateRiskValuesInThreats(itNetworkDBId,
-                updateContext);
-
-        RiskConfigurationUpdateResult updateRequirementsResult = removeRiskValuesFromRequirements(
-                itNetworkDBId, updateContext);
-        updateResult.setNumberOfChangedRequirements(
-                updateRequirementsResult.getNumberOfChangedRequirements());
-
-        RiskConfigurationUpdateResult updateSafeguardsResult = removeRiskValuesFromSafeguards(
-                itNetworkDBId, updateContext);
-        updateResult.setNumberOfChangedSafeguards(
-                updateSafeguardsResult.getNumberOfChangedSafeguards());
-
-        return updateResult;
+        return updateRiskValuesInThreats(itNetworkDBId, updateContext);
     }
 
     private void updateItNetwork(ItNetwork itNetwork,
@@ -109,27 +92,11 @@ public class RiskServiceImpl implements RiskService {
         Set<BpThreat> threatsFromScope = getMetaDao().loadThreatsFromScope(scopeId);
         RiskValueInThreatUpdater riskValueUpdater = new RiskValueInThreatUpdater(updateContext,
                 threatsFromScope);
-        riskValueUpdater.setPropertyListDao(propertyListDao);
-        riskValueUpdater.execute();
+        Set<BpThreat> changedThreats = riskValueUpdater.execute();
+        for (BpThreat bpThreat : changedThreats) {
+            metaDao.getElementDao().merge(bpThreat);
+        }
         return riskValueUpdater.getRiskConfigurationUpdateResult();
-    }
-
-    private RiskConfigurationUpdateResult removeRiskValuesFromRequirements(Integer scopeId,
-            RiskConfigurationUpdateContext updateContext) {
-        Set<CnATreeElement> requirementsFromScope = getMetaDao().loadRequirementsFromScope(scopeId);
-        RiskValueRemover riskValueRemover = new RiskValueFromRequirementRemover(updateContext,
-                requirementsFromScope);
-        riskValueRemover.execute();
-        return riskValueRemover.getRiskConfigurationUpdateResult();
-    }
-
-    private RiskConfigurationUpdateResult removeRiskValuesFromSafeguards(Integer scopeId,
-            RiskConfigurationUpdateContext updateContext) {
-        Set<CnATreeElement> safeguardsFromScope = getMetaDao().loadSafeguardsFromScope(scopeId);
-        RiskValueRemover riskValueRemover = new RiskValueFromSafeguardRemover(updateContext,
-                safeguardsFromScope);
-        riskValueRemover.execute();
-        return riskValueRemover.getRiskConfigurationUpdateResult();
     }
 
     @Override
@@ -152,14 +119,6 @@ public class RiskServiceImpl implements RiskService {
 
     public void setMetaDao(RiskServiceMetaDao metaDao) {
         this.metaDao = metaDao;
-    }
-
-    public IBaseDao<PropertyList, Integer> getPropertyListDao() {
-        return propertyListDao;
-    }
-
-    public void setpropertyListDao(IBaseDao<PropertyList, Integer> propertyListDao) {
-        this.propertyListDao = propertyListDao;
     }
 
 }

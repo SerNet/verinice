@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.bsi.editors;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +73,7 @@ import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.hui.swt.widgets.IHuiControlFactory;
 import sernet.snutils.AssertException;
 import sernet.snutils.FormInputParser;
+import sernet.snutils.TagHelper;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.bp.rcp.risk.ui.FrequencyConfigurator;
 import sernet.verinice.bp.rcp.risk.ui.ImpactConfigurator;
@@ -276,7 +278,9 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
                             .getBoolean(PreferenceConstants.USE_VALIDATION_GUI_HINTS),
                     overrides);
             InputHelperFactory.setInputHelpers(entityType, huiComposite);
-            RiskUiUtils.addSelectionListener(huiComposite, cnAElement);
+            if (Arrays.stream(tags).anyMatch("BSI-200-3"::equals)) {
+                RiskUiUtils.addSelectionListener(huiComposite, cnAElement);
+            }
             huiComposite.resetInitialFocus();
 
             // create in place editor for links to other objects
@@ -458,19 +462,6 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
         // not supported
     }
 
-    /**
-     * @param tags
-     * @return
-     */
-    private static String[] split(String tags) {
-        if (tags == null) {
-            return new String[] {};
-        }
-
-        String tags0 = tags.replaceAll("\\s+", ""); //$NON-NLS-1$ //$NON-NLS-2$
-        return tags0.split(","); //$NON-NLS-1$
-    }
-
     private void setIcon() {
         Image icon = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
         if (cnAElement != null) {
@@ -549,7 +540,7 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
             tags = new String[allTagsSet.size()];
             tags = allTagsSet.toArray(tags);
         } else {
-            tags = split(tagString);
+            tags = TagHelper.getTags(tagString).stream().toArray(String[]::new);
         }
         return tags;
     }
@@ -592,6 +583,7 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
         @Override
         protected IStatus run(IProgressMonitor monitor) {
             monitor.setTaskName("Refresh application...");
+            Activator.inheritVeriniceContextState();
             refresh();
             return Status.OK_STATUS;
         }

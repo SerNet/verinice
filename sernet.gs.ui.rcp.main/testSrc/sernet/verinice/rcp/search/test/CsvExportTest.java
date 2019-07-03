@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,7 +57,7 @@ import com.opencsv.CSVReader;
 public class CsvExportTest {
 
     private static final LoremIpsum LOREM = new LoremIpsum();
-    private static final Object FILE_SUFFIX = "csv";
+    private static final String FILE_SUFFIX = ".csv";
     public static double visabilityFactor = 0.2;
 
     @Test
@@ -177,11 +178,10 @@ public class CsvExportTest {
         return columnStore;
     }
 
-    private String getFilePath() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(this.getClass().getSimpleName().toString());
-        sb.append(".").append(FILE_SUFFIX);
-        return sb.toString();
+    private String getFilePath() throws IOException {
+        File tempFile = Files.createTempFile(this.getClass().getSimpleName(), FILE_SUFFIX).toFile();
+        tempFile.deleteOnExit();
+        return tempFile.getAbsolutePath();
     }
     
     

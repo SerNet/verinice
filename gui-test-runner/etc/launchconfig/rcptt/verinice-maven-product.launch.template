@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.rcptt.launching.ext">
+<booleanAttribute key="append.args" value="true"/>
+<stringAttribute key="application" value="sernet.gs.ui.rcp.main.application"/>
+<booleanAttribute key="askclear" value="true"/>
+<stringAttribute key="aut-location" value="/home/urszeidler/git-e4/verinice/sernet.verinice.releng.client.product/target/products/sernet.verinice.releng.client/linux/gtk/x86_64/verinice"/>
+<stringAttribute key="aut-target-platform" value="AUT verinice-maven-product (Target Platform)"/>
+<booleanAttribute key="aut-target-updatable" value="true"/>
+<stringAttribute key="bootstrap" value=""/>
+<stringAttribute key="checked" value="[NONE]"/>
+<booleanAttribute key="clearConfig" value="false"/>
+<booleanAttribute key="clearws" value="false"/>
+<booleanAttribute key="clearwslog" value="false"/>
+<stringAttribute key="com.xored.launching.common.attrArch" value="x86_64"/>
+<stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/verinice-maven-product"/>
+<booleanAttribute key="generateProfile" value="true"/>
+<stringAttribute key="location" value="${workspace_loc:build/wrks/aut-workspace-}"/>
+<booleanAttribute key="org.eclipse.debug.ui.ATTR_APPEND_TO_FILE" value="true"/>
+<stringAttribute key="org.eclipse.debug.ui.ATTR_CAPTURE_IN_FILE" value="${workspace_loc:build/result/logs/aut.log}"/>
+<booleanAttribute key="org.eclipse.debug.ui.ATTR_CONSOLE_OUTPUT_ON" value="false"/>
+<stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch x86_64 -consoleLog"/>
+<stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms512m -Xmx4g &#10;-Dorg.osgi.service.http.port=8800 &#10;-Dorg.ops4j.pax.web.listening.addresses=localhost &#10;-Djavax.activation.debug=true &#10;-Dosgi.parentClassloader=ext &#10;-Djavax.xml.soap.SOAPFactory=org.apache.axis.soap.SOAPFactoryImpl &#10;-Djavax.xml.soap.MessageFactory=org.apache.axis.soap.MessageFactoryImpl &#10;-Djavax.xml.soap.SOAPConnectionFactory=org.apache.axis.soap.SOAPConnectionFactoryImpl &#10;-XX:MaxPermSize=128m&#10;-Dbasepath=/home/urszeidler/git/verinice-rcptt/build/result&#10;-Dimages=/home/urszeidler/git/verinice-rcptt/build/result/screenshots&#10;-Dtest-data=/home/urszeidler/git/verinice-rcptt/build/result"/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:build/result/wrks/aut-workspace-}"/>
+<stringAttribute key="pde.version" value="3.3"/>
+<stringAttribute key="product" value="sernet.gs.ui.rcp.main.product"/>
+<booleanAttribute key="tracing" value="false"/>
+<booleanAttribute key="useDefaultConfig" value="true"/>
+<booleanAttribute key="useDefaultConfigArea" value="true"/>
+<booleanAttribute key="useProduct" value="true"/>
+</launchConfiguration>

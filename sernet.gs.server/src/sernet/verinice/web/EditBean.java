@@ -49,6 +49,7 @@ import org.primefaces.event.SelectEvent;
 
 import sernet.gs.service.GSServiceException;
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.StringUtil;
 import sernet.gs.service.TimeFormatter;
 import sernet.gs.web.SecurityException;
 import sernet.gs.web.Util;
@@ -66,9 +67,7 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
-import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
-import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.risk.Frequency;
 import sernet.verinice.model.bp.risk.Impact;
 import sernet.verinice.model.bp.risk.Risk;
@@ -257,9 +256,17 @@ public class EditBean {
 
     private void initRiskComputations(BpThreat threat, Map<String, HuiProperty> key2HuiProperty) {
         RiskValueChangeListener listener = new RiskValueChangeListener(threat, key2HuiProperty);
+        key2HuiProperty.get(BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS)
+                .addValueChangeListener(listener);
+        key2HuiProperty.get(BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS)
+                .addValueChangeListener(listener);
         key2HuiProperty.get(BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS)
                 .addValueChangeListener(listener);
         key2HuiProperty.get(BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS)
+                .addValueChangeListener(listener);
+        key2HuiProperty.get(BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS)
+                .addValueChangeListener(listener);
+        key2HuiProperty.get(BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS)
                 .addValueChangeListener(listener);
     }
 
@@ -297,24 +304,24 @@ public class EditBean {
     private PropertyType adaptTypeIfRiskProperty(PropertyType propertyType) {
         String propertyId = propertyType.getId();
         switch (propertyId) {
-        case BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY:
-            return new OverrideOptionsPropertyType(propertyType, getFrequencyValues(true));
-        case BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT:
-            return new OverrideOptionsPropertyType(propertyType, getImpactValues(true));
-        case Safeguard.PROP_STRENGTH_FREQUENCY:
-            return new OverrideOptionsPropertyType(propertyType, getFrequencyValues(true));
-        case Safeguard.PROP_STRENGTH_IMPACT:
-            return new OverrideOptionsPropertyType(propertyType, getImpactValues(true));
+        case BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS:
+            return new OverrideOptionsPropertyType(propertyType, getFrequencyValues());
+        case BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS:
+            return new OverrideOptionsPropertyType(propertyType, getImpactValues());
+        case BpThreat.PROP_RISK_WITHOUT_SAFEGUARDS:
+            return new OverrideOptionsPropertyType(propertyType, getRiskValues());
+
         case BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS:
-            return new OverrideOptionsPropertyType(propertyType, getFrequencyValues(false));
+            return new OverrideOptionsPropertyType(propertyType, getFrequencyValues());
         case BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS:
-            return new OverrideOptionsPropertyType(propertyType, getImpactValues(false));
+            return new OverrideOptionsPropertyType(propertyType, getImpactValues());
         case BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS:
             return new OverrideOptionsPropertyType(propertyType, getRiskValues());
+
         case BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS:
-            return new OverrideOptionsPropertyType(propertyType, getFrequencyValues(false));
+            return new OverrideOptionsPropertyType(propertyType, getFrequencyValues());
         case BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS:
-            return new OverrideOptionsPropertyType(propertyType, getImpactValues(false));
+            return new OverrideOptionsPropertyType(propertyType, getImpactValues());
         case BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS:
             return new OverrideOptionsPropertyType(propertyType, getRiskValues());
         default:
@@ -329,25 +336,19 @@ public class EditBean {
                 .collect(Collectors.toList());
     }
 
-    private List<IMLPropertyOption> getImpactValues(boolean excludeLastValue) {
+    private List<IMLPropertyOption> getImpactValues() {
         RiskConfiguration riskConfiguration = getRiskConfiguration();
         List<Impact> impactValues = riskConfiguration.getImpacts();
-        Stream<Impact> stream = impactValues.stream();
-        if (excludeLastValue) {
-            stream = stream.limit(impactValues.size() - 1l);
-        }
-        return stream.map(impact -> new PropertyOption(impact.getId(), impact.getLabel()))
+        return impactValues.stream()
+                .map(impact -> new PropertyOption(impact.getId(), impact.getLabel()))
                 .collect(Collectors.toList());
     }
 
-    private List<IMLPropertyOption> getFrequencyValues(boolean excludeMaximumValue) {
+    private List<IMLPropertyOption> getFrequencyValues() {
         RiskConfiguration riskConfiguration = getRiskConfiguration();
         List<Frequency> frequencyValues = riskConfiguration.getFrequencies();
-        Stream<Frequency> stream = frequencyValues.stream();
-        if (excludeMaximumValue) {
-            stream = stream.limit(riskConfiguration.getFrequencies().size() - 1l);
-        }
-        return stream.map(frequency -> new PropertyOption(frequency.getId(), frequency.getLabel()))
+        return frequencyValues.stream()
+                .map(frequency -> new PropertyOption(frequency.getId(), frequency.getLabel()))
                 .collect(Collectors.toList());
     }
 
@@ -1029,82 +1030,65 @@ public class EditBean {
 
     private final class RiskValueChangeListener implements ValueChangeListener {
 
-        private static final long serialVersionUID = -3623879117292043547L;
+        private static final long serialVersionUID = 8853202166155378758L;
+
         private final Map<String, HuiProperty> key2HuiProperty;
-        private final BpThreat threat;
-        private final String frequencyWithoutAdditionalSafeguardsInitial;
-        private final String impactWithoutAdditionalSafeguardsInitial;
-        private final String riskWithoutAdditionalSafeguardsInitial;
-        private final String frequencyWithAdditionalSafeguardsInitial;
-        private final String impactyWithAdditionalSafeguardsInitial;
-        private final String riskWithAdditionalSafeguardsInitial;
+
+        private final Map<String, String> initialValues = new HashMap<>();
 
         public RiskValueChangeListener(BpThreat threat, Map<String, HuiProperty> key2HuiProperty) {
             this.key2HuiProperty = key2HuiProperty;
-            this.threat = threat;
 
-            frequencyWithoutAdditionalSafeguardsInitial = threat
-                    .getFrequencyWithoutAdditionalSafeguards();
-            impactWithoutAdditionalSafeguardsInitial = threat
-                    .getImpactWithoutAdditionalSafeguards();
-            riskWithoutAdditionalSafeguardsInitial = threat.getRiskWithoutAdditionalSafeguards();
-            frequencyWithAdditionalSafeguardsInitial = threat
-                    .getFrequencyWithAdditionalSafeguards();
-            impactyWithAdditionalSafeguardsInitial = threat.getImpactWithAdditionalSafeguards();
-            riskWithAdditionalSafeguardsInitial = threat.getRiskWithAdditionalSafeguards();
-
+            Stream.of(BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS).forEach(propertyName -> {
+                        String value = StringUtil.replaceEmptyStringByNull(
+                                threat.getEntity().getRawPropertyValue(propertyName));
+                        initialValues.put(propertyName, value);
+                    });
         }
 
         @Override
         public void processChangedValue(HuiProperty huiProperty) {
             String propertyName = huiProperty.getKey();
             String newValue = huiProperty.getValue();
+            recordNewValueIfChanged(propertyName, newValue);
+            RiskConfiguration riskConfiguration = getRiskConfiguration();
+            String riskWithoutSafeguardsNew = calculateRisk(
+                    BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS, riskConfiguration);
+            String riskWithoutAdditionalSafeguardsNew = calculateRisk(
+                    BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS, riskConfiguration);
+            String riskWithAdditionalSafeguardsNew = calculateRisk(
+                    BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS, riskConfiguration);
 
-            if (BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS.equals(propertyName)) {
-                threat.setFrequencyWithoutAdditionalSafeguards(newValue);
-                threat.setImpactWithoutAdditionalSafeguards(key2HuiProperty
-                        .get(BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS).getValue());
-            } else if (BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS.equals(propertyName)) {
-                threat.setFrequencyWithoutAdditionalSafeguards(key2HuiProperty
-                        .get(BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS).getValue());
-                threat.setImpactWithoutAdditionalSafeguards(newValue);
-            }
-            RiskDeductionUtil.deduceRisk(threat);
-            String frequencyWithoutAdditionalSafeguardsNew = threat
-                    .getFrequencyWithoutAdditionalSafeguards();
-            String impactWithoutAdditionalSafeguardsNew = threat
-                    .getImpactWithoutAdditionalSafeguards();
-            String riskWithoutAdditionalSafeguardsNew = threat.getRiskWithoutAdditionalSafeguards();
-            String frequencyWithAdditionalSafeguardsNew = threat
-                    .getFrequencyWithAdditionalSafeguards();
-            String impactWithAdditionalSafeguardsNew = threat.getImpactWithAdditionalSafeguards();
-            String riskWithAdditionalSafeguardsNew = threat.getRiskWithAdditionalSafeguards();
-
-            threat.setFrequencyWithoutAdditionalSafeguards(
-                    frequencyWithoutAdditionalSafeguardsInitial);
-            threat.setImpactWithoutAdditionalSafeguards(impactWithoutAdditionalSafeguardsInitial);
-            RiskDeductionUtil.deduceRisk(threat);
-
-            recordNewValueIfChanged(BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
-                    frequencyWithoutAdditionalSafeguardsInitial,
-                    frequencyWithoutAdditionalSafeguardsNew);
-            recordNewValueIfChanged(BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
-                    impactWithoutAdditionalSafeguardsInitial, impactWithoutAdditionalSafeguardsNew);
+            recordNewValueIfChanged(BpThreat.PROP_RISK_WITHOUT_SAFEGUARDS,
+                    riskWithoutSafeguardsNew);
             recordNewValueIfChanged(BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
-                    riskWithoutAdditionalSafeguardsInitial, riskWithoutAdditionalSafeguardsNew);
-            recordNewValueIfChanged(BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS,
-                    frequencyWithAdditionalSafeguardsInitial, frequencyWithAdditionalSafeguardsNew);
-            recordNewValueIfChanged(BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS,
-                    impactyWithAdditionalSafeguardsInitial, impactWithAdditionalSafeguardsNew);
+                    riskWithoutAdditionalSafeguardsNew);
             recordNewValueIfChanged(BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS,
-                    riskWithAdditionalSafeguardsInitial, riskWithAdditionalSafeguardsNew);
-
+                    riskWithAdditionalSafeguardsNew);
         }
 
-        private void recordNewValueIfChanged(String propertyId, String initialValue,
-                String newValue) {
+        private String calculateRisk(String frequencyProperty, String impactProperty,
+                RiskConfiguration riskConfiguration) {
+            return RiskDeductionUtil.calculateRisk(riskConfiguration,
+                    StringUtil.replaceEmptyStringByNull(
+                            key2HuiProperty.get(frequencyProperty).getValue()),
+                    StringUtil.replaceEmptyStringByNull(
+                            key2HuiProperty.get(impactProperty).getValue()))
+                    .orElse(null);
+        }
+
+        private void recordNewValueIfChanged(String propertyId, String newValue) {
+            String initialValue = initialValues.get(propertyId);
             HuiProperty huiProperty = key2HuiProperty.get(propertyId);
-            String oldValue = emptyStringToNull(huiProperty.getValue());
+            String oldValue = StringUtil.replaceEmptyStringByNull(huiProperty.getValue());
             if (!Objects.equals(oldValue, newValue)) {
                 huiProperty.setValue(newValue);
             }
@@ -1117,13 +1101,6 @@ public class EditBean {
                     changedElementProperties.remove(propertyId);
                 }
             }
-        }
-
-        private String emptyStringToNull(String s) {
-            if (s == null || s.length() == 0) {
-                return null;
-            }
-            return s;
         }
     }
 }
