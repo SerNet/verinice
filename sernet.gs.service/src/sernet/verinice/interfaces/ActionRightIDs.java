@@ -20,7 +20,8 @@ package sernet.verinice.interfaces;
 import java.util.stream.Stream;
 
 /**
- * List of all possible actions that should be controlable by right-management
+ * List of all possible actions that should be controllable by the rights
+ * management.
  */
 public final class ActionRightIDs {
 
@@ -64,7 +65,6 @@ public final class ActionRightIDs {
     public static final String EXPORT_LINK_TABLE = "exportlinktable";
     public static final String FILES = "files";
     public static final String GENERATEORGREPORT = "generateorgreport";
-    public static final String GENERATEAUDITREPORT = "generateauditreport";
     public static final String GROUP_BY_TAG = "groupbytag";
     public static final String GSNOTESIMPORT = "gsnotesimport";
     public static final String GSTOOLIMPORT = "gstoolimport";

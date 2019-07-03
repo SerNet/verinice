@@ -71,7 +71,6 @@
           <action id="editriskconfiguration" />
           	<action id="exportlinktable" />
 	        <action id="files" />
-	        <action id="generateauditreport" />
 	        <action id="generateorgreport" />
           <action id="groupbytag"/>
 	        <action id="gsnotesimport" />

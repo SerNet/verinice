@@ -409,8 +409,6 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.gs.service.NumericStringComparator;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -471,16 +469,12 @@ Audit getParentAudit(CnATreeElement elem){
 }
 
 
-String loadOrganizationOrVerbund(CnATreeElement elem){
-    if (elem instanceof Organization ) {
-	return ((Organization) elem).getTitle();
+String getScopeTitle(CnATreeElement elem){
+    if (elem.isScope()) {
+	return elem.getTitle();
     }
 
-    if (elem instanceof ITVerbund) {
-	return ((ITVerbund) elem).getTitle();
-    }
-
-    return loadOrganizationOrVerbund(elem.getParent());
+    return getScopeTitle(elem.getParent());
 }
 
 
@@ -532,7 +526,7 @@ for (ITask task : taskList) {
     row.add(task.getProcessName());
     row.add(task.getUuidGroup());
     
-    row.add(loadOrganizationOrVerbund(ancestor));
+    row.add(getScopeTitle(ancestor));
     row.add(getSamtTopicEntityProperty(ancestor, PROP_AUDIT_FINDINGS));
     row.add(getSamtTopicEntityProperty(ancestor, SAMT_TOPIC_CONTROLNOTE));
     row.add(getSamtTopicEntityProperty(ancestor, PROP_MATURITY));

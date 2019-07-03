@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _mEARsE-jEemuCsPaiy5gOQ
-Runtime-Version: 2.4.1.201903190000
-Save-Time: 5/22/19 4:12 PM
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 6/12/19 10:13 AM
 Tags: report
 Testcase-Type: ecl
 
@@ -22,7 +22,9 @@ These tests also makes a risk analysis.
 Content-Type: text/ecl
 Entry-Name: .content
 
-global [val selectedObject "Imported Objects/verinice Risk Catalogue pursuant to ISO IEC 27001:2013 EN [VRC20160829]"]
+global 
+[val selectedObject "Imported Objects/verinice Risk Catalogue pursuant to ISO IEC 27001:2013 EN [VRC20160829]"]
+[val selectedObject1 "Imported Objects/Risk Test [860357]"]
 
 proc "gen-rep-ism" [val report] [val quallifier ""]{
 	try {
@@ -53,20 +55,41 @@ proc "gen-rep-com-en" [val report] [val view] [val object] [val quallifier ""] {
 
 log "Start report testing en-risk-ISM-ltr"
 
-get-button "Refresh view" | click
+//get-button "Refresh view" | click
 
 get-view "Information Security Model" | get-button "Import organization from File..." | click
 set-dialog-result File [concat $datadir [get-java-property "file.separator"] "verinice_Risk_Catalogue_EN.vna"]
 get-window Import | get-group File | get-button "Select file..." | click
 get-window Import | get-button OK | click
 
+log "verinice_Risk_Catalogue_EN imported"
+
+get-view "Information Security Model" | get-button "Import organization from File..." | click
+set-dialog-result File [concat $datadir [get-java-property "file.separator"] "Risk_Test.vna"]
+get-window Import | get-group File | get-button "Select file..." | click
+get-window Import | get-button OK | click
+
+log "Risk_Test imported"
+
+get-view "Information Security Model" | get-tree 
+    | select $selectedObject | get-menu 
+    -path "Run Risk Analysis..." | click
+get-window "ISO/IEC 27005 Risk Analysis" | get-button "Finish" | click
+get-window "ISO/IEC 27005 Risk Analysis" | get-button OK | click
+
 gen-rep-ism "(S) ISM: Risk Assessment (en)" "en-Verinice_Risk_Catalogue"
-//gen-rep-ism "(S) ISM: Risk Treatment (en)" "en-Verinice_Risk_Catalogue"
+gen-rep-ism "(S) ISM: Risk Treatment" "en-Verinice_Risk_Catalogue"
 
 get-view "Information Security Model" | get-tree 
     | select $selectedObject | get-menu 
     -path Delete | click
 get-window "Really delete?" | get-button Yes | click
+
+get-view "Information Security Model" | get-tree 
+    | select $selectedObject1 | get-menu 
+    -path Delete | click
+get-window "Really delete?" | get-button Yes | click
+
 
 log "stop report testing en-risk-ISM-ltr" 
 
