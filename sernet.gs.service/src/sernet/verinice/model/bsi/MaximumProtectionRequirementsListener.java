@@ -50,7 +50,7 @@ public class MaximumProtectionRequirementsListener implements ILinkChangeListene
 
         // get protection level from upward links:
         int highestValue = 0;
-        allLinks: for (CnALink link : sbTarget.getLinksUp()) {
+        for (CnALink link : sbTarget.getLinksUp()) {
             CnATreeElement upwardElmt = link.getDependant();
             if (upwardElmt.isProtectionRequirementsProvider()) {
                 // upwardElement might depend on maximum level itself, so
@@ -64,7 +64,7 @@ public class MaximumProtectionRequirementsListener implements ILinkChangeListene
             }
         }
 
-        // if we dont use the maximum principle, keep current level:
+        // if we don't use the maximum principle, keep current level:
         if (!Schutzbedarf.isMaximumPrinzip(
                 sbTarget.getProtectionRequirementsProvider().getIntegrityDescription())) {
             return;
@@ -72,15 +72,8 @@ public class MaximumProtectionRequirementsListener implements ILinkChangeListene
         sbTarget.getProtectionRequirementsProvider().setIntegrity(highestValue);
     }
 
-    /**
-     * @param ta
-     * @return
-     */
     private boolean hasBeenVisited(CascadingTransaction ta) {
-        if (ta.hasBeenVisited(sbTarget)) {
-            return true; // we have already been down this path
-        }
-        return false;
+        return ta.hasBeenVisited(sbTarget);
     }
 
     @Override
@@ -92,7 +85,7 @@ public class MaximumProtectionRequirementsListener implements ILinkChangeListene
 
         // otherwise get protection level from upward links:
         int highestValue = 0;
-        allLinks: for (CnALink link : sbTarget.getLinksUp()) {
+        for (CnALink link : sbTarget.getLinksUp()) {
             CnATreeElement upwardElmt = link.getDependant();
             if (upwardElmt.isProtectionRequirementsProvider()) {
 
@@ -107,7 +100,7 @@ public class MaximumProtectionRequirementsListener implements ILinkChangeListene
             }
         }
 
-        // if we dont use the maximum principle, keep current level:
+        // if we don't use the maximum principle, keep current level:
         if (!Schutzbedarf.isMaximumPrinzip(
                 sbTarget.getProtectionRequirementsProvider().getAvailabilityDescription())) {
             return;
@@ -126,7 +119,7 @@ public class MaximumProtectionRequirementsListener implements ILinkChangeListene
 
         // otherwise get protection level from upward links:
         int highestValue = 0;
-        allLinks: for (CnALink link : sbTarget.getLinksUp()) {
+        for (CnALink link : sbTarget.getLinksUp()) {
             CnATreeElement upwardElmt = link.getDependant();
             if (upwardElmt.isProtectionRequirementsProvider()) {
 
@@ -140,7 +133,7 @@ public class MaximumProtectionRequirementsListener implements ILinkChangeListene
                 }
             }
         }
-        // if we dont use the maximum principle, keep current level:
+        // if we don't use the maximum principle, keep current level:
         if (!Schutzbedarf.isMaximumPrinzip(
                 sbTarget.getProtectionRequirementsProvider().getConfidentialityDescription())) {
             return;

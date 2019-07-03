@@ -78,7 +78,7 @@ public class MaximumProtectionRequirementsValueListener extends AbstractLinkChan
             }
         }
 
-        // if we dont use the maximum principle, keep current level:
+        // if we don't use the maximum principle, keep current level:
         if (!sbTarget.getProtectionRequirementsProvider().isCalculatedIntegrity()) {
             if (LOG_INHERIT.isInfo()) {
                 LOG_INHERIT.info("Integrity is set manually: " //$NON-NLS-1$
@@ -124,11 +124,11 @@ public class MaximumProtectionRequirementsValueListener extends AbstractLinkChan
             }
         }
 
-        // if we dont use the maximum principle, keep current level:
+        // if we don't use the maximum principle, keep current level:
         if (!sbTarget.getProtectionRequirementsProvider().isCalculatedAvailability()) {
             if (LOG_INHERIT.isInfo()) {
                 LOG_INHERIT.info("Availability is set manually: " //$NON-NLS-1$
-                        + sbTarget.getProtectionRequirementsProvider().getIntegrity()
+                        + sbTarget.getProtectionRequirementsProvider().getAvailability()
                         + STRING_CONNECTOR_FOR + sbTarget.getTitle()); // $NON-NLS-2$
             }
             return;
@@ -170,11 +170,11 @@ public class MaximumProtectionRequirementsValueListener extends AbstractLinkChan
                 }
             }
         }
-        // if we dont use the maximum principle, keep current level:
+        // if we don't use the maximum principle, keep current level:
         if (!sbTarget.getProtectionRequirementsProvider().isCalculatedConfidentiality()) {
             if (LOG_INHERIT.isInfo()) {
                 LOG_INHERIT.info("Confidentiality is set manually: " //$NON-NLS-1$
-                        + sbTarget.getProtectionRequirementsProvider().getIntegrity()
+                        + sbTarget.getProtectionRequirementsProvider().getConfidentiality()
                         + STRING_CONNECTOR_FOR + sbTarget.getTitle()); // $NON-NLS-2$
             }
             return;
@@ -188,10 +188,6 @@ public class MaximumProtectionRequirementsValueListener extends AbstractLinkChan
 
     }
 
-    /**
-     * @param ta
-     * @return
-     */
     private boolean hasBeenVisited(CascadingTransaction ta) {
         if (ta.hasBeenVisited(sbTarget)) {
             if (LOG_INHERIT.isDebug()) {

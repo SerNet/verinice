@@ -88,10 +88,10 @@ public class TaskService implements ITaskService {
 
     private final Logger log = Logger.getLogger(TaskService.class);
 
-    public static final Map<String, String> DEFAULT_OUTCOMES;
+    private static final Map<String, String> DEFAULT_OUTCOMES;
 
     static {
-        DEFAULT_OUTCOMES = new HashMap<String, String>();
+        DEFAULT_OUTCOMES = new HashMap<>();
         DEFAULT_OUTCOMES.put(IIsaExecutionProcess.TASK_SET_ASSIGNEE,
                 IIsaExecutionProcess.TRANS_COMPLETE);
         DEFAULT_OUTCOMES.put(IIsaExecutionProcess.TASK_IMPLEMENT,
@@ -183,7 +183,6 @@ public class TaskService implements ITaskService {
      * 
      * @see sernet.verinice.interfaces.bpm.ITaskService#getTaskList(java.lang.String)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public List<ITask> getTaskList(ITaskParameter parameter) {
         if (log.isDebugEnabled()) {
@@ -205,11 +204,13 @@ public class TaskService implements ITaskService {
         List<ITask> taskList = Collections.emptyList();
         if (doSearch(parameter)) {
             Object[] queryElements = prepareSearchQuery(parameter);
+            @SuppressWarnings("unchecked")
             List<?> paramList = (List<Object>) queryElements[0];
             final String hql = (String) queryElements[1];
             if (log.isDebugEnabled()) {
                 log.debug("getTaskList, hql: " + hql); //$NON-NLS-1$
             }
+            @SuppressWarnings("unchecked")
             List<Object> jbpmTaskList = getJbpmTaskDao().findByQuery(hql, paramList.toArray());
             if (log.isDebugEnabled()) {
                 log.debug("getTaskList, number of tasks: " + jbpmTaskList.size()); //$NON-NLS-1$
@@ -227,7 +228,7 @@ public class TaskService implements ITaskService {
 
     private List<ITask> populateTaskList(List<?> jbpmTaskList) {
         List<ITask> taskList;
-        taskList = new ArrayList<ITask>();
+        taskList = new ArrayList<>();
         Task task = null;
         for (Iterator<?> iterator = jbpmTaskList.iterator(); iterator.hasNext();) {
             Object object = iterator.next();
@@ -256,7 +257,7 @@ public class TaskService implements ITaskService {
 
     private List<KeyValue> getOutcomeList(Task task) {
         Set<String> outcomeSet = getTaskService().getOutcomes(task.getId());
-        List<KeyValue> outcomeList = new ArrayList<KeyValue>(outcomeSet.size());
+        List<KeyValue> outcomeList = new ArrayList<>(outcomeSet.size());
         for (String id : outcomeSet) {
             if (!getTaskOutcomeBlacklist().contains(id)) {
                 outcomeList.add(new KeyValue(id, Messages.getString(id)));
@@ -268,7 +269,7 @@ public class TaskService implements ITaskService {
     private Object[] prepareSearchQuery(ITaskParameter parameter) {
         Object[] retValues = new Object[2];
         StringBuilder sb = new StringBuilder("from org.jbpm.pvm.internal.task.TaskImpl as task "); //$NON-NLS-1$
-        List<Object> paramList = new LinkedList<Object>();
+        List<Object> paramList = new LinkedList<>();
 
         if (parameter.getAuditUuid() != null
                 || (parameter.getGroupIdList() != null && !parameter.getGroupIdList().isEmpty())) {
@@ -362,7 +363,7 @@ public class TaskService implements ITaskService {
 
     private void addReadStatus(StringBuilder sb, List<Object> paramList, boolean where,
             String status) {
-        where = concat(sb, where);
+        concat(sb, where);
         sb.append("readVar.key=? "); //$NON-NLS-1$
         paramList.add(ITaskService.VAR_READ_STATUS);
         sb.append("and readVar.string=? "); //$NON-NLS-1$
@@ -370,22 +371,9 @@ public class TaskService implements ITaskService {
     }
 
     private String getQuestionMarkList(List<String> uuidList) {
-        StringBuilder sb = new StringBuilder();
-        boolean first = true;
-        for (String uuid : uuidList) {
-            if (!first) {
-                sb.append(",");
-            }
-            sb.append("?");
-            first = false;
-        }
-        return sb.toString();
+        return String.join(",", Collections.nCopies(uuidList.size(), "?"));
     }
 
-    /**
-     * @param hql
-     * @param where
-     */
     private boolean concat(/* not final */StringBuilder hql, /* not final */boolean where) {
         boolean where0 = where;
         if (!where0) {
@@ -398,10 +386,9 @@ public class TaskService implements ITaskService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.bpm.ITaskService#getAuditList()
      */
+    @SuppressWarnings("unchecked")
     @Override
     public List<String> getElementList() {
         ServerInitializer.inheritVeriniceContextState();
@@ -415,9 +402,6 @@ public class TaskService implements ITaskService {
                 || (parameter.getRead() || parameter.getUnread()));
     }
 
-    /**
-     * @param task
-     */
     private TaskInformation map(Task task) {
         TaskInformation taskInformation = new TaskInformation();
         taskInformation.setId(task.getId());
@@ -444,8 +428,8 @@ public class TaskService implements ITaskService {
             taskInformation.setProperties((Set<String>) value);
         }
 
-        taskInformation = mapElement(taskInformation, varMap);
-        taskInformation = mapAudit(taskInformation, varMap);
+        mapElement(taskInformation, varMap);
+        mapAudit(taskInformation, varMap);
 
         if (log.isDebugEnabled()) {
             log.debug("map, loading type..."); //$NON-NLS-1$
@@ -511,12 +495,11 @@ public class TaskService implements ITaskService {
 
         log.debug("mapAudit, loading audit..."); //$NON-NLS-1$
 
-        CnATreeElement audit = null;
         String uuidAudit = (String) varMap.get(IIsaExecutionProcess.VAR_AUDIT_UUID);
         String elementUuid = (String) varMap.get(IIsaExecutionProcess.VAR_UUID);
 
         if (uuidAudit != null) {// task references child of Audit
-            return handleAuditElement(taskInformation, uuidAudit, elementUuid);
+            return handleAuditElement(taskInformation, uuidAudit);
         } else { // task references child of ITVerbund or Organization
             return handleNonAuditElement(taskInformation, elementUuid);
         }
@@ -539,8 +522,7 @@ public class TaskService implements ITaskService {
         return taskInformation;
     }
 
-    private TaskInformation handleAuditElement(TaskInformation taskInformation, String uuidAudit,
-            String elementUuid) {
+    private TaskInformation handleAuditElement(TaskInformation taskInformation, String uuidAudit) {
         CnATreeElement audit;
         taskInformation.setUuidGroup(uuidAudit);
         RetrieveInfo ri = new RetrieveInfo();
@@ -563,8 +545,8 @@ public class TaskService implements ITaskService {
                 + "select scopeId from CnATreeElement element2 where element2.uuid = :uuid " + ") "
                 + "AND props.propertyType IN (:titleProperties)";
         List hqlResult = getElementDao().findByQuery(hql,
-                new String[] { "uuid", "titleProperties" }, new Object[] { elementUuid, Arrays
-                        .asList(new String[] { ITVerbund.PROP_NAME, Organization.PROP_NAME }) });
+                new String[] { "uuid", "titleProperties" }, new Object[] { elementUuid,
+                        Arrays.asList(ITVerbund.PROP_NAME, Organization.PROP_NAME) });
         if (hqlResult instanceof Collection && hqlResult.size() == 1) {
             results = getValuesFromHQLResult(hqlResult);
         }
@@ -646,8 +628,6 @@ public class TaskService implements ITaskService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.bpm.ITaskService#completeTask(java.lang.
      * String)
      */
@@ -708,15 +688,13 @@ public class TaskService implements ITaskService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.bpm.ITaskService#markAsRead(java.lang.String)
      */
     @Override
     public void markAsRead(String taskId) {
-        Map<String, String> varMap = new HashMap<String, String>(1);
-        varMap.put(ITaskService.VAR_READ_STATUS, ITaskService.VAR_READ);
+        Map<String, String> varMap = Collections.singletonMap(ITaskService.VAR_READ_STATUS,
+                ITaskService.VAR_READ);
         getTaskService().setVariables(taskId, varMap);
     }
 
@@ -743,6 +721,7 @@ public class TaskService implements ITaskService {
         // Some task belongs to a subprocess of the main process
         // HQL query to find the main process
         String hql = "select execution.parent from org.jbpm.pvm.internal.task.TaskImpl t where t.id = ?"; //$NON-NLS-1$
+        @SuppressWarnings("unchecked")
         List<Execution> executionList = getJbpmTaskDao().findByQuery(hql,
                 new Long[] { Long.valueOf(taskId) });
         if (!executionList.isEmpty()) {
@@ -765,8 +744,6 @@ public class TaskService implements ITaskService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.bpm.ITaskService#setAssignee(java.lang.String,
      * java.lang.String)
@@ -782,8 +759,6 @@ public class TaskService implements ITaskService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.bpm.ITaskService#setAssignee(java.lang.String,
      * java.lang.String)
@@ -791,8 +766,8 @@ public class TaskService implements ITaskService {
     @Override
     public void setDuedate(Set<String> taskIdset, Date duedate) {
         if (taskIdset != null && !taskIdset.isEmpty() && duedate != null) {
-            Map<String, Date> param = new HashMap<String, Date>();
-            param.put(IGenericProcess.VAR_DUEDATE, duedate);
+            Map<String, Date> param = Collections.singletonMap(IGenericProcess.VAR_DUEDATE,
+                    duedate);
             for (String taskId : taskIdset) {
                 Task task = getTaskService().getTask(taskId);
                 task.setDuedate(duedate);
@@ -806,8 +781,8 @@ public class TaskService implements ITaskService {
     public void setAssigneeVar(Set<String> taskIdset, String username) {
         if (taskIdset != null && !taskIdset.isEmpty() && username != null) {
             for (String taskId : taskIdset) {
-                Map<String, String> param = new HashMap<String, String>();
-                param.put(IGenericProcess.VAR_ASSIGNEE_NAME, username);
+                Map<String, String> param = Collections
+                        .singletonMap(IGenericProcess.VAR_ASSIGNEE_NAME, username);
                 getTaskService().setVariables(taskId, param);
             }
 
@@ -815,8 +790,6 @@ public class TaskService implements ITaskService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.bpm.ITaskService#setVariables(java.lang.
      * String, java.util.Map)
      */
@@ -827,8 +800,8 @@ public class TaskService implements ITaskService {
 
     @Override
     public Map<String, Object> getVariables(String taskId) {
-        Map<String, Object> variables = new HashMap<String, Object>();
         Set<String> names = getTaskService().getVariableNames(taskId);
+        Map<String, Object> variables = new HashMap<>(names.size());
         for (String name : names) {
             variables.put(name, getTaskService().getVariable(taskId, name));
         }
@@ -855,6 +828,7 @@ public class TaskService implements ITaskService {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Map<String, String> loadChangedElementProperties(String taskId) {
         Map<String, Object> variables = getVariables(taskId);
@@ -875,15 +849,16 @@ public class TaskService implements ITaskService {
                 command = getCommandService().executeCommand(command);
                 CnATreeElement cnAElement = command.getElement();
 
+                @SuppressWarnings("unchecked")
                 Map<String, String> changedElementProperties = (Map<String, String>) variables
                         .get(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES);
                 for (Map.Entry<String, String> entry : changedElementProperties.entrySet()) {
                     cnAElement.setPropertyValue(entry.getKey(), entry.getValue());
                 }
 
-                UpdateElementEntity<? extends CnATreeElement> updateCommand = new UpdateElementEntity<CnATreeElement>(
+                UpdateElementEntity<? extends CnATreeElement> updateCommand = new UpdateElementEntity<>(
                         cnAElement, ChangeLogEntry.STATION_ID);
-                updateCommand = getCommandService().executeCommand(updateCommand);
+                getCommandService().executeCommand(updateCommand);
 
             } catch (CommandException e) {
                 log.error("Error while saving changed element properties to CnATreeElement.", e); //$NON-NLS-1$

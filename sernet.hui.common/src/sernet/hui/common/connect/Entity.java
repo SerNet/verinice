@@ -468,10 +468,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
      * <em>untranslated</em> IOW should directly represent the strings used in
      * the SNCA.xml
      * </p>
-     *
-     * @param huiTypeFactory
-     * @param propertyTypeId
-     * @param foreignProperties
+     * 
      */
     public void importProperties(HUITypeFactory huiTypeFactory, String propertyTypeId,
             List<String> foreignProperties, List<Boolean> foreignLimitedLicense,
@@ -505,25 +502,8 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                 logger.info("Property-type was not found in SNCA.xml: " + propertyTypeId
                         + ", entity type: " + this.entityType);
             }
+            checkPropertyValue(propertyTypeId, propertyType, value);
 
-            if (propertyType != null && propertyType.isSingleSelect() && value != null
-                    && !value.isEmpty()) {
-                List<IMLPropertyOption> optionList = propertyType.getOptions();
-                boolean found = false;
-                for (IMLPropertyOption option : optionList) {
-                    if (value.equals(option.getName())) {
-                        value = option.getId();
-                        found = true;
-                    } else if (value.equals(option.getId())) {
-                        found = true;
-                    }
-                }
-                if (!found && logger.isInfoEnabled()) {
-                    logger.info(
-                            "No value found for option property: " + propertyTypeId + " of entity: "
-                                    + this.entityType + ". Importing unmapped value: " + value);
-                }
-            }
             p.setPropertyType(propertyTypeId);
             p.setPropertyValue(value);
             p.setParent(this);
@@ -533,6 +513,27 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                 p.setLicenseContentId(foreignContentId.get(i));
             }
             properties.add(p);
+        }
+    }
+
+    private void checkPropertyValue(String propertyTypeId, PropertyType propertyType,
+            String value) {
+        if (propertyType != null && propertyType.isSingleSelect() && value != null
+                && !value.isEmpty()) {
+            List<IMLPropertyOption> optionList = propertyType.getOptions();
+            boolean found = false;
+            for (IMLPropertyOption option : optionList) {
+                if (value.equals(option.getName())) {
+                    value = option.getId();
+                    found = true;
+                } else if (value.equals(option.getId())) {
+                    found = true;
+                }
+            }
+            if (!found && logger.isInfoEnabled()) {
+                logger.info("No value found for option property: " + propertyTypeId + " of entity: "
+                        + this.entityType + ". Importing unmapped value: " + value);
+            }
         }
     }
 
