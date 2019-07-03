@@ -36,14 +36,16 @@ import sernet.verinice.model.common.TransactionAbortedException;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
-public class MaximumProtectionRequirementsValueListener extends AbstractLinkChangeListener implements Serializable {
+public class MaximumProtectionRequirementsValueListener extends AbstractLinkChangeListener
+        implements Serializable {
 
-    private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(MaximumProtectionRequirementsValueListener.class);
-    
+    private static final InheritLogger LOG_INHERIT = InheritLogger
+            .getLogger(MaximumProtectionRequirementsValueListener.class);
+
     protected CnATreeElement sbTarget;
-    
+
     private static final String STRING_CONNECTOR_FOR = " for ";
-     
+
     public MaximumProtectionRequirementsValueListener(CnATreeElement item) {
         this.sbTarget = item;
     }
@@ -53,13 +55,13 @@ public class MaximumProtectionRequirementsValueListener extends AbstractLinkChan
         if (hasBeenVisited(ta)) {
             return;
         }
-        
-        ta.enter(sbTarget); 
-        
+
+        ta.enter(sbTarget);
+
         if (LOG_INHERIT.isDebug()) {
             LOG_INHERIT.debug("Determining integrity for " + sbTarget.getTitle()); //$NON-NLS-1$
         }
-        
+
         // get protection level from upward links:
         int highestValue = 0;
         for (CnALink link : sbTarget.getLinksUp()) {
@@ -75,17 +77,20 @@ public class MaximumProtectionRequirementsValueListener extends AbstractLinkChan
                 }
             }
         }
-        
+
         // if we dont use the maximum principle, keep current level:
         if (!sbTarget.getProtectionRequirementsProvider().isCalculatedIntegrity()) {
             if (LOG_INHERIT.isInfo()) {
-                LOG_INHERIT.info("Integrity is set manually: " + sbTarget.getProtectionRequirementsProvider().getIntegrity() + STRING_CONNECTOR_FOR + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                LOG_INHERIT.info("Integrity is set manually: " //$NON-NLS-1$
+                        + sbTarget.getProtectionRequirementsProvider().getIntegrity()
+                        + STRING_CONNECTOR_FOR + sbTarget.getTitle()); // $NON-NLS-2$
             }
             return;
         }
-        
+
         if (LOG_INHERIT.isInfo()) {
-            LOG_INHERIT.info("Setting maximum integrity " + highestValue + STRING_CONNECTOR_FOR + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+            LOG_INHERIT.info("Setting maximum integrity " + highestValue + STRING_CONNECTOR_FOR //$NON-NLS-1$
+                    + sbTarget.getTitle()); // $NON-NLS-2$
         }
         sbTarget.getProtectionRequirementsProvider().setIntegrity(highestValue);
     }
@@ -95,9 +100,9 @@ public class MaximumProtectionRequirementsValueListener extends AbstractLinkChan
         if (hasBeenVisited(ta)) {
             return;
         }
-        
+
         ta.enter(sbTarget);
-        
+
         if (LOG_INHERIT.isDebug()) {
             LOG_INHERIT.debug("Determining availability for " + sbTarget.getTitle()); //$NON-NLS-1$
         }
@@ -122,13 +127,16 @@ public class MaximumProtectionRequirementsValueListener extends AbstractLinkChan
         // if we dont use the maximum principle, keep current level:
         if (!sbTarget.getProtectionRequirementsProvider().isCalculatedAvailability()) {
             if (LOG_INHERIT.isInfo()) {
-                LOG_INHERIT.info("Availability is set manually: " + sbTarget.getProtectionRequirementsProvider().getIntegrity() + STRING_CONNECTOR_FOR + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                LOG_INHERIT.info("Availability is set manually: " //$NON-NLS-1$
+                        + sbTarget.getProtectionRequirementsProvider().getIntegrity()
+                        + STRING_CONNECTOR_FOR + sbTarget.getTitle()); // $NON-NLS-2$
             }
             return;
         }
-        
+
         if (LOG_INHERIT.isInfo()) {
-            LOG_INHERIT.info("Setting maximum availability " + highestValue + STRING_CONNECTOR_FOR + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+            LOG_INHERIT.info("Setting maximum availability " + highestValue + STRING_CONNECTOR_FOR //$NON-NLS-1$
+                    + sbTarget.getTitle()); // $NON-NLS-2$
         }
         sbTarget.getProtectionRequirementsProvider().setAvailability(highestValue);
     }
@@ -137,11 +145,11 @@ public class MaximumProtectionRequirementsValueListener extends AbstractLinkChan
     public void determineConfidentiality(CascadingTransaction ta)
             throws TransactionAbortedException {
 
-        if (hasBeenVisited(ta)){
+        if (hasBeenVisited(ta)) {
             return;
         }
         ta.enter(sbTarget);
-        
+
         if (LOG_INHERIT.isDebug()) {
             LOG_INHERIT.debug("Determining confidentiality for " + sbTarget.getTitle()); //$NON-NLS-1$
         }
@@ -163,20 +171,23 @@ public class MaximumProtectionRequirementsValueListener extends AbstractLinkChan
             }
         }
         // if we dont use the maximum principle, keep current level:
-        if (!sbTarget.getProtectionRequirementsProvider().isCalculatedConfidentiality()) {   
+        if (!sbTarget.getProtectionRequirementsProvider().isCalculatedConfidentiality()) {
             if (LOG_INHERIT.isInfo()) {
-                LOG_INHERIT.info("Confidentiality is set manually: " + sbTarget.getProtectionRequirementsProvider().getIntegrity() + STRING_CONNECTOR_FOR + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                LOG_INHERIT.info("Confidentiality is set manually: " //$NON-NLS-1$
+                        + sbTarget.getProtectionRequirementsProvider().getIntegrity()
+                        + STRING_CONNECTOR_FOR + sbTarget.getTitle()); // $NON-NLS-2$
             }
             return;
         }
-        
+
         if (LOG_INHERIT.isInfo()) {
-            LOG_INHERIT.info("Setting maximum confidentiality " + highestValue + STRING_CONNECTOR_FOR + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+            LOG_INHERIT.info("Setting maximum confidentiality " + highestValue //$NON-NLS-1$
+                    + STRING_CONNECTOR_FOR + sbTarget.getTitle()); // $NON-NLS-2$
         }
         sbTarget.getProtectionRequirementsProvider().setConfidentiality(highestValue);
 
     }
-    
+
     /**
      * @param ta
      * @return
