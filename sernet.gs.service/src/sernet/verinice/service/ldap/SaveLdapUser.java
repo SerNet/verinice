@@ -133,6 +133,7 @@ public class SaveLdapUser extends ChangeLoggingCommand
 
         person = dao.merge(person);
         dao.flush();
+        parent.addChild(person);
         savedPersonList.add(person);
         return person;
     }
