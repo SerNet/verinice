@@ -11,7 +11,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/derby/derbynet.jar" sourcepath="sernet.gs.db.fragmentsrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/derby/derbyrun.jar" sourcepath="sernet.gs.db.fragmentsrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/derby/derbytools.jar" sourcepath="sernet.gs.db.fragmentsrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/postgres/postgresql-8.2-504.jdbc3.jar" sourcepath="sernet.gs.db.fragmentsrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/oracle/ojdbc6.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/postgres/postgresql-42.2.6.jar" sourcepath="sernet.gs.db.fragmentsrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/oracle/ojdbc8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

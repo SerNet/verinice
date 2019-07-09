@@ -11,8 +11,8 @@ Bundle-ClassPath: .,
  lib/derby/derbynet.jar,
  lib/derby/derbyrun.jar,
  lib/derby/derbytools.jar,
- lib/postgres/postgresql-8.2-504.jdbc3.jar,
- lib/oracle/ojdbc6.jar
+ lib/postgres/postgresql-42.2.6.jar,
+ lib/oracle/ojdbc8.jar
 Export-Package: 
  oracle.jdbc,
  oracle.jdbc.driver,
