@@ -21,6 +21,7 @@ package sernet.verinice.rcp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -41,14 +42,13 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.UpdateElement;
+import sernet.verinice.service.commands.UpdateIcon;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -91,8 +91,17 @@ public class IconSelectAction
                             if (dialog.isDefaultIcon()) {
                                 iconPath = null;
                             }
-                            for (CnATreeElement element : selectedElments) {
-                                updateIcon(element, iconPath);
+
+                            Activator.inheritVeriniceContextState();
+                            UpdateIcon updateIcon = new UpdateIcon(
+                                    selectedElments.stream().map(CnATreeElement::getUuid)
+                                            .collect(Collectors.toSet()),
+                                    iconPath, ChangeLogEntry.STATION_ID);
+                            updateIcon = getCommandService().executeCommand(updateIcon);
+
+                            // notify all views of change:
+                            for (CnATreeElement element : updateIcon.getChangedElements()) {
+                                CnAElementFactory.getModel(element).childChanged(element);
                             }
                         } catch (Exception e) {
                             LOG.error("Error while changing icons.", e); //$NON-NLS-1$
@@ -107,18 +116,6 @@ public class IconSelectAction
         } catch (Exception e) {
             LOG.error(Messages.IconSelectAction_4, e);
         }
-    }
-
-    private CnATreeElement updateIcon(CnATreeElement element, String iconPath)
-            throws CommandException {
-        element.setIconPath(iconPath);
-        Activator.inheritVeriniceContextState();
-        UpdateElement<CnATreeElement> updateCommand = new UpdateElement<>(element, false,
-                ChangeLogEntry.STATION_ID);
-        getCommandService().executeCommand(updateCommand);
-        // notify all views of change:
-        CnAElementFactory.getModel(element).childChanged(element);
-        return element;
     }
 
     /*
