@@ -20,6 +20,8 @@ package sernet.verinice.model.iso27k;
 import java.util.Collection;
 
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.IAbbreviatedElement;
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -27,7 +29,8 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class Organization extends CnATreeElement implements IISO27kGroup, IISO27Scope {
+public class Organization extends CnATreeElement
+        implements IISO27kGroup, IISO27Scope, ITaggableElement, IAbbreviatedElement {
 
 	public static final String TYPE_ID = "org"; //$NON-NLS-1$
 	public static final String PROP_ABBR = "org_abbr"; //$NON-NLS-1$

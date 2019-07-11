@@ -22,14 +22,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.annotation.NonNull;
 
 import sernet.verinice.model.bp.risk.Frequency;
 import sernet.verinice.model.bp.risk.Impact;
 import sernet.verinice.model.bp.risk.Risk;
-import sernet.verinice.model.bp.risk.Risk.Color;
+import sernet.verinice.model.bp.risk.RiskPropertyValue;
 
 public class RiskConfiguration implements Serializable {
 
@@ -54,9 +54,8 @@ public class RiskConfiguration implements Serializable {
      *            A two-dimensional array that stores risk indices, the first
      *            dimension is the impact, the second the frequency
      */
-    public RiskConfiguration(List<Frequency> frequencyValues,
-            List<Impact> impactValues, List<Risk> risks,
-            Integer[][] configuration) {
+    public RiskConfiguration(List<Frequency> frequencyValues, List<Impact> impactValues,
+            List<Risk> risks, Integer[][] configuration) {
 
         validateParameter(frequencyValues, impactValues, risks, configuration);
 
@@ -65,7 +64,6 @@ public class RiskConfiguration implements Serializable {
         this.impacts = Collections.unmodifiableList(new ArrayList<>(impactValues));
         this.risks = Collections.unmodifiableList(new ArrayList<>(risks));
 
-        int numberOfFrequencyValues = frequencyValues.size();
         int numberOfRiskValues = risks.size();
 
         this.configuration = new Integer[impactValues.size()][frequencyValues.size()];
@@ -73,17 +71,12 @@ public class RiskConfiguration implements Serializable {
         for (int impactIndex = 0; impactIndex < configuration.length; impactIndex++) {
 
             Integer[] configurationForImpact = configuration[impactIndex];
-            if (configurationForImpact.length != numberOfFrequencyValues) {
-                throw new IllegalArgumentException(
-                        "Risk matrix size does not match number values for frequency");
-            }
             for (int frequencyIndex = 0; frequencyIndex < configurationForImpact.length; frequencyIndex++) {
                 int riskIndex = configuration[impactIndex][frequencyIndex];
                 if (riskIndex > numberOfRiskValues) {
                     throw new IllegalArgumentException("Risk value for index [" + impactIndex + "]["
                             + frequencyIndex + "] is invalid, value is " + riskIndex
-                            + " but configuration contains only " + numberOfRiskValues
-                            + " values");
+                            + " but configuration contains only " + numberOfRiskValues + " values");
                 }
                 this.configuration[impactIndex][frequencyIndex] = riskIndex;
             }
@@ -106,11 +99,18 @@ public class RiskConfiguration implements Serializable {
         if (numberOfRiskValues == 0) {
             throw new IllegalArgumentException("Configuration contains no risks");
         }
-
         if (configuration.length != numberOfImpactValues) {
             throw new IllegalArgumentException(
                     "Risk matrix size does not match number values for impact, expecting "
                             + numberOfImpactValues + " but got " + configuration.length);
+        }
+        for (int impactIndex = 0; impactIndex < configuration.length; impactIndex++) {
+            if (configuration[impactIndex].length != numberOfFrequencyValues) {
+                throw new IllegalArgumentException(
+                        "Risk matrix size does not match number values for frequencies, expecting "
+                                + numberOfFrequencyValues + " but got "
+                                + configuration[impactIndex].length);
+            }
         }
     }
 
@@ -151,8 +151,7 @@ public class RiskConfiguration implements Serializable {
 
     }
 
-    public RiskConfiguration withRisk(Frequency frequency,
-            Impact impact, Risk risk) {
+    public RiskConfiguration withRisk(Frequency frequency, Impact impact, Risk risk) {
         int frequencyIndex = getFrequencyIndex(frequency);
         int impactIndex = getImpactIndex(impact);
         Integer[][] newConfiguration = clone(configuration);
@@ -166,211 +165,48 @@ public class RiskConfiguration implements Serializable {
             }
             newConfiguration[impactIndex][frequencyIndex] = riskIndex;
         }
-        return new RiskConfiguration(frequencies, impacts, risks,
-                newConfiguration);
+        return new RiskConfiguration(frequencies, impacts, risks, newConfiguration);
     }
 
-    public RiskConfiguration withRiskColor(Risk risk, Color newColor) {
-        return withModifiedRisk(risk,
-                oldCategory -> new Risk(oldCategory.getId(), oldCategory.getLabel(),
-                        oldCategory.getDescription(), newColor));
+    public @NonNull RiskConfiguration withValues(List<Frequency> frequencies, List<Impact> impacts,
+            List<Risk> riskCategories) {
+        Integer[][] newConfiguration = configurationWithSize(impacts.size(), frequencies.size(),
+                riskCategories.size());
+        return new RiskConfiguration(frequencies, impacts, riskCategories, newConfiguration);
     }
 
-    public RiskConfiguration withRiskLabel(Risk risk, String newLabel) {
-        return withModifiedRisk(risk,
-                oldCategory -> new Risk(oldCategory.getId(), newLabel,
-                        oldCategory.getDescription(), oldCategory.getColor()));
-    }
+    /**
+     * Create a new configuration matrix out of the given dimensions and of the
+     * given configuration. If a dimension of the new matrix is greater than the
+     * corresponding dimension of the given matrix, new entries are set to -1.
+     */
+    private Integer[][] configurationWithSize(int nImpacts, int nFrequencies, int nRisks) {
+        Integer[][] newConfiguration = newMatrix(nImpacts, nFrequencies, -1);
 
-    public RiskConfiguration withRiskDescription(Risk risk, String newDescription) {
-        return withModifiedRisk(risk,
-                oldCategory -> new Risk(oldCategory.getId(), oldCategory.getLabel(),
-                        newDescription, oldCategory.getColor()));
-    }
-
-    public RiskConfiguration withModifiedRisk(Risk risk,
-            Function<Risk, Risk> newElementCreator) {
-        int riskIndex = risks.indexOf(risk);
-        if (riskIndex == -1) {
-            throw new IllegalArgumentException("Unknown risk category: " + risk);
-        }
-        List<Risk> newRisks = new ArrayList<>(risks);
-        Risk oldRisk = risks.get(riskIndex);
-        Risk newRisk = newElementCreator.apply(oldRisk);
-        newRisks.set(riskIndex, newRisk);
-        return new RiskConfiguration(frequencies, impacts, newRisks,
-                configuration);
-    }
-
-    public RiskConfiguration withFrequencyLabel(
-            Frequency frequency, String newLabel) {
-        return withModifiedFrequency(frequency,
-                oldValue -> new Frequency(oldValue.getId(), newLabel,
-                        oldValue.getDescription()));
-    }
-
-    public RiskConfiguration withFrequencyDescription(
-            Frequency frequency, String newDescription) {
-        return withModifiedFrequency(frequency,
-                oldValue -> new Frequency(oldValue.getId(), oldValue.getLabel(),
-                        newDescription));
-    }
-
-    public RiskConfiguration withModifiedFrequency(
-            Frequency frequency,
-            Function<Frequency, Frequency> newElementCreator) {
-        int index = getFrequencyIndex(frequency);
-        List<Frequency> newFrequencies = new ArrayList<>(frequencies);
-        Frequency oldValue = frequencies.get(index);
-        Frequency newValue = newElementCreator.apply(oldValue);
-        newFrequencies.set(index, newValue);
-        return new RiskConfiguration(newFrequencies, impacts, risks,
-                configuration);
-    }
-
-    public RiskConfiguration withImpactLabel(Impact impact,
-            String newLabel) {
-        return withModifiedImpact(impact,
-                oldValue -> new Impact(oldValue.getId(), newLabel,
-                        oldValue.getDescription()));
-    }
-
-    public RiskConfiguration withImpactDescription(Impact impact,
-            String newDescription) {
-        return withModifiedImpact(impact,
-                oldValue -> new Impact(oldValue.getId(), oldValue.getLabel(),
-                        newDescription));
-    }
-
-    public RiskConfiguration withModifiedImpact(Impact impact,
-            Function<Impact, Impact> newElementCreator) {
-        int index = impacts.indexOf(impact);
-        if (index == -1) {
-            throw new IllegalArgumentException("Unknown impact: " + impact);
-        }
-        List<Impact> newImpacts = new ArrayList<>(impacts);
-        Impact oldValue = impacts.get(index);
-        Impact newValue = newElementCreator.apply(oldValue);
-        newImpacts.set(index, newValue);
-        return new RiskConfiguration(frequencies, newImpacts, risks, configuration);
-    }
-
-    public RiskConfiguration withLastRiskRemoved() {
-        if (risks.size() < 2) {
-            throw new UnsupportedOperationException("Cannot remove last entry");
-        }
-        List<Risk> newRisks = new ArrayList<>(risks.subList(0, risks.size() - 1));
-        Integer[][] newConfiguration = new Integer[impacts.size()][frequencies.size()];
-
-        for (int impactIndex = 0; impactIndex < configuration.length; impactIndex++) {
-
-            Integer[] configurationForImpact = configuration[impactIndex];
-            for (int frequencyIndex = 0; frequencyIndex < configurationForImpact.length; frequencyIndex++) {
+        for (int impactIndex = 0; impactIndex < Math.min(configuration.length,
+                newConfiguration.length); impactIndex++) {
+            for (int frequencyIndex = 0; frequencyIndex < Math.min(configuration[0].length,
+                    newConfiguration[0].length); frequencyIndex++) {
                 int riskValue = configuration[impactIndex][frequencyIndex];
-                if (riskValue >= newRisks.size()) {
-                    riskValue = -1;
+                if (riskValue < nRisks) {
+                    newConfiguration[impactIndex][frequencyIndex] = riskValue;
                 }
-                newConfiguration[impactIndex][frequencyIndex] = riskValue;
-            }
-
-        }
-        return new RiskConfiguration(frequencies, impacts, newRisks,
-                newConfiguration);
-    }
-
-    public RiskConfiguration withRiskAdded() {
-        List<Risk> newRisks = new ArrayList<>(risks.size() + 1);
-        newRisks.addAll(risks);
-        newRisks.add(
-                new Risk(Risk.getPropertyKeyForIndex(newRisks.size() + 1), "", "", null));
-        return new RiskConfiguration(frequencies, impacts, newRisks,
-                configuration);
-    }
-
-    public RiskConfiguration withLastFrequencyRemoved() {
-        if (frequencies.size() < 2) {
-            throw new UnsupportedOperationException("Cannot remove last entry");
-        }
-        List<Frequency> newFrequencies = new ArrayList<>(
-                frequencies.subList(0, frequencies.size() - 1));
-        Integer[][] newConfiguration = new Integer[impacts.size()][newFrequencies.size()];
-
-        for (int impactIndex = 0; impactIndex < newConfiguration.length; impactIndex++) {
-
-            Integer[] configurationForImpact = newConfiguration[impactIndex];
-            for (int frequencyIndex = 0; frequencyIndex < configurationForImpact.length; frequencyIndex++) {
-                int riskValue = configuration[impactIndex][frequencyIndex];
-                newConfiguration[impactIndex][frequencyIndex] = riskValue;
-            }
-
-        }
-        return new RiskConfiguration(newFrequencies, impacts, risks, newConfiguration);
-    }
-
-    public RiskConfiguration withFrequencyAdded() {
-        List<Frequency> newFrequencies = new ArrayList<>(frequencies.size() + 1);
-        newFrequencies.addAll(frequencies);
-        newFrequencies
-                .add(new Frequency(Frequency.getPropertyKeyForIndex(newFrequencies.size() + 1), "",
-                        ""));
-
-        Integer[][] newConfiguration = new Integer[impacts.size()][newFrequencies.size()];
-
-        for (int impactIndex = 0; impactIndex < newConfiguration.length; impactIndex++) {
-
-            Integer[] configurationForImpact = newConfiguration[impactIndex];
-            for (int frequencyIndex = 0; frequencyIndex < configurationForImpact.length; frequencyIndex++) {
-                int riskValue;
-                if (frequencyIndex >= frequencies.size()) {
-                    riskValue = -1;
-                } else {
-                    riskValue = configuration[impactIndex][frequencyIndex];
-                }
-                newConfiguration[impactIndex][frequencyIndex] = riskValue;
-            }
-
-        }
-
-        return new RiskConfiguration(newFrequencies, impacts, risks,
-                newConfiguration);
-    }
-
-    public RiskConfiguration withLastImpactRemoved() {
-        if (impacts.size() < 2) {
-            throw new UnsupportedOperationException("Cannot remove last entry");
-        }
-        List<Impact> newImpacts = new ArrayList<>(impacts.subList(0, impacts.size() - 1));
-        Integer[][] newConfiguration = new Integer[newImpacts.size()][frequencies.size()];
-
-        for (int impactIndex = 0; impactIndex < newConfiguration.length; impactIndex++) {
-
-            Integer[] configurationForImpact = newConfiguration[impactIndex];
-            for (int frequencyIndex = 0; frequencyIndex < configurationForImpact.length; frequencyIndex++) {
-                int riskValue = configuration[impactIndex][frequencyIndex];
-                newConfiguration[impactIndex][frequencyIndex] = riskValue;
-            }
-
-        }
-        return new RiskConfiguration(frequencies, newImpacts, risks, newConfiguration);
-    }
-
-    public RiskConfiguration withImpactAdded() {
-        List<Impact> newImpacts = new ArrayList<>(impacts.size() + 1);
-        newImpacts.addAll(impacts);
-        newImpacts.add(new Impact(Impact.getPropertyKeyForIndex(newImpacts.size() + 1), "", ""));
-
-        Integer[][] newConfiguration = new Integer[newImpacts.size()][frequencies.size()];
-
-        for (int impactIndex = 0; impactIndex < configuration.length; impactIndex++) {
-            Integer[] configurationForImpact = newConfiguration[impactIndex];
-            for (int frequencyIndex = 0; frequencyIndex < configurationForImpact.length; frequencyIndex++) {
-                int riskValue = configuration[impactIndex][frequencyIndex];
-                newConfiguration[impactIndex][frequencyIndex] = riskValue;
             }
         }
-        Arrays.fill(newConfiguration[newImpacts.size() - 1], -1);
+        return newConfiguration;
+    }
 
-        return new RiskConfiguration(frequencies, newImpacts, risks, newConfiguration);
+    /**
+     * Creates a new Integer[rows][cols] with each value set to `initialValue`.
+     */
+    private Integer[][] newMatrix(int rows, int cols, Integer initialValue) {
+        Integer[][] newConfiguration = new Integer[rows][cols];
+        for (int i = 0; i < newConfiguration.length; i++) {
+            for (int j = 0; j < newConfiguration[0].length; j++) {
+                newConfiguration[i][j] = initialValue;
+            }
+        }
+        return newConfiguration;
     }
 
     private static Integer[][] clone(Integer[][] configuration) {
@@ -400,8 +236,8 @@ public class RiskConfiguration implements Serializable {
 
     @Override
     public String toString() {
-        return "RiskConfiguration [risks=" + risks + ", frequencies="
-                + frequencies + ", impacts=" + impacts + "]";
+        return "RiskConfiguration [risks=" + risks + ", frequencies=" + frequencies + ", impacts="
+                + impacts + "]";
     }
 
     public boolean deepEquals(Object obj) {
@@ -429,5 +265,23 @@ public class RiskConfiguration implements Serializable {
         } else if (!Risk.deepEquals(risks, other.risks))
             return false;
         return true;
+    }
+
+    public String getLabelForFrequency(String frequencyId) {
+        return getLabelForValue(frequencies, frequencyId);
+    }
+
+    public String getLabelForImpact(String impactId) {
+        return getLabelForValue(impacts, impactId);
+    }
+
+    public String getLabelForRisk(String riskId) {
+        return getLabelForValue(risks, riskId);
+    }
+
+    private String getLabelForValue(List<? extends RiskPropertyValue> riskPropertyValues,
+            String valueId) {
+        return riskPropertyValues.stream().filter(item -> item.getId().equals(valueId)).findFirst()
+                .orElseThrow(IllegalArgumentException::new).getLabel();
     }
 }

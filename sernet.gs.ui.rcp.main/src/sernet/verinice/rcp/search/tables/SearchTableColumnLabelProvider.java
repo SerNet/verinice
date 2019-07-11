@@ -32,6 +32,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.elasticsearch.search.SearchService;
 
+import sernet.hui.swt.SWTResourceManager;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.search.Occurence;
 import sernet.verinice.model.search.VeriniceQuery;
@@ -60,9 +61,9 @@ import sernet.verinice.rcp.search.column.TitleColumn;
  */
 public class SearchTableColumnLabelProvider extends StyledCellLabelProvider {
 
-    Color yellow = Display.getCurrent().getSystemColor(SWT.COLOR_YELLOW);
-    Color white = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
-    Color red = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
+    Color yellow = SWTResourceManager.getColor(SWT.COLOR_YELLOW);
+    Color white = SWTResourceManager.getColor(SWT.COLOR_WHITE);
+    Color red = SWTResourceManager.getColor(SWT.COLOR_RED);
 
     private IColumn column;
 

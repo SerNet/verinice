@@ -1,0 +1,36 @@
+{
+	"analysis":{
+		"filter":{
+			"italian_elision": {
+        "type": "elision",
+            "articles": [
+                "c", "l", "all", "dall", "dell",
+                "nell", "sull", "coll", "pell",
+                "gl", "agl", "dagl", "degl", "negl",
+                "sugl", "un", "m", "t", "s", "v", "d"
+            ]
+        },
+        "italian_stemmer": {
+          "type": "stemmer",
+          "language": "light_italian"
+        }		
+		},
+		"analyzer":{
+			"verinice_analyzer":{
+				"tokenizer":"standard",
+				"filter":[
+					"italian_elision",
+          "lowercase",
+          "italian_stemmer"
+				]			
+			},
+			"analyzer_keyword":{
+        "tokenizer":"keyword",
+        "filter":[
+					"lowercase"
+				]
+      }			
+		}
+		
+	}
+}

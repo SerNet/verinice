@@ -2,7 +2,7 @@
 <feature
       id="sernet.verinice.lang.feature"
       label="Language Feature"
-      version="1.0.0"
+      version="1.0.0.qualifier"
       provider-name="SerNet">
 
    <description url="http://www.verinice.com">
@@ -195,6 +195,14 @@ Library.
 
    <includes
          id="org.eclipse.babel.nls_eclipse_it"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_datatools_cs"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_eclipse_cs"
          version="0.0.0"/>
 
 </feature>

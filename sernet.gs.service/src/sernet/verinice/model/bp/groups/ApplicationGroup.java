@@ -21,6 +21,7 @@ package sernet.verinice.model.bp.groups;
 
 import java.util.Collection;
 
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.elements.Application;
 import sernet.verinice.model.bsi.TagHelper;
@@ -31,41 +32,37 @@ import sernet.verinice.model.iso27k.Group;
  * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
-public class ApplicationGroup extends Group<Application> implements IBpGroup {
-    
-    private static final long serialVersionUID = -6856197006068953402L;
+public class ApplicationGroup extends Group<Application> implements IBpGroup, ITaggableElement {
+
+    private static final long serialVersionUID = -6856197006068953403L;
 
     public static final String TYPE_ID = "bp_application_group";
     public static final String PROP_NAME = "bp_application_group_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_application_group_tag"; //$NON-NLS-1$
 
-    public static final String[] CHILD_TYPES = new String[] {Application.TYPE_ID};
-    
-    protected ApplicationGroup() {}
-    
+    public static final String[] CHILD_TYPES = new String[] { Application.TYPE_ID };
+
+    protected ApplicationGroup() {
+    }
+
     public ApplicationGroup(CnATreeElement parent) {
         super(parent);
         init();
     }
-    
+
     @Override
     public String getTitle() {
         return getEntity().getPropertyValue(PROP_NAME);
     }
-    
+
     @Override
     public void setTitel(String name) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
-    
+
     @Override
     public String getTypeId() {
         return TYPE_ID;
-    }
-    
-    @Override
-    public boolean canContain(Object object) {
-        return object instanceof Application;
     }
 
     @Override
@@ -77,5 +74,4 @@ public class ApplicationGroup extends Group<Application> implements IBpGroup {
     public Collection<String> getTags() {
         return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
-
 }

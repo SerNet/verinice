@@ -19,16 +19,14 @@ package sernet.verinice.bp.rcp.risk.ui;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
@@ -36,20 +34,22 @@ import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.hui.swt.SWTResourceManager;
 import sernet.verinice.model.bp.risk.Risk;
-import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 
-final class RiskValuesConfigurator extends StackConfigurator<Risk> {
+public final class RiskValuesConfigurator extends StackConfigurator<Risk> {
 
     private static final int MAX_NUMBER_OF_RISKS = 5;
     private static final int COLOR_BUTTON_WIDTH = 30;
 
-    private RiskConfiguration riskConfiguration;
-    private Consumer<RiskConfiguration> updateListener;
+    public RiskValuesConfigurator(Composite parent, List<Risk> editorState,
+            Runnable fireProperyChange) {
+        super(parent, MAX_NUMBER_OF_RISKS, editorState, fireProperyChange);
+    }
 
-    RiskValuesConfigurator(Composite parent, Consumer<RiskConfiguration> updateListener) {
-        super(parent, MAX_NUMBER_OF_RISKS);
-        this.updateListener = updateListener;
+    @Override
+    protected @NonNull Risk generateNewData(int index) {
+        return new Risk(Risk.getPropertyKeyForIndex(index), "", "", null);
     }
 
     @Override
@@ -64,121 +64,52 @@ final class RiskValuesConfigurator extends StackConfigurator<Risk> {
         Text riskLabel = new Text(leftComposite, SWT.BORDER);
         riskLabel.setLayoutData(new RowData(LABEL_WIDTH, SWT.DEFAULT));
         riskLabel.setText(risk.getLabel());
-        riskLabel.addFocusListener(new LabelFocusListener(updateListener, riskConfiguration, risk));
+        final ControlDecoration txtDecorator = createLabelFieldDecoration(riskLabel,
+                Messages.errorUniqueRiskCategoryLabels);
+        updateDecoratorVisibility(txtDecorator, risk.getId(), risk.getLabel());
+        riskLabel.addModifyListener(e -> {
+            if (e.getSource() instanceof Text) {
+                String newLabel = ((Text) e.getSource()).getText();
+                updateDecoratorVisibility(txtDecorator, risk.getId(), newLabel);
+                updateValue(risk.getId(),
+                        valueFromEditorState -> valueFromEditorState.withLabel(newLabel));
+            }
+        });
 
         CLabel riskColor = new CLabel(leftComposite, SWT.SHADOW_OUT | SWT.CENTER);
         riskColor.setLayoutData(new RowData(COLOR_BUTTON_WIDTH, SWT.DEFAULT));
         RGB rgb = ColorConverter.toRGB(risk.getColor());
         if (rgb != null) {
-            riskColor.setBackground(new Color(getDisplay(), rgb));
+            riskColor.setBackground(SWTResourceManager.getColor(rgb));
         }
-        riskColor.addMouseListener(
-                new ColorSelectionAdapter(updateListener, riskConfiguration, rgb, risk));
+        riskColor.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseDown(MouseEvent e) {
+                ColorDialog dlg = new ColorDialog(getDisplay().getActiveShell());
+
+                dlg.setRGB(rgb);
+                dlg.setText(Messages.RiskValuesConfigurator_chooseColor);
+
+                RGB newColor = dlg.open();
+                if (!Objects.equals(rgb, newColor)) {
+                    updateValue(risk.getId(), valueFromEditorState -> valueFromEditorState
+                            .withColor(ColorConverter.toRiskColor(newColor)));
+                    riskColor.setBackground(SWTResourceManager.getColor(newColor));
+                }
+            }
+        });
 
         Text riskDescription = new Text(parent, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
         riskDescription.setLayoutData(new RowData(450, 80));
         riskDescription.setText(risk.getDescription());
-        riskDescription.addFocusListener(
-                new DescriptionFocusListener(riskConfiguration, updateListener, risk));
-    }
 
-    @Override
-    protected void onAddClicked() {
-        riskConfiguration = riskConfiguration.withRiskAdded();
-        updateListener.accept(riskConfiguration);
-    }
-
-    @Override
-    protected void onRemoveClicked() {
-        riskConfiguration = riskConfiguration.withLastRiskRemoved();
-        updateListener.accept(riskConfiguration);
-    }
-
-    /**
-     * Set the new risk configuration and refresh the composite with the list.
-     */
-    public void setRiskConfiguration(RiskConfiguration riskConfiguration) {
-        this.riskConfiguration = riskConfiguration;
-        super.refresh(this.riskConfiguration.getRisks());
-    }
-
-    @Override
-    protected void refresh(List<Risk> risks) {
-        throw new UnsupportedOperationException("call setRiskConfiguration instead"); //$NON-NLS-1$
-    }
-
-    private final class DescriptionFocusListener extends FocusAdapter {
-        private final RiskConfiguration riskConfiguration;
-        private final Consumer<RiskConfiguration> updateListener;
-        private final Risk risk;
-
-        private DescriptionFocusListener(RiskConfiguration riskConfiguration,
-                Consumer<RiskConfiguration> updateListener, Risk risk) {
-            this.riskConfiguration = riskConfiguration;
-            this.updateListener = updateListener;
-            this.risk = risk;
-        }
-
-        @Override
-        public void focusLost(FocusEvent event) {
-            Text text = (Text) event.widget;
-            String newDescription = text.getText();
-            if (!Objects.equals(risk.getDescription(), newDescription)) {
-                updateListener.accept(riskConfiguration.withRiskDescription(risk, newDescription));
+        riskDescription.addModifyListener(e -> {
+            if (e.getSource() instanceof Text) {
+                String newDescription = ((Text) e.getSource()).getText();
+                updateValue(risk.getId(), valueFromEditorState -> valueFromEditorState
+                        .withDescription(newDescription));
             }
-        }
+        });
     }
 
-    private final class LabelFocusListener extends FocusAdapter {
-
-        private final Consumer<RiskConfiguration> updateListener;
-        private final RiskConfiguration riskConfiguration;
-        private final Risk risk;
-
-        private LabelFocusListener(Consumer<RiskConfiguration> updateListener,
-                RiskConfiguration riskConfiguration, Risk risk) {
-            this.updateListener = updateListener;
-            this.riskConfiguration = riskConfiguration;
-            this.risk = risk;
-        }
-
-        @Override
-        public void focusLost(FocusEvent event) {
-            Text text = (Text) event.widget;
-            String newLabel = text.getText();
-            if (!Objects.equals(risk.getLabel(), newLabel)) {
-                updateListener.accept(riskConfiguration.withRiskLabel(risk, newLabel));
-            }
-        }
-    }
-
-    private final class ColorSelectionAdapter extends MouseAdapter {
-
-        private final Consumer<RiskConfiguration> updateListener;
-        private final RiskConfiguration riskConfiguration;
-        private final RGB rgb;
-        private final Risk risk;
-
-        private ColorSelectionAdapter(Consumer<RiskConfiguration> updateListener,
-                RiskConfiguration riskConfiguration, RGB rgb, Risk risk) {
-            this.updateListener = updateListener;
-            this.riskConfiguration = riskConfiguration;
-            this.rgb = rgb;
-            this.risk = risk;
-        }
-
-        @Override
-        public void mouseDown(MouseEvent e) {
-            ColorDialog dlg = new ColorDialog(getDisplay().getActiveShell());
-
-            dlg.setRGB(rgb);
-            dlg.setText(Messages.RiskValuesConfigurator_chooseColor);
-
-            RGB newColor = dlg.open();
-            if (!Objects.equals(rgb, newColor)) {
-                updateListener.accept(riskConfiguration.withRiskColor(risk,
-                        ColorConverter.toRiskColor(newColor)));
-            }
-        }
-    }
 }

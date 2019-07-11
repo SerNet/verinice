@@ -21,6 +21,7 @@ package sernet.verinice.model.bp.groups;
 
 import java.util.Collection;
 
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.elements.BusinessProcess;
 import sernet.verinice.model.bsi.TagHelper;
@@ -31,9 +32,10 @@ import sernet.verinice.model.iso27k.Group;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class BusinessProcessGroup extends Group<BusinessProcess> implements IBpGroup {
+public class BusinessProcessGroup extends Group<BusinessProcess>
+        implements IBpGroup, ITaggableElement {
     
-    private static final long serialVersionUID = -9081751520389572620L;
+    private static final long serialVersionUID = -9081751520389572621L;
 
     public static final String TYPE_ID = "bp_businessprocess_group"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_businessprocess_group_name"; //$NON-NLS-1$

@@ -19,14 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.model.iso27k;
 
-import sernet.hui.common.connect.IAbbreviatedElement;
-import sernet.hui.common.connect.ITaggableElement;
-
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public interface IISO27kElement extends IAbbreviatedElement, ITaggableElement {
+public interface IISO27kElement {
 
 	public String getTypeId();
 	

@@ -23,6 +23,7 @@
         <!-- missing actions: 
             "accountsettings"
             "accesscontrol"
+            "convertitnetwork"
             "editprofile"
             "taskdelete"
             "taskshowall"
@@ -34,7 +35,6 @@
             <action id="addbsielement" />
             <action id="addbpelement"/>
             <action id="addbpgroup"/>  
-            <action id="addcatalog" />
             <action id="addfile" />
             <action id="addismelement" />
             <action id="addismgroup" />
@@ -64,7 +64,6 @@
             <action id="creategreenbonetasks" />
             <action id="createindividualtasks" />
             <action id="createisatasks" />
-            <action id="deletecatalog" />
             <action id="deletefile" />
             <action id="deleteitem" />
             <action id="derivestatus" />
@@ -73,14 +72,12 @@
             <action id="editriskconfiguration" />
             <action id="exportlinktable" />
             <action id="files" />
-            <action id="generateauditreport" />
             <action id="generateorgreport" />
             <action id="groupbytag"/>
             <action id="gsnotesimport" />
             <action id="gstoolimport" />
             <action id="importcsv" />
             <action id="importldap" />
-            <action id="ismcatalog" />
             <action id="ismcopy" />
             <action id="ismcut" />
             <action id="ismview" />
@@ -115,6 +112,7 @@
             "additverbund"
             "additnetwork"
             "addsecurityassessment"
+            "convertitnetwork"
             "editprofile"
             "showallfiles"
             "searchreindex"
@@ -133,7 +131,6 @@
 	        <action id="addbsielement" />
 	        <action id="addbpelement"/>
           <action id="addbpgroup"/>  
-	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />
 	        <action id="addismgroup" />
@@ -158,7 +155,6 @@
           <action id="creategreenbonetasks" />
           <action id="createindividualtasks" />
 	        <action id="createisatasks" />
-	        <action id="deletecatalog" />
 	        <action id="deletefile" />
 	        <action id="deleteitem" />
 	        <action id="derivestatus" />
@@ -167,14 +163,12 @@
           <action id="editriskconfiguration" />
           <action id="exportlinktable" />
 	        <action id="files" />
-	        <action id="generateauditreport" />
 	        <action id="generateorgreport" />
           <action id="groupbytag"/>
 	        <action id="gsnotesimport" />
 	        <action id="gstoolimport" />
 	        <action id="importcsv" />
 	        <action id="importldap" />
-	        <action id="ismcatalog" />
 	        <action id="ismcopy" />
 	        <action id="ismcut" />
 	        <action id="ismview" />
@@ -206,7 +200,6 @@
             <action id="creategreenbonetasks" />
             <action id="createindividualtasks" />
             <action id="createisatasks" />
-            <action id="deletecatalog" />
             <action id="deletefile" />
             <action id="deleteitem" />
             <action id="derivestatus" />
@@ -214,14 +207,12 @@
             <action id="editlinks" />
             <action id="exportlinktable" />
             <action id="files" />
-            <action id="generateauditreport" />
             <action id="generateorgreport" />
             <action id="groupbytag"/>
             <action id="gsnotesimport" />
             <action id="gstoolimport" />
             <action id="importcsv" />
             <action id="importldap" />
-            <action id="ismcatalog" />
             <action id="ismcopy" />
             <action id="ismcut" />
             <action id="ismview" />
@@ -266,7 +257,6 @@
 	        <action id="addbsielement" />
 	        <action id="addbpelement"/>
           <action id="addbpgroup"/>  
-	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />
 	        <action id="addismgroup" />
@@ -287,11 +277,11 @@
           <action id="catalogimport" />       
 	        <action id="catalogview" />
           <action id="changeicon" />
+          <action id="convertitnetwork" />
 	        <action id="cnavalidation" />
           <action id="creategreenbonetasks" />
           <action id="createindividualtasks" />
 	        <action id="createisatasks" />
-	        <action id="deletecatalog" />
 	        <action id="deletefile" />
 	        <action id="deleteitem" />
 	        <action id="derivestatus"/>
@@ -300,11 +290,9 @@
           <action id="editriskconfiguration" />
           <action id="exportlinktable" />
 	        <action id="files" />
-	        <action id="generateauditreport" />
 	        <action id="generateorgreport" />
           <action id="groupbytag"/>
 	        <action id="importcsv" />
-	        <action id="ismcatalog" />
 	        <action id="ismcopy" />
 	        <action id="ismcut" />
 	        <action id="ismview" />
@@ -351,7 +339,6 @@
             <action id="addbsielement" /> 
             <action id="addbpelement"/>
             <action id="addbpgroup"/>  
-            <action id="addcatalog" /> 
             <action id="addfile" /> 
             <action id="addismelement" /> 
             <action id="addismgroup" /> 
@@ -373,11 +360,11 @@
             <action id="catalogimport" />       
 	          <action id="catalogview" />
           	<action id="changeicon" /> 
-            <action id="cnavalidation" /> 
+            <action id="cnavalidation" />
+            <action id="convertitnetwork" /> 
           	<action id="creategreenbonetasks" /> 
           	<action id="createindividualtasks" /> 
             <action id="createisatasks" /> 
-            <action id="deletecatalog" /> 
             <action id="deletefile" /> 
             <action id="deleteitem" /> 
             <action id="derivestatus"/> 
@@ -387,11 +374,9 @@
             <action id="editriskconfiguration" /> 
           	<action id="exportlinktable" /> 
             <action id="files" /> 
-            <action id="generateauditreport" /> 
             <action id="generateorgreport" /> 
           	<action id="groupbytag"/> 
             <action id="importcsv" /> 
-            <action id="ismcatalog" /> 
             <action id="ismcopy" /> 
             <action id="ismcut" /> 
             <action id="ismview" /> 
@@ -431,7 +416,6 @@
 	        <action id="addbsielement" />
 	        <action id="addbpelement"/>
           <action id="addbpgroup"/>  
-	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />
 	        <action id="addismgroup" />
@@ -457,10 +441,10 @@
 	        <action id="catalogview" />
           <action id="changeicon" />
 	        <action id="cnavalidation" />
+          <action id="convertitnetwork" />
           <action id="creategreenbonetasks" />
           <action id="createindividualtasks" />
 	        <action id="createisatasks" />
-	        <action id="deletecatalog" />
 	        <action id="deletefile" />
 	        <action id="deleteitem" />
 	        <action id="derivestatus"/>
@@ -470,14 +454,12 @@
           <action id="editriskconfiguration" />
           <action id="exportlinktable" />
 	        <action id="files" />
-	        <action id="generateauditreport" />
 	        <action id="generateorgreport" />
           <action id="groupbytag"/>
 	        <action id="gsnotesimport" />
 	        <action id="gstoolimport" />
 	        <action id="importcsv" />
 	        <action id="importldap" />
-	        <action id="ismcatalog" />
 	        <action id="ismcopy" />
 	        <action id="ismcut" />
 	        <action id="ismview" />

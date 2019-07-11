@@ -19,9 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable;
 
-import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
-import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationCache;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
@@ -46,20 +44,11 @@ public abstract class PropertyAdapterFactory {
         if (element instanceof FinishedRiskAnalysis) {
             return new RiskAnalysisPropertyAdapter((FinishedRiskAnalysis) element);
         }
-
+        if (element instanceof BpThreat
+                && BpRiskValuePropertyAdapter.riskPropertiesThreat.contains(property)) {
+            return new BpRiskValuePropertyAdapter((BpThreat) element, riskConfigurationCache);
+        }
         if (element instanceof CnATreeElement) {
-            if (element instanceof BpThreat
-                    && BpRiskValuePropertyAdapter.riskPropertiesThreat.contains(property)
-                    || element instanceof BpRequirement
-                            && BpRiskValuePropertyAdapter.riskPropertiesRequirement
-                                    .contains(property)
-                    || element instanceof Safeguard
-                            && BpRiskValuePropertyAdapter.riskPropertiesSafeguard
-                                    .contains(property)) {
-                return new BpRiskValuePropertyAdapter((CnATreeElement) element,
-                        riskConfigurationCache);
-
-            }
             return new EntityPropertyAdapter((CnATreeElement) element);
         }
         throw new NoPropertyAdapterFoundException(

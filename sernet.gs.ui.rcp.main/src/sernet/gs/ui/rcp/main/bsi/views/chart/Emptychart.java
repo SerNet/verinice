@@ -17,27 +17,48 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views.chart;
 
+import java.awt.Color;
+
+import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryLabelPositions;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import sernet.verinice.model.common.CnATreeElement;
 
-public class Emptychart extends UmsetzungBarChart implements ISelectionChartGenerator{
+public class Emptychart implements ISelectionChartGenerator {
 
-	@Override
-	public JFreeChart createChart() {
-		return createBarChart(createEmptyBarDataset());
-	}
-	
-	private Object createEmptyBarDataset() {
-		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		return dataset;
-	}
+    @Override
+    public JFreeChart createChart() {
+        return createBarChart(createEmptyBarDataset());
+    }
 
-	@Override
-	public JFreeChart createChart(CnATreeElement elmt) {
-		return createBarChart(createEmptyBarDataset());
-	}
-	
-	
+    private Object createEmptyBarDataset() {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        return dataset;
+    }
+
+    @Override
+    public JFreeChart createChart(CnATreeElement elmt) {
+        return createBarChart(createEmptyBarDataset());
+    }
+
+    protected JFreeChart createBarChart(Object dataset) {
+        final float plotForegroundAlpha = 0.6f;
+        JFreeChart chart = ChartFactory.createStackedBarChart3D(null, Messages.UmsetzungBarChart_1,
+                Messages.UmsetzungBarChart_2, (CategoryDataset) dataset, PlotOrientation.HORIZONTAL,
+                false, true, false);
+        chart.setBackgroundPaint(Color.white);
+        chart.getPlot().setForegroundAlpha(plotForegroundAlpha);
+        chart.setBackgroundPaint(Color.white);
+        CategoryPlot plot = (CategoryPlot) chart.getPlot();
+
+        plot.getDomainAxis().setCategoryLabelPositions(CategoryLabelPositions.STANDARD);
+        return chart;
+
+    }
+
 }

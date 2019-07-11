@@ -93,7 +93,7 @@ public class TemplateViewLabelProvider extends LabelProvider implements ITableLa
             // type
             typeId = group.getChildTypes()[0];
         }
-        return ImageCache.getInstance().getObjectTypeImage(typeId);
+        return ImageCache.getInstance().getImageForTypeId(typeId);
     }
 
     /*

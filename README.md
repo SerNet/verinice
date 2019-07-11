@@ -1,7 +1,5 @@
 # verinice
 
-[![Build Status](https://travis-ci.org/SimonScholz/verinice.svg?branch=master)](https://travis-ci.org/SimonScholz/verinice)
-
 verinice helps you to build and operate your management system for
 information security (ISMS). Whether you base it on ISO 27001, BSI IT
 Baseline Protection, IDW PS 330 or another standard: verinice supports
@@ -101,14 +99,13 @@ The built artifacts will be located in
 `sernet.verinice.releng.client.product/target/products/`.
 Artifacts for the following platforms will be produced:
 
-* Linux GTK 32 and 64 bit
+* Linux GTK 64 bit
 * Windows 32 and 64 bit
 * Mac OS X 64 bit
 
 If you want to pack a JRE into the build, you can copy the JRE to
 
 sernet.verinice.extraresources.feature/linux/jre
-sernet.verinice.extraresources.feature/linux32/jre
 sernet.verinice.extraresources.feature/windows/jre
 sernet.verinice.extraresources.feature/windows32/jre
 sernet.verinice.extraresources.feature/macos/jre
@@ -138,6 +135,7 @@ The built artifacts will be located in
 `sernet.verinice.report.designer.tycho/target/products/`.
 Artifacts for the following platforms will be produced:
 
-* Linux GTK 32 and 64 bit
+* Linux GTK 64 bit
 * Windows 32 and 64 bit
 * Mac OS X 64 bit
+

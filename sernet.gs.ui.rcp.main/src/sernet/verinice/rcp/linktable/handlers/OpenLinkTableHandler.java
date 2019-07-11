@@ -29,12 +29,13 @@ import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
 
 /**
- *
+ * Handler class for opening existing report queries. This handler is configured
+ * in plugin.xml.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
 public class OpenLinkTableHandler extends LinkTableHandler {
-    
+
     public OpenLinkTableHandler() {
         super();
     }

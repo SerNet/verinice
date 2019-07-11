@@ -1,0 +1,26 @@
+{
+	"analysis":{
+		"filter":{
+      "czech_stemmer": {
+          "type":       "stemmer",
+          "language":   "czech"
+      }		
+		},
+		"analyzer":{
+			"verinice_analyzer":{
+				"tokenizer":"standard",
+				"filter":[
+					"lowercase",
+					"czech_stemmer"
+				]			
+			},
+			"analyzer_keyword":{
+        "tokenizer":"keyword",
+        "filter":[
+					"lowercase"
+				]
+      }			
+		}
+		
+	}
+}

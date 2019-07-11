@@ -18,7 +18,8 @@
 package sernet.hui.common.connect;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -261,9 +262,11 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                             + getDbId());
                 }
             } catch (Exception e) {
-                String propertyValue = propertyList.getProperties().stream().map(Property::getPropertyValue).collect(Collectors.joining(", "));
+                String propertyValue = propertyList.getProperties().stream()
+                        .map(Property::getPropertyValue).collect(Collectors.joining(", "));
                 String message = "Error reading Entity:" + entityType + " uuid:" + this.uuid
-                        + " propertytype:" + propertyTypeId+" propertyValue: ["+propertyValue+"]"  ;
+                        + " propertytype:" + propertyTypeId + " propertyValue: [" + propertyValue
+                        + "]";
                 logger.error(message, e);
                 throw new RuntimeException("Error loading reference property.\n" + message, e);
             }
@@ -358,7 +361,8 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         String dateInISO8601 = null;
         Date date = getDate(propertyTypeId);
         if (date != null) {
-            dateInISO8601 = new SimpleDateFormat("yyyy-MM-dd").format(date);
+            dateInISO8601 = DateTimeFormatter.ISO_LOCAL_DATE
+                    .format(date.toInstant().atZone(ZoneId.systemDefault()));
         }
         return dateInISO8601;
     }

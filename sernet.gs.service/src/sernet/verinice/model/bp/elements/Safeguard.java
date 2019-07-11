@@ -38,8 +38,6 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 import sernet.verinice.model.common.TransactionAbortedException;
-import sernet.verinice.service.bp.risk.RiskDeductionUtil;
-import sernet.verinice.service.hibernate.HibernateUtil;
 
 /**
  * @author Daniel Murygin dm[at]sernet.de
@@ -51,8 +49,7 @@ public class Safeguard extends CnATreeElement
     private static final long serialVersionUID = -3597661958061483411L;
 
     public static final String TYPE_ID = "bp_safeguard"; //$NON-NLS-1$
-    private static final String PROP_ABBR = "bp_safeguard_abbr"; //$NON-NLS-1$
-    private static final String PROP_OBJECTBROWSER_DESC = "bp_safeguard_objectbrowser_content"; //$NON-NLS-1$
+    public static final String PROP_OBJECTBROWSER_DESC = "bp_safeguard_objectbrowser_content"; //$NON-NLS-1$
     private static final String PROP_NAME = "bp_safeguard_name"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_safeguard_id"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_safeguard_tag"; //$NON-NLS-1$
@@ -71,9 +68,6 @@ public class Safeguard extends CnATreeElement
     public static final String PROP_IMPLEMENTATION_STATUS_YES = "bp_safeguard_implementation_status_yes"; //$NON-NLS-1$
     public static final String PROP_IMPLEMENTATION_STATUS_PARTIALLY = "bp_safeguard_implementation_status_partially"; //$NON-NLS-1$
     public static final String PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE = "bp_safeguard_implementation_status_na"; //$NON-NLS-1$
-    public static final String PROP_STRENGTH_FREQUENCY = "bp_safeguard_safeguard_strength_frequency"; //$NON-NLS-1$
-    public static final String PROP_STRENGTH_IMPACT = "bp_safeguard_safeguard_strength_impact"; //$NON-NLS-1$
-    public static final String PROP_REDUCE_RISK = "bp_safeguard_reduce_risk";
 
     private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
     private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
@@ -92,19 +86,6 @@ public class Safeguard extends CnATreeElement
                     .filter(DeductionImplementationUtil::isDeductiveImplementationEnabled)
                     .forEach(DeductionImplementationUtil::setImplementationStatusToRequirement);
 
-            Safeguard.this.getLinksUp().stream()
-                    .filter(link -> BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD
-                            .equals(link.getRelationId()))
-                    .map(CnALink::getDependant).map(HibernateUtil::unproxy)
-                    .map(BpRequirement.class::cast)
-                    .forEach(r -> {
-                        try {
-                            RiskDeductionUtil.deduceSafeguardStrength(r);
-                            r.getLinkChangeListener().determineValue(ta);
-                        } catch (TransactionAbortedException e) {
-                            //swallow this exception
-                        }
-                    });
         }
     };
 
@@ -138,14 +119,6 @@ public class Safeguard extends CnATreeElement
     public void setObjectBrowserDescription(String description) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER_DESC),
                 description);
-    }
-
-    public String getAbbreviation() {
-        return getEntity().getPropertyValue(PROP_ABBR);
-    }
-
-    public void setAbbreviation(String abbreviation) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
     }
 
     @Override

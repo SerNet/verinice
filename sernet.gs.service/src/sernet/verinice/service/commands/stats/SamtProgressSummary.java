@@ -4,11 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.interfaces.IAuthAwareCommand;
-import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
@@ -18,19 +14,14 @@ import sernet.verinice.service.iso27k.ControlMaturityService;
 
 @SuppressWarnings("serial")
 /**
- * Returns two values: total topics and answered topics (state != default value).
- * 
+ * Returns two values: total topics and answered topics (state != default
+ * value).
  */
-public class SamtProgressSummary extends GenericCommand implements IAuthAwareCommand {
-   
-    private static final Logger log = Logger.getLogger(SamtProgressSummary.class);
-    
+public class SamtProgressSummary extends GenericCommand {
+
     public static final String ANSWERED = Messages.SamtProgressSummary_0;
 
     public static final String UNANSWERED = Messages.SamtProgressSummary_1;
-
-
-    private transient IAuthService authService;
 
     private Integer id;
 
@@ -42,7 +33,7 @@ public class SamtProgressSummary extends GenericCommand implements IAuthAwareCom
 
     @Override
     public void execute() {
-        result = new HashMap<String, Integer>();
+        result = new HashMap<>(2);
         result.put(UNANSWERED, 0);
         result.put(ANSWERED, 0);
 
@@ -52,7 +43,7 @@ public class SamtProgressSummary extends GenericCommand implements IAuthAwareCom
     }
 
     private void loadSamtTopics(ControlGroup cg) {
-        if (cg == null){
+        if (cg == null) {
             return;
         }
         ControlMaturityService maturityService = new ControlMaturityService();
@@ -60,13 +51,13 @@ public class SamtProgressSummary extends GenericCommand implements IAuthAwareCom
         for (CnATreeElement e : cg.getChildren()) {
             if (e instanceof SamtTopic) {
                 SamtTopic st = (SamtTopic) e;
-                // ignore chapters 0.x (Copyright et al):
-                if (!st.getTitle().startsWith("0")) { //$NON-NLS-1$
-                    if (maturityService.getIsaState(st) == IControl.IMPLEMENTED_NOTEDITED) {
-                        result.put(UNANSWERED, (Integer)result.get(UNANSWERED)+1);
-                    }
-                    else {
-                        result.put(ANSWERED, (Integer)result.get(ANSWERED)+1);
+                String title = st.getTitle();
+                // ignore chapters 0.x (Copyright et al) and 100.x (addendum):
+                if (!title.startsWith("0") && !title.startsWith("100")) { //$NON-NLS-1$
+                    if (IControl.IMPLEMENTED_NOTEDITED.equals(maturityService.getIsaState(st))) {
+                        result.put(UNANSWERED, (Integer) result.get(UNANSWERED) + 1);
+                    } else {
+                        result.put(ANSWERED, (Integer) result.get(ANSWERED) + 1);
                     }
                 }
             } else if (e instanceof ControlGroup) {
@@ -75,32 +66,7 @@ public class SamtProgressSummary extends GenericCommand implements IAuthAwareCom
         }
     }
 
-    /**
-     * @return the result
-     */
     public Map<String, Integer> getResult() {
         return result;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand#getAuthService()
-     */
-    public IAuthService getAuthService() {
-        return authService;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand#setAuthService
-     * (sernet.gs.ui.rcp.main.service.IAuthService)
-     */
-    public void setAuthService(IAuthService service) {
-        this.authService = service;
-    }
-
 }

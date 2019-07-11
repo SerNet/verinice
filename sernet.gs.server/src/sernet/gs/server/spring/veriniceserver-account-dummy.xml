@@ -7,6 +7,7 @@
 	<bean id="accountService" class="sernet.verinice.service.AccountService">
 	    <property name="accountGroupDao" ref="accountGroupDao" />
 		<property name="configurationDao" ref="configurationDao" />
+        <property name="authService" ref="authService" />
 	<property name="commandService" ref="commandService" />
 	<property name="configurationService" ref="configurationService" />
 	<property name="rightsServerHandler" ref="rightsServerHandler" />

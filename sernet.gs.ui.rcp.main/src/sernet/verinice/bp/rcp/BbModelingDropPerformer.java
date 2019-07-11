@@ -72,7 +72,7 @@ import sernet.verinice.service.commands.bp.ModelCommand;
 /**
  * This drop performer class starts the modeling process of IT base protection
  * after one or more modules are dragged from
- * sernet.verinice.rcp.catalog.CatalogView and dropped on an element in
+ * {@link sernet.verinice.rcp.catalog.CatalogView} and dropped on an element in
  * BaseProtectionView.
  *
  * @see CatalogDragListener
@@ -343,8 +343,9 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
     private void showModelingError(final String causeMessage) {
         final String message = String.join("", causeMessage, " ",
                 Messages.BbModelingDropPerformer_ModelingAborted, causeMessage);
-        Display.getDefault().asyncExec(() -> MessageDialog.openError(Display.getDefault().getActiveShell(),
-                Messages.BbModelingDropPerformerModelingError, message));
+        Display.getDefault()
+                .asyncExec(() -> MessageDialog.openError(Display.getDefault().getActiveShell(),
+                        Messages.BbModelingDropPerformerModelingError, message));
     }
 
     protected VeriniceElementTransfer getTransfer() {

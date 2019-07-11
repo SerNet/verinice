@@ -19,6 +19,7 @@ package sernet.verinice.model.common;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -35,6 +36,7 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.IReevaluator;
+import sernet.verinice.model.bp.elements.BpPerson;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
@@ -42,10 +44,12 @@ import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.LinkKategorie;
+import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.Schutzbedarf;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.InheritLogger;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.model.validation.CnAValidation;
 
 /**
@@ -72,8 +76,21 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     public static final String UUID = "uuid";
     public static final String PARENT_ID = "parent-id";
     public static final String SCOPE_ID = "scope-id";
+    public static final String EXT_ID = "ext-id";
+    public static final String SOURCE_ID = "source-id";
+
+    private static final Set<String> staticProperties;
+
+    static {
+        staticProperties = Collections
+                .unmodifiableSet(new HashSet<>(Arrays.asList(CnATreeElement.SCOPE_ID,
+                        CnATreeElement.PARENT_ID, CnATreeElement.DBID, CnATreeElement.UUID,
+                        CnATreeElement.EXT_ID, CnATreeElement.SOURCE_ID)));
+    }
 
     private Integer dbId;
+
+    private String uuid;
 
     private Integer scopeId;
 
@@ -323,8 +340,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     public Set<CnATreeElement> getChildren() {
         return children;
     }
-
-    private String uuid;
 
     private transient EntityType subEntityType;
 
@@ -677,10 +692,11 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
      * @return Return true if the id is the id of a "static" property
      */
     public static boolean isStaticProperty(String propertyId) {
-        return (CnATreeElement.PARENT_ID.equals(propertyId)
-                || CnATreeElement.SCOPE_ID.equals(propertyId)
-                || CnATreeElement.DBID.equals(propertyId)
-                || CnATreeElement.UUID.equals(propertyId));
+        return staticProperties.contains(propertyId);
+    }
+
+    public static Set<String> getStaticProperties() {
+        return staticProperties;
     }
 
     /**
@@ -692,22 +708,23 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
      *            A CnATreeElement
      * @param propertyId
      *            The id of a "static" property: CnATreeElement.DBID,
-     *            .PARENT_ID, .SCOPE_ID, .UUID
+     *            .PARENT_ID, .SCOPE_ID, .UUID, .EXT_ID, .SOURCE_ID
      * @return The value of the property or null if no value exists
      */
     public static String getStaticProperty(CnATreeElement element, String propertyId) {
         String value = null;
         if (CnATreeElement.SCOPE_ID.equals(propertyId)) {
             value = String.valueOf(element.getScopeId());
-        }
-        if (CnATreeElement.DBID.equals(propertyId)) {
+        } else if (CnATreeElement.DBID.equals(propertyId)) {
             value = String.valueOf(element.getDbId());
-        }
-        if (CnATreeElement.PARENT_ID.equals(propertyId)) {
+        } else if (CnATreeElement.PARENT_ID.equals(propertyId)) {
             value = String.valueOf(element.getParentId());
-        }
-        if (CnATreeElement.UUID.equals(propertyId)) {
+        } else if (CnATreeElement.UUID.equals(propertyId)) {
             value = element.getUuid();
+        } else if (CnATreeElement.EXT_ID.equals(propertyId)) {
+            value = element.getExtId();
+        } else if (CnATreeElement.SOURCE_ID.equals(propertyId)) {
+            value = element.getSourceId();
         }
         return value;
     }
@@ -774,8 +791,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
             }
             this.children = newElement.getChildren();
             this.setChildrenLoaded(true);
-
-            return;
         } else {
             if (log.isDebugEnabled()) {
                 log.debug("Replacing child " + this + "in parent " + getParent());
@@ -874,11 +889,11 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
     @Override
     public void validationAdded(Integer scopeId) {
-    };
+    }
 
     @Override
     public void validationRemoved(Integer scopeId) {
-    };
+    }
 
     @Override
     public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation) {
@@ -1001,6 +1016,25 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
     public boolean isItNetwork() {
         return ItNetwork.class.equals(getClass()) || ItNetwork.TYPE_ID.equals(getTypeId());
+    }
+
+    /**
+     * Indicates whether the instance is a person element.
+     */
+    public boolean isPerson() {
+        return isBpOldPerson() || isIsoPerson() || isBpPerson();
+    }
+
+    public boolean isBpOldPerson() {
+        return Person.class.equals(getClass()) || Person.TYPE_ID.equals(getTypeId());
+    }
+
+    public boolean isIsoPerson() {
+        return PersonIso.class.equals(getClass()) || PersonIso.TYPE_ID.equals(getTypeId());
+    }
+
+    public boolean isBpPerson() {
+        return BpPerson.class.equals(getClass()) || BpPerson.TYPE_ID.equals(getTypeId());
     }
 
     /**

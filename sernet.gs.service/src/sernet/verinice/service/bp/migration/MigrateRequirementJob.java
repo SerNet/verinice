@@ -20,7 +20,6 @@ package sernet.verinice.service.bp.migration;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.bp.ModelLinksCommand;
 
 /**
  * This class migrates the data of a requirement. See
@@ -44,6 +43,6 @@ public class MigrateRequirementJob extends MigrateCompendiumElementJob {
     }
 
     protected String getLinkTypeId() {
-        return ModelLinksCommand.ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS.get(element.getTypeId());
+        return BpRequirement.getLinkTypeToTargetObject(element.getTypeId());
     }
 }

@@ -55,15 +55,13 @@ import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.hui.common.connect.IPerson;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.UsernameExistsException;
 import sernet.verinice.interfaces.ldap.PersonParameter;
 import sernet.verinice.interfaces.ldap.SizeLimitExceededException;
-import sernet.verinice.model.bp.elements.BpPerson;
-import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Domain;
-import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
 import sernet.verinice.service.ldap.LoadLdapUser;
 import sernet.verinice.service.ldap.PersonInfo;
@@ -367,23 +365,15 @@ public class LdapImportDialog extends TitleAreaDialog {
     }
 
     private static String getPersonSurname(CnATreeElement person) {
-        if (person instanceof Person) {
-            return ((Person) person).getEntity().getPropertyValue(Person.P_NAME);
-        } else if (person instanceof PersonIso) {
-            return ((PersonIso) person).getSurname();
-        } else if (person instanceof BpPerson) {
-            return person.getEntity().getPropertyValue(BpPerson.PROP_LAST_NAME);
+        if (person instanceof IPerson) {
+            return ((IPerson) person).getLastName();
         }
         return "";
     }
 
     private static String getPersonName(CnATreeElement person) {
-        if (person instanceof Person) {
-            return ((Person) person).getEntity().getPropertyValue(Person.P_VORNAME);
-        } else if (person instanceof PersonIso) {
-            return ((PersonIso) person).getName();
-        } else if (person instanceof BpPerson) {
-            return person.getEntity().getPropertyValue(BpPerson.PROP_FIRST_NAME);
+        if (person instanceof IPerson) {
+            return ((IPerson) person).getFirstName();
         }
         return "";
     }

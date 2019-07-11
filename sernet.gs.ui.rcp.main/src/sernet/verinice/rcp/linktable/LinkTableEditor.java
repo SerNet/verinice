@@ -54,7 +54,7 @@ import sernet.verinice.rcp.linktable.ui.LinkTableFieldListener;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
 
 /**
- *
+ * Editor for report queries / link tables (VLTs)
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
@@ -63,30 +63,32 @@ public class LinkTableEditor extends EditorPart {
     public static final String EDITOR_ID = LinkTableEditor.class.getName();
     public static final String TITLE_DEFAULT = Messages.LinkTableEditor_0;
     private static final Logger LOG = Logger.getLogger(LinkTableEditor.class);
-    
+
     private LinkTableEditorInput linkTableEditorInput;
     private boolean isDirty = false;
 
     private LinkTableFieldListener contentObserver;
     private boolean validQuery = false;
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
+    /*
+     * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite,
+     * org.eclipse.ui.IEditorInput)
      */
     @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-        if (! (input instanceof LinkTableEditorInput)) {
-            throw new PartInitException("Input is not an instance of " + LinkTableEditorInput.class.getSimpleName()); //$NON-NLS-1$
+        if (!(input instanceof LinkTableEditorInput)) {
+            throw new PartInitException(
+                    "Input is not an instance of " + LinkTableEditorInput.class.getSimpleName()); //$NON-NLS-1$
         }
-
         linkTableEditorInput = (LinkTableEditorInput) input;
 
         setSite(site);
         setInput(linkTableEditorInput);
     }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+
+    /*
+     * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
+     * widgets.Composite)
      */
     @Override
     public void createPartControl(Composite parent) {
@@ -110,10 +112,8 @@ public class LinkTableEditor extends EditorPart {
         GridDataFactory.swtDefaults().applyTo(exportButton);
 
         exportButton.addSelectionListener(new SelectionListener() {
-
             @Override
             public void widgetSelected(SelectionEvent event) {
-
 
                 ExportLinkTableHandler exportHandler = new ExportLinkTableHandler(true,
                         linkTableEditorInput.getInput());
@@ -131,21 +131,16 @@ public class LinkTableEditor extends EditorPart {
         });
 
         LinkTableComposite ltr = new LinkTableComposite(linkTableEditorInput.getInput(),
-                ServiceFactory.lookupObjectModelService(),
-                container);
-
+                ServiceFactory.lookupObjectModelService(), container);
         contentObserver = new LinkTableFieldListener() {
-
             @Override
             public void fieldValueChanged() {
                 isDirty = true;
                 firePropertyChange(IEditorPart.PROP_DIRTY);
-
             }
 
             @Override
             public void validate() {
-
                 LinkTableValidationResult validationResult = LinkTableUtil
                         .isValidVeriniceLinkTable(linkTableEditorInput.getInput());
 
@@ -157,7 +152,8 @@ public class LinkTableEditor extends EditorPart {
                     validQuery = true;
                 } else {
                     ImageDescriptor[] descriptors = new ImageDescriptor[5];
-                    Image warningImage = ImageCache.getInstance().getImage(ImageCache.ERROR_DECORATOR);
+                    Image warningImage = ImageCache.getInstance()
+                            .getImage(ImageCache.ERROR_DECORATOR);
 
                     descriptors[IDecoration.BOTTOM_LEFT] = ImageDescriptor
                             .createFromImage(warningImage);
@@ -165,13 +161,12 @@ public class LinkTableEditor extends EditorPart {
                             .createImage();
 
                     setTitleImage(decorated);
-                    setPartName(linkTableEditorInput.getName() + Messages.VeriniceLinkTableEditor_7);
+                    setPartName(
+                            linkTableEditorInput.getName() + Messages.VeriniceLinkTableEditor_7);
                     firePropertyChange(IEditorPart.PROP_DIRTY);
                     validQuery = false;
                 }
                 firePropertyChange(IEditorPart.PROP_TITLE);
-
-
             }
         };
         ltr.addListener(contentObserver);
@@ -182,9 +177,10 @@ public class LinkTableEditor extends EditorPart {
         GridLayoutFactory.fillDefaults().margins(10, 10).generateLayout(container);
         contentObserver.validate();
     }
-    
-    /* 
-     * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
+
+    /*
+     * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.
+     * IProgressMonitor)
      */
     @Override
     public void doSave(IProgressMonitor monitor) {
@@ -197,7 +193,7 @@ public class LinkTableEditor extends EditorPart {
             }
         }
     }
-    
+
     /*
      * @see org.eclipse.ui.part.EditorPart#doSaveAs()
      */
@@ -212,16 +208,12 @@ public class LinkTableEditor extends EditorPart {
             }
         }
     }
-    
-    private boolean wantSaveEvenIfInvalid() {
 
+    private boolean wantSaveEvenIfInvalid() {
         if (!validQuery) {
             MessageDialog confirmInvalidInput = new MessageDialog(
-                    Display.getCurrent().getActiveShell(),
-                    Messages.LinkTableHandler_1,
-                    null,
-                    Messages.LinkTableHandler_2
-                            + Messages.LinkTableHandler_3,
+                    Display.getCurrent().getActiveShell(), Messages.LinkTableHandler_1, null,
+                    Messages.LinkTableHandler_2 + Messages.LinkTableHandler_3,
                     MessageDialog.WARNING,
                     new String[] { Messages.LinkTableEditor_1, Messages.LinkTableEditor_2 }, 0);
 
@@ -232,19 +224,18 @@ public class LinkTableEditor extends EditorPart {
 
     public static String getEditorTitle(String filePath) {
         String title = TITLE_DEFAULT;
-        if(filePath!=null) {
-            title = filePath.substring(filePath.lastIndexOf(File.separator) + 1,
-                    filePath.length());
+        if (filePath != null) {
+            title = filePath.substring(filePath.lastIndexOf(File.separator) + 1, filePath.length());
         }
         return title;
     }
-    
+
     @Override
     public void dispose() {
         EditorRegistry.getInstance().closeEditor(((LinkTableEditorInput) getEditorInput()).getId());
         super.dispose();
     }
-    
+
     private void executeSave(String filePath) {
         VeriniceLinkTableIO.write(linkTableEditorInput.getInput(), filePath);
         setPartName(getEditorTitle(filePath));
@@ -256,9 +247,8 @@ public class LinkTableEditor extends EditorPart {
     private String getFilePath(LinkTableEditorInput linkTableEditorInput, boolean isSaveAs) {
         String filePath = linkTableEditorInput.getFilePath();
         if (isSaveAs || filePath == null) {
-            filePath = LinkTableUtil.createVltFilePath(
-                    Display.getCurrent().getActiveShell(), Messages.VeriniceLinkTableEditor_4,
-                    SWT.SAVE, linkTableEditorInput.getName());
+            filePath = LinkTableUtil.createVltFilePath(Display.getCurrent().getActiveShell(),
+                    Messages.VeriniceLinkTableEditor_4, SWT.SAVE, linkTableEditorInput.getName());
             if (filePath != null) {
                 EditorRegistry.getInstance().closeEditor(linkTableEditorInput.getId());
                 linkTableEditorInput.setFilePath(filePath);
@@ -266,9 +256,9 @@ public class LinkTableEditor extends EditorPart {
             }
         }
         return filePath;
-    }  
+    }
 
-    /* (non-Javadoc)
+    /*
      * @see org.eclipse.ui.part.EditorPart#isDirty()
      */
     @Override
@@ -276,7 +266,7 @@ public class LinkTableEditor extends EditorPart {
         return isDirty;
     }
 
-    /* (non-Javadoc)
+    /*
      * @see org.eclipse.ui.part.EditorPart#isSaveAsAllowed()
      */
     @Override
@@ -284,16 +274,12 @@ public class LinkTableEditor extends EditorPart {
         return true;
     }
 
-
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
      */
     @Override
     public void setFocus() {
         // nothing to do
-
     }
 
 }

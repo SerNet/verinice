@@ -38,7 +38,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -57,6 +56,8 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bp.DeductionImplementationUtil;
+import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.Person;
@@ -68,7 +69,6 @@ import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.rcp.RightsEnabledHandler;
 import sernet.verinice.service.commands.LoadConfiguration;
-import sernet.verinice.service.commands.crud.LoadChildrenForExpansion;
 import sernet.verinice.service.commands.crud.LoadReportElements;
 import sernet.verinice.service.commands.crud.PrepareObjectWithAccountDataForDeletion;
 
@@ -82,8 +82,6 @@ public class DeleteHandler extends RightsEnabledHandler {
     private static final Logger LOG = Logger.getLogger(DeleteHandler.class);
 
     protected static final String DEFAULT_ERR_MSG = "Error while deleting element.";
-
-    protected IWorkbenchPart targetPart;
 
     /*
      * 
@@ -230,40 +228,8 @@ public class DeleteHandler extends RightsEnabledHandler {
 
     protected void doDelete(final List<CnATreeElement> deleteList)
             throws InvocationTargetException, InterruptedException {
-        PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-            @Override
-            public void run(IProgressMonitor monitor)
-                    throws InvocationTargetException, InterruptedException {
-                CnATreeElement sel = null;
-                try {
-                    Activator.inheritVeriniceContextState();
-                    monitor.beginTask(Messages.DeleteActionDelegate_14, IProgressMonitor.UNKNOWN);
-                    for (Iterator<CnATreeElement> iter = deleteList.iterator(); iter.hasNext();) {
-                        sel = iter.next();
-
-                        // do not delete last ITVerbund:
-                        if (sel instanceof ITVerbund
-                                && CnAElementHome.getInstance().getItverbuende().size() < 2) {
-                            ExceptionUtil.log(new Exception(Messages.DeleteActionDelegate_12),
-                                    Messages.DeleteActionDelegate_13);
-                            return;
-                        }
-
-                        CnATreeElement el = sel;
-                        removeElement(el);
-                    }
-                } catch (DataIntegrityViolationException dive) {
-                    deleteElementWithAccountAsync((CnATreeElement) sel);
-                } catch (Exception e) {
-                    LOG.error(DEFAULT_ERR_MSG, e);
-                    ExceptionUtil.log(e, Messages.DeleteActionDelegate_15);
-                } finally {
-                    if (monitor != null) {
-                        monitor.done();
-                    }
-                }
-            }
-        });
+        PlatformUI.getWorkbench().getProgressService()
+                .busyCursorWhile(new DeleteElements(deleteList));
     }
 
     protected void doDeleteIso(final List<CnATreeElement> deleteList)
@@ -325,7 +291,7 @@ public class DeleteHandler extends RightsEnabledHandler {
         }
     }
 
-    protected void deleteElementWithAccountAsync(final CnATreeElement element) {
+    protected static void deleteElementWithAccountAsync(final CnATreeElement element) {
         Display.getDefault().asyncExec(() -> {
             try {
                 deleteElementWithAccount(element);
@@ -341,7 +307,8 @@ public class DeleteHandler extends RightsEnabledHandler {
         });
     }
 
-    protected void deleteElementWithAccount(final CnATreeElement element) throws CommandException {
+    protected static void deleteElementWithAccount(final CnATreeElement element)
+            throws CommandException {
         GenericCommand command = null;
         if (loadConfiguration(element)) {
             if (MessageDialog.openConfirm(Display.getDefault().getActiveShell(),
@@ -355,13 +322,13 @@ public class DeleteHandler extends RightsEnabledHandler {
         removeElement(element);
     }
 
-    protected void removeElement(CnATreeElement elementToRemove) throws CommandException {
+    protected static void removeElement(CnATreeElement elementToRemove) throws CommandException {
         CnAElementHome.getInstance().remove(elementToRemove);
         CnAElementFactory.getModel(elementToRemove).databaseChildRemoved(elementToRemove);
         CnAElementFactory.getInstance().getCatalogModel().databaseChildRemoved(elementToRemove);
     }
 
-    protected boolean loadConfiguration(CnATreeElement elmt) {
+    protected static boolean loadConfiguration(CnATreeElement elmt) {
         String[] types = new String[] { Person.TYPE_ID, PersonIso.TYPE_ID };
         ICommandService service = ServiceFactory.lookupCommandService();
         for (String type : types) {
@@ -381,14 +348,6 @@ public class DeleteHandler extends RightsEnabledHandler {
         }
 
         return false;
-    }
-
-    protected CnATreeElement loadChildren(CnATreeElement element) throws CommandException {
-        LoadChildrenForExpansion command = new LoadChildrenForExpansion(element);
-        command = ServiceFactory.lookupCommandService().executeCommand(command);
-        element = command.getElementWithChildren();
-        element.setChildrenLoaded(true);
-        return element;
     }
 
     private void changeSelection(ISelection selection) {
@@ -417,6 +376,43 @@ public class DeleteHandler extends RightsEnabledHandler {
     @Override
     public String getRightID() {
         return ActionRightIDs.DELETEITEM;
+    }
+
+    private static final class DeleteElements implements IRunnableWithProgress {
+        private final List<CnATreeElement> deleteList;
+
+        private DeleteElements(List<CnATreeElement> deleteList) {
+            this.deleteList = deleteList;
+        }
+
+        @Override
+        public void run(IProgressMonitor monitor)
+                throws InvocationTargetException, InterruptedException {
+            CnATreeElement sel = null;
+            try {
+                Activator.inheritVeriniceContextState();
+                monitor.beginTask(Messages.DeleteActionDelegate_14, IProgressMonitor.UNKNOWN);
+                boolean reloadBpModel = false;
+                for (Iterator<CnATreeElement> iter = deleteList.iterator(); iter.hasNext();) {
+                    sel = iter.next();
+                    removeElement(sel);
+                    reloadBpModel |= sel instanceof IBpElement;
+                }
+                if (reloadBpModel) {
+                    BpModel bpModel = CnAElementFactory.getInstance().getBpModel();
+                    bpModel.modelReload(bpModel);
+                }
+            } catch (DataIntegrityViolationException dive) {
+                deleteElementWithAccountAsync((CnATreeElement) sel);
+            } catch (Exception e) {
+                LOG.error(DEFAULT_ERR_MSG, e);
+                ExceptionUtil.log(e, Messages.DeleteActionDelegate_15);
+            } finally {
+                if (monitor != null) {
+                    monitor.done();
+                }
+            }
+        }
     }
 
 }

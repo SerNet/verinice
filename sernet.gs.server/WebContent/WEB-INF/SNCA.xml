@@ -5546,7 +5546,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                     name="" />
                 <option
                     id="person-iso_anrede_frau"
-                    name="Mrs" />
+                    name="Ms" />
                 <option
                     id="person-iso_anrede_herr"
                     name="Mr" />
@@ -6153,8 +6153,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         <huiproperty
             name="isISOGroup"
             id="controlgroup_is_NoIso_group"
-            inputtype="booleanoption" defaultValue="0"
-            tags="VDA_ISA_Audit" />
+            inputtype="booleanoption" defaultValue="0" />
     </huientity>
 
     <huientity
@@ -6764,6 +6763,9 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
 
             <huirelation to="samt_topic" id="rel_requirement_samt_topic_fullfilled"
             name="fullfilled by" reversename="fullfills" tooltip="" />
+
+        <huirelation to="requirement" id="rel_requirement_requirement_considers"
+            name="considers" reversename="considered in"/>
 
         <huiproperty
             name="Title"
@@ -9044,7 +9046,10 @@ Wurden bereits weitere Stellen informiert?
                 <option id="samt_topic_maturity_4"  value="4" />
                 <option id="samt_topic_maturity_5"  value="5" />
           </huiproperty>
-
+          <huiproperty id="samt_topic_data_protection" inputtype="singleoption" tags="VDA-ISA" name="Data Protection Fulfilled" >
+                <option id="samt_topic_data_protection_yes" name="Yes" />
+                <option id="samt_topic_data_protection_no" name="No" />
+          </huiproperty>
           <huiproperty
             id="samt_topic_weight"  visible="false" inputtype="numericoption" min="0" max="10" />
           <huiproperty
@@ -9135,8 +9140,37 @@ Wurden bereits weitere Stellen informiert?
     <!-- Modernised base protection elements -->
 
     <huientity id="bp_itnetwork" name="Information Network">
+        <huirelation to="bp_businessprocess" id="rel_bp_itnetwork_bp_businessproces"
+            name="implements"
+            reversename="implemented by" />
+        <huirelation to="bp_application" id="rel_bp_itnetwork_bp_application"
+            name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_itsystem" id="rel_bp_itnetwork_bp_itsystem"
+            name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_icssystem" id="rel_bp_itnetwork_bp_icssystem"
+            name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_device" id="rel_bp_itnetwork_bp_device"
+            name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_network" id="rel_bp_itnetwork_bp_network"
+            name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_room" id="rel_bp_itnetwork_bp_room"
+            name="includes"
+            reversename="located in" />
+        <huirelation to="bp_person" id="rel_bp_itnetwork_bp_person"
+            name="person primarily responsible"
+            reversename="primarily responsible for " />
+        <huirelation to="bp_incident" id="rel_bp_itnetwork_bp_incident"
+            name="was affected by"
+            reversename="affected" />
+
         <huiproperty id="bp_itnetwork_name" name="Title" required="true" />
         <huiproperty id="bp_itnetwork_abbr" name="Abbreviation" />
+        <huiproperty id="bp_itnetwork_organization" name="Organization" />
         <huiproperty id="bp_itnetwork_tag" name="Tags" tooltip="List of tags, separated by comma or space" />
         <huiproperty id="bp_itnetwork_employee_number" name="Number of employees" />
         <huiproperty id="bp_itnetwork_description" name="Description" />
@@ -9372,6 +9406,12 @@ Wurden bereits weitere Stellen informiert?
             reversename="necessary for" />
         <huirelation to="bp_room" id="rel_bp_application_bp_room" name="located in"
             reversename="includes" />
+        <huirelation to="bp_person" id="rel_bp_application_bp_person_accountable" name="accountable"
+            reversename="accountable for" />
+        <huirelation to="bp_person" id="rel_bp_application_bp_person_consulted" name="consulted"
+            reversename="consulted for" />
+        <huirelation to="bp_person" id="rel_bp_application_bp_person_informed" name="informed"
+            reversename="informed about" />
 
         <huiproperty id="bp_application_abbr" name="Abbreviation" required="true" />
         <huiproperty id="bp_application_name" name="Title" required="true" />
@@ -9484,6 +9524,12 @@ Wurden bereits weitere Stellen informiert?
             reversename="necessary for" />
         <huirelation to="bp_network" id="rel_bp_businessprocess_bp_network" name="depends on"
             reversename="necessary for" />
+        <huirelation to="bp_person" id="rel_bp_businessprocess_bp_person_accountable" name="accountable"
+            reversename="accountable for" />
+        <huirelation to="bp_person" id="rel_bp_businessprocess_bp_person_consulted" name="consulted"
+            reversename="consulted for" />
+        <huirelation to="bp_person" id="rel_bp_businessprocess_bp_person_informed" name="informed"
+            reversename="informed about" />
 
         <huiproperty id="bp_businessprocess_abbr" name="Abbreviation" required="true" />
         <huiproperty id="bp_businessprocess_name" name="Title" required="true" />
@@ -10311,6 +10357,8 @@ Wurden bereits weitere Stellen informiert?
     <huientity id="bp_itsystem" name="IT System">
         <huirelation to="bp_itsystem" id="rel_bp_itsystem_bp_itsystem" name="depends on"
             reversename="necessary for" />
+        <huirelation to="bp_itsystem" id="rel_bp_itsystem_bp_itsystem_virtualized" name="virtualized on"
+            reversename="VM host for" />
         <huirelation to="bp_icssystem" id="rel_bp_itsystem_bp_icssystem" name="depends on"
             reversename="necessary for" />
         <huirelation to="bp_device" id="rel_bp_itsystem_bp_device" name="depends on"
@@ -10326,6 +10374,7 @@ Wurden bereits weitere Stellen informiert?
             tooltip="List of tags, separated by comma or space" />
         <huiproperty id="bp_itsystem_description" inputtype="text" name="Description" />
         <huiproperty id="bp_itsystem_platform" name="Platform / Module" />
+        <huiproperty id="bp_itsystem_site" name="Site" />
         <huiproperty id="bp_itsystem_count" name="Anzahl" />
         <huiproperty id="bp_itsystem_status" inputtype="singleoption" name="Status">
             <option id="bp_itsystem_status_operation" name="Operation" />
@@ -10333,6 +10382,23 @@ Wurden bereits weitere Stellen informiert?
             <option id="bp_itsystem_status_test" name="Test" />
             <option id="bp_itsystem_status_reserve" name="Reserve" />
         </huiproperty>
+        <huiproperty id="bp_itsystem_net_address" name="Net addresses" />
+        <huiproperty id="bp_itsystem_interfaces" name="Interfaces" inputtype="multioption">
+            <option id="bp_itsystem_interfaces_ethernet" name="Ethernet"/>
+            <option id="bp_itsystem_interfaces_wlan" name="WLAN"/>
+            <option id="bp_itsystem_interfaces_bluetooth" name="Bluetooth"/>
+            <option id="bp_itsystem_interfaces_irda" name="IrDA"/>
+            <option id="bp_itsystem_interfaces_modem" name="Modem"/>
+            <option id="bp_itsystem_interfaces_usb" name="USB"/>
+            <option id="bp_itsystem_interfaces_ieee1394" name="IEEE 1394"/>
+            <option id="bp_itsystem_interfaces_serial" name="Serial"/>
+            <option id="bp_itsystem_interfaces_parallel" name="Parallel"/>
+            <option id="bp_itsystem_interfaces_scsi" name="Ext SCSI"/>
+            <option id="bp_itsystem_interfaces_sata" name="Ext SATA"/>
+            <option id="bp_itsystem_interfaces_ide" name="Ext IDE"/>
+            <option id="bp_itsystem_interfaces_audio" name="Audio In"/>
+            <option id="bp_itsystem_interfaces_video" name="Video In"/>
+        </huiproperty>        
          <huiproperty id="bp_itsystem_user" name="User" tooltip=""	required="true" inputtype="multioption">
 			<option	id="bp_itsystem_user_1"	name="Administration" />
 			<option	id="bp_itsystem_user_2"	name="Development" />
@@ -10488,6 +10554,16 @@ Wurden bereits weitere Stellen informiert?
             reversename="person primarily responsible" />
         <huirelation to="bp_record" id="rel_bp_person_record" name="maintains"
             reversename="maintained by" />
+        <huirelation to="bp_itsystem" id="rel_bp_person_bp_itsystem_user" name="User of"
+            reversename="User" />
+        <huirelation to="bp_itsystem" id="rel_bp_person_bp_itsystem_administrator" name="Administrator of"
+            reversename="Administrator" />
+        <huirelation to="bp_application" id="rel_bp_person_bp_application_user" name="User of"
+            reversename="User" />
+        <huirelation to="bp_businessprocess" id="rel_bp_person_bp_businessprocess_user" name="User of"
+            reversename="User" />
+        <huirelation to="bp_businessprocess" id="rel_bp_person_bp_businessprocess_owner" name="Owner of"
+            reversename="Owner" />
 
         <huiproperty id="bp_person_abbr" name="Abbreviation" required="true" />
         <huiproperty id="bp_person_title" inputtype="singleoption" name="Anrede">
@@ -10503,7 +10579,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_person_email" name="Email" />
         <huiproperty id="bp_person_org_unit" name="=Org. unit" />
         <huiproperty id="bp_person_explanation" name="Explanation" />
-        <huiproperty id="bp_person_tag" name="Tags" />
+        <huiproperty id="bp_person_tag" name="Tags" />       
+        <huiproperty id="bp_person_count" name="Count" />
 		<huiproperty id="bp_person_roles" inputtype="multioption" name="Roles" required="false" >
 			<option id="bp_person_role_0" name="Administrator" />
 			<option id="bp_person_role_2" name="Anwendungsentwickler" />
@@ -10628,20 +10705,6 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="bp_requirement_implementation_desc" name="Description"
                 required="false" inputtype="text" focus="true" />
         </huipropertygroup>
-        <huipropertygroup id="bp_requirement_safeguard_strength" name="Safeguard Strength" tags="BSI-200-3">
-            <huiproperty defaultValue="0" id="bp_requirement_reduce_risk"
-                inputtype="booleanoption" name="Reduce Risk" tags="Risk" />
-            <huiproperty id="bp_requirement_safeguard_strength_frequency" name="Reduces frequency of occurrence to"
-                required="true" inputtype="singleoption">
-                <depends option="bp_requirement_implementation_deduce" value="0" />
-                <!-- options will be populated dynamically in the application -->
-            </huiproperty>
-            <huiproperty id="bp_requirement_safeguard_strength_impact" name="Reduces potential extent of damage to"
-                required="true" inputtype="singleoption">
-                <depends option="bp_requirement_implementation_deduce" value="0" />
-                <!-- options will be populated dynamically in the application -->
-            </huiproperty>
-        </huipropertygroup>
     <huipropertygroup id="bp_requirement_group_kosten" name="Kosten" tags="Finance">
       <huiproperty id="bp_requirement_kosten_ptfix" name="Personalkosten fix EUR" tags="Finance"/>
       <huiproperty id="bp_requirement_kosten_ptvar" name="Personalkosten var. EUR" tags="Finance"/>
@@ -10748,6 +10811,39 @@ Wurden bereits weitere Stellen informiert?
             name="Elemental Threat Content" showInObjectBrowser="true" visible="false" />
         <huiproperty id="bp_threat_desc" inputtype="text" name="Description"
             showInObjectBrowser="false" visible="true" />
+        <huiproperty id="bp_threat_vulnerability" inputtype="singleoption" name="Vulnerability">
+            <option id="bp_threat_vulnerability_organisational_deficiencies" name="Organisational deficiencies"/>
+            <option id="bp_threat_vulnerability_technical_vulnerabilities" name="Technical vulnerabilities"/>
+            <option id="bp_threat_vulnerability_technical_breakdown" name="Technical breakdown"/>
+            <option id="bp_threat_vulnerability_human_mistakes" name="Human mistakes"/>
+            <option id="bp_threat_vulnerability_infrastructure_lack" name="Lack of infrastructure"/>
+            <option id="bp_threat_vulnerability_network_defects" name="Network defects"/>
+            <option id="bp_threat_vulnerability_service_coupling" name="Coupling of services"/>
+            <option id="bp_threat_vulnerability_intentional_action" name="Intentional action"/>
+        </huiproperty>
+        <huiproperty id="bp_threat_threat" inputtype="singleoption" name="Threat">
+            <option id="bp_threat_threat_undirected_attacks" name="Undirected attacks"/>
+            <option id="bp_threat_threat_criminal_act" name="Criminal act"/>
+            <option id="bp_threat_threat_force_majeure" name="Force majeure"/>
+            <option id="bp_threat_threat_identity_abuse" name="Identity abuse"/>
+            <option id="bp_threat_threat_internal_offender" name="Internal offender"/>
+            <option id="bp_threat_threat_third_parties_dependency" name="Dependency on third parties"/>
+            <option id="bp_threat_threat_unauthorized_access" name="Unauthorized access"/>
+            <option id="bp_threat_threat_it_damage" name="Damage to IT equipment"/>
+            <option id="bp_threat_threat_malware" name="Malware"/>
+            <option id="bp_threat_threat_social_engineering" name="Social engineering"/>
+            <option id="bp_threat_threat_targeted_attacks" name="Targeted attacks"/>
+            <option id="bp_threat_threat_verlust_information_loss" name="Loss of stored information"/>
+            <option id="bp_threat_threat_process_equipment_damage" name="Damage to process equipment"/>
+            <option id="bp_threat_threat_overload" name="Overload"/>
+            <option id="bp_threat_threat_criminal_prosecution" name="Criminal prosecution / disciplinary measures"/>
+            <option id="bp_threat_threat_confidentiality_loss" name="Loss of confidentiality"/>
+            <option id="bp_threat_threat_liability_loss" name="Loss of liability"/>
+            <option id="bp_threat_threat_administration_loss" name="Loss of administration possibilities"/>
+            <option id="bp_threat_threat_vulnerability_exploitation " name="Exploitation of security vulnerabilities"/>
+            <option id="bp_threat_threat_system_failure" name="System failure"/>
+            <option id="bp_threat_threat_wlan_failure" name="WLAN failure"/>
+        </huiproperty>
         <huiproperty id="bp_threat_document" isURL="true" name="Document" />
         <huiproperty defaultValue="1" id="bp_threat_value_method_confidentiality"
             inputtype="booleanoption" name="Affects Confidentiality" tags="Risk" />
@@ -10755,6 +10851,20 @@ Wurden bereits weitere Stellen informiert?
             name="Affects Integrity" tags="Risk" />
         <huiproperty defaultValue="1" id="bp_threat_value_method_availability"
             inputtype="booleanoption" name="Affects Availability" tags="Risk" />
+        <huipropertygroup id="bp_threat_risk_without_safeguards" name="Risk without safeguards" tags="BSI-200-3-without-safeguards">
+            <huiproperty id="bp_threat_risk_without_safeguards_frequency" name="Frequency of occurrence"
+                inputtype="singleoption">
+                <!-- options will be populated dynamically in the application -->
+            </huiproperty>
+            <huiproperty id="bp_threat_risk_without_safeguards_impact" name="Potential extent of damage"
+                inputtype="singleoption">
+                <!-- options will be populated dynamically in the application -->
+            </huiproperty>
+            <huiproperty id="bp_threat_risk_without_safeguards_risk" name="Risk"
+                inputtype="singleoption" editable="false">
+                <!-- options will be populated dynamically in the application -->
+            </huiproperty>
+        </huipropertygroup>
         <huipropertygroup id="bp_threat_risk_without_additional_safeguards" name="Risk without additional safeguards" tags="BSI-200-3">
             <huiproperty id="bp_threat_risk_without_additional_safeguards_frequency" name="Frequency of occurrence"
                 required="true" inputtype="singleoption">
@@ -10785,15 +10895,17 @@ Wurden bereits weitere Stellen informiert?
         </huipropertygroup>
         <huipropertygroup id="bp_threat_risk_with_additional_safeguards" name="Risk with additional safeguards" tags="BSI-200-3">
             <huiproperty id="bp_threat_risk_with_additional_safeguards_frequency" name="Frequency of occurrence"
-                required="true" inputtype="singleoption" editable="false">
+                inputtype="singleoption">
+                <depends option="bp_threat_risk_treatment_option" value="bp_threat_risk_treatment_option_risk_reduction" />
                <!-- options will be populated dynamically in the application -->
             </huiproperty>
             <huiproperty id="bp_threat_risk_with_additional_safeguards_impact" name="Potential extent of damage"
-                required="true" inputtype="singleoption" editable="false">
+                inputtype="singleoption">
+                <depends option="bp_threat_risk_treatment_option" value="bp_threat_risk_treatment_option_risk_reduction" />
                 <!-- options will be populated dynamically in the application -->
             </huiproperty>
             <huiproperty id="bp_threat_risk_with_additional_safeguards_risk" name="Risk"
-                required="true" inputtype="singleoption" editable="false">
+                inputtype="singleoption" editable="false">
             </huiproperty>
         </huipropertygroup>
     </huientity>
@@ -10823,8 +10935,8 @@ Wurden bereits weitere Stellen informiert?
             <option id="bp_network_status_test" name="Test" />
             <option id="bp_network_status_reserve" name="Reserve" />
         </huiproperty>
-        <huiproperty id="bp_network_netadr" name="Netadresses" />
-        <huiproperty id="bp_network_coms" inputtype="multioption" name="Schnittstellen">
+        <huiproperty id="bp_network_netadr" visible="false" name="Netadresses" />
+        <huiproperty id="bp_network_coms" inputtype="multioption" visible="false" name="Schnittstellen">
             <option id="bp_network_coms_ether" name="Ethernet" />
             <option id="bp_network_coms_wlan" name="WLAN" />
             <option id="bp_network_coms_blue" name="Bluetooth" />
@@ -10862,6 +10974,19 @@ Wurden bereits weitere Stellen informiert?
 			<option	id="bp_network_user_19"	name="Accounting" />
 		</huiproperty>
         <huiproperty id="bp_network_document" isURL="true" name="Document" />
+        <huiproperty id="bp_network_cable" name="Cable / Connection Type" />
+        <huiproperty id="bp_network_capacity" name="Capacity" />
+        <huiproperty id="bp_network_protocols" name="Protocols" />
+        <huiproperty id="bp_network_external_network" name="External Network" />
+        <huiproperty id="bp_network_criticality" inputtype="multioption" name="Criticality" tooltip="Connection is critical due to...">
+            <option id="bp_network_criticality_0" name="K0: Non-Critical" />
+            <option id="bp_network_criticality_1" name="K1: External Connection" />
+            <option id="bp_network_criticality_2" name="K2: High Confidentiality" />
+            <option id="bp_network_criticality_3" name="K3: High Integrity" />
+            <option id="bp_network_criticality_4" name="K4: High Availability" />
+            <option id="bp_network_criticality_5" name="K5: No Transfer of Highly Confidential Information" />
+        </huiproperty>
+        <huiproperty id="bp_network_explanation" inputtype="text" textrows="4" name="Explanation" />
         <huipropertygroup id="bp_network_group_business_impact" name="Protection Requirement"
             tags="Risk">
 		    <huiproperty defaultValue="1" id="bp_network_value_method_confidentiality" inputtype="booleanoption" name="Deduce confidentiality with maximumpriciple" tags="Risk"/>
@@ -11068,14 +11193,14 @@ Wurden bereits weitere Stellen informiert?
     </huientity>
 
     <huientity id="bp_room" name="Room">
-        <huirelation to="bp_room" id="rel_bp_room_bp_room" name="includes" reversename="located in" />
+        <huirelation to="bp_room" id="rel_bp_room_bp_room" name="located in" reversename="includes" />
 
         <huiproperty id="bp_room_abbr" name="Abbreviation" required="true" />
         <huiproperty id="bp_room_name" name="Title" required="true" />
         <huiproperty id="bp_room_description" inputtype="text" name="Description" />
         <huiproperty id="bp_room_platform" name="Platform / Module" />
         <huiproperty id="bp_room_count" name="Anzahl" />
-        <huiproperty id="bp_room_status" inputtype="singleoption" name="Status">
+        <huiproperty id="bp_room_status" inputtype="singleoption" visible="false" name="Status">
             <option id="bp_room_status_operation" name="Operation" />
             <option id="bp_room_status_planning" name="Planning" />
             <option id="bp_room_status_test" name="Test" />
@@ -11206,18 +11331,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
             <huiproperty id="bp_safeguard_implementation_desc" name="Description"
                 required="false" inputtype="text" focus="true" />
-        </huipropertygroup>
-        <huipropertygroup id="bp_safeguard_safeguard_strength" name="Safeguard Strength" tags="BSI-200-3">
-            <huiproperty defaultValue="0" id="bp_safeguard_reduce_risk"
-                inputtype="booleanoption" name="Reduce Risk" tags="Risk" />
-            <huiproperty id="bp_safeguard_safeguard_strength_frequency" name="Reduces frequency of occurrence to"
-                required="true" inputtype="singleoption">
-               <!-- options will be populated dynamically in the application -->
-            </huiproperty>
-            <huiproperty id="bp_safeguard_safeguard_strength_impact" name="Reduces potential extent of damage to"
-                required="true" inputtype="singleoption">
-                <!-- options will be populated dynamically in the application -->
-            </huiproperty>
         </huipropertygroup>
     <huipropertygroup id="bp_safeguard_group_kosten" name="Kosten" tags="Finance">
       <huiproperty id="bp_safeguard_kosten_ptfix" name="Personalkosten fix EUR" tags="Finance"/>
@@ -11382,6 +11495,9 @@ Wurden bereits weitere Stellen informiert?
             id="bp_document_group_desc"
             inputtype="text"
             showInObjectBrowser="true" />
+
+         <huiproperty id="bp_document_group_tag" name="Tags" />
+
     </huientity>
 
     <huientity
@@ -11605,6 +11721,9 @@ Wurden bereits weitere Stellen informiert?
             id="bp_incident_group_desc"
             inputtype="text"
             showInObjectBrowser="true" />
+
+        <huiproperty id="bp_incident_group_tag" name="Tags" />
+
     </huientity>
 
     <huientity
@@ -11761,5 +11880,8 @@ Wurden bereits weitere Stellen informiert?
             id="bp_record_group_desc"
             inputtype="text"
             showInObjectBrowser="true" />
+
+        <huiproperty id="bp_record_group_tag" name="Tags" />
+
     </huientity>
 </huientities>

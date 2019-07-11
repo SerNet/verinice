@@ -27,58 +27,57 @@ import java.util.Map.Entry;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * IsaMapper is used by command {@link LoadUnifyMapping} to create a mapping between
- * {@link CnATreeElement}s. IsaMapper is searching for elements with the same
- * number prefix in the destination map as in the source.
+ * IsaMapper is used by command {@link LoadUnifyMapping} to create a mapping
+ * between {@link CnATreeElement}s. IsaMapper is searching for elements with the
+ * same number prefix in the destination map as in the source.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class IsaMapper implements IElementMapper {
+public final class IsaMapper {
 
-    public static final String ID = "unify.mapper.isa";
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.commands.unify.IElementMapper#createMapping(java.util.Map, java.util.Map)
+    private static final IsaMapper INSTANCE = new IsaMapper();
+
+    public static IsaMapper getInstance() {
+        return INSTANCE;
+    }
+
+    /**
+     * Creates a mapping between source and destination elements
+     * ({@link CnATreeElement}s).
+     * 
+     * @param sourceMap
+     *            A map with all source elements. Key is the number in the
+     *            beginning of the elements title or the whole title if there is
+     *            no number (e.g. "1.2" for "1.2 IS Risk Management") Value is
+     *            the element.
+     * @param destinationMap
+     *            A map with all destination elements. Key is the number in the
+     *            beginning of the elements title or the whole title if there is
+     *            no number (e.g. "1.2" for "1.2 IS Risk Management"). Value is
+     *            the element.
+     * @return A mapping between {@link CnATreeElement}s.
      */
-    @Override
-    public List<UnifyMapping> createMapping(Map<String, CnATreeElement> sourceMap, Map<String, CnATreeElement> destinationMap) {
-        List<UnifyMapping> internalMappings = new ArrayList<UnifyMapping>(sourceMap.size());      
-        for(Entry<String, CnATreeElement> sourceEntry : sourceMap.entrySet()){
+
+    public List<UnifyMapping> createMapping(Map<String, CnATreeElement> sourceMap,
+            Map<String, CnATreeElement> destinationMap) {
+        List<UnifyMapping> internalMappings = new ArrayList<>(sourceMap.size());
+        for (Entry<String, CnATreeElement> sourceEntry : sourceMap.entrySet()) {
             CnATreeElement source = sourceEntry.getValue();
-            UnifyMapping mapping = new UnifyMapping(new UnifyElement(source.getUuid(), source.getTitle())); 
-            List<String> destinationKeyList = getDestinationKey(sourceEntry);
-            for (String destinationKey : destinationKeyList) {
-                CnATreeElement destination = destinationMap.get(destinationKey);
-                if(destination!=null) {
-                    mapping.addDestinationElement(new UnifyElement(destination.getUuid(), destination.getTitle()));
-                }
-            }         
+            UnifyMapping mapping = new UnifyMapping(
+                    new UnifyElement(source.getUuid(), source.getTitle()));
+            String destinationKey = sourceEntry.getKey();
+            CnATreeElement destination = destinationMap.get(destinationKey);
+            if (destination != null) {
+                mapping.addDestinationElement(
+                        new UnifyElement(destination.getUuid(), destination.getTitle()));
+            }
+
             internalMappings.add(mapping);
         }
         return internalMappings;
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.commands.unify.IElementMapper#validate(java.util.Map, java.util.Map)
-     */
-    @Override
-    public void validate(Map<String, CnATreeElement> sourceMap, Map<String, CnATreeElement> destinationMap) throws UnifyValidationException {
-        // no validation needed in this mapper
-        
-    }
 
-    protected List<String> getDestinationKey(Entry<String, CnATreeElement> sourceEntry) {
-        List<String> destKeyList = new ArrayList<String>(1);
-        destKeyList.add(sourceEntry.getKey());
-        return destKeyList;
-    }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.commands.unify.IElementMapper#getId()
-     */
-    @Override
-    public String getId() {
-        return ID;
+    private IsaMapper() {
     }
 
 }

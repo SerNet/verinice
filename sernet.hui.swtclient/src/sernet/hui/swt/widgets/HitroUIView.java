@@ -18,6 +18,8 @@
 package sernet.hui.swt.widgets;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -61,6 +63,7 @@ import sernet.hui.swt.widgets.URL.URLControl;
 import sernet.hui.swt.widgets.multiselectionlist.MultiSelectionControl;
 import sernet.snutils.AssertException;
 import sernet.snutils.DBException;
+import sernet.snutils.TagHelper;
 
 /**
  * Creates the editable SWT view of a collection of properties as defined by a
@@ -431,12 +434,8 @@ public class HitroUIView implements IEntityChangedListener {
                 || propertyTags.length() == 0) {
             return false;
         }
-        for (String searchTag : filterTags) {
-            if (propertyTags.indexOf(searchTag) > -1) {
-                return true;
-            }
-        }
-        return false;
+        Collection<String> propertyTagsSplit = TagHelper.getTags(propertyTags);
+        return Arrays.stream(filterTags).anyMatch(propertyTagsSplit::contains);
     }
 
     private void createNumericSelect(PropertyType fieldType, boolean editableField,

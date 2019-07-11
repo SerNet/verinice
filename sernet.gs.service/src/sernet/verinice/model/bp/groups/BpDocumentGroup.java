@@ -18,16 +18,21 @@
 
 package sernet.verinice.model.bp.groups;
 
+import java.util.Collection;
+
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.elements.BpDocument;
+import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 
 @SuppressWarnings("serial")
-public class BpDocumentGroup extends Group<BpDocument> implements IBpGroup {
+public class BpDocumentGroup extends Group<BpDocument> implements IBpGroup, ITaggableElement {
 
     public static final String TYPE_ID = "bp_document_group"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_document_group_name"; //$NON-NLS-1$
+    public static final String PROP_TAG = "bp_document_group_tag"; //$NON-NLS-1$
 
     public static final String[] CHILD_TYPES = new String[] { BpDocument.TYPE_ID };
 
@@ -64,6 +69,11 @@ public class BpDocumentGroup extends Group<BpDocument> implements IBpGroup {
     @Override
     public String[] getChildTypes() {
         return CHILD_TYPES;
+    }
+
+    @Override
+    public Collection<String> getTags() {
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
 }

@@ -61,7 +61,7 @@ public class HUITypeFactoryTest extends CommandServiceProvider {
             + "/testSrc/SNCA.xml";
     private static final int MAX_NUM_TO_TEST = 100;
     private static final int ALL_ENTITY_TYPES_SIZE = 88;
-    private static final int ALL_TAGS_SIZE = 21;
+    private static final int ALL_TAGS_SIZE = 22;
     private static final int ALL_URL_PROPERY_TYPES_SIZE = 46;
 
     @Resource(name = "huiTypeFactory")

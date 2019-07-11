@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.ui.externaltools.ProgramLaunchConfigurationType">
+<stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="${workspace_loc:/sernet.verinice.releng.client.product/target/products/sernet.verinice.releng.client/linux/gtk/x86_64/verinice/verinice}"/>
+<stringAttribute key="org.eclipse.ui.externaltools.ATTR_WORKING_DIRECTORY" value="${workspace_loc:/sernet.verinice.releng.client.product/target/products/sernet.verinice.releng.client/linux/gtk/x86_64/verinice}"/>
+</launchConfiguration>

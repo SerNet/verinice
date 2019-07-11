@@ -30,7 +30,6 @@ import org.hibernate.StaleObjectStateException;
 import sernet.gs.model.Baustein;
 import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
@@ -64,7 +63,6 @@ import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.IncidentScenario;
-import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.service.commands.CreateElement;
@@ -98,11 +96,11 @@ public final class CnAElementHome {
     private Set<String> roles = null;
 
     private static CnAElementHome instance;
-    
+
     protected static final String LINK_NO_COMMENT = ""; //$NON-NLS-1$
 
     private ICommandService commandService;
-    
+
     private IValidationService validationService;
 
     public ICommandService getCommandService() {
@@ -132,14 +130,6 @@ public final class CnAElementHome {
     }
 
     public void open(IProgress monitor) throws MalformedURLException {
-        open(CnAWorkspace.getInstance().getConfDir(), monitor);
-    }
-
-    public void preload(String confDir) {
-        // do nothing
-    }
-
-    public void open(String confDir, IProgress monitor) throws MalformedURLException {
         monitor.beginTask(Messages.getString("CnAElementHome.0"), IProgress.UNKNOWN_WORK); //$NON-NLS-1$
         ServiceFactory.openCommandService();
         commandService = ServiceFactory.lookupCommandService();
@@ -167,87 +157,105 @@ public final class CnAElementHome {
         if (log.isDebugEnabled()) {
             log.debug("Saving new element, uuid " + element.getUuid()); //$NON-NLS-1$
         }
-        SaveElement<T> saveCommand = new SaveElement<T>(element);
+        SaveElement<T> saveCommand = new SaveElement<>(element);
         saveCommand = getCommandService().executeCommand(saveCommand);
-        if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
+        if (Activator.getDefault().getPluginPreferences()
+                .getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)) {
             validateElement(saveCommand.getElement());
         }
         return saveCommand.getElement();
     }
 
     /**
-     * Creates a new instance of class clazz as a child of container.
-     * The new instance is saved in the database.
+     * Creates a new instance of class clazz as a child of container. The new
+     * instance is saved in the database.
      * 
-     * A localized title of the instance is set on the server 
-     * which locale may differ from the clients locale.
+     * A localized title of the instance is set on the server which locale may
+     * differ from the clients locale.
      * 
-     * @param container The parent of the new instance
-     * @param clazz Class of the new instance
+     * @param container
+     *            The parent of the new instance
+     * @param clazz
+     *            Class of the new instance
      * @return the new instance which is saved in the database
      */
-    public <T extends CnATreeElement> T save(CnATreeElement container, Class<T> clazz) throws CommandException {
+    public <T extends CnATreeElement> T save(CnATreeElement container, Class<T> clazz)
+            throws CommandException {
         return save(container, clazz, null);
     }
-    
+
     /**
-     * Creates a new instance of class clazz as a child of container.
-     * The new instance is saved in the database.
+     * Creates a new instance of class clazz as a child of container. The new
+     * instance is saved in the database.
      * 
-     * If you pass a typeId (HUI-Type-id) a localized title of the 
-     * instance is set on the cliant via HUITypeFactory from message bundle.
-     * If typeId is null a localized title of the instance is set on the server 
-     * which locale may differ from the clients locale.
+     * If you pass a typeId (HUI-Type-id) a localized title of the instance is
+     * set on the cliant via HUITypeFactory from message bundle. If typeId is
+     * null a localized title of the instance is set on the server which locale
+     * may differ from the clients locale.
      * 
-     * @param container The parent of the new instance
-     * @param clazz Class of the new instance
-     * @param typeId HUI-Type-Id or null
+     * @param container
+     *            The parent of the new instance
+     * @param clazz
+     *            Class of the new instance
+     * @param typeId
+     *            HUI-Type-Id or null
      * @return the new instance which is saved in the database
      */
-    public <T extends CnATreeElement> T save(CnATreeElement container, Class<T> clazz, String typeId) throws CommandException {
+    public <T extends CnATreeElement> T save(CnATreeElement container, Class<T> clazz,
+            String typeId) throws CommandException {
         String title = null;
-        if(typeId!=null) {
+        if (typeId != null) {
             // load the localized title via HUITypeFactory from message bundle
             title = HitroUtil.getInstance().getTypeFactory().getMessage(typeId);
         }
         if (log.isDebugEnabled()) {
-            log.debug("Creating new instance of " + clazz.getName() + " in " + container + " with title: " + title); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            log.debug("Creating new instance of " + clazz.getName() + " in " + container //$NON-NLS-1$ //$NON-NLS-2$
+                    + " with title: " + title); //$NON-NLS-1$
         }
-        CreateElement<T> saveCommand = new CreateElement<T>(container, clazz, title);
+        CreateElement<T> saveCommand = new CreateElement<>(container, clazz, title);
         saveCommand.setInheritAuditPermissions(true);
         saveCommand = getCommandService().executeCommand(saveCommand);
-        if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
+        if (Activator.getDefault().getPluginPreferences()
+                .getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)) {
             validateElement(saveCommand.getNewElement());
         }
         return saveCommand.getNewElement();
     }
 
-    public BausteinUmsetzung save(CnATreeElement container, Baustein baustein) throws CommandException {
+    public BausteinUmsetzung save(CnATreeElement container, Baustein baustein)
+            throws CommandException {
         if (log.isDebugEnabled()) {
             log.debug("Creating new element, parent uuid: " + container.getUuid()); //$NON-NLS-1$
         }
-        CreateBaustein saveCommand = new CreateBaustein(container, baustein, BSIKatalogInvisibleRoot.getInstance().getLanguage());
+        CreateBaustein saveCommand = new CreateBaustein(container, baustein,
+                BSIKatalogInvisibleRoot.getInstance().getLanguage());
         saveCommand = getCommandService().executeCommand(saveCommand);
-        if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
+        if (Activator.getDefault().getPluginPreferences()
+                .getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)) {
             validateElement(saveCommand.getNewElement());
         }
         return saveCommand.getNewElement();
     }
 
-    public CnALink createLink(CnATreeElement dropTarget, CnATreeElement dragged) throws CommandException {
+    public CnALink createLink(CnATreeElement dropTarget, CnATreeElement dragged)
+            throws CommandException {
         if (log.isDebugEnabled()) {
             log.debug("Saving new link from " + dropTarget.getUuid() + " to " + dragged.getUuid()); //$NON-NLS-1$ //$NON-NLS-2$
         }
-        CreateLink command = new CreateLink(dropTarget, dragged, false);
+        CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(dropTarget, dragged,
+                false);
         command = getCommandService().executeCommand(command);
         return command.getLink();
     }
 
-    public CnALink createLink(CnATreeElement dropTarget, CnATreeElement dragged, String typeId, String comment) throws CommandException {
+    public CnALink createLink(CnATreeElement dropTarget, CnATreeElement dragged, String typeId,
+            String comment) throws CommandException {
         if (log.isDebugEnabled()) {
-            log.debug("Saving new link from " + dropTarget.getUuid() + " to " + dragged.getUuid() + " of type " + typeId); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            log.debug("Saving new link from " + dropTarget.getUuid() + " to " + dragged.getUuid() //$NON-NLS-1$ //$NON-NLS-2$
+                    + " of type " + typeId); //$NON-NLS-1$
         }
-        CreateLink command = new CreateLink(dropTarget, dragged, typeId, comment, false);
+        CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(dropTarget, dragged,
+                typeId, comment, false);
         command = getCommandService().executeCommand(command);
 
         return command.getLink();
@@ -261,9 +269,9 @@ public final class CnAElementHome {
 
         ChangeLoggingCommand command;
         if (isModelingTemplateActive()) {
-            command = new sernet.verinice.service.commands.templates.RemoveElement(element);
+            command = new sernet.verinice.service.commands.templates.RemoveElement<>(element);
         } else {
-            command = new sernet.verinice.service.commands.RemoveElement(element);
+            command = new sernet.verinice.service.commands.RemoveElement<>(element);
         }
 
         deleteValidations(element);
@@ -276,37 +284,40 @@ public final class CnAElementHome {
     }
 
     public CnATreeElement update(CnATreeElement element) throws CommandException {
-        UpdateElement command = new UpdateElement(element, true, ChangeLogEntry.STATION_ID);
+        UpdateElement<CnATreeElement> command = new UpdateElement<>(element, true,
+                ChangeLogEntry.STATION_ID);
         command = getCommandService().executeCommand(command);
-        return (CnATreeElement) command.getElement();
+        return command.getElement();
     }
-    
+
     /**
      * @param cnAElement
-     * @throws Exception 
+     * @throws Exception
      */
     public CnATreeElement updateEntity(CnATreeElement element) throws CommandException {
         UpdateElementEntity<? extends CnATreeElement> command = createCommand(element);
         command = getCommandService().executeCommand(command);
-        if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
+        if (Activator.getDefault().getPluginPreferences()
+                .getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)) {
             validateElement(command.getMergedElement());
         }
-        return command.getMergedElement(); 
+        return command.getMergedElement();
     }
 
-    public void update(List<? extends CnATreeElement> elements) throws StaleObjectStateException, CommandException {
-        UpdateMultipleElements command = new UpdateMultipleElements(elements, ChangeLogEntry.STATION_ID);
+    public void update(List<? extends CnATreeElement> elements)
+            throws StaleObjectStateException, CommandException {
+        UpdateMultipleElements command = new UpdateMultipleElements(elements,
+                ChangeLogEntry.STATION_ID);
         command = getCommandService().executeCommand(command);
-        if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
-            for(Object o :  command.getChangedElements()){
-                if(o instanceof CnATreeElement){
-                    validateElement((CnATreeElement)o);
+        if (Activator.getDefault().getPluginPreferences()
+                .getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)) {
+            for (Object o : command.getChangedElements()) {
+                if (o instanceof CnATreeElement) {
+                    validateElement((CnATreeElement) o);
                 }
             }
         }
     }
-
-   
 
     /**
      * Load object with given ID for given class.
@@ -316,9 +327,8 @@ public final class CnAElementHome {
      * @return
      * @throws CommandException
      */
-    @SuppressWarnings("unchecked")
-	public CnATreeElement loadById(String typeId, int id) throws CommandException {
-		LoadCnAElementById command = new LoadCnAElementById(typeId, id);
+    public CnATreeElement loadById(String typeId, int id) throws CommandException {
+        LoadCnAElementById command = new LoadCnAElementById(typeId, id);
         command = getCommandService().executeCommand(command);
         return command.getFound();
     }
@@ -353,20 +363,14 @@ public final class CnAElementHome {
      * @throws CommandException
      */
     public void refresh(CnATreeElement cnAElement) throws CommandException {
-        RefreshElement command = new RefreshElement(cnAElement);
+        RefreshElement<CnATreeElement> command = new RefreshElement<>(cnAElement);
         command = getCommandService().executeCommand(command);
         CnATreeElement refreshedElement = command.getElement();
         cnAElement.setEntity(refreshedElement.getEntity());
     }
 
-    public List<ITVerbund> getItverbuende() throws CommandException {
-        LoadCnAElementByType<ITVerbund> command = new LoadCnAElementByType<ITVerbund>(ITVerbund.class);
-        command = getCommandService().executeCommand(command);
-        return command.getElements();
-    }
-
     public List<Person> getPersonen() throws CommandException {
-        LoadCnAElementByType<Person> command = new LoadCnAElementByType<Person>(Person.class);
+        LoadCnAElementByType<Person> command = new LoadCnAElementByType<>(Person.class);
         command = getCommandService().executeCommand(command);
         return command.getElements();
 
@@ -389,15 +393,15 @@ public final class CnAElementHome {
         if (cte instanceof ImportIsoGroup) {
             return true;
         }
-        
+
         // Category objects cannot be deleted.
         if (cte instanceof IBSIStrukturKategorie) {
             return false;
         }
 
-        // ITVerbund instances can be removed when
+        // scope instances can be removed when
         // one has write access to it (There is no parent to check).
-        if (cte instanceof ITVerbund || cte instanceof Organization) {
+        if (cte.isScope()) {
             return isWriteAllowed(cte);
         }
 
@@ -431,8 +435,7 @@ public final class CnAElementHome {
      */
     public boolean isNewChildAllowed(CnATreeElement cte) {
         return cte instanceof BSIModel || cte instanceof ISO27KModel || cte instanceof BpModel
-                || cte instanceof CatalogModel
-                || isWriteAllowed(cte);
+                || cte instanceof CatalogModel || isWriteAllowed(cte);
     }
 
     /**
@@ -444,110 +447,124 @@ public final class CnAElementHome {
      */
     public boolean isWriteAllowed(CnATreeElement cte) {
         try {
-            // Short cut: If no permission handling is needed than all objects are
+            // Short cut: If no permission handling is needed than all objects
+            // are
             // writable.
             ServiceFactory.lookupAuthService();
             if (!ServiceFactory.isPermissionHandlingNeeded()) {
                 return true;
             }
-    
+
             // Short cut 2: If we are the admin, then everything is writable as
             // well.
             if (getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN })) {
                 return true;
             }
-            
+
             // Short cut 3: If cte is a implementation, then it is not writable
             // @see CnATreeElement.TemplateType
             if (cte.isImplementation()) {
-            	return false;
+                return false;
             }
-    
+
             if (roles == null) {
                 LoadCurrentUserConfiguration lcuc = new LoadCurrentUserConfiguration();
                 lcuc = getCommandService().executeCommand(lcuc);
                 Configuration c = lcuc.getConfiguration();
-    
-                // No configuration for the current user (anymore?). Then nothing is
+
+                // No configuration for the current user (anymore?). Then
+                // nothing is
                 // writable.
                 if (c == null) {
                     return false;
                 }
-    
+
                 roles = c.getRoles();
             }
-            
+
             CnATreeElement elemntWithPermissions = Retriever.checkRetrievePermissions(cte);
+            if (elemntWithPermissions == null) {
+                if (log.isInfoEnabled()) {
+                    log.info("Element " + cte + " not found when checking write permissions");
+                }
+                return false;
+            }
             for (Permission p : elemntWithPermissions.getPermissions()) {
                 if (p.isWriteAllowed() && roles.contains(p.getRole())) {
                     return true;
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Error while checking write permission.", e);
         }
         return false;
     }
 
-    public void createLinksAccordingToBusinessLogic(final CnATreeElement dropTarget, final List<CnATreeElement> toDrop) {
+    public void createLinksAccordingToBusinessLogic(final CnATreeElement dropTarget,
+            final List<CnATreeElement> toDrop) {
         createLinksAccordingToBusinessLogicAsync(dropTarget, toDrop, null);
     }
-    
-    public void createLinksAccordingToBusinessLogicAsync(final CnATreeElement dropTarget, final List<CnATreeElement> toDrop, final String linkId) {
+
+    public void createLinksAccordingToBusinessLogicAsync(final CnATreeElement dropTarget,
+            final List<CnATreeElement> toDrop, final String linkId) {
         if (log.isDebugEnabled()) {
             log.debug("createLink..."); //$NON-NLS-1$
         }
-        
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                Activator.inheritVeriniceContextState();
-                createLinksAccordingToBusinessLogic(dropTarget, toDrop, linkId);
-            }
-  
+
+        Display.getDefault().asyncExec(() -> {
+            Activator.inheritVeriniceContextState();
+            createLinksAccordingToBusinessLogic(dropTarget, toDrop, linkId);
         });
     }
-    
+
     protected void createLinksAccordingToBusinessLogic(final CnATreeElement dropTarget,
             final List<CnATreeElement> droppedElements, final String linkId) {
-        List<CnALink> newLinks = new ArrayList<CnALink>();
-        allDragged: for (CnATreeElement droppedElement : droppedElements) {
+        List<CnALink> newLinks = new ArrayList<>();
+        for (CnATreeElement droppedElement : droppedElements) {
             try {
                 if (linksAreConfiguredInSnca(dropTarget, droppedElement)) {
 
-                    // special case: threats and vulnerabilities can create a new scenario when dropped:
+                    // special case: threats and vulnerabilities can create a
+                    // new scenario when dropped:
                     specialISO27kDndHandling(dropTarget, droppedElement);
                     String linkIdParam = linkId;
-                    if(linkIdParam==null) {
+                    if (linkIdParam == null) {
                         // use first relation type since param linkId is null
                         linkIdParam = getFirstLinkdId(droppedElement, dropTarget);
                     }
-                    
-                    // try to link from target to dragged elements first:                            
-                    if (linkIdParam!=null) {
-                        boolean linkCreated = createTypedLink(newLinks, dropTarget, droppedElement, linkIdParam, LINK_NO_COMMENT);
-                        if (linkCreated){
-                            continue allDragged;
+
+                    // try to link from target to dragged elements first:
+                    if (linkIdParam != null) {
+                        boolean linkCreated = createTypedLink(newLinks, dropTarget, droppedElement,
+                                linkIdParam, LINK_NO_COMMENT);
+                        if (linkCreated) {
+                            continue;
                         }
                     }
-                                           
-                    if(linkIdParam==null) {
+
+                    if (linkIdParam == null) {
                         linkIdParam = getFirstLinkdId(dropTarget, droppedElement);
                     }
-                    if ( linkIdParam!=null ) {
+                    if (linkIdParam != null) {
                         // use first relation type (user can change it later):
-                        boolean linkCreated = createTypedLink(newLinks, droppedElement, dropTarget, linkIdParam, LINK_NO_COMMENT);
-                        if (linkCreated){
-                            continue allDragged;
+                        boolean linkCreated = createTypedLink(newLinks, droppedElement, dropTarget,
+                                linkIdParam, LINK_NO_COMMENT);
+                        if (linkCreated) {
+                            continue;
                         }
                     }
                 } // end for ISO 27k elements
-                
-                // backwards compatibility: BSI elements can be linked without a defined relation type, but we use one if present:
-                boolean bsiHandlingNeeded = dropTarget instanceof IBSIStrukturElement || droppedElement instanceof IBSIStrukturElement || dropTarget instanceof BausteinUmsetzung;
-                bsiHandlingNeeded = bsiHandlingNeeded || droppedElement instanceof BausteinUmsetzung || dropTarget instanceof MassnahmenUmsetzung;
-                bsiHandlingNeeded = bsiHandlingNeeded || droppedElement instanceof MassnahmenUmsetzung;
-                if ( bsiHandlingNeeded ) {
+
+                // backwards compatibility: BSI elements can be linked without a
+                // defined relation type, but we use one if present:
+                boolean bsiHandlingNeeded = dropTarget instanceof IBSIStrukturElement
+                        || droppedElement instanceof IBSIStrukturElement
+                        || dropTarget instanceof BausteinUmsetzung;
+                bsiHandlingNeeded = bsiHandlingNeeded || droppedElement instanceof BausteinUmsetzung
+                        || dropTarget instanceof MassnahmenUmsetzung;
+                bsiHandlingNeeded = bsiHandlingNeeded
+                        || droppedElement instanceof MassnahmenUmsetzung;
+                if (bsiHandlingNeeded) {
                     bsiElementLinkHandling(dropTarget, linkId, newLinks, droppedElement);
                 }
             } catch (Exception e) {
@@ -555,24 +572,29 @@ public final class CnAElementHome {
             }
         }
 
-        // fire model changed events:        
+        // fire model changed events:
         for (CnALink link : newLinks) {
             if (link.getDependant() instanceof ITVerbund) {
                 CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
                 return;
             }
         }
-        
+
         // calling linkAdded for one link reloads all changed links
-        if(newLinks!=null && !newLinks.isEmpty()) {
-            CnALink link = newLinks.get(newLinks.size()-1);
-            if ((link.getDependant() instanceof IBSIStrukturElement || link.getDependant() instanceof MassnahmenUmsetzung)  || (link.getDependency() instanceof IBSIStrukturElement || link.getDependency() instanceof MassnahmenUmsetzung)) {
+        if (newLinks != null && !newLinks.isEmpty()) {
+            CnALink link = newLinks.get(newLinks.size() - 1);
+            if ((link.getDependant() instanceof IBSIStrukturElement
+                    || link.getDependant() instanceof MassnahmenUmsetzung)
+                    || (link.getDependency() instanceof IBSIStrukturElement
+                            || link.getDependency() instanceof MassnahmenUmsetzung)) {
                 CnAElementFactory.getLoadedModel().linkAdded(link);
             }
-            if (link.getDependant() instanceof IISO27kElement || link.getDependency() instanceof IISO27kElement) {
+            if (link.getDependant() instanceof IISO27kElement
+                    || link.getDependency() instanceof IISO27kElement) {
                 CnAElementFactory.getInstance().getISO27kModel().linkAdded(link);
             }
-            if (link.getDependant() instanceof IBpElement || link.getDependency() instanceof IBpElement) {
+            if (link.getDependant() instanceof IBpElement
+                    || link.getDependency() instanceof IBpElement) {
                 CnAElementFactory.getInstance().getBpModel().linkAdded(link);
             }
         }
@@ -582,39 +604,41 @@ public final class CnAElementHome {
     protected boolean linksAreConfiguredInSnca(final CnATreeElement dropTarget,
             CnATreeElement dragged) {
         return (dropTarget instanceof IISO27kElement || dropTarget instanceof IBpElement)
-            && (dragged instanceof IISO27kElement || dragged instanceof IBpElement);
+                && (dragged instanceof IISO27kElement || dragged instanceof IBpElement);
     }
-    
-    private void bsiElementLinkHandling(final CnATreeElement dropTarget, final String linkId, List<CnALink> newLinks, CnATreeElement dragged) throws CommandException {
+
+    private void bsiElementLinkHandling(final CnATreeElement dropTarget, final String linkId,
+            List<CnALink> newLinks, CnATreeElement dragged) throws CommandException {
         CnATreeElement from = dropTarget;
         CnATreeElement to = dragged;
         String linkIdParam = linkId;
-        if(linkIdParam==null) {
+        if (linkIdParam == null) {
             linkIdParam = getFirstLinkdId(to, from);
         }
-        if (linkIdParam==null) {
+        if (linkIdParam == null) {
             // try again for reverse direction:
             from = dragged;
             to = dropTarget;
             linkIdParam = getFirstLinkdId(to, from);
         }
-        if (linkIdParam==null) {
-            //still nothing found, create untyped link:
+        if (linkIdParam == null) {
+            // still nothing found, create untyped link:
             CnALink link = CnAElementHome.getInstance().createLink(dropTarget, dragged);
             newLinks.add(link);
-        }
-        else {
+        } else {
             // create link with type:
             createTypedLink(newLinks, from, to, linkIdParam, LINK_NO_COMMENT);
         }
     }
-    
+
     private String getFirstLinkdId(final CnATreeElement dropTarget, CnATreeElement dragged) {
         String linkIdParam = null;
-        // if none found: try reverse direction from dragged element to target (link is always modelled from one side only)
+        // if none found: try reverse direction from dragged element to target
+        // (link is always modelled from one side only)
         Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory()
-            .getPossibleRelations(dragged.getEntityType().getId(), dropTarget.getEntityType().getId());
-        if ( !possibleRelations.isEmpty()) {
+                .getPossibleRelations(dragged.getEntityType().getId(),
+                        dropTarget.getEntityType().getId());
+        if (!possibleRelations.isEmpty()) {
             linkIdParam = possibleRelations.iterator().next().getId();
         }
         return linkIdParam;
@@ -627,8 +651,7 @@ public final class CnAElementHome {
             threat = (Threat) dropTarget;
             vuln = (Vulnerability) dragged;
             createScenario(threat, vuln);
-        } 
-        else if (dropTarget instanceof Vulnerability && dragged instanceof Threat) {
+        } else if (dropTarget instanceof Vulnerability && dragged instanceof Threat) {
             Threat threat;
             Vulnerability vuln;
             vuln = (Vulnerability) dropTarget;
@@ -645,20 +668,19 @@ public final class CnAElementHome {
         boolean confirm = MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
                 Messages.getString("CnAElementHome.5"), Messages.getString("CnAElementHome.6") + //$NON-NLS-1$ //$NON-NLS-2$
                         Messages.getString("CnAElementHome.7")); //$NON-NLS-1$
-        if (!confirm){
+        if (!confirm) {
             return;
         }
         try {
             CreateScenario command = new CreateScenario(threat, vuln);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             IncidentScenario newElement = command.getNewElement();
-            CnAElementFactory.getInstance().getISO27kModel().childAdded(newElement.getParent(), newElement);
+            CnAElementFactory.getInstance().getISO27kModel().childAdded(newElement.getParent(),
+                    newElement);
         } catch (CommandException e) {
             ExceptionUtil.log(e, "Error while creating the new scenario."); //$NON-NLS-1$
         }
     }
-
-
 
     /**
      * @param newLinks
@@ -667,19 +689,17 @@ public final class CnAElementHome {
      * @param id
      * @param noComment
      * @return
-     * @throws CommandException 
+     * @throws CommandException
      */
-    protected boolean createTypedLink(List<CnALink> newLinks,
-            CnATreeElement from, CnATreeElement to, String relationTypeid,
-            String comment) throws CommandException {
+    protected boolean createTypedLink(List<CnALink> newLinks, CnATreeElement from,
+            CnATreeElement to, String relationTypeid, String comment) throws CommandException {
         // use first one (user can change it later):
-        CnALink link = CnAElementHome.getInstance()
-            .createLink(from, to, relationTypeid, comment );
-        if (link == null){
+        CnALink link = CnAElementHome.getInstance().createLink(from, to, relationTypeid, comment);
+        if (link == null) {
             return false;
         }
         newLinks.add(link);
-        if (log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("Link created"); //$NON-NLS-1$
         }
         return true;
@@ -692,23 +712,23 @@ public final class CnAElementHome {
      * @return update command
      */
     private UpdateElementEntity<? extends CnATreeElement> createCommand(CnATreeElement element) {
-        return new UpdateElementEntity<CnATreeElement>(element, ChangeLogEntry.STATION_ID);
+        return new UpdateElementEntity<>(element, ChangeLogEntry.STATION_ID);
     }
 
-    private void validateElement(CnATreeElement elmt){
+    private void validateElement(CnATreeElement elmt) {
         getValidationService().createValidationForSingleElement(elmt);
         CnAElementFactory.getModel(elmt).validationAdded(elmt.getScopeId());
     }
-    
-    private IValidationService getValidationService(){
-        if(validationService == null){
+
+    private IValidationService getValidationService() {
+        if (validationService == null) {
             validationService = ServiceFactory.lookupValidationService();
         }
         return validationService;
     }
-    
-    private void deleteValidations(CnATreeElement element){
-        if(element.getScopeId() != null && element.getDbId() != null){
+
+    private void deleteValidations(CnATreeElement element) throws CommandException {
+        if (element.getScopeId() != null && element.getDbId() != null) {
             getValidationService().deleteValidationsOfSubtree(element);
             CnAElementFactory.getModel(element).validationRemoved(element.getScopeId());
         } else {

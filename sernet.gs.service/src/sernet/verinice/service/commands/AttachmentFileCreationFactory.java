@@ -32,22 +32,26 @@ import sernet.verinice.model.bsi.AttachmentFile;
  *
  */
 public class AttachmentFileCreationFactory {
-    
-    private AttachmentFileCreationFactory(){}
-    
+
+    private AttachmentFileCreationFactory() {
+    }
+
     /**
-     * creates an entity of {@link AttachmentFile} as referenced by @param hostAttachment
-     * to reference the data, that should be stored in the new {@link AttachmentFile}
-     * @param dbIdOfDataSource defines the content of the new entity 
+     * creates an entity of {@link AttachmentFile} as referenced by @param
+     * hostAttachment to reference the data, that should be stored in the new
+     * {@link AttachmentFile}
+     * 
+     * @param dbIdOfDataSource
+     *            defines the content of the new entity
      **/
-    public static void createAttachmentFile(Attachment hostAttachment, byte[] fileData) throws IOException, CommandException{
+    public static void createAttachmentFile(Attachment hostAttachment, byte[] fileData)
+            throws IOException, CommandException {
         AttachmentFile newFileAttachment = new AttachmentFile();
-        if(fileData != null && fileData.length > 0){
-            newFileAttachment.setFileData(fileData);
-            newFileAttachment.setDbId(hostAttachment.getDbId());
-        }
+        newFileAttachment.setFileData(fileData);
+        newFileAttachment.setDbId(hostAttachment.getDbId());
         SaveAttachment saveFileCommand = new SaveAttachment(newFileAttachment);
-        saveFileCommand =  ((ICommandService)VeriniceContext.get(VeriniceContext.COMMAND_SERVICE)).executeCommand(saveFileCommand);
+        saveFileCommand = ((ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE))
+                .executeCommand(saveFileCommand);
         saveFileCommand.clear();
     }
 

@@ -26,51 +26,49 @@ import org.eclipse.osgi.util.NLS;
  *
  */
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "sernet.gs.ui.rcp.main.bsi.actions.messages"; //$NON-NLS-1$
-	public static String AddMassnahmeActionDelegate_0;
-	public static String AddBausteinActionDelegate_0;
-	public static String AddAnwendungActionDelegate_0;
-	public static String AddClientActionDelegate_0;
+    private static final String BUNDLE_NAME = "sernet.gs.ui.rcp.main.bsi.actions.messages"; //$NON-NLS-1$
+    public static String AddMassnahmeActionDelegate_0;
+    public static String AddBausteinActionDelegate_0;
+    public static String AddAnwendungActionDelegate_0;
+    public static String AddClientActionDelegate_0;
     public static String AddFileActionDelegate_0;
     public static String AddFileActionDelegate_2;
-	public static String AddGebaudeActionDelegate_0;
-	public static String AddITVerbundActionDelegate_0;
-	public static String AddNetzKomponenteActionDelegate_0;
-	public static String AddNoteActionDelegate_0;
-	public static String AddNoteActionDelegate_1;
-	public static String AddPersonActionDelegate_0;
-	public static String AddRaumActionDelegate_0;
-	public static String AddServerActionDelegate_0;
-	public static String AddSonstItActionDelegate_0;
-	public static String AddTelefonKomponenteActionDelegate_0;
-	public static String BausteinZuordnungAction_1;
-	public static String BausteinZuordnungAction_2;
-	public static String BausteinZuordnungAction_4;
-	public static String GSMBausteinZuordnungAction_1;
-	public static String GSMBausteinZuordnungAction_2;
-	public static String GSMBausteinZuordnungAction_3;
-	public static String GSMBausteinZuordnungAction_4;
-	public static String GSMBausteinZuordnungAction_5;
-	public static String GSMBausteinZuordnungAction_6;
-	public static String DeleteActionDelegate_0;
+    public static String AddGebaudeActionDelegate_0;
+    public static String AddITVerbundActionDelegate_0;
+    public static String AddNetzKomponenteActionDelegate_0;
+    public static String AddNoteActionDelegate_0;
+    public static String AddNoteActionDelegate_1;
+    public static String AddPersonActionDelegate_0;
+    public static String AddRaumActionDelegate_0;
+    public static String AddServerActionDelegate_0;
+    public static String AddSonstItActionDelegate_0;
+    public static String AddTelefonKomponenteActionDelegate_0;
+    public static String BausteinZuordnungAction_1;
+    public static String BausteinZuordnungAction_2;
+    public static String BausteinZuordnungAction_4;
+    public static String GSMBausteinZuordnungAction_1;
+    public static String GSMBausteinZuordnungAction_2;
+    public static String GSMBausteinZuordnungAction_3;
+    public static String GSMBausteinZuordnungAction_4;
+    public static String GSMBausteinZuordnungAction_5;
+    public static String GSMBausteinZuordnungAction_6;
+    public static String DeleteActionDelegate_0;
     public static String DeleteActionDelegate_1;
-	public static String DeleteActionDelegate_3;
-	public static String DeleteActionDelegate_4;
-	public static String DeleteActionDelegate_5;
-	public static String DeleteActionDelegate_6;
-	public static String DeleteActionDelegate_8;
-	public static String DeleteActionDelegate_9;
-	public static String DeleteActionDelegate_11;
-	public static String DeleteActionDelegate_12;
-	public static String DeleteActionDelegate_13;
-	public static String DeleteActionDelegate_14;
-	public static String DeleteActionDelegate_15;
-	public static String DeleteActionDelegate_16;
-	public static String DeleteActionDelegate_17;
-	public static String DeleteActionDelegate_18;
-	public static String DeleteLinkActionDelegate_0;
-	public static String DeleteLinkActionDelegate_1;
-	public static String DeleteLinkActionDelegate_2;
+    public static String DeleteActionDelegate_3;
+    public static String DeleteActionDelegate_4;
+    public static String DeleteActionDelegate_5;
+    public static String DeleteActionDelegate_6;
+    public static String DeleteActionDelegate_8;
+    public static String DeleteActionDelegate_9;
+    public static String DeleteActionDelegate_11;
+    public static String DeleteActionDelegate_14;
+    public static String DeleteActionDelegate_15;
+    public static String DeleteActionDelegate_16;
+    public static String DeleteActionDelegate_17;
+    public static String DeleteActionDelegate_18;
+    public static String DeleteLinkActionDelegate_0;
+    public static String DeleteLinkActionDelegate_1;
+    public static String DeleteLinkActionDelegate_2;
     public static String DownloadBsiCataloguesAction_1;
     public static String NaturalizeAction_0;
     public static String NaturalizeAction_1;
@@ -78,11 +76,11 @@ public class Messages extends NLS {
     public static String MarkTemplateBSIStrukturElementActionDelegate_0;
     public static String MarkTemplateModuleActionDelegate_0;
     public static String MarkTemplateSafeguardActionDelegate_0;
-	static {
-		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	}
+    static {
+        // initialize resource bundle
+        NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+    }
 
-	private Messages() {
-	}
+    private Messages() {
+    }
 }

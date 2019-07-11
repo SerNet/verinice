@@ -28,10 +28,10 @@ import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 
 /**
- * Extension of {@link CnAWorkspace} from verinice core.
+ * Extension of {@link sernet.gs.ui.rcp.main.CnAWorkspace} from verinice core.
  * 
- * Copies the self-assessment CSV-file from this bundle jar to the 
- * workspace of verinice.
+ * Copies the self-assessment CSV-file from this bundle jar to the workspace of
+ * verinice.
  * 
  * @author Daniel Murygin <dm@sernet.de>
  */
@@ -42,7 +42,7 @@ public final class SamtWorkspace extends CnAWorkspace {
     private static volatile SamtWorkspace instance;
 
     /**
-     * Classloader-relative path to the resources folder of this bundle without
+     * Class loader-relative path to the resources folder of this bundle without
      * a path separator in the beginning and in the end
      */
     public static final String RESOURCES_PATH = "resources"; //$NON-NLS-1$
@@ -54,10 +54,10 @@ public final class SamtWorkspace extends CnAWorkspace {
     public static final String CONF_PATH = "conf"; //$NON-NLS-1$
 
     /**
-     * File name of the self-assessment CSV catalog
-     * Is externalized to ressource bundle so that the right file is used for each locale
+     * File name of the self-assessment CSV catalog is externalized to resource
+     * bundle so that the right file is used for each locale
      */
-    public static final String SAMT_CATALOG_FILE_NAME = Messages.SamtWorkspace_0; 
+    public static final String SAMT_CATALOG_FILE_NAME = Messages.SamtWorkspace_0;
 
     private SamtWorkspace() {
         // use getInstance
@@ -71,10 +71,11 @@ public final class SamtWorkspace extends CnAWorkspace {
     }
 
     /**
-     * Copies the self-assessment CSV-file from this bundle jar to the 
-     * workspace of the of verinice.
+     * Copies the self-assessment CSV-file from this bundle jar to the verinice
+     * workspace.
      * 
-     * This method is called on startup of the application. See {@link Activator}.start().
+     * This method is called on startup of the application. See
+     * {@link Activator}.start().
      * 
      * @throws NullPointerException
      * @throws IOException
@@ -86,10 +87,12 @@ public final class SamtWorkspace extends CnAWorkspace {
         try {
             createTextFile(inputPath, VeriniceCharset.CHARSET_UTF_8, getWorkdir(), ouputPath, null);
         } catch (RuntimeException e) {
-            LOG.error("Error while saving samt catalog file in conf dir. Input path: " + inputPath + ", output path: " + ouputPath, e); //$NON-NLS-1$ //$NON-NLS-2$
+            LOG.error("Error while saving samt catalog file in conf dir. Input path: " + inputPath //$NON-NLS-1$
+                    + ", output path: " + ouputPath, e); //$NON-NLS-1$
             throw e;
         } catch (Exception e) {
-            LOG.error("Error while saving samt catalog file in conf dir. Input path: " + inputPath + ", output path: " + ouputPath, e); //$NON-NLS-1$ //$NON-NLS-2$
+            LOG.error("Error while saving samt catalog file in conf dir. Input path: " + inputPath //$NON-NLS-1$
+                    + ", output path: " + ouputPath, e); //$NON-NLS-1$
             throw new RuntimeException(e);
         }
     }

@@ -27,7 +27,7 @@ import sernet.verinice.model.bsi.Attachment;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public interface IAttachmentDao {
+public interface IAttachmentDao extends IBaseDao<Attachment, Integer> {
 
     List<Attachment> loadAttachmentList(Integer cnAElementId);
 }

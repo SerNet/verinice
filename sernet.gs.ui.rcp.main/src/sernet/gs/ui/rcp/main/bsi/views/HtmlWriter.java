@@ -46,7 +46,6 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
-import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.model.bp.IBpElement;
@@ -449,7 +448,9 @@ public abstract class HtmlWriter {
     }
 
     private static void writeHtml(StringBuilder buf, String headline, String bodytext, String encoding) {
-
+        if (StringUtils.isBlank(headline) && StringUtils.isBlank(bodytext)) {
+            return;
+        }
         String cssFile = "screen.css";
 
         String cssDir = CnAWorkspace.getInstance().getWorkdir() + File.separator + "html" + File.separator + cssFile; //$NON-NLS-1$ //$NON-NLS-2$

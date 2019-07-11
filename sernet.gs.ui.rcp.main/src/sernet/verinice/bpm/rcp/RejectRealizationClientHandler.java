@@ -38,8 +38,10 @@ import sernet.verinice.interfaces.bpm.IIndividualProcess;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.interfaces.bpm.IndividualServiceParameter;
-import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.common.Domain;
+import sernet.verinice.model.common.DomainSpecificElementUtil;
 import sernet.verinice.rcp.NonModalWizardDialog;
+import sernet.verinice.service.commands.CnATypeMapper;
 
 /**
  * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
@@ -52,32 +54,32 @@ public class RejectRealizationClientHandler implements ICompleteClientHandler {
     private int dialogStatus;
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.bpm.ICompleteClientHandler#execute()
      */
     @Override
     public Map<String, Object> execute(final ITask task) {
-        Map<String, Object> parameter = new HashMap<String, Object>();
+        Map<String, Object> parameter = new HashMap<>();
         try {
-            final IndividualProcessWizard wizard = new IndividualProcessWizard(Collections.singletonList(task.getUuid()), task.getElementTitle(), task.getElementType());
-            // TODO: check if isGrundschutzElement?
-            wizard.setPersonTypeId(Person.TYPE_ID);
-            Display.getDefault().syncExec(new Runnable() {
-                @Override
-                public void run() {
-                    WizardDialog wizardDialog = new NonModalWizardDialog(shell, wizard);
-                    wizardDialog.create();
+            final IndividualProcessWizard wizard = new IndividualProcessWizard(
+                    Collections.singletonList(task.getUuid()), task.getElementTitle(),
+                    task.getElementType());
+            Domain domain = CnATypeMapper.getDomainFromTypeId(task.getElementType());
+            String type = DomainSpecificElementUtil.getPersonTypeIdFromDomain(domain);
+            wizard.setPersonTypeId(type);
+            Display.getDefault().syncExec(() -> {
+                WizardDialog wizardDialog = new NonModalWizardDialog(shell, wizard);
+                wizardDialog.create();
 
-                    IndividualServiceParameter individualServiceParameter = getIndividualServiceParameter(task.getId());
-                    wizard.setTemplateForRejectedRealization(individualServiceParameter);
-                    dialogStatus = wizardDialog.open();
-                }
+                IndividualServiceParameter individualServiceParameter = getIndividualServiceParameter(
+                        task.getId());
+                wizard.setTemplateForRejectedRealization(individualServiceParameter);
+                dialogStatus = wizardDialog.open();
             });
 
             if (dialogStatus == Window.OK) {
                 wizard.saveTemplate();
-                parameter.putAll(ServiceFactory.lookupIndividualService().createParameterMap(wizard.getParameter()));
+                parameter.putAll(ServiceFactory.lookupIndividualService()
+                        .createParameterMap(wizard.getParameter()));
             } else {
                 throw new CompletionAbortedException("Canceled by user.");
             }
@@ -92,20 +94,26 @@ public class RejectRealizationClientHandler implements ICompleteClientHandler {
     private IndividualServiceParameter getIndividualServiceParameter(String taskId) {
         Map<String, Object> taskVariables = getTaskService().getVariables(taskId);
         final IndividualServiceParameter individualServiceParameter = new IndividualServiceParameter();
-        individualServiceParameter.setDueDate((Date) taskVariables.get(IIndividualProcess.VAR_DUEDATE));
-        individualServiceParameter.setReminderPeriodDays((Integer) taskVariables.get(IIndividualProcess.VAR_REMINDER_DAYS));
-        individualServiceParameter.setAssignee((String) taskVariables.get(IIndividualProcess.VAR_ASSIGNEE_NAME));
-        individualServiceParameter.setAssigneeRelationId((String) taskVariables.get(IIndividualProcess.VAR_RELATION_ID));
-        individualServiceParameter.setProperties((Set<String>) taskVariables.get(IIndividualProcess.VAR_PROPERTY_TYPES));
-        individualServiceParameter.setTitle((String) taskVariables.get(IIndividualProcess.VAR_TITLE));
-        individualServiceParameter.setDescription((String) taskVariables.get(IIndividualProcess.VAR_DESCRIPTION));
-        individualServiceParameter.setWithAReleaseProcess((boolean) taskVariables.get(IIndividualProcess.VAR_IS_WITH_RELEASE_PROCESS));
+        individualServiceParameter
+                .setDueDate((Date) taskVariables.get(IIndividualProcess.VAR_DUEDATE));
+        individualServiceParameter.setReminderPeriodDays(
+                (Integer) taskVariables.get(IIndividualProcess.VAR_REMINDER_DAYS));
+        individualServiceParameter
+                .setAssignee((String) taskVariables.get(IIndividualProcess.VAR_ASSIGNEE_NAME));
+        individualServiceParameter.setAssigneeRelationId(
+                (String) taskVariables.get(IIndividualProcess.VAR_RELATION_ID));
+        individualServiceParameter.setProperties(
+                (Set<String>) taskVariables.get(IIndividualProcess.VAR_PROPERTY_TYPES));
+        individualServiceParameter
+                .setTitle((String) taskVariables.get(IIndividualProcess.VAR_TITLE));
+        individualServiceParameter
+                .setDescription((String) taskVariables.get(IIndividualProcess.VAR_DESCRIPTION));
+        individualServiceParameter.setWithAReleaseProcess(
+                (boolean) taskVariables.get(IIndividualProcess.VAR_IS_WITH_RELEASE_PROCESS));
         return individualServiceParameter;
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.bpm.ICompleteClientHandler#setShell(org.eclipse.swt.
      * widgets.Shell)
      */

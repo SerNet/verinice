@@ -23,14 +23,19 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
@@ -41,12 +46,10 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.IISO27kGroup;
 
 /**
  * Copies a list of elements with all children to a group. Element types in
@@ -59,10 +62,11 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
  */
 public class CopyCommand extends GenericCommand {
 
-    private static final long serialVersionUID = -269076325994387265L;
+    private static final long serialVersionUID = 4810890094775605851L;
+
     private static final Logger logger = Logger.getLogger(CopyCommand.class);
 
-    private static final int FLUSH_LEVEL = 10;
+    private static final int DEFAULT_FLUSH_LEVEL = 50;
 
     private String uuidGroup;
 
@@ -74,13 +78,13 @@ public class CopyCommand extends GenericCommand {
 
     private int number = 0;
 
+    private int flushLevel;
+
     private transient IBaseDao<CnATreeElement, Serializable> dao;
 
     private List<String> newElements;
 
     private boolean copyAttachments = false;
-
-    private boolean copyChildren = true;
 
     /**
      * @param uuidGroup
@@ -89,7 +93,7 @@ public class CopyCommand extends GenericCommand {
      *            Uuids of the elements to copy
      */
     public CopyCommand(final String uuidGroup, final List<String> uuidList) {
-        this(uuidGroup, uuidList, new ArrayList<IPostProcessor>());
+        this(uuidGroup, uuidList, Collections.emptyList());
     }
 
     /**
@@ -99,10 +103,16 @@ public class CopyCommand extends GenericCommand {
      */
     public CopyCommand(final String uuidGroup, final List<String> uuidList,
             final List<IPostProcessor> postProcessorList) {
+        this(uuidGroup, uuidList, postProcessorList, DEFAULT_FLUSH_LEVEL);
+    }
+
+    public CopyCommand(final String uuidGroup, final List<String> uuidList,
+            final List<IPostProcessor> postProcessorList, int flushLevel) {
         super();
         this.uuidGroup = uuidGroup;
         this.uuidList = uuidList;
         this.postProcessorList = postProcessorList;
+        this.flushLevel = flushLevel;
     }
 
     /**
@@ -115,26 +125,38 @@ public class CopyCommand extends GenericCommand {
     public void execute() {
         try {
             number = 0;
-            List<CnATreeElement> rootElementsToCopy = createInsertList(uuidList);
+            List<CnATreeElement> allElements = getDao()
+                    .findByCriteria(DetachedCriteria.forClass(CnATreeElement.class)
+                            .add(Restrictions.in(CnATreeElement.UUID, uuidList)));
+
+            List<CnATreeElement> rootElementsToCopy;
+            if (allElements.size() == 1) {
+                rootElementsToCopy = allElements;
+            } else {
+                rootElementsToCopy = filterRoots(allElements);
+            }
             newElements = new ArrayList<>(rootElementsToCopy.size());
             groupToPasteTo = getDao().findByUuid(uuidGroup,
                     RetrieveInfo.getChildrenInstance().setParent(true).setProperties(true));
-            final Map<String, String> sourceDestMap = new HashMap<>();
+            boolean postProcessorsPresent = postProcessorList != null
+                    && !postProcessorList.isEmpty();
+            Optional<Map<String, String>> sourceDestMap = postProcessorsPresent
+                    ? Optional.of(new HashMap<>())
+                    : Optional.empty();
             for (final CnATreeElement copyElement : rootElementsToCopy) {
                 final CnATreeElement newElement = copy(groupToPasteTo, copyElement, sourceDestMap);
                 if (newElement != null && newElement.getUuid() != null) {
                     newElements.add(newElement.getUuid());
                 }
             }
-            if (getPostProcessorList() != null && !getPostProcessorList().isEmpty()) {
+            if (postProcessorsPresent) {
                 getDao().flush();
                 getDao().clear();
-                final List<String> copyElementUuidList = new ArrayList<>(rootElementsToCopy.size());
-                for (final CnATreeElement element : rootElementsToCopy) {
-                    copyElementUuidList.add(element.getUuid());
-                }
-                for (final IPostProcessor postProcessor : getPostProcessorList()) {
-                    postProcessor.process(getCommandService(), copyElementUuidList, sourceDestMap);
+                final List<String> copyElementUuidList = rootElementsToCopy.stream()
+                        .map(CnATreeElement::getUuid).collect(Collectors.toList());
+                for (final IPostProcessor postProcessor : postProcessorList) {
+                    postProcessor.process(getCommandService(), copyElementUuidList,
+                            sourceDestMap.get());
                 }
             }
         } catch (final Exception e) {
@@ -144,7 +166,7 @@ public class CopyCommand extends GenericCommand {
     }
 
     private CnATreeElement copy(final CnATreeElement groupToCopyTo,
-            final CnATreeElement elementToCopy, final Map<String, String> sourceDestMap)
+            final CnATreeElement elementToCopy, final Optional<Map<String, String>> sourceDestMap)
             throws CommandException, IOException {
         CnATreeElement elementCopy = elementToCopy;
         if (elementToCopy != null && elementToCopy.getTypeId() != null
@@ -156,9 +178,7 @@ public class CopyCommand extends GenericCommand {
                 elementCopy = saveCopy(groupToCopyTo, elementToCopy);
                 number++;
                 afterCopy(elementToCopy, elementCopy, sourceDestMap);
-                if (isCopyChildren()) {
-                    copyChildrenIfExistant(elementToCopy, sourceDestMap, elementCopy);
-                }
+                copyChildrenIfExistant(elementToCopy, sourceDestMap, elementCopy);
             }
         } else if (elementToCopy != null) {
             logger.warn("Can not copy element with pk: " + elementToCopy.getDbId() //$NON-NLS-1$
@@ -170,7 +190,7 @@ public class CopyCommand extends GenericCommand {
     }
 
     private CnATreeElement copyRiskAnalysis(CnATreeElement group,
-            CnATreeElement finishedRiskAnalysis, Map<String, String> sourceDestMap)
+            CnATreeElement finishedRiskAnalysis, Optional<Map<String, String>> sourceDestMap)
             throws CommandException, IOException {
 
         CnATreeElement copyOfFinishedRiskAnalysis = saveCopy(group, finishedRiskAnalysis);
@@ -182,8 +202,8 @@ public class CopyCommand extends GenericCommand {
     }
 
     private void copyFinishedRiskAnalysisLists(FinishedRiskAnalysis oldFinishedRiskAnalysis,
-            FinishedRiskAnalysis copyOfFinishedRiskAnalysis, Map<String, String> sourceDestMap)
-            throws CommandException, IOException {
+            FinishedRiskAnalysis copyOfFinishedRiskAnalysis,
+            Optional<Map<String, String>> sourceDestMap) throws CommandException, IOException {
 
         FindRiskAnalysisListsByParentID command = new FindRiskAnalysisListsByParentID(
                 oldFinishedRiskAnalysis.getDbId());
@@ -201,7 +221,7 @@ public class CopyCommand extends GenericCommand {
     }
 
     private void copyAssociatedGefaehrdungen(FinishedRiskAnalysis copyOfFinishedRiskAnalysis,
-            Map<String, String> sourceDestMap, FinishedRiskAnalysisLists listsToCopy,
+            Optional<Map<String, String>> sourceDestMap, FinishedRiskAnalysisLists listsToCopy,
             FinishedRiskAnalysisLists newLists) throws CommandException, IOException {
 
         for (GefaehrdungsUmsetzung gefaehrdung : listsToCopy.getAssociatedGefaehrdungen()) {
@@ -239,21 +259,45 @@ public class CopyCommand extends GenericCommand {
     }
 
     private void afterCopy(CnATreeElement original, CnATreeElement copy,
-            Map<String, String> sourceDestMap) {
-
-        sourceDestMap.put(original.getUuid(), copy.getUuid());
-        if (number % FLUSH_LEVEL == 0) {
+            Optional<Map<String, String>> sourceDestMap) {
+        afterCopy(original, copy);
+        sourceDestMap.ifPresent(map -> map.put(original.getUuid(), copy.getUuid()));
+        if (flushLevel > 0 && number > 0 && number % flushLevel == 0) {
             getDao().flush();
         }
     }
 
-    private void copyChildrenIfExistant(CnATreeElement element, Map<String, String> sourceDestMap,
-            CnATreeElement elementCopy) throws CommandException, IOException {
+    protected void afterCopy(CnATreeElement original, CnATreeElement copy) {
+
+    }
+
+    private void copyChildrenIfExistant(CnATreeElement element,
+            Optional<Map<String, String>> sourceDestMap, CnATreeElement elementCopy)
+            throws CommandException, IOException {
         if (element.getChildren() != null) {
             for (CnATreeElement child : element.getChildren()) {
-                copy(elementCopy, child, sourceDestMap);
+                if (copyDescendant(child, elementCopy)) {
+                    copy(elementCopy, child, sourceDestMap);
+                }
             }
         }
+    }
+
+    /**
+     * By default, all descendants are copied recursively. Overwrite this method
+     * to filter, which descendants to include in the copying process.
+     * 
+     * @param descendant
+     *            the current descendant that is to be copied (the original
+     *            element in the source tree)
+     * @param groupToCopyTo
+     *            the target group that the element would be copied to (in the
+     *            destination tree)
+     * @return {@code true} to copy the element, {@code false} to ignore it (and
+     *         its descendants, if applicable)
+     */
+    protected boolean copyDescendant(CnATreeElement descendant, CnATreeElement groupToCopyTo) {
+        return true;
     }
 
     private CnATreeElement saveCopy(CnATreeElement toGroup, CnATreeElement copyElement)
@@ -267,28 +311,23 @@ public class CopyCommand extends GenericCommand {
             }
 
             if (toGroup.getChildren() != null && !toGroup.getChildren().isEmpty()) {
+                final String title = newElement.getTitle();
+                String prospectiveTitle = title;
                 if (newElement instanceof GefaehrdungsUmsetzung) {
-                    final String title = newElement.getTitle();
-                    final String copyGefaehrdungtitle = ((GefaehrdungsUmsetzung) newElement)
-                            .getText();
-                    Set<CnATreeElement> siblings = toGroup.getChildren();
-                    siblings.remove(newElement);
-                    siblings = removeDifferentTypes(siblings, newElement.getTypeId());
-                    newElement.setTitel(getUniqueTitle(title, copyGefaehrdungtitle, siblings, 0));
-                } else {
-                    final String title = newElement.getTitle();
-                    Set<CnATreeElement> siblings = toGroup.getChildren();
-                    siblings.remove(newElement);
-                    siblings = removeDifferentTypes(siblings, newElement.getTypeId());
-                    newElement.setTitel(getUniqueTitle(title, title, siblings, 0));
+                    prospectiveTitle = ((GefaehrdungsUmsetzung) newElement).getText();
                 }
+                String typeId = newElement.getTypeId();
+                Set<CnATreeElement> siblings = new HashSet<>(toGroup.getChildren());
+                siblings.remove(newElement);
+                siblings.removeIf(element -> !typeId.equals(element.getTypeId()));
+                newElement.setTitel(getUniqueTitle(title, prospectiveTitle, siblings, 0));
             }
         }
         SaveElement<CnATreeElement> saveCommand = new SaveElement<>(newElement);
         saveCommand = getCommandService().executeCommand(saveCommand);
         newElement = saveCommand.getElement();
         newElement.setParentAndScope(toGroup);
-        if (isCopyAttachments()) {
+        if (copyAttachments) {
             LoadAttachments attachmentLoader = new LoadAttachments(copyElement.getDbId());
             copyAttachments(newElement,
                     getCommandService().executeCommand(attachmentLoader).getAttachmentList());
@@ -298,16 +337,6 @@ public class CopyCommand extends GenericCommand {
         }
         newElement.setChildren(new HashSet<CnATreeElement>());
         return newElement;
-    }
-
-    private Set<CnATreeElement> removeDifferentTypes(Set<CnATreeElement> set, String typeId) {
-        Set<CnATreeElement> newSet = new HashSet<>(set.size());
-        for (CnATreeElement element : set) {
-            if (element.getTypeId().equals(typeId)) {
-                newSet.add(element);
-            }
-        }
-        return newSet;
     }
 
     private void copyAttachments(final CnATreeElement destinationElement,
@@ -366,50 +395,20 @@ public class CopyCommand extends GenericCommand {
     }
 
     /**
-     * Creates a list of elements. First all elements are loaded by UUID. A
-     * child will be removed from the list if its parent is already a member.
-     * 
-     * @param uuidList
-     *            A list of element UUID
-     * @return List of element
+     * Returns a list with elements filtered out that are descendants of other
+     * items of the list
      */
-    protected List<CnATreeElement> createInsertList(final List<String> uuidList) {
-        final List<CnATreeElement> tempList = new ArrayList<>();
-        final List<CnATreeElement> insertList = new ArrayList<>();
-        final int depth = 0;
-        if (uuidList.size() > 1) {
-            for (final String uuid : uuidList) {
-                final CnATreeElement element = getDao().findByUuid(uuid,
-                        RetrieveInfo.getChildrenInstance());
-                createInsertList(element, tempList, insertList, depth);
-            }
-        } else {
-            final CnATreeElement element = getDao().findByUuid(uuidList.get(0),
-                    RetrieveInfo.getChildrenInstance());
-            insertList.add(element);
-        }
-        return insertList;
-    }
-
-    private void createInsertList(final CnATreeElement element, final List<CnATreeElement> tempList,
-            final List<CnATreeElement> insertList, final int depth) {
-        if (!tempList.contains(element)) {
-            tempList.add(element);
-            int depthLocal = depth;
-            if (depthLocal == 0) {
-                insertList.add(element);
-            }
-            if ((element instanceof IISO27kGroup || element instanceof BausteinUmsetzung)
-                    && element.getChildren() != null) {
-
-                depthLocal++;
-                for (final CnATreeElement child : element.getChildren()) {
-                    createInsertList(child, tempList, insertList, depthLocal);
+    protected List<CnATreeElement> filterRoots(final List<CnATreeElement> elements) {
+        return elements.stream().filter(element -> {
+            CnATreeElement currentAncestor = element.getParent();
+            while (currentAncestor != null) {
+                if (elements.contains(currentAncestor)) {
+                    return false;
                 }
+                currentAncestor = currentAncestor.getParent();
             }
-        } else {
-            insertList.remove(element);
-        }
+            return true;
+        }).collect(Collectors.toList());
     }
 
     /**
@@ -483,14 +482,6 @@ public class CopyCommand extends GenericCommand {
 
     public List<String> getNewElements() {
         return newElements;
-    }
-
-    public boolean isCopyChildren() {
-        return copyChildren;
-    }
-
-    public void setCopyChildren(boolean copyChildren) {
-        this.copyChildren = copyChildren;
     }
 
     /**

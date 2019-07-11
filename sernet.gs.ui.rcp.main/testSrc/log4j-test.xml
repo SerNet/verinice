@@ -12,23 +12,9 @@
     </filter>
   </appender>
 
-  <appender name="FILE" class="org.apache.log4j.RollingFileAppender">
-    <!-- <param name="Threshold" value="INFO" /> -->
-    <param name="File" value="verinice-rcp-test.log" />
-    <param name="Append" value="true" />
-    <param name="MaxFileSize" value="5000KB" />
-    <param name="MaxBackupIndex" value="10" />
-    <layout class="org.apache.log4j.PatternLayout">
-      <param name="ConversionPattern" value="%d %-5p [%t] (%13F:%L) %3x - %m%n" />
-    </layout>
-  </appender>
-
-
-
-  <!-- Logger for everything else -->
   <root>
     <priority value="WARN" />
-    <appender-ref ref="FILE" />
+    <appender-ref ref="STDOUT" />
   </root>
 
 </log4j:configuration>

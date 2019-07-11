@@ -22,47 +22,41 @@ package sernet.verinice.service.test;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.function.BiFunction;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.SyncParameter;
-import sernet.verinice.service.commands.SyncParameterException;
 import sernet.verinice.service.linktable.ILinkTableConfiguration;
 import sernet.verinice.service.linktable.ILinkTableService;
 import sernet.verinice.service.linktable.LinkTableConfiguration;
 import sernet.verinice.service.linktable.LinkTableService;
 import sernet.verinice.service.linktable.generator.GraphLinkedTableCreator;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
-import sernet.verinice.service.test.helper.vnaimport.AbstractVNAImportHelper;
 
-class LoadData extends AbstractVNAImportHelper {
+class LoadData {
 
     private String sourceId;
     private List<String> orgExtIds;
     private String vltFile;
-    private String vnaFile;
 
-    private ILinkTableService linkTableService;
     private ILinkTableConfiguration configuration;
 
-    public LoadData() {
-        // spring need this
-    }
-
-    public List<List<String>> loadAndExecuteVLT() throws CommandException {
-        linkTableService = new LinkTableService();
+    public List<List<String>> loadAndExecuteVLT(
+            BiFunction<String, String, CnATreeElement> elementLoader) throws CommandException {
+        ILinkTableService linkTableService = new LinkTableService();
         linkTableService.setLinkTableCreator(new GraphLinkedTableCreator());
         String vltPath = this.getClass().getResource(getVltFile()).getPath();
         configuration = VeriniceLinkTableIO.readLinkTableConfiguration(vltPath);
-        writeScopeAndExtIdToLinkTableConfiguration();
+        writeScopeAndExtIdToLinkTableConfiguration(elementLoader);
         return linkTableService.createTable(configuration);
     }
 
-    private void writeScopeAndExtIdToLinkTableConfiguration() throws CommandException {
+    private void writeScopeAndExtIdToLinkTableConfiguration(
+            BiFunction<String, String, CnATreeElement> elementLoader) throws CommandException {
 
         LinkTableConfiguration changedConfiguration = cloneConfiguration(configuration);
-        for(String extId : getOrgExtIds()){
-            CnATreeElement org = loadElement(getSourceId(), extId);
+        for (String extId : getOrgExtIds()) {
+            CnATreeElement org = elementLoader.apply(getSourceId(), extId);
             changedConfiguration.addScopeId(org.getScopeId());
         }
 
@@ -71,21 +65,12 @@ class LoadData extends AbstractVNAImportHelper {
 
     private LinkTableConfiguration cloneConfiguration(ILinkTableConfiguration configuration) {
         LinkTableConfiguration.Builder builder = new LinkTableConfiguration.Builder();
-        builder.setColumnPathes(configuration.getColumnPaths()).setLinkTypeIds(configuration.getLinkTypeIds());
+        builder.setColumnPathes(configuration.getColumnPaths())
+                .setLinkTypeIds(configuration.getLinkTypeIds());
         if (configuration.getScopeIdArray() != null) {
             builder.setScopeIds(new HashSet<>(Arrays.asList(configuration.getScopeIdArray())));
         }
         return builder.build();
-    }
-
-    @Override
-    protected String getFilePath() {
-        return this.getClass().getResource(getVnaFile()).getPath();
-    }
-
-    @Override
-    protected SyncParameter getSyncParameter() throws SyncParameterException {
-        return new SyncParameter(true, true, true, false, SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
     }
 
     public String getVltFile() {
@@ -94,14 +79,6 @@ class LoadData extends AbstractVNAImportHelper {
 
     public void setVltFile(String vltFile) {
         this.vltFile = vltFile;
-    }
-
-    public String getVnaFile() {
-        return vnaFile;
-    }
-
-    public void setVnaFile(String vnaFile) {
-        this.vnaFile = vnaFile;
     }
 
     public String getSourceId() {

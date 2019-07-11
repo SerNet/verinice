@@ -1,0 +1,6 @@
+DOCK_PERSPECTIVE_BAR=TOP_LEFT
+PERSPECTIVE_BAR_EXTRAS=sernet.gs.ui.rcp.main.perspective
+PERSPECTIVE_BAR_SIZE=360
+SHOW_TRADITIONAL_STYLE_TABS=false
+eclipse.preferences.version=1
+showIntro=false

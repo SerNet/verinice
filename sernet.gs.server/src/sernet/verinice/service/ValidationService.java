@@ -20,21 +20,16 @@ package sernet.verinice.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.ProjectionList;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.RetrieveInfo;
@@ -56,6 +51,7 @@ import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.validation.CnAValidation;
 import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.verinice.service.commands.LoadSubtreeIds;
 import sernet.verinice.service.commands.crud.LoadScopeElementsById;
 
 public class ValidationService implements IValidationService {
@@ -461,46 +457,18 @@ public class ValidationService implements IValidationService {
      * deleteValidationsOfSubtree(sernet.verinice.model.common.CnATreeElement)
      */
     @Override
-    public void deleteValidationsOfSubtree(CnATreeElement elmt) {
+    public void deleteValidationsOfSubtree(CnATreeElement elmt) throws CommandException {
         ServerInitializer.inheritVeriniceContextState();
         if (elmt == null) {
             return;
         }
-        int scopeId = elmt.getScopeId();
 
-        @SuppressWarnings("unchecked")
-        List<Object[]> parentChildRelationships = (List<Object[]>) getCnaTreeElementDAO()
-                .executeCallback(session -> {
-                    Criteria criteria = session.createCriteria(CnATreeElement.class);
-                    criteria.add(Restrictions.eq("scopeId", scopeId));
+        LoadSubtreeIds loadSubtreeIdsCommand = new LoadSubtreeIds(elmt);
+        loadSubtreeIdsCommand = getCommandService().executeCommand(loadSubtreeIdsCommand);
+        Set<Integer> dbIdsOfSubtree = loadSubtreeIdsCommand.getDbIdsOfSubtree();
 
-                    ProjectionList projectionList = Projections.projectionList();
-                    projectionList.add(Projections.property("parentId"));
-                    projectionList.add(Projections.property("dbId"));
-
-                    criteria.setProjection(projectionList);
-                    return criteria.list();
-                });
-
-        Map<Integer, Set<Integer>> childIDsByParentId = parentChildRelationships.stream()
-                .collect(Collectors.groupingBy(item -> (Integer) item[0],
-                        Collectors.mapping(item -> (Integer) item[1], Collectors.toSet())));
-
-        Set<Integer> dbIDsOfSubtree = new HashSet<>();
-        Set<Integer> childrenOnCurrentLevel = Collections.singleton(elmt.getDbId());
-        while (!childrenOnCurrentLevel.isEmpty()) {
-            Set<Integer> childrenOnNextLevel = new HashSet<>();
-            for (Integer elementId : childrenOnCurrentLevel) {
-                dbIDsOfSubtree.add(elementId);
-                Set<Integer> children = childIDsByParentId.get(elementId);
-                if (children != null) {
-                    childrenOnNextLevel.addAll(children);
-                }
-            }
-            childrenOnCurrentLevel = childrenOnNextLevel;
-        }
-        for (Integer elementId : dbIDsOfSubtree) {
-            deleteValidations(scopeId, elementId);
+        for (Integer elementId : dbIdsOfSubtree) {
+            deleteValidations(elmt.getScopeId(), elementId);
         }
     }
 

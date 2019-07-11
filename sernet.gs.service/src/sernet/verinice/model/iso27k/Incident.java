@@ -20,6 +20,8 @@ package sernet.verinice.model.iso27k;
 import java.util.Collection;
 
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.IAbbreviatedElement;
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -27,7 +29,8 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class Incident extends CnATreeElement implements IISO27kElement {
+public class Incident extends CnATreeElement
+        implements IISO27kElement, IAbbreviatedElement, ITaggableElement {
 
 	public static final String TYPE_ID = "incident"; //$NON-NLS-1$
 	public static final String PROP_ABBR = "incident_abbr"; //$NON-NLS-1$
@@ -59,9 +62,6 @@ public class Incident extends CnATreeElement implements IISO27kElement {
 		return TYPE_ID;
 	}
 	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitel()
-	 */
 	@Override
 	public String getTitle() {
 		return getEntity().getSimpleValue(PROP_NAME);
@@ -70,7 +70,8 @@ public class Incident extends CnATreeElement implements IISO27kElement {
 	public void setTitel(String name) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
-	
+
+    @Override
 	public String getAbbreviation() {
 		return getEntity().getSimpleValue(PROP_ABBR);
 	}
@@ -78,7 +79,8 @@ public class Incident extends CnATreeElement implements IISO27kElement {
 	public void setAbbreviation(String abbreviation) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
 	}
-	
+
+    @Override
 	public Collection<String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}

@@ -1,0 +1,88 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _IAiN8Lp9EeiXpMYvKv_wWQ,_UlFDQMI2EeiBGdyBeGVxCg
+Element-Name: test_4_10-4_11
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _c5yb4LsZEeiYFqx4KkjVdQ
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 10/9/18 5:06 PM
+Tags: bp_old
+Testcase-Type: ecl
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+log "test_4.10-4.11"
+get-view Objektbrowser | close
+create-it-verbund "IT-Verbund-1"
+
+get-view Grundschutzmodell | get-tree | select "  IT-Verbund-1/Anwendungen" | get-menu -path "Neue Anwendung" | click
+with [get-editor Anwendung | get-section "" | get-section Schutzbedarf] {
+    get-combo -after [get-label Vertraulichkeit] | set-text Normal
+    get-combo -after [get-label "Verfügbarkeit"] | set-text Hoch
+    get-combo -after [get-label "Integrität"] | set-text Normal
+}
+get-editor Anwendung | close
+get-window "Ressource speichern" | get-button Speichern | click
+
+get-view Grundschutzmodell | get-tree | select "  IT-Verbund-1/IT-Systeme: Server" | get-menu -path "Neuer Server" | click
+with [get-editor Server | get-section "" | get-section Schutzbedarf] {
+    with [get-editbox -after [get-label "Begründung Vertraulichkeit"]] {
+        click-text
+        set-focus
+        key-type Down
+        key-type Enter
+        set-text Maximumprinzip
+        key-type Enter
+    }
+    with [get-editbox -after [get-label "Begründung Verfügbarkeit"]] {
+        click-text
+        set-focus
+        key-type Down
+        key-type Enter
+        set-text Maximumprinzip
+        key-type Enter
+    }
+    with [get-editbox -after [get-label "Begründung Integrität"]] {
+        click-text
+        set-focus
+        key-type Down
+        key-type Enter
+        set-text Maximumprinzip
+        key-type Enter
+        key-type "M1+s"
+        set-focus
+    }
+}
+get-view Grundschutzmodell | click
+get-editor Server | close
+
+
+
+with [get-view Grundschutzmodell | get-tree] {
+    select "  IT-Verbund-1/Anwendungen/A- Anwendung"
+    get-item -path "  IT-Verbund-1/Anwendungen/A- Anwendung" | drag-start 49 9
+    get-item -path "  IT-Verbund-1/Anwendungen/A- Anwendung" | drag-enter 57 15 -detail move
+    get-item -path "  IT-Verbund-1/Anwendungen/A- Anwendung" | drag-exit
+    get-item -path "  IT-Verbund-1/IT-Systeme: Server/S- Server" | drag-accept 33 9 -detail move
+    drag-set-data
+    get-item -path "  IT-Verbund-1/IT-Systeme: Server/S- Server" | drop 33 9 -detail move
+    drag-end -detail move
+    select "  IT-Verbund-1/IT-Systeme: Server/S- Server" | double-click
+}
+
+
+
+with [get-editor Server | get-section "" | get-section Schutzbedarf | get-combo -after [get-label "Verfügbarkeit"]] {
+    get-property "getText()" | equals Hoch | verify-true
+    get-property "isEnabled()" | equals false | verify-true
+}
+
+delete-bp-old-element "  IT-Verbund-1"
+
+
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

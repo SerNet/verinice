@@ -18,32 +18,30 @@
 package sernet.verinice.bp.rcp.risk.ui;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Consumer;
 
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.verinice.model.bp.risk.Impact;
-import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 
-final class ImpactConfigurator extends StackConfigurator<Impact> {
+public final class ImpactConfigurator extends StackConfigurator<Impact> {
 
     private static final int MAX_NUMBER_OF_IMPACTS = 10;
 
-    private RiskConfiguration riskConfiguration;
-    private Consumer<RiskConfiguration> updateListener;
+    public ImpactConfigurator(Composite parent, List<Impact> editorState,
+            Runnable fireProperyChange) {
+        super(parent, MAX_NUMBER_OF_IMPACTS, editorState, fireProperyChange);
+    }
 
-    ImpactConfigurator(Composite parent,
-            Consumer<RiskConfiguration> updateListener) {
-        super(parent, MAX_NUMBER_OF_IMPACTS);
-        this.updateListener = updateListener;
+    @Override
+    protected @NonNull Impact generateNewData(int index) {
+        return new Impact(Impact.getPropertyKeyForIndex(index), "", "");
     }
 
     @Override
@@ -58,57 +56,28 @@ final class ImpactConfigurator extends StackConfigurator<Impact> {
         Text labelField = new Text(currentItemLeft, SWT.BORDER);
         labelField.setLayoutData(new RowData(LABEL_WIDTH, SWT.DEFAULT));
         labelField.setText(impact.getLabel());
-        labelField.addFocusListener(new FocusAdapter() {
+        final ControlDecoration txtDecorator = createLabelFieldDecoration(labelField,
+                Messages.errorUniqueImpactLabels);
+        updateDecoratorVisibility(txtDecorator, impact.getId(), impact.getLabel());
 
-            @Override
-            public void focusLost(FocusEvent event) {
-                Text text = (Text) event.widget;
-                String newLabel = text.getText();
-                if (!Objects.equals(impact.getLabel(), newLabel)) {
-                    updateListener.accept(riskConfiguration.withImpactLabel(impact, newLabel));
-                }
+        labelField.addModifyListener(e -> {
+            if (e.getSource() instanceof Text) {
+                String newLabel = ((Text) e.getSource()).getText();
+                updateDecoratorVisibility(txtDecorator, impact.getId(), newLabel);
+                updateValue(impact.getId(),
+                        valueFromEditorState -> valueFromEditorState.withLabel(newLabel));
             }
         });
 
         Text descriptionField = new Text(parent, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
         descriptionField.setLayoutData(new RowData(450, 80));
         descriptionField.setText(impact.getDescription());
-        descriptionField.addFocusListener(new FocusAdapter() {
-
-            @Override
-            public void focusLost(FocusEvent event) {
-                Text text = (Text) event.widget;
-                String newDescription = text.getText();
-                if (!Objects.equals(impact.getDescription(), newDescription)) {
-                    updateListener.accept(
-                            riskConfiguration.withImpactDescription(impact, newDescription));
-                }
+        descriptionField.addModifyListener(e -> {
+            if (e.getSource() instanceof Text) {
+                String newDescription = ((Text) e.getSource()).getText();
+                updateValue(impact.getId(), valueFromEditorState -> valueFromEditorState
+                        .withDescription(newDescription));
             }
         });
-    }
-
-    @Override
-    protected void onAddClicked() {
-        riskConfiguration = riskConfiguration.withImpactAdded();
-        updateListener.accept(riskConfiguration);
-    }
-
-    @Override
-    protected void onRemoveClicked() {
-        riskConfiguration = riskConfiguration.withLastImpactRemoved();
-        updateListener.accept(riskConfiguration);
-    }
-
-    /**
-     * Set the new risk configuration an refreshes the risk list composite.s
-     */
-    public void setRiskConfiguration(RiskConfiguration riskConfiguration) {
-        this.riskConfiguration = riskConfiguration;
-        super.refresh(this.riskConfiguration.getImpacts());
-    }
-
-    @Override
-    protected void refresh(List<Impact> impacts) {
-        throw new UnsupportedOperationException("call setRiskConfiguration instead");
     }
 }

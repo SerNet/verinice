@@ -120,19 +120,6 @@ public class BpModel extends CnATreeElement implements IBpRoot {
         for (IBpModelListener listener : getListeners()) {
             listener.databaseChildRemoved(child);
         }
-        if (isOrContainsSafeguard(child)) {
-            modelReload(this);
-        }
-    }
-
-    private static boolean isOrContainsSafeguard(CnATreeElement element) {
-        try {
-            return Safeguard.isSafeguard(element)
-                    || element.getChildren().stream().anyMatch(BpModel::isOrContainsSafeguard);
-        } catch (Exception e) {
-            log.error("Error determine checkChildrenForUpdate() returning false.", e);
-        }
-        return false;
     }
 
     @Override

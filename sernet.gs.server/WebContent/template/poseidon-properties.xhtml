@@ -70,7 +70,7 @@
 						whatever we only want to display the text -->
 						<c:when
 							test="#{(not huiProperty.isText) and (not huiProperty.isEditable) and (not huiProperty.isURL)}">
-							<h:outputText value="#{huiProperty.value}" />
+							<h:outputText value="#{huiProperty.displayValue}" />
 						</c:when>
 
 						<!-- Field for PropertyType: singleoption -->

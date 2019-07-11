@@ -22,6 +22,8 @@ import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
+import sernet.hui.swt.SWTResourceManager;
+
 /**
  * This class controls all aspects of the application's execution
  */
@@ -52,6 +54,8 @@ public class Application implements IApplication {
             return IApplication.EXIT_OK;
         } finally {
             ConfigurationLogger.logStop();
+        	SWTResourceManager.dispose();
+        	ImageCache.getInstance().dispose();
             display.dispose();
         }
     }

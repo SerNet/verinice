@@ -24,14 +24,11 @@ import java.util.Collections;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
-import sernet.gs.service.StringUtil;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
-import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
-import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.risk.Frequency;
 import sernet.verinice.model.bp.risk.Impact;
 import sernet.verinice.model.bp.risk.Risk;
@@ -45,82 +42,52 @@ public class BpRiskValuePropertyAdapter implements IPropertyAdapter {
     private static final Logger log = Logger.getLogger(BpRiskValuePropertyAdapter.class);
 
     public static final Collection<String> riskPropertiesThreat = Collections
-            .unmodifiableList(Arrays.asList(BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
+            .unmodifiableList(Arrays.asList(BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS, BpThreat.PROP_RISK_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS,
                     BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS));
 
-    public static final Collection<String> riskPropertiesRequirement = Collections
-            .unmodifiableList(Arrays.asList(BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY,
-                    BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT));
-
-    public static final Collection<String> riskPropertiesSafeguard = Collections.unmodifiableList(
-            Arrays.asList(Safeguard.PROP_STRENGTH_FREQUENCY, Safeguard.PROP_STRENGTH_IMPACT));
-
-    private CnATreeElement element;
+    private BpThreat threat;
 
     private RiskConfigurationCache riskConfigurationCache;
 
     private ICommandService commandService;
 
-    public BpRiskValuePropertyAdapter(CnATreeElement element,
+    public BpRiskValuePropertyAdapter(BpThreat threat,
             RiskConfigurationCache riskConfigurationCache) {
-        this.element = element;
+        this.threat = threat;
         this.riskConfigurationCache = riskConfigurationCache;
     }
 
     @Override
     public String getPropertyValue(String propertyId) {
-        if (element instanceof BpThreat) {
-            BpThreat threat = (BpThreat) element;
-            switch (propertyId) {
-            case BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS:
-                return getLabelForFrequency(threat.getFrequencyWithoutAdditionalSafeguards(),
-                        element);
-            case BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS:
-                return getLabelForImpact(threat.getImpactWithoutAdditionalSafeguards(), element);
-            case BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS:
-                return getLabelForRisk(threat.getRiskWithoutAdditionalSafeguards(), element);
-            case BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS:
-                return getLabelForFrequency(threat.getFrequencyWithAdditionalSafeguards(), element);
-            case BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS:
-                return getLabelForImpact(threat.getImpactWithAdditionalSafeguards(), element);
-            case BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS:
-                return getLabelForRisk(threat.getRiskWithAdditionalSafeguards(), element);
-            default:
-                throwUnhandledCombinationException(propertyId);
-            }
+        switch (propertyId) {
+        case BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS:
+            return getLabelForFrequency(threat.getFrequencyWithoutSafeguards(), threat);
+        case BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS:
+            return getLabelForFrequency(threat.getFrequencyWithoutAdditionalSafeguards(), threat);
+        case BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS:
+            return getLabelForFrequency(threat.getFrequencyWithAdditionalSafeguards(), threat);
+        case BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS:
+            return getLabelForImpact(threat.getImpactWithoutSafeguards(), threat);
+        case BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS:
+            return getLabelForImpact(threat.getImpactWithoutAdditionalSafeguards(), threat);
+        case BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS:
+            return getLabelForImpact(threat.getImpactWithAdditionalSafeguards(), threat);
+        case BpThreat.PROP_RISK_WITHOUT_SAFEGUARDS:
+            return getLabelForRisk(threat.getRiskWithoutSafeguards(), threat);
+        case BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS:
+            return getLabelForRisk(threat.getRiskWithoutAdditionalSafeguards(), threat);
+        case BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS:
+            return getLabelForRisk(threat.getRiskWithAdditionalSafeguards(), threat);
+        default:
+            throw new IllegalArgumentException(
+                    "Unhandled combination: " + threat + ", " + propertyId);
         }
-        if (element instanceof BpRequirement) {
-            BpRequirement requirement = (BpRequirement) element;
-            switch (propertyId) {
-            case BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY:
-                return getLabelForFrequency(requirement.getSafeguardStrengthFrequency(), element);
-            case BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT:
-                return getLabelForFrequency(requirement.getSafeguardStrengthImpact(), element);
-            default:
-                throwUnhandledCombinationException(propertyId);
-            }
-        }
-        if (element instanceof Safeguard) {
-            Safeguard safeguard = (Safeguard) element;
-            switch (propertyId) {
-            case Safeguard.PROP_STRENGTH_FREQUENCY:
-                String frequencyId = StringUtil.replaceEmptyStringByNull(safeguard.getEntity()
-                        .getRawPropertyValue(Safeguard.PROP_STRENGTH_FREQUENCY));
-                return getLabelForFrequency(frequencyId, element);
-            case Safeguard.PROP_STRENGTH_IMPACT:
-                String impactId = StringUtil.replaceEmptyStringByNull(
-                        safeguard.getEntity().getRawPropertyValue(Safeguard.PROP_STRENGTH_IMPACT));
-                return getLabelForFrequency(impactId, element);
-            default:
-                throwUnhandledCombinationException(propertyId);
-            }
-        }
-        throw new IllegalArgumentException("Unhandled element type: " + element);
-
     }
 
     private String getLabelForFrequency(String frequencyId, CnATreeElement element) {
@@ -164,8 +131,7 @@ public class BpRiskValuePropertyAdapter implements IPropertyAdapter {
                     "Loading scope with id: " + scopeId + ". Element with scope id is: " + element);
         }
         RetrieveCnATreeElement retrieveCommand = new RetrieveCnATreeElement(ItNetwork.TYPE_ID,
-                scopeId,
-                RetrieveInfo.getPropertyInstance());
+                scopeId, RetrieveInfo.getPropertyInstance());
         try {
             retrieveCommand = getCommandService().executeCommand(retrieveCommand);
         } catch (CommandException e) {
@@ -174,7 +140,7 @@ public class BpRiskValuePropertyAdapter implements IPropertyAdapter {
             throw new RuntimeException(message, e);
         }
         RiskConfiguration riskConfiguration = ((ItNetwork) retrieveCommand.getElement())
-                .getRiskConfiguration();
+                .getRiskConfigurationOrDefault();
         if (log.isDebugEnabled()) {
             log.debug("Risk configuration of scope with id: " + scopeId + " is: "
                     + riskConfiguration);
@@ -189,10 +155,6 @@ public class BpRiskValuePropertyAdapter implements IPropertyAdapter {
             log.error(message);
             throw new IllegalStateException(message);
         }
-    }
-
-    private void throwUnhandledCombinationException(String propertyId) {
-        throw new IllegalArgumentException("Unhandled combination: " + element + ", " + propertyId);
     }
 
     private ICommandService getCommandService() {

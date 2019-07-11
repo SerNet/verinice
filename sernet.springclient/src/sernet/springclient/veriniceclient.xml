@@ -326,6 +326,10 @@
     <bean id="hitroUtil" class="sernet.hui.common.connect.HitroUtil"
         init-method="initForClient">
         <property name="url" value="${verinice.serverURL}/GetHitroConfig" />
+        <property name="entityResolverFactory">
+            <bean
+                class="sernet.gs.ui.rcp.main.bsi.model.BSIEntityResolverFactory" />
+        </property>
     </bean>
 
     <bean id="huiTypeFactory" class="sernet.hui.common.connect.HUITypeFactory"

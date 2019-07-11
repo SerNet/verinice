@@ -28,20 +28,6 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.verinice.iso27k.rcp.messages"; //$NON-NLS-1$
     public static String NewObjectMenu;
-    public static String CatalogView_0;
-    public static String CatalogView_10;
-    public static String CatalogView_11;
-    public static String CatalogView_12;
-    public static String CatalogView_13;
-    public static String CatalogView_14;
-    public static String CatalogView_15;
-    public static String CatalogView_16;
-    public static String CatalogView_21;
-    public static String CatalogView_22;
-    public static String CatalogView_26;
-    public static String CatalogView_28;
-    public static String CatalogView_4;
-    public static String CatalogView_7;
     public static String CatalogView_AccessControl;
     public static String CatalogView_open_in_editor;
     public static String CatalogView_delete;
@@ -115,8 +101,6 @@ public class Messages extends NLS {
     public static String SamtExportDialog_16;
     public static String SamtExportDialog_17;
     public static String JobScheduler_0;
-    public static String Deprecated_View;
-    public static String ISM_Catalog_View_Is_Deprecated;
 
     static {
         // initialize resource bundle

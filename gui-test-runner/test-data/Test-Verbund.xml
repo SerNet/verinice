@@ -1,0 +1,710 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:syncRequest xmlns="http://www.sernet.de/sync/data" xmlns:ns2="http://www.sernet.de/sync/mapping" xmlns:ns3="http://www.sernet.de/sync/sync" sourceId="9b4eaf">
+    <syncData>
+        <syncObject>
+            <syncAttribute>
+                <name>itverbund_sehrhoch_wirkung</name>
+                <value>Ein weitreichende Ansehens- oder Vertrauensbeeinträchtigung, evtl. sogar existenzgefährdender Art, ist denkbar.</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_bia_schritt_3</name>
+                <value>Anhand des zeitlichen Schadenverlaufs und der zu erwartenden Schadenshöhe werden die maximal tolerierbare Ausfallzeit, die Wiederanlaufzeit und das Wiederanlauf-Niveau für jeden Geschäftsprozess festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und konsolidiert.</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_normal_datenschutz</name>
+                <value>Eine Beeinträchtigung des informationellen Selbstbestimmungsrechts würde durch den Einzelnen als tolerabel eingeschätzt werden.  Ein möglicher Mißbrauch personenbezogener Daten hat nur geringfügige Auswirkungen auf die gesellschaftliche Stellung oder die wirtschaftlichen Verhältnisse des Betroffenen.</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_organisation</name>
+                <value></value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_sehrhoch_leib</name>
+                <value>Gravierende Beeinträchtigungen der persönlichen Unversehrtheit sind möglich. Gefahr für Leib und Leben</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_freigabe</name>
+                <value></value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_schadenskategorie_sehrhoch_beeintr</name>
+                <value>gravierende Beeinträchtigung der Aufgabenerfüllung / Rückstände können nur mit externer Hilfe oder gar nicht aufgeholt werden / Verzögerte und fehlerhafte Ergebnisse werden extern deutlich bemerkt / schwerwiegende Minderung der Servicequalität / die Arbeit anderer Organisationseinheiten oder Vertragspartner ist nicht möglich / hohe Haftungsansprüche, Konventionalstrafen</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_hoch_datenschutz</name>
+                <value>Eine erhebliche Beeinträchtigung des informationellen Selbstbestimmungsrechts des Einzelnen erscheint möglich.  Ein möglicher Mißbrauch personenbezogener Daten hat erhebliche Auswirkungen auf die gesellschaftliche Stellung oder die wirtschaftlichen Verhältnisse des Betroffenen.</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_schadenskategorie_sehrhoch_negativ</name>
+                <value>ein erheblicher Teil der Kunden und Geschäftspartner zieht aus den Vorfällen Konsequenzen / Image, Vertrauen und Zuverlässigkeit der Institution sind stark beeinträchtigt und werden grundsätzlich in Zweifel gezogen / Image- und Vertrauensverluste sind schwer oder nicht mehr auszugleichen / starke Verluste von Marktanteilen / Verluste sind schwer oder nicht auszugleichen</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_sehrhoch_datenschutz</name>
+                <value>Eine besonders bedeutende Beeinträchtigung des informationellen Selbstbestimmungsrechts des Einzelnen erscheint möglich.  Ein möglicher Mißbrauch personenbezogener Daten würde für den Betroffenen den gesellschaftlichen oder wirtschaftlichen Ruin bedeuten.</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_schadenskategorie_hoch_verstoss</name>
+                <value>Verstoß gegen Gesetze und Bestimmungen mit tolerierbaren Konsequenzen / Verstöße werden auch außerhalb der Institution bemerkt</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_dokument</name>
+                <value></value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_hoch_finanzen</name>
+                <value>Der finanzielle Schaden liegt zwischen ???,- EUR und ???,-EUR.</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_geltungsbereich</name>
+                <value></value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_schadenskategorie_niedrig_beeintr</name>
+                <value>keine nennenswerten Auswirkungen</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_normal_wirkung</name>
+                <value>Eine geringe bzw. nur interne Ansehens- oder Vertrauensbeeinträchtigung ist zu erwarten.</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_gewichtung_finanz</name>
+                <value>0</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_bia_schritt_0</name>
+                <value>Für die Durchführung einer BIA wird eine Übersicht über alle relevanten Geschäftsprozesse des Unternehmens bzw. aller Fachaufgaben der Behörde mit den jeweils verantwortlichen Ansprechpartnernbzw. Prozessverantwortlichen benötigt. Diese Übersicht sollte neben der Auflistung der Prozesse auch eine Zuordnung zu den Geschäftszielen enthalten sowie die Abhängigkeiten zwischen den einzelnen Prozessen darstellen. Die Geschäftsziele einer Behörde leiten sich meist aus deren gesetzlichen Aufträgen ab. Liegt keine  aktuelle Prozess-Übersicht vor, so ist diese als Vorarbeit zur BIA zu erstellen oder zu aktualisieren. Zusätzlich sollten Stammdaten der Institution wie Unternehmensstruktur oder Lokationen bereitgestellt werden.</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_hoch_gesetze</name>
+                <value>Verstöße gegen Vorschriften und Gesetze mit erheblichen Konsequenzen Vertragsverletzungen mit hohen Konventionalstrafen</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_hoch_leib</name>
+                <value>Eine Beeinträchtigung der persönlichen Unversehrtheit kann nicht absolut ausgeschlossen werden.</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_bia_schritt_2</name>
+                <value>Die Schadensanalyse untersucht den Schaden für die Institution, den der Ausfall einzelner Geschäftsprozesse verursachen könnte. Dabei ist nicht nur die Höhe des Schadens, sondern insbesondere die zeitliche Entwicklung des Schadenverlaufs von Interesse. Für die Durchführung der Schadensanalyse sind die Rahmenbedingungen für die Erhebung festzulegen (Schadenskategorien und Schadensszenarien), die Bewertungsperioden sowie die Strategie zur Behandlung besonderer Termine, an denen die Verfügbarkeitsanforderung eines Prozesses von dessen Durchschnitt abweicht. Anschließend wird für jeden einzelnen Prozess und jede Bewertungsperiode der entstehende Schaden bei Ausfall bewertet.</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_bia_schritt_1</name>
+                <value>Ist offensichtlich, dass innerhalb des festgelegten Gültigkeitsbereichs des Notfallmanagements einige Organisationseinheiten oder Geschäftsprozesse eine sehr geringe Bedeutung für das Erreichen der Geschäftsziele und die wertschöpfenden Prozesse der Institution besitzen, so können diese bei der weiteren Betrachtung ausgespart werden.</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_schadenskategorie_niedrig_verstoss</name>
+                <value>keine nennenswerten Auswirkungen</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_schadenskategorie_sehrhoch_verstoss</name>
+                <value>Verstoß gegen Gesetze mit Konsequenzen für den Geschäftsbetrieb und einzelne Mitarbeiter</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_schadenskategorie_hoch_finanz</name>
+                <value>Störungen bzw. Ausfälle werden nur in Einzelfällen bemerkt und von Kunden und Geschäftspartnern als bedeutungslos eingeschätzt / Kunden und Geschäftspartner ziehen keine Konsequenzen / das grundsätzliche Vertrauen in die Institution ist nicht beeinträchtigt / keine wahrnehmbaren Verluste von Marktanteilen.</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_normal_finanzen</name>
+                <value>Der finanzieller Schaden ist kleiner als ???,- EUR.</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_sehrhoch_finanzen</name>
+                <value>Der finanzielle Schaden ist größer als ???,- EUR.</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_schadenskategorie_hoch_beeintr</name>
+                <value>Nicht tolerierbare Unterbrechungen bzw. Einschränkungen / Minderung der Arbeitsqualität / Fristversäumnisse nach außen wirksam / Rückstandsaufholung nicht innerhalb der normalen Arbeitszeit möglich / andere Organisationseinheiten oder Vertragspartner werden in ihrer Arbeit erheblich gestört, auch dort müssen Rückstände aufgeholt werden / Konventionalstrafen in akzeptablem Rahmen</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_schadenskategorie_normal_finanz</name>
+                <value>Der finanzielle Schaden bleibt für die Institution tolerabel (z. B. Verlust weniger als 5-20% des Umsatzes)</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_gewichtung_beeintr</name>
+                <value>0</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_autor</name>
+                <value></value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_schadenskategorie_normal_beeintr</name>
+                <value>Beeinträchtigung wird von Mitarbeitern toleriert / andere Tätigkeiten können vorgezogen werden / Nacharbeit  behindert die Aufgabenerfüllung nicht merklich / andere Organisationseinheiten oder Vertragspartner werden in ihrer Arbeit nicht wesentlich gestört.</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_normal_aufgaben</name>
+                <value>Die Beeinträchtigung würde von den Betroffenen als tolerabel eingeschätzt werden.  Die maximal tolerierbare Ausfallzeit des IT- Systems ist größer als ??? Stunden.</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_schadenskategorie_normal_negativ</name>
+                <value>Störungen bzw. Ausfälle werden nur in Einzelfällen bemerkt und von Kunden und Geschäftspartnern als bedeutungslos eingeschätzt / Kunden und Geschäftspartner ziehen keine Konsequenzen / das grundsätzliche Vertrauen in die Institution ist nicht beeinträchtigt / keine wahrnehmbaren Verluste von Marktanteilen.</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_tag</name>
+                <value></value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_schadenskategorie_niedrig_negativ</name>
+                <value>keine nennenswerten Auswirkungen</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_schadenskategorie_sehrhoch_finanz</name>
+                <value>Der finanzielle Schaden ist für die Institution existenzgefährdend (z. B. wenn der Verlust 30% des Umsatzes überschreitet)</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_sehrhoch_aufgaben</name>
+                <value>Die Beeinträchtigung würde von allen Betroffenen als nicht tolerabel eingeschätzt werden. Ein IT-Systemausfall ist nur bis zu ??? Stunden tolerabel.</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_hoch_wirkung</name>
+                <value>Eine breite Ansehens- oder Vertrauensbeeinträchtigung ist erwarten.</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_hoch_aufgaben</name>
+                <value>Die Beeinträchtigung würde von einzelnen Betroffenen als nicht tolerabel eingeschätzt. Ein IT-Systemausfall ist nur zwischen ??? und ??? Stunden tolerabel.</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_gewichtung_negativ</name>
+                <value>0</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_gewichtung_verstoss</name>
+                <value>0</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_sehrhoch_gesetze</name>
+                <value>Fundamentaler Verstoß gegen Vorschriften und Gesetze Vertragsverletzungen, deren Haftungsschäden ruinös sind</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_schadenskategorie_hoch_negativ</name>
+                <value>Störungen bzw. Ausfälle werden von Kunden und Geschäftspartnern deutlich bemerkt und in der Brache wahrgenommen / Image und Vertrauen in die Institution sind bei einzelnen Kunden und Geschäftspartnern beeinträchtig / Image- bzw. Vertrauensverluste sind mit hohem Aufwand wieder auszugleichen / einzelne Kunden und Geschäftspartner ziehen Konsequenzen und beenden die Geschäftsbeziehung / merkliche Verluste von Marktanteilen / Verluste sind mit Aufwand wieder zurückzugewinnen</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_version</name>
+                <value></value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_name</name>
+                <value>Test-Verbund</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_mitarbeiter</name>
+                <value></value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_normal_leib</name>
+                <value>Eine Beeinträchtigung erscheint nicht möglich.</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_schadenskategorie_niedrig_finanz</name>
+                <value>keine nennenswerten Auswirkungen (z. B. Verlust geringer als 5% des Umsatzes)</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_normal_gesetze</name>
+                <value>Verstöße gegen Vorschriften und Gesetze mit geringfügigen Konsequenzen. Geringfügige Vertragsverletzungen mit maximal geringen Konventionalstrafen</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_schadenskategorie_normal_verstoss</name>
+                <value>Verstöße gegen Gesetze und Bestimmungen mit geringen Konsequenzen / Verstöße werden nur intern bemerkt</value>
+                <limitedLicense>false</limitedLicense>
+                <licenseContentId></licenseContentId>
+            </syncAttribute>
+            <extId>ENTITY_4227084</extId>
+            <extObjectType>itverbund</extObjectType>
+            <children>
+                <extId>ENTITY_43f4fbbe-4c88-4822-886a-ceed70e26f84</extId>
+                <extObjectType>raeumekategorie</extObjectType>
+            </children>
+            <children>
+                <extId>ENTITY_73f8142f-83d3-4471-9874-af89e40520e5</extId>
+                <extObjectType>personkategorie</extObjectType>
+                <children>
+                    <syncAttribute>
+                        <name>person_email</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>person_kuerzel</name>
+                        <value>M-</value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>vorname</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>person_tag</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>nachname</name>
+                        <value>Tester</value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>person_anzahl</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>person_orgeinheit</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>person_erlaeuterung</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>person_dokument</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>person_anrede</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>person_telefon</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <extId>ENTITY_4227085</extId>
+                    <extObjectType>person</extObjectType>
+                    <file>
+                        <syncAttribute>
+                            <name>attachment_date</name>
+                            <value>1539345949864</value>
+                            <limitedLicense>false</limitedLicense>
+                            <licenseContentId></licenseContentId>
+                        </syncAttribute>
+                        <syncAttribute>
+                            <name>attachment_version</name>
+                            <value></value>
+                            <limitedLicense>false</limitedLicense>
+                            <licenseContentId></licenseContentId>
+                        </syncAttribute>
+                        <syncAttribute>
+                            <name>attachment_publish</name>
+                            <value></value>
+                            <limitedLicense>false</limitedLicense>
+                            <licenseContentId></licenseContentId>
+                        </syncAttribute>
+                        <syncAttribute>
+                            <name>attachment_name</name>
+                            <value>Logo</value>
+                            <limitedLicense>false</limitedLicense>
+                            <licenseContentId></licenseContentId>
+                        </syncAttribute>
+                        <syncAttribute>
+                            <name>attachment_file_name</name>
+                            <value>design1.png</value>
+                            <limitedLicense>false</limitedLicense>
+                            <licenseContentId></licenseContentId>
+                        </syncAttribute>
+                        <syncAttribute>
+                            <name>attachment_mime_type</name>
+                            <value>png</value>
+                            <limitedLicense>false</limitedLicense>
+                            <licenseContentId></licenseContentId>
+                        </syncAttribute>
+                        <syncAttribute>
+                            <name>attachment_text</name>
+                            <value></value>
+                            <limitedLicense>false</limitedLicense>
+                            <licenseContentId></licenseContentId>
+                        </syncAttribute>
+                        <syncAttribute>
+                            <name>attachment_approval</name>
+                            <value></value>
+                            <limitedLicense>false</limitedLicense>
+                            <licenseContentId></licenseContentId>
+                        </syncAttribute>
+                        <syncAttribute>
+                            <name>attachment_size</name>
+                            <value>13841</value>
+                            <limitedLicense>false</limitedLicense>
+                            <licenseContentId></licenseContentId>
+                        </syncAttribute>
+                        <extId>ENTITY_4227087</extId>
+                        <file>files/4358144-design1.png</file>
+                    </file>
+                </children>
+            </children>
+            <children>
+                <extId>ENTITY_be0fac70-11d0-495f-ba10-8a95b70c9586</extId>
+                <extObjectType>sonstitkategorie</extObjectType>
+            </children>
+            <children>
+                <extId>ENTITY_c5a81d99-5f2a-49f2-9365-6165f3fdfa62</extId>
+                <extObjectType>clientskategorie</extObjectType>
+            </children>
+            <children>
+                <extId>ENTITY_f30c117e-71db-41ab-8898-faac03a531ae</extId>
+                <extObjectType>netzkategorie</extObjectType>
+            </children>
+            <children>
+                <extId>ENTITY_e3539309-45b8-46c0-b234-621212497b6d</extId>
+                <extObjectType>gebaeudekategorie</extObjectType>
+                <children>
+                    <syncAttribute>
+                        <name>gebaeude_ergaenzendeanalyse_entscheidung_bis</name>
+                        <value>1539345856033</value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_vertraulichkeit</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_dokument</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_verfuegbarkeit_begruendung</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_kuerzel</name>
+                        <value>G-</value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_risikoanalyse</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_integritaet</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_integritaet_begruendung</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_risikoanalyse_begruendung</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_name</name>
+                        <value>Schuppen</value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_ergaenzendeanalyse_entscheidung_am</name>
+                        <value>1539345856033</value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_anzahl</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_vertraulichkeit_begruendung</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_ergaenzendeanalyse</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_erlaeuterung</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_verfuegbarkeit</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_tag</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_ergaenzendeanalyse_entscheidung_durch</name>
+                        <value></value>
+                        <limitedLicense>false</limitedLicense>
+                        <licenseContentId></licenseContentId>
+                    </syncAttribute>
+                    <extId>ENTITY_4227086</extId>
+                    <extObjectType>gebaeude</extObjectType>
+                </children>
+            </children>
+            <children>
+                <extId>ENTITY_1b53b38c-fbec-4a1a-b173-ad467da04d87</extId>
+                <extObjectType>tkkategorie</extObjectType>
+            </children>
+            <children>
+                <extId>ENTITY_95a4fe68-862d-4381-8321-54b6d7c19ff1</extId>
+                <extObjectType>anwendungenkategorie</extObjectType>
+            </children>
+            <children>
+                <extId>ENTITY_4415ab80-91d5-4dc0-aeef-bdb73bdf6bf8</extId>
+                <extObjectType>serverkategorie</extObjectType>
+            </children>
+        </syncObject>
+        <syncLink>
+            <dependant>ENTITY_4227085</dependant>
+            <dependency>ENTITY_4227086</dependency>
+            <relationId>rel_person_gebaeude</relationId>
+        </syncLink>
+    </syncData>
+    <ns2:syncMapping>
+        <ns2:mapObjectType extId="attachment" intId="attachment">
+            <ns2:mapAttributeType extId="attachment_date" intId="attachment_date"/>
+            <ns2:mapAttributeType extId="attachment_version" intId="attachment_version"/>
+            <ns2:mapAttributeType extId="attachment_publish" intId="attachment_publish"/>
+            <ns2:mapAttributeType extId="attachment_name" intId="attachment_name"/>
+            <ns2:mapAttributeType extId="attachment_file_name" intId="attachment_file_name"/>
+            <ns2:mapAttributeType extId="attachment_text" intId="attachment_text"/>
+            <ns2:mapAttributeType extId="attachment_mime_type" intId="attachment_mime_type"/>
+            <ns2:mapAttributeType extId="attachment_approval" intId="attachment_approval"/>
+            <ns2:mapAttributeType extId="attachment_size" intId="attachment_size"/>
+        </ns2:mapObjectType>
+        <ns2:mapObjectType extId="person" intId="person">
+            <ns2:mapAttributeType extId="person_email" intId="person_email"/>
+            <ns2:mapAttributeType extId="person_rollen" intId="person_rollen"/>
+            <ns2:mapAttributeType extId="person_kuerzel" intId="person_kuerzel"/>
+            <ns2:mapAttributeType extId="vorname" intId="vorname"/>
+            <ns2:mapAttributeType extId="person_tag" intId="person_tag"/>
+            <ns2:mapAttributeType extId="nachname" intId="nachname"/>
+            <ns2:mapAttributeType extId="person_anzahl" intId="person_anzahl"/>
+            <ns2:mapAttributeType extId="person_orgeinheit" intId="person_orgeinheit"/>
+            <ns2:mapAttributeType extId="person_erlaeuterung" intId="person_erlaeuterung"/>
+            <ns2:mapAttributeType extId="person_dokument" intId="person_dokument"/>
+            <ns2:mapAttributeType extId="person_anrede" intId="person_anrede"/>
+            <ns2:mapAttributeType extId="person_telefon" intId="person_telefon"/>
+        </ns2:mapObjectType>
+        <ns2:mapObjectType extId="itverbund" intId="itverbund">
+            <ns2:mapAttributeType extId="itverbund_tag" intId="itverbund_tag"/>
+            <ns2:mapAttributeType extId="itverbund_organisation" intId="itverbund_organisation"/>
+            <ns2:mapAttributeType extId="itverbund_dokument" intId="itverbund_dokument"/>
+            <ns2:mapAttributeType extId="itverbund_geltungsbereich" intId="itverbund_geltungsbereich"/>
+            <ns2:mapAttributeType extId="itverbund_name" intId="itverbund_name"/>
+            <ns2:mapAttributeType extId="itverbund_mitarbeiter" intId="itverbund_mitarbeiter"/>
+            <ns2:mapAttributeType extId="itverbund_autor" intId="itverbund_autor"/>
+            <ns2:mapAttributeType extId="itverbund_version" intId="itverbund_version"/>
+            <ns2:mapAttributeType extId="itverbund_freigabe" intId="itverbund_freigabe"/>
+            <ns2:mapAttributeType extId="itverbund_normal_gesetze" intId="itverbund_normal_gesetze"/>
+            <ns2:mapAttributeType extId="itverbund_normal_datenschutz" intId="itverbund_normal_datenschutz"/>
+            <ns2:mapAttributeType extId="itverbund_normal_leib" intId="itverbund_normal_leib"/>
+            <ns2:mapAttributeType extId="itverbund_normal_aufgaben" intId="itverbund_normal_aufgaben"/>
+            <ns2:mapAttributeType extId="itverbund_normal_wirkung" intId="itverbund_normal_wirkung"/>
+            <ns2:mapAttributeType extId="itverbund_normal_finanzen" intId="itverbund_normal_finanzen"/>
+            <ns2:mapAttributeType extId="itverbund_hoch_gesetze" intId="itverbund_hoch_gesetze"/>
+            <ns2:mapAttributeType extId="itverbund_hoch_datenschutz" intId="itverbund_hoch_datenschutz"/>
+            <ns2:mapAttributeType extId="itverbund_hoch_leib" intId="itverbund_hoch_leib"/>
+            <ns2:mapAttributeType extId="itverbund_hoch_aufgaben" intId="itverbund_hoch_aufgaben"/>
+            <ns2:mapAttributeType extId="itverbund_hoch_wirkung" intId="itverbund_hoch_wirkung"/>
+            <ns2:mapAttributeType extId="itverbund_hoch_finanzen" intId="itverbund_hoch_finanzen"/>
+            <ns2:mapAttributeType extId="itverbund_sehrhoch_gesetze" intId="itverbund_sehrhoch_gesetze"/>
+            <ns2:mapAttributeType extId="itverbund_sehrhoch_datenschutz" intId="itverbund_sehrhoch_datenschutz"/>
+            <ns2:mapAttributeType extId="itverbund_sehrhoch_leib" intId="itverbund_sehrhoch_leib"/>
+            <ns2:mapAttributeType extId="itverbund_sehrhoch_aufgaben" intId="itverbund_sehrhoch_aufgaben"/>
+            <ns2:mapAttributeType extId="itverbund_sehrhoch_wirkung" intId="itverbund_sehrhoch_wirkung"/>
+            <ns2:mapAttributeType extId="itverbund_sehrhoch_finanzen" intId="itverbund_sehrhoch_finanzen"/>
+            <ns2:mapAttributeType extId="itverbund_bia_schritt_0" intId="itverbund_bia_schritt_0"/>
+            <ns2:mapAttributeType extId="itverbund_bia_schritt_1" intId="itverbund_bia_schritt_1"/>
+            <ns2:mapAttributeType extId="itverbund_bia_schritt_2" intId="itverbund_bia_schritt_2"/>
+            <ns2:mapAttributeType extId="itverbund_bia_schritt_3" intId="itverbund_bia_schritt_3"/>
+            <ns2:mapAttributeType extId="itverbund_schadenskategorie_niedrig_finanz" intId="itverbund_schadenskategorie_niedrig_finanz"/>
+            <ns2:mapAttributeType extId="itverbund_schadenskategorie_niedrig_beeintr" intId="itverbund_schadenskategorie_niedrig_beeintr"/>
+            <ns2:mapAttributeType extId="itverbund_schadenskategorie_niedrig_verstoss" intId="itverbund_schadenskategorie_niedrig_verstoss"/>
+            <ns2:mapAttributeType extId="itverbund_schadenskategorie_niedrig_negativ" intId="itverbund_schadenskategorie_niedrig_negativ"/>
+            <ns2:mapAttributeType extId="itverbund_schadenskategorie_normal_finanz" intId="itverbund_schadenskategorie_normal_finanz"/>
+            <ns2:mapAttributeType extId="itverbund_schadenskategorie_normal_beeintr" intId="itverbund_schadenskategorie_normal_beeintr"/>
+            <ns2:mapAttributeType extId="itverbund_schadenskategorie_normal_verstoss" intId="itverbund_schadenskategorie_normal_verstoss"/>
+            <ns2:mapAttributeType extId="itverbund_schadenskategorie_normal_negativ" intId="itverbund_schadenskategorie_normal_negativ"/>
+            <ns2:mapAttributeType extId="itverbund_schadenskategorie_hoch_finanz" intId="itverbund_schadenskategorie_hoch_finanz"/>
+            <ns2:mapAttributeType extId="itverbund_schadenskategorie_hoch_beeintr" intId="itverbund_schadenskategorie_hoch_beeintr"/>
+            <ns2:mapAttributeType extId="itverbund_schadenskategorie_hoch_verstoss" intId="itverbund_schadenskategorie_hoch_verstoss"/>
+            <ns2:mapAttributeType extId="itverbund_schadenskategorie_hoch_negativ" intId="itverbund_schadenskategorie_hoch_negativ"/>
+            <ns2:mapAttributeType extId="itverbund_schadenskategorie_sehrhoch_finanz" intId="itverbund_schadenskategorie_sehrhoch_finanz"/>
+            <ns2:mapAttributeType extId="itverbund_schadenskategorie_sehrhoch_beeintr" intId="itverbund_schadenskategorie_sehrhoch_beeintr"/>
+            <ns2:mapAttributeType extId="itverbund_schadenskategorie_sehrhoch_verstoss" intId="itverbund_schadenskategorie_sehrhoch_verstoss"/>
+            <ns2:mapAttributeType extId="itverbund_schadenskategorie_sehrhoch_negativ" intId="itverbund_schadenskategorie_sehrhoch_negativ"/>
+            <ns2:mapAttributeType extId="itverbund_gewichtung_finanz" intId="itverbund_gewichtung_finanz"/>
+            <ns2:mapAttributeType extId="itverbund_gewichtung_beeintr" intId="itverbund_gewichtung_beeintr"/>
+            <ns2:mapAttributeType extId="itverbund_gewichtung_verstoss" intId="itverbund_gewichtung_verstoss"/>
+            <ns2:mapAttributeType extId="itverbund_gewichtung_negativ" intId="itverbund_gewichtung_negativ"/>
+        </ns2:mapObjectType>
+        <ns2:mapObjectType extId="gebaeude" intId="gebaeude">
+            <ns2:mapAttributeType extId="gebaeude_name" intId="gebaeude_name"/>
+            <ns2:mapAttributeType extId="gebaeude_anzahl" intId="gebaeude_anzahl"/>
+            <ns2:mapAttributeType extId="gebaeude_dokument" intId="gebaeude_dokument"/>
+            <ns2:mapAttributeType extId="gebaeude_erlaeuterung" intId="gebaeude_erlaeuterung"/>
+            <ns2:mapAttributeType extId="gebaeude_kuerzel" intId="gebaeude_kuerzel"/>
+            <ns2:mapAttributeType extId="gebaeude_tag" intId="gebaeude_tag"/>
+            <ns2:mapAttributeType extId="gebaeude_vertraulichkeit" intId="gebaeude_vertraulichkeit"/>
+            <ns2:mapAttributeType extId="gebaeude_verfuegbarkeit" intId="gebaeude_verfuegbarkeit"/>
+            <ns2:mapAttributeType extId="gebaeude_integritaet" intId="gebaeude_integritaet"/>
+            <ns2:mapAttributeType extId="gebaeude_vertraulichkeit_begruendung" intId="gebaeude_vertraulichkeit_begruendung"/>
+            <ns2:mapAttributeType extId="gebaeude_verfuegbarkeit_begruendung" intId="gebaeude_verfuegbarkeit_begruendung"/>
+            <ns2:mapAttributeType extId="gebaeude_integritaet_begruendung" intId="gebaeude_integritaet_begruendung"/>
+            <ns2:mapAttributeType extId="gebaeude_ergaenzendeanalyse" intId="gebaeude_ergaenzendeanalyse"/>
+            <ns2:mapAttributeType extId="gebaeude_risikoanalyse" intId="gebaeude_risikoanalyse"/>
+            <ns2:mapAttributeType extId="gebaeude_risikoanalyse_begruendung" intId="gebaeude_risikoanalyse_begruendung"/>
+            <ns2:mapAttributeType extId="gebaeude_ergaenzendeanalyse_entscheidung_durch" intId="gebaeude_ergaenzendeanalyse_entscheidung_durch"/>
+            <ns2:mapAttributeType extId="gebaeude_ergaenzendeanalyse_entscheidung_am" intId="gebaeude_ergaenzendeanalyse_entscheidung_am"/>
+            <ns2:mapAttributeType extId="gebaeude_ergaenzendeanalyse_entscheidung_bis" intId="gebaeude_ergaenzendeanalyse_entscheidung_bis"/>
+        </ns2:mapObjectType>
+        <ns2:mapObjectType extId="tkkategorie" intId="tkkategorie"/>
+        <ns2:mapObjectType extId="gebaeudekategorie" intId="gebaeudekategorie"/>
+        <ns2:mapObjectType extId="clientskategorie" intId="clientskategorie"/>
+        <ns2:mapObjectType extId="raeumekategorie" intId="raeumekategorie"/>
+        <ns2:mapObjectType extId="anwendungenkategorie" intId="anwendungenkategorie"/>
+        <ns2:mapObjectType extId="netzkategorie" intId="netzkategorie"/>
+        <ns2:mapObjectType extId="personkategorie" intId="personkategorie"/>
+        <ns2:mapObjectType extId="sonstitkategorie" intId="sonstitkategorie"/>
+        <ns2:mapObjectType extId="serverkategorie" intId="serverkategorie"/>
+    </ns2:syncMapping>
+    <ns3:syncVnaSchemaVersion vnaSchemaVersion="vna-1.2">
+        <ns3:compatibleVersions>vna-1.1</ns3:compatibleVersions>
+        <ns3:compatibleVersions>vna-1.2</ns3:compatibleVersions>
+        <ns3:compatibleVersions>vna-1.0</ns3:compatibleVersions>
+    </ns3:syncVnaSchemaVersion>
+</ns3:syncRequest>

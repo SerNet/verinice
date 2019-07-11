@@ -11,24 +11,11 @@
             <param name="LevelMax" value="FATAL"/>
         </filter>
     </appender>
-    
-    <appender name="FILE"
-		class="org.apache.log4j.RollingFileAppender">
-		<!-- <param name="Threshold" value="INFO" /> -->
-		<param name="File" value="verinice-server.log" />
-		<param name="Append" value="true" />
-		<param name="MaxFileSize" value="10000KB" />
-		<param name="MaxBackupIndex" value="5" />
-		<layout class="org.apache.log4j.PatternLayout">
-		<param name="ConversionPattern" value="%d %-5p [%t] (%13F:%L) %3x - %m%n" />
-		</layout>
-	</appender>
 
      <!-- Logger for verinice -->
     <logger name="sernet.gs" additivity="false">
   		<level value="DEBUG"/>
   		<appender-ref ref="STDOUT"/>
-  		<appender-ref ref="FILE"/>
 	</logger>
 	
 	<logger name="org.hibernate.cache" additivity="false">

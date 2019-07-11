@@ -14,6 +14,7 @@ import org.threeten.bp.LocalDate;
 
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.hui.swt.SWTResourceManager;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.licensemanagement.LicenseMessageInfos;
 import sernet.verinice.rcp.ElementTitleCache;
@@ -145,7 +146,7 @@ class AccountLabelProvider extends ColumnLabelProvider implements ITableLabelPro
     @Override
     public Color getForeground(Object o) {
         if (o instanceof Configuration && !AccountLoader.isEditAllowed((Configuration) o)) {
-            return Display.getDefault().getSystemColor(SWT.COLOR_GRAY);
+            return SWTResourceManager.getColor(SWT.COLOR_GRAY);
         }
         return super.getForeground(o);
     }

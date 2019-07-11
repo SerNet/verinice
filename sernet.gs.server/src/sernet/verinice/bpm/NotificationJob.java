@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -44,8 +46,10 @@ import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import sernet.gs.server.security.DummyAuthentication;
+import sernet.gs.service.StringUtil;
 import sernet.gs.service.VeriniceCharset;
 import sernet.hui.common.VeriniceContext;
+import sernet.hui.common.connect.IPerson;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.bpm.ITask;
@@ -53,14 +57,12 @@ import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bpm.Messages;
 import sernet.verinice.model.bpm.TaskParameter;
-import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.iso27k.PersonIso;
 
 /**
- * Quartz job configured by Spring in veriniceserver-jbpm.xml, veriniceserver-plain.xml
- * and veriniceserver-plain.properties
+ * Quartz job configured by Spring in veriniceserver-jbpm.xml,
+ * veriniceserver-plain.xml and veriniceserver-plain.properties
  * 
  * NotificationJob send one email to a user if user is newly assigned to a task.
  * Emails are created by velocity template engine (http://velocity.apache.org)
@@ -72,22 +74,22 @@ import sernet.verinice.model.iso27k.PersonIso;
 public class NotificationJob extends QuartzJobBean implements StatefulJob {
 
     private static final String DEFAULT_ADDRESS = Messages.getString("NotificationJob.0"); //$NON-NLS-1$
-    
-    public static final String TEMPLATE_NUMBER = "n";    //$NON-NLS-1$
-    public static final String TEMPLATE_URL = "url";    //$NON-NLS-1$
+
+    public static final String TEMPLATE_NUMBER = "n"; //$NON-NLS-1$
+    public static final String TEMPLATE_URL = "url"; //$NON-NLS-1$
     public static final String TEMPLATE_EMAIL = "email"; //$NON-NLS-1$
     public static final String TEMPLATE_EMAIL_FROM = "emailFrom"; //$NON-NLS-1$
     public static final String TEMPLATE_REPLY_TO = "replyTo"; //$NON-NLS-1$
     public static final String TEMPLATE_NAME = "name"; //$NON-NLS-1$
     public static final String TEMPLATE_ADDRESS = "address"; //$NON-NLS-1$
-    
+
     private static final String EMAIL_CC_PROPERTY = "${veriniceserver.notification.email.cc}";
     private static final String EMAIL_BCC_PROPERTY = "${veriniceserver.notification.email.bcc}";
-    
+
     // template path without lang code "_en" and file extension ".vm"
     public static final String TEMPLATE_BASE_PATH = "sernet/verinice/bpm/TaskNotification"; //$NON-NLS-1$
     public static final String TEMPLATE_EXTENSION = ".vm"; //$NON-NLS-1$
-    
+
     private final Logger log = Logger.getLogger(NotificationJob.class);
 
     private static VeriniceContext.State state;
@@ -98,36 +100,36 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
 
     private ITaskService taskService;
 
-    private JavaMailSender mailSender;   
-    
+    private JavaMailSender mailSender;
+
     private VelocityEngine velocityEngine;
-    
+
     private boolean enabled = false;
-    
+
     private String emailFrom;
-    
+
     private String replyTo;
-    
+
     private String emailCc;
-    
+
     private String emailBcc;
-    
+
     private String taskListPath;
-    
+
     private String url;
 
-    private Map<String,String> model = new HashMap<String,String>();
-    
+    private Map<String, String> model = new HashMap<>();
+
     // NotificationJob can not do a real login
     // authentication is a fake instance to run secured commands and dao actions
     // without a login
-    private DummyAuthentication authentication = new DummyAuthentication(); 
-    
+    private DummyAuthentication authentication = new DummyAuthentication();
+
     /*
      * Send notification if task notification is enabled.
      * 
-     * Toggle enablement: veriniceserver-plain.properties
-     * property veriniceserver.notification.enabled
+     * Toggle enablement: veriniceserver-plain.properties property
+     * veriniceserver.notification.enabled
      * 
      * @see
      * org.springframework.scheduling.quartz.QuartzJobBean#executeInternal(org
@@ -135,75 +137,79 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
      */
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-        if(isEnabled()) {
+        if (isEnabled()) {
             doExecute(context);
         }
     }
-    
+
     /**
      * Send email to a user if user is newly assigned to a task
      * 
-     * @param context Quarzt context
+     * @param context
+     *            Quarzt context
      */
     private void doExecute(JobExecutionContext context) {
         VeriniceContext.setState(NotificationJob.state);
 
         // NotificationJob can not do a real login
-        // authentication is a fake instance to run secured commands and dao actions
+        // authentication is a fake instance to run secured commands and dao
+        // actions
         // without a login
         boolean dummyAuthAdded = false;
-        SecurityContext ctx = SecurityContextHolder.getContext(); 
-        try {                    
-            if(ctx.getAuthentication()==null) {
+        SecurityContext ctx = SecurityContextHolder.getContext();
+        try {
+            if (ctx.getAuthentication() == null) {
                 ctx.setAuthentication(authentication);
                 dummyAuthAdded = true;
-            }    
-            
-            sendNotification(context);  
-            
+            }
+
+            sendNotification(context);
+
         } finally {
-            if(dummyAuthAdded) {
+            if (dummyAuthAdded) {
                 ctx.setAuthentication(null);
             }
         }
-    
+
     }
 
     private void sendNotification(JobExecutionContext context) {
-        try{
+        try {
             // search for user names
             List<String> nameList = getUserList(context);
             for (String name : nameList) {
                 ITaskParameter param = new TaskParameter(name);
-                if(context.getPreviousFireTime()!=null) {
+                if (context.getPreviousFireTime() != null) {
                     // select all tasks created since last timer execution
                     param.setSince(context.getPreviousFireTime());
                 } else {
-                    // first execution since java vm starts, select all tasks created since 24 hours
+                    // first execution since java vm starts, select all tasks
+                    // created since 24 hours
                     Calendar yesterday = Calendar.getInstance();
                     yesterday.add(Calendar.DATE, -1);
                     param.setSince(yesterday.getTime());
                 }
                 param.setBlacklist(getTaskService().getTaskReminderBlacklist());
                 final List<ITask> taskList = getTaskService().getTaskList(param);
-                if(taskList==null || taskList.isEmpty()) {
+                if (taskList == null || taskList.isEmpty()) {
                     continue;
                 }
                 loadUserData(name);
-                if(getEmail()==null) {
+                if (getEmail() == null) {
                     continue;
-                }                                  
+                }
                 if (log.isDebugEnabled()) {
-                    log.debug("User/Email: " + name + "/" + getEmail() + ", number of tasks: " + taskList.size()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    log.debug("User/Email: " + name + "/" + getEmail() + ", number of tasks: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                            + taskList.size());
                 }
-                model.put(TEMPLATE_NUMBER,String.valueOf(taskList.size()));
-                if(getUrl()!=null && !getUrl().isEmpty()) {
-                    model.put(TEMPLATE_URL,getUrl());
+                model.put(TEMPLATE_NUMBER, String.valueOf(taskList.size()));
+                if (getUrl() != null && !getUrl().isEmpty()) {
+                    model.put(TEMPLATE_URL, getUrl());
                 } else {
-                    model.put(TEMPLATE_URL,VeriniceContext.getServerUrl() + getTaskListPath());
+                    model.put(TEMPLATE_URL, VeriniceContext.getServerUrl() + getTaskListPath());
                 }
-                model.put(TEMPLATE_EMAIL_FROM,getEmailFrom());
-                model.put(TEMPLATE_REPLY_TO,getReplyTo());
+                model.put(TEMPLATE_EMAIL_FROM, getEmailFrom());
+                model.put(TEMPLATE_REPLY_TO, getReplyTo());
                 MimeMessagePreparator preparator = new MimeMessagePreparator() {
 
                     @Override
@@ -211,16 +217,19 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
                         MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                         message.setTo(getEmail());
                         message.setFrom(getEmailFrom());
-                        if(getReplyTo()!=null && !getReplyTo().isEmpty()) {
+                        if (getReplyTo() != null && !getReplyTo().isEmpty()) {
                             message.setReplyTo(getReplyTo());
                         }
-                        message.setSubject(NLS.bind(Messages.getString("NotificationJob.1"), new Object[] {taskList.size()})); //$NON-NLS-1$
-                        String text = VelocityEngineUtils.mergeTemplateIntoString(getVelocityEngine(), getTemplatePath(), VeriniceCharset.CHARSET_UTF_8.name(), model);
+                        message.setSubject(NLS.bind(Messages.getString("NotificationJob.1"), //$NON-NLS-1$
+                                new Object[] { taskList.size() }));
+                        String text = VelocityEngineUtils.mergeTemplateIntoString(
+                                getVelocityEngine(), getTemplatePath(),
+                                VeriniceCharset.CHARSET_UTF_8.name(), model);
                         message.setText(text, false);
-                        if(getEmailCc()!=null) {
+                        if (getEmailCc() != null) {
                             message.setCc(getEmailCc());
                         }
-                        if(getEmailBcc()!=null) {
+                        if (getEmailBcc() != null) {
                             message.setBcc(getEmailBcc());
                         }
                     }
@@ -228,8 +237,8 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
                 };
                 if (log.isDebugEnabled()) {
                     log.debug("Sending email... parameter: ");
-                    for (String key : model.keySet()) {
-                        log.debug( key + ": "+ model.get(key));
+                    for (Entry<String, String> entry : model.entrySet()) {
+                        log.debug(entry.getKey() + ": " + entry.getValue());
                     }
                 }
                 this.mailSender.send(preparator);
@@ -237,25 +246,26 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
                     log.debug("Email was send successfully.");
                 }
             }
-        } catch (Exception t){
+        } catch (Exception t) {
             log.error("Error in sendNotification()", t);
         }
     }
 
     /**
      * Returns the bundle/jar relative path to the velocity email template.
-     * First a localized template is search by the default locale of the java vm.
-     * If localized template is not found default/english template is returned.
+     * First a localized template is search by the default locale of the java
+     * vm. If localized template is not found default/english template is
+     * returned.
      * 
-     * Localized template path: <TEMPLATE_BASE_PATH>_<LANG_CODE>.vm
-     * Default template path: <TEMPLATE_BASE_PATH>.vm
+     * Localized template path: <TEMPLATE_BASE_PATH>_<LANG_CODE>.vm Default
+     * template path: <TEMPLATE_BASE_PATH>.vm
      * 
      * @return bundle/jar relative path to the velocity email template
      */
-    protected String getTemplatePath() {      
+    protected String getTemplatePath() {
         String langCode = Locale.getDefault().getLanguage();
         String path = TEMPLATE_BASE_PATH + "_" + langCode + TEMPLATE_EXTENSION; //$NON-NLS-1$
-        if(this.getClass().getClassLoader().getResource(path)==null) {
+        if (this.getClass().getClassLoader().getResource(path) == null) {
             path = TEMPLATE_BASE_PATH + TEMPLATE_EXTENSION;
         }
         return path;
@@ -263,44 +273,50 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
 
     /**
      * Returns a list with user login names of users who are assigned to a task
-     * since last timer execution or since 24 hours if timer is executed the first time.
+     * since last timer execution or since 24 hours if timer is executed the
+     * first time.
      * 
-     * @param Quartz context
+     * @param Quartz
+     *            context
      * @return a list with user login names
      */
+    @SuppressWarnings("unchecked")
     private List<String> getUserList(JobExecutionContext context) {
-        StringBuilder sb = new StringBuilder("select distinct task.assignee from org.jbpm.pvm.internal.task.TaskImpl task where createTime >= ?"); //$NON-NLS-1$
+        StringBuilder sb = new StringBuilder(
+                "select distinct task.assignee from org.jbpm.pvm.internal.task.TaskImpl task where createTime >= ?"); //$NON-NLS-1$
         Object[] params = null;
-        if(context.getPreviousFireTime()!=null) {
+        if (context.getPreviousFireTime() != null) {
             // select all tasks created since last execution
-            params = new Object[] {context.getPreviousFireTime()};
+            params = new Object[] { context.getPreviousFireTime() };
         } else {
-            // first execution since java vm starts, select all tasks created since 24 hours
+            // first execution since java vm starts, select all tasks created
+            // since 24 hours
             Calendar yesterday = Calendar.getInstance();
             yesterday.add(Calendar.DATE, -1);
-            params = new Object[]{yesterday.getTime()};
+            params = new Object[] { yesterday.getTime() };
         }
         final String hql = sb.toString();
-        List nameList = getJbpmTaskDao().findByQuery(hql, params);
-        return nameList;
+        return getJbpmTaskDao().findByQuery(hql, params);
     }
 
     private void loadUserData(String name) {
         if (name != null) {
             String hql = "select conf.dbId,emailprops.propertyValue from Configuration as conf " + //$NON-NLS-1$
-            "inner join conf.entity as entity " + //$NON-NLS-1$
-            "inner join entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
-            "inner join propertyList.properties as props " + //$NON-NLS-1$
-            "inner join conf.entity as entity2 " + //$NON-NLS-1$
-            "inner join entity2.typedPropertyLists as propertyList2 " + //$NON-NLS-1$
-            "inner join propertyList2.properties as emailprops " + //$NON-NLS-1$
-            "where props.propertyType = ? " + //$NON-NLS-1$
-            "and props.propertyValue like ? " + //$NON-NLS-1$
-            "and emailprops.propertyType = ?";          //$NON-NLS-1$
-            
+                    "inner join conf.entity as entity " + //$NON-NLS-1$
+                    "inner join entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
+                    "inner join propertyList.properties as props " + //$NON-NLS-1$
+                    "inner join conf.entity as entity2 " + //$NON-NLS-1$
+                    "inner join entity2.typedPropertyLists as propertyList2 " + //$NON-NLS-1$
+                    "inner join propertyList2.properties as emailprops " + //$NON-NLS-1$
+                    "where props.propertyType = ? " + //$NON-NLS-1$
+                    "and props.propertyValue like ? " + //$NON-NLS-1$
+                    "and emailprops.propertyType = ?"; //$NON-NLS-1$
+
             String escaped = name.replace("\\", "\\\\");
-            Object[] params = new Object[]{Configuration.PROP_USERNAME,escaped,Configuration.PROP_NOTIFICATION_EMAIL};        
-            List<Object[]> configurationList = getConfigurationDao().findByQuery(hql,params);
+            Object[] params = new Object[] { Configuration.PROP_USERNAME, escaped,
+                    Configuration.PROP_NOTIFICATION_EMAIL };
+            @SuppressWarnings("unchecked")
+            List<Object[]> configurationList = getConfigurationDao().findByQuery(hql, params);
             Integer dbId = null;
             if (configurationList != null && configurationList.size() == 1) {
                 model.put(TEMPLATE_EMAIL, (String) configurationList.get(0)[1]);
@@ -310,47 +326,35 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
         }
     }
 
-    /**
-     * @param dbId
-     * @param result
-     */
     private void loadPerson(Integer dbId) {
-        if(dbId!=null) {
+        if (dbId != null) {
             String hql = "from Configuration as conf " + //$NON-NLS-1$
-            "inner join fetch conf.person as person " + //$NON-NLS-1$
-            "inner join fetch person.entity as entity " + //$NON-NLS-1$
-            "inner join fetch entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
-            "inner join fetch propertyList.properties as props " + //$NON-NLS-1$
-            "where conf.dbId = ? "; //$NON-NLS-1$
-            
-            Object[] params = new Object[]{dbId};        
-            List<Configuration> configurationList = getConfigurationDao().findByQuery(hql,params);
+                    "inner join fetch conf.person as person " + //$NON-NLS-1$
+                    "inner join fetch person.entity as entity " + //$NON-NLS-1$
+                    "inner join fetch entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
+                    "inner join fetch propertyList.properties as props " + //$NON-NLS-1$
+                    "where conf.dbId = ? "; //$NON-NLS-1$
+
+            Object[] params = new Object[] { dbId };
+            @SuppressWarnings("unchecked")
+            List<Configuration> configurationList = getConfigurationDao().findByQuery(hql, params);
             for (Configuration configuration : configurationList) {
                 CnATreeElement element = configuration.getPerson();
-                if(element instanceof PersonIso) {
-                    PersonIso person = (PersonIso) element;
-                    model.put(TEMPLATE_NAME, person.getSurname());
-                    String anrede = person.getAnrede();
-                    if(anrede!=null && !anrede.isEmpty()) {
-                        model.put(TEMPLATE_ADDRESS, person.getAnrede());
-                    } else {
-                        model.put(TEMPLATE_ADDRESS, DEFAULT_ADDRESS);
-                    }
-                // handling for bsi persons
-                } else if (element instanceof Person){
-                    Person person = (Person) element;
-                    String nachname = (person.getEntity() != null ? (person.getEntity().getSimpleValue("nachname") != null ? person.getEntity().getSimpleValue("nachname") : "Kein Name") : "Kein Name");
-                    model.put(TEMPLATE_NAME, nachname);
-                    String anrede = (person.getEntity() != null ? (person.getEntity().getSimpleValue("person_anrede") != null ? person.getEntity().getSimpleValue("person_anrede") : DEFAULT_ADDRESS) : DEFAULT_ADDRESS);
-                    model.put(TEMPLATE_ADDRESS, anrede);
+                if (element instanceof IPerson) {
+                    IPerson person = (IPerson) element;
+                    model.put(TEMPLATE_NAME, person.getLastName());
+                    model.put(TEMPLATE_ADDRESS, Optional.ofNullable(person.getSalutation())
+                            .map(StringUtil::replaceEmptyStringByNull).orElse(DEFAULT_ADDRESS));
+                } else {
+                    log.warn("Failed to handle " + element + ", unsupported type");
                 }
             }
-        }   
-        
+        }
+
     }
-    
+
     public String getEmail() {
-        return (model!=null) ? model.get(TEMPLATE_EMAIL) : null;
+        return (model != null) ? model.get(TEMPLATE_EMAIL) : null;
     }
 
     public void setWorkObjects(VeriniceContext.State workObjects) {
@@ -424,13 +428,13 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
     public void setReplyTo(String replyTo) {
         this.replyTo = replyTo;
     }
-    
+
     public String getEmailCc() {
         return emailCc;
     }
 
     public void setEmailCc(String emailCc) {
-        if(!EMAIL_CC_PROPERTY.equals(emailCc)) {
+        if (!EMAIL_CC_PROPERTY.equals(emailCc)) {
             this.emailCc = emailCc;
         }
     }
@@ -440,7 +444,7 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
     }
 
     public void setEmailBcc(String emailBcc) {
-        if(!EMAIL_BCC_PROPERTY.equals(emailBcc)) {
+        if (!EMAIL_BCC_PROPERTY.equals(emailBcc)) {
             this.emailBcc = emailBcc;
         }
     }

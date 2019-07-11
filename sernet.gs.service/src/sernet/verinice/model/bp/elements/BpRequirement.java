@@ -23,9 +23,9 @@ import static sernet.verinice.model.bp.DeductionImplementationUtil.isDeductiveIm
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
-import sernet.gs.service.StringUtil;
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IReevaluator;
@@ -38,12 +38,9 @@ import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.AbstractLinkChangeListener;
 import sernet.verinice.model.common.CascadingTransaction;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 import sernet.verinice.model.common.TransactionAbortedException;
-import sernet.verinice.service.bp.risk.RiskDeductionUtil;
-import sernet.verinice.service.hibernate.HibernateUtil;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -56,7 +53,6 @@ public class BpRequirement extends CnATreeElement
 
     public static final String TYPE_ID = "bp_requirement"; //$NON-NLS-1$
 
-    public static final String PROP_ABBR = "bp_requirement_abbr"; //$NON-NLS-1$
     public static final String PROP_OBJECTBROWSER = "bp_requirement_objectbrowser_content"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_requirement_name"; //$NON-NLS-1$
     public static final String PROP_ID = "bp_requirement_id"; //$NON-NLS-1$
@@ -79,10 +75,6 @@ public class BpRequirement extends CnATreeElement
     private static final String PROP_IMPLEMENTATION_STATUS_PARTIALLY = "bp_requirement_implementation_status_partially"; //$NON-NLS-1$
     private static final String PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE = "bp_requirement_implementation_status_na"; //$NON-NLS-1$
 
-    public static final String PROP_SAFEGUARD_STRENGTH_FREQUENCY = "bp_requirement_safeguard_strength_frequency";//$NON-NLS-1$
-    public static final String PROP_SAFEGUARD_STRENGTH_IMPACT = "bp_requirement_safeguard_strength_impact";//$NON-NLS-1$
-    public static final String PROP_SAFEGUARD_REDUCE_RISK = "bp_requirement_reduce_risk";//$NON-NLS-1$
-
     public static final String REL_BP_REQUIREMENT_BP_THREAT = "rel_bp_requirement_bp_threat"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_SAFEGUARD = "rel_bp_requirement_bp_safeguard"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_ITNETWORK = "rel_bp_requirement_bp_itnetwork"; //$NON-NLS-1$
@@ -94,36 +86,30 @@ public class BpRequirement extends CnATreeElement
     public static final String REL_BP_REQUIREMENT_BP_NETWORK = "rel_bp_requirement_bp_network"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_ROOM = "rel_bp_requirement_bp_room"; //$NON-NLS-1$
 
-	private final IReevaluator protectionRequirementsProvider = new Reevaluator(this) {
-		private static final long serialVersionUID = -2522374396559298793L;
+    private static final Map<String, String> RELATION_TYPES_BY_TARGET_OBJECT_TYPE = new HashMap<>();
 
-		@Override
-		protected void findBottomNodes(CnATreeElement downwardElement, Set<CnATreeElement> bottomNodes,
-				CascadingTransaction downwardsTA) {
-			if (downwardsTA.hasBeenVisited(downwardElement)) {
-				return;
-			}
+    static {
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(Application.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_APPLICATION);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(BusinessProcess.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_BUSINESSPROCESS);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(Device.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_DEVICE);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(IcsSystem.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_ICSSYSTEM);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(ItNetwork.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_ITNETWORK);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(ItSystem.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_ITSYSTEM);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(Network.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_NETWORK);
+        RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(Room.TYPE_ID,
+                BpRequirement.REL_BP_REQUIREMENT_BP_ROOM);
+    }
 
-			try {
-				downwardsTA.enter(downwardElement);
-			} catch (TransactionAbortedException e) {
-				return;
-			}
-			 if (downwardElement.isProtectionRequirementsProvider()) {
-				 bottomNodes.add(downwardElement);
-			 }
-			downwardElement.getLinksDown().stream().map(CnALink::getDependency)//
-				.map(HibernateUtil::unproxy)//
-				.forEach(l -> {
-						if (bottomNodes.add(l)) {
-							findBottomNodes(l, bottomNodes, downwardsTA);
-						}
-				});
-		}
+    private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
 
-	};
-
-	private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
+    private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
 
         private static final long serialVersionUID = -3220319074711927103L;
 
@@ -133,9 +119,6 @@ public class BpRequirement extends CnATreeElement
                     && !ta.hasBeenVisited(BpRequirement.this)) {
                 DeductionImplementationUtil
                         .setImplementationStatusToRequirement(BpRequirement.this);
-            }
-            if (BpRequirement.this.getEntity().isFlagged(PROP_SAFEGUARD_REDUCE_RISK)) {
-                RiskDeductionUtil.deduceRiskForLinkedThreats(BpRequirement.this);
             }
         }
     };
@@ -175,14 +158,6 @@ public class BpRequirement extends CnATreeElement
     public void setObjectBrowserDescription(String description) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER),
                 description);
-    }
-
-    public String getAbbreviation() {
-        return getEntity().getPropertyValue(PROP_ABBR);
-    }
-
-    public void setAbbreviation(String abbreviation) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
     }
 
     @Override
@@ -306,16 +281,6 @@ public class BpRequirement extends CnATreeElement
         setSimpleProperty(PROP_IMPLEMENTATION_STATUS, rawValue);
     }
 
-    public String getSafeguardStrengthFrequency() {
-        return StringUtil.replaceEmptyStringByNull(
-                getEntity().getRawPropertyValue(PROP_SAFEGUARD_STRENGTH_FREQUENCY));
-    }
-
-    public String getSafeguardStrengthImpact() {
-        return StringUtil.replaceEmptyStringByNull(
-                getEntity().getRawPropertyValue(PROP_SAFEGUARD_STRENGTH_IMPACT));
-    }
-
     public static ImplementationStatus getImplementationStatus(String rawValue) {
         if (rawValue == null || rawValue.isEmpty()) {
             return null;
@@ -369,6 +334,10 @@ public class BpRequirement extends CnATreeElement
             return false;
         }
         return TYPE_ID.equals(element.getTypeId());
+    }
+
+    public static String getLinkTypeToTargetObject(String objectType) {
+        return RELATION_TYPES_BY_TARGET_OBJECT_TYPE.get(objectType);
     }
 
     @Override

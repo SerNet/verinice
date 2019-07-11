@@ -1,0 +1,73 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _CqjpUMI0EeiBGdyBeGVxCg,_HQDeEI9NEeic2YXgdvyDUQ,_mCQwkI9ZEeic2YXgdvyDUQ
+Element-Name: test_5_7
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _hcNf8MVmEei4p80S5TXbug
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 10/25/18 2:00 PM
+Testcase-Type: ecl
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+log "test_5.7"
+create-iso-org "xOrganisation / Scope"
+try -command {
+	get-view ISM | get-tree | select "xOrganisation \\/ Scope/Assets" | get-menu -path "Neues Asset..." | click
+	with [get-editor Asset | get-section "" | get-editbox -after [get-label Titel]] {
+		set-text xAsset
+		key-type "M1+s"
+	}
+	get-view ISM | get-tree | select "xOrganisation \\/ Scope/Szenarios" | get-menu -path "Neues Szenario..." | click
+	with [get-editor Szenario | get-section "" | get-editbox -after [get-label Titel]] {
+		set-text xSzenario
+		key-type "M1+s"
+	}
+	with [get-editor xSzenario | get-section "" | get-section Wahrscheinlichkeit] {
+		get-button | uncheck
+		get-combo -after [get-label "Einstufung der Schwachstelle"] | select "3: Sehr hoch"
+		get-combo -after [get-label "Bedrohungshäufigkeit"] | select "5: Stündlich"
+		key-type "M1+s"
+	}
+	with [get-view ISM | get-tree] {
+		get-item -path "xOrganisation \\/ Scope/Szenarios/xSzenario" | drag-start 49 14
+		get-item -path "xOrganisation \\/ Scope/Szenarios/xSzenario" | drag-enter 47 10 -detail move
+		get-item -path "xOrganisation \\/ Scope/Assets/xAsset" | drag-over 25 7 -detail move
+		get-item -path "xOrganisation \\/ Scope/Szenarios/xSzenario" | drag-exit
+		get-item -path "xOrganisation \\/ Scope/Assets/xAsset" | drag-accept 25 7 -detail move
+		drag-set-data
+		get-item -path "xOrganisation \\/ Scope/Assets/xAsset" | drop 25 7 -detail move
+		drag-end -detail move
+	}
+	get-menu -path "Ansicht/Zeige View.../Verknüpfungen" | click
+	with [get-view "Verknüpfungen" | get-table] {
+		get-item -path beeinflusst -column "Verknüpfung" | get-property "columns[1]" | equals beeinflusst | verify-true
+		get-item -path beeinflusst -column "Verknüpfung" | get-property "columns[3]" | equals xAsset | verify-true
+		select beeinflusst -column "Verknüpfung" | get-menu -path "Verknüpfung entfernen" | click
+	}
+	get-window "Wirklich entfernen?" | get-button Ja | click
+	get-view ISM | get-tree | select "xOrganisation \\/ Scope/Szenarios/xSzenario" | double-click
+	with [get-editor xSzenario] {
+		get-tab-folder | get-tab-item "Verknüpfungen" | click
+		get-combo -after [get-label "Verknüpfungen"] | select Asset
+		get-button "Hinzufügen" | click
+	}
+	get-window "Elemente auswählen:" | get-table | select xAsset -column Element | double-click
+	with [get-view "Verknüpfungen" | get-table] {
+		get-item -path beeinflusst -column "Verknüpfung" | get-property "columns[1]" | equals beeinflusst | verify-true
+		get-item -path beeinflusst -column "Verknüpfung" | get-property "columns[3]" | equals xAsset | verify-true
+	}
+	get-button "ISO/IEC 27005 Risikoanalyse durchführen..." | click
+	get-window "ISO/IEC 27005 Risikoanalyse" | get-button Fertigstellen | click
+	get-window "ISO/IEC 27005 Risikoanalyse" | get-button OK | click
+	get-view ISM | get-tree | select "xOrganisation \\/ Scope/Assets/xAsset" | double-click
+	get-editor xAsset | get-section "" | get-section "Risiko Management" | get-editbox -after [get-label "Risikowert " +
+		"Vertraulichkeit"] | get-property text | equals 8 | verify-true
+} -finally {
+	delete-iso-model "xOrganisation \\/ Scope"
+}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

@@ -105,7 +105,7 @@ public interface IValidationService {
     
     void deleteValidations(Integer scopeId, Integer elmtDbId);
     
-    void deleteValidationsOfSubtree(CnATreeElement elmt);
+    void deleteValidationsOfSubtree(CnATreeElement elmt) throws CommandException;
     
     /**
      * Returns all validations for a specified {@link PropertType} of a given {@link CnATreeElement} 

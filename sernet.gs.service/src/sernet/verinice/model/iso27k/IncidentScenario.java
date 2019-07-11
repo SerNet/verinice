@@ -22,6 +22,8 @@ import java.util.Collection;
 import org.apache.log4j.Logger;
 
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.IAbbreviatedElement;
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -32,7 +34,8 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class IncidentScenario extends CnATreeElement implements IISO27kElement {
+public class IncidentScenario extends CnATreeElement
+        implements IISO27kElement, IAbbreviatedElement, ITaggableElement {
 
     private static final Logger LOG = Logger.getLogger(IncidentScenario.class);
     

@@ -20,6 +20,8 @@ package sernet.verinice.model.iso27k;
 import java.util.Collection;
 
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.IAbbreviatedElement;
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -27,7 +29,8 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class Document extends CnATreeElement implements IISO27kElement {
+public class Document extends CnATreeElement
+        implements IISO27kElement, IAbbreviatedElement, ITaggableElement {
 
 	public static final String TYPE_ID = "document"; //$NON-NLS-1$
 	public static final String PROP_ABBR = "document_abbr"; //$NON-NLS-1$
@@ -69,6 +72,7 @@ public class Document extends CnATreeElement implements IISO27kElement {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 	
+    @Override
 	public String getAbbreviation() {
 		return getEntity().getSimpleValue(PROP_ABBR);
 	}
@@ -77,6 +81,7 @@ public class Document extends CnATreeElement implements IISO27kElement {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
 	}
 	
+    @Override
 	public Collection<String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}

@@ -82,7 +82,6 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.rcp.action.AddGroup;
 import sernet.verinice.iso27k.rcp.action.BSIModelDropPerformer;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
-import sernet.verinice.iso27k.rcp.action.ControlDropPerformer;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.FileDropPerformer;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
@@ -333,7 +332,6 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
     }
 
     private void makeActions() {
-        ControlDropPerformer controlDropAdapter;
         BSIModelViewDropListener bsiDropAdapter;
 
         bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(),
@@ -381,11 +379,9 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
         }
 
         metaDropAdapter = new MetaDropAdapter(viewer);
-        controlDropAdapter = new ControlDropPerformer(viewer);
         bsiDropAdapter = new BSIModelViewDropListener(viewer);
         BSIModelDropPerformer bsi2IsmDropAdapter = new BSIModelDropPerformer(viewer);
         FileDropPerformer fileDropPerformer = new FileDropPerformer(viewer);
-        metaDropAdapter.addAdapter(controlDropAdapter);
         metaDropAdapter.addAdapter(bsiDropAdapter);
 
         metaDropAdapter.addAdapter(bsi2IsmDropAdapter);

@@ -87,10 +87,6 @@ public final class ConfigurationLogger {
         PreferenceConstants.GS_DB_USER,
         PreferenceConstants.VNSERVER_PASS,
         PreferenceConstants.VNSERVER_USER,
-        PreferenceConstants.CRYPTO_TRUSTSTORE_FILE,
-        PreferenceConstants.CRYPTO_KEYSTORE_FILE,
-        PreferenceConstants.CRYPTO_TRUSTSTORE_PASSWORD,
-        PreferenceConstants.CRYPTO_KEYSTORE_PASSWORD,
         ConfigurationLogger.SUN_JAVA_COMMAND};
     
     public static List<String> preferenceBlacklist = Arrays.asList(PREFERENCE_BLACKLIST);

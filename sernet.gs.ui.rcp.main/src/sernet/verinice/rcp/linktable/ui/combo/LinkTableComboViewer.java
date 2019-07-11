@@ -20,7 +20,6 @@
 package sernet.verinice.rcp.linktable.ui.combo;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -45,9 +44,7 @@ import org.eclipse.swt.widgets.Control;
 import sernet.verinice.rcp.linktable.ui.LinkTableColumn;
 
 /**
- * 
- * Base class for the different Combo-tpes of a vlt column.
- * 
+ * Base class for the different combo types of a report query column.
  * 
  * @see LinkTableColumn
  * @see LinkTableOperationTypeComboViewer
@@ -67,17 +64,22 @@ public abstract class LinkTableComboViewer extends ComboViewer
     protected String relatedID;
     protected LinkTableOperationType operationType;
 
+    protected boolean interactive = true;
+
     public LinkTableComboViewer(LinkTableComboViewer leftCombo, String relatedID,
             LinkTableOperationType operationType, LinkTableColumn ltrParent, Composite parent) {
-
         super(new Combo(parent, SWT.NONE | SWT.READ_ONLY));
+        getCombo().addListener(SWT.MouseVerticalWheel, event -> event.doit = false);
+
         this.parentComposite = parent;
         this.ltrColumn = ltrParent;
         this.setContentProvider(this);
         this.relatedID = relatedID;
         this.operationType = operationType;
         this.leftCombo = leftCombo;
-
+        if (leftCombo != null) {
+            this.interactive = leftCombo.interactive;
+        }
         this.addSelectionChangedListener(this);
 
         this.setLabelProvider(new LabelProvider() {
@@ -86,12 +88,9 @@ public abstract class LinkTableComboViewer extends ComboViewer
             public String getText(Object element) {
                 return getLabelText(element).replaceAll("\n", "");
             }
-
         });
-
         this.setInput(new Object());
         refreshCombo();
-
     }
 
     protected abstract String getLabelText(Object element);
@@ -113,7 +112,6 @@ public abstract class LinkTableComboViewer extends ComboViewer
         if (leftCombo != null) {
             parentComposite.dispose();
         }
-
     }
 
     /*
@@ -123,11 +121,10 @@ public abstract class LinkTableComboViewer extends ComboViewer
      */
     @Override
     public void selectionChanged(SelectionChangedEvent event) {
-
         doSelectionChanged();
         if (rightCombo != null) {
             rightCombo.selectionChanged(event);
-        } else {
+        } else if (interactive) {
             Control newComposite = createRightCombo();
             refreshViewer();
             ltrColumn.getLtrParent().showComposite(newComposite);
@@ -135,7 +132,6 @@ public abstract class LinkTableComboViewer extends ComboViewer
     }
 
     private Control createRightCombo() {
-
         Composite newParent = new Composite(parentComposite, SWT.NONE);
         newParent.setLayout(new FormLayout());
         newParent.setLayoutData(getDefaultFormData(getCombo()));
@@ -151,7 +147,6 @@ public abstract class LinkTableComboViewer extends ComboViewer
 
     public LinkTableComboViewer copy(LinkTableComboViewer leftCombo, Composite newParent,
             Control formerElement) {
-
         Composite newParentComposite = new Composite(newParent, SWT.NONE);
         newParentComposite.setLayout(new FormLayout());
         newParentComposite.setLayoutData(getDefaultFormData(formerElement));
@@ -207,7 +202,6 @@ public abstract class LinkTableComboViewer extends ComboViewer
      */
     @Override
     public String toString() {
-
         StringBuilder toString = new StringBuilder(
                 "Comboviewer " + this.getClass().getSimpleName());
         if (leftCombo != null) {
@@ -220,14 +214,14 @@ public abstract class LinkTableComboViewer extends ComboViewer
                 toString.append("true");
             }
         } else {
-            toString.append(", leftCombo is null!!");
+            toString.append(", leftCombo is null");
         }
 
         return toString.toString();
     }
 
     protected String[] sortElementsByLabel(String[] typeIDs) {
-        String [] result = new String[typeIDs.length];
+        String[] result = new String[typeIDs.length];
         System.arraycopy(typeIDs, 0, result, 0, typeIDs.length);
 
         final Map<String, String> translations = new HashMap<>(typeIDs.length);
@@ -235,13 +229,7 @@ public abstract class LinkTableComboViewer extends ComboViewer
             translations.put(typeID, ltrColumn.getContentService().getLabel(typeID));
         }
 
-        Arrays.sort(result, new Comparator<String>() {
-
-            @Override
-            public int compare(String o1, String o2) {
-                return translations.get(o1).compareTo(translations.get(o2));
-            }
-        });
+        Arrays.sort(result, (o1, o2) -> translations.get(o1).compareTo(translations.get(o2)));
 
         return result;
     }
@@ -254,12 +242,10 @@ public abstract class LinkTableComboViewer extends ComboViewer
     }
 
     protected void refreshCombo() {
-
         this.getCombo().pack(true);
     }
 
     public String getColumnPath() {
-
         String message = getCurrentSelection();
         if (rightCombo != null) {
             message += rightCombo.getColumnPath();
@@ -268,27 +254,23 @@ public abstract class LinkTableComboViewer extends ComboViewer
     }
 
     public void setColumnPath(List<String> path) {
-
         if (!path.isEmpty()) {
             select(path.get(0));
             if (path.size() > 1) {
-                selectionChanged(null);
+                createRightCombo();
                 rightCombo.setColumnPath(path.subList(1, path.size()));
             }
         }
-
     }
 
     public void setColumnPath(String firstElement, List<String> path) {
-
         if (!path.isEmpty()) {
             select(firstElement);
             if (path.size() > 1) {
-                selectionChanged(null);
+                createRightCombo();
                 rightCombo.setColumnPath(path.subList(1, path.size()));
             }
         }
-
     }
 
     protected abstract void select(String string);
@@ -307,4 +289,10 @@ public abstract class LinkTableComboViewer extends ComboViewer
 
     protected abstract Set<String> doGetAllRelationTypes();
 
+    public void setInteractive(boolean interactive) {
+        this.interactive = interactive;
+        if (rightCombo != null) {
+            rightCombo.setInteractive(interactive);
+        }
+    }
 }

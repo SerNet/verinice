@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="sernet.birt.feature"
-      label="Feature"
-      version="1.0.0">
+      label="Birt Feature"
+      version="1.0.0.qualifier">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -433,6 +433,21 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
+         unpack="false"/>
+    <!-- contains the radar series -->
+   <plugin
+         id="org.eclipse.birt.chart.examples.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.w3c.dom.svg.extension"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
          unpack="false"/>
 
 </feature>

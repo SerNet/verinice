@@ -43,9 +43,6 @@ import sernet.verinice.model.iso27k.ImportIsoGroup;
  */
 public abstract class UuidLoader extends ContextConfiguration {
     
-    @Resource(name="cnaTreeElementDao")
-    protected IBaseDao<CnATreeElement, Integer> elementDao;
-    
     protected List<String> getAllUuids() {
         String hql = "select element.uuid from CnATreeElement element"; 
         return elementDao.findByQuery(hql, new Object[0]);

@@ -28,10 +28,16 @@ public class Messages extends NLS {
     public static String riskConfigurationUpdateResultDialogNotAgain;
     public static String riskConfigurationUpdateResultDialogRiskConfiguration;
     public static String riskConfigurationMatrixUsage;
-	public static String riskConfigurationMatrixFrequencyAxis;
-	public static String riskConfigurationMatrixImpactAxis;
+    public static String riskConfigurationMatrixFrequencyAxis;
+    public static String riskConfigurationMatrixImpactAxis;
 
     public static String RiskValuesConfigurator_chooseColor;
+
+    public static String errorUniqueFrequencyLabels;
+    public static String errorUniqueImpactLabels;
+    public static String errorUniqueRiskCategoryLabels;
+
+    public static String warningRiskPropertyExceedance;
 
     static {
         // initialize resource bundle

@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
@@ -38,6 +39,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElementLabelGenerator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnALink;
@@ -66,17 +68,14 @@ public class RelationTableViewer extends TableViewer {
     private final TableViewerColumn col3;
     private final TableViewerColumn viewerCol5;
     private final TableViewerColumn col5;
-    
+
     private TableViewerColumn colRiskTreatment;
     private TableViewerColumn colCWithControls;
     private TableViewerColumn colIWithControls;
     private TableViewerColumn colAWithControls;
 
-    /**
-     * @param parent
-     * @param i
-     */
-    public RelationTableViewer(IRelationTable relationView, Composite parent, int style, boolean showRisk) {
+    public RelationTableViewer(IRelationTable relationView, Composite parent, int style,
+            boolean showRisk) {
         super(parent, style);
 
         final int defaultColumnWidth = 30;
@@ -131,7 +130,7 @@ public class RelationTableViewer extends TableViewer {
             colRiskTreatment.getColumn().setText(Messages.RelationTableViewer_0);
             colRiskTreatment.getColumn().setWidth(colWithRiskTreatment);
             colRiskTreatment.setEditingSupport(new RiskTreatmentEditingSupport(view, this));
-                      
+
             col6 = new TableViewerColumn(this, SWT.LEFT);
             col6.getColumn().setText("C"); //$NON-NLS-1$
             col6.getColumn().setWidth(defaultColumnWidth);
@@ -143,40 +142,33 @@ public class RelationTableViewer extends TableViewer {
             col8 = new TableViewerColumn(this, SWT.LEFT);
             col8.getColumn().setText("A"); //$NON-NLS-1$
             col8.getColumn().setWidth(defaultColumnWidth);
-            
+
             colCWithControls = new TableViewerColumn(this, SWT.LEFT);
             colCWithControls.getColumn().setText(Messages.RelationTableViewer_2);
             colCWithControls.getColumn().setWidth(defaultColumnWidth);
 
             colIWithControls = new TableViewerColumn(this, SWT.LEFT);
-            colIWithControls.getColumn().setText(Messages.RelationTableViewer_8); 
+            colIWithControls.getColumn().setText(Messages.RelationTableViewer_8);
             colIWithControls.getColumn().setWidth(defaultColumnWidth);
 
             colAWithControls = new TableViewerColumn(this, SWT.LEFT);
-            colAWithControls.getColumn().setText(Messages.RelationTableViewer_9); 
+            colAWithControls.getColumn().setText(Messages.RelationTableViewer_9);
             colAWithControls.getColumn().setWidth(defaultColumnWidth);
         }
 
-        setColumnProperties(new String[] { IRelationTable.COLUMN_IMG, 
-                IRelationTable.COLUMN_TYPE, 
-                IRelationTable.COLUMN_TYPE_IMG, 
-                IRelationTable.COLUMN_SCOPE_ID, 
-                IRelationTable.COLUMN_TITLE, 
-                IRelationTable.COLUMN_COMMENT, 
-                IRelationTable.COLUMN_RISK_TREATMENT,
-                IRelationTable.COLUMN_RISK_C, 
-                IRelationTable.COLUMN_RISK_I, 
-                IRelationTable.COLUMN_RISK_A,
-                IRelationTable.COLUMN_RISK_C_CONTROLS, 
-                IRelationTable.COLUMN_RISK_I_CONTROLS, 
-                IRelationTable.COLUMN_RISK_A_CONTROLS 
-        });
+        setColumnProperties(new String[] { IRelationTable.COLUMN_IMG, IRelationTable.COLUMN_TYPE,
+                IRelationTable.COLUMN_TYPE_IMG, IRelationTable.COLUMN_SCOPE_ID,
+                IRelationTable.COLUMN_TITLE, IRelationTable.COLUMN_COMMENT,
+                IRelationTable.COLUMN_RISK_TREATMENT, IRelationTable.COLUMN_RISK_C,
+                IRelationTable.COLUMN_RISK_I, IRelationTable.COLUMN_RISK_A,
+                IRelationTable.COLUMN_RISK_C_CONTROLS, IRelationTable.COLUMN_RISK_I_CONTROLS,
+                IRelationTable.COLUMN_RISK_A_CONTROLS });
 
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
 
     }
-    
+
     /**
      * Provides an object path of the linked object in the title column in the
      * relation view.
@@ -193,33 +185,33 @@ public class RelationTableViewer extends TableViewer {
             TOOLTIPS.put(11, Messages.RelationTableViewer_I_with_controls);
             TOOLTIPS.put(12, Messages.RelationTableViewer_A_with_Controls);
         }
-        
+
         RelationViewLabelProvider relationViewLabelProvider;
-        
-        
+
         /** current column index */
         private int column;
-        
-        public InfoCellLabelProvider(RelationViewLabelProvider relationViewLabelProvider, int column) {
+
+        public InfoCellLabelProvider(RelationViewLabelProvider relationViewLabelProvider,
+                int column) {
             this.relationViewLabelProvider = relationViewLabelProvider;
             this.column = column;
-           
+
         }
-        
+
         @Override
         public void update(ViewerCell cell) {
-            cell.setText(relationViewLabelProvider.getColumnText(cell.getElement(), column));      
+            cell.setText(relationViewLabelProvider.getColumnText(cell.getElement(), column));
         }
-        
+
         @Override
         public String getToolTipText(final Object element) {
             String tooltip = TOOLTIPS.get(column);
             if (tooltip == null) {
                 tooltip = ""; //$NON-NLS-1$
-            }     
+            }
             return tooltip;
         }
-        
+
     }
 
     /**
@@ -227,12 +219,6 @@ public class RelationTableViewer extends TableViewer {
      * relation view.
      */
     public static class PathCellLabelProvider extends CellLabelProvider {
-
-        /**
-         * Caches the object pathes. Key is the title of the target
-         * CnaTreeElement which is listed in the title column.
-         */
-        private Map<String, String> cache;
 
         /** the current width of the verinice window */
         private int shellWidth;
@@ -246,24 +232,25 @@ public class RelationTableViewer extends TableViewer {
         /** current column index */
         private int column;
 
-        private GC gc;
-
-        private FontMetrics fmt;
-
         private int charWidth;
 
         RelationViewLabelProvider relationViewLabelProvider;
 
-        public PathCellLabelProvider(RelationViewLabelProvider relationViewLabelProvider, Composite parent, int column) {
+        public PathCellLabelProvider(RelationViewLabelProvider relationViewLabelProvider,
+                Composite parent, int column) {
             this.relationViewLabelProvider = relationViewLabelProvider;
             this.parent = parent;
             this.column = column;
-            cache = new HashMap<>();
 
             // calc text width
-            this.gc = new GC(parent);
-            this.fmt = gc.getFontMetrics();
-            this.charWidth = fmt.getAverageCharWidth();
+            GC gc = new GC(parent);
+            try {
+                FontMetrics fmt = gc.getFontMetrics();
+                this.charWidth = fmt.getAverageCharWidth();
+            } finally {
+                gc.dispose();
+            }
+
         }
 
         @Override
@@ -281,7 +268,8 @@ public class RelationTableViewer extends TableViewer {
             LOG.debug("mouse location: " + mouseX); //$NON-NLS-1$
 
             CnATreeElement cnATreeElement;
-            boolean isDownwardLink = CnALink.isDownwardLink(relationViewLabelProvider.getInputElemt(), link);
+            boolean isDownwardLink = CnALink
+                    .isDownwardLink(relationViewLabelProvider.getInputElemt(), link);
             if (isDownwardLink) {
                 cnATreeElement = link.getDependency();
 
@@ -289,30 +277,25 @@ public class RelationTableViewer extends TableViewer {
                 cnATreeElement = link.getDependant();
             }
 
-            if (cache.containsKey(link.getId())) {
-                return cropToolTip(cache.get(link.getId().toString() + isDownwardLink), mouseX);
-            }
-
             try {
 
                 RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
-                relationViewLabelProvider.replaceLinkEntities(link);
+                RelationViewLabelProvider.replaceLinkEntities(link);
 
-                LoadAncestors command = new LoadAncestors(cnATreeElement.getTypeId(), cnATreeElement.getUuid(), ri);
+                LoadAncestors command = new LoadAncestors(cnATreeElement.getTypeId(),
+                        cnATreeElement.getUuid(), ri);
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
                 CnATreeElement current = command.getElement();
 
                 // build object path
                 StringBuilder sb = new StringBuilder();
-                sb.insert(0, current.getTitle());
+                sb.insert(0, CnATreeElementLabelGenerator.getElementTitle(current));
 
                 while (current.getParent() != null) {
                     current = current.getParent();
                     sb.insert(0, "/"); //$NON-NLS-1$
-                    sb.insert(0, current.getTitle());
+                    sb.insert(0, CnATreeElementLabelGenerator.getElementTitle(current));
                 }
-
-
 
                 // crop the root element, which is always ISO .. or BSI ...
                 String[] p = sb.toString().split("/"); //$NON-NLS-1$
@@ -320,17 +303,17 @@ public class RelationTableViewer extends TableViewer {
                 for (int i = 1; i < p.length; i++) {
                     sb.append("/").append(p[i]); //$NON-NLS-1$
                 }
-                
+
                 // delete root slash
                 sb.deleteCharAt(0);
 
-                cache.put(link.getId().toString() + isDownwardLink, sb.toString());
+                return cropToolTip(sb.toString(), mouseX);
 
             } catch (CommandException e) {
                 LOG.debug("loading ancestors failed", e); //$NON-NLS-1$
+                return StringUtils.EMPTY;
             }
 
-            return cropToolTip(cache.get(link.getId().toString() + isDownwardLink), mouseX);
         }
 
         /**
@@ -410,40 +393,49 @@ public class RelationTableViewer extends TableViewer {
      *            The {@link Composite} which contains the table.
      * @return A List of all initiated cell label provider.
      */
-    public List<PathCellLabelProvider> initToolTips(RelationViewLabelProvider relationViewLabelProvider, Composite parent) {
+    public List<PathCellLabelProvider> initToolTips(
+            RelationViewLabelProvider relationViewLabelProvider, Composite parent) {
 
         List<PathCellLabelProvider> relTblCellLabelProv = new ArrayList<>();
 
-        PathCellLabelProvider relTableCellProviderCol1 = new PathCellLabelProvider(relationViewLabelProvider, parent, 0);
+        PathCellLabelProvider relTableCellProviderCol1 = new PathCellLabelProvider(
+                relationViewLabelProvider, parent, 0);
         relTblCellLabelProv.add(relTableCellProviderCol1);
         col1.setLabelProvider(relTableCellProviderCol1);
 
-        PathCellLabelProvider relTableCellProviderCol3 = new PathCellLabelProvider(relationViewLabelProvider, parent, 2);
+        PathCellLabelProvider relTableCellProviderCol3 = new PathCellLabelProvider(
+                relationViewLabelProvider, parent, 2);
         relTblCellLabelProv.add(relTableCellProviderCol3);
         col3.setLabelProvider(relTableCellProviderCol3);
 
-        PathCellLabelProvider relTableCellProviderCol4 = new PathCellLabelProvider(relationViewLabelProvider, parent, 3);
+        PathCellLabelProvider relTableCellProviderCol4 = new PathCellLabelProvider(
+                relationViewLabelProvider, parent, 3);
         relTblCellLabelProv.add(relTableCellProviderCol4);
         col4.setLabelProvider(relTableCellProviderCol4);
-        
+
         if (this.getTable().getColumnCount() > 7) {
             col6.setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 7));
             col7.setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 8));
             col8.setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 9));
-            colCWithControls.setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 10));
-            colIWithControls.setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 11));
-            colAWithControls.setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 12));
+            colCWithControls
+                    .setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 10));
+            colIWithControls
+                    .setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 11));
+            colAWithControls
+                    .setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 12));
         }
         return relTblCellLabelProv;
     }
-    
+
     public static boolean isAssetAndSzenario(CnALink link) {
         try {
             CnATreeElement dependant = link.getDependant();
             CnATreeElement dependency = link.getDependency();
-            return (Asset.TYPE_ID.equals(dependant.getTypeId()) && IncidentScenario.TYPE_ID.equals(dependency.getTypeId()))
-                   || (Asset.TYPE_ID.equals(dependency.getTypeId()) && IncidentScenario.TYPE_ID.equals(dependant.getTypeId()));
-        } catch(Exception e) {
+            return (Asset.TYPE_ID.equals(dependant.getTypeId())
+                    && IncidentScenario.TYPE_ID.equals(dependency.getTypeId()))
+                    || (Asset.TYPE_ID.equals(dependency.getTypeId())
+                            && IncidentScenario.TYPE_ID.equals(dependant.getTypeId()));
+        } catch (Exception e) {
             LOG.error("Error while checking link.", e); //$NON-NLS-1$
             return false;
         }

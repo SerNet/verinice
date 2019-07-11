@@ -19,8 +19,9 @@ package sernet.verinice.model.bp.risk;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
-public class Risk implements Serializable {
+public class Risk implements Serializable, RiskPropertyValue {
 
     private static final long serialVersionUID = -6696978614506867808L;
 
@@ -41,10 +42,12 @@ public class Risk implements Serializable {
         this.color = color;
     }
 
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public String getLabel() {
         return label;
     }
@@ -141,4 +144,34 @@ public class Risk implements Serializable {
     public static String getPropertyKeyForIndex(int index) {
         return String.format("%s%02d", ID_PREFIX, index);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (this.getClass() != obj.getClass())
+            return false;
+        Risk other = (Risk) obj;
+        return Objects.equals(this.id, other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    public Risk withLabel(String newLabel) {
+        return new Risk(id, newLabel, description, color);
+    }
+
+    public Risk withDescription(String newDescription) {
+        return new Risk(id, label, newDescription, color);
+    }
+
+    public Risk withColor(Color newColor) {
+        return new Risk(id, label, description, newColor);
+    }
+
 }

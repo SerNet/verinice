@@ -21,8 +21,8 @@ import java.util.Set;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.bp.ModelLinksCommand;
 
 /**
  * This class migrates the data of a safeguard. See ModelingMigrationServiceImpl
@@ -59,6 +59,6 @@ public class MigrateThreatJob extends MigrateCompendiumElementJob {
     }
 
     protected String getLinkTypeId() {
-        return ModelLinksCommand.ELEMENT_TO_THREAT_LINK_TYPE_IDS.get(element.getTypeId());
+        return BpThreat.getLinkTypeToTargetObject(element.getTypeId());
     }
 }

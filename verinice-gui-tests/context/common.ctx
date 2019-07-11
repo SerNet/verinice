@@ -1,0 +1,109 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Context-Type: org.eclipse.rcptt.ctx.ecl
+Element-Name: common
+Element-Type: context
+Element-Version: 2.0
+Id: _lGnj8Ix1Eei2UKUDmonytQ
+Runtime-Version: 2.4.1.201903190000
+Save-Time: 4/16/19 3:45 PM
+
+------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
+Content-Type: text/ecl
+Entry-Name: .ecl.context
+
+global [val basedir [get-java-property basepath]] [val datadir [get-java-property "test-data"]] [val imagedir
+	[get-java-property images]]
+
+/* Take a screenshot of the window. */
+proc "screen-shot-window" [val name] {
+	get-eclipse-window | get-object | save-screenshot -out [concat $imagedir [get-java-property "file.separator"] $name]
+}
+
+/* Take a screenshot of the window. */
+proc "screen-shot" [val windowname] [val name] {
+	get-window $windowname | get-object | save-screenshot -out [concat $imagedir [get-java-property "file.separator"] $name]
+}
+
+proc "screen-shot-view" [val view] [val name] {
+	get-view $view | get-tree | get-object | invoke getParent | invoke getParent | invoke getParent | save-screenshot
+		-out [concat $imagedir "/" $name]
+}
+
+proc "screen-shot-editor" [val editor] [val tabname] [val name] {
+	with [get-editor $editor] {
+		get-tab-folder | get-tab-item $tabname | click
+		get-tab-folder | get-object | invoke getParent | save-screenshot -out [concat $imagedir [get-java-property
+			"file.separator"] $name]
+	}
+}
+
+/* Selects an element of a view and attaches a file to it. */
+proc "attach-file" [val view] [val elementpath] [val filename] {
+	get-view $view | get-tree | select $elementpath
+	set-dialog-result File [concat $datadir [get-java-property "file.separator"] $filename]
+	get-view $view | get-tree | get-menu -path "Datei anhängen ..." | click
+	get-button "Speichern (M1+S)" | click
+	get-view Dateien | click
+}
+
+proc "delete-attachment" [val filename] {
+	with [get-view Dateien] {
+		get-table | select $filename -column Name
+		get-button "Datei löschen..." | click
+	}
+	get-window "Wirklich löschen?" | get-button OK | click
+}
+
+proc "link-element-type-view" [val sourcename] [val targetname] [val linktype] [val path] [val view] {
+	log -message [concat $path $sourcename]
+	get-view $view | get-tree | select [concat $path $sourcename] | double-click
+	get-editor $sourcename | click
+	with [get-editor $sourcename] {
+		get-combo -after [get-label "Verknüpfungen"] | select $linktype
+		get-button "Hinzufügen" | click
+	}
+	with [get-window "Elemente auswählen:"] {
+		get-table | select $targetname -column Element
+		get-button OK | click
+	}
+}
+
+proc "get-last" [val path] [val separator "/"] {
+	split -str $path -sep $separator -trimResults -omitEmptyStrings | to-list | get [minus [split -str $path -sep $separator
+               -trimResults -omitEmptyStrings | length] 1]
+}
+
+proc "get-first" [val path] [val separator "/"] {
+	split -str $path -sep $separator -trimResults -omitEmptyStrings | to-list | get 0
+}
+
+/* Import a .vna in any view */
+proc "import-vna" [val view] [val filename] {
+	get-view $view | get-button "Importiere Informationsverbund aus Datei..." | click
+	log [concat "import vna: " $vna]
+	set-dialog-result File $vna
+	with [get-window Import] {
+		get-group Datei | get-button "Datei auswählen..." | click
+		get-button OK | click
+	}
+}
+proc "wait-for-import" [val view] [val elementpath] {
+	try -times 12 -delay 10000 -command {
+		get-view $view | get-tree | select $elementpath
+	}
+}
+proc "import-compendium" {
+	try {
+		get-view Kataloge | get-tree | get-item -path "IT-Grundschutz-Kompendium 4.0"
+	} -catch {
+		get-view Kataloge | get-button "Importiere Katalog aus Datei..." | click
+		set-dialog-result File [concat $datadir [get-java-property "file.separator"] "IT-Grundschutz-Kompendium_4.0.vna"]
+		with [get-window Import] {
+			get-group Datei | get-button "Datei auswählen..." | click
+			get-button OK | click
+		}
+		wait-for-import Kataloge "IT-Grundschutz-Kompendium 4.0"
+	}
+}
+------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998--

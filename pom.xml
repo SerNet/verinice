@@ -33,6 +33,7 @@
 		<module>sernet.verinice.lang.feature</module>
 		<module>sernet.verinice.extraresources.feature</module>
 		<module>sernet.verinice.report.designer.feature</module>
+		<module>sernet.verinice.app.feature</module>
 
 		<!-- Bundles -->
 		<module>bouncycastle</module>
@@ -86,11 +87,6 @@
 						</artifact>
 					</target>
 					<environments>
-						<environment>
-							<os>linux</os>
-							<ws>gtk</ws>
-							<arch>x86</arch>
-						</environment>
 						<environment>
 							<os>linux</os>
 							<ws>gtk</ws>

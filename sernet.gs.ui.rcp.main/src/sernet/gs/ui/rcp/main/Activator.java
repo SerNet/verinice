@@ -64,7 +64,6 @@ import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
 import sernet.gs.ui.rcp.main.logging.LoggerInitializer;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.gs.ui.rcp.main.security.VeriniceSecurityProvider;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.ResolverFactoryRegistry;
@@ -223,8 +222,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
         Preferences prefs = getPluginPreferences();
 
-        checkPKCS11Support(prefs);
-
         // set service factory location to local / remote according to
         // preferences:
         standalone = sernet.verinice.rcp.Preferences.isStandalone();
@@ -368,52 +365,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
         JobScheduler.scheduleInitJob(job);
     }
     
-    private void checkPKCS11Support(Preferences prefs) {
-        // May replace the JDK's built-in security settings
-        try {
-            if (!isWin64() || isAtLeastJava8()) {
-                VeriniceSecurityProvider.register(prefs); // this fails on a
-                                                          // win7/64 system
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("verinice security provider registered.");
-                }
-            } else {
-                LOG.debug("Currently no PKCS#11 implementation for windows 64 bit available"); //$NON-NLS-1$
-            }
-
-        } catch (Exception e) {
-            LOG.error("Error while registering verinice security provider.", e); //$NON-NLS-1$
-        }
-    }
-
-    private boolean isAtLeastJava8() {
-        String javaVersion = System.getProperty(IVeriniceConstants.JAVA_VERSION);
-        boolean result = false;
-        // version String should look like "1.4.2_10"
-        if (javaVersion.indexOf("1.8.") != -1) { //$NON-NLS-1$ 
-            result = true;
-        }
-        if (javaVersion.indexOf("1.9.") != -1) { //$NON-NLS-1$ 
-            result = true;
-        }
-        if (javaVersion.indexOf("2.0.") != -1) { //$NON-NLS-1$ 
-            result = true;
-        }
-        if (javaVersion.indexOf("8.0.") != -1) { //$NON-NLS-1$ 
-            result = true;
-        }
-        if (javaVersion.indexOf("1.10.") != -1) { //$NON-NLS-1$ 
-            result = true;
-        }
-        return result;
-    }
-
-    private boolean isWin64() {
-        String osName = System.getProperty(IVeriniceConstants.OS_NAME); //$NON-NLS-1$
-        String osArch = System.getProperty(IVeriniceConstants.OS_ARCH); //$NON-NLS-1$
-        return osName.toLowerCase().contains("win") && osArch.contains("64"); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
     private void setGSDSCatalog(Preferences prefs) {
         if (prefs.getString(PreferenceConstants.GSACCESS).equals(PreferenceConstants.GSACCESS_DIR)) {
             try {

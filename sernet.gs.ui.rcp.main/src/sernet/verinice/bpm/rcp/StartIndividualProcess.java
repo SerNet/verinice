@@ -50,12 +50,11 @@ import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.bpm.IIndividualService;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
 import sernet.verinice.interfaces.bpm.IndividualServiceParameter;
-import sernet.verinice.model.bp.elements.BpPerson;
 import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.ImportBsiGroup;
-import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Domain;
+import sernet.verinice.model.common.DomainSpecificElementUtil;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
@@ -231,19 +230,7 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
                 selectedTitles.add(element.getTitle());
                 String typeId = element.getTypeId();
                 Domain domain = CnATypeMapper.getDomainFromTypeId(typeId);
-                switch (domain) {
-                case BASE_PROTECTION:
-                    personTypeId = BpPerson.TYPE_ID;
-                    break;
-                case BASE_PROTECTION_OLD:
-                    personTypeId = Person.TYPE_ID;
-                    break;
-                case ISM:
-                    personTypeId = PersonIso.TYPE_ID;
-                    break;
-                default:
-                    throw new IllegalStateException("Unhandled domain type " + domain);
-                }
+                personTypeId = DomainSpecificElementUtil.getPersonTypeIdFromDomain(domain);
                 selectedTypeIds.add(typeId);
             }
         }

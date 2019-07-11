@@ -10,6 +10,7 @@ call:jar_cmd sernet.verinice.samt.service
 call:jar_cmd sernet.verinice.oda.driver
 call:jar_cmd sernet.verinice.report.service
 call:jar_cmd sernet.verinice.fei.service
+call:jar_cmd sernet.gs.ui.rcp.main
 goto:eof
 
 :jar_cmd    - here starts my function identified by it's label

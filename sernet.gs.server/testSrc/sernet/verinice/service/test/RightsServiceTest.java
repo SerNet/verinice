@@ -22,14 +22,18 @@ package sernet.verinice.service.test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.IRightsServerHandler;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.auth.Action;
@@ -38,6 +42,9 @@ import sernet.verinice.model.auth.OriginType;
 import sernet.verinice.model.auth.Profile;
 import sernet.verinice.model.auth.ProfileRef;
 import sernet.verinice.model.auth.Userprofile;
+import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.service.XmlRightsService;
 
 /**
@@ -45,73 +52,88 @@ import sernet.verinice.service.XmlRightsService;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class RightsServiceTest extends ContextConfiguration {
-    
-    public static final String[] adminActionIds = {
-        ActionRightIDs.ACCOUNTSETTINGS,
-        ActionRightIDs.ACCESSCONTROL,
-        ActionRightIDs.EDITPROFILE,
-        ActionRightIDs.TASKDELETE,
-        ActionRightIDs.TASKSHOWALL,
-        ActionRightIDs.SEARCHREINDEX,
-        ActionRightIDs.SHOWALLFILES,
-        ActionRightIDs.TASKCHANGEASSIGNEE,
-        ActionRightIDs.TASKCHANGEDUEDATE,
-        ActionRightIDs.TASKWITHRELEASEPROCESS,
-        ActionRightIDs.MARKTEMPLATE,
-        ActionRightIDs.TEMPLATES
-    };
-    
-    public static final String[] newProfileActionIds = {
-        ActionRightIDs.IMPORTCSV,
-        ActionRightIDs.IMPORTLDAP,
-        ActionRightIDs.ISMCATALOG,
-        ActionRightIDs.XMLIMPORT
-    };
-    
+public class RightsServiceTest extends UuidLoader {
+
+    public static final String[] adminActionIds = { ActionRightIDs.ACCOUNTSETTINGS,
+            ActionRightIDs.ACCESSCONTROL, ActionRightIDs.EDITPROFILE, ActionRightIDs.TASKDELETE,
+            ActionRightIDs.TASKSHOWALL, ActionRightIDs.SEARCHREINDEX, ActionRightIDs.SHOWALLFILES,
+            ActionRightIDs.TASKCHANGEASSIGNEE, ActionRightIDs.TASKCHANGEDUEDATE,
+            ActionRightIDs.TASKWITHRELEASEPROCESS, ActionRightIDs.MARKTEMPLATE, ActionRightIDs.TEMPLATES };
+
+    public static final String[] newProfileActionIds = { ActionRightIDs.IMPORTCSV,
+            ActionRightIDs.IMPORTLDAP, ActionRightIDs.XMLIMPORT };
+
     public static final String NEW_ACTION_ID = "RightsServiceTestAction";
-    
-    public static final String USER_NAME = "nn"; 
-    
+
+    public static final String USER_NAME = "nn";
+
     public static final String ADMIN_NAME = "rr";
-    
+
     public static final String USER_DEFAULT_PROFILE = "user-default-profile";
-    
+
     public static final String PROFILE_NAME = XmlRightsService.class.getSimpleName();
-    
-    @Resource(name="rightsService")
+
+    @Resource(name = "rightsService")
     private IRightsService rightsService;
-    
-    @Resource(name="rightsServerHandler")
+
+    @Resource(name = "rightsServerHandler")
     private IRightsServerHandler rightsServerHandler;
-    
+
+    @Resource(name = "configurationDao")
+    private IDao<Configuration, Serializable> configurationDao;
+
+    @Before
+    public void ensureUsersExist() throws CommandException {
+        if (!rightsService.getUsernames().contains(ADMIN_NAME)) {
+            CnATreeElement admin = new Person(null);
+            admin = elementDao.merge(admin);
+            Configuration adminConfiguration = new Configuration();
+            adminConfiguration.addRole(IRightsService.ADMINDEFAULTGROUPNAME);
+            adminConfiguration.setUser(ADMIN_NAME);
+            adminConfiguration.setPerson(admin);
+            adminConfiguration.setAdminUser(true);
+            configurationDao.merge(adminConfiguration);
+        }
+        if (!rightsService.getUsernames().contains(USER_NAME)) {
+            CnATreeElement user = new Person(null);
+            user = elementDao.merge(user);
+            Configuration userConfiguration = new Configuration();
+            userConfiguration.addRole(IRightsService.USERDEFAULTGROUPNAME);
+            userConfiguration.setUser(USER_NAME);
+            userConfiguration.setPerson(user);
+            configurationDao.merge(userConfiguration);
+        }
+    }
+
     @Test
     public void testUpdate() throws Exception {
         Action action = new Action();
         action.setId(NEW_ACTION_ID);
-        
+
         Auth conf = rightsService.getConfiguration();
         List<Profile> profileList = conf.getProfiles().getProfile();
         for (Profile profile : profileList) {
-            profile.getAction().add(action);  
+            profile.getAction().add(action);
             profile.setOrigin(OriginType.MODIFICATION);
         }
         rightsService.updateConfiguration(clone(conf));
-        assertTrue( "Action: " + NEW_ACTION_ID + " is disabled after adding.", rightsServerHandler.isEnabled(USER_NAME, NEW_ACTION_ID));
-        
+        assertTrue("Action: " + NEW_ACTION_ID + " is disabled after adding.",
+                rightsServerHandler.isEnabled(USER_NAME, NEW_ACTION_ID));
+
         conf = rightsService.getConfiguration();
         profileList = conf.getProfiles().getProfile();
         for (Profile profile : profileList) {
-            if(profile.getAction().contains(action)) {
-                profile.getAction().remove(action);  
+            if (profile.getAction().contains(action)) {
+                profile.getAction().remove(action);
                 profile.setOrigin(OriginType.MODIFICATION);
             }
         }
         rightsService.updateConfiguration(clone(conf));
-//        rightsServerHandler.discardData();
-        assertFalse( "Action: " + NEW_ACTION_ID + " is enabled after removal.", rightsServerHandler.isEnabled(USER_NAME, NEW_ACTION_ID));       
+        // rightsServerHandler.discardData();
+        assertFalse("Action: " + NEW_ACTION_ID + " is enabled after removal.",
+                rightsServerHandler.isEnabled(USER_NAME, NEW_ACTION_ID));
     }
-    
+
     @Test
     public void testAddProfile() throws Exception {
         Profile unitTestProfile = createNewProfile();
@@ -130,11 +152,13 @@ public class RightsServiceTest extends ContextConfiguration {
         String[] allActionIds = ActionRightIDs.getAllRightIDs();
         Arrays.sort(newProfileActionIds);
         for (String id : allActionIds) {
-            boolean expected = Arrays.binarySearch(newProfileActionIds,id) > -1;
-            if(expected) {
-                assertTrue( "Action: " + id + " is disabled for user.", rightsServerHandler.isEnabled(USER_NAME, id));
+            boolean expected = Arrays.binarySearch(newProfileActionIds, id) > -1;
+            if (expected) {
+                assertTrue("Action: " + id + " is disabled for user.",
+                        rightsServerHandler.isEnabled(USER_NAME, id));
             } else {
-                assertFalse( "Action: " + id + " is enabled for  user.", rightsServerHandler.isEnabled(USER_NAME, id));
+                assertFalse("Action: " + id + " is enabled for  user.",
+                        rightsServerHandler.isEnabled(USER_NAME, id));
             }
         }
     }
@@ -157,27 +181,29 @@ public class RightsServiceTest extends ContextConfiguration {
         }
         return unitTestProfile;
     }
-    
+
     private Auth removeNewProfile(Profile unitTestProfile) {
         Auth conf = rightsService.getConfiguration();
         conf.getProfiles().getProfile().remove(unitTestProfile);
         return conf;
     }
-    
+
     @Test
     public void testDefaultProfile() throws Exception {
         String[] allActionIds = ActionRightIDs.getAllRightIDs();
         Arrays.sort(adminActionIds);
         for (String id : allActionIds) {
-            boolean expected = Arrays.binarySearch(adminActionIds,id) < 0;
-            if(expected) {
-                assertTrue( "Action: " + id + " is disabled for user.", rightsServerHandler.isEnabled(USER_NAME, id));
+            boolean expected = Arrays.binarySearch(adminActionIds, id) < 0;
+            if (expected) {
+                assertTrue("Action: " + id + " is disabled for user.",
+                        rightsServerHandler.isEnabled(USER_NAME, id));
             } else {
-                assertFalse( "Admin action: " + id + " is enabled for non admin user.", rightsServerHandler.isEnabled(USER_NAME, id));
+                assertFalse("Admin action: " + id + " is enabled for non admin user.",
+                        rightsServerHandler.isEnabled(USER_NAME, id));
             }
         }
     }
-    
+
     @Test
     public void testAdminProfile() throws Exception {
         String[] allActionIds = ActionRightIDs.getAllRightIDs();
@@ -191,14 +217,14 @@ public class RightsServiceTest extends ContextConfiguration {
             }
         }
     }
-    
+
     private void setProfileForLogin(Auth conf, String profile, String login) {
-        List<Userprofile> userProfileList  = conf.getUserprofiles().getUserprofile();
+        List<Userprofile> userProfileList = conf.getUserprofiles().getUserprofile();
         for (Userprofile userprofile : userProfileList) {
-            if(userprofile.getLogin().equals(login)) {
+            if (userprofile.getLogin().equals(login)) {
                 userprofile.getProfileRef().clear();
                 ProfileRef profileRef = new ProfileRef();
-                profileRef.setName(profile);              
+                profileRef.setName(profile);
                 userprofile.getProfileRef().add(profileRef);
                 userprofile.setOrigin(OriginType.MODIFICATION);
             }

@@ -27,11 +27,11 @@ import java.util.stream.Stream;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HuiRelation;
+import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.hui.common.connect.ITypedElement;
 import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.Raum;
-import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.InheritLogger;
 
 /**
@@ -148,8 +148,8 @@ public class CnALink implements Serializable, ITypedElement {
             element = link.getDependant();
         }
         StringBuilder sb = new StringBuilder();
-        if (element instanceof IISO27kElement) {
-            String abbreviation = ((IISO27kElement) element).getAbbreviation();
+        if (element instanceof IAbbreviatedElement) {
+            String abbreviation = ((IAbbreviatedElement) element).getAbbreviation();
             if (abbreviation != null && !abbreviation.isEmpty()) {
                 sb.append(abbreviation).append(" ");
             }

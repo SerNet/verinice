@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cheatsheet title="Začínáme">
+
+  <intro>
+    <description>
+      <b>Vítejte ve verinice!</b>
+      <br /><br />
+      Tento tutoriál vám pomůže nastavit verinice a provede vás prvními kroky v něm.
+    </description>
+  </intro>
+
+  <item title="Přepněte na ISM perspektivu">
+    <description>
+      Pokud toto čtete v Češtině, předpokládáme, že chcete používat perspektivu ISM.
+      tato perspektiva vám umoznuje modelovat požadavky a bezpečnostní opatření k výpočtu rizika a generování zpráv.
+      <br /><br />
+      Otevrte ISM perspektivu kliknutím na položku <b>Zobrazit > Zobrazit Perspektivu... >
+      ISM Perspektiva</b>.
+    </description>
+  </item>
+
+  <item title="Import katalogu bezpečnostních opatření">
+    <description>
+      Nejprve musíte importovat katalog bezpečnostních opatření. Musíte importovat soubor katalogu. Na levé straně sady nástrojů verinice najdete 
+	  zobrazení "Katalogy". Kliknutím na tlačítko úplne vlevo ("Importovat katalog...").
+      <br /><br />
+      Vyberte si stažený nebo manuálně vytvořený katalog (napr. pomocí aplikace MS Excel nebo OpenOffice) a klikněte <b>OK</b>.
+    </description>
+  </item>
+
+  <item title="Vytvořte rozsah">
+    <description>
+      Katalog je nyní načten. Po dokončení parsování uvidíte jeho obsah v zobrazení katalogu.
+      <br /><br />
+      Otevrte pohled prohlížece (<b>Zobrazit> Zobrazit Panely > Prohlžeč objektů</b>). Klikněte na bezpečnostní opatření
+      pro zobrazení jeho obsahu.
+      <br /><br />
+      Chcete-li skutecne pracovat s importovanými bezpečnostními opatřeními, musíte v databázi vytvořit svou organizaci. 
+	  Přejděte do perspektivy "Model Bezpečnosti Informací". Měla by být zobrazena uprostřed sady nástroju verinice. 
+	  Kliknete na tlačítko nejvíce vpravo ("Přidat novou organizaci" ").
+      <br /><br />
+      Pretáhněte některá bezpečnostní opatření z katalogu do skupiny "Bezpečnostní opatření" pod vaší novou organizaci.
+      Bezpečnostní opatření byla vytvorena. Dvojklikem otevřte editor pro každé z nich.
+    </description>
+    <onCompletion>
+      Výborně! Pokud chcete pokračovat, více tutoriálů najdete v Nápovědě.
+    </onCompletion>
+
+  </item>
+
+</cheatsheet>

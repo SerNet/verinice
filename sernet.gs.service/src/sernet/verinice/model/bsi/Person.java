@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.model.bsi;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -27,195 +26,218 @@ import org.apache.log4j.Logger;
 
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.IPerson;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.verinice.model.common.CnATreeElement;
 
-public class Person extends CnATreeElement
-implements IBSIStrukturElement {
-    
+public class Person extends CnATreeElement implements IBSIStrukturElement, IPerson {
+
     private static final Logger log = Logger.getLogger(Person.class);
 
-	public static final String PROP_TAG			= "person_tag"; //$NON-NLS-1$
+    public static final String PROP_TAG = "person_tag"; //$NON-NLS-1$
     public static final String P_ANREDE = "person_anrede"; //$NON-NLS-1$
-	public static final String P_NAME = "nachname"; //$NON-NLS-1$
-	public static final String P_VORNAME = "vorname"; //$NON-NLS-1$
-	public static final String PROP_KUERZEL = "person_kuerzel"; //$NON-NLS-1$
-	public static final String P_ROLLEN = "person_rollen"; //$NON-NLS-1$
-	public static final String P_EMAIL = "person_email"; //$NON-NLS-1$
-	public static final String P_PHONE = "person_telefon"; //$NON-NLS-1$
-	public static final String P_ORGEINHEIT = "person_orgeinheit"; //$NON-NLS-1$
+    public static final String P_NAME = "nachname"; //$NON-NLS-1$
+    public static final String P_VORNAME = "vorname"; //$NON-NLS-1$
+    public static final String PROP_KUERZEL = "person_kuerzel"; //$NON-NLS-1$
+    public static final String P_ROLLEN = "person_rollen"; //$NON-NLS-1$
+    public static final String P_EMAIL = "person_email"; //$NON-NLS-1$
+    public static final String P_PHONE = "person_telefon"; //$NON-NLS-1$
+    public static final String P_ORGEINHEIT = "person_orgeinheit"; //$NON-NLS-1$
 
-	// ID must correspond to entity definition in entitytype XML description:
-	public static final String TYPE_ID = "person"; //$NON-NLS-1$
-	public static final String PROP_ERLAEUTERUNG = "person_erlaeuterung"; //$NON-NLS-1$
-	public static final String PROP_ANZAHL = "person_anzahl"; //$NON-NLS-1$
-	
-	
-	public Person(CnATreeElement parent) {
-		super(parent);
-		setEntity(new Entity(TYPE_ID));
-		getEntity().initDefaultValues(getTypeFactory());
+    // ID must correspond to entity definition in entitytype XML description:
+    public static final String TYPE_ID = "person"; //$NON-NLS-1$
+    public static final String PROP_ERLAEUTERUNG = "person_erlaeuterung"; //$NON-NLS-1$
+    public static final String PROP_ANZAHL = "person_anzahl"; //$NON-NLS-1$
+
+    public Person(CnATreeElement parent) {
+        super(parent);
+        setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
         // sets the localized name via HUITypeFactory from message bundle
-		getEntity().setSimpleValue(getEntityType().getPropertyType(P_NAME), getTypeFactory().getMessage(TYPE_ID));
+        getEntity().setSimpleValue(getEntityType().getPropertyType(P_NAME),
+                getTypeFactory().getMessage(TYPE_ID));
     }
-	
-	@Override
+
+    @Override
     public String getKuerzel() {
-		return getEntity().getSimpleValue(PROP_KUERZEL);
-	}
-	@Override
+        return getEntity().getSimpleValue(PROP_KUERZEL);
+    }
+
+    @Override
     public Collection<? extends String> getTags() {
-		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
-	}
-	
-	protected Person() {
-		
-	}
-	
-	@Override
+        return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+    }
+
+    protected Person() {
+
+    }
+
+    @Override
     public int getSchicht() {
-		return 0;
-	}
-	
-	@Override
+        return 0;
+    }
+
+    @Override
     public void setTitel(String name) {
-	    // empty, otherwise title get scrambled while copying, bug 264
-	}
-	
-	@Override
-	public String getTitle() {
-		if (getEntity() == null){
-			return ""; //$NON-NLS-1$
-		}
-		return getTitel(getEntity());
-	}
-	
-	public static String getTitel(Entity entity) {
-		if (entity == null){
-			return ""; //$NON-NLS-1$
-		}
-		StringBuffer buff = new StringBuffer();
-		buff.append(entity.getSimpleValue(P_VORNAME));
-		if (buff.length() > 0){
-			buff.append(" "); //$NON-NLS-1$
-		}
-		buff.append( entity.getSimpleValue(P_NAME));
-		
-		String rollen = getRollen(entity);
-		if (rollen.length() > 0){
-			buff.append(" [" + rollen + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		return buff.toString();
-	}
-	
-	public String getFullName() {
-		if (getEntity() == null){
-			return ""; //$NON-NLS-1$
-		}
-		StringBuffer buff = new StringBuffer();
-		buff.append(getEntity().getSimpleValue(P_VORNAME));
-		if (buff.length() > 0){
-			buff.append(" "); //$NON-NLS-1$
-		}
-		buff.append( getEntity().getSimpleValue(P_NAME));
-		
-		return buff.toString();
-	}
-	
-	public String getNachname() {
-	    return getEntity().getSimpleValue(P_NAME);
-	}
-	
-	public String getAnrede() {
+        // empty, otherwise title get scrambled while copying, bug 264
+    }
+
+    @Override
+    public String getTitle() {
+        if (getEntity() == null) {
+            return ""; //$NON-NLS-1$
+        }
+        return getTitel(getEntity());
+    }
+
+    public static String getTitel(Entity entity) {
+        if (entity == null) {
+            return ""; //$NON-NLS-1$
+        }
+        StringBuffer buff = new StringBuffer();
+        buff.append(entity.getSimpleValue(P_VORNAME));
+        if (buff.length() > 0) {
+            buff.append(" "); //$NON-NLS-1$
+        }
+        buff.append(entity.getSimpleValue(P_NAME));
+
+        String rollen = getRollen(entity);
+        if (rollen.length() > 0) {
+            buff.append(" [" + rollen + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        return buff.toString();
+    }
+
+    public String getFullName() {
+        if (getEntity() == null) {
+            return ""; //$NON-NLS-1$
+        }
+        StringBuffer buff = new StringBuffer();
+        buff.append(getEntity().getSimpleValue(P_VORNAME));
+        if (buff.length() > 0) {
+            buff.append(" "); //$NON-NLS-1$
+        }
+        buff.append(getEntity().getSimpleValue(P_NAME));
+
+        return buff.toString();
+    }
+
+    public String getNachname() {
+        return getEntity().getSimpleValue(P_NAME);
+    }
+
+    public String getAnrede() {
         return getEntity().getSimpleValue(P_ANREDE);
     }
-	
-	private String getRollen() {
-		if (getEntity() == null){
-			return ""; //$NON-NLS-1$
-		}
-		return getRollen(getEntity());
-	}
-	
-	private static String getRollen(Entity entity) {
-		if (entity == null){
-			return ""; //$NON-NLS-1$
-		}
-		StringBuffer buf = new StringBuffer();
-		PropertyList propertyList = entity.getProperties(P_ROLLEN);
-		PropertyType type = HUITypeFactory.getInstance().getPropertyType(TYPE_ID, P_ROLLEN);
-		List<Property> properties = propertyList.getProperties();
-		
-		if (properties == null)
-			return ""; //$NON-NLS-1$
-		
-		for (Iterator iter = properties.iterator(); iter.hasNext();) {
-			Property prop = (Property) iter.next();
-			String rolle = type.getOption(prop.getPropertyValue()).getName();
-			buf.append(rolle);
-			if (iter.hasNext()){
-				buf.append(", "); //$NON-NLS-1$
-			}
-		}
-		return buf.toString();
-	}
 
-	@Override
-	public String getTypeId() {
-		return TYPE_ID;
-	}
-	
-	@Override
-	public void addChild(CnATreeElement child) {
-		// Person doesn't have children
-	}
+    private String getRollen() {
+        if (getEntity() == null) {
+            return ""; //$NON-NLS-1$
+        }
+        return getRollen(getEntity());
+    }
 
-	public void setErlaeuterung(String name) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ERLAEUTERUNG), name);
-	}
-	
-	public String getErlaeuterung() {
-		return getEntity().getSimpleValue(PROP_ERLAEUTERUNG);
-	}
-	
-	public void setKuerzel(String name) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_KUERZEL), name);
-	}
+    private static String getRollen(Entity entity) {
+        if (entity == null) {
+            return ""; //$NON-NLS-1$
+        }
+        StringBuffer buf = new StringBuffer();
+        PropertyList propertyList = entity.getProperties(P_ROLLEN);
+        PropertyType type = HUITypeFactory.getInstance().getPropertyType(TYPE_ID, P_ROLLEN);
+        List<Property> properties = propertyList.getProperties();
 
-	public boolean hasRole(Property role) {
-	    String value = role.getPropertyValue();
-	    if(value!=null) {
-	        value = value.replaceAll("\u00A0", "");
-	        if (getRollen().indexOf(value) > -1){
-	            return true;
-	        }
-	    }
-		
-		return false;
-	}
+        if (properties == null)
+            return ""; //$NON-NLS-1$
 
-	public boolean addRole(String name) {
-		PropertyType propertyType = getEntityType().getPropertyType(P_ROLLEN);
-		ArrayList<IMLPropertyOption> options = (ArrayList<IMLPropertyOption>)propertyType.getOptions();
-		for (IMLPropertyOption option : options) {
-			if (option.getName().equals(name)) {
-				getEntity().createNewProperty(propertyType, option.getId());
-				return true;
-			}
-		}
-		return false;
-	}
+        for (Iterator iter = properties.iterator(); iter.hasNext();) {
+            Property prop = (Property) iter.next();
+            String rolle = type.getOption(prop.getPropertyValue()).getName();
+            buf.append(rolle);
+            if (iter.hasNext()) {
+                buf.append(", "); //$NON-NLS-1$
+            }
+        }
+        return buf.toString();
+    }
 
-	public void setAnzahl(int anzahl) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ANZAHL), Integer.toString(anzahl));
-	}
+    @Override
+    public String getTypeId() {
+        return TYPE_ID;
+    }
+
+    @Override
+    public void addChild(CnATreeElement child) {
+        // Person doesn't have children
+    }
+
+    public void setErlaeuterung(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ERLAEUTERUNG), name);
+    }
+
+    public String getErlaeuterung() {
+        return getEntity().getSimpleValue(PROP_ERLAEUTERUNG);
+    }
+
+    public void setKuerzel(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_KUERZEL), name);
+    }
+
+    public boolean hasRole(Property role) {
+        String value = role.getPropertyValue();
+        if (value != null) {
+            value = value.replaceAll("\u00A0", "");
+            if (getRollen().indexOf(value) > -1) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean addRole(String name) {
+        PropertyType propertyType = getEntityType().getPropertyType(P_ROLLEN);
+        ArrayList<IMLPropertyOption> options = (ArrayList<IMLPropertyOption>) propertyType
+                .getOptions();
+        for (IMLPropertyOption option : options) {
+            if (option.getName().equals(name)) {
+                getEntity().createNewProperty(propertyType, option.getId());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void setAnzahl(int anzahl) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ANZAHL),
+                Integer.toString(anzahl));
+    }
 
     @Override
     public String toString() {
         return "Person [getFullName()=" + getFullName() + ", getKuerzel()=" + getKuerzel()
                 + ", getId()=" + getId() + "]";
+    }
+
+    @Override
+    public String getFirstName() {
+        return getEntity().getRawPropertyValue(P_VORNAME);
+    }
+
+    @Override
+    public String getLastName() {
+        return getEntity().getRawPropertyValue(P_NAME);
+    }
+
+    @Override
+    public String getSalutation() {
+        return getEntity().getRawPropertyValue(P_ANREDE);
+    }
+
+    @Override
+    public String getEMailAddress() {
+        return getEntity().getRawPropertyValue(P_EMAIL);
     }
 }

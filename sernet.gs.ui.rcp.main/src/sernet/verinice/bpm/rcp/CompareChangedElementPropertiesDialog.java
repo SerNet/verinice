@@ -22,6 +22,11 @@ package sernet.verinice.bpm.rcp;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -56,7 +61,11 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.model.bp.elements.BpThreat;
+import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
+import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.bp.risk.RiskService;
 import sernet.verinice.service.commands.LoadAncestors;
 
 /**
@@ -69,6 +78,22 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
     private static final int DIALOG_WIDTH = 1000;
     private static final int DIALOG_HEIGHT = 450;
 
+    private static final Set<String> PROPERTY_IDS_FREQUENCY_OF_OCCURRENCE = Stream
+            .of(BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS)
+            .collect(Collectors.toSet());
+
+    private static final Set<String> PROPERTY_IDS_EFFECT = Stream
+            .of(BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS)
+            .collect(Collectors.toSet());
+
+    private static final Set<String> PROPERTY_IDS_RISK_CATEGORY = Stream.of(
+            BpThreat.PROP_RISK_WITHOUT_SAFEGUARDS, BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
+            BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS).collect(Collectors.toSet());
+
     private String title;
 
     private final ITask task;
@@ -79,7 +104,8 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
      * @param parentShell
      * @throws CommandException
      */
-    public CompareChangedElementPropertiesDialog(Shell parentShell, ITask task) throws CommandException {
+    public CompareChangedElementPropertiesDialog(Shell parentShell, ITask task)
+            throws CommandException {
         super(parentShell);
         this.task = task;
 
@@ -171,7 +197,8 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
             GC gc = new GC(titleLabel);
             Point size = gc.textExtent(title);
             if (size.x > DIALOG_WIDTH - dialogWidthSubtrahend) {
-                title = trimTitleByWidthSize(gc, title, DIALOG_WIDTH - dialogWidthSubtrahend) + "..."; //$NON-NLS-1$
+                title = trimTitleByWidthSize(gc, title, DIALOG_WIDTH - dialogWidthSubtrahend)
+                        + "..."; //$NON-NLS-1$
             }
             titleLabel.setText(title);
         }
@@ -203,15 +230,18 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
 
     private void createGridCompositeHeader(final Composite parent) {
         final Label fealdNameHeaderLabel = new Label(parent, SWT.NONE);
-        fealdNameHeaderLabel.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH));
+        fealdNameHeaderLabel
+                .setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH));
         fealdNameHeaderLabel.setText(Messages.CompareTaskChangesAction_3);
 
         final Label fealdOldHeaderLabel = new Label(parent, SWT.NONE);
-        fealdOldHeaderLabel.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH));
+        fealdOldHeaderLabel
+                .setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH));
         fealdOldHeaderLabel.setText(Messages.CompareTaskChangesAction_4);
 
         final Label fealdNewHeaderLabel = new Label(parent, SWT.NONE);
-        fealdNewHeaderLabel.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH));
+        fealdNewHeaderLabel
+                .setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH));
         fealdNewHeaderLabel.setText(Messages.CompareTaskChangesAction_5);
     }
 
@@ -222,27 +252,74 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
 
         for (PropertyType propertyType : propertyTypes) {
             if (changedElementProperties.containsKey(propertyType.getId())) {
-                String oldValue = element.getPropertyValue(propertyType.getId());
+                String propertyId = propertyType.getId();
+                String oldValue;
                 String newValue = changedElementProperties.get(propertyType.getId());
+                String newValueDisplay;
+                if (PROPERTY_IDS_FREQUENCY_OF_OCCURRENCE.contains(propertyId)) {
+                    RiskConfiguration riskConfiguration = getRiskConfiguration();
+                    oldValue = getDisplayValueForRiskPropertyValue(
+                            element.getEntity().getRawPropertyValue(propertyId),
+                            riskConfiguration::getLabelForFrequency);
+                    newValueDisplay = getDisplayValueForRiskPropertyValue(newValue,
+                            riskConfiguration::getLabelForFrequency);
+                } else if (PROPERTY_IDS_EFFECT.contains(propertyId)) {
+                    RiskConfiguration riskConfiguration = getRiskConfiguration();
+                    oldValue = getDisplayValueForRiskPropertyValue(
+                            element.getEntity().getRawPropertyValue(propertyId),
+                            riskConfiguration::getLabelForImpact);
+                    newValueDisplay = getDisplayValueForRiskPropertyValue(newValue,
+                            riskConfiguration::getLabelForImpact);
+                } else if (PROPERTY_IDS_RISK_CATEGORY.contains(propertyId)) {
+                    RiskConfiguration riskConfiguration = getRiskConfiguration();
+                    oldValue = getDisplayValueForRiskPropertyValue(
+                            element.getEntity().getRawPropertyValue(propertyId),
+                            riskConfiguration::getLabelForRisk);
+                    newValueDisplay = getDisplayValueForRiskPropertyValue(newValue,
+                            riskConfiguration::getLabelForRisk);
+                } else {
+                    oldValue = element.getPropertyValue(propertyType.getId());
+                    if (propertyType.isReference()) {
+                        newValueDisplay = loadTextForReferenceProperty(propertyType, newValue);
+                    } else if (propertyType.isSingleSelect() || propertyType.isMultiselect()) {
+                        newValueDisplay = loadTextForOptionProperty(propertyType, newValue);
+                    } else if (propertyType.isDate()) {
+                        newValueDisplay = getDate(newValue);
+                    } else {
+                        newValueDisplay = newValue;
+                    }
+
+                }
 
                 if (StringUtils.isNotBlank(oldValue) || StringUtils.isNotBlank(newValue)) {
                     createLabelForProperty(parent, typeFactory, propertyType);
                     createTextForOldValue(parent, propertyType, oldValue);
-                    createTextForNewValue(parent, propertyType, newValue);
+                    createTextForNewValue(parent, propertyType, newValueDisplay);
                 }
             }
         }
     }
 
-    private void createLabelForProperty(final Composite parent, HUITypeFactory typeFactory, PropertyType propertyType) {
+    protected String getDisplayValueForRiskPropertyValue(String rawValue,
+            UnaryOperator<String> valueMapper) {
+        if (StringUtils.isEmpty(rawValue)) {
+            return sernet.hui.swt.widgets.Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE);
+        }
+        return valueMapper.apply(rawValue);
+    }
+
+    private void createLabelForProperty(final Composite parent, HUITypeFactory typeFactory,
+            PropertyType propertyType) {
         final Label titleLabel = new Label(parent, SWT.NONE);
         titleLabel.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH));
         titleLabel.setText(typeFactory.getMessage(propertyType.getId()));
     }
 
-    private void createTextForOldValue(final Composite parent, PropertyType propertyType, String oldValue) {
+    private void createTextForOldValue(final Composite parent, PropertyType propertyType,
+            String oldValue) {
         if (propertyType.isSingleSelect() && StringUtils.isEmpty(oldValue)) {
-            oldValue = sernet.hui.swt.widgets.Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE);
+            oldValue = sernet.hui.swt.widgets.Messages
+                    .getString(PropertyOption.SINGLESELECTDUMMYVALUE);
         }
         final Text oldText = new Text(parent, SWT.BORDER | SWT.WRAP);
         oldText.setEditable(false);
@@ -252,22 +329,11 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
         oldText.setLayoutData(gridData);
     }
 
-    private void createTextForNewValue(final Composite parent, PropertyType propertyType, String value) {
+    private void createTextForNewValue(final Composite parent, PropertyType propertyType,
+            String value) {
         final Text newText = new Text(parent, SWT.BORDER | SWT.WRAP);
         newText.setEditable(false);
-
-        if (propertyType.isReference()) {
-            value = loadTextForReferenceProperty(propertyType, value);
-            newText.setText(value);
-        } else if (propertyType.isSingleSelect() || propertyType.isMultiselect()) {
-            value = loadTextForOptionProperty(propertyType, value);
-            newText.setText(value);
-        } else if (propertyType.isDate()) {
-            newText.setText(getDate(value));
-        } else {
-            newText.setText(value);
-        }
-
+        newText.setText(value);
         GridData gridData = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH);
         gridData.widthHint = DIALOG_WIDTH / 3;
         newText.setLayoutData(gridData);
@@ -287,13 +353,24 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
             return sernet.hui.swt.widgets.Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE);
         } else {
             String[] propertyOptions = newValue.split(",");
-            return OptionSelectionHelper.loadOptionLabels(propertyType, Arrays.asList(propertyOptions));
+            return OptionSelectionHelper.loadOptionLabels(propertyType,
+                    Arrays.asList(propertyOptions));
         }
+    }
+
+    private RiskConfiguration getRiskConfiguration() {
+        RiskService riskService = (RiskService) VeriniceContext
+                .get(VeriniceContext.ITBP_RISK_SERVICE);
+        RiskConfiguration riskConfiguration = riskService
+                .findRiskConfiguration(element.getScopeId());
+        return Optional.ofNullable(riskConfiguration)
+                .orElseGet(DefaultRiskConfiguration::getInstance);
     }
 
     private String loadTextForReferenceProperty(PropertyType propertyType, String newValue) {
         String[] propertyOptions = newValue.split(",");
-        return OptionSelectionHelper.loadReferenceLabels(propertyType, Arrays.asList(propertyOptions));
+        return OptionSelectionHelper.loadReferenceLabels(propertyType,
+                Arrays.asList(propertyOptions));
     }
 
     private void setDialogLocation() {
@@ -305,7 +382,8 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
     }
 
     private void loadChangedElementPropertiesFromTask() {
-        changedElementProperties = (Map<String, String>) getTaskService().loadChangedElementProperties(task.getId());
+        changedElementProperties = (Map<String, String>) getTaskService()
+                .loadChangedElementProperties(task.getId());
         LOG.info("Loaded changes for element properties from task."); //$NON-NLS-1$
     }
 

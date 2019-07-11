@@ -22,15 +22,20 @@ package sernet.verinice.web;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -44,6 +49,7 @@ import org.primefaces.event.SelectEvent;
 
 import sernet.gs.service.GSServiceException;
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.StringUtil;
 import sernet.gs.service.TimeFormatter;
 import sernet.gs.web.SecurityException;
 import sernet.gs.web.Util;
@@ -53,19 +59,30 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyGroup;
+import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
+import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.model.bp.elements.BpThreat;
+import sernet.verinice.model.bp.risk.Frequency;
+import sernet.verinice.model.bp.risk.Impact;
+import sernet.verinice.model.bp.risk.Risk;
+import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
+import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.bp.risk.RiskDeductionUtil;
+import sernet.verinice.service.bp.risk.RiskService;
 import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.SaveElement;
 import sernet.verinice.service.parser.GSScraperUtil;
+import sernet.verinice.web.HuiProperty.ValueChangeListener;
 
 /**
  * JSF managed bean which provides data for the element editor in the web
@@ -139,7 +156,12 @@ public class EditBean {
     private void doInit(ITask task) throws CommandException {
         RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
         ri.setPermissions(true);
-        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<>(getTypeId(), getUuid(), ri);
+        if (BpThreat.TYPE_ID.equals(typeId)) {
+            ri.setLinksUp(true);
+            ri.setLinksUpProperties(true);
+        }
+        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<>(getTypeId(), getUuid(),
+                ri);
         command = getCommandService().executeCommand(command);
         setElement(command.getElement());
 
@@ -180,7 +202,14 @@ public class EditBean {
 
         doInitPropertyGroups(entity);
         doInitGeneralProperties(entity);
-        initDependencyBehaviour();
+        Map<String, HuiProperty> key2HuiProperty = getPropertyKey2HuiPropertyMap();
+
+        initDependencyBehaviour(key2HuiProperty);
+
+        if (element instanceof BpThreat) {
+            initRiskComputations((BpThreat) element, key2HuiProperty);
+        }
+
     }
 
     protected void doInitPropertyGroups(Entity entity) {
@@ -189,7 +218,8 @@ public class EditBean {
         List<PropertyGroup> groupListHui = entityType.getPropertyGroups();
         for (PropertyGroup groupHui : groupListHui) {
             if (isVisible(groupHui)) {
-                sernet.verinice.web.PropertyGroup group = new sernet.verinice.web.PropertyGroup(groupHui.getId(), groupHui.getName());
+                sernet.verinice.web.PropertyGroup group = new sernet.verinice.web.PropertyGroup(
+                        groupHui.getId(), groupHui.getName());
                 List<PropertyType> typeListHui = groupHui.getPropertyTypes();
                 List<HuiProperty> listOfGroup = createPropertyList(entity, typeListHui);
                 group.setPropertyList(listOfGroup);
@@ -203,7 +233,7 @@ public class EditBean {
 
     protected void doInitGeneralProperties(Entity entity) {
         List<PropertyType> typeList = entityType.getPropertyTypesSorted();
-        generalPropertyList = createPropertyList(entity, typeList);
+        generalPropertyList = moveURLPropertyToEndOfList(createPropertyList(entity, typeList));
     }
 
     protected List<HuiProperty> createPropertyList(Entity entity, List<PropertyType> typeListHui) {
@@ -213,15 +243,31 @@ public class EditBean {
         return properties;
     }
 
-    private void initDependencyBehaviour() {
-        Map<String, HuiProperty> key2HuiProperty = getPropertyKey2HuiPropertyMap();
+    private void initDependencyBehaviour(Map<String, HuiProperty> key2HuiProperty) {
         for (HuiProperty huiProperty : key2HuiProperty.values()) {
             for (DependsType dependsType : huiProperty.getType().getDependencies()) {
                 HuiProperty dependsOn = key2HuiProperty.get(dependsType.getPropertyId());
-                dependsOn.addValueChangeListener(new DependencyChangeListener(huiProperty, key2HuiProperty));
+                dependsOn.addValueChangeListener(
+                        new DependencyChangeListener(huiProperty, key2HuiProperty));
                 dependsOn.fireChangeListeners();
             }
         }
+    }
+
+    private void initRiskComputations(BpThreat threat, Map<String, HuiProperty> key2HuiProperty) {
+        RiskValueChangeListener listener = new RiskValueChangeListener(threat, key2HuiProperty);
+        key2HuiProperty.get(BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS)
+                .addValueChangeListener(listener);
+        key2HuiProperty.get(BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS)
+                .addValueChangeListener(listener);
+        key2HuiProperty.get(BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS)
+                .addValueChangeListener(listener);
+        key2HuiProperty.get(BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS)
+                .addValueChangeListener(listener);
+        key2HuiProperty.get(BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS)
+                .addValueChangeListener(listener);
+        key2HuiProperty.get(BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS)
+                .addValueChangeListener(listener);
     }
 
     private Map<String, HuiProperty> getPropertyKey2HuiPropertyMap() {
@@ -232,17 +278,19 @@ public class EditBean {
         return key2HuiProperty;
     }
 
-    private void initHuiProperties(Entity entity, List<PropertyType> typeListHui, List<HuiProperty> huiProperties) {
+    private void initHuiProperties(Entity entity, List<PropertyType> typeListHui,
+            List<HuiProperty> huiProperties) {
         for (PropertyType huiType : typeListHui) {
             initHuiProperty(entity, huiType, huiProperties);
         }
     }
 
-    private void initHuiProperty(Entity entity, PropertyType huiType, List<HuiProperty> huiProperties) {
+    private void initHuiProperty(Entity entity, PropertyType huiType,
+            List<HuiProperty> huiProperties) {
         if (isVisible(huiType)) {
             String id = huiType.getId();
             String value = entity.getRawPropertyValue(id);
-            HuiProperty prop = new HuiProperty(huiType, id, value);
+            HuiProperty prop = new HuiProperty(adaptTypeIfRiskProperty(huiType), id, value);
             huiProperties.add(prop);
             if (getNoLabelTypeList().contains(id)) {
                 prop.setShowLabel(false);
@@ -251,6 +299,64 @@ public class EditBean {
                 LOG.debug("prop: " + id + " (" + huiType.getInputName() + ") - " + value);
             }
         }
+    }
+
+    private PropertyType adaptTypeIfRiskProperty(PropertyType propertyType) {
+        String propertyId = propertyType.getId();
+        switch (propertyId) {
+        case BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS:
+            return new OverrideOptionsPropertyType(propertyType, getFrequencyValues());
+        case BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS:
+            return new OverrideOptionsPropertyType(propertyType, getImpactValues());
+        case BpThreat.PROP_RISK_WITHOUT_SAFEGUARDS:
+            return new OverrideOptionsPropertyType(propertyType, getRiskValues());
+
+        case BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS:
+            return new OverrideOptionsPropertyType(propertyType, getFrequencyValues());
+        case BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS:
+            return new OverrideOptionsPropertyType(propertyType, getImpactValues());
+        case BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS:
+            return new OverrideOptionsPropertyType(propertyType, getRiskValues());
+
+        case BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS:
+            return new OverrideOptionsPropertyType(propertyType, getFrequencyValues());
+        case BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS:
+            return new OverrideOptionsPropertyType(propertyType, getImpactValues());
+        case BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS:
+            return new OverrideOptionsPropertyType(propertyType, getRiskValues());
+        default:
+            return propertyType;
+        }
+    }
+
+    private List<IMLPropertyOption> getRiskValues() {
+        RiskConfiguration riskConfiguration = getRiskConfiguration();
+        List<Risk> risks = riskConfiguration.getRisks();
+        return risks.stream().map(risk -> new PropertyOption(risk.getId(), risk.getLabel()))
+                .collect(Collectors.toList());
+    }
+
+    private List<IMLPropertyOption> getImpactValues() {
+        RiskConfiguration riskConfiguration = getRiskConfiguration();
+        List<Impact> impactValues = riskConfiguration.getImpacts();
+        return impactValues.stream()
+                .map(impact -> new PropertyOption(impact.getId(), impact.getLabel()))
+                .collect(Collectors.toList());
+    }
+
+    private List<IMLPropertyOption> getFrequencyValues() {
+        RiskConfiguration riskConfiguration = getRiskConfiguration();
+        List<Frequency> frequencyValues = riskConfiguration.getFrequencies();
+        return frequencyValues.stream()
+                .map(frequency -> new PropertyOption(frequency.getId(), frequency.getLabel()))
+                .collect(Collectors.toList());
+    }
+
+    private RiskConfiguration getRiskConfiguration() {
+        Integer scopeId = element.getScopeId();
+        RiskConfiguration riskConfiguration = getRiskService().findRiskConfiguration(scopeId);
+        return Optional.ofNullable(riskConfiguration)
+                .orElseGet(DefaultRiskConfiguration::getInstance);
     }
 
     private void checkMassnahmenUmsetzung() {
@@ -262,7 +368,8 @@ public class EditBean {
     }
 
     private void loadChangedElementPropertiesFromTask() {
-        Map<String, String> changedProperties = getTaskService().loadChangedElementProperties(task.getId());
+        Map<String, String> changedProperties = getTaskService()
+                .loadChangedElementProperties(task.getId());
         for (Entry<String, String> entry : changedProperties.entrySet()) {
             element.setPropertyValue(entry.getKey(), entry.getValue());
         }
@@ -419,7 +526,8 @@ public class EditBean {
     }
 
     private void setMultiSelectValue(Entity entity, HuiProperty property) {
-        String propertyValue =  property.getValue() == null ? "" : StringUtils.join(property.getSelectedOptions(),","); 
+        String propertyValue = property.getValue() == null ? ""
+                : StringUtils.join(property.getSelectedOptions(), ",");
         entity.setPropertyValue(property.getType().getId(), propertyValue);
     }
 
@@ -443,7 +551,7 @@ public class EditBean {
             generalPropertyList.clear();
         }
 
-        if(allProperties != null){
+        if (allProperties != null) {
             allProperties.clear();
         }
 
@@ -552,7 +660,8 @@ public class EditBean {
     }
 
     private void changeURL(String key, String url, String label) {
-        if (StringUtils.isNotEmpty(key) && StringUtils.isNotEmpty(url) && StringUtils.isNotEmpty(label)) {
+        if (StringUtils.isNotEmpty(key) && StringUtils.isNotEmpty(url)
+                && StringUtils.isNotEmpty(label)) {
             StringBuilder sb = new StringBuilder();
             sb.append("<a href=\"").append(url).append("\">").append(label).append("</a>");
             changedElementProperties.put(key, sb.toString());
@@ -661,17 +770,9 @@ public class EditBean {
         return true;
     }
 
-    private void moveURLPropertyToEndOfList() {
-        HuiProperty docProp = null;
-        for (int i = 0; i < generalPropertyList.size(); i++) {
-            if (generalPropertyList.get(i).getIsURL()) {
-                docProp = generalPropertyList.get(i);
-                break;
-            }
-        }
-        if (docProp != null) {
-            Collections.swap(generalPropertyList, generalPropertyList.indexOf(docProp), generalPropertyList.size() - 1);
-        }
+    private static List<HuiProperty> moveURLPropertyToEndOfList(List<HuiProperty> propertyList) {
+        return propertyList.stream().sorted(Comparator.comparing(HuiProperty::getIsURL))
+                .collect(Collectors.toList());
     }
 
     public void setPropertyList(List<HuiProperty> properties) {
@@ -806,6 +907,10 @@ public class EditBean {
         return (IConfigurationService) VeriniceContext.get(VeriniceContext.CONFIGURATION_SERVICE);
     }
 
+    private RiskService getRiskService() {
+        return (RiskService) VeriniceContext.get(VeriniceContext.ITBP_RISK_SERVICE);
+    }
+
     public MassnahmenUmsetzung getMassnahmenUmsetzung() {
         return massnahmenUmsetzung;
     }
@@ -819,7 +924,8 @@ public class EditBean {
         String text = null;
         if (massnahme != null) {
             try {
-                text = GSScraperUtil.getInstanceWeb().getModel().getMassnahmeHtml(massnahme.getUrl(), massnahme.getStand());
+                text = GSScraperUtil.getInstanceWeb().getModel()
+                        .getMassnahmeHtml(massnahme.getUrl(), massnahme.getStand());
             } catch (GSServiceException e) {
                 LOG.error("Error while loading massnahme description.", e);
                 Util.addError(SUBMIT, Util.getMessage("todo.load.failed"));
@@ -845,12 +951,11 @@ public class EditBean {
             generalPropertyList = Collections.emptyList();
         }
 
-        moveURLPropertyToEndOfList();
         return generalPropertyList;
     }
 
     public void setGeneralPropertyList(List<HuiProperty> generalPropertyList) {
-        this.generalPropertyList = generalPropertyList;
+        this.generalPropertyList = moveURLPropertyToEndOfList(generalPropertyList);
     }
 
     /**
@@ -880,7 +985,8 @@ public class EditBean {
          * @param key2HuiProperty
          *            holds a map from property key to {@link HuiProperty}.
          */
-        public DependencyChangeListener(HuiProperty targetHuiProperty, Map<String, HuiProperty> key2HuiProperty) {
+        public DependencyChangeListener(HuiProperty targetHuiProperty,
+                Map<String, HuiProperty> key2HuiProperty) {
             this.targetHuiProperty = targetHuiProperty;
             this.key2HuiProperty = key2HuiProperty;
         }
@@ -918,6 +1024,82 @@ public class EditBean {
                 return !dependsOnValue.equals(dependsType.getPropertyValue());
             } else {
                 return dependsOnValue.equals(dependsType.getPropertyValue());
+            }
+        }
+    }
+
+    private final class RiskValueChangeListener implements ValueChangeListener {
+
+        private static final long serialVersionUID = 8853202166155378758L;
+
+        private final Map<String, HuiProperty> key2HuiProperty;
+
+        private final Map<String, String> initialValues = new HashMap<>();
+
+        public RiskValueChangeListener(BpThreat threat, Map<String, HuiProperty> key2HuiProperty) {
+            this.key2HuiProperty = key2HuiProperty;
+
+            Stream.of(BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS).forEach(propertyName -> {
+                        String value = StringUtil.replaceEmptyStringByNull(
+                                threat.getEntity().getRawPropertyValue(propertyName));
+                        initialValues.put(propertyName, value);
+                    });
+        }
+
+        @Override
+        public void processChangedValue(HuiProperty huiProperty) {
+            String propertyName = huiProperty.getKey();
+            String newValue = huiProperty.getValue();
+            recordNewValueIfChanged(propertyName, newValue);
+            RiskConfiguration riskConfiguration = getRiskConfiguration();
+            String riskWithoutSafeguardsNew = calculateRisk(
+                    BpThreat.PROP_FREQUENCY_WITHOUT_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITHOUT_SAFEGUARDS, riskConfiguration);
+            String riskWithoutAdditionalSafeguardsNew = calculateRisk(
+                    BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS, riskConfiguration);
+            String riskWithAdditionalSafeguardsNew = calculateRisk(
+                    BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS,
+                    BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS, riskConfiguration);
+
+            recordNewValueIfChanged(BpThreat.PROP_RISK_WITHOUT_SAFEGUARDS,
+                    riskWithoutSafeguardsNew);
+            recordNewValueIfChanged(BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    riskWithoutAdditionalSafeguardsNew);
+            recordNewValueIfChanged(BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS,
+                    riskWithAdditionalSafeguardsNew);
+        }
+
+        private String calculateRisk(String frequencyProperty, String impactProperty,
+                RiskConfiguration riskConfiguration) {
+            return RiskDeductionUtil.calculateRisk(riskConfiguration,
+                    StringUtil.replaceEmptyStringByNull(
+                            key2HuiProperty.get(frequencyProperty).getValue()),
+                    StringUtil.replaceEmptyStringByNull(
+                            key2HuiProperty.get(impactProperty).getValue()))
+                    .orElse(null);
+        }
+
+        private void recordNewValueIfChanged(String propertyId, String newValue) {
+            String initialValue = initialValues.get(propertyId);
+            HuiProperty huiProperty = key2HuiProperty.get(propertyId);
+            String oldValue = StringUtil.replaceEmptyStringByNull(huiProperty.getValue());
+            if (!Objects.equals(oldValue, newValue)) {
+                huiProperty.setValue(newValue);
+            }
+            if (isTaskEditorContext()) {
+                boolean valueChangedFromInitial = !Objects.equals(initialValue, newValue);
+
+                if (valueChangedFromInitial) {
+                    changedElementProperties.put(propertyId, newValue);
+                } else {
+                    changedElementProperties.remove(propertyId);
+                }
             }
         }
     }

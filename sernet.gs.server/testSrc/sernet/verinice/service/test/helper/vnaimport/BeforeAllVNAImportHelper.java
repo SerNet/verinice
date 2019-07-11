@@ -19,28 +19,44 @@
  ******************************************************************************/
 package sernet.verinice.service.test.helper.vnaimport;
 
+import java.io.IOException;
+
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.Before;
 
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.SyncCommand;
+import sernet.verinice.service.commands.SyncParameter;
+import sernet.verinice.service.commands.SyncParameterException;
+import sernet.verinice.service.test.CommandServiceProvider;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public abstract class BeforeAllVNAImportHelper extends AbstractVNAImportHelper {
+public abstract class BeforeAllVNAImportHelper extends CommandServiceProvider {
 
-    @BeforeClass
-    public void setUp() throws Exception
-    {
-        super.setUp();
+    private static SyncCommand syncCommand;
+    private static IBaseDao<CnATreeElement, Integer> elementDaoStaticRef;
+
+    @Before
+    public void setUp() throws IOException, CommandException, SyncParameterException {
+        if (syncCommand == null) {
+            syncCommand = VNAImportHelper.importFile(getFilePath(), getSyncParameter());
+            elementDaoStaticRef = elementDao;
+        }
     }
 
-    
     @AfterClass
-    public void tearDown() throws CommandException
-    {
-        super.tearDown();
+    public static void tearDown() throws CommandException {
+        VNAImportHelper.tearDown(syncCommand, elementDaoStaticRef);
+        syncCommand = null;
     }
+
+    protected abstract String getFilePath();
+
+    protected abstract SyncParameter getSyncParameter() throws SyncParameterException;
 
 }

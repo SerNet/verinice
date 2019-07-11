@@ -40,24 +40,18 @@ import sernet.verinice.service.commands.stats.MassnahmenSummaryHome;
 
 /**
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
- *
  */
 public class SamtProgressChart extends MaturitySpiderChart {
-    
+
     private static final float CHART_FOREGROUND_ALPHA = 0.6f;
-    private static final int AXIS_UPPER_BOUND = 55;
-    
+
     /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.gs.ui.rcp.main.bsi.views.chart.ISelectionChartGenerator#createChart
-     * (sernet.gs.ui.rcp.main.common.model.CnATreeElement)
+     * @see sernet.gs.ui.rcp.main.bsi.views.chart.ISelectionChartGenerator#
+     * createChart (sernet.gs.ui.rcp.main.common.model.CnATreeElement)
      */
+    @Override
     public JFreeChart createChart(CnATreeElement elmt) {
-        if (!(elmt instanceof ControlGroup)){
+        if (!(elmt instanceof ControlGroup)) {
             return null;
         }
         super.setElmt((ControlGroup) elmt);
@@ -68,35 +62,38 @@ public class SamtProgressChart extends MaturitySpiderChart {
             return null;
         }
     }
-    
-    protected JFreeChart createBarChart(Object dataset) {    
-       JFreeChart chart = ChartFactory.createBarChart3D(
-                null, 
-                Messages.SamtProgressChart_1, 
-                Messages.SamtProgressChart_2,
-                (CategoryDataset) dataset, 
-                PlotOrientation.HORIZONTAL, 
-                true,
-                true, 
+
+    protected JFreeChart createBarChart(CategoryDataset dataset) {
+        JFreeChart chart = ChartFactory.createBarChart3D(null, Messages.SamtProgressChart_1,
+                Messages.SamtProgressChart_2, dataset, PlotOrientation.HORIZONTAL, true, true,
                 false);
-        
+
         chart.setBackgroundPaint(Color.white);
         chart.getPlot().setForegroundAlpha(CHART_FOREGROUND_ALPHA);
         chart.setBackgroundPaint(Color.white);
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
-        
-        plot.getRenderer().setSeriesPaint(0, ChartColor.LIGHT_GREEN);
-        plot.getRenderer().setSeriesPaint(1, ChartColor.LIGHT_RED);
+
+        plot.getRenderer().setSeriesPaint(0, ChartColor.LIGHT_RED);
+        plot.getRenderer().setSeriesPaint(1, ChartColor.LIGHT_GREEN);
 
         plot.getDomainAxis().setCategoryLabelPositions(CategoryLabelPositions.STANDARD);
-        
+
+        int numUnanswered = dataset.getValue(0, 0).intValue();
+        int numAnswered = dataset.getValue(1, 0).intValue();
+
+        int sum = numAnswered + numUnanswered;
         NumberAxis axis = (NumberAxis) plot.getRangeAxis();
-        axis.setUpperBound(AXIS_UPPER_BOUND);
-   
+        if (sum == 0) {
+            axis.setTickLabelsVisible(false);
+        } else {
+            // calculate next multiple of 5
+            int upperBound = sum + (5 - sum % 5);
+            axis.setUpperBound(upperBound);
+        }
         return chart;
     }
-    
-    protected Object createBarDataset() throws CommandException {
+
+    protected CategoryDataset createBarDataset() throws CommandException {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         MassnahmenSummaryHome dao = new MassnahmenSummaryHome();
         Map<String, Integer> items = dao.getSamtTopicsProgress(getElmt());
@@ -104,9 +101,7 @@ public class SamtProgressChart extends MaturitySpiderChart {
         for (Entry<String, Integer> entry : entrySet) {
             dataset.addValue(entry.getValue(), entry.getKey(), ""); //$NON-NLS-1$
         }
-        
+
         return dataset;
     }
 }
-
-

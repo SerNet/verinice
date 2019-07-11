@@ -1,0 +1,165 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Context-Type: org.eclipse.rcptt.ctx.ecl
+Element-Name: bp
+Element-Type: context
+Element-Version: 2.0
+Id: _4GRncI0bEei2UKUDmonytQ
+Runtime-Version: 2.4.1.201903190000
+Save-Time: 4/16/19 10:41 AM
+Tags: bp
+
+------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
+Content-Type: text/ecl
+Entry-Name: .ecl.context
+
+/**
+* Creates an element 'elementname' in the path 'elementpath' ...
+**/
+proc "create-bpelement" [val elementpath] [val elementname] [val newelement] [val newname] {
+	get-view "Modernisierter IT-Grundschutz" | get-tree | select $elementpath | get-menu -path $newelement | click
+	get-editor $newname | get-section "" | get-editbox -after [get-label Titel] | set-text $elementname
+	get-eclipse-window | key-type "M1+s"
+	// try [get-button "Speichern (Strg+S)" | click] -catch [get-eclipse-window | key-type "M1+s"]
+}
+
+/**
+* Creates a new bp model object with the name 'modelname'.
+**/
+proc "create-bpmodel" [val modelname] {
+	get-view "Modernisierter IT-Grundschutz" | get-button "Neuer Informationsverbund" | click
+	get-editor Informationsverbund | get-section "" | get-editbox -after [get-label Titel] | set-text $modelname
+	get-eclipse-window | key-type "M1+s"
+	// try [get-button "Speichern (Strg+S)" | click] -catch [get-eclipse-window | key-type "M1+s"]
+}
+
+proc "create-bpthreatgroup" [val elementpath] [val elementname] {
+	create-bpelement $elementpath $elementname "Neu/Neue Gefährdungen-Gruppe..." "Gefährdungen"
+}
+
+proc "create-bpthreat" [val elementpath] [val elementname] {
+	create-bpelement $elementpath $elementname "Neue Gefährdung..." "Gefährdung"
+}
+
+proc "create-bpapplication" [val elementpath] [val elementname] {
+	create-bpelement $elementpath $elementname "Neue Anwendung..." Anwendung
+}
+
+proc "create-bprequirementgroup" [val elementpath] [val elementname] {
+	create-bpelement $elementpath $elementname "Neuer Baustein..." "Baustein(e)"
+}
+proc "create-bprequirement" [val elementpath] [val elementname] {
+	create-bpelement $elementpath $elementname "Neue Anforderung..." "(?:\[\] )?Baustein-.*"
+}
+proc "create-bpsafeguardgroup" [val elementpath] [val elementname] {
+	create-bpelement $elementpath $elementname "Neue Maßnahmen-Gruppe..." "Maßnahmen"
+}
+
+proc "create-bpsafeguard" [val elementpath] [val elementname] {
+	create-bpelement $elementpath $elementname "Neue Maßnahme..." "(?:\[\] )?Maßnahme"
+}
+
+proc "create-bpitsystem" [val path] [val elementname] {
+	create-bpelement $path $elementname "Neues IT-System..." "IT-System"
+}
+
+proc "create-bpicssystem" [val path] [val elementname] {
+	create-bpelement $path $elementname "Neues ICS-System..." "ICS-System"
+}
+
+proc "create-bpiotsystem" [val path] [val elementname] {
+	create-bpelement $path $elementname "Neues Anderes\\/IoT-System..." "Anderes/IoT-System"
+}
+
+proc "create-bpnetwork" [val path] [val elementname] {
+	create-bpelement $path $elementname "Neues Netzwerk..." "Kommunikationsverbi…"
+}
+
+proc "create-bproom" [val path] [val elementname] {
+	create-bpelement $path $elementname "Neuer Raum" Raum
+}
+
+proc "create-bpprocess" [val path] [val elementname] {
+	create-bpelement $path $elementname "Neuer Geschäftsprozess..." "Geschäftsprozess"
+}
+
+//needs common context
+proc "create-bpperson" [val path] [val elementname] {
+	get-view "Modernisierter IT-Grundschutz" | get-tree | select $path| get-menu -path "Neue Person..." | click
+	get-editor "" | close //TODO fw: close all other editors correctly
+	with [get-editor "" | get-section "" | get-editbox -after [get-label Nachname]] {
+	    set-text $elementname
+	    key-type "M1+s"
+	}
+}
+
+/**
+* Delete a bp model defined by the 'elementpath'.
+**/
+proc "delete-bpelement" [val elementpath] {
+	get-view "Modernisierter IT-Grundschutz" | get-tree | select $elementpath | get-menu -path "Löschen" | click
+	get-window "Wirklich löschen?" | get-button Ja | click
+}
+
+/**
+* Copy an element defined by the 'source' path to the 'target' path.
+**/
+proc "copy-bpelement" [val source] [val target] {
+	with [get-view "Modernisierter IT-Grundschutz" | get-tree] {
+		select $source | get-menu -path Kopieren | click
+		select $target | get-menu -path "Einfügen" | click
+	}
+	try -times 2 -delay 1000 -command {
+		get-window "Status Information" | get-button OK | click
+	} -catch {
+	   log  [concat "info: no Status Window for copy of: " $source $target]
+	}
+}
+
+/**
+* Link the object defined by the 'path' with the object 'targetname' with a link from type 'targettype'. 
+**/
+proc "link-bp-elements" [val path] [val targetname] [val targettype] {
+	get-view "Modernisierter IT-Grundschutz" | get-tree | select $path | double-click
+	get-editor [get-last $path] | get-tab-folder | get-tab-item "Verknüpfungen" | click
+	
+	with [get-editor [split -str $path -sep "/" -trimResults -omitEmptyStrings | to-list | get [minus [split -str $path
+		-sep "/" -trimResults -omitEmptyStrings | length] 1]]] {
+		get-combo -after [get-label "Verknüpfungen"] | select $targettype
+		get-button "Hinzufügen" | click
+	}
+	get-window "Elemente auswählen:" | get-table | select $targetname -column Element | double-click
+}
+
+/**
+* Verfiy that a link to an object defines by the path with the name 'benötigt' exist. 
+**/
+proc "verify-link" [val path] [val index] [val value] {
+	verify-link-type $path $index $value "benötigt"
+}
+
+/**
+* Verfiy that a link to an object defines by the 'path' with the name linktype exist. 
+**/
+proc "verify-link-type" [val path] [val index] [val value] [val linktype] {
+	get-view "Modernisierter IT-Grundschutz" | get-tree | select $path | double-click
+	get-editor [get-last $path] | get-tab-folder | get-tab-item "Verknüpfungen" | click
+	/*
+	get-editor [split -str $path -sep "/" -trimResults -omitEmptyStrings | to-list | get [minus [split -str $path
+		-sep "/" -trimResults -omitEmptyStrings | length] 1]] | 
+	*/
+	get-editor [get-last $path] |	get-table | get-item -path $linktype -column "Verknü" +
+		"pfung" -index $index | get-property  "values['Titel']" -raw | eq $value | assert-true [concat  "Verknüpfung mit namen: " $value " in der link Tabelle nicht gefunden." ]
+}
+
+/* Imports a vna file in the bp view. */
+proc "bp-import-vna" [val vna] {
+	get-view "Modernisierter IT-Grundschutz" | get-button "Importiere Informationsverbund aus Datei..." | click
+	log [concat "import vna: " $vna]
+	set-dialog-result File  [concat $datadir [get-java-property "file.separator"] $vna]
+	with [get-window Import] {
+		get-group Datei | get-button "Datei auswählen..." | click
+		get-button OK | click
+	}
+}
+------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998--

@@ -1,0 +1,132 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _HQDeEI9NEeic2YXgdvyDUQ,_lGnj8Ix1Eei2UKUDmonytQ,_aB0i4JHdEeiOvLT1aM35vw
+Element-Name: test_update
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _e9TvABNOEemg775CWW9MAw
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 6/4/19 2:41 PM
+Tags: skipExecution
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Test if the application can be updated with the builded updatesite.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+log "start update test"
+
+proc "info-screenshots" [val suffix] {
+	get-about-menu | click
+	screen-shot "Info über verinice" [concat "verinice-info-" $suffix "-0.png"]
+	get-window "Info über verinice" | get-button Installationsdetails | click
+	screen-shot "Installationsdetails für verinice" [concat "verinice-info-" $suffix "-1.png"]
+	get-window "Installationsdetails für verinice" | get-tab-folder | get-tab-item Installationsprotokoll | click
+	screen-shot "Installationsdetails für verinice" [concat "verinice-info-" $suffix "-2.png"]
+	get-window "Installationsdetails für verinice" | get-tab-folder | get-tab-item Funktionen | click
+	screen-shot "Installationsdetails für verinice" [concat "verinice-info-" $suffix "-3.png"]
+	get-window "Installationsdetails für verinice" | get-tab-folder | get-tab-item "Plug-ins" | click
+	screen-shot "Installationsdetails für verinice" [concat "verinice-info-" $suffix "-4.png"]
+	get-window "Installationsdetails für verinice" | get-tab-folder | get-tab-item Konfiguration | click
+	wait 2000 // wait for the text to load
+	screen-shot "Installationsdetails für verinice" [concat "verinice-info-" $suffix "-5.png"]
+	get-window "Installationsdetails für verinice" | get-button "Schließen" | click
+	get-window "Info über verinice" | get-button "Schließen" | click
+}
+info-screenshots "before"
+list-install-units | write-lines [concat "file:" $basedir "/before-instalable-units.txt"] true
+list-plugins | write-lines [concat "file:" $basedir "/before-instalable-units.txt"] true
+list-features | write-lines [concat "file:" $basedir "/before-instalable-units.txt"] true
+
+get-menu -path "Bearbeiten/Einstellungen..." | click
+with [get-window Benutzervorgaben] {
+    get-tree | select "Installieren\\/Aktualisieren/Websites mit verfügbarer Software"
+    with [get-table] {
+        select "Öffentlicher Update-Server" | activate-cell-edit -type MouseClickSelection
+        apply-cell-edit -deactivate
+    }
+    get-button Entfernen | click
+    get-window "Entferne Sites" | get-button Ja | click
+    get-button "Anwenden und Schließen" | click
+}
+
+try {
+	get-menu -path "Hilfe/Install New Software..." | click
+} -catch {
+	get-menu -path "Hilfe/Neue Software installieren..." | click
+}
+
+get-window Installieren | get-button "Hinzufügen ..." | click
+set-dialog-result Folder
+get-window Installieren | get-window "Repository hinzufügen" | get-button "Lokal..." | click
+set-dialog-result Folder [concat $datadir [get-java-property "file.separator"] repository]
+with [get-window Installieren] {
+	with [get-window "Repository hinzufügen"] {
+		get-button "Lokal..." | click
+		get-button OK | click
+	}
+	get-button "Elemente nach Kategorie gruppieren" | uncheck
+	get-button "Alles auswählen" | click
+}
+
+with [get-window Installieren | get-tree] {
+	get-item -path "Application Feature" | uncheck
+}
+
+try -times 12 -delay 1000 -command {
+	get-window Installieren | get-button "Weiter >" | click
+}
+
+try -times 12 -delay 1000 -command {
+	get-window Installieren | get-button "Weiter >" | click
+}
+
+try -times 12 -delay 1000 -command {
+	get-window Installieren | get-button "Ich akzeptiere die Bedingungen der Lizenzvereinbarungen" | click
+}
+
+screen-shot-window "install-window.png"
+
+exec-with-options {
+	get-window Installieren | get-button Fertigstellen | click
+} -allowStatusDialog
+verify-error {
+	get-window "Fehler aufgetreten" | get-button OK | click
+}
+
+screen-shot-window "install-window1.png"
+
+try -times 12 -delay 10000 -command {
+	with [get-window Sicherheitswarnung] {
+		get-button "Trotzdem installieren" | click
+	}
+} -catch {
+	log "could not find 'sicherheits warnungs' dialog"
+}
+
+try -times 12 -delay 10000 -command {
+	with [get-window "Software-Aktualisierungen"] {
+		get-button "Jetzt neu starten" | click
+	}
+} -catch {
+	log "could not find 'Software-Aktualisierungen' dialog"
+	throw-error "could not find 'Software-Aktualisierungen' dialog"
+}
+
+// restart-aut
+
+wait-until-eclipse-is-ready
+
+list-install-units | write-lines [concat "file:" $basedir "/after-instalable-units.txt"] true
+list-plugins | write-lines [concat "file:" $basedir "/after-instalable-units.txt"] true
+list-features | write-lines [concat "file:" $basedir "/after-instalable-units.txt"] true
+
+info-screenshots "after"
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

@@ -7,23 +7,27 @@
 # Default location value of the resource specifying the SNCA.xml file
 snca.resource=SNCA.xml
 
-# Location of the hibernate configuration for PostgreSQL:
-hibernate.config.resource=classpath:/server_hibernate.cfg.xml
-
-# Location of the hibernate configuration for Oracle
-#hibernate.config.resource=classpath:/server_hibernate_oracle.cfg.xml
-
-# Connection settings for PostgreSQL
-# Please adjust host, port, database name, user and pass according to your database.
-jdbc.driverClass=org.postgresql.Driver
+# Connection settings for an in-memory H2 Database in PostgreSQL mode
+hibernate.config.resource=classpath:/server_hibernate_test.cfg.xml
+jdbc.driverClass=org.h2.Driver
 jdbc.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
-jdbc.url=jdbc:postgresql://127.0.0.1:5432/verinicedb
-jdbc.username=verinice
-jdbc.password=verinice
+jdbc.url=jdbc:h2:mem:verinicedb;MODE=PostgreSQL
+
+##################################################
+#Alternative database: connection settings for PostgreSQL
+#Please adjust host, port, database name, user and pass according to your database.
+#hibernate.config.resource=classpath:/server_hibernate.cfg.xml
+#jdbc.driverClass=org.postgresql.Driver
+#jdbc.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+#jdbc.url=jdbc:postgresql://127.0.0.1:5432/verinicedb
+#jdbc.username=verinice
+#jdbc.password=verinice
+##################################################
 
 ##################################################
 #Alternative database: connection settings for Oracle
 #also change hibernate config above!!!
+#hibernate.config.resource=classpath:/server_hibernate_oracle.cfg.xml
 #jdbc.driverClass=oracle.jdbc.OracleDriver
 #jdbc.hibernate.dialect=sernet.verinice.hibernate.Oracle10gNclobDialect
 #jdbc.url=jdbc:oracle:thin:@localhost:1521:XE

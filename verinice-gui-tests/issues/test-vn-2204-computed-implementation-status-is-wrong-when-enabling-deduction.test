@@ -1,0 +1,50 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _74j9YLaIEeiiZL0aNB5Nyg,_kpzJwJASEeiCTbb54-xhBQ,_lGnj8Ix1Eei2UKUDmonytQ,_4GRncI0bEei2UKUDmonytQ,_K06wgI0fEei2UKUDmonytQ,_aB0i4JHdEeiOvLT1aM35vw
+Element-Name: test-vn-2204-computed-implementation-status-is-wrong-when-enabling-deduction
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _una70I0lEei2VKUDmonytQ
+Runtime-Version: 2.4.1.201903190000
+Save-Time: 4/15/19 11:32 AM
+Tags: bp, deduction, skipExecution
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Currently skipped.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+get-view Objektbrowser | close
+create-bpmodel "testname"
+create-bpapplication "testname/Anwendungen" "testapp"
+create-bprequirementgroup "testname/Anwendungen/testapp" "modulegroup-1"
+create-bprequirement "testname/Anwendungen/testapp/modulegroup-1" "module-1"
+set-implementation-status-deduction "testname/Anwendungen/testapp/modulegroup-1/.*module-1" 0
+assert-implementation-status "testname/Anwendungen/testapp/modulegroup-1/.*module-1" $state_unedited
+
+create-bpsafeguardgroup "testname/Anwendungen/testapp" "safeguardgroup-1"
+
+create-bpsafeguard "testname/Anwendungen/testapp/safeguardgroup-1" "safeguard-1"
+set-implementation-status "testname/Anwendungen/testapp/safeguardgroup-1/.*safeguard-1" Ja
+linksafeguard "testname/Anwendungen/testapp/modulegroup-1/.*module-1" "safeguard-1"
+
+create-bpsafeguard "testname/Anwendungen/testapp/safeguardgroup-1" "safeguard-2"
+set-implementation-status "testname/Anwendungen/testapp/safeguardgroup-1/.*safeguard-2" Nein
+linksafeguard "testname/Anwendungen/testapp/modulegroup-1/.*module-1" "safeguard-2"
+
+assert-implementation-status "testname/Anwendungen/testapp/modulegroup-1/.*module-1" $state_unedited
+
+set-implementation-status-deduction "testname/Anwendungen/testapp/modulegroup-1/.*module-1" 1
+screen-shot-bp-view  "vn-2204-deduction-wrong.png"
+assert-implementation-status "testname/Anwendungen/testapp/modulegroup-1/.*module-1" $state_partial
+
+delete-bpelement "testname"
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

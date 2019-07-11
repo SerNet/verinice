@@ -28,9 +28,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.annotation.NonNull;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.service.SecurityException;
+import sernet.gs.service.TimeFormatter;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
@@ -42,7 +46,6 @@ import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
-import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.PersonenKategorie;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
@@ -50,7 +53,6 @@ import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.iso27k.PersonIso;
 
 /**
  * Removes tree-elements.
@@ -82,6 +84,8 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     private HashMap<Integer, String> dbIdTypeIdPairs;
     private String stationId;
 
+    private long start;
+
     public RemoveElement(CnATreeElement... elements) {
         // only transfer id of element to keep footprint small:
         dbIdTypeIdPairs = new HashMap<>(elements.length);
@@ -105,7 +109,6 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     private void removeElement(Integer dbid, String typeId) {
         try {
             this.element = (T) getDaoFactory().getDAO(typeId).findById(dbid);
-
             if (this.element == null) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug(
@@ -117,9 +120,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
             // first we check if the operation is allowed for the element and
             // the children
             dao.checkRights(element);
-            CnATreeElement[] children = element.getChildrenAsArray();
-            checkRightForSubElements(children);
-
+            checkRightsOfSubtree(element);
             removeElement(element);
         } catch (SecurityException e) {
             LOG.error("SecurityException while deleting element: " + element, e);
@@ -146,7 +147,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
             }
         }
 
-        if (element instanceof Person || element instanceof PersonIso) {
+        if (element.isPerson()) {
             removeConfiguration(element);
         }
 
@@ -206,22 +207,21 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         dao.delete(element);
     }
 
-
     /**
      * Check the rights for the given elements in the list, which is a recursive
      * call, as children can have children.
      * @param children
      *            the elements to check in this method call
      */
-    private void checkRightForSubElements(CnATreeElement[] children) {
-        for (CnATreeElement cnATreeElement : children) {
-            IBaseDao<? super CnATreeElement, Serializable> dao = getDaoFactory()
-                    .getDAOforTypedElement(cnATreeElement);
-            dao.checkRights(cnATreeElement);
-            CnATreeElement[] childrenAsArray = cnATreeElement.getChildrenAsArray();
-            if (childrenAsArray.length > 0) {
-                checkRightForSubElements(childrenAsArray);
-            }
+    private void checkRightsOfSubtree(CnATreeElement element) throws CommandException {
+        LoadSubtreeIds loadSubtreeIdsCommand = new LoadSubtreeIds(element);
+        loadSubtreeIdsCommand = getCommandService().executeCommand(loadSubtreeIdsCommand);
+        Set<Integer> dbIdsOfSubtree = loadSubtreeIdsCommand.getDbIdsOfSubtree();
+        @SuppressWarnings("unchecked")
+        IBaseDao<? super CnATreeElement, Serializable> dao = getDaoFactory()
+                .getDAOforTypedElement(element);
+        for (Integer dbId : dbIdsOfSubtree) {
+            dao.checkRights(dbId, element.getScopeId());
         }
     }
 
@@ -339,10 +339,13 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     }
 
     private void removeConfiguration(CnATreeElement person) throws CommandException {
-        LoadConfiguration command = new LoadConfiguration(person);
-        command = getCommandService().executeCommand(command);
-        Configuration conf = command.getConfiguration();
-        if (conf != null) {
+        IBaseDao<@NonNull Configuration, Serializable> configurationDao = getDaoFactory()
+                .getDAO(Configuration.class);
+        @SuppressWarnings("unchecked")
+        List<Configuration> configurations = configurationDao.findByCriteria(DetachedCriteria
+                .forClass(Configuration.class).add(Restrictions.eq("person", person)));
+        if (!configurations.isEmpty()) {
+            Configuration conf = configurations.get(0);
             IBaseDao<Configuration, Serializable> confDAO = getDaoFactory()
                     .getDAO(Configuration.class);
             confDAO.delete(conf);
@@ -371,6 +374,12 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     @Override
     public String getStationId() {
         return stationId;
+    }
+
+    private void logRuntime(String message) {
+        long runtimeCheckRights = System.currentTimeMillis() - start;
+        LOG.debug(String.format("%s %s", message,
+                TimeFormatter.getHumanRedableTime(runtimeCheckRights)));
     }
 
     public IFinishedRiskAnalysisListsDao getRaListDao() {

@@ -25,6 +25,8 @@ import java.util.Collection;
 import java.util.Date;
 
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.IAbbreviatedElement;
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -33,7 +35,8 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  */
 @SuppressWarnings("serial")
-public class Audit extends CnATreeElement implements IISO27kElement, IISO27kGroup,IISO27Scope {
+public class Audit extends CnATreeElement implements IISO27kElement, IISO27kGroup, IISO27Scope,
+        IAbbreviatedElement, ITaggableElement {
 
 	public static final String TYPE_ID = "audit"; //$NON-NLS-1$
 	public static final String PROP_ABBR = "audit_abbr"; //$NON-NLS-1$

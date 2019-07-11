@@ -23,15 +23,11 @@ import java.util.Map;
 import java.util.Set;
 
 import sernet.gs.service.ServerInitializer;
-import sernet.hui.common.connect.PropertyList;
-import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateContext;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateResult;
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Service implementation to run and configure an IT base protection (ITBP) risk
@@ -52,7 +48,6 @@ import sernet.verinice.model.common.CnATreeElement;
 public class RiskServiceImpl implements RiskService {
 
     private RiskServiceMetaDao metaDao;
-    private IBaseDao<PropertyList, Integer> propertyListDao;
 
     private Map<Integer, RiskConfiguration> riskConfigurationCache = Collections
             .synchronizedMap(new LinkedHashMap<Integer, RiskConfiguration>() {
@@ -75,64 +70,37 @@ public class RiskServiceImpl implements RiskService {
     public RiskConfigurationUpdateResult updateRiskConfiguration(
             RiskConfigurationUpdateContext updateContext) {
         ServerInitializer.inheritVeriniceContextState();
-        updateItNetwork(updateContext);
-        RiskConfigurationUpdateResult updateResult = updateRiskValuesInThreats(updateContext);
+        ItNetwork itNetwork = getMetaDao().loadItNetwork(updateContext.getUuidItNetwork());
+        Integer itNetworkDBId = itNetwork.getDbId();
 
-        RiskConfigurationUpdateResult updateRequirementsResult = removeRiskValuesFromRequirements(
-                updateContext);
-        updateResult.setNumberOfChangedRequirements(
-                updateRequirementsResult.getNumberOfChangedRequirements());
-
-        RiskConfigurationUpdateResult updateSafeguardsResult = removeRiskValuesFromSafeguards(
-                updateContext);
-        updateResult.setNumberOfChangedSafeguards(
-                updateSafeguardsResult.getNumberOfChangedSafeguards());
-
-        return updateResult;
+        updateItNetwork(itNetwork, updateContext);
+        return updateRiskValuesInThreats(itNetworkDBId, updateContext);
     }
 
-    private void updateItNetwork(RiskConfigurationUpdateContext updateContext) {
-        ItNetwork itNetwork = getMetaDao().loadItNetwork(updateContext.getUuidItNetwork());
-        updateContext.setItNetwork(itNetwork);
+    private void updateItNetwork(ItNetwork itNetwork,
+            RiskConfigurationUpdateContext updateContext) {
         itNetwork.setRiskConfiguration(updateContext.getRiskConfiguration());
         getMetaDao().updateItNetwork(itNetwork);
-        riskConfigurationCache.computeIfPresent(itNetwork.getDbId(),
-                (id, oldValue) -> updateContext.getRiskConfiguration());
+        Integer itNetworkId = itNetwork.getDbId();
+        if (riskConfigurationCache.containsKey(itNetworkId)) {
+            riskConfigurationCache.put(itNetworkId, updateContext.getRiskConfiguration());
+        }
     }
 
-    private RiskConfigurationUpdateResult updateRiskValuesInThreats(
+    private RiskConfigurationUpdateResult updateRiskValuesInThreats(Integer scopeId,
             RiskConfigurationUpdateContext updateContext) {
-        Set<BpThreat> threatsFromScope = getMetaDao()
-                .loadThreatsFromScope(updateContext.getItNetwork().getDbId());
+        Set<BpThreat> threatsFromScope = getMetaDao().loadThreatsFromScope(scopeId);
         RiskValueInThreatUpdater riskValueUpdater = new RiskValueInThreatUpdater(updateContext,
                 threatsFromScope);
-        riskValueUpdater.setPropertyListDao(propertyListDao);
-        riskValueUpdater.execute();
+        Set<BpThreat> changedThreats = riskValueUpdater.execute();
+        for (BpThreat bpThreat : changedThreats) {
+            metaDao.getElementDao().merge(bpThreat);
+        }
         return riskValueUpdater.getRiskConfigurationUpdateResult();
     }
 
-    private RiskConfigurationUpdateResult removeRiskValuesFromRequirements(
-            RiskConfigurationUpdateContext updateContext) {
-        Set<CnATreeElement> requirementsFromScope = getMetaDao()
-                .loadRequirementsFromScope(updateContext.getItNetwork().getDbId());
-        RiskValueRemover riskValueRemover = new RiskValueFromRequirementRemover(updateContext,
-                requirementsFromScope);
-        riskValueRemover.execute();
-        return riskValueRemover.getRiskConfigurationUpdateResult();
-    }
-
-    private RiskConfigurationUpdateResult removeRiskValuesFromSafeguards(
-            RiskConfigurationUpdateContext updateContext) {
-        Set<CnATreeElement> safeguardsFromScope = getMetaDao()
-                .loadSafeguardsFromScope(updateContext.getItNetwork().getDbId());
-        RiskValueRemover riskValueRemover = new RiskValueFromSafeguardRemover(updateContext,
-                safeguardsFromScope);
-        riskValueRemover.execute();
-        return riskValueRemover.getRiskConfigurationUpdateResult();
-    }
-
     @Override
-    public RiskConfiguration findRiskConfiguration(Integer itNetworkID) throws CommandException {
+    public RiskConfiguration findRiskConfiguration(Integer itNetworkID) {
         RiskConfiguration riskConfiguration = riskConfigurationCache.get(itNetworkID);
         if (riskConfiguration == null
                 // null is a valid value for a RiskConfiguration and therefore
@@ -151,14 +119,6 @@ public class RiskServiceImpl implements RiskService {
 
     public void setMetaDao(RiskServiceMetaDao metaDao) {
         this.metaDao = metaDao;
-    }
-
-    public IBaseDao<PropertyList, Integer> getPropertyListDao() {
-        return propertyListDao;
-    }
-
-    public void setpropertyListDao(IBaseDao<PropertyList, Integer> propertyListDao) {
-        this.propertyListDao = propertyListDao;
     }
 
 }

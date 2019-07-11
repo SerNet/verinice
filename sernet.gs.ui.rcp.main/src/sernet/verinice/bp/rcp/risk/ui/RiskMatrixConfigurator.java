@@ -20,12 +20,11 @@ package sernet.verinice.bp.rcp.risk.ui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Color;
@@ -38,11 +37,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
 import sernet.gs.ui.rcp.main.common.model.CnATreeElementScopeUtils;
+import sernet.hui.swt.SWTResourceManager;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.risk.Frequency;
 import sernet.verinice.model.bp.risk.Impact;
 import sernet.verinice.model.bp.risk.Risk;
-import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -53,79 +52,141 @@ public class RiskMatrixConfigurator extends Composite {
     private static final RGB WHITE = new RGB(255, 255, 255);
     private static final RGB BLACK = new RGB(0, 0, 0);
 
-    private final RiskConfiguration riskConfiguration;
+    private Composite pane;
+
+    private RiskConfiguration editorState;
+    private final Runnable firePropertyChanged;
 
     public RiskMatrixConfigurator(Composite parent, RiskConfiguration riskConfiguration,
-            Consumer<RiskConfiguration> updateListener) {
+            Runnable firePropertyChanged) {
         super(parent, SWT.NONE);
-        this.riskConfiguration = riskConfiguration;
+        this.firePropertyChanged = firePropertyChanged;
+        editorState = riskConfiguration;
+        refresh();
+    }
 
-        List<Impact> impactValues = riskConfiguration.getImpacts();
+    public static RiskConfiguration getRiskConfiguration(CnATreeElement element) {
+        ItNetwork itNetwork = (ItNetwork) CnATreeElementScopeUtils.getScope(element);
+        if (!(itNetwork instanceof ItNetwork)) {
+            throw new IllegalArgumentException("Cannot retrieve risk configuration for " + element
+                    + " as it is not part of an IT network");
+        }
+        return itNetwork.getRiskConfigurationOrDefault();
+    }
+
+    public void setEditorState(RiskConfiguration riskConfiguration) {
+        this.editorState = riskConfiguration;
+    }
+
+    public RiskConfiguration getEditorState() {
+        return editorState;
+    }
+
+    public void refresh() {
+        if (pane != null) {
+            pane.dispose();
+        }
+
+        List<Impact> impactValues = editorState.getImpacts();
         List<Impact> impactValuesReverse = new ArrayList<>(impactValues);
         Collections.reverse(impactValuesReverse);
+        List<Frequency> frequencyValues = editorState.getFrequencies();
 
-        List<Frequency> frequencyValues = riskConfiguration.getFrequencies();
-        setLayout(new GridLayout(frequencyValues.size() + 1, false));
+        setLayout(new GridLayout(frequencyValues.size() + 1, true));
+        pane = new Composite(this, SWT.NONE);
+        pane.setLayout(new GridLayout(frequencyValues.size() + 1, false));
 
-        Label labels = new Label(this, SWT.NONE);
+        Label labels = new Label(pane, SWT.NONE);
         labels.setLayoutData(
                 GridDataFactory.swtDefaults().span(frequencyValues.size() + 1, 1).create());
         labels.setText(Messages.riskConfigurationMatrixImpactAxis);
 
         impactValuesReverse.forEach(impact -> {
-            Label label = new Label(this, SWT.NONE);
+            Label label = new Label(pane, SWT.NONE);
             GridData layoutData = new GridData();
             layoutData.widthHint = StackConfigurator.LABEL_WIDTH;
             label.setLayoutData(layoutData);
             String text = cutLabel(impact.getLabel(), label,
                     StackConfigurator.LABEL_WIDTH + StackConfigurator.ELEMENT_MARGINS);
             label.setText(text);
-            frequencyValues.forEach(frequency -> addRiskSelector(riskConfiguration, updateListener,
-                    impact, frequency));
+            frequencyValues.forEach(frequency -> addRiskSelector(impact, frequency));
         });
-        new Label(this, SWT.NONE);
+        new Label(pane, SWT.NONE);
         frequencyValues.forEach(frequency -> {
-            Label label = new Label(this, SWT.NONE);
+            Label label = new Label(pane, SWT.NONE);
             String text = cutLabel(frequency.getLabel(), label, SELECTOR_SIZE);
             label.setText(text);
         });
-        new Label(this, SWT.NONE);
-        Label axisLabel = new Label(this, SWT.NONE);
+        new Label(pane, SWT.NONE);
+        Label axisLabel = new Label(pane, SWT.NONE);
         axisLabel.setLayoutData(GridDataFactory.swtDefaults()//
                 .align(SWT.CENTER, SWT.BEGINNING)//
                 .span(frequencyValues.size(), 1).create());
         axisLabel.setText(Messages.riskConfigurationMatrixFrequencyAxis);
 
-        new Label(this, SWT.NONE).setLayoutData(
+        new Label(pane, SWT.NONE).setLayoutData(
                 GridDataFactory.swtDefaults().span(frequencyValues.size() + 1, 1).create());
-        Label helpText = new Label(this, SWT.NONE);
+        Label helpText = new Label(pane, SWT.NONE);
         helpText.setLayoutData(
                 GridDataFactory.swtDefaults().span(frequencyValues.size() + 1, 1).create());
         helpText.setText(Messages.riskConfigurationMatrixUsage);
+
+        pack(true);
+        if (getParent() instanceof ScrolledComposite) {
+            ((ScrolledComposite) getParent()).setMinSize(getClientArea().width,
+                    getClientArea().height);
+        }
+
+        pane.requestLayout();
+        redraw();
     }
 
-    private void addRiskSelector(RiskConfiguration riskConfiguration,
-            Consumer<RiskConfiguration> updateListener, Impact impact, Frequency frequency) {
-        CLabel selector = new CLabel(this, SWT.SHADOW_OUT | SWT.CENTER);
+    private void addRiskSelector(Impact impact, Frequency frequency) {
+        CLabel selector = new CLabel(pane, SWT.SHADOW_OUT | SWT.CENTER);
 
         selector.setLayoutData(new GridData(SELECTOR_SIZE, SELECTOR_SIZE));
-        selector.addMouseListener(
-                new RiskSelectorListener(impact, updateListener, riskConfiguration, frequency));
-        Risk risk = riskConfiguration.getRisk(frequency, impact);
+        selector.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseDown(MouseEvent e) {
+                boolean modifierPressed = (e.stateMask & SWT.MODIFIER_MASK) != 0;
+                int numberOfRisks = editorState.getRisks().size();
+
+                Risk currentRisk = editorState.getRisk(frequency, impact);
+                Risk newRisk;
+                int index = editorState.getRisks().indexOf(currentRisk);
+
+                int newIndex = index + (modifierPressed ? -1 : 1);
+                if (newIndex >= numberOfRisks || newIndex == -1) {
+                    newRisk = null;
+                } else if (newIndex < -1) {
+                    newRisk = editorState.getRisks().get(numberOfRisks - 1);
+                } else {
+                    newRisk = editorState.getRisks().get(newIndex);
+                }
+                fillSelector(selector, newRisk);
+                editorState = editorState.withRisk(frequency, impact, newRisk);
+                firePropertyChanged.run();
+            }
+        });
+
+        fillSelector(selector, editorState.getRisk(frequency, impact));
+    }
+
+    private void fillSelector(CLabel selector, Risk risk) {
         String text;
         Color backgroundColor = null;
         Color textColor = null;
         if (risk == null) {
             text = sernet.hui.swt.widgets.Messages.getString("SingleSelectDummyValue");
-            textColor = new Color(selector.getDisplay(), BLACK);
+            textColor = SWTResourceManager.getColor(BLACK);
         } else {
             text = cutLabel(risk.getLabel(), selector,
                     SELECTOR_SIZE - StackConfigurator.ELEMENT_MARGINS);
             RGB riskColor = ColorConverter.toRGB(risk.getColor());
             if (riskColor != null) {
-                backgroundColor = new Color(selector.getDisplay(), riskColor);
-                textColor = new Color(selector.getDisplay(),
-                        determineOptimalTextColor(riskColor, WHITE, BLACK));
+                backgroundColor = SWTResourceManager.getColor(riskColor);
+                textColor = SWTResourceManager
+                        .getColor(determineOptimalTextColor(riskColor, WHITE, BLACK));
             }
         }
 
@@ -148,20 +209,6 @@ public class RiskMatrixConfigurator extends Composite {
         }
         gc.dispose();
         return newText;
-    }
-
-    public RiskConfiguration getRiskConfiguration() {
-        return riskConfiguration;
-    }
-
-    public static RiskConfiguration getRiskConfiguration(CnATreeElement element) {
-        ItNetwork itNetwork = (ItNetwork) CnATreeElementScopeUtils.getScope(element);
-        if (!(itNetwork instanceof ItNetwork)) {
-            throw new IllegalArgumentException("Cannot retrieve risk configuration for " + element
-                    + " as it is not part of an IT network");
-        }
-        return Optional.ofNullable(itNetwork.getRiskConfiguration())
-                .orElseGet(DefaultRiskConfiguration::getInstance);
     }
 
     private static RGB determineOptimalTextColor(RGB bgColor, RGB lightColor, RGB darkColor) {
@@ -191,43 +238,5 @@ public class RiskMatrixConfigurator extends Composite {
             c[i] = col;
         }
         return (0.2126 * c[0]) + (0.7152 * c[1]) + (0.0722 * c[2]);
-    }
-
-    /**
-     * TODO meaningful comment
-     */
-    private final class RiskSelectorListener extends MouseAdapter {
-        private final Impact impact;
-        private final Consumer<RiskConfiguration> updateListener;
-        private final RiskConfiguration riskConfiguration;
-        private final Frequency frequency;
-
-        private RiskSelectorListener(Impact impact, Consumer<RiskConfiguration> updateListener,
-                RiskConfiguration riskConfiguration, Frequency frequency) {
-            this.impact = impact;
-            this.updateListener = updateListener;
-            this.riskConfiguration = riskConfiguration;
-            this.frequency = frequency;
-        }
-
-        @Override
-        public void mouseDown(MouseEvent e) {
-            boolean modifierPressed = (e.stateMask & SWT.MODIFIER_MASK) != 0;
-            int numberOfRisks = riskConfiguration.getRisks().size();
-
-            Risk currentRisk = riskConfiguration.getRisk(frequency, impact);
-            Risk newRisk;
-            int index = riskConfiguration.getRisks().indexOf(currentRisk);
-
-            int newIndex = index + (modifierPressed ? -1 : 1);
-            if (newIndex >= numberOfRisks || newIndex == -1) {
-                newRisk = null;
-            } else if (newIndex < -1) {
-                newRisk = riskConfiguration.getRisks().get(numberOfRisks - 1);
-            } else {
-                newRisk = riskConfiguration.getRisks().get(newIndex);
-            }
-            updateListener.accept(riskConfiguration.withRisk(frequency, impact, newRisk));
-        }
     }
 }

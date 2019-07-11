@@ -15,6 +15,7 @@ import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.ImmutableSettings.Builder;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.indices.IndexAlreadyExistsException;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.node.NodeBuilder;
 import org.springframework.beans.factory.DisposableBean;
@@ -59,33 +60,28 @@ public class ElasticsearchClientFactory implements DisposableBean {
     private IDirectoryCreator directoryCreator;
 
     public void init() {
-        try {
-            if (node == null || node.isClosed()) {
-                // Build and start the node
-                node = NodeBuilder.nodeBuilder().settings(buildNodeSettings()).node();
-                if (LOG.isDebugEnabled()) {
-                    for (Entry<String, String> entry : node.settings().getAsMap().entrySet()) {
-                        LOG.debug(
-                                "nodeEntry:\t <" + entry.getKey() + ", " + entry.getValue() + ">");
-                    }
+        if (node == null || node.isClosed()) {
+            // Build and start the node
+            node = NodeBuilder.nodeBuilder().settings(buildNodeSettings()).node();
+            if (LOG.isDebugEnabled()) {
+                for (Entry<String, String> entry : node.settings().getAsMap().entrySet()) {
+                    LOG.debug("nodeEntry:\t <" + entry.getKey() + ", " + entry.getValue() + ">");
                 }
-                // Get a client
-                client = node.client();
-                configure();
-                Map<String, String> map = ImmutableSettings.builder().internalMap();
-                for (Entry<String, String> e : map.entrySet()) {
-                    LOG.error("ES Setting:\t<" + e.getKey() + ", " + e.getValue() + ">");
-                }
-                // Wait for Yellow status
-                client.admin().cluster().prepareHealth().setWaitForYellowStatus()
-                        // yellow means, there are no replicas that could be
-                        // used, since we are running on 1 node only, we are not
-                        // going to have any replicas available, so yellow is ok
-                        // for us
-                        .setTimeout(TimeValue.timeValueMinutes(1)).execute().actionGet();
             }
-        } catch (Exception e) {
-            LOG.error("Error while initializing elasticsearch", e);
+            // Get a client
+            client = node.client();
+            configure();
+            Map<String, String> map = ImmutableSettings.builder().internalMap();
+            for (Entry<String, String> e : map.entrySet()) {
+                LOG.error("ES Setting:\t<" + e.getKey() + ", " + e.getValue() + ">");
+            }
+            // Wait for Yellow status
+            client.admin().cluster().prepareHealth()
+                    // yellow means, there are no replicas that could be used,
+                    // since we are running on 1 node only, we are not going to
+                    // have any replicas available, so yellow is ok for us
+                    .setWaitForYellowStatus().setTimeout(TimeValue.timeValueMinutes(1)).execute()
+                    .actionGet();
         }
     }
 
@@ -95,9 +91,15 @@ public class ElasticsearchClientFactory implements DisposableBean {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Creating index " + ISearchDao.INDEX_NAME + "...");
             }
-            client.admin().indices().prepareCreate(ISearchDao.INDEX_NAME)
-                    .setSettings(getAnylysisConf()).addMapping(ElementDao.TYPE_NAME, getMapping())
-                    .execute().actionGet();
+            try {
+                client.admin().indices().prepareCreate(ISearchDao.INDEX_NAME)
+                        .setSettings(getAnylysisConf())
+                        .addMapping(ElementDao.TYPE_NAME, getMapping()).execute().actionGet();
+            } catch (IndexAlreadyExistsException e) {
+                // https://github.com/elastic/elasticsearch/issues/8105
+                LOG.warn("Index " + ISearchDao.INDEX_NAME
+                        + " already existed when trying to create it, trying to use it.");
+            }
         } else if (LOG.isDebugEnabled()) {
             LOG.debug("Index " + ISearchDao.INDEX_NAME + " exists");
         }
@@ -162,7 +164,11 @@ public class ElasticsearchClientFactory implements DisposableBean {
                 // EXPERIMENTAL, could cause perfomance issues, TEST
                 .put("index.store.compress.stored", true)
                 // EXPERIMENTAL, as above;
-                .put("index.store.compress.tv", true);
+                .put("index.store.compress.tv", true)
+                // disable the REST API since it has security vulnerabilities
+                // and we don't use it anyway
+                .put("http.enabled", false);
+
         setOSDependentFileSystem(builder);
 
         return builder.build();
