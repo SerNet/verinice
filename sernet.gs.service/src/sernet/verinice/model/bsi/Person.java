@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.StringUtil;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.IPerson;
@@ -233,7 +234,7 @@ public class Person extends CnATreeElement implements IBSIStrukturElement, IPers
 
     @Override
     public String getSalutation() {
-        return getEntity().getRawPropertyValue(P_ANREDE);
+        return StringUtil.replaceEmptyStringByNull(getEntity().getPropertyValue(P_ANREDE));
     }
 
     @Override

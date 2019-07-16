@@ -21,6 +21,7 @@ package sernet.verinice.model.bp.elements;
 
 import java.util.Collection;
 
+import sernet.gs.service.StringUtil;
 import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.hui.common.connect.IPerson;
 import sernet.hui.common.connect.ITaggableElement;
@@ -103,7 +104,7 @@ public class BpPerson extends CnATreeElement
 
     @Override
     public String getSalutation() {
-        return getEntity().getRawPropertyValue(PROP_TITLE);
+        return StringUtil.replaceEmptyStringByNull(getEntity().getPropertyValue(PROP_TITLE));
     }
 
     @Override

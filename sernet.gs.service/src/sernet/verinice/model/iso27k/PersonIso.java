@@ -19,6 +19,7 @@ package sernet.verinice.model.iso27k;
 
 import java.util.Collection;
 
+import sernet.gs.service.StringUtil;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.hui.common.connect.IPerson;
@@ -171,7 +172,7 @@ public class PersonIso extends CnATreeElement
 
     @Override
     public String getSalutation() {
-        return getEntity().getRawPropertyValue(PROP_ANREDE);
+        return StringUtil.replaceEmptyStringByNull(getEntity().getPropertyValue(PROP_ANREDE));
     }
 
     @Override
