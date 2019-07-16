@@ -2,25 +2,25 @@
 <auth version="0" type="whitelist" xmlns="http://www.verinice.org/auth"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.verinice.org/auth verinice-auth.xsd">
-    
+
     <!-- This is the default configuration of access rights to application actions. -->
     <!-- End users should NEVER edit this file! Use verinice-auth.xml instead. -->
     <!-- Settings in verinice-auth.xml overwrites settings in this file. -->
-    
+
     <profiles>
         <!-- Each profile in this document defines a collection -->
         <!-- of application actions. All actions in verinice are -->
         <!-- defined in property file verinice-action.properties. -->
-        
-        
+
+
         <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-             When adding actions here, don't forget to add 
+             When adding actions here, don't forget to add
              them to verinice-auth-standalone-default.xml as well
              !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         -->
-        
+
         <profile name="user-default-profile" origin="default">
-        <!-- missing actions: 
+        <!-- missing actions:
             "accountsettings"
             "accesscontrol"
             "convertitnetwork"
@@ -33,7 +33,7 @@
             "searchreindex"
             "showallfiles" -->
             <action id="addbpelement"/>
-            <action id="addbpgroup"/>  
+            <action id="addbpgroup"/>
             <action id="addbsielement" />
             <action id="addfile" />
             <action id="addismelement" />
@@ -56,7 +56,7 @@
             <action id="bsimodelview" />
             <action id="bulkedit" />
             <action id="catalogdelete" />
-            <action id="catalogimport" />       
+            <action id="catalogimport" />
             <action id="catalogview" />
             <action id="changeicon" />
             <action id="changeownpassword" />
@@ -105,7 +105,7 @@
             <action id="xmlimport" />
         </profile>
         <profile name="user-scope-default-profile" origin="default">
-        <!-- missing actions: 
+        <!-- missing actions:
             "accountsettings"
             "accesscontrol"
             "addismorg"
@@ -124,12 +124,12 @@
             "taskchangeduedate"
             "taskwithreleaseprocess"
             "addismorg"
-            "xmlimport" 
+            "xmlimport"
             "searchreindex
             "showallfiles"
             "addsecurityassessment"-->
             <action id="addbpelement"/>
-            <action id="addbpgroup"/>  
+            <action id="addbpgroup"/>
             <action id="addbsielement" />
             <action id="addfile" />
             <action id="addismelement" />
@@ -148,7 +148,7 @@
             <action id="bsimodelview" />
             <action id="bulkedit" />
             <action id="catalogdelete" />
-            <action id="catalogimport" />       
+            <action id="catalogimport" />
             <action id="catalogview" />
             <action id="changeicon" />
             <action id="changeownpassword" />
@@ -241,21 +241,21 @@
         </profile>
         <profile name="admin-scope-default-profile" origin="default">
         <!-- missing actions:
-            "accountsettings" 
-            "addismorg" 
+            "accountsettings"
+            "addismorg"
             "additnetwork"
-            "additverbund" 
-            "addsecurityassessment" 
-            "editprofile" 
-            "gsnotesimport" 
-            "gstoolimport" 
-            "importldap" 
+            "additverbund"
+            "addsecurityassessment"
+            "editprofile"
+            "gsnotesimport"
+            "gstoolimport"
+            "importldap"
             "showallfiles"
-            "taskshowall" 
+            "taskshowall"
             "xmlimport"  -->
             <action id="accesscontrol" />
             <action id="addbpelement"/>
-            <action id="addbpgroup"/>  
+            <action id="addbpgroup"/>
             <action id="addbsielement" />
             <action id="addfile" />
             <action id="addismelement" />
@@ -274,7 +274,7 @@
             <action id="bsimodelview" />
             <action id="bulkedit" />
             <action id="catalogdelete" />
-            <action id="catalogimport" />       
+            <action id="catalogimport" />
             <action id="catalogview" />
             <action id="changeicon" />
             <action id="cnavalidation" />
@@ -323,98 +323,98 @@
             <action id="unify" />
             <action id="xmlexport"/>
         </profile>
-        
-        <profile name="admin-local-default-profile" origin="default" > 
-         <!-- missing actions:  
-            "addismorg" 
+
+        <profile name="admin-local-default-profile" origin="default" >
+         <!-- missing actions:
+            "addismorg"
             "additnetwork"
-            "additverbund" 
-            "gsnotesimport" 
-            "gstoolimport" 
-            "importldap" 
+            "additverbund"
+            "gsnotesimport"
+            "gstoolimport"
+            "importldap"
             "showallfiles"
             "taskshowall" -->
-            <action id="accesscontrol" /> 
-            <action id="accountsettings" /> 
+            <action id="accesscontrol" />
+            <action id="accountsettings" />
             <action id="addbpelement"/>
-            <action id="addbpgroup"/>  
-            <action id="addbsielement" /> 
-            <action id="addfile" /> 
-            <action id="addismelement" /> 
-            <action id="addismgroup" /> 
-            <action id="addnote" /> 
-            <action id="addownmodul"/> 
-            <action id="addsecurityassessment" /> 
-            <action id="assignallisatopics" /> 
+            <action id="addbpgroup"/>
+            <action id="addbsielement" />
+            <action id="addfile" />
+            <action id="addismelement" />
+            <action id="addismgroup" />
+            <action id="addnote" />
+            <action id="addownmodul"/>
+            <action id="addsecurityassessment" />
+            <action id="assignallisatopics" />
             <action id="auditview" />
             <action id="baseprotectionmodeling" />
-            <action id="baseprotectionview" /> 
-            <action id="bausteinzuordnung" /> 
+            <action id="baseprotectionview" />
+            <action id="bausteinzuordnung" />
             <action id="bpimporter" />
-            <action id="bsibrowser" /> 
-            <action id="bsidnd" /> 
-            <action id="bsimassnahmen" /> 
-            <action id="bsimodelview" /> 
+            <action id="bsibrowser" />
+            <action id="bsidnd" />
+            <action id="bsimassnahmen" />
+            <action id="bsimodelview" />
             <action id="bulkedit" />
             <action id="catalogdelete" />
-            <action id="catalogimport" />       
+            <action id="catalogimport" />
             <action id="catalogview" />
-            <action id="changeicon" /> 
+            <action id="changeicon" />
             <action id="cnavalidation" />
-            <action id="convertitnetwork" /> 
-            <action id="creategreenbonetasks" /> 
-            <action id="createindividualtasks" /> 
-            <action id="createisatasks" /> 
-            <action id="deletefile" /> 
-            <action id="deleteitem" /> 
-            <action id="derivestatus"/> 
-            <action id="documentview" /> 
-            <action id="editlinks" /> 
+            <action id="convertitnetwork" />
+            <action id="creategreenbonetasks" />
+            <action id="createindividualtasks" />
+            <action id="createisatasks" />
+            <action id="deletefile" />
+            <action id="deleteitem" />
+            <action id="derivestatus"/>
+            <action id="documentview" />
+            <action id="editlinks" />
             <action id="editprofile" />
-            <action id="editriskconfiguration" /> 
-            <action id="exportlinktable" /> 
-            <action id="files" /> 
-            <action id="generateorgreport" /> 
-            <action id="groupbytag"/> 
-            <action id="importcsv" /> 
-            <action id="ismcopy" /> 
-            <action id="ismcut" /> 
-            <action id="ismview" /> 
-            <action id="ismviewweb" /> 
+            <action id="editriskconfiguration" />
+            <action id="exportlinktable" />
+            <action id="files" />
+            <action id="generateorgreport" />
+            <action id="groupbytag"/>
+            <action id="importcsv" />
+            <action id="ismcopy" />
+            <action id="ismcut" />
+            <action id="ismview" />
+            <action id="ismviewweb" />
             <action id="konsolidator" />
             <action id="migrate_data_protection"/>
-            <action id="naturalize" /> 
-            <action id="notes" /> 
-            <action id="relations" /> 
-            <action id="reportdeposit" /> 
-            <action id="reportdepositadd" /> 
-            <action id="reportdepositdelete" /> 
-            <action id="reportdepositedit" /> 
-            <action id="riskanalysis" /> 
-            <action id="samtview" /> 
-            <action id="searchexport" /> 
-            <action id="searchreindex" /> 
-            <action id="searchview" /> 
-            <action id="showchartview" /> 
-            <action id="showpreferences" /> 
-            <action id="simpleauditview" /> 
-            <action id="taskchangeassignee" /> 
-            <action id="taskchangeduedate" /> 
-            <action id="taskdelete" /> 
-            <action id="taskview" /> 
-            <action id="taskwithreleaseprocess" /> 
-            <action id="todo"/> 
-            <action id="unify" /> 
-            <action id="xmlexport"/> 
+            <action id="naturalize" />
+            <action id="notes" />
+            <action id="relations" />
+            <action id="reportdeposit" />
+            <action id="reportdepositadd" />
+            <action id="reportdepositdelete" />
+            <action id="reportdepositedit" />
+            <action id="riskanalysis" />
+            <action id="samtview" />
+            <action id="searchexport" />
+            <action id="searchreindex" />
+            <action id="searchview" />
+            <action id="showchartview" />
+            <action id="showpreferences" />
+            <action id="simpleauditview" />
+            <action id="taskchangeassignee" />
+            <action id="taskchangeduedate" />
+            <action id="taskdelete" />
+            <action id="taskview" />
+            <action id="taskwithreleaseprocess" />
+            <action id="todo"/>
+            <action id="unify" />
+            <action id="xmlexport"/>
             <action id="xmlimport" />
-        </profile> 
-        
+        </profile>
+
         <profile name="admin-default-profile" origin="default" >
         <!-- this user is allowed to do everything -->
             <action id="accesscontrol" />
             <action id="accountsettings" />
             <action id="addbpelement"/>
-            <action id="addbpgroup"/>  
+            <action id="addbpgroup"/>
             <action id="addbsielement" />
             <action id="addfile" />
             <action id="addismelement" />
@@ -437,7 +437,7 @@
             <action id="bsimodelview" />
             <action id="bulkedit" />
             <action id="catalogdelete" />
-            <action id="catalogimport" />       
+            <action id="catalogimport" />
             <action id="catalogview" />
             <action id="changeicon" />
             <action id="cnavalidation" />
@@ -517,8 +517,8 @@
         <userprofile login="admin-scope-default-group">
         	<profile-ref name="admin-scope-default-profile"/>
         </userprofile>
-        <userprofile login="admin-local-default-group" origin="default"> 
-            <profile-ref name="admin-local-default-profile" /> 
-        </userprofile> 
+        <userprofile login="admin-local-default-group" origin="default">
+            <profile-ref name="admin-local-default-profile" />
+        </userprofile>
     </userprofiles>
 </auth>

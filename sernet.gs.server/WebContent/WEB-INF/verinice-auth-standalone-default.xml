@@ -2,21 +2,21 @@
 <auth version="0" type="whitelist" xmlns="http://www.verinice.org/auth"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.verinice.org/auth verinice-auth.xsd">
-    
+
     <!-- This is the default-standalone configuration of access rights to application actions. -->
     <!-- End users should NEVER edit this file! -->
-    
+
     <profiles>
         <!-- Each profile in this document defines a collection -->
         <!-- of application actions. All actions in verinice are -->
         <!-- defined in property file verinice-action.properties. -->
-        
+
          <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-             When adding actions here, don't forget to add 
+             When adding actions here, don't forget to add
              them to verinice-auth-default.xml as well
              !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         -->
-        
+
         <profile name="admin-default-profile" origin="default">
             <!-- missing actions:
             "accountsettings"
@@ -36,7 +36,7 @@
             "reportdepositdelete"
             "reportdepositedit" -->
             <action id="addbpelement"/>
-            <action id="addbpgroup"/>  
+            <action id="addbpgroup"/>
             <action id="addbsielement" />
             <action id="addfile" />
             <action id="addismelement" />
@@ -48,7 +48,7 @@
             <action id="addownmodul"/>
             <action id="addsecurityassessment" />
             <action id="assignallisatopics" />
-            <action id="auditview" /> 
+            <action id="auditview" />
             <action id="baseprotectionmodeling" />
             <action id="baseprotectionview" />
             <action id="bausteinzuordnung" />
@@ -59,7 +59,7 @@
             <action id="bsimodelview" />
             <action id="bulkedit" />
             <action id="catalogdelete" />
-            <action id="catalogimport" />       
+            <action id="catalogimport" />
             <action id="catalogview" />
             <action id="changeicon" />
             <action id="cnavalidation" />
