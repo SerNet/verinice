@@ -83,6 +83,7 @@
             <action id="ismview" />
             <action id="ismviewweb" />
             <action id="konsolidator" />
+            <action id="marktemplate" />
             <action id="migrate_data_protection"/>
             <action id="naturalize" />
             <action id="notes" />
@@ -99,6 +100,7 @@
             <action id="showpreferences" />
             <action id="simpleauditview" />
             <action id="taskview" />
+            <action id="templates" />
             <action id="todo" />
             <action id="unify" />
             <action id="xmlexport" />
@@ -197,6 +199,7 @@
             <action id="ismviewweb" />
             <action id="konsolidator" />
             <action id="konsolidator" />
+            <action id="marktemplate"/>
             <action id="migrate_data_protection"/>
             <action id="naturalize" />
             <action id="naturalize" />
@@ -232,6 +235,7 @@
             <action id="taskview" />
             <action id="taskwithreleaseprocess" />
             <action id="taskwithreleaseprocess" />
+            <action id="templates"/>
             <action id="todo"/>
             <action id="todo"/>
             <action id="unify" />
@@ -298,6 +302,7 @@
             <action id="ismview" />
             <action id="ismviewweb" />
             <action id="konsolidator" />
+            <action id="marktemplate"/>
             <action id="migrate_data_protection"/>
             <action id="naturalize" />
             <action id="notes" />
@@ -319,6 +324,7 @@
             <action id="taskdelete" />
             <action id="taskview" />
             <action id="taskwithreleaseprocess" />
+            <action id="templates"/>
             <action id="todo"/>
             <action id="unify" />
             <action id="xmlexport"/>
@@ -382,6 +388,7 @@
             <action id="ismview" />
             <action id="ismviewweb" />
             <action id="konsolidator" />
+            <action id="marktemplate"/>
             <action id="migrate_data_protection"/>
             <action id="naturalize" />
             <action id="notes" />
@@ -403,6 +410,7 @@
             <action id="taskdelete" />
             <action id="taskview" />
             <action id="taskwithreleaseprocess" />
+            <action id="templates"/>
             <action id="todo"/>
             <action id="unify" />
             <action id="xmlexport"/>
@@ -465,6 +473,7 @@
             <action id="ismview" />
             <action id="ismviewweb" />
             <action id="konsolidator" />
+            <action id="marktemplate"/>
             <action id="migrate_data_protection"/>
             <action id="naturalize" />
             <action id="notes" />
@@ -488,6 +497,7 @@
             <action id="taskshowall" />
             <action id="taskview" />
             <action id="taskwithreleaseprocess" />
+            <action id="templates"/>
             <action id="todo"/>
             <action id="unify" />
             <action id="xmlexport"/>

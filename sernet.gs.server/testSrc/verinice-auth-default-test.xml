@@ -464,6 +464,7 @@
             <action id="konsolidator" />
             <action id="naturalize" />
             <action id="migrate_data_protection"/>
+            <action id="marktemplate"/>
             <action id="notes" />
             <action id="relations" />
             <action id="reportdeposit" />
@@ -484,6 +485,7 @@
             <action id="taskdelete" />
             <action id="taskshowall" />
             <action id="taskview" />
+            <action id="templates"/>
             <action id="todo"/>
           <action id="unify" />
             <action id="xmlexport"/>
