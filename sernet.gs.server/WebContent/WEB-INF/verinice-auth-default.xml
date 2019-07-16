@@ -21,20 +21,20 @@
         
         <profile name="user-default-profile" origin="default">
         <!-- missing actions: 
-            "accountsettings"
             "accesscontrol"
+            "accountsettings"
             "convertitnetwork"
             "editprofile"
-            "taskdelete"
-            "taskshowall"
+            "searchreindex"
+            "showallfiles"
             "taskchangeassignee"
             "taskchangeduedate"
-            "taskwithreleaseprocess"
-            "searchreindex"
-            "showallfiles" -->
-            <action id="addbsielement" />
+            "taskdelete"
+            "taskshowall"
+            "taskwithreleaseprocess" -->
             <action id="addbpelement"/>
             <action id="addbpgroup"/>  
+            <action id="addbsielement" />
             <action id="addfile" />
             <action id="addismelement" />
             <action id="addismgroup" />
@@ -42,16 +42,16 @@
             <action id="additnetwork" />
             <action id="additverbund" />
             <action id="addnote" />
+            <action id="addownmodul"/>
             <action id="addsecurityassessment" />
             <action id="assignallisatopics" />
-            <action id="addownmodul"/>
             <action id="auditview" />
             <action id="baseprotectionmodeling" />
             <action id="baseprotectionview" />
             <action id="bausteinzuordnung" />
             <action id="bpimporter" />
-            <action id="bsidnd" />
             <action id="bsibrowser" />
+            <action id="bsidnd" />
             <action id="bsimassnahmen" />
             <action id="bsimodelview" />
             <action id="bulkedit" />
@@ -83,8 +83,8 @@
             <action id="ismview" />
             <action id="ismviewweb" />
             <action id="konsolidator" />
-            <action id="naturalize" />
             <action id="migrate_data_protection"/>
+            <action id="naturalize" />
             <action id="notes" />
             <action id="relations" />
             <action id="reportdeposit" />
@@ -127,10 +127,10 @@
             "xmlimport" 
             "searchreindex
             "showallfiles"
-            "addsecurityassessment"-->
-            <action id="addbsielement" />
+            "addsecurityassessment" -->
             <action id="addbpelement"/>
             <action id="addbpgroup"/>  
+            <action id="addbsielement" />
             <action id="addfile" />
             <action id="addismelement" />
             <action id="addismgroup" />
@@ -138,12 +138,12 @@
             <action id="addownmodul"/>
             <action id="assignallisatopics" />
             <action id="auditview" />
-            <action id="baseprotectionview" />
             <action id="baseprotectionmodeling" />
+            <action id="baseprotectionview" />
             <action id="bausteinzuordnung" />
             <action id="bpimporter" />
-            <action id="bsidnd" />
             <action id="bsibrowser" />
+            <action id="bsidnd" />
             <action id="bsimassnahmen" />
             <action id="bsimodelview" />
             <action id="bulkedit" />
@@ -151,92 +151,92 @@
             <action id="catalogimport" />       
             <action id="catalogview" />
             <action id="changeicon" />
+            <action id="changeownpassword" />
+            <action id="cnavalidation" />
             <action id="cnavalidation" />
             <action id="creategreenbonetasks" />
+            <action id="creategreenbonetasks" />
+            <action id="createindividualtasks" />
             <action id="createindividualtasks" />
             <action id="createisatasks" />
+            <action id="createisatasks" />
+            <action id="deletefile" />
             <action id="deletefile" />
             <action id="deleteitem" />
+            <action id="deleteitem" />
+            <action id="derivestatus" />
             <action id="derivestatus" />
             <action id="documentview" />
+            <action id="documentview" />
+            <action id="editlinks" />
             <action id="editlinks" />
             <action id="editriskconfiguration" />
             <action id="exportlinktable" />
+            <action id="exportlinktable" />
+            <action id="files" />
             <action id="files" />
             <action id="generateorgreport" />
+            <action id="generateorgreport" />
+            <action id="groupbytag"/>
             <action id="groupbytag"/>
             <action id="gsnotesimport" />
+            <action id="gsnotesimport" />
+            <action id="gstoolimport" />
             <action id="gstoolimport" />
             <action id="importcsv" />
+            <action id="importcsv" />
+            <action id="importldap" />
             <action id="importldap" />
             <action id="ismcopy" />
+            <action id="ismcopy" />
+            <action id="ismcut" />
             <action id="ismcut" />
             <action id="ismview" />
+            <action id="ismview" />
             <action id="ismviewweb" />
+            <action id="ismviewweb" />
+            <action id="konsolidator" />
             <action id="konsolidator" />
             <action id="migrate_data_protection"/>
             <action id="naturalize" />
-            <action id="notes" />
-            <action id="relations" />
-            <action id="reportdeposit" />
-            <action id="reportdepositadd" />
-            <action id="reportdepositdelete" />
-            <action id="reportdepositedit" />
-            <action id="riskanalysis" />
-            <action id="samtview" />
-            <action id="searchexport" />
-            <action id="searchreindex" />
-            <action id="searchview" />
-            <action id="showchartview" />
-            <action id="showpreferences" />
-            <action id="simpleauditview" />
-            <action id="taskview" />
-            <action id="taskwithreleaseprocess" />
-            <action id="todo"/>
-            <action id="unify" />
-            <action id="xmlexport"/>
-            <action id="changeownpassword" />
-            <action id="cnavalidation" />
-            <action id="creategreenbonetasks" />
-            <action id="createindividualtasks" />
-            <action id="createisatasks" />
-            <action id="deletefile" />
-            <action id="deleteitem" />
-            <action id="derivestatus" />
-            <action id="documentview" />
-            <action id="editlinks" />
-            <action id="exportlinktable" />
-            <action id="files" />
-            <action id="generateorgreport" />
-            <action id="groupbytag"/>
-            <action id="gsnotesimport" />
-            <action id="gstoolimport" />
-            <action id="importcsv" />
-            <action id="importldap" />
-            <action id="ismcopy" />
-            <action id="ismcut" />
-            <action id="ismview" />
-            <action id="ismviewweb" />
-            <action id="konsolidator" />
             <action id="naturalize" />
             <action id="notes" />
+            <action id="notes" />
+            <action id="relations" />
             <action id="relations" />
             <action id="reportdeposit" />
+            <action id="reportdeposit" />
+            <action id="reportdepositadd" />
             <action id="reportdepositadd" />
             <action id="reportdepositdelete" />
+            <action id="reportdepositdelete" />
+            <action id="reportdepositedit" />
             <action id="reportdepositedit" />
             <action id="riskanalysis" />
+            <action id="riskanalysis" />
+            <action id="samtview" />
             <action id="samtview" />
             <action id="searchexport" />
+            <action id="searchexport" />
+            <action id="searchreindex" />
             <action id="searchreindex" />
             <action id="searchview" />
+            <action id="searchview" />
+            <action id="showchartview" />
             <action id="showchartview" />
             <action id="showpreferences" />
+            <action id="showpreferences" />
+            <action id="simpleauditview" />
             <action id="simpleauditview" />
             <action id="taskview" />
+            <action id="taskview" />
+            <action id="taskwithreleaseprocess" />
             <action id="taskwithreleaseprocess" />
             <action id="todo"/>
+            <action id="todo"/>
             <action id="unify" />
+            <action id="unify" />
+            <action id="xmlexport"/>
             <action id="xmlexport"/>
         </profile>
         <profile name="admin-scope-default-profile" origin="default">
@@ -254,9 +254,9 @@
           	"taskshowall" 
           	"xmlimport"  -->
             <action id="accesscontrol" />
-            <action id="addbsielement" />
             <action id="addbpelement"/>
             <action id="addbpgroup"/>  
+            <action id="addbsielement" />
             <action id="addfile" />
             <action id="addismelement" />
             <action id="addismgroup" />
@@ -268,8 +268,8 @@
             <action id="baseprotectionview" />
             <action id="bausteinzuordnung" />
             <action id="bpimporter" />
-            <action id="bsidnd" />
             <action id="bsibrowser" />
+            <action id="bsidnd" />
             <action id="bsimassnahmen" />
             <action id="bsimodelview" />
             <action id="bulkedit" />
@@ -277,8 +277,8 @@
             <action id="catalogimport" />       
             <action id="catalogview" />
             <action id="changeicon" />
-            <action id="convertitnetwork" />
             <action id="cnavalidation" />
+            <action id="convertitnetwork" />
             <action id="creategreenbonetasks" />
             <action id="createindividualtasks" />
             <action id="createisatasks" />
@@ -316,9 +316,9 @@
             <action id="simpleauditview" />
             <action id="taskchangeassignee" />
             <action id="taskchangeduedate" />
-            <action id="taskwithreleaseprocess" />
             <action id="taskdelete" />
             <action id="taskview" />
+            <action id="taskwithreleaseprocess" />
             <action id="todo"/>
             <action id="unify" />
             <action id="xmlexport"/>
@@ -336,23 +336,23 @@
             "showallfiles"--> 
             <action id="accesscontrol" /> 
             <action id="accountsettings" /> 
-            <action id="addbsielement" /> 
             <action id="addbpelement"/>
             <action id="addbpgroup"/>  
+            <action id="addbsielement" /> 
             <action id="addfile" /> 
             <action id="addismelement" /> 
             <action id="addismgroup" /> 
             <action id="addnote" /> 
-            <action id="addsecurityassessment" /> 
             <action id="addownmodul"/> 
+            <action id="addsecurityassessment" /> 
             <action id="assignallisatopics" /> 
             <action id="auditview" />
             <action id="baseprotectionmodeling" />
             <action id="baseprotectionview" /> 
             <action id="bausteinzuordnung" /> 
             <action id="bpimporter" />
-            <action id="bsidnd" /> 
             <action id="bsibrowser" /> 
+            <action id="bsidnd" /> 
             <action id="bsimassnahmen" /> 
             <action id="bsimodelview" /> 
             <action id="bulkedit" />
@@ -382,8 +382,8 @@
             <action id="ismview" /> 
             <action id="ismviewweb" /> 
             <action id="konsolidator" />
-            <action id="naturalize" /> 
             <action id="migrate_data_protection"/>
+            <action id="naturalize" /> 
             <action id="notes" /> 
             <action id="relations" /> 
             <action id="reportdeposit" /> 
@@ -400,9 +400,9 @@
             <action id="simpleauditview" /> 
             <action id="taskchangeassignee" /> 
             <action id="taskchangeduedate" /> 
-            <action id="taskwithreleaseprocess" /> 
             <action id="taskdelete" /> 
             <action id="taskview" /> 
+            <action id="taskwithreleaseprocess" /> 
             <action id="todo"/> 
             <action id="unify" /> 
             <action id="xmlexport"/> 
@@ -413,9 +413,9 @@
         	<!-- this user is allowed to do everything -->
             <action id="accesscontrol" />
             <action id="accountsettings" />
-            <action id="addbsielement" />
             <action id="addbpelement"/>
             <action id="addbpgroup"/>  
+            <action id="addbsielement" />
             <action id="addfile" />
             <action id="addismelement" />
             <action id="addismgroup" />
@@ -423,16 +423,16 @@
             <action id="additnetwork" />
             <action id="additverbund" />
             <action id="addnote" />
-            <action id="addsecurityassessment" />
             <action id="addownmodul"/>
+            <action id="addsecurityassessment" />
             <action id="assignallisatopics" />
             <action id="auditview" />
             <action id="baseprotectionmodeling" />
             <action id="baseprotectionview" />
             <action id="bausteinzuordnung" />
             <action id="bpimporter" />
-            <action id="bsidnd" />
             <action id="bsibrowser" />
+            <action id="bsidnd" />
             <action id="bsimassnahmen" />
             <action id="bsimodelview" />
             <action id="bulkedit" />
@@ -465,8 +465,8 @@
             <action id="ismview" />
             <action id="ismviewweb" />
             <action id="konsolidator" />
-            <action id="naturalize" />
             <action id="migrate_data_protection"/>
+            <action id="naturalize" />
             <action id="notes" />
             <action id="relations" />
             <action id="reportdeposit" />
@@ -478,20 +478,20 @@
             <action id="searchexport" />
             <action id="searchreindex" />
             <action id="searchview" />
+            <action id="showallfiles" />
             <action id="showchartview" />
             <action id="showpreferences" />
             <action id="simpleauditview" />
             <action id="taskchangeassignee" />
             <action id="taskchangeduedate" />
-            <action id="taskwithreleaseprocess" />
             <action id="taskdelete" />
             <action id="taskshowall" />
             <action id="taskview" />
+            <action id="taskwithreleaseprocess" />
             <action id="todo"/>
             <action id="unify" />
             <action id="xmlexport"/>
             <action id="xmlimport"/>
-            <action id="showallfiles" />
         </profile>
     </profiles>
     <userprofiles>
