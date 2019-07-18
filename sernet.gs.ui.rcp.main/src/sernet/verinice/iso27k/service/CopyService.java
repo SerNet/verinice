@@ -26,10 +26,10 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.rcp.Preferences;
 import sernet.verinice.service.commands.CopyCommand;
 import sernet.verinice.service.commands.CopyLinks;
 import sernet.verinice.service.commands.CopyLinksCommand;
@@ -153,8 +153,7 @@ public class CopyService extends PasteService implements IProgressTask {
     }
 
     private boolean isModelingTemplateActive() {
-        boolean standalone = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
-        if (standalone) {
+        if (Preferences.isStandalone()) {
             return false;
         }
         LoadModelingTemplateSettings modelingTemplateSettings = new LoadModelingTemplateSettings();

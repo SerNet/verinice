@@ -25,9 +25,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 
-import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ApplicationActionBarAdvisor;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
@@ -37,6 +35,7 @@ import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.CnATreeElement.TemplateType;
+import sernet.verinice.rcp.Preferences;
 import sernet.verinice.service.commands.templates.LoadModelingTemplateSettings;
 
 /**
@@ -128,8 +127,7 @@ public abstract class MarkTemplateActionDelegate implements IObjectActionDelegat
     }
 
     private boolean isModelingTemplateActive() {
-        boolean standalone = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
-        if (standalone) {
+        if (Preferences.isStandalone()) {
             return false;
         }
         LoadModelingTemplateSettings modelingTemplateSettings = new LoadModelingTemplateSettings();

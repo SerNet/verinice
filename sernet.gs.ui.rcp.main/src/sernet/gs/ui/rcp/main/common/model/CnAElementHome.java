@@ -65,6 +65,7 @@ import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
+import sernet.verinice.rcp.Preferences;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.CreateLink;
 import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
@@ -741,8 +742,7 @@ public final class CnAElementHome {
     }
 
     private boolean isModelingTemplateActive() {
-        boolean standalone = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
-        if (standalone) {
+        if (Preferences.isStandalone()) {
             return false;
         }
         LoadModelingTemplateSettings modelingTemplateSettings = new LoadModelingTemplateSettings();

@@ -91,6 +91,7 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 import sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap;
+import sernet.verinice.rcp.Preferences;
 import sernet.verinice.rcp.ProfileEditAction;
 import sernet.verinice.rcp.ServerConnectionToggleAction;
 import sernet.verinice.rcp.account.AccountView;
@@ -674,8 +675,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     }
 
     private boolean isModelingTemplateActive() {
-        boolean standalone = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
-        if (standalone) {
+        if (Preferences.isStandalone()) {
             return false;
         }
         LoadModelingTemplateSettings modelingTemplateSettings = new LoadModelingTemplateSettings();
