@@ -468,7 +468,6 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
      * <em>untranslated</em> IOW should directly represent the strings used in
      * the SNCA.xml
      * </p>
-     * 
      */
     public void importProperties(HUITypeFactory huiTypeFactory, String propertyTypeId,
             List<String> foreignProperties, List<Boolean> foreignLimitedLicense,
@@ -479,40 +478,44 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
             typedPropertyLists.put(propertyTypeId, pl);
         }
 
-        // It would be possible to create a new list and make the PropertyList
-        // object
-        // use that but that causes problems with hibernate. As such the
-        // existing list
-        // is taken and cleared before use.
         List<Property> properties = pl.getProperties();
-        if (properties == null) {
-            properties = new LinkedList<>();
-            pl.setProperties(properties);
-        } else {
-            properties.clear();
+        int oldSize = properties.size();
+        int newSize = foreignProperties.size();
+        if (oldSize > newSize) {
+            for (int i = oldSize; i > newSize; i--) {
+                properties.remove(i - 1);
+            }
+        } else if (newSize > oldSize) {
+            for (int i = oldSize; i < newSize; i++) {
+                Property p = new Property();
+                p.setParent(this);
+                p.setPropertyType(propertyTypeId);
+                properties.add(p);
+            }
+        }
+
+        PropertyType propertyType = huiTypeFactory.getPropertyType(this.entityType, propertyTypeId);
+        if (propertyType == null && logger.isInfoEnabled()) {
+            logger.info("Property-type was not found in SNCA.xml: " + propertyTypeId
+                    + ", entity type: " + this.entityType);
         }
 
         for (int i = 0; i < foreignProperties.size(); i++) {
             String value = foreignProperties.get(i);
-            PropertyType propertyType = huiTypeFactory.getPropertyType(this.entityType,
-                    propertyTypeId);
-            Property p = new Property();
-
-            if (propertyType == null && logger.isInfoEnabled()) {
-                logger.info("Property-type was not found in SNCA.xml: " + propertyTypeId
-                        + ", entity type: " + this.entityType);
-            }
+            Property p = properties.get(i);
             checkPropertyValue(propertyTypeId, propertyType, value);
-
-            p.setPropertyType(propertyTypeId);
             p.setPropertyValue(value);
-            p.setParent(this);
+
+            Boolean limitedLicense = Boolean.FALSE;
+            String licenseContentId = null;
             if (licenseManagement && !foreignContentId.isEmpty()
                     && !foreignLimitedLicense.isEmpty()) {
-                p.setLimitedLicense(foreignLimitedLicense.get(i));
-                p.setLicenseContentId(foreignContentId.get(i));
+                limitedLicense = foreignLimitedLicense.get(i);
+                licenseContentId = foreignContentId.get(i);
             }
-            properties.add(p);
+
+            p.setLimitedLicense(limitedLicense);
+            p.setLicenseContentId(licenseContentId);
         }
     }
 
