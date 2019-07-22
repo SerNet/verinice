@@ -22,6 +22,7 @@ package sernet.verinice.bpm;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
@@ -121,16 +122,11 @@ public abstract class GenericEmailHandler implements IEmailHandler {
         return path;
     }
 
-    protected String replaceSpecialChars(String description) {
-        String result = description.replace("ä", "&auml;");
-        result = result.replace("Ä", "&Auml;");
-        result = result.replace("ü", "&uuml;");
-        result = result.replace("Ü", "&Uuml;");
-        result = result.replace("ö", "&ouml;");
-        result = result.replace("Ö", "&Ouml;");
-        result = result.replace("ß", "&szlig;");
-        result = result.replace("€", "&euro;");
-        return result;
+    protected String escapeForHTMLIfNecessary(String str) {
+        if (!isHtml() || str == null) {
+            return str;
+        }
+        return StringEscapeUtils.escapeHtml(str);
     }
 
     protected CnATreeElement retrieveElement(String uuid, RetrieveInfo ri) throws CommandException {

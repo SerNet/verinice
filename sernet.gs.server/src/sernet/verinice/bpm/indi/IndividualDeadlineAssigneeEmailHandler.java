@@ -57,15 +57,11 @@ public class IndividualDeadlineAssigneeEmailHandler extends GenericEmailHandler
         if (element == null) {
             throw new MissingParameterException("Object was not found, UUID is: " + uuidElement); //$NON-NLS-1$
         }
-        String title = element.getTitle();
+        String title = escapeForHTMLIfNecessary(element.getTitle());
         String taskTitle = getTaskService().loadTaskTitle(type, processVariables);
-        String taskTitleHtml = taskTitle;
-        String taskDescription = getTaskService().loadTaskDescription(type, processVariables);
-        if (isHtml()) {
-            title = replaceSpecialChars(title);
-            taskDescription = replaceSpecialChars(taskDescription);
-            taskTitleHtml = replaceSpecialChars(taskTitle);
-        }
+        String taskTitleHtml = escapeForHTMLIfNecessary(taskTitle);
+        String taskDescription = escapeForHTMLIfNecessary(
+                getTaskService().loadTaskDescription(type, processVariables));
         emailParameter.put(TEMPLATE_TASK_DESCRIPTION, taskDescription);
         emailParameter.put(TEMPLATE_ELEMENT_TITLE, title);
         emailParameter.put(TEMPLATE_TASK_TITLE, taskTitleHtml);

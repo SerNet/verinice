@@ -60,15 +60,11 @@ public class IndividualDeadlineAdminEmailHandler extends GenericEmailHandler
         if (element == null) {
             throw new MissingParameterException("Object was not found, UUID is: " + uuidElement);
         }
-        String title = element.getTitle();
+        String title = escapeForHTMLIfNecessary(element.getTitle());
         String taskTitle = getTaskService().loadTaskTitle(type, processVariables);
-        String taskDescription = getTaskService().loadTaskDescription(type, processVariables);
-        String taskTitleHtml = taskTitle;
-        if (isHtml()) {
-            title = replaceSpecialChars(title);
-            taskTitleHtml = replaceSpecialChars(taskTitle);
-            taskDescription = replaceSpecialChars(taskDescription);
-        }
+        String taskDescription = escapeForHTMLIfNecessary(
+                getTaskService().loadTaskDescription(type, processVariables));
+        String taskTitleHtml = escapeForHTMLIfNecessary(taskTitle);
         emailParameter.put(TEMPLATE_TASK_DESCRIPTION, taskDescription);
         emailParameter.put(TEMPLATE_ELEMENT_TITLE, title);
         emailParameter.put(TEMPLATE_TASK_TITLE, taskTitleHtml);

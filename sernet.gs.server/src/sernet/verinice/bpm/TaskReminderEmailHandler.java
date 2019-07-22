@@ -21,6 +21,8 @@ package sernet.verinice.bpm;
 
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.model.bpm.MissingParameterException;
 import sernet.verinice.model.common.CnATreeElement;
@@ -44,23 +46,15 @@ public class TaskReminderEmailHandler extends GenericEmailHandler implements IEm
         if (element == null) {
             throw new MissingParameterException("Object was not found, UUID is: " + uuidElement);
         }
-        String title = element.getTitle();
-        if (isHtml()) {
-            title = replaceSpecialChars(title);
-        }
+        String title = escapeForHTMLIfNecessary(element.getTitle());
         emailParameter.put(TEMPLATE_ELEMENT_TITLE, title);
 
         String taskTitle = getTaskService().loadTaskTitle(type, processVariables);
-        String taskTitleHtml = taskTitle;
-        if (isHtml()) {
-            taskTitleHtml = replaceSpecialChars(taskTitleHtml);
-        }
+        String taskTitleHtml = escapeForHTMLIfNecessary(taskTitle);
         emailParameter.put(TEMPLATE_TASK_TITLE, taskTitleHtml);
 
-        String description = getTaskService().loadTaskDescription(type, processVariables);
-        if (isHtml()) {
-            description = replaceSpecialChars(description);
-        }
+        String description = escapeForHTMLIfNecessary(
+                getTaskService().loadTaskDescription(type, processVariables));
         emailParameter.put(TEMPLATE_TASK_DESCRIPTION, description);
 
         emailParameter.put(IRemindService.TEMPLATE_SUBJECT, "verinice task reminder: " + taskTitle);
@@ -69,7 +63,8 @@ public class TaskReminderEmailHandler extends GenericEmailHandler implements IEm
     }
 
     private void fixEncodingOfName(Map<String, String> emailParameter) {
-        emailParameter.computeIfPresent(KEY_NAME, (key, value) -> replaceSpecialChars(value));
+        emailParameter.computeIfPresent(KEY_NAME,
+                (key, value) -> StringEscapeUtils.escapeHtml(value));
     }
 
     @Override
