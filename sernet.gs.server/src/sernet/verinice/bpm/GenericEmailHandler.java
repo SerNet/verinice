@@ -84,7 +84,7 @@ public abstract class GenericEmailHandler implements IEmailHandler {
                 LOG.error("stacktrace: ", e);
             }
         } catch (MissingParameterException e) {
-            LOG.error("Email can not be send: " + e.getMessage());
+            LOG.error("Email cannot be sent: " + e.getMessage());
             if (LOG.isDebugEnabled()) {
                 LOG.error("stacktrace: ", e);
             }
@@ -94,8 +94,6 @@ public abstract class GenericEmailHandler implements IEmailHandler {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.bpm.IEmailHandler#isHtml()
      */
     @Override
@@ -136,7 +134,7 @@ public abstract class GenericEmailHandler implements IEmailHandler {
     }
 
     protected CnATreeElement retrieveElement(String uuid, RetrieveInfo ri) throws CommandException {
-        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuid, ri);
+        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<>(uuid, ri);
         command = getCommandService().executeCommand(command);
         return command.getElement();
     }

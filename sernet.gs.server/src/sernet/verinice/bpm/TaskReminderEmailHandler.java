@@ -42,7 +42,7 @@ public class TaskReminderEmailHandler extends GenericEmailHandler implements IEm
         CnATreeElement element = getRemindService().retrieveElement(uuidElement,
                 RetrieveInfo.getPropertyInstance());
         if (element == null) {
-            throw new MissingParameterException("Obejct was not found, UUID is: " + uuidElement);
+            throw new MissingParameterException("Object was not found, UUID is: " + uuidElement);
         }
         String title = element.getTitle();
         if (isHtml()) {
@@ -69,11 +69,7 @@ public class TaskReminderEmailHandler extends GenericEmailHandler implements IEm
     }
 
     private void fixEncodingOfName(Map<String, String> emailParameter) {
-        String name = emailParameter.get(KEY_NAME);
-        if (name != null) {
-            name = replaceSpecialChars(name);
-            emailParameter.put(KEY_NAME, name);
-        }
+        emailParameter.computeIfPresent(KEY_NAME, (key, value) -> replaceSpecialChars(value));
     }
 
     @Override

@@ -49,8 +49,6 @@ public class IndividualDeadlineAdminEmailHandler extends GenericEmailHandler
     /**
      * Param uuidElement is always null for this email handler.
      * 
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.bpm.IEmailHandler#addParameter(java.lang.String,
      *      java.util.Map, java.lang.String, java.util.Map)
      */
@@ -60,7 +58,7 @@ public class IndividualDeadlineAdminEmailHandler extends GenericEmailHandler
         CnATreeElement element = getRemindService().retrieveElement(uuidElement,
                 RetrieveInfo.getPropertyInstance());
         if (element == null) {
-            throw new MissingParameterException("Obejct was not found, UUID is: " + uuidElement);
+            throw new MissingParameterException("Object was not found, UUID is: " + uuidElement);
         }
         String title = element.getTitle();
         String taskTitle = getTaskService().loadTaskTitle(type, processVariables);
@@ -85,8 +83,6 @@ public class IndividualDeadlineAdminEmailHandler extends GenericEmailHandler
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.bpm.GenericEmailHandler#validate(java.util.Map,
      * java.util.Map)
      */
@@ -101,8 +97,6 @@ public class IndividualDeadlineAdminEmailHandler extends GenericEmailHandler
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.bpm.IEmailHandler#getTemplate()
      */
     @Override
@@ -111,8 +105,6 @@ public class IndividualDeadlineAdminEmailHandler extends GenericEmailHandler
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.bpm.GenericEmailHandler#isHtml()
      */
     @Override
