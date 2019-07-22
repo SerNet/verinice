@@ -31,10 +31,10 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class TaskReminderEmailHandler extends GenericEmailHandler implements IEmailHandler {
-    
+
     private static final String TEMPLATE = "TaskReminder";
     private static final String KEY_NAME = "name";
-    
+
     @Override
     public void addParameter(String type, Map<String, Object> processVariables, String uuidElement,
             Map<String, String> emailParameter) throws MissingParameterException {
@@ -75,7 +75,6 @@ public class TaskReminderEmailHandler extends GenericEmailHandler implements IEm
             emailParameter.put(KEY_NAME, name);
         }
     }
-
 
     @Override
     public boolean isHtml() {
