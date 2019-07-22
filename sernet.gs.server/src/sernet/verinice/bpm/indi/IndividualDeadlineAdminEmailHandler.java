@@ -73,9 +73,11 @@ public class IndividualDeadlineAdminEmailHandler extends GenericEmailHandler
 
         String assignee = (String) processVariables.get(IGenericProcess.VAR_ASSIGNEE_NAME);
         Map<String, String> assigneeData = getRemindService().loadUserData(assignee);
+
         emailParameter.put(TEMPLATE_ASSIGNEE_ADDRESS,
-                assigneeData.get(IRemindService.TEMPLATE_ADDRESS));
-        emailParameter.put(TEMPLATE_ASSIGNEE_NAME, assigneeData.get(IRemindService.TEMPLATE_NAME));
+                escapeForHTMLIfNecessary(assigneeData.get(IRemindService.TEMPLATE_ADDRESS)));
+        emailParameter.put(TEMPLATE_ASSIGNEE_NAME,
+                escapeForHTMLIfNecessary(assigneeData.get(IRemindService.TEMPLATE_NAME)));
     }
 
     /*
