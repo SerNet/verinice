@@ -424,6 +424,7 @@ ${verinice-workspace}
 -Dtest-data=${test-data}
 -Dderby.locks.monitor=true
 -Dderby.locks.deadlockTrace=true
+-Djava.net.useSystemProxies=true
 </echo>
 	</target>
 
