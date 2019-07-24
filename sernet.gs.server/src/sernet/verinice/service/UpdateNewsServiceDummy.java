@@ -23,10 +23,9 @@ import sernet.verinice.interfaces.updatenews.IUpdateNewsService;
 import sernet.verinice.model.updateNews.UpdateNewsMessageEntry;
 
 /**
- * this implementation is used when running verinice.PRO.
- * verinice.PRO has a different update-strategy than the standalone
- * version, and there is (currently) no need for a serious implementation
- * of this functionality. 
+ * this implementation is used when running verinice.PRO. verinice.PRO has a
+ * different update-strategy than the standalone version, and there is
+ * (currently) no need for a serious implementation of this functionality.
  * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
@@ -34,25 +33,34 @@ import sernet.verinice.model.updateNews.UpdateNewsMessageEntry;
 public class UpdateNewsServiceDummy implements IUpdateNewsService {
 
     private static final String DUMMY_VERSION_NUMBER = "99.0.0";
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.updatenews.IUpdateNewsService#getCurrentInstalledVersion()
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.updatenews.IUpdateNewsService#
+     * getCurrentInstalledVersion()
      */
     @Override
     public String getCurrentInstalledVersion() {
         return DUMMY_VERSION_NUMBER;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.updatenews.IUpdateNewsService#isUpdateNecessary()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.updatenews.IUpdateNewsService#
+     * isUpdateNecessary()
      */
     @Override
     public boolean isUpdateNecessary(String installedVersion) {
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.updatenews.IUpdateNewsService#getNewsFromRepository(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.updatenews.IUpdateNewsService#
+     * getNewsFromRepository(java.lang.String)
      */
     @Override
     public UpdateNewsMessageEntry getNewsFromRepository(String newsRepository) {
