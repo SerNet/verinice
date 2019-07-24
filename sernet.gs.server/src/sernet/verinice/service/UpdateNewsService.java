@@ -21,23 +21,13 @@ package sernet.verinice.service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.FileLocator;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -96,69 +86,6 @@ public class UpdateNewsService implements IUpdateNewsService {
     private String newsLocation;
 
     /**
-     * Parses (using a xml-parser) the value of the attribute version out of
-     * applications "oc.prodcut".
-     * 
-     * Since sernet.gs.ui.rcp.main.feature is not available as a bundle on
-     * OSGI-platform we can't use:
-     * 
-     * Platform.getBundle("sernet.gs.ui.rcp.main.feature").getEntry("/oc.product");
-     * 
-     * Instead of this the instance of the file is loaded via an url formatted
-     * as "platform:/plugin/.."
-     * 
-     * 
-     * The information is needed to compare the version of the current installed
-     * client to the one of the offered update
-     * 
-     */
-    @Override
-    public String getCurrentInstalledVersion() {
-        String version = null;
-        try {
-            NodeList productElements = getProductElements();
-            for (int i = 0; i < productElements.getLength(); i++) {
-                version = getVersion(productElements.item(i));
-                if (version != null) {
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            LOG.error("Unable to determine version of running client:\t", e);
-        }
-        return version;
-    }
-
-    private String getVersion(Node product) {
-        String version = null;
-        NamedNodeMap namedNodeMap = product.getAttributes();
-        for (int j = 0; j < namedNodeMap.getLength(); j++) {
-            if ("version".equals(namedNodeMap.item(j).getNodeName())) {
-                String installedVersion = namedNodeMap.item(j).getNodeValue();
-                LOG.debug("installed Version from oc.product:\t" + installedVersion);
-                final Pattern p = Pattern.compile(IUpdateNewsService.VERINICE_VERSION_PATTERN);
-                final Matcher matcher = p.matcher(installedVersion);
-                if (matcher.find()) {
-                    String parsedVersion = matcher.group();
-                    version = parsedVersion;
-                    break;
-                }
-            }
-        }
-        return version;
-    }
-
-    private NodeList getProductElements()
-            throws URISyntaxException, IOException, ParserConfigurationException, SAXException {
-        URL fileURL = new URL("platform:/plugin/sernet.gs.ui.rcp.main.feature/oc.product");
-        java.io.File file = new java.io.File(FileLocator.resolve(fileURL).toURI());
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder parser = factory.newDocumentBuilder();
-        Document document = parser.parse(file);
-        return document.getElementsByTagName("product");
-    }
-
-    /**
      * compares version string configured in applications oc.product to the one
      * that is configured in the news message (formatted as json) using an
      * instance of the {@link NumericStringComparator}
@@ -193,8 +120,10 @@ public class UpdateNewsService implements IUpdateNewsService {
     private void loadNewsFromRepository(String url) {
         try {
             URL repositoryURL = new URL(url);
-            InputStream in = repositoryURL.openStream();
-            this.sessionNewsEntry = parseNewsEntry(IOUtils.toString(in));
+            try (InputStream in = repositoryURL.openStream()) {
+                this.sessionNewsEntry = parseNewsEntry(
+                        IOUtils.toString(in, StandardCharsets.UTF_8.name()));
+            }
         } catch (IOException e) {
             LOG.info("Can not read update news from URL:  " + url + " " + e.getMessage());
             if (LOG.isDebugEnabled()) {

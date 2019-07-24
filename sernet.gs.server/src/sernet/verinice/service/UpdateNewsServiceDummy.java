@@ -32,22 +32,7 @@ import sernet.verinice.model.updateNews.UpdateNewsMessageEntry;
  */
 public class UpdateNewsServiceDummy implements IUpdateNewsService {
 
-    private static final String DUMMY_VERSION_NUMBER = "99.0.0";
-
     /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.interfaces.updatenews.IUpdateNewsService#
-     * getCurrentInstalledVersion()
-     */
-    @Override
-    public String getCurrentInstalledVersion() {
-        return DUMMY_VERSION_NUMBER;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.updatenews.IUpdateNewsService#
      * isUpdateNecessary()
      */
@@ -57,8 +42,6 @@ public class UpdateNewsServiceDummy implements IUpdateNewsService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.updatenews.IUpdateNewsService#
      * getNewsFromRepository(java.lang.String)
      */
