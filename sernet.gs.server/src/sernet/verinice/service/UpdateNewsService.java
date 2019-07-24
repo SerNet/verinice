@@ -22,6 +22,7 @@ package sernet.verinice.service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -120,7 +121,10 @@ public class UpdateNewsService implements IUpdateNewsService {
     private void loadNewsFromRepository(String url) {
         try {
             URL repositoryURL = new URL(url);
-            try (InputStream in = repositoryURL.openStream()) {
+            URLConnection conn = repositoryURL.openConnection();
+            conn.setConnectTimeout(2000);
+            conn.setReadTimeout(2000);
+            try (InputStream in = conn.getInputStream()) {
                 this.sessionNewsEntry = parseNewsEntry(
                         IOUtils.toString(in, StandardCharsets.UTF_8.name()));
             }
