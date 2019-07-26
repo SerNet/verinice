@@ -297,7 +297,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         this.openTemplateViewAction = isModelingTemplateActive()
                 && getRightsService().isEnabled(ActionRightIDs.TEMPLATES)
                         ? new OpenViewAction(window,
-                                Messages.ApplicationActionBarAdvisor_CatalogView, TemplateView.ID,
+                                Messages.ApplicationActionBarAdvisor_44, TemplateView.ID,
                                 ImageCache.TEMPLATES, ActionRightIDs.TEMPLATES)
                         : null;
         this.openBpViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_45,
