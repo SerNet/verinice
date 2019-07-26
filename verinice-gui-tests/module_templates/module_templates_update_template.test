@@ -4,7 +4,7 @@ Contexts: _IAiN8Lp9EeiXpMYvKv_wWQ,_UlFDQMI2EeiBGdyBeGVxCg
 Element-Name: module_templates_update_template
 Element-Type: testcase
 Element-Version: 3.0
-External-Reference: 
+External-Reference:
 Id: _22SagK-HEemHSdxtkCdUwQ
 Runtime-Version: 2.3.0.201806262310
 Save-Time: 7/26/19 11:59 AM
@@ -46,20 +46,20 @@ with [get-view Grundschutzmodell | get-tree] {
     select "  IT-Verbund Template/Anwendungen/A- Anwendung-Template" | get-menu -path "Kopieren" | click
     create-it-verbund "IT-Verbund Modelliert"
     select "  IT-Verbund Modelliert/Anwendungen" | get-menu -path "Einfügen" | click
-    
+
     select "  IT-Verbund Modelliert/Anwendungen/A- Anwendung-Template/Baustein/Maßnahme Zentral []" | get-menu -path "Öffnen" | click
-    with [get-editor "Maßnahme Zentral []" | get-section "" { 
-        get-editbox -after [get-label Name]] | equals "Maßnahme Zentral" | verify-true
-        get-editbox -after [get-label Beschreibung]] | set-text "Maßnahme mit Template modelliert"
+    with [get-editor "Maßnahme Zentral []" | get-section ""] {
+        get-editbox -after [get-label Name] | equals "Maßnahme Zentral" | verify-true
+        get-editbox -after [get-label Beschreibung] | set-text "Maßnahme mit Template modelliert"
         key-type "M1+s"
     }
     select "  IT-Verbund Modelliert/Anwendungen/A- Anwendung-Template/Baustein/Maßnahme Normal []" | get-menu -path "Öffnen" | click
-    with [get-editor "Maßnahme Normal []" | get-section "" {
-        get-editbox -after [get-label Name]] | equals "Maßnahme Normal" | verify-true
-        get-editbox -after [get-label Beschreibung]] | set-text "Maßnahme ohne Template modelliert"
+    with [get-editor "Maßnahme Normal []" | get-section ""] {
+        get-editbox -after [get-label Name] | equals "Maßnahme Normal" | verify-true
+        get-editbox -after [get-label Beschreibung] | set-text "Maßnahme ohne Template modelliert"
         key-type "M1+s"
     }
-    
+
     select "  IT-Verbund Template/Anwendungen/A- Anwendung-Template/Baustein/Maßnahme Zentral []" | get-menu -path "Öffnen" | click
     with [get-editor "Maßnahme Zentral []" | get-section "" | get-editbox -after [get-label Beschreibung]] {
         equals "Maßnahme mit Template modelliert" | verify-true
