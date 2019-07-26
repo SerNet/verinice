@@ -1,27 +1,21 @@
 --- RCPTT testcase ---
 Format-Version: 1.0
 Contexts: _IAiN8Lp9EeiXpMYvKv_wWQ,_UlFDQMI2EeiBGdyBeGVxCg
-Element-Name: test_4_1-4_5
+Element-Name: module_templates_create
 Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
-Id: _5qhxsLp8EeiXpMYvKv_wWQ
+Id: _VYqGwK9_EemHSdxtkCdUwQ
 Runtime-Version: 2.3.0.201806262310
-Save-Time: 11/21/18 1:04 PM
+Save-Time: 7/26/19 10:28 AM
 Tags: bp_old, serverOnlyTest
 Testcase-Type: ecl
 
-------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
-Content-Type: text/plain
-Entry-Name: .description
-
-4.1-4.5
-------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
 Content-Type: text/ecl
 Entry-Name: .content
 
-log "test_4.1-4.5"
+log "module_templates_create"
 
 create-it-verbund "IT-Verbund 1"
 delete-bp-old-element "  IT-Verbund 1"
@@ -35,3 +29,4 @@ with [get-editor Anwendung | get-section "" | get-editbox -after [get-label Name
 with [get-view Grundschutzmodell | get-tree] {
     select "  IT-Verbund-1/Anwendungen/A- Anwendung-1" | get-menu -path "Modellierungs-Template" | click
 }
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
