@@ -1,6 +1,12 @@
 package sernet.verinice.rcp.account;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.DialogPage;
@@ -15,6 +21,7 @@ import org.eclipse.swt.widgets.Label;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.Retriever;
+import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.ComboModel;
@@ -75,10 +82,14 @@ public class PersonPage extends BaseWizardPage {
         comboScope.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                comboModelScope.setSelectedIndex(comboScope.getSelectionIndex());
+                int selectionIndex = comboScope.getSelectionIndex();
+                if (selectionIndex == 0) {
+                    person = null;
+                }
+                comboModelScope.setSelectedIndex(selectionIndex);
                 scope = comboModelScope.getSelectedObject();
                 checkIfScopeIsPersonScope();
-                personComponent.setTypeId(getPersonTypeId());
+                personComponent.setTypeIds(getPersonTypeIds());
                 personComponent.setScopeId(getScopeId());
                 personComponent.loadElements();
                 loadGroups();
@@ -101,7 +112,7 @@ public class PersonPage extends BaseWizardPage {
         });
 
         final Composite personComposite = createEmptyComposite(parent);
-        personComponent = new ElementSelectionComponent(personComposite, getPersonTypeId(),
+        personComponent = new ElementSelectionComponent(personComposite, getPersonTypeIds(),
                 getScopeId(), getGroupId());
         personComponent.setScopeOnly(true);
         personComponent.setShowScopeCheckbox(false);
@@ -239,9 +250,12 @@ public class PersonPage extends BaseWizardPage {
     private void loadGroups() {
         try {
             comboModelGroup.clear();
-            String groupTypeId = findGroupTypeIdByPersonTypeId(getPersonTypeId());
-            if (groupTypeId != null) {
-                loadPersonGroups(groupTypeId);
+            Set<String> groupTypeIds = getPersonTypeIds().stream()
+                    .map(PersonPage::findGroupTypeIdByPersonTypeId).filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
+
+            if (!groupTypeIds.isEmpty()) {
+                loadPersonGroups(groupTypeIds);
             }
             getDisplay().syncExec(() -> {
                 comboGroup.setItems(comboModelGroup.getLabelArray());
@@ -263,11 +277,19 @@ public class PersonPage extends BaseWizardPage {
         }
     }
 
-    private void loadPersonGroups(String typeId) throws CommandException {
-        LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(typeId,
-                getScopeId());
-        command = getCommandService().executeCommand(command);
-        comboModelGroup.addAll(command.getElements());
+    private void loadPersonGroups(Set<String> typeIds) {
+        List<CnATreeElement> elements = typeIds.stream().flatMap(typeId -> {
+            LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(typeId,
+                    getScopeId());
+            try {
+                command = getCommandService().executeCommand(command);
+            } catch (CommandException e) {
+                throw new RuntimeCommandException(e);
+            }
+            return command.getElements().stream();
+        }).collect(Collectors.toList());
+
+        comboModelGroup.addAll(elements);
         comboModelGroup.sort();
         comboModelGroup.addNoSelectionObject(Messages.PersonPage_9);
     }
@@ -331,20 +353,21 @@ public class PersonPage extends BaseWizardPage {
         return id;
     }
 
-    private String getPersonTypeId() {
+    private Set<String> getPersonTypeIds() {
         if (person != null) {
-            return person.getTypeId();
+            return Collections.singleton(person.getTypeId());
         }
         if (scope == null) {
-            return PersonIso.TYPE_ID;
+            return new HashSet<>(
+                    Arrays.asList(Person.TYPE_ID, PersonIso.TYPE_ID, BpPerson.TYPE_ID));
         }
 
         if (scope.isItNetwork()) {
-            return BpPerson.TYPE_ID;
+            return Collections.singleton(BpPerson.TYPE_ID);
         } else if (scope.isItVerbund()) {
-            return Person.TYPE_ID;
+            return Collections.singleton(Person.TYPE_ID);
         } else {
-            return PersonIso.TYPE_ID;
+            return Collections.singleton(PersonIso.TYPE_ID);
         }
     }
 
