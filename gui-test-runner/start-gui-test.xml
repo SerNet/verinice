@@ -62,6 +62,8 @@
         	<replacefilter token="# admin.username=admin" value="admin.username=verinice"/>
         	<replacefilter token="# veriniceserver.grundschutzKataloge=/WEB-INF/it-grundschutz_el14_html_de.zip" 
         		value="veriniceserver.grundschutzKataloge=file:${test-data}/it-grundschutz_el14_html_de.zip"/>
+        	<replacefilter token="# veriniceserver.datenschutzBaustein=/WEB-INF/B1.5-Datenschutz-2008-08-26.zip" 
+        		value="veriniceserver.datenschutzBaustein=file:${test-data}/B1.5-Datenschutz-2008-08-26.zip"/>
         </replace>
         <replace file="${server-work-dir}/verinice/WEB-INF/classes/log4j.xml" summary="true">
             <replacefilter token="${catalina.home}/logs/verinice-server.log" 
