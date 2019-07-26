@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.DialogPage;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -20,7 +18,6 @@ import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.ComboModel;
-import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 import sernet.verinice.model.bp.elements.BpPerson;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.groups.BpPersonGroup;
@@ -105,29 +102,22 @@ public class PersonPage extends BaseWizardPage {
 
         final Composite personComposite = createEmptyComposite(parent);
         personComponent = new ElementSelectionComponent(personComposite, getPersonTypeId(),
-                getGroupId());
+                getScopeId(), getGroupId());
         personComponent.setScopeOnly(true);
         personComponent.setShowScopeCheckbox(false);
         personComponent.setHeight(200);
         personComponent.init();
-        personComponent.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                selectPerson();
-            }
-        });
+        personComponent.getViewer().addSelectionChangedListener(event -> selectPerson());
         personLabel = new Label(parent, SWT.NONE);
 
         showSelectedPerson();
     }
 
     protected void checkIfScopeIsPersonScope() {
-        if (scope != null && person != null) {
-            if (scope.getDbId() != person.getScopeId()) {
-                deselectPerson();
-            }
-        }
+        if (scope != null && person != null && !scope.getDbId().equals(person.getScopeId())) {
+            deselectPerson();
 
+        }
     }
 
     private void deselectPerson() {
@@ -188,18 +178,8 @@ public class PersonPage extends BaseWizardPage {
     }
 
     protected void initData() throws Exception {
-        comboModelScope = new ComboModel<>(new IComboModelLabelProvider<CnATreeElement>() {
-            @Override
-            public String getLabel(CnATreeElement element) {
-                return element.getTitle();
-            }
-        });
-        comboModelGroup = new ComboModel<>(new IComboModelLabelProvider<CnATreeElement>() {
-            @Override
-            public String getLabel(CnATreeElement element) {
-                return element.getTitle();
-            }
-        });
+        comboModelScope = new ComboModel<>(CnATreeElement::getTitle);
+        comboModelGroup = new ComboModel<>(CnATreeElement::getTitle);
         loadScopes();
         personComponent.loadElements();
     }
@@ -231,19 +211,16 @@ public class PersonPage extends BaseWizardPage {
 
         comboModelScope.sort();
         comboModelScope.addNoSelectionObject(Messages.PersonPage_8);
-        getDisplay().syncExec(new Runnable() {
-            @Override
-            public void run() {
-                comboScope.setItems(comboModelScope.getLabelArray());
-                if (scope != null) {
-                    comboModelScope.setSelectedObject(scope);
-                    comboScope.select(comboModelScope.getSelectedIndex());
-                    personComponent.setScopeId(getScopeId());
-                    loadGroups();
-                } else {
-                    comboScope.select(0);
-                    comboModelScope.setSelectedIndex(comboScope.getSelectionIndex());
-                }
+        getDisplay().syncExec(() -> {
+            comboScope.setItems(comboModelScope.getLabelArray());
+            if (scope != null) {
+                comboModelScope.setSelectedObject(scope);
+                comboScope.select(comboModelScope.getSelectedIndex());
+                personComponent.setScopeId(getScopeId());
+                loadGroups();
+            } else {
+                comboScope.select(0);
+                comboModelScope.setSelectedIndex(comboScope.getSelectionIndex());
             }
         });
     }
@@ -266,22 +243,19 @@ public class PersonPage extends BaseWizardPage {
             if (groupTypeId != null) {
                 loadPersonGroups(groupTypeId);
             }
-            getDisplay().syncExec(new Runnable() {
-                @Override
-                public void run() {
-                    comboGroup.setItems(comboModelGroup.getLabelArray());
-                    if (group != null) {
-                        comboModelGroup.setSelectedObject(group);
-                        selectFirstIfNoGroupIsSelected();
-                        comboGroup.select(comboModelGroup.getSelectedIndex());
-                    } else {
-                        comboGroup.select(0);
-                        comboModelGroup.setSelectedIndex(comboGroup.getSelectionIndex());
-                    }
-                    group = comboModelGroup.getSelectedObject();
-                    personComponent.setGroupId(getGroupId());
-                    personComponent.loadElementsAndSelect(person);
+            getDisplay().syncExec(() -> {
+                comboGroup.setItems(comboModelGroup.getLabelArray());
+                if (group != null) {
+                    comboModelGroup.setSelectedObject(group);
+                    selectFirstIfNoGroupIsSelected();
+                    comboGroup.select(comboModelGroup.getSelectedIndex());
+                } else {
+                    comboGroup.select(0);
+                    comboModelGroup.setSelectedIndex(comboGroup.getSelectionIndex());
                 }
+                group = comboModelGroup.getSelectedObject();
+                personComponent.setGroupId(getGroupId());
+                personComponent.loadElementsAndSelect(person);
             });
         } catch (Exception e) {
             LOG.error("Error while loading groups", e); //$NON-NLS-1$
@@ -319,16 +293,12 @@ public class PersonPage extends BaseWizardPage {
         }
     }
 
-    private void loadScope() {
+    private void loadScope(String personTypeId) {
         try {
-            String personTypeId = getPersonTypeId();
-            if (personTypeId == null) {
-                return;
-            }
             String typeId;
-            if (BpPerson.TYPE_ID.equals(getPersonTypeId())) {
+            if (BpPerson.TYPE_ID.equals(personTypeId)) {
                 typeId = ItNetwork.TYPE_ID;
-            } else if (Person.TYPE_ID.equals(getPersonTypeId())) {
+            } else if (Person.TYPE_ID.equals(personTypeId)) {
                 typeId = ITVerbund.TYPE_ID;
             } else {
                 typeId = Organization.TYPE_ID;
@@ -394,7 +364,7 @@ public class PersonPage extends BaseWizardPage {
     public void setPerson(CnATreeElement person) {
         this.person = person;
         if (person != null) {
-            loadScope();
+            loadScope(person.getTypeId());
             loadGroup(person);
         }
     }
