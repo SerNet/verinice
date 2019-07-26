@@ -61,7 +61,7 @@
 					value="jdbc.url=${server-database-url}" />
         	<replacefilter token="# admin.username=admin" value="admin.username=verinice"/>
         	<replacefilter token="# veriniceserver.grundschutzKataloge=/WEB-INF/it-grundschutz_el14_html_de.zip" 
-        		value="veriniceserver.grundschutzKataloge=${test-data}/it-grundschutz_el14_html_de.zip"/>
+        		value="veriniceserver.grundschutzKataloge=file:${test-data}/it-grundschutz_el14_html_de.zip"/>
         </replace>
         <replace file="${server-work-dir}/verinice/WEB-INF/classes/log4j.xml" summary="true">
             <replacefilter token="${catalina.home}/logs/verinice-server.log" 
