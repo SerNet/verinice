@@ -58,7 +58,7 @@ public class SearchService implements ISearchService {
 
     @Resource(name = "searchElementDao")
     protected IElementSearchDao searchDao;
-    
+
     @Resource(name = "jsonBuilder")
     protected IJsonBuilder jsonBuilder;
 
@@ -80,15 +80,14 @@ public class SearchService implements ISearchService {
         }
         return query(veriniceQuery, null);
     }
-    
-    
-    
+
     /**
      * Uses the es querybuilder api to build a query that could be paramterized
      * to search on given fields only, and adding filters for rightmanagement
      * and type-filtered results.
      *
-     * @see sernet.verinice.interfaces.search.ISearchService#query(sernet.verinice.model.search.VeriniceQuery, java.lang.String)
+     * @see sernet.verinice.interfaces.search.ISearchService#query(sernet.verinice.model.search.VeriniceQuery,
+     *      java.lang.String)
      */
     @Override
     public VeriniceSearchResult query(VeriniceQuery query, String elementTypeId) {
@@ -96,16 +95,22 @@ public class SearchService implements ISearchService {
         ServerInitializer.inheritVeriniceContextState();
         VeriniceSearchResult results = new VeriniceSearchResult();
         if (StringUtils.isNotEmpty(elementTypeId)) {
-            results.addVeriniceSearchTable(processSearchResponse(elementTypeId, searchDao.find(elementTypeId, query), query.getLimit()));
+            results.addVeriniceSearchTable(processSearchResponse(elementTypeId,
+                    searchDao.find(elementTypeId, query), query.getLimit()));
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Time for executing query( " + query.getQuery() + ", " + elementTypeId + "):\t" + String.valueOf((System.currentTimeMillis() - startTime) / 1000) + " seconds");
+                LOG.debug("Time for executing query( " + query.getQuery() + ", " + elementTypeId
+                        + "):\t" + String.valueOf((System.currentTimeMillis() - startTime) / 1000)
+                        + " seconds");
             }
         } else {
             for (EntityType type : HUITypeFactory.getInstance().getAllEntityTypes()) {
-                results.addVeriniceSearchTable(processSearchResponse(type.getId(), searchDao.find(type.getId(), query), query.getLimit()));
+                results.addVeriniceSearchTable(processSearchResponse(type.getId(),
+                        searchDao.find(type.getId(), query), query.getLimit()));
             }
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Time for executing query( " + query.getQuery() + ", <allTypeIds>):\t" + String.valueOf((System.currentTimeMillis() - startTime) / 1000) + " seconds");
+                LOG.debug("Time for executing query( " + query.getQuery() + ", <allTypeIds>):\t"
+                        + String.valueOf((System.currentTimeMillis() - startTime) / 1000)
+                        + " seconds");
             }
         }
         return results;
@@ -116,16 +121,19 @@ public class SearchService implements ISearchService {
         return HUITypeFactory.getInstance().getEntityType(typeID).getName();
     }
 
-    private VeriniceSearchResultTable processSearchResponse(String elementTypeId, MultiSearchResponse msr, int limit) {
+    private VeriniceSearchResultTable processSearchResponse(String elementTypeId,
+            MultiSearchResponse msr, int limit) {
         long startTime = System.currentTimeMillis();
         List<SearchHit> hitList = createHitList(msr, limit);
         String identifier = "";
-        VeriniceSearchResultTable results = new VeriniceSearchResultTable(elementTypeId, getEntityName(elementTypeId), getPropertyIds(elementTypeId));
+        VeriniceSearchResultTable results = new VeriniceSearchResultTable(elementTypeId,
+                getEntityName(elementTypeId), getPropertyIds(elementTypeId));
         results.setLimit(limit);
         for (SearchHit hit : hitList) {
             identifier = hit.getId();
             Occurence occurence = createOccurence(elementTypeId, hit);
-            VeriniceSearchResultRow result = new VeriniceSearchResultRow(results, identifier, occurence);
+            VeriniceSearchResultRow result = new VeriniceSearchResultRow(results, identifier,
+                    occurence);
 
             for (String key : hit.getSource().keySet()) {
                 if (hit.getSource().get(key) != null) {
@@ -136,18 +144,21 @@ public class SearchService implements ISearchService {
 
         }
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Time for executing processSearchResponse:\t" + String.valueOf((System.currentTimeMillis() - startTime) / 1000) + " seconds");
+            LOG.debug("Time for executing processSearchResponse:\t"
+                    + String.valueOf((System.currentTimeMillis() - startTime) / 1000) + " seconds");
         }
         return results;
     }
-    
+
     private Occurence createOccurence(String elementTypeId, SearchHit hit) {
-        Iterator<Entry<String, HighlightField>> iter = hit.getHighlightFields().entrySet().iterator();
+        Iterator<Entry<String, HighlightField>> iter = hit.getHighlightFields().entrySet()
+                .iterator();
         Occurence occurence = new Occurence();
         while (iter.hasNext()) {
             Entry<String, HighlightField> entry = iter.next();
-            for (Text textFragment : entry.getValue().fragments()){
-                occurence.addFragment(entry.getKey(), getHuiTranslation(entry.getKey(), elementTypeId), textFragment.toString());
+            for (Text textFragment : entry.getValue().fragments()) {
+                occurence.addFragment(entry.getKey(),
+                        getHuiTranslation(entry.getKey(), elementTypeId), textFragment.toString());
             }
         }
         return occurence;
@@ -162,22 +173,22 @@ public class SearchService implements ISearchService {
                 }
             }
         }
-        if(limit > 0 && limit < hitList.size()){
+        if (limit > 0 && limit < hitList.size()) {
             return limitList(limit, hitList);
         }
         return hitList;
     }
 
-
-
     /**
-     * reduce size of Hitlist to given limit 
-     * (cuts of all elements after position $limit )
+     * reduce size of Hitlist to given limit (cuts of all elements after
+     * position $limit )
+     * 
      * @return
      */
     private List<SearchHit> limitList(int limit, List<SearchHit> hitList) {
-        if(LOG.isDebugEnabled()){
-            LOG.debug("Reducing elastic search result list of size:\t" + hitList.size() + " to " + limit + " elements");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Reducing elastic search result list of size:\t" + hitList.size() + " to "
+                    + limit + " elements");
         }
         SearchHit[] limitedHits = new SearchHit[limit];
         System.arraycopy(hitList.toArray(new SearchHit[hitList.size()]), 0, limitedHits, 0, limit);
@@ -185,7 +196,8 @@ public class SearchService implements ISearchService {
     }
 
     private String getHuiTranslation(String id, String entityType) {
-        for (PropertyType type : HUITypeFactory.getInstance().getEntityType(entityType).getAllPropertyTypes()) {
+        for (PropertyType type : HUITypeFactory.getInstance().getEntityType(entityType)
+                .getAllPropertyTypes()) {
             if (type.getId().equals(id)) {
                 return type.getName();
             }
@@ -235,9 +247,8 @@ public class SearchService implements ISearchService {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * sernet.verinice.interfaces.search.ISearchService#addToIndex(sernet.verinice
-     * .model.common.CnATreeElement)
+     * @see sernet.verinice.interfaces.search.ISearchService#addToIndex(sernet.
+     * verinice .model.common.CnATreeElement)
      */
     @Override
     public void add(CnATreeElement element) {
@@ -306,6 +317,5 @@ public class SearchService implements ISearchService {
     public int getImplementationtype() {
         return ISearchService.ES_IMPLEMENTATION_TYPE_REAL;
     }
-
 
 }
