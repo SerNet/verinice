@@ -151,9 +151,15 @@ public class SearchService implements ISearchService {
     private Occurence createOccurence(String elementTypeId, SearchHit hit) {
         Occurence occurence = new Occurence();
         for (Entry<String, HighlightField> entry : hit.getHighlightFields().entrySet()) {
-            String translatedFieldName = getHuiTranslation(entry.getKey(), elementTypeId);
+
+            String fieldName = entry.getKey();
+            boolean translateFieldName = !ES_FIELD_TITLE.equals(fieldName);
+            if (translateFieldName) {
+                fieldName = getHuiTranslation(entry.getKey(), elementTypeId);
+            }
+
             for (Text textFragment : entry.getValue().fragments()) {
-                occurence.addFragment(entry.getKey(), translatedFieldName, textFragment.toString());
+                occurence.addFragment(entry.getKey(), fieldName, textFragment.toString());
             }
         }
         return occurence;
