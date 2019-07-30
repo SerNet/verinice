@@ -9651,9 +9651,6 @@ Wurden bereits weitere Stellen informiert?
                 <option id="bp_businessprocess_va_gemenVerantwo_2" name="Nein" />
             </huiproperty>
 
-            <huiproperty id="bp_businessprocess_va_gemenVerant_Kontaktd" name="Angaben zum gemeinsam Verantwortlichen">
-                <depends option="bp_businessprocess_va_gemenVerant" value="bp_businessprocess_va_gemenVerantwo_1" />
-            </huiproperty>
             <huiproperty id="bp_businessprocess_va_gemenVerant_name" name="Name">
                 <depends option="bp_businessprocess_va_gemenVerant" value="bp_businessprocess_va_gemenVerantwo_1" />
             </huiproperty>
