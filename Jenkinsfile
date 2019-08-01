@@ -15,7 +15,6 @@ pipeline {
         		        currentBuild.keepLog = true
         		    }
 			    }
-                notifyBB()
                 buildDescription "${env.GIT_BRANCH} ${env.GIT_COMMIT[0..8]}"
                 sh 'env'
                 sh 'make -C verinice-distribution clean'
@@ -65,14 +64,9 @@ pipeline {
             recordIssues(tools: [taskScanner(highTags: 'FIXME', ignoreCase: true, normalTags: 'TODO', includePattern: '**/*.java, **/*.xml')])
             junit allowEmptyResults: true, testResults: '**/build/reports/**/*.xml'
             perfReport filterRegex: '', sourceDataFiles: '**/build/reports/TEST*.xml'
-            notifyBB()
         }
         failure {
             emailext body: '${JELLY_SCRIPT,template="text"}', subject: '$DEFAULT_SUBJECT', to: 'dm@sernet.de, uz@sernet.de, an@sernet.de, fw@sernet.de, ak@sernet.de'
         }
     }
-}
-
-def notifyBB() {
-    notifyBitbucket commitSha1: '', considerUnstableAsSuccess: false, credentialsId: 'bitbucket', disableInprogressNotification: false, ignoreUnverifiedSSLPeer: false, includeBuildNumberInKey: false, prependParentProjectKey: false, projectKey: '', stashServerBaseUrl: 'https://git.verinice.org/bb'
 }
