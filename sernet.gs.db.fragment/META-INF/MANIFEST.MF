@@ -19,3 +19,4 @@ Export-Package:
  org.apache.derby.jdbc,
  org.postgresql,
  org.postgresql.util
+Bundle-Vendor: SerNet GmbH
