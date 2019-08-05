@@ -11,7 +11,5 @@
 	<classpathentry exported="true" kind="lib" path="lib/derby/derbynet.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/derby/derbyrun.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/derby/derbytools.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/postgres/postgresql-42.2.6.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/oracle/ojdbc8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
