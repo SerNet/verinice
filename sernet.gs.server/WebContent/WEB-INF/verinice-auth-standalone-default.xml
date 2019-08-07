@@ -19,85 +19,85 @@
         
         <profile name="admin-default-profile" origin="default">
             <!-- missing actions:
-		            "accountsettings"
-		            "accesscontrol"
-                "creategreenbonetasks"
-                "createindividualtasks"
-                "createisatasks"
-	              "editprofile"
-                "taskchangeassignee"
-                "taskchangeduedate"
-	              "taskdelete"
-	              "taskshowall"
-	              "taskwithreleaseprocess"
-                "importldap"
-                "reportdeposit"
-                "reportdepositadd"
-                "reportdepositdelete"
-                "reportdepositedit" -->
-	        <action id="addbsielement" />
-	        <action id="addbpelement"/>
-          <action id="addbpgroup"/>  
-	        <action id="addfile" />
-	        <action id="addismelement" />
-	        <action id="addismgroup" />
-	        <action id="addismorg" />
-	        <action id="additnetwork" />
-	        <action id="additverbund" />
-	        <action id="addnote" />
-	        <action id="addsecurityassessment" />
-	        <action id="addownmodul"/>
-	        <action id="assignallisatopics" />
-	        <action id="auditview" /> 
-          <action id="baseprotectionmodeling" />
-          <action id="baseprotectionview" />
-	        <action id="bausteinzuordnung" />
-	        <action id="bpimporter" />
-	        <action id="bsidnd" />
-        	<action id="bsibrowser" />
-	        <action id="bsimassnahmen" />
-	        <action id="bsimodelview" />
-	        <action id="bulkedit" />
-          <action id="catalogdelete" />
-          <action id="catalogimport" />       
-	        <action id="catalogview" />
-          <action id="changeicon" />
-          <action id="convertitnetwork" />
-	        <action id="deletefile" />
-	        <action id="deleteitem" />
-	        <action id="derivestatus"/>
-	        <action id="documentview" />
-	        <action id="editlinks" />
-          <action id="editriskconfiguration" />
-          	<action id="exportlinktable" />
-	        <action id="files" />
-	        <action id="generateorgreport" />
-          <action id="groupbytag"/>
-	        <action id="gsnotesimport" />
-	        <action id="gstoolimport" />
-	        <action id="importcsv" />
-	        <action id="ismcopy" />
-	        <action id="ismcut" />
-	        <action id="ismview" />
-          <action id="ismviewweb" />
-	        <action id="konsolidator" />
-	        <action id="naturalize" />
-	        <action id="notes" />
-	        <action id="relations" />
-	        <action id="riskanalysis" />
-	        <action id="samtview" />
-          <action id="searchexport" />
-          <action id="searchreindex" />
-	        <action id="searchview" />
-	        <action id="showchartview" />
-	        <action id="showpreferences" />
-	        <action id="simpleauditview" />
-	        <action id="todo"/>
-          <action id="unify" />
-	        <action id="xmlexport"/>
-	        <action id="xmlimport"/>
-	        <action id="cnavalidation" />
-	        <action id="showallfiles" />
+            "accountsettings"
+            "accesscontrol"
+            "creategreenbonetasks"
+            "createindividualtasks"
+            "createisatasks"
+            "editprofile"
+            "taskchangeassignee"
+            "taskchangeduedate"
+            "taskdelete"
+            "taskshowall"
+            "taskwithreleaseprocess"
+            "importldap"
+            "reportdeposit"
+            "reportdepositadd"
+            "reportdepositdelete"
+            "reportdepositedit" -->
+            <action id="addbsielement" />
+            <action id="addbpelement"/>
+            <action id="addbpgroup"/>  
+            <action id="addfile" />
+            <action id="addismelement" />
+            <action id="addismgroup" />
+            <action id="addismorg" />
+            <action id="additnetwork" />
+            <action id="additverbund" />
+            <action id="addnote" />
+            <action id="addsecurityassessment" />
+            <action id="addownmodul"/>
+            <action id="assignallisatopics" />
+            <action id="auditview" /> 
+            <action id="baseprotectionmodeling" />
+            <action id="baseprotectionview" />
+            <action id="bausteinzuordnung" />
+            <action id="bpimporter" />
+            <action id="bsidnd" />
+            <action id="bsibrowser" />
+            <action id="bsimassnahmen" />
+            <action id="bsimodelview" />
+            <action id="bulkedit" />
+            <action id="catalogdelete" />
+            <action id="catalogimport" />       
+            <action id="catalogview" />
+            <action id="changeicon" />
+            <action id="convertitnetwork" />
+            <action id="deletefile" />
+            <action id="deleteitem" />
+            <action id="derivestatus"/>
+            <action id="documentview" />
+            <action id="editlinks" />
+            <action id="editriskconfiguration" />
+            <action id="exportlinktable" />
+            <action id="files" />
+            <action id="generateorgreport" />
+            <action id="groupbytag"/>
+            <action id="gsnotesimport" />
+            <action id="gstoolimport" />
+            <action id="importcsv" />
+            <action id="ismcopy" />
+            <action id="ismcut" />
+            <action id="ismview" />
+            <action id="ismviewweb" />
+            <action id="konsolidator" />
+            <action id="naturalize" />
+            <action id="notes" />
+            <action id="relations" />
+            <action id="riskanalysis" />
+            <action id="samtview" />
+            <action id="searchexport" />
+            <action id="searchreindex" />
+            <action id="searchview" />
+            <action id="showchartview" />
+            <action id="showpreferences" />
+            <action id="simpleauditview" />
+            <action id="todo"/>
+            <action id="unify" />
+            <action id="xmlexport"/>
+            <action id="xmlimport"/>
+            <action id="cnavalidation" />
+            <action id="showallfiles" />
             <action id="migrate_data_protection" />
         </profile>
     </profiles>
