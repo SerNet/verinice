@@ -91,10 +91,6 @@ public class ReportPreferencePage extends FieldEditorPreferencePage implements I
 			checkState();
 		}
 
-		if (event.getSource() == localTemplateEditor) {
-			Activator.getDefault().getIReportTemplateDirectoryService().setDirectory((String) event.getNewValue());
-		}
-
 		if (event.getSource() == useSandboxEditor) {
 			// show a warning dialog if user disables security feature
 			boolean deactivated = !(Boolean) event.getNewValue();
@@ -109,6 +105,12 @@ public class ReportPreferencePage extends FieldEditorPreferencePage implements I
 				});
 			}
 		}
+	}
+
+	@Override
+	public boolean performOk() {
+		Activator.getDefault().getIReportTemplateDirectoryService().setDirectory(localTemplateEditor.getStringValue());
+		return super.performOk();
 	}
 
 	private static Display getDisplay() {
