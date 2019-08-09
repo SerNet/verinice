@@ -67,7 +67,7 @@ public class DesktopUtil {
             }
         }
 
-        if (SystemUtils.IS_OS_MAC && runCommand("open", "%s", what)) {
+        if (SystemUtils.IS_OS_MAC && runCommand("/usr/bin/open", "%s", what)) {
             return true;
         }
 
@@ -109,6 +109,11 @@ public class DesktopUtil {
         String[] parts = prepareCommand(command, args, file);
 
         try {
+            if (SystemUtils.IS_OS_MAC) {
+                // https://stackoverflow.com/questions/53113127/java-runtime-exec-fails-to-run
+                // https://bugs.java.com/bugdatabase/view_bug.do?bug_id=5049299
+                System.setProperty("jdk.lang.Process.launchMechanism", "FORK");
+            }
             Process p = Runtime.getRuntime().exec(parts);
             if (p == null) {
                 return false;
