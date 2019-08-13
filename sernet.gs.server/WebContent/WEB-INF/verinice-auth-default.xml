@@ -3,15 +3,14 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.verinice.org/auth verinice-auth.xsd">
 
-    <!-- This is the default configuration of access rights to application actions. -->
-    <!-- End users should NEVER edit this file! Use verinice-auth.xml instead. -->
-    <!-- Settings in verinice-auth.xml overwrites settings in this file. -->
+    <!-- This is the default configuration of the access rights for the actions in the application. -->
+    <!-- End users should never edit this file, only make changes to the verinice-auth.xml file. -->
+    <!-- The entries in the verinice-auth.xml file overwrite the settings in this file. -->
 
     <profiles>
         <!-- Each profile in this document defines a collection -->
         <!-- of application actions. All actions in verinice are -->
-        <!-- defined in property file verinice-action.properties. -->
-
+        <!-- defined in class sernet.verinice.interfaces.ActionRightIDs. -->
 
         <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
              When adding actions here, don't forget to add

@@ -2,14 +2,15 @@
 <p:auth version="0" type="whitelist" xmlns:p="http://www.verinice.org/auth"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.verinice.org/auth verinice-auth.xsd">
-    
-    <!-- This is configuration of access rights to application actions. -->
-    <!-- Settings in this file overwrites verinice-auth-default.xml  -->
-    
+
+    <!-- This is the custom configuration of the access rights for the actions in the application. -->
+    <!-- End users should never edit this file, only make changes to the verinice-auth.xml file. -->
+    <!-- The entries in the verinice-auth.xml file overwrite the settings in this file. -->
+
     <p:profiles>
         <!-- Each profile in this document defines a collection -->
         <!-- of application actions. All actions in verinice are -->
-        <!-- defined in property file verinice-action.properties. -->
+        <!-- defined in class sernet.verinice.interfaces.ActionRightIDs. -->
     </p:profiles>
     <p:userprofiles>
         <!-- A userprofile defines a n:m mapping between users and -->
