@@ -21,4 +21,8 @@
 		<tag-name>login</tag-name>
 		<source>../template/login.xhtml</source>
 	</tag>
+	<tag>
+        <tag-name>purify</tag-name>
+        <source>../misc/purify.xhtml</source>
+    </tag>
 </facelet-taglib>
