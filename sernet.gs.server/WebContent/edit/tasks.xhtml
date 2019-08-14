@@ -16,6 +16,7 @@
 	<ui:define name="viewname">Tasks :: verinice</ui:define>
 
 	<ui:define name="content">
+		<h:outputScript name="DOMPurify/v1.0.11/purify.min.js" />
 		<div class="ui-g ui-fluid">
 			<div class="ui-g-6 ui-lg-6 ui-xl-6 ui-md-12 ui-sm-12">
 				<p:panel header="#{msgTask['tasks']}">
@@ -83,10 +84,9 @@
 								<ui:fragment id="descriptionPanel"
 									rendered="#{task.selectedTask!=null}">
 									<div class="task-description">
-										<p>
-											<h:outputText value="#{task.selectedTask.description}"
-												escape="false" />
-										</p>
+										<vn:purify>
+											<h:outputText value="#{task.selectedTask.description}" />
+										</vn:purify>
 									</div>
 								</ui:fragment>
 
@@ -128,7 +128,9 @@
 					jsf:id="elementDescription">
 					<p:panel header="${msgTask['description']}" toggleable="true"
 						rendered="${task.elementDescription != null}">
-						<h:outputText escape="false" value="${task.elementDescription}" />
+						<vn:purify>
+							<h:outputText value="${task.elementDescription}" />
+						</vn:purify>
 					</p:panel>
 				</div>
 			</div>
