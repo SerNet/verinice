@@ -21,8 +21,8 @@
 				<p:panel header="#{msgTask['tasks']}">
 					<h:form id="tableForm" rendered="#{auth.isoTasks}">
 
-						<p:growl id="msg" autoUpdate="true" showDetail="true" sticky="true"
-						severity="info" />
+						<p:growl id="msg" autoUpdate="true" showDetail="true"
+							sticky="true" severity="info" />
 
 						<div class="ui-g ui-fluid">
 							<div class="ui-g-2">
@@ -55,8 +55,9 @@
 									<f:selectItem itemLabel="#{msgTask['selectIsa']}" itemValue="" />
 									<f:selectItems value="#{task.auditNameList}" var="name"
 										itemLabel="#{name}" itemValue="#{name}" />
-									<p:ajax update=":tableForm:taskTable,:editForm,:elementDescription" event="change"
-										listener="#{task.selectAudit}" process="audit" />
+									<p:ajax
+										update=":tableForm:taskTable,:editForm,:elementDescription"
+										event="change" listener="#{task.selectAudit}" process="audit" />
 								</p:selectOneMenu>
 							</div>
 
@@ -65,13 +66,15 @@
 								<p:panelGrid columns="4" id="taskFilter">
 									<h:outputText value="#{msgTask['read']}" />
 									<p:selectBooleanCheckbox value="#{task.showRead}">
-										<p:ajax update=":tableForm:taskTable,:editForm,:elementDescription"
+										<p:ajax
+											update=":tableForm:taskTable,:editForm,:elementDescription"
 											listener="#{task.loadTasks}" />
 									</p:selectBooleanCheckbox>
 
 									<h:outputText value="#{msgTask['unread']}" />
 									<p:selectBooleanCheckbox value="#{task.showUnread}">
-										<p:ajax update=":tableForm:taskTable,:editForm,:elementDescription"
+										<p:ajax
+											update=":tableForm:taskTable,:editForm,:elementDescription"
 											listener="#{task.loadTasks}" />
 									</p:selectBooleanCheckbox>
 								</p:panelGrid>
@@ -121,8 +124,10 @@
 
 			<div class="ui-g-6 ui-lg-6 ui-xl-6 ui-md-12 ui-sm-12">
 				<vn:editor rendered="#{auth.isoTasks}" />
-				<div xmlns:jsf="http://xmlns.jcp.org/jsf" jsf:id="elementDescription">
-					<p:panel header="${msgTask['description']}" toggleable="true" rendered="${task.elementDescription != null}">
+				<div xmlns:jsf="http://xmlns.jcp.org/jsf"
+					jsf:id="elementDescription">
+					<p:panel header="${msgTask['description']}" toggleable="true"
+						rendered="${task.elementDescription != null}">
 						<h:outputText escape="false" value="${task.elementDescription}" />
 					</p:panel>
 				</div>
