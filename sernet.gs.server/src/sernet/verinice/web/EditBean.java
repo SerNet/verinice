@@ -657,8 +657,17 @@ public class EditBean {
         }
     }
 
+    private boolean protocolIsAllowed(String url) {
+        return StringUtils.isNotEmpty(url) && url.matches("^(((f|ht)tps?)://|ssh:|smb:|mailto:|file:|[a-zA-Z]:|\\\\\\\\|//).*$");
+    }
+
     public void onUrlChange(AjaxBehaviorEvent event) {
         HuiProperty huiProperty = extractHuiProperty(event);
+        String url = huiProperty.getURLValue();
+        if (!protocolIsAllowed(url)) {
+            huiProperty.setURLValue("");
+            huiProperty.setURLText("ERROR: bad url");
+        }
         changeURL(huiProperty.getKey(), huiProperty.getURLText(), huiProperty.getURLValue());
     }
 
