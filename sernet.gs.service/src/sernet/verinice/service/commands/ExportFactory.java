@@ -203,11 +203,7 @@ public final class ExportFactory {
         }
         String extId = element.getExtId();
         if (extId == null || extId.isEmpty()) {
-            if (element.getEntity() != null) {
-                extId = element.getEntity().getId();
-            } else {
-                extId = element.getId();
-            }
+            extId = element.getUuid();
         }
         return extId;
     }
@@ -225,7 +221,7 @@ public final class ExportFactory {
         }
         String extId = attachment.getExtId();
         if (extId == null || extId.isEmpty()) {
-            extId = attachment.getEntity().getId();
+            extId = attachment.getEntity().getUuid();
         }
         return extId;
     }
