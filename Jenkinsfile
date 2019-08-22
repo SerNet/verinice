@@ -12,11 +12,11 @@ pipeline {
     stages {
         stage('Setup') {
             steps {
-    			script {
-        		    if (env.TAG_NAME){
-        		        currentBuild.keepLog = true
-        		    }
-			    }
+                script {
+                    if (env.TAG_NAME){
+                        currentBuild.keepLog = true
+                    }
+                }
                 buildDescription "${env.GIT_BRANCH} ${env.GIT_COMMIT[0..8]}"
                 sh 'env'
                 sh 'make -C verinice-distribution clean'
