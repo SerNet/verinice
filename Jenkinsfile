@@ -19,17 +19,17 @@ pipeline {
                 }
                 buildDescription "${env.GIT_BRANCH} ${env.GIT_COMMIT[0..8]}"
                 sh 'env'
-                sh 'make -C verinice-distribution clean'
+                sh './verinice-distribution/build.sh clean'
             }
         }
         stage('Fetch JREs') {
             steps {
-                sh 'make -C verinice-distribution -j4 jres'
+                sh './verinice-distribution/build.sh -j4 jres'
             }
         }
         stage('Build') {
             steps {
-                sh "make -C verinice-distribution products"
+                sh "./verinice-distribution/build.sh products"
                 archiveArtifacts artifacts: 'sernet.verinice.releng.client.product/target/products/*.zip,sernet.verinice.report.designer.product/target/products/*.zip,sernet.verinice.releng.server.product/target/*.war,sernet.verinice.releng.client.product/target/repository/**', fingerprint: true
             }
         }
@@ -40,12 +40,12 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh "make -C verinice-distribution tests"
+                sh "./verinice-distribution/build.sh tests"
             }
         }
         stage('Documentation') {
             steps {
-                sh "make -C verinice-distribution -j4 docs"
+                sh "./verinice-distribution/build.sh -j4 docs"
                 archiveArtifacts artifacts: 'doc/manual/*/*.pdf,doc/manual/*/*.zip', fingerprint: true
             }
         }
@@ -54,7 +54,7 @@ pipeline {
                 expression { params.dists && currentBuild.result in [null, 'SUCCESS'] }
             }
             steps {
-                sh "make -C verinice-distribution -j2 dists"
+                sh "./verinice-distribution/build.sh -j2 dists"
                 archiveArtifacts artifacts: 'verinice-distribution/rhel-?/RPMS/noarch/*', fingerprint: true
             }
         }

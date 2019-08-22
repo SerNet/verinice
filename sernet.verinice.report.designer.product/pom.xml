@@ -45,7 +45,7 @@
                         <product>
                             <id>sernet.verinice.report.designer</id>
                             <rootFolder>v.Designer</rootFolder>
-                            <archiveFileName>v.Designer-${unqualifiedVersion}</archiveFileName>
+                            <archiveFileName>v.Designer-${qualifiedVersion}</archiveFileName>
                         </product>
                     </products>
                 </configuration>

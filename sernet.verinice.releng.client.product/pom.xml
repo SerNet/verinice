@@ -46,7 +46,7 @@
 						<product>
 							<id>sernet.verinice.releng.client</id>
 							<rootFolder>verinice</rootFolder>
-							<archiveFileName>verinice-${unqualifiedVersion}</archiveFileName>
+							<archiveFileName>verinice-${qualifiedVersion}</archiveFileName>
 						</product>
 					</products>
 				</configuration>
