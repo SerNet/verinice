@@ -9163,7 +9163,10 @@ Wurden bereits weitere Stellen informiert?
             reversename="located in" />
         <huirelation to="bp_person" id="rel_bp_itnetwork_bp_person"
             name="person primarily responsible"
-            reversename="primarily responsible for " />
+            reversename="primarily responsible for" />
+        <huirelation to="bp_person" id="rel_bp_itnetwork_bp_person_dps"
+            name="data protection supervisor"
+            reversename="data protection supervisor for" />
         <huirelation to="bp_incident" id="rel_bp_itnetwork_bp_incident"
             name="was affected by"
             reversename="affected" />
