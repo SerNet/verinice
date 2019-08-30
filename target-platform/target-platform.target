@@ -12,14 +12,14 @@
 <unit id="org.eclipse.equinox.executable" version="0.0.0"/>
 <unit id="org.apache.batik.css" version="0.0.0"/>
 <unit id="org.apache.batik.util" version="0.0.0"/>
-<repository location="http://download.eclipse.org/eclipse/updates/4.10/"/>
+<repository location="http://download.eclipse.org/eclipse/updates/4.12/"/>
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.birt.chart.cshelp.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.birt.cshelp.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.help.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/releases/2018-12/"/>
+<repository location="http://download.eclipse.org/releases/2019-06/"/>
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -41,7 +41,7 @@
 <unit id="org.eclipse.datatools.enablement.sdk.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.datatools.sdk.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.datatools.sqldevtools.feature.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/releases/2018-12/"/>
+<repository location="http://download.eclipse.org/releases/2019-06/"/>
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -129,7 +129,7 @@
 <unit id="org.eclipse.babel.nls_eclipse_cs.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.babel.nls_eclipse_de.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.babel.nls_eclipse_it.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/technology/babel/update-site/R0.17.0/2018-12/"/>
+<repository location="http://download.eclipse.org/technology/babel/update-site/R0.17.0/2019-06/"/>
 </location>
 
 </locations>
