@@ -554,7 +554,7 @@ ${verinice-workspace}
 	        <antcall target="configure-aut" />
 	        <echo file="${verinice-sever-workspace}/.metadata/.plugins/org.eclipse.core.runtime/.settings/sernet.gs.ui.rcp.main.prefs" >
 	eclipse.preferences.version=1
-	cna_derbywarning=true
+	cna_derbywarning=false
 	gs_cna_vnserver_uri=${server.test.url}
 	gs_cna_operationmode=gs_cna_operationmode_withserver
 	</echo>
