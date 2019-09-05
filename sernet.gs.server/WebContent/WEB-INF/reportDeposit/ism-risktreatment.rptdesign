@@ -32,8 +32,8 @@
     </parameters>
     <data-sources>
         <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44">
-            <property name="sncaUrl">http://localhost:8820/GetHitroConfig</property>
-            <property name="serverURI">http://localhost:8820</property>
+            <property name="sncaUrl">http://localhost:8801/GetHitroConfig</property>
+            <property name="serverURI">http://localhost:8801</property>
         </oda-data-source>
         <script-data-source name="scriptedSource" id="7115"/>
     </data-sources>
@@ -7425,40 +7425,52 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     <text-property name="heading">Implementierung_-_Implementiert_(Control)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">risk-value-a_(!)_(Szenario)</property>
+                    <property name="columnName">risk-value-a_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">risk-value-a_(!)_(Szenario)</text-property>
-                    <text-property name="heading">risk-value-a_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">risk-value-a_(Szenario)</text-property>
+                    <text-property name="heading">risk-value-a_(Szenario)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">risk-value-a-with-controls_(!)_(Szenario)</property>
+                    <property name="columnName">risk-value-a-with-controls_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">risk-value-a-with-controls_(!)_(Szenario)</text-property>
-                    <text-property name="heading">risk-value-a-with-controls_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">risk-value-a-with-controls_(Szenario)</text-property>
+                    <text-property name="heading">risk-value-a-with-controls_(Szenario)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">risk-value-c_(!)_(Szenario)</property>
+                    <property name="columnName">risk-value-c_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">risk-value-c_(!)_(Szenario)</text-property>
-                    <text-property name="heading">risk-value-c_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">risk-value-c_(Szenario)</text-property>
+                    <text-property name="heading">risk-value-c_(Szenario)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">risk-value-c-with-controls_(!)_(Szenario)</property>
+                    <property name="columnName">risk-value-c-with-controls_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">risk-value-c-with-controls_(!)_(Szenario)</text-property>
-                    <text-property name="heading">risk-value-c-with-controls_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">risk-value-c-with-controls_(Szenario)</text-property>
+                    <text-property name="heading">risk-value-c-with-controls_(Szenario)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">risk-value-i_(!)_(Szenario)</property>
+                    <property name="columnName">risk-value-i_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">risk-value-i_(!)_(Szenario)</text-property>
-                    <text-property name="heading">risk-value-i_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">risk-value-i_(Szenario)</text-property>
+                    <text-property name="heading">risk-value-i_(Szenario)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">risk-value-i-with-controls_(!)_(Szenario)</property>
+                    <property name="columnName">risk-value-i-with-controls_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">risk-value-i-with-controls_(!)_(Szenario)</text-property>
-                    <text-property name="heading">risk-value-i-with-controls_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">risk-value-i-with-controls_(Szenario)</text-property>
+                    <text-property name="heading">risk-value-i-with-controls_(Szenario)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">incscen_likelihood</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">incscen_likelihood</text-property>
+                    <text-property name="heading">incscen_likelihood</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)</text-property>
+                    <text-property name="heading">Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters"/>
@@ -7536,46 +7548,56 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">risk-value-a_(!)_(Szenario)</property>
+                        <property name="name">risk-value-a_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">16</property>
-                        <property name="name">risk-value-a-with-controls_(!)_(Szenario)</property>
+                        <property name="name">risk-value-a-with-controls_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">17</property>
-                        <property name="name">risk-value-c_(!)_(Szenario)</property>
+                        <property name="name">risk-value-c_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">18</property>
-                        <property name="name">risk-value-c-with-controls_(!)_(Szenario)</property>
+                        <property name="name">risk-value-c-with-controls_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">19</property>
-                        <property name="name">risk-value-i_(!)_(Szenario)</property>
+                        <property name="name">risk-value-i_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">20</property>
-                        <property name="name">risk-value-i-with-controls_(!)_(Szenario)</property>
+                        <property name="name">risk-value-i-with-controls_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">21</property>
+                        <property name="name">incscen_likelihood</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">22</property>
+                        <property name="name">Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
                         <property name="name">affects_i</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">22</property>
+                        <property name="position">24</property>
                         <property name="name">affects_c</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">23</property>
+                        <property name="position">25</property>
                         <property name="name">affects_a</property>
                         <property name="dataType">integer</property>
                     </structure>
@@ -7683,44 +7705,57 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                 </structure>
                 <structure>
                     <property name="position">15</property>
-                    <property name="name">risk-value-a_(!)_(Szenario)</property>
-                    <property name="nativeName">risk-value-a_(!)_(Szenario)</property>
+                    <property name="name">risk-value-a_(Szenario)</property>
+                    <property name="nativeName">risk-value-a_(Szenario)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">16</property>
-                    <property name="name">risk-value-a-with-controls_(!)_(Szenario)</property>
-                    <property name="nativeName">risk-value-a-with-controls_(!)_(Szenario)</property>
+                    <property name="name">risk-value-a-with-controls_(Szenario)</property>
+                    <property name="nativeName">risk-value-a-with-controls_(Szenario)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">17</property>
-                    <property name="name">risk-value-c_(!)_(Szenario)</property>
-                    <property name="nativeName">risk-value-c_(!)_(Szenario)</property>
+                    <property name="name">risk-value-c_(Szenario)</property>
+                    <property name="nativeName">risk-value-c_(Szenario)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">18</property>
-                    <property name="name">risk-value-c-with-controls_(!)_(Szenario)</property>
-                    <property name="nativeName">risk-value-c-with-controls_(!)_(Szenario)</property>
+                    <property name="name">risk-value-c-with-controls_(Szenario)</property>
+                    <property name="nativeName">risk-value-c-with-controls_(Szenario)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">19</property>
-                    <property name="name">risk-value-i_(!)_(Szenario)</property>
-                    <property name="nativeName">risk-value-i_(!)_(Szenario)</property>
+                    <property name="name">risk-value-i_(Szenario)</property>
+                    <property name="nativeName">risk-value-i_(Szenario)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">20</property>
-                    <property name="name">risk-value-i-with-controls_(!)_(Szenario)</property>
-                    <property name="nativeName">risk-value-i-with-controls_(!)_(Szenario)</property>
+                    <property name="name">risk-value-i-with-controls_(Szenario)</property>
+                    <property name="nativeName">risk-value-i-with-controls_(Szenario)</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">21</property>
+                    <property name="name">incscen_likelihood</property>
+                    <property name="nativeName">incscen_likelihood</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">22</property>
+                    <property name="name">Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)</property>
+                    <property name="nativeName">Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
@@ -7743,12 +7778,14 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
     "asset/incident_scenario/control.control_name AS Titel_(Control)",
     "asset/incident_scenario/control.control_eff_probability AS Control-Level_-_Wahrscheinlichkeit_des_Szenarios_(Control)",
     "asset/incident_scenario/control.control_implemented AS Implementierung_-_Implementiert_(Control)",
-    "asset:incident_scenario.risk-value-a AS risk-value-a_(!)_(Szenario)",
-    "asset:incident_scenario.risk-value-a-with-controls AS risk-value-a-with-controls_(!)_(Szenario)",
-    "asset:incident_scenario.risk-value-c AS risk-value-c_(!)_(Szenario)",
-    "asset:incident_scenario.risk-value-c-with-controls AS risk-value-c-with-controls_(!)_(Szenario)",
-    "asset:incident_scenario.risk-value-i AS risk-value-i_(!)_(Szenario)",
-    "asset:incident_scenario.risk-value-i-with-controls AS risk-value-i-with-controls_(!)_(Szenario)"
+    "asset:incident_scenario.risk-value-a AS risk-value-a_(Szenario)",
+    "asset:incident_scenario.risk-value-a-with-controls AS risk-value-a-with-controls_(Szenario)",
+    "asset:incident_scenario.risk-value-c AS risk-value-c_(Szenario)",
+    "asset:incident_scenario.risk-value-c-with-controls AS risk-value-c-with-controls_(Szenario)",
+    "asset:incident_scenario.risk-value-i AS risk-value-i_(Szenario)",
+    "asset:incident_scenario.risk-value-i-with-controls AS risk-value-i-with-controls_(Szenario)",
+    "asset/incident_scenario.incscen_likelihood AS incscen_likelihood",
+    "asset/incident_scenario.incscen_likelihoodmethod AS Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)"
   ],
   "relationIds": []
 }]]></xml-property>
@@ -7941,12 +7978,6 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     <text-property name="displayName">vulnerabilities::A</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">asset_id-scenarios-with-controlls::scenario_control_weight</property>
-                    <property name="alias">scenario_control_weight</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls::scenario_control_weight</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">vulnerabilities::C</property>
                     <property name="alias">C</property>
                     <property name="analysis">dimension</property>
@@ -7977,10 +8008,10 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     <text-property name="displayName">asset_id-scenarios-with-controlls::Datenbank-Id_(Control)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">asset_id-scenarios-with-controlls::risk-value-c-with-controls_(!)_(Szenario)</property>
-                    <property name="alias">risk-value-c-with-controls_(!)_(Szenario)</property>
+                    <property name="columnName">asset_id-scenarios-with-controlls::risk-value-c-with-controls_(Szenario)</property>
+                    <property name="alias">risk-value-c-with-controls_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls::risk-value-c-with-controls_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls::risk-value-c-with-controls_(Szenario)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_id-scenarios-with-controlls::Wahrscheinlichkeit_-_Bedrohungshäufigkeit_(Szenario)</property>
@@ -8031,10 +8062,10 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     <text-property name="displayName">asset_id-scenarios-with-controlls::Control-Level_-_Wahrscheinlichkeit_des_Szenarios_(Control)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">asset_id-scenarios-with-controlls::risk-value-i-with-controls_(!)_(Szenario)</property>
-                    <property name="alias">risk-value-i-with-controls_(!)_(Szenario)</property>
+                    <property name="columnName">asset_id-scenarios-with-controlls::risk-value-i-with-controls_(Szenario)</property>
+                    <property name="alias">risk-value-i-with-controls_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls::risk-value-i-with-controls_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls::risk-value-i-with-controls_(Szenario)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_id-scenarios-with-controlls::Betrifft_Integrität_(Szenario)</property>
@@ -8055,10 +8086,10 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     <text-property name="displayName">asset_id-scenarios-with-controlls::Betrifft_Verfügbarkeit_(Szenario)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">asset_id-scenarios-with-controlls::risk-value-c_(!)_(Szenario)</property>
-                    <property name="alias">risk-value-c_(!)_(Szenario)</property>
+                    <property name="columnName">asset_id-scenarios-with-controlls::risk-value-c_(Szenario)</property>
+                    <property name="alias">risk-value-c_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls::risk-value-c_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls::risk-value-c_(Szenario)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">vulnerabilities::C__mit__Controls</property>
@@ -8085,10 +8116,10 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     <text-property name="displayName">asset_id-scenarios-with-controlls::Titel_(Control)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">asset_id-scenarios-with-controlls::risk-value-a_(!)_(Szenario)</property>
-                    <property name="alias">risk-value-a_(!)_(Szenario)</property>
+                    <property name="columnName">asset_id-scenarios-with-controlls::risk-value-a_(Szenario)</property>
+                    <property name="alias">risk-value-a_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls::risk-value-a_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls::risk-value-a_(Szenario)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_id-scenarios-with-controlls::Wahrscheinlichkeit_-_Einstufung_der_Schwachstelle_(Szenario)</property>
@@ -8103,10 +8134,10 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     <text-property name="displayName">vulnerabilities::Datenbank-Id__(Szenario)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">asset_id-scenarios-with-controlls::risk-value-i_(!)_(Szenario)</property>
-                    <property name="alias">risk-value-i_(!)_(Szenario)</property>
+                    <property name="columnName">asset_id-scenarios-with-controlls::risk-value-i_(Szenario)</property>
+                    <property name="alias">risk-value-i_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls::risk-value-i_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls::risk-value-i_(Szenario)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_id-scenarios-with-controlls::Abkürzung_(Control)</property>
@@ -8127,16 +8158,24 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     <text-property name="displayName">asset_id-scenarios-with-controlls::Betrifft_Vertraulichkeit_(Szenario)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">asset_id-scenarios-with-controlls::risk-value-a-with-controls_(!)_(Szenario)</property>
-                    <property name="alias">risk-value-a-with-controls_(!)_(Szenario)</property>
+                    <property name="columnName">asset_id-scenarios-with-controlls::risk-value-a-with-controls_(Szenario)</property>
+                    <property name="alias">risk-value-a-with-controls_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls::risk-value-a-with-controls_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls::risk-value-a-with-controls_(Szenario)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_id-scenarios-with-controlls::Titel_(Szenario)</property>
                     <property name="alias">Titel_(Szenario)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">asset_id-scenarios-with-controlls::Titel_(Szenario)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">asset_id-scenarios-with-controlls::incscen_likelihood</property>
+                    <property name="alias">asset_id-scenarios-with-controlls::incscen_likelihood</property>
+                </structure>
+                <structure>
+                    <property name="columnName">asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)</property>
+                    <property name="alias">asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)</property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
@@ -8213,101 +8252,106 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">risk-value-a_(!)_(Szenario)</property>
+                        <property name="name">risk-value-a_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">16</property>
-                        <property name="name">risk-value-a-with-controls_(!)_(Szenario)</property>
+                        <property name="name">risk-value-a-with-controls_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">17</property>
-                        <property name="name">risk-value-c_(!)_(Szenario)</property>
+                        <property name="name">risk-value-c_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">18</property>
-                        <property name="name">risk-value-c-with-controls_(!)_(Szenario)</property>
+                        <property name="name">risk-value-c-with-controls_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">19</property>
-                        <property name="name">risk-value-i_(!)_(Szenario)</property>
+                        <property name="name">risk-value-i_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">20</property>
-                        <property name="name">risk-value-i-with-controls_(!)_(Szenario)</property>
+                        <property name="name">risk-value-i-with-controls_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">21</property>
+                        <property name="name">asset_id-scenarios-with-controlls::incscen_likelihood</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">22</property>
+                        <property name="name">asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
                         <property name="name">affects_i</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">22</property>
+                        <property name="position">24</property>
                         <property name="name">affects_c</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">23</property>
+                        <property name="position">25</property>
                         <property name="name">affects_a</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">24</property>
-                        <property name="name">scenario_control_weight</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">25</property>
+                        <property name="position">26</property>
                         <property name="name">Datenbank-Id__(Schwachstelle)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">26</property>
+                        <property name="position">27</property>
                         <property name="name">Abkürzung__(Schwachstelle)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">27</property>
+                        <property name="position">28</property>
                         <property name="name">Titel__(Schwachstelle)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">28</property>
+                        <property name="position">29</property>
                         <property name="name">Einstufung__der__Schwachstelle__(Schwachstelle)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">29</property>
+                        <property name="position">30</property>
                         <property name="name">Datenbank-Id__(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">30</property>
+                        <property name="position">31</property>
                         <property name="name">C</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">31</property>
+                        <property name="position">32</property>
                         <property name="name">I</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">32</property>
+                        <property name="position">33</property>
                         <property name="name">A</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">33</property>
+                        <property name="position">34</property>
                         <property name="name">C__mit__Controls</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">34</property>
+                        <property name="position">35</property>
                         <property name="name">I__mit__Controls</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -8319,7 +8363,7 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
             </simple-property-list>
             <list-property name="joinConditions">
                 <structure>
-                    <property name="joinType">inner</property>
+                    <property name="joinType">left-out</property>
                     <property name="joinOperator">eq</property>
                     <property name="leftDataSet">asset_id-scenarios-with-controlls</property>
                     <property name="rightDataSet">vulnerabilities</property>
@@ -8397,10 +8441,10 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     <text-property name="displayName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::affects_c</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a-with-controls_(!)_(Szenario)</property>
-                    <property name="alias">asset_id-scenarios-with-controlls::risk-value-a-with-controls_(!)_(Szenario)</property>
+                    <property name="columnName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a-with-controls_(Szenario)</property>
+                    <property name="alias">asset_id-scenarios-with-controlls::risk-value-a-with-controls_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a-with-controls_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a-with-controls_(Szenario)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">threats::A__mit__Controls</property>
@@ -8415,10 +8459,10 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     <text-property name="displayName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::affects_i</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i-with-controls_(!)_(Szenario)</property>
-                    <property name="alias">asset_id-scenarios-with-controlls::risk-value-i-with-controls_(!)_(Szenario)</property>
+                    <property name="columnName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i-with-controls_(Szenario)</property>
+                    <property name="alias">asset_id-scenarios-with-controlls::risk-value-i-with-controls_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i-with-controls_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i-with-controls_(Szenario)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Betrifft_Vertraulichkeit_(Szenario)</property>
@@ -8433,10 +8477,10 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     <text-property name="displayName">asset_id-scenarios-with-controlls-and-vulnerabilities::vulnerabilities::Datenbank-Id__(Szenario)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a_(!)_(Szenario)</property>
-                    <property name="alias">asset_id-scenarios-with-controlls::risk-value-a_(!)_(Szenario)</property>
+                    <property name="columnName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a_(Szenario)</property>
+                    <property name="alias">asset_id-scenarios-with-controlls::risk-value-a_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a_(Szenario)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_id-scenarios-with-controlls-and-vulnerabilities::vulnerabilities::I__mit__Controls</property>
@@ -8451,10 +8495,10 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     <text-property name="displayName">threats::Abkürzung__(Bedrohung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i_(!)_(Szenario)</property>
-                    <property name="alias">asset_id-scenarios-with-controlls::risk-value-i_(!)_(Szenario)</property>
+                    <property name="columnName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i_(Szenario)</property>
+                    <property name="alias">asset_id-scenarios-with-controlls::risk-value-i_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i_(Szenario)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Datenbank-Id_(Szenario)</property>
@@ -8475,10 +8519,10 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     <text-property name="displayName">asset_id-scenarios-with-controlls-and-vulnerabilities::vulnerabilities::Datenbank-Id__(Schwachstelle)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c-with-controls_(!)_(Szenario)</property>
-                    <property name="alias">asset_id-scenarios-with-controlls::risk-value-c-with-controls_(!)_(Szenario)</property>
+                    <property name="columnName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c-with-controls_(Szenario)</property>
+                    <property name="alias">asset_id-scenarios-with-controlls::risk-value-c-with-controls_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c-with-controls_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c-with-controls_(Szenario)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_id-scenarios-with-controlls-and-vulnerabilities::vulnerabilities::A</property>
@@ -8517,22 +8561,16 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     <text-property name="displayName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit_-_Bedrohungshäufigkeit_(Szenario)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::scenario_control_weight</property>
-                    <property name="alias">asset_id-scenarios-with-controlls::scenario_control_weight</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::scenario_control_weight</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">threats::C__mit__Controls</property>
                     <property name="alias">C__mit__Controls</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">threats::C__mit__Controls</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c_(!)_(Szenario)</property>
-                    <property name="alias">asset_id-scenarios-with-controlls::risk-value-c_(!)_(Szenario)</property>
+                    <property name="columnName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c_(Szenario)</property>
+                    <property name="alias">asset_id-scenarios-with-controlls::risk-value-c_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c_(Szenario)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Abkürzung_(Szenario)</property>
@@ -8599,6 +8637,15 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     <property name="alias">vulnerabilities::Einstufung__der__Schwachstelle__(Schwachstelle)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">asset_id-scenarios-with-controlls-and-vulnerabilities::vulnerabilities::Einstufung__der__Schwachstelle__(Schwachstelle)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::incscen_likelihood</property>
+                    <property name="alias">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::incscen_likelihood</property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::incscen_likelihood</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)</property>
+                    <property name="alias">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)</property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
@@ -8675,156 +8722,161 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">asset_id-scenarios-with-controlls::risk-value-a_(!)_(Szenario)</property>
+                        <property name="name">asset_id-scenarios-with-controlls::risk-value-a_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">16</property>
-                        <property name="name">asset_id-scenarios-with-controlls::risk-value-a-with-controls_(!)_(Szenario)</property>
+                        <property name="name">asset_id-scenarios-with-controlls::risk-value-a-with-controls_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">17</property>
-                        <property name="name">asset_id-scenarios-with-controlls::risk-value-c_(!)_(Szenario)</property>
+                        <property name="name">asset_id-scenarios-with-controlls::risk-value-c_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">18</property>
-                        <property name="name">asset_id-scenarios-with-controlls::risk-value-c-with-controls_(!)_(Szenario)</property>
+                        <property name="name">asset_id-scenarios-with-controlls::risk-value-c-with-controls_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">19</property>
-                        <property name="name">asset_id-scenarios-with-controlls::risk-value-i_(!)_(Szenario)</property>
+                        <property name="name">asset_id-scenarios-with-controlls::risk-value-i_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">20</property>
-                        <property name="name">asset_id-scenarios-with-controlls::risk-value-i-with-controls_(!)_(Szenario)</property>
+                        <property name="name">asset_id-scenarios-with-controlls::risk-value-i-with-controls_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">21</property>
+                        <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::incscen_likelihood</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">22</property>
+                        <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
                         <property name="name">asset_id-scenarios-with-controlls::affects_i</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">22</property>
+                        <property name="position">24</property>
                         <property name="name">asset_id-scenarios-with-controlls::affects_c</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">23</property>
+                        <property name="position">25</property>
                         <property name="name">asset_id-scenarios-with-controlls::affects_a</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">24</property>
-                        <property name="name">asset_id-scenarios-with-controlls::scenario_control_weight</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">25</property>
+                        <property name="position">26</property>
                         <property name="name">vulnerabilities::Datenbank-Id__(Schwachstelle)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">26</property>
+                        <property name="position">27</property>
                         <property name="name">vulnerabilities::Abkürzung__(Schwachstelle)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">27</property>
+                        <property name="position">28</property>
                         <property name="name">vulnerabilities::Titel__(Schwachstelle)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">28</property>
+                        <property name="position">29</property>
                         <property name="name">vulnerabilities::Einstufung__der__Schwachstelle__(Schwachstelle)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">29</property>
+                        <property name="position">30</property>
                         <property name="name">vulnerabilities::Datenbank-Id__(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">30</property>
+                        <property name="position">31</property>
                         <property name="name">vulnerabilities::C</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">31</property>
+                        <property name="position">32</property>
                         <property name="name">vulnerabilities::I</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">32</property>
+                        <property name="position">33</property>
                         <property name="name">vulnerabilities::A</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">33</property>
+                        <property name="position">34</property>
                         <property name="name">vulnerabilities::C__mit__Controls</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">34</property>
+                        <property name="position">35</property>
                         <property name="name">vulnerabilities::I__mit__Controls</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">35</property>
+                        <property name="position">36</property>
                         <property name="name">Datenbank-Id__(Bedrohung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">36</property>
+                        <property name="position">37</property>
                         <property name="name">Abkürzung__(Bedrohung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">37</property>
+                        <property name="position">38</property>
                         <property name="name">Titel__(Bedrohung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">38</property>
+                        <property name="position">39</property>
                         <property name="name">Bedrohungshäufigkeit__(Bedrohung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">39</property>
+                        <property name="position">40</property>
                         <property name="name">Datenbank-Id__(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">40</property>
+                        <property name="position">41</property>
                         <property name="name">C</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">41</property>
+                        <property name="position">42</property>
                         <property name="name">I</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">42</property>
+                        <property name="position">43</property>
                         <property name="name">A</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">43</property>
+                        <property name="position">44</property>
                         <property name="name">C__mit__Controls</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">44</property>
+                        <property name="position">45</property>
                         <property name="name">I__mit__Controls</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">45</property>
+                        <property name="position">46</property>
                         <property name="name">A__mit__Controls</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -8836,7 +8888,7 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
             </simple-property-list>
             <list-property name="joinConditions">
                 <structure>
-                    <property name="joinType">inner</property>
+                    <property name="joinType">left-out</property>
                     <property name="joinOperator">eq</property>
                     <property name="leftDataSet">asset_id-scenarios-with-controlls-and-vulnerabilities</property>
                     <property name="rightDataSet">threats</property>
@@ -9226,10 +9278,10 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     <text-property name="displayName">process-asset-risk-control::process2details::process_details::Business__Impact__-__Integrität__(Prozess)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c_(!)_(Szenario)</property>
-                    <property name="alias">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c_(!)_(Szenario)</property>
+                    <property name="columnName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c_(Szenario)</property>
+                    <property name="alias">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c_(Szenario)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Titel_(Control)</property>
@@ -9292,10 +9344,10 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Titel_(Szenario)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a-with-controls_(!)_(Szenario)</property>
-                    <property name="alias">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a-with-controls_(!)_(Szenario)</property>
+                    <property name="columnName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a-with-controls_(Szenario)</property>
+                    <property name="alias">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a-with-controls_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a-with-controls_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a-with-controls_(Szenario)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::vulnerabilities::I</property>
@@ -9352,10 +9404,10 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::vulnerabilities::Einstufung__der__Schwachstelle__(Schwachstelle)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c-with-controls_(!)_(Szenario)</property>
-                    <property name="alias">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c-with-controls_(!)_(Szenario)</property>
+                    <property name="columnName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c-with-controls_(Szenario)</property>
+                    <property name="alias">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c-with-controls_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c-with-controls_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c-with-controls_(Szenario)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">process-asset-risk-control::process2details::process_details::Datenbank-Id__(Prozess)</property>
@@ -9382,10 +9434,10 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Datenbank-Id_(Control)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i-with-controls_(!)_(Szenario)</property>
-                    <property name="alias">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i-with-controls_(!)_(Szenario)</property>
+                    <property name="columnName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i-with-controls_(Szenario)</property>
+                    <property name="alias">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i-with-controls_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i-with-controls_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i-with-controls_(Szenario)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Abkürzung_(Control)</property>
@@ -9418,10 +9470,10 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::vulnerabilities::Abkürzung__(Schwachstelle)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i_(!)_(Szenario)</property>
-                    <property name="alias">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i_(!)_(Szenario)</property>
+                    <property name="columnName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i_(Szenario)</property>
+                    <property name="alias">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i_(Szenario)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::threats::Abkürzung__(Bedrohung)</property>
@@ -9436,10 +9488,10 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::vulnerabilities::C__mit__Controls</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a_(!)_(Szenario)</property>
-                    <property name="alias">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a_(!)_(Szenario)</property>
+                    <property name="columnName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a_(Szenario)</property>
+                    <property name="alias">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a_(Szenario)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a_(!)_(Szenario)</text-property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a_(Szenario)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Control-Level_-_Wahrscheinlichkeit_des_Szenarios_(Control)</property>
@@ -9588,6 +9640,17 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                 <structure>
                     <property name="columnName">process-asset-risk-control::asset-risk-control::Risiko__Management__-__Risiko__Verfügbarkeit__nach__umgesetzten__Controls__(Asset)</property>
                     <property name="alias">process-asset-risk-control::asset-risk-control::Risiko__Management__-__Risiko__Verfügbarkeit__nach__umgesetzten__Controls__(Asset)</property>
+                    <property name="analysis">dimension</property>
+                </structure>
+                <structure>
+                    <property name="columnName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::incscen_likelihood</property>
+                    <property name="alias">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::incscen_likelihood</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::incscen_likelihood</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)</property>
+                    <property name="alias">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)</property>
                     <property name="analysis">dimension</property>
                 </structure>
             </list-property>
@@ -9806,151 +9869,161 @@ row["Business__Impact__-__Verfügbarkeit__(Asset)"]</expression>
                     </structure>
                     <structure>
                         <property name="position">43</property>
-                        <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a_(!)_(Szenario)</property>
+                        <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">44</property>
-                        <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a-with-controls_(!)_(Szenario)</property>
+                        <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a-with-controls_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">45</property>
-                        <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c_(!)_(Szenario)</property>
+                        <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">46</property>
-                        <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c-with-controls_(!)_(Szenario)</property>
+                        <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c-with-controls_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">47</property>
-                        <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i_(!)_(Szenario)</property>
+                        <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">48</property>
-                        <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i-with-controls_(!)_(Szenario)</property>
+                        <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i-with-controls_(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">49</property>
+                        <property name="name">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::incscen_likelihood</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">50</property>
+                        <property name="name">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">51</property>
                         <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::affects_i</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">50</property>
+                        <property name="position">52</property>
                         <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::affects_c</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">51</property>
+                        <property name="position">53</property>
                         <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::affects_a</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">52</property>
+                        <property name="position">54</property>
                         <property name="name">Datenbank-Id__(Schwachstelle)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">53</property>
+                        <property name="position">55</property>
                         <property name="name">Abkürzung__(Schwachstelle)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">54</property>
+                        <property name="position">56</property>
                         <property name="name">Titel__(Schwachstelle)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">55</property>
+                        <property name="position">57</property>
                         <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::vulnerabilities::Einstufung__der__Schwachstelle__(Schwachstelle)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">56</property>
+                        <property name="position">58</property>
                         <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::vulnerabilities::Datenbank-Id__(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">57</property>
+                        <property name="position">59</property>
                         <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::vulnerabilities::C</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">58</property>
+                        <property name="position">60</property>
                         <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::vulnerabilities::I</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">59</property>
+                        <property name="position">61</property>
                         <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::vulnerabilities::A</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">60</property>
+                        <property name="position">62</property>
                         <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::vulnerabilities::C__mit__Controls</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">61</property>
+                        <property name="position">63</property>
                         <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::vulnerabilities::I__mit__Controls</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">62</property>
+                        <property name="position">64</property>
                         <property name="name">Datenbank-Id__(Bedrohung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">63</property>
+                        <property name="position">65</property>
                         <property name="name">Abkürzung__(Bedrohung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">64</property>
+                        <property name="position">66</property>
                         <property name="name">Titel__(Bedrohung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">65</property>
+                        <property name="position">67</property>
                         <property name="name">threats::Bedrohungshäufigkeit__(Bedrohung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">66</property>
+                        <property name="position">68</property>
                         <property name="name">threats::Datenbank-Id__(Szenario)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">67</property>
+                        <property name="position">69</property>
                         <property name="name">threats::C</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">68</property>
+                        <property name="position">70</property>
                         <property name="name">threats::I</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">69</property>
+                        <property name="position">71</property>
                         <property name="name">threats::A</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">70</property>
+                        <property name="position">72</property>
                         <property name="name">threats::C__mit__Controls</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">71</property>
+                        <property name="position">73</property>
                         <property name="name">threats::I__mit__Controls</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">72</property>
+                        <property name="position">74</property>
                         <property name="name">threats::A__mit__Controls</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -11926,9 +11999,9 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                 </structure>
                 <structure>
                     <property name="name">sum_residual_risk</property>
-                    <expression name="expression" type="javascript">parseInt(row["risk-value-a-with-controls_(!)_(Szenario)"])
-+parseInt(row["risk-value-c-with-controls_(!)_(Szenario)"])
-+parseInt(row["risk-value-i-with-controls_(!)_(Szenario)"])</expression>
+                    <expression name="expression" type="javascript">parseInt(row["risk-value-a-with-controls_(Szenario)"])
++parseInt(row["risk-value-c-with-controls_(Szenario)"])
++parseInt(row["risk-value-i-with-controls_(Szenario)"])</expression>
                     <property name="dataType">integer</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -12050,8 +12123,8 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                 </structure>
                 <structure>
                     <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Bedrohungshäufigkeit__(Szenario)</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Bedrohungshäufigkeit__(Szenario)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit_-_Bedrohungshäufigkeit_(Szenario)"]</expression>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::incscen_likelihood</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::incscen_likelihood"]</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -12180,44 +12253,44 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">risk-value-a_(!)_(Szenario)</property>
-                    <text-property name="displayName">risk-value-a_(!)_(Szenario)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a_(!)_(Szenario)"]</expression>
+                    <property name="name">risk-value-a_(Szenario)</property>
+                    <text-property name="displayName">risk-value-a_(Szenario)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a_(Szenario)"]</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">risk-value-a-with-controls_(!)_(Szenario)</property>
-                    <text-property name="displayName">risk-value-a-with-controls_(!)_(Szenario)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a-with-controls_(!)_(Szenario)"]</expression>
+                    <property name="name">risk-value-a-with-controls_(Szenario)</property>
+                    <text-property name="displayName">risk-value-a-with-controls_(Szenario)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a-with-controls_(Szenario)"]</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">risk-value-c_(!)_(Szenario)</property>
-                    <text-property name="displayName">risk-value-c_(!)_(Szenario)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c_(!)_(Szenario)"]</expression>
+                    <property name="name">risk-value-c_(Szenario)</property>
+                    <text-property name="displayName">risk-value-c_(Szenario)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c_(Szenario)"]</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">risk-value-c-with-controls_(!)_(Szenario)</property>
-                    <text-property name="displayName">risk-value-c-with-controls_(!)_(Szenario)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c-with-controls_(!)_(Szenario)"]</expression>
+                    <property name="name">risk-value-c-with-controls_(Szenario)</property>
+                    <text-property name="displayName">risk-value-c-with-controls_(Szenario)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c-with-controls_(Szenario)"]</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">risk-value-i_(!)_(Szenario)</property>
-                    <text-property name="displayName">risk-value-i_(!)_(Szenario)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i_(!)_(Szenario)"]</expression>
+                    <property name="name">risk-value-i_(Szenario)</property>
+                    <text-property name="displayName">risk-value-i_(Szenario)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i_(Szenario)"]</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">risk-value-i-with-controls_(!)_(Szenario)</property>
-                    <text-property name="displayName">risk-value-i-with-controls_(!)_(Szenario)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i-with-controls_(!)_(Szenario)"]</expression>
+                    <property name="name">risk-value-i-with-controls_(Szenario)</property>
+                    <text-property name="displayName">risk-value-i-with-controls_(Szenario)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i-with-controls_(Szenario)"]</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -12366,39 +12439,39 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a_(!)_(Szenario)</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a_(!)_(Szenario)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a_(!)_(Szenario)"]</expression>
+                    <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a_(Szenario)</property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a_(Szenario)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a_(Szenario)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a-with-controls_(!)_(Szenario)</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a-with-controls_(!)_(Szenario)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a-with-controls_(!)_(Szenario)"]</expression>
+                    <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a-with-controls_(Szenario)</property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a-with-controls_(Szenario)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-a-with-controls_(Szenario)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c_(!)_(Szenario)</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c_(!)_(Szenario)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c_(!)_(Szenario)"]</expression>
+                    <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c_(Szenario)</property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c_(Szenario)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c_(Szenario)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c-with-controls_(!)_(Szenario)</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c-with-controls_(!)_(Szenario)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c-with-controls_(!)_(Szenario)"]</expression>
+                    <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c-with-controls_(Szenario)</property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c-with-controls_(Szenario)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-c-with-controls_(Szenario)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i_(!)_(Szenario)</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i_(!)_(Szenario)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i_(!)_(Szenario)"]</expression>
+                    <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i_(Szenario)</property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i_(Szenario)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i_(Szenario)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i-with-controls_(!)_(Szenario)</property>
-                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i-with-controls_(!)_(Szenario)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i-with-controls_(!)_(Szenario)"]</expression>
+                    <property name="name">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i-with-controls_(Szenario)</property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i-with-controls_(Szenario)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::risk-value-i-with-controls_(Szenario)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
@@ -12450,6 +12523,18 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
 }</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::incscen_likelihood</property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::incscen_likelihood</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::incscen_likelihood"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)</property>
+                    <text-property name="displayName">asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)"]</expression>
+                    <property name="dataType">string</property>
                 </structure>
             </list-property>
             <structure name="toc">
@@ -13173,7 +13258,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                                 <property name="style">sub_table_header</property>
                                 <property name="textUnderline">none</property>
                                 <property name="textAlign">center</property>
-                                <text-property name="text" key="scenario_titel">Scenario</text-property>
+                                <text-property name="text" key="controls_affecting_scenario_titel">Scenario</text-property>
                             </label>
                         </cell>
                         <cell id="3417">
@@ -13198,7 +13283,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                             <property name="borderTopStyle">none</property>
                             <property name="verticalAlign">middle</property>
                             <data id="3850">
-                                <property name="resultSetColumn">risk-value-c_(!)_(Szenario)</property>
+                                <property name="resultSetColumn">risk-value-c_(Szenario)</property>
                             </data>
                         </cell>
                         <cell id="3846">
@@ -13210,7 +13295,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                             <property name="borderTopStyle">none</property>
                             <property name="verticalAlign">middle</property>
                             <data id="3851">
-                                <property name="resultSetColumn">risk-value-i_(!)_(Szenario)</property>
+                                <property name="resultSetColumn">risk-value-i_(Szenario)</property>
                             </data>
                         </cell>
                         <cell id="3847">
@@ -13222,7 +13307,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                             <property name="borderTopStyle">none</property>
                             <property name="verticalAlign">middle</property>
                             <data id="3852">
-                                <property name="resultSetColumn">risk-value-a_(!)_(Szenario)</property>
+                                <property name="resultSetColumn">risk-value-a_(Szenario)</property>
                             </data>
                         </cell>
                         <cell id="3422">
@@ -13257,55 +13342,104 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                             <data id="3531">
                                 <list-property name="mapRules">
                                     <structure>
-                                        <expression name="testExpr" type="javascript">row["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Bedrohungshäufigkeit__(Szenario)"]</expression>
+                                        <expression name="testExpr" type="javascript">row["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit_-_Bedrohungshäufigkeit_(Szenario)"]</expression>
                                         <property name="operator">eq</property>
                                         <simple-property-list name="value1">
                                             <value type="javascript">0</value>
                                         </simple-property-list>
-                                        <text-property name="display">0: Selten</text-property>
+                                        <text-property name="display" key="threat_likelihood_0">0: Selten</text-property>
                                     </structure>
                                     <structure>
-                                        <expression name="testExpr" type="javascript">row["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Bedrohungshäufigkeit__(Szenario)"]</expression>
+                                        <expression name="testExpr" type="javascript">row["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit_-_Bedrohungshäufigkeit_(Szenario)"]</expression>
                                         <property name="operator">eq</property>
                                         <simple-property-list name="value1">
                                             <value type="javascript">1</value>
                                         </simple-property-list>
-                                        <text-property name="display">1: Jährlich</text-property>
+                                        <text-property name="display" key="threat_likelihood_1">1: Jährlich</text-property>
                                     </structure>
                                     <structure>
-                                        <expression name="testExpr" type="javascript">row["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Bedrohungshäufigkeit__(Szenario)"]</expression>
+                                        <expression name="testExpr" type="javascript">row["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit_-_Bedrohungshäufigkeit_(Szenario)"]</expression>
                                         <property name="operator">eq</property>
                                         <simple-property-list name="value1">
                                             <value type="javascript">2</value>
                                         </simple-property-list>
-                                        <text-property name="display">2: Monatlich</text-property>
+                                        <text-property name="display" key="threat_likelihood_2">2: Monatlich</text-property>
                                     </structure>
                                     <structure>
-                                        <expression name="testExpr" type="javascript">row["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Bedrohungshäufigkeit__(Szenario)"]</expression>
+                                        <expression name="testExpr" type="javascript">row["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit_-_Bedrohungshäufigkeit_(Szenario)"]</expression>
                                         <property name="operator">eq</property>
                                         <simple-property-list name="value1">
                                             <value type="javascript">3</value>
                                         </simple-property-list>
-                                        <text-property name="display">3: Wöchentlich</text-property>
+                                        <text-property name="display" key="threat_likelihood_3">3: Wöchentlich</text-property>
                                     </structure>
                                     <structure>
-                                        <expression name="testExpr" type="javascript">row["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Bedrohungshäufigkeit__(Szenario)"]</expression>
+                                        <expression name="testExpr" type="javascript">row["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit_-_Bedrohungshäufigkeit_(Szenario)"]</expression>
                                         <property name="operator">eq</property>
                                         <simple-property-list name="value1">
                                             <value type="javascript">4</value>
                                         </simple-property-list>
-                                        <text-property name="display">4: Täglich</text-property>
+                                        <text-property name="display" key="threat_likelihood_4">4: Täglich</text-property>
                                     </structure>
                                     <structure>
-                                        <expression name="testExpr" type="javascript">row["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Bedrohungshäufigkeit__(Szenario)"]</expression>
+                                        <expression name="testExpr" type="javascript">row["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit_-_Bedrohungshäufigkeit_(Szenario)"]</expression>
                                         <property name="operator">eq</property>
                                         <simple-property-list name="value1">
                                             <value type="javascript">5</value>
                                         </simple-property-list>
-                                        <text-property name="display">5: Stündlich</text-property>
+                                        <text-property name="display" key="threat_likelihood_5">5: Stündlich</text-property>
                                     </structure>
                                 </list-property>
-                                <property name="resultSetColumn">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Bedrohungshäufigkeit__(Szenario)</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">row["asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)"]=="1"</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit_-_Bedrohungshäufigkeit_(Szenario)</property>
+                            </data>
+                            <data id="7908">
+                                <list-property name="mapRules">
+                                    <structure>
+                                        <expression name="testExpr" type="javascript">row["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Einstufung__der__Schwachstelle__(Szenario)"]</expression>
+                                        <property name="operator">eq</property>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">0</value>
+                                        </simple-property-list>
+                                        <text-property name="display" key="vulnerability_level_0">0: Sehr niedrig</text-property>
+                                    </structure>
+                                    <structure>
+                                        <expression name="testExpr" type="javascript">row["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Einstufung__der__Schwachstelle__(Szenario)"]</expression>
+                                        <property name="operator">eq</property>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">1</value>
+                                        </simple-property-list>
+                                        <text-property name="display" key="vulnerability_level_1">1: Niedrig</text-property>
+                                    </structure>
+                                    <structure>
+                                        <expression name="testExpr" type="javascript">row["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Einstufung__der__Schwachstelle__(Szenario)"]</expression>
+                                        <property name="operator">eq</property>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">2</value>
+                                        </simple-property-list>
+                                        <text-property name="display" key="vulnerability_level_2">2: Hoch</text-property>
+                                    </structure>
+                                    <structure>
+                                        <expression name="testExpr" type="javascript">row["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Einstufung__der__Schwachstelle__(Szenario)"]</expression>
+                                        <property name="operator">eq</property>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">3</value>
+                                        </simple-property-list>
+                                        <text-property name="display" key="vulnerability_level_3">3: sehr hoch</text-property>
+                                    </structure>
+                                </list-property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">row["asset_id-scenarios-with-controlls-vulnerabilities-and-threats::asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)"]=="1"</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Wahrscheinlichkeit__-__Einstufung__der__Schwachstelle__(Szenario)</property>
                             </data>
                         </cell>
                     </row>
@@ -13473,7 +13607,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                             <label id="3453">
                                 <property name="style">sub_table_header</property>
                                 <property name="textAlign">center</property>
-                                <text-property name="text" key="controls_affecting_scenario_titel">Controls affecting scenario</text-property>
+                                <text-property name="text" key="controls_affecting_likelyhood_titel">Controls affecting scenario</text-property>
                             </label>
                         </cell>
                         <cell id="7795">
@@ -13555,7 +13689,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                             <list-property name="highlightRules">
                                 <structure>
                                     <property name="operator">gt</property>
-                                    <expression name="testExpr" type="javascript">parseInt(row["risk-value-c-with-controls_(!)_(Szenario)"])</expression>
+                                    <expression name="testExpr" type="javascript">parseInt(row["risk-value-c-with-controls_(Szenario)"])</expression>
                                     <simple-property-list name="value1">
                                         <value type="javascript">reportContext.getGlobalVariable("accepted_c")</value>
                                     </simple-property-list>
@@ -13563,7 +13697,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                                 </structure>
                                 <structure>
                                     <property name="operator">lt</property>
-                                    <expression name="testExpr" type="javascript">parseInt(row["risk-value-c-with-controls_(!)_(Szenario)"])+new Number(reportContext.getGlobalVariable( "c_correction"))</expression>
+                                    <expression name="testExpr" type="javascript">parseInt(row["risk-value-c-with-controls_(Szenario)"])+new Number(reportContext.getGlobalVariable( "c_correction"))</expression>
                                     <simple-property-list name="value1">
                                         <value type="javascript">reportContext.getGlobalVariable("accepted_c")</value>
                                     </simple-property-list>
@@ -13571,7 +13705,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                                 </structure>
                             </list-property>
                             <data id="3632">
-                                <property name="resultSetColumn">risk-value-c-with-controls_(!)_(Szenario)</property>
+                                <property name="resultSetColumn">risk-value-c-with-controls_(Szenario)</property>
                             </data>
                         </cell>
                         <cell id="3476">
@@ -13579,7 +13713,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                             <list-property name="highlightRules">
                                 <structure>
                                     <property name="operator">gt</property>
-                                    <expression name="testExpr" type="javascript">parseInt(row["risk-value-i-with-controls_(!)_(Szenario)"])</expression>
+                                    <expression name="testExpr" type="javascript">parseInt(row["risk-value-i-with-controls_(Szenario)"])</expression>
                                     <simple-property-list name="value1">
                                         <value type="javascript">reportContext.getGlobalVariable("accepted_i")</value>
                                     </simple-property-list>
@@ -13587,7 +13721,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                                 </structure>
                                 <structure>
                                     <property name="operator">lt</property>
-                                    <expression name="testExpr" type="javascript">parseInt(row["risk-value-i-with-controls_(!)_(Szenario)"])
+                                    <expression name="testExpr" type="javascript">parseInt(row["risk-value-i-with-controls_(Szenario)"])
 +new Number(reportContext.getGlobalVariable( "i_correction"))</expression>
                                     <simple-property-list name="value1">
                                         <value type="javascript">reportContext.getGlobalVariable("accepted_i")</value>
@@ -13596,7 +13730,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                                 </structure>
                             </list-property>
                             <data id="3633">
-                                <property name="resultSetColumn">risk-value-i-with-controls_(!)_(Szenario)</property>
+                                <property name="resultSetColumn">risk-value-i-with-controls_(Szenario)</property>
                             </data>
                         </cell>
                         <cell id="3477">
@@ -13604,7 +13738,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                             <list-property name="highlightRules">
                                 <structure>
                                     <property name="operator">gt</property>
-                                    <expression name="testExpr" type="javascript">parseInt(row["risk-value-a-with-controls_(!)_(Szenario)"])</expression>
+                                    <expression name="testExpr" type="javascript">parseInt(row["risk-value-a-with-controls_(Szenario)"])</expression>
                                     <simple-property-list name="value1">
                                         <value type="javascript">reportContext.getGlobalVariable("accepted_a")</value>
                                     </simple-property-list>
@@ -13612,7 +13746,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                                 </structure>
                                 <structure>
                                     <property name="operator">lt</property>
-                                    <expression name="testExpr" type="javascript">parseInt(row["risk-value-a-with-controls_(!)_(Szenario)"])
+                                    <expression name="testExpr" type="javascript">parseInt(row["risk-value-a-with-controls_(Szenario)"])
 +new Number(reportContext.getGlobalVariable( "a_correction"))</expression>
                                     <simple-property-list name="value1">
                                         <value type="javascript">reportContext.getGlobalVariable("accepted_c")</value>
@@ -13621,7 +13755,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                                 </structure>
                             </list-property>
                             <data id="3634">
-                                <property name="resultSetColumn">risk-value-a-with-controls_(!)_(Szenario)</property>
+                                <property name="resultSetColumn">risk-value-a-with-controls_(Szenario)</property>
                             </data>
                         </cell>
                         <cell id="3478">
