@@ -18,6 +18,8 @@
 package sernet.verinice.model.iso27k;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import sernet.gs.service.StringUtil;
 import sernet.hui.common.connect.Entity;
@@ -26,6 +28,7 @@ import sernet.hui.common.connect.IPerson;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.snutils.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.configuration.Configuration;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -44,6 +47,8 @@ public class PersonIso extends CnATreeElement
     public static final String PROP_EMAIL = "person-iso_email"; //$NON-NLS-1$
     public static final String PROP_ANREDE = "person-iso_anrede"; //$NON-NLS-1$
 
+    private Set<Configuration> configurations = new HashSet<>(1);
+
     /**
      * Creates an empty person
      */
@@ -59,6 +64,14 @@ public class PersonIso extends CnATreeElement
         getEntity().initDefaultValues(getTypeFactory());
         // sets the localized title via HUITypeFactory from message bundle
         setSurname(getTypeFactory().getMessage(TYPE_ID));
+    }
+
+    public Set<Configuration> getConfigurations() {
+        return configurations;
+    }
+
+    public void setConfigurations(Set<Configuration> configurations) {
+        this.configurations = configurations;
     }
 
     @Override

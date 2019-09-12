@@ -31,8 +31,8 @@ Configuration items.
             name="person"
             column="person_id"
             lazy="false"
-            fetch="join"/>
-
+            fetch="join"
+            not-null="true"/>
     </class>
 
 </hibernate-mapping>

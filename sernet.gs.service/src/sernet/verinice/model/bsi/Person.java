@@ -19,8 +19,10 @@ package sernet.verinice.model.bsi;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import sernet.gs.service.StringUtil;
 import sernet.hui.common.connect.Entity;
@@ -32,10 +34,11 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.snutils.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.configuration.Configuration;
 
 public class Person extends CnATreeElement implements IBSIStrukturElement, IPerson {
 
-    private static final long serialVersionUID = -1732578953811301897L;
+    private static final long serialVersionUID = -4658214027652209720L;
 
     public static final String PROP_TAG = "person_tag"; //$NON-NLS-1$
     public static final String P_ANREDE = "person_anrede"; //$NON-NLS-1$
@@ -52,7 +55,17 @@ public class Person extends CnATreeElement implements IBSIStrukturElement, IPers
     public static final String PROP_ERLAEUTERUNG = "person_erlaeuterung"; //$NON-NLS-1$
     public static final String PROP_ANZAHL = "person_anzahl"; //$NON-NLS-1$
 
+    private Set<Configuration> configurations = new HashSet<>(1);
+
     protected Person() {
+    }
+
+    public Set<Configuration> getConfigurations() {
+        return configurations;
+    }
+
+    public void setConfigurations(Set<Configuration> configurations) {
+        this.configurations = configurations;
     }
 
     public Person(CnATreeElement parent) {

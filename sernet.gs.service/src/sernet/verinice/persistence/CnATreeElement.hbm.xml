@@ -139,8 +139,17 @@
         <subclass
             name="sernet.verinice.model.bsi.Person"
             extends="CnATreeElement"
-            discriminator-value="person"/>
+            discriminator-value="person">
 
+            <set
+                name="Configurations"
+                inverse="true"
+                cascade="delete,delete-orphan">
+                <key column="person_id"/>
+                <one-to-many
+                    class="sernet.verinice.model.common.configuration.Configuration"/>
+            </set>
+        </subclass>
         <subclass
             name="sernet.verinice.model.bsi.BausteinUmsetzung"
             extends="CnATreeElement"
@@ -358,7 +367,17 @@
         <subclass
             name="sernet.verinice.model.iso27k.PersonIso"
             extends="CnATreeElement"
-            discriminator-value="person-iso"/>
+            discriminator-value="person-iso">
+
+            <set
+                name="Configurations"
+                inverse="true"
+                cascade="delete,delete-orphan">
+                <key column="person_id"/>
+                <one-to-many
+                    class="sernet.verinice.model.common.configuration.Configuration"/>
+            </set>
+        </subclass>
 
         <subclass
             name="sernet.verinice.model.iso27k.RequirementGroup"
@@ -500,7 +519,17 @@
         <subclass
             name="sernet.verinice.model.bp.elements.BpPerson"
             extends="CnATreeElement"
-            discriminator-value="bp_person"/>
+            discriminator-value="bp_person">
+
+            <set
+                name="Configurations"
+                inverse="true"
+                cascade="delete,delete-orphan">
+                <key column="person_id"/>
+                <one-to-many
+                    class="sernet.verinice.model.common.configuration.Configuration"/>
+            </set>
+        </subclass>
 
         <subclass
             name="sernet.verinice.model.bp.elements.BpRequirement"
