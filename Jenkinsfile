@@ -6,6 +6,9 @@ pipeline {
     environment {
         MAVEN_OPTS = "-Dmaven.repo.local=${env.MAVEN_REPOSITORY_BASE}/repository${env.EXECUTOR_NUMBER}"
     }
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '5'))
+    }
     stages {
         stage('Setup') {
             steps {
