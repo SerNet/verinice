@@ -34,6 +34,11 @@ import sernet.verinice.interfaces.oda.IChainableFilter;
 public class AndFilterChain extends FilterChain implements IChainableFilter {
 
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2622724019137227989L;
+
     public AndFilterChain(IChainableFilter... filters) {
         super(filters);
     }

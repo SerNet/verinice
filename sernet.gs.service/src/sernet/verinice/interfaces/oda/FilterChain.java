@@ -34,6 +34,11 @@ import java.util.List;
  */
 public abstract class FilterChain implements IChainableFilter {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3691821501759654412L;
+    
     private List<IChainableFilter> filterList;
     
     public FilterChain(IChainableFilter... filters) {

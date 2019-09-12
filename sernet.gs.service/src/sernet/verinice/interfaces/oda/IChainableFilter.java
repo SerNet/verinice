@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.interfaces.oda;
 
+import java.io.Serializable;
+
 import sernet.hui.common.connect.Entity;
 
 /**
@@ -28,7 +30,7 @@ import sernet.hui.common.connect.Entity;
  * @author akoderman
  *
  */
-public interface IChainableFilter {
+public interface IChainableFilter extends Serializable {
 
     /**
      * Test the given entity object against the filter criteria.

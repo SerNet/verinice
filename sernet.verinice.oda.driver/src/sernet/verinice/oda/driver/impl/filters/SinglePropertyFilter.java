@@ -52,6 +52,10 @@ import sernet.verinice.interfaces.oda.IChainableFilter;
  */
 public class SinglePropertyFilter implements IChainableFilter {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4382916136268014218L;
     private String propertyKey;
     private String propertyValueRegex;
 
