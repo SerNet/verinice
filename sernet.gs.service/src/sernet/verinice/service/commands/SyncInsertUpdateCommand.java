@@ -531,7 +531,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 attachment.setSourceId(sourceId);
             }
             attachmentMap.put(fileXml.getFile(), attachment);
-            attachment.setCnATreeElementId(elementInDB.getDbId());
+            attachment.setCnATreeElement(elementInDB);
             attachment.setCnAElementTitel(elementInDB.getTitle());
             attachment.setTitel(fileXml.getFile());
             attachment.setFileSize(String.valueOf(getSyncObjectFileSize(fileXml)));

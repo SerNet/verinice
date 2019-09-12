@@ -196,7 +196,7 @@ public class NoteView extends RightsEnabledView implements ILinkedWithEditorView
             @Override
             public void doRun() {
                 Note note = new Note();
-                note.setCnATreeElementId(getCurrentCnaElement().getDbId());
+                note.setCnATreeElement(getCurrentCnaElement());
                 note.setCnAElementTitel(getCurrentCnaElement().getTitle());
                 note.setTitel(Messages.NoteView_2);
                 note.addListener(new Note.INoteChangedListener() {

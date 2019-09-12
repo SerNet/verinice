@@ -67,7 +67,7 @@ public class AttachmentBean {
     public void handleFileUpload(FileUploadEvent event) throws CommandException, IOException {
         UploadedFile item = event.getFile();
         Attachment attachment = new Attachment();
-        attachment.setCnATreeElementId(getElement().getDbId());
+        attachment.setCnATreeElement(getElement());
         attachment.setCnAElementTitel(getElement().getTitle());
         String filename = FilenameUtils.getName(item.getFileName());
         attachment.setTitel(filename);

@@ -14,10 +14,12 @@
         <discriminator
             column="OBJECT_TYPE"
             type="string"/>
-        <property
+        <many-to-one
+            name="cnATreeElement"
             column="cnatreeelement_id"
-            name="cnATreeElementId"
-            type="integer"/>
+            lazy="false"
+            fetch="join"
+            not-null="true"/>    
         <property name="extId"/>
         <property name="sourceId"/>
         <many-to-one

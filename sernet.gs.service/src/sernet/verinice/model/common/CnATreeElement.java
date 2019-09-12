@@ -44,6 +44,7 @@ import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.LinkKategorie;
+import sernet.verinice.model.bsi.Note;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.Schutzbedarf;
 import sernet.verinice.model.iso27k.IISO27kGroup;
@@ -145,6 +146,8 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     private boolean childrenLoaded = false;
 
     private Set<Attachment> files = new HashSet<>(1);
+
+    private Set<Note> notes = new HashSet<>(1);
 
     @Override
     public boolean equals(Object obj) {
@@ -734,6 +737,14 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
     public Set<Attachment> getFiles() {
         return files;
+    }
+
+    public Set<Note> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(Set<Note> notes) {
+        this.notes = notes;
     }
 
     public void setFiles(Set<Attachment> files) {

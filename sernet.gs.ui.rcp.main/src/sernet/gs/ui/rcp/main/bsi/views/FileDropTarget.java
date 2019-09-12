@@ -77,7 +77,7 @@ public class FileDropTarget extends DropTargetAdapter {
             return;
         }
         Attachment attachment = new Attachment();
-        attachment.setCnATreeElementId(view.getCurrentCnaElement().getDbId());
+        attachment.setCnATreeElement(view.getCurrentCnaElement());
         attachment.setCnAElementTitel(view.getCurrentCnaElement().getTitle());
         attachment.setTitel(file.getName());
         attachment.setDate(Calendar.getInstance().getTime());

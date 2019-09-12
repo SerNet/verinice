@@ -82,7 +82,7 @@ public class Note extends Addition implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result
-                + ((getCnATreeElementId() == null) ? 0 : getCnATreeElementId().hashCode());
+                + ((getCnATreeElement() == null) ? 0 : getCnATreeElement().hashCode());
         result = prime * result + ((getDbId() == null) ? 0 : getDbId().hashCode());
         return result;
     }
@@ -99,11 +99,11 @@ public class Note extends Addition implements Serializable {
             return false;
         }
         Note other = (Note) obj;
-        if (getCnATreeElementId() == null) {
-            if (other.getCnATreeElementId() != null) {
+        if (getCnATreeElement() == null) {
+            if (other.getCnATreeElement() != null) {
                 return false;
             }
-        } else if (!getCnATreeElementId().equals(other.getCnATreeElementId())) {
+        } else if (!getCnATreeElement().equals(other.getCnATreeElement())) {
             return false;
         }
         if (getDbId() == null) {

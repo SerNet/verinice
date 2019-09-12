@@ -31,22 +31,23 @@ import sernet.verinice.model.bsi.Attachment;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
  */
-public class AttachmentDao extends TreeElementDao<Attachment,Integer> implements IAttachmentDao {
+public class AttachmentDao extends TreeElementDao<Attachment, Integer> implements IAttachmentDao {
 
     public AttachmentDao() {
         super(Attachment.class);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IAttachmentDao#loadAttachmentList(java.lang.Integer)
+    /*
+     * @see
+     * sernet.verinice.interfaces.IAttachmentDao#loadAttachmentList(java.lang.
+     * Integer)
      */
     @Override
     public List<Attachment> loadAttachmentList(Integer cnAElementId) {
         DetachedCriteria crit = DetachedCriteria.forClass(Attachment.class);
-        if(cnAElementId!=null) {
-            crit.add(Restrictions.eq("cnATreeElementId", cnAElementId));
+        if (cnAElementId != null) {
+            crit.add(Restrictions.eq("cnATreeElement.dbId", cnAElementId));
         }
         crit.setFetchMode("entity", FetchMode.JOIN);
         crit.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);

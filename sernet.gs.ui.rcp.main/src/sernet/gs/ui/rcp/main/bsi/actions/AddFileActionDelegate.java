@@ -77,7 +77,7 @@ public class AddFileActionDelegate implements IObjectActionDelegate, RightEnable
                     }
 
                     Attachment attachment = new Attachment();
-                    attachment.setCnATreeElementId(element.getDbId());
+                    attachment.setCnATreeElement(element);
                     attachment.setCnAElementTitel(element.getTitle());
                     attachment.setTitel(file.getName());
                     attachment.setDate(Calendar.getInstance().getTime());

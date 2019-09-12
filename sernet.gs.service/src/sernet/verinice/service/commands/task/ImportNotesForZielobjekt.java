@@ -108,8 +108,8 @@ public class ImportNotesForZielobjekt extends GenericCommand {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Adding note for " + cnATreeElement.getTitle());
             }
-            saveNewNote(cnATreeElement.getDbId(), cnATreeElement.getTitle(),
-                    cnATreeElement.getTitle(), notiz.notiz.getNotizText());
+            saveNewNote(cnATreeElement, cnATreeElement.getTitle(), cnATreeElement.getTitle(),
+                    notiz.notiz.getNotizText());
             appendDescription(cnATreeElement, notiz.notiz.getNotizText());
         }
     }
@@ -169,12 +169,11 @@ public class ImportNotesForZielobjekt extends GenericCommand {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Adding note for " + bstUms.getTitle() + ", " + mnums.getKapitel());
                 }
-                Integer dbId = mnums.getDbId();
                 String elmtTitle = mnums.getTitle();
                 String noteTitle = "Notiz " + mnums.getKapitel();
                 String text = notizVorlage.notiz.getNotizText();
 
-                saveNewNote(dbId, elmtTitle, noteTitle, text);
+                saveNewNote(mnums, elmtTitle, noteTitle, text);
                 appendDescription(mnums, notizVorlage.notiz.getNotizText());
             }
         }
@@ -187,12 +186,11 @@ public class ImportNotesForZielobjekt extends GenericCommand {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Adding note for " + bstUms.getTitle());
                 }
-                Integer dbId = bstUms.getDbId();
                 String elmtTitle = bstUms.getTitle();
                 String noteTitle = "Notiz " + bstUms.getKapitel();
                 String text = bstNotizVorlage.notiz.getNotizText();
 
-                saveNewNote(dbId, elmtTitle, noteTitle, text);
+                saveNewNote(bstUms, elmtTitle, noteTitle, text);
             }
 
             LOG.debug("Notes without target object: ");
@@ -204,14 +202,14 @@ public class ImportNotesForZielobjekt extends GenericCommand {
     }
 
     /**
-     * @param dbId
+     * @param element
      * @param elmtTitle
      * @param noteTitle
      * @param text
      * @throws CommandException
      */
-    private void saveNewNote(Integer dbId, String elmtTitle, String noteTitle, String text)
-            throws CommandException {
+    private void saveNewNote(CnATreeElement element, String elmtTitle, String noteTitle,
+            String text) throws CommandException {
         String convertedText;
         try {
             convertedText = TransferData.convertRtf(text);
@@ -226,7 +224,7 @@ public class ImportNotesForZielobjekt extends GenericCommand {
             return;
         }
         Note note = new Note();
-        note.setCnATreeElementId(dbId);
+        note.setCnATreeElement(element);
         note.setCnAElementTitel(elmtTitle);
         note.setTitel(noteTitle);
         note.setText(convertedText);

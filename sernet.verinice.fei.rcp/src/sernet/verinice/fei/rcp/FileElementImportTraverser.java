@@ -188,7 +188,7 @@ public class FileElementImportTraverser extends FileSystemTraverser {
             throws CommandException, IOException {
         // create attachment (without file data)
         Attachment attachment = new Attachment();
-        attachment.setCnATreeElementId(element.getDbId());
+        attachment.setCnATreeElement(element);
         attachment.setCnAElementTitel(element.getTitle());
         attachment.setTitel(file.getName());
         attachment.setDate(Calendar.getInstance().getTime());

@@ -287,13 +287,13 @@ public class MasterConverter {
             }
             List<Addition> additionsForSourceElement = elementDao
                     .findByCriteria(DetachedCriteria.forClass(Addition.class)
-                            .add(Restrictions.eq("cnATreeElementId", originalSource.getDbId())));
+                            .add(Restrictions.eq("cnATreeElement.dbId", originalSource.getDbId())));
 
             for (Addition addition : additionsForSourceElement) {
                 try {
                     Addition newAddition = addition.getClass().newInstance();
                     newAddition.getEntity().copyEntity(addition.getEntity());
-                    newAddition.setCnATreeElementId(newSource.getDbId());
+                    newAddition.setCnATreeElement(newSource);
                     if (addition instanceof Attachment) {
                         Attachment newAttachmeht = (Attachment) newAddition;
                         daoFactory.getAttachmentDao().saveOrUpdate(newAttachmeht);

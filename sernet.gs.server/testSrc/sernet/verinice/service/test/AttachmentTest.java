@@ -191,7 +191,7 @@ public class AttachmentTest extends CommandServiceProvider {
 
     private Attachment createAttachment(Organization org, File f) throws IOException {
         Attachment a = new Attachment();
-        a.setCnATreeElementId(org.getDbId());
+        a.setCnATreeElement(org);
         a.setCnAElementTitel(org.getTitle());
         a.setTitel(f.getName());
         a.setDate(Calendar.getInstance().getTime());

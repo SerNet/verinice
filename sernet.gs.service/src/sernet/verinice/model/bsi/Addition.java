@@ -45,7 +45,7 @@ public class Addition implements Serializable, ITypedElement {
 
     private Integer dbId;
 
-    private Integer cnATreeElementId;
+    private CnATreeElement cnATreeElement;
 
     private String extId;
 
@@ -72,12 +72,12 @@ public class Addition implements Serializable, ITypedElement {
         this.dbId = dbId;
     }
 
-    public Integer getCnATreeElementId() {
-        return cnATreeElementId;
+    public CnATreeElement getCnATreeElement() {
+        return cnATreeElement;
     }
 
-    public void setCnATreeElementId(Integer cnATreeElementId) {
-        this.cnATreeElementId = cnATreeElementId;
+    public void setCnATreeElement(CnATreeElement cnATreeElement) {
+        this.cnATreeElement = cnATreeElement;
     }
 
     public String getExtId() {

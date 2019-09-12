@@ -181,7 +181,7 @@ public class LoadAttachments extends GenericCommand implements IAuthAwareCommand
     private String getQuery() {
         StringBuilder sb = new StringBuilder();
         sb.append("from Addition addition ");
-        sb.append("where addition.cnATreeElementId IN ( ");
+        sb.append("where addition.cnATreeElement.dbId IN ( ");
         sb.append("select elmt.dbId from CnATreeElement elmt ");
         if (isScopeOnly && isAdmin) {
             // scopeOnly-Admin is allowed to see everything within its scope
@@ -203,7 +203,7 @@ public class LoadAttachments extends GenericCommand implements IAuthAwareCommand
         StringBuilder sb = new StringBuilder();
         sb.append("inner join elmt.permissions as perm ");
         sb.append("where elmt.dbId IN ( ");
-        sb.append("select ad.cnATreeElementId from Addition ad ) ");
+        sb.append("select ad.cnATreeElement.dbId from Addition ad ) ");
         if (isScopeOnly) {
             sb.append(" and elmt.scopeId = :scopeId");
         }

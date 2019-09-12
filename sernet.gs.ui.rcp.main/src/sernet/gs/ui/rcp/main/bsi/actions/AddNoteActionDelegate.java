@@ -46,7 +46,7 @@ public class AddNoteActionDelegate implements IObjectActionDelegate, RightEnable
                     .getSelection()).getFirstElement();
             if (sel instanceof CnATreeElement) {
                 Note note = new Note();
-                note.setCnATreeElementId(((CnATreeElement) sel).getDbId());
+                note.setCnATreeElement(((CnATreeElement) sel));
                 note.setCnAElementTitel(((CnATreeElement) sel).getTitle());
                 note.setTitel(Messages.AddNoteActionDelegate_0);
                 EditorFactory.getInstance().openEditor(note);
