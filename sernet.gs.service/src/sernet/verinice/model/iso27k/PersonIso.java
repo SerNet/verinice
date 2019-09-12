@@ -24,15 +24,16 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.hui.common.connect.IPerson;
 import sernet.hui.common.connect.ITaggableElement;
-import sernet.verinice.model.bsi.TagHelper;
+import sernet.snutils.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@SuppressWarnings("serial")
 public class PersonIso extends CnATreeElement
         implements IISO27kElement, IPerson, IAbbreviatedElement, ITaggableElement {
+
+    private static final long serialVersionUID = 4963915392257764700L;
 
     public static final String TYPE_ID = "person-iso"; //$NON-NLS-1$
     public static final String PROP_ABBR = "person_abbr"; //$NON-NLS-1$
@@ -44,7 +45,7 @@ public class PersonIso extends CnATreeElement
     public static final String PROP_ANREDE = "person-iso_anrede"; //$NON-NLS-1$
 
     /**
-     * Creates an empty asset
+     * Creates an empty person
      */
     public PersonIso() {
         super();
@@ -60,29 +61,19 @@ public class PersonIso extends CnATreeElement
         setSurname(getTypeFactory().getMessage(TYPE_ID));
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
-     */
     @Override
     public String getTypeId() {
         return TYPE_ID;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitel()
-     */
     @Override
     public String getTitle() {
         StringBuilder sb = new StringBuilder();
-        final String surname = getEntity().getSimpleValue(PROP_SURNAME);
+        final String surname = getEntity().getPropertyValue(PROP_SURNAME);
         if (surname != null && !surname.isEmpty()) {
             sb.append(surname);
         }
-        final String name = getEntity().getSimpleValue(PROP_NAME);
+        final String name = getEntity().getPropertyValue(PROP_NAME);
         if (name != null && !name.isEmpty()) {
             if (sb.length() > 0) {
                 sb.append(", ");
@@ -97,7 +88,7 @@ public class PersonIso extends CnATreeElement
     }
 
     public String getSurname() {
-        return getEntity().getSimpleValue(PROP_SURNAME);
+        return getEntity().getPropertyValue(PROP_SURNAME);
     }
 
     public void setSurname(String surname) {
@@ -105,7 +96,7 @@ public class PersonIso extends CnATreeElement
     }
 
     public String getName() {
-        return getEntity().getSimpleValue(PROP_NAME);
+        return getEntity().getPropertyValue(PROP_NAME);
     }
 
     public void setName(String name) {
@@ -116,24 +107,24 @@ public class PersonIso extends CnATreeElement
         if (getEntity() == null) {
             return ""; //$NON-NLS-1$
         }
-        StringBuffer sb = new StringBuffer();
-        sb.append(getEntity().getSimpleValue(PROP_NAME));
+        StringBuilder sb = new StringBuilder();
+        sb.append(getEntity().getPropertyValue(PROP_NAME));
         if (sb.length() > 0) {
             sb.append(" "); //$NON-NLS-1$
         }
-        sb.append(getEntity().getSimpleValue(PROP_SURNAME));
+        sb.append(getEntity().getPropertyValue(PROP_SURNAME));
 
         return sb.toString();
     }
 
     @Override
     public Collection<String> getTags() {
-        return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
     @Override
     public String getAbbreviation() {
-        return getEntity().getSimpleValue(PROP_ABBR);
+        return getEntity().getPropertyValue(PROP_ABBR);
     }
 
     public void setAbbreviation(String abbreviation) {
@@ -141,7 +132,7 @@ public class PersonIso extends CnATreeElement
     }
 
     public String getPhone() {
-        return getEntity().getSimpleValue(PROP_TELEFON);
+        return getEntity().getPropertyValue(PROP_TELEFON);
     }
 
     public void setPhone(String value) {
@@ -149,7 +140,7 @@ public class PersonIso extends CnATreeElement
     }
 
     public String getEmail() {
-        return getEntity().getSimpleValue(PROP_EMAIL);
+        return getEntity().getPropertyValue(PROP_EMAIL);
     }
 
     public void setEmail(String value) {
@@ -157,7 +148,7 @@ public class PersonIso extends CnATreeElement
     }
 
     public String getAnrede() {
-        return getEntity().getSimpleValue(PROP_ANREDE);
+        return getEntity().getPropertyValue(PROP_ANREDE);
     }
 
     @Override

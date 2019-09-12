@@ -36,113 +36,122 @@ import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Loads files/attachmets meta data for a {@link CnATreeElement}
- * or for all elements if no id is set.
- * File data will not be loaded by this command. 
- * Use command LoadAttachmentFile to load file data from database.
+ * Loads files/attachments meta data for a {@link CnATreeElement} or for all
+ * elements if no id is set. File data will not be loaded by this command. Use
+ * command LoadAttachmentFile to load file data from database.
  * 
  * @see LoadAttachmentFile
  * @see Attachment
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
  */
-@SuppressWarnings("serial")
-public class LoadAttachments extends GenericCommand implements IAuthAwareCommand{
+public class LoadAttachments extends GenericCommand implements IAuthAwareCommand {
 
-	private static final Logger log = Logger.getLogger(LoadAttachments.class);
-	
-	private transient IAuthService authService;
-	
-	private Integer cnAElementId;
-	
-	private List<Attachment> attachmentList;
-	
-	private String[] roles;
-	
-	private boolean isAdmin;
-	
-	private boolean isScopeOnly;
-	
-	private Integer scopeId;
-	
-	/** Query-Setup-Objects **/
+    private static final long serialVersionUID = 8962742230109201372L;
+
+    private static final Logger log = Logger.getLogger(LoadAttachments.class);
+
+    private transient IAuthService authService;
+
+    private Integer cnAElementId;
+
+    private List<Attachment> attachmentList;
+
+    private String[] roles;
+
+    private boolean isAdmin;
+
+    private boolean isScopeOnly;
+
+    private Integer scopeId;
+
+    /** Query-Setup-Objects **/
     private String hql;
     private Object[] params;
     private String[] paramNames;
-	
-	public List<Attachment> getAttachmentList() {
-		return attachmentList;
-	}
 
-	public void setAttachmentList(List<Attachment> noteList) {
-		this.attachmentList = noteList;
-	}
+    public List<Attachment> getAttachmentList() {
+        return attachmentList;
+    }
 
-	/**
-	 * Creates a new command, to load attachments for {@link CnATreeElement}
-	 * with id cnAElementId.
-	 * If cnAElementId all attachments will be loaded.
-	 * 
-	 * @param cnAElementId Id of a {@link CnATreeElement} or null
-	 */
-	public LoadAttachments(Integer cnAElementId) {
-		super();
-		this.cnAElementId = cnAElementId;
-	}
-	
-	public LoadAttachments(Integer cnAElementId, String[] roles, boolean isAdmin, boolean isScopeOnly, Integer scopeId){
-	    this(cnAElementId);
-	    this.roles = (roles!=null) ? roles.clone() : null;
-	    this.isAdmin = isAdmin;
-	    this.isScopeOnly = isScopeOnly;
-	    this.scopeId = scopeId;
-	}
+    public void setAttachmentList(List<Attachment> noteList) {
+        this.attachmentList = noteList;
+    }
 
-	/**
-	 * Loads attachments for for {@link CnATreeElement}
-	 * with id cnAElementId.
-	 * File data will not be loaded by this command. 
- 	 * Use {@link LoadAttachmentFile} to load file data from database.
-	 * 
-	 * if PermissionHandling is needed, attachments are loaded by additionDao via HQL
-	 * @see sernet.verinice.interfaces.ICommand#execute()
-	 */
-	@Override
-	public void execute() {
-	    if (log.isDebugEnabled()) {
-	        log.debug("executing, id is: " + getCnAElementId() + "...");
-	    }
-	    long startTime = System.currentTimeMillis();
-	    
-	    fillAttachmentList();
+    /**
+     * Creates a new command, to load attachments for {@link CnATreeElement}
+     * with id cnAElementId. If cnAElementId all attachments will be loaded.
+     * 
+     * @param cnAElementId
+     *            Id of a {@link CnATreeElement} or null
+     */
+    public LoadAttachments(Integer cnAElementId) {
+        super();
+        this.cnAElementId = cnAElementId;
+    }
 
-	    if (log.isDebugEnabled()) {
-	        log.debug("number of attachments found: " + attachmentList.size());
-	    }
+    public LoadAttachments(Integer cnAElementId, String[] roles, boolean isAdmin,
+            boolean isScopeOnly, Integer scopeId) {
+        this(cnAElementId);
+        this.roles = (roles != null) ? roles.clone() : null;
+        this.isAdmin = isAdmin;
+        this.isScopeOnly = isScopeOnly;
+        this.scopeId = scopeId;
+    }
 
-	    initializeAttachmentList();
-	    setAttachmentList(attachmentList);
-	    if(log.isDebugEnabled()){
-	        log.debug("It takes :\t" + TimeFormatter.getHumanRedableTime(System.currentTimeMillis()-startTime) + " to load " + attachmentList.size() + " attachments");
-	    }
-	    
-	}
+    /**
+     * Loads attachments for for {@link CnATreeElement} with id cnAElementId.
+     * File data will not be loaded by this command. Use
+     * {@link LoadAttachmentFile} to load file data from database.
+     * 
+     * if PermissionHandling is needed, attachments are loaded by additionDao
+     * via HQL
+     * 
+     * @see sernet.verinice.interfaces.ICommand#execute()
+     */
+    @Override
+    public void execute() {
+        if (log.isDebugEnabled()) {
+            log.debug("executing, id is: " + getCnAElementId() + "...");
+        }
+        long startTime = System.currentTimeMillis();
 
-	/** decides if permissionHandling is needed or not **/
+        fillAttachmentList();
+
+        if (log.isDebugEnabled()) {
+            log.debug("number of attachments found: " + attachmentList.size());
+        }
+
+        initializeAttachmentList();
+        setAttachmentList(attachmentList);
+        if (log.isDebugEnabled()) {
+            log.debug("It takes :\t"
+                    + TimeFormatter.getHumanRedableTime(System.currentTimeMillis() - startTime)
+                    + " to load " + attachmentList.size() + " attachments");
+        }
+
+    }
+
+    /*
+     * decides if permissionHandling is needed or not
+     */
     private void fillAttachmentList() {
         String username = getAuthService().getUsername();
-	    IAttachmentDao dao = getDaoFactory().getAttachmentDao();
-	    if(getCnAElementId() != null || !isPermissionHandlingNeeded(username)){ // no permission handling needed
-	        attachmentList = dao.loadAttachmentList(getCnAElementId());
-	    } else{
-	        fillPermissonHandled(); // load only allowed attachmnets
-	    }
+        IAttachmentDao dao = getDaoFactory().getAttachmentDao();
+        if (getCnAElementId() != null || !isPermissionHandlingNeeded(username)) { // no
+                                                                                  // permission
+                                                                                  // handling
+                                                                                  // needed
+            attachmentList = dao.loadAttachmentList(getCnAElementId());
+        } else {
+            fillPermissonHandled(); // load only allowed attachmnets
+        }
     }
 
     private void initializeAttachmentList() {
         for (Attachment attachment : attachmentList) {
             Entity entity = attachment.getEntity();
-            if(entity!=null) {
+            if (entity != null) {
                 for (PropertyList pl : entity.getTypedPropertyLists().values()) {
                     for (Property p : pl.getProperties()) {
                         p.setParent(entity);
@@ -151,80 +160,88 @@ public class LoadAttachments extends GenericCommand implements IAuthAwareCommand
             }
         }
     }
-    
-    /** passes query and params to addition-dao **/
+
+    /*
+     * passes query and params to addition-dao
+     */
     private void fillPermissonHandled() {
         IBaseDao<Addition, Integer> additionDao = getDaoFactory().getDAO(Addition.TYPE_ID);
         hql = getQuery();
-        attachmentList = new ArrayList<Attachment>();
-        for(Object o : additionDao.findByQuery(hql, paramNames, params)){
-            if(o instanceof Attachment){
-                attachmentList.add((Attachment)o);
+        attachmentList = new ArrayList<>();
+        for (Object o : additionDao.findByQuery(hql, paramNames, params)) {
+            if (o instanceof Attachment) {
+                attachmentList.add((Attachment) o);
             }
         }
     }
 
-    /** computes hql-Query dependent on users admin and scopeOnly properties **/
+    /*
+     * Computes hql-Query dependent on users admin and scopeOnly properties
+     */
     private String getQuery() {
         StringBuilder sb = new StringBuilder();
         sb.append("from Addition addition ");
         sb.append("where addition.cnATreeElementId IN ( ");
         sb.append("select elmt.dbId from CnATreeElement elmt ");
-        if(isScopeOnly && isAdmin){
+        if (isScopeOnly && isAdmin) {
             // scopeOnly-Admin is allowed to see everything within its scope
             sb.append(" where elmt.scopeId = :scopeId)");
             hql = sb.toString();
-            params = new Object[]{scopeId};
-            paramNames = new String[]{"scopeId"};
-        } else { 
+            params = new Object[] { scopeId };
+            paramNames = new String[] { "scopeId" };
+        } else {
             // full permission handling needed
             sb.append(getPermissionHandlingQueryPart());
         }
         return sb.toString();
     }
 
-    /**  create hql-query and fill parameter arrays**/
+    /*
+     * create hql-query and fill parameter arrays
+     */
     private String getPermissionHandlingQueryPart() {
         StringBuilder sb = new StringBuilder();
         sb.append("inner join elmt.permissions as perm ");
         sb.append("where elmt.dbId IN ( ");
         sb.append("select ad.cnATreeElementId from Addition ad ) ");
-        if(isScopeOnly){
+        if (isScopeOnly) {
             sb.append(" and elmt.scopeId = :scopeId");
         }
         sb.append(" and perm.role IN (:roles) ");
         sb.append(" and perm.readAllowed = :readAllowed )");
         hql = sb.toString();
-        if(isScopeOnly){
-            params = new Object[]{scopeId, roles, true};
-            paramNames = new String[]{"scopeId", "roles", "readAllowed"};
+        if (isScopeOnly) {
+            params = new Object[] { scopeId, roles, true };
+            paramNames = new String[] { "scopeId", "roles", "readAllowed" };
         } else {
-            paramNames = new String[]{"roles", "readAllowed"};
-            params = new Object[]{roles, true};
+            paramNames = new String[] { "roles", "readAllowed" };
+            params = new Object[] { roles, true };
         }
         return sb.toString();
     }
-	
-    /** detect if permission handling is needed at all by the following parameters (one is sufficient)
-     * - ask authservice for permissionhandling
-     * - if username equals admin username no permissionhandling is needed
-     * - if user is admin and NOT scopeOnlyUser no permissionhandling is needed 
+
+    /**
+     * detect if permission handling is needed at all by the following
+     * parameters (one is sufficient) - ask authservice for permissionhandling -
+     * if username equals admin username no permissionhandling is needed - if
+     * user is admin and NOT scopeOnlyUser no permissionhandling is needed
+     * 
      * @param username
      * @return permissionHandling needed or not by boolean value
      */
-	private boolean isPermissionHandlingNeeded(String username) {
-        return !(!getAuthService().isPermissionHandlingNeeded() 
+    private boolean isPermissionHandlingNeeded(String username) {
+        return !(!getAuthService().isPermissionHandlingNeeded()
                 || (getAuthService().getAdminUsername().equals(username))
-                || (isAdmin && !isScopeOnly)); 
+                || (isAdmin && !isScopeOnly));
     }
-	
-	public void setCnAElementId(Integer cnAElementId) {
-		this.cnAElementId = cnAElementId;
-	}
 
-	public Integer getCnAElementId() {
-		return cnAElementId;
-	}
+    public void setCnAElementId(Integer cnAElementId) {
+        this.cnAElementId = cnAElementId;
+    }
+
+    public Integer getCnAElementId() {
+        return cnAElementId;
+    }
 
     @Override
     public IAuthService getAuthService() {

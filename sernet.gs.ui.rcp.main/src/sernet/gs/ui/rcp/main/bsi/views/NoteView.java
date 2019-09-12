@@ -68,7 +68,6 @@ import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.crud.DeleteNote;
 import sernet.verinice.service.commands.crud.LoadNotes;
 
-@SuppressWarnings("restriction")
 public class NoteView extends RightsEnabledView implements ILinkedWithEditorView {
 
     private static final Logger LOG = Logger.getLogger(NoteView.class);
@@ -100,8 +99,8 @@ public class NoteView extends RightsEnabledView implements ILinkedWithEditorView
     public String getRightID() {
         return ActionRightIDs.NOTES;
     }
-    
-    /* (non-Javadoc)
+
+    /*
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
     @Override
@@ -112,12 +111,12 @@ public class NoteView extends RightsEnabledView implements ILinkedWithEditorView
     @Override
     public void createPartControl(Composite parent) {
         super.createPartControl(parent);
-        
-        final int expandBarSpacing = 4;
-        
-        parent.setLayout(new FillLayout());
-        toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
 
+        final int expandBarSpacing = 4;
+
+        parent.setLayout(new FillLayout());
+        toggleLinking(Activator.getDefault().getPreferenceStore()
+                .getBoolean(PreferenceConstants.LINK_TO_EDITOR));
         try {
             expandBar = new ExpandBar(parent, SWT.V_SCROLL);
             expandBar.setSpacing(expandBarSpacing);
@@ -126,10 +125,8 @@ public class NoteView extends RightsEnabledView implements ILinkedWithEditorView
             ExceptionUtil.log(e, Messages.BrowserView_3);
             LOG.error("Error while creating control", e); //$NON-NLS-1$
         }
-
         makeActions();
         fillLocalToolBar();
-
     }
 
     /**
@@ -154,13 +151,13 @@ public class NoteView extends RightsEnabledView implements ILinkedWithEditorView
     }
 
     protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
-        if (part == this){
+        if (part == this) {
             return;
         }
-        if (!(selection instanceof IStructuredSelection)){
+        if (!(selection instanceof IStructuredSelection)) {
             return;
         }
-        if (((IStructuredSelection) selection).size() != 1){
+        if (((IStructuredSelection) selection).size() != 1) {
             return;
         }
         try {
@@ -174,9 +171,6 @@ public class NoteView extends RightsEnabledView implements ILinkedWithEditorView
         }
     }
 
-    /**
-     * @param element
-     */
     private void elementSelected(Object element) {
         if (element instanceof CnATreeElement && !element.equals(getCurrentCnaElement())) {
             if (addNoteAction.checkRights()) {
@@ -198,7 +192,6 @@ public class NoteView extends RightsEnabledView implements ILinkedWithEditorView
     }
 
     private void makeActions() {
-
         addNoteAction = new RightsEnabledAction(ActionRightIDs.ADDNOTE) {
             @Override
             public void doRun() {
@@ -217,7 +210,8 @@ public class NoteView extends RightsEnabledView implements ILinkedWithEditorView
             }
         };
         addNoteAction.setText(Messages.NoteView_3);
-        addNoteAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
+        addNoteAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
         addNoteAction.setEnabled(false);
 
         linkWithEditorAction = new Action(Messages.NoteView_0, IAction.AS_CHECK_BOX) {
@@ -226,7 +220,8 @@ public class NoteView extends RightsEnabledView implements ILinkedWithEditorView
                 toggleLinking(isChecked());
             }
         };
-        linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
+        linkWithEditorAction
+                .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
         linkWithEditorAction.setChecked(isLinkingActive());
     }
 
@@ -297,7 +292,9 @@ public class NoteView extends RightsEnabledView implements ILinkedWithEditorView
 
                         @Override
                         public void widgetSelected(SelectionEvent e) {
-                            boolean b = MessageDialog.openQuestion(NoteView.this.getSite().getShell(), Messages.NoteView_6, NLS.bind(Messages.NoteView_7, note.getTitel()));
+                            boolean b = MessageDialog.openQuestion(
+                                    NoteView.this.getSite().getShell(), Messages.NoteView_6,
+                                    NLS.bind(Messages.NoteView_7, note.getTitel()));
                             if (b) {
                                 deleteNote(note);
                             }
@@ -375,7 +372,8 @@ public class NoteView extends RightsEnabledView implements ILinkedWithEditorView
     protected void toggleLinking(boolean checked) {
         this.linkingActive = checked;
         if (checked) {
-            Optional.ofNullable(getSite().getPage().getActiveEditor()).ifPresent(this::editorActivated);
+            Optional.ofNullable(getSite().getPage().getActiveEditor())
+                    .ifPresent(this::editorActivated);
         }
     }
 
@@ -384,8 +382,6 @@ public class NoteView extends RightsEnabledView implements ILinkedWithEditorView
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.
      * eclipse.ui.IEditorPart)

@@ -47,36 +47,35 @@ public class AddFileActionDelegate implements IObjectActionDelegate, RightEnable
     private IWorkbenchPart targetPart;
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
      * action.IAction, org.eclipse.ui.IWorkbenchPart)
      */
+    @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
         this.targetPart = targetPart;
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
+    @Override
     public void run(IAction action) {
         try {
-            Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
+            Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider()
+                    .getSelection()).getFirstElement();
             if (sel instanceof CnATreeElement) {
                 CnATreeElement element = (CnATreeElement) sel;
                 FileDialog fd = new FileDialog(targetPart.getSite().getShell());
                 fd.setText(Messages.AddFileActionDelegate_0);
-                fd.setFilterPath(System.getProperty(IVeriniceConstants.USER_HOME)); //$NON-NLS-1$
+                fd.setFilterPath(System.getProperty(IVeriniceConstants.USER_HOME)); // $NON-NLS-1$
                 String selected = fd.open();
                 if (selected != null && selected.length() > 0) {
                     File file = new File(selected);
                     if (file.isDirectory()) {
                         return;
                     }
-                    
+
                     Attachment attachment = new Attachment();
                     attachment.setCnATreeElementId(element.getDbId());
                     attachment.setCnAElementTitel(element.getTitle());
@@ -87,7 +86,8 @@ public class AddFileActionDelegate implements IObjectActionDelegate, RightEnable
 
                     attachment.addListener(new Attachment.INoteChangedListener() {
                         public void noteChanged() {
-                            IViewPart page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(FileView.ID);
+                            IViewPart page = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                                    .getActivePage().findView(FileView.ID);
                             if (page != null) {
                                 ((FileView) page).loadFiles();
                             }
@@ -105,27 +105,27 @@ public class AddFileActionDelegate implements IObjectActionDelegate, RightEnable
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action
      * .IAction, org.eclipse.jface.viewers.ISelection)
      */
+    @Override
     public void selectionChanged(IAction action, ISelection selection) {
         action.setEnabled(checkRights() && isCnATreeElementEditable(selection));
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
     public boolean checkRights() {
         Activator.inheritVeriniceContextState();
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override

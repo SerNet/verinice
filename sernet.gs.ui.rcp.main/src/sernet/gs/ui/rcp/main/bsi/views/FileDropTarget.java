@@ -32,71 +32,62 @@ import sernet.verinice.model.bsi.Attachment;
 
 /**
  * @author koderman[at]sernet[dot]de
- * @version $Rev$ $LastChangedDate$ $LastChangedBy$
- * 
  */
 public class FileDropTarget extends DropTargetAdapter {
 
-	private FileView view;
+    private FileView view;
 
-	/**
-	 * @param viewer
-	 */
-	public FileDropTarget(FileView view) {
-		this.view = view;
-		DropTarget target = new DropTarget(view.getViewer().getControl(), DND.DROP_MOVE
-				| DND.DROP_COPY);
-		target.setTransfer(new Transfer[] { FileTransfer.getInstance() });
-		target.addDropListener(this);
-	}
+    public FileDropTarget(FileView view) {
+        this.view = view;
+        DropTarget target = new DropTarget(view.getViewer().getControl(),
+                DND.DROP_MOVE | DND.DROP_COPY);
+        target.setTransfer(new Transfer[] { FileTransfer.getInstance() });
+        target.addDropListener(this);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.swt.dnd.DropTargetAdapter#drop(org.eclipse.swt.dnd.
-	 * DropTargetEvent)
-	 */
-	@Override
-	public void drop(DropTargetEvent event) {
-		if (FileTransfer.getInstance().isSupportedType(event.currentDataType)) {
-			String[] files = (String[]) event.data;
-			for (int i = 0; i < files.length; i++) {
-				String selected = files[i];
-				 if(selected!=null && selected.length()>0) {
-					 	File file = new File(selected);
-					 	// the user can drag-n-drop a directory with files, but only one level deep:
-					 	if (file.isDirectory()) {
-					 		File[] dirFiles = file.listFiles();
-					 		for (File dirFile : dirFiles) {
-					 			createFile(dirFile.getAbsolutePath());
-							}
-					 	}
-						createFile(selected);
-			        }
-			}
-		}
-	}
+    /*
+     * @seeorg.eclipse.swt.dnd.DropTargetAdapter#drop(org.eclipse.swt.dnd.
+     * DropTargetEvent)
+     */
+    @Override
+    public void drop(DropTargetEvent event) {
+        if (FileTransfer.getInstance().isSupportedType(event.currentDataType)) {
+            String[] files = (String[]) event.data;
+            for (int i = 0; i < files.length; i++) {
+                String selected = files[i];
+                if (selected != null && selected.length() > 0) {
+                    File file = new File(selected);
+                    // the user can drag-n-drop a directory with files, but only
+                    // one level deep:
+                    if (file.isDirectory()) {
+                        File[] dirFiles = file.listFiles();
+                        for (File dirFile : dirFiles) {
+                            createFile(dirFile.getAbsolutePath());
+                        }
+                    }
+                    createFile(selected);
+                }
+            }
+        }
+    }
 
-	/**
-	 * @param selected
-	 */
-	private void createFile(String selected) {
-		File file = new File(selected);
-		if (file.isDirectory()){
-			return;
-		}
-		Attachment attachment = new Attachment();
-		attachment.setCnATreeElementId(view.getCurrentCnaElement().getDbId());
-		attachment.setCnAElementTitel(view.getCurrentCnaElement().getTitle());
-		attachment.setTitel(file.getName());
-		attachment.setDate(Calendar.getInstance().getTime());
-		attachment.setFilePath(selected);
-		attachment.addListener(new Attachment.INoteChangedListener() {
-			public void noteChanged() {
-				view.loadFiles();
-			}
-		});
-		attachment.setFileSize(String.valueOf(file.length()));
-		EditorFactory.getInstance().openEditor(attachment);			
-	}
+    private void createFile(String selected) {
+        File file = new File(selected);
+        if (file.isDirectory()) {
+            return;
+        }
+        Attachment attachment = new Attachment();
+        attachment.setCnATreeElementId(view.getCurrentCnaElement().getDbId());
+        attachment.setCnAElementTitel(view.getCurrentCnaElement().getTitle());
+        attachment.setTitel(file.getName());
+        attachment.setDate(Calendar.getInstance().getTime());
+        attachment.setFilePath(selected);
+        attachment.addListener(new Attachment.INoteChangedListener() {
+            public void noteChanged() {
+                view.loadFiles();
+            }
+        });
+        attachment.setFileSize(String.valueOf(file.length()));
+        EditorFactory.getInstance().openEditor(attachment);
+    }
 }

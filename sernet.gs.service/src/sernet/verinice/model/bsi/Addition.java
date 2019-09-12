@@ -18,6 +18,7 @@
 package sernet.verinice.model.bsi;
 
 import java.io.Serializable;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import sernet.hui.common.VeriniceContext;
@@ -26,62 +27,60 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.ITypedElement;
 import sernet.verinice.model.common.CnATreeElement;
 
-
 /**
- * Base class for all entities which add additional data to {@link CnATreeElement}s
+ * Base class for all entities which add additional data to
+ * {@link CnATreeElement}s
  * 
  * @see Note
  * @see Attachment
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@SuppressWarnings("serial")
 public class Addition implements Serializable, ITypedElement {
-	
-    public static final String TYPE_ID = "addition";
-    
-	private transient CopyOnWriteArraySet<INoteChangedListener>  listeners;
-	
-	private Integer dbId;
 
-	private Integer cnATreeElementId;
-	
-	private String extId;
+    private static final long serialVersionUID = -7530350956649862452L;
+
+    public static final String TYPE_ID = "addition";
+
+    private transient CopyOnWriteArraySet<INoteChangedListener> listeners;
+
+    private Integer dbId;
+
+    private Integer cnATreeElementId;
+
+    private String extId;
 
     private String sourceId;
-	
-	private transient String cnAElementTitel;
-	
-	private Entity entity;
 
+    private transient String cnAElementTitel;
 
-	public Addition() {
-		super();
-	}
-	
-	 /* (non-Javadoc)
-     * @see sernet.hui.common.connect.ITypedElement#getTypeId()
-     */
+    private Entity entity;
+
+    public Addition() {
+        super();
+    }
+
+    @Override
     public String getTypeId() {
         return TYPE_ID;
     }
-	
-	public Integer getDbId() {
-		return dbId;
-	}
 
-	public void setDbId(Integer dbId) {
-		this.dbId = dbId;
-	}
-	
-	public Integer getCnATreeElementId() {
-		return cnATreeElementId;
-	}
+    public Integer getDbId() {
+        return dbId;
+    }
 
-	public void setCnATreeElementId(Integer cnATreeElementId) {
-		this.cnATreeElementId = cnATreeElementId;
-	}
-	
-	public String getExtId() {
+    public void setDbId(Integer dbId) {
+        this.dbId = dbId;
+    }
+
+    public Integer getCnATreeElementId() {
+        return cnATreeElementId;
+    }
+
+    public void setCnATreeElementId(Integer cnATreeElementId) {
+        this.cnATreeElementId = cnATreeElementId;
+    }
+
+    public String getExtId() {
         return extId;
     }
 
@@ -98,84 +97,82 @@ public class Addition implements Serializable, ITypedElement {
     }
 
     public String getCnAElementTitel() {
-		return cnAElementTitel;
-	}
-
-	public void setCnAElementTitel(String cnAElementTitel) {
-		this.cnAElementTitel = cnAElementTitel;
-	}
-
-	public Entity getEntity() {
-		return entity;
-	}
-
-	public void setEntity(Entity entity) {
-		this.entity = entity;
-	}
-	
-	protected HUITypeFactory getTypeFactory() {
-		return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((dbId == null) ? 0 : dbId.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj){
-			return true;
-		}
-		if (obj == null){
-			return false;
-		}
-		// FIXME ak this will not work when comparing proxies: 
-		if (getClass() != obj.getClass()){
-			return false;
-		}
-		Addition other = (Addition) obj;
-		if (dbId == null) {
-			if (other.dbId != null){
-				return false;
-			}
-		} else if (!dbId.equals(other.dbId)){
-			return false;
-		}
-		return true;
-	}
-
-	public void fireChange() {
-		for (INoteChangedListener list : getListener()) {
-			list.noteChanged();
-		}
-	}
-	
-	public interface INoteChangedListener {
-		void noteChanged();
-	}
-	
-	public CopyOnWriteArraySet<INoteChangedListener> getListener() {
-		if(listeners==null) {
-			listeners = new CopyOnWriteArraySet<INoteChangedListener>();
-		}
-		return listeners;
-	}
-	
-	public void addListener(INoteChangedListener listener) {
-		getListener().add(listener);
-	}
-	
-	public void removeListener(INoteChangedListener listener) {
-		getListener().remove(listener);
-	}
-	
-	public void removeAllListener() {
-        getListener().clear();
+        return cnAElementTitel;
     }
 
+    public void setCnAElementTitel(String cnAElementTitel) {
+        this.cnAElementTitel = cnAElementTitel;
+    }
+
+    public Entity getEntity() {
+        return entity;
+    }
+
+    public void setEntity(Entity entity) {
+        this.entity = entity;
+    }
+
+    protected HUITypeFactory getTypeFactory() {
+        return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((dbId == null) ? 0 : dbId.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Addition other = (Addition) obj;
+        if (dbId == null) {
+            if (other.dbId != null) {
+                return false;
+            }
+        } else if (!dbId.equals(other.dbId)) {
+            return false;
+        }
+        return true;
+    }
+
+    public void fireChange() {
+        for (INoteChangedListener list : getListener()) {
+            list.noteChanged();
+        }
+    }
+
+    public interface INoteChangedListener {
+        void noteChanged();
+    }
+
+    public Set<INoteChangedListener> getListener() {
+        if (listeners == null) {
+            listeners = new CopyOnWriteArraySet<>();
+        }
+        return listeners;
+    }
+
+    public void addListener(INoteChangedListener listener) {
+        getListener().add(listener);
+    }
+
+    public void removeListener(INoteChangedListener listener) {
+        getListener().remove(listener);
+    }
+
+    public void removeAllListener() {
+        getListener().clear();
+    }
 
 }
