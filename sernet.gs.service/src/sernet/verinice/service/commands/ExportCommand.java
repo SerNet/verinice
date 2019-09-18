@@ -171,6 +171,13 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             createFields();
             xmlData = export();
             xmlDataRiskAnalysis = exportRiskAnalyses();
+            if (isReImport()) {
+                if (log.isInfoEnabled()) {
+                    log.info("Prepare reimport is enabled. Saving the IDS of "
+                            + changedElements.size() + " elements ...");
+                }
+                saveChangedElements();
+            }
 
             if (isVeriniceArchive()) {
                 result = createVeriniceArchive();
@@ -424,6 +431,30 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         } catch (final IOException e) {
             log.error("Error while creating zip output stream", e);
             throw new RuntimeCommandException(e);
+        }
+    }
+
+    private void saveChangedElements() {
+        int number = changedElements.size();
+        int i = 0;
+        for (CnATreeElement element : changedElements) {
+            getDao().merge(element);
+            if (i % 50 == 0) { // Same as the JDBC batch size
+                flushAndClearHibernateSession();
+            }
+            i++;
+            if (log.isDebugEnabled()) {
+                log.debug(i + "/" + number + " elements saved");
+            }
+        }
+    }
+
+    public void flushAndClearHibernateSession() {
+        // flush a batch of inserts and release memory:
+        getDao().flush();
+        getDao().clear();
+        if (log.isDebugEnabled()) {
+            log.debug("Hibernate session cleared.");
         }
     }
 

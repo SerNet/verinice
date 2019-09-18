@@ -208,7 +208,6 @@ public class ExportThread extends NotifyingThread {
                 if (element.getExtId() == null) {
                     element.setExtId(extId);
                 }
-                getDao().merge(element);
                 getChangedElementList().add(element);
             }
         } else if (LOG.isDebugEnabled()) { // else if(checkElement(element))
