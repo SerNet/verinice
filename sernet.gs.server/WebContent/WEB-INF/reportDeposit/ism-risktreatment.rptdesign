@@ -11905,6 +11905,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
             </row>
         </grid>
         <table name="process-risk" id="3339">
+            <property name="pageBreakBefore">always</property>
             <property name="pageBreakInside">avoid</property>
             <property name="width">7.739583333333333in</property>
             <property name="dataSet">process-risk-control-scenarios-control-threats-vulnerabilities</property>
@@ -12601,8 +12602,9 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                             <property name="marginTop">0pt</property>
                             <property name="marginBottom">0pt</property>
                             <property name="paddingTop">5pt</property>
+                            <property name="textAlign">left</property>
                             <property name="pageBreakAfter">avoid</property>
-                            <property name="pageBreakBefore">avoid</property>
+                            <property name="pageBreakBefore">always</property>
                             <property name="pageBreakInside">avoid</property>
                             <structure name="toc"/>
                             <text-property name="text" key="detailed_risk_treatment">Detailed Risk Treatment</text-property>
@@ -12697,7 +12699,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                     </row>
                     <row id="3349">
                         <property name="pageBreakAfter">avoid</property>
-                        <property name="pageBreakBefore">avoid</property>
+                        <property name="pageBreakBefore">auto</property>
                         <cell id="3350">
                             <data id="3351">
                                 <property name="resultSetColumn">Abk?rzung__(Prozess)</property>
@@ -12824,7 +12826,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                         <property name="backgroundColor">#B0B4B9</property>
                         <property name="fontWeight">bold</property>
                         <property name="pageBreakAfter">avoid</property>
-                        <property name="pageBreakBefore">avoid</property>
+                        <property name="pageBreakBefore">auto</property>
                         <cell id="6799">
                             <property name="colSpan">4</property>
                             <property name="rowSpan">1</property>
@@ -13261,7 +13263,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                             <property name="borderLeftStyle">none</property>
                             <property name="borderRightStyle">none</property>
                             <property name="borderTopStyle">none</property>
-                           <label id="3416">
+                            <label id="3416">
                                 <property name="style">sub_table_header</property>
                                 <property name="textUnderline">none</property>
                                 <property name="textAlign">center</property>

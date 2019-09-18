@@ -13306,11 +13306,11 @@ reportContext.setGlobalVariable("process2asset-risk", Total.count());]]></method
                         <property name="colSpan">3</property>
                         <property name="rowSpan">1</property>
                         <label id="8132">
-                            <property name="fontSize">12pt</property>
+                            <property name="fontSize">x-large</property>
                             <property name="fontWeight">bold</property>
                             <property name="textUnderline">underline</property>
                             <property name="pageBreakAfter">avoid</property>
-                            <property name="pageBreakBefore">avoid</property>
+                            <property name="pageBreakBefore">always</property>
                             <property name="pageBreakInside">avoid</property>
                             <structure name="toc">
                                 <expression name="expressionValue" type="javascript">reportContext.getMessage("risk_without_implemented_controls")</expression>
@@ -28770,10 +28770,10 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
             </row>
         </grid>
         <label id="8133">
-            <property name="fontSize">12pt</property>
+            <property name="fontSize">x-large</property>
             <property name="fontWeight">bold</property>
             <property name="textUnderline">underline</property>
-            <property name="pageBreakBefore">avoid</property>
+            <property name="pageBreakBefore">always</property>
             <text-property name="text" key="asset_risks">ASSETRISIKEN+Subtitle</text-property>
         </label>
         <label id="8134">
@@ -28782,12 +28782,13 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
         </label>
         <grid name="assets-with-risks" id="2733">
             <property name="pageBreakAfter">always</property>
-            <property name="pageBreakBefore">always</property>
+            <property name="pageBreakBefore">avoid</property>
             <property name="height">8.791666666666666in</property>
             <structure name="toc"/>
             <column id="2734"/>
             <row id="2735">
                 <property name="pageBreakAfter">auto</property>
+                <property name="pageBreakBefore">avoid</property>
                 <property name="height">100%</property>
                 <cell id="2736">
                     <property name="textAlign">center</property>
@@ -28797,6 +28798,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                         <property name="textUnderline">underline</property>
                         <property name="marginBottom">10pt</property>
                         <property name="textAlign">left</property>
+                        <property name="pageBreakBefore">avoid</property>
                         <structure name="toc">
                             <expression name="expressionValue" type="javascript">reportContext.getMessage("hight_risk_without_controls")</expression>
                         </structure>
@@ -28996,6 +28998,7 @@ reportContext.setGlobalVariable("asset_pre_control", Total.count());]]></method>
                         <property name="textUnderline">underline</property>
                         <property name="marginBottom">10pt</property>
                         <property name="textAlign">left</property>
+                        <property name="pageBreakBefore">avoid</property>
                         <structure name="toc">
                             <expression name="expressionValue" type="javascript">reportContext.getMessage("hight_risk_with_controls")</expression>
                         </structure>
@@ -29219,16 +29222,17 @@ reportContext.setGlobalVariable("asset_impl_control", Total.count());]]></method
             <row id="7012">
                 <property name="verticalAlign">bottom</property>
                 <property name="pageBreakAfter">avoid</property>
-                <property name="pageBreakBefore">avoid</property>
+                <property name="pageBreakBefore">always</property>
                 <property name="height">100%</property>
                 <cell id="7013">
                     <property name="textAlign">center</property>
                     <label id="8135">
-                        <property name="fontSize">12pt</property>
+                        <property name="fontSize">x-large</property>
                         <property name="fontWeight">bold</property>
                         <property name="textUnderline">underline</property>
                         <property name="marginBottom">0pt</property>
                         <property name="textAlign">left</property>
+                        <property name="pageBreakBefore">always</property>
                         <structure name="toc">
                             <expression name="expressionValue" type="javascript">reportContext.getMessage("hight_risk_areas_without_control")</expression>
                         </structure>
@@ -30549,7 +30553,7 @@ reportContext.setGlobalVariable("High Risk Areas with impl Controls", Total.coun
             <property name="marginBottom">10pt</property>
             <property name="paddingTop">20pt</property>
             <property name="pageBreakAfter">avoid</property>
-            <property name="pageBreakBefore">auto</property>
+            <property name="pageBreakBefore">always</property>
             <structure name="toc"/>
             <text-property name="text" key="detail_risk_with_control">Detailed Risk Assessment (without Controls)</text-property>
         </label>
