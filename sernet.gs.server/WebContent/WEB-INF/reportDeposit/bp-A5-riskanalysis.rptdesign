@@ -9869,6 +9869,16 @@ reportContext.getMessage("title_impact")+": &lt;b>"+ str +"&lt;/b>";</expression
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">risk_treatment_explanation</property>
+                    <expression name="expression" type="javascript">value = row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"];
+if(value=="null"){
+	value = "";
+}
+reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">reportContext.getMessage("sec_title_infverbund")</expression>
@@ -10112,7 +10122,8 @@ reportContext.getMessage("title_impact")+": &lt;b>"+ str +"&lt;/b>";</expression
                             <property name="colSpan">2</property>
                             <property name="rowSpan">1</property>
                             <text-data id="76673">
-                                <expression name="valueExpr">row["risk_frequency_without"]</expression>
+                                <structure name="toc"/>
+                                <expression name="valueExpr" type="javascript">row["risk_frequency_without"]</expression>
                                 <property name="contentType">html</property>
                             </text-data>
                         </cell>
@@ -10240,34 +10251,10 @@ this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__o
                             <property name="colSpan">5</property>
                             <property name="rowSpan">1</property>
                             <property name="style">lighter-grey</property>
-                            <label id="5956">
-                                <text-property name="text" key="label_risk_treatment_option_explanation">Erläuterungen:</text-property>
-                            </label>
-                        </cell>
-                    </row>
-                    <row id="5957">
-                        <list-property name="visibility">
-                            <structure>
-                                <property name="format">all</property>
-                                <expression name="valueExpr" type="javascript">BirtStr.charLength(&#13;
-row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"]) &lt; 1</expression>
-                            </structure>
-                        </list-property>
-                        <cell id="5958"/>
-                        <cell id="5959">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="5960">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="5961"/>
-                        <cell id="5962">
-                            <property name="colSpan">5</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5963">
-                                <property name="style">lighter-grey</property>
-                                <property name="resultSetColumn">Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)</property>
-                            </data>
+                            <text-data id="76784">
+                                <expression name="valueExpr">row["risk_treatment_explanation"]</expression>
+                                <property name="contentType">html</property>
+                            </text-data>
                         </cell>
                     </row>
                     <row id="5964">
@@ -10593,6 +10580,16 @@ if(str=="null"){
 }
 
 reportContext.getMessage("title_impact")+": &lt;b>"+ str +"&lt;/b>";</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">risk_treatment_explanation</property>
+                    <expression name="expression" type="javascript">value = row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"];
+if(value=="null"){
+	value = "";
+}
+reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -11157,34 +11154,10 @@ this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__o
                             <property name="colSpan">5</property>
                             <property name="rowSpan">1</property>
                             <property name="style">lighter-grey</property>
-                            <label id="5852">
-                                <text-property name="text">Erläuterungen:</text-property>
-                            </label>
-                        </cell>
-                    </row>
-                    <row id="5868">
-                        <list-property name="visibility">
-                            <structure>
-                                <property name="format">all</property>
-                                <expression name="valueExpr" type="javascript">BirtStr.charLength(&#13;
-row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"]) &lt; 1</expression>
-                            </structure>
-                        </list-property>
-                        <cell id="5869"/>
-                        <cell id="5870">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="5871">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="5872"/>
-                        <cell id="5873">
-                            <property name="colSpan">5</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5853">
-                                <property name="style">lighter-grey</property>
-                                <property name="resultSetColumn">Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)</property>
-                            </data>
+                            <text-data id="76785">
+                                <expression name="valueExpr">row["risk_treatment_explanation"]</expression>
+                                <property name="contentType">html</property>
+                            </text-data>
                         </cell>
                     </row>
                     <row id="5855">
@@ -11510,6 +11483,16 @@ if(str=="null"){
 }
 
 reportContext.getMessage("title_impact")+": &lt;b>"+ str +"&lt;/b>";</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">risk_treatment_explanation</property>
+                    <expression name="expression" type="javascript">value = row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"];
+if(value=="null"){
+	value = "";
+}
+reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -12080,34 +12063,10 @@ this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__o
                             <property name="colSpan">5</property>
                             <property name="rowSpan">1</property>
                             <property name="style">lighter-grey</property>
-                            <label id="6050">
-                                <text-property name="text" key="label_risk_treatment_option_explanation">Erläuterungen:</text-property>
-                            </label>
-                        </cell>
-                    </row>
-                    <row id="6051">
-                        <list-property name="visibility">
-                            <structure>
-                                <property name="format">all</property>
-                                <expression name="valueExpr" type="javascript">BirtStr.charLength(&#13;
-row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"]) &lt; 1</expression>
-                            </structure>
-                        </list-property>
-                        <cell id="6052"/>
-                        <cell id="6053">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6054">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6055"/>
-                        <cell id="6056">
-                            <property name="colSpan">5</property>
-                            <property name="rowSpan">1</property>
-                            <data id="6057">
-                                <property name="style">lighter-grey</property>
-                                <property name="resultSetColumn">Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)</property>
-                            </data>
+                            <text-data id="76786">
+                                <expression name="valueExpr">row["risk_treatment_explanation"]</expression>
+                                <property name="contentType">html</property>
+                            </text-data>
                         </cell>
                     </row>
                     <row id="6058">
@@ -12434,6 +12393,16 @@ if(str=="null"){
 }
 
 reportContext.getMessage("title_impact")+": &lt;b>"+ str +"&lt;/b>";</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">risk_treatment_explanation</property>
+                    <expression name="expression" type="javascript">value = row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"];
+if(value=="null"){
+	value = "";
+}
+reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -13004,34 +12973,10 @@ this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__o
                             <property name="colSpan">5</property>
                             <property name="rowSpan">1</property>
                             <property name="style">lighter-grey</property>
-                            <label id="6144">
-                                <text-property name="text" key="label_risk_treatment_option_explanation">Erläuterungen:</text-property>
-                            </label>
-                        </cell>
-                    </row>
-                    <row id="6145">
-                        <list-property name="visibility">
-                            <structure>
-                                <property name="format">all</property>
-                                <expression name="valueExpr" type="javascript">BirtStr.charLength(&#13;
-row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"]) &lt; 1</expression>
-                            </structure>
-                        </list-property>
-                        <cell id="6146"/>
-                        <cell id="6147">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6148">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6149"/>
-                        <cell id="6150">
-                            <property name="colSpan">5</property>
-                            <property name="rowSpan">1</property>
-                            <data id="6151">
-                                <property name="style">lighter-grey</property>
-                                <property name="resultSetColumn">Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)</property>
-                            </data>
+                            <text-data id="76787">
+                                <expression name="valueExpr">row["risk_treatment_explanation"]</expression>
+                                <property name="contentType">html</property>
+                            </text-data>
                         </cell>
                     </row>
                     <row id="6152">
@@ -13358,6 +13303,16 @@ if(str=="null"){
 }
 
 reportContext.getMessage("title_impact")+": &lt;b>"+ str +"&lt;/b>";</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">risk_treatment_explanation</property>
+                    <expression name="expression" type="javascript">value = row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"];
+if(value=="null"){
+	value = "";
+}
+reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -13921,34 +13876,10 @@ this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__o
                             <property name="colSpan">5</property>
                             <property name="rowSpan">1</property>
                             <property name="style">lighter-grey</property>
-                            <label id="6331">
-                                <text-property name="text" key="label_risk_treatment_option_explanation">Erläuterungen:</text-property>
-                            </label>
-                        </cell>
-                    </row>
-                    <row id="6332">
-                        <list-property name="visibility">
-                            <structure>
-                                <property name="format">all</property>
-                                <expression name="valueExpr" type="javascript">BirtStr.charLength(&#13;
-row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"]) &lt; 1</expression>
-                            </structure>
-                        </list-property>
-                        <cell id="6333"/>
-                        <cell id="6334">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6335">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6336"/>
-                        <cell id="6337">
-                            <property name="colSpan">5</property>
-                            <property name="rowSpan">1</property>
-                            <data id="6338">
-                                <property name="style">lighter-grey</property>
-                                <property name="resultSetColumn">Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)</property>
-                            </data>
+                            <text-data id="76788">
+                                <expression name="valueExpr">row["risk_treatment_explanation"]</expression>
+                                <property name="contentType">html</property>
+                            </text-data>
                         </cell>
                     </row>
                     <row id="6339">
@@ -14280,6 +14211,16 @@ if(str=="null"){
 }
 
 reportContext.getMessage("title_impact")+": &lt;b>"+ str +"&lt;/b>";</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">risk_treatment_explanation</property>
+                    <expression name="expression" type="javascript">value = row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"];
+if(value=="null"){
+	value = "";
+}
+reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -14840,34 +14781,10 @@ this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__o
                             <property name="colSpan">5</property>
                             <property name="rowSpan">1</property>
                             <property name="style">lighter-grey</property>
-                            <label id="6425">
-                                <text-property name="text" key="label_risk_treatment_option_explanation">Erläuterungen:</text-property>
-                            </label>
-                        </cell>
-                    </row>
-                    <row id="6426">
-                        <list-property name="visibility">
-                            <structure>
-                                <property name="format">all</property>
-                                <expression name="valueExpr" type="javascript">BirtStr.charLength(&#13;
-row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"]) &lt; 1</expression>
-                            </structure>
-                        </list-property>
-                        <cell id="6427"/>
-                        <cell id="6428">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6429">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6430"/>
-                        <cell id="6431">
-                            <property name="colSpan">5</property>
-                            <property name="rowSpan">1</property>
-                            <data id="6432">
-                                <property name="style">lighter-grey</property>
-                                <property name="resultSetColumn">Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)</property>
-                            </data>
+                            <text-data id="76789">
+                                <expression name="valueExpr">row["risk_treatment_explanation"]</expression>
+                                <property name="contentType">html</property>
+                            </text-data>
                         </cell>
                     </row>
                     <row id="6433">
@@ -15195,6 +15112,16 @@ if(str=="null"){
 }
 
 reportContext.getMessage("title_impact")+": &lt;b>"+ str +"&lt;/b>";</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">risk_treatment_explanation</property>
+                    <expression name="expression" type="javascript">value = row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"];
+if(value=="null"){
+	value = "";
+}
+reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -15761,34 +15688,10 @@ this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__o
                             <property name="colSpan">5</property>
                             <property name="rowSpan">1</property>
                             <property name="style">lighter-grey</property>
-                            <label id="6519">
-                                <text-property name="text">Erläuterungen:</text-property>
-                            </label>
-                        </cell>
-                    </row>
-                    <row id="6520">
-                        <list-property name="visibility">
-                            <structure>
-                                <property name="format">all</property>
-                                <expression name="valueExpr" type="javascript">BirtStr.charLength(&#13;
-row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"]) &lt; 1</expression>
-                            </structure>
-                        </list-property>
-                        <cell id="6521"/>
-                        <cell id="6522">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6523">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6524"/>
-                        <cell id="6525">
-                            <property name="colSpan">5</property>
-                            <property name="rowSpan">1</property>
-                            <data id="6526">
-                                <property name="style">lighter-grey</property>
-                                <property name="resultSetColumn">Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)</property>
-                            </data>
+                            <text-data id="76790">
+                                <expression name="valueExpr">row["risk_treatment_explanation"]</expression>
+                                <property name="contentType">html</property>
+                            </text-data>
                         </cell>
                     </row>
                     <row id="6527">
@@ -16116,6 +16019,16 @@ if(str=="null"){
 }
 
 reportContext.getMessage("title_impact")+": &lt;b>"+ str +"&lt;/b>";</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">risk_treatment_explanation</property>
+                    <expression name="expression" type="javascript">value = row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"];
+if(value=="null"){
+	value = "";
+}
+reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -16682,34 +16595,10 @@ this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__o
                             <property name="colSpan">5</property>
                             <property name="rowSpan">1</property>
                             <property name="style">lighter-grey</property>
-                            <label id="6613">
-                                <text-property name="text" key="label_risk_treatment_option_explanation">Erläuterungen:</text-property>
-                            </label>
-                        </cell>
-                    </row>
-                    <row id="6614">
-                        <list-property name="visibility">
-                            <structure>
-                                <property name="format">all</property>
-                                <expression name="valueExpr" type="javascript">BirtStr.charLength(&#13;
-row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"]) &lt; 1</expression>
-                            </structure>
-                        </list-property>
-                        <cell id="6615"/>
-                        <cell id="6616">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6617">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6618"/>
-                        <cell id="6619">
-                            <property name="colSpan">5</property>
-                            <property name="rowSpan">1</property>
-                            <data id="6620">
-                                <property name="style">lighter-grey</property>
-                                <property name="resultSetColumn">Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)</property>
-                            </data>
+                            <text-data id="76791">
+                                <expression name="valueExpr">row["risk_treatment_explanation"]</expression>
+                                <property name="contentType">html</property>
+                            </text-data>
                         </cell>
                     </row>
                     <row id="6621">
