@@ -3294,7 +3294,7 @@ else &#13;
                     <property name="paddingLeft">2pt</property>
                     <property name="paddingBottom">2pt</property>
                     <label id="2411">
-                        <text-property name="text">Version: 4.1.0</text-property>
+                        <text-property name="text">4.1.1</text-property>
                     </label>
                 </cell>
             </row>
@@ -3923,6 +3923,13 @@ else &#13;
                 </structure>
             </list-property>
         </extended-item>
+        <text id="3740">
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="paddingTop">20pt</property>
+            <property name="paddingBottom">5pt</property>
+            <text-property name="content" key="spiderChartHeading"><![CDATA[]]></text-property>
+        </text>
         <extended-item extensionName="Chart" id="3580">
             <property name="cube">Data Cube</property>
             <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithoutAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/RadarChartModelType">
