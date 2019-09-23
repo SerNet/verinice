@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.oda.driver.impl.filters;
 
+
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.interfaces.oda.FilterChain;
 import sernet.verinice.interfaces.oda.IChainableFilter;
@@ -37,16 +38,12 @@ import sernet.verinice.interfaces.oda.IChainableFilter;
  */
 public class NandFilterChain extends FilterChain implements IChainableFilter {
 
-
-    /**
-     * 
-     */
     private static final long serialVersionUID = -9156945143234284673L;
 
     public NandFilterChain(IChainableFilter[] filters) {
         super(filters);
     }
-
+    
     @Override
     public boolean matches(Entity entity) {
         return ! getFilterList().stream().allMatch(aFilter -> aFilter.matches(entity));

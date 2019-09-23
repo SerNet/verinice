@@ -47,11 +47,13 @@ public interface IFilteringCommand extends ICommand {
      * 
      * @param filter
      *            The filter to be used. This can be a chained filter with many
-     *            individual comparisons.
+     *            individual comparisons. It will be applied to all loaded elements.
      *            
      *            Use <code>null</code> if you want to unset an already existing filter.
      */
     public void setFilterCriteria(IChainableFilter filter);
+    
+    
     
     /**
      * Returns the state of the filter.

@@ -33,7 +33,7 @@ import sernet.hui.common.connect.Entity;
 public interface IChainableFilter extends Serializable {
 
     /**
-     * Test the given entity object against the filter criteria.
+     * Test the given entity object against the filter criteria. Applies the filter to entities of all types.
      * 
      * @param entity
      * @return <code>true</code> if the filter matches. <code>false</code> if
@@ -45,7 +45,6 @@ public interface IChainableFilter extends Serializable {
      * Return this filter wrapped in a <code>List</code> object. May be used to
      * chain filters together easily.
      * 
-     * @return
      */
     public FilterChain asList();
 }

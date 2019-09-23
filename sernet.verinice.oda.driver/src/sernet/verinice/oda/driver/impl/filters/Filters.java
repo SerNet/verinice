@@ -27,22 +27,27 @@ import sernet.verinice.interfaces.oda.IChainableFilter;
  * statically import its methods:
  * 
  * <blockquote>
+ * 
  * <pre>
  * import static sernet.verinice.oda.drivers.impl.filters.Filters.*;
  * </pre>
+ * 
  * </blockquote>
  * 
  * It is then possible to create filters by chaining calls together:
  * 
  * <blockquote>
+ * 
  * <pre>
- * and( is("prop_id1", "I want this"), is("prop_id2", "...and this") )
+ * and(is("prop_id1", "I want this"), is("prop_id2", "...and this"))
  * </pre>
+ * 
  * </blockquote>
  * 
  * You can combine more filters if you want:
  * 
  * <blockquote>
+ * 
  * <pre>
  *    or( and (
  *            is("prop_id1", "I want this"), 
@@ -51,33 +56,45 @@ import sernet.verinice.interfaces.oda.IChainableFilter;
  *        is("prop_id1", "Or simply this (forget about the first two)"
  *    )
  * </pre>
+ * 
  * </blockquote>
  * 
- * To ignore elements when they contain a certain property:
- * <br/>(This will filter out all entities where the first OR last name is "JohnDoe").
+ * To ignore elements when they contain a certain property: <br/>
+ * (This will filter out all entities where the first OR last name is
+ * "JohnDoe").
  * 
  * <blockquote>
+ * 
  * <pre>
- *    noneOf( 
- *         is("prop_lastname",  "JohnDoe"), 
- *         is("prop_firstname", "JohnDoe") 
- *    )
+ * noneOf(is("prop_lastname", "JohnDoe"), is("prop_firstname", "JohnDoe"))
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * 
+ * If you want to ignore only entities where BOTH properties match, use
+ * "notAll":
+ * 
+ * <blockquote>
+ * 
+ * <pre>
+ * notAll(is("prop_lastname", "John"), is("prop_firstname", "Doe"))
  * </pre>
  * </blockquote>
  * 
+ * This will filter out entities only if the first name is "John" AND the last
+ * name is "Doe".
+ * <br/><br/>
  * 
- * If you want to ignore only entities where BOTH properties match, use "notAll":
- * 
+ * You can define that a filter is only applied to objects of a certain type:
  * <blockquote>
  * <pre>
- *    notAll( 
- *         is("prop_lastname", "John"), 
- *         is("prop_firstname", "Doe") 
- *    )
+ * is(BusinessProcess.TYPE_ID, "bp_businessprocess_privacy_yesno", "1")
  * </pre>
  * </blockquote>
  * 
- * This will filter out entities only if the first name is "John" AND the last name is "Doe".
+ * All objects that are not business processes will be unaffected by this
+ * filter.
  */
 public final class Filters {
 
@@ -99,10 +116,35 @@ public final class Filters {
      *            value will be a literal value entered by the user, a date
      *            value in milliseconds, a translated user-facing String for a
      *            property-option or an integer value.
-     * @return
+     * @return true if the value is present.
      */
     public static IChainableFilter is(String propertyType, String propertyValueRegex) {
         return new SinglePropertyFilter(propertyType, propertyValueRegex);
+    }
+    
+    /**
+     * Returns true if the given value is present. This filter will only be applied
+     * to elements of the type given in <code>entityType</code>. All other elements will be unaffected 
+     * by this filter.
+     * 
+     *  
+     * The value is given as a regular expression and will be matched against
+     * the value of the given property-ID.
+     * 
+     * @param entityType the entityType for which the filter will exclusively be applied
+     * @param propertyType
+     *            The wanted property-type-ID.
+     * @param propertyValueRegex
+     *            A regular expression to match the value of the given property
+     *            against. The filter will run a case-sensitive regular
+     *            expression match against the property value. The property
+     *            value will be a literal value entered by the user, a date
+     *            value in milliseconds, a translated user-facing String for a
+     *            property-option or an integer value.
+     * @return true if the value is present.
+     */
+    public static IChainableFilter is(String entityType, String propertyType, String propertyValueRegex) {
+        return new SinglePropertyFilter(entityType, propertyType, propertyValueRegex);
     }
 
     /**
