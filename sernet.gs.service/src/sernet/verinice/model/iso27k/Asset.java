@@ -51,6 +51,16 @@ public class Asset extends CnATreeElement
     public static final String ASSET_VALUE_METHOD_INTEGRITY = "asset_value_method_integrity"; //$NON-NLS-1$
     public static final String ASSET_VALUE_METHOD_AVAILABILITY = "asset_value_method_availability"; //$NON-NLS-1$
 
+    public static final String ASSET_CONFIDENTIALITY_WITH_CONTROLS = "asset_confidentiality_with_controls"; //$NON-NLS-1$
+    public static final String ASSET_INTEGRITY_WITH_CONTROLS = "asset_integrity_with_controls"; //$NON-NLS-1$
+    public static final String ASSET_AVAILABILITY_WITH_CONTROLS = "asset_availability_with_controls"; //$NON-NLS-1$
+    public static final String ASSET_CONFIDENTIALITY_WITH_PLANNED_CONTROLS = "asset_confidentiality_with_planned_controls"; //$NON-NLS-1$
+    public static final String ASSET_INTEGRITY_WITH_PLANNED_CONTROLS = "asset_integrity_with_planned_controls"; //$NON-NLS-1$
+    public static final String ASSET_AVAILABILITY_WITH_PLANNED_CONTROLS = "asset_availability_with_planned_controls"; //$NON-NLS-1$
+    public static final String ASSET_CONFIDENTIALITY_WITH_IMPLEMENTED_CONTROLS = "asset_confidentiality_with_implemented_controls"; //$NON-NLS-1$
+    public static final String ASSET_INTEGRITY_WITH_IMPLEMENTED_CONTROLS = "asset_integrity_with_implemented_controls"; //$NON-NLS-1$
+    public static final String ASSET_AVAILABILITY_WITH_IMPLEMENTED_CONTROLS = "asset_availability_with_implemented_controls"; //$NON-NLS-1$
+
     public static final String ASSET_WITHOUT_NA_PLANCONTROLRISK_A = "asset_risk_without_na_plancontrolvalue_a";
     public static final String ASSET_WITHOUT_NA_PLANCONTROLRISK_I = "asset_risk_without_na_plancontrolvalue_i";
     public static final String ASSET_WITHOUT_NA_PLANCONTROLRISK_C = "asset_risk_without_na_plancontrolvalue_c";

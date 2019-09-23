@@ -5377,6 +5377,15 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         <huipropertygroup name="Calculated Total Risk" id="asset_riskgroup" tags="Risk">
             <huiproperty
              tags="Risk"
+                name="Confidentiality business impact with all controls" id="asset_confidentiality_with_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
+                name="Confidentiality business impact with planned controls" id="asset_confidentiality_with_planned_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
+                name="Confidentiality business impact with implemented controls" id="asset_confidentiality_with_implemented_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
                 name="Confidentiality risk value" id="asset_riskvalue_c" editable="false"/>
             <huiproperty
              tags="Risk"
@@ -5387,6 +5396,15 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
 
             <huiproperty
              tags="Risk"
+                name="Integrity business impact with all controls" id="asset_integrity_with_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
+                name="Integrity business impact with planned controls" id="asset_integrity_with_planned_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
+                name="Integrity business impact with implemented controls" id="asset_integrity_with_implemented_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
                 name="Integrity risk value" id="asset_riskvalue_i" editable="false"/>
             <huiproperty
              tags="Risk"
@@ -5395,6 +5413,15 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
              tags="Risk"
                 name="Integrity risk with planned controls" id="asset_riskwplancontrolvalue_i" editable="false"/>
 
+            <huiproperty
+             tags="Risk"
+                name="Availability business impact with all controls" id="asset_availability_with_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
+                name="Availability business impact with planned controls" id="asset_availability_with_planned_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
+                name="Availability business impact with implemented controls" id="asset_availability_with_implemented_controls" editable="false"/>
             <huiproperty
              tags="Risk"
                 name="Availability risk value" id="asset_riskvalue_a" editable="false"/>
