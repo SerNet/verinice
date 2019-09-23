@@ -63,6 +63,7 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
+import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
@@ -383,7 +384,10 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         FindRiskAnalysisListsByParentID loader = new FindRiskAnalysisListsByParentID(
                 element.getDbId());
         loader = getCommandService().executeCommand(loader);
-        returnValue.addAll(loader.getFoundLists().getAssociatedGefaehrdungen());
+        FinishedRiskAnalysisLists lists = loader.getFoundLists();
+        if(lists != null) {
+            returnValue.addAll(lists.getAssociatedGefaehrdungen());
+        }
         return returnValue;
     }
 
