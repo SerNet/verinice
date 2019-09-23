@@ -318,6 +318,8 @@ public class RiskAnalysisJob {
                 .getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
         int riskWithImplementedControlsC = calculateRisk(biWithImplementedControlsC,
                 probabilityWithImplementedControls);
+        asset.setNumericProperty(Asset.ASSET_CONFIDENTIALITY_WITH_IMPLEMENTED_CONTROLS,
+                biWithImplementedControlsC);
         asset.setNumericProperty(Asset.ASSET_CONTROLRISK_C,
                 positiveOrZero(asset.getNumericProperty(Asset.ASSET_CONTROLRISK_C)
                         + riskWithImplementedControlsC));
@@ -330,6 +332,7 @@ public class RiskAnalysisJob {
         int probabilityWithAllControls = scenario.getNumericProperty(
                 IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
         int riskWithAllControlsC = calculateRisk(biWithAllControlsC, probabilityWithAllControls);
+        asset.setNumericProperty(Asset.ASSET_CONFIDENTIALITY_WITH_CONTROLS, biWithAllControlsC);
         asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_C, positiveOrZero(
                 asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_C) + riskWithAllControlsC));
 
@@ -340,6 +343,8 @@ public class RiskAnalysisJob {
                 .getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
         int riskWithPlannedControlsC = calculateRisk(biWithPlannedControlsC,
                 probabilityWithPlannedControls);
+        asset.setNumericProperty(Asset.ASSET_CONFIDENTIALITY_WITH_PLANNED_CONTROLS,
+                biWithPlannedControlsC);
         asset.setNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_C,
                 positiveOrZero(asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_C)
                         + riskWithPlannedControlsC));
@@ -372,6 +377,8 @@ public class RiskAnalysisJob {
                 .getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
         int riskWithImplementedControlsI = calculateRisk(biWithImplementedControlsI,
                 probabilityWithImplementedControls);
+        asset.setNumericProperty(Asset.ASSET_INTEGRITY_WITH_IMPLEMENTED_CONTROLS,
+                biWithImplementedControlsI);
         asset.setNumericProperty(Asset.ASSET_CONTROLRISK_I,
                 positiveOrZero(asset.getNumericProperty(Asset.ASSET_CONTROLRISK_I)
                         + riskWithImplementedControlsI));
@@ -383,6 +390,7 @@ public class RiskAnalysisJob {
         int probabilityWithAllControls = scenario.getNumericProperty(
                 IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
         int riskWithAllControlsI = calculateRisk(biWithAllControlsI, probabilityWithAllControls);
+        asset.setNumericProperty(Asset.ASSET_INTEGRITY_WITH_CONTROLS, biWithAllControlsI);
         asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_I, positiveOrZero(
                 asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_I) + riskWithAllControlsI));
 
@@ -393,6 +401,8 @@ public class RiskAnalysisJob {
                 .getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
         int riskWithPlannedControlsI = calculateRisk(biWithPlannedControlsI,
                 probabilityWithPlannedControls);
+        asset.setNumericProperty(Asset.ASSET_INTEGRITY_WITH_PLANNED_CONTROLS,
+                biWithPlannedControlsI);
         asset.setNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_I,
                 positiveOrZero(asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_I)
                         + riskWithPlannedControlsI));
@@ -425,6 +435,8 @@ public class RiskAnalysisJob {
                 .getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
         int riskWithImplementedControlsA = calculateRisk(biWithImplementedControlsA,
                 probabilityWithImplementedControls);
+        asset.setNumericProperty(Asset.ASSET_AVAILABILITY_WITH_IMPLEMENTED_CONTROLS,
+                biWithImplementedControlsA);
         asset.setNumericProperty(Asset.ASSET_CONTROLRISK_A,
                 positiveOrZero(asset.getNumericProperty(Asset.ASSET_CONTROLRISK_A)
                         + riskWithImplementedControlsA));
@@ -436,6 +448,7 @@ public class RiskAnalysisJob {
         int probabilityWithAllControls = scenario.getNumericProperty(
                 IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
         int riskWithAllControlsA = calculateRisk(biWithAllControlsA, probabilityWithAllControls);
+        asset.setNumericProperty(Asset.ASSET_AVAILABILITY_WITH_CONTROLS, biWithAllControlsA);
         asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_A, positiveOrZero(
                 asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_A) + riskWithAllControlsA));
 
@@ -446,6 +459,8 @@ public class RiskAnalysisJob {
                 .getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
         int riskWithPlannedControlsA = calculateRisk(biWithPlannedControlsA,
                 probabilityWithPlannedControls);
+        asset.setNumericProperty(Asset.ASSET_AVAILABILITY_WITH_PLANNED_CONTROLS,
+                biWithPlannedControlsA);
         asset.setNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_A,
                 positiveOrZero(asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_A)
                         + riskWithPlannedControlsA));
@@ -550,6 +565,15 @@ public class RiskAnalysisJob {
      * @param asset
      */
     private void resetRisks(Asset asset) {
+        asset.setNumericProperty(Asset.ASSET_CONFIDENTIALITY_WITH_CONTROLS, 0);
+        asset.setNumericProperty(Asset.ASSET_INTEGRITY_WITH_CONTROLS, 0);
+        asset.setNumericProperty(Asset.ASSET_AVAILABILITY_WITH_CONTROLS, 0);
+        asset.setNumericProperty(Asset.ASSET_CONFIDENTIALITY_WITH_PLANNED_CONTROLS, 0);
+        asset.setNumericProperty(Asset.ASSET_INTEGRITY_WITH_PLANNED_CONTROLS, 0);
+        asset.setNumericProperty(Asset.ASSET_AVAILABILITY_WITH_PLANNED_CONTROLS, 0);
+        asset.setNumericProperty(Asset.ASSET_CONFIDENTIALITY_WITH_IMPLEMENTED_CONTROLS, 0);
+        asset.setNumericProperty(Asset.ASSET_INTEGRITY_WITH_IMPLEMENTED_CONTROLS, 0);
+        asset.setNumericProperty(Asset.ASSET_AVAILABILITY_WITH_IMPLEMENTED_CONTROLS, 0);
         asset.setNumericProperty(Asset.ASSET_RISK_C, 0);
         asset.setNumericProperty(Asset.ASSET_RISK_I, 0);
         asset.setNumericProperty(Asset.ASSET_RISK_A, 0);
