@@ -46,8 +46,8 @@
     </parameters>
     <data-sources>
         <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44">
-            <property name="sncaUrl">http://localhost:8801/GetHitroConfig</property>
-            <property name="serverURI">http://localhost:8801</property>
+            <property name="sncaUrl">http://localhost:8800/GetHitroConfig</property>
+            <property name="serverURI">http://localhost:8800</property>
         </oda-data-source>
         <script-data-source name="scriptedSource" id="7115"/>
     </data-sources>
@@ -30918,25 +30918,28 @@ reportContext.setGlobalVariable("High Risk Areas with impl Controls", Total.coun
                 <structure>
                     <property name="name">asset_risk_c</property>
                     <text-property name="displayName">asset_risk_c</text-property>
-                    <expression name="expression" type="javascript">parseInt(row["Einstufung__der__Schwachstelle__(Schwachstelle)"])
-  + parseInt(row["Bedrohungshäufigkeit__(Bedrohung)"])
+                    <expression name="expression" type="javascript">parseInt(row["risks_threats::process_detail2asset::process2asset::CountRiskByServity_new::Wahrscheinlichkeit__-__Bedrohungshäufigkeit__(Szenario)"]
+)
+  + parseInt(row["risks_threats::process_detail2asset::process2asset::CountRiskByServity_new::Wahrscheinlichkeit__-__Einstufung__der__Schwachstelle__(Szenario)"])
   + parseInt(row["detail-risk1::Business__Impact__-__Vertraulichkeit__(Asset)"])</expression>
                     <property name="dataType">integer</property>
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">asset_risk_i</property>
-                    <expression name="expression" type="javascript">parseInt(row["Einstufung__der__Schwachstelle__(Schwachstelle)"])
-  + parseInt(row["Bedrohungshäufigkeit__(Bedrohung)"])
+                    <expression name="expression" type="javascript">parseInt(row["risks_threats::process_detail2asset::process2asset::CountRiskByServity_new::Wahrscheinlichkeit__-__Bedrohungshäufigkeit__(Szenario)"]
+)
+  + parseInt(row["risks_threats::process_detail2asset::process2asset::CountRiskByServity_new::Wahrscheinlichkeit__-__Einstufung__der__Schwachstelle__(Szenario)"])
   + parseInt(row["detail-risk1::Business__Impact__-__Integrität__(Asset)"])</expression>
                     <property name="dataType">integer</property>
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">asset_risk_a</property>
-                    <expression name="expression" type="javascript">parseInt(row["Einstufung__der__Schwachstelle__(Schwachstelle)"])
-  + parseInt(row["Bedrohungshäufigkeit__(Bedrohung)"])
-  + parseInt(row["detail-risk1::Business__Impact__-__Verfügbarkeit__(Asset)"])</expression>
+                    <expression name="expression" type="javascript">parseInt(row["risks_threats::process_detail2asset::process2asset::CountRiskByServity_new::Wahrscheinlichkeit__-__Bedrohungshäufigkeit__(Szenario)"]
+)
+  + parseInt(row["risks_threats::process_detail2asset::process2asset::CountRiskByServity_new::Wahrscheinlichkeit__-__Einstufung__der__Schwachstelle__(Szenario)"])
+ + parseInt(row["detail-risk1::Business__Impact__-__Verfügbarkeit__(Asset)"])</expression>
                     <property name="dataType">integer</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -31791,7 +31794,10 @@ reportContext.setGlobalVariable("grouped-table", Total.count());]]></method>
             </group>
             <group id="2581">
                 <property name="groupName">scenarios</property>
-                <expression name="keyExpr" type="javascript">row["detail-risk1::Datenbank-Id__(Szenario)"]</expression>
+                <expression name="keyExpr" type="javascript">row["risks_threats::process_detail2asset::process2asset::CountRiskByServity_new::Datenbank-Id__(Szenario)"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["Titel__(Szenario)"]</expression>
+                </structure>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
                     <structure>
@@ -31804,6 +31810,7 @@ reportContext.setGlobalVariable("grouped-table", Total.count());]]></method>
                     <row id="2582">
                         <cell id="2583">
                             <grid id="2649">
+                                <property name="height">1.3645833333333333in</property>
                                 <property name="width">100%</property>
                                 <column id="2650">
                                     <property name="width">0.5in</property>
@@ -31815,6 +31822,7 @@ reportContext.setGlobalVariable("grouped-table", Total.count());]]></method>
                                 <row id="2668">
                                     <property name="borderTopStyle">solid</property>
                                     <property name="borderTopWidth">thin</property>
+                                    <property name="height">0.8854166666666666in</property>
                                     <cell id="2669">
                                         <data id="2672">
                                             <property name="resultSetColumn">Abkürzung__(Szenario)</property>
@@ -31879,12 +31887,6 @@ reportContext.setGlobalVariable("grouped-table", Total.count());]]></method>
                                                     <text-property name="display" key="threat_likelihood_5">5: Stündlich</text-property>
                                                 </structure>
                                             </list-property>
-                                            <list-property name="visibility">
-                                                <structure>
-                                                    <property name="format">all</property>
-                                                    <expression name="valueExpr" type="javascript">row["risks_threats::process_detail2asset::process2asset::CountRiskByServity_new::Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)"]=="1"</expression>
-                                                </structure>
-                                            </list-property>
                                             <property name="resultSetColumn">risks_threats::process_detail2asset::process2asset::CountRiskByServity_new::Wahrscheinlichkeit__-__Bedrohungshäufigkeit__(Szenario)</property>
                                         </data>
                                         <data id="8130">
@@ -31920,12 +31922,6 @@ reportContext.setGlobalVariable("grouped-table", Total.count());]]></method>
                                                         <value type="javascript">"3"</value>
                                                     </simple-property-list>
                                                     <text-property name="display" key="vulnerability_level_3"></text-property>
-                                                </structure>
-                                            </list-property>
-                                            <list-property name="visibility">
-                                                <structure>
-                                                    <property name="format">all</property>
-                                                    <expression name="valueExpr" type="javascript">row["risks_threats::process_detail2asset::process2asset::CountRiskByServity_new::Wahrscheinlichkeit__-__Ableiten__aus__Bedr____Schwachst__(Szenario)"]=="1"</expression>
                                                 </structure>
                                             </list-property>
                                             <property name="resultSetColumn">risks_threats::process_detail2asset::process2asset::CountRiskByServity_new::Wahrscheinlichkeit__-__Einstufung__der__Schwachstelle__(Szenario)</property>
