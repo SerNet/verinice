@@ -4728,7 +4728,10 @@ function beforeDrawAxisLabel( axis, label, icsc )
           <Visible>false</Visible>
         </Label>
         <DataDefinition>
-          <Definition>data[&quot;Summary Field/calcMaturity&quot;] / data[&quot;Summary Field/calcCount&quot;]</Definition>
+          <Definition>if (data[&quot;Summary Field/calcCount&quot;] > 0)
+    data[&quot;Summary Field/calcMaturity&quot;] / data[&quot;Summary Field/calcCount&quot;]
+else
+    0</Definition>
           <Grouping>
             <GroupType>Text</GroupType>
             <AggregateExpression>Sum</AggregateExpression>
@@ -5093,7 +5096,10 @@ function beforeDrawAxisLabel( axis, label, icsc )
           <Visible>false</Visible>
         </Label>
         <DataDefinition>
-          <Definition>data[&quot;Summary Field/schwellwert&quot;] / data[&quot;Summary Field/calcCount&quot;]</Definition>
+          <Definition>if (data[&quot;Summary Field/calcCount&quot;] > 0)
+    data[&quot;Summary Field/schwellwert&quot;] / data[&quot;Summary Field/calcCount&quot;]
+else
+    0</Definition>
           <Grouping>
             <Enabled>false</Enabled>
             <GroupType>Text</GroupType>
