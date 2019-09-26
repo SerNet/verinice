@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.22" id="1">
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
     <property name="author">A. Koderman</property>
-    <property name="createdBy">Eclipse BIRT Designer Version 3.7.0.v20110602 Build &lt;3.7.0.v20110607-1526></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
     <text-property name="title">verinice - BSI Realisierungsplan</text-property>
-    <property name="units">in</property>
     <list-property name="propertyBindings">
         <structure>
             <property name="name">queryText</property>
@@ -14,6 +13,7 @@
             <property name="id">1607</property>
         </structure>
     </list-property>
+    <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">fixed layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -40,8 +40,8 @@
     </parameters>
     <data-sources>
         <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44">
-            <property name="sncaUrl">http://localhost:8080/veriniceserver/GetHitroConfig</property>
-            <property name="serverURI">http://localhost:8080/veriniceserver</property>
+            <property name="sncaUrl">http://localhost:8800/veriniceserver/GetHitroConfig</property>
+            <property name="serverURI">http://localhost::8800/veriniceserver</property>
         </oda-data-source>
     </data-sources>
     <data-sets>
@@ -5132,9 +5132,9 @@ bestehende Risiken</text-property>
             <property name="borderTopWidth">medium</property>
             <property name="width">7.75206611570248in</property>
             <column id="1067">
-                <property name="width">2.4242424242424243in</property>
                 <property name="backgroundColor">#9AC3D6</property>
                 <property name="fontWeight">bold</property>
+                <property name="width">2.4242424242424243in</property>
             </column>
             <column id="1068">
                 <property name="width">5.330578512396694in</property>
@@ -5609,8 +5609,8 @@ bestehende Risiken</text-property>
                                     <grid id="1618">
                                         <property name="width">11.03305785123967in</property>
                                         <column id="1619">
-                                            <property name="width">1.4462809917355373in</property>
                                             <property name="fontWeight">bold</property>
+                                            <property name="width">1.4462809917355373in</property>
                                         </column>
                                         <column id="1620">
                                             <property name="width">9.586776859504132in</property>
@@ -5863,8 +5863,8 @@ bestehende Risiken</text-property>
                                             </structure>
                                         </list-property>
                                         <column id="1635">
-                                            <property name="width">1.4462809917355373in</property>
                                             <property name="textAlign">left</property>
+                                            <property name="width">1.4462809917355373in</property>
                                         </column>
                                         <column id="1636">
                                             <property name="width">6.181818181818182in</property>
@@ -6042,8 +6042,8 @@ bestehende Risiken</text-property>
                                             </structure>
                                         </list-property>
                                         <column id="1658">
-                                            <property name="width">1.4545454545454546in</property>
                                             <property name="textAlign">left</property>
+                                            <property name="width">1.4545454545454546in</property>
                                         </column>
                                         <column id="1659">
                                             <property name="width">6.1735537190082646in</property>
@@ -6335,6 +6335,7 @@ bestehende Risiken</text-property>
                                                 <text-property name="displayName">mnums_umsetzung</text-property>
                                                 <expression name="expression" type="javascript">dataSetRow["mnums_umsetzung"]</expression>
                                                 <property name="dataType">javaObject</property>
+                                                <property name="allowExport">true</property>
                                             </structure>
                                             <structure>
                                                 <property name="name">mnums_erlaeuterung</property>
@@ -6454,6 +6455,7 @@ bestehende Risiken</text-property>
                                             <property name="width">0.7676767676767676in</property>
                                         </column>
                                         <column id="1909">
+                                            <property name="overflow">visible</property>
                                             <property name="width">1.2083333333333333in</property>
                                         </column>
                                         <column id="1910">
@@ -6988,6 +6990,16 @@ bestehende Risiken</text-property>
                                                     <property name="borderTopStyle">solid</property>
                                                     <property name="borderTopWidth">thin</property>
                                                     <data id="1922">
+                                                        <list-property name="mapRules">
+                                                            <structure>
+                                                                <expression name="testExpr" type="javascript">row["mnums_umsetzung"]</expression>
+                                                                <property name="operator">eq</property>
+                                                                <simple-property-list name="value1">
+                                                                    <value type="javascript">""</value>
+                                                                </simple-property-list>
+                                                                <text-property name="display">unbearbeitet</text-property>
+                                                            </structure>
+                                                        </list-property>
                                                         <property name="resultSetColumn">mnums_umsetzung</property>
                                                     </data>
                                                 </cell>
@@ -7132,7 +7144,6 @@ bestehende Risiken</text-property>
                                         </detail>
                                         <footer>
                                             <row id="3358">
-                                                <property name="height">0.09375in</property>
                                                 <property name="borderBottomColor">#000000</property>
                                                 <property name="borderBottomStyle">solid</property>
                                                 <property name="borderBottomWidth">thin</property>
@@ -7145,6 +7156,7 @@ bestehende Risiken</text-property>
                                                 <property name="borderTopColor">#000000</property>
                                                 <property name="borderTopStyle">solid</property>
                                                 <property name="borderTopWidth">thin</property>
+                                                <property name="height">0.09375in</property>
                                                 <cell id="3359"/>
                                                 <cell id="3360"/>
                                                 <cell id="3361"/>
@@ -8241,6 +8253,16 @@ bestehende Risiken</text-property>
                                                         <property name="borderTopStyle">solid</property>
                                                         <property name="borderTopWidth">thin</property>
                                                         <data id="3307">
+                                                            <list-property name="mapRules">
+                                                                <structure>
+                                                                    <expression name="testExpr" type="javascript">row["mnums_umsetzung"]</expression>
+                                                                    <property name="operator">eq</property>
+                                                                    <simple-property-list name="value1">
+                                                                        <value type="javascript">""</value>
+                                                                    </simple-property-list>
+                                                                    <text-property name="display">unbearbeitet</text-property>
+                                                                </structure>
+                                                            </list-property>
                                                             <property name="resultSetColumn">mnums_umsetzung</property>
                                                         </data>
                                                     </cell>
@@ -8695,7 +8717,7 @@ einer regelmäßigen Revision überarbeitet und neu bewertet.</H4>]]></text-prop
                 Kw/iLKGsxaJNSzLAhBlJeUCaIIjDEu2LZMvsgAW/ooeFdObRdZlh8E6zj3g4b6h+p2Dc9JEFFUeelBMC
                 giAOZxJjuZUgCIIgQtpT6iy3kpsVQRAEQZBIEgRBEASJJEEQBEGQSBIEQRAEiSRBEARBkEgSBEEQBIkk
                 QRAEQZBIEgRBEASJJEEQBEEkGf8Pn6UU/6Nng30AAAAASUVORK5CYII=
-            </property>
+</property>
         </structure>
     </list-property>
 </report>
