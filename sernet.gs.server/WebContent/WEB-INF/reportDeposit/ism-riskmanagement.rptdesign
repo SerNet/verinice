@@ -4521,7 +4521,7 @@ row["risk_a_impl"]&lt;parseInt(row["tolerableRiskA"])-row["numYellowFields_A"]+1
                     <property name="joinOperator">eq</property>
                     <property name="leftDataSet">risks_threats</property>
                     <property name="rightDataSet">vulnerabilities</property>
-                    <expression name="leftExpression">dataSetRow["Datenbank-Id__(Szenario)"]</expression>
+                    <expression name="leftExpression">dataSetRow["process_detail2asset::process2asset::CountRiskByServity_new::Datenbank-Id__(Szenario)"]</expression>
                     <expression name="rightExpression">dataSetRow["Datenbank-Id__(Szenario)"]</expression>
                 </structure>
             </list-property>
