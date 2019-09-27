@@ -6428,13 +6428,6 @@ bestehende Risiken</text-property>
                                                 <property name="dataType">javaObject</property>
                                             </structure>
                                         </list-property>
-                                        <list-property name="sort">
-                                            <structure>
-                                                <expression name="key" type="javascript">row["mnums_umsetzung"]</expression>
-                                                <property name="direction">asc</property>
-                                                <property name="strength">-1</property>
-                                            </structure>
-                                        </list-property>
                                         <list-property name="filter">
                                             <structure>
                                                 <property name="operator">ne</property>
@@ -7692,13 +7685,6 @@ bestehende Risiken</text-property>
                                                     <text-property name="displayName">mnums_naechsterevisionam</text-property>
                                                     <expression name="expression" type="javascript">dataSetRow["mnums_naechsterevisionam"]</expression>
                                                     <property name="dataType">javaObject</property>
-                                                </structure>
-                                            </list-property>
-                                            <list-property name="sort">
-                                                <structure>
-                                                    <expression name="key" type="javascript">row["mnums_umsetzung"]</expression>
-                                                    <property name="direction">asc</property>
-                                                    <property name="strength">-1</property>
                                                 </structure>
                                             </list-property>
                                             <list-property name="filter">
