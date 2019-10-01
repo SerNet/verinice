@@ -700,6 +700,9 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
     }
 
     private boolean isCatalogElement(CnATreeElement element) {
+        if (element.getScopeId() == null) {
+            return false;
+        }
         CatalogModel catalogModel = CnAElementFactory.getInstance().getCatalogModel();
         return catalogModel.getChildren().stream().map(CnATreeElement::getDbId)
                 .anyMatch(element.getScopeId()::equals);
