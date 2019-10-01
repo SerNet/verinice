@@ -30674,9 +30674,10 @@ reportContext.setGlobalVariable("High Risk Areas with impl Controls", Total.coun
                 </structure>
                 <structure>
                     <property name="name">detail-risk1::Business__Impact__-__Integrität__(Prozess)</property>
-                    <text-property name="displayName">risks_threats::detail-risk1::Business__Impact__-__Integrität__(Prozess)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["detail-risk1::Business__Impact__-__Integrität__(Prozess)"]</expression>
+                    <text-property name="displayName">Business__Impact__-__Integrität__(Asset)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["detail-risk1::Business__Impact__-__Integrität__(Asset)"]</expression>
                     <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">detail-risk1::Business__Impact__-__Verfügbarkeit__(Prozess)</property>
@@ -31306,6 +31307,13 @@ reportContext.setGlobalVariable("High Risk Areas with impl Controls", Total.coun
                     <expression name="expression" type="javascript">dataSetRow["risks_threats::process_detail2asset::process2asset::CountRiskByServity_new::Wahrscheinlichkeit__-__Bedrohungshäufigkeit__(Szenario)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">business-impact_process</property>
+                    <text-property name="displayName">business-impact_process</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["detail-risk1::Business__Impact__-__Integrität__(Prozess)"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">reportContext.getMessage("detail_risk_with_control")</expression>
@@ -31518,9 +31526,10 @@ reportContext.setGlobalVariable("grouped-table", Total.count());]]></method>
                                         <property name="borderTopColor">#000000</property>
                                         <property name="borderTopStyle">solid</property>
                                         <property name="borderTopWidth">thin</property>
-                                        <data id="4959">
+                                        <property name="textAlign">center</property>
+                                        <data id="8137">
                                             <property name="textAlign">center</property>
-                                            <property name="resultSetColumn">detail-risk1::Business__Impact__-__Integrität__(Prozess)</property>
+                                            <property name="resultSetColumn">business-impact_process</property>
                                         </data>
                                     </cell>
                                     <cell id="4960">
