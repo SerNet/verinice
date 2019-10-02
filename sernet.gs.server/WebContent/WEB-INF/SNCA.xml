@@ -8089,6 +8089,12 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
             <huiproperty id="process_va_anz_ma" name="Anzahl Mitarbeiter" />
             <huiproperty id="process_va_ort_bem" name="Bemerkungen" inputtype="text" />
+            <huiproperty
+              id="process_va_interviewed_on"
+              name="Befragung durchgeführt am"
+              inputtype="date">
+              <defaultRule class="Today"/>
+          </huiproperty>
         </huipropertygroup>
 
         <huipropertygroup tags="Privacy" id="process_va_gemensemVerantwortliche" name="Gemeinsame Verantwortliche Art.26 DSGVO">
@@ -9673,6 +9679,12 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
             <huiproperty id="bp_businessprocess_va_anz_ma" name="Anzahl Mitarbeiter" />
             <huiproperty id="bp_businessprocess_va_ort_bem" name="Bemerkungen" inputtype="text" />
+            <huiproperty
+               id="bp_businessprocess_va_interviewed_on"
+               name="Befragung durchgeführt am"
+               inputtype="date">
+               <defaultRule class="Today"/>
+           </huiproperty>
         </huipropertygroup>
 
         <huipropertygroup tags="Privacy" id="bp_businessprocess_va_gemensemVerantwortliche" name="Gemeinsame Verantwortliche Art.26 DSGVO">
