@@ -5083,7 +5083,7 @@ columns(cols);</value>
                             <text id="1996">
                                 <property name="fontSize">9pt</property>
                                 <property name="contentType">html</property>
-                                <text-property name="content"><![CDATA[printed on <value-of>new Date()</value-of>]]></text-property>
+                                <text-property name="content"><![CDATA[gedruckt am <value-of>new Date()</value-of>]]></text-property>
                             </text>
                         </cell>
                     </row>
