@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
@@ -34,6 +33,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
+import sernet.gs.service.CollectionUtil;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.Retriever;
 import sernet.gs.service.RuntimeCommandException;
@@ -486,19 +486,29 @@ public class ValidationService implements IValidationService {
      * @see sernet.verinice.interfaces.validation.IValidationService#
      * deleteValidationsOfSubtree(sernet.verinice.model.common.CnATreeElement)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public void deleteValidationsOfSubtree(CnATreeElement elmt) throws CommandException {
         ServerInitializer.inheritVeriniceContextState();
         if (elmt == null) {
             return;
         }
-
         LoadSubtreeIds loadSubtreeIdsCommand = new LoadSubtreeIds(elmt);
         loadSubtreeIdsCommand = getCommandService().executeCommand(loadSubtreeIdsCommand);
-        Set<Integer> dbIdsOfSubtree = loadSubtreeIdsCommand.getDbIdsOfSubtree();
+        List<Integer> dbIdsOfSubtree = new ArrayList<>(loadSubtreeIdsCommand.getDbIdsOfSubtree());
+        // Delete validation in partitions due to Oracle limitations
+        Collection<List<Integer>> partitions = CollectionUtil.partition(dbIdsOfSubtree, 1000);
+        if (log.isDebugEnabled()) {
+            log.debug("Deleting validations in " + partitions.size() + " partition(s)");
+        }
+        for (List<Integer> partition : partitions) {
+            deleteValidations(elmt, partition);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void deleteValidations(CnATreeElement elmt, List<Integer> dbIds) {
         DetachedCriteria criteria = DetachedCriteria.forClass(CnAValidation.class)
-                .add(Restrictions.in("elmtDbId", dbIdsOfSubtree))
+                .add(Restrictions.in("elmtDbId", dbIds))
                 .add(createScopeIdRestriction(elmt.getScopeId()));
         for (CnAValidation validation : (List<CnAValidation>) getCnaValidationDAO()
                 .findByCriteria(criteria)) {
