@@ -142,6 +142,7 @@ public class ValidationService implements IValidationService {
      * sernet.verinice.interfaces.validation.IValidationService#getValidations(
      * sernet.verinice.model.common.CnATreeElement)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public List<CnAValidation> getValidations(Integer scopeId) {
         ServerInitializer.inheritVeriniceContextState();
@@ -159,6 +160,7 @@ public class ValidationService implements IValidationService {
      * returns validations for given scope or validations for given element in
      * given scope or validation for (scope-)unspecified element
      */
+    @SuppressWarnings("unchecked")
     @Override
     public List<CnAValidation> getValidations(Integer scopeId, Integer cnaId) {
         ServerInitializer.inheritVeriniceContextState();
@@ -172,6 +174,7 @@ public class ValidationService implements IValidationService {
         return getCnaValidationDAO().findByCriteria(criteria);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<CnAValidation> getValidations(Integer elmtDbId, String propertyType) {
         ServerInitializer.inheritVeriniceContextState();
@@ -439,6 +442,7 @@ public class ValidationService implements IValidationService {
      * @see sernet.verinice.interfaces.validation.IValidationService#
      * deleteValidations(java.lang.Integer, java.lang.Integer)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void deleteValidations(Integer scopeId, Integer elmtDbId) {
         ServerInitializer.inheritVeriniceContextState();
@@ -482,6 +486,7 @@ public class ValidationService implements IValidationService {
      * @see sernet.verinice.interfaces.validation.IValidationService#
      * deleteValidationsOfSubtree(sernet.verinice.model.common.CnATreeElement)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void deleteValidationsOfSubtree(CnATreeElement elmt) throws CommandException {
         ServerInitializer.inheritVeriniceContextState();
