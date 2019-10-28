@@ -176,6 +176,7 @@ public class GraphService implements IGraphService, Serializable {
 
     private void loadLinks(VeriniceGraph graph, String[] relationIds,
             Map<Integer, CnATreeElement> elementsByDBId) {
+        long time = initRuntime();
         DetachedCriteria linkCrit = DetachedCriteria.forClass(CnALink.class);
         linkCrit.add(Restrictions.and(Restrictions.in("id.dependantId", elementsByDBId.keySet()),
                 Restrictions.in("id.dependencyId", elementsByDBId.keySet())));
@@ -201,6 +202,7 @@ public class GraphService implements IGraphService, Serializable {
                 }
             }
         }
+        logRuntime("Load links runtime: ", time);
     }
 
     private Edge createEdge(CnALink link, CnATreeElement source, CnATreeElement target) {
