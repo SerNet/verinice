@@ -76,22 +76,19 @@ public class SNCAMessages {
         if (resourceBundle == null) {
             if (getBaseUrl() == null) {
                 LOG.error("Can not load resource bundle. Base url is null");
-            } else {
-                String protocol = SNCAResourceBundleLoader.getProtocol(getBaseUrl());
-                if (protocol == null
-                        || !SNCAResourceBundleLoader.PROTOCOL_LIST.contains(protocol)) {
-                    LOG.error(
-                            "Can not load resource bundle. Protocol is not supported: " + protocol);
-                } else {
-                    resourceBundle = ResourceBundle.getBundle(BUNDLE_NAME,
-                            new SNCAResourceBundleLoader(getBaseUrl()));
-                }
+                return null;
             }
+            String protocol = SNCAResourceBundleLoader.getProtocol(getBaseUrl());
+            if (protocol == null || !SNCAResourceBundleLoader.PROTOCOL_LIST.contains(protocol)) {
+                LOG.error("Can not load resource bundle. Protocol is not supported: " + protocol);
+                return null;
+            }
+            resourceBundle = ResourceBundle.getBundle(BUNDLE_NAME,
+                    new SNCAResourceBundleLoader(getBaseUrl()));
+
         }
         return resourceBundle;
     }
-	
-	
 
 	public void setBaseUrl(String baseUrl) {
 		if(baseUrl!=null && baseUrl.endsWith(HUITypeFactory.HUI_CONFIGURATION_FILE)) {
