@@ -531,18 +531,16 @@ public class ValidationService implements IValidationService {
 
     @Override
     public void createValidationsByUuids(Collection<String> uuids) throws CommandException {
-        DetachedCriteria criteriaElements = DetachedCriteria.forClass(CnATreeElement.class)
-                .add(Restrictions.in("uuid", uuids));
-        new RetrieveInfo().setProperties(true).configureCriteria(criteriaElements);
-        @SuppressWarnings("unchecked")
-        List<CnATreeElement> elements = getCnaTreeElementDAO().findByCriteria(criteriaElements);
+        List<CnATreeElement> elements = new ArrayList<>(uuids.size());
+        List<CnAValidation> existingValidations = new ArrayList<>(uuids.size());
+        Collection<List<String>> partitions = CollectionUtil.partition(new ArrayList<String>(uuids),
+                1000);
+        for (List<String> partitionUUIDs : partitions) {
+            List<CnATreeElement> partitionElements = loadElements(partitionUUIDs);
+            elements.addAll(partitionElements);
+            existingValidations.addAll(loadValidations(partitionElements));
+        }
 
-        DetachedCriteria criteriaValidations = DetachedCriteria.forClass(CnAValidation.class);
-        criteriaValidations.add(Restrictions.in("elmtDbId",
-                elements.stream().map(CnATreeElement::getDbId).collect(Collectors.toSet())));
-        @SuppressWarnings("unchecked")
-        List<CnAValidation> existingValidations = getCnaValidationDAO()
-                .findByCriteria(criteriaValidations);
         Map<Integer, List<CnAValidation>> existingValidationsByElementId = existingValidations
                 .stream().collect(Collectors.groupingBy(CnAValidation::getElmtDbId));
         ServerInitializer.inheritVeriniceContextState();
@@ -552,6 +550,22 @@ public class ValidationService implements IValidationService {
                     existingValidationsByElementId.getOrDefault(element.getDbId(),
                             Collections.emptyList()));
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<CnATreeElement> loadElements(Collection<String> uuids) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class)
+                .add(Restrictions.in("uuid", uuids));
+        RetrieveInfo.getPropertyInstance().configureCriteria(criteria);
+        return getCnaTreeElementDAO().findByCriteria(criteria);
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<CnAValidation> loadValidations(List<CnATreeElement> elements) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(CnAValidation.class);
+        criteria.add(Restrictions.in("elmtDbId",
+                elements.stream().map(CnATreeElement::getDbId).collect(Collectors.toSet())));
+        return getCnaValidationDAO().findByCriteria(criteria);
     }
 
     /*
