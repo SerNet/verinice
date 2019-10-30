@@ -31,7 +31,6 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
@@ -41,6 +40,7 @@ import org.eclipse.equinox.p2.repository.IRepository;
 import org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
 import org.eclipse.equinox.p2.ui.ProvisioningUI;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -223,24 +223,23 @@ public class Activator extends AbstractUIPlugin implements IMain {
         }
         setProxy();
 
-        Preferences prefs = getPluginPreferences();
-
         // set service factory location to local / remote according to
         // preferences:
         standalone = sernet.verinice.rcp.Preferences.isStandalone();
 
         initializeInternalServer();
 
-        setGSDSCatalog(prefs);
+        setGSDSCatalog();
 
         // Provide initial DB connection details to server.
-        internalServer.configureDatabase(prefs.getString(PreferenceConstants.DB_URL),
-                prefs.getString(PreferenceConstants.DB_USER),
-                prefs.getString(PreferenceConstants.DB_PASS),
-                prefs.getString(PreferenceConstants.DB_DRIVER),
-                prefs.getString(PreferenceConstants.DB_DIALECT));
-        internalServer.configureSearch(prefs.getBoolean(PreferenceConstants.SEARCH_DISABLE),
-                prefs.getBoolean(PreferenceConstants.SEARCH_INDEX_ON_STARTUP));
+        internalServer.configureDatabase(getPreferences().getString(PreferenceConstants.DB_URL),
+                getPreferences().getString(PreferenceConstants.DB_USER),
+                getPreferences().getString(PreferenceConstants.DB_PASS),
+                getPreferences().getString(PreferenceConstants.DB_DRIVER),
+                getPreferences().getString(PreferenceConstants.DB_DIALECT));
+        internalServer.configureSearch(
+                getPreferences().getBoolean(PreferenceConstants.SEARCH_DISABLE),
+                getPreferences().getBoolean(PreferenceConstants.SEARCH_INDEX_ON_STARTUP));
 
         // prepare client's workspace:
         CnAWorkspace.getInstance().prepare();
@@ -368,19 +367,21 @@ public class Activator extends AbstractUIPlugin implements IMain {
         JobScheduler.scheduleInitJob(job);
     }
 
-    private void setGSDSCatalog(Preferences prefs) {
-        if (prefs.getString(PreferenceConstants.GSACCESS)
+    private void setGSDSCatalog() {
+        if (getPreferences().getString(PreferenceConstants.GSACCESS)
                 .equals(PreferenceConstants.GSACCESS_DIR)) {
             try {
                 internalServer.setGSCatalogURL(
-                        new File(prefs.getString(PreferenceConstants.BSIDIR)).toURI().toURL());
+                        new File(getPreferences().getString(PreferenceConstants.BSIDIR)).toURI()
+                                .toURL());
             } catch (MalformedURLException mfue) {
                 LOG.warn("Stored GS catalog dir is an invalid URL."); //$NON-NLS-1$
             }
         } else {
             try {
                 internalServer.setGSCatalogURL(
-                        new File(prefs.getString(PreferenceConstants.BSIZIPFILE)).toURI().toURL());
+                        new File(getPreferences().getString(PreferenceConstants.BSIZIPFILE)).toURI()
+                                .toURL());
             } catch (MalformedURLException mfue) {
                 LOG.warn("Stored GS catalog zip file path is an invalid URL."); //$NON-NLS-1$
             }
@@ -388,7 +389,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
         }
         try {
             internalServer.setDSCatalogURL(
-                    new File(prefs.getString(PreferenceConstants.DSZIPFILE)).toURI().toURL());
+                    new File(getPreferences().getString(PreferenceConstants.DSZIPFILE)).toURI()
+                            .toURL());
         } catch (MalformedURLException mfue) {
             LOG.warn("Stored DS catalog zip file path is an invalid URL."); //$NON-NLS-1$
         }
@@ -444,9 +446,9 @@ public class Activator extends AbstractUIPlugin implements IMain {
      */
     private void setProxy() {
         try {
-            Preferences prefs = Activator.getDefault().getPluginPreferences();
             if (sernet.verinice.rcp.Preferences.isServerMode()) {
-                URI serverUri = new URI(prefs.getString(PreferenceConstants.VNSERVER_URI));
+                URI serverUri = new URI(
+                        getPreferences().getString(PreferenceConstants.VNSERVER_URI));
                 IProxyService proxyService = getProxyService();
                 IProxyData[] proxyDataForHost = proxyService.select(serverUri);
                 if (proxyDataForHost == null || proxyDataForHost.length == 0) {
@@ -476,6 +478,11 @@ public class Activator extends AbstractUIPlugin implements IMain {
         } catch (Exception t) {
             LOG.error("Error while setting proxy.", t); //$NON-NLS-1$
         }
+    }
+
+    public IPreferenceStore getPreferences() {
+        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+        return prefs;
     }
 
     /*
@@ -631,12 +638,11 @@ public class Activator extends AbstractUIPlugin implements IMain {
     }
 
     private void addUpdateRepository() throws URISyntaxException {
-        Preferences prefs = Activator.getDefault().getPluginPreferences();
         URI repoUri = null;
         String name = null;
         if (sernet.verinice.rcp.Preferences.isServerMode()) {
-            repoUri = new URI(
-                    createUpdateSiteUrl(prefs.getString(PreferenceConstants.VNSERVER_URI)));
+            repoUri = new URI(createUpdateSiteUrl(
+                    getPreferences().getString(PreferenceConstants.VNSERVER_URI)));
             name = Messages.Activator_4;
         } else {
             repoUri = new URI(UPDATE_SITE_URL);
