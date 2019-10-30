@@ -37,9 +37,8 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
-import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.osgi.util.NLS;
 
 import sernet.gs.service.VeriniceCharset;
@@ -53,7 +52,6 @@ import sernet.verinice.interfaces.report.IReportService;
  * etc.
  * 
  * @author akoderman[at]sernet[dot]de
- * 
  */
 public class CnAWorkspace {
 
@@ -63,8 +61,7 @@ public class CnAWorkspace {
 
     private static final String OFFICEDIR = "office"; //$NON-NLS-1$
 
-    public static final String LINE_SEP = System.getProperty(
-            IVeriniceConstants.LINE_SEPARATOR); //$NON-NLS-1$
+    public static final String LINE_SEP = System.getProperty(IVeriniceConstants.LINE_SEPARATOR); // $NON-NLS-1$
 
     private static String workDir;
 
@@ -85,20 +82,21 @@ public class CnAWorkspace {
 
     private static volatile CnAWorkspace instance;
 
-    private final IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
-        @Override
-        public void propertyChange(PropertyChangeEvent event) {
-            if ((event.getProperty().equals(PreferenceConstants.GS_DB_URL) || event.getProperty().equals(PreferenceConstants.GS_DB_USER) || event.getProperty().equals(PreferenceConstants.GS_DB_PASS))) {
+    private final IPropertyChangeListener prefChangeListener = event -> {
+        if ((event.getProperty().equals(PreferenceConstants.GS_DB_URL)
+                || event.getProperty().equals(PreferenceConstants.GS_DB_USER)
+                || event.getProperty().equals(PreferenceConstants.GS_DB_PASS))) {
 
-                Preferences prefs = Activator.getDefault().getPluginPreferences();
-                try {
-                    String dbUrl = prefs.getString(PreferenceConstants.GS_DB_URL);
+            IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+            try {
+                String dbUrl = prefs.getString(PreferenceConstants.GS_DB_URL);
 
-                    createGstoolImportDatabaseConfig(dbUrl, prefs.getString(PreferenceConstants.GS_DB_USER), prefs.getString(PreferenceConstants.GS_DB_PASS));
+                createGstoolImportDatabaseConfig(dbUrl,
+                        prefs.getString(PreferenceConstants.GS_DB_USER),
+                        prefs.getString(PreferenceConstants.GS_DB_PASS));
 
-                } catch (Exception e) {
-                    ExceptionUtil.log(e, Messages.CnAWorkspace_0);
-                }
+            } catch (Exception e) {
+                ExceptionUtil.log(e, Messages.CnAWorkspace_0);
             }
         }
     };
@@ -109,7 +107,8 @@ public class CnAWorkspace {
     }
 
     public String createTempImportDbUrl() {
-        String tmpDerbyUrl = PreferenceConstants.DB_URL_DERBY.replace("%s", CnAWorkspace.getInstance().getWorkdir().replaceAll("\\\\", "/")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        String tmpDerbyUrl = PreferenceConstants.DB_URL_DERBY.replace("%s", //$NON-NLS-1$
+                CnAWorkspace.getInstance().getWorkdir().replaceAll("\\\\", "/")); //$NON-NLS-1$ //$NON-NLS-2$
         return tmpDerbyUrl.replace(VERINICEDB, TEMPIMPORTDB);
     }
 
@@ -120,7 +119,9 @@ public class CnAWorkspace {
     public static synchronized CnAWorkspace getInstance() {
         if (instance == null) {
             instance = new CnAWorkspace();
-            Activator.getDefault().getPluginPreferences().addPropertyChangeListener(instance.prefChangeListener);
+
+            Activator.getDefault().getPluginPreferences()
+                    .addPropertyChangeListener(instance.prefChangeListener);
         }
         return instance;
     }
@@ -135,52 +136,43 @@ public class CnAWorkspace {
         prepareWorkDir();
 
         if (!force && confDir.exists() && confDir.isDirectory()) {
-            File confFile = new File(confDir, "configuration.version"); //$NON-NLS-1$
-            if (confFile.exists()) {
-                Properties props = new Properties();
-                FileInputStream fis = null;
-                try {
-                    fis = new FileInputStream(confFile);
-                    props.load(fis);
-
-                    if (props.get("version").equals(CONFIG_CURRENT_VERSION)) { //$NON-NLS-1$
-                        LOG.debug("Arbeitsverzeichnis bereits vorhanden, wird nicht neu erzeugt: " + confDir.getAbsolutePath()); //$NON-NLS-1$
-                        return;
-                    }
-                } catch (Exception e) {
-                    LOG.debug(e);
-                } finally {
-                    if (fis != null) {
-                        try {
-                            fis.close();
-                        } catch (IOException e) {
-                            LOG.error("Error while closing FileInputStream", e);
-                        }
-                    }
-                }
-            }
-
+            createConfFile();
         }
 
-        CnAWorkspace workspace = new CnAWorkspace();
         try {
-            workspace.createConfDir();
-            workspace.createConfDirFiles();
-            workspace.createHtmlDir();
-            workspace.createOfficeDir();
-            workspace.createDatabaseConfig();
-            workspace.createGstoolPropertyFiles();
+            createConfDir();
+            createConfDirFiles();
+            createHtmlDir();
+            createOfficeDir();
+            createDatabaseConfig();
+            createGstoolPropertyFiles();
         } catch (Exception e) {
             ExceptionUtil.log(e, NLS.bind(Messages.CnAWorkspace_4, confDir.getAbsolutePath()));
         }
 
     }
 
+    public void createConfFile() {
+        File confFile = new File(confDir, "configuration.version"); //$NON-NLS-1$
+        if (confFile.exists()) {
+            Properties props = new Properties();
+            try (FileInputStream fis = new FileInputStream(confFile)) {
+                props.load(fis);
+                if (props.get("version").equals(CONFIG_CURRENT_VERSION)) { //$NON-NLS-1$
+                    LOG.debug("Arbeitsverzeichnis bereits vorhanden, wird nicht neu erzeugt: " //$NON-NLS-1$
+                            + confDir.getAbsolutePath());
+                }
+            } catch (Exception e) {
+                LOG.error(e);
+            }
+        }
+    }
+
     public synchronized void prepareWorkDir() {
         URL url = Platform.getInstanceLocation().getURL();
         String path = url.getPath().replaceAll("/", "\\" + File.separator); //$NON-NLS-1$ //$NON-NLS-2$
         workDir = (new File(path)).getAbsolutePath();
-        confDir = new File(url.getPath() + File.separator + CONF); //$NON-NLS-1$
+        confDir = new File(url.getPath() + File.separator + CONF); // $NON-NLS-1$
     }
 
     public String getWorkdir() {
@@ -195,17 +187,19 @@ public class CnAWorkspace {
      * @return the full path to configuration dir of the client
      */
     public String getConfDir() {
-        return workDir + File.separator + CONF; //$NON-NLS-1$
+        return workDir + File.separator + CONF; // $NON-NLS-1$
     }
 
     private void createConfDirFiles() throws IOException {
-        createTextFile(CONF + File.separator + "reports.properties_skeleton", workDir, CONF + File.separator + "reports.properties"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        createTextFile(CONF + File.separator + "reports.properties_skeleton", workDir, //$NON-NLS-1$
+                CONF + File.separator + "reports.properties"); //$NON-NLS-1$ //$NON-NLS-3$
+                                                               // //$NON-NLS-4$
         createTextFile(CONF + File.separator + "configuration.version", workDir); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    public void createConfDir() throws IOException {
+    public void createConfDir() {
         URL url = Platform.getInstanceLocation().getURL();
-        File dir = new File(url.getPath() + File.separator + CONF); //$NON-NLS-1$
+        File dir = new File(url.getPath() + File.separator + CONF); // $NON-NLS-1$
         dir.mkdirs();
     }
 
@@ -223,26 +217,21 @@ public class CnAWorkspace {
     private void createHtmlDir() throws IOException {
         URL url = Platform.getInstanceLocation().getURL();
         String html = "html";
-        File htmlDir = new File(url.getPath() + File.separator + html); //$NON-NLS-1$
+        File htmlDir = new File(url.getPath() + File.separator + html); // $NON-NLS-1$
         htmlDir.mkdirs();
 
         createTextFile(html + File.separator + "screen.css", workDir); //$NON-NLS-1$ //$NON-NLS-2$
         createTextFile(html + File.separator + "about.html", workDir); //$NON-NLS-1$ //$NON-NLS-2$
         createBinaryFile("browserdefault.png", workDir + File.separator + html); //$NON-NLS-1$ //$NON-NLS-2$
     }
-    
+
     private void createGstoolPropertyFiles() throws IOException {
         createTextFile(CONF + File.separator + GstoolTypeMapper.TYPE_PROPERTIES_FILE,
-                VeriniceCharset.CHARSET_ISO_8859_15, 
-                getConfDir(), 
-                GstoolTypeMapper.TYPE_PROPERTIES_FILE,
-                VeriniceCharset.CHARSET_ISO_8859_15,
-                null);
+                VeriniceCharset.CHARSET_ISO_8859_15, getConfDir(),
+                GstoolTypeMapper.TYPE_PROPERTIES_FILE, VeriniceCharset.CHARSET_ISO_8859_15, null);
         createTextFile(CONF + File.separator + GstoolTypeMapper.SUBTYPE_PROPERTIES_FILE,
-                VeriniceCharset.CHARSET_ISO_8859_15,
-                getConfDir(), 
-                GstoolTypeMapper.SUBTYPE_PROPERTIES_FILE,
-                VeriniceCharset.CHARSET_ISO_8859_15,
+                VeriniceCharset.CHARSET_ISO_8859_15, getConfDir(),
+                GstoolTypeMapper.SUBTYPE_PROPERTIES_FILE, VeriniceCharset.CHARSET_ISO_8859_15,
                 null);
     }
 
@@ -254,14 +243,11 @@ public class CnAWorkspace {
      * @throws IOException
      */
     private void createBinaryFile(String infile, String toDir) throws IOException {
-
         backupFile(toDir, infile);
 
         String infileResource = infile.replace('\\', '/');
         InputStream in = getClass().getClassLoader().getResourceAsStream(infileResource);
-        OutputStream out = null;
-        try {
-            out = new FileOutputStream(toDir + File.separator + infile);
+        try (OutputStream out = new FileOutputStream(toDir + File.separator + infile)) {
             while (true) {
                 synchronized (BUFFER) {
                     int amountRead = in.read(BUFFER);
@@ -271,19 +257,13 @@ public class CnAWorkspace {
                     out.write(BUFFER, 0, amountRead);
                 }
             }
-        } finally {
-            if (in != null) {
-                in.close();
-            }
-            if (out != null) {
-                out.close();
-            }
         }
     }
 
-    public void createGstoolImportDatabaseConfig(String url, String user, String pass) throws IOException {
+    public void createGstoolImportDatabaseConfig(String url, String user, String pass)
+            throws IOException {
         final int settingsSize = 5;
-        HashMap<String, String> settings = new HashMap<String, String>(settingsSize);
+        HashMap<String, String> settings = new HashMap<>(settingsSize);
         settings.put("url", url.replace("\\", "\\\\")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         settings.put("user", user); //$NON-NLS-1$
         settings.put("pass", pass); //$NON-NLS-1$
@@ -302,23 +282,23 @@ public class CnAWorkspace {
             settings.put("dialect", PreferenceConstants.GS_DB_DIALECT_JTDS); //$NON-NLS-1$
         }
 
-        createTextFile(
-                CONF + File.separator + "skel_hibernate-vampire.cfg.xml", //$NON-NLS-1$ //$NON-NLS-2$
-                workDir, 
-                CONF + File.separator + "hibernate-vampire.cfg.xml", //$NON-NLS-1$ //$NON-NLS-2$
+        createTextFile(CONF + File.separator + "skel_hibernate-vampire.cfg.xml", //$NON-NLS-1$ //$NON-NLS-2$
+                workDir, CONF + File.separator + "hibernate-vampire.cfg.xml", //$NON-NLS-1$ //$NON-NLS-2$
                 settings);
     }
 
     public void createGstoolImportDatabaseConfig() throws IOException {
-        Preferences prefs = Activator.getDefault().getPluginPreferences();
-        createGstoolImportDatabaseConfig(prefs.getString(PreferenceConstants.GS_DB_URL), prefs.getString(PreferenceConstants.GS_DB_USER), prefs.getString(PreferenceConstants.GS_DB_PASS));
+        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+        createGstoolImportDatabaseConfig(prefs.getString(PreferenceConstants.GS_DB_URL),
+                prefs.getString(PreferenceConstants.GS_DB_USER),
+                prefs.getString(PreferenceConstants.GS_DB_PASS));
     }
 
     private void createTextFile(String infile, String toDir) throws IOException {
         createTextFile(infile, toDir, infile, null);
     }
 
-    private void createTextFile(String infile, String toDir, String outfile) throws NullPointerException, IOException {
+    private void createTextFile(String infile, String toDir, String outfile) throws IOException {
         createTextFile(infile, toDir, outfile, null);
     }
 
@@ -340,10 +320,12 @@ public class CnAWorkspace {
      * @throws NullPointerException
      * @throws IOException
      */
-    protected void createTextFile(String infile, String toDir, String outfile, Map<String, String> variables) throws NullPointerException, IOException {
-        createTextFile(infile, VeriniceCharset.CHARSET_DEFAULT, toDir, outfile, VeriniceCharset.CHARSET_DEFAULT, variables);
+    protected void createTextFile(String infile, String toDir, String outfile,
+            Map<String, String> variables) throws IOException {
+        createTextFile(infile, VeriniceCharset.CHARSET_DEFAULT, toDir, outfile,
+                VeriniceCharset.CHARSET_DEFAULT, variables);
     }
-    
+
     /**
      * Create a text file in the local file system from a resource (i.e. inside
      * a JAR file distributed with the application).
@@ -367,10 +349,11 @@ public class CnAWorkspace {
      * @throws NullPointerException
      * @throws IOException
      */
-    protected void createTextFile(String infile, Charset charsetInfile, String toDir, String outfile, Map<String, String> variables) throws NullPointerException, IOException {
-        createTextFile(infile, charsetInfile, toDir, outfile, VeriniceCharset.CHARSET_DEFAULT, variables);
+    protected void createTextFile(String infile, Charset charsetInfile, String toDir,
+            String outfile, Map<String, String> variables) throws IOException {
+        createTextFile(infile, charsetInfile, toDir, outfile, VeriniceCharset.CHARSET_DEFAULT,
+                variables);
     }
-
 
     /**
      * Create a text file in the local file system from a resource (i.e. inside
@@ -397,13 +380,15 @@ public class CnAWorkspace {
      * @throws NullPointerException
      * @throws IOException
      */
-    protected void createTextFile(String infile, Charset charsetInfile, String toDir, String outfile, Charset charsetOutfile, Map<String, String> variables) throws NullPointerException, IOException {
+    protected void createTextFile(String infile, Charset charsetInfile, String toDir,
+            String outfile, Charset charsetOutfile, Map<String, String> variables)
+            throws IOException {
 
         String infileResource = infile.replace('\\', '/');
         InputStream is = getClass().getClassLoader().getResourceAsStream(infileResource);
         InputStreamReader inRead = new InputStreamReader(is, charsetInfile);
         BufferedReader bufRead = new BufferedReader(inRead);
-        StringBuffer skelFile = new StringBuffer();
+        StringBuilder skelFile = new StringBuilder();
 
         // write from skel file, replacing newline characters to system
         // specific:
@@ -425,9 +410,9 @@ public class CnAWorkspace {
 
         backupFile(toDir, outfile);
         FileOutputStream fout = new FileOutputStream(toDir + File.separator + outfile, false);
-        OutputStreamWriter outWrite = new OutputStreamWriter(fout, charsetOutfile);
-        outWrite.write(skelFile.toString());
-        outWrite.close();
+        try (OutputStreamWriter outWrite = new OutputStreamWriter(fout, charsetOutfile)) {
+            outWrite.write(skelFile.toString());
+        }
         fout.close();
     }
 
@@ -437,24 +422,6 @@ public class CnAWorkspace {
             File outfile = new File(dir + File.separator + filepath + ".bak"); //$NON-NLS-1$
             FileUtils.copyFile(file, outfile);
         }
-    }
-
-    public synchronized void createDatabaseConfig() throws IOException, IllegalStateException {
-
-        Preferences prefs = Activator.getDefault().getPluginPreferences();
-
-        Activator.getDefault().getInternalServer().configureDatabase(
-                prefs.getString(PreferenceConstants.DB_URL), 
-                prefs.getString(PreferenceConstants.DB_USER), 
-                prefs.getString(PreferenceConstants.DB_PASS), 
-                prefs.getString(PreferenceConstants.DB_DRIVER), 
-                prefs.getString(PreferenceConstants.DB_DIALECT));
-        
-        Activator.getDefault().getInternalServer().configureSearch(
-                prefs.getBoolean(PreferenceConstants.SEARCH_DISABLE),
-                prefs.getBoolean(PreferenceConstants.SEARCH_INDEX_ON_STARTUP));
-
-        createGstoolImportDatabaseConfig(prefs.getString(PreferenceConstants.GS_DB_URL), prefs.getString(PreferenceConstants.GS_DB_USER), prefs.getString(PreferenceConstants.GS_DB_PASS));
     }
 
     public void prepare() {

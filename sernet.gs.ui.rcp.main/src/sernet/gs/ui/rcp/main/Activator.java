@@ -32,7 +32,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.equinox.internal.p2.ui.ProvUI;
 import org.eclipse.equinox.internal.p2.ui.ProvUIActivator;
@@ -59,7 +58,6 @@ import sernet.gs.ui.rcp.main.bsi.model.RcpLayoutConfig;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
-import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
 import sernet.gs.ui.rcp.main.logging.LoggerInitializer;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -81,9 +79,9 @@ import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.rcp.Preferences;
 import sernet.verinice.rcp.ReportTemplateSync;
 import sernet.verinice.rcp.StartupImporter;
-import sernet.verinice.rcp.StatusResult;
 import sernet.verinice.rcp.jobs.VeriniceWorkspaceJob;
 import sernet.verinice.service.commands.migration.DbVersion;
 import sernet.verinice.service.model.IObjectModelService;
@@ -93,14 +91,11 @@ import sernet.verinice.service.parser.GSScraperUtil;
 /**
  * The activator class controls the plug-in life cycle
  */
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings("restriction")
 public class Activator extends AbstractUIPlugin implements IMain {
 
     private static final Logger LOG = Logger.getLogger(Activator.class);
 
-    private ServiceTracker proxyTracker;
-
-    // The plug-in ID
     public static final String PLUGIN_ID = "sernet.gs.ui.rcp.main"; //$NON-NLS-1$
 
     private static final String PAX_WEB_SYMBOLIC_NAME = "org.ops4j.pax.web.pax-web-bundle"; //$NON-NLS-1$
@@ -132,11 +127,10 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
     private ServiceTracker templateDirTracker;
 
+    private ServiceTracker proxyTracker;
+
     private WorkspaceJob reindexJob;
 
-    /**
-     * The constructor
-     */
     public Activator() {
         plugin = this;
     }
@@ -156,8 +150,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
     }
 
     /**
-     * Brings the bundle (not the whole RCP application) in a usable state.
-     * 
+     * Brings the bundle (not the whole RCP application) in a usable state. 
      */
     @Override
     public void start(BundleContext context) throws Exception {
@@ -221,7 +214,10 @@ public class Activator extends AbstractUIPlugin implements IMain {
         if (!prepareVNLDir()) {
             LOG.warn("VNL-Dir was not created correctly");
         }
-        setProxy();
+
+        if (sernet.verinice.rcp.Preferences.isServerMode()) {
+            setSystemProxy();
+        }
 
         // set service factory location to local / remote according to
         // preferences:
@@ -269,13 +265,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
         ResolverFactoryRegistry.setResolverFactory(new BSIEntityResolverFactory());
 
         Job repositoryJob = new Job("add-repository") { //$NON-NLS-1$
-            /*
-             * (non-Javadoc)
-             * 
-             * @see
-             * org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime
-             * .IProgressMonitor)
-             */
             @Override
             protected IStatus run(IProgressMonitor monitor) {
                 try {
@@ -284,8 +273,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
                     LOG.error("Error while adding update repository."); //$NON-NLS-1$
                 }
                 return Status.OK_STATUS;
-
-            };
+            }
         };
         repositoryJob.schedule();
 
@@ -305,20 +293,17 @@ public class Activator extends AbstractUIPlugin implements IMain {
                 @Override
                 public void loaded(ISO27KModel model) {
                     // do nothing
-
                 }
 
                 @Override
                 public void loaded(BSIModel model) {
                     initObjectModelService();
                     CnAElementFactory.getInstance().removeLoadListener(this);
-
                 }
 
                 @Override
                 public void closed(BSIModel model) {
                     // do nothing
-
                 }
 
                 @Override
@@ -333,7 +318,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
             };
             CnAElementFactory.getInstance().addLoadListener(loadListener);
         }
-
     }
 
     private void configureItbpCatalogLoader() {
@@ -346,13 +330,10 @@ public class Activator extends AbstractUIPlugin implements IMain {
     }
 
     private void initObjectModelService() {
-
         VeriniceWorkspaceJob job = new VeriniceWorkspaceJob("Load objectModelService",
                 "error while loading objectModelService") {
-
             @Override
             protected void doRunInWorkspace() {
-
                 inheritVeriniceContextState();
                 IObjectModelService objectModelService = ServiceFactory.lookupObjectModelService();
                 long time = System.currentTimeMillis();
@@ -361,39 +342,26 @@ public class Activator extends AbstractUIPlugin implements IMain {
                     LOG.debug("took " + (System.currentTimeMillis() - time)
                             + " msec to load Service");
                 }
-
             }
         };
         JobScheduler.scheduleInitJob(job);
     }
 
     private void setGSDSCatalog() {
-        if (getPreferences().getString(PreferenceConstants.GSACCESS)
-                .equals(PreferenceConstants.GSACCESS_DIR)) {
-            try {
-                internalServer.setGSCatalogURL(
-                        new File(getPreferences().getString(PreferenceConstants.BSIDIR)).toURI()
-                                .toURL());
-            } catch (MalformedURLException mfue) {
-                LOG.warn("Stored GS catalog dir is an invalid URL."); //$NON-NLS-1$
-            }
-        } else {
-            try {
-                internalServer.setGSCatalogURL(
-                        new File(getPreferences().getString(PreferenceConstants.BSIZIPFILE)).toURI()
-                                .toURL());
-            } catch (MalformedURLException mfue) {
-                LOG.warn("Stored GS catalog zip file path is an invalid URL."); //$NON-NLS-1$
-            }
-
-        }
         try {
-            internalServer.setDSCatalogURL(
-                    new File(getPreferences().getString(PreferenceConstants.DSZIPFILE)).toURI()
-                            .toURL());
+            if (Preferences.isBpCatalogLoadedFromZipFile()) {
+                internalServer.setGSCatalogURL(propertyToURL(PreferenceConstants.BSIZIPFILE));
+            } else {
+                internalServer.setGSCatalogURL(propertyToURL(PreferenceConstants.BSIDIR));
+            }
+            internalServer.setDSCatalogURL(propertyToURL(PreferenceConstants.DSZIPFILE));
         } catch (MalformedURLException mfue) {
-            LOG.warn("Stored DS catalog zip file path is an invalid URL."); //$NON-NLS-1$
+            LOG.warn("Error while setting base protection catalog pathes", mfue); //$NON-NLS-1$
         }
+    }
+
+    public URL propertyToURL(String propertyKey) throws MalformedURLException {
+        return new File(getPreferences().getString(propertyKey)).toURI().toURL();
     }
 
     private void initializeInternalServer() throws BundleException {
@@ -439,58 +407,54 @@ public class Activator extends AbstractUIPlugin implements IMain {
     }
 
     /**
-     * Load proxy params from the RCP settings dialog and sets these params as
-     * sxstem properties
+     * Load proxy parameter from the preferences and set these parameters as
+     * system properties
      * 
      * @throws URISyntaxException
      */
-    private void setProxy() {
+    private void setSystemProxy() {
         try {
-            if (sernet.verinice.rcp.Preferences.isServerMode()) {
-                URI serverUri = new URI(
-                        getPreferences().getString(PreferenceConstants.VNSERVER_URI));
-                IProxyService proxyService = getProxyService();
-                IProxyData[] proxyDataForHost = proxyService.select(serverUri);
-                if (proxyDataForHost == null || proxyDataForHost.length == 0) {
-                    System.setProperty("http.proxySet", "false"); //$NON-NLS-1$ //$NON-NLS-2$
-                    System.clearProperty("http.proxyHost"); //$NON-NLS-1$
-                    System.clearProperty("http.proxyPort"); //$NON-NLS-1$
-                    System.clearProperty("http.proxyName"); //$NON-NLS-1$
-                    System.clearProperty("http.proxyPassword"); //$NON-NLS-1$
-                } else {
-                    for (IProxyData data : proxyDataForHost) {
-                        if (data.getHost() != null) {
-                            System.setProperty("http.proxySet", "true"); //$NON-NLS-1$ //$NON-NLS-2$
-                            System.setProperty("http.proxyHost", data.getHost()); //$NON-NLS-1$
-                            System.setProperty("http.proxyPort", String.valueOf(data.getPort())); //$NON-NLS-1$
-                            if (data.getUserId() != null && !data.getUserId().isEmpty()) {
-                                System.setProperty("http.proxyName", data.getUserId()); //$NON-NLS-1$
-                            }
-                            if (data.getPassword() != null && !data.getPassword().isEmpty()) {
-                                System.setProperty("http.proxyPassword", data.getPassword()); //$NON-NLS-1$
-                            }
-                        }
-                    }
-                }
-                // Close the service and close the service tracker
-                proxyService = null;
+            URI serverUri = new URI(getPreferences().getString(PreferenceConstants.VNSERVER_URI));
+            IProxyService proxyService = getProxyService();
+            IProxyData[] proxyDataForHost = proxyService.select(serverUri);
+            if (proxyDataForHost == null || proxyDataForHost.length == 0) {
+                clearSystemProxy();
+            } else {
+                setSystemProxy(proxyDataForHost);
             }
         } catch (Exception t) {
             LOG.error("Error while setting proxy.", t); //$NON-NLS-1$
         }
     }
 
-    public IPreferenceStore getPreferences() {
-        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
-        return prefs;
+    private void setSystemProxy(IProxyData[] proxyDataForHost) {
+        for (IProxyData data : proxyDataForHost) {
+            if (data.getHost() != null) {
+                System.setProperty("http.proxySet", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+                System.setProperty("http.proxyHost", data.getHost()); //$NON-NLS-1$
+                System.setProperty("http.proxyPort", String.valueOf(data.getPort())); //$NON-NLS-1$
+                if (data.getUserId() != null && !data.getUserId().isEmpty()) {
+                    System.setProperty("http.proxyName", data.getUserId()); //$NON-NLS-1$
+                }
+                if (data.getPassword() != null && !data.getPassword().isEmpty()) {
+                    System.setProperty("http.proxyPassword", data.getPassword()); //$NON-NLS-1$
+                }
+            }
+        }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.
-     * BundleContext )
-     */
+    private void clearSystemProxy() {
+        System.setProperty("http.proxySet", "false"); //$NON-NLS-1$ //$NON-NLS-2$
+        System.clearProperty("http.proxyHost"); //$NON-NLS-1$
+        System.clearProperty("http.proxyPort"); //$NON-NLS-1$
+        System.clearProperty("http.proxyName"); //$NON-NLS-1$
+        System.clearProperty("http.proxyPassword"); //$NON-NLS-1$
+    }
+
+    private IPreferenceStore getPreferences() {
+        return Activator.getDefault().getPreferenceStore();
+    }
+
     @Override
     public void stop(BundleContext context) throws Exception {
         CnAElementHome.getInstance().close();
@@ -498,9 +462,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
         if (proxyTracker != null) {
             proxyTracker.close();
         }
-
         joinReindexJob();
-
         super.stop(context);
     }
 
@@ -513,9 +475,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
     }
 
     /**
-     * Returns the shared instance
-     * 
-     * @return the shared instance
+     * @return The shared instance
      */
     public static Activator getDefault() {
         return plugin;
@@ -619,6 +579,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
                             return;
                         }
                     } catch (InterruptedException e) {
+                        // Restore interrupted state...
+                        Thread.currentThread().interrupt();
                     }
                 }
             }
@@ -626,7 +588,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
         timeout.start();
         try {
             DbVersion command = new DbVersion(VersionConstants.COMPATIBLE_CLIENT_VERSION);
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            ServiceFactory.lookupCommandService().executeCommand(command);
             done[0] = true;
         } catch (CommandException e) {
             done[0] = true;
@@ -671,7 +633,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
                 LOG.debug("stacktrace: ", e); //$NON-NLS-1$
             }
         }
-
     }
 
     public IArtifactRepositoryManager getArtifactRepositoryManager() {
@@ -701,10 +662,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
         }
     }
 
-    /**
-     * @param string
-     * @return
-     */
     private String createUpdateSiteUrl(String serverUrl) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(serverUrl);
@@ -719,12 +676,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
     /**
      * Tries to start the internal server via a workspace thread and returns a
      * result object for that operation.
-     * 
-     * @param mutex
-     * 
-     * @return
      */
-    public static StatusResult startServer(ISchedulingRule mutex, final StatusResult result) {
+    private static StatusResult startServer(final StatusResult result) {
         final IInternalServer internalServer = getDefault().getInternalServer();
         if (!internalServer.isRunning()) {
             WorkspaceJob job = new WorkspaceJob("") { //$NON-NLS-1$
@@ -752,7 +705,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
         } else {
             result.status = Status.OK_STATUS;
         }
-
         return result;
     }
 
@@ -792,7 +744,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
      * 
      */
     private static class ServerDummy implements IInternalServer {
-
         @Override
         public void configureDatabase(String url, String user, String pass, String driver,
                 String dialect) {
@@ -832,15 +783,12 @@ public class Activator extends AbstractUIPlugin implements IMain {
         @Override
         public void addInternalServerStatusListener(IInternalServerStartListener listener) {
             // Intentionally do nothing.
-
         }
 
         @Override
         public void removeInternalServerStatusListener(IInternalServerStartListener listener) {
             // Intentionally do nothing.
-
         }
-
     }
 
     /**
@@ -888,9 +836,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
         return (IProxyService) getProxyTracker().getService();
     }
 
-    /**
-     * @return
-     */
     private ServiceTracker getProxyTracker() {
         if (proxyTracker == null) {
             proxyTracker = new ServiceTracker(
