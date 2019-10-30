@@ -41,9 +41,7 @@ import org.eclipse.equinox.p2.repository.IRepository;
 import org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
 import org.eclipse.equinox.p2.ui.ProvisioningUI;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -629,27 +627,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
         } catch (RuntimeException re) {
             done[0] = true;
             throw re;
-        }
-    }
-
-    public static void showDerbyWarning(Shell shell) {
-        if (getDefault().getPluginPreferences().getBoolean(PreferenceConstants.FIRSTSTART)) {
-            Preferences prefs = getDefault().getPluginPreferences();
-            prefs.setValue(PreferenceConstants.FIRSTSTART, false);
-
-            if (getDefault().getPluginPreferences().getString(PreferenceConstants.DB_DRIVER)
-                    .equals(PreferenceConstants.DB_DRIVER_DERBY)) {
-
-                // Do not show dialog if remote server is configured instead of
-                // internal server.
-                if (sernet.verinice.rcp.Preferences.isServerMode()) {
-                    return;
-                }
-
-                MessageDialog.openInformation(new Shell(shell), Messages.Activator_26,
-                        Messages.Activator_27);
-
-            }
         }
     }
 
