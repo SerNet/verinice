@@ -226,18 +226,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
         standalone = sernet.verinice.rcp.Preferences.isStandalone();
 
         initializeInternalServer();
-
-        setGSDSCatalog();
-
-        // Provide initial DB connection details to server.
-        internalServer.configureDatabase(getPreferences().getString(PreferenceConstants.DB_URL),
-                getPreferences().getString(PreferenceConstants.DB_USER),
-                getPreferences().getString(PreferenceConstants.DB_PASS),
-                getPreferences().getString(PreferenceConstants.DB_DRIVER),
-                getPreferences().getString(PreferenceConstants.DB_DIALECT));
-        internalServer.configureSearch(
-                getPreferences().getBoolean(PreferenceConstants.SEARCH_DISABLE),
-                getPreferences().getBoolean(PreferenceConstants.SEARCH_INDEX_ON_STARTUP));
+        configureInternalServer();
 
         // prepare client's workspace:
         CnAWorkspace.getInstance().prepare();
@@ -320,6 +309,20 @@ public class Activator extends AbstractUIPlugin implements IMain {
             };
             CnAElementFactory.getInstance().addLoadListener(loadListener);
         }
+    }
+
+    public void configureInternalServer() {
+        setGSDSCatalog();
+
+        // Provide initial DB connection details to server.
+        internalServer.configureDatabase(getPreferences().getString(PreferenceConstants.DB_URL),
+                getPreferences().getString(PreferenceConstants.DB_USER),
+                getPreferences().getString(PreferenceConstants.DB_PASS),
+                getPreferences().getString(PreferenceConstants.DB_DRIVER),
+                getPreferences().getString(PreferenceConstants.DB_DIALECT));
+        internalServer.configureSearch(
+                getPreferences().getBoolean(PreferenceConstants.SEARCH_DISABLE),
+                getPreferences().getBoolean(PreferenceConstants.SEARCH_INDEX_ON_STARTUP));
     }
 
     private void configureItbpCatalogLoader() {
