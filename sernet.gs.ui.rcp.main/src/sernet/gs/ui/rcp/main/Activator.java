@@ -150,7 +150,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
     }
 
     /**
-     * Brings the bundle (not the whole RCP application) in a usable state. 
+     * Brings the bundle (not the whole RCP application) in a usable state.
      */
     @Override
     public void start(BundleContext context) throws Exception {
@@ -179,7 +179,9 @@ public class Activator extends AbstractUIPlugin implements IMain {
     }
 
     /**
-     * Starts everything that is needed for the whole application.
+     * Starts methods and jobs which are needed for the application. See
+     * sernet.verinice.iso27k.rcp.action.Initializer, which is executed after
+     * code in this Activator.
      * 
      * <p>
      * Note: This method can only be called once.
@@ -489,76 +491,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
         return odaDriver;
     }
 
-    public static void initDatabase(ISchedulingRule mutex, final StatusResult result) {
-        WorkspaceJob initDbJob = new WorkspaceJob(Messages.Activator_InitDatabase) {
-            @Override
-            public IStatus runInWorkspace(final IProgressMonitor monitor) {
-                IStatus status = Status.OK_STATUS;
-                try {
-                    monitor.beginTask(Messages.Activator_InitDatabase, IProgressMonitor.UNKNOWN);
-                    // If server could not be started for whatever reason do not
-                    // try to
-                    // load the model either.
-                    if (result.status == Status.CANCEL_STATUS) {
-                        status = Status.CANCEL_STATUS;
-                    } else {
-                        CnAWorkspace.getInstance().createDatabaseConfig();
-                        Activator.inheritVeriniceContextState();
-                    }
-                } catch (Exception e) {
-                    LOG.error("Error while initializing database.", e); //$NON-NLS-1$
-                    if (e.getCause() != null && e.getCause().getLocalizedMessage() != null) {
-                        setName(e.getCause().getLocalizedMessage());
-                    }
-                    status = new Status(IStatus.ERROR, PLUGIN_ID, Messages.Activator_31, e);
-                } finally {
-                    monitor.done();
-                }
-                return status;
-            }
-        };
-        JobScheduler.scheduleJob(initDbJob, mutex, JobScheduler.getInitProgressMonitor());
-    }
-
-    public static void createModel() {
-        createModel(JobScheduler.getInitMutex(), new StatusResult());
-    }
-
-    public static void createModel(ISchedulingRule mutex, final StatusResult serverStartResult) {
-        WorkspaceJob job = new WorkspaceJob(Messages.Activator_LoadModel) {
-            @Override
-            public IStatus runInWorkspace(final IProgressMonitor monitor) {
-                IStatus status = Status.OK_STATUS;
-                try {
-                    // If server could not be started for whatever reason do not
-                    // try to
-                    // load the model either.
-                    if (serverStartResult.status == Status.CANCEL_STATUS) {
-                        status = Status.CANCEL_STATUS;
-                    }
-                    Activator.inheritVeriniceContextState();
-                    monitor.beginTask(Messages.Activator_LoadModel, IProgressMonitor.UNKNOWN);
-                    monitor.setTaskName(Messages.Activator_LoadModel);
-                    CnAElementFactory.getInstance().loadOrCreateModel(new ProgressAdapter(monitor));
-                    CnAElementFactory.getInstance().getISO27kModel();
-                    CnAElementFactory.getInstance().getBpModel();
-                    CnAElementFactory.getInstance().getCatalogModel();
-                } catch (Exception e) {
-                    LOG.error("Error while loading model.", e); //$NON-NLS-1$
-                    if (e.getCause() != null && e.getCause().getLocalizedMessage() != null) {
-                        setName(e.getCause().getLocalizedMessage());
-                    }
-                    status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
-                            Messages.Activator_31, e);
-                } finally {
-                    monitor.done();
-                }
-                return status;
-            }
-        };
-        JobScheduler.scheduleJob(job, mutex, JobScheduler.getInitProgressMonitor());
-    }
-
     public static void checkDbVersion() throws CommandException {
         final boolean[] done = new boolean[1];
         final int sleepTime = 1000;
@@ -667,45 +599,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
         stringBuilder.append(serverUrl);
         stringBuilder.append(LOCAL_UPDATE_SITE_URL);
         return stringBuilder.toString();
-    }
-
-    public static StatusResult startServer() {
-        return startServer(JobScheduler.getInitMutex(), new StatusResult());
-    }
-
-    /**
-     * Tries to start the internal server via a workspace thread and returns a
-     * result object for that operation.
-     */
-    private static StatusResult startServer(final StatusResult result) {
-        final IInternalServer internalServer = getDefault().getInternalServer();
-        if (!internalServer.isRunning()) {
-            WorkspaceJob job = new WorkspaceJob("") { //$NON-NLS-1$
-                @Override
-                public IStatus runInWorkspace(final IProgressMonitor monitor) {
-                    inheritVeriniceContextState();
-                    try {
-                        if (!internalServer.isRunning()) {
-                            monitor.beginTask(Messages.Activator_1, IProgressMonitor.UNKNOWN);
-                            internalServer.start();
-                        }
-                        result.status = Status.OK_STATUS;
-                    } catch (Exception e) {
-                        ExceptionUtil.log(e, Messages.Activator_2);
-                        result.status = new Status(IStatus.ERROR, PLUGIN_ID, Messages.Activator_3,
-                                e);
-                    } finally {
-                        monitor.done();
-                    }
-                    return result.status;
-                }
-            };
-            JobScheduler.scheduleJob(job, JobScheduler.getInitMutex(),
-                    JobScheduler.getInitProgressMonitor());
-        } else {
-            result.status = Status.OK_STATUS;
-        }
-        return result;
     }
 
     /**
