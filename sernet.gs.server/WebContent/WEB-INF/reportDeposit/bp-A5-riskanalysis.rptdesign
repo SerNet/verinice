@@ -777,22 +777,22 @@
                     <text-property name="heading">Betrifft__Vertraulichkeit__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Risiko__ohne__zusätzliche__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
@@ -893,17 +893,17 @@
                     </structure>
                     <structure>
                         <property name="position">10</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">11</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">12</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
@@ -1015,22 +1015,22 @@
                 </structure>
                 <structure>
                     <property name="position">10</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">11</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">12</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -1102,9 +1102,9 @@
     "bp_itnetwork/bp_threat.bp_threat_value_method_integrity AS Betrifft__Integrität__(Gefährdung)",
     "bp_itnetwork/bp_threat.bp_threat_value_method_availability AS Betrifft__Verfügbarkeit__(Gefährdung)",
     "bp_itnetwork/bp_threat.bp_threat_value_method_confidentiality AS Betrifft__Vertraulichkeit__(Gefährdung)",
-    "bp_itnetwork/bp_threat.bp_threat_risk_with_additional_safeguards_impact AS Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)",
-    "bp_itnetwork/bp_threat.bp_threat_risk_with_additional_safeguards_frequency AS Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)",
-    "bp_itnetwork/bp_threat.bp_threat_risk_with_additional_safeguards_risk AS Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)",
+    "bp_itnetwork/bp_threat.bp_threat_risk_with_additional_safeguards_impact AS Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)",
+    "bp_itnetwork/bp_threat.bp_threat_risk_with_additional_safeguards_frequency AS Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)",
+    "bp_itnetwork/bp_threat.bp_threat_risk_with_additional_safeguards_risk AS Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)",
     "bp_itnetwork/bp_threat.bp_threat_risk_without_additional_safeguards_impact AS Risiko__ohne__zusätzliche__Maßnahmen__-__Auswirkung__(Gefährdung)",
     "bp_itnetwork/bp_threat.bp_threat_risk_without_additional_safeguards_frequency AS Risiko__ohne__zusätzliche__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)",
     "bp_itnetwork/bp_threat.bp_threat_risk_without_additional_safeguards_risk AS Risiko__ohne__zusätzliche__Maßnahmen__-__Risiko__(Gefährdung)",
@@ -1272,7 +1272,7 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</design:name>
+              <design:name>Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</design:name>
               <design:position>8</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
@@ -1280,11 +1280,11 @@
             <design:scale>-1</design:scale>
             <design:nullability>Unknown</design:nullability>
             <design:uiHints>
-              <design:displayName>Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</design:displayName>
+              <design:displayName>Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</design:label>
+            <design:label>Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</design:label>
             <design:formattingHints>
               <design:displaySize>8</design:displaySize>
             </design:formattingHints>
@@ -1293,7 +1293,7 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</design:name>
+              <design:name>Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</design:name>
               <design:position>9</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
@@ -1301,11 +1301,11 @@
             <design:scale>-1</design:scale>
             <design:nullability>Unknown</design:nullability>
             <design:uiHints>
-              <design:displayName>Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</design:displayName>
+              <design:displayName>Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</design:label>
+            <design:label>Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</design:label>
             <design:formattingHints>
               <design:displaySize>8</design:displaySize>
             </design:formattingHints>
@@ -1314,7 +1314,7 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</design:name>
+              <design:name>Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</design:name>
               <design:position>10</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
@@ -1322,11 +1322,11 @@
             <design:scale>-1</design:scale>
             <design:nullability>Unknown</design:nullability>
             <design:uiHints>
-              <design:displayName>Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</design:displayName>
+              <design:displayName>Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</design:label>
+            <design:label>Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</design:label>
             <design:formattingHints>
               <design:displaySize>8</design:displaySize>
             </design:formattingHints>
@@ -1477,22 +1477,22 @@
                     <text-property name="heading">Betrifft__Vertraulichkeit__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Risiko__ohne__zusätzliche__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
@@ -1629,17 +1629,17 @@
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
@@ -1782,22 +1782,22 @@
                 </structure>
                 <structure>
                     <property name="position">13</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">14</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">15</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -1886,9 +1886,9 @@
     "bp_application/bp_threat.bp_threat_value_method_integrity AS Betrifft__Integrität__(Gefährdung)",
     "bp_application/bp_threat.bp_threat_value_method_availability AS Betrifft__Verfügbarkeit__(Gefährdung)",
     "bp_application/bp_threat.bp_threat_value_method_confidentiality AS Betrifft__Vertraulichkeit__(Gefährdung)",
-    "bp_application/bp_threat.bp_threat_risk_with_additional_safeguards_impact AS Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)",
-    "bp_application/bp_threat.bp_threat_risk_with_additional_safeguards_frequency AS Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)",
-    "bp_application/bp_threat.bp_threat_risk_with_additional_safeguards_risk AS Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)",
+    "bp_application/bp_threat.bp_threat_risk_with_additional_safeguards_impact AS Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)",
+    "bp_application/bp_threat.bp_threat_risk_with_additional_safeguards_frequency AS Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)",
+    "bp_application/bp_threat.bp_threat_risk_with_additional_safeguards_risk AS Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)",
     "bp_application/bp_threat.bp_threat_risk_without_additional_safeguards_impact AS Risiko__ohne__zusätzliche__Maßnahmen__-__Auswirkung__(Gefährdung)",
     "bp_application/bp_threat.bp_threat_risk_without_additional_safeguards_frequency AS Risiko__ohne__zusätzliche__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)",
     "bp_application/bp_threat.bp_threat_risk_without_additional_safeguards_risk AS Risiko__ohne__zusätzliche__Maßnahmen__-__Risiko__(Gefährdung)",
@@ -2058,7 +2058,7 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</design:name>
+              <design:name>Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</design:name>
               <design:position>8</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
@@ -2066,11 +2066,11 @@
             <design:scale>-1</design:scale>
             <design:nullability>Unknown</design:nullability>
             <design:uiHints>
-              <design:displayName>Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</design:displayName>
+              <design:displayName>Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</design:label>
+            <design:label>Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</design:label>
             <design:formattingHints>
               <design:displaySize>8</design:displaySize>
             </design:formattingHints>
@@ -2079,7 +2079,7 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</design:name>
+              <design:name>Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</design:name>
               <design:position>9</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
@@ -2087,11 +2087,11 @@
             <design:scale>-1</design:scale>
             <design:nullability>Unknown</design:nullability>
             <design:uiHints>
-              <design:displayName>Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</design:displayName>
+              <design:displayName>Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</design:label>
+            <design:label>Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</design:label>
             <design:formattingHints>
               <design:displaySize>8</design:displaySize>
             </design:formattingHints>
@@ -2100,7 +2100,7 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</design:name>
+              <design:name>Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</design:name>
               <design:position>10</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
@@ -2108,11 +2108,11 @@
             <design:scale>-1</design:scale>
             <design:nullability>Unknown</design:nullability>
             <design:uiHints>
-              <design:displayName>Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</design:displayName>
+              <design:displayName>Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</design:label>
+            <design:label>Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</design:label>
             <design:formattingHints>
               <design:displaySize>8</design:displaySize>
             </design:formattingHints>
@@ -2262,22 +2262,22 @@
                     <text-property name="heading">Betrifft__Vertraulichkeit__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Risiko__ohne__zusätzliche__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
@@ -2414,17 +2414,17 @@
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
@@ -2567,22 +2567,22 @@
                 </structure>
                 <structure>
                     <property name="position">13</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">14</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">15</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -2639,18 +2639,21 @@
                     <property name="position">23</property>
                     <property name="name">Risiko__ohne__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                     <property name="nativeName">Risiko__ohne__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
+                    <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">24</property>
                     <property name="name">Risiko__ohne__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                     <property name="nativeName">Risiko__ohne__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
+                    <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">25</property>
                     <property name="name">Risiko__ohne__Maßnahmen__-__Risiko__(Gefährdung)</property>
                     <property name="nativeName">Risiko__ohne__Maßnahmen__-__Risiko__(Gefährdung)</property>
+                    <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
@@ -2671,9 +2674,9 @@
     "bp_businessprocess/bp_threat.bp_threat_value_method_integrity AS Betrifft__Integrität__(Gefährdung)",
     "bp_businessprocess/bp_threat.bp_threat_value_method_availability AS Betrifft__Verfügbarkeit__(Gefährdung)",
     "bp_businessprocess/bp_threat.bp_threat_value_method_confidentiality AS Betrifft__Vertraulichkeit__(Gefährdung)",
-    "bp_businessprocess/bp_threat.bp_threat_risk_with_additional_safeguards_impact AS Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)",
-    "bp_businessprocess/bp_threat.bp_threat_risk_with_additional_safeguards_frequency AS Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)",
-    "bp_businessprocess/bp_threat.bp_threat_risk_with_additional_safeguards_risk AS Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)",
+    "bp_businessprocess/bp_threat.bp_threat_risk_with_additional_safeguards_impact AS Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)",
+    "bp_businessprocess/bp_threat.bp_threat_risk_with_additional_safeguards_frequency AS Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)",
+    "bp_businessprocess/bp_threat.bp_threat_risk_with_additional_safeguards_risk AS Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)",
     "bp_businessprocess/bp_threat.bp_threat_risk_without_additional_safeguards_impact AS Risiko__ohne__zusätzliche__Maßnahmen__-__Auswirkung__(Gefährdung)",
     "bp_businessprocess/bp_threat.bp_threat_risk_without_additional_safeguards_frequency AS Risiko__ohne__zusätzliche__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)",
     "bp_businessprocess/bp_threat.bp_threat_risk_without_additional_safeguards_risk AS Risiko__ohne__zusätzliche__Maßnahmen__-__Risiko__(Gefährdung)",
@@ -2948,7 +2951,7 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</design:name>
+              <design:name>Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</design:name>
               <design:position>13</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
@@ -2956,11 +2959,11 @@
             <design:scale>-1</design:scale>
             <design:nullability>Unknown</design:nullability>
             <design:uiHints>
-              <design:displayName>Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</design:displayName>
+              <design:displayName>Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</design:label>
+            <design:label>Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</design:label>
             <design:formattingHints>
               <design:displaySize>8</design:displaySize>
             </design:formattingHints>
@@ -2969,7 +2972,7 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</design:name>
+              <design:name>Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</design:name>
               <design:position>14</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
@@ -2977,11 +2980,11 @@
             <design:scale>-1</design:scale>
             <design:nullability>Unknown</design:nullability>
             <design:uiHints>
-              <design:displayName>Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</design:displayName>
+              <design:displayName>Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</design:label>
+            <design:label>Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</design:label>
             <design:formattingHints>
               <design:displaySize>8</design:displaySize>
             </design:formattingHints>
@@ -2990,7 +2993,7 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</design:name>
+              <design:name>Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</design:name>
               <design:position>15</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
@@ -2998,11 +3001,11 @@
             <design:scale>-1</design:scale>
             <design:nullability>Unknown</design:nullability>
             <design:uiHints>
-              <design:displayName>Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</design:displayName>
+              <design:displayName>Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</design:label>
+            <design:label>Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</design:label>
             <design:formattingHints>
               <design:displaySize>8</design:displaySize>
             </design:formattingHints>
@@ -3194,22 +3197,22 @@
                     <text-property name="heading">Betrifft__Vertraulichkeit__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Risiko__ohne__zusätzliche__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
@@ -3346,17 +3349,17 @@
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
@@ -3499,22 +3502,22 @@
                 </structure>
                 <structure>
                     <property name="position">13</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">14</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">15</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -3603,9 +3606,9 @@
     "bp_itsystem/bp_threat.bp_threat_value_method_integrity AS Betrifft__Integrität__(Gefährdung)",
     "bp_itsystem/bp_threat.bp_threat_value_method_availability AS Betrifft__Verfügbarkeit__(Gefährdung)",
     "bp_itsystem/bp_threat.bp_threat_value_method_confidentiality AS Betrifft__Vertraulichkeit__(Gefährdung)",
-    "bp_itsystem/bp_threat.bp_threat_risk_with_additional_safeguards_impact AS Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)",
-    "bp_itsystem/bp_threat.bp_threat_risk_with_additional_safeguards_frequency AS Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)",
-    "bp_itsystem/bp_threat.bp_threat_risk_with_additional_safeguards_risk AS Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)",
+    "bp_itsystem/bp_threat.bp_threat_risk_with_additional_safeguards_impact AS Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)",
+    "bp_itsystem/bp_threat.bp_threat_risk_with_additional_safeguards_frequency AS Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)",
+    "bp_itsystem/bp_threat.bp_threat_risk_with_additional_safeguards_risk AS Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)",
     "bp_itsystem/bp_threat.bp_threat_risk_without_additional_safeguards_impact AS Risiko__ohne__zusätzliche__Maßnahmen__-__Auswirkung__(Gefährdung)",
     "bp_itsystem/bp_threat.bp_threat_risk_without_additional_safeguards_frequency AS Risiko__ohne__zusätzliche__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)",
     "bp_itsystem/bp_threat.bp_threat_risk_without_additional_safeguards_risk AS Risiko__ohne__zusätzliche__Maßnahmen__-__Risiko__(Gefährdung)",
@@ -3880,7 +3883,7 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</design:name>
+              <design:name>Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</design:name>
               <design:position>13</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
@@ -3888,11 +3891,11 @@
             <design:scale>-1</design:scale>
             <design:nullability>Unknown</design:nullability>
             <design:uiHints>
-              <design:displayName>Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</design:displayName>
+              <design:displayName>Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</design:label>
+            <design:label>Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</design:label>
             <design:formattingHints>
               <design:displaySize>8</design:displaySize>
             </design:formattingHints>
@@ -3901,7 +3904,7 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</design:name>
+              <design:name>Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</design:name>
               <design:position>14</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
@@ -3909,11 +3912,11 @@
             <design:scale>-1</design:scale>
             <design:nullability>Unknown</design:nullability>
             <design:uiHints>
-              <design:displayName>Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</design:displayName>
+              <design:displayName>Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</design:label>
+            <design:label>Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</design:label>
             <design:formattingHints>
               <design:displaySize>8</design:displaySize>
             </design:formattingHints>
@@ -3922,7 +3925,7 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</design:name>
+              <design:name>Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</design:name>
               <design:position>15</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
@@ -3930,11 +3933,11 @@
             <design:scale>-1</design:scale>
             <design:nullability>Unknown</design:nullability>
             <design:uiHints>
-              <design:displayName>Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</design:displayName>
+              <design:displayName>Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</design:label>
+            <design:label>Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</design:label>
             <design:formattingHints>
               <design:displaySize>8</design:displaySize>
             </design:formattingHints>
@@ -4126,22 +4129,22 @@
                     <text-property name="heading">Betrifft__Vertraulichkeit__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Risiko__ohne__zusätzliche__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
@@ -4278,17 +4281,17 @@
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
@@ -4431,22 +4434,22 @@
                 </structure>
                 <structure>
                     <property name="position">13</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">14</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">15</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -4535,9 +4538,9 @@
     "bp_icssystem/bp_threat.bp_threat_value_method_integrity AS Betrifft__Integrität__(Gefährdung)",
     "bp_icssystem/bp_threat.bp_threat_value_method_availability AS Betrifft__Verfügbarkeit__(Gefährdung)",
     "bp_icssystem/bp_threat.bp_threat_value_method_confidentiality AS Betrifft__Vertraulichkeit__(Gefährdung)",
-    "bp_icssystem/bp_threat.bp_threat_risk_with_additional_safeguards_impact AS Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)",
-    "bp_icssystem/bp_threat.bp_threat_risk_with_additional_safeguards_frequency AS Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)",
-    "bp_icssystem/bp_threat.bp_threat_risk_with_additional_safeguards_risk AS Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)",
+    "bp_icssystem/bp_threat.bp_threat_risk_with_additional_safeguards_impact AS Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)",
+    "bp_icssystem/bp_threat.bp_threat_risk_with_additional_safeguards_frequency AS Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)",
+    "bp_icssystem/bp_threat.bp_threat_risk_with_additional_safeguards_risk AS Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)",
     "bp_icssystem/bp_threat.bp_threat_risk_without_additional_safeguards_impact AS Risiko__ohne__zusätzliche__Maßnahmen__-__Auswirkung__(Gefährdung)",
     "bp_icssystem/bp_threat.bp_threat_risk_without_additional_safeguards_frequency AS Risiko__ohne__zusätzliche__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)",
     "bp_icssystem/bp_threat.bp_threat_risk_without_additional_safeguards_risk AS Risiko__ohne__zusätzliche__Maßnahmen__-__Risiko__(Gefährdung)",
@@ -4812,7 +4815,7 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</design:name>
+              <design:name>Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</design:name>
               <design:position>13</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
@@ -4820,11 +4823,11 @@
             <design:scale>-1</design:scale>
             <design:nullability>Unknown</design:nullability>
             <design:uiHints>
-              <design:displayName>Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</design:displayName>
+              <design:displayName>Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</design:label>
+            <design:label>Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</design:label>
             <design:formattingHints>
               <design:displaySize>8</design:displaySize>
             </design:formattingHints>
@@ -4833,7 +4836,7 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</design:name>
+              <design:name>Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</design:name>
               <design:position>14</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
@@ -4841,11 +4844,11 @@
             <design:scale>-1</design:scale>
             <design:nullability>Unknown</design:nullability>
             <design:uiHints>
-              <design:displayName>Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</design:displayName>
+              <design:displayName>Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</design:label>
+            <design:label>Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</design:label>
             <design:formattingHints>
               <design:displaySize>8</design:displaySize>
             </design:formattingHints>
@@ -4854,7 +4857,7 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</design:name>
+              <design:name>Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</design:name>
               <design:position>15</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
@@ -4862,11 +4865,11 @@
             <design:scale>-1</design:scale>
             <design:nullability>Unknown</design:nullability>
             <design:uiHints>
-              <design:displayName>Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</design:displayName>
+              <design:displayName>Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</design:label>
+            <design:label>Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</design:label>
             <design:formattingHints>
               <design:displaySize>8</design:displaySize>
             </design:formattingHints>
@@ -5058,22 +5061,22 @@
                     <text-property name="heading">Betrifft__Vertraulichkeit__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Risiko__ohne__zusätzliche__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
@@ -5210,17 +5213,17 @@
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
@@ -5363,22 +5366,22 @@
                 </structure>
                 <structure>
                     <property name="position">13</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">14</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">15</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -5467,9 +5470,9 @@
     "bp_device/bp_threat.bp_threat_value_method_integrity AS Betrifft__Integrität__(Gefährdung)",
     "bp_device/bp_threat.bp_threat_value_method_availability AS Betrifft__Verfügbarkeit__(Gefährdung)",
     "bp_device/bp_threat.bp_threat_value_method_confidentiality AS Betrifft__Vertraulichkeit__(Gefährdung)",
-    "bp_device/bp_threat.bp_threat_risk_with_additional_safeguards_impact AS Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)",
-    "bp_device/bp_threat.bp_threat_risk_with_additional_safeguards_frequency AS Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)",
-    "bp_device/bp_threat.bp_threat_risk_with_additional_safeguards_risk AS Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)",
+    "bp_device/bp_threat.bp_threat_risk_with_additional_safeguards_impact AS Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)",
+    "bp_device/bp_threat.bp_threat_risk_with_additional_safeguards_frequency AS Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)",
+    "bp_device/bp_threat.bp_threat_risk_with_additional_safeguards_risk AS Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)",
     "bp_device/bp_threat.bp_threat_risk_without_additional_safeguards_impact AS Risiko__ohne__zusätzliche__Maßnahmen__-__Auswirkung__(Gefährdung)",
     "bp_device/bp_threat.bp_threat_risk_without_additional_safeguards_frequency AS Risiko__ohne__zusätzliche__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)",
     "bp_device/bp_threat.bp_threat_risk_without_additional_safeguards_risk AS Risiko__ohne__zusätzliche__Maßnahmen__-__Risiko__(Gefährdung)",
@@ -5591,22 +5594,22 @@
                     <text-property name="heading">Betrifft__Vertraulichkeit__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Risiko__ohne__zusätzliche__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
@@ -5743,17 +5746,17 @@
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
@@ -5896,22 +5899,22 @@
                 </structure>
                 <structure>
                     <property name="position">13</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">14</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">15</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -6000,9 +6003,9 @@
     "bp_network/bp_threat.bp_threat_value_method_integrity AS Betrifft__Integrität__(Gefährdung)",
     "bp_network/bp_threat.bp_threat_value_method_availability AS Betrifft__Verfügbarkeit__(Gefährdung)",
     "bp_network/bp_threat.bp_threat_value_method_confidentiality AS Betrifft__Vertraulichkeit__(Gefährdung)",
-    "bp_network/bp_threat.bp_threat_risk_with_additional_safeguards_impact AS Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)",
-    "bp_network/bp_threat.bp_threat_risk_with_additional_safeguards_frequency AS Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)",
-    "bp_network/bp_threat.bp_threat_risk_with_additional_safeguards_risk AS Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)",
+    "bp_network/bp_threat.bp_threat_risk_with_additional_safeguards_impact AS Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)",
+    "bp_network/bp_threat.bp_threat_risk_with_additional_safeguards_frequency AS Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)",
+    "bp_network/bp_threat.bp_threat_risk_with_additional_safeguards_risk AS Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)",
     "bp_network/bp_threat.bp_threat_risk_without_additional_safeguards_impact AS Risiko__ohne__zusätzliche__Maßnahmen__-__Auswirkung__(Gefährdung)",
     "bp_network/bp_threat.bp_threat_risk_without_additional_safeguards_frequency AS Risiko__ohne__zusätzliche__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)",
     "bp_network/bp_threat.bp_threat_risk_without_additional_safeguards_risk AS Risiko__ohne__zusätzliche__Maßnahmen__-__Risiko__(Gefährdung)",
@@ -6277,7 +6280,7 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</design:name>
+              <design:name>Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</design:name>
               <design:position>13</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
@@ -6285,11 +6288,11 @@
             <design:scale>-1</design:scale>
             <design:nullability>Unknown</design:nullability>
             <design:uiHints>
-              <design:displayName>Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</design:displayName>
+              <design:displayName>Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</design:label>
+            <design:label>Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</design:label>
             <design:formattingHints>
               <design:displaySize>8</design:displaySize>
             </design:formattingHints>
@@ -6298,7 +6301,7 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</design:name>
+              <design:name>Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</design:name>
               <design:position>14</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
@@ -6306,11 +6309,11 @@
             <design:scale>-1</design:scale>
             <design:nullability>Unknown</design:nullability>
             <design:uiHints>
-              <design:displayName>Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</design:displayName>
+              <design:displayName>Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</design:label>
+            <design:label>Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</design:label>
             <design:formattingHints>
               <design:displaySize>8</design:displaySize>
             </design:formattingHints>
@@ -6319,7 +6322,7 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</design:name>
+              <design:name>Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</design:name>
               <design:position>15</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
@@ -6327,11 +6330,11 @@
             <design:scale>-1</design:scale>
             <design:nullability>Unknown</design:nullability>
             <design:uiHints>
-              <design:displayName>Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</design:displayName>
+              <design:displayName>Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</design:label>
+            <design:label>Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</design:label>
             <design:formattingHints>
               <design:displaySize>8</design:displaySize>
             </design:formattingHints>
@@ -6523,22 +6526,22 @@
                     <text-property name="heading">Betrifft__Vertraulichkeit__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="columnName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <text-property name="heading">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
+                    <text-property name="heading">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Risiko__ohne__zusätzliche__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
@@ -6675,17 +6678,17 @@
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                        <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
@@ -6828,22 +6831,22 @@
                 </structure>
                 <structure>
                     <property name="position">13</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">14</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">15</property>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <property name="nativeName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
+                    <property name="nativeName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -6932,9 +6935,9 @@
     "bp_room/bp_threat.bp_threat_value_method_integrity AS Betrifft__Integrität__(Gefährdung)",
     "bp_room/bp_threat.bp_threat_value_method_availability AS Betrifft__Verfügbarkeit__(Gefährdung)",
     "bp_room/bp_threat.bp_threat_value_method_confidentiality AS Betrifft__Vertraulichkeit__(Gefährdung)",
-    "bp_room/bp_threat.bp_threat_risk_with_additional_safeguards_impact AS Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)",
-    "bp_room/bp_threat.bp_threat_risk_with_additional_safeguards_frequency AS Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)",
-    "bp_room/bp_threat.bp_threat_risk_with_additional_safeguards_risk AS Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)",
+    "bp_room/bp_threat.bp_threat_risk_with_additional_safeguards_impact AS Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)",
+    "bp_room/bp_threat.bp_threat_risk_with_additional_safeguards_frequency AS Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)",
+    "bp_room/bp_threat.bp_threat_risk_with_additional_safeguards_risk AS Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)",
     "bp_room/bp_threat.bp_threat_risk_without_additional_safeguards_impact AS Risiko__ohne__zusätzliche__Maßnahmen__-__Auswirkung__(Gefährdung)",
     "bp_room/bp_threat.bp_threat_risk_without_additional_safeguards_frequency AS Risiko__ohne__zusätzliche__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)",
     "bp_room/bp_threat.bp_threat_risk_without_additional_safeguards_risk AS Risiko__ohne__zusätzliche__Maßnahmen__-__Risiko__(Gefährdung)",
@@ -7209,7 +7212,7 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</design:name>
+              <design:name>Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</design:name>
               <design:position>13</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
@@ -7217,11 +7220,11 @@
             <design:scale>-1</design:scale>
             <design:nullability>Unknown</design:nullability>
             <design:uiHints>
-              <design:displayName>Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</design:displayName>
+              <design:displayName>Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</design:label>
+            <design:label>Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</design:label>
             <design:formattingHints>
               <design:displaySize>8</design:displaySize>
             </design:formattingHints>
@@ -7230,7 +7233,7 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</design:name>
+              <design:name>Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</design:name>
               <design:position>14</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
@@ -7238,11 +7241,11 @@
             <design:scale>-1</design:scale>
             <design:nullability>Unknown</design:nullability>
             <design:uiHints>
-              <design:displayName>Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</design:displayName>
+              <design:displayName>Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</design:label>
+            <design:label>Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</design:label>
             <design:formattingHints>
               <design:displaySize>8</design:displaySize>
             </design:formattingHints>
@@ -7251,7 +7254,7 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</design:name>
+              <design:name>Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</design:name>
               <design:position>15</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
@@ -7259,11 +7262,11 @@
             <design:scale>-1</design:scale>
             <design:nullability>Unknown</design:nullability>
             <design:uiHints>
-              <design:displayName>Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</design:displayName>
+              <design:displayName>Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</design:label>
+            <design:label>Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</design:label>
             <design:formattingHints>
               <design:displaySize>8</design:displaySize>
             </design:formattingHints>
@@ -9680,21 +9683,21 @@ if (riskConfigurationString == null) {
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
@@ -9761,7 +9764,7 @@ reportContext.getMessage("title_impact")+": &lt;b>"+ str +"&lt;/b>";</expression
                 </structure>
                 <structure>
                     <property name="name">risk_frequency_with_safeguard</property>
-                    <expression name="expression" type="javascript">str = row["Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)"];&#13;
+                    <expression name="expression" type="javascript">str = row["Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)"];&#13;
 if(str=="null"){&#13;
 	str = "Unbearbeitet";&#13;
 }&#13;
@@ -9772,7 +9775,7 @@ if(str=="null"){&#13;
                 </structure>
                 <structure>
                     <property name="name">risk_impact_with_safeguard</property>
-                    <expression name="expression" type="javascript">str = row["Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)"];&#13;
+                    <expression name="expression" type="javascript">str = row["Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)"];&#13;
 if(str=="null"){&#13;
 	str = "Unbearbeitet";&#13;
 }&#13;
@@ -9866,6 +9869,16 @@ if(str=="null"){
 }
 
 reportContext.getMessage("title_impact")+": &lt;b>"+ str +"&lt;/b>";</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">risk_treatment_explanation</property>
+                    <expression name="expression" type="javascript">value = row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"];
+if(value=="null"){
+	value = "";
+}
+reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -10112,7 +10125,8 @@ reportContext.getMessage("title_impact")+": &lt;b>"+ str +"&lt;/b>";</expression
                             <property name="colSpan">2</property>
                             <property name="rowSpan">1</property>
                             <text-data id="76673">
-                                <expression name="valueExpr">row["risk_frequency_without"]</expression>
+                                <structure name="toc"/>
+                                <expression name="valueExpr" type="javascript">row["risk_frequency_without"]</expression>
                                 <property name="contentType">html</property>
                             </text-data>
                         </cell>
@@ -10240,34 +10254,10 @@ this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__o
                             <property name="colSpan">5</property>
                             <property name="rowSpan">1</property>
                             <property name="style">lighter-grey</property>
-                            <label id="5956">
-                                <text-property name="text" key="label_risk_treatment_option_explanation">Erläuterungen:</text-property>
-                            </label>
-                        </cell>
-                    </row>
-                    <row id="5957">
-                        <list-property name="visibility">
-                            <structure>
-                                <property name="format">all</property>
-                                <expression name="valueExpr" type="javascript">BirtStr.charLength(&#13;
-row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"]) &lt; 1</expression>
-                            </structure>
-                        </list-property>
-                        <cell id="5958"/>
-                        <cell id="5959">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="5960">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="5961"/>
-                        <cell id="5962">
-                            <property name="colSpan">5</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5963">
-                                <property name="style">lighter-grey</property>
-                                <property name="resultSetColumn">Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)</property>
-                            </data>
+                            <text-data id="76784">
+                                <expression name="valueExpr">row["risk_treatment_explanation"]</expression>
+                                <property name="contentType">html</property>
+                            </text-data>
                         </cell>
                     </row>
                     <row id="5964">
@@ -10308,7 +10298,7 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                             </label>
                         </cell>
                         <cell id="5974">
-                            <method name="onRender"><![CDATA[this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]);
+                            <method name="onRender"><![CDATA[this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]);
 
 
 ]]></method>
@@ -10317,7 +10307,7 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                                 <property name="fontWeight">bold</property>
                                 <list-property name="mapRules">
                                     <structure>
-                                        <expression name="testExpr" type="javascript">row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                                        <expression name="testExpr" type="javascript">row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                                         <property name="operator">eq</property>
                                         <simple-property-list name="value1">
                                             <value type="javascript">"null"</value>
@@ -10325,12 +10315,12 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                                         <text-property name="display" key="risk_value_unedited">Unbearbeitet</text-property>
                                     </structure>
                                     <structure>
-                                        <expression name="testExpr" type="javascript">row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                                        <expression name="testExpr" type="javascript">row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                                         <property name="operator">is-null</property>
                                         <text-property name="display" key="risk_value_unedited">Unbearbeitet</text-property>
                                     </structure>
                                 </list-property>
-                                <property name="resultSetColumn">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                                <property name="resultSetColumn">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                             </data>
                         </cell>
                     </row>
@@ -10377,21 +10367,21 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
@@ -10458,7 +10448,7 @@ if(str=="null"){&#13;
                 </structure>
                 <structure>
                     <property name="name">risk_frequency_with_safeguard</property>
-                    <expression name="expression" type="javascript">str = row["Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)"];&#13;
+                    <expression name="expression" type="javascript">str = row["Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)"];&#13;
 if(str=="null"){&#13;
 	str = "Unbearbeitet";&#13;
 }&#13;
@@ -10469,7 +10459,7 @@ if(str=="null"){&#13;
                 </structure>
                 <structure>
                     <property name="name">risk_impact_with_safeguard</property>
-                    <expression name="expression" type="javascript">str = row["Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)"];&#13;
+                    <expression name="expression" type="javascript">str = row["Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)"];&#13;
 if(str=="null"){&#13;
 	str = "Unbearbeitet";&#13;
 }&#13;
@@ -10593,6 +10583,16 @@ if(str=="null"){
 }
 
 reportContext.getMessage("title_impact")+": &lt;b>"+ str +"&lt;/b>";</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">risk_treatment_explanation</property>
+                    <expression name="expression" type="javascript">value = row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"];
+if(value=="null"){
+	value = "";
+}
+reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -11157,34 +11157,10 @@ this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__o
                             <property name="colSpan">5</property>
                             <property name="rowSpan">1</property>
                             <property name="style">lighter-grey</property>
-                            <label id="5852">
-                                <text-property name="text">Erläuterungen:</text-property>
-                            </label>
-                        </cell>
-                    </row>
-                    <row id="5868">
-                        <list-property name="visibility">
-                            <structure>
-                                <property name="format">all</property>
-                                <expression name="valueExpr" type="javascript">BirtStr.charLength(&#13;
-row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"]) &lt; 1</expression>
-                            </structure>
-                        </list-property>
-                        <cell id="5869"/>
-                        <cell id="5870">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="5871">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="5872"/>
-                        <cell id="5873">
-                            <property name="colSpan">5</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5853">
-                                <property name="style">lighter-grey</property>
-                                <property name="resultSetColumn">Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)</property>
-                            </data>
+                            <text-data id="76785">
+                                <expression name="valueExpr">row["risk_treatment_explanation"]</expression>
+                                <property name="contentType">html</property>
+                            </text-data>
                         </cell>
                     </row>
                     <row id="5855">
@@ -11225,7 +11201,7 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                             </label>
                         </cell>
                         <cell id="5864">
-                            <method name="onRender"><![CDATA[this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]);
+                            <method name="onRender"><![CDATA[this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]);
 
 
 ]]></method>
@@ -11234,7 +11210,7 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                                 <property name="fontWeight">bold</property>
                                 <list-property name="mapRules">
                                     <structure>
-                                        <expression name="testExpr" type="javascript">row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                                        <expression name="testExpr" type="javascript">row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                                         <property name="operator">eq</property>
                                         <simple-property-list name="value1">
                                             <value type="javascript">"null"</value>
@@ -11242,12 +11218,12 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                                         <text-property name="display" key="risk_value_unedited">Unbearbeitet</text-property>
                                     </structure>
                                     <structure>
-                                        <expression name="testExpr" type="javascript">row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                                        <expression name="testExpr" type="javascript">row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                                         <property name="operator">is-null</property>
                                         <text-property name="display" key="risk_value_unedited">Unbearbeitet</text-property>
                                     </structure>
                                 </list-property>
-                                <property name="resultSetColumn">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                                <property name="resultSetColumn">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                             </data>
                         </cell>
                     </row>
@@ -11330,21 +11306,21 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
@@ -11411,7 +11387,7 @@ if(str=="null"){&#13;
                 </structure>
                 <structure>
                     <property name="name">risk_frequency_with_safeguard</property>
-                    <expression name="expression" type="javascript">str = row["Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)"];&#13;
+                    <expression name="expression" type="javascript">str = row["Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)"];&#13;
 if(str=="null"){&#13;
 	str = "Unbearbeitet";&#13;
 }&#13;
@@ -11422,7 +11398,7 @@ if(str=="null"){&#13;
                 </structure>
                 <structure>
                     <property name="name">risk_impact_with_safeguard</property>
-                    <expression name="expression" type="javascript">str = row["Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)"];&#13;
+                    <expression name="expression" type="javascript">str = row["Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)"];&#13;
 if(str=="null"){&#13;
 	str = "Unbearbeitet";&#13;
 }&#13;
@@ -11510,6 +11486,16 @@ if(str=="null"){
 }
 
 reportContext.getMessage("title_impact")+": &lt;b>"+ str +"&lt;/b>";</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">risk_treatment_explanation</property>
+                    <expression name="expression" type="javascript">value = row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"];
+if(value=="null"){
+	value = "";
+}
+reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -12080,34 +12066,10 @@ this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__o
                             <property name="colSpan">5</property>
                             <property name="rowSpan">1</property>
                             <property name="style">lighter-grey</property>
-                            <label id="6050">
-                                <text-property name="text" key="label_risk_treatment_option_explanation">Erläuterungen:</text-property>
-                            </label>
-                        </cell>
-                    </row>
-                    <row id="6051">
-                        <list-property name="visibility">
-                            <structure>
-                                <property name="format">all</property>
-                                <expression name="valueExpr" type="javascript">BirtStr.charLength(&#13;
-row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"]) &lt; 1</expression>
-                            </structure>
-                        </list-property>
-                        <cell id="6052"/>
-                        <cell id="6053">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6054">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6055"/>
-                        <cell id="6056">
-                            <property name="colSpan">5</property>
-                            <property name="rowSpan">1</property>
-                            <data id="6057">
-                                <property name="style">lighter-grey</property>
-                                <property name="resultSetColumn">Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)</property>
-                            </data>
+                            <text-data id="76786">
+                                <expression name="valueExpr">row["risk_treatment_explanation"]</expression>
+                                <property name="contentType">html</property>
+                            </text-data>
                         </cell>
                     </row>
                     <row id="6058">
@@ -12148,7 +12110,7 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                             </label>
                         </cell>
                         <cell id="6068">
-                            <method name="onRender"><![CDATA[this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]);
+                            <method name="onRender"><![CDATA[this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]);
 
 
 ]]></method>
@@ -12157,7 +12119,7 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                                 <property name="fontWeight">bold</property>
                                 <list-property name="mapRules">
                                     <structure>
-                                        <expression name="testExpr" type="javascript">row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                                        <expression name="testExpr" type="javascript">row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                                         <property name="operator">eq</property>
                                         <simple-property-list name="value1">
                                             <value type="javascript">"null"</value>
@@ -12165,12 +12127,12 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                                         <text-property name="display" key="risk_value_unedited">Unbearbeitet</text-property>
                                     </structure>
                                     <structure>
-                                        <expression name="testExpr" type="javascript">row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                                        <expression name="testExpr" type="javascript">row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                                         <property name="operator">is-null</property>
                                         <text-property name="display" key="risk_value_unedited">Unbearbeitet</text-property>
                                     </structure>
                                 </list-property>
-                                <property name="resultSetColumn">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                                <property name="resultSetColumn">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                             </data>
                         </cell>
                     </row>
@@ -12217,21 +12179,21 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
@@ -12299,7 +12261,7 @@ if(str=="null"){&#13;
                 </structure>
                 <structure>
                     <property name="name">risk_frequency_with_safeguard</property>
-                    <expression name="expression" type="javascript">str = row["Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)"];&#13;
+                    <expression name="expression" type="javascript">str = row["Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)"];&#13;
 if(str=="null"){&#13;
 	str = "Unbearbeitet";&#13;
 }&#13;
@@ -12310,7 +12272,7 @@ if(str=="null"){&#13;
                 </structure>
                 <structure>
                     <property name="name">risk_impact_with_safeguard</property>
-                    <expression name="expression" type="javascript">str = row["Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)"];&#13;
+                    <expression name="expression" type="javascript">str = row["Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)"];&#13;
 if(str=="null"){&#13;
 	str = "Unbearbeitet";&#13;
 }&#13;
@@ -12434,6 +12396,16 @@ if(str=="null"){
 }
 
 reportContext.getMessage("title_impact")+": &lt;b>"+ str +"&lt;/b>";</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">risk_treatment_explanation</property>
+                    <expression name="expression" type="javascript">value = row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"];
+if(value=="null"){
+	value = "";
+}
+reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -13004,34 +12976,10 @@ this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__o
                             <property name="colSpan">5</property>
                             <property name="rowSpan">1</property>
                             <property name="style">lighter-grey</property>
-                            <label id="6144">
-                                <text-property name="text" key="label_risk_treatment_option_explanation">Erläuterungen:</text-property>
-                            </label>
-                        </cell>
-                    </row>
-                    <row id="6145">
-                        <list-property name="visibility">
-                            <structure>
-                                <property name="format">all</property>
-                                <expression name="valueExpr" type="javascript">BirtStr.charLength(&#13;
-row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"]) &lt; 1</expression>
-                            </structure>
-                        </list-property>
-                        <cell id="6146"/>
-                        <cell id="6147">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6148">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6149"/>
-                        <cell id="6150">
-                            <property name="colSpan">5</property>
-                            <property name="rowSpan">1</property>
-                            <data id="6151">
-                                <property name="style">lighter-grey</property>
-                                <property name="resultSetColumn">Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)</property>
-                            </data>
+                            <text-data id="76787">
+                                <expression name="valueExpr">row["risk_treatment_explanation"]</expression>
+                                <property name="contentType">html</property>
+                            </text-data>
                         </cell>
                     </row>
                     <row id="6152">
@@ -13072,7 +13020,7 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                             </label>
                         </cell>
                         <cell id="6162">
-                            <method name="onRender"><![CDATA[this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]);
+                            <method name="onRender"><![CDATA[this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]);
 
 
 ]]></method>
@@ -13081,7 +13029,7 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                                 <property name="fontWeight">bold</property>
                                 <list-property name="mapRules">
                                     <structure>
-                                        <expression name="testExpr" type="javascript">row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                                        <expression name="testExpr" type="javascript">row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                                         <property name="operator">eq</property>
                                         <simple-property-list name="value1">
                                             <value type="javascript">"null"</value>
@@ -13089,12 +13037,12 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                                         <text-property name="display" key="risk_value_unedited">Unbearbeitet</text-property>
                                     </structure>
                                     <structure>
-                                        <expression name="testExpr" type="javascript">row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                                        <expression name="testExpr" type="javascript">row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                                         <property name="operator">is-null</property>
                                         <text-property name="display" key="risk_value_unedited">Unbearbeitet</text-property>
                                     </structure>
                                 </list-property>
-                                <property name="resultSetColumn">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                                <property name="resultSetColumn">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                             </data>
                         </cell>
                     </row>
@@ -13141,21 +13089,21 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
@@ -13223,7 +13171,7 @@ if(str=="null"){&#13;
                 </structure>
                 <structure>
                     <property name="name">risk_frequency_with_safeguard</property>
-                    <expression name="expression" type="javascript">str = row["Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)"];&#13;
+                    <expression name="expression" type="javascript">str = row["Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)"];&#13;
 if(str=="null"){&#13;
 	str = "Unbearbeitet";&#13;
 }&#13;
@@ -13234,7 +13182,7 @@ if(str=="null"){&#13;
                 </structure>
                 <structure>
                     <property name="name">risk_impact_with_safeguard</property>
-                    <expression name="expression" type="javascript">str = row["Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)"];&#13;
+                    <expression name="expression" type="javascript">str = row["Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)"];&#13;
 if(str=="null"){&#13;
 	str = "Unbearbeitet";&#13;
 }&#13;
@@ -13358,6 +13306,16 @@ if(str=="null"){
 }
 
 reportContext.getMessage("title_impact")+": &lt;b>"+ str +"&lt;/b>";</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">risk_treatment_explanation</property>
+                    <expression name="expression" type="javascript">value = row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"];
+if(value=="null"){
+	value = "";
+}
+reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -13921,34 +13879,10 @@ this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__o
                             <property name="colSpan">5</property>
                             <property name="rowSpan">1</property>
                             <property name="style">lighter-grey</property>
-                            <label id="6331">
-                                <text-property name="text" key="label_risk_treatment_option_explanation">Erläuterungen:</text-property>
-                            </label>
-                        </cell>
-                    </row>
-                    <row id="6332">
-                        <list-property name="visibility">
-                            <structure>
-                                <property name="format">all</property>
-                                <expression name="valueExpr" type="javascript">BirtStr.charLength(&#13;
-row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"]) &lt; 1</expression>
-                            </structure>
-                        </list-property>
-                        <cell id="6333"/>
-                        <cell id="6334">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6335">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6336"/>
-                        <cell id="6337">
-                            <property name="colSpan">5</property>
-                            <property name="rowSpan">1</property>
-                            <data id="6338">
-                                <property name="style">lighter-grey</property>
-                                <property name="resultSetColumn">Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)</property>
-                            </data>
+                            <text-data id="76788">
+                                <expression name="valueExpr">row["risk_treatment_explanation"]</expression>
+                                <property name="contentType">html</property>
+                            </text-data>
                         </cell>
                     </row>
                     <row id="6339">
@@ -13989,7 +13923,7 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                             </label>
                         </cell>
                         <cell id="6349">
-                            <method name="onRender"><![CDATA[this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]);
+                            <method name="onRender"><![CDATA[this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]);
 
 
 ]]></method>
@@ -13998,7 +13932,7 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                                 <property name="fontWeight">bold</property>
                                 <list-property name="mapRules">
                                     <structure>
-                                        <expression name="testExpr" type="javascript">row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                                        <expression name="testExpr" type="javascript">row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                                         <property name="operator">eq</property>
                                         <simple-property-list name="value1">
                                             <value type="javascript">"null"</value>
@@ -14006,12 +13940,12 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                                         <text-property name="display" key="risk_value_unedited">Unbearbeitet</text-property>
                                     </structure>
                                     <structure>
-                                        <expression name="testExpr" type="javascript">row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                                        <expression name="testExpr" type="javascript">row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                                         <property name="operator">is-null</property>
                                         <text-property name="display" key="risk_value_unedited">Unbearbeitet</text-property>
                                     </structure>
                                 </list-property>
-                                <property name="resultSetColumn">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                                <property name="resultSetColumn">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                             </data>
                         </cell>
                     </row>
@@ -14064,21 +13998,21 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
@@ -14145,7 +14079,7 @@ if(str=="null"){&#13;
                 </structure>
                 <structure>
                     <property name="name">risk_frequency_with_safeguard</property>
-                    <expression name="expression" type="javascript">str = row["Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)"];&#13;
+                    <expression name="expression" type="javascript">str = row["Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)"];&#13;
 if(str=="null"){&#13;
 	str = "Unbearbeitet";&#13;
 }&#13;
@@ -14156,7 +14090,7 @@ if(str=="null"){&#13;
                 </structure>
                 <structure>
                     <property name="name">risk_impact_with_safeguard</property>
-                    <expression name="expression" type="javascript">str = row["Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)"];&#13;
+                    <expression name="expression" type="javascript">str = row["Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)"];&#13;
 if(str=="null"){&#13;
 	str = "Unbearbeitet";&#13;
 }&#13;
@@ -14280,6 +14214,16 @@ if(str=="null"){
 }
 
 reportContext.getMessage("title_impact")+": &lt;b>"+ str +"&lt;/b>";</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">risk_treatment_explanation</property>
+                    <expression name="expression" type="javascript">value = row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"];
+if(value=="null"){
+	value = "";
+}
+reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -14840,34 +14784,10 @@ this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__o
                             <property name="colSpan">5</property>
                             <property name="rowSpan">1</property>
                             <property name="style">lighter-grey</property>
-                            <label id="6425">
-                                <text-property name="text" key="label_risk_treatment_option_explanation">Erläuterungen:</text-property>
-                            </label>
-                        </cell>
-                    </row>
-                    <row id="6426">
-                        <list-property name="visibility">
-                            <structure>
-                                <property name="format">all</property>
-                                <expression name="valueExpr" type="javascript">BirtStr.charLength(&#13;
-row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"]) &lt; 1</expression>
-                            </structure>
-                        </list-property>
-                        <cell id="6427"/>
-                        <cell id="6428">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6429">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6430"/>
-                        <cell id="6431">
-                            <property name="colSpan">5</property>
-                            <property name="rowSpan">1</property>
-                            <data id="6432">
-                                <property name="style">lighter-grey</property>
-                                <property name="resultSetColumn">Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)</property>
-                            </data>
+                            <text-data id="76789">
+                                <expression name="valueExpr">row["risk_treatment_explanation"]</expression>
+                                <property name="contentType">html</property>
+                            </text-data>
                         </cell>
                     </row>
                     <row id="6433">
@@ -14908,7 +14828,7 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                             </label>
                         </cell>
                         <cell id="6443">
-                            <method name="onRender"><![CDATA[this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]);
+                            <method name="onRender"><![CDATA[this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]);
 
 
 ]]></method>
@@ -14917,7 +14837,7 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                                 <property name="fontWeight">bold</property>
                                 <list-property name="mapRules">
                                     <structure>
-                                        <expression name="testExpr" type="javascript">row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                                        <expression name="testExpr" type="javascript">row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                                         <property name="operator">eq</property>
                                         <simple-property-list name="value1">
                                             <value type="javascript">"null"</value>
@@ -14925,12 +14845,12 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                                         <text-property name="display" key="risk_value_unedited">Unbearbeitet</text-property>
                                     </structure>
                                     <structure>
-                                        <expression name="testExpr" type="javascript">row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                                        <expression name="testExpr" type="javascript">row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                                         <property name="operator">is-null</property>
                                         <text-property name="display" key="risk_value_unedited">Unbearbeitet</text-property>
                                     </structure>
                                 </list-property>
-                                <property name="resultSetColumn">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                                <property name="resultSetColumn">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                             </data>
                         </cell>
                     </row>
@@ -14977,21 +14897,21 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
@@ -15060,7 +14980,7 @@ if(str=="null"){&#13;
                 </structure>
                 <structure>
                     <property name="name">risk_frequency_with_safeguard</property>
-                    <expression name="expression" type="javascript">str = row["Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)"];&#13;
+                    <expression name="expression" type="javascript">str = row["Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)"];&#13;
 if(str=="null"){&#13;
 	str = "Unbearbeitet";&#13;
 }&#13;
@@ -15071,7 +14991,7 @@ if(str=="null"){&#13;
                 </structure>
                 <structure>
                     <property name="name">risk_impact_with_safeguard</property>
-                    <expression name="expression" type="javascript">str = row["Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)"];&#13;
+                    <expression name="expression" type="javascript">str = row["Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)"];&#13;
 if(str=="null"){&#13;
 	str = "Unbearbeitet";&#13;
 }&#13;
@@ -15195,6 +15115,16 @@ if(str=="null"){
 }
 
 reportContext.getMessage("title_impact")+": &lt;b>"+ str +"&lt;/b>";</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">risk_treatment_explanation</property>
+                    <expression name="expression" type="javascript">value = row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"];
+if(value=="null"){
+	value = "";
+}
+reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -15761,34 +15691,10 @@ this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__o
                             <property name="colSpan">5</property>
                             <property name="rowSpan">1</property>
                             <property name="style">lighter-grey</property>
-                            <label id="6519">
-                                <text-property name="text">Erläuterungen:</text-property>
-                            </label>
-                        </cell>
-                    </row>
-                    <row id="6520">
-                        <list-property name="visibility">
-                            <structure>
-                                <property name="format">all</property>
-                                <expression name="valueExpr" type="javascript">BirtStr.charLength(&#13;
-row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"]) &lt; 1</expression>
-                            </structure>
-                        </list-property>
-                        <cell id="6521"/>
-                        <cell id="6522">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6523">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6524"/>
-                        <cell id="6525">
-                            <property name="colSpan">5</property>
-                            <property name="rowSpan">1</property>
-                            <data id="6526">
-                                <property name="style">lighter-grey</property>
-                                <property name="resultSetColumn">Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)</property>
-                            </data>
+                            <text-data id="76790">
+                                <expression name="valueExpr">row["risk_treatment_explanation"]</expression>
+                                <property name="contentType">html</property>
+                            </text-data>
                         </cell>
                     </row>
                     <row id="6527">
@@ -15829,7 +15735,7 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                             </label>
                         </cell>
                         <cell id="6537">
-                            <method name="onRender"><![CDATA[this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]);
+                            <method name="onRender"><![CDATA[this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]);
 
 
 ]]></method>
@@ -15838,7 +15744,7 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                                 <property name="fontWeight">bold</property>
                                 <list-property name="mapRules">
                                     <structure>
-                                        <expression name="testExpr" type="javascript">row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                                        <expression name="testExpr" type="javascript">row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                                         <property name="operator">eq</property>
                                         <simple-property-list name="value1">
                                             <value type="javascript">"null"</value>
@@ -15846,12 +15752,12 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                                         <text-property name="display">Unbearbeitet</text-property>
                                     </structure>
                                     <structure>
-                                        <expression name="testExpr" type="javascript">row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                                        <expression name="testExpr" type="javascript">row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                                         <property name="operator">is-null</property>
                                         <text-property name="display">Unbearbeitet</text-property>
                                     </structure>
                                 </list-property>
-                                <property name="resultSetColumn">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                                <property name="resultSetColumn">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                             </data>
                         </cell>
                     </row>
@@ -15898,21 +15804,21 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
-                    <text-property name="displayName">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                    <property name="name">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
+                    <text-property name="displayName">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
@@ -15981,7 +15887,7 @@ if(str=="null"){&#13;
                 </structure>
                 <structure>
                     <property name="name">risk_frequency_with_safeguard</property>
-                    <expression name="expression" type="javascript">str = row["Risiko__mit__ergänzender__Maßnahme__-__Eintrittshäufigkeit__mit__ergänzender__Maßnahme__(Gefährdung)"];&#13;
+                    <expression name="expression" type="javascript">str = row["Risiko__mit__zusätzlichen__Maßnahmen__-__Eintrittshäufigkeit__(Gefährdung)"];&#13;
 if(str=="null"){&#13;
 	str = "Unbearbeitet";&#13;
 }&#13;
@@ -15992,7 +15898,7 @@ if(str=="null"){&#13;
                 </structure>
                 <structure>
                     <property name="name">risk_impact_with_safeguard</property>
-                    <expression name="expression" type="javascript">str = row["Risiko__mit__ergänzender__Maßnahme__-__Auswirkung__mit__ergänzender__Maßnahme__(Gefährdung)"];&#13;
+                    <expression name="expression" type="javascript">str = row["Risiko__mit__zusätzlichen__Maßnahmen__-__Auswirkung__(Gefährdung)"];&#13;
 if(str=="null"){&#13;
 	str = "Unbearbeitet";&#13;
 }&#13;
@@ -16116,6 +16022,16 @@ if(str=="null"){
 }
 
 reportContext.getMessage("title_impact")+": &lt;b>"+ str +"&lt;/b>";</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">risk_treatment_explanation</property>
+                    <expression name="expression" type="javascript">value = row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"];
+if(value=="null"){
+	value = "";
+}
+reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -16682,34 +16598,10 @@ this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__o
                             <property name="colSpan">5</property>
                             <property name="rowSpan">1</property>
                             <property name="style">lighter-grey</property>
-                            <label id="6613">
-                                <text-property name="text" key="label_risk_treatment_option_explanation">Erläuterungen:</text-property>
-                            </label>
-                        </cell>
-                    </row>
-                    <row id="6614">
-                        <list-property name="visibility">
-                            <structure>
-                                <property name="format">all</property>
-                                <expression name="valueExpr" type="javascript">BirtStr.charLength(&#13;
-row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"]) &lt; 1</expression>
-                            </structure>
-                        </list-property>
-                        <cell id="6615"/>
-                        <cell id="6616">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6617">
-                            <property name="paddingLeft">10pt</property>
-                        </cell>
-                        <cell id="6618"/>
-                        <cell id="6619">
-                            <property name="colSpan">5</property>
-                            <property name="rowSpan">1</property>
-                            <data id="6620">
-                                <property name="style">lighter-grey</property>
-                                <property name="resultSetColumn">Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)</property>
-                            </data>
+                            <text-data id="76791">
+                                <expression name="valueExpr">row["risk_treatment_explanation"]</expression>
+                                <property name="contentType">html</property>
+                            </text-data>
                         </cell>
                     </row>
                     <row id="6621">
@@ -16750,7 +16642,7 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                             </label>
                         </cell>
                         <cell id="6631">
-                            <method name="onRender"><![CDATA[this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]);
+                            <method name="onRender"><![CDATA[this.getStyle().backgroundColor = reportContext.getGlobalVariable(row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]);
 
 
 ]]></method>
@@ -16759,7 +16651,7 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                                 <property name="fontWeight">bold</property>
                                 <list-property name="mapRules">
                                     <structure>
-                                        <expression name="testExpr" type="javascript">row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                                        <expression name="testExpr" type="javascript">row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                                         <property name="operator">eq</property>
                                         <simple-property-list name="value1">
                                             <value type="javascript">"null"</value>
@@ -16767,12 +16659,12 @@ row["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdu
                                         <text-property name="display" key="risk_value_unedited">Unbearbeitet</text-property>
                                     </structure>
                                     <structure>
-                                        <expression name="testExpr" type="javascript">row["Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)"]</expression>
+                                        <expression name="testExpr" type="javascript">row["Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)"]</expression>
                                         <property name="operator">is-null</property>
                                         <text-property name="display" key="risk_value_unedited">Unbearbeitet</text-property>
                                     </structure>
                                 </list-property>
-                                <property name="resultSetColumn">Risiko__mit__ergänzender__Maßnahme__-__Risiko__mit__ergänzender__Maßnahme__(Gefährdung)</property>
+                                <property name="resultSetColumn">Risiko__mit__zusätzlichen__Maßnahmen__-__Risiko__(Gefährdung)</property>
                             </data>
                         </cell>
                     </row>

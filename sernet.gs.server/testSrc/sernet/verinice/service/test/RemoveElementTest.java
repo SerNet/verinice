@@ -27,6 +27,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
@@ -34,6 +35,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bp.elements.BpPerson;
@@ -60,6 +62,7 @@ import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.LoadConfiguration;
 import sernet.verinice.service.commands.LoadElementByTypeId;
 import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.verinice.service.commands.LoadElementsByUuid;
 import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
@@ -230,8 +233,13 @@ public class RemoveElementTest extends CommandServiceProvider {
 
         SyncCommand syncCommand = new SyncCommand(syncParameter, it_network_vna);
         syncCommand = commandService.executeCommand(syncCommand);
+        Set<String> importedElementUUIDs = syncCommand.getImportedElementUUIDs();
+        LoadElementsByUuid<CnATreeElement> elementLoader = new LoadElementsByUuid<>(
+                new ArrayList<>(importedElementUUIDs), new RetrieveInfo());
+        elementLoader = commandService.executeCommand(elementLoader);
+        Set<CnATreeElement> elements = elementLoader.getElements();
 
-        for (CnATreeElement element : syncCommand.getElementSet()) {
+        for (CnATreeElement element : elements) {
             if (element instanceof ITVerbund) {
                 element = loadElement(element.getSourceId(), element.getExtId());
                 removeElement((ITVerbund) element);

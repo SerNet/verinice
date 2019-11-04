@@ -19,6 +19,7 @@ package sernet.verinice.bp.rcp.risk.ui;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -36,6 +37,7 @@ import org.eclipse.swt.widgets.Text;
 
 import sernet.hui.swt.SWTResourceManager;
 import sernet.verinice.model.bp.risk.Risk;
+import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 
 public final class RiskValuesConfigurator extends StackConfigurator<Risk> {
 
@@ -110,6 +112,11 @@ public final class RiskValuesConfigurator extends StackConfigurator<Risk> {
                         .withDescription(newDescription));
             }
         });
+    }
+
+    @Override
+    protected Optional<List<Risk>> getDefault() {
+        return Optional.ofNullable(DefaultRiskConfiguration.getInstance().getRisks());
     }
 
 }

@@ -5,8 +5,8 @@ Element-Name: bp
 Element-Type: context
 Element-Version: 2.0
 Id: _4GRncI0bEei2UKUDmonytQ
-Runtime-Version: 2.4.1.201903190000
-Save-Time: 4/16/19 10:41 AM
+Runtime-Version: 2.4.2.201905080442
+Save-Time: 7/3/19 10:38 AM
 Tags: bp
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
@@ -160,6 +160,54 @@ proc "bp-import-vna" [val vna] {
 	with [get-window Import] {
 		get-group Datei | get-button "Datei auswählen..." | click
 		get-button OK | click
+	}
+}
+
+// has to be called with risk configuration matrix opened.
+proc "get-risk-matrix-width"  [val editor -input] {
+    with $editor {
+	    get-label "Klicken um Werte zu erhöhen, Shift und klicken um Werte zu verkleinern"
+	      | get-property "getLayoutData().horizontalSpan" -raw
+	      | minus 1
+    }
+}
+
+// row and col start at the top left, 0-based
+proc "get-matrix-button" [val row] [val col] [val editor -input] { 
+    with $editor {
+	  let [val nCols [get-risk-matrix-width $editor]]
+	      [val offset 2]
+	      [val nLabelsBeforeMatrixRow 1] {
+	    // index = first matrix button index (offset) + col + (width + 1) * row
+	  	get-label -index [int [plus $offset [plus $col [mult [plus $nLabelsBeforeMatrixRow $nCols] $row]]]]
+	  }
+    }
+}
+
+proc "shift-click-matrix" [val row] [val col] [val editor -input] { 
+   with $editor {
+     get-matrix-button $row $col | mouse down -with M3
+   }
+}
+
+proc "click-matrix" [val row] [val col] [val editor -input] { 
+   with $editor {
+     get-matrix-button $row $col | mouse down
+   }
+
+}
+
+/* Exports an information network as a vna file in the bp view. */
+proc "bp-export-vna" [val path] [val file] {
+	log [concat "export " $path " to " $file]
+
+	with [get-view "Modernisierter IT-Grundschutz" | get-tree] {
+		select $path | get-menu -path "Exportiere..." | click
+		set-dialog-result File $file
+		with [get-window " "] {
+			get-button "Datei wählen" | click
+			get-button OK | click
+		}
 	}
 }
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998--

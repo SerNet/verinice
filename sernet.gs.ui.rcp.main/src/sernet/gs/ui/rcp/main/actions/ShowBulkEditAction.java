@@ -24,11 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.naming.ConfigurationException;
-
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
@@ -46,7 +43,6 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dialogs.BulkEditDialog;
-import sernet.gs.ui.rcp.main.bsi.dialogs.PersonBulkEditDialog;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -56,9 +52,6 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.swt.widgets.IHuiControlFactory;
 import sernet.verinice.bp.rcp.risk.ui.RiskUiUtils;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.interfaces.PasswordException;
 import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.Safeguard;
@@ -66,18 +59,11 @@ import sernet.verinice.model.bpm.TodoViewItem;
 import sernet.verinice.model.bsi.DocumentReference;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.IISO27kElement;
-import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.service.bp.risk.RiskDeductionUtil;
-import sernet.verinice.service.commands.CreateConfiguration;
-import sernet.verinice.service.commands.LoadConfiguration;
 import sernet.verinice.service.commands.UpdateMultipleElementEntities;
-import sernet.verinice.service.commands.task.BulkEditUpdate;
-import sernet.verinice.service.commands.task.ConfigurationBulkEditUpdate;
 
 /**
  * Erlaubt das gemeinsame Editieren der Eigenschaften von gleichen,
@@ -95,9 +81,6 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
     private List<Integer> dbIDs;
     private ArrayList<CnATreeElement> selectedElements;
     private EntityType entType = null;
-    @SuppressWarnings("rawtypes")
-    private Class clazz;
-    private Dialog chosenDialog;
 
     public static final String ID = "sernet.gs.ui.rcp.main.actions.showbulkeditaction"; //$NON-NLS-1$
     private final IWorkbenchWindow window;
@@ -133,28 +116,15 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
         selectedElements = new ArrayList<>();
         entType = null;
         readSelection(selection);
-        Dialog dialog = null;
+        Map<String, IHuiControlFactory> overrides = RiskUiUtils
+                .createHuiControlFactories(selectedElements.get(0));
+        BulkEditDialog dialog = new BulkEditDialog(window.getShell(), entType, overrides);
 
-        if (entType != null && !(entType.getId().equals(Person.TYPE_ID)
-                || entType.getId().equals(PersonIso.TYPE_ID))) {
-            Map<String, IHuiControlFactory> overrides = RiskUiUtils
-                    .createHuiControlFactories(selectedElements.get(0));
-            dialog = new BulkEditDialog(window.getShell(), entType, overrides);
-        } else {
-            dialog = new PersonBulkEditDialog(window.getShell(), Messages.ShowBulkEditAction_14);
-        }
         if (dialog.open() != Window.OK) {
             return;
         }
-        Entity tmpEntity = null;
-        if (dialog instanceof BulkEditDialog) {
-            tmpEntity = ((BulkEditDialog) dialog).getEntity();
-        }
-        if (dialog instanceof PersonBulkEditDialog) {
-            tmpEntity = ((PersonBulkEditDialog) dialog).getEntity();
-        }
-        final Entity dialogEntity = tmpEntity;
-        chosenDialog = dialog;
+
+        final Entity dialogEntity = dialog.getEntity();
 
         try {
             // close editors first:
@@ -181,29 +151,11 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             throws InterruptedException {
         Activator.inheritVeriniceContextState();
 
-        // the selected items are of type CnaTreeelement and can be
-        // edited right here:
         if (!(selectedElements.isEmpty())) {
-            if (!(selectedElements.get(0) instanceof Person
-                    || selectedElements.get(0) instanceof PersonIso)) {
-                editElements(selectedElements, dialogEntity, monitor);
-            }
-        } else {
-            // the selected elements are of type TodoView or other
-            // light weight items,
-            // editing has to be deferred to server (lookup of real
-            // items needed)
-            try {
-                String pw1 = null;
-                String pw2 = null;
-                if (chosenDialog instanceof PersonBulkEditDialog) {
-                    pw1 = ((PersonBulkEditDialog) chosenDialog).getPassword();
-                    pw2 = ((PersonBulkEditDialog) chosenDialog).getPassword2();
-                }
-                editPersons(clazz, dbIDs, dialogEntity, monitor, pw1, pw2);
-            } catch (CommandException e) {
-                throw new InterruptedException(e.getLocalizedMessage());
-            }
+            // the selected items are of type CnaTreeelement and can be
+            // edited right here:
+            editElements(selectedElements, dialogEntity, monitor);
+
         }
         monitor.done();
         refreshListeners();
@@ -240,28 +192,6 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
                 dbIDs.add(item.getDbId());
             }
             entType = HUITypeFactory.getInstance().getEntityType(MassnahmenUmsetzung.TYPE_ID);
-            clazz = MassnahmenUmsetzung.class;
-        } else if (selection.getFirstElement() instanceof Person
-                || selection.getFirstElement() instanceof PersonIso) {
-            for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
-                CnATreeElement cElmt = (CnATreeElement) iter.next();
-                LoadConfiguration command = new LoadConfiguration(cElmt);
-                try {
-                    command = ServiceFactory.lookupCommandService().executeCommand(command);
-                    if (command.getConfiguration() != null) {
-                        dbIDs.add(command.getConfiguration().getDbId());
-                    } else { // no configuration existing for this user up to
-                             // here, create new one
-                        CreateConfiguration command2 = new CreateConfiguration(cElmt);
-                        command2 = ServiceFactory.lookupCommandService().executeCommand(command2);
-                        dbIDs.add(command2.getConfiguration().getDbId());
-                    }
-                } catch (CommandException e) {
-                    logger.error("Error while retrieving configuration", e);
-                    ExceptionUtil.log(e, Messages.ShowBulkEditAction_6);
-                }
-            }
-            clazz = Configuration.class;
         } else {
             // prepare list according to selected tree items:
             for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
@@ -282,7 +212,6 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
                 selectedElements.add(elmt);
                 logger.debug("Adding to bulk edit: " + elmt.getTitle()); //$NON-NLS-1$
             }
-            clazz = null;
         }
     }
 
@@ -305,39 +234,6 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             }
         }
         return true;
-    }
-
-    private void editPersons(Class<? extends CnATreeElement> clazz, List<Integer> dbIDs,
-            Entity dialogEntity, IProgressMonitor monitor, String newPassword, String newPassword2)
-            throws CommandException {
-        monitor.setTaskName(Messages.ShowBulkEditAction_7);
-        monitor.beginTask(Messages.ShowBulkEditAction_8, IProgressMonitor.UNKNOWN);
-        GenericCommand command = null;
-        if (!dialogEntity.getEntityType().trim().equalsIgnoreCase(Configuration.TYPE_ID)) {
-            command = new BulkEditUpdate(clazz, dbIDs, dialogEntity);
-        } else {
-            boolean changePassword = false;
-            if (newPassword != null && !newPassword.isEmpty()) {
-                if (!newPassword.equals(newPassword2)) {
-                    throw new PasswordException(Messages.ConfigurationAction_10);
-                } else {
-                    changePassword = true;
-                }
-            }
-            command = new ConfigurationBulkEditUpdate(dbIDs, dialogEntity, changePassword,
-                    newPassword);
-        }
-        command = ServiceFactory.lookupCommandService().executeCommand(command);
-        if (!((ConfigurationBulkEditUpdate) command).getFailedUpdates().isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(Messages.ShowBulkEditAction_15).append(":\n");
-            for (String username : ((ConfigurationBulkEditUpdate) command).getFailedUpdates()) {
-                sb.append(username).append("\n");
-            }
-            ExceptionUtil.log(new ConfigurationException(Messages.ShowBulkEditAction_16),
-                    Messages.ShowBulkEditAction_16 + "\n" + sb.toString());
-        }
-
     }
 
     /**
@@ -424,6 +320,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
                 RiskDeductionUtil.deduceRisk((BpThreat) elmt);
             }
             elementsToSave.add(elmt);
+            elmt.getEntity().trackChange(ServiceFactory.lookupAuthService().getUsername());
             monitor.worked(1);
         }
         try {

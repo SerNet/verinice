@@ -21,7 +21,6 @@ package sernet.verinice.service.test.helper.vnaimport;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -67,14 +66,6 @@ public final class VNAImportHelper {
     public static void tearDown(SyncCommand syncCommand,
             IBaseDao<CnATreeElement, Integer> elementDao) throws CommandException {
         try {
-            Set<CnATreeElement> importedElements = syncCommand.getElementSet();
-            for (CnATreeElement element : importedElements) {
-
-                if (element.isScope()) {
-                    elementDao.delete(element);
-                }
-            }
-
             // clean up the parents of imported cnatreeelements
             removeAllElementsByType(ImportBsiGroup.TYPE_ID, elementDao);
             removeAllElementsByType(ImportIsoGroup.TYPE_ID, elementDao);

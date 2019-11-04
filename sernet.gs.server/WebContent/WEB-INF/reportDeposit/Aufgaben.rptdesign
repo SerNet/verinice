@@ -494,16 +494,15 @@ if (myroot != null &amp;&amp; myroot != -1) {
     root = myroot;
 }
 
-TaskParameter param = new TaskParameter();
-rightsService = (RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
-boolean enabled =  rightsService.isEnabled(ActionRightIDs.TASKSHOWALL);
-if(enabled){
-    param.setAllUser(true);
-}
-
 Activator.inheritVeriniceContextState();
-taskList = ServiceFactory.lookupTaskService().getTaskList(param);
-
+rightsService = (RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+if(rightsService.isEnabled(ActionRightIDs.TASKSHOWALL)){
+    TaskParameter param = new TaskParameter();
+    param.setAllUser(true);
+    taskList = ServiceFactory.lookupTaskService().getTaskList(param);
+} else {
+    taskList = ServiceFactory.lookupTaskService().getCurrentUserTaskList();
+}
 
 List tasks = new ArrayList();
 DateFormat formatter = new SimpleDateFormat();

@@ -61,7 +61,9 @@
 					value="jdbc.url=${server-database-url}" />
         	<replacefilter token="# admin.username=admin" value="admin.username=verinice"/>
         	<replacefilter token="# veriniceserver.grundschutzKataloge=/WEB-INF/it-grundschutz_el14_html_de.zip" 
-        		value="veriniceserver.grundschutzKataloge=${test-data}/it-grundschutz_el14_html_de.zip"/>
+        		value="veriniceserver.grundschutzKataloge=file:${test-data}/it-grundschutz_el14_html_de.zip"/>
+        	<replacefilter token="# veriniceserver.datenschutzBaustein=/WEB-INF/B1.5-Datenschutz-2008-08-26.zip" 
+        		value="veriniceserver.datenschutzBaustein=file:${test-data}/B1.5-Datenschutz-2008-08-26.zip"/>
         </replace>
         <replace file="${server-work-dir}/verinice/WEB-INF/classes/log4j.xml" summary="true">
             <replacefilter token="${catalina.home}/logs/verinice-server.log" 
@@ -185,7 +187,7 @@ catalina.base : ${server-work-dir}
 	</java>
 </target>
 
-	<target name="init" depends="clean, configure.linux, configure.windows">
+	<target name="init" depends="clean, configure.rcptt.runner">
 		<mkdir dir="${test-results}" />
 		<mkdir dir="${auts}" />
 		<mkdir dir="${images}" />
@@ -208,15 +210,42 @@ test-options: ${test-options}
 lang        : ${verinice.lang}
 ---		
 		</echo>
-</target>
-
-	<target name="configure.windows" unless="isLinux">
-		<property name="starterPlugin" value="plugins/org.eclipse.equinox.launcher.win32.win32.x86_64_${rcptt.laucher.version}"/>
-	</target>
-	<target name="configure.linux" unless="isWindows">
-		<property name="starterPlugin" value="plugins/org.eclipse.equinox.launcher.gtk.linux.x86_64_${rcptt.laucher.version}"/>
 	</target>
 
+	<target name="configure.rcptt.runner">
+		<echo>Configure rcptt runner at ${runner-path}</echo>
+		<path id="rcp-runner">
+			<fileset dir="${runner-path}/plugins" >
+				<include name="org.eclipse.equinox.launcher*" />
+			</fileset>
+		</path>
+
+		<property name="e-runner" refid="rcp-runner"/>
+		<basename property="erunner" file="${e-runner}"/>
+		<echo>found erunner:  ${erunner}</echo>
+	</target>
+	
+	<target name="configure.runners" >
+		<echo>Configure verinice at ${verinice-aut-path}</echo>
+		<path id="verinice-runner">
+			<fileset dir="${verinice-aut-path}/plugins">
+				<include name="org.eclipse.equinox.launcher_*.jar" />
+			</fileset>
+		</path>
+		<property name="v-runner" refid="verinice-runner"/>
+		<basename property="verinice.launcher" file="${v-runner}"/>
+		<echo>found verinice.launcher:  ${verinice.launcher}</echo>
+
+		<path id="verinice-starter">
+			<dirset  dir="${verinice-aut-path}/plugins">
+				<include name="org.eclipse.equinox.launcher.*" />
+			</dirset>
+		</path>
+		<property name="v-launcher" refid="verinice-starter"/>
+		<basename property="verinice.starter" file="${v-launcher}"/>
+		<echo>found verinice.starter:  ${verinice.starter}</echo>
+	</target>
+	
 	<!-- - - - - - - - - - - - - - - - - - 
           target: unzip.archive                      
          - - - - - - - - - - - - - - - - - -->
@@ -369,13 +398,13 @@ workspace
 	<!-- - - - - - - - - - - - - - - - - - 
           target: configure.verinice                      
          - - - - - - - - - - - - - - - - - -->
-	<target name="configure.verinice" depends="unzip.archive.linux, unzip.archive.windows">
+	<target name="configure.verinice" depends="unzip.archive.linux, unzip.archive.windows, configure.runners">
 		<delete file="${verinice.dir}/verinice.ini" />
 		<echo>${verinice-workspace}::${verinice.dir}</echo>
 		<echo file="${verinice.dir}/verinice.ini">-startup
-plugins/org.eclipse.equinox.launcher_${verinice.launcher.version}.jar
+plugins/${verinice.launcher}
 --launcher.library
-${starterPlugin}
+plugins/${verinice.starter}
 -nl
 ${verinice.lang}
 -data
@@ -395,6 +424,9 @@ ${verinice-workspace}
 -Dimages=${images}
 -Dbasepath=${test-results}
 -Dtest-data=${test-data}
+-Dderby.locks.monitor=true
+-Dderby.locks.deadlockTrace=true
+-Djava.net.useSystemProxies=true
 </echo>
 	</target>
 
@@ -450,7 +482,7 @@ ${verinice-workspace}
     <!-- - - - - - - - - - - - - - - - - - 
           target: starts the rcptt testrunner and executes all test in the property test-list
          - - - - - - - - - - - - - - - - - -->
-	<target name="start-test-runner-customtest">
+	<target name="start-test-runner-customtest" depends="configure.rcptt.runner">
 		<echo>  
 		starting aut:${aut-path}
 		tests       :${test-list}

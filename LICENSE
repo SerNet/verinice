@@ -67,6 +67,7 @@ Libraries:
 * Apache Lucene
 * Apache Xerces
 * cglib
+* DOMPurify
 * ehcache
 * Elasticsearch
 * Gson

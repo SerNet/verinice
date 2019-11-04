@@ -56,6 +56,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
+import sernet.gs.ui.rcp.main.actions.ShowBulkEditAccountsAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.bsi.actions.NaturalizeAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
@@ -153,6 +154,8 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
     private DrillDownAdapter drillDownAdapter;
 
     private ShowBulkEditAction bulkEditAction;
+
+    private ShowBulkEditAccountsAction bulkEditAccountsAction;
 
     private ExpandAction expandAction;
 
@@ -336,6 +339,8 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 
         bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(),
                 Messages.ISMView_6);
+        bulkEditAccountsAction = new ShowBulkEditAccountsAction(getViewSite().getWorkbenchWindow(),
+                sernet.gs.ui.rcp.main.Messages.ContextMenuAccountBulkEditor);
 
         expandAction = new ExpandAction(viewer, contentProvider);
         expandAction.setText(Messages.ISMView_7);
@@ -516,6 +521,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
         manager.add(new Separator());
         manager.add(new GroupMarker("special")); //$NON-NLS-1$
         manager.add(bulkEditAction);
+        manager.add(bulkEditAccountsAction);
         manager.add(accessControlEditAction);
         manager.add(naturalizeAction);
         manager.add(new Separator());

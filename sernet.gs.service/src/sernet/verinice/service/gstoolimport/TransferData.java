@@ -70,7 +70,6 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.NetzKomponente;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.Raum;
-import sernet.verinice.model.bsi.Schutzbedarf;
 import sernet.verinice.model.bsi.Server;
 import sernet.verinice.model.bsi.SonstIT;
 import sernet.verinice.model.bsi.TelefonKomponente;
@@ -793,19 +792,6 @@ public class TransferData {
         element.setKuerzel(result.zielobjekt.getKuerzel());
         element.setErlaeuterung(result.zielobjekt.getBeschreibung());
         element.setAnzahl(result.zielobjekt.getAnzahl());
-    }
-
-    public static int translateSchutzbedarf(String name) {
-        if (name.equals("normal")) {
-            return Schutzbedarf.NORMAL;
-        }
-        if (name.equals("hoch")) {
-            return Schutzbedarf.HOCH;
-        }
-        if (name.equals("sehr hoch")) {
-            return Schutzbedarf.SEHRHOCH;
-        }
-        return Schutzbedarf.UNDEF;
     }
 
     /**

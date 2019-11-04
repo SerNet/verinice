@@ -106,6 +106,9 @@ public class Messages extends NLS {
     public static String ExceptionUtilErrorMessageServerMode;
     public static String ClientAndServerIncompatible;
     public static String FilterInformationNetworksByProceeding;
+    public static String ContextMenuAccountBulkEditor;
+    public static String Select_All;
+    public static String Select_None;
 
     static {
         // initialize resource bundle

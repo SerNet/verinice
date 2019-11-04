@@ -1,22 +1,23 @@
 /*******************************************************************************
  * Copyright (c) 2009 Alexander Koderman <ak[at]sernet[dot]de>.
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU Lesser General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- *     This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
- *     You should have received a copy of the GNU Lesser General Public 
- * License along with this program. 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
+ * Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import org.apache.commons.lang.StringUtils;
@@ -43,6 +44,8 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.StatusLine;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorMultiPage;
+import sernet.gs.ui.rcp.main.bsi.views.listeners.DisableContextMenuListener;
+import sernet.gs.ui.rcp.main.bsi.views.listeners.WhiteListLocationListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
@@ -83,6 +86,9 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
                     GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL));
 
             browser.setJavascriptEnabled(false);
+            browser.addMenuDetectListener(new DisableContextMenuListener());
+            browser.addLocationListener(
+                    new WhiteListLocationListener(Arrays.asList("about:blank", defaultImage())));
 
             serializeListener = new SerializeBrowserLoadingListener(browser);
             browser.addProgressListener(serializeListener);

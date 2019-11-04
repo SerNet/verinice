@@ -72,50 +72,47 @@ import sernet.verinice.service.commands.crud.LoadElementForEditor;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@TransactionConfiguration(transactionManager="txManager", defaultRollback=false)
+@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
 @Transactional
-public class CommandServiceTest extends CommandServiceProvider {  
-    
+public class CommandServiceTest extends CommandServiceProvider {
+
     private static final Logger LOG = Logger.getLogger(CommandServiceTest.class);
-    
-    private static final int NUMBER_PER_GROUP = 20;  
-    private static final int NUMBER_OF_IMPORTED_ELEMENTS = 29;   
+
+    private static final int NUMBER_PER_GROUP = 20;
+    private static final int NUMBER_OF_IMPORTED_ELEMENTS = 29;
     private static final String SOURCE_ID = "CommandServiceTest";
     private static final String VALUE_PREFIX = "****";
     private static final int NUMBER_OF_ELEMENTS = 300;
-     
-    @Resource(name="huiTypeFactory")
+
+    @Resource(name = "huiTypeFactory")
     private HUITypeFactory huiTypeFactory;
-    
-    private Set<CnATreeElement> importedElements;    
+
     private List<String> uuidList;
     private String currentDate;
-    
-    
+
     /**
-     * For randomly choosed NUMBER_OF_ELEMENTS elements:
-     *  -Open the element similar to BSIElementEditor,
-     *  -Changes all simple (line and text type) properties.
-     *  -Saves the element.
-     *  -Loads the element again.
-     *  -Checks id proerties are changed.
+     * For randomly choosed NUMBER_OF_ELEMENTS elements: -Open the element
+     * similar to BSIElementEditor, -Changes all simple (line and text type)
+     * properties. -Saves the element. -Loads the element again. -Checks id
+     * proerties are changed.
      */
     @Test
     @Transactional
     @Rollback(true)
     public void testOpenEditor() throws Exception {
         Calendar now = Calendar.getInstance();
-        currentDate = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).format(now.getTime());
+        currentDate = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT)
+                .format(now.getTime());
         List<String> uuidList = getAllUuids();
         double factor = 1;
-        if(uuidList.size()>NUMBER_OF_ELEMENTS) {
-            factor = (NUMBER_OF_ELEMENTS*1.0) / uuidList.size();
-        } 
+        if (uuidList.size() > NUMBER_OF_ELEMENTS) {
+            factor = (NUMBER_OF_ELEMENTS * 1.0) / uuidList.size();
+        }
         LOG.info(uuidList.size() + " elements, test factor is: " + factor);
         int n = 0;
         for (String uuid : uuidList) {
-            if(Math.random()<factor) {              
-                loadChangeAndCheckElement(uuid);  
+            if (Math.random() < factor) {
+                loadChangeAndCheckElement(uuid);
                 n++;
             }
         }
@@ -123,21 +120,23 @@ public class CommandServiceTest extends CommandServiceProvider {
     }
 
     /**
-     * Loads all elements with the LoadTreeItem command.
-     * ISO- and BSI-View using LoadTreeItem to load the tree.
+     * Loads all elements with the LoadTreeItem command. ISO- and BSI-View using
+     * LoadTreeItem to load the tree.
      */
     @Test
     public void testLoadTreeItems() throws Exception {
-        LoadElementByTypeId loadOrgs = new LoadElementByTypeId(Organization.TYPE_ID, RetrieveInfo.getPropertyInstance());
+        LoadElementByTypeId loadOrgs = new LoadElementByTypeId(Organization.TYPE_ID,
+                RetrieveInfo.getPropertyInstance());
         loadOrgs = commandService.executeCommand(loadOrgs);
         List<Organization> allOrgs = (List<Organization>) loadOrgs.getElementList();
-        
+
         loadTree(allOrgs);
-        
-        LoadElementByTypeId loadItVerbunds = new LoadElementByTypeId(ITVerbund.TYPE_ID, RetrieveInfo.getPropertyInstance());
+
+        LoadElementByTypeId loadItVerbunds = new LoadElementByTypeId(ITVerbund.TYPE_ID,
+                RetrieveInfo.getPropertyInstance());
         loadItVerbunds = commandService.executeCommand(loadItVerbunds);
         List<ITVerbund> allItVerbunds = (List<ITVerbund>) loadItVerbunds.getElementList();
-        
+
         loadTree(allItVerbunds);
     }
 
@@ -148,86 +147,89 @@ public class CommandServiceTest extends CommandServiceProvider {
             LOG.debug("Testing element: " + title);
             loadChildren(element);
         }
-    }    
-    
+    }
+
     /**
      * Calls LoadElementByUuid for all elements in DB
      */
     @Test
     public void testLoadElementByUuid() throws Exception {
         List<String> uuidList = getAllUuids();
-        
+
         for (String uuid : uuidList) {
             RetrieveInfo ri = new RetrieveInfo();
             ri.setParent(true);
-            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuid, ri);
+            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuid,
+                    ri);
             command = commandService.executeCommand(command);
             CnATreeElement element = command.getElement();
             assertNotNull(element);
             checkScopeId(element);
-        }    
+        }
     }
-    
+
     /**
-     * Creates a new organization and for every group in it
-     * NUMBER_PER_GROUP elements.
+     * Creates a new organization and for every group in it NUMBER_PER_GROUP
+     * elements.
      * 
-     * Deletes the newly created org. by command RemoveElement 
-     * and checks if every element is removed.
+     * Deletes the newly created org. by command RemoveElement and checks if
+     * every element is removed.
      */
     @Test
     public void testCreateAndRemoveElement() throws Exception {
         uuidList = new LinkedList<String>();
-        
+
         Organization organization = createOrganization();
         uuidList.add(organization.getUuid());
-        checkOrganization(organization);       
+        checkOrganization(organization);
         uuidList.addAll(createElementsInGroups(organization, NUMBER_PER_GROUP));
-        
+
         LOG.info("Total number of created elements: " + uuidList.size());
-        
-        RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(organization);
+
+        RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(
+                organization);
         commandService.executeCommand(removeCommand);
-        
-        for (String uuid: uuidList) {
+
+        for (String uuid : uuidList) {
             LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuid);
             command = commandService.executeCommand(command);
             CnATreeElement element = command.getElement();
             assertNull("Organization was not deleted.", element);
-        }       
+        }
     }
-    
+
     protected void loadChangeAndCheckElement(String uuid) throws CommandException {
         LoadElementByUuid<CnATreeElement> loadByUuid;
         CnATreeElement element = loadElement(uuid, new RetrieveInfo());
-        
+
         LOG.debug("Element opened: " + element.getTitle());
-        
-        if(isEditable(element)) {
-            changeElement(element);          
-            CnATreeElement changedElement = loadElement(uuid,RetrieveInfo.getPropertyInstance());         
+
+        if (isEditable(element)) {
+            changeElement(element);
+            CnATreeElement changedElement = loadElement(uuid, RetrieveInfo.getPropertyInstance());
             checkElement(changedElement);
             checkChangedProperties(changedElement);
         }
     }
-    
 
     /**
      * Loads an element similar to the BsiElementEditor
      */
-    protected CnATreeElement loadElement(String uuid, RetrieveInfo ri) throws CommandException {  
-        LoadElementByUuid<CnATreeElement> loadByUuid = new LoadElementByUuid<CnATreeElement>(uuid, ri);
+    protected CnATreeElement loadElement(String uuid, RetrieveInfo ri) throws CommandException {
+        LoadElementByUuid<CnATreeElement> loadByUuid = new LoadElementByUuid<CnATreeElement>(uuid,
+                ri);
         loadByUuid = commandService.executeCommand(loadByUuid);
         CnATreeElement element = loadByUuid.getElement();
         assertNotNull("Element is null, uuid: " + uuid, element);
-        
-        
-        RetrieveCnATreeElement retrieveCommand = new RetrieveCnATreeElement(element.getTypeId(), element.getDbId(),RetrieveInfo.getChildrenInstance());
-        retrieveCommand = commandService.executeCommand(retrieveCommand);           
-        CnATreeElement elementWithChildren = retrieveCommand.getElement(); 
+
+        RetrieveCnATreeElement retrieveCommand = new RetrieveCnATreeElement(element.getTypeId(),
+                element.getDbId(), RetrieveInfo.getChildrenInstance());
+        retrieveCommand = commandService.executeCommand(retrieveCommand);
+        CnATreeElement elementWithChildren = retrieveCommand.getElement();
         assertNotNull("Element with children is null, uuid: " + uuid, elementWithChildren);
-        assertNotNull("Children of element are null, uuid: " + uuid, elementWithChildren.getChildren());
-        
+        assertNotNull("Children of element are null, uuid: " + uuid,
+                elementWithChildren.getChildren());
+
         LoadElementForEditor loadForEditor = new LoadElementForEditor(element);
         loadForEditor = commandService.executeCommand(loadForEditor);
         element = loadForEditor.getElement();
@@ -235,19 +237,20 @@ public class CommandServiceTest extends CommandServiceProvider {
         element.setChildren(elementWithChildren.getChildren());
         return element;
     }
-    
+
     protected void changeElement(CnATreeElement element) throws CommandException {
-        changeProperties(element);            
-        UpdateElementEntity<CnATreeElement> updateCommand = new UpdateElementEntity<CnATreeElement>(element, ChangeLogEntry.STATION_ID);
+        changeProperties(element);
+        UpdateElementEntity<CnATreeElement> updateCommand = new UpdateElementEntity<CnATreeElement>(
+                element, ChangeLogEntry.STATION_ID);
         commandService.executeCommand(updateCommand);
     }
-    
+
     protected void loadChildren(CnATreeElement element) throws CommandException {
         RetrieveInfo ri = new RetrieveInfo();
-        ri.setChildren(true).setChildrenProperties(true);           
+        ri.setChildren(true).setChildrenProperties(true);
         LoadTreeItem command = new LoadTreeItem(element.getUuid(), ri);
         command = commandService.executeCommand(command);
-        CnATreeElement elementWithChildren = command.getElement();       
+        CnATreeElement elementWithChildren = command.getElement();
         Set<CnATreeElement> children = elementWithChildren.getChildren();
         assertNotNull("Children set of element is null", children);
         for (CnATreeElement child : children) {
@@ -258,36 +261,33 @@ public class CommandServiceTest extends CommandServiceProvider {
             loadChildren(child);
         }
     }
-    
+
     protected boolean isEditable(CnATreeElement element) {
-        return ! (element instanceof IBSIStrukturKategorie) &&
-           ! (element instanceof IISO27kRoot) && 
-           ! (element instanceof IBpRoot) &&
-           ! (element instanceof BSIModel) &&
-           ! (element instanceof CatalogModel) &&
-           ! (element instanceof ImportIsoGroup) &&
-           ! (element instanceof ImportBsiGroup) &&
-           ! (element instanceof FinishedRiskAnalysis);
+        return !(element instanceof IBSIStrukturKategorie) && !(element instanceof IISO27kRoot)
+                && !(element instanceof IBpRoot) && !(element instanceof BSIModel)
+                && !(element instanceof CatalogModel) && !(element instanceof ImportIsoGroup)
+                && !(element instanceof ImportBsiGroup)
+                && !(element instanceof FinishedRiskAnalysis);
     }
-    
+
     private void changeProperties(CnATreeElement element) {
         Entity entity = element.getEntity();
         EntityType type = huiTypeFactory.getEntityType(element.getTypeId());
         assertNotNull("Entity type not found, id: " + element.getTypeId(), type);
         List<PropertyType> propertyList = type.getAllPropertyTypes();
         for (PropertyType propertyType : propertyList) {
-            if(propertyType.isLine() || propertyType.isText()) {
+            if (propertyType.isLine() || propertyType.isText()) {
                 String id = propertyType.getId();
                 String value = entity.getSimpleValue(id);
-                if(value.contains(VALUE_PREFIX)) {
+                if (value.contains(VALUE_PREFIX)) {
                     value = value.substring(value.indexOf(VALUE_PREFIX));
                 }
                 value = value + VALUE_PREFIX + currentDate;
-                entity.setSimpleValue(propertyType,value);
+                entity.setSimpleValue(propertyType, value);
             }
         }
     }
-    
+
     private void checkChangedProperties(CnATreeElement element) {
         String typeId = element.getTypeId();
         Entity entity = element.getEntity();
@@ -295,61 +295,47 @@ public class CommandServiceTest extends CommandServiceProvider {
         assertNotNull("Entity type not found, id: " + typeId, type);
         List<PropertyType> propertyList = type.getAllPropertyTypes();
         for (PropertyType propertyType : propertyList) {
-            if(propertyType.isLine() || propertyType.isText()) {
+            if (propertyType.isLine() || propertyType.isText()) {
                 String id = propertyType.getId();
                 String value = entity.getSimpleValue(id);
-                assertTrue("Property not changed, type: " + typeId + ", uuid: " + element.getUuid() + ", prop: " + id ,value.contains(VALUE_PREFIX));
+                assertTrue("Property not changed, type: " + typeId + ", uuid: " + element.getUuid()
+                        + ", prop: " + id, value.contains(VALUE_PREFIX));
             }
         }
-        
+
     }
-    
-    /**
-     * Vna import does not work in Junit-Test. After importing only the organization is 
-     * saved in DB. Probably this is a spring-junit-transaction issue.
-     * 
-     * This method is not annotated with @Test anymore.
-     * To activate it activate the annotation again.
-     */
-    //@Test
-    //@Transactional
-    //@Rollback(false)
-    public void testVnaImport() throws Exception {      
+
+    @Test
+    @Transactional
+    @Rollback(true)
+    public void testVnaImport() throws Exception {
         importVna();
-        
-        String hql = "select element.uuid from CnATreeElement element where element.sourceId = ?"; 
-        Object[] params = new Object[]{SOURCE_ID}; 
+
+        String hql = "select element.uuid from CnATreeElement element where element.sourceId = ?";
+        Object[] params = new Object[] { SOURCE_ID };
         List<String> importedUuids = elementDao.findByQuery(hql, params);
         LOG.info("Number of imported elements: " + importedUuids.size());
-        
-        assertEquals("number of imported elements is not: " + NUMBER_OF_IMPORTED_ELEMENTS, NUMBER_OF_IMPORTED_ELEMENTS, importedUuids.size());
-        
+
+        assertEquals("number of imported elements is not: " + NUMBER_OF_IMPORTED_ELEMENTS,
+                NUMBER_OF_IMPORTED_ELEMENTS, importedUuids.size());
+
         // Elemente 29
         // Links 40 / 20
         // Dateien 2
-        
-        removeImport();
+
     }
-    
+
     public void importVna() throws Exception {
-        SyncParameter parameter = new SyncParameter(true, true, true, false, SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
+        SyncParameter parameter = new SyncParameter(true, true, true, false,
+                SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
         URL vnaUrl = this.getClass().getResource("testVnaImport.vna");
 
         SyncCommand command = new SyncCommand(parameter, vnaUrl.getPath());
         command = commandService.executeCommand(command);
-        importedElements = command.getElementSet();
-        
-        //sessionFactory.getCurrentSession().flush(); 
-        
+
+        // sessionFactory.getCurrentSession().flush();
+
         LOG.info("VNA imported: " + vnaUrl.getPath());
     }
-    
-    public void removeImport() throws Exception {
-        for (CnATreeElement element : importedElements) {
-            RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(element);
-            commandService.executeCommand(removeCommand);
-        }
-    }
-    
 
 }

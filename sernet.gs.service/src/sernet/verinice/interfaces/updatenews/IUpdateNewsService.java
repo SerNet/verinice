@@ -27,14 +27,11 @@ import sernet.verinice.model.updateNews.UpdateNewsMessageEntry;
  *
  */
 public interface IUpdateNewsService {
-    
-    public static final String VERINICE_VERSION_PATTERN = 
-            "\\b\\d{1}?[\\.]\\d{2}[\\.]\\d{1}\\b";
-    
-    String getCurrentInstalledVersion();
-    
+
+    public static final String VERINICE_VERSION_PATTERN = "\\b\\d{1}?[\\.]\\d{2}[\\.]\\d{1}\\b";
+
     UpdateNewsMessageEntry getNewsFromRepository(String newsRepository) throws UpdateNewsException;
-    
+
     boolean isUpdateNecessary(String installedVersion) throws UpdateNewsException;
-    
+
 }

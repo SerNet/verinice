@@ -42,6 +42,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.bsi.views.SerializeBrowserLoadingListener;
+import sernet.gs.ui.rcp.main.bsi.views.listeners.DisableContextMenuListener;
+import sernet.gs.ui.rcp.main.bsi.views.listeners.WhiteListLocationListener;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
@@ -54,7 +56,6 @@ import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
  * @param <T>
  */
 public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends WizardPage {
-
 
     protected Composite rootContainer;
     protected Button buttonOwnGefaehrdungen, buttonGefaehrdungen;
@@ -98,20 +99,19 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
         return riskWizard;
     }
 
-
     @Override
     public void createControl(Composite parent) {
         rootContainer = new Composite(parent, SWT.NONE);
-        
+
         setLeftColumn(rootContainer);
         setRightColumn(rootContainer);
         addControls(rootContainer);
-        GridLayoutFactory.fillDefaults().numColumns(WIZARD_NUM_COLS_ROOT).margins(DEFAULT_MARGINS).generateLayout(rootContainer);
+        GridLayoutFactory.fillDefaults().numColumns(WIZARD_NUM_COLS_ROOT).margins(DEFAULT_MARGINS)
+                .generateLayout(rootContainer);
         setControl(rootContainer);
         addListeners();
 
     }
-
 
     private void resetSearchField() {
         if (textSearch != null) {
@@ -148,17 +148,20 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
         browserListener.selectionChanged(new SelectionChangedEvent(viewer, viewer.getSelection()));
     }
 
-
     private void setRightColumn(Composite parent) {
         Composite rightColumn = new Composite(parent, SWT.FULL_SELECTION);
 
         browser = new Browser(rightColumn, SWT.BORDER);
+        browser.setJavascriptEnabled(false);
+        browser.addMenuDetectListener(new DisableContextMenuListener());
+        browser.addLocationListener(WhiteListLocationListener.DEFAULT);
         browserLoadingListener = new SerializeBrowserLoadingListener(browser);
         browser.addProgressListener(browserLoadingListener);
         GridLayoutFactory.fillDefaults().margins(DEFAULT_MARGINS).generateLayout(rightColumn);
-        browser.setLayoutData(new GridData(GridData.FILL_BOTH
-                | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL));
-        GridDataFactory.fillDefaults().hint(WIZARD_BROWSER_WIDTH, SWT.LONG).grab(false, true).applyTo(rightColumn);
+        browser.setLayoutData(new GridData(
+                GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL));
+        GridDataFactory.fillDefaults().hint(WIZARD_BROWSER_WIDTH, SWT.LONG).grab(false, true)
+                .applyTo(rightColumn);
     }
 
     /**
@@ -167,7 +170,7 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
      * @param parent
      */
     protected void setLeftColumn(Composite parent) {
-        
+
         /* CheckboxTableViewer */
         Composite leftColumn = new Composite(parent, SWT.NONE);
         viewer = initializeViewer(leftColumn);
@@ -177,8 +180,6 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
         table.setLinesVisible(true);
 
         setColumns();
-
-
 
         table.layout();
         GridLayoutFactory.fillDefaults().margins(DEFAULT_MARGINS).generateLayout(leftColumn);
@@ -191,13 +192,13 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
 
     protected void addControls(Composite parent) {
 
-
         Composite controls = new Composite(parent, SWT.NONE);
         addFilters(controls);
 
         addButtons(controls, Messages.ChooseGefaehrdungPage_11);
 
-        GridLayoutFactory.fillDefaults().numColumns(NUM_COLS_CONTROLS).margins(DEFAULT_MARGINS).generateLayout(controls);
+        GridLayoutFactory.fillDefaults().numColumns(NUM_COLS_CONTROLS).margins(DEFAULT_MARGINS)
+                .generateLayout(controls);
 
     }
 
@@ -216,8 +217,10 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
         Composite search = new Composite(compositeFilter, SWT.NULL);
         new Label(search, SWT.NULL).setText(Messages.ChooseGefaehrdungPage_10);
         textSearch = new Text(search, SWT.SINGLE | SWT.BORDER);
-        GridLayoutFactory.fillDefaults().numColumns(2).margins(DEFAULT_MARGINS).generateLayout(search);
-        GridLayoutFactory.fillDefaults().numColumns(NUM_COLS_FILTERS).margins(DEFAULT_MARGINS).generateLayout(compositeFilter);
+        GridLayoutFactory.fillDefaults().numColumns(2).margins(DEFAULT_MARGINS)
+                .generateLayout(search);
+        GridLayoutFactory.fillDefaults().numColumns(NUM_COLS_FILTERS).margins(DEFAULT_MARGINS)
+                .generateLayout(compositeFilter);
         GridDataFactory.fillDefaults().hint(125, SWT.DEFAULT).applyTo(textSearch);
 
     }
@@ -242,8 +245,8 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
         buttonDelete.setText(Messages.ChooseGefaehrdungPage_13);
         GridDataFactory.fillDefaults().hint(ADD_EDIT_REMOVE_BUTTON_SIZE).applyTo(buttonDelete);
 
-
-        GridLayoutFactory.fillDefaults().numColumns(NUM_COLS_BUTTONS).margins(DEFAULT_MARGINS).generateLayout(groupButtons);
+        GridLayoutFactory.fillDefaults().numColumns(NUM_COLS_BUTTONS).margins(DEFAULT_MARGINS)
+                .generateLayout(groupButtons);
 
         GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.TOP).applyTo(groupButtons);
 
@@ -253,7 +256,8 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
 
         addSpecificListenersForPage();
 
-        browserListener = new RiskAnalysisWizardBrowserUpdateListener(browserLoadingListener, viewer);
+        browserListener = new RiskAnalysisWizardBrowserUpdateListener(browserLoadingListener,
+                viewer);
         viewer.addSelectionChangedListener(browserListener);
 
         if (buttonDelete != null && buttonEdit != null) {
@@ -262,8 +266,10 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
                 @Override
                 public void selectionChanged(SelectionChangedEvent event) {
                     if (event.getSelection() instanceof IStructuredSelection) {
-                        Object element = ((IStructuredSelection) event.getSelection()).getFirstElement();
-                        if (element instanceof RisikoMassnahmenUmsetzung || element instanceof OwnGefaehrdung) {
+                        Object element = ((IStructuredSelection) event.getSelection())
+                                .getFirstElement();
+                        if (element instanceof RisikoMassnahmenUmsetzung
+                                || element instanceof OwnGefaehrdung) {
                             buttonDelete.setEnabled(true);
                             buttonEdit.setEnabled(true);
                         } else {
@@ -274,7 +280,7 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
                 }
             });
         }
-        
+
         if (textSearch != null) {
             /* Listener adds/removes Filter searchFilter */
             textSearch.addModifyListener(new ModifyListener() {
@@ -315,7 +321,8 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
         }
     }
 
-    protected void updateOrAddFilter(String text, RiskAnalysisWizardPageSearchFilter thisFilter, boolean contains) {
+    protected void updateOrAddFilter(String text, RiskAnalysisWizardPageSearchFilter thisFilter,
+            boolean contains) {
         if (contains) {
             /* filter is already active - update filter */
             thisFilter.setPattern(text);
@@ -371,7 +378,8 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
             // only gefaehrdungen from BSI catalog have a URL associated
             // with
             // them:
-            return gef.getUrl() == null || gef.getUrl().length() == 0 || gef.getUrl().equals(DB_NULL); // $NON-NLS-1$
+            return gef.getUrl() == null || gef.getUrl().length() == 0
+                    || gef.getUrl().equals(DB_NULL); // $NON-NLS-1$
         }
     }
 
@@ -405,10 +413,10 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
             // only gefaehrdungen from BSI catalog have a URL associated
             // with
             // them:
-            return gef.getUrl() == null || gef.getUrl().length() == 0 || gef.getUrl().equals(DB_NULL); // $NON-NLS-1$
+            return gef.getUrl() == null || gef.getUrl().length() == 0
+                    || gef.getUrl().equals(DB_NULL); // $NON-NLS-1$
         }
 
     }
-
 
 }

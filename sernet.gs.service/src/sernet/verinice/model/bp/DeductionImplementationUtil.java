@@ -191,6 +191,7 @@ public final class DeductionImplementationUtil {
             return false;
         }
         String rawValue = BpRequirement.toRawValue(status);
+        requirement.getEntity().trackChange("system");
         requirement.setSimpleProperty(BpRequirement.PROP_IMPLEMENTATION_STATUS, rawValue);
         return true;
     }

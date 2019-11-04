@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cheatsheet title="Konvertierung von Informationsverbünden">
+
+  <intro>
+    <description>
+      <b>Willkommen bei verinice.</b>
+      <br/>
+      <br/>
+      Anwender des IT-Grundschutz können bestehende IT-Verbünde auf Grundlage der BSI-Standards der
+      100er Reihe nun direkt in verinice in Informationsverbünde nach den BSI-Standards der 200er 
+      Reihe konvertieren. In diesem Tutorial lernen Sie, wie Sie die Konvertierung in verinice 
+      durchführen.
+    </description>
+  </intro>
+
+  <item title="IT-Verbund vorbereiten">
+    <description>
+      Bevor Sie die Konvertierung Ihres IT-Verbundes anstoßen, sollten Sie diesen vorbereiten, denn
+      hier ist eine Besonderheiten zu beachten: Anwendungen können als Prozess oder Anwendung
+      konvertiert werden.
+      Öffnen Sie zunächst die BSI-Grundschutz-Perspektive, wo Sie bisher Ihren IT-Verbund auf
+      Grundlage der BSI-Standards der 100erReihe modelliert haben, unter <b>Ansicht >
+      Zeige Perspektive… > BSI-Grundschutz</b>. Bestimmen Sie nun für jede Anwendung, ob es sich um
+      eine Anwendung oder ein Prozess handelt. In welchen Zielobjekttyp die einzelnen Anwendungen in
+      der modernisierten BSI IT-Grundschutz Perspektive umgewandelt werden sollen, können Sie in der
+      <b>Anwendung</b> unter <b>Tags</b> bestimmen. Vergeben Sie wahlweise <b>MoGs:Anwendung</b>
+      (für eine Anwendung) oder  <b>MoGs:Prozess</b> (für einen Prozess) als Tag. Bitte beachten
+      Sie die Groß-/Kleinschreibung.
+      Schließen und Speichern Sie die Anwendungen (<b>Strg+W</b>).
+    </description>
+  </item>
+
+  <item title="Konvertierung">
+    <description>
+      Nachdem Sie die Vorbereitung vorgenommen haben, kann der IT-Verbund konvertiert werden.
+      Klicken Sie dazu mit der rechten Maustaste auf den zu konvertierenden IT-Verbund und wählen
+      <b>Konvertiere IT-Verbünde…</b> im Kontextmenü. Auch ein Klick auf das entsprechende Icon in
+      der oberen Werkzeugleiste ist möglich. Nun können Sie noch einmal eine Auswahl treffen welche
+      IT-Verbünde konvertiert werden sollen. Mit Klick auf <b>Fertigstellen</b> erfolgt die
+      Konvertierung automatisch.
+      Bei der Konvertierung wird eine Kopie des alten Modells in der Perspektive des Modernisierten
+      IT-Grundschutz erzeugt, der alte IT-Verbund bleibt unverändert erhalten. Daher kann die
+      Konvertierung beliebig oft wiederholt werden. Konvertiert werden alle Zielobjekte inklusive
+      aller bestehenden Verknüpfungen. Neben dieser Übernahme der <b>Strukturanalyse</b> werden
+      auch die bestehende <b>Schutzbedarfsdefinitionen und -vererbungen</b> automatisiert
+      übernommen.
+    </description>
+  </item>
+
+  <item title="Hinweise">
+    <description>
+      Bitte beachten Sie folgende Hinweise bei der Konvertierung:
+      <br />
+      <br />
+      1. Wenn es erforderlich ist, werden Gruppen im neuen Modell angelegt, siehe z.B. die
+      Untergruppen Gebäude und Räume im neuen Informationsverbund.
+      <br />
+      <br />
+      2. In seltenen Fällen kann der Typ einer Verknüpfung nicht eindeutig konvertiert werden, die
+      Verknüpfung ist dann in der Beschreibung mit <b>PRÜFEN:Verknüpfungstyp</b> gekennzeichnet
+      und kann einfach korrigiert werden.
+      <br />
+      <br />
+      3. Objekttypen die im alten IT-Grundschutz nicht verwendet wurden bzw. vorlagen werden nicht
+      kopiert. Diese können über das Kontextmenü per rechtem Mausklick neu angelegt werden.
+      <br />
+      <br />
+      4. Eine Migration von Bausteinen des alten IT-Grundschutzkataloges auf das neu
+      IT-Grundschutz-Kompendium erfolgt <b>nicht</b>.
+    </description>
+  </item>
+
+  <item title="Konvertierter Informationsverbund">
+    <description>
+      Der konvertierte Informationsverbund (versehen mit einem Zeitstempel der Konvertierung) steht
+      Ihnen in der Modernisierten BSI-Grundschutz-Perspektive zur Verfügung. Wechseln Sie dazu über
+      <b>Ansicht > Zeige Perspektive… > Modernisierter BSI-Grundschutz</b> die Perspektive.
+    </description>
+  </item>
+
+</cheatsheet>

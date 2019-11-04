@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -87,6 +88,14 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
      * {@link #getValueOfReferenceProperty(PropertyType)}
      */
     private Map<String, String> referenceValueCache;
+
+    private String createdBy;
+
+    private Date createdAt;
+
+    private String changedBy;
+
+    private Date changedAt;
 
     protected Entity() {
         uuid = UUID.randomUUID().toString();
@@ -468,71 +477,83 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
      * <em>untranslated</em> IOW should directly represent the strings used in
      * the SNCA.xml
      * </p>
-     *
-     * @param huiTypeFactory
-     * @param propertyTypeId
-     * @param foreignProperties
      */
-    public void importProperties(HUITypeFactory huiTypeFactory, String propertyTypeId,
+    public boolean importProperties(HUITypeFactory huiTypeFactory, String propertyTypeId,
             List<String> foreignProperties, List<Boolean> foreignLimitedLicense,
             List<String> foreignContentId, boolean licenseManagement) {
+        boolean propertyValueChanged = false;
         PropertyList pl = typedPropertyLists.get(propertyTypeId);
         if (pl == null) {
             pl = new PropertyList();
             typedPropertyLists.put(propertyTypeId, pl);
+            propertyValueChanged = true;
         }
 
-        // It would be possible to create a new list and make the PropertyList
-        // object
-        // use that but that causes problems with hibernate. As such the
-        // existing list
-        // is taken and cleared before use.
         List<Property> properties = pl.getProperties();
-        if (properties == null) {
-            properties = new LinkedList<>();
-            pl.setProperties(properties);
-        } else {
-            properties.clear();
+        int oldSize = properties.size();
+        int newSize = foreignProperties.size();
+        if (oldSize > newSize) {
+            propertyValueChanged = true;
+            for (int i = oldSize; i > newSize; i--) {
+                properties.remove(i - 1);
+            }
+        } else if (newSize > oldSize) {
+            propertyValueChanged = true;
+            for (int i = oldSize; i < newSize; i++) {
+                Property p = new Property();
+                p.setParent(this);
+                p.setPropertyType(propertyTypeId);
+                properties.add(p);
+            }
+        }
+
+        PropertyType propertyType = huiTypeFactory.getPropertyType(this.entityType, propertyTypeId);
+        if (propertyType == null && logger.isInfoEnabled()) {
+            logger.info("Property-type was not found in SNCA.xml: " + propertyTypeId
+                    + ", entity type: " + this.entityType);
         }
 
         for (int i = 0; i < foreignProperties.size(); i++) {
             String value = foreignProperties.get(i);
-            PropertyType propertyType = huiTypeFactory.getPropertyType(this.entityType,
-                    propertyTypeId);
-            Property p = new Property();
-
-            if (propertyType == null && logger.isInfoEnabled()) {
-                logger.info("Property-type was not found in SNCA.xml: " + propertyTypeId
-                        + ", entity type: " + this.entityType);
+            Property p = properties.get(i);
+            checkPropertyValue(propertyTypeId, propertyType, value);
+            if (!Objects.equals(value, p.getPropertyValue())) {
+                propertyValueChanged = true;
+                p.setPropertyValue(value);
             }
 
-            if (propertyType != null && propertyType.isSingleSelect() && value != null
-                    && !value.isEmpty()) {
-                List<IMLPropertyOption> optionList = propertyType.getOptions();
-                boolean found = false;
-                for (IMLPropertyOption option : optionList) {
-                    if (value.equals(option.getName())) {
-                        value = option.getId();
-                        found = true;
-                    } else if (value.equals(option.getId())) {
-                        found = true;
-                    }
-                }
-                if (!found && logger.isInfoEnabled()) {
-                    logger.info(
-                            "No value found for option property: " + propertyTypeId + " of entity: "
-                                    + this.entityType + ". Importing unmapped value: " + value);
-                }
-            }
-            p.setPropertyType(propertyTypeId);
-            p.setPropertyValue(value);
-            p.setParent(this);
+            Boolean limitedLicense = Boolean.FALSE;
+            String licenseContentId = null;
             if (licenseManagement && !foreignContentId.isEmpty()
                     && !foreignLimitedLicense.isEmpty()) {
-                p.setLimitedLicense(foreignLimitedLicense.get(i));
-                p.setLicenseContentId(foreignContentId.get(i));
+                limitedLicense = foreignLimitedLicense.get(i);
+                licenseContentId = foreignContentId.get(i);
             }
-            properties.add(p);
+
+            p.setLimitedLicense(limitedLicense);
+            p.setLicenseContentId(licenseContentId);
+        }
+        return propertyValueChanged;
+    }
+
+    private void checkPropertyValue(String propertyTypeId, PropertyType propertyType,
+            String value) {
+        if (propertyType != null && propertyType.isSingleSelect() && value != null
+                && !value.isEmpty()) {
+            List<IMLPropertyOption> optionList = propertyType.getOptions();
+            boolean found = false;
+            for (IMLPropertyOption option : optionList) {
+                if (value.equals(option.getName())) {
+                    value = option.getId();
+                    found = true;
+                } else if (value.equals(option.getId())) {
+                    found = true;
+                }
+            }
+            if (!found && logger.isInfoEnabled()) {
+                logger.info("No value found for option property: " + propertyTypeId + " of entity: "
+                        + this.entityType + ". Importing unmapped value: " + value);
+            }
         }
     }
 
@@ -1001,6 +1022,48 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
             referenceValueCache = new HashMap<>();
         }
         return referenceValueCache;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getChangedBy() {
+        return changedBy;
+    }
+
+    public void setChangedBy(String changedBy) {
+        this.changedBy = changedBy;
+    }
+
+    public Date getChangedAt() {
+        return changedAt;
+    }
+
+    public void setChangedAt(Date changedAt) {
+        this.changedAt = changedAt;
+    }
+
+    public void trackCreation(String userName) {
+        createdAt = new Date();
+        createdBy = userName;
+    }
+
+    public void trackChange(String userName) {
+        changedAt = new Date();
+        changedBy = userName;
     }
 
     @Override

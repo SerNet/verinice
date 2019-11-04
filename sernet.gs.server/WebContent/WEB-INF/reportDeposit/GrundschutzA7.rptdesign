@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.22" id="1">
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
     <property name="author">A. Koderman</property>
-    <property name="createdBy">Eclipse BIRT Designer Version 3.7.0.v20110602 Build &lt;3.7.0.v20110607-1526></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
     <text-property name="title">verinice - BSI Realisierungsplan</text-property>
-    <property name="units">in</property>
     <list-property name="propertyBindings">
         <structure>
             <property name="name">queryText</property>
@@ -14,6 +13,7 @@
             <property name="id">1607</property>
         </structure>
     </list-property>
+    <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">fixed layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -40,8 +40,8 @@
     </parameters>
     <data-sources>
         <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44">
-            <property name="sncaUrl">http://localhost:8080/veriniceserver/GetHitroConfig</property>
-            <property name="serverURI">http://localhost:8080/veriniceserver</property>
+            <property name="sncaUrl">http://localhost:8800/veriniceserver/GetHitroConfig</property>
+            <property name="serverURI">http://localhost::8800/veriniceserver</property>
         </oda-data-source>
     </data-sources>
     <data-sets>
@@ -5083,7 +5083,7 @@ columns(cols);</value>
                             <text id="1996">
                                 <property name="fontSize">9pt</property>
                                 <property name="contentType">html</property>
-                                <text-property name="content"><![CDATA[printed on <value-of>new Date()</value-of>]]></text-property>
+                                <text-property name="content"><![CDATA[gedruckt am <value-of>new Date()</value-of>]]></text-property>
                             </text>
                         </cell>
                     </row>
@@ -5132,9 +5132,9 @@ bestehende Risiken</text-property>
             <property name="borderTopWidth">medium</property>
             <property name="width">7.75206611570248in</property>
             <column id="1067">
-                <property name="width">2.4242424242424243in</property>
                 <property name="backgroundColor">#9AC3D6</property>
                 <property name="fontWeight">bold</property>
+                <property name="width">2.4242424242424243in</property>
             </column>
             <column id="1068">
                 <property name="width">5.330578512396694in</property>
@@ -5609,8 +5609,8 @@ bestehende Risiken</text-property>
                                     <grid id="1618">
                                         <property name="width">11.03305785123967in</property>
                                         <column id="1619">
-                                            <property name="width">1.4462809917355373in</property>
                                             <property name="fontWeight">bold</property>
+                                            <property name="width">1.4462809917355373in</property>
                                         </column>
                                         <column id="1620">
                                             <property name="width">9.586776859504132in</property>
@@ -5863,8 +5863,8 @@ bestehende Risiken</text-property>
                                             </structure>
                                         </list-property>
                                         <column id="1635">
-                                            <property name="width">1.4462809917355373in</property>
                                             <property name="textAlign">left</property>
+                                            <property name="width">1.4462809917355373in</property>
                                         </column>
                                         <column id="1636">
                                             <property name="width">6.181818181818182in</property>
@@ -6042,8 +6042,8 @@ bestehende Risiken</text-property>
                                             </structure>
                                         </list-property>
                                         <column id="1658">
-                                            <property name="width">1.4545454545454546in</property>
                                             <property name="textAlign">left</property>
+                                            <property name="width">1.4545454545454546in</property>
                                         </column>
                                         <column id="1659">
                                             <property name="width">6.1735537190082646in</property>
@@ -6335,6 +6335,7 @@ bestehende Risiken</text-property>
                                                 <text-property name="displayName">mnums_umsetzung</text-property>
                                                 <expression name="expression" type="javascript">dataSetRow["mnums_umsetzung"]</expression>
                                                 <property name="dataType">javaObject</property>
+                                                <property name="allowExport">true</property>
                                             </structure>
                                             <structure>
                                                 <property name="name">mnums_erlaeuterung</property>
@@ -6427,13 +6428,6 @@ bestehende Risiken</text-property>
                                                 <property name="dataType">javaObject</property>
                                             </structure>
                                         </list-property>
-                                        <list-property name="sort">
-                                            <structure>
-                                                <expression name="key" type="javascript">row["mnums_umsetzung"]</expression>
-                                                <property name="direction">asc</property>
-                                                <property name="strength">-1</property>
-                                            </structure>
-                                        </list-property>
                                         <list-property name="filter">
                                             <structure>
                                                 <property name="operator">ne</property>
@@ -6451,16 +6445,15 @@ bestehende Risiken</text-property>
                                             </structure>
                                         </list-property>
                                         <column id="1908">
-                                            <property name="width">0.7676767676767676in</property>
+                                            <property name="suppressDuplicates">true</property>
+                                            <property name="width">6em</property>
                                         </column>
                                         <column id="1909">
-                                            <property name="width">1.2083333333333333in</property>
+                                            <property name="overflow">visible</property>
+                                            <property name="width">100%</property>
                                         </column>
                                         <column id="1910">
                                             <property name="width">1.25in</property>
-                                        </column>
-                                        <column id="1911">
-                                            <property name="width">1.3333333333333333in</property>
                                         </column>
                                         <column id="1912">
                                             <property name="width">1.5104166666666667in</property>
@@ -6514,20 +6507,6 @@ bestehende Risiken</text-property>
                                                     <property name="borderTopWidth">thin</property>
                                                 </cell>
                                                 <cell id="1958">
-                                                    <property name="borderBottomColor">#000000</property>
-                                                    <property name="borderBottomStyle">solid</property>
-                                                    <property name="borderBottomWidth">thin</property>
-                                                    <property name="borderLeftColor">#000000</property>
-                                                    <property name="borderLeftStyle">solid</property>
-                                                    <property name="borderLeftWidth">thin</property>
-                                                    <property name="borderRightColor">#000000</property>
-                                                    <property name="borderRightStyle">solid</property>
-                                                    <property name="borderRightWidth">thin</property>
-                                                    <property name="borderTopColor">#000000</property>
-                                                    <property name="borderTopStyle">solid</property>
-                                                    <property name="borderTopWidth">thin</property>
-                                                </cell>
-                                                <cell id="1959">
                                                     <property name="borderBottomColor">#000000</property>
                                                     <property name="borderBottomStyle">solid</property>
                                                     <property name="borderBottomWidth">thin</property>
@@ -6642,7 +6621,7 @@ bestehende Risiken</text-property>
                                             </row>
                                             <row id="1890">
                                                 <cell id="1891">
-                                                    <property name="colSpan">5</property>
+                                                    <property name="colSpan">4</property>
                                                     <property name="rowSpan">1</property>
                                                     <property name="borderBottomColor">#000000</property>
                                                     <property name="borderBottomStyle">solid</property>
@@ -6795,23 +6774,6 @@ bestehende Risiken</text-property>
                                                     <property name="borderTopWidth">thin</property>
                                                     <label id="1934">
                                                         <text-property name="text">Umsetzung</text-property>
-                                                    </label>
-                                                </cell>
-                                                <cell id="1917">
-                                                    <property name="borderBottomColor">#000000</property>
-                                                    <property name="borderBottomStyle">solid</property>
-                                                    <property name="borderBottomWidth">thin</property>
-                                                    <property name="borderLeftColor">#000000</property>
-                                                    <property name="borderLeftStyle">solid</property>
-                                                    <property name="borderLeftWidth">thin</property>
-                                                    <property name="borderRightColor">#000000</property>
-                                                    <property name="borderRightStyle">solid</property>
-                                                    <property name="borderRightWidth">thin</property>
-                                                    <property name="borderTopColor">#000000</property>
-                                                    <property name="borderTopStyle">solid</property>
-                                                    <property name="borderTopWidth">thin</property>
-                                                    <label id="1935">
-                                                        <text-property name="text">Erläuterung</text-property>
                                                     </label>
                                                 </cell>
                                                 <cell id="1918">
@@ -6988,24 +6950,17 @@ bestehende Risiken</text-property>
                                                     <property name="borderTopStyle">solid</property>
                                                     <property name="borderTopWidth">thin</property>
                                                     <data id="1922">
+                                                        <list-property name="mapRules">
+                                                            <structure>
+                                                                <expression name="testExpr" type="javascript">row["mnums_umsetzung"]</expression>
+                                                                <property name="operator">eq</property>
+                                                                <simple-property-list name="value1">
+                                                                    <value type="javascript">""</value>
+                                                                </simple-property-list>
+                                                                <text-property name="display">unbearbeitet</text-property>
+                                                            </structure>
+                                                        </list-property>
                                                         <property name="resultSetColumn">mnums_umsetzung</property>
-                                                    </data>
-                                                </cell>
-                                                <cell id="1900">
-                                                    <property name="borderBottomColor">#000000</property>
-                                                    <property name="borderBottomStyle">solid</property>
-                                                    <property name="borderBottomWidth">thin</property>
-                                                    <property name="borderLeftColor">#000000</property>
-                                                    <property name="borderLeftStyle">solid</property>
-                                                    <property name="borderLeftWidth">thin</property>
-                                                    <property name="borderRightColor">#000000</property>
-                                                    <property name="borderRightStyle">solid</property>
-                                                    <property name="borderRightWidth">thin</property>
-                                                    <property name="borderTopColor">#000000</property>
-                                                    <property name="borderTopStyle">solid</property>
-                                                    <property name="borderTopWidth">thin</property>
-                                                    <data id="1923">
-                                                        <property name="resultSetColumn">mnums_erlaeuterung</property>
                                                     </data>
                                                 </cell>
                                                 <cell id="1901">
@@ -7129,10 +7084,47 @@ bestehende Risiken</text-property>
                                                     </label>
                                                 </cell>
                                             </row>
+                                            <row id="3972">
+                                                <property name="borderBottomColor">#000000</property>
+                                                <property name="borderBottomStyle">solid</property>
+                                                <property name="borderBottomWidth">thin</property>
+                                                <cell id="3973">
+                                                    <property name="borderBottomColor">#000000</property>
+                                                    <property name="borderBottomStyle">solid</property>
+                                                    <property name="borderBottomWidth">thin</property>
+                                                    <property name="borderLeftColor">#000000</property>
+                                                    <property name="borderLeftStyle">solid</property>
+                                                    <property name="borderLeftWidth">thin</property>
+                                                    <property name="borderRightColor">#000000</property>
+                                                    <property name="borderRightStyle">solid</property>
+                                                    <property name="borderRightWidth">thin</property>
+                                                    <property name="borderTopColor">#000000</property>
+                                                    <property name="borderTopStyle">solid</property>
+                                                    <property name="borderTopWidth">thin</property>
+                                                </cell>
+                                                <cell id="3974">
+                                                    <property name="colSpan">9</property>
+                                                    <property name="rowSpan">1</property>
+                                                    <property name="borderBottomColor">#000000</property>
+                                                    <property name="borderBottomStyle">solid</property>
+                                                    <property name="borderBottomWidth">thin</property>
+                                                    <property name="borderLeftColor">#000000</property>
+                                                    <property name="borderLeftStyle">solid</property>
+                                                    <property name="borderLeftWidth">thin</property>
+                                                    <property name="borderRightColor">#000000</property>
+                                                    <property name="borderRightStyle">solid</property>
+                                                    <property name="borderRightWidth">thin</property>
+                                                    <property name="borderTopColor">#000000</property>
+                                                    <property name="borderTopStyle">solid</property>
+                                                    <property name="borderTopWidth">thin</property>
+                                                    <data id="1923">
+                                                        <property name="resultSetColumn">mnums_erlaeuterung</property>
+                                                    </data>
+                                                </cell>
+                                            </row>
                                         </detail>
                                         <footer>
                                             <row id="3358">
-                                                <property name="height">0.09375in</property>
                                                 <property name="borderBottomColor">#000000</property>
                                                 <property name="borderBottomStyle">solid</property>
                                                 <property name="borderBottomWidth">thin</property>
@@ -7145,10 +7137,10 @@ bestehende Risiken</text-property>
                                                 <property name="borderTopColor">#000000</property>
                                                 <property name="borderTopStyle">solid</property>
                                                 <property name="borderTopWidth">thin</property>
+                                                <property name="height">0.09375in</property>
                                                 <cell id="3359"/>
                                                 <cell id="3360"/>
                                                 <cell id="3361"/>
-                                                <cell id="3362"/>
                                                 <cell id="3363"/>
                                                 <cell id="3364"/>
                                                 <cell id="3365"/>
@@ -7682,13 +7674,6 @@ bestehende Risiken</text-property>
                                                     <property name="dataType">javaObject</property>
                                                 </structure>
                                             </list-property>
-                                            <list-property name="sort">
-                                                <structure>
-                                                    <expression name="key" type="javascript">row["mnums_umsetzung"]</expression>
-                                                    <property name="direction">asc</property>
-                                                    <property name="strength">-1</property>
-                                                </structure>
-                                            </list-property>
                                             <list-property name="filter">
                                                 <structure>
                                                     <property name="operator">ne</property>
@@ -7706,16 +7691,14 @@ bestehende Risiken</text-property>
                                                 </structure>
                                             </list-property>
                                             <column id="3322">
-                                                <property name="width">0.7676767676767676in</property>
+                                                <property name="suppressDuplicates">true</property>
+                                                <property name="width">6em</property>
                                             </column>
                                             <column id="3323">
-                                                <property name="width">1.2083333333333333in</property>
+                                                <property name="width">100%</property>
                                             </column>
                                             <column id="3324">
                                                 <property name="width">1.25in</property>
-                                            </column>
-                                            <column id="3325">
-                                                <property name="width">1.333in</property>
                                             </column>
                                             <column id="3326">
                                                 <property name="width">1.51in</property>
@@ -7769,20 +7752,6 @@ bestehende Risiken</text-property>
                                                         <property name="borderTopWidth">thin</property>
                                                     </cell>
                                                     <cell id="3264">
-                                                        <property name="borderBottomColor">#000000</property>
-                                                        <property name="borderBottomStyle">solid</property>
-                                                        <property name="borderBottomWidth">thin</property>
-                                                        <property name="borderLeftColor">#000000</property>
-                                                        <property name="borderLeftStyle">solid</property>
-                                                        <property name="borderLeftWidth">thin</property>
-                                                        <property name="borderRightColor">#000000</property>
-                                                        <property name="borderRightStyle">solid</property>
-                                                        <property name="borderRightWidth">thin</property>
-                                                        <property name="borderTopColor">#000000</property>
-                                                        <property name="borderTopStyle">solid</property>
-                                                        <property name="borderTopWidth">thin</property>
-                                                    </cell>
-                                                    <cell id="3265">
                                                         <property name="borderBottomColor">#000000</property>
                                                         <property name="borderBottomStyle">solid</property>
                                                         <property name="borderBottomWidth">thin</property>
@@ -7897,7 +7866,7 @@ bestehende Risiken</text-property>
                                                 </row>
                                                 <row id="3272">
                                                     <cell id="3273">
-                                                        <property name="colSpan">5</property>
+                                                        <property name="colSpan">4</property>
                                                         <property name="rowSpan">1</property>
                                                         <property name="borderBottomColor">#000000</property>
                                                         <property name="borderBottomStyle">solid</property>
@@ -8051,23 +8020,6 @@ bestehende Risiken</text-property>
                                                         <property name="borderTopWidth">thin</property>
                                                         <label id="3286">
                                                             <text-property name="text">Umsetzung</text-property>
-                                                        </label>
-                                                    </cell>
-                                                    <cell id="3287">
-                                                        <property name="borderBottomColor">#000000</property>
-                                                        <property name="borderBottomStyle">solid</property>
-                                                        <property name="borderBottomWidth">thin</property>
-                                                        <property name="borderLeftColor">#000000</property>
-                                                        <property name="borderLeftStyle">solid</property>
-                                                        <property name="borderLeftWidth">thin</property>
-                                                        <property name="borderRightColor">#000000</property>
-                                                        <property name="borderRightStyle">solid</property>
-                                                        <property name="borderRightWidth">thin</property>
-                                                        <property name="borderTopColor">#000000</property>
-                                                        <property name="borderTopStyle">solid</property>
-                                                        <property name="borderTopWidth">thin</property>
-                                                        <label id="3288">
-                                                            <text-property name="text">Erläuterung</text-property>
                                                         </label>
                                                     </cell>
                                                     <cell id="3289">
@@ -8241,24 +8193,17 @@ bestehende Risiken</text-property>
                                                         <property name="borderTopStyle">solid</property>
                                                         <property name="borderTopWidth">thin</property>
                                                         <data id="3307">
+                                                            <list-property name="mapRules">
+                                                                <structure>
+                                                                    <expression name="testExpr" type="javascript">row["mnums_umsetzung"]</expression>
+                                                                    <property name="operator">eq</property>
+                                                                    <simple-property-list name="value1">
+                                                                        <value type="javascript">""</value>
+                                                                    </simple-property-list>
+                                                                    <text-property name="display">unbearbeitet</text-property>
+                                                                </structure>
+                                                            </list-property>
                                                             <property name="resultSetColumn">mnums_umsetzung</property>
-                                                        </data>
-                                                    </cell>
-                                                    <cell id="3308">
-                                                        <property name="borderBottomColor">#000000</property>
-                                                        <property name="borderBottomStyle">solid</property>
-                                                        <property name="borderBottomWidth">thin</property>
-                                                        <property name="borderLeftColor">#000000</property>
-                                                        <property name="borderLeftStyle">solid</property>
-                                                        <property name="borderLeftWidth">thin</property>
-                                                        <property name="borderRightColor">#000000</property>
-                                                        <property name="borderRightStyle">solid</property>
-                                                        <property name="borderRightWidth">thin</property>
-                                                        <property name="borderTopColor">#000000</property>
-                                                        <property name="borderTopStyle">solid</property>
-                                                        <property name="borderTopWidth">thin</property>
-                                                        <data id="3309">
-                                                            <property name="resultSetColumn">mnums_erlaeuterung</property>
                                                         </data>
                                                     </cell>
                                                     <cell id="3310">
@@ -8380,6 +8325,41 @@ bestehende Risiken</text-property>
                                                             <property name="textAlign">center</property>
                                                             <text-property name="text">EUR</text-property>
                                                         </label>
+                                                    </cell>
+                                                </row>
+                                                <row id="3984">
+                                                    <cell id="3985">
+                                                        <property name="borderBottomColor">#000000</property>
+                                                        <property name="borderBottomStyle">solid</property>
+                                                        <property name="borderBottomWidth">thin</property>
+                                                        <property name="borderLeftColor">#000000</property>
+                                                        <property name="borderLeftStyle">solid</property>
+                                                        <property name="borderLeftWidth">thin</property>
+                                                        <property name="borderRightColor">#000000</property>
+                                                        <property name="borderRightStyle">solid</property>
+                                                        <property name="borderRightWidth">thin</property>
+                                                        <property name="borderTopColor">#000000</property>
+                                                        <property name="borderTopStyle">solid</property>
+                                                        <property name="borderTopWidth">thin</property>
+                                                    </cell>
+                                                    <cell id="3986">
+                                                        <property name="colSpan">9</property>
+                                                        <property name="rowSpan">1</property>
+                                                        <property name="borderBottomColor">#000000</property>
+                                                        <property name="borderBottomStyle">solid</property>
+                                                        <property name="borderBottomWidth">thin</property>
+                                                        <property name="borderLeftColor">#000000</property>
+                                                        <property name="borderLeftStyle">solid</property>
+                                                        <property name="borderLeftWidth">thin</property>
+                                                        <property name="borderRightColor">#000000</property>
+                                                        <property name="borderRightStyle">solid</property>
+                                                        <property name="borderRightWidth">thin</property>
+                                                        <property name="borderTopColor">#000000</property>
+                                                        <property name="borderTopStyle">solid</property>
+                                                        <property name="borderTopWidth">thin</property>
+                                                        <data id="3309">
+                                                            <property name="resultSetColumn">mnums_erlaeuterung</property>
+                                                        </data>
                                                     </cell>
                                                 </row>
                                             </detail>
@@ -8695,7 +8675,7 @@ einer regelmäßigen Revision überarbeitet und neu bewertet.</H4>]]></text-prop
                 Kw/iLKGsxaJNSzLAhBlJeUCaIIjDEu2LZMvsgAW/ooeFdObRdZlh8E6zj3g4b6h+p2Dc9JEFFUeelBMC
                 giAOZxJjuZUgCIIgQtpT6iy3kpsVQRAEQZBIEgRBEASJJEEQBEGQSBIEQRAEiSRBEARBkEgSBEEQBIkk
                 QRAEQZBIEgRBEASJJEEQBEEkGf8Pn6UU/6Nng30AAAAASUVORK5CYII=
-            </property>
+</property>
         </structure>
     </list-property>
 </report>

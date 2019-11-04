@@ -23,14 +23,14 @@ import java.util.Collection;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.hui.common.connect.ITaggableElement;
+import sernet.snutils.TagHelper;
 import sernet.verinice.interfaces.IReevaluator;
-import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 
 /**
- * An asset from the ISO/IEC 27000 standard.
- * See https://en.wikipedia.org/wiki/ISO/IEC_27000-series for details
+ * An asset from the ISO/IEC 27000 standard. See
+ * https://en.wikipedia.org/wiki/ISO/IEC_27000-series for details
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -38,19 +38,29 @@ import sernet.verinice.model.common.ILinkChangeListener;
 public class Asset extends CnATreeElement
         implements IISO27kElement, IISO27kGroup, IAbbreviatedElement, ITaggableElement {
 
-	public static final String TYPE_ID = "asset"; //$NON-NLS-1$
-	public static final String UNSECURE_TYPE_ID = "unsecureAssetDAO"; //$NON-NLS-1$
-	public static final String PROP_ABBR = "asset_abbr"; //$NON-NLS-1$
-	public static final String PROP_NAME = "asset_name"; //$NON-NLS-1$
-	public static final String PROP_TAG = "asset_tag"; //$NON-NLS-1$
-	public static final String ASSET_VALUE_CONFIDENTIALITY = "asset_value_confidentiality"; //$NON-NLS-1$
+    public static final String TYPE_ID = "asset"; //$NON-NLS-1$
+    public static final String UNSECURE_TYPE_ID = "unsecureAssetDAO"; //$NON-NLS-1$
+    public static final String PROP_ABBR = "asset_abbr"; //$NON-NLS-1$
+    public static final String PROP_NAME = "asset_name"; //$NON-NLS-1$
+    public static final String PROP_TAG = "asset_tag"; //$NON-NLS-1$
+    public static final String ASSET_VALUE_CONFIDENTIALITY = "asset_value_confidentiality"; //$NON-NLS-1$
     public static final String ASSET_VALUE_INTEGRITY = "asset_value_integrity"; //$NON-NLS-1$
     public static final String ASSET_VALUE_AVAILABILITY = "asset_value_availability"; //$NON-NLS-1$
 
     public static final String ASSET_VALUE_METHOD_CONFIDENTIALITY = "asset_value_method_confidentiality"; //$NON-NLS-1$
     public static final String ASSET_VALUE_METHOD_INTEGRITY = "asset_value_method_integrity"; //$NON-NLS-1$
     public static final String ASSET_VALUE_METHOD_AVAILABILITY = "asset_value_method_availability"; //$NON-NLS-1$
-	
+
+    public static final String ASSET_CONFIDENTIALITY_WITH_CONTROLS = "asset_confidentiality_with_controls"; //$NON-NLS-1$
+    public static final String ASSET_INTEGRITY_WITH_CONTROLS = "asset_integrity_with_controls"; //$NON-NLS-1$
+    public static final String ASSET_AVAILABILITY_WITH_CONTROLS = "asset_availability_with_controls"; //$NON-NLS-1$
+    public static final String ASSET_CONFIDENTIALITY_WITH_PLANNED_CONTROLS = "asset_confidentiality_with_planned_controls"; //$NON-NLS-1$
+    public static final String ASSET_INTEGRITY_WITH_PLANNED_CONTROLS = "asset_integrity_with_planned_controls"; //$NON-NLS-1$
+    public static final String ASSET_AVAILABILITY_WITH_PLANNED_CONTROLS = "asset_availability_with_planned_controls"; //$NON-NLS-1$
+    public static final String ASSET_CONFIDENTIALITY_WITH_IMPLEMENTED_CONTROLS = "asset_confidentiality_with_implemented_controls"; //$NON-NLS-1$
+    public static final String ASSET_INTEGRITY_WITH_IMPLEMENTED_CONTROLS = "asset_integrity_with_implemented_controls"; //$NON-NLS-1$
+    public static final String ASSET_AVAILABILITY_WITH_IMPLEMENTED_CONTROLS = "asset_availability_with_implemented_controls"; //$NON-NLS-1$
+
     public static final String ASSET_WITHOUT_NA_PLANCONTROLRISK_A = "asset_risk_without_na_plancontrolvalue_a";
     public static final String ASSET_WITHOUT_NA_PLANCONTROLRISK_I = "asset_risk_without_na_plancontrolvalue_i";
     public static final String ASSET_WITHOUT_NA_PLANCONTROLRISK_C = "asset_risk_without_na_plancontrolvalue_c";
@@ -64,106 +74,90 @@ public class Asset extends CnATreeElement
     public static final String ASSET_RISK_I = "asset_riskvalue_i";
     public static final String ASSET_RISK_C = "asset_riskvalue_c";
 
-    
-	public static final String REL_ASSET_PERSON_RESPO = "rel_asset_person_respo"; //$NON-NLS-1$
-	
-	public static final String[] CHILD_TYPES = new String[] {
-        ControlGroup.TYPE_ID,
-        Control.TYPE_ID
-    };
-	
-	// all risk management constants are in AssetValueService.java
-	
-	
-	
-    private final IReevaluator protectionRequirementsProvider = new ProtectionRequirementsValueAdapter(this);
-    private final ILinkChangeListener linkChangeListener = new MaximumProtectionRequirementsValueListener(this);
-    
-    
+    public static final String REL_ASSET_PERSON_RESPO = "rel_asset_person_respo"; //$NON-NLS-1$
+
+    public static final String[] CHILD_TYPES = new String[] { ControlGroup.TYPE_ID,
+            Control.TYPE_ID };
+
+    // all risk management constants are in AssetValueService.java
+    private final IReevaluator protectionRequirementsProvider = new ProtectionRequirementsValueAdapter(
+            this);
+    private final ILinkChangeListener linkChangeListener = new MaximumProtectionRequirementsValueListener(
+            this);
+
     @Override
     public ILinkChangeListener getLinkChangeListener() {
         return linkChangeListener;
     }
+
     @Override
     public IReevaluator getProtectionRequirementsProvider() {
         return protectionRequirementsProvider;
     }
 
-	/**
-	 * Creates an empty asset
-	 */
-	public Asset() {
-		super();
-		setEntity(new Entity(TYPE_ID));
+    /**
+     * Creates an empty asset
+     */
+    public Asset() {
+        super();
+        setEntity(new Entity(TYPE_ID));
         getEntity().initDefaultValues(getTypeFactory());
-	}
-	
-	public Asset(CnATreeElement parent) {
-		super(parent);
-		setEntity(new Entity(TYPE_ID));
-		getEntity().initDefaultValues(getTypeFactory());
-		// sets the localized title via HUITypeFactory from message bundle
-		setTitel(getTypeFactory().getMessage(TYPE_ID));
-	}
-	
-	public Asset(CnATreeElement parent, String title) {
+    }
+
+    public Asset(CnATreeElement parent) {
+        super(parent);
+        setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
+        // sets the localized title via HUITypeFactory from message bundle
+        setTitel(getTypeFactory().getMessage(TYPE_ID));
+    }
+
+    public Asset(CnATreeElement parent, String title) {
         this(parent);
-        if(title!=null) {
+        if (title != null) {
             setTitel(title);
         }
     }
-	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
-	 */
-	@Override
-	public String getTypeId() {
-		return TYPE_ID;
-	}
-	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitel()
-	 */
-	@Override
-	public String getTitle() {
-		return getEntity().getPropertyValue(PROP_NAME);
-	}
-	
-	@Override
+
+    @Override
+    public String getTypeId() {
+        return TYPE_ID;
+    }
+
+    @Override
+    public String getTitle() {
+        return getEntity().getPropertyValue(PROP_NAME);
+    }
+
+    @Override
     public void setTitel(String name) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
-	}
-	
-	@Override
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
+    }
+
+    @Override
     public String getAbbreviation() {
-		return getEntity().getPropertyValue(PROP_ABBR);
-	}
-	
-	public void setAbbreviation(String abbreviation) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
-	}
-	
-	@Override
+        return getEntity().getPropertyValue(PROP_ABBR);
+    }
+
+    public void setAbbreviation(String abbreviation) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
+    }
+
+    @Override
     public Collection<String> getTags() {
-		return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
-	}
-	
-	/* (non-Javadoc)
-     * @see sernet.verinice.iso27k.model.Group#getChildTypes()
-     */
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
+    }
+
     @Override
     public String[] getChildTypes() {
         return CHILD_TYPES;
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#canContain(java.lang.Object)
-     */
+
     @Override
     public boolean canContain(Object obj) {
         boolean canContain = false;
-        if(obj instanceof CnATreeElement) {
-            CnATreeElement element = (CnATreeElement)obj;
+        if (obj instanceof CnATreeElement) {
+            CnATreeElement element = (CnATreeElement) obj;
             canContain = Arrays.asList(getChildTypes()).contains(element.getTypeId());
         }
         return canContain;

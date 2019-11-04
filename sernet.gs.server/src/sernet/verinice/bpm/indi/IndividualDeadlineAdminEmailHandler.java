@@ -38,65 +38,71 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class IndividualDeadlineAdminEmailHandler extends GenericEmailHandler implements IEmailHandler {
+public class IndividualDeadlineAdminEmailHandler extends GenericEmailHandler
+        implements IEmailHandler {
 
     private static final String TEMPLATE = "IndiDeadlineAdmin"; //$NON-NLS-1$
-    
-    public static final String TEMPLATE_ASSIGNEE_NAME = "assignee-name";   
+
+    public static final String TEMPLATE_ASSIGNEE_NAME = "assignee-name";
     public static final String TEMPLATE_ASSIGNEE_ADDRESS = "assignee-address";
 
     /**
      * Param uuidElement is always null for this email handler.
      * 
-     * (non-Javadoc)
-     * @see sernet.verinice.bpm.IEmailHandler#addParameter(java.lang.String, java.util.Map, java.lang.String, java.util.Map)
+     * @see sernet.verinice.bpm.IEmailHandler#addParameter(java.lang.String,
+     *      java.util.Map, java.lang.String, java.util.Map)
      */
     @Override
-    public void addParameter(String type, Map<String, Object> processVariables, String uuidElement, Map<String, String> emailParameter) throws MissingParameterException {
-        CnATreeElement element = getRemindService().retrieveElement(uuidElement, RetrieveInfo.getPropertyInstance());
-        if(element==null) {
-            throw new MissingParameterException("Obejct was not found, UUID is: " + uuidElement);
+    public void addParameter(String type, Map<String, Object> processVariables, String uuidElement,
+            Map<String, String> emailParameter) throws MissingParameterException {
+        CnATreeElement element = getRemindService().retrieveElement(uuidElement,
+                RetrieveInfo.getPropertyInstance());
+        if (element == null) {
+            throw new MissingParameterException("Object was not found, UUID is: " + uuidElement);
         }
-        String title = element.getTitle();
-        String taskTitle = getTaskService().loadTaskTitle(type, processVariables);String taskDescription = getTaskService().loadTaskDescription(type, processVariables);
-        String taskTitleHtml =  taskTitle;
-        if(isHtml()) {
-            title = replaceSpecialChars(title);
-            taskTitleHtml = replaceSpecialChars(taskTitle);
-            taskDescription = replaceSpecialChars(taskDescription);
-        }
+        String title = escapeForHTMLIfNecessary(element.getTitle());
+        String taskTitle = getTaskService().loadTaskTitle(type, processVariables);
+        String taskDescription = escapeForHTMLIfNecessary(
+                getTaskService().loadTaskDescription(type, processVariables));
+        String taskTitleHtml = escapeForHTMLIfNecessary(taskTitle);
         emailParameter.put(TEMPLATE_TASK_DESCRIPTION, taskDescription);
         emailParameter.put(TEMPLATE_ELEMENT_TITLE, title);
         emailParameter.put(TEMPLATE_TASK_TITLE, taskTitleHtml);
-        emailParameter.put(IRemindService.TEMPLATE_SUBJECT, Messages.getString("IndividualDeadlineAdminEmailHandler.1",taskTitle));
-        
+        emailParameter.put(IRemindService.TEMPLATE_SUBJECT,
+                Messages.getString("IndividualDeadlineAdminEmailHandler.1", taskTitle));
+
         String assignee = (String) processVariables.get(IGenericProcess.VAR_ASSIGNEE_NAME);
         Map<String, String> assigneeData = getRemindService().loadUserData(assignee);
-        emailParameter.put(TEMPLATE_ASSIGNEE_ADDRESS, assigneeData.get(IRemindService.TEMPLATE_ADDRESS));
-        emailParameter.put(TEMPLATE_ASSIGNEE_NAME, assigneeData.get(IRemindService.TEMPLATE_NAME));
+
+        emailParameter.put(TEMPLATE_ASSIGNEE_ADDRESS,
+                escapeForHTMLIfNecessary(assigneeData.get(IRemindService.TEMPLATE_ADDRESS)));
+        emailParameter.put(TEMPLATE_ASSIGNEE_NAME,
+                escapeForHTMLIfNecessary(assigneeData.get(IRemindService.TEMPLATE_NAME)));
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.bpm.GenericEmailHandler#validate(java.util.Map, java.util.Map)
+
+    /*
+     * @see sernet.verinice.bpm.GenericEmailHandler#validate(java.util.Map,
+     * java.util.Map)
      */
     @Override
-    public void validate(Map<String, Object> processVariables, Map<String, String> userParameter) throws AbortException {
+    public void validate(Map<String, Object> processVariables, Map<String, String> userParameter)
+            throws AbortException {
         final Date dueDate = (Date) processVariables.get(IGenericProcess.VAR_DUEDATE);
         final Calendar now = Calendar.getInstance();
-        if(dueDate.after(now.getTime())) {
+        if (dueDate.after(now.getTime())) {
             throw new AbortException("Due date is in the future.");
         }
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.bpm.IEmailHandler#getTemplate()
      */
     @Override
     public String getTemplate() {
         return TEMPLATE;
     }
-    
-    /* (non-Javadoc)
+
+    /*
      * @see sernet.verinice.bpm.GenericEmailHandler#isHtml()
      */
     @Override

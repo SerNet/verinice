@@ -63,6 +63,7 @@ import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.bpm.ITask;
@@ -489,6 +490,8 @@ public class EditBean {
             throw new SecurityException("write is not allowed");
         }
         setPropertyValues();
+        IAuthService authService = (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
+        element.getEntity().trackChange(authService.getUsername());
         SaveElement<CnATreeElement> command = new SaveElement<>(getElement());
         command = getCommandService().executeCommand(command);
         setElement(command.getElement());
@@ -654,8 +657,17 @@ public class EditBean {
         }
     }
 
+    private boolean protocolIsAllowed(String url) {
+        return StringUtils.isNotEmpty(url) && url.matches("^(((f|ht)tps?)://|ssh:|smb:|mailto:|file:|[a-zA-Z]:|\\\\\\\\|//).*$");
+    }
+
     public void onUrlChange(AjaxBehaviorEvent event) {
         HuiProperty huiProperty = extractHuiProperty(event);
+        String url = huiProperty.getURLValue();
+        if (!protocolIsAllowed(url)) {
+            huiProperty.setURLValue("");
+            huiProperty.setURLText("ERROR: bad url");
+        }
         changeURL(huiProperty.getKey(), huiProperty.getURLText(), huiProperty.getURLValue());
     }
 

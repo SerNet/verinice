@@ -5,8 +5,8 @@ Element-Name: performance
 Element-Type: context
 Element-Version: 2.0
 Id: _9AEX8Pk3EeiLXcsCitNBjg
-Runtime-Version: 2.3.0.201806262310
-Save-Time: 3/25/19 10:11 AM
+Runtime-Version: 2.4.2.201905080442
+Save-Time: 6/27/19 2:57 PM
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
 Content-Type: text/ecl
@@ -40,6 +40,25 @@ proc "measure-ism-import-vna" [val measurement] [val filename] {
          log [concat "no dialog :" $filename "  <-> " $measurement]
         }
         log [concat "error importing :" $filename "  <-> " $measurement]
+    }
+}
+
+proc "measure-export" [val measurement] [val target] {
+    try {
+        start-time-measure $measurement
+        bp-export-vna $target [concat [get-java-property "java.io.tmpdir"] [get-java-property "file.separator"] "export.vna"]
+        try -times 500 -delay 1000 -command {
+            get-window "Export beendet" | get-button OK | click
+        }
+        stop-time-measure $measurement | write-lines [concat "file:" $basedir [get-java-property "file.separator"] "export-measure.csv"] true
+    } -error [val errorObj] -catch {
+        try {
+            get-window Fehler | get-button OK | click
+        } -catch {
+         log [concat "no dialog: " $target "  <-> " $measurement]
+        }
+        screen-shot-window "measure-export-error.png"
+        log -severity "error" -message [concat "error exporting: " $target "  <-> " $measurement ": " [$errorObj | get message] "\n" [$errorObj | get-status-trace] ]
     }
 }
 

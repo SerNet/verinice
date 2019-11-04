@@ -18,12 +18,13 @@
 package sernet.verinice.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -32,6 +33,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
+import sernet.gs.service.CollectionUtil;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.Retriever;
 import sernet.gs.service.RuntimeCommandException;
@@ -78,22 +80,41 @@ public class ValidationService implements IValidationService {
             throw new RuntimeCommandException("validated element not existent");
         }
         ServerInitializer.inheritVeriniceContextState();
-        HashMap<PropertyType, List<String>> hintsOfFailedValidationsMap = new HashMap<>();
         EntityType eType = getHuiTypeFactory().getEntityType(elmt.getTypeId());
         if (eType != null) {
-            for (Object pElement : eType.getAllPropertyTypes()) {
-                if (pElement instanceof PropertyType) {
-                    updateValueMap(hintsOfFailedValidationsMap, (PropertyType) pElement, elmt);
-                } else if (pElement instanceof PropertyGroup) {
-                    PropertyGroup pGroup = (PropertyGroup) pElement;
-                    for (PropertyType pType : pGroup.getPropertyTypes()) {
-                        updateValueMap(hintsOfFailedValidationsMap, pType, elmt);
-                    }
+            List<CnAValidation> existingValidationsForElement = getValidations(elmt.getScopeId(),
+                    elmt.getDbId());
+            createValidationForSingleElement(elmt, eType, existingValidationsForElement);
+        }
+    }
+
+    protected void createValidationForSingleElement(CnATreeElement element, EntityType entityType,
+            List<CnAValidation> existingValidationsForElement) {
+        HashMap<PropertyType, List<String>> hintsOfFailedValidationsMap = new HashMap<>();
+        for (Object pElement : entityType.getAllPropertyTypes()) {
+            if (pElement instanceof PropertyType) {
+                updateValueMap(hintsOfFailedValidationsMap, (PropertyType) pElement, element,
+                        existingValidationsForElement);
+            } else if (pElement instanceof PropertyGroup) {
+                PropertyGroup pGroup = (PropertyGroup) pElement;
+                for (PropertyType pType : pGroup.getPropertyTypes()) {
+                    updateValueMap(hintsOfFailedValidationsMap, pType, element,
+                            existingValidationsForElement);
                 }
             }
-            for (Entry<PropertyType, List<String>> entry : hintsOfFailedValidationsMap.entrySet()) {
-                for (String hint : entry.getValue()) {
-                    createCnAValidationObject(elmt, entry, hint);
+        }
+
+        Map<String, List<CnAValidation>> existingValidationsByPropertyType = existingValidationsForElement
+                .stream().collect(Collectors.groupingBy(CnAValidation::getPropertyId));
+        for (Entry<PropertyType, List<String>> entry : hintsOfFailedValidationsMap.entrySet()) {
+            String propertyType = entry.getKey().getId();
+            List<CnAValidation> existingValidationsForPropertyType = existingValidationsByPropertyType
+                    .getOrDefault(propertyType, Collections.emptyList());
+            for (String hint : entry.getValue()) {
+                boolean validationExists = existingValidationsForPropertyType.stream()
+                        .anyMatch(validation -> validation.getHintId().equals(hint));
+                if (!validationExists) {
+                    createCnAValidationObject(element, entry, hint);
                 }
             }
         }
@@ -109,10 +130,7 @@ public class ValidationService implements IValidationService {
         validation.setElmtTitle(StringUtils.abbreviate(elmt.getTitle(), MAXLENGTH_DBSTRING));
         validation.setScopeId(elmt.getScopeId());
         validation.setElementType(StringUtils.abbreviate(elmt.getTypeId(), MAXLENGTH_DBSTRING));
-        if (!isValidationExistant(elmt.getDbId(), entry.getKey().getId(), hint,
-                elmt.getScopeId())) {
-            getCnaValidationDAO().saveOrUpdate(validation);
-        }
+        getCnaValidationDAO().saveOrUpdate(validation);
         if (log.isDebugEnabled()) {
             log.debug("Created Validation for : " + elmt.getTitle() + "(" + entry.getKey().getId()
                     + ")\tHint:\t" + hint);
@@ -124,6 +142,7 @@ public class ValidationService implements IValidationService {
      * sernet.verinice.interfaces.validation.IValidationService#getValidations(
      * sernet.verinice.model.common.CnATreeElement)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public List<CnAValidation> getValidations(Integer scopeId) {
         ServerInitializer.inheritVeriniceContextState();
@@ -141,6 +160,7 @@ public class ValidationService implements IValidationService {
      * returns validations for given scope or validations for given element in
      * given scope or validation for (scope-)unspecified element
      */
+    @SuppressWarnings("unchecked")
     @Override
     public List<CnAValidation> getValidations(Integer scopeId, Integer cnaId) {
         ServerInitializer.inheritVeriniceContextState();
@@ -154,6 +174,7 @@ public class ValidationService implements IValidationService {
         return getCnaValidationDAO().findByCriteria(criteria);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<CnAValidation> getValidations(Integer elmtDbId, String propertyType) {
         ServerInitializer.inheritVeriniceContextState();
@@ -247,29 +268,33 @@ public class ValidationService implements IValidationService {
         return deleteValidation(validation);
     }
 
-    private List<String> getInvalidPropertyHints(PropertyType type, CnATreeElement elmt) {
+    private List<String> getInvalidPropertyHints(PropertyType type, CnATreeElement elmt,
+            List<CnAValidation> existingValidationsForType) {
         ArrayList<String> hintsOfFailedValidations = new ArrayList<>();
         List<Property> savedProperties = elmt.getEntity().getProperties(type.getId())
                 .getProperties();
         // iterate(validate) all existing properties
         for (Property savedProp : savedProperties) {
-            hintsOfFailedValidations.addAll(processValidationMap(
-                    type.validate(savedProp.getPropertyValue(), null), elmt, type));
+            hintsOfFailedValidations
+                    .addAll(processValidationMap(type.validate(savedProp.getPropertyValue(), null),
+                            elmt, type, existingValidationsForType));
         }
         // no property exists yet
         if (savedProperties.isEmpty()) {
-            hintsOfFailedValidations
-                    .addAll(processValidationMap(type.validate(null, null), elmt, type));
+            hintsOfFailedValidations.addAll(processValidationMap(type.validate(null, null), elmt,
+                    type, existingValidationsForType));
         }
         return hintsOfFailedValidations;
     }
 
     private List<String> processValidationMap(Map<String, Boolean> validationMap,
-            CnATreeElement elmt, PropertyType type) {
+            CnATreeElement elmt, PropertyType type,
+            List<CnAValidation> existingValidationsForType) {
         ArrayList<String> hintsOfFailedValidations = new ArrayList<>();
         for (Entry<String, Boolean> entry : validationMap.entrySet()) {
-            boolean validationExists = isValidationExistant(elmt.getDbId(), type.getId(),
-                    entry.getKey(), elmt.getScopeId());
+            boolean validationExists = existingValidationsForType.stream()
+                    .anyMatch(validation -> validation.getHintId().equals(entry.getKey()));
+
             boolean elmtIsValid = entry.getValue().booleanValue();
             if (!elmtIsValid) {
                 if (!validationExists) {
@@ -295,7 +320,7 @@ public class ValidationService implements IValidationService {
         // defined)
         // ===> delete existing validations for type
         if (validationMap.isEmpty()) { // no negative validations exist
-            for (CnAValidation validation : getValidations(elmt.getDbId(), type.getId())) {
+            for (CnAValidation validation : existingValidationsForType) {
                 deleteValidation(validation);
             }
         }
@@ -303,8 +328,12 @@ public class ValidationService implements IValidationService {
     }
 
     private void updateValueMap(Map<PropertyType, List<String>> map, PropertyType type,
-            CnATreeElement elmt) {
-        List<String> invalidHints = getInvalidPropertyHints(type, elmt);
+            CnATreeElement elmt, List<CnAValidation> existingValidationsForElement) {
+        List<CnAValidation> existingValidationsForType = existingValidationsForElement.stream()
+                .filter(validation -> validation.getPropertyId().equals(type.getId()))
+                .collect(Collectors.toList());
+
+        List<String> invalidHints = getInvalidPropertyHints(type, elmt, existingValidationsForType);
         if (map.containsKey(type)) {
             List<String> listWithNewValues = map.get(type);
             listWithNewValues.addAll(invalidHints);
@@ -413,6 +442,7 @@ public class ValidationService implements IValidationService {
      * @see sernet.verinice.interfaces.validation.IValidationService#
      * deleteValidations(java.lang.Integer, java.lang.Integer)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void deleteValidations(Integer scopeId, Integer elmtDbId) {
         ServerInitializer.inheritVeriniceContextState();
@@ -462,13 +492,27 @@ public class ValidationService implements IValidationService {
         if (elmt == null) {
             return;
         }
-
         LoadSubtreeIds loadSubtreeIdsCommand = new LoadSubtreeIds(elmt);
         loadSubtreeIdsCommand = getCommandService().executeCommand(loadSubtreeIdsCommand);
-        Set<Integer> dbIdsOfSubtree = loadSubtreeIdsCommand.getDbIdsOfSubtree();
+        List<Integer> dbIdsOfSubtree = new ArrayList<>(loadSubtreeIdsCommand.getDbIdsOfSubtree());
+        // Delete validation in partitions due to Oracle limitations
+        Collection<List<Integer>> partitions = CollectionUtil.partition(dbIdsOfSubtree, 1000);
+        if (log.isDebugEnabled()) {
+            log.debug("Deleting validations in " + partitions.size() + " partition(s)");
+        }
+        for (List<Integer> partition : partitions) {
+            deleteValidations(elmt, partition);
+        }
+    }
 
-        for (Integer elementId : dbIdsOfSubtree) {
-            deleteValidations(elmt.getScopeId(), elementId);
+    @SuppressWarnings("unchecked")
+    public void deleteValidations(CnATreeElement elmt, List<Integer> dbIds) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(CnAValidation.class)
+                .add(Restrictions.in("elmtDbId", dbIds))
+                .add(createScopeIdRestriction(elmt.getScopeId()));
+        for (CnAValidation validation : (List<CnAValidation>) getCnaValidationDAO()
+                .findByCriteria(criteria)) {
+            getCnaValidationDAO().delete(validation);
         }
     }
 
@@ -483,6 +527,45 @@ public class ValidationService implements IValidationService {
                 new RetrieveInfo().setProperties(true));
         elementLoader = getCommandService().executeCommand(elementLoader);
         createValidationForSingleElement(elementLoader.getElement());
+    }
+
+    @Override
+    public void createValidationsByUuids(Collection<String> uuids) throws CommandException {
+        List<CnATreeElement> elements = new ArrayList<>(uuids.size());
+        List<CnAValidation> existingValidations = new ArrayList<>(uuids.size());
+        Collection<List<String>> partitions = CollectionUtil.partition(new ArrayList<String>(uuids),
+                1000);
+        for (List<String> partitionUUIDs : partitions) {
+            List<CnATreeElement> partitionElements = loadElements(partitionUUIDs);
+            elements.addAll(partitionElements);
+            existingValidations.addAll(loadValidations(partitionElements));
+        }
+
+        Map<Integer, List<CnAValidation>> existingValidationsByElementId = existingValidations
+                .stream().collect(Collectors.groupingBy(CnAValidation::getElmtDbId));
+        ServerInitializer.inheritVeriniceContextState();
+
+        for (CnATreeElement element : elements) {
+            createValidationForSingleElement(element, element.getEntityType(),
+                    existingValidationsByElementId.getOrDefault(element.getDbId(),
+                            Collections.emptyList()));
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<CnATreeElement> loadElements(Collection<String> uuids) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class)
+                .add(Restrictions.in("uuid", uuids));
+        RetrieveInfo.getPropertyInstance().configureCriteria(criteria);
+        return getCnaTreeElementDAO().findByCriteria(criteria);
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<CnAValidation> loadValidations(List<CnATreeElement> elements) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(CnAValidation.class);
+        criteria.add(Restrictions.in("elmtDbId",
+                elements.stream().map(CnATreeElement::getDbId).collect(Collectors.toSet())));
+        return getCnaValidationDAO().findByCriteria(criteria);
     }
 
     /*

@@ -23,12 +23,15 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import sernet.verinice.interfaces.GraphCommand;
 import sernet.verinice.interfaces.graph.GraphElementLoader;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
+import sernet.verinice.interfaces.oda.IChainableFilter;
+import sernet.verinice.interfaces.oda.IFilteringCommand;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
@@ -36,12 +39,39 @@ import sernet.verinice.model.iso27k.Process;
 
 /**
  * Loads all related assets to processes.
+ * 
+ * Returns two dimensional data structure of objects' DB-Ids as
+ * 
+ * <code>List&lt;List&lt;String&gt;&gt;</code>.
+ * 
+ * For instance:
+ * <table border="1">
+ * <tr>
+ * <td>Process ID</td>
+ * <td>Asset ID</td>
+ * </tr>
+ * <tr>
+ * <td>42</td>
+ * <td>23</td>
+ * </tr>
+ * <tr>
+ * <td>43</td>
+ * <td>24</td>
+ * </tr>
+ * <tr>
+ * <td>44</td>
+ * <td>25</td>
+ * </tr>
+ * </tr>
+ * </table>
  */
-public class LoadProcessAndAsset extends GraphCommand {
-    private static final long serialVersionUID = -5521034650961341678L;
+public class LoadProcessAndAsset extends GraphCommand implements IFilteringCommand {
+    private static final long serialVersionUID = 3972535701538215222L;
     private static final String REL_ASSET_ASSET = "rel_asset_asset";
     private static final String REL_PROCESS_ASSET = "rel_process_asset";
     private List<List<String>> commandResult;
+    private IChainableFilter resultsFilter;
+    private boolean isFilterActive;
 
     public LoadProcessAndAsset(int rootId) {
         super();
@@ -51,8 +81,11 @@ public class LoadProcessAndAsset extends GraphCommand {
         processLoader.setTypeIds(new String[] { Process.TYPE_ID, Asset.TYPE_ID });
         addLoader(processLoader);
 
+        
         addRelationId(REL_ASSET_ASSET);
         addRelationId(REL_PROCESS_ASSET);
+
+        this.isFilterActive = false;
     }
 
     @Override
@@ -62,6 +95,10 @@ public class LoadProcessAndAsset extends GraphCommand {
 
         List<List<String>> result = new LinkedList<>();
         for (CnATreeElement process : processes) {
+            // skip this process if a filter is active and it doesn't match:
+            if (this.isFilterActive && !this.resultsFilter.matches(process.getEntity()))
+                continue;
+
             Set<CnATreeElement> linkTargets = processGraph.getLinkTargets(process);
             Set<CnATreeElement> assetPerProcess = new HashSet<>();
             for (CnATreeElement cnATreeElement : linkTargets) {
@@ -93,5 +130,21 @@ public class LoadProcessAndAsset extends GraphCommand {
 
     public List<List<String>> getElements() {
         return commandResult;
+    }
+
+    /**
+     * Notice: the filter set here will only be applied to the processes in the
+     * result set. Filtering ALL loaded objects is currently not a requirement
+     * for this command.
+     */
+    @Override
+    public void setFilterCriteria(IChainableFilter filter) {
+        this.resultsFilter = filter;
+        this.isFilterActive = Optional.ofNullable(filter).isPresent();
+    }
+
+    @Override
+    public boolean isFilterActive() {
+        return this.isFilterActive;
     }
 }

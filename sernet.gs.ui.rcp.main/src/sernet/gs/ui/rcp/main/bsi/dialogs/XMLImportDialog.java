@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -49,9 +50,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
@@ -891,9 +894,7 @@ public class XMLImportDialog extends Dialog {
     }
 
     private void updateModelAndValidate(SyncCommand command) {
-        Set<CnATreeElement> importRootObjectSet = command.getImportRootObject();
-        final Set<CnATreeElement> changedElement = command.getElementSet();
-        updateModel(importRootObjectSet, changedElement);
+        CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
         if (Activator.getDefault().getPreferenceStore()
                 .getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)) {
             WorkspaceJob validationCreationJob = new WorkspaceJob(Messages.XMLImportDialog_4) {
@@ -905,7 +906,7 @@ public class XMLImportDialog extends Dialog {
                                 NLS.bind(Messages.XMLImportDialog_5,
                                         new Object[] { dataFile.getName() }),
                                 IProgressMonitor.UNKNOWN);
-                        createValidations(changedElement);
+                        createValidations(command.getImportedElementUUIDs());
                     } catch (Exception e) {
                         LOG.error("Exception while executing createValidationsJob", e); //$NON-NLS-1$
                     } finally {
@@ -940,47 +941,18 @@ public class XMLImportDialog extends Dialog {
         return result;
     }
 
-    private void updateModel(Set<CnATreeElement> importRootObjectSet,
-            Set<CnATreeElement> changedElement) {
-        final int maxChangedElements = 9;
-        if (changedElement != null && changedElement.size() > maxChangedElements) {
-            // if more than 9 elements changed or added do a complete reload
-            CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
-        } else {
-            if (importRootObjectSet != null && !importRootObjectSet.isEmpty()) {
-                for (CnATreeElement importRootObject : importRootObjectSet) {
-                    CnAElementFactory.getModel(importRootObject)
-                            .childAdded(importRootObject.getParent(), importRootObject);
-                    CnAElementFactory.getModel(importRootObject)
-                            .databaseChildAdded(importRootObject);
-                    if (changedElement != null) {
-                        for (CnATreeElement cnATreeElement : changedElement) {
-                            CnAElementFactory.getModel(cnATreeElement)
-                                    .childAdded(cnATreeElement.getParent(), cnATreeElement);
-                            CnAElementFactory.getModel(cnATreeElement)
-                                    .databaseChildAdded(cnATreeElement);
-                        }
-                    }
-                }
-            }
-            if (changedElement != null) {
-                for (CnATreeElement cnATreeElement : changedElement) {
-                    CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement);
-                    CnAElementFactory.getModel(cnATreeElement).databaseChildChanged(cnATreeElement);
-                }
-            }
-        }
-    }
-
-    private void createValidations(Set<CnATreeElement> elmts) {
+    private void createValidations(Set<String> uuids) {
         try {
             Activator.inheritVeriniceContextState();
-            for (CnATreeElement elmt : elmts) {
-                ServiceFactory.lookupValidationService().createValidationByUuid(elmt.getUuid());
-            }
-            if (!elmts.isEmpty()) {
-                CnAElementFactory.getModel(((CnATreeElement) elmts.toArray()[0]))
-                        .validationAdded(((CnATreeElement) elmts.toArray()[0]).getScopeId());
+            if (!uuids.isEmpty()) {
+                // all the elements have been imported into a single
+                // perspective, so we take an arbitrary entry
+                ServiceFactory.lookupValidationService().createValidationsByUuids(uuids);
+                String oneUUID = uuids.iterator().next();
+                CnATreeElement element = CnAElementHome.getInstance()
+                        .loadElementsByUUID(Collections.singleton(oneUUID), new RetrieveInfo())
+                        .iterator().next();
+                CnAElementFactory.getModel(element).validationAdded(element.getScopeId());
             }
         } catch (CommandException e) {
             LOG.error("Error while executing validation creation command", e); //$NON-NLS-1$

@@ -160,6 +160,36 @@
 								</ui:fragment>
 							</p:outputPanel>
 						</p:tab>
+						<p:tab id="changeMetadata" title="#{msgEdit['changeMetadata']}">
+							<p:outputPanel>
+								<div class="ui-g ui-fluid">
+									<div class="ui-g-12 ui-sm-12 ui-md-12 ui-lg-4 ui-xl-4">
+										<p:outputLabel value="#{msgEdit['createdBy']}" />
+									</div>
+									<div class="ui-g-12 ui-sm-12 ui-md-12 ui-lg-8 ui-xl-8">
+										<p:inputText value="#{edit.element.entity.createdBy}" disabled="true" />
+									</div>
+									<div class="ui-g-12 ui-sm-12 ui-md-12 ui-lg-4 ui-xl-4">
+										<p:outputLabel value="#{msgEdit['createdAt']}" />
+									</div>
+									<div class="ui-g-12 ui-sm-12 ui-md-12 ui-lg-8 ui-xl-8">
+										<p:inputText value="#{edit.element.entity.createdAt}" disabled="true" converter="changeMetadataDateTimeConverter"/>
+									</div>
+									<div class="ui-g-12 ui-sm-12 ui-md-12 ui-lg-4 ui-xl-4">
+										<p:outputLabel value="#{msgEdit['changedBy']}" />
+									</div>
+									<div class="ui-g-12 ui-sm-12 ui-md-12 ui-lg-8 ui-xl-8">
+										<p:inputText value="#{edit.element.entity.changedBy}" disabled="true" />
+									</div>
+									<div class="ui-g-12 ui-sm-12 ui-md-12 ui-lg-4 ui-xl-4">
+										<p:outputLabel value="#{msgEdit['changedAt']}" />
+									</div>
+									<div class="ui-g-12 ui-sm-12 ui-md-12 ui-lg-8 ui-xl-8">
+										<p:inputText value="#{edit.element.entity.changedAt}" disabled="true" converter="changeMetadataDateTimeConverter"/>
+									</div>
+								</div>
+							</p:outputPanel>
+						</p:tab>
 					</p:accordionPanel>
 
 					<p:growl id="msg" life="2000" />

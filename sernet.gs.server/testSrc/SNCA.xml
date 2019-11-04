@@ -5377,6 +5377,15 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         <huipropertygroup name="Calculated Total Risk" id="asset_riskgroup" tags="Risk">
             <huiproperty
              tags="Risk"
+                name="Confidentiality business impact with all controls" id="asset_confidentiality_with_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
+                name="Confidentiality business impact with planned controls" id="asset_confidentiality_with_planned_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
+                name="Confidentiality business impact with implemented controls" id="asset_confidentiality_with_implemented_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
                 name="Confidentiality risk value" id="asset_riskvalue_c" editable="false"/>
             <huiproperty
              tags="Risk"
@@ -5387,6 +5396,15 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
 
             <huiproperty
              tags="Risk"
+                name="Integrity business impact with all controls" id="asset_integrity_with_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
+                name="Integrity business impact with planned controls" id="asset_integrity_with_planned_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
+                name="Integrity business impact with implemented controls" id="asset_integrity_with_implemented_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
                 name="Integrity risk value" id="asset_riskvalue_i" editable="false"/>
             <huiproperty
              tags="Risk"
@@ -5395,6 +5413,15 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
              tags="Risk"
                 name="Integrity risk with planned controls" id="asset_riskwplancontrolvalue_i" editable="false"/>
 
+            <huiproperty
+             tags="Risk"
+                name="Availability business impact with all controls" id="asset_availability_with_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
+                name="Availability business impact with planned controls" id="asset_availability_with_planned_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
+                name="Availability business impact with implemented controls" id="asset_availability_with_implemented_controls" editable="false"/>
             <huiproperty
              tags="Risk"
                 name="Availability risk value" id="asset_riskvalue_a" editable="false"/>
@@ -8062,6 +8089,12 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
             <huiproperty id="process_va_anz_ma" name="Anzahl Mitarbeiter" />
             <huiproperty id="process_va_ort_bem" name="Bemerkungen" inputtype="text" />
+            <huiproperty
+              id="process_va_interviewed_on"
+              name="Befragung durchgeführt am"
+              inputtype="date">
+              <defaultRule class="Today"/>
+          </huiproperty>
         </huipropertygroup>
 
         <huipropertygroup tags="Privacy" id="process_va_gemensemVerantwortliche" name="Gemeinsame Verantwortliche Art.26 DSGVO">
@@ -9163,7 +9196,10 @@ Wurden bereits weitere Stellen informiert?
             reversename="located in" />
         <huirelation to="bp_person" id="rel_bp_itnetwork_bp_person"
             name="person primarily responsible"
-            reversename="primarily responsible for " />
+            reversename="primarily responsible for" />
+        <huirelation to="bp_person" id="rel_bp_itnetwork_bp_person_dps"
+            name="data protection supervisor"
+            reversename="data protection supervisor for" />
         <huirelation to="bp_incident" id="rel_bp_itnetwork_bp_incident"
             name="was affected by"
             reversename="affected" />
@@ -9643,6 +9679,12 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
             <huiproperty id="bp_businessprocess_va_anz_ma" name="Anzahl Mitarbeiter" />
             <huiproperty id="bp_businessprocess_va_ort_bem" name="Bemerkungen" inputtype="text" />
+            <huiproperty
+               id="bp_businessprocess_va_interviewed_on"
+               name="Befragung durchgeführt am"
+               inputtype="date">
+               <defaultRule class="Today"/>
+           </huiproperty>
         </huipropertygroup>
 
         <huipropertygroup tags="Privacy" id="bp_businessprocess_va_gemensemVerantwortliche" name="Gemeinsame Verantwortliche Art.26 DSGVO">
@@ -9651,9 +9693,6 @@ Wurden bereits weitere Stellen informiert?
                 <option id="bp_businessprocess_va_gemenVerantwo_2" name="Nein" />
             </huiproperty>
 
-            <huiproperty id="bp_businessprocess_va_gemenVerant_Kontaktd" name="Angaben zum gemeinsam Verantwortlichen">
-                <depends option="bp_businessprocess_va_gemenVerant" value="bp_businessprocess_va_gemenVerantwo_1" />
-            </huiproperty>
             <huiproperty id="bp_businessprocess_va_gemenVerant_name" name="Name">
                 <depends option="bp_businessprocess_va_gemenVerant" value="bp_businessprocess_va_gemenVerantwo_1" />
             </huiproperty>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.22" id="1">
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
     <property name="author">A. Koderman</property>
-    <property name="createdBy">Eclipse BIRT Designer Version 3.7.0.v20110602 Build &lt;3.7.0.v20110607-1526></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
     <text-property name="title">verinice - BSI Strukturanalyse</text-property>
-    <property name="units">in</property>
     <list-property name="propertyBindings">
         <structure>
             <property name="name">queryText</property>
             <property name="id">3756</property>
         </structure>
     </list-property>
+    <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">fixed layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -6066,9 +6066,9 @@ columns(cols);</value>
             <property name="borderTopWidth">medium</property>
             <property name="width">100%</property>
             <column id="1067">
-                <property name="width">2.4242424242424243in</property>
                 <property name="backgroundColor">#9AC3D6</property>
                 <property name="fontWeight">bold</property>
+                <property name="width">2.4242424242424243in</property>
             </column>
             <column id="1068">
                 <property name="width">5.330578512396694in</property>
@@ -7053,13 +7053,6 @@ columns(cols);</value>
                                                             </structure>
                                                         </list-property>
                                                         <property name="pageBreakInterval">10</property>
-                                                        <list-property name="sort">
-                                                            <structure>
-                                                                <expression name="key" type="javascript">row["mnums_id"]</expression>
-                                                                <property name="direction">asc</property>
-                                                                <property name="strength">-1</property>
-                                                            </structure>
-                                                        </list-property>
                                                         <column id="3965">
                                                             <property name="width">2.3020833333333335in</property>
                                                         </column>
@@ -7144,6 +7137,16 @@ columns(cols);</value>
                                                                                 <simple-property-list name="value1">
                                                                                     <value type="javascript">"Entbehrlich"</value>
                                                                                 </simple-property-list>
+                                                                            </structure>
+                                                                        </list-property>
+                                                                        <list-property name="mapRules">
+                                                                            <structure>
+                                                                                <expression name="testExpr" type="javascript">row["mnums_umsetzung"]</expression>
+                                                                                <property name="operator">eq</property>
+                                                                                <simple-property-list name="value1">
+                                                                                    <value type="javascript">""</value>
+                                                                                </simple-property-list>
+                                                                                <text-property name="display">unbearbeitet</text-property>
                                                                             </structure>
                                                                         </list-property>
                                                                         <property name="resultSetColumn">mnums_umsetzung</property>
@@ -7342,9 +7345,9 @@ columns(cols);</value>
             <column id="1990"/>
             <detail>
                 <row id="1986">
-                    <property name="height">100%</property>
                     <property name="pageBreakBefore">avoid</property>
                     <property name="pageBreakInside">auto</property>
+                    <property name="height">100%</property>
                     <cell id="1987">
                         <grid id="1991">
                             <property name="height">100%</property>
@@ -7395,8 +7398,8 @@ columns(cols);</value>
                                 </cell>
                             </row>
                             <row id="1995">
-                                <property name="height">100%</property>
                                 <property name="pageBreakInside">auto</property>
+                                <property name="height">100%</property>
                                 <cell id="1996">
                                     <table id="2009">
                                         <property name="pageBreakBefore">auto</property>
@@ -7916,6 +7919,16 @@ columns(cols);</value>
                                                                                 <simple-property-list name="value1">
                                                                                     <value type="javascript">"Entbehrlich"</value>
                                                                                 </simple-property-list>
+                                                                            </structure>
+                                                                        </list-property>
+                                                                        <list-property name="mapRules">
+                                                                            <structure>
+                                                                                <expression name="testExpr" type="javascript">row["mnums_umsetzung"]</expression>
+                                                                                <property name="operator">eq</property>
+                                                                                <simple-property-list name="value1">
+                                                                                    <value type="javascript">""</value>
+                                                                                </simple-property-list>
+                                                                                <text-property name="display">unbearbeitet</text-property>
                                                                             </structure>
                                                                         </list-property>
                                                                         <property name="resultSetColumn">mnums_umsetzung</property>
@@ -8584,13 +8597,6 @@ columns(cols);</value>
                                                             </structure>
                                                         </list-property>
                                                         <property name="pageBreakInterval">0</property>
-                                                        <list-property name="sort">
-                                                            <structure>
-                                                                <expression name="key" type="javascript">row["mnums_id"]</expression>
-                                                                <property name="direction">asc</property>
-                                                                <property name="strength">-1</property>
-                                                            </structure>
-                                                        </list-property>
                                                         <column id="3190">
                                                             <property name="width">2.3020833333333335in</property>
                                                         </column>
@@ -8675,6 +8681,16 @@ columns(cols);</value>
                                                                                 <simple-property-list name="value1">
                                                                                     <value type="javascript">"Entbehrlich"</value>
                                                                                 </simple-property-list>
+                                                                            </structure>
+                                                                        </list-property>
+                                                                        <list-property name="mapRules">
+                                                                            <structure>
+                                                                                <expression name="testExpr" type="javascript">row["mnums_umsetzung"]</expression>
+                                                                                <property name="operator">eq</property>
+                                                                                <simple-property-list name="value1">
+                                                                                    <value type="javascript">""</value>
+                                                                                </simple-property-list>
+                                                                                <text-property name="display">unbearbeitet</text-property>
                                                                             </structure>
                                                                         </list-property>
                                                                         <property name="resultSetColumn">mnums_umsetzung</property>
@@ -9343,13 +9359,6 @@ columns(cols);</value>
                                                             </structure>
                                                         </list-property>
                                                         <property name="pageBreakInterval">0</property>
-                                                        <list-property name="sort">
-                                                            <structure>
-                                                                <expression name="key" type="javascript">row["mnums_id"]</expression>
-                                                                <property name="direction">asc</property>
-                                                                <property name="strength">-1</property>
-                                                            </structure>
-                                                        </list-property>
                                                         <column id="3267">
                                                             <property name="width">2.406in</property>
                                                         </column>
@@ -9434,6 +9443,16 @@ columns(cols);</value>
                                                                                 <simple-property-list name="value1">
                                                                                     <value type="javascript">"Entbehrlich"</value>
                                                                                 </simple-property-list>
+                                                                            </structure>
+                                                                        </list-property>
+                                                                        <list-property name="mapRules">
+                                                                            <structure>
+                                                                                <expression name="testExpr" type="javascript">row["mnums_umsetzung"]</expression>
+                                                                                <property name="operator">eq</property>
+                                                                                <simple-property-list name="value1">
+                                                                                    <value type="javascript">""</value>
+                                                                                </simple-property-list>
+                                                                                <text-property name="display">unbearbeitet</text-property>
                                                                             </structure>
                                                                         </list-property>
                                                                         <property name="resultSetColumn">mnums_umsetzung</property>
@@ -10090,13 +10109,6 @@ columns(cols);</value>
                                                             </structure>
                                                         </list-property>
                                                         <property name="pageBreakInterval">0</property>
-                                                        <list-property name="sort">
-                                                            <structure>
-                                                                <expression name="key" type="javascript">row["mnums_id"]</expression>
-                                                                <property name="direction">asc</property>
-                                                                <property name="strength">-1</property>
-                                                            </structure>
-                                                        </list-property>
                                                         <column id="3344">
                                                             <property name="width">2.3958333333333335in</property>
                                                         </column>
@@ -10181,6 +10193,16 @@ columns(cols);</value>
                                                                                 <simple-property-list name="value1">
                                                                                     <value type="javascript">"Entbehrlich"</value>
                                                                                 </simple-property-list>
+                                                                            </structure>
+                                                                        </list-property>
+                                                                        <list-property name="mapRules">
+                                                                            <structure>
+                                                                                <expression name="testExpr" type="javascript">row["mnums_umsetzung"]</expression>
+                                                                                <property name="operator">eq</property>
+                                                                                <simple-property-list name="value1">
+                                                                                    <value type="javascript">""</value>
+                                                                                </simple-property-list>
+                                                                                <text-property name="display">unbearbeitet</text-property>
                                                                             </structure>
                                                                         </list-property>
                                                                         <property name="resultSetColumn">mnums_umsetzung</property>
@@ -10853,13 +10875,6 @@ columns(cols);</value>
                                                             </structure>
                                                         </list-property>
                                                         <property name="pageBreakInterval">0</property>
-                                                        <list-property name="sort">
-                                                            <structure>
-                                                                <expression name="key" type="javascript">row["mnums_id"]</expression>
-                                                                <property name="direction">asc</property>
-                                                                <property name="strength">-1</property>
-                                                            </structure>
-                                                        </list-property>
                                                         <column id="3421">
                                                             <property name="width">2.4375in</property>
                                                         </column>
@@ -10944,6 +10959,16 @@ columns(cols);</value>
                                                                                 <simple-property-list name="value1">
                                                                                     <value type="javascript">"Entbehrlich"</value>
                                                                                 </simple-property-list>
+                                                                            </structure>
+                                                                        </list-property>
+                                                                        <list-property name="mapRules">
+                                                                            <structure>
+                                                                                <expression name="testExpr" type="javascript">row["mnums_umsetzung"]</expression>
+                                                                                <property name="operator">eq</property>
+                                                                                <simple-property-list name="value1">
+                                                                                    <value type="javascript">""</value>
+                                                                                </simple-property-list>
+                                                                                <text-property name="display">unbearbeitet</text-property>
                                                                             </structure>
                                                                         </list-property>
                                                                         <property name="resultSetColumn">mnums_umsetzung</property>
@@ -11576,13 +11601,6 @@ columns(cols);</value>
                                                             </structure>
                                                         </list-property>
                                                         <property name="pageBreakInterval">0</property>
-                                                        <list-property name="sort">
-                                                            <structure>
-                                                                <expression name="key" type="javascript">row["mnums_id"]</expression>
-                                                                <property name="direction">asc</property>
-                                                                <property name="strength">-1</property>
-                                                            </structure>
-                                                        </list-property>
                                                         <column id="3498">
                                                             <property name="width">2.3020833333333335in</property>
                                                         </column>
@@ -11667,6 +11685,16 @@ columns(cols);</value>
                                                                                 <simple-property-list name="value1">
                                                                                     <value type="javascript">"Entbehrlich"</value>
                                                                                 </simple-property-list>
+                                                                            </structure>
+                                                                        </list-property>
+                                                                        <list-property name="mapRules">
+                                                                            <structure>
+                                                                                <expression name="testExpr" type="javascript">row["mnums_umsetzung"]</expression>
+                                                                                <property name="operator">eq</property>
+                                                                                <simple-property-list name="value1">
+                                                                                    <value type="javascript">""</value>
+                                                                                </simple-property-list>
+                                                                                <text-property name="display">unbearbeitet</text-property>
                                                                             </structure>
                                                                         </list-property>
                                                                         <property name="resultSetColumn">mnums_umsetzung</property>
@@ -12299,13 +12327,6 @@ columns(cols);</value>
                                                             </structure>
                                                         </list-property>
                                                         <property name="pageBreakInterval">0</property>
-                                                        <list-property name="sort">
-                                                            <structure>
-                                                                <expression name="key" type="javascript">row["mnums_id"]</expression>
-                                                                <property name="direction">asc</property>
-                                                                <property name="strength">-1</property>
-                                                            </structure>
-                                                        </list-property>
                                                         <column id="3575">
                                                             <property name="width">2.375in</property>
                                                         </column>
@@ -12390,6 +12411,16 @@ columns(cols);</value>
                                                                                 <simple-property-list name="value1">
                                                                                     <value type="javascript">"Entbehrlich"</value>
                                                                                 </simple-property-list>
+                                                                            </structure>
+                                                                        </list-property>
+                                                                        <list-property name="mapRules">
+                                                                            <structure>
+                                                                                <expression name="testExpr" type="javascript">row["mnums_umsetzung"]</expression>
+                                                                                <property name="operator">eq</property>
+                                                                                <simple-property-list name="value1">
+                                                                                    <value type="javascript">""</value>
+                                                                                </simple-property-list>
+                                                                                <text-property name="display">unbearbeitet</text-property>
                                                                             </structure>
                                                                         </list-property>
                                                                         <property name="resultSetColumn">mnums_umsetzung</property>
@@ -13010,13 +13041,6 @@ columns(cols);</value>
                                                             </structure>
                                                         </list-property>
                                                         <property name="pageBreakInterval">0</property>
-                                                        <list-property name="sort">
-                                                            <structure>
-                                                                <expression name="key" type="javascript">row["mnums_id"]</expression>
-                                                                <property name="direction">asc</property>
-                                                                <property name="strength">-1</property>
-                                                            </structure>
-                                                        </list-property>
                                                         <column id="3652">
                                                             <property name="width">2.5208333333333335in</property>
                                                         </column>
@@ -13101,6 +13125,16 @@ columns(cols);</value>
                                                                                 <simple-property-list name="value1">
                                                                                     <value type="javascript">"Entbehrlich"</value>
                                                                                 </simple-property-list>
+                                                                            </structure>
+                                                                        </list-property>
+                                                                        <list-property name="mapRules">
+                                                                            <structure>
+                                                                                <expression name="testExpr" type="javascript">row["mnums_umsetzung"]</expression>
+                                                                                <property name="operator">eq</property>
+                                                                                <simple-property-list name="value1">
+                                                                                    <value type="javascript">""</value>
+                                                                                </simple-property-list>
+                                                                                <text-property name="display">unbearbeitet</text-property>
                                                                             </structure>
                                                                         </list-property>
                                                                         <property name="resultSetColumn">mnums_umsetzung</property>
@@ -13367,7 +13401,7 @@ columns(cols);</value>
                 Kw/iLKGsxaJNSzLAhBlJeUCaIIjDEu2LZMvsgAW/ooeFdObRdZlh8E6zj3g4b6h+p2Dc9JEFFUeelBMC
                 giAOZxJjuZUgCIIgQtpT6iy3kpsVQRAEQZBIEgRBEASJJEEQBEGQSBIEQRAEiSRBEARBkEgSBEEQBIkk
                 QRAEQZBIEgRBEASJJEEQBEEkGf8Pn6UU/6Nng30AAAAASUVORK5CYII=
-            </property>
+</property>
         </structure>
     </list-property>
 </report>

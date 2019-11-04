@@ -54,6 +54,8 @@ public class Messages extends NLS {
 
     public static String BSIElementEditorMultiPage_page_name_risk_values;
 
+    public static String BSIElementEditorMultiPage_page_name_change_metadata;
+
     public static String BSIElementEditorMultiPage_risk_configuration_invalid;
 
     public static String BSIElementEditorMultiPage_risk_property_value_labels_not_unique;
@@ -117,6 +119,14 @@ public class Messages extends NLS {
     public static String RiskConfigurationEditorInput_name;
 
     public static String RiskConfigurationEditorInput_tooltip;
+
+    public static String CreatedBy;
+
+    public static String CreatedAt;
+
+    public static String ChangedBy;
+
+    public static String ChangedAt;
 
     static {
         // initialize resource bundle

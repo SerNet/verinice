@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -257,6 +258,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             elementInDB = findDbElement(sourceId, extId, true, true);
         }
 
+        boolean updatingExistingElement = false;
         if (elementInDB != null) {
             if (parameter.isUpdate()) {
                 /*** UPDATE: ***/
@@ -271,6 +273,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                     elementInDB.setExtId(null);
                 }
                 setAttributes = true;
+                updatingExistingElement = true;
                 potentiallyUpdated++;
             } else {
                 if (log.isDebugEnabled()) {
@@ -328,6 +331,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             // <syncObject>...
             HUITypeFactory huiTypeFactory = getHuiTypeFactory();
             boolean licenseManagement = isLicenseManagementSupported(so);
+            boolean propertyValueChanged = false;
             for (SyncAttribute syncaAttribute : so.getSyncAttribute()) {
                 String attrExtId = syncaAttribute.getName();
                 List<String> attrValues = syncaAttribute.getValue();
@@ -349,14 +353,18 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                         syncaAttribute);
                 importReferenceTypes.trackReferences(elementInDB, syncaAttribute, attrIntId);
                 try {
-                    elementInDB.getEntity().importProperties(huiTypeFactory, attrIntId, attrValues,
-                            syncaAttribute.getLimitedLicense(),
+                    propertyValueChanged |= elementInDB.getEntity().importProperties(huiTypeFactory,
+                            attrIntId, attrValues, syncaAttribute.getLimitedLicense(),
                             syncaAttribute.getLicenseContentId(), licenseManagementValid);
                 } catch (IndexOutOfBoundsException e) {
                     log.error("wrong number of arguments while importing", e);
                 }
                 addElement(elementInDB);
             } // for <syncAttribute>
+            if (updatingExistingElement && propertyValueChanged) {
+                Optional.ofNullable(elementInDB.getEntity())
+                        .ifPresent(entity -> entity.trackChange(authService.getUsername()));
+            }
             elementInDB = dao.merge(elementInDB);
             parent.addChild(elementInDB);
             elementInDB.setParentAndScope(parent);
@@ -480,6 +488,10 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 child.setPermissions(Permission.clonePermissionSet(child, parent.getPermissions()));
             }
         }
+        if (!parameter.isImportAsCatalog()) {
+            Optional.ofNullable(child).map(CnATreeElement::getEntity)
+                    .ifPresent(entity -> entity.trackCreation(authService.getUsername()));
+        }
 
         return child;
     }
@@ -519,7 +531,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 attachment.setSourceId(sourceId);
             }
             attachmentMap.put(fileXml.getFile(), attachment);
-            attachment.setCnATreeElementId(elementInDB.getDbId());
+            attachment.setCnATreeElement(elementInDB);
             attachment.setCnAElementTitel(elementInDB.getTitle());
             attachment.setTitel(fileXml.getFile());
             attachment.setFileSize(String.valueOf(getSyncObjectFileSize(fileXml)));

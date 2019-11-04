@@ -21,6 +21,7 @@ package sernet.verinice.rcp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -41,131 +42,132 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.UpdateElement;
+import sernet.verinice.service.commands.UpdateIcon;
 
 /**
- *
- *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class IconSelectAction implements IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {
+public class IconSelectAction
+        implements IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {
 
     private static final Logger LOG = Logger.getLogger(IconSelectAction.class);
-    
+
     private Shell shell;
-    
+
     private List<CnATreeElement> selectedElments;
-    
+
     private static ISchedulingRule iSchedulingRule = new Mutex();
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
+
+    /*
+     * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.
+     * IWorkbenchWindow)
      */
     @Override
     public void init(IWorkbenchWindow window) {
-        this.shell = window.getShell();     
+        this.shell = window.getShell();
     }
-    
-    /* (non-Javadoc)
+
+    /*
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
     @Override
     public void run(IAction arg0) {
         try {
             final IconSelectDialog dialog = new IconSelectDialog(shell);
-            if(Dialog.OK==dialog.open() && dialog.isSomethingSelected()) {
-                WorkspaceJob importJob = new WorkspaceJob(Messages.IconSelectAction_0) {
+            if (Dialog.OK == dialog.open() && dialog.isSomethingSelected()) {
+                WorkspaceJob updateIconJob = new WorkspaceJob(Messages.IconSelectAction_0) {
                     @Override
                     public IStatus runInWorkspace(final IProgressMonitor monitor) {
                         IStatus status = Status.OK_STATUS;
                         try {
                             monitor.setTaskName(Messages.IconSelectAction_1);
                             String iconPath = dialog.getSelectedPath();
-                            if(dialog.isDefaultIcon()) {
+                            if (dialog.isDefaultIcon()) {
                                 iconPath = null;
                             }
-                            for (CnATreeElement element : selectedElments) {                  
-                                element = updateIcon(element, iconPath);
+
+                            Activator.inheritVeriniceContextState();
+                            UpdateIcon updateIcon = new UpdateIcon(
+                                    selectedElments.stream().map(CnATreeElement::getUuid)
+                                            .collect(Collectors.toSet()),
+                                    iconPath, ChangeLogEntry.STATION_ID);
+                            updateIcon = getCommandService().executeCommand(updateIcon);
+
+                            // notify all views of change:
+                            for (CnATreeElement element : updateIcon.getChangedElements()) {
+                                CnAElementFactory.getModel(element).childChanged(element);
                             }
                         } catch (Exception e) {
                             LOG.error("Error while changing icons.", e); //$NON-NLS-1$
-                            status = new Status(IStatus.ERROR, "sernet.verinice.rcp", Messages.IconSelectAction_3, e); //$NON-NLS-1$
+                            status = new Status(IStatus.ERROR, "sernet.verinice.rcp", //$NON-NLS-1$
+                                    Messages.IconSelectAction_3, e);
                         }
                         return status;
                     }
                 };
-                JobScheduler.scheduleJob(importJob, iSchedulingRule);
+                JobScheduler.scheduleJob(updateIconJob, iSchedulingRule);
             }
         } catch (Exception e) {
             LOG.error(Messages.IconSelectAction_4, e);
         }
     }
 
-    private CnATreeElement updateIcon(CnATreeElement element, String iconPath) throws CommandException {
-        element.setIconPath(iconPath);
-        Activator.inheritVeriniceContextState();
-        UpdateElement<CnATreeElement> updateCommand = new UpdateElement<CnATreeElement>(element, false, ChangeLogEntry.STATION_ID);
-        getCommandService().executeCommand(updateCommand);
-        // notify all views of change:
-        CnAElementFactory.getModel(element).childChanged(element);
-        return element;
-    }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+    /*
+     * @see
+     * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.
+     * IAction, org.eclipse.jface.viewers.ISelection)
      */
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
         if (action.isEnabled()) {
             action.setEnabled(checkRights());
         }
-        
-        if(selection instanceof ITreeSelection) {
+
+        if (selection instanceof ITreeSelection) {
             ITreeSelection treeSelection = (ITreeSelection) selection;
-            List<Object> selectionList = treeSelection.toList();
-            selectedElments = new ArrayList<CnATreeElement>(selectionList.size());
+            List<?> selectionList = treeSelection.toList();
+            selectedElments = new ArrayList<>(selectionList.size());
             for (Object object : selectionList) {
-                if(object instanceof CnATreeElement) {
+                if (object instanceof CnATreeElement) {
                     selectedElments.add((CnATreeElement) object);
                 }
             }
         }
     }
 
-    /* (non-Javadoc)
+    /*
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
      */
     @Override
     public void dispose() {
-        // TODO Auto-generated method stub
-        
+        // nothing to do here
     }
-    
-    /* (non-Javadoc)
+
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
     public boolean checkRights() {
         Activator.inheritVeriniceContextState();
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override
     public String getRightID() {
         return ActionRightIDs.CHANGEICON;
     }
-    
+
     private ICommandService getCommandService() {
         return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
     }

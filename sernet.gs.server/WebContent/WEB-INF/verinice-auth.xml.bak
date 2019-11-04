@@ -11,7 +11,7 @@
     <p:profiles>
         <!-- Each profile in this document defines a collection -->
         <!-- of application actions. All actions in verinice are -->
-        <!-- defined in property file verinice-action.properties. -->
+        <!-- defined in class sernet.verinice.interfaces.ActionRightIDs. -->
     </p:profiles>
     <p:userprofiles>
         <!-- A userprofile defines a n:m mapping between users and -->

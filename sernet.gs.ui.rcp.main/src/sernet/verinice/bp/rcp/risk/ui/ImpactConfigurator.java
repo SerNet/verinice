@@ -18,6 +18,7 @@
 package sernet.verinice.bp.rcp.risk.ui;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -29,6 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.verinice.model.bp.risk.Impact;
+import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 
 public final class ImpactConfigurator extends StackConfigurator<Impact> {
 
@@ -79,5 +81,10 @@ public final class ImpactConfigurator extends StackConfigurator<Impact> {
                         .withDescription(newDescription));
             }
         });
+    }
+
+    @Override
+    protected Optional<List<Impact>> getDefault() {
+        return Optional.ofNullable(DefaultRiskConfiguration.getInstance().getImpacts());
     }
 }

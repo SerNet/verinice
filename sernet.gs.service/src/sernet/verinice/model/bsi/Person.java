@@ -19,11 +19,12 @@ package sernet.verinice.model.bsi;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
-import org.apache.log4j.Logger;
-
+import sernet.gs.service.StringUtil;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.IPerson;
@@ -31,11 +32,13 @@ import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
+import sernet.snutils.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.configuration.Configuration;
 
 public class Person extends CnATreeElement implements IBSIStrukturElement, IPerson {
 
-    private static final Logger log = Logger.getLogger(Person.class);
+    private static final long serialVersionUID = -4658214027652209720L;
 
     public static final String PROP_TAG = "person_tag"; //$NON-NLS-1$
     public static final String P_ANREDE = "person_anrede"; //$NON-NLS-1$
@@ -47,10 +50,23 @@ public class Person extends CnATreeElement implements IBSIStrukturElement, IPers
     public static final String P_PHONE = "person_telefon"; //$NON-NLS-1$
     public static final String P_ORGEINHEIT = "person_orgeinheit"; //$NON-NLS-1$
 
-    // ID must correspond to entity definition in entitytype XML description:
+    // ID must correspond to entity definition in entity type XML description:
     public static final String TYPE_ID = "person"; //$NON-NLS-1$
     public static final String PROP_ERLAEUTERUNG = "person_erlaeuterung"; //$NON-NLS-1$
     public static final String PROP_ANZAHL = "person_anzahl"; //$NON-NLS-1$
+
+    private Set<Configuration> configurations = new HashSet<>(1);
+
+    protected Person() {
+    }
+
+    public Set<Configuration> getConfigurations() {
+        return configurations;
+    }
+
+    public void setConfigurations(Set<Configuration> configurations) {
+        this.configurations = configurations;
+    }
 
     public Person(CnATreeElement parent) {
         super(parent);
@@ -63,16 +79,12 @@ public class Person extends CnATreeElement implements IBSIStrukturElement, IPers
 
     @Override
     public String getKuerzel() {
-        return getEntity().getSimpleValue(PROP_KUERZEL);
+        return getEntity().getPropertyValue(PROP_KUERZEL);
     }
 
     @Override
     public Collection<? extends String> getTags() {
-        return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
-    }
-
-    protected Person() {
-
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
     @Override
@@ -97,40 +109,40 @@ public class Person extends CnATreeElement implements IBSIStrukturElement, IPers
         if (entity == null) {
             return ""; //$NON-NLS-1$
         }
-        StringBuffer buff = new StringBuffer();
-        buff.append(entity.getSimpleValue(P_VORNAME));
-        if (buff.length() > 0) {
-            buff.append(" "); //$NON-NLS-1$
+        StringBuilder sb = new StringBuilder();
+        sb.append(entity.getPropertyValue(P_VORNAME));
+        if (sb.length() > 0) {
+            sb.append(" "); //$NON-NLS-1$
         }
-        buff.append(entity.getSimpleValue(P_NAME));
+        sb.append(entity.getPropertyValue(P_NAME));
 
         String rollen = getRollen(entity);
         if (rollen.length() > 0) {
-            buff.append(" [" + rollen + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+            sb.append(" [" + rollen + "]"); //$NON-NLS-1$ //$NON-NLS-2$
         }
-        return buff.toString();
+        return sb.toString();
     }
 
     public String getFullName() {
         if (getEntity() == null) {
             return ""; //$NON-NLS-1$
         }
-        StringBuffer buff = new StringBuffer();
-        buff.append(getEntity().getSimpleValue(P_VORNAME));
-        if (buff.length() > 0) {
-            buff.append(" "); //$NON-NLS-1$
+        StringBuilder sb = new StringBuilder();
+        sb.append(getEntity().getPropertyValue(P_VORNAME));
+        if (sb.length() > 0) {
+            sb.append(" "); //$NON-NLS-1$
         }
-        buff.append(getEntity().getSimpleValue(P_NAME));
+        sb.append(getEntity().getPropertyValue(P_NAME));
 
-        return buff.toString();
+        return sb.toString();
     }
 
     public String getNachname() {
-        return getEntity().getSimpleValue(P_NAME);
+        return getEntity().getPropertyValue(P_NAME);
     }
 
     public String getAnrede() {
-        return getEntity().getSimpleValue(P_ANREDE);
+        return getEntity().getPropertyValue(P_ANREDE);
     }
 
     private String getRollen() {
@@ -144,7 +156,7 @@ public class Person extends CnATreeElement implements IBSIStrukturElement, IPers
         if (entity == null) {
             return ""; //$NON-NLS-1$
         }
-        StringBuffer buf = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         PropertyList propertyList = entity.getProperties(P_ROLLEN);
         PropertyType type = HUITypeFactory.getInstance().getPropertyType(TYPE_ID, P_ROLLEN);
         List<Property> properties = propertyList.getProperties();
@@ -152,15 +164,15 @@ public class Person extends CnATreeElement implements IBSIStrukturElement, IPers
         if (properties == null)
             return ""; //$NON-NLS-1$
 
-        for (Iterator iter = properties.iterator(); iter.hasNext();) {
-            Property prop = (Property) iter.next();
+        for (Iterator<Property> iter = properties.iterator(); iter.hasNext();) {
+            Property prop = iter.next();
             String rolle = type.getOption(prop.getPropertyValue()).getName();
-            buf.append(rolle);
+            sb.append(rolle);
             if (iter.hasNext()) {
-                buf.append(", "); //$NON-NLS-1$
+                sb.append(", "); //$NON-NLS-1$
             }
         }
-        return buf.toString();
+        return sb.toString();
     }
 
     @Override
@@ -178,7 +190,7 @@ public class Person extends CnATreeElement implements IBSIStrukturElement, IPers
     }
 
     public String getErlaeuterung() {
-        return getEntity().getSimpleValue(PROP_ERLAEUTERUNG);
+        return getEntity().getPropertyValue(PROP_ERLAEUTERUNG);
     }
 
     public void setKuerzel(String name) {
@@ -233,7 +245,7 @@ public class Person extends CnATreeElement implements IBSIStrukturElement, IPers
 
     @Override
     public String getSalutation() {
-        return getEntity().getRawPropertyValue(P_ANREDE);
+        return StringUtil.replaceEmptyStringByNull(getEntity().getPropertyValue(P_ANREDE));
     }
 
     @Override

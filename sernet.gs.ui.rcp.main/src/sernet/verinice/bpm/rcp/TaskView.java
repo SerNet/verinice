@@ -85,6 +85,8 @@ import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.editors.TaskEditorContext;
 import sernet.gs.ui.rcp.main.bsi.views.HtmlWriter;
+import sernet.gs.ui.rcp.main.bsi.views.listeners.DisableContextMenuListener;
+import sernet.gs.ui.rcp.main.bsi.views.listeners.WhiteListLocationListener;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
@@ -361,6 +363,9 @@ public class TaskView extends RightsEnabledView {
     private void createInfoComposite(Composite container) {
         final int gridDataHeight = 80;
         textPanel = new Browser(container, SWT.NONE);
+        textPanel.setJavascriptEnabled(false);
+        textPanel.addMenuDetectListener(new DisableContextMenuListener());
+        textPanel.addLocationListener(WhiteListLocationListener.DEFAULT);
         textPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
         final GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         gridData.heightHint = gridDataHeight;

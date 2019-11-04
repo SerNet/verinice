@@ -374,7 +374,7 @@ public class CopyCommand extends GenericCommand {
             final Attachment sourceAttachment) {
         final Attachment newAttachmentEntity = new Attachment();
         newAttachmentEntity.getEntity().copyEntity(sourceAttachment.getEntity());
-        newAttachmentEntity.setCnATreeElementId(destinationElement.getDbId());
+        newAttachmentEntity.setCnATreeElement(destinationElement);
         newAttachmentEntity.setCnAElementTitel(destinationElement.getTitle());
         return newAttachmentEntity;
     }

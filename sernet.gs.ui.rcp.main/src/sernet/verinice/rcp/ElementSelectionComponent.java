@@ -24,6 +24,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -55,6 +57,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.CnaTreeElementTitleFilter;
@@ -88,7 +91,7 @@ public class ElementSelectionComponent {
     private List<CnATreeElement> elementList;
     private Integer scopeId;
     private Integer groupId;
-    private String typeId;
+    private Set<String> typeIDs;
     private boolean scopeOnly;
     private boolean showScopeCheckbox;
     private static final String COLUMN_IMG = "_img"; //$NON-NLS-1$
@@ -106,9 +109,14 @@ public class ElementSelectionComponent {
 
     public ElementSelectionComponent(Composite container, String type, Integer scopeId,
             Integer groupId) {
+        this(container, Collections.singleton(type), scopeId, groupId);
+    }
+
+    public ElementSelectionComponent(Composite container, Set<String> typeIDs, Integer scopeId,
+            Integer groupId) {
         super();
         this.container = container;
-        this.typeId = type;
+        this.typeIDs = typeIDs;
         this.scopeId = scopeId;
         this.groupId = groupId;
         scopeOnly = true;
@@ -230,7 +238,7 @@ public class ElementSelectionComponent {
     }
 
     public void loadElementsAndSelect(final CnATreeElement selected) {
-        if (typeId == null || typeId.length() == 0) {
+        if (typeIDs == null || typeIDs.isEmpty()) {
             return;
         }
         viewer.setInput(Collections
@@ -296,15 +304,23 @@ public class ElementSelectionComponent {
         this.showScopeCheckbox = showScopeCheckbox;
     }
 
-    private void loadElementsFromDb() throws CommandException {
-        LoadCnAElementByEntityTypeId command;
-        if (scopeOnly) {
-            command = new LoadCnAElementByEntityTypeId(typeId, getScopeId(), getGroupId());
-        } else {
-            command = new LoadCnAElementByEntityTypeId(typeId);
-        }
-        command = ServiceFactory.lookupCommandService().executeCommand(command);
-        showElementsInTable(command.getElements());
+    private void loadElementsFromDb() {
+        List<CnATreeElement> elements = typeIDs.stream().flatMap(typeId -> {
+            LoadCnAElementByEntityTypeId command;
+            if (scopeOnly) {
+                command = new LoadCnAElementByEntityTypeId(typeId, getScopeId(), getGroupId());
+            } else {
+                command = new LoadCnAElementByEntityTypeId(typeId);
+            }
+            try {
+                command = ServiceFactory.lookupCommandService().executeCommand(command);
+            } catch (CommandException e) {
+                throw new RuntimeCommandException(e);
+            }
+            return command.getElements().stream();
+        }).collect(Collectors.toList());
+
+        showElementsInTable(elements);
     }
 
     private void showElementsInTable(final List<CnATreeElement> list) {
@@ -356,12 +372,12 @@ public class ElementSelectionComponent {
         this.groupId = groupId;
     }
 
-    public String getTypeId() {
-        return typeId;
+    public void setTypeId(String typeId) {
+        this.typeIDs = Collections.singleton(typeId);
     }
 
-    public void setTypeId(String typeId) {
-        this.typeId = typeId;
+    public void setTypeIds(Set<String> typeIds) {
+        this.typeIDs = typeIds;
     }
 
     public Integer getHeight() {
