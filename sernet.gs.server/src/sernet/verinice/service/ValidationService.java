@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
@@ -34,6 +33,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
+import sernet.gs.service.CollectionUtil;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.Retriever;
 import sernet.gs.service.RuntimeCommandException;
@@ -142,6 +142,7 @@ public class ValidationService implements IValidationService {
      * sernet.verinice.interfaces.validation.IValidationService#getValidations(
      * sernet.verinice.model.common.CnATreeElement)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public List<CnAValidation> getValidations(Integer scopeId) {
         ServerInitializer.inheritVeriniceContextState();
@@ -159,6 +160,7 @@ public class ValidationService implements IValidationService {
      * returns validations for given scope or validations for given element in
      * given scope or validation for (scope-)unspecified element
      */
+    @SuppressWarnings("unchecked")
     @Override
     public List<CnAValidation> getValidations(Integer scopeId, Integer cnaId) {
         ServerInitializer.inheritVeriniceContextState();
@@ -172,6 +174,7 @@ public class ValidationService implements IValidationService {
         return getCnaValidationDAO().findByCriteria(criteria);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<CnAValidation> getValidations(Integer elmtDbId, String propertyType) {
         ServerInitializer.inheritVeriniceContextState();
@@ -439,6 +442,7 @@ public class ValidationService implements IValidationService {
      * @see sernet.verinice.interfaces.validation.IValidationService#
      * deleteValidations(java.lang.Integer, java.lang.Integer)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void deleteValidations(Integer scopeId, Integer elmtDbId) {
         ServerInitializer.inheritVeriniceContextState();
@@ -488,12 +492,23 @@ public class ValidationService implements IValidationService {
         if (elmt == null) {
             return;
         }
-
         LoadSubtreeIds loadSubtreeIdsCommand = new LoadSubtreeIds(elmt);
         loadSubtreeIdsCommand = getCommandService().executeCommand(loadSubtreeIdsCommand);
-        Set<Integer> dbIdsOfSubtree = loadSubtreeIdsCommand.getDbIdsOfSubtree();
+        List<Integer> dbIdsOfSubtree = new ArrayList<>(loadSubtreeIdsCommand.getDbIdsOfSubtree());
+        // Delete validation in partitions due to Oracle limitations
+        Collection<List<Integer>> partitions = CollectionUtil.partition(dbIdsOfSubtree, 1000);
+        if (log.isDebugEnabled()) {
+            log.debug("Deleting validations in " + partitions.size() + " partition(s)");
+        }
+        for (List<Integer> partition : partitions) {
+            deleteValidations(elmt, partition);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void deleteValidations(CnATreeElement elmt, List<Integer> dbIds) {
         DetachedCriteria criteria = DetachedCriteria.forClass(CnAValidation.class)
-                .add(Restrictions.in("elmtDbId", dbIdsOfSubtree))
+                .add(Restrictions.in("elmtDbId", dbIds))
                 .add(createScopeIdRestriction(elmt.getScopeId()));
         for (CnAValidation validation : (List<CnAValidation>) getCnaValidationDAO()
                 .findByCriteria(criteria)) {
@@ -516,18 +531,16 @@ public class ValidationService implements IValidationService {
 
     @Override
     public void createValidationsByUuids(Collection<String> uuids) throws CommandException {
-        DetachedCriteria criteriaElements = DetachedCriteria.forClass(CnATreeElement.class)
-                .add(Restrictions.in("uuid", uuids));
-        new RetrieveInfo().setProperties(true).configureCriteria(criteriaElements);
-        @SuppressWarnings("unchecked")
-        List<CnATreeElement> elements = getCnaTreeElementDAO().findByCriteria(criteriaElements);
+        List<CnATreeElement> elements = new ArrayList<>(uuids.size());
+        List<CnAValidation> existingValidations = new ArrayList<>(uuids.size());
+        Collection<List<String>> partitions = CollectionUtil.partition(new ArrayList<String>(uuids),
+                1000);
+        for (List<String> partitionUUIDs : partitions) {
+            List<CnATreeElement> partitionElements = loadElements(partitionUUIDs);
+            elements.addAll(partitionElements);
+            existingValidations.addAll(loadValidations(partitionElements));
+        }
 
-        DetachedCriteria criteriaValidations = DetachedCriteria.forClass(CnAValidation.class);
-        criteriaValidations.add(Restrictions.in("elmtDbId",
-                elements.stream().map(CnATreeElement::getDbId).collect(Collectors.toSet())));
-        @SuppressWarnings("unchecked")
-        List<CnAValidation> existingValidations = getCnaValidationDAO()
-                .findByCriteria(criteriaValidations);
         Map<Integer, List<CnAValidation>> existingValidationsByElementId = existingValidations
                 .stream().collect(Collectors.groupingBy(CnAValidation::getElmtDbId));
         ServerInitializer.inheritVeriniceContextState();
@@ -537,6 +550,22 @@ public class ValidationService implements IValidationService {
                     existingValidationsByElementId.getOrDefault(element.getDbId(),
                             Collections.emptyList()));
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<CnATreeElement> loadElements(Collection<String> uuids) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class)
+                .add(Restrictions.in("uuid", uuids));
+        RetrieveInfo.getPropertyInstance().configureCriteria(criteria);
+        return getCnaTreeElementDAO().findByCriteria(criteria);
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<CnAValidation> loadValidations(List<CnATreeElement> elements) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(CnAValidation.class);
+        criteria.add(Restrictions.in("elmtDbId",
+                elements.stream().map(CnATreeElement::getDbId).collect(Collectors.toSet())));
+        return getCnaValidationDAO().findByCriteria(criteria);
     }
 
     /*

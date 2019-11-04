@@ -20,6 +20,8 @@
 package sernet.verinice.graph;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,8 +31,11 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Restrictions;
 
+import sernet.gs.service.CollectionUtil;
 import sernet.gs.service.TimeFormatter;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.graph.DirectedVeriniceGraph;
@@ -176,9 +181,9 @@ public class GraphService implements IGraphService, Serializable {
 
     private void loadLinks(VeriniceGraph graph, String[] relationIds,
             Map<Integer, CnATreeElement> elementsByDBId) {
+        long time = initRuntime();
         DetachedCriteria linkCrit = DetachedCriteria.forClass(CnALink.class);
-        linkCrit.add(Restrictions.and(Restrictions.in("id.dependantId", elementsByDBId.keySet()),
-                Restrictions.in("id.dependencyId", elementsByDBId.keySet())));
+        createElementIdRestriction(linkCrit, new ArrayList<>(elementsByDBId.keySet()));
         if (relationIds != null && relationIds.length > 0) {
             linkCrit.add(Restrictions.in("id.typeId", relationIds));
         }
@@ -201,6 +206,27 @@ public class GraphService implements IGraphService, Serializable {
                 }
             }
         }
+        logRuntime("Load links runtime: ", time);
+    }
+
+    public void createElementIdRestriction(DetachedCriteria linkCrit, List<Integer> elementDbIds) {
+        if (elementDbIds.size() <= 1000) {
+            linkCrit.add(createInStatement(elementDbIds));
+        } else {
+            Collection<List<Integer>> partitions = CollectionUtil.partition(elementDbIds, 1000);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Creating a disjunction with " + partitions.size()
+                        + " elements for loading links.");
+            }
+            Disjunction or = Restrictions.disjunction();
+            partitions.forEach(partition -> or.add(Restrictions.in("id.dependantId", partition)));
+            linkCrit.add(or);
+        }
+    }
+
+    private LogicalExpression createInStatement(List<Integer> elementDbIds) {
+        return Restrictions.and(Restrictions.in("id.dependantId", elementDbIds),
+                Restrictions.in("id.dependencyId", elementDbIds));
     }
 
     private Edge createEdge(CnALink link, CnATreeElement source, CnATreeElement target) {
