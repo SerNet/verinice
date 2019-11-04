@@ -305,7 +305,7 @@ public class HUITypeFactory {
     }
 
     /**
-     * Returns the key of a resource bundle property for a given id and attibute
+     * Returns the key of a resource bundle property for a given id and attribute
      * name.
      * 
      * @param id
