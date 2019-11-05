@@ -622,7 +622,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
         try {
             DbVersion command = new DbVersion(VersionConstants.COMPATIBLE_CLIENT_VERSION);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
-            ServiceFactory.lookupModelingMigrationService().migrateModeling();
             done[0] = true;
         } catch (CommandException e) {
             done[0] = true;
