@@ -36,14 +36,6 @@
 	<logger name="org.springframework">
 		<level value="ERROR" />
 	</logger>
-        
-	<!-- Log the migration to the new modeling in ITBP -->  
-	<logger name="sernet.verinice.service.bp.migration.MigrateItNetworkJob">
-		<level value="INFO" />
-	</logger>
-	<logger name="sernet.verinice.service.bp.migration.MigrateElementJobImpl">
-		<level value="INFO" />
-	</logger>
 
 	<!-- Logger for everything else -->
 	<root>
