@@ -19,8 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.interfaces;
 
-import sernet.verinice.service.bp.migration.ModelingMigrationDatabaseServiceImpl;
-
 /**
  * @author Daniel Murygin <dm@sernet.de>
  *
@@ -30,7 +28,7 @@ public final class VersionConstants {
     /**
      * Version number of DB that can be used:
      */
-    public static final double COMPATIBLE_DB_VERSION = ModelingMigrationDatabaseServiceImpl.DB_VERSION;
+    public static final double COMPATIBLE_DB_VERSION = 1.06D;
 
     /**
      * Version number of client that can be used. (Must be the same in client /

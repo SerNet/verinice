@@ -154,8 +154,6 @@ public final class VeriniceContext {
 
     public static final String COUNT_SERVICE = "countService";
 
-    public static final String MODELING_MIGRATION_SERVICE = "modelingMigrationService";
-
     private static String serverUrl = null;
 
     private ThreadLocal<Map<String, Object>> threadLocal = new InheritableThreadLocal<>();
