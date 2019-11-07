@@ -10683,6 +10683,30 @@ Wurden bereits weitere Stellen informiert?
 		</huiproperty>
         
         <huiproperty id="bp_person_document" isURL="true" name="Document" />
+
+        <huipropertygroup id="bp_person_dpo_information" name="General information relating to the data protection officer (DPO)">
+            <huiproperty id="bp_person_dpo" inputtype="singleoption" name="Data protection officer (DPO)">
+                <option id="bp_person_dpo_external" name="External DPO"/>
+                <option id="bp_person_dpo_internal" name="Internal DPO"/>
+            </huiproperty>
+            <huiproperty id="bp_person_dpo_contact" inputtype="text" name="Contact details DPO"/>
+            <huiproperty id="bp_person_dpo_written" inputtype="booleanoption" name="Written appointment of DPO"/>
+            <huiproperty id="bp_person_dpo_written_document" isURL="true" name="Document"/>
+            <huiproperty id="bp_person_dpo_date_appointment" inputtype="date" name="Date of appointment">
+                <defaultRule class="Today"/>
+            </huiproperty>
+            <huiproperty id="bp_person_dpo_knowledge" inputtype="booleanoption" name="Expert knowledge and personal reliability"/>
+            <huiproperty id="bp_person_dpo_education" required="false"
+                inputtype="multioption" name="Professional title and education">
+                <option id="bp_person_dpo_education_law" name="Graduate in law"/>
+                <option id="bp_person_dpo_education_scientist" name="Computer scientist"/>
+                <option id="bp_person_dpo_education_economics" name="Graduate of economics"/>
+                <option id="bp_person_dpo_education_hr" name="HR administrator"/>
+                <option id="bp_person_dpo_education_other_option" name="Other graduates"/>
+            </huiproperty>
+            <huiproperty id="bp_person_dpo_education_other" name="Other graduates"/>
+        </huipropertygroup>
+
     </huientity>
     <huientity id="bp_person_group" name="Person Group">
         <huiproperty id="bp_person_group_name" name="Title" required="true" />
