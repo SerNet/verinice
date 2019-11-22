@@ -147,6 +147,18 @@
 	</servlet-mapping>
 
 	<servlet>
+		<description>verinice.SERVER Health Check</description>
+		<display-name>ServerTestServlet</display-name>
+		<servlet-name>ServerTestServlet</servlet-name>
+		<servlet-class>sernet.gs.server.ServerTestServlet</servlet-class>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ServerTestServlet</servlet-name>
+		<url-pattern>/servertest</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
