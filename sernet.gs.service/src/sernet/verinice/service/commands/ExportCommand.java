@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -79,12 +80,14 @@ import sernet.verinice.service.sync.VnaSchemaVersion;
  * is 3. You can configure maximum number of threads in
  * veriniceserver-common.xml:
  * 
- * <bean id="hibernateCommandService" class=
- * "sernet.verinice.service.HibernateCommandService"> <!-- Set properties for
- * command instances here --> <!-- Key is <COMMAND_CLASS_NAME>.<PROPERTY_NAME>
- * --> <property name="properties"> <props> <prop key=
- * "sernet.verinice.service.commands.ExportCommand.maxNumberOfThreads">5</prop>
- * </props> </property> </bean>
+ * <bean id="hibernateCommandService" class="sernet.verinice.service.HibernateCommandService"> 
+ * <!-- Set properties for command instances here --> 
+ * <!-- Key is <COMMAND_CLASS_NAME>.<PROPERTY_NAME> --> 
+ * <property name="properties"> 
+ * <props> 
+ *   <prop key="sernet.verinice.service.commands.ExportCommand.maxNumberOfThreads">5</prop>
+ * </props> 
+ * </property> </bean>
  * 
  * @author <andreas[at]becker[dot]name>
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -153,12 +156,12 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     }
 
     private void createFields() {
-        this.changedElements = new LinkedList<>();
-        this.linkSet = new HashSet<>();
-        this.attachmentSet = new HashSet<>();
-        this.riskAnalysisIdSet = new HashSet<>();
-        this.exportedTypes = new HashSet<>();
-        this.exportedEntityTypes = new HashSet<>();
+        this.changedElements = Collections.synchronizedList(new LinkedList<>());
+        this.linkSet = Collections.synchronizedSet(new HashSet<>());
+        this.attachmentSet = Collections.synchronizedSet(new HashSet<>());
+        this.riskAnalysisIdSet = Collections.synchronizedSet(new HashSet<>());
+        this.exportedTypes = Collections.synchronizedSet(new HashSet<>());
+        this.exportedEntityTypes = Collections.synchronizedSet(new HashSet<>());
     }
 
     /*
@@ -297,10 +300,12 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     }
 
     private void exportElement(final ExportTransaction exportTransaction) throws CommandException {
-        final ExportThread thread = new ExportThread(exportTransaction);
-        configureThread(thread);
-        thread.export();
-        getValuesFromThread(thread);
+        final ExportThread jobThread = new ExportThread(exportTransaction);
+        configureThread(jobThread);
+        synchronized(LOCK) {
+            jobThread.export();
+            getValuesFromThread(jobThread);
+        }
         exportChildren(exportTransaction);
     }
 
@@ -325,6 +330,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     }
 
     private void exportChildren(final ExportTransaction transaction) throws CommandException {
+        log.debug("Call exportChildren in ExportCommand hashcode " + this.hashCode() + "for object " + transaction.getElement().getTitle());
         final int timeOutFactor = 40;
         final CnATreeElement element = transaction.getElement();
         final Set<CnATreeElement> children = element.getChildren();
@@ -332,11 +338,12 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             children.addAll(getRiskAnalysisOrphanElements(element));
         }
 
-        final List<ExportTransaction> transactionList = new ArrayList<>();
+        final List<ExportTransaction> transactionList = Collections.synchronizedList(new ArrayList<>());
 
         taskExecutor = Executors.newFixedThreadPool(getMaxNumberOfThreads());
         if (!children.isEmpty()) {
             for (final CnATreeElement child : children) {
+                log.debug("Create export job for child " + child.getDbId());
                 final ExportTransaction childTransaction = new ExportTransaction(child);
                 transactionList.add(childTransaction);
                 final ExportThread thread = new ExportThread(childTransaction);
@@ -348,9 +355,10 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
                     public void notifyOfThreadComplete(final Thread thread) {
                         final ExportThread exportThread = (ExportThread) thread;
                         synchronized (LOCK) {
-                            if (exportThread.getSyncObject() != null) {
-                                transaction.getTarget().getChildren()
-                                        .add(exportThread.getSyncObject());
+                            if (exportThread.getTransaction().getTarget() != null) {
+                                transaction.getTarget().getChildren().add(
+                                        exportThread.getTransaction().getTarget()
+                                );
                             }
                             getValuesFromThread(exportThread);
                         }
@@ -651,7 +659,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         super.finalize();
     }
 
-    private Cache getCache() {
+    private synchronized Cache getCache() {
         if (manager == null || Status.STATUS_SHUTDOWN.equals(manager.getStatus()) || cache == null
                 || !Status.STATUS_ALIVE.equals(cache.getStatus())) {
             cache = createCache();
@@ -672,7 +680,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         return cache;
     }
 
-    public CacheManager getManager() {
+    public synchronized CacheManager getManager() {
         if (manager == null || Status.STATUS_SHUTDOWN.equals(manager.getStatus())) {
             manager = CacheManager.create();
         }

@@ -64,7 +64,7 @@ public class ExportThread extends NotifyingThread {
 
     private HUITypeFactory huiTypeFactory;
 
-    private ExportTransaction transaction;
+    private ThreadLocal<ExportTransaction> transaction;
 
     private Set<CnALink> linkSet;
 
@@ -94,7 +94,7 @@ public class ExportThread extends NotifyingThread {
 
     public ExportThread(ExportTransaction transaction) {
         super();
-        this.transaction = transaction;
+        this.transaction = ThreadLocal.withInitial(() -> transaction);
     }
 
     /*
@@ -135,12 +135,12 @@ public class ExportThread extends NotifyingThread {
 
         exportReferenceTypes = new ExportReferenceTypes(getCommandService());
 
-        CnATreeElement element = transaction.getElement();
+        CnATreeElement element = transaction.get().getElement();
         if (LOG.isDebugEnabled()) {
             LOG.debug("Exporting element: " + element.getUuid());
         }
 
-        /**
+        /*
          * Export the given CnATreeElement, if it is NOT blacklisted (i.e. an IT
          * network or category element) AND, if we should restrict the exported
          * objects to certain entity types, this element's entity type IS
@@ -150,7 +150,7 @@ public class ExportThread extends NotifyingThread {
         String typeId = element.getTypeId();
         if (checkElement(element)) {
             element = hydrate(element);
-            transaction.setElement(element);
+            transaction.get().setElement(element);
 
             String extId = ExportFactory.createExtId(element);
 
@@ -198,7 +198,7 @@ public class ExportThread extends NotifyingThread {
                 getExportedEntityTypes().add(getHuiTypeFactory().getEntityType(Attachment.TYPE_ID));
             }
 
-            transaction.setTarget(syncObject);
+            transaction.get().setTarget(syncObject);
 
             /**
              * Save source id to re-import element later
@@ -210,34 +210,45 @@ public class ExportThread extends NotifyingThread {
                 }
                 getChangedElementList().add(element);
             }
-        } else if (LOG.isDebugEnabled()) { // else if(checkElement(element))
+        } else if (LOG.isDebugEnabled()) { 
             LOG.debug("Element is not exported: Type " + typeId + ", uuid: " + element.getUuid());
         }
     }
 
     private CnATreeElement hydrate(CnATreeElement element) {
         if (element == null) {
-            return element;
+            return null;
         }
         CnATreeElement elementFromCache = getElementFromCache(element);
         if (elementFromCache != null) {
             return elementFromCache;
         }
-
+        
+        // Loading links that point back to parents may cause endless loops in Hibernate's CriteriaLoader, depending on
+        // the structure of the exported data (see issue VN-2648).
+        // Split loading of children and links to prevent this from happening:
         RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance();
+        ri.setLinksDown(false);
+        ri.setLinksUp(false);
+        element = getDao().retrieve(element.getDbId(), ri);
+        
+        ri = new RetrieveInfo();
         ri.setLinksDown(true);
         ri.setLinksUp(true);
-        element = getDao().retrieve(element.getDbId(), ri);
-
+        CnATreeElement elementWithLinks = getDao().retrieve(element.getDbId(), ri);
+        element.setLinksDown(elementWithLinks.getLinksDown());
+        element.setLinksUp(elementWithLinks.getLinksUp());
+        
         cacheElement(element);
-
+        
         if (LOG.isDebugEnabled()) {
             LOG.debug("Element: " + element.getTitle() + " hydrated, UUID: " + element.getUuid());
         }
-
+        
         return element;
     }
 
+    
     private CnATreeElement getElementFromCache(CnATreeElement element) {
         CnATreeElement fromCache = null;
         synchronized (LOCK) {
@@ -259,8 +270,11 @@ public class ExportThread extends NotifyingThread {
     }
 
     private void cacheElement(CnATreeElement element) {
-        synchronized (LOCK) {
-            if (Status.STATUS_ALIVE.equals(cache.getStatus())) {
+        synchronized(LOCK) {
+            if (Status.STATUS_ALIVE.equals(cache.getStatus())
+                    && getElementFromCache(element) == null
+            ) {
+                LOG.debug("Put element into cache: " + element.getTitle() + " : " + element.getDbId());
                 getCache().put(new Element(element.getUuid(), element));
             } else {
                 LOG.warn("Cache is not alive. Can't put element to cache, uuid: "
@@ -314,18 +328,14 @@ public class ExportThread extends NotifyingThread {
                         || getEntityClassBlackList().get(element.getClass()) == null);
     }
 
-    public SyncObject getSyncObject() {
-        return getTransaction().getTarget();
-    }
-
-    public Set<CnALink> getLinkSet() {
+    public synchronized Set<CnALink> getLinkSet() {
         if (linkSet == null) {
             linkSet = new HashSet<>();
         }
         return linkSet;
     }
 
-    public Set<Attachment> getAttachmentSet() {
+    public synchronized Set<Attachment> getAttachmentSet() {
         if (attachmentSet == null) {
             attachmentSet = new HashSet<>();
         }
@@ -337,16 +347,14 @@ public class ExportThread extends NotifyingThread {
     }
 
     public ExportTransaction getTransaction() {
-        return transaction;
+        return transaction.get();
     }
 
     public void setTransaction(ExportTransaction transaction) {
-        this.transaction = transaction;
+        this.transaction.set(transaction);
     }
 
-    public void setLinkSet(Set<CnALink> linkSet) {
-        this.linkSet = linkSet;
-    }
+   
 
     public void setAttachmentSet(Set<Attachment> attachmentSet) {
         this.attachmentSet = attachmentSet;

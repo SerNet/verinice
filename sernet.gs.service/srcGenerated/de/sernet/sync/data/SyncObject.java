@@ -9,6 +9,7 @@
 package de.sernet.sync.data;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -82,9 +83,9 @@ public class SyncObject {
      * 
      * 
      */
-    public List<SyncAttribute> getSyncAttribute() {
+    public synchronized List<SyncAttribute> getSyncAttribute() {
         if (syncAttribute == null) {
-            syncAttribute = new ArrayList<SyncAttribute>();
+            syncAttribute = Collections.synchronizedList(new ArrayList<SyncAttribute>());
         }
         return this.syncAttribute;
     }
@@ -183,9 +184,9 @@ public class SyncObject {
      * 
      * 
      */
-    public List<SyncObject> getChildren() {
+    public synchronized List<SyncObject> getChildren() {
         if (children == null) {
-            children = new ArrayList<SyncObject>();
+            children = Collections.synchronizedList(new ArrayList<SyncObject>());
         }
         return this.children;
     }
@@ -212,9 +213,9 @@ public class SyncObject {
      * 
      * 
      */
-    public List<SyncFile> getFile() {
+    public synchronized List<SyncFile> getFile() {
         if (file == null) {
-            file = new ArrayList<SyncFile>();
+            file = Collections.synchronizedList(new ArrayList<>());
         }
         return this.file;
     }
