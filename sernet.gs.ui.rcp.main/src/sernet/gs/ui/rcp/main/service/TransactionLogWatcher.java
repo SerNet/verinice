@@ -23,15 +23,14 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.Preferences;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.rcp.Preferences;
 import sernet.verinice.service.commands.task.GetChangesSince;
 
 /**
@@ -62,8 +61,7 @@ public class TransactionLogWatcher {
 
 		// No need to do anything when the internal server is used as this
 		// means that there is only one user.
-		Preferences prefs = Activator.getDefault().getPluginPreferences();
-		if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER)){
+		if (Preferences.isStandalone()){
 			return;
 		}
 
