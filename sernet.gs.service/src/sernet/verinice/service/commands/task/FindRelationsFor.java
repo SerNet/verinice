@@ -52,6 +52,7 @@ public class FindRelationsFor extends GenericCommand {
      * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
      */
     public void execute() {
+        @SuppressWarnings("unchecked")
         IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
         elmt = dao.findById(dbId);
 
