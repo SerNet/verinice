@@ -245,15 +245,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         reportName.setText(editTemplate.getOutputname());
         reportName.addListener(SWT.CHANGED, new Listener() {
             public void handleEvent(Event event) {
-                if (!reportName.getText().isEmpty()
-                        && !reportName.getText().equals(editTemplate.getOutputname())) {
-                    event.doit = true;
                     getButton(IDialogConstants.OK_ID).setEnabled(true);
-
-                } else if (reportName.getText().equals(editTemplate.getOutputname())) {
-                    event.doit = false;
-                    getButton(IDialogConstants.OK_ID).setEnabled(false);
-                }
             }
         });
 
@@ -271,15 +263,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         allowMultipleRootObjects.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                if (editTemplate.isMultipleRootObjects() != allowMultipleRootObjects
-                        .getSelection()) {
-                    e.doit = true;
                     getButton(IDialogConstants.OK_ID).setEnabled(true);
-
-                } else {
-                    e.doit = false;
-                    getButton(IDialogConstants.OK_ID).setEnabled(false);
-                }
             }
 
             @Override
@@ -419,14 +403,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
             checkBoxSelectionListener = new SelectionListener() {
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-                    if (!outputFormatEquals()) {
-                        e.doit = true;
-                        getButton(IDialogConstants.OK_ID).setEnabled(true);
-
-                    } else {
-                        e.doit = false;
-                        getButton(IDialogConstants.OK_ID).setEnabled(false);
-                    }
+                    getButton(IDialogConstants.OK_ID).setEnabled(true);
                 }
 
                 @Override
