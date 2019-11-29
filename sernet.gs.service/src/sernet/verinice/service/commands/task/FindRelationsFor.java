@@ -37,6 +37,8 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class FindRelationsFor extends GenericCommand {
 
+    private static final long serialVersionUID = 1L;
+
     private Integer dbId;
     private CnATreeElement elmt;
     private String typeId;
