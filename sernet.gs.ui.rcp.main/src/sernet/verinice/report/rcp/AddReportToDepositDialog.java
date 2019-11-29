@@ -40,11 +40,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -106,14 +104,12 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         super.configureShell(newShell);
         newShell.setText(
                 isEditMode() ? Messages.ReportDepositView_17 : Messages.ReportDepositView_5);
-        // newShell.setSize(SIZE_X, SIZE_Y);
 
-        // open the window right under the mouse pointer:
         Point cursorLocation = Display.getCurrent().getCursorLocation();
         newShell.setLocation(
                 new Point(cursorLocation.x - SIZE_X / 2, cursorLocation.y - SIZE_Y / 2));
     }
-
+    
     @Override
     protected void createButtonsForButtonBar(Composite parent) {
         super.createButtonsForButtonBar(parent);
@@ -186,9 +182,6 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         oflData.grabExcessHorizontalSpace = true;
         outputFormatGroup.setLayoutData(oflData);
 
-        // Label outputFormatLabel = new Label(checkboxComposite, SWT.NONE);
-        // outputFormatLabel.setText(Messages.ReportDepositView_2);
-
         outputTypePDFCheckbox = new Button(outputFormatGroup, SWT.CHECK);
         outputTypePDFCheckbox.setText(OutputFormat.PDF.toString());
 
@@ -243,12 +236,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
 
     private void prepareEditMode() {
         reportName.setText(editTemplate.getOutputname());
-        reportName.addListener(SWT.CHANGED, new Listener() {
-            public void handleEvent(Event event) {
-                    getButton(IDialogConstants.OK_ID).setEnabled(true);
-            }
-        });
-
+        reportName.addListener(SWT.CHANGED, event -> getButton(IDialogConstants.OK_ID).setEnabled(true));
         outputTypePDFCheckbox = checkboxEditMode(outputTypePDFCheckbox, OutputFormat.PDF);
         outputTypeHTMLCheckbox = checkboxEditMode(outputTypeHTMLCheckbox, OutputFormat.HTML);
         outputTypeWordCheckbox = checkboxEditMode(outputTypeWordCheckbox, OutputFormat.DOC);
@@ -374,14 +362,6 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
             list.add(OutputFormat.ODS);
         }
         return list.toArray(new OutputFormat[list.size()]);
-    }
-
-    private boolean outputFormatEquals() {
-        if (editTemplate != null) {
-            return Arrays.equals(getReportOutputFormats(), editTemplate.getOutputFormats());
-        }
-
-        return false;
     }
 
     private boolean isAnyFormatSelected() {
