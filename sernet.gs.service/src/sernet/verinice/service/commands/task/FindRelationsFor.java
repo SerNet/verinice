@@ -56,21 +56,23 @@ public class FindRelationsFor extends GenericCommand {
         IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
         elmt = dao.findById(dbId);
 
-        if (elmt != null) {
-            Set<CnALink> linksDown = elmt.getLinksDown();
-            for (CnALink cnALink : linksDown) {
-                for (PropertyList pl : cnALink.getDependency().getEntity().getTypedPropertyLists()
-                        .values()) {
-                    Hibernate.initialize(pl.getProperties());
-                }
-            }
+        if (elmt == null) {
+            return;
+        }
 
-            Set<CnALink> linksUp = elmt.getLinksUp();
-            for (CnALink cnALink : linksUp) {
-                for (PropertyList pl : cnALink.getDependant().getEntity().getTypedPropertyLists()
-                        .values()) {
-                    Hibernate.initialize(pl.getProperties());
-                }
+        Set<CnALink> linksDown = elmt.getLinksDown();
+        for (CnALink cnALink : linksDown) {
+            for (PropertyList pl : cnALink.getDependency().getEntity().getTypedPropertyLists()
+                    .values()) {
+                Hibernate.initialize(pl.getProperties());
+            }
+        }
+
+        Set<CnALink> linksUp = elmt.getLinksUp();
+        for (CnALink cnALink : linksUp) {
+            for (PropertyList pl : cnALink.getDependant().getEntity().getTypedPropertyLists()
+                    .values()) {
+                Hibernate.initialize(pl.getProperties());
             }
         }
     }
