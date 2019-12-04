@@ -101,6 +101,7 @@ This variant:
             <entry key="individualService" value-ref="individualService" />
             <entry key="layoutConfig" value-ref="layoutConfig" />
             <entry key="itbpRiskService" value-ref="itbpRiskService" />
+            <entry key="sessionFactory" value-ref="sessionFactory" />
         </map>
     </property>
 	</bean>

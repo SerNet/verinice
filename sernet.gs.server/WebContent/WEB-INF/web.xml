@@ -148,6 +148,18 @@
 
 	<servlet>
 		<description>verinice.SERVER Health Check</description>
+		<display-name>EvictLinksServlet</display-name>
+		<servlet-name>EvictLinksServlet</servlet-name>
+		<servlet-class>sernet.gs.server.EvictLinksServlet</servlet-class>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>EvictLinksServlet</servlet-name>
+		<url-pattern>/evict-links</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<description>verinice.SERVER Health Check</description>
 		<display-name>ServerTestServlet</display-name>
 		<servlet-name>ServerTestServlet</servlet-name>
 		<servlet-class>sernet.gs.server.ServerTestServlet</servlet-class>
