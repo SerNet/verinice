@@ -1,10 +1,17 @@
 pipeline {
-    agent any
-    parameters {
-        booleanParam(name: 'dists', defaultValue: false, description: 'Run distribution steps, i.e. build RPMs files etc.')
+    agent {
+        dockerfile {
+            dir 'verinice-distribution/docker-verinice-builder'
+            args '-v $MAVEN_REPOSITORY_BASE/repository$EXECUTOR_NUMBER:/m2/repository -v $HOME/.cache/verinicebuild:/cache/verinicebuild'
+        }
     }
     environment {
-        MAVEN_OPTS = "-Dmaven.repo.local=${env.MAVEN_REPOSITORY_BASE}/repository${env.EXECUTOR_NUMBER}"
+        // In case the build server exports a custom JAVA_HOME, we fix the JAVA_HOME
+        // to the one used by the docker image.
+        JAVA_HOME='/usr/lib/jvm/java-1.8.0-openjdk'
+    }
+    parameters {
+        booleanParam(name: 'dists', defaultValue: false, description: 'Run distribution steps, i.e. build RPMs files etc.')
     }
     options {
         buildDiscarder(logRotator(numToKeepStr: '3'))
