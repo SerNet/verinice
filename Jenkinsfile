@@ -37,18 +37,13 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh "./verinice-distribution/build.sh products"
+                sh "./verinice-distribution/build.sh verify"
                 archiveArtifacts artifacts: 'sernet.verinice.releng.client.product/target/products/*.zip,sernet.verinice.report.designer.product/target/products/*.zip,sernet.verinice.releng.server.product/target/*.war,sernet.verinice.releng.client.product/target/repository/**', fingerprint: true
             }
         }
         stage('Trigger RCPTT') {
             steps {
                 build job: 'verinice-client-rcptt', wait: false, parameters: [gitParameter(name: 'BRANCH_OR_TAG', value: "${env.GIT_BRANCH}"), string(name: 'artifact_selector', value: 'sernet.verinice.releng.client.product/target/products/*linux.gtk.x86_64*.zip'), string(name: 'job_to_copy_from', value: "${currentBuild.fullProjectName}"), string(name: 'build_to_copy_from', value: '<TriggeredBuildSelector plugin="copyartifact@1.42.1">  <upstreamFilterStrategy>UseGlobalSetting</upstreamFilterStrategy>  <allowUpstreamDependencies>false</allowUpstreamDependencies></TriggeredBuildSelector>')]
-            }
-        }
-        stage('Test') {
-            steps {
-                sh "./verinice-distribution/build.sh tests"
             }
         }
         stage('Documentation') {
