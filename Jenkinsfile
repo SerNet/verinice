@@ -12,6 +12,7 @@ pipeline {
     }
     parameters {
         booleanParam(name: 'dists', defaultValue: false, description: 'Run distribution steps, i.e. build RPMs files etc.')
+        string(name: 'jreversion', defaultValue: 'jdk8u232-b09', description: 'Download and pack a JRE with this version. See https://adoptopenjdk.net/archive.html for a list of possible versions.')
     }
     options {
         buildDiscarder(logRotator(numToKeepStr: '3'))
@@ -31,7 +32,7 @@ pipeline {
         }
         stage('Fetch JREs') {
             steps {
-                sh './verinice-distribution/build.sh -j4 jres'
+                sh "./verinice-distribution/build.sh JREVERSION=${params.jreversion} -j4 jres"
             }
         }
         stage('Build') {
