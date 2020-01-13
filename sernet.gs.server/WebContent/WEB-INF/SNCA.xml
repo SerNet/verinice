@@ -10748,6 +10748,14 @@ Wurden bereits weitere Stellen informiert?
             editable="false">
             <defaultRule class="Today" />
         </huiproperty>
+        <huiproperty id="bp_requirement_release" name="Release" editable="false" />
+        <huiproperty id="bp_requirement_change_type" name="Change type" inputtype="multioption" editable="false">
+            <option id="bp_requirement_change_type_new" name="New" />
+            <option id="bp_requirement_change_type_changed" name="Changed" />
+            <option id="bp_requirement_change_type_reordered" name="Reordered" />
+            <option id="bp_requirement_change_type_removed" name="Removed" />
+        </huiproperty>
+        <huiproperty id="bp_requirement_change_details" name="Change details" inputtype="text" editable="false" />
         <huiproperty defaultValue="1" id="bp_requirement_value_method_confidentiality"
             inputtype="booleanoption" name="Affects Confidentiality" tags="Risk" />
         <huiproperty defaultValue="1" id="bp_requirement_value_method_integrity"
@@ -10864,6 +10872,14 @@ Wurden bereits weitere Stellen informiert?
             editable="false">
             <defaultRule class="Today" />
         </huiproperty>
+        <huiproperty id="bp_requirement_group_release" name="Release" editable="false"/>
+        <huiproperty id="bp_requirement_group_change_type" name="Change type" inputtype="multioption" editable="false">
+            <option id="bp_requirement_group_change_type_new" name="New" />
+            <option id="bp_requirement_group_change_type_changed" name="Changed" />
+            <option id="bp_requirement_group_change_type_reordered" name="Reordered" />
+            <option id="bp_requirement_group_change_type_removed" name="Removed" />
+        </huiproperty>
+        <huiproperty id="bp_requirement_group_change_details" name="Change details" inputtype="text" editable="false" />
     </huientity>
 
     <huientity id="bp_threat" name="Threat">
@@ -10890,6 +10906,14 @@ Wurden bereits weitere Stellen informiert?
             name="Elemental Threat Content" showInObjectBrowser="true" visible="false" />
         <huiproperty id="bp_threat_desc" inputtype="text" name="Description"
             showInObjectBrowser="false" visible="true" />
+        <huiproperty id="bp_threat_release" name="Release" editable="false" />
+        <huiproperty id="bp_threat_change_type" name="Change type" inputtype="multioption" editable="false">
+            <option id="bp_threat_change_type_new" name="New" />
+            <option id="bp_threat_change_type_changed" name="Changed" />
+            <option id="bp_threat_change_type_reordered" name="Reordered" />
+            <option id="bp_threat_change_type_removed" name="Removed" />
+        </huiproperty>
+        <huiproperty id="bp_threat_change_details" name="Change details" inputtype="text" editable="false" />
         <huiproperty id="bp_threat_vulnerability" inputtype="singleoption" name="Vulnerability">
             <option id="bp_threat_vulnerability_organisational_deficiencies" name="Organisational deficiencies"/>
             <option id="bp_threat_vulnerability_technical_vulnerabilities" name="Technical vulnerabilities"/>
@@ -10995,6 +11019,14 @@ Wurden bereits weitere Stellen informiert?
             inputtype="text" name="Threatgroup Content" showInObjectBrowser="true" visible="false" />
         <huiproperty id="bp_threat_group_desc" inputtype="text" name="Description" />
         <huiproperty id="bp_threat_group_tag" name="Tags" />
+        <huiproperty id="bp_threat_group_release" name="Release" editable="false" />
+        <huiproperty id="bp_threat_group_change_type" name="Change type" inputtype="multioption" editable="false">
+            <option id="bp_threat_group_change_type_new" name="New" />
+            <option id="bp_threat_group_change_type_changed" name="Changed" />
+            <option id="bp_threat_group_change_type_reordered" name="Reordered" />
+            <option id="bp_threat_group_change_type_removed" name="Removed" />
+        </huiproperty>
+        <huiproperty id="bp_threat_group_change_details" name="Change details" inputtype="text" editable="false" />
     </huientity>
 
     <huientity id="bp_network" name="Network">
@@ -11394,6 +11426,14 @@ Wurden bereits weitere Stellen informiert?
             editable="false">
             <defaultRule class="Today" />
         </huiproperty>
+        <huiproperty id="bp_safeguard_release" name="Release" editable="false" />
+        <huiproperty id="bp_safeguard_change_type" name="Change type" inputtype="multioption" editable="false">
+            <option id="bp_safeguard_change_type_new" name="New" />
+            <option id="bp_safeguard_change_type_changed" name="Changed" />
+            <option id="bp_safeguard_change_type_reordered" name="Reordered" />
+            <option id="bp_safeguard_change_type_removed" name="Removed" />
+        </huiproperty>
+        <huiproperty id="bp_safeguard_change_details" name="Change details" inputtype="text" editable="false" />
         <huiproperty defaultValue="1" id="bp_safeguard_value_method_confidentiality"
             inputtype="booleanoption" name="Affects Confidentiality" tags="Risk" />
         <huiproperty defaultValue="1" id="bp_safeguard_value_method_integrity"
@@ -11496,6 +11536,14 @@ Wurden bereits weitere Stellen informiert?
             inputtype="text" name="Safeguardgroup Content" showInObjectBrowser="true" visible="false" />
         <huiproperty id="bp_safeguard_group_desc" inputtype="text" name="Description" />
         <huiproperty id="bp_safeguard_group_tag" name="Tags" />
+        <huiproperty id="bp_safeguard_group_release" name="Release" editable="false" />
+        <huiproperty id="bp_safeguard_group_change_type" name="Change type" inputtype="multioption" editable="false">
+            <option id="bp_safeguard_group_change_type_new" name="New" />
+            <option id="bp_safeguard_group_change_type_changed" name="Changed" />
+            <option id="bp_safeguard_group_change_type_reordered" name="Reordered" />
+            <option id="bp_safeguard_group_change_type_removed" name="Removed" />
+        </huiproperty>
+        <huiproperty id="bp_safeguard_group_change_details" name="Change details" inputtype="text" editable="false" />
     </huientity>
 
     <huientity
