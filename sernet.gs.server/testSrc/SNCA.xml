@@ -10772,6 +10772,18 @@ Wurden bereits weitere Stellen informiert?
                 <defaultRule class="Today" />
             </huiproperty>
         </huipropertygroup>
+        <huipropertygroup id="bp_requirement_revision" name="Revision">
+            <huiproperty id="bp_requirement_revision_previous_revision_date" inputtype="date" name="Previous revision date">
+                <defaultRule class="Today"/>
+            </huiproperty>
+            <huiproperty id="bp_requirement_revision_revision_remark" inputtype="text" name="Remark"/>
+            <huiproperty id="bp_requirement_revision_next_revision_date" inputtype="date" name="Next revision date">
+                <defaultRule class="Today">
+                    <param id="bp_requirement_revision_next_revision_date_changeField">YEAR</param>
+                    <param id="bp_requirement_revision_next_revision_date_timeDifference">2</param>
+                </defaultRule>
+            </huiproperty>
+        </huipropertygroup>
     <huipropertygroup id="bp_requirement_group_kosten" name="Kosten" tags="Finance">
       <huiproperty id="bp_requirement_kosten_ptfix" name="Personalkosten fix EUR" tags="Finance"/>
       <huiproperty id="bp_requirement_kosten_ptvar" name="Personalkosten var. EUR" tags="Finance"/>
@@ -11401,6 +11413,18 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="bp_safeguard_implementation_by_date" name="Implementation by"
                 required="false" inputtype="date">
                 <defaultRule class="Today" />
+            </huiproperty>
+        </huipropertygroup>
+        <huipropertygroup id="bp_safeguard_revision" name="Revision">
+            <huiproperty id="bp_safeguard_revision_previous_revision_date" inputtype="date" name="Previous revision date">
+                <defaultRule class="Today"/>
+            </huiproperty>
+            <huiproperty id="bp_safeguard_revision_revision_remark" inputtype="text" name="Remark"/>
+            <huiproperty id="bp_safeguard_revision_next_revision_date" inputtype="date" name="Next revision date">
+                <defaultRule class="Today">
+                    <param id="bp_safeguard_revision_next_revision_date_changeField">YEAR</param>
+                    <param id="bp_safeguard_revision_next_revision_date_timeDifference">2</param>
+                </defaultRule>
             </huiproperty>
         </huipropertygroup>
     <huipropertygroup id="bp_safeguard_group_kosten" name="Kosten" tags="Finance">
