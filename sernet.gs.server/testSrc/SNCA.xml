@@ -10716,7 +10716,7 @@ Wurden bereits weitere Stellen informiert?
 
     <huientity id="bp_requirement" name="Requirement">
         <huirelation to="bp_safeguard" id="rel_bp_requirement_bp_safeguard" name="fulfilled through" reversename="fulfills" />
-        <huirelation to="bp_threat" id="rel_bp_requirement_bp_threat" name="reduces probability" reversename="probability reduced by" />
+        <huirelation to="bp_threat" id="rel_bp_requirement_bp_threat" name="reduces risk" reversename="risk reduced by" />
 
         <huirelation to="bp_itnetwork" id="rel_bp_requirement_bp_itnetwork" name="models"  reversename="modeled with" />
         <huirelation to="bp_businessprocess" id="rel_bp_requirement_bp_businessprocess"  name="models" reversename="modeled with" />
