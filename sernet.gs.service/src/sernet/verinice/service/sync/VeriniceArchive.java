@@ -141,6 +141,13 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
                 File newFile = new File(getTempDirName() + File.separator + fileName);
                 new File(newFile.getParent()).mkdirs();
 
+                boolean stillInTempFolder = newFile.toPath().normalize()
+                        .startsWith(getTempDirName());
+                if (!stillInTempFolder) {
+                    throw new VeriniceArchiveNotValidException(
+                            "Path Traversal in VNA detected! Stopping import.");
+                }
+
                 FileOutputStream fos = new FileOutputStream(newFile);
 
                 int len;
