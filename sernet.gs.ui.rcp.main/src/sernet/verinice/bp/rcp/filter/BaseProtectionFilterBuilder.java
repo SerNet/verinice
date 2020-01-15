@@ -41,7 +41,9 @@ import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.ImportBpGroup;
+import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementFilter;
 import sernet.verinice.model.iso27k.Group;
@@ -140,6 +142,10 @@ public class BaseProtectionFilterBuilder {
             if (!hideEmptyGroups && element instanceof Group || element instanceof ItNetwork) {
                 return true;
             }
+            if (hideEmptyGroups && (element instanceof BpRequirementGroup
+                    || element instanceof SafeguardGroup)) {
+                return false;
+            }
             if (element instanceof BpRequirement) {
                 return selectedImplementationStatus
                         .contains(((BpRequirement) element).getImplementationStatus());
@@ -224,6 +230,10 @@ public class BaseProtectionFilterBuilder {
         public boolean select(Viewer viewer, Object parentElement, Object element) {
             if (!hideEmptyGroups && element instanceof Group || element instanceof ItNetwork) {
                 return true;
+            }
+            if (hideEmptyGroups && (element instanceof BpRequirementGroup
+                    || element instanceof SafeguardGroup)) {
+                return false;
             }
             if (element instanceof Safeguard) {
                 return selectedSecurityLevels.contains(((Safeguard) element).getSecurityLevel());
