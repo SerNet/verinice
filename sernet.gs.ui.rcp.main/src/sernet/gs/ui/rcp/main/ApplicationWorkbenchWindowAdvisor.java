@@ -66,6 +66,7 @@ import sernet.verinice.model.updateNews.UpdateNewsMessageEntry;
 import sernet.verinice.rcp.PartListenerAdapter;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.UpdateNewsDialog;
+import sernet.verinice.rcp.bp.BaseProtectionPerspective;
 
 /**
  * Workbench Window advisor.
@@ -127,7 +128,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         // as eclipse has change the behavior, only one perspective can be
         // opened to display the welcome screen
         // see org.eclipse.ui.internal.WorkbenchWindow.setup() line 764
-        return Perspective.ID;
+        return BaseProtectionPerspective.ID;
     }
 
     private String getCurrentUserName() {

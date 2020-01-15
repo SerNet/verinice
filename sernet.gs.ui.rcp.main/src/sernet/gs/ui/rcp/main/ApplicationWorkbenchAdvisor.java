@@ -37,13 +37,13 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.ServiceReference;
 import org.springframework.remoting.RemoteAccessException;
 
+import sernet.verinice.rcp.bp.BaseProtectionPerspective;
+
 /**
  * This workbench advisor creates the window advisor, and specifies the
  * perspective id for the initial window.
  */
 public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
-
-    private static final String PERSPECTIVE_ID = "sernet.gs.ui.rcp.main.perspective";
 
     @Override
     public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(
@@ -52,7 +52,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
     }
 
     public String getInitialWindowPerspectiveId() {
-        return PERSPECTIVE_ID;
+        return BaseProtectionPerspective.ID;
     }
 
     @Override
