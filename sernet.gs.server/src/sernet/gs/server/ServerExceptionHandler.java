@@ -31,8 +31,9 @@ import sernet.verinice.service.sync.VnaSchemaException;
 /**
  * This class handles exceptions on the server.
  * 
- * The class is configured as an exception handler for the HibernateCommandService in
- * the spring configuration file 'veriniceserver-common.xml'.
+ * The class is configured as an exception handler for the
+ * HibernateCommandService in the spring configuration file
+ * 'veriniceserver-common.xml'.
  * 
  * @author Alexander Koderman
  * @author Daniel Murygin
@@ -42,10 +43,9 @@ public class ServerExceptionHandler implements ICommandExceptionHandler {
     @Override
     public void handle(Exception e) throws CommandException {
         if (e instanceof SpringSecurityException) {
-            throw new CommandException("Security violation",
-                    new Exception(
-                            "Security check failed. Check user name, password and necessary authorizations for the operation. Details: "
-                                    + e.getMessage()));
+            throw new CommandException("Security violation", new Exception(
+                    "Security check failed. Check user name, password and necessary authorizations for the operation. Details: "
+                            + e.getMessage()));
         }
         if (e instanceof sernet.gs.service.SecurityException) {
             throw new CommandException("Security violation",
