@@ -26,6 +26,7 @@ import sernet.verinice.interfaces.ldap.SizeLimitExceededException;
 import sernet.verinice.service.ICommandExceptionHandler;
 import sernet.verinice.service.commands.UsernameExistsRuntimeException;
 import sernet.verinice.service.commands.unify.UnifyValidationException;
+import sernet.verinice.service.sync.VeriniceArchiveNotValidException;
 import sernet.verinice.service.sync.VnaSchemaException;
 
 /**
@@ -64,6 +65,8 @@ public class ServerExceptionHandler implements ICommandExceptionHandler {
             throw (UnifyValidationException) e;
         } else if (e instanceof VnaSchemaException) {
             throw (VnaSchemaException) e;
+        } else if (e instanceof VeriniceArchiveNotValidException) {
+            throw (VeriniceArchiveNotValidException) e;
         } else {
             wrapUnknownException(e);
         }
