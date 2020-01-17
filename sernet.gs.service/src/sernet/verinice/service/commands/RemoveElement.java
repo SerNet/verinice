@@ -42,6 +42,8 @@ import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.interfaces.IFinishedRiskAnalysisListsDao;
 import sernet.verinice.interfaces.INoAccessControl;
 import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
@@ -133,18 +135,48 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     private void removeElement(T element) throws CommandException {
         if (element instanceof IBpElement
                 && !CatalogModel.TYPE_ID.equals(element.getParent().getTypeId())) {
+
+            LoadSubtreeIds getDescendantPersonIDs = new LoadSubtreeIds(element, BpPerson.TYPE_ID);
+            getDescendantPersonIDs = getCommandService().executeCommand(getDescendantPersonIDs);
+            Set<Integer> personIDs = getDescendantPersonIDs.getDbIdsOfSubtree();
+            if (!personIDs.isEmpty()) {
+                IBaseDao<@NonNull Configuration, Serializable> configurationDao = getDaoFactory()
+                        .getDAO(Configuration.class);
+                List<Configuration> configurations = configurationDao
+                        .findByCriteria(DetachedCriteria.forClass(Configuration.class)
+                                .add(Restrictions.in("person.id", personIDs)));
+                configurationDao.delete(configurations);
+                // When a Configuration instance got deleted the server needs to
+                // update
+                // its cached role map. This is done here.
+                getCommandService().discardUserData();
+            }
+
             // We could be removing an element that has a safeguard as one
             // of its children. Since we want our manual event listeners to be
             // fired for those and their links as well (via element.remove()),
             // we need to delete them by hand. This is not an optimal solution
             // and should be replaced by Hibernate event listeners someday.
             // (see VN-2084)
-            for (CnATreeElement child : element.getChildrenAsArray()) {
-                removeElement((T) child);
+            LoadSubtreeIds getDescendantSafeguardIDs = new LoadSubtreeIds(element,
+                    Safeguard.TYPE_ID);
+            getDescendantSafeguardIDs = getCommandService()
+                    .executeCommand(getDescendantSafeguardIDs);
+            Set<Integer> safeguardIDs = getDescendantSafeguardIDs.getDbIdsOfSubtree();
+            if (!safeguardIDs.isEmpty()) {
+                IBaseDao<@NonNull Safeguard, Serializable> safeguardDao = getDaoFactory()
+                        .getDAO(Safeguard.class);
+                final List<Safeguard> safeguards = safeguardDao.findByCriteria(DetachedCriteria
+                        .forClass(Safeguard.class).add(Restrictions.in("id", safeguardIDs)));
+                for (Safeguard safeguard : safeguards) {
+                    safeguard.remove();
+                }
+                safeguardDao.delete(safeguards);
+
             }
         }
 
-        if (element.isPerson()) {
+        else if (element.isPerson()) {
             removeConfiguration(element);
         }
 
@@ -338,9 +370,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
                 .forClass(Configuration.class).add(Restrictions.eq("person", person)));
         if (!configurations.isEmpty()) {
             Configuration conf = configurations.get(0);
-            IBaseDao<Configuration, Serializable> confDAO = getDaoFactory()
-                    .getDAO(Configuration.class);
-            confDAO.delete(conf);
+            configurationDao.delete(conf);
             // When a Configuration instance got deleted the server needs to
             // update
             // its cached role map. This is done here.
