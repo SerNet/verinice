@@ -126,7 +126,7 @@ public final class Retriever {
 
     }
 
-    private static boolean isElementInitialized(CnATreeElement element) {
+    public static boolean isElementInitialized(CnATreeElement element) {
         if (element == null) {
             return true;
         }
