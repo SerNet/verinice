@@ -137,6 +137,7 @@ public class DatePage extends WizardPage {
         if (isRelation) {
 
             radios[0] = new Button(composite, SWT.RADIO);
+            radios[0].setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
             radios[0].setText(Messages.DatePage_7);
             radios[0].setSelection(true);
             radios[0].addSelectionListener(new SelectionAdapter() {
@@ -152,6 +153,7 @@ public class DatePage extends WizardPage {
             });
 
             radios[1] = new Button(composite, SWT.RADIO);
+            radios[1].setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
             radios[1].setText(Messages.DatePage_8);
             radios[1].setSelection(false);
             radios[1].addSelectionListener(new SelectionAdapter() {
