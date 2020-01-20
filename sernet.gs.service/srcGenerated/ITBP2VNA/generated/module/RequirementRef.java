@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = { "elementalthreatRef" })
+@XmlType(name = "", propOrder = { "cia", "elementalthreatRef" })
 @XmlRootElement(name = "requirement-ref")
 public class RequirementRef {
 
@@ -19,6 +19,7 @@ public class RequirementRef {
     protected List<ElementalthreatRef> elementalthreatRef;
     @XmlAttribute(name = "identifier", required = true)
     protected String identifier;
+    protected Cia cia;
 
     /**
      * Gets the value of the elementalthreatRef property.
@@ -56,6 +57,14 @@ public class RequirementRef {
 
     public void setIdentifier(String value) {
         this.identifier = value;
+    }
+
+    public Cia getCia() {
+        return cia;
+    }
+
+    public void setCia(Cia value) {
+        this.cia = value;
     }
 
 }

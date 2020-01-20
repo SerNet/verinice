@@ -33,13 +33,16 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
 import ITBP2VNA.generated.module.BibItem;
+import ITBP2VNA.generated.module.Cia;
 import ITBP2VNA.generated.module.Description;
 import ITBP2VNA.generated.module.Document;
+import ITBP2VNA.generated.module.Document.Crossreferences;
 import ITBP2VNA.generated.module.Document.ThreatScenario.SpecificThreats;
 import ITBP2VNA.generated.module.Requirement;
 import ITBP2VNA.generated.module.SpecificThreat;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.service.bp.importer.ImportUtils;
 import sernet.verinice.service.bp.importer.Messages;
 
 /**
@@ -203,7 +206,8 @@ public final class HtmlHelper {
         sb.append(Messages.Basic_Requirements_Intro);
         sb.append(HTML_CLOSE_PARAGRAPH);
         sb.append(getModuleRequirementDescription(
-                module.getRequirements().getBasicRequirements().getRequirement()));
+                module.getRequirements().getBasicRequirements().getRequirement(),
+                module.getCrossreferences()));
 
         sb.append(HTML_CLOSE_PARAGRAPH);
 
@@ -212,7 +216,8 @@ public final class HtmlHelper {
         sb.append(Messages.Standard_Requirements_Intro);
         sb.append(HTML_CLOSE_PARAGRAPH);
         sb.append(getModuleRequirementDescription(
-                module.getRequirements().getStandardRequirements().getRequirement()));
+                module.getRequirements().getStandardRequirements().getRequirement(),
+                module.getCrossreferences()));
 
         sb.append(HTML_CLOSE_OPEN_PARAGRAPH);
 
@@ -223,7 +228,8 @@ public final class HtmlHelper {
         sb.append(HTML_CLOSE_PARAGRAPH);
 
         sb.append(getModuleRequirementDescription(
-                module.getRequirements().getHighLevelRequirements().getRequirement()));
+                module.getRequirements().getHighLevelRequirements().getRequirement(),
+                module.getCrossreferences()));
 
         sb.append(HTML_CLOSE_PARAGRAPH);
         return sb.toString();
@@ -367,7 +373,8 @@ public final class HtmlHelper {
     /**
      * returns the description of a {@link BpRequirement} HTML-Formatted
      */
-    private static String getModuleRequirementDescription(List<Requirement> requirements) {
+    private static String getModuleRequirementDescription(List<Requirement> requirements,
+            Crossreferences crossreferences) {
         StringBuilder sb = new StringBuilder();
 
         for (Requirement requirement : requirements) {
@@ -376,7 +383,8 @@ public final class HtmlHelper {
             sb.append(" ");
             sb.append(getRequirementResponsibleDescription(requirement));
             sb.append(" ");
-            sb.append(getRequirementCIA(requirement));
+            sb.append(getRequirementCIA(
+                    ImportUtils.getCiaForRequirement(requirement, crossreferences)));
             sb.append(HTML_CLOSE_H1);
             sb.append(HTML_OPEN_PARAGRAPH);
             sb.append(getAnyElementDescription("", -1, -1, -1,
@@ -427,23 +435,20 @@ public final class HtmlHelper {
      * 
      * C for Confidentiality I for Integrity A for Availabiltiy
      */
-    private static String getRequirementCIA(Requirement requirement) {
+    private static String getRequirementCIA(Cia cia) {
+        String confidentiality = (Boolean.parseBoolean(cia.getConfidentiality())) ? "C" : "";
+        String integrity = (Boolean.parseBoolean(cia.getIntegrity())) ? "I" : "";
+        String availitbility = (Boolean.parseBoolean(cia.getAvailability())) ? "A" : "";
 
-        String confidentiality = (Boolean.parseBoolean(requirement.getCia().getConfidentiality()))
-                ? "C"
-                : "";
-        String integrity = (Boolean.parseBoolean(requirement.getCia().getIntegrity())) ? "I" : "";
-        String availitbility = (Boolean.parseBoolean(requirement.getCia().getAvailability())) ? "A"
-                : "";
+        String ciaStr = confidentiality + integrity + availitbility;
 
-        String cia = confidentiality + integrity + availitbility;
-
-        if (StringUtils.isNotEmpty(cia)) {
+        if (StringUtils.isNotEmpty(ciaStr)) {
             StringBuilder sb = new StringBuilder(5);
             sb.append('(');
-            sb.append(cia);
+            sb.append(ciaStr);
             sb.append(')');
             return sb.toString();
+
         }
 
         return StringUtils.EMPTY;

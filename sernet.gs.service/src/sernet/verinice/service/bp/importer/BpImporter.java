@@ -35,7 +35,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import ITBP2VNA.generated.implementationhint.Document.Safeguards;
+import ITBP2VNA.generated.module.Cia;
 import ITBP2VNA.generated.module.Document;
+import ITBP2VNA.generated.module.Document.Crossreferences;
 import ITBP2VNA.generated.module.ElementalthreatRef;
 import ITBP2VNA.generated.module.Requirement;
 import ITBP2VNA.generated.module.RequirementRef;
@@ -994,21 +996,21 @@ public class BpImporter {
             createRequirement(parent, bsiRequirement,
                     safeguardsByCorrespondingRequirementIdentifier
                             .map(map -> map.get(bsiRequirement.getIdentifier())).orElse(null),
-                    Messages.Qualifier_Basic, importMetadata);
+                    Messages.Qualifier_Basic, bsiModule.getCrossreferences(), importMetadata);
         }
         for (Requirement bsiRequirement : bsiModule.getRequirements().getStandardRequirements()
                 .getRequirement()) {
             createRequirement(parent, bsiRequirement,
                     safeguardsByCorrespondingRequirementIdentifier
                             .map(map -> map.get(bsiRequirement.getIdentifier())).orElse(null),
-                    Messages.Qualifier_Standard, importMetadata);
+                    Messages.Qualifier_Standard, bsiModule.getCrossreferences(), importMetadata);
         }
         for (Requirement bsiRequirement : bsiModule.getRequirements().getHighLevelRequirements()
                 .getRequirement()) {
             createRequirement(parent, bsiRequirement,
                     safeguardsByCorrespondingRequirementIdentifier
                             .map(map -> map.get(bsiRequirement.getIdentifier())).orElse(null),
-                    Messages.Qualifier_High, importMetadata);
+                    Messages.Qualifier_High, bsiModule.getCrossreferences(), importMetadata);
         }
 
     }
@@ -1016,11 +1018,11 @@ public class BpImporter {
     /**
      * transforms a single given {@link Requirement} into a
      * {@link BpRequirement} and adds it to the caching-map addedReqs
-     * 
      */
     private BpRequirement createRequirement(BpRequirementGroup parent, Requirement bsiRequirement,
             ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard, String qualifier,
-            ImportMetadata importMetadata) throws CreateBPElementException {
+            Crossreferences crossreferences, ImportMetadata importMetadata)
+            throws CreateBPElementException {
         if (!addedReqs.containsKey(bsiRequirement.getIdentifier())) {
             BpRequirement veriniceRequirement = null;
             veriniceRequirement = (BpRequirement) createElement(BpRequirement.TYPE_ID, parent,
@@ -1028,12 +1030,13 @@ public class BpImporter {
             veriniceRequirement.setIdentifier(bsiRequirement.getIdentifier());
             veriniceRequirement.setTitle(bsiRequirement.getTitle());
             veriniceRequirement.setLastChange(parent.getLastChange());
-            veriniceRequirement.setIsAffectsConfidentiality(
-                    Boolean.parseBoolean(bsiRequirement.getCia().getConfidentiality()));
-            veriniceRequirement.setIsAffectsIntegrity(
-                    Boolean.parseBoolean(bsiRequirement.getCia().getIntegrity()));
-            veriniceRequirement.setIsAffectsAvailability(
-                    Boolean.parseBoolean(bsiRequirement.getCia().getAvailability()));
+            Cia cia = ImportUtils.getCiaForRequirement(bsiRequirement, crossreferences);
+
+            veriniceRequirement
+                    .setIsAffectsConfidentiality(Boolean.parseBoolean(cia.getConfidentiality()));
+            veriniceRequirement.setIsAffectsIntegrity(Boolean.parseBoolean(cia.getIntegrity()));
+            veriniceRequirement
+                    .setIsAffectsAvailability(Boolean.parseBoolean(cia.getAvailability()));
 
             String title = extendTitleForObjectBrowser(bsiRequirement.getTitle(),
                     bsiRequirement.getIdentifier(),
