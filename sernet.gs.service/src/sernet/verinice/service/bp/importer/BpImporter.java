@@ -917,6 +917,8 @@ public class BpImporter {
             if (addedModules.containsKey(moduleIdentifier)) {
                 moduleTitle = addedModules.get(moduleIdentifier).getTitle();
             } else {
+                LOG.warn("Cannot find parent for safeguard " + identifier + ", module "
+                        + moduleIdentifier + " does not exist.");
                 return null;
             }
             // safeguardparent is a module
