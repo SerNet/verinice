@@ -5,7 +5,6 @@
 // Generiert: 2017.09.11 um 03:36:26 PM CEST 
 //
 
-
 package ITBP2VNA.generated.implementationhint;
 
 import java.util.ArrayList;
@@ -19,11 +18,13 @@ import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-
 /**
- * <p>Java-Klasse für anonymous complex type.
+ * <p>
+ * Java-Klasse für anonymous complex type.
  * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+ * <p>
+ * Das folgende Schemafragment gibt den erwarteten Content an, der in dieser
+ * Klasse enthalten ist.
  * 
  * <pre>
  * &lt;complexType>
@@ -145,10 +146,8 @@ public class Document {
     /**
      * Ruft den Wert der fullTitle-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getFullTitle() {
         return fullTitle;
@@ -158,9 +157,8 @@ public class Document {
      * Legt den Wert der fullTitle-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setFullTitle(String value) {
         this.fullTitle = value;
@@ -169,10 +167,8 @@ public class Document {
     /**
      * Ruft den Wert der identifier-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getIdentifier() {
         return identifier;
@@ -182,9 +178,8 @@ public class Document {
      * Legt den Wert der identifier-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setIdentifier(String value) {
         this.identifier = value;
@@ -193,10 +188,8 @@ public class Document {
     /**
      * Ruft den Wert der title-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getTitle() {
         return title;
@@ -206,9 +199,8 @@ public class Document {
      * Legt den Wert der title-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setTitle(String value) {
         this.title = value;
@@ -217,10 +209,8 @@ public class Document {
     /**
      * Ruft den Wert der lastChange-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link XMLGregorianCalendar }
-     *     
+     * @return possible object is {@link XMLGregorianCalendar }
+     * 
      */
     public XMLGregorianCalendar getLastChange() {
         return lastChange;
@@ -230,9 +220,8 @@ public class Document {
      * Legt den Wert der lastChange-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link XMLGregorianCalendar }
-     *     
+     *            allowed object is {@link XMLGregorianCalendar }
+     * 
      */
     public void setLastChange(XMLGregorianCalendar value) {
         this.lastChange = value;
@@ -241,10 +230,8 @@ public class Document {
     /**
      * Ruft den Wert der lastCheck-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getLastCheck() {
         return lastCheck;
@@ -254,9 +241,8 @@ public class Document {
      * Legt den Wert der lastCheck-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setLastCheck(String value) {
         this.lastCheck = value;
@@ -265,10 +251,8 @@ public class Document {
     /**
      * Ruft den Wert der draftVersion-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getDraftVersion() {
         return draftVersion;
@@ -278,9 +262,8 @@ public class Document {
      * Legt den Wert der draftVersion-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setDraftVersion(String value) {
         this.draftVersion = value;
@@ -289,10 +272,8 @@ public class Document {
     /**
      * Ruft den Wert der headerIcon-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getHeaderIcon() {
         return headerIcon;
@@ -302,9 +283,8 @@ public class Document {
      * Legt den Wert der headerIcon-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setHeaderIcon(String value) {
         this.headerIcon = value;
@@ -313,10 +293,8 @@ public class Document {
     /**
      * Ruft den Wert der description-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link Document.Description }
-     *     
+     * @return possible object is {@link Document.Description }
+     * 
      */
     public Document.Description getDescription() {
         return description;
@@ -326,9 +304,8 @@ public class Document {
      * Legt den Wert der description-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link Document.Description }
-     *     
+     *            allowed object is {@link Document.Description }
+     * 
      */
     public void setDescription(Document.Description value) {
         this.description = value;
@@ -337,10 +314,8 @@ public class Document {
     /**
      * Ruft den Wert der safeguards-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link Document.Safeguards }
-     *     
+     * @return possible object is {@link Document.Safeguards }
+     * 
      */
     public Document.Safeguards getSafeguards() {
         return safeguards;
@@ -350,9 +325,8 @@ public class Document {
      * Legt den Wert der safeguards-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link Document.Safeguards }
-     *     
+     *            allowed object is {@link Document.Safeguards }
+     * 
      */
     public void setSafeguards(Document.Safeguards value) {
         this.safeguards = value;
@@ -361,10 +335,8 @@ public class Document {
     /**
      * Ruft den Wert der advancedInformationText-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getAdvancedInformationText() {
         return advancedInformationText;
@@ -374,9 +346,8 @@ public class Document {
      * Legt den Wert der advancedInformationText-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setAdvancedInformationText(String value) {
         this.advancedInformationText = value;
@@ -385,10 +356,8 @@ public class Document {
     /**
      * Ruft den Wert der bibliography-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link Document.Bibliography }
-     *     
+     * @return possible object is {@link Document.Bibliography }
+     * 
      */
     public Document.Bibliography getBibliography() {
         return bibliography;
@@ -398,19 +367,20 @@ public class Document {
      * Legt den Wert der bibliography-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link Document.Bibliography }
-     *     
+     *            allowed object is {@link Document.Bibliography }
+     * 
      */
     public void setBibliography(Document.Bibliography value) {
         this.bibliography = value;
     }
 
-
     /**
-     * <p>Java-Klasse für anonymous complex type.
+     * <p>
+     * Java-Klasse für anonymous complex type.
      * 
-     * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+     * <p>
+     * Das folgende Schemafragment gibt den erwarteten Content an, der in dieser
+     * Klasse enthalten ist.
      * 
      * <pre>
      * &lt;complexType>
@@ -427,9 +397,7 @@ public class Document {
      * 
      */
     @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-        "bibItem"
-    })
+    @XmlType(name = "", propOrder = { "bibItem" })
     public static class Bibliography {
 
         protected List<BibItem> bibItem;
@@ -438,15 +406,16 @@ public class Document {
          * Gets the value of the bibItem property.
          * 
          * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
-         * This is why there is not a <CODE>set</CODE> method for the bibItem property.
+         * This accessor method returns a reference to the live list, not a
+         * snapshot. Therefore any modification you make to the returned list
+         * will be present inside the JAXB object. This is why there is not a
+         * <CODE>set</CODE> method for the bibItem property.
          * 
          * <p>
          * For example, to add a new item, do as follows:
+         * 
          * <pre>
-         *    getBibItem().add(newItem);
+         * getBibItem().add(newItem);
          * </pre>
          * 
          * 
@@ -465,11 +434,13 @@ public class Document {
 
     }
 
-
     /**
-     * <p>Java-Klasse für anonymous complex type.
+     * <p>
+     * Java-Klasse für anonymous complex type.
      * 
-     * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+     * <p>
+     * Das folgende Schemafragment gibt den erwarteten Content an, der in dieser
+     * Klasse enthalten ist.
      * 
      * <pre>
      * &lt;complexType>
@@ -487,10 +458,7 @@ public class Document {
      * 
      */
     @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-        "introduction",
-        "lifecycle"
-    })
+    @XmlType(name = "", propOrder = { "introduction", "lifecycle" })
     public static class Description {
 
         @XmlElement(required = true)
@@ -501,10 +469,8 @@ public class Document {
         /**
          * Ruft den Wert der introduction-Eigenschaft ab.
          * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         * @return possible object is {@link String }
+         * 
          */
         public String getIntroduction() {
             return introduction;
@@ -514,9 +480,8 @@ public class Document {
          * Legt den Wert der introduction-Eigenschaft fest.
          * 
          * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         *            allowed object is {@link String }
+         * 
          */
         public void setIntroduction(String value) {
             this.introduction = value;
@@ -525,10 +490,8 @@ public class Document {
         /**
          * Ruft den Wert der lifecycle-Eigenschaft ab.
          * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         * @return possible object is {@link String }
+         * 
          */
         public String getLifecycle() {
             return lifecycle;
@@ -538,9 +501,8 @@ public class Document {
          * Legt den Wert der lifecycle-Eigenschaft fest.
          * 
          * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         *            allowed object is {@link String }
+         * 
          */
         public void setLifecycle(String value) {
             this.lifecycle = value;
@@ -548,11 +510,13 @@ public class Document {
 
     }
 
-
     /**
-     * <p>Java-Klasse für anonymous complex type.
+     * <p>
+     * Java-Klasse für anonymous complex type.
      * 
-     * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+     * <p>
+     * Das folgende Schemafragment gibt den erwarteten Content an, der in dieser
+     * Klasse enthalten ist.
      * 
      * <pre>
      * &lt;complexType>
@@ -616,10 +580,9 @@ public class Document {
         /**
          * Ruft den Wert der basicSafeguards-Eigenschaft ab.
          * 
-         * @return
-         *     possible object is
-         *     {@link Document.Safeguards.BasicSafeguards }
-         *     
+         * @return possible object is
+         *         {@link Document.Safeguards.BasicSafeguards }
+         * 
          */
         public Document.Safeguards.BasicSafeguards getBasicSafeguards() {
             return basicSafeguards;
@@ -629,9 +592,9 @@ public class Document {
          * Legt den Wert der basicSafeguards-Eigenschaft fest.
          * 
          * @param value
-         *     allowed object is
-         *     {@link Document.Safeguards.BasicSafeguards }
-         *     
+         *            allowed object is
+         *            {@link Document.Safeguards.BasicSafeguards }
+         * 
          */
         public void setBasicSafeguards(Document.Safeguards.BasicSafeguards value) {
             this.basicSafeguards = value;
@@ -640,10 +603,9 @@ public class Document {
         /**
          * Ruft den Wert der standardSafeguards-Eigenschaft ab.
          * 
-         * @return
-         *     possible object is
-         *     {@link Document.Safeguards.StandardSafeguards }
-         *     
+         * @return possible object is
+         *         {@link Document.Safeguards.StandardSafeguards }
+         * 
          */
         public Document.Safeguards.StandardSafeguards getStandardSafeguards() {
             return standardSafeguards;
@@ -653,9 +615,9 @@ public class Document {
          * Legt den Wert der standardSafeguards-Eigenschaft fest.
          * 
          * @param value
-         *     allowed object is
-         *     {@link Document.Safeguards.StandardSafeguards }
-         *     
+         *            allowed object is
+         *            {@link Document.Safeguards.StandardSafeguards }
+         * 
          */
         public void setStandardSafeguards(Document.Safeguards.StandardSafeguards value) {
             this.standardSafeguards = value;
@@ -664,10 +626,9 @@ public class Document {
         /**
          * Ruft den Wert der highLevelSafeguards-Eigenschaft ab.
          * 
-         * @return
-         *     possible object is
-         *     {@link Document.Safeguards.HighLevelSafeguards }
-         *     
+         * @return possible object is
+         *         {@link Document.Safeguards.HighLevelSafeguards }
+         * 
          */
         public Document.Safeguards.HighLevelSafeguards getHighLevelSafeguards() {
             return highLevelSafeguards;
@@ -677,19 +638,21 @@ public class Document {
          * Legt den Wert der highLevelSafeguards-Eigenschaft fest.
          * 
          * @param value
-         *     allowed object is
-         *     {@link Document.Safeguards.HighLevelSafeguards }
-         *     
+         *            allowed object is
+         *            {@link Document.Safeguards.HighLevelSafeguards }
+         * 
          */
         public void setHighLevelSafeguards(Document.Safeguards.HighLevelSafeguards value) {
             this.highLevelSafeguards = value;
         }
 
-
         /**
-         * <p>Java-Klasse für anonymous complex type.
+         * <p>
+         * Java-Klasse für anonymous complex type.
          * 
-         * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+         * <p>
+         * Das folgende Schemafragment gibt den erwarteten Content an, der in
+         * dieser Klasse enthalten ist.
          * 
          * <pre>
          * &lt;complexType>
@@ -706,9 +669,7 @@ public class Document {
          * 
          */
         @XmlAccessorType(XmlAccessType.FIELD)
-        @XmlType(name = "", propOrder = {
-            "safeguard"
-        })
+        @XmlType(name = "", propOrder = { "safeguard" })
         public static class BasicSafeguards {
 
             protected List<Safeguard> safeguard;
@@ -717,15 +678,16 @@ public class Document {
              * Gets the value of the safeguard property.
              * 
              * <p>
-             * This accessor method returns a reference to the live list,
-             * not a snapshot. Therefore any modification you make to the
-             * returned list will be present inside the JAXB object.
-             * This is why there is not a <CODE>set</CODE> method for the safeguard property.
+             * This accessor method returns a reference to the live list, not a
+             * snapshot. Therefore any modification you make to the returned
+             * list will be present inside the JAXB object. This is why there is
+             * not a <CODE>set</CODE> method for the safeguard property.
              * 
              * <p>
              * For example, to add a new item, do as follows:
+             * 
              * <pre>
-             *    getSafeguard().add(newItem);
+             * getSafeguard().add(newItem);
              * </pre>
              * 
              * 
@@ -744,11 +706,13 @@ public class Document {
 
         }
 
-
         /**
-         * <p>Java-Klasse für anonymous complex type.
+         * <p>
+         * Java-Klasse für anonymous complex type.
          * 
-         * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+         * <p>
+         * Das folgende Schemafragment gibt den erwarteten Content an, der in
+         * dieser Klasse enthalten ist.
          * 
          * <pre>
          * &lt;complexType>
@@ -765,9 +729,7 @@ public class Document {
          * 
          */
         @XmlAccessorType(XmlAccessType.FIELD)
-        @XmlType(name = "", propOrder = {
-            "safeguard"
-        })
+        @XmlType(name = "", propOrder = { "safeguard" })
         public static class HighLevelSafeguards {
 
             protected List<Safeguard> safeguard;
@@ -776,15 +738,16 @@ public class Document {
              * Gets the value of the safeguard property.
              * 
              * <p>
-             * This accessor method returns a reference to the live list,
-             * not a snapshot. Therefore any modification you make to the
-             * returned list will be present inside the JAXB object.
-             * This is why there is not a <CODE>set</CODE> method for the safeguard property.
+             * This accessor method returns a reference to the live list, not a
+             * snapshot. Therefore any modification you make to the returned
+             * list will be present inside the JAXB object. This is why there is
+             * not a <CODE>set</CODE> method for the safeguard property.
              * 
              * <p>
              * For example, to add a new item, do as follows:
+             * 
              * <pre>
-             *    getSafeguard().add(newItem);
+             * getSafeguard().add(newItem);
              * </pre>
              * 
              * 
@@ -803,11 +766,13 @@ public class Document {
 
         }
 
-
         /**
-         * <p>Java-Klasse für anonymous complex type.
+         * <p>
+         * Java-Klasse für anonymous complex type.
          * 
-         * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+         * <p>
+         * Das folgende Schemafragment gibt den erwarteten Content an, der in
+         * dieser Klasse enthalten ist.
          * 
          * <pre>
          * &lt;complexType>
@@ -824,9 +789,7 @@ public class Document {
          * 
          */
         @XmlAccessorType(XmlAccessType.FIELD)
-        @XmlType(name = "", propOrder = {
-            "safeguard"
-        })
+        @XmlType(name = "", propOrder = { "safeguard" })
         public static class StandardSafeguards {
 
             protected List<Safeguard> safeguard;
@@ -835,15 +798,16 @@ public class Document {
              * Gets the value of the safeguard property.
              * 
              * <p>
-             * This accessor method returns a reference to the live list,
-             * not a snapshot. Therefore any modification you make to the
-             * returned list will be present inside the JAXB object.
-             * This is why there is not a <CODE>set</CODE> method for the safeguard property.
+             * This accessor method returns a reference to the live list, not a
+             * snapshot. Therefore any modification you make to the returned
+             * list will be present inside the JAXB object. This is why there is
+             * not a <CODE>set</CODE> method for the safeguard property.
              * 
              * <p>
              * For example, to add a new item, do as follows:
+             * 
              * <pre>
-             *    getSafeguard().add(newItem);
+             * getSafeguard().add(newItem);
              * </pre>
              * 
              * 

@@ -5,7 +5,6 @@
 // Generiert: 2017.09.11 um 03:36:26 PM CEST 
 //
 
-
 package ITBP2VNA.generated.implementationhint;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java-Klasse für anonymous complex type.
+ * <p>
+ * Java-Klasse für anonymous complex type.
  * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+ * <p>
+ * Das folgende Schemafragment gibt den erwarteten Content an, der in dieser
+ * Klasse enthalten ist.
  * 
  * <pre>
  * &lt;complexType>
@@ -53,10 +54,8 @@ public class Safeguard {
     /**
      * Ruft den Wert der identifier-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getIdentifier() {
         return identifier;
@@ -66,9 +65,8 @@ public class Safeguard {
      * Legt den Wert der identifier-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setIdentifier(String value) {
         this.identifier = value;
@@ -77,10 +75,8 @@ public class Safeguard {
     /**
      * Ruft den Wert der title-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getTitle() {
         return title;
@@ -90,9 +86,8 @@ public class Safeguard {
      * Legt den Wert der title-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setTitle(String value) {
         this.title = value;
@@ -101,10 +96,8 @@ public class Safeguard {
     /**
      * Ruft den Wert der responsibleRoles-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link ResponsibleRoles }
-     *     
+     * @return possible object is {@link ResponsibleRoles }
+     * 
      */
     public ResponsibleRoles getResponsibleRoles() {
         return responsibleRoles;
@@ -114,9 +107,8 @@ public class Safeguard {
      * Legt den Wert der responsibleRoles-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ResponsibleRoles }
-     *     
+     *            allowed object is {@link ResponsibleRoles }
+     * 
      */
     public void setResponsibleRoles(ResponsibleRoles value) {
         this.responsibleRoles = value;
@@ -125,10 +117,8 @@ public class Safeguard {
     /**
      * Ruft den Wert der cia-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link Cia }
-     *     
+     * @return possible object is {@link Cia }
+     * 
      */
     public Cia getCia() {
         return cia;
@@ -138,9 +128,8 @@ public class Safeguard {
      * Legt den Wert der cia-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link Cia }
-     *     
+     *            allowed object is {@link Cia }
+     * 
      */
     public void setCia(Cia value) {
         this.cia = value;
@@ -149,10 +138,8 @@ public class Safeguard {
     /**
      * Ruft den Wert der description-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link Description }
-     *     
+     * @return possible object is {@link Description }
+     * 
      */
     public Description getDescription() {
         return description;
@@ -162,9 +149,8 @@ public class Safeguard {
      * Legt den Wert der description-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link Description }
-     *     
+     *            allowed object is {@link Description }
+     * 
      */
     public void setDescription(Description value) {
         this.description = value;

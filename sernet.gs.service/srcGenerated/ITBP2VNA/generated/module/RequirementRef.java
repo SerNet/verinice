@@ -5,7 +5,6 @@
 // Generiert: 2017.09.11 um 03:35:00 PM CEST 
 //
 
-
 package ITBP2VNA.generated.module;
 
 import java.util.ArrayList;
@@ -18,11 +17,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java-Klasse für anonymous complex type.
+ * <p>
+ * Java-Klasse für anonymous complex type.
  * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+ * <p>
+ * Das folgende Schemafragment gibt den erwarteten Content an, der in dieser
+ * Klasse enthalten ist.
  * 
  * <pre>
  * &lt;complexType>
@@ -40,9 +41,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "elementalthreatRef"
-})
+@XmlType(name = "", propOrder = { "elementalthreatRef" })
 @XmlRootElement(name = "requirement-ref")
 public class RequirementRef {
 
@@ -55,15 +54,16 @@ public class RequirementRef {
      * Gets the value of the elementalthreatRef property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the elementalthreatRef property.
+     * This accessor method returns a reference to the live list, not a
+     * snapshot. Therefore any modification you make to the returned list will
+     * be present inside the JAXB object. This is why there is not a
+     * <CODE>set</CODE> method for the elementalthreatRef property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getElementalthreatRef().add(newItem);
+     * getElementalthreatRef().add(newItem);
      * </pre>
      * 
      * 
@@ -83,10 +83,8 @@ public class RequirementRef {
     /**
      * Ruft den Wert der identifier-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getIdentifier() {
         return identifier;
@@ -96,9 +94,8 @@ public class RequirementRef {
      * Legt den Wert der identifier-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setIdentifier(String value) {
         this.identifier = value;

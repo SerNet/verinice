@@ -5,7 +5,6 @@
 // Generiert: 2017.09.11 um 03:35:00 PM CEST 
 //
 
-
 package ITBP2VNA.generated.module;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -14,11 +13,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java-Klasse für anonymous complex type.
+ * <p>
+ * Java-Klasse für anonymous complex type.
  * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+ * <p>
+ * Das folgende Schemafragment gibt den erwarteten Content an, der in dieser
+ * Klasse enthalten ist.
  * 
  * <pre>
  * &lt;complexType>
@@ -50,10 +51,8 @@ public class SpecificThreat {
     /**
      * Ruft den Wert der headline-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getHeadline() {
         return headline;
@@ -63,9 +62,8 @@ public class SpecificThreat {
      * Legt den Wert der headline-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setHeadline(String value) {
         this.headline = value;
@@ -74,10 +72,8 @@ public class SpecificThreat {
     /**
      * Ruft den Wert der description-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link Description }
-     *     
+     * @return possible object is {@link Description }
+     * 
      */
     public Description getDescription() {
         return description;
@@ -87,9 +83,8 @@ public class SpecificThreat {
      * Legt den Wert der description-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link Description }
-     *     
+     *            allowed object is {@link Description }
+     * 
      */
     public void setDescription(Description value) {
         this.description = value;

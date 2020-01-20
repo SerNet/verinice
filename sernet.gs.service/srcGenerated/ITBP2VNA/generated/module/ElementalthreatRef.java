@@ -5,7 +5,6 @@
 // Generiert: 2017.09.11 um 03:35:00 PM CEST 
 //
 
-
 package ITBP2VNA.generated.module;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -14,11 +13,13 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java-Klasse für anonymous complex type.
+ * <p>
+ * Java-Klasse für anonymous complex type.
  * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+ * <p>
+ * Das folgende Schemafragment gibt den erwarteten Content an, der in dieser
+ * Klasse enthalten ist.
  * 
  * <pre>
  * &lt;complexType>
@@ -46,10 +47,8 @@ public class ElementalthreatRef {
     /**
      * Ruft den Wert der identifier-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getIdentifier() {
         return identifier;
@@ -59,9 +58,8 @@ public class ElementalthreatRef {
      * Legt den Wert der identifier-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setIdentifier(String value) {
         this.identifier = value;
@@ -70,10 +68,8 @@ public class ElementalthreatRef {
     /**
      * Ruft den Wert der isReferenced-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getIsReferenced() {
         return isReferenced;
@@ -83,9 +79,8 @@ public class ElementalthreatRef {
      * Legt den Wert der isReferenced-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setIsReferenced(String value) {
         this.isReferenced = value;

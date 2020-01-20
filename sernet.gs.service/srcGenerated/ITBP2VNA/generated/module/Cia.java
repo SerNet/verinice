@@ -5,7 +5,6 @@
 // Generiert: 2017.09.11 um 03:35:00 PM CEST 
 //
 
-
 package ITBP2VNA.generated.module;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -14,11 +13,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java-Klasse für anonymous complex type.
+ * <p>
+ * Java-Klasse für anonymous complex type.
  * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+ * <p>
+ * Das folgende Schemafragment gibt den erwarteten Content an, der in dieser
+ * Klasse enthalten ist.
  * 
  * <pre>
  * &lt;complexType>
@@ -53,10 +54,8 @@ public class Cia {
     /**
      * Ruft den Wert der confidentiality-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getConfidentiality() {
         return confidentiality;
@@ -66,9 +65,8 @@ public class Cia {
      * Legt den Wert der confidentiality-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setConfidentiality(String value) {
         this.confidentiality = value;
@@ -77,10 +75,8 @@ public class Cia {
     /**
      * Ruft den Wert der integrity-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getIntegrity() {
         return integrity;
@@ -90,9 +86,8 @@ public class Cia {
      * Legt den Wert der integrity-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setIntegrity(String value) {
         this.integrity = value;
@@ -101,10 +96,8 @@ public class Cia {
     /**
      * Ruft den Wert der availability-Eigenschaft ab.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getAvailability() {
         return availability;
@@ -114,9 +107,8 @@ public class Cia {
      * Legt den Wert der availability-Eigenschaft fest.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setAvailability(String value) {
         this.availability = value;
