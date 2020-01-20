@@ -95,12 +95,6 @@ public final class HtmlHelper {
      * 1 Chaptertitle 1.0 Chaptertitle 1.2.3 Chaptertitle
      * 
      * to not create subchapters, set the int to -1
-     * 
-     * @param chapter
-     * @param subChapter
-     * @param subSubChapter
-     * @param headline
-     * @return
      */
     private static String generateChapterHeader(int chapter, int subChapter, int subSubChapter,
             String headline) {
@@ -169,10 +163,6 @@ public final class HtmlHelper {
      * generates the part of the {@link BpRequirementGroup} (Module)
      * object-browser-property that describes the {@link BpRequirement} further
      * Information (the literature notes) related to the module
-     * 
-     * @param module
-     * @param descriptionBuilder
-     * @param chapter
      */
     private static String getModuleDescriptionSuffix(Document module, int chapter) {
         StringBuilder sb = new StringBuilder();
@@ -208,11 +198,6 @@ public final class HtmlHelper {
      * generates the part of the {@link BpRequirementGroup} (Module)
      * object-browser-property that describes the {@link BpRequirement} defined
      * within that module
-     * 
-     * @param module
-     * @param descriptionBuilder
-     * @param chapter
-     * @param subChapter
      */
     private static String getModuleReqMain(Document module, int chapter, int subChapter) {
         StringBuilder sb = new StringBuilder();
@@ -250,10 +235,6 @@ public final class HtmlHelper {
     /**
      * get Introduction of Requirements-Description of description of
      * {@link BpRequirementGroup} (Module)
-     * 
-     * @param module
-     * @param descriptionBuilder
-     * @param chapter
      */
     private static String getModuleReqIntro(Document module, int chapter) {
         StringBuilder sb = new StringBuilder();
@@ -304,10 +285,6 @@ public final class HtmlHelper {
      * 
      * creates the specific-threats describing part of the
      * {@link BpRequirementGroup} (Module) description
-     * 
-     * @param module
-     * @param descriptionBuilder
-     * @param chapter
      */
     private static String getModuleSpecificThreats(Document module, int chapter) {
         int subChapter;
@@ -335,11 +312,6 @@ public final class HtmlHelper {
 
     /**
      * creates the intro of a {@link BpRequirementGroup} (Module) description
-     * 
-     * @param module
-     * @param descriptionBuilder
-     * @param chapter
-     * @return
      */
     private static int getModuleIntroduction(Document module, StringBuilder descriptionBuilder,
             int chapter, String modelingHint) {
@@ -364,9 +336,6 @@ public final class HtmlHelper {
     /**
      * returns the description (three parts (Introduction, Purpose,
      * Differentiation)) of a module {@link BpRequirementGroup}
-     * 
-     * @param module
-     * @param descriptionBuilder
      */
     private static String getModuleDescriptionStart(Document module, int chapter) {
         StringBuilder sb = new StringBuilder();
@@ -410,9 +379,6 @@ public final class HtmlHelper {
 
     /**
      * returns the description of a {@link BpRequirement} HTML-Formatted
-     * 
-     * @param requirements
-     * @return
      */
     private static String getModuleRequirementDescription(List<Requirement> requirements) {
         StringBuilder sb = new StringBuilder();
@@ -436,8 +402,6 @@ public final class HtmlHelper {
 
     /**
      * returns the description-prefix of a {@link BpRequirement} HTML-Formatted
-     * 
-     * @param requirement
      */
     private static String getRequirementDescriptionStart(Requirement requirement) {
         StringBuilder sb = new StringBuilder();
@@ -450,8 +414,6 @@ public final class HtmlHelper {
     /**
      * returns a string that is the suffix to a {@link BpRequirement} title,
      * that contains all responsible roles
-     * 
-     * @param requirement
      */
     private static String getRequirementResponsibleDescription(Requirement requirement) {
         StringBuilder sb = new StringBuilder();
@@ -477,11 +439,8 @@ public final class HtmlHelper {
      * requirement
      * 
      * C for Confidentiality I for Integrity A for Availabiltiy
-     * 
-     * @param requirement
      */
     private static String getRequirementCIA(Requirement requirement) {
-        StringBuilder sb = new StringBuilder();
 
         String confidentiality = (Boolean.parseBoolean(requirement.getCia().getConfidentiality()))
                 ? "C"
@@ -493,20 +452,19 @@ public final class HtmlHelper {
         String cia = confidentiality + integrity + availitbility;
 
         if (StringUtils.isNotEmpty(cia)) {
-            cia = "(" + cia + ")";
+            StringBuilder sb = new StringBuilder(5);
+            sb.append('(');
             sb.append(cia);
+            sb.append(')');
+            return sb.toString();
         }
 
-        return sb.toString();
+        return StringUtils.EMPTY;
     }
 
     /**
      * transforms mixed HTML/XML-Content (given by a {@link List} of
      * {@link Element} to a html-formatted String
-     * 
-     * @param title
-     * @param anyElements
-     * @return
      */
     public static String getAnyElementDescription(String title, int chapter, int subChapter,
             int subSubChapter, List<Element> anyElements) {
@@ -529,9 +487,6 @@ public final class HtmlHelper {
     /**
      * searches for a text-element in a tree given by an {@link Element} and
      * returns it
-     * 
-     * @param sb
-     * @param element
      */
     private static String extractContentFromObject(Object element) {
         StringBuilder sb = new StringBuilder();
@@ -546,11 +501,6 @@ public final class HtmlHelper {
     /**
      * transforms mixed HTML/XML-Content (given by a {@link List} of
      * {@link Object} to a html-formatted String
-     * 
-     * @param title
-     * @param headlineLevel
-     * @param anyObjects
-     * @return
      */
     public static String getAnyObjectDescription(String title, int headlineLevel,
             List<Object> anyObjects) {
@@ -585,9 +535,6 @@ public final class HtmlHelper {
      * 
      * blacklists known BSI-XML-Structure defining strings to not appear as
      * html-tags in the output
-     * 
-     * @param element
-     * @return
      */
     private static String unwrapText(Node element) {
         StringBuilder sb = new StringBuilder();

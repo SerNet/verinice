@@ -1,10 +1,3 @@
-//
-// Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
-// Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2017.09.11 um 03:36:26 PM CEST 
-//
-
 package ITBP2VNA.generated.implementationhint;
 
 import javax.xml.bind.JAXBElement;
@@ -26,13 +19,13 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _Identifier_QNAME = new QName("", "identifier");
-    private final static QName _ShortHand_QNAME = new QName("", "shortHand");
-    private final static QName _Integrity_QNAME = new QName("", "integrity");
-    private final static QName _Role_QNAME = new QName("", "role");
-    private final static QName _Confidentiality_QNAME = new QName("", "confidentiality");
-    private final static QName _Availability_QNAME = new QName("", "availability");
-    private final static QName _Title_QNAME = new QName("", "title");
+    private static final QName _Identifier_QNAME = new QName("", "identifier");
+    private static final QName _ShortHand_QNAME = new QName("", "shortHand");
+    private static final QName _Integrity_QNAME = new QName("", "integrity");
+    private static final QName _Role_QNAME = new QName("", "role");
+    private static final QName _Confidentiality_QNAME = new QName("", "confidentiality");
+    private static final QName _Availability_QNAME = new QName("", "availability");
+    private static final QName _Title_QNAME = new QName("", "title");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of
@@ -145,7 +138,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "identifier")
     public JAXBElement<String> createIdentifier(String value) {
-        return new JAXBElement<String>(_Identifier_QNAME, String.class, null, value);
+        return new JAXBElement<>(_Identifier_QNAME, String.class, null, value);
     }
 
     /**
@@ -155,7 +148,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "shortHand")
     public JAXBElement<String> createShortHand(String value) {
-        return new JAXBElement<String>(_ShortHand_QNAME, String.class, null, value);
+        return new JAXBElement<>(_ShortHand_QNAME, String.class, null, value);
     }
 
     /**
@@ -165,7 +158,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "integrity")
     public JAXBElement<String> createIntegrity(String value) {
-        return new JAXBElement<String>(_Integrity_QNAME, String.class, null, value);
+        return new JAXBElement<>(_Integrity_QNAME, String.class, null, value);
     }
 
     /**
@@ -175,7 +168,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "role")
     public JAXBElement<String> createRole(String value) {
-        return new JAXBElement<String>(_Role_QNAME, String.class, null, value);
+        return new JAXBElement<>(_Role_QNAME, String.class, null, value);
     }
 
     /**
@@ -185,7 +178,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "confidentiality")
     public JAXBElement<String> createConfidentiality(String value) {
-        return new JAXBElement<String>(_Confidentiality_QNAME, String.class, null, value);
+        return new JAXBElement<>(_Confidentiality_QNAME, String.class, null, value);
     }
 
     /**
@@ -195,7 +188,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "availability")
     public JAXBElement<String> createAvailability(String value) {
-        return new JAXBElement<String>(_Availability_QNAME, String.class, null, value);
+        return new JAXBElement<>(_Availability_QNAME, String.class, null, value);
     }
 
     /**
@@ -205,7 +198,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "title")
     public JAXBElement<String> createTitle(String value) {
-        return new JAXBElement<String>(_Title_QNAME, String.class, null, value);
+        return new JAXBElement<>(_Title_QNAME, String.class, null, value);
     }
 
 }
