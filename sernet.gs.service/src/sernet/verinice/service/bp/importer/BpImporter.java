@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
@@ -101,8 +102,6 @@ public class BpImporter {
 
     private String xmlRootDirectory = null;
 
-    private ItNetwork rootNetwork = null;
-
     private BpRequirementGroup processReqGroup = null;
     private BpRequirementGroup systemReqGroup = null;
 
@@ -158,7 +157,7 @@ public class BpImporter {
                 + importData.implementationHints.size());
 
         long veryBeginning = System.currentTimeMillis();
-        prepareITNetwork();
+        ItNetwork rootNetwork = prepareITNetwork();
         long itnetworkReady = System.currentTimeMillis();
         LOG.debug("ITNetwork prepared, took :\t"
                 + (itnetworkReady - veryBeginning) / MILLIS_PER_SECOND);
@@ -196,7 +195,7 @@ public class BpImporter {
         long safeguardsReady = System.currentTimeMillis();
         LOG.debug(
                 "Safeguards ready, took:\t" + (safeguardsReady - modulesReady) / MILLIS_PER_SECOND);
-        updateElement(getRootItNetwork());
+        updateElement(rootNetwork);
         LOG.debug("ItNetwork updated");
         LOG.debug("Import finished, took:\t"
                 + (System.currentTimeMillis() - startImport) / MILLIS_PER_SECOND);
@@ -345,11 +344,12 @@ public class BpImporter {
      * creates an {@link ItNetwork} and its substructure to prepare it for
      * transforming the bsi-data (xml) into verinice Objects
      */
-    private void prepareITNetwork() throws CreateBPElementException {
+    private ItNetwork prepareITNetwork() throws CreateBPElementException {
+
+        ItNetwork rootNetwork = createRootItNetwork();
 
         BpRequirementGroup rootReqGroup = (BpRequirementGroup) createElement(
-                BpRequirementGroup.TYPE_ID, getRootItNetwork(),
-                Messages.Root_Requirement_Group_Name);
+                BpRequirementGroup.TYPE_ID, rootNetwork, Messages.Root_Requirement_Group_Name);
 
         systemReqGroup = (BpRequirementGroup) createElement(BpRequirementGroup.TYPE_ID,
                 rootReqGroup, Messages.System_Requirement_Group_Name);
@@ -358,12 +358,14 @@ public class BpImporter {
                 rootReqGroup, Messages.Process_Requirement_Group_Name);
 
         BpThreatGroup rootThreatGroup = (BpThreatGroup) createElement(BpThreatGroup.TYPE_ID,
-                getRootItNetwork(), Messages.Root_Threat_Group_Name);
+                rootNetwork, Messages.Root_Threat_Group_Name);
 
         SafeguardGroup safeguardRootGroup = (SafeguardGroup) createElement(SafeguardGroup.TYPE_ID,
-                getRootItNetwork(), Messages.Root_Safeguard_Group_Name);
+                rootNetwork, Messages.Root_Safeguard_Group_Name);
 
         createStructuredSubGroups(rootThreatGroup, safeguardRootGroup);
+
+        return rootNetwork;
     }
 
     /**
@@ -541,10 +543,6 @@ public class BpImporter {
     private void transferModules(ImportData importData, ImportMetadata importMetadata)
             throws CreateBPElementException {
 
-        if (rootNetwork == null) {
-            LOG.error("Root-IT-Network not initialized. Ending import");
-            return;
-        }
         Map<String, ITBP2VNA.generated.implementationhint.Document> implementationHintsByIdentifier = importData.implementationHints
                 .stream()
                 .collect(Collectors.toMap(
@@ -1066,31 +1064,29 @@ public class BpImporter {
     }
 
     /**
-     * get the root {@link ItNetwork} and creates it at the first call
+     * create the root {@link ItNetwork}
      */
-    private ItNetwork getRootItNetwork() throws CreateBPElementException {
+    private ItNetwork createRootItNetwork() throws CreateBPElementException {
         try {
             LoadBpModel modelLoader = new LoadBpModel();
             modelLoader = getCommandService().executeCommand(modelLoader);
             BpModel model = modelLoader.getModel();
-
-            if (rootNetwork == null && model != null) {
-                CreateITNetwork command = new CreateITNetwork(model, false);
-                command = getCommandService().executeCommand(command);
-                rootNetwork = command.getNewElement();
-                StringBuilder titleBuilder = new StringBuilder();
-                titleBuilder.append(Messages.IT_Network_Name);
-                titleBuilder.append("_");
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-                String dateInISO = df.format(new Date());
-                titleBuilder.append(dateInISO);
-                rootNetwork.setTitel(titleBuilder.toString());
-                updateElement(rootNetwork);
-            }
+            Objects.requireNonNull(model, "Unable to load base protection model");
+            CreateITNetwork command = new CreateITNetwork(model, false);
+            command = getCommandService().executeCommand(command);
+            ItNetwork rootNetwork = command.getNewElement();
+            StringBuilder titleBuilder = new StringBuilder();
+            titleBuilder.append(Messages.IT_Network_Name);
+            titleBuilder.append("_");
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+            String dateInISO = df.format(new Date());
+            titleBuilder.append(dateInISO);
+            rootNetwork.setTitel(titleBuilder.toString());
+            updateElement(rootNetwork);
+            return rootNetwork;
         } catch (CommandException e) {
             throw new CreateBPElementException(e, "Error while loading BPModel");
         }
-        return rootNetwork;
     }
 
     /**
