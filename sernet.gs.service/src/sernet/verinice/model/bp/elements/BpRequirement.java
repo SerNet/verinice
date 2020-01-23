@@ -31,10 +31,11 @@ import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.IBpElement;
-import sernet.verinice.model.bp.ISecurityLevelProvider;
+import sernet.verinice.model.bp.IImplementableSecurityLevelProvider;
 import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.Reevaluator;
 import sernet.verinice.model.bp.SecurityLevel;
+import sernet.verinice.model.bp.SecurityLevelUtil;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.AbstractLinkChangeListener;
 import sernet.verinice.model.common.CascadingTransaction;
@@ -46,8 +47,8 @@ import sernet.verinice.model.common.TransactionAbortedException;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class BpRequirement extends CnATreeElement
-        implements IBpElement, IIdentifiableElement, ITaggableElement, ISecurityLevelProvider {
+public class BpRequirement extends CnATreeElement implements IBpElement, IIdentifiableElement,
+        ITaggableElement, IImplementableSecurityLevelProvider {
 
     private static final long serialVersionUID = 6621062615495040741L;
 
@@ -351,4 +352,8 @@ public class BpRequirement extends CnATreeElement
         return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
+    @Override
+    public boolean getImplementationPending() {
+        return SecurityLevelUtil.getImplementationPending(getImplementationStatus());
+    }
 }

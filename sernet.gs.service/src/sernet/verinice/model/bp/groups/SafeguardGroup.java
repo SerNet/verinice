@@ -20,10 +20,15 @@
 package sernet.verinice.model.bp.groups;
 
 import java.util.Collection;
+import java.util.List;
 
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpGroup;
+import sernet.verinice.model.bp.IImplementableSecurityLevelProvider;
+import sernet.verinice.model.bp.ISecurityLevelProvider;
+import sernet.verinice.model.bp.SecurityLevel;
+import sernet.verinice.model.bp.SecurityLevelUtil;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
@@ -34,7 +39,7 @@ import sernet.verinice.model.iso27k.Group;
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
 public class SafeguardGroup extends Group<Safeguard>
-        implements IBpGroup, IIdentifiableElement, ITaggableElement {
+        implements IBpGroup, ISecurityLevelProvider, IIdentifiableElement, ITaggableElement {
 
     private static final long serialVersionUID = -6689926582876183790L;
 
@@ -100,4 +105,9 @@ public class SafeguardGroup extends Group<Safeguard>
         return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
+    @Override
+    public SecurityLevel getSecurityLevel() {
+        List<IImplementableSecurityLevelProvider> providers = SecurityLevelUtil.findProviders(this);
+        return SecurityLevelUtil.getImplementedSecurityLevel(providers);
+    }
 }

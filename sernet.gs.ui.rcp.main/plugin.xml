@@ -2553,6 +2553,21 @@
 	      </decorator>
 	      <decorator
 	            adaptable="true"
+	            class="sernet.verinice.rcp.bp.SecurityLevelDecorator"
+	            id="sernet.verinice.rcp.bp.securityLevelDecorator"
+	            label="securityLevelDecorator"
+	            lightweight="true"
+	            location="BOTTOM_RIGHT"
+	            state="true">
+	          <enablement>
+	          <or>
+	            <objectClass name="sernet.verinice.model.bp.groups.BpRequirementGroup"/>
+	            <objectClass name="sernet.verinice.model.bp.groups.SafeguardGroup"/>
+	          </or>
+	         </enablement>
+	      </decorator>
+	      <decorator
+	            adaptable="true"
 	            class="sernet.verinice.rcp.OwnModulDecorator"
 	            id="sernet.verinice.rcp.OMDecorator"
 	            label="ownModulDecorator"

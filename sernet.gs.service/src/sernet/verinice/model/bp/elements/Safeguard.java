@@ -27,10 +27,11 @@ import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.IBpElement;
-import sernet.verinice.model.bp.ISecurityLevelProvider;
+import sernet.verinice.model.bp.IImplementableSecurityLevelProvider;
 import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.Reevaluator;
 import sernet.verinice.model.bp.SecurityLevel;
+import sernet.verinice.model.bp.SecurityLevelUtil;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.AbstractLinkChangeListener;
 import sernet.verinice.model.common.CascadingTransaction;
@@ -43,8 +44,8 @@ import sernet.verinice.model.common.TransactionAbortedException;
  * @author Daniel Murygin dm[at]sernet.de
  *
  */
-public class Safeguard extends CnATreeElement
-        implements IBpElement, IIdentifiableElement, ITaggableElement, ISecurityLevelProvider {
+public class Safeguard extends CnATreeElement implements IBpElement, IIdentifiableElement,
+        ITaggableElement, IImplementableSecurityLevelProvider {
 
     private static final long serialVersionUID = -3597661958061483411L;
 
@@ -292,5 +293,10 @@ public class Safeguard extends CnATreeElement
     @Override
     public Collection<String> getTags() {
         return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
+    }
+
+    @Override
+    public boolean getImplementationPending() {
+        return SecurityLevelUtil.getImplementationPending(getImplementationStatus());
     }
 }
