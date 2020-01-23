@@ -11,8 +11,11 @@ pipeline {
         JAVA_HOME='/usr/lib/jvm/java-1.8.0-openjdk'
     }
     parameters {
+        string(name: 'jreversion', defaultValue: 'jdk8u232-b09', description: 'Download and pack a JRE with this version. See https://adoptopenjdk.net/archive.html for a list of possible versions.', trim: true)
         booleanParam(name: 'dists', defaultValue: false, description: 'Run distribution steps, i.e. build RPMs files etc.')
-        string(name: 'jreversion', defaultValue: 'jdk8u232-b09', description: 'Download and pack a JRE with this version. See https://adoptopenjdk.net/archive.html for a list of possible versions.')
+        // We need an extra flag. Unfortunately it is not possible to find out, if a password is left empty.
+        booleanParam(name: 'distSign', defaultValue: false, description: 'Sign RPM packages')
+        password(name: 'GNUPGPASSPHRASE', defaultValue: null, description: 'The passphrase of the key stored in KEYDIR/verinice.public.')
     }
     options {
         buildDiscarder(logRotator(numToKeepStr: '3'))
@@ -21,6 +24,11 @@ pipeline {
         stage('Setup') {
             steps {
                 script {
+                    if (params.distSign && !params.dists) {
+                        def msg = 'You have to enable dists, if you want to sign packages.'
+                        buildDescription msg
+                        error msg
+                    }
                     if (env.TAG_NAME){
                         currentBuild.keepLog = true
                     }
@@ -58,6 +66,16 @@ pipeline {
             }
             steps {
                 sh "./verinice-distribution/build.sh -j2 dists"
+            }
+        }
+        // Signing is a separate step because we want to be able to build RPMs any time, to test them.
+        // However RPMs are only archived if they are signed.
+        stage('Distributions Signing') {
+            when {
+                expression { params.distSign && currentBuild.result in [null, 'SUCCESS'] }
+            }
+            steps {
+                sh "./verinice-distribution/sign-rpms verinice-distribution/rhel-?/RPMS/noarch/*"
                 archiveArtifacts artifacts: 'verinice-distribution/rhel-?/RPMS/noarch/*', fingerprint: true
             }
         }
