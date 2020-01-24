@@ -15,7 +15,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  ******************************************************************************/
-package sernet.verinice.service.test;
+package sernet.verinice.service.commands.bp;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -52,6 +52,7 @@ import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.bp.ModelCommand;
+import sernet.verinice.service.test.AbstractModernizedBaseProtection;
 
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
 @Transactional
