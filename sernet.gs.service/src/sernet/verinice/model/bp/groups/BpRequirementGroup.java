@@ -53,6 +53,9 @@ public class BpRequirementGroup extends Group<BpRequirement>
 
     private static final String PROP_IMPLEMENTATION_ORDER = "bp_requirement_group_impl_seq"; //$NON-NLS-1$
     public static final String PROP_RELEASE = "bp_requirement_group_release"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_TYPE = "bp_requirement_group_change_type"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_TYPE_REMOVED = "bp_requirement_group_change_type_removed"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_DETAILS = "bp_requirement_group_change_details"; //$NON-NLS-1$
 
     public static final String[] CHILD_TYPES = new String[] { BpRequirement.TYPE_ID,
             BpRequirementGroup.TYPE_ID };

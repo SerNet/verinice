@@ -62,6 +62,9 @@ public class Safeguard extends CnATreeElement implements IBpElement, IIdentifiab
     public static final String PROP_IMPLEMENTATION_STATUS_PARTIALLY = "bp_safeguard_implementation_status_partially"; //$NON-NLS-1$
     public static final String PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE = "bp_safeguard_implementation_status_na"; //$NON-NLS-1$
     public static final String PROP_RELEASE = "bp_safeguard_release"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_TYPE = "bp_safeguard_change_type"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_TYPE_REMOVED = "bp_safeguard_change_type_removed"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_DETAILS = "bp_safeguard_change_details"; //$NON-NLS-1$
 
     protected Safeguard() {
     }

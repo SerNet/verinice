@@ -57,6 +57,9 @@ public class BpThreat extends CnATreeElement
     public static final String PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS = "bp_threat_risk_with_additional_safeguards_risk";//$NON-NLS-1$
     public static final String PROP_RISK_TREATMENT_OPTION = "bp_threat_risk_treatment_option";//$NON-NLS-1$
     public static final String PROP_RELEASE = "bp_threat_release"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_TYPE = "bp_threat_change_type"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_TYPE_REMOVED = "bp_threat_change_type_removed"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_DETAILS = "bp_threat_change_details"; //$NON-NLS-1$
 
     public static final String TYPE_ID = "bp_threat"; //$NON-NLS-1$
 
