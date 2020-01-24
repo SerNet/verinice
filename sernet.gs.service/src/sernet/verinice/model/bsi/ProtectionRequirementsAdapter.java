@@ -335,14 +335,4 @@ public class ProtectionRequirementsAdapter implements IReevaluator, Serializable
     public boolean isCalculatedIntegrity() {
         return false;
     }
-
-    @Override
-    public void updateValue(CascadingTransaction ta) {
-        // do nothing
-    }
-
-    @Override
-    public void setValue(CascadingTransaction ta, String properyName, Object value) {
-        // do nothing
-    }
 }

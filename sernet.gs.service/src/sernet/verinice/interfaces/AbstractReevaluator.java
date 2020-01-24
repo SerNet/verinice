@@ -42,7 +42,8 @@ public abstract class AbstractReevaluator implements IReevaluator {
      * Collects all downwards linked {@link CnATreeElement} which don't have any
      * further links in the given bottomNodes Set.
      */
-    protected void findBottomNodes(CnATreeElement downwardElement, Set<CnATreeElement> bottomNodes, CascadingTransaction downwardsTA) {
+    protected void findBottomNodes(CnATreeElement downwardElement, Set<CnATreeElement> bottomNodes,
+            CascadingTransaction downwardsTA) {
         if (downwardsTA.hasBeenVisited(downwardElement)) {
             return;
         }
@@ -50,7 +51,8 @@ public abstract class AbstractReevaluator implements IReevaluator {
         try {
             downwardsTA.enter(downwardElement);
         } catch (TransactionAbortedException e) {
-            LOG.error("Aborted while determining bottom node for object: " + downwardElement.getTitle(), e); //$NON-NLS-1$
+            LOG.error("Aborted while determining bottom node for object: " //$NON-NLS-1$
+                    + downwardElement.getTitle(), e);
             return;
         }
 
@@ -63,17 +65,9 @@ public abstract class AbstractReevaluator implements IReevaluator {
         }
 
         // could not go further down, so add this node:
-        if (countLinks == 0){
+        if (countLinks == 0) {
             bottomNodes.add(downwardElement);
         }
-    }
-
-     @Override
-    public void updateValue(CascadingTransaction ta) {
-    }
-
-     @Override
-    public void setValue(CascadingTransaction ta, String properyName, Object value) {
     }
 
     @Override

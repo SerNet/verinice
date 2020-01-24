@@ -126,6 +126,9 @@ public class CnALink implements Serializable, ITypedElement {
         // maintain bi-directional association:
         dependency.addLinkUp(this);
         dependant.addLinkDown(this);
+
+        dependency.linkAdded(this);
+        dependant.linkAdded(this);
         this.linkType = linkTypeFor(dependency);
     }
 
@@ -349,12 +352,14 @@ public class CnALink implements Serializable, ITypedElement {
         dependant.removeLinkDown(this);
         dependency.removeLinkUp(this);
 
+        dependant.linkRemoved(this);
+        dependency.linkRemoved(this);
+
         Stream.of(dependant, dependency).forEach(element -> {
             if (element.isProtectionRequirementsProvider()) {
                 element.fireIntegritaetChanged(new CascadingTransaction());
                 element.fireVerfuegbarkeitChanged(new CascadingTransaction());
                 element.fireVertraulichkeitChanged(new CascadingTransaction());
-                element.fireValueChanged(new CascadingTransaction());
             }
         });
     }
@@ -538,5 +543,4 @@ public class CnALink implements Serializable, ITypedElement {
         }
 
     }
-
 }

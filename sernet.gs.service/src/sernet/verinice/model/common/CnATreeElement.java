@@ -683,20 +683,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     }
 
     /**
-     * Signal a value change of this {@link CnATreeElement} to the
-     * {@link IReevaluator} when an IReevaluator is present.
-     */
-    public void fireValueChanged(CascadingTransaction ta) {
-        if (isProtectionRequirementsProvider()) {
-            if (LOG_INHERIT.isInfo()) {
-                LOG_INHERIT.info(
-                        this.getTypeId() + " is provider, update value of: " + this.getTitle());
-            }
-            getProtectionRequirementsProvider().updateValue(ta);
-        }
-    }
-
-    /**
      * Replace a displayed item in tree with another one. Used to replace
      * displaed objects with reloaded ones from thje database.
      *
@@ -771,6 +757,19 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
         getModelChangeListener().databaseChildRemoved(entry);
     }
 
+    public void valuesChanged() {
+        getLinksUp().forEach(l -> l.getDependant().linkDependencyChanged(l));
+        getLinksDown().forEach(l -> l.getDependency().linkDependantChanged(l));
+    }
+
+    public void linkDependantChanged(CnALink link) {
+        // override this in model classes
+    }
+
+    public void linkDependencyChanged(CnALink link) {
+        // override this in model classes
+    }
+
     @Override
     public void modelReload(BSIModel newModel) {
         getModelChangeListener().modelReload(newModel);
@@ -816,8 +815,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     @Override
     public String toString() {
         return new StringBuilder("type: ").append(getTypeId()).append(", uuid: ").append(getUuid())
-                .append(", dbid: ").append(getDbId())
-                .toString();
+                .append(", dbid: ").append(getDbId()).toString();
     }
 
     @Override

@@ -66,17 +66,4 @@ public interface IReevaluator {
 	void updateConfidentiality(CascadingTransaction ta);
 	void updateIntegrity(CascadingTransaction ta);
 	void updateAvailability(CascadingTransaction ta);
-
-    /**
-     * Is triggered by
-     * {@link CnATreeElement#fireValueChanged(CascadingTransaction)} to indicate
-     * a change in the properties values of an {@link CnATreeElement}.
-     */
-	void updateValue(CascadingTransaction ta);
-
-    /**
-     * Can be used to set a value to a property which is determine in the
-     * {@link IReevaluator#updateValue(CascadingTransaction)} method.
-     */
-	void setValue(CascadingTransaction ta, String properyName, Object value);
 }

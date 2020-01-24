@@ -24,21 +24,13 @@ import java.util.Date;
 
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITaggableElement;
-import sernet.verinice.interfaces.IReevaluator;
-import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.IImplementableSecurityLevelProvider;
 import sernet.verinice.model.bp.ImplementationStatus;
-import sernet.verinice.model.bp.Reevaluator;
 import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bp.SecurityLevelUtil;
 import sernet.verinice.model.bsi.TagHelper;
-import sernet.verinice.model.common.AbstractLinkChangeListener;
-import sernet.verinice.model.common.CascadingTransaction;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.ILinkChangeListener;
-import sernet.verinice.model.common.TransactionAbortedException;
 
 /**
  * @author Daniel Murygin dm[at]sernet.de
@@ -71,37 +63,7 @@ public class Safeguard extends CnATreeElement implements IBpElement, IIdentifiab
     public static final String PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE = "bp_safeguard_implementation_status_na"; //$NON-NLS-1$
     public static final String PROP_RELEASE = "bp_safeguard_release"; //$NON-NLS-1$
 
-    private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
-    private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
-
-        private static final long serialVersionUID = 9205866080876674150L;
-
-        @Override
-        public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
-            if (ta.hasBeenVisited(Safeguard.this)) {
-                return;
-            }
-
-            Safeguard.this.getLinksUp().stream().filter(
-                    DeductionImplementationUtil::isRelevantLinkForImplementationStateDeduction)
-                    .map(CnALink::getDependant)
-                    .filter(DeductionImplementationUtil::isDeductiveImplementationEnabled)
-                    .forEach(DeductionImplementationUtil::setImplementationStatusToRequirement);
-
-        }
-    };
-
     protected Safeguard() {
-    }
-
-    @Override
-    public ILinkChangeListener getLinkChangeListener() {
-        return linkChangeListener;
-    }
-
-    @Override
-    public IReevaluator getProtectionRequirementsProvider() {
-        return protectionRequirementsProvider;
     }
 
     public Safeguard(CnATreeElement parent) {
