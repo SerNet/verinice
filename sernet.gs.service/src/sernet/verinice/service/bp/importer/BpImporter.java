@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -158,11 +159,11 @@ public class BpImporter {
                 + importData.implementationHints.size());
 
         long veryBeginning = System.currentTimeMillis();
-        ItNetwork rootNetwork = prepareITNetwork();
+        ItNetwork rootNetwork = prepareITNetwork(importMetadata);
         long itnetworkReady = System.currentTimeMillis();
         LOG.debug("ITNetwork prepared, took :\t"
                 + (itnetworkReady - veryBeginning) / MILLIS_PER_SECOND);
-        generateElementalThreats(importData.threats);
+        generateElementalThreats(importData.threats, importMetadata);
         long elementalThreatsReady = System.currentTimeMillis();
         LOG.debug("Elementalthreats ready, took :\t"
                 + (elementalThreatsReady - itnetworkReady) / MILLIS_PER_SECOND);
@@ -192,7 +193,7 @@ public class BpImporter {
         LOG.debug("Modules ready, took :\t"
                 + (modulesReady - elementalThreatsReady) / MILLIS_PER_SECOND);
         LOG.debug("Transformation of elements complete");
-        createSafeguards(importData.implementationHints);
+        createSafeguards(importData.implementationHints, importMetadata);
         long safeguardsReady = System.currentTimeMillis();
         LOG.debug(
                 "Safeguards ready, took:\t" + (safeguardsReady - modulesReady) / MILLIS_PER_SECOND);
@@ -241,8 +242,34 @@ public class BpImporter {
         Map<String, String> modelingHintByModuleIdentifier = readModelingHints(
                 rootDirectory.toPath().resolve("modeling-hints.properties"));
 
+        String release = null;
+
+        // read additional metatada from the properties file at the
+        // given location. Currently, there is a single optional property
+        // denoting the compendium release version, i.e. 2019-0
+        Path metadataProperties = rootDirectory.toPath().resolve("metadata.properties");
+        if (metadataProperties.toFile().exists()) {
+            Properties metadata = loadProperties(metadataProperties);
+
+            release = metadata.getProperty("release");
+            Matcher releaseMatcher = Pattern.compile("(\\d{4})-\\d+").matcher(release);
+            if (!releaseMatcher.matches()) {
+                throw new IllegalArgumentException("Invalid release: " + release);
+            }
+            String year = releaseMatcher.group(1);
+            if (Integer.parseInt(year) != ZonedDateTime.now().getYear()) {
+                LOG.warn("Release " + release
+                        + " does not match the current year, continuing anyway");
+            }
+
+            LOG.info("Importing release " + release);
+
+        } else {
+            LOG.warn("metadata.properties file not found, using defaults");
+        }
+
         return new ImportMetadata(implementationOrderByModuleIdentifier,
-                modelingHintByModuleIdentifier);
+                modelingHintByModuleIdentifier, release);
     }
 
     /**
@@ -364,26 +391,32 @@ public class BpImporter {
      * creates an {@link ItNetwork} and its substructure to prepare it for
      * transforming the bsi-data (xml) into verinice Objects
      */
-    private ItNetwork prepareITNetwork() throws CreateBPElementException {
+    private ItNetwork prepareITNetwork(ImportMetadata importMetadata)
+            throws CreateBPElementException {
 
-        ItNetwork rootNetwork = createRootItNetwork();
+        ItNetwork rootNetwork = createRootItNetwork(importMetadata);
 
         BpRequirementGroup rootReqGroup = (BpRequirementGroup) createElement(
-                BpRequirementGroup.TYPE_ID, rootNetwork, Messages.Root_Requirement_Group_Name);
+                BpRequirementGroup.TYPE_ID, rootNetwork, Messages.Root_Requirement_Group_Name,
+                BpRequirementGroup.PROP_RELEASE, importMetadata.release);
 
         systemReqGroup = (BpRequirementGroup) createElement(BpRequirementGroup.TYPE_ID,
-                rootReqGroup, Messages.System_Requirement_Group_Name);
+                rootReqGroup, Messages.System_Requirement_Group_Name,
+                BpRequirementGroup.PROP_RELEASE, importMetadata.release);
 
         processReqGroup = (BpRequirementGroup) createElement(BpRequirementGroup.TYPE_ID,
-                rootReqGroup, Messages.Process_Requirement_Group_Name);
+                rootReqGroup, Messages.Process_Requirement_Group_Name,
+                BpRequirementGroup.PROP_RELEASE, importMetadata.release);
 
         BpThreatGroup rootThreatGroup = (BpThreatGroup) createElement(BpThreatGroup.TYPE_ID,
-                rootNetwork, Messages.Root_Threat_Group_Name);
+                rootNetwork, Messages.Root_Threat_Group_Name, BpThreatGroup.PROP_RELEASE,
+                importMetadata.release);
 
         SafeguardGroup safeguardRootGroup = (SafeguardGroup) createElement(SafeguardGroup.TYPE_ID,
-                rootNetwork, Messages.Root_Safeguard_Group_Name);
+                rootNetwork, Messages.Root_Safeguard_Group_Name, SafeguardGroup.PROP_RELEASE,
+                importMetadata.release);
 
-        createStructuredSubGroups(rootThreatGroup, safeguardRootGroup);
+        createStructuredSubGroups(rootThreatGroup, safeguardRootGroup, importMetadata);
 
         return rootNetwork;
     }
@@ -393,22 +426,30 @@ public class BpImporter {
      * way in verinice
      */
     private void createStructuredSubGroups(BpThreatGroup rootThreatGroup,
-            SafeguardGroup safeguardRootGroup) throws CreateBPElementException {
+            SafeguardGroup safeguardRootGroup, ImportMetadata importMetadata)
+            throws CreateBPElementException {
         elementalThreatGroup = (BpThreatGroup) createElement(BpThreatGroup.TYPE_ID, rootThreatGroup,
-                Messages.Elemental_Threat_Group_Name);
+                Messages.Elemental_Threat_Group_Name, BpThreatGroup.PROP_RELEASE,
+                importMetadata.release);
         processSafeguardGroup = (SafeguardGroup) createElement(SafeguardGroup.TYPE_ID,
-                safeguardRootGroup, Messages.Process_Requirement_Group_Name);
+                safeguardRootGroup, Messages.Process_Requirement_Group_Name,
+                SafeguardGroup.PROP_RELEASE, importMetadata.release);
         systemSafeguardGroup = (SafeguardGroup) createElement(SafeguardGroup.TYPE_ID,
-                safeguardRootGroup, Messages.System_Requirement_Group_Name);
+                safeguardRootGroup, Messages.System_Requirement_Group_Name,
+                SafeguardGroup.PROP_RELEASE, importMetadata.release);
 
         for (String name : systemIdentifierPrefixes) {
-            createElement(BpRequirementGroup.TYPE_ID, systemReqGroup, name);
-            createElement(SafeguardGroup.TYPE_ID, systemSafeguardGroup, name);
+            createElement(BpRequirementGroup.TYPE_ID, systemReqGroup, name,
+                    BpRequirementGroup.PROP_RELEASE, importMetadata.release);
+            createElement(SafeguardGroup.TYPE_ID, systemSafeguardGroup, name,
+                    SafeguardGroup.PROP_RELEASE, importMetadata.release);
         }
 
         for (String name : processIdentifierPrefixes) {
-            createElement(BpRequirementGroup.TYPE_ID, processReqGroup, name);
-            createElement(SafeguardGroup.TYPE_ID, processSafeguardGroup, name);
+            createElement(BpRequirementGroup.TYPE_ID, processReqGroup, name,
+                    BpRequirementGroup.PROP_RELEASE, importMetadata.release);
+            createElement(SafeguardGroup.TYPE_ID, processSafeguardGroup, name,
+                    SafeguardGroup.PROP_RELEASE, importMetadata.release);
         }
     }
 
@@ -419,8 +460,8 @@ public class BpImporter {
      * and transforms them into verinice-Objects {@link Safeguard}
      */
     private void createSafeguards(
-            Set<ITBP2VNA.generated.implementationhint.Document> implementationHints)
-            throws CreateBPElementException {
+            Set<ITBP2VNA.generated.implementationhint.Document> implementationHints,
+            ImportMetadata importMetadata) throws CreateBPElementException {
 
         Set<SafeguardGroup> subGroups = new HashSet<>(10);
 
@@ -452,7 +493,7 @@ public class BpImporter {
             }
 
             if (safeGuardParent != null) {
-                createSafeguardsForModule(bsiSafeguard, safeGuardParent);
+                createSafeguardsForModule(bsiSafeguard, safeGuardParent, importMetadata);
             } else {
                 LOG.warn("Could not determine parent for :\t" + bsiSafeguard.getTitle());
             }
@@ -545,9 +586,20 @@ public class BpImporter {
     /**
      * simply creates a {@link CnATreeElement}
      */
-    private CnATreeElement createElement(String typeId, CnATreeElement parent, String title)
-            throws CreateBPElementException {
-        CreateElement<CnATreeElement> command = new CreateElement<>(parent, typeId, title);
+    private CnATreeElement createElement(String typeId, CnATreeElement parent, String title,
+            String releasePropertyId, String release) throws CreateBPElementException {
+        CreateElement<CnATreeElement> command = new CreateElement<CnATreeElement>(parent, typeId,
+                title) {
+            private static final long serialVersionUID = 8513409513498160007L;
+
+            @Override
+            protected CnATreeElement saveElement() {
+                if (release != null) {
+                    element.setSimpleProperty(releasePropertyId, release);
+                }
+                return super.saveElement();
+            }
+        };
         try {
             return getCommandService().executeCommand(command).getNewElement();
         } catch (CommandException e) {
@@ -598,7 +650,7 @@ public class BpImporter {
             String moduleIdentifier = bsiModule.getIdentifier();
             String moduleTitle = bsiModule.getTitle();
             veriniceModule = (BpRequirementGroup) createElement(BpRequirementGroup.TYPE_ID, parent,
-                    moduleTitle);
+                    moduleTitle, BpRequirementGroup.PROP_RELEASE, importMetadata.release);
 
             veriniceModule.setIdentifier(moduleIdentifier);
             String modelingHint = importMetadata.modelingHintByModuleIdentifier
@@ -618,11 +670,11 @@ public class BpImporter {
                 LOG.warn("No implementation order specified for module '" + moduleIdentifier + "' ("
                         + moduleTitle + ")");
             }
-
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Module : \t" + veriniceModule.getTitle() + " created");
             }
-            createRequirementsForModule(bsiModule, veriniceModule, implementationHint);
+            createRequirementsForModule(bsiModule, veriniceModule, implementationHint,
+                    importMetadata);
         }
         return veriniceModule;
     }
@@ -684,12 +736,13 @@ public class BpImporter {
      * generate elemental-threats defined in a {@link Document} as instances of
      * {@link BpThreat} within the given structure
      */
-    private void generateElementalThreats(Set<ITBP2VNA.generated.threat.Document> threats)
-            throws CreateBPElementException {
+    private void generateElementalThreats(Set<ITBP2VNA.generated.threat.Document> threats,
+            ImportMetadata importMetadata) throws CreateBPElementException {
         for (ITBP2VNA.generated.threat.Document bsiThreat : threats) {
             if (!addedThreats.containsKey(bsiThreat.getIdentifier())) {
                 BpThreat veriniceThreat = (BpThreat) createElement(BpThreat.TYPE_ID,
-                        elementalThreatGroup, bsiThreat.getTitle());
+                        elementalThreatGroup, bsiThreat.getTitle(), BpThreat.PROP_RELEASE,
+                        importMetadata.release);
 
                 veriniceThreat.setIdentifier(bsiThreat.getIdentifier());
                 String plainDescription = HtmlHelper.getAnyObjectDescription(
@@ -759,7 +812,7 @@ public class BpImporter {
      */
     private void createSafeguardsForModule(
             ITBP2VNA.generated.implementationhint.Document bsiSafeguardDocument,
-            SafeguardGroup parent) throws CreateBPElementException {
+            SafeguardGroup parent, ImportMetadata importMetadata) throws CreateBPElementException {
 
         final String defaultErrorMsg = "Could not create Safeguard:\t";
 
@@ -770,10 +823,11 @@ public class BpImporter {
         for (ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard : safeGuards) {
 
             SafeguardGroup safeGuardParent = getSafeguardParent(parent,
-                    bsiSafeguard.getIdentifier());
+                    bsiSafeguard.getIdentifier(), importMetadata);
 
             Safeguard safeguard = createSafeguard(safeGuardParent, bsiSafeguard,
-                    Messages.Qualifier_Basic, bsiSafeguardDocument.getLastChange().toString());
+                    Messages.Qualifier_Basic, bsiSafeguardDocument.getLastChange().toString(),
+                    importMetadata);
             if (safeguard != null) {
                 links.addAll(linkSafeguardToRequirements(safeguard));
             } else {
@@ -784,9 +838,10 @@ public class BpImporter {
         safeGuards = bsiModule.getStandardSafeguards().getSafeguard();
         for (ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard : safeGuards) {
             SafeguardGroup safeGuardParent = getSafeguardParent(parent,
-                    bsiSafeguard.getIdentifier());
+                    bsiSafeguard.getIdentifier(), importMetadata);
             Safeguard safeguard = createSafeguard(safeGuardParent, bsiSafeguard,
-                    Messages.Qualifier_Standard, bsiSafeguardDocument.getLastChange().toString());
+                    Messages.Qualifier_Standard, bsiSafeguardDocument.getLastChange().toString(),
+                    importMetadata);
             if (safeguard != null) {
                 links.addAll(linkSafeguardToRequirements(safeguard));
             } else {
@@ -797,9 +852,10 @@ public class BpImporter {
         safeGuards = bsiModule.getHighLevelSafeguards().getSafeguard();
         for (ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard : safeGuards) {
             SafeguardGroup safeGuardParent = getSafeguardParent(parent,
-                    bsiSafeguard.getIdentifier());
+                    bsiSafeguard.getIdentifier(), importMetadata);
             Safeguard safeguard = createSafeguard(safeGuardParent, bsiSafeguard,
-                    Messages.Qualifier_High, bsiSafeguardDocument.getLastChange().toString());
+                    Messages.Qualifier_High, bsiSafeguardDocument.getLastChange().toString(),
+                    importMetadata);
             if (safeguard != null) {
                 links.addAll(linkSafeguardToRequirements(safeguard));
             } else {
@@ -822,10 +878,10 @@ public class BpImporter {
      */
     private Safeguard createSafeguard(SafeguardGroup parent,
             ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard, String qualifier,
-            String lastChange) throws CreateBPElementException {
+            String lastChange, ImportMetadata importMetadata) throws CreateBPElementException {
         if (parent != null) {
             Safeguard safeguard = (Safeguard) createElement(Safeguard.TYPE_ID, parent,
-                    bsiSafeguard.getTitle());
+                    bsiSafeguard.getTitle(), Safeguard.PROP_RELEASE, importMetadata.release);
             updateElement(safeguard);
             safeguard = setSafeguardProperties(bsiSafeguard, qualifier, lastChange, safeguard);
             if (LOG.isDebugEnabled()) {
@@ -892,8 +948,8 @@ public class BpImporter {
      * this method returns this {@link SafeguardGroup} for a given safeguard-
      * identifier or creates it, if not existent yet
      */
-    private SafeguardGroup getSafeguardParent(SafeguardGroup rootGroup, String identifier)
-            throws CreateBPElementException {
+    private SafeguardGroup getSafeguardParent(SafeguardGroup rootGroup, String identifier,
+            ImportMetadata importMetadata) throws CreateBPElementException {
         SafeguardGroup safeguardParent = null;
         if (identifier.contains(".M")) {
             String moduleIdentifier = identifier.substring(0, identifier.lastIndexOf(".M"));
@@ -916,7 +972,8 @@ public class BpImporter {
                         (IBpGroup) moduleParent, moduleTitle);
                 if (safeguardParent == null) {
                     safeguardParent = (SafeguardGroup) createElement(SafeguardGroup.TYPE_ID,
-                            moduleParent, moduleTitle);
+                            moduleParent, moduleTitle, SafeguardGroup.PROP_RELEASE,
+                            importMetadata.release);
                     safeguardParent.setIdentifier(moduleIdentifier);
                     safeguardParent = (SafeguardGroup) updateElement(safeguardParent);
                 }
@@ -955,8 +1012,8 @@ public class BpImporter {
      * {@link Document}
      */
     private void createRequirementsForModule(Document bsiModule, BpRequirementGroup parent,
-            ITBP2VNA.generated.implementationhint.Document implementationHint)
-            throws CreateBPElementException {
+            ITBP2VNA.generated.implementationhint.Document implementationHint,
+            ImportMetadata importMetadata) throws CreateBPElementException {
 
         Optional<Map<String, ITBP2VNA.generated.implementationhint.Safeguard>> safeguardsByCorrespondingRequirementIdentifier = Optional
                 .ofNullable(implementationHint)
@@ -976,21 +1033,21 @@ public class BpImporter {
             createRequirement(parent, bsiRequirement,
                     safeguardsByCorrespondingRequirementIdentifier
                             .map(map -> map.get(bsiRequirement.getIdentifier())).orElse(null),
-                    Messages.Qualifier_Basic);
+                    Messages.Qualifier_Basic, importMetadata);
         }
         for (Requirement bsiRequirement : bsiModule.getRequirements().getStandardRequirements()
                 .getRequirement()) {
             createRequirement(parent, bsiRequirement,
                     safeguardsByCorrespondingRequirementIdentifier
                             .map(map -> map.get(bsiRequirement.getIdentifier())).orElse(null),
-                    Messages.Qualifier_Standard);
+                    Messages.Qualifier_Standard, importMetadata);
         }
         for (Requirement bsiRequirement : bsiModule.getRequirements().getHighLevelRequirements()
                 .getRequirement()) {
             createRequirement(parent, bsiRequirement,
                     safeguardsByCorrespondingRequirementIdentifier
                             .map(map -> map.get(bsiRequirement.getIdentifier())).orElse(null),
-                    Messages.Qualifier_High);
+                    Messages.Qualifier_High, importMetadata);
         }
 
     }
@@ -1001,12 +1058,12 @@ public class BpImporter {
      * 
      */
     private BpRequirement createRequirement(BpRequirementGroup parent, Requirement bsiRequirement,
-            ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard, String qualifier)
-            throws CreateBPElementException {
+            ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard, String qualifier,
+            ImportMetadata importMetadata) throws CreateBPElementException {
         if (!addedReqs.containsKey(bsiRequirement.getIdentifier())) {
             BpRequirement veriniceRequirement = null;
             veriniceRequirement = (BpRequirement) createElement(BpRequirement.TYPE_ID, parent,
-                    bsiRequirement.getTitle());
+                    bsiRequirement.getTitle(), BpRequirement.PROP_RELEASE, importMetadata.release);
             veriniceRequirement.setIdentifier(bsiRequirement.getIdentifier());
             veriniceRequirement.setTitle(bsiRequirement.getTitle());
             veriniceRequirement.setLastChange(parent.getLastChange());
@@ -1038,6 +1095,7 @@ public class BpImporter {
             SecurityLevel level = getSecurityLevelFromQualifier(qualifier);
 
             veriniceRequirement.setSecurityLevel(level);
+
             addedReqs.put(bsiRequirement.getIdentifier(), veriniceRequirement);
             return (BpRequirement) updateElement(veriniceRequirement);
         } else {
@@ -1086,7 +1144,8 @@ public class BpImporter {
     /**
      * create the root {@link ItNetwork}
      */
-    private ItNetwork createRootItNetwork() throws CreateBPElementException {
+    private ItNetwork createRootItNetwork(ImportMetadata importMetadata)
+            throws CreateBPElementException {
         try {
             LoadBpModel modelLoader = new LoadBpModel();
             modelLoader = getCommandService().executeCommand(modelLoader);
@@ -1097,6 +1156,10 @@ public class BpImporter {
             ItNetwork rootNetwork = command.getNewElement();
             StringBuilder titleBuilder = new StringBuilder();
             titleBuilder.append(Messages.IT_Network_Name);
+            if (importMetadata.release != null) {
+                titleBuilder.append("_");
+                titleBuilder.append(importMetadata.release);
+            }
             titleBuilder.append("_");
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
             String dateInISO = df.format(new Date());
@@ -1104,6 +1167,7 @@ public class BpImporter {
             rootNetwork.setTitel(titleBuilder.toString());
             updateElement(rootNetwork);
             return rootNetwork;
+
         } catch (CommandException e) {
             throw new CreateBPElementException(e, "Error while loading BPModel");
         }
@@ -1156,11 +1220,13 @@ public class BpImporter {
 
         private final Map<String, String> implementationOrderByModuleIdentifier;
         private final Map<String, String> modelingHintByModuleIdentifier;
+        private final String release;
 
         ImportMetadata(Map<String, String> implementationOrderByModuleIdentifier,
-                Map<String, String> modelingHintByModuleIdentifier) {
+                Map<String, String> modelingHintByModuleIdentifier, String release) {
             this.implementationOrderByModuleIdentifier = implementationOrderByModuleIdentifier;
             this.modelingHintByModuleIdentifier = modelingHintByModuleIdentifier;
+            this.release = release;
         }
     }
 }
