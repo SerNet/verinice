@@ -43,7 +43,7 @@ public class BpThreat extends CnATreeElement
     private static final String PROP_ID = "bp_threat_id"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_threat_tag"; //$NON-NLS-1$
 
-    private static final String PROP_CONFIDENIALITY = "bp_threat_value_method_confidentiality"; //$NON-NLS-1$
+    private static final String PROP_CONFIDENTIALITY = "bp_threat_value_method_confidentiality"; //$NON-NLS-1$
     private static final String PROP_INTEGRITY = "bp_threat_value_method_integrity"; //$NON-NLS-1$
     private static final String PROP_AVAILABILITY = "bp_threat_value_method_availability"; //$NON-NLS-1$
     public static final String PROP_FREQUENCY_WITHOUT_SAFEGUARDS = "bp_threat_risk_without_safeguards_frequency";//$NON-NLS-1$
@@ -129,13 +129,13 @@ public class BpThreat extends CnATreeElement
     }
 
     public boolean isConfidentiality() {
-        String value = getEntity().getPropertyValue(PROP_CONFIDENIALITY);
+        String value = getEntity().getPropertyValue(PROP_CONFIDENTIALITY);
         return Boolean.getBoolean(value);
     }
 
     public void setConfidentiality(boolean isConfidentiality) {
         int value = (isConfidentiality) ? 1 : 0;
-        setNumericProperty(PROP_CONFIDENIALITY, value);
+        setNumericProperty(PROP_CONFIDENTIALITY, value);
     }
 
     public boolean isIntegrity() {
