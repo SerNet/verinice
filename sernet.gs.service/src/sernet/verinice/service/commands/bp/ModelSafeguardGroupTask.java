@@ -51,7 +51,8 @@ public class ModelSafeguardGroupTask extends ModelCopyTask {
 
     public ModelSafeguardGroupTask(ICommandService commandService, IDAOFactory daoFactory,
             ModelingData modelingData) {
-        super(commandService, daoFactory, modelingData, SafeguardGroup.TYPE_ID, null);
+        super(commandService, daoFactory, modelingData, SafeguardGroup.TYPE_ID, null,
+                Safeguard.PROP_RELEASE, SafeguardGroup.PROP_RELEASE);
         this.requirementGroups = modelingData.getRequirementGroups();
     }
 
@@ -86,6 +87,36 @@ public class ModelSafeguardGroupTask extends ModelCopyTask {
     protected void afterSkipExistingElement(CnATreeElement targetObject,
             CnATreeElement existingElement, CnATreeElement compendiumElement) {
         afterHandleElement(existingElement, compendiumElement);
+    }
+
+    @Override
+    protected void updateExistingElement(CnATreeElement targetObject,
+            CnATreeElement existingElement, CnATreeElement compendiumElement,
+            boolean elementRemoved) {
+        copyProperties(compendiumElement, existingElement, Safeguard.PROP_QUALIFIER,
+                Safeguard.PROP_LAST_CHANGE, Safeguard.PROP_RELEASE, Safeguard.PROP_CHANGE_DETAILS);
+        if (elementRemoved) {
+            existingElement.setPropertyValue(Safeguard.PROP_CHANGE_TYPE,
+                    Safeguard.PROP_CHANGE_TYPE_REMOVED);
+        } else {
+            copyProperties(compendiumElement, existingElement, Safeguard.PROP_NAME,
+                    Safeguard.PROP_CHANGE_TYPE, Safeguard.PROP_OBJECTBROWSER_DESC);
+        }
+        afterHandleElement(targetObject, existingElement);
+    }
+
+    @Override
+    protected void updateExistingGroup(CnATreeElement targetObject, CnATreeElement existingGroup,
+            CnATreeElement compendiumGroup, boolean groupRemoved) {
+        copyProperties(compendiumGroup, existingGroup, SafeguardGroup.PROP_RELEASE,
+                SafeguardGroup.PROP_CHANGE_DETAILS);
+        if (groupRemoved) {
+            existingGroup.setPropertyValue(SafeguardGroup.PROP_CHANGE_TYPE,
+                    SafeguardGroup.PROP_CHANGE_TYPE_REMOVED);
+        } else {
+            copyProperties(compendiumGroup, existingGroup, SafeguardGroup.PROP_NAME,
+                    SafeguardGroup.PROP_CHANGE_TYPE, SafeguardGroup.PROP_DESC);
+        }
     }
 
     private void afterHandleElement(CnATreeElement safeguardFromScope,

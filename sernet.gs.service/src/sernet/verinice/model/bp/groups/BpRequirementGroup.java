@@ -46,12 +46,12 @@ public class BpRequirementGroup extends Group<BpRequirement>
 
     public static final String TYPE_ID = "bp_requirement_group";
     public static final String PROP_NAME = "bp_requirement_group_name"; //$NON-NLS-1$
-    private static final String PROP_OBJECTBROWSER_DESC = "bp_requirement_group_objectbrowser_content"; //$NON-NLS-1$
+    public static final String PROP_OBJECTBROWSER_DESC = "bp_requirement_group_objectbrowser_content"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_requirement_group_id"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_requirement_group_tag"; //$NON-NLS-1$
-    private static final String PROP_LAST_CHANGE = "bp_requirement_group_last_change"; //$NON-NLS-1$
+    public static final String PROP_LAST_CHANGE = "bp_requirement_group_last_change"; //$NON-NLS-1$
 
-    private static final String PROP_IMPLEMENTATION_ORDER = "bp_requirement_group_impl_seq"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_ORDER = "bp_requirement_group_impl_seq"; //$NON-NLS-1$
     public static final String PROP_RELEASE = "bp_requirement_group_release"; //$NON-NLS-1$
     public static final String PROP_CHANGE_TYPE = "bp_requirement_group_change_type"; //$NON-NLS-1$
     public static final String PROP_CHANGE_TYPE_REMOVED = "bp_requirement_group_change_type_removed"; //$NON-NLS-1$

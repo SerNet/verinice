@@ -39,13 +39,13 @@ public class BpThreat extends CnATreeElement
     private static final long serialVersionUID = -7182966153863832177L;
 
     public static final String PROP_OBJECTBROWSER_DESC = "bp_threat_objectbrowser_content"; //$NON-NLS-1$
-    private static final String PROP_NAME = "bp_threat_name"; //$NON-NLS-1$
+    public static final String PROP_NAME = "bp_threat_name"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_threat_id"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_threat_tag"; //$NON-NLS-1$
 
-    private static final String PROP_CONFIDENTIALITY = "bp_threat_value_method_confidentiality"; //$NON-NLS-1$
-    private static final String PROP_INTEGRITY = "bp_threat_value_method_integrity"; //$NON-NLS-1$
-    private static final String PROP_AVAILABILITY = "bp_threat_value_method_availability"; //$NON-NLS-1$
+    public static final String PROP_CONFIDENTIALITY = "bp_threat_value_method_confidentiality"; //$NON-NLS-1$
+    public static final String PROP_INTEGRITY = "bp_threat_value_method_integrity"; //$NON-NLS-1$
+    public static final String PROP_AVAILABILITY = "bp_threat_value_method_availability"; //$NON-NLS-1$
     public static final String PROP_FREQUENCY_WITHOUT_SAFEGUARDS = "bp_threat_risk_without_safeguards_frequency";//$NON-NLS-1$
     public static final String PROP_IMPACT_WITHOUT_SAFEGUARDS = "bp_threat_risk_without_safeguards_impact";//$NON-NLS-1$
     public static final String PROP_RISK_WITHOUT_SAFEGUARDS = "bp_threat_risk_without_safeguards_risk";//$NON-NLS-1$

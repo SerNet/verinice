@@ -42,7 +42,8 @@ public class ModelModulesTask extends ModelCopyTask {
 
     public ModelModulesTask(ICommandService commandService, IDAOFactory daoFactory,
             ModelingData modelingData) {
-        super(commandService, daoFactory, modelingData, BpRequirementGroup.TYPE_ID, null);
+        super(commandService, daoFactory, modelingData, BpRequirementGroup.TYPE_ID, null,
+                BpRequirement.PROP_RELEASE, BpRequirementGroup.PROP_RELEASE);
         this.modulesCompendium = modelingData.getRequirementGroups();
     }
 
@@ -75,6 +76,39 @@ public class ModelModulesTask extends ModelCopyTask {
     protected void afterSkipExistingElement(CnATreeElement targetObject,
             CnATreeElement existingElement, CnATreeElement compendiumElement) {
         afterHandleElement(targetObject, existingElement);
+    }
+
+    @Override
+    protected void updateExistingElement(CnATreeElement targetObject,
+            CnATreeElement existingElement, CnATreeElement compendiumElement,
+            boolean elementRemoved) {
+        copyProperties(compendiumElement, existingElement, BpRequirement.PROP_QUALIFIER,
+                BpRequirement.PROP_LAST_CHANGE, BpRequirement.PROP_RELEASE,
+                BpRequirement.PROP_CHANGE_DETAILS);
+        if (elementRemoved) {
+            existingElement.setPropertyValue(BpRequirement.PROP_CHANGE_TYPE,
+                    BpRequirement.PROP_CHANGE_TYPE_REMOVED);
+        } else {
+            copyProperties(compendiumElement, existingElement, BpRequirement.PROP_NAME,
+                    BpRequirement.PROP_CHANGE_TYPE, BpRequirement.PROP_OBJECTBROWSER);
+        }
+        afterHandleElement(targetObject, existingElement);
+    }
+
+    @Override
+    protected void updateExistingGroup(CnATreeElement targetObject, CnATreeElement existingGroup,
+            CnATreeElement compendiumGroup, boolean groupRemoved) {
+        copyProperties(compendiumGroup, existingGroup, BpRequirementGroup.PROP_IMPLEMENTATION_ORDER,
+                BpRequirementGroup.PROP_LAST_CHANGE, BpRequirementGroup.PROP_RELEASE,
+                BpRequirementGroup.PROP_CHANGE_DETAILS);
+        if (groupRemoved) {
+            existingGroup.setPropertyValue(BpRequirementGroup.PROP_CHANGE_TYPE,
+                    BpRequirementGroup.PROP_CHANGE_TYPE_REMOVED);
+        } else {
+            copyProperties(compendiumGroup, existingGroup, BpRequirementGroup.PROP_NAME,
+                    BpRequirementGroup.PROP_CHANGE_TYPE,
+                    BpRequirementGroup.PROP_OBJECTBROWSER_DESC);
+        }
     }
 
     private void afterHandleElement(CnATreeElement targetObject,

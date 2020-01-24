@@ -38,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import junit.framework.Assert;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bp.elements.Application;
 import sernet.verinice.model.bp.elements.BpRequirement;
@@ -51,7 +52,6 @@ import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.bp.ModelCommand;
 import sernet.verinice.service.test.AbstractModernizedBaseProtection;
 
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
@@ -906,6 +906,358 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
                 BpThreat.REL_BP_THREAT_BP_ITNETWORK);
         assertEquals(1, linksThreatTargetObject.size());
         assertEquals(linksThreatTargetObject.iterator().next().getDependency(), itNetwork);
+
+    }
+
+    @Test
+    public void checkUpdatableReleases() throws CommandException {
+        assertFalse(ModelCopyTask.canUpdateFrom(null, "2018-0"));
+        assertFalse(ModelCopyTask.canUpdateFrom("", "2018-0"));
+        assertFalse(ModelCopyTask.canUpdateFrom("", ""));
+        assertFalse(ModelCopyTask.canUpdateFrom(null, null));
+        assertFalse(ModelCopyTask.canUpdateFrom("2018-0", null));
+        assertFalse(ModelCopyTask.canUpdateFrom("2018-0", "2018-0"));
+        assertFalse(ModelCopyTask.canUpdateFrom("2020-0", "2018-0"));
+        assertFalse(ModelCopyTask.canUpdateFrom("2018-0", "2020-0"));
+
+        assertTrue(ModelCopyTask.canUpdateFrom("2019-0", "2019-5"));
+        assertTrue(ModelCopyTask.canUpdateFrom("2019-0", "2020-0"));
+        assertTrue(ModelCopyTask.canUpdateFrom("2019-1", "2020-0"));
+        assertTrue(ModelCopyTask.canUpdateFrom("2019-0", "2020-3"));
+
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void updateExistingRequirement() throws CommandException {
+        CatalogModel catalogModel = loadCatalogModel();
+        BpRequirementGroup requirementGroup = createRequirementGroup(catalogModel, "R1",
+                "Requirements 1");
+        BpRequirement requirement1 = createBpRequirement(requirementGroup, "R1.1",
+                "Requirement 1 (updated)");
+        requirement1.setSimpleProperty(BpRequirement.PROP_RELEASE, "2019-1");
+        ItNetwork itNetwork = createNewBPOrganization();
+        BpRequirementGroup requirementGroupItNetwork = createRequirementGroup(itNetwork, "R1",
+                "Requirements 1");
+        BpRequirement requirement1ItNetwork = createBpRequirement(requirementGroupItNetwork, "R1.1",
+                "Requirement 1");
+        requirement1ItNetwork.setSimpleProperty(BpRequirement.PROP_RELEASE, "2019-0");
+        requirement1ItNetwork.setImplementationStatus(ImplementationStatus.YES);
+        createLink(requirement1ItNetwork, itNetwork, BpRequirement.REL_BP_REQUIREMENT_BP_ITNETWORK);
+
+        elementDao.flush();
+        elementDao.clear();
+
+        ModelCommand modelCommand = new ModelCommand(
+                Collections.singleton(requirementGroup.getUuid()),
+                Collections.singletonList(itNetwork.getUuid()));
+        modelCommand.setHandleSafeguards(true);
+        modelCommand.setHandleDummySafeguards(false);
+        commandService.executeCommand(modelCommand);
+        elementDao.flush();
+
+        itNetwork = reloadElement(itNetwork);
+        assertEquals(0, itNetwork.getLinksDown().size());
+        Set<CnATreeElement> requirementsGroupsInNetwork = getChildrenWithTypeId(itNetwork,
+                BpRequirementGroup.TYPE_ID);
+        assertEquals(1, requirementsGroupsInNetwork.size());
+        CnATreeElement firstRequirementsGroupInNetwork = requirementsGroupsInNetwork.iterator()
+                .next();
+        assertEquals(requirementGroupItNetwork, firstRequirementsGroupInNetwork);
+        assertEquals(1, firstRequirementsGroupInNetwork.getChildren().size());
+        assertEquals("Requirement 1 (updated)",
+                firstRequirementsGroupInNetwork.getChildren().iterator().next().getTitle());
+        assertEquals(ImplementationStatus.YES,
+                ((BpRequirement) firstRequirementsGroupInNetwork.getChildren().iterator().next())
+                        .getImplementationStatus());
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void updateExistingRequirementWithRemovedVersion() throws CommandException {
+        CatalogModel catalogModel = loadCatalogModel();
+        BpRequirementGroup requirementGroup = createRequirementGroup(catalogModel, "R1",
+                "Requirements 1");
+        BpRequirement requirement1 = createBpRequirement(requirementGroup, "R1.1", "ENTFALLEN");
+        requirement1.setSimpleProperty(BpRequirement.PROP_RELEASE, "2019-1");
+
+        ItNetwork itNetwork = createNewBPOrganization();
+        BpRequirementGroup requirementGroupItNetwork = createRequirementGroup(itNetwork, "R1",
+                "Requirements 1");
+        BpRequirement requirement1ItNetwork = createBpRequirement(requirementGroupItNetwork, "R1.1",
+                "Requirement 1");
+        requirement1ItNetwork.setSimpleProperty(BpRequirement.PROP_RELEASE, "2019-0");
+        createLink(requirement1ItNetwork, itNetwork, BpRequirement.REL_BP_REQUIREMENT_BP_ITNETWORK);
+
+        elementDao.flush();
+        elementDao.clear();
+
+        ModelCommand modelCommand = new ModelCommand(
+                Collections.singleton(requirementGroup.getUuid()),
+                Collections.singletonList(itNetwork.getUuid()));
+        modelCommand.setHandleSafeguards(true);
+        modelCommand.setHandleDummySafeguards(false);
+        commandService.executeCommand(modelCommand);
+        elementDao.flush();
+
+        itNetwork = reloadElement(itNetwork);
+        assertEquals(0, itNetwork.getLinksDown().size());
+        Set<CnATreeElement> requirementsGroupsInNetwork = getChildrenWithTypeId(itNetwork,
+                BpRequirementGroup.TYPE_ID);
+        assertEquals(1, requirementsGroupsInNetwork.size());
+        CnATreeElement firstRequirementsGroupInNetwork = requirementsGroupsInNetwork.iterator()
+                .next();
+        assertEquals(requirementGroupItNetwork, firstRequirementsGroupInNetwork);
+        assertEquals(1, firstRequirementsGroupInNetwork.getChildren().size());
+        CnATreeElement firstRequirement = firstRequirementsGroupInNetwork.getChildren().iterator()
+                .next();
+        assertEquals("Requirement 1", firstRequirement.getTitle());
+        assertEquals("bp_requirement_change_type_removed",
+                firstRequirement.getEntity().getRawPropertyValue(BpRequirement.PROP_CHANGE_TYPE));
+
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void doNotUpdateExistingRequirementWithNewerRelease() throws CommandException {
+        CatalogModel catalogModel = loadCatalogModel();
+        BpRequirementGroup requirementGroup = createRequirementGroup(catalogModel, "R1",
+                "Requirements 1");
+        BpRequirement requirement1 = createBpRequirement(requirementGroup, "R1.1",
+                "Requirement 1 (updated)");
+        requirement1.setSimpleProperty(BpRequirement.PROP_RELEASE, "2019-1");
+        ItNetwork itNetwork = createNewBPOrganization();
+        BpRequirementGroup requirementGroupItNetwork = createRequirementGroup(itNetwork, "R1",
+                "Requirements 1");
+        BpRequirement requirement1ItNetwork = createBpRequirement(requirementGroupItNetwork, "R1.1",
+                "Requirement 1");
+        requirement1ItNetwork.setSimpleProperty(BpRequirement.PROP_RELEASE, "2019-5");
+        createLink(requirement1ItNetwork, itNetwork, BpRequirement.REL_BP_REQUIREMENT_BP_ITNETWORK);
+
+        elementDao.flush();
+        elementDao.clear();
+
+        ModelCommand modelCommand = new ModelCommand(
+                Collections.singleton(requirementGroup.getUuid()),
+                Collections.singletonList(itNetwork.getUuid()));
+        modelCommand.setHandleSafeguards(true);
+        modelCommand.setHandleDummySafeguards(false);
+        commandService.executeCommand(modelCommand);
+        elementDao.flush();
+
+        itNetwork = reloadElement(itNetwork);
+        assertEquals(0, itNetwork.getLinksDown().size());
+        Set<CnATreeElement> requirementsGroupsInNetwork = getChildrenWithTypeId(itNetwork,
+                BpRequirementGroup.TYPE_ID);
+        assertEquals(1, requirementsGroupsInNetwork.size());
+        CnATreeElement firstRequirementsGroupInNetwork = requirementsGroupsInNetwork.iterator()
+                .next();
+        assertEquals(requirementGroupItNetwork, firstRequirementsGroupInNetwork);
+        assertEquals(1, firstRequirementsGroupInNetwork.getChildren().size());
+        assertEquals("Requirement 1",
+                firstRequirementsGroupInNetwork.getChildren().iterator().next().getTitle());
+
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void updateExistingSafeguardGroup() throws CommandException {
+        CatalogModel catalogModel = loadCatalogModel();
+        BpRequirementGroup requirementGroup = createRequirementGroup(catalogModel, "R1",
+                "Requirements 1");
+        BpRequirement requirement1 = createBpRequirement(requirementGroup, "R1.1",
+                "Requirement 1 (updated)");
+        SafeguardGroup safeguardGroupCompendium = createSafeguardGroup(catalogModel, "S1",
+                "Renamed Safeguards");
+        safeguardGroupCompendium.setSimpleProperty(SafeguardGroup.PROP_RELEASE, "2019-1");
+        safeguardGroupCompendium.setSimpleProperty(SafeguardGroup.PROP_CHANGE_TYPE,
+                "bp_safeguard_group_change_type_changed");
+        Safeguard safeguard = createSafeguard(safeguardGroupCompendium, "S1.1", "Safeguard");
+        createLink(requirement1, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
+
+        ItNetwork itNetwork = createNewBPOrganization();
+        SafeguardGroup safeguardGroupItNetwork = createSafeguardGroup(itNetwork, "S1",
+                "Safeguards");
+        safeguardGroupItNetwork.setSimpleProperty(SafeguardGroup.PROP_RELEASE, "2019-0");
+
+        elementDao.flush();
+        elementDao.clear();
+
+        ModelCommand modelCommand = new ModelCommand(
+                Collections.singleton(requirementGroup.getUuid()),
+                Collections.singletonList(itNetwork.getUuid()));
+        modelCommand.setHandleSafeguards(true);
+        modelCommand.setHandleDummySafeguards(false);
+        commandService.executeCommand(modelCommand);
+        elementDao.flush();
+
+        itNetwork = reloadElement(itNetwork);
+        assertEquals(0, itNetwork.getLinksDown().size());
+        Set<CnATreeElement> safeguardGroupsInNetwork = getChildrenWithTypeId(itNetwork,
+                SafeguardGroup.TYPE_ID);
+        assertEquals(1, safeguardGroupsInNetwork.size());
+        CnATreeElement firstSafeguardGroupInNetwork = safeguardGroupsInNetwork.iterator().next();
+        assertEquals("2019-1",
+                firstSafeguardGroupInNetwork.getPropertyValue(SafeguardGroup.PROP_RELEASE));
+        assertEquals("bp_safeguard_group_change_type_changed", firstSafeguardGroupInNetwork
+                .getEntity().getRawPropertyValue(SafeguardGroup.PROP_CHANGE_TYPE));
+        assertEquals("Renamed Safeguards", firstSafeguardGroupInNetwork.getEntity()
+                .getRawPropertyValue(SafeguardGroup.PROP_NAME));
+
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void updateExistingThreatWithRemovedVersion() throws CommandException {
+        CatalogModel catalogModel = loadCatalogModel();
+        BpRequirementGroup requirementGroup = createRequirementGroup(catalogModel, "R1",
+                "Requirements 1");
+        BpRequirement requirement1 = createBpRequirement(requirementGroup, "R1.1", "Requirement 1");
+        BpThreatGroup threatGroup = createBpThreatGroup(catalogModel, "Threats");
+        BpThreat threat = createThreat(threatGroup, "T1.1", "ENTFALLEN");
+        threat.setSimpleProperty(BpThreat.PROP_RELEASE, "2019-1");
+        threat.setSimpleProperty(BpThreat.PROP_CHANGE_TYPE, BpThreat.PROP_CHANGE_TYPE_REMOVED);
+        threat.setSimpleProperty("bp_threat_change_details", "This threat was removed");
+        createLink(requirement1, threat, BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
+
+        ItNetwork itNetwork = createNewBPOrganization();
+        BpThreatGroup threatGroupItNetwork = createBpThreatGroup(itNetwork, "Threats");
+        BpThreat threat1ItNetwork = createThreat(threatGroupItNetwork, "T1.1", "Threat 1 (RIP)");
+        threat1ItNetwork.setSimpleProperty(BpThreat.PROP_RELEASE, "2019-0");
+        threat1ItNetwork.setSimpleProperty(BpThreat.PROP_CHANGE_TYPE,
+                "bp_threat_change_type_changed");
+        threat1ItNetwork.setSimpleProperty("bp_threat_change_details",
+                "Something important was changed");
+        threat1ItNetwork.setRiskWithoutAdditionalSafeguards("risk1");
+        createLink(threat1ItNetwork, itNetwork, BpThreat.REL_BP_THREAT_BP_ITNETWORK);
+
+        elementDao.flush();
+        elementDao.clear();
+
+        ModelCommand modelCommand = new ModelCommand(
+                Collections.singleton(requirementGroup.getUuid()),
+                Collections.singletonList(itNetwork.getUuid()));
+        modelCommand.setHandleSafeguards(true);
+        modelCommand.setHandleDummySafeguards(false);
+        commandService.executeCommand(modelCommand);
+        elementDao.flush();
+
+        itNetwork = reloadElement(itNetwork);
+        Set<CnALink> linksThreatTargetObject = getLinksWithType(itNetwork,
+                BpThreat.REL_BP_THREAT_BP_ITNETWORK);
+        assertEquals(1, linksThreatTargetObject.size());
+        BpThreat linkedThreat = (BpThreat) linksThreatTargetObject.iterator().next().getDependant();
+        assertEquals("2019-1", linkedThreat.getPropertyValue(BpThreat.PROP_RELEASE));
+        assertEquals("Threat 1 (RIP)", linkedThreat.getTitle());
+        assertEquals("bp_threat_change_type_removed",
+                linkedThreat.getEntity().getRawPropertyValue(BpThreat.PROP_CHANGE_TYPE));
+        assertEquals("This threat was removed",
+                linkedThreat.getEntity().getRawPropertyValue("bp_threat_change_details"));
+        assertEquals("risk1", linkedThreat.getRiskWithoutAdditionalSafeguards());
+
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void doNotCopyRemovedElementIfNotPresentInExistingModule() throws CommandException {
+        CatalogModel catalogModel = loadCatalogModel();
+        BpRequirementGroup requirementGroup = createRequirementGroup(catalogModel, "R1",
+                "Requirements 1");
+        BpRequirement requirement1 = createBpRequirement(requirementGroup, "R1.1", "ENTFALLEN");
+        requirement1.setSimpleProperty(BpRequirement.PROP_RELEASE, "2019-1");
+        ItNetwork itNetwork = createNewBPOrganization();
+        BpRequirementGroup requirementGroupItNetwork = createRequirementGroup(itNetwork, "R1",
+                "Requirements 1");
+
+        elementDao.flush();
+        elementDao.clear();
+
+        ModelCommand modelCommand = new ModelCommand(
+                Collections.singleton(requirementGroup.getUuid()),
+                Collections.singletonList(itNetwork.getUuid()));
+        modelCommand.setHandleSafeguards(true);
+        modelCommand.setHandleDummySafeguards(false);
+        commandService.executeCommand(modelCommand);
+        elementDao.flush();
+
+        itNetwork = reloadElement(itNetwork);
+        assertEquals(0, itNetwork.getLinksDown().size());
+        Set<CnATreeElement> requirementsGroupsInNetwork = getChildrenWithTypeId(itNetwork,
+                BpRequirementGroup.TYPE_ID);
+        assertEquals(1, requirementsGroupsInNetwork.size());
+        CnATreeElement firstRequirementsGroupInNetwork = requirementsGroupsInNetwork.iterator()
+                .next();
+        assertEquals(requirementGroupItNetwork, firstRequirementsGroupInNetwork);
+        assertTrue(firstRequirementsGroupInNetwork.getChildren().isEmpty());
+
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void doNotCopyRemovedElementIfNotPresentInNewModule() throws CommandException {
+        CatalogModel catalogModel = loadCatalogModel();
+        BpRequirementGroup requirementGroup = createRequirementGroup(catalogModel, "R1",
+                "Requirements 1");
+        BpRequirement requirement1 = createBpRequirement(requirementGroup, "R1.1", "ENTFALLEN");
+        requirement1.setSimpleProperty(BpRequirement.PROP_RELEASE, "2019-1");
+        ItNetwork itNetwork = createNewBPOrganization();
+
+        elementDao.flush();
+        elementDao.clear();
+
+        ModelCommand modelCommand = new ModelCommand(
+                Collections.singleton(requirementGroup.getUuid()),
+                Collections.singletonList(itNetwork.getUuid()));
+        modelCommand.setHandleSafeguards(true);
+        modelCommand.setHandleDummySafeguards(false);
+        commandService.executeCommand(modelCommand);
+        elementDao.flush();
+
+        itNetwork = reloadElement(itNetwork);
+        assertEquals(0, itNetwork.getLinksDown().size());
+        Set<CnATreeElement> requirementsGroupsInNetwork = getChildrenWithTypeId(itNetwork,
+                BpRequirementGroup.TYPE_ID);
+        assertEquals(1, requirementsGroupsInNetwork.size());
+        CnATreeElement firstRequirementsGroupInNetwork = requirementsGroupsInNetwork.iterator()
+                .next();
+        assertTrue(firstRequirementsGroupInNetwork.getChildren().isEmpty());
+
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void doNotCopyRemovedGroupIfNotPresentInNewModule() throws CommandException {
+        CatalogModel catalogModel = loadCatalogModel();
+        BpRequirementGroup requirementGroup = createRequirementGroup(catalogModel, "R1",
+                "ENTFALLEN");
+        BpRequirement requirement1 = createBpRequirement(requirementGroup, "R1.1", "ENTFALLEN");
+        requirement1.setSimpleProperty(BpRequirement.PROP_RELEASE, "2019-1");
+        ItNetwork itNetwork = createNewBPOrganization();
+
+        elementDao.flush();
+        elementDao.clear();
+
+        ModelCommand modelCommand = new ModelCommand(
+                Collections.singleton(requirementGroup.getUuid()),
+                Collections.singletonList(itNetwork.getUuid()));
+        modelCommand.setHandleSafeguards(true);
+        modelCommand.setHandleDummySafeguards(false);
+        commandService.executeCommand(modelCommand);
+        elementDao.flush();
+
+        itNetwork = reloadElement(itNetwork);
+        assertEquals(0, itNetwork.getLinksDown().size());
+        Set<CnATreeElement> requirementsGroupsInNetwork = getChildrenWithTypeId(itNetwork,
+                BpRequirementGroup.TYPE_ID);
+        assertTrue(requirementsGroupsInNetwork.isEmpty());
 
     }
 

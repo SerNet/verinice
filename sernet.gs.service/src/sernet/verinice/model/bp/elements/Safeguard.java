@@ -43,10 +43,10 @@ public class Safeguard extends CnATreeElement implements IBpElement, IIdentifiab
 
     public static final String TYPE_ID = "bp_safeguard"; //$NON-NLS-1$
     public static final String PROP_OBJECTBROWSER_DESC = "bp_safeguard_objectbrowser_content"; //$NON-NLS-1$
-    private static final String PROP_NAME = "bp_safeguard_name"; //$NON-NLS-1$
+    public static final String PROP_NAME = "bp_safeguard_name"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_safeguard_id"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_safeguard_tag"; //$NON-NLS-1$
-    private static final String PROP_LAST_CHANGE = "bp_safeguard_last_change"; //$NON-NLS-1$
+    public static final String PROP_LAST_CHANGE = "bp_safeguard_last_change"; //$NON-NLS-1$
     public static final String PROP_CONFIDENTIALITY = "bp_safeguard_value_method_confidentiality";//$NON-NLS-1$
     public static final String PROP_INTEGRITY = "bp_safeguard_value_method_integrity";//$NON-NLS-1$
     public static final String PROP_AVAILABILITY = "bp_safeguard_value_method_availability";//$NON-NLS-1$
