@@ -34,7 +34,6 @@ pipeline {
                     }
                 }
                 buildDescription "${env.GIT_BRANCH} ${env.GIT_COMMIT[0..8]}"
-                sh 'env'
                 sh './verinice-distribution/build.sh clean'
             }
         }
