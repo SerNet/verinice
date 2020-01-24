@@ -68,6 +68,7 @@ public class Safeguard extends CnATreeElement
     public static final String PROP_IMPLEMENTATION_STATUS_YES = "bp_safeguard_implementation_status_yes"; //$NON-NLS-1$
     public static final String PROP_IMPLEMENTATION_STATUS_PARTIALLY = "bp_safeguard_implementation_status_partially"; //$NON-NLS-1$
     public static final String PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE = "bp_safeguard_implementation_status_na"; //$NON-NLS-1$
+    public static final String PROP_RELEASE = "bp_safeguard_release"; //$NON-NLS-1$
 
     private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
     private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {

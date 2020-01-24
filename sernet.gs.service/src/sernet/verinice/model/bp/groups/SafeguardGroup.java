@@ -49,6 +49,8 @@ public class SafeguardGroup extends Group<Safeguard>
 
     public static final String PROP_TAG = "bp_safeguard_group_tag"; //$NON-NLS-1$
 
+    public static final String PROP_RELEASE = "bp_safeguard_group_release"; //$NON-NLS-1$
+
     public static final String[] CHILD_TYPES = new String[] { Safeguard.TYPE_ID };
 
     protected SafeguardGroup() {
