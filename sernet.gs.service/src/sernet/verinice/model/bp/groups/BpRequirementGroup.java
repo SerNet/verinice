@@ -119,7 +119,7 @@ public class BpRequirementGroup extends Group<BpRequirement>
     public String getFullTitle() {
         return joinPrefixAndTitle(getIdentifier(), getTitle());
     }
-    
+
     @Override
     public Collection<String> getTags() {
         return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));

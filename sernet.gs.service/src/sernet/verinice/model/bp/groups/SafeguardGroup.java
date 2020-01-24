@@ -35,26 +35,25 @@ import sernet.verinice.model.iso27k.Group;
  */
 public class SafeguardGroup extends Group<Safeguard>
         implements IBpGroup, IIdentifiableElement, ITaggableElement {
-    
+
     private static final long serialVersionUID = -6689926582876183790L;
-    
+
     public static final String TYPE_ID = "bp_safeguard_group";
-    
+
     @SuppressWarnings("unused")
     private static final String PROP_DESC = "bp_safeguard_group_objectbrowser_content"; //$NON-NLS-1$
 
     private static final String PROP_NAME = "bp_safeguard_group_name"; //$NON-NLS-1$
-    
+
     private static final String PROP_ID = "bp_safeguard_group_id"; //$NON-NLS-1$
 
     public static final String PROP_TAG = "bp_safeguard_group_tag"; //$NON-NLS-1$
 
+    public static final String[] CHILD_TYPES = new String[] { Safeguard.TYPE_ID };
 
-    
-    public static final String[] CHILD_TYPES = new String[] {Safeguard.TYPE_ID};
-    
-    protected SafeguardGroup() {}
-    
+    protected SafeguardGroup() {
+    }
+
     public SafeguardGroup(CnATreeElement parent) {
         super(parent);
         init();
@@ -64,22 +63,22 @@ public class SafeguardGroup extends Group<Safeguard>
     public String getTypeId() {
         return TYPE_ID;
     }
-    
+
     @Override
     public String[] getChildTypes() {
         return CHILD_TYPES;
-    }  
-    
+    }
+
     @Override
     public String getTitle() {
         return getEntity().getPropertyValue(PROP_NAME);
     }
-    
+
     @Override
     public void setTitel(String title) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
     }
-    
+
     @Override
     public String getIdentifier() {
         return getEntity().getPropertyValue(PROP_ID);
