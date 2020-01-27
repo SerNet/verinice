@@ -54,6 +54,7 @@ public class PreferenceConstants {
     public static final String SHOW_GSMISM_DECORATOR = "show_gsmism_decorator"; //$NON-NLS-1$
     public static final String SHOW_SECURITY_LEVEL_DECORATOR = "show_security_level_decorator"; //$NON-NLS-1$
     public static final String SHOW_RISK_ANALYSIS_DECORATOR = "show_risk_analysis_decorator"; //$NON-NLS-1$
+    public static final String SHOW_BP_RISK_ANALYSIS_DECORATOR = "show_bp_risk_analysis_decorator"; //$NON-NLS-1$
     public static final String USE_AUTOMATIC_VALIDATION = "use_automatic_validation"; //$NON-NLS-1$
     public static final String SHOW_REPORT_VALIDATION_WARNING = "show_report_validation_warning"; //$NON-NLS-1$
     public static final String USE_VALIDATION_GUI_HINTS = "use_validation_gui_hints"; //$NON-NLS-1$

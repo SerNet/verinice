@@ -35,6 +35,7 @@ import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.IBpModelListener;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
@@ -177,12 +178,22 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
             getElementManager().elementChanged(child);
             updater.refresh(child);
             String childType = child.getTypeId();
-            if (BpRequirement.TYPE_ID.equals(childType) || Safeguard.TYPE_ID.equals(childType)) {
+            if (BpRequirement.TYPE_ID.equals(childType) || Safeguard.TYPE_ID.equals(childType)
+                    || BpThreat.TYPE_ID.equals(childType)) {
                 RetrieveInfo retrieveInfo = new RetrieveInfo().setParent(true).setProperties(true)
                         .setChildren(true);
                 CnATreeElement parent = Retriever.retrieveElement(child.getParent(), retrieveInfo);
                 updater.refresh(parent);
             }
+            if (BpThreat.TYPE_ID.equals(childType)) {
+                CnATreeElement childReloaded = Retriever.retrieveElement(child,
+                        new RetrieveInfo().setLinksDown(true).setLinksDownProperties(true));
+                for (CnALink link : childReloaded.getLinksDown()) {
+                    CnATreeElement targetObject = link.getDependency();
+                    updater.refresh(targetObject);
+                }
+            }
+
         } catch (Exception e) {
             LOG.error(ERROR_MESSAGE, e);
         }
@@ -252,6 +263,9 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
             requirement = Retriever.retrieveElement(requirement, ri);
             childChanged(requirement);
             EditorUtil.closeEditorForElement(requirement.getUuid());
+        } else if (BpThreat.TYPE_ID.equals(link.getDependant().getTypeId())) {
+            CnATreeElement targetObject = Retriever.checkRetrieveElement(link.getDependency());
+            updater.refresh(targetObject);
         }
     }
 

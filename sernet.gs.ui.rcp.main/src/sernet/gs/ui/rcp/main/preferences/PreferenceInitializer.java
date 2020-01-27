@@ -78,6 +78,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
         store.setDefault(PreferenceConstants.SHOW_GSMISM_DECORATOR, false);
         store.setDefault(PreferenceConstants.SHOW_RISK_ANALYSIS_DECORATOR, false);
+        store.setDefault(PreferenceConstants.SHOW_BP_RISK_ANALYSIS_DECORATOR, false);
 
         store.setDefault(PreferenceConstants.LINK_TO_EDITOR, true);
 

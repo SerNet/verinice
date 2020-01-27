@@ -2638,6 +2638,18 @@
             <objectClass name="sernet.verinice.rcp.linktable.LinkTableEditor"/>
           </enablement>
        </decorator>
+       <decorator
+             adaptable="true"
+             class="sernet.verinice.bp.rcp.risk.ui.RiskDecorator"
+             id="sernet.verinice.bp.rcp.risk.ui.RiskDecorator"
+             label="RiskDecorator"
+             lightweight="true"
+             location="TOP_RIGHT"
+             state="true">
+          <enablement>
+            <objectClass name="sernet.verinice.model.bp.IBpElement"/>
+          </enablement>
+       </decorator>
    </extension>
    <extension
          point="org.eclipse.ui.splashHandlers">

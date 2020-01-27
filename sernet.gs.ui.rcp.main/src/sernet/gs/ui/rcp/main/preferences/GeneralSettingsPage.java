@@ -105,6 +105,12 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage
                 getFieldEditorParent());
         addField(showRiskAnalysisDecorator);
 
+        final BooleanFieldEditor showBpRiskAnalysisDecorator = new BooleanFieldEditor(
+                PreferenceConstants.SHOW_BP_RISK_ANALYSIS_DECORATOR,
+                Messages.getString("GeneralSettingsPage.ShowBpRiskAnalysisDecorator"), //$NON-NLS-1$
+                getFieldEditorParent());
+        addField(showBpRiskAnalysisDecorator);
+
         final BooleanFieldEditor showSecurityLevelDecorator = new BooleanFieldEditor(
                 PreferenceConstants.SHOW_SECURITY_LEVEL_DECORATOR,
                 Messages.getString("GeneralSettingsPage.ShowSecurityLevelDecorator"), //$NON-NLS-1$
