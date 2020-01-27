@@ -44,6 +44,7 @@ import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.elements.ItSystem;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
@@ -388,7 +389,37 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
 
         CnATreeElement requirementReloaded = reloadElement(requirement);
         assertEquals(null, getImplementationStatus(requirementReloaded));
+    }
 
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void resetImplementationStatusWhenRemovingLastSafeguardWhenOtherDownwardLinkPresent()
+            throws CommandException {
+        ItNetwork itNetwork = createNewBPOrganization();
+
+        BpRequirementGroup requirementGroup = createRequirementGroup(itNetwork);
+        BpRequirement requirement = createBpRequirement(requirementGroup);
+        requirement = prepareRequirement(requirement);
+
+        ItSystem itSystem = createElement(itNetwork, ItSystem.class);
+        createLink(requirement, itSystem, BpRequirement.REL_BP_REQUIREMENT_BP_ITSYSTEM);
+
+        SafeguardGroup safeguardGroup = createSafeguardGroup(itNetwork);
+        Safeguard safeguard1 = createSafeguard(safeguardGroup);
+        safeguard1 = updateSafeguard(safeguard1, ImplementationStatus.NO);
+
+        createLink(requirement, safeguard1);
+        assertEquals(ImplementationStatus.NO, getImplementationStatus(requirement));
+        elementDao.flush();
+        elementDao.clear();
+
+        RemoveElement<Safeguard> removeSafeguard = new RemoveElement<>(safeguard1);
+
+        removeSafeguard = commandService.executeCommand(removeSafeguard);
+
+        CnATreeElement requirementReloaded = reloadElement(requirement);
+        assertEquals(null, getImplementationStatus(requirementReloaded));
     }
 
     @Transactional
