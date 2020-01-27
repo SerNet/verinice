@@ -46,6 +46,8 @@ pipeline {
             steps {
                 sh "./verinice-distribution/build.sh verify"
                 archiveArtifacts artifacts: 'sernet.verinice.releng.client.product/target/products/*.zip,sernet.verinice.report.designer.product/target/products/*.zip,sernet.verinice.releng.server.product/target/*.war,sernet.verinice.releng.client.product/target/repository/**', fingerprint: true
+                junit allowEmptyResults: true, testResults: '**/build/reports/**/*.xml'
+                perfReport filterRegex: '', sourceDataFiles: '**/build/reports/TEST*.xml'
             }
         }
         stage('Trigger RCPTT') {
@@ -84,8 +86,6 @@ pipeline {
             recordIssues(tools: [mavenConsole()])
             recordIssues(tools: [java()])
             recordIssues(tools: [taskScanner(highTags: 'FIXME', ignoreCase: true, normalTags: 'TODO', includePattern: '**/*.java, **/*.xml')])
-            junit allowEmptyResults: true, testResults: '**/build/reports/**/*.xml'
-            perfReport filterRegex: '', sourceDataFiles: '**/build/reports/TEST*.xml'
         }
         failure {
             emailext body: '${JELLY_SCRIPT,template="text"}', subject: '$DEFAULT_SUBJECT', to: 'dm@sernet.de, uz@sernet.de, an@sernet.de, fw@sernet.de, ak@sernet.de'
