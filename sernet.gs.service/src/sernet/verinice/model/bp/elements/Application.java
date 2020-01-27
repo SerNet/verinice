@@ -50,6 +50,7 @@ public class Application extends ElementWithChilds
     public static final String PROP_NAME = "bp_application_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_application_tag"; //$NON-NLS-1$
     public static final String PROP_ABBR = "bp_application_abbr"; //$NON-NLS-1$
+    public static final String PROP_RISKANALYSIS_NECESSARY = "bp_application_riskanalysis_necessary"; //$NON-NLS-1$
 
     public static final String[] CHILD_TYPES = new String[] { BpRequirementGroup.TYPE_ID,
             SafeguardGroup.TYPE_ID, BpThreatGroup.TYPE_ID };

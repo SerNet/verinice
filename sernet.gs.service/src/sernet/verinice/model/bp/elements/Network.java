@@ -49,7 +49,8 @@ public class Network extends ElementWithChilds
     public static final String TYPE_ID = "bp_network"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_network_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_network_tag"; //$NON-NLS-1$
-    public static final String PROP_ABBR = "bp_network_abbr"; //$NON-NLS-1$
+    public static final String PROP_ABBR = "bp_network_abbr";
+    public static final String PROP_RISKANALYSIS_NECESSARY = "bp_network_riskanalysis_necessary";//$NON-NLS-1$
 
     public static final String[] CHILD_TYPES = new String[] { BpRequirementGroup.TYPE_ID,
             SafeguardGroup.TYPE_ID, BpThreatGroup.TYPE_ID };

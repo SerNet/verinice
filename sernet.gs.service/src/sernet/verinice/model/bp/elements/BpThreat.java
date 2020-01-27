@@ -60,6 +60,10 @@ public class BpThreat extends CnATreeElement
     public static final String PROP_CHANGE_TYPE = "bp_threat_change_type"; //$NON-NLS-1$
     public static final String PROP_CHANGE_TYPE_REMOVED = "bp_threat_change_type_removed"; //$NON-NLS-1$
     public static final String PROP_CHANGE_DETAILS = "bp_threat_change_details"; //$NON-NLS-1$
+    public static final String PROP_RISK_TREATMENT_OPTION_RISK_REDUCTION = "bp_threat_risk_treatment_option_risk_reduction"; //$NON-NLS-1$
+    public static final String PROP_RISK_TREATMENT_OPTION_TRANSFER_OF_RISK = "bp_threat_risk_treatment_option_transfer_of_risk"; //$NON-NLS-1$
+    public static final String PROP_RISK_TREATMENT_OPTION_RISK_AVOIDANCE = "bp_threat_risk_treatment_option_risk_avoidance"; //$NON-NLS-1$
+    public static final String PROP_RISK_TREATMENT_OPTION_RISK_ACCEPTANCE = "bp_threat_risk_treatment_option_risk_acceptance"; //$NON-NLS-1$
 
     public static final String TYPE_ID = "bp_threat"; //$NON-NLS-1$
 

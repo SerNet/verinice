@@ -50,6 +50,7 @@ public class BusinessProcess extends ElementWithChilds
     public static final String PROP_NAME = "bp_businessprocess_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_businessprocess_tag"; //$NON-NLS-1$
     public static final String PROP_ABBR = "bp_businessprocess_abbr"; //$NON-NLS-1$
+    public static final String PROP_RISKANALYSIS_NECESSARY = "bp_businessprocess_riskanalysis_necessary"; //$NON-NLS-1$
 
     public static final String[] CHILD_TYPES = new String[] { BpRequirementGroup.TYPE_ID,
             SafeguardGroup.TYPE_ID, BpThreatGroup.TYPE_ID };
