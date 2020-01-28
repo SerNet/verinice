@@ -5,6 +5,7 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -230,24 +231,29 @@ public class BpImporter {
 
     }
 
+    /**
+     * Read additional metadata required for the import from the import
+     * directory
+     */
     private static ImportMetadata parseMetadataFiles(File rootDirectory) {
-        Properties implementationOrder = new Properties();
-        Properties modelingHints = new Properties();
+        Map<String, String> implementationOrderByModuleIdentifier = readImplementationOrder(
+                rootDirectory.toPath().resolve("implementation-order.properties"));
+        Map<String, String> modelingHintByModuleIdentifier = readModelingHints(
+                rootDirectory.toPath().resolve("modeling-hints.properties"));
 
-        try (InputStream implementationOrderProperties = Files
-                .newInputStream(rootDirectory.toPath().resolve("implementation-order.properties"));
-                InputStream modelingHintsProperties = Files.newInputStream(
-                        rootDirectory.toPath().resolve("modeling-hints.properties"))) {
-            implementationOrder.load(implementationOrderProperties);
-            modelingHints.load(modelingHintsProperties);
-        } catch (IOException e) {
-            throw new RuntimeException(
-                    "Failed to load additional information from properties files", e);
-        }
+        return new ImportMetadata(implementationOrderByModuleIdentifier,
+                modelingHintByModuleIdentifier);
+    }
 
-        Map<String, String> mapForImplementationOrder = new HashMap<>();
-        Map<String, String> mapForModelingHints = new HashMap<>();
+    /**
+     * Reads the modules' implementation order from the properties file at the
+     * given location. The file contains a mapping from module IDs to
+     * implementation orders, i.e. <code>ISMS.1=R1</code>.
+     */
+    private static Map<String, String> readImplementationOrder(Path implementationOrderProperties) {
+        Properties implementationOrder = loadProperties(implementationOrderProperties);
 
+        Map<String, String> result = new HashMap<>();
         for (Entry<Object, Object> entry : implementationOrder.entrySet()) {
             String moduleIdentifier = (String) entry.getKey();
             validateModuleIdentifier(moduleIdentifier);
@@ -269,34 +275,37 @@ public class BpImporter {
                         + implementationOrderName + "' for module '" + moduleIdentifier + "'"
                         + ", allowed values: R1, R2, R3");
             }
-            String existingMapping = mapForImplementationOrder.put(moduleIdentifier,
-                    implementationOrderPropertyValue);
+            String existingMapping = result.put(moduleIdentifier, implementationOrderPropertyValue);
             if (existingMapping != null) {
                 throw new RuntimeException(
                         "Found duplicate implementation order mapping for module '"
                                 + moduleIdentifier + "'" + ".");
             }
         }
+        return Collections.unmodifiableMap(result);
+    }
 
+    /**
+     * Reads the modules' modeling hints from the properties file at the given
+     * location. The file contains a mapping from module IDs to modeling hint,
+     * i.e.
+     * <code>ISMS.1=Der Baustein ISMS.1 Sicherheitsmanagement ist für den gesamten Informationsverbund einmal anzuwenden.[...]</code>.
+     */
+    private static Map<String, String> readModelingHints(Path modelingHintsProperties) {
+        Properties modelingHints = loadProperties(modelingHintsProperties);
+        Map<String, String> result = new HashMap<>(modelingHints.size());
         for (Entry<Object, Object> entry : modelingHints.entrySet()) {
             String moduleIdentifier = (String) entry.getKey();
             validateModuleIdentifier(moduleIdentifier);
             String modelingHint = (String) entry.getValue();
 
-            String existingMapping = mapForModelingHints.put(moduleIdentifier, modelingHint);
+            String existingMapping = result.put(moduleIdentifier, modelingHint);
             if (existingMapping != null) {
                 throw new RuntimeException("Found duplicate modeling hint mapping for module '"
                         + moduleIdentifier + "'" + ".");
             }
         }
-
-        Map<String, String> implementationOrderByModuleIdentifier = Collections
-                .unmodifiableMap(mapForImplementationOrder);
-        Map<String, String> modelingHintByModuleIdentifier = Collections
-                .unmodifiableMap(mapForModelingHints);
-
-        return new ImportMetadata(implementationOrderByModuleIdentifier,
-                modelingHintByModuleIdentifier);
+        return Collections.unmodifiableMap(result);
     }
 
     private static void validateModuleIdentifier(String moduleIdentifier) {
@@ -310,6 +319,17 @@ public class BpImporter {
             throw new IllegalArgumentException("Illegal system identifier prefix '" + prefix
                     + "' used in module identifier '" + moduleIdentifier + "'.");
         }
+    }
+
+    private static Properties loadProperties(Path propertiesFile) {
+        Properties properties = new Properties();
+        try (InputStream is = Files.newInputStream(propertiesFile)) {
+            properties.load(is);
+        } catch (IOException e) {
+            throw new RuntimeException(
+                    "Failed to load additional information from properties files", e);
+        }
+        return properties;
     }
 
     /**
