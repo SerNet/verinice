@@ -80,7 +80,8 @@ public class BaseProtectionFilterBuilder {
     private static ViewerFilter createSecurityLevelFilter(
             BaseProtectionFilterParameters filterParameters) {
         if (!filterParameters.getSecurityLevels().isEmpty()) {
-            return new SecurityLevelFilter(filterParameters.getSecurityLevels());
+            return new RecursiveTreeFilter(new SecurityLevelFilter(
+                    filterParameters.getSecurityLevels(), filterParameters.isHideEmptyGroups()));
         }
         return null;
     }
@@ -211,13 +212,19 @@ public class BaseProtectionFilterBuilder {
 
     private static final class SecurityLevelFilter extends ViewerFilter {
         private final Collection<SecurityLevel> selectedSecurityLevels;
+        private final boolean hideEmptyGroups;
 
-        SecurityLevelFilter(Collection<SecurityLevel> selectedSecurityLevels) {
+        SecurityLevelFilter(Collection<SecurityLevel> selectedSecurityLevels,
+                boolean hideEmptyGroups) {
             this.selectedSecurityLevels = selectedSecurityLevels;
+            this.hideEmptyGroups = hideEmptyGroups;
         }
 
         @Override
         public boolean select(Viewer viewer, Object parentElement, Object element) {
+            if (!hideEmptyGroups && element instanceof Group || element instanceof ItNetwork) {
+                return true;
+            }
             if (element instanceof Safeguard) {
                 return selectedSecurityLevels.contains(((Safeguard) element).getSecurityLevel());
             }
@@ -225,7 +232,7 @@ public class BaseProtectionFilterBuilder {
                 return selectedSecurityLevels
                         .contains(((BpRequirement) element).getSecurityLevel());
             }
-            return true;
+            return false;
         }
     }
 
