@@ -96,6 +96,10 @@ public class EntityType {
         return types;
     }
 
+    public boolean hasPropertyType(String id) {
+        return getAllPropertyTypes().stream().anyMatch(p -> p.getId().equals(id));
+    }
+
     /**
      * Returns a list with all property types of this entity type including the
      * types which are contained in property groups.

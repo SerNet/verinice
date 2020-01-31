@@ -153,6 +153,10 @@ public class Messages extends NLS {
     public static String AddGroupHandler_document;
     public static String AddGroupHandler_incident;
     public static String AddGroupHandler_record;
+
+    public static String OptionalBooleanDropDown_Yes;
+    public static String OptionalBooleanDropDown_No;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

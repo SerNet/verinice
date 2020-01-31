@@ -18,6 +18,7 @@
 package sernet.verinice.model.common;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -401,6 +402,60 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
     public void setPropertyValue(String typeId, String value) {
         getEntity().setPropertyValue(typeId, value);
+    }
+
+    public boolean hasDynamicProperty(@NonNull String propertyType) {
+        EntityType entityType = getEntityType();
+        return entityType != null
+                && entityType.hasPropertyType(getDynamicPropertyName(propertyType));
+    }
+
+    /**
+     * Gets dynamic (SNCA) string property value or null if property is absent.
+     * 
+     * @param propertyType
+     *            Dynamic property name (without entity type prefix).
+     */
+    public String getDynamicStringProperty(@NonNull String propertyType) {
+        return getEntity().getRawPropertyValue(getDynamicPropertyName(propertyType));
+    }
+
+    /**
+     * Gets dynamic (SNCA) boolean property value.
+     * 
+     * @param propertyType
+     *            Dynamic property name (without entity type prefix).
+     */
+    public Boolean getDynamicBooleanProperty(@NonNull String propertyType) {
+        return getEntity().isFlagged(getDynamicPropertyName(propertyType));
+    }
+
+    /**
+     * Gets dynamic (SNCA) enum property value or null if the value is not a
+     * member of given enum type or the property is absent.
+     * 
+     * @param propertyType
+     *            Dynamic property name (without entity type prefix).
+     * @param enumType
+     *            Enum class of property.
+     */
+    public <T extends Enum<T>> T getDynamicEnumProperty(@NonNull String propertyType,
+            Class<T> enumType) {
+        // The actual value is prefixed with entity type & property type
+        // (entity_type_property_type_value).
+        String prefixedValue = getDynamicStringProperty(propertyType);
+        if (prefixedValue != null) {
+            String isolatedValue = prefixedValue
+                    .substring(getTypeId().length() + propertyType.length() + 2).toUpperCase();
+            try {
+                return Enum.valueOf(enumType, isolatedValue);
+            } catch (IllegalArgumentException ex) {
+                log.warn(MessageFormat.format(
+                        "Dynamic SNCA property {0} on entity type {1} has unexpected value.",
+                        propertyType, getTypeId()), ex);
+            }
+        }
+        return null;
     }
 
     public void setSimpleProperty(String typeId, String value) {
@@ -868,6 +923,10 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
     public boolean isBpPerson() {
         return BpPerson.class.equals(getClass()) || BpPerson.TYPE_ID.equals(getTypeId());
+    }
+
+    private String getDynamicPropertyName(String propertyType) {
+        return getTypeId() + "_" + propertyType;
     }
 
     /**

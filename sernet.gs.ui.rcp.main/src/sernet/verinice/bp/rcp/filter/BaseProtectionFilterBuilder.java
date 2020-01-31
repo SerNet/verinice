@@ -17,10 +17,11 @@
  ******************************************************************************/
 package sernet.verinice.bp.rcp.filter;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -33,6 +34,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElementScopeUtils;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.connect.ITaggableElement;
+import sernet.verinice.model.bp.ChangeType;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.ISecurityLevelProvider;
 import sernet.verinice.model.bp.ImplementationStatus;
@@ -60,13 +62,33 @@ public class BaseProtectionFilterBuilder {
 
     public static @NonNull Collection<ViewerFilter> makeFilters(
             BaseProtectionFilterParameters params, IPreferenceStore prererenceStore) {
-        Collection<ViewerFilter> viewerFilters = new ArrayList<>(7);
-        Optional.ofNullable(createRequirementSafeguardFilter(params)).ifPresent(viewerFilters::add);
-        Optional.ofNullable(createTypeFilter(params)).ifPresent(viewerFilters::add);
-        Optional.ofNullable(createTagFilter(params)).ifPresent(viewerFilters::add);
-        Optional.ofNullable(createHideEmptyGroupsFilter(params)).ifPresent(viewerFilters::add);
-        viewerFilters.add(createProceedingFilter(prererenceStore));
-        return viewerFilters;
+        return Stream.of(createRequirementSafeguardFilter(params), createChangeTypeFilter(params),
+                createReleaseFilter(params), createRiskAnalysisNecessaryFilter(params),
+                createTypeFilter(params), createTagFilter(params),
+                createHideEmptyGroupsFilter(params), createProceedingFilter(prererenceStore))
+                .filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+    private static ViewerFilter createChangeTypeFilter(BaseProtectionFilterParameters params) {
+        if (!params.getChangeTypes().isEmpty()) {
+            return new DynamicEnumPropertyFilter<>("change_type", ChangeType.class,
+                    params.getChangeTypes());
+        }
+        return null;
+    }
+
+    private static ViewerFilter createReleaseFilter(BaseProtectionFilterParameters params) {
+        if (!params.getReleases().isEmpty()) {
+            return new DynamicStringPropertyFilter("release", params.getReleases());
+        }
+        return null;
+    }
+
+    private static ViewerFilter createRiskAnalysisNecessaryFilter(
+            BaseProtectionFilterParameters params) {
+        return params.getRiskAnalysisNecessary()
+                .map(v -> new DynamicBooleanPropertyFilter("riskanalysis_necessary", v))
+                .orElse(null);
     }
 
     public static @NonNull Collection<ViewerFilter> makeFilters(
