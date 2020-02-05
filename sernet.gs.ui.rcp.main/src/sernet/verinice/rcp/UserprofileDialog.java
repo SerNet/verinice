@@ -20,6 +20,7 @@
 package sernet.verinice.rcp;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -52,7 +53,9 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ApplicationRoles;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthService;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IRightsServiceClient;
 import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
@@ -63,7 +66,9 @@ import sernet.verinice.model.auth.OriginType;
 import sernet.verinice.model.auth.Profile;
 import sernet.verinice.model.auth.ProfileRef;
 import sernet.verinice.model.auth.Userprofile;
+import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.service.account.AccountLoader;
+import sernet.verinice.service.commands.LoadVisibleAccounts;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -93,6 +98,7 @@ public class UserprofileDialog extends TitleAreaDialog {
     private ProfileRef selectedProfileRef;
 
     private IRightsServiceClient rightsService;
+    private ICommandService commandService;
 
     public UserprofileDialog(Shell parent) {
         super(parent);
@@ -243,13 +249,9 @@ public class UserprofileDialog extends TitleAreaDialog {
         table.setInput(unselectedProfiles);
 
         Set<String> nameSet = new HashSet<>();
-        for (String username : getRightService().getUsernames()) {
-            if (username != null && !username.isEmpty()) {
-                nameSet.add(username);
-            }
-        }
-
         try {
+            nameSet.addAll(loadUserNames());
+
             boolean isLocalAdmin = getAuthService()
                     .currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
 
@@ -270,6 +272,17 @@ public class UserprofileDialog extends TitleAreaDialog {
         comboModel.addAll(nameSet);
         comboModel.sort();
         comboLogin.setItems(comboModel.getLabelArray());
+    }
+
+    private Collection<String> loadUserNames() throws CommandException {
+        LoadVisibleAccounts command = new LoadVisibleAccounts();
+        command = getCommandService().executeCommand(command);
+        List<Configuration> accountList = command.getAccountList();
+        Set<String> userNames = new HashSet<>();
+        for (Configuration account : accountList) {
+            userNames.add(account.getUser());
+        }
+        return userNames;
     }
 
     private void setUnselected() {
@@ -673,6 +686,13 @@ public class UserprofileDialog extends TitleAreaDialog {
                     .get(VeriniceContext.RIGHTS_SERVICE);
         }
         return rightsService;
+    }
+
+    private ICommandService getCommandService() {
+        if (commandService == null) {
+            commandService = (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
+        }
+        return commandService;
     }
 
     private IAuthService getAuthService() {
