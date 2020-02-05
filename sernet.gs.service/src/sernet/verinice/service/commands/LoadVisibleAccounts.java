@@ -52,7 +52,8 @@ import sernet.verinice.service.account.AccountSearchParameter;
 public class LoadVisibleAccounts extends GenericCommand implements IAuthAwareCommand {
 
     private static final String HQL = "select p.cnaTreeElement.dbId from Permission p where"
-            + " p.cnaTreeElement.objectType in " + "('person','person-iso') and p.role in (:roles)";
+            + " p.cnaTreeElement.objectType in " + "('" + Person.TYPE_ID + "','" + PersonIso.TYPE_ID
+            + "','" + BpPerson.TYPE_ID + "') and p.role in (:roles)";
 
     private transient IAuthService authService;
 
