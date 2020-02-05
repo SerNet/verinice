@@ -42,6 +42,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.KeyMessage;
 import sernet.verinice.model.bp.elements.BpModel;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ITVerbund;
@@ -185,6 +186,9 @@ public class TaskViewDataLoader {
             command = new LoadCnAElementByEntityTypeId(ITVerbund.TYPE_ID_HIBERNATE);
             command = taskView.getCommandService().executeCommand(command);
             taskView.comboModelScope.addAll(command.getElements());
+            command = new LoadCnAElementByEntityTypeId(ItNetwork.TYPE_ID);
+            command = taskView.getCommandService().executeCommand(command);
+            taskView.comboModelScope.addAll(command.getElements());
             taskView.comboModelScope.sort(TaskView.COMPARATOR_CNA_TREE_ELEMENT);
             taskView.comboModelScope.addNoSelectionObject(Messages.TaskView_21);
             TaskView.getDisplay().syncExec(() -> {
@@ -195,7 +199,7 @@ public class TaskViewDataLoader {
         } catch (CommandException e) {
             // exception is not logged here, but in createPartControl
             throw new RuntimeCommandException(
-                    "Error while loading " + "organizations, it-verbunds or audits", e); //$NON-NLS-2$
+                    "Error while loading organizations, it-verbunds, IT networks or audits", e); // $NON-NLS-2$
         }
     }
 
