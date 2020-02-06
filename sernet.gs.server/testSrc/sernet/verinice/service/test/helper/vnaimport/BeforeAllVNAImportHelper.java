@@ -51,8 +51,11 @@ public abstract class BeforeAllVNAImportHelper extends CommandServiceProvider {
 
     @AfterClass
     public static void tearDown() throws CommandException {
-        VNAImportHelper.tearDown(syncCommand, elementDaoStaticRef);
-        syncCommand = null;
+        try {
+            VNAImportHelper.tearDown(syncCommand, elementDaoStaticRef);
+        } finally {
+            syncCommand = null;
+        }
     }
 
     protected abstract String getFilePath();
