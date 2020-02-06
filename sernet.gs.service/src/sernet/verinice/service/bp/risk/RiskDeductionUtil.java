@@ -24,7 +24,6 @@ import org.apache.commons.lang.StringUtils;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.risk.Risk;
-import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -49,9 +48,7 @@ public class RiskDeductionUtil {
                 .getImpactWithoutAdditionalSafeguards();
         final String impactWithAdditionalSafeguards = threat.getImpactWithAdditionalSafeguards();
 
-        RiskConfiguration riskConfiguration = Optional
-                .ofNullable(findRiskConfiguration(threat.getScopeId()))
-                .orElseGet(DefaultRiskConfiguration::getInstance);
+        RiskConfiguration riskConfiguration = findRiskConfiguration(threat.getScopeId());
 
         String riskWithoutSafeguards = calculateRisk(riskConfiguration, frequencyWithoutSafeguards,
                 impactWithoutSafeguards).orElse(null);
@@ -106,7 +103,7 @@ public class RiskDeductionUtil {
     private static RiskConfiguration findRiskConfiguration(Integer scopeId) {
         RiskService riskService = (RiskService) VeriniceContext
                 .get(VeriniceContext.ITBP_RISK_SERVICE);
-        return riskService.findRiskConfiguration(scopeId);
+        return riskService.findRiskConfigurationOrDefault(scopeId);
     }
 
 }

@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
@@ -72,7 +71,6 @@ import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.risk.Frequency;
 import sernet.verinice.model.bp.risk.Impact;
 import sernet.verinice.model.bp.risk.Risk;
-import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
@@ -355,9 +353,7 @@ public class EditBean {
 
     private RiskConfiguration getRiskConfiguration() {
         Integer scopeId = element.getScopeId();
-        RiskConfiguration riskConfiguration = getRiskService().findRiskConfiguration(scopeId);
-        return Optional.ofNullable(riskConfiguration)
-                .orElseGet(DefaultRiskConfiguration::getInstance);
+        return getRiskService().findRiskConfigurationOrDefault(scopeId);
     }
 
     private void checkMassnahmenUmsetzung() {
@@ -658,7 +654,8 @@ public class EditBean {
     }
 
     private boolean protocolIsAllowed(String url) {
-        return StringUtils.isNotEmpty(url) && url.matches("^(((f|ht)tps?)://|ssh:|smb:|mailto:|file:|[a-zA-Z]:|\\\\\\\\|//).*$");
+        return StringUtils.isNotEmpty(url) && url
+                .matches("^(((f|ht)tps?)://|ssh:|smb:|mailto:|file:|[a-zA-Z]:|\\\\\\\\|//).*$");
     }
 
     public void onUrlChange(AjaxBehaviorEvent event) {

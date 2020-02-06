@@ -22,7 +22,6 @@ package sernet.verinice.bpm.rcp;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
@@ -62,7 +61,6 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bp.elements.BpThreat;
-import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.bp.risk.RiskService;
@@ -361,10 +359,7 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
     private RiskConfiguration getRiskConfiguration() {
         RiskService riskService = (RiskService) VeriniceContext
                 .get(VeriniceContext.ITBP_RISK_SERVICE);
-        RiskConfiguration riskConfiguration = riskService
-                .findRiskConfiguration(element.getScopeId());
-        return Optional.ofNullable(riskConfiguration)
-                .orElseGet(DefaultRiskConfiguration::getInstance);
+        return riskService.findRiskConfigurationOrDefault(element.getScopeId());
     }
 
     private String loadTextForReferenceProperty(PropertyType propertyType, String newValue) {

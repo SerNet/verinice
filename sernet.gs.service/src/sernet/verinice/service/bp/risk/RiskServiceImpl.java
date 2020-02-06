@@ -20,11 +20,13 @@ package sernet.verinice.service.bp.risk;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import sernet.gs.service.ServerInitializer;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateContext;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateResult;
@@ -113,6 +115,12 @@ public class RiskServiceImpl implements RiskService {
         return riskConfiguration;
     }
 
+    @Override
+    public RiskConfiguration findRiskConfigurationOrDefault(Integer itNetworkID) {
+        return Optional.ofNullable(findRiskConfiguration(itNetworkID))
+                .orElseGet(DefaultRiskConfiguration::getInstance);
+    }
+
     public RiskServiceMetaDao getMetaDao() {
         return metaDao;
     }
@@ -120,5 +128,4 @@ public class RiskServiceImpl implements RiskService {
     public void setMetaDao(RiskServiceMetaDao metaDao) {
         this.metaDao = metaDao;
     }
-
 }

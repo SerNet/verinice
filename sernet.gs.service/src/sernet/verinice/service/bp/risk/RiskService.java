@@ -41,6 +41,16 @@ public interface RiskService {
      * Return the risk configuration for a given IT network's ID. If there is no
      * explicit configuration for the given network, <code>null</code> is
      * returned.
+     * 
+     * @deprecated Use findRiskConfigurationOrDefault.
      */
+    @Deprecated()
     RiskConfiguration findRiskConfiguration(Integer itNetworkID);
+
+    /**
+     * Return the risk configuration for a given IT network's ID. If there is no
+     * explicit configuration for the given network, a default configuration is
+     * returned.
+     */
+    RiskConfiguration findRiskConfigurationOrDefault(Integer itNetworkID);
 }
