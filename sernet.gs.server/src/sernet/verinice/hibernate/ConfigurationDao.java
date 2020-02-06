@@ -43,7 +43,7 @@ public class ConfigurationDao extends TreeElementDao<Configuration, Serializable
     @Override
     public Configuration merge(Configuration entity) {
         saveAccountGroups(entity.getRoles(false));
-        return (Configuration) super.merge(entity);
+        return super.merge(entity);
     }
 
     @Override
@@ -53,15 +53,12 @@ public class ConfigurationDao extends TreeElementDao<Configuration, Serializable
     }
 
     private void saveAccountGroups(Set<String> accountGroupNames) {
-
         List<AccountGroup> accountGroups = getAccountService().listGroups();
-
         for (AccountGroup aGroup : accountGroups) {
             if (accountGroupNames.contains(aGroup.getName())) {
                 accountGroupNames.remove(aGroup.getName());
             }
         }
-
         accountService.saveAccountGroups(accountGroupNames);
     }
 
@@ -71,7 +68,7 @@ public class ConfigurationDao extends TreeElementDao<Configuration, Serializable
         }
         return accountService;
     }
-    
+
     public static IAccountService createAccountService() {
         return (IAccountService) VeriniceContext.get(VeriniceContext.ACCOUNT_SERVICE);
     }

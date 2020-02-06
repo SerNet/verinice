@@ -52,7 +52,7 @@ public class AccountWizard extends Wizard {
         setWindowTitle(Messages.AccountWizard_0);
     }
 
-    /* (non-Javadoc)
+    /*
      * @see org.eclipse.jface.wizard.Wizard#addPages()
      */
     @Override
@@ -95,13 +95,15 @@ public class AccountWizard extends Wizard {
             notificationPage.setDeadlineWarning(getAccount().isNotificationExpirationEnabled());
             notificationPage.setDeadlineInDays(getAccount().getNotificationExpirationDays());
             auditorNotificationPage.setGlobal(getAccount().isAuditorNotificationGlobal());
-            auditorNotificationPage.setDeadlineWarning(getAccount().isAuditorNotificationExpirationEnabled());
-            auditorNotificationPage.setDeadlineInDays(getAccount().getAuditorNotificationExpirationDays());
+            auditorNotificationPage
+                    .setDeadlineWarning(getAccount().isAuditorNotificationExpirationEnabled());
+            auditorNotificationPage
+                    .setDeadlineInDays(getAccount().getAuditorNotificationExpirationDays());
             profilePage.setLogin(account.getUser());
         } 
     }
 
-    /* (non-Javadoc)
+    /*
      * @see org.eclipse.jface.wizard.Wizard#performFinish()
      */
     @Override
@@ -127,17 +129,17 @@ public class AccountWizard extends Wizard {
         getAccount().setNotificationExpirationDays(notificationPage.getDeadlineInDays());
         
         getAccount().setAuditorNotificationGlobal(auditorNotificationPage.isGlobal());
-        getAccount().setAuditorNotificationExpirationEnabled(auditorNotificationPage.isDeadlineWarning());
+        getAccount().setAuditorNotificationExpirationEnabled(
+                auditorNotificationPage.isDeadlineWarning());
         
-        getAccount().setAuditorNotificationExpirationDays(auditorNotificationPage.getDeadlineInDays());
+        getAccount()
+                .setAuditorNotificationExpirationDays(auditorNotificationPage.getDeadlineInDays());
         
         getAccount().setNotificationLicense(licenseMgmtPage.isSendEmail());
         
         return true;
     }
 
-
-    
     @Override
     public IWizardPage getStartingPage() {
         IWizardPage startingPage = super.getStartingPage();

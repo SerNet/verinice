@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Robert Schuster <r.schuster@tarent.de>.
+ * Copyright (c) 2009 Robert Schuster.
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
  * as published by the Free Software Foundation, either version 3 
@@ -13,7 +13,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
+ *     Robert Schuster - initial API and implementation
  ******************************************************************************/
 package sernet.verinice.service.commands;
 
@@ -31,55 +31,41 @@ import sernet.verinice.model.common.configuration.Configuration;
  * Loads the configuration item of the currently logged in user.
  */
 @SuppressWarnings("serial")
-public class LoadCurrentUserConfiguration extends GenericCommand implements IAuthAwareCommand, INoAccessControl {
+public class LoadCurrentUserConfiguration extends GenericCommand
+        implements IAuthAwareCommand, INoAccessControl {
 
-	private Configuration configuration = null;
-	
-	private transient IAuthService authService;
+    private Configuration configuration = null;
 
-	public LoadCurrentUserConfiguration() {
-	}
+    private transient IAuthService authService;
 
-	public void execute() {
-		String user = authService.getUsername();
-		
-		IBaseDao<Configuration, Serializable> dao = getDaoFactory().getDAO(Configuration.class);
-		List<Configuration> confs = dao.findAll();
-		
-		for (Configuration c : confs)
-		{
-			if (user.equals(c.getUser()))
-			{
-				c.getRoles();
-				
-				configuration = c;
-				
-				return;
-			}
-		}
-		
-		// configuration instance will be null at this point!
-	}
+    public void execute() {
+        String user = authService.getUsername();
 
-	/**
-	 * Returns the {@link Configuration} instance of the currently logged
-	 * in user or <code>null</code> if there is none.
-	 * 
-	 * <p>In such a case the application should forbid any modifications to
-	 * existing items.</p>
-	 *  
-	 * @return
-	 */
-	public Configuration getConfiguration() {
-		return configuration;
-	}
+        IBaseDao<Configuration, Serializable> dao = getDaoFactory().getDAO(Configuration.class);
+        List<Configuration> confs = dao.findAll();
 
-	public IAuthService getAuthService() {
-		return authService;
-	}
+        for (Configuration c : confs) {
+            if (user.equals(c.getUser())) {
+                c.getRoles();
+                configuration = c;
+                return;
+            }
+        }
+    }
 
-	public void setAuthService(IAuthService service) {
-		authService = service;
-	}
+    /**
+     * @return The {@link Configuration} instance of the currently logged in
+     *         user or <code>null</code> if there is none.
+     */
+    public Configuration getConfiguration() {
+        return configuration;
+    }
 
+    public IAuthService getAuthService() {
+        return authService;
+    }
+
+    public void setAuthService(IAuthService service) {
+        authService = service;
+    }
 }

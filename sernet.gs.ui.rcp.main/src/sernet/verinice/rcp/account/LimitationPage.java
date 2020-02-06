@@ -37,42 +37,44 @@ import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
- * Wizard page of wizard {@link AccountWizard}.
+ * Wizard page of wizard {@link AccountWizard} which shows basic account
+ * configuration.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class LimitationPage extends BaseWizardPage {
 
-    private static final Logger LOG = Logger.getLogger(LimitationPage.class);    
+    private static final Logger LOG = Logger.getLogger(LimitationPage.class);
     public static final String PAGE_NAME = "account-wizard-limitation-page"; //$NON-NLS-1$
-     
+
     private Configuration account;
-    
+
     private boolean isAdmin = false;
     private boolean isLocalAdmin = false;
     private boolean isScopeOnly = false;
     private boolean isDesktop = true;
     private boolean isWeb = true;
     private boolean isDeactivated = false;
-    
+
     private Button cbAdmin;
     private Button cbLocalAdmin;
     private Button cbScopeOnly;
     private Button cbDesktop;
     private Button cbWeb;
     private Button cbDeactivated;
-    
+
     protected LimitationPage(Configuration account) {
         super(PAGE_NAME);
         this.account = account;
     }
-    
+
     @Override
     protected void initGui(Composite composite) {
         setTitle(Messages.LimitationPage_1);
         setMessage(Messages.LimitationPage_2);
-        
-        final boolean currentUserIsLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+
+        final boolean currentUserIsLocalAdmin = getAuthService()
+                .currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
 
         cbAdmin = createCheckbox(composite, Messages.LimitationPage_3, isAdmin);
         cbAdmin.setEnabled(!currentUserIsLocalAdmin && !isLocalAdmin);
@@ -83,7 +85,7 @@ public class LimitationPage extends BaseWizardPage {
                 cbLocalAdmin.setEnabled(!isAdmin && !isScopeOnly);
                 configureStandartGroup();
                 changeGroupPage();
-            } 
+            }
         });
         cbLocalAdmin = createCheckbox(composite, Messages.LimitationPage_8, isLocalAdmin);
         cbLocalAdmin.setEnabled(!isAdmin && !isScopeOnly);
@@ -110,31 +112,31 @@ public class LimitationPage extends BaseWizardPage {
                 cbLocalAdmin.setEnabled(!isAdmin && !isScopeOnly);
                 configureStandartGroup();
                 changeGroupPage();
-            } 
+            }
         });
         cbDesktop = createCheckbox(composite, Messages.LimitationPage_5, isDesktop);
         cbDesktop.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isDesktop = cbDesktop.getSelection();
-            } 
+            }
         });
         cbWeb = createCheckbox(composite, Messages.LimitationPage_6, isWeb);
         cbWeb.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isWeb = cbWeb.getSelection();
-            } 
+            }
         });
         cbDeactivated = createCheckbox(composite, Messages.LimitationPage_7, isDeactivated);
         cbDeactivated.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isDeactivated = cbDeactivated.getSelection();
-            } 
+            }
         });
     }
-    
+
     private void changeGroupPage() {
         GroupPage groupPage = (GroupPage) getNextPage();
         Set<String> standartGroupsOfAccount = account.getStandartGroups();
@@ -153,34 +155,33 @@ public class LimitationPage extends BaseWizardPage {
     }
 
     private void configureAdminGroup() {
-        if(isScopeOnly()) {
-            account.addRole(IRightsService.ADMINSCOPEDEFAULTGROUPNAME);   
+        if (isScopeOnly()) {
+            account.addRole(IRightsService.ADMINSCOPEDEFAULTGROUPNAME);
         } else {
-            account.addRole(IRightsService.ADMINDEFAULTGROUPNAME); 
+            account.addRole(IRightsService.ADMINDEFAULTGROUPNAME);
         }
     }
-    
+
     private void configureLocalAdminGroup() {
         account.addRole(IRightsService.ADMINLOCALDEFAULTGROUPNAME);
     }
 
     private void configureUserGroup() {
-        if(isScopeOnly()) {
-            account.addRole(IRightsService.USERSCOPEDEFAULTGROUPNAME);    
+        if (isScopeOnly()) {
+            account.addRole(IRightsService.USERSCOPEDEFAULTGROUPNAME);
         } else {
-            account.addRole(IRightsService.USERDEFAULTGROUPNAME);   
+            account.addRole(IRightsService.USERDEFAULTGROUPNAME);
         }
     }
 
     private void deleteStandartGroups() {
         Set<String> rolesInAccount = account.getRoles(false);
         for (String role : rolesInAccount) {
-            if(isStandardGroup(role)) {
+            if (isStandardGroup(role)) {
                 account.deleteRole(role);
             }
         }
     }
-
 
     private static boolean isStandardGroup(String role) {
         return ArrayUtils.contains(STANDARD_GROUPS, role);
@@ -188,11 +189,9 @@ public class LimitationPage extends BaseWizardPage {
 
     @Override
     protected void initData() throws Exception {
+        // No data needs to be loaded
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
-     */
     @Override
     public boolean isPageComplete() {
         boolean complete = true;

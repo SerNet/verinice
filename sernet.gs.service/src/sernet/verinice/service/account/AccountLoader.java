@@ -42,45 +42,45 @@ import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
 
 /**
- * Helper class to account data
+ * Helper class for loading account data.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public final class AccountLoader {
-    
+
     private static final Logger log = Logger.getLogger(AccountLoader.class);
- 
+
     private static final NumericStringComparator NSC = new NumericStringComparator();
-    
-    private AccountLoader() {        
+
+    private AccountLoader() {
     }
-      
+
     public static List<String> loadLoginAndGroupNames() {
         List<String> accountGroups = getAccountService().listGroupNames();
         Set<String> accounts = getAccountService().listAccounts();
         accountGroups.addAll(accounts);
         Collections.sort(accountGroups, NSC);
         return accountGroups;
-    } 
-    
+    }
+
     public static List<String> loadLoginNames() {
-        List<String> accounts = new LinkedList<String>(getAccountService().listAccounts());
+        List<String> accounts = new LinkedList<>(getAccountService().listAccounts());
         Collections.sort(accounts, NSC);
         return accounts;
-    } 
-    
+    }
+
     public static List<String> loadGroupNames() {
         List<String> accountGroups = getAccountService().listGroupNames();
         Collections.sort(accountGroups, NSC);
         return accountGroups;
     }
-    
+
     public static List<Configuration> loadAccounts() {
         return getAccountService().findAccounts(AccountSearchParameter.newInstance());
-    } 
-    
+    }
+
     public static Set<String> loadCurrentUserGroups() {
-        Set<String> userRoles = new HashSet<String>();
+        Set<String> userRoles = new HashSet<>();
         try {
             LoadCurrentUserConfiguration lcuc = new LoadCurrentUserConfiguration();
             lcuc = getCommandService().executeCommand(lcuc);
@@ -96,7 +96,7 @@ public final class AccountLoader {
     }
 
     public static List<String> loadGroupNamesForLocalAdmin() {
-        List<String> groups = new ArrayList<String>();
+        List<String> groups = new ArrayList<>();
         List<String> groupNames = AccountLoader.loadGroupNames();
 
         for (String groupName : groupNames) {
@@ -121,14 +121,16 @@ public final class AccountLoader {
 
     public static boolean isLocalAdminOwnerOrCreator(String groupName) {
         Set<String> userGroups = AccountLoader.loadCurrentUserGroups();
-        if (IRightsService.ADMINLOCALDEFAULTGROUPNAME.equals(groupName) || userGroups.contains(groupName)) {
+        if (IRightsService.ADMINLOCALDEFAULTGROUPNAME.equals(groupName)
+                || userGroups.contains(groupName)) {
             return true;
         }
 
         List<AccountGroup> accountGroups = getAccountService().listGroups();
         String username = getAuthService().getUsername();
         for (AccountGroup accountGroup : accountGroups) {
-            if (accountGroup.getName().equals(groupName) && username.equals(accountGroup.getCreator())) {
+            if (accountGroup.getName().equals(groupName)
+                    && username.equals(accountGroup.getCreator())) {
                 return true;
             }
         }
@@ -144,19 +146,21 @@ public final class AccountLoader {
     }
 
     public static boolean isEditAllowed(Configuration account) {
-        final boolean isAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
-        final boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        final boolean isAdmin = getAuthService()
+                .currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
+        final boolean isLocalAdmin = getAuthService()
+                .currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
         return isAdmin || (isLocalAdmin && !account.isAdminUser());
     }
-    
+
     private static IAuthService getAuthService() {
         return (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
     }
-    
+
     public static IAccountService getAccountService() {
         return (IAccountService) VeriniceContext.get(VeriniceContext.ACCOUNT_SERVICE);
     }
-    
+
     public static ICommandService getCommandService() {
         return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
     }

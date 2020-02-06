@@ -53,14 +53,14 @@ import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.service.account.AccountSearchParameterFactory;
 
 /**
- * Service to find, remove and add new accounts and account groups.
- * This service is configured in veriniceserver-common.xml. Remote access is configured in
+ * Service to find, remove and add new accounts and account groups. This service
+ * is configured in veriniceserver-common.xml. Remote access is configured in
  * springDispatcher-servlet.xml.
  * 
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@SuppressWarnings({"serial", "unchecked"})
+@SuppressWarnings({ "serial", "unchecked" })
 public class AccountService implements IAccountService, Serializable {
 
     private static final Logger LOG = Logger.getLogger(AccountService.class);
@@ -76,13 +76,16 @@ public class AccountService implements IAccountService, Serializable {
 
     private IBaseDao<Permission, Serializable> permissionDao;
 
-    private final Set<String> STANDARD_GROUPS = new HashSet<String>(Arrays.asList(new String[] { ADMINDEFAULTGROUPNAME, ADMINLOCALDEFAULTGROUPNAME, ADMINSCOPEDEFAULTGROUPNAME, USERDEFAULTGROUPNAME, USERSCOPEDEFAULTGROUPNAME }));
+    private final Set<String> standardGroups = new HashSet<>(
+            Arrays.asList(ADMINDEFAULTGROUPNAME, ADMINLOCALDEFAULTGROUPNAME,
+                    ADMINSCOPEDEFAULTGROUPNAME, USERDEFAULTGROUPNAME, USERSCOPEDEFAULTGROUPNAME));
 
     @Override
     public List<Configuration> findAccounts(IAccountSearchParameter parameter) {
         ServerInitializer.inheritVeriniceContextState();
         HqlQuery hqlQuery = AccountSearchQueryFactory.createHql(parameter);
-        List<Configuration> resultNoProps = getConfigurationDao().findByQuery(hqlQuery.getHql(), hqlQuery.getParams());
+        List<Configuration> resultNoProps = getConfigurationDao().findByQuery(hqlQuery.getHql(),
+                hqlQuery.getParams());
         List<Configuration> result = initializeProperties(resultNoProps);
         Collections.sort(result);
         return result;
@@ -91,23 +94,24 @@ public class AccountService implements IAccountService, Serializable {
     private List<Configuration> initializeProperties(List<Configuration> resultNoProps) {
         List<Configuration> result;
         if (resultNoProps != null && !resultNoProps.isEmpty()) {
-            Set<Integer> dbIds = new HashSet<Integer>(resultNoProps.size());
+            Set<Integer> dbIds = new HashSet<>(resultNoProps.size());
             for (Configuration configuration : resultNoProps) {
                 dbIds.add(configuration.getDbId());
             }
             result = loadAccounts(dbIds);
-       } else {
-           result = Collections.emptyList(); 
-       }
-       Collections.sort(result);
-       return result;
+        } else {
+            result = Collections.emptyList();
+        }
+        Collections.sort(result);
+        return result;
     }
 
     private List<Configuration> loadAccounts(Set<Integer> dbIds) {
         HqlQuery hqlQuery = AccountSearchQueryFactory.createRetrieveHql(dbIds);
         hqlQuery.setNames(new String[] { "dbIds" });
-        Set<Configuration> set = new HashSet<Configuration>(getConfigurationDao().findByQuery(hqlQuery.getHql(), hqlQuery.getNames(), hqlQuery.getParams()));
-        return new ArrayList<Configuration>(set);
+        Set<Configuration> set = new HashSet<>(getConfigurationDao().findByQuery(hqlQuery.getHql(),
+                hqlQuery.getNames(), hqlQuery.getParams()));
+        return new ArrayList<>(set);
     }
 
     @Override
@@ -119,7 +123,7 @@ public class AccountService implements IAccountService, Serializable {
         // its cached role map. This is done here.
         getCommandService().discardUserData();
     }
-    
+
     @Override
     public void deactivate(Configuration account) {
         ServerInitializer.inheritVeriniceContextState();
@@ -137,29 +141,23 @@ public class AccountService implements IAccountService, Serializable {
         if (!existStandardGroups()) {
             createStandardGroups();
         }
-
         return getAccountGroupDao().findAll();
     }
 
     private boolean existStandardGroups() {
-
         boolean exists = true;
-
         List<String> accountGroupNames = listAccountGroupsViaHQL();
-
-        for (String standardGroup : STANDARD_GROUPS)
+        for (String standardGroup : standardGroups)
             if (!accountGroupNames.contains(standardGroup)) {
                 exists = false;
                 break;
             }
-
         return exists;
     }
 
     private List<String> listAccountGroupsViaHQL() {
         String hqlQuery = "select accountgroup.name from AccountGroup accountgroup";
-        List<String> accountGroupNames = accountGroupDao.findByQuery(hqlQuery, new String[] {});
-        return accountGroupNames;
+        return accountGroupDao.findByQuery(hqlQuery, new String[] {});
     }
 
     @Override
@@ -209,19 +207,16 @@ public class AccountService implements IAccountService, Serializable {
     }
 
     private void validateAccountGroupName(String name) {
-
         if (name == null) {
             String msg = "group name may not be null";
             LOG.error(msg);
             throw new AccountServiceError(msg);
         }
-
         if (ArrayUtils.contains(IRightsService.STANDARD_GROUPS, name)) {
             String msg = "group name may not be null";
             LOG.error(msg);
             throw new AccountServiceError("standard groups may not be deleted");
         }
-
     }
 
     private AccountGroup findGroupByHQL(String name) {
@@ -243,12 +238,10 @@ public class AccountService implements IAccountService, Serializable {
     public Set<String> listAccounts() {
         ServerInitializer.inheritVeriniceContextState();
         List<Configuration> configurations = getAllConfigurations();
-        Set<String> accountNames = new HashSet<String>();
+        Set<String> accountNames = new HashSet<>();
 
-        if (configurations != null) {
-            for (Configuration configuration : configurations) {
-                accountNames.add(configuration.getUser());
-            }
+        for (Configuration configuration : configurations) {
+            accountNames.add(configuration.getUser());
         }
 
         return accountNames;
@@ -265,26 +258,21 @@ public class AccountService implements IAccountService, Serializable {
     @Override
     public Set<String> addRole(Set<String> usernames, String role) {
         ServerInitializer.inheritVeriniceContextState();
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         for (Configuration account : extractConfiguration(usernames, getAllConfigurations())) {
-
             if (!isRoleSet(role, account)) {
                 try {
-
                     account.addRole(role);
                     getConfigurationDao().merge(account);
-
                     result.add(account.getUser());
-
                 } catch (Exception ex) {
-                    LOG.error(String.format("adding role %s for user %s failed: %s", role, account.getUser(), ex.getLocalizedMessage()), ex);
+                    LOG.error(String.format("adding role %s for user %s failed: %s", role,
+                            account.getUser(), ex.getLocalizedMessage()), ex);
                 }
             }
         }
-
         configurationService.discardUserData();
         rightsServerHandler.discardData();
-
         return result;
     }
 
@@ -295,21 +283,17 @@ public class AccountService implements IAccountService, Serializable {
     @Override
     public Set<String> deleteRole(Set<String> usernames, String role) {
         ServerInitializer.inheritVeriniceContextState();
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         for (Configuration account : extractConfiguration(usernames, getAllConfigurations())) {
-
             try {
-
                 account.deleteRole(role);
                 getConfigurationDao().merge(account);
-
                 result.add(account.getUser());
-
             } catch (Exception ex) {
-                LOG.error(String.format("deleting role %s for user %s failed: %s", role, account.getUser(), ex.getLocalizedMessage()), ex);
+                LOG.error(String.format("deleting role %s for user %s failed: %s", role,
+                        account.getUser(), ex.getLocalizedMessage()), ex);
             }
         }
-
         configurationService.discardUserData();
         rightsServerHandler.discardData();
         return result;
@@ -325,7 +309,7 @@ public class AccountService implements IAccountService, Serializable {
     }
 
     @Override
-    public void updatePermissions(String newRole, String oldRole){
+    public void updatePermissions(String newRole, String oldRole) {
         ServerInitializer.inheritVeriniceContextState();
         String hqlQuery = "update Permission set role = ? where role = ?";
         String[] params = new String[] { newRole, oldRole };
@@ -367,13 +351,15 @@ public class AccountService implements IAccountService, Serializable {
 
     private List<Configuration> getAllConfigurations() {
         HqlQuery hqlQuery = AccountSearchQueryFactory.createRetrieveAllConfigurations();
-        List<Configuration> configurations = getConfigurationDao().findByQuery(hqlQuery.getHql(), new String[] {}, new Object[] {});
+        List<Configuration> configurations = getConfigurationDao().findByQuery(hqlQuery.getHql(),
+                new String[] {}, new Object[] {});
 
-        return configurations == null ? new ArrayList<Configuration>() : configurations;
+        return configurations == null ? new ArrayList<>() : configurations;
     }
 
-    private Set<Configuration> extractConfiguration(Set<String> usernames, List<Configuration> configurations) {
-        Set<Configuration> result = new HashSet<Configuration>();
+    private Set<Configuration> extractConfiguration(Set<String> usernames,
+            List<Configuration> configurations) {
+        Set<Configuration> result = new HashSet<>();
         for (String username : usernames) {
             for (Configuration c : configurations) {
                 if (c.getUser().equals(username)) {
@@ -400,7 +386,7 @@ public class AccountService implements IAccountService, Serializable {
         String[] params = new String[] { groupName };
         List<Long> result = permissionDao.findByQuery(hqlQuery, params);
 
-        if (result != null && result.size() > 0) {
+        if (result != null && !result.isEmpty()) {
             return result.get(0);
         }
 
@@ -410,9 +396,11 @@ public class AccountService implements IAccountService, Serializable {
     @Override
     public Configuration getAccountByName(String name) {
         ServerInitializer.inheritVeriniceContextState();
-        IAccountSearchParameter parameter = AccountSearchParameterFactory.createLoginParameter(name);
+        IAccountSearchParameter parameter = AccountSearchParameterFactory
+                .createLoginParameter(name);
         HqlQuery hqlQuery = AccountSearchQueryFactory.createHql(parameter);
-        List<Configuration> accounts = getConfigurationDao().findByQuery(hqlQuery.getHql(), hqlQuery.params);
+        List<Configuration> accounts = getConfigurationDao().findByQuery(hqlQuery.getHql(),
+                hqlQuery.params);
         accounts = initializeProperties(accounts);
 
         if (accounts != null && !accounts.isEmpty()) {
@@ -425,7 +413,7 @@ public class AccountService implements IAccountService, Serializable {
     @Override
     public Configuration getAccountById(Integer dbId) {
         ServerInitializer.inheritVeriniceContextState();
-        Set<Integer> dbIdSet = new HashSet<Integer>();
+        Set<Integer> dbIdSet = new HashSet<>();
         dbIdSet.add(dbId);
         List<Configuration> result = loadAccounts(dbIdSet);
         if (result.size() > 1) {
@@ -441,10 +429,10 @@ public class AccountService implements IAccountService, Serializable {
     public List<String> listGroupNames() {
         ServerInitializer.inheritVeriniceContextState();
         List<AccountGroup> accountGroups = listGroups();
-        List<String> accountGroupNames = new ArrayList<String>();
+        List<String> accountGroupNames = new ArrayList<>();
 
         if (accountGroups == null) {
-            return new ArrayList<String>(0);
+            return new ArrayList<>(0);
         } else {
             for (AccountGroup accountGroup : accountGroups) {
                 accountGroupNames.add(accountGroup.getName());
@@ -455,15 +443,17 @@ public class AccountService implements IAccountService, Serializable {
 
     public void createStandardGroups() {
 
-        Set<String> alreadyStoredAccountGroups = new HashSet<String>(listAccountGroupsViaHQL());
+        Set<String> alreadyStoredAccountGroups = new HashSet<>(listAccountGroupsViaHQL());
 
-        for (String defaultGroup : STANDARD_GROUPS) {
+        for (String defaultGroup : standardGroups) {
             if (alreadyStoredAccountGroups.contains(defaultGroup))
                 continue;
             try {
                 createAccountGroup(defaultGroup);
             } catch (Exception ex) {
-                String message = String.format("default group %s not added to account group table: %s", defaultGroup, ex.getLocalizedMessage());
+                String message = String.format(
+                        "default group %s not added to account group table: %s", defaultGroup,
+                        ex.getLocalizedMessage());
                 LOG.error(message, ex);
                 throw new RuntimeException(ex);
             }

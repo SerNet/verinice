@@ -35,7 +35,7 @@ interface IAccountGroupViewDataService {
 
     void addAccountGroup(String accountGroupName);
 
-    void loadAccountGroupData();
+    void runLoadDataJob();
 
     String[] saveAccountGroupData(String groupName, String[] accountNames);
 

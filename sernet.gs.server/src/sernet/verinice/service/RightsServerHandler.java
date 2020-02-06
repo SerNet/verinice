@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -42,55 +41,53 @@ import sernet.verinice.model.auth.Userprofile;
 /**
  * @see IRightsServerHandler
  * 
- * This Class is {@ApplicationContextAware} so that it can access the bean context to get 
- * the 'rightsService' and add it self as change listeners to be notified when some user rights
- * are changed. This is done in the init method which is called by spring after the context is created 
- * and fully populated.
+ *      This Class is {@ApplicationContextAware} so that it can access the bean
+ *      context to get the 'rightsService' and add it self as change listeners
+ *      to be notified when some user rights are changed. This is done in the
+ *      init method which is called by spring after the context is created and
+ *      fully populated.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class RightsServerHandler implements IRightsServerHandler, IRightsChangeListener,  ApplicationContextAware {
+public class RightsServerHandler
+        implements IRightsServerHandler, IRightsChangeListener, ApplicationContextAware {
 
     private static final Logger LOG = Logger.getLogger(RightsServerHandler.class);
-    
-    private Map<String,Map<String, Action>> userActionMap;
-    
+
+    private Map<String, Map<String, Action>> userActionMap;
+
     private Map<String, List<Userprofile>> userprofileMap;
-    
+
     private Map<String, Profile> profileMap;
 
     private IRightsService rightsService;
 
     private ApplicationContext appContext;
-    
+
     public RightsServerHandler() {
         super();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IRightsServerHandler#isEnabled(java.lang.String, java.lang.String)
-     */
     @Override
-    public boolean isEnabled(String username, String actionId) {      
-        boolean returnValue = isBlacklist(); 
+    public boolean isEnabled(String username, String actionId) {
+        boolean returnValue = isBlacklist();
         Map<String, Action> actionMap = getUserActionMap().get(username);
-        if(actionMap!=null) {
+        if (actionMap != null) {
             Action action = actionMap.get(actionId);
-            returnValue = action!=null && isWhitelist() || 
-                          action==null && isBlacklist();
+            returnValue = action != null && isWhitelist() || action == null && isBlacklist();
         }
         return returnValue;
     }
-    
-    private Map<String,Map<String, Action>> getUserActionMap() {
-        if(userActionMap==null) {
+
+    private Map<String, Map<String, Action>> getUserActionMap() {
+        if (userActionMap == null) {
             userActionMap = loadUserActionMap();
         }
         return userActionMap;
     }
-    
+
     private Map<String, Map<String, Action>> loadUserActionMap() {
-        userActionMap = new HashMap<String,Map<String, Action>>();
+        userActionMap = new HashMap<>();
         for (String user : getUserprofileMap().keySet()) {
             userActionMap.put(user, loadActionMap(user));
         }
@@ -98,18 +95,18 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
     }
 
     private Map<String, Action> loadActionMap(String username) {
-        HashMap<String, Action> actionMap = new HashMap<String, Action>();
+        HashMap<String, Action> actionMap = new HashMap<>();
         List<Userprofile> userprofileList = getUserprofileMap().get(username);
-        if(userprofileList!=null) {
-            for (Userprofile userprofile : userprofileList) {  
+        if (userprofileList != null) {
+            for (Userprofile userprofile : userprofileList) {
                 List<ProfileRef> profileList = userprofile.getProfileRef();
-                if(profileList!=null) {
+                if (profileList != null) {
                     for (ProfileRef profileRef : profileList) {
                         Profile profileWithActions = getProfileMap().get(profileRef.getName());
-                        if(profileWithActions!=null) {
+                        if (profileWithActions != null) {
                             List<Action> actionList = profileWithActions.getAction();
                             for (Action action : actionList) {
-                                actionMap.put(action.getId(), action);            
+                                actionMap.put(action.getId(), action);
                             }
                         } else {
                             LOG.error("Could not find profile " + profileRef.getName());
@@ -120,9 +117,9 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
         }
         return actionMap;
     }
-    
+
     public Map<String, List<Userprofile>> getUserprofileMap() {
-        if(userprofileMap==null) {
+        if (userprofileMap == null) {
             loadUserprofileMap();
         }
         return userprofileMap;
@@ -130,10 +127,10 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
 
     private Map<String, List<Userprofile>> loadUserprofileMap() {
         List<String> usernameList = rightsService.getUsernames();
-        if(usernameList!=null) {
-            userprofileMap = new HashMap<String, List<Userprofile>>(usernameList.size());
+        if (usernameList != null) {
+            userprofileMap = new HashMap<>(usernameList.size());
             for (String name : usernameList) {
-                if(name!=null) {
+                if (name != null) {
                     userprofileMap.put(name, rightsService.getUserprofile(name));
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("User-profiles loaded for login-name: " + name);
@@ -145,67 +142,57 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
         }
         return userprofileMap;
     }
-    
+
     public Map<String, Profile> getProfileMap() {
-        if(profileMap==null) {
+        if (profileMap == null) {
             loadProfileMap();
         }
         return profileMap;
     }
-    
+
     private Profiles loadProfileMap() {
         Profiles profiles = rightsService.getProfiles();
-        profileMap = new HashMap<String, Profile>();
+        profileMap = new HashMap<>();
         for (Profile profile : profiles.getProfile()) {
             profileMap.put(profile.getName(), profile);
         }
         return profiles;
     }
-    
+
     public boolean isBlacklist() {
         return ConfigurationType.BLACKLIST.equals(rightsService.getConfiguration().getType());
     }
-    
+
     public boolean isWhitelist() {
         return ConfigurationType.WHITELIST.equals(rightsService.getConfiguration().getType());
     }
 
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IRightsChangeListener#configurationChanged(sernet.verinice.model.auth.Auth)
-     */
     @Override
     public void configurationChanged(Auth auth) {
-        discardData();       
+        discardData();
     }
 
-   
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IRightsServerHandler#discardData()
-     */
     @Override
     public void discardData() {
-        profileMap=null;
-        userActionMap=null;
-        userprofileMap=null;
+        profileMap = null;
+        userActionMap = null;
+        userprofileMap = null;
     }
-    
-    /* (non-Javadoc)
-     * @see java.lang.Object#finalize()
-     */
+
     @Override
     protected void finalize() throws Throwable {
         rightsService.removeChangeListener(this);
         super.finalize();
     }
-    
+
     /**
-     * The init method is called by the spring framework after the application context is completely bootstraped.
+     * The init method is called by the spring framework after the application
+     * context is completely bootstraped.
      */
-    public void init(){
+    public void init() {
         registerIRightsService();
     }
-    
+
     /**
      * Initialize the rightservice and register as change listener.
      */
@@ -217,7 +204,7 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(ApplicationContext applicationContext) {
         appContext = applicationContext;
     }
 }

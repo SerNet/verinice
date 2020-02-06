@@ -144,11 +144,6 @@ public class AccountView extends RightsEnabledView {
         initCombos();
     }
 
-    /*
-     * @see
-     * sernet.verinice.rcp.RightsEnabledView#createPartControl(org.eclipse.swt.
-     * widgets.Composite)
-     */
     @Override
     public void createPartControl(Composite parent) {
         super.createPartControl(parent);
@@ -756,17 +751,11 @@ public class AccountView extends RightsEnabledView {
         return display;
     }
 
-    /*
-     * @see sernet.verinice.rcp.RightsEnabledView#getRightID()
-     */
     @Override
     public String getRightID() {
         return ActionRightIDs.ACCOUNTSETTINGS;
     }
 
-    /*
-     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
-     */
     @Override
     public String getViewId() {
         return ID;

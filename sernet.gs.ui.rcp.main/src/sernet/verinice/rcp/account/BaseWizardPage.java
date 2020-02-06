@@ -44,8 +44,11 @@ public abstract class BaseWizardPage extends WizardPage {
         super(pageName);
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
+     * widgets.Composite)
      */
     @Override
     public void createControl(Composite parent) {
@@ -57,7 +60,7 @@ public abstract class BaseWizardPage extends WizardPage {
             // Required to avoid an error in the system
             setControl(composite);
             setPageComplete(false);
-        } catch(Exception e) {
+        } catch (Exception e) {
             LOG.error("Error while opening person page.", e);
         }
     }
@@ -72,7 +75,7 @@ public abstract class BaseWizardPage extends WizardPage {
         GridLayout layout = new GridLayout(1, true);
         layout.marginWidth = marginWidth;
         composite.setLayout(layout);
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true,true);
+        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         composite.setLayoutData(gd);
         return composite;
     }
@@ -114,7 +117,7 @@ public abstract class BaseWizardPage extends WizardPage {
     }
     
     protected void setText(Text text, String s) {
-        if(s!=null) {
+        if (s != null) {
             text.setText(s);
         }   
     }
