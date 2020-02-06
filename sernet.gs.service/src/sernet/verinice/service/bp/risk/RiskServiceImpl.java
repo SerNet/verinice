@@ -17,15 +17,24 @@
  ******************************************************************************/
 package sernet.verinice.service.bp.risk;
 
+import java.text.MessageFormat;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.eclipse.jdt.annotation.NonNull;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.ServerInitializer;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.risk.Risk;
 import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateContext;
@@ -102,6 +111,15 @@ public class RiskServiceImpl implements RiskService {
     }
 
     @Override
+    public List<String> findAllRiskLabels() {
+        cacheAllConfigurations();
+        return riskConfigurationCache.values().stream()
+                .map(rc -> rc != null ? rc : DefaultRiskConfiguration.getInstance())
+                .flatMap(rc -> rc.getRisks().stream()).sorted(Comparator.comparing(Risk::getId))
+                .map(Risk::getLabel).distinct().collect(Collectors.toList());
+    }
+
+    @Override
     public RiskConfiguration findRiskConfiguration(Integer itNetworkID) {
         RiskConfiguration riskConfiguration = riskConfigurationCache.get(itNetworkID);
         if (riskConfiguration == null
@@ -121,11 +139,32 @@ public class RiskServiceImpl implements RiskService {
                 .orElseGet(DefaultRiskConfiguration::getInstance);
     }
 
+    @Override
+    public Risk getRisk(@NonNull String riskId, @NonNull Integer networkId) {
+        return findRiskConfigurationOrDefault(networkId).getRisks().stream()
+                .filter(r -> r.getId().equals(riskId)).findFirst()
+                .orElseThrow(() -> new RuntimeException(MessageFormat
+                        .format("Risk {0} not found in network {1}", riskId, networkId)));
+    }
+
     public RiskServiceMetaDao getMetaDao() {
         return metaDao;
     }
 
     public void setMetaDao(RiskServiceMetaDao metaDao) {
         this.metaDao = metaDao;
+    }
+
+    private void cacheAllConfigurations() {
+        DetachedCriteria criteria = DetachedCriteria.forClass(ItNetwork.class);
+        Set<Integer> cachedKeys = riskConfigurationCache.keySet();
+        if (!cachedKeys.isEmpty()) {
+            criteria.add(Restrictions.not(Restrictions.in("dbId", cachedKeys)));
+        }
+        List<ItNetwork> uncachedNetworks = (List<ItNetwork>) getMetaDao().getItNetworkDao()
+                .findByCriteria(criteria);
+        for (ItNetwork network : uncachedNetworks) {
+            riskConfigurationCache.put(network.getDbId(), network.getRiskConfiguration());
+        }
     }
 }

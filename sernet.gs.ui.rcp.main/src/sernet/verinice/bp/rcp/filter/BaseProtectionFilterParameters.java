@@ -32,6 +32,7 @@ import sernet.verinice.model.bp.SecurityLevel;
 public class BaseProtectionFilterParameters {
     private @NonNull Set<ImplementationStatus> implementationStatuses = new HashSet<>();
     private @NonNull Optional<Boolean> riskAnalysisNecessary = Optional.empty();
+    private @NonNull Set<String> riskLabels = new HashSet<>();
     private @NonNull Set<SecurityLevel> securityLevels = new HashSet<>();
     private @NonNull Set<ChangeType> changeTypes = new HashSet<>();
     private @NonNull Set<String> elementTypes = new HashSet<>();
@@ -81,6 +82,8 @@ public class BaseProtectionFilterParameters {
             return false;
         if (!riskAnalysisNecessary.equals(other.riskAnalysisNecessary))
             return false;
+        if (!riskLabels.equals(other.riskLabels))
+            return false;
         if (!securityLevels.equals(other.securityLevels))
             return false;
         if (!tags.equals(other.tags))
@@ -102,6 +105,10 @@ public class BaseProtectionFilterParameters {
 
     public Optional<Boolean> getRiskAnalysisNecessary() {
         return riskAnalysisNecessary;
+    }
+
+    public Set<String> getRiskLabels() {
+        return riskLabels;
     }
 
     public @NonNull Set<SecurityLevel> getSecurityLevels() {
@@ -179,6 +186,11 @@ public class BaseProtectionFilterParameters {
 
         public Builder withRiskAnalysisNecessary(Optional<Boolean> riskanalysisNecessary) {
             parameters.riskAnalysisNecessary = riskanalysisNecessary;
+            return this;
+        }
+
+        public Builder withRiskLabels(Set<String> risks) {
+            parameters.riskLabels = risks;
             return this;
         }
     }

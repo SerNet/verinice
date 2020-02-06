@@ -22,13 +22,16 @@ package sernet.verinice.model.bp.elements;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import sernet.gs.service.StringUtil;
+import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.bp.risk.RiskService;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -282,4 +285,13 @@ public class BpThreat extends CnATreeElement
 
     }
 
+    public String getRiskLabel() {
+        String riskId = Optional.ofNullable(getRiskWithAdditionalSafeguards())
+                .orElseGet(this::getRiskWithoutAdditionalSafeguards);
+        if (riskId != null) {
+            return ((RiskService) VeriniceContext.get(VeriniceContext.ITBP_RISK_SERVICE))
+                    .getRisk(riskId, getScopeId()).getLabel();
+        }
+        return null;
+    }
 }

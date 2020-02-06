@@ -68,6 +68,7 @@ import sernet.verinice.model.bp.elements.Network;
 import sernet.verinice.model.bp.elements.Room;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.common.ElementFilter;
+import sernet.verinice.service.bp.risk.RiskService;
 import sernet.verinice.service.commands.QueryDynamicPropertyValuesCommand;
 
 /**
@@ -88,6 +89,7 @@ public class BaseProtectionFilterDialog extends Dialog {
     private Set<Button> implementationStatusButtons = new HashSet<>();
     private Set<Button> releaseButtons = new HashSet<>();
     private Set<Button> qualifierButtons = new HashSet<>();
+    private Set<Button> risklabelButtons = new HashSet<>();
 
     private CheckboxTableViewer elementTypeSelector;
 
@@ -138,6 +140,7 @@ public class BaseProtectionFilterDialog extends Dialog {
             throw new RuntimeException("Failed to initialize release filter.", ex);
         }
         addChangeTypeGroup(container);
+        addRiskLabelGroup(container);
         addRiskAnalysisNecessaryGroup(container);
 
         addElementTypesGroup(container);
@@ -235,6 +238,21 @@ public class BaseProtectionFilterDialog extends Dialog {
         boxesComposite.setLayout(layout);
 
         riskAnalysisNecessaryDropDown = new OptionalBooleanDropDown(boxesComposite);
+    }
+
+    private void addRiskLabelGroup(Composite parent) {
+        List<String> choices = getRiskService().findAllRiskLabels();
+
+        Group boxesComposite = new Group(parent, SWT.NONE);
+        boxesComposite.setText(Messages.BaseProtectionFilterDialog_Risk);
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1);
+        boxesComposite.setLayoutData(gridData);
+        GridLayout layout = new GridLayout(choices.size() + 1, false);
+        boxesComposite.setLayout(layout);
+
+        for (final String risk : choices) {
+            risklabelButtons.add(addButton(boxesComposite, risk, risk));
+        }
     }
 
     private Button addButton(Group container, final Object value, String label) {
@@ -345,6 +363,10 @@ public class BaseProtectionFilterDialog extends Dialog {
             boolean isSelected = params.getReleases().contains(button.getData());
             button.setSelection(isSelected);
         }
+        for (Button button : risklabelButtons) {
+            boolean isSelected = params.getRiskLabels().contains(button.getData());
+            button.setSelection(isSelected);
+        }
         riskAnalysisNecessaryDropDown.select(params.getRiskAnalysisNecessary());
         elementTypeSelector.setCheckedElements(
                 params.getElementTypes().toArray(new String[params.getElementTypes().size()]));
@@ -394,6 +416,9 @@ public class BaseProtectionFilterDialog extends Dialog {
 
         Optional<Boolean> riskanalysisNecessary = riskAnalysisNecessaryDropDown.getSelection();
 
+        Set<String> riskLabels = risklabelButtons.stream().filter(b -> b.getSelection())
+                .map(b -> (String) b.getData()).collect(Collectors.toSet());
+
         Set<ChangeType> changeTypes = changeTypeButtons.stream().filter(b -> b.getSelection())
                 .map(b -> (ChangeType) b.getData()).collect(Collectors.toSet());
 
@@ -412,10 +437,15 @@ public class BaseProtectionFilterDialog extends Dialog {
                 .withImplementationStatuses(statuses).withSecurityLevels(levels)
                 .withElementTypes(types).withTags(tags).withChangeTypes(changeTypes)
                 .withReleases(releases).withRiskAnalysisNecessary(riskanalysisNecessary)
+                .withRiskLabels(riskLabels)
                 .withApplyTagFilterToItNetworks(applyTagFilterToItNetworksCheckbox.getSelection())
                 .withHideEmptyGroups(hideEmptyGroupsCheckbox.getSelection()).build();
 
         return super.close();
+    }
+
+    private RiskService getRiskService() {
+        return (RiskService) VeriniceContext.get(VeriniceContext.ITBP_RISK_SERVICE);
     }
 
     private static HUITypeFactory getTypeFactory() {

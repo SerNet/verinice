@@ -30,6 +30,7 @@ public class Messages extends NLS {
     public static String BaseProtectionFilterDialog_Tags;
     public static String BaseProtectionFilterDialog_Qualifier;
     public static String BaseProtectionFilterDialog_Releases;
+    public static String BaseProtectionFilterDialog_Risk;
     public static String BaseProtectionFilterDialog_RiskanalysisNecessary;
     public static String BaseProtectionFilterDialog_Apply_Tag_Filter_To_IT_Networks;
     public static String BaseProtectionFilterDialog_Hide_Empty_Groups;
