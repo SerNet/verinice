@@ -288,7 +288,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         try {
             ReportTemplateMetaData metaData = new ReportTemplateMetaData(
                     FilenameUtils.getName(getSelectedDesginFile()), getReportOutputName(),
-                    getReportOutputFormats(), true, null, allowMultipleRootObjects.getSelection());
+                    getReportOutputFormats(), true, null, allowMultipleRootObjects.getSelection(), getContext());
             getReportService().update(metaData, getLanguage());
         } catch (ReportDepositException e) {
             LOG.error("Error while updating report template file", e); //$NON-NLS-1$
@@ -301,7 +301,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
             byte[] rptDesignFile = FileUtils.readFileToByteArray(new File(getSelectedDesginFile()));
             ReportTemplateMetaData metaData = new ReportTemplateMetaData(
                     FilenameUtils.getName(getSelectedDesginFile()), getReportOutputName(),
-                    getReportOutputFormats(), true, null, allowMultipleRootObjects.getSelection());
+                    getReportOutputFormats(), true, null, allowMultipleRootObjects.getSelection(), getContext());
             getReportService().add(metaData, rptDesignFile, getLanguage());
         } catch (IOException | ReportDepositException e) {
             LOG.error("Error while adding new report template file", e); //$NON-NLS-1$
@@ -340,6 +340,11 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
 
     private String getReportOutputName() {
         return reportName.getText();
+    }
+    
+    private String getContext() {
+        //TODO implement UI later
+        return "";
     }
 
     private OutputFormat[] getReportOutputFormats() {

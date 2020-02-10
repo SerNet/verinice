@@ -176,7 +176,7 @@ public class ReportDepositTest extends CommandServiceProvider {
         ReportTemplateMetaData updatedData = new ReportTemplateMetaData(
                 checkServerLocation(randomTemplate.getFilename()), randomTemplate.getOutputname(),
                 toTest, randomTemplate.isServer(),
-                getCheckSums(randomTemplate.getFilename(), dir.getAbsolutePath()), false);
+                getCheckSums(randomTemplate.getFilename(), dir.getAbsolutePath()), false, randomTemplate.getContext());
 
         depositService.update(updatedData, getLanguage());
         ReportTemplateMetaData storedData = getReportMetaDataFromDeposit(
@@ -186,7 +186,7 @@ public class ReportDepositTest extends CommandServiceProvider {
 
         updatedData = new ReportTemplateMetaData(checkServerLocation(randomTemplate.getFilename()),
                 randomTemplate.getOutputname(), toTest, randomTemplate.isServer(),
-                getCheckSums(randomTemplate.getFilename(), dir.getAbsolutePath()), true);
+                getCheckSums(randomTemplate.getFilename(), dir.getAbsolutePath()), true, randomTemplate.getContext());
         depositService.update(updatedData, getLanguage());
         storedData = getReportMetaDataFromDeposit(
                 checkServerLocation(randomTemplate.getFilename()));

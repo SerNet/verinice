@@ -59,6 +59,7 @@ public interface IReportTemplateService {
     public static final String PROPERTIES_OUTPUTFORMATS = "outputformats";
     public static final String PROPERTIES_OUTPUTNAME = "outputname";
     public static final String PROPERTIES_MULTIPLE_ROOT_OBJECTS = "multiple_root_objects";
+    public static final String PROPERTIES_CONTEXT = "context";
 
     public static final String REPORT_DEPOSIT_CLIENT_LOCAL = "report_templates_local";
     public static final String REPORT_DEPOSIT_CLIENT_REMOTE = "report_templates_remote";

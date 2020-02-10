@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
 
@@ -31,14 +33,19 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
 
     private static final NumericStringComparator NSC = new NumericStringComparator();
 
-    public static final String REPORT_LOCAL_DECORATOR = "(L)";
-    public static final String REPORT_SERVER_DECORATOR = "(S)";
+    public static final String[] CONTEXTS = { "ISM-ISO", "ISM-ISA", "ISM-DS", "ITGS", "ITGS-DS", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+            "ITGS-alt", Messages.ReportTemplateMetaDataUnspecified }; //$NON-NLS-1$
+
+    public static final String REPORT_LOCAL_DECORATOR = "(L)"; //$NON-NLS-1$
+    public static final String REPORT_SERVER_DECORATOR = "(S)"; //$NON-NLS-1$
 
     private String filename;
 
     private OutputFormat[] outputFormat;
 
     private String outputname;
+
+    private String context;
 
     /**
      * contains checksums from the rptdesign file and also from all property
@@ -54,13 +61,14 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
     private boolean multipleRootObjects;
 
     public ReportTemplateMetaData(String filename, String outputname, OutputFormat[] outputFormats,
-            boolean isServer, String[] md5CheckSums, boolean multipleRootObjects) {
+            boolean isServer, String[] md5CheckSums, boolean multipleRootObjects, String context) {
 
         this.filename = filename;
         this.outputname = outputname;
         setOutputFormats(outputFormats);
         this.isServer = isServer;
         this.multipleRootObjects = multipleRootObjects;
+        this.context = context;
 
         if (md5CheckSums != null) {
             this.md5CheckSums = new HashSet<String>(Arrays.asList(md5CheckSums));
@@ -81,6 +89,7 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
         result = prime * result + Arrays.hashCode(outputFormat);
         result = prime * result + ((outputname == null) ? 0 : outputname.hashCode());
         result = prime * result + Boolean.valueOf(multipleRootObjects).hashCode();
+        result = prime * result + getContext().hashCode();
         return result;
     }
 
@@ -147,9 +156,9 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
     public String getDecoratedOutputname() {
         String name;
         if (isServer()) {
-            name = (ReportTemplateMetaData.REPORT_SERVER_DECORATOR + " " + getOutputname());
+            name = (ReportTemplateMetaData.REPORT_SERVER_DECORATOR + " " + getOutputname()); //$NON-NLS-1$
         } else {
-            name = (ReportTemplateMetaData.REPORT_LOCAL_DECORATOR + " " + getOutputname());
+            name = (ReportTemplateMetaData.REPORT_LOCAL_DECORATOR + " " + getOutputname()); //$NON-NLS-1$
         }
         return name;
     }
@@ -181,5 +190,16 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
 
     public void setMultipleRootObject(boolean multipleRootObjects) {
         this.multipleRootObjects = multipleRootObjects;
+    }
+
+    public @NonNull String getContext() {
+        if (context == null) {
+            return ""; //$NON-NLS-1$
+        }
+        return context;
+    }
+
+    public void setContext(String context) {
+        this.context = context;
     }
 }
