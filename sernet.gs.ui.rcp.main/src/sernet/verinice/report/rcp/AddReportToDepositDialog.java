@@ -109,7 +109,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         newShell.setLocation(
                 new Point(cursorLocation.x - SIZE_X / 2, cursorLocation.y - SIZE_Y / 2));
     }
-    
+
     @Override
     protected void createButtonsForButtonBar(Composite parent) {
         super.createButtonsForButtonBar(parent);
@@ -236,7 +236,8 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
 
     private void prepareEditMode() {
         reportName.setText(editTemplate.getOutputname());
-        reportName.addListener(SWT.CHANGED, event -> getButton(IDialogConstants.OK_ID).setEnabled(true));
+        reportName.addListener(SWT.CHANGED,
+                event -> getButton(IDialogConstants.OK_ID).setEnabled(true));
         outputTypePDFCheckbox = checkboxEditMode(outputTypePDFCheckbox, OutputFormat.PDF);
         outputTypeHTMLCheckbox = checkboxEditMode(outputTypeHTMLCheckbox, OutputFormat.HTML);
         outputTypeWordCheckbox = checkboxEditMode(outputTypeWordCheckbox, OutputFormat.DOC);
@@ -251,7 +252,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         allowMultipleRootObjects.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                    getButton(IDialogConstants.OK_ID).setEnabled(true);
+                getButton(IDialogConstants.OK_ID).setEnabled(true);
             }
 
             @Override

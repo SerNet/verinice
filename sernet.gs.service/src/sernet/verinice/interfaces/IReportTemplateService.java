@@ -59,7 +59,7 @@ public interface IReportTemplateService {
     public static final String PROPERTIES_OUTPUTFORMATS = "outputformats";
     public static final String PROPERTIES_OUTPUTNAME = "outputname";
     public static final String PROPERTIES_MULTIPLE_ROOT_OBJECTS = "multiple_root_objects";
-    
+
     public static final String REPORT_DEPOSIT_CLIENT_LOCAL = "report_templates_local";
     public static final String REPORT_DEPOSIT_CLIENT_REMOTE = "report_templates_remote";
 
@@ -67,18 +67,24 @@ public interface IReportTemplateService {
 
     IOutputFormat[] getOutputFormats(OutputFormat[] format);
 
-    public ReportTemplate getReportTemplate(ReportTemplateMetaData metadata, String locale) throws ReportTemplateServiceException;
+    public ReportTemplate getReportTemplate(ReportTemplateMetaData metadata, String locale)
+            throws ReportTemplateServiceException;
 
-    public Set<ReportTemplateMetaData> getServerReportTemplates(String locale) throws ReportTemplateServiceException;
+    public Set<ReportTemplateMetaData> getServerReportTemplates(String locale)
+            throws ReportTemplateServiceException;
 
-    public Set<ReportTemplateMetaData> getReportTemplateMetaData(String[] rptDesignFiles, String locale) throws ReportTemplateServiceException;
+    public Set<ReportTemplateMetaData> getReportTemplateMetaData(String[] rptDesignFiles,
+            String locale) throws ReportTemplateServiceException;
 
-    public Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles, String locale) throws ReportTemplateServiceException;
+    public Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles, String locale)
+            throws ReportTemplateServiceException;
 
-    public Set<ReportTemplateMetaData> getReportTemplates(String locale) throws ReportTemplateServiceException;
+    public Set<ReportTemplateMetaData> getReportTemplates(String locale)
+            throws ReportTemplateServiceException;
 
     public Iterator<File> listPropertiesFiles(String fileName);
 
     @Deprecated
-    ReportTemplateMetaData getMetaData(File rptDesign, String locale) throws ReportTemplateServiceException;
+    ReportTemplateMetaData getMetaData(File rptDesign, String locale)
+            throws ReportTemplateServiceException;
 }

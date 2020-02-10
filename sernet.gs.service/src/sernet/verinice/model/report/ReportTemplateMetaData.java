@@ -30,10 +30,10 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
     private static final long serialVersionUID = 1208760677224489421L;
 
     private static final NumericStringComparator NSC = new NumericStringComparator();
-    
+
     public static final String REPORT_LOCAL_DECORATOR = "(L)";
     public static final String REPORT_SERVER_DECORATOR = "(S)";
-    
+
     private String filename;
 
     private OutputFormat[] outputFormat;
@@ -47,7 +47,7 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
     private Set<String> md5CheckSums;
 
     private boolean isServer;
-    
+
     /**
      * Can this report run with multiple root objects.
      */
@@ -67,7 +67,9 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -82,7 +84,9 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
         return result;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -124,7 +128,7 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
         if (multipleRootObjects != other.multipleRootObjects) {
             return false;
         }
-            
+
         return true;
     }
 
@@ -137,12 +141,12 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
     }
 
     public void setOutputFormats(OutputFormat[] outputFormats) {
-        this.outputFormat = (outputFormats!=null) ? outputFormats.clone() : null;
+        this.outputFormat = (outputFormats != null) ? outputFormats.clone() : null;
     }
-    
+
     public String getDecoratedOutputname() {
         String name;
-        if(isServer()){
+        if (isServer()) {
             name = (ReportTemplateMetaData.REPORT_SERVER_DECORATOR + " " + getOutputname());
         } else {
             name = (ReportTemplateMetaData.REPORT_LOCAL_DECORATOR + " " + getOutputname());
