@@ -37,6 +37,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -63,6 +64,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     private static final Logger LOG = Logger.getLogger(AddReportToDepositDialog.class);
 
     private Text reportName;
+    private Combo reportContextCombo;
 
     private Button outputTypePDFCheckbox;
     private Button outputTypeHTMLCheckbox;
@@ -148,6 +150,36 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         reportNameTextGd.horizontalSpan = 2;
         reportName.setLayoutData(reportNameTextGd);
 
+        Label reportContextLabel = new Label(dialogContent, SWT.NONE);
+        reportContextLabel.setText(Messages.ReportMetaDataContext);
+
+        GridData reportContextLabelGd = new GridData();
+        reportContextLabelGd.horizontalAlignment = SWT.FILL;
+        reportContextLabelGd.verticalAlignment = SWT.CENTER;
+        reportContextLabelGd.grabExcessHorizontalSpace = false;
+        reportContextLabelGd.horizontalSpan = 1;
+        reportContextLabel.setLayoutData(reportNameLabelGd);
+        
+        reportContextCombo = new Combo(dialogContent,SWT.DROP_DOWN | SWT.READ_ONLY);
+        reportContextCombo.setItems(ReportTemplateMetaData.CONTEXTS);
+        GridData reportContextGd = new GridData();
+        reportContextGd.horizontalAlignment = SWT.FILL;
+        reportContextGd.verticalAlignment = SWT.TOP;
+        reportContextGd.grabExcessHorizontalSpace = true;
+        reportContextGd.horizontalSpan = 2;
+        reportContextCombo.setLayoutData(reportContextGd);
+        reportContextCombo.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                getButton(IDialogConstants.OK_ID).setEnabled(true);
+            }
+
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }
+        });
+        
         allowMultipleRootObjects = new Button(dialogContent, SWT.CHECK);
         allowMultipleRootObjects.setText(Messages.ReportDepositView_25);
         GridData allowMultipleRootObjectsGd = new GridData();
@@ -247,7 +279,6 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         reportTemplateText.setText(editTemplate.getFilename());
         reportTemplateText.setEnabled(false);
         reportTemplateSelectButton.setEnabled(false);
-        reportTemplateSelectButton.setEnabled(false);
         allowMultipleRootObjects.setSelection(editTemplate.isMultipleRootObjects());
         allowMultipleRootObjects.addSelectionListener(new SelectionListener() {
             @Override
@@ -260,6 +291,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
                 widgetSelected(e);
             }
         });
+        reportContextCombo.setText(editTemplate.getContext());
     }
 
     private Button checkboxEditMode(Button checkbox, OutputFormat format) {
@@ -288,7 +320,8 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         try {
             ReportTemplateMetaData metaData = new ReportTemplateMetaData(
                     FilenameUtils.getName(getSelectedDesginFile()), getReportOutputName(),
-                    getReportOutputFormats(), true, null, allowMultipleRootObjects.getSelection(), getContext());
+                    getReportOutputFormats(), true, null, allowMultipleRootObjects.getSelection(),
+                    getContext());
             getReportService().update(metaData, getLanguage());
         } catch (ReportDepositException e) {
             LOG.error("Error while updating report template file", e); //$NON-NLS-1$
@@ -301,7 +334,8 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
             byte[] rptDesignFile = FileUtils.readFileToByteArray(new File(getSelectedDesginFile()));
             ReportTemplateMetaData metaData = new ReportTemplateMetaData(
                     FilenameUtils.getName(getSelectedDesginFile()), getReportOutputName(),
-                    getReportOutputFormats(), true, null, allowMultipleRootObjects.getSelection(), getContext());
+                    getReportOutputFormats(), true, null, allowMultipleRootObjects.getSelection(),
+                    getContext());
             getReportService().add(metaData, rptDesignFile, getLanguage());
         } catch (IOException | ReportDepositException e) {
             LOG.error("Error while adding new report template file", e); //$NON-NLS-1$
@@ -341,10 +375,9 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     private String getReportOutputName() {
         return reportName.getText();
     }
-    
+
     private String getContext() {
-        //TODO implement UI later
-        return "";
+        return reportContextCombo.getText();
     }
 
     private OutputFormat[] getReportOutputFormats() {

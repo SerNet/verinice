@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
 
+import javax.swing.text.TabExpander;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
@@ -116,10 +118,12 @@ public class ReportDepositView extends RightsEnabledView {
 
     private void createTable(Composite parent) {
         TableColumn reportNameColumn;
+        TableColumn contextColumn;
         TableColumn outputFormatColumn;
         TableColumn templateColumn;
 
         final int reportNameWidth = 200;
+        final int contextWidth = 100;
         final int outputFormatWidth = 200;
         final int templateWidth = 100;
 
@@ -134,16 +138,21 @@ public class ReportDepositView extends RightsEnabledView {
         reportNameColumn.setText(Messages.ReportDepositView_1);
         reportNameColumn.addSelectionListener(new SortSelectionAdapter(this, reportNameColumn, 0));
 
+        contextColumn = new TableColumn(table, SWT.LEFT);
+        contextColumn.setWidth(contextWidth);
+        contextColumn.setText(Messages.ReportMetaDataContext);
+        contextColumn.addSelectionListener(new SortSelectionAdapter(this, contextColumn, 1));
+        
         outputFormatColumn = new TableColumn(table, SWT.LEFT);
         outputFormatColumn.setWidth(outputFormatWidth);
         outputFormatColumn.setText(Messages.ReportDepositView_2);
         outputFormatColumn
-                .addSelectionListener(new SortSelectionAdapter(this, outputFormatColumn, 1));
+                .addSelectionListener(new SortSelectionAdapter(this, outputFormatColumn, 2));
 
         templateColumn = new TableColumn(table, SWT.LEFT);
         templateColumn.setWidth(templateWidth);
         templateColumn.setText(Messages.ReportDepositView_3);
-        templateColumn.addSelectionListener(new SortSelectionAdapter(this, templateColumn, 2));
+        templateColumn.addSelectionListener(new SortSelectionAdapter(this, templateColumn, 3));
 
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
@@ -301,6 +310,8 @@ public class ReportDepositView extends RightsEnabledView {
                 case 0:
                     return data.getOutputname(); // $NON-NLS-1$
                 case 1:
+                    return data.getContext();
+                case 2:
                     StringBuilder sb = new StringBuilder();
                     OutputFormat[] formats = data.getOutputFormats();
                     for (int i = 0; i < formats.length; i++) {
@@ -310,7 +321,7 @@ public class ReportDepositView extends RightsEnabledView {
                         }
                     }
                     return sb.toString(); // $NON-NLS-1$
-                case 2:
+                case 3:
                     return data.getFilename(); // $NON-NLS-1$
                 default:
                     return null;
@@ -400,6 +411,9 @@ public class ReportDepositView extends RightsEnabledView {
                             data2.getDecoratedOutputname());
                     break;
                 case 1:
+                    rc = data1.getContext().compareTo(data2.getContext());
+                    break;
+                case 2:
                     // implement a sorted list here that needs to be compared
                     String s1 = getSortedOutputFormatsString(data1.getOutputFormats());
                     String s2 = getSortedOutputFormatsString(data2.getOutputFormats());
@@ -407,7 +421,7 @@ public class ReportDepositView extends RightsEnabledView {
                         rc = s1.compareTo(s2);
                     }
                     break;
-                case 2:
+                case 3:
                     rc = comporeToLowerCase(data1.getFilename(), data2.getFilename());
                     break;
                 default:
