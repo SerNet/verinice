@@ -8565,7 +8565,7 @@ Wurden bereits weitere Stellen informiert?
                     id="loeschfrist_dokument"
                     isURL="true" />
         </huipropertygroup>
-	     <huipropertygroup id="process_dsfa_needed_group" name="Datenschutzfolgenabschätzung (DSFA) erfoderlich" tags="Privacy">
+	     <huipropertygroup id="process_dsfa_needed_group" name="Datenschutz-Folgenabschätzung (DSFA) erfoderlich" tags="Privacy">
 	      <huiproperty id="process_is_dsgvo_blacklisted" inputtype="singleoption" max="1" name="Verarbeitung ist auf Negativliste geführt" tags="Privacy">
 	        <option id="process_is_dsgvo_blacklisted_yes" name="Ja" value="0"/>
 	        <option id="process_is_dsgvo_blacklisted_no" name="Nein" value="1"/>
@@ -8641,7 +8641,7 @@ Wurden bereits weitere Stellen informiert?
 	    </huipropertygroup>
         <huipropertygroup tags="Privacy" id="process_stellungnahmedsb_group" name="Stellungnahme DSB">
             <depends option="process_privacy_yesno" value="1" />
-            <huiproperty tags="Privacy" id="process_stellungnahmedsb_vorpruefung" name="Datenschutzfolgeabschätzung erforderlich?" inputtype="singleoption">
+            <huiproperty tags="Privacy" id="process_stellungnahmedsb_vorpruefung" name="Datenschutz-Folgenabschätzung erforderlich?" inputtype="singleoption">
                 <option id="process_stellungnahmedsb_vorpruefung_1" name="Ja" />
                 <option id="process_stellungnahmedsb_vorpruefung_2" name="Nein" />
             </huiproperty>
@@ -10151,7 +10151,7 @@ Wurden bereits weitere Stellen informiert?
                     id="bp_businessprocess_loeschfrist_dokument"
                     isURL="true" />
         </huipropertygroup>
-	    <huipropertygroup id="bp_businessprocess_dsfa_needed_group" name="Datenschutzfolgenabschätzung (DSFA) erfoderlich" tags="Privacy">
+	    <huipropertygroup id="bp_businessprocess_dsfa_needed_group" name="Datenschutz-Folgenabschätzung (DSFA) erfoderlich" tags="Privacy">
 	      <huiproperty id="bp_businessprocess_is_dsgvo_blacklisted" inputtype="singleoption" max="1" name="Verarbeitung ist auf Negativliste geführt" tags="Privacy">
 	        <option id="bp_businessprocess_is_dsgvo_blacklisted_yes" name="Ja" value="0"/>
 	        <option id="bp_businessprocess_is_dsgvo_blacklisted_no" name="Nein" value="1"/>
@@ -10227,7 +10227,7 @@ Wurden bereits weitere Stellen informiert?
 	    </huipropertygroup>
         <huipropertygroup tags="Privacy" id="bp_businessprocess_stellungnahmedsb_group" name="Stellungnahme DSB">
             <depends option="bp_businessprocess_privacy_yesno" value="1" />
-            <huiproperty tags="Privacy" id="bp_businessprocess_stellungnahmedsb_vorpruefung" name="Datenschutzfolgeabschätzung erforderlich?" inputtype="singleoption">
+            <huiproperty tags="Privacy" id="bp_businessprocess_stellungnahmedsb_vorpruefung" name="Datenschutz-Folgenabschätzung erforderlich?" inputtype="singleoption">
                 <option id="bp_businessprocess_stellungnahmedsb_vorpruefung_1" name="Ja" />
                 <option id="bp_businessprocess_stellungnahmedsb_vorpruefung_2" name="Nein" />
             </huiproperty>
