@@ -17,15 +17,18 @@
  ******************************************************************************/
 package sernet.verinice.rcp.bp;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.model.bp.DefaultBpModelListener;
 import sernet.verinice.model.bp.IBpModelListener;
 import sernet.verinice.model.bp.ISecurityLevelProvider;
@@ -45,20 +48,32 @@ public class SecurityLevelDecorator extends LabelProvider implements ILightweigh
     private static final String IMAGE_BASIC = "overlays/sec_level_b.png";
     private static final String IMAGE_STANDARD = "overlays/sec_level_s.png";
     private static final String IMAGE_HIGH = "overlays/sec_level_e.png";
+    private boolean enabled;
 
     public SecurityLevelDecorator() {
         CnAElementFactory.getInstance().addLoadListener(new DefaultModelLoadListener() {
+
             @Override
             public void loaded(BpModel model) {
                 super.loaded(model);
                 model.addModITBOModelListener(getModelListener());
+                IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+                enabled = preferenceStore
+                        .getBoolean(PreferenceConstants.SHOW_SECURITY_LEVEL_DECORATOR);
+                preferenceStore.addPropertyChangeListener(event -> {
+                    if (event.getProperty()
+                            .equals(PreferenceConstants.SHOW_SECURITY_LEVEL_DECORATOR)) {
+                        enabled = (boolean) event.getNewValue();
+                        updateDecorations();
+                    }
+                });
             }
         });
     }
 
     @Override
     public void decorate(Object element, IDecoration decoration) {
-        if (element instanceof ISecurityLevelProvider) {
+        if (enabled && element instanceof ISecurityLevelProvider) {
             ISecurityLevelProvider securable = (ISecurityLevelProvider) element;
             SecurityLevel level = securable.getSecurityLevel();
             if (level != null) {
