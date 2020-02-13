@@ -15,8 +15,8 @@ public class SpecificThreat {
 
     @XmlElement(required = true)
     protected String headline;
-
-    protected Description description;
+    @XmlElement(required = true)
+    protected String description;
 
     public String getHeadline() {
         return headline;
@@ -26,11 +26,11 @@ public class SpecificThreat {
         this.headline = value;
     }
 
-    public Description getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(Description value) {
+    public void setDescription(String value) {
         this.description = value;
     }
 

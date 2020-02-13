@@ -537,16 +537,15 @@ public class Document {
     })
     public static class ThreatScenario {
 
-        protected ITBP2VNA.generated.module.Description description;
-
+        protected String description;
         @XmlElement(required = true)
         protected Document.ThreatScenario.SpecificThreats specificThreats;
 
-        public ITBP2VNA.generated.module.Description getDescription() {
+        public String getDescription() {
             return description;
         }
 
-        public void setDescription(ITBP2VNA.generated.module.Description value) {
+        public void setDescription(String value) {
             this.description = value;
         }
 

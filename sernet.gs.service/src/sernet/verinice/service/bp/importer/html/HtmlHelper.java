@@ -34,7 +34,6 @@ import org.w3c.dom.Text;
 
 import ITBP2VNA.generated.module.BibItem;
 import ITBP2VNA.generated.module.Cia;
-import ITBP2VNA.generated.module.Description;
 import ITBP2VNA.generated.module.Document;
 import ITBP2VNA.generated.module.Document.Crossreferences;
 import ITBP2VNA.generated.module.Document.ThreatScenario.SpecificThreats;
@@ -293,10 +292,7 @@ public final class HtmlHelper {
         int subChapter;
         StringBuilder sb = new StringBuilder();
         sb.append(generateChapterHeader(chapter, -1, -1, Messages.Threat_Situation));
-
-        Description description = module.getThreatScenario().getDescription();
-        String descriptionText = getAnyElementDescription("", -1, -1, -1, description.getAny());
-        sb.append(descriptionText);
+        sb.append(module.getThreatScenario().getDescription());
 
         SpecificThreats specificThreats = module.getThreatScenario().getSpecificThreats();
 
@@ -305,9 +301,7 @@ public final class HtmlHelper {
             sb.append(HTML_OPEN_PARAGRAPH);
             sb.append(
                     generateChapterHeader(chapter, subChapter++, -1, specificThreat.getHeadline()));
-            String threatDescriptionText = getAnyElementDescription("", -1, -1, -1,
-                    specificThreat.getDescription().getAny());
-            sb.append(threatDescriptionText);
+            sb.append(specificThreat.getDescription());
             sb.append(HTML_CLOSE_PARAGRAPH);
         }
         return sb.toString();
