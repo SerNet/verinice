@@ -165,29 +165,36 @@ public final class HtmlHelper {
      */
     private static String getModuleDescriptionSuffix(Document module, int chapter) {
         StringBuilder sb = new StringBuilder();
-        int subChapter;
+        int subChapter = 1;
         sb.append(HTML_OPEN_PARAGRAPH);
 
-        if (module.getBibliography() != null) {
+        if (module.getBibliography() != null
+                || !StringUtils.isEmpty(module.getAdvancedInformationText())) {
 
             chapter++;
             sb.append(generateChapterHeader(chapter, -1, -1, Messages.Further_Information));
+            if (!StringUtils.isEmpty(module.getAdvancedInformationText())) {
+                sb.append(generateChapterHeader(chapter, subChapter, -1, Messages.Noteworthy));
+                subChapter++;
+                sb.append(module.getAdvancedInformationText());
+            }
 
-            subChapter = 1;
-            sb.append(generateChapterHeader(chapter, subChapter, -1, Messages.Literature));
-            for (BibItem bibItem : module.getBibliography().getBibItem()) {
-                StringBuilder bibBuilder = new StringBuilder();
-                bibBuilder.append(HTML_OPEN_UL);
-                bibBuilder.append(HTML_OPEN_LIST_ITEM);
-                bibBuilder.append(bibItem.getShortHand()).append(" ");
-                String descriptionText = bibItem.getDescription();
-                descriptionText = descriptionText.replaceAll("<p>", "");
-                descriptionText = descriptionText.replaceAll("</p>", "");
-                descriptionText = descriptionText.replaceAll("<br />", "");
-                bibBuilder.append(descriptionText);
-                bibBuilder.append(HTML_CLOSE_LIST_ITEM);
-                bibBuilder.append(HTML_CLOSE_UL);
-                sb.append(bibBuilder.toString());
+            if (module.getBibliography() != null) {
+                sb.append(generateChapterHeader(chapter, subChapter, -1, Messages.Literature));
+                for (BibItem bibItem : module.getBibliography().getBibItem()) {
+                    StringBuilder bibBuilder = new StringBuilder();
+                    bibBuilder.append(HTML_OPEN_UL);
+                    bibBuilder.append(HTML_OPEN_LIST_ITEM);
+                    bibBuilder.append(bibItem.getShortHand()).append(" ");
+                    String descriptionText = bibItem.getDescription();
+                    descriptionText = descriptionText.replaceAll("<p>", "");
+                    descriptionText = descriptionText.replaceAll("</p>", "");
+                    descriptionText = descriptionText.replaceAll("<br />", "");
+                    bibBuilder.append(descriptionText);
+                    bibBuilder.append(HTML_CLOSE_LIST_ITEM);
+                    bibBuilder.append(HTML_CLOSE_UL);
+                    sb.append(bibBuilder.toString());
+                }
             }
         }
         return sb.toString();

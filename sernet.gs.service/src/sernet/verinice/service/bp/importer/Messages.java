@@ -47,6 +47,7 @@ public class Messages extends NLS {
     public static String High_Requirements_Intro;
     public static String Requirements;
     public static String Further_Information;
+    public static String Noteworthy;
     public static String Literature;
     public static String Introduction;
     public static String Purpose;
