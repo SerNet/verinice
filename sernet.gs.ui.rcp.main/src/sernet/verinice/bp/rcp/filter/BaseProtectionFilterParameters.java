@@ -30,6 +30,7 @@ import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.SecurityLevel;
 
 public class BaseProtectionFilterParameters {
+    private @NonNull Optional<Boolean> auditPerformed = Optional.empty();
     private @NonNull Set<ImplementationStatus> implementationStatuses = new HashSet<>();
     private @NonNull Optional<Boolean> riskAnalysisNecessary = Optional.empty();
     private @NonNull Set<String> riskLabels = new HashSet<>();
@@ -70,6 +71,8 @@ public class BaseProtectionFilterParameters {
         BaseProtectionFilterParameters other = (BaseProtectionFilterParameters) obj;
         if (applyTagFilterToItNetworks != other.applyTagFilterToItNetworks)
             return false;
+        if (!auditPerformed.equals(other.auditPerformed))
+            return false;
         if (!changeTypes.equals(other.changeTypes))
             return false;
         if (!elementTypes.equals(other.elementTypes))
@@ -89,6 +92,10 @@ public class BaseProtectionFilterParameters {
         if (!tags.equals(other.tags))
             return false;
         return true;
+    }
+
+    public Optional<Boolean> getAuditPerformed() {
+        return auditPerformed;
     }
 
     public Set<ChangeType> getChangeTypes() {
@@ -171,6 +178,11 @@ public class BaseProtectionFilterParameters {
                 @NonNull Set<ImplementationStatus> selectedImplementationStatus) {
             parameters.implementationStatuses = CollectionUtil
                     .unmodifiableSet(selectedImplementationStatus);
+            return this;
+        }
+
+        public Builder withAuditPerformed(Optional<Boolean> auditPerformed) {
+            parameters.auditPerformed = auditPerformed;
             return this;
         }
 

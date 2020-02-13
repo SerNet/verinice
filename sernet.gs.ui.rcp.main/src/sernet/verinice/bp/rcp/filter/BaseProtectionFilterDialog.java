@@ -98,6 +98,7 @@ public class BaseProtectionFilterDialog extends Dialog {
     private Button applyTagFilterToItNetworksCheckbox;
     private Button hideEmptyGroupsCheckbox;
 
+    private OptionalBooleanDropDown auditPerformedDropdown;
     private OptionalBooleanDropDown riskAnalysisNecessaryDropDown;
 
     private @NonNull BaseProtectionFilterParameters filterParameters;
@@ -142,6 +143,7 @@ public class BaseProtectionFilterDialog extends Dialog {
         addChangeTypeGroup(container);
         addRiskLabelGroup(container);
         addRiskAnalysisNecessaryGroup(container);
+        addAuditPerformedGroup(container);
 
         addElementTypesGroup(container);
         try {
@@ -194,6 +196,17 @@ public class BaseProtectionFilterDialog extends Dialog {
         }
         qualifierButtons.add(addButton(boxesComposite, null,
                 Messages.BaseProtectionFilterDialog_Property_Value_Null));
+    }
+
+    private void addAuditPerformedGroup(Composite container) {
+        Group boxesComposite = new Group(container, SWT.NONE);
+        boxesComposite.setText(Messages.BaseProtectionFilterDialog_AuditPerformed);
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1);
+        boxesComposite.setLayoutData(gridData);
+        GridLayout layout = new GridLayout(1, false);
+        boxesComposite.setLayout(layout);
+
+        auditPerformedDropdown = new OptionalBooleanDropDown(boxesComposite);
     }
 
     private void addChangeTypeGroup(Composite parent) {
@@ -367,6 +380,7 @@ public class BaseProtectionFilterDialog extends Dialog {
             boolean isSelected = params.getRiskLabels().contains(button.getData());
             button.setSelection(isSelected);
         }
+        auditPerformedDropdown.select(params.getAuditPerformed());
         riskAnalysisNecessaryDropDown.select(params.getRiskAnalysisNecessary());
         elementTypeSelector.setCheckedElements(
                 params.getElementTypes().toArray(new String[params.getElementTypes().size()]));
@@ -414,6 +428,7 @@ public class BaseProtectionFilterDialog extends Dialog {
         Set<String> releases = releaseButtons.stream().filter(b -> b.getSelection())
                 .map(b -> (String) b.getData()).collect(Collectors.toSet());
 
+        Optional<Boolean> auditPerformed = auditPerformedDropdown.getSelection();
         Optional<Boolean> riskanalysisNecessary = riskAnalysisNecessaryDropDown.getSelection();
 
         Set<String> riskLabels = risklabelButtons.stream().filter(b -> b.getSelection())
@@ -434,10 +449,10 @@ public class BaseProtectionFilterDialog extends Dialog {
         }
 
         filterParameters = BaseProtectionFilterParameters.builder()
-                .withImplementationStatuses(statuses).withSecurityLevels(levels)
-                .withElementTypes(types).withTags(tags).withChangeTypes(changeTypes)
-                .withReleases(releases).withRiskAnalysisNecessary(riskanalysisNecessary)
-                .withRiskLabels(riskLabels)
+                .withAuditPerformed(auditPerformed).withImplementationStatuses(statuses)
+                .withSecurityLevels(levels).withElementTypes(types).withTags(tags)
+                .withChangeTypes(changeTypes).withReleases(releases)
+                .withRiskAnalysisNecessary(riskanalysisNecessary).withRiskLabels(riskLabels)
                 .withApplyTagFilterToItNetworks(applyTagFilterToItNetworksCheckbox.getSelection())
                 .withHideEmptyGroups(hideEmptyGroupsCheckbox.getSelection()).build();
 

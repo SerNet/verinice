@@ -62,11 +62,17 @@ public class BaseProtectionFilterBuilder {
 
     public static @NonNull Collection<ViewerFilter> makeFilters(
             BaseProtectionFilterParameters params, IPreferenceStore prererenceStore) {
-        return Stream.of(createRequirementSafeguardFilter(params), createChangeTypeFilter(params),
+        return Stream.of(createRequirementSafeguardFilter(params),
+                createAuditPerformedFilter(params), createChangeTypeFilter(params),
                 createReleaseFilter(params), createRiskAnalysisNecessaryFilter(params),
                 createRiskLabelFilter(params), createTypeFilter(params), createTagFilter(params),
                 createHideEmptyGroupsFilter(params), createProceedingFilter(prererenceStore))
                 .filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+    private static ViewerFilter createAuditPerformedFilter(BaseProtectionFilterParameters params) {
+        return params.getAuditPerformed()
+                .map(v -> new DynamicBooleanPropertyFilter("audit_performed", v)).orElse(null);
     }
 
     private static ViewerFilter createChangeTypeFilter(BaseProtectionFilterParameters params) {
