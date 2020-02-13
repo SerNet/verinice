@@ -71,8 +71,6 @@ public final class HtmlHelper {
     private static final String HTML_OPEN_LIST_ITEM = "<li>"; //$NON-NLS-1$
     private static final String HTML_CLOSE_LIST_ITEM = "</li>"; //$NON-NLS-1$
     private static final String HTML_BR = "<br>"; //$NON-NLS-1$
-    private static final String HTML_OPEN_STRONG = "<strong>"; //$NON-NLS-1$
-    private static final String HTML_CLOSE_STRONG = "</strong>"; //$NON-NLS-1$
 
     private static final Set<String> HTML_TAG_BLACKLIST = new HashSet<>();
 
@@ -133,15 +131,14 @@ public final class HtmlHelper {
      * 
      * this method gathers all that information and creates a html-structure
      * around it to format it in a pretty way
-     * 
      */
-    public static String getCompleteModuleXMLText(Document module, String modelingHint) {
+    public static String getCompleteModuleXMLText(Document module) {
         StringBuilder descriptionBuilder = new StringBuilder();
 
         int chapter = 1;
         int subChapter = 0;
 
-        chapter = getModuleIntroduction(module, descriptionBuilder, chapter, modelingHint);
+        chapter = getModuleIntroduction(module, descriptionBuilder, chapter);
 
         descriptionBuilder.append(getModuleSpecificThreats(module, chapter));
 
@@ -314,20 +311,10 @@ public final class HtmlHelper {
      * creates the intro of a {@link BpRequirementGroup} (Module) description
      */
     private static int getModuleIntroduction(Document module, StringBuilder descriptionBuilder,
-            int chapter, String modelingHint) {
+            int chapter) {
         descriptionBuilder.append(HTML_OPEN_H1);
         descriptionBuilder.append(module.getFullTitle());
         descriptionBuilder.append(HTML_CLOSE_H1);
-        if (modelingHint != null) {
-            descriptionBuilder.append(HTML_OPEN_PARAGRAPH);
-            descriptionBuilder.append(HTML_OPEN_STRONG);
-            descriptionBuilder.append(Messages.Modeling_Hint);
-            descriptionBuilder.append(HTML_CLOSE_STRONG);
-            descriptionBuilder.append(HTML_BR);
-            descriptionBuilder.append(modelingHint);
-            descriptionBuilder.append(HTML_CLOSE_PARAGRAPH);
-        }
-
         descriptionBuilder.append(generateChapterHeader(chapter, -1, -1, Messages.Description));
         descriptionBuilder.append(getModuleDescriptionStart(module, chapter++));
         return chapter;

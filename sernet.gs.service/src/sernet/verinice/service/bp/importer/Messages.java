@@ -54,7 +54,6 @@ public class Messages extends NLS {
     public static String Threat_Situation;
     public static String Description;
     public static String Root_Safeguard_Group_Name;
-    public static String Modeling_Hint;
     public static String Implementation_Hint;
 
     static {

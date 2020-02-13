@@ -179,15 +179,6 @@ public class BpImporter {
                     + moduleIdentifiersStrayImplementationOrder
                     + ", but those modules do not exist in the import data.");
         }
-        Set<String> modelingHintsStrayImplementationOrder = new HashSet<>();
-        modelingHintsStrayImplementationOrder
-                .addAll(importMetadata.modelingHintByModuleIdentifier.keySet());
-        modelingHintsStrayImplementationOrder.removeAll(addedModules.keySet());
-        if (!modelingHintsStrayImplementationOrder.isEmpty()) {
-            LOG.warn("The implementation hint mapping file contains an entry for the module(s) "
-                    + modelingHintsStrayImplementationOrder
-                    + ", but those modules do not exist in the import data.");
-        }
 
         long modulesReady = System.currentTimeMillis();
         LOG.debug("Modules ready, took :\t"
@@ -239,8 +230,6 @@ public class BpImporter {
     private static ImportMetadata parseMetadataFiles(File rootDirectory) {
         Map<String, String> implementationOrderByModuleIdentifier = readImplementationOrder(
                 rootDirectory.toPath().resolve("implementation-order.properties"));
-        Map<String, String> modelingHintByModuleIdentifier = readModelingHints(
-                rootDirectory.toPath().resolve("modeling-hints.properties"));
 
         String release = null;
 
@@ -268,8 +257,7 @@ public class BpImporter {
             LOG.warn("metadata.properties file not found, using defaults");
         }
 
-        return new ImportMetadata(implementationOrderByModuleIdentifier,
-                modelingHintByModuleIdentifier, release);
+        return new ImportMetadata(implementationOrderByModuleIdentifier, release);
     }
 
     /**
@@ -307,29 +295,6 @@ public class BpImporter {
                 throw new RuntimeException(
                         "Found duplicate implementation order mapping for module '"
                                 + moduleIdentifier + "'" + ".");
-            }
-        }
-        return Collections.unmodifiableMap(result);
-    }
-
-    /**
-     * Reads the modules' modeling hints from the properties file at the given
-     * location. The file contains a mapping from module IDs to modeling hint,
-     * i.e.
-     * <code>ISMS.1=Der Baustein ISMS.1 Sicherheitsmanagement ist für den gesamten Informationsverbund einmal anzuwenden.[...]</code>.
-     */
-    private static Map<String, String> readModelingHints(Path modelingHintsProperties) {
-        Properties modelingHints = loadProperties(modelingHintsProperties);
-        Map<String, String> result = new HashMap<>(modelingHints.size());
-        for (Entry<Object, Object> entry : modelingHints.entrySet()) {
-            String moduleIdentifier = (String) entry.getKey();
-            validateModuleIdentifier(moduleIdentifier);
-            String modelingHint = (String) entry.getValue();
-
-            String existingMapping = result.put(moduleIdentifier, modelingHint);
-            if (existingMapping != null) {
-                throw new RuntimeException("Found duplicate modeling hint mapping for module '"
-                        + moduleIdentifier + "'" + ".");
             }
         }
         return Collections.unmodifiableMap(result);
@@ -653,14 +618,8 @@ public class BpImporter {
                     moduleTitle, BpRequirementGroup.PROP_RELEASE, importMetadata.release);
 
             veriniceModule.setIdentifier(moduleIdentifier);
-            String modelingHint = importMetadata.modelingHintByModuleIdentifier
-                    .get(moduleIdentifier);
-            if (modelingHint == null) {
-                LOG.warn("No modeling hint specified for module '" + moduleIdentifier + "' ("
-                        + moduleTitle + ")");
-            }
-            veriniceModule.setObjectBrowserDescription(
-                    HtmlHelper.getCompleteModuleXMLText(bsiModule, modelingHint));
+            veriniceModule
+                    .setObjectBrowserDescription(HtmlHelper.getCompleteModuleXMLText(bsiModule));
             veriniceModule.setLastChange(getBSIDate(bsiModule.getLastChange()));
             String implementationOrder = importMetadata.implementationOrderByModuleIdentifier
                     .get(moduleIdentifier);
@@ -1219,13 +1178,10 @@ public class BpImporter {
     private static class ImportMetadata {
 
         private final Map<String, String> implementationOrderByModuleIdentifier;
-        private final Map<String, String> modelingHintByModuleIdentifier;
         private final String release;
 
-        ImportMetadata(Map<String, String> implementationOrderByModuleIdentifier,
-                Map<String, String> modelingHintByModuleIdentifier, String release) {
+        ImportMetadata(Map<String, String> implementationOrderByModuleIdentifier, String release) {
             this.implementationOrderByModuleIdentifier = implementationOrderByModuleIdentifier;
-            this.modelingHintByModuleIdentifier = modelingHintByModuleIdentifier;
             this.release = release;
         }
     }
