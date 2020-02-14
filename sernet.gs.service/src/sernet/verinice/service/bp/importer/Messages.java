@@ -57,6 +57,7 @@ public class Messages extends NLS {
     public static String Root_Safeguard_Group_Name;
     public static String Implementation_Hint;
     public static String Cross_References_Table;
+    public static String Cross_References_Table_Explanation;
 
     static {
         // initialize resource bundle

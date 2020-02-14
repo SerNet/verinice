@@ -155,6 +155,9 @@ public final class HtmlHelper {
         chapter++;
         descriptionBuilder
                 .append(generateChapterHeader(chapter, -1, -1, Messages.Cross_References_Table));
+        descriptionBuilder.append(HTML_OPEN_PARAGRAPH);
+        descriptionBuilder.append(Messages.Cross_References_Table_Explanation);
+        descriptionBuilder.append(HTML_CLOSE_PARAGRAPH);
         descriptionBuilder.append(
                 ToHtmlTableTransformer.createCrossreferenceTable(module.getCrossreferences()));
         return descriptionBuilder.toString();
