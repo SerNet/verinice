@@ -151,10 +151,12 @@ public final class HtmlHelper {
         subChapter = 1;
 
         descriptionBuilder.append(getModuleReqMain(module, chapter, subChapter));
+        chapter = getModuleDescriptionSuffix(module, descriptionBuilder, chapter);
+        chapter++;
+        descriptionBuilder
+                .append(generateChapterHeader(chapter, -1, -1, Messages.Cross_References_Table));
         descriptionBuilder.append(
                 ToHtmlTableTransformer.createCrossreferenceTable(module.getCrossreferences()));
-        descriptionBuilder.append(getModuleDescriptionSuffix(module, chapter));
-
         return descriptionBuilder.toString();
     }
 
@@ -163,24 +165,27 @@ public final class HtmlHelper {
      * object-browser-property that describes the {@link BpRequirement} further
      * Information (the literature notes) related to the module
      */
-    private static String getModuleDescriptionSuffix(Document module, int chapter) {
-        StringBuilder sb = new StringBuilder();
+    private static int getModuleDescriptionSuffix(Document module, StringBuilder descriptionBuilder,
+            int chapter) {
         int subChapter = 1;
-        sb.append(HTML_OPEN_PARAGRAPH);
+        descriptionBuilder.append(HTML_OPEN_PARAGRAPH);
 
         if (module.getBibliography() != null
                 || !StringUtils.isEmpty(module.getAdvancedInformationText())) {
 
             chapter++;
-            sb.append(generateChapterHeader(chapter, -1, -1, Messages.Further_Information));
+            descriptionBuilder
+                    .append(generateChapterHeader(chapter, -1, -1, Messages.Further_Information));
             if (!StringUtils.isEmpty(module.getAdvancedInformationText())) {
-                sb.append(generateChapterHeader(chapter, subChapter, -1, Messages.Noteworthy));
+                descriptionBuilder.append(
+                        generateChapterHeader(chapter, subChapter, -1, Messages.Noteworthy));
                 subChapter++;
-                sb.append(module.getAdvancedInformationText());
+                descriptionBuilder.append(module.getAdvancedInformationText());
             }
 
             if (module.getBibliography() != null) {
-                sb.append(generateChapterHeader(chapter, subChapter, -1, Messages.Literature));
+                descriptionBuilder.append(
+                        generateChapterHeader(chapter, subChapter, -1, Messages.Literature));
                 for (BibItem bibItem : module.getBibliography().getBibItem()) {
                     StringBuilder bibBuilder = new StringBuilder();
                     bibBuilder.append(HTML_OPEN_UL);
@@ -193,11 +198,11 @@ public final class HtmlHelper {
                     bibBuilder.append(descriptionText);
                     bibBuilder.append(HTML_CLOSE_LIST_ITEM);
                     bibBuilder.append(HTML_CLOSE_UL);
-                    sb.append(bibBuilder.toString());
+                    descriptionBuilder.append(bibBuilder.toString());
                 }
             }
         }
-        return sb.toString();
+        return chapter;
     }
 
     /**
