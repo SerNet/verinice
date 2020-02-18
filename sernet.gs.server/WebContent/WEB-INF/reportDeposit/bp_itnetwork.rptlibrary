@@ -1,0 +1,722 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <simple-property-list name="includeResource">
+        <value>bp_itnetwork</value>
+    </simple-property-list>
+    <property name="units">in</property>
+    <property name="theme">defaultTheme</property>
+    <list-property name="libraries">
+        <structure>
+            <property name="fileName">verinice_data_source.rptlibrary</property>
+            <property name="namespace">verinice_data_source</property>
+        </structure>
+    </list-property>
+    <data-sources>
+        <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="5339"
+ extends="verinice_data_source.verinice"/>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="verinice.oda.linktable.driver.dataSet.id" name="bp_itnetwork-main-data" id="5338">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">Titel__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Titel__(Informationsverbund)</text-property>
+                    <text-property name="heading">Titel__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Abkürzung__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Abkürzung__(Informationsverbund)</text-property>
+                    <text-property name="heading">Abkürzung__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Anzahl__Mitarbeiter__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Anzahl__Mitarbeiter__(Informationsverbund)</text-property>
+                    <text-property name="heading">Anzahl__Mitarbeiter__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Geltungsbereich__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Geltungsbereich__(Informationsverbund)</text-property>
+                    <text-property name="heading">Geltungsbereich__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Reporting__-__Author__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Reporting__-__Author__(Informationsverbund)</text-property>
+                    <text-property name="heading">Reporting__-__Author__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Reporting__-__Version__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Reporting__-__Version__(Informationsverbund)</text-property>
+                    <text-property name="heading">Reporting__-__Version__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Reporting__-__Freigabe__durch__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Reporting__-__Freigabe__durch__(Informationsverbund)</text-property>
+                    <text-property name="heading">Reporting__-__Freigabe__durch__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Vorgehensweise__der__Absicherung__(Informationsverbund)</text-property>
+                    <text-property name="heading">Vorgehensweise__der__Absicherung__(Informationsverbund)</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters"/>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">Titel__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">Abkürzung__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">Anzahl__Mitarbeiter__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">Geltungsbereich__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">Reporting__-__Author__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">Reporting__-__Version__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">Reporting__-__Freigabe__durch__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">verinice</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">Titel__(Informationsverbund)</property>
+                    <property name="nativeName">Titel__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">Abkürzung__(Informationsverbund)</property>
+                    <property name="nativeName">Abkürzung__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">Anzahl__Mitarbeiter__(Informationsverbund)</property>
+                    <property name="nativeName">Anzahl__Mitarbeiter__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">Geltungsbereich__(Informationsverbund)</property>
+                    <property name="nativeName">Geltungsbereich__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">Reporting__-__Author__(Informationsverbund)</property>
+                    <property name="nativeName">Reporting__-__Author__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">Reporting__-__Version__(Informationsverbund)</property>
+                    <property name="nativeName">Reporting__-__Version__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">Reporting__-__Freigabe__durch__(Informationsverbund)</property>
+                    <property name="nativeName">Reporting__-__Freigabe__durch__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
+                    <property name="nativeName">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{
+  "followLinksOutsideOfScope": false,
+  "useAllScopes": false,
+  "scopeIds": [],
+  "columnPaths": [
+    "bp_itnetwork.bp_itnetwork_name AS Titel__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_abbr AS Abkürzung__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_employee_number AS Anzahl__Mitarbeiter__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_description AS Geltungsbereich__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_author AS Reporting__-__Author__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_version AS Reporting__-__Version__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_approved AS Reporting__-__Freigabe__durch__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_qualifier AS Vorgehensweise__der__Absicherung__(Informationsverbund)"
+  ],
+  "relationIds": []
+}]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>Titel__(Informationsverbund)</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>Titel__(Informationsverbund)</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>Titel__(Informationsverbund)</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>Abkürzung__(Informationsverbund)</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>Abkürzung__(Informationsverbund)</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>Abkürzung__(Informationsverbund)</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <themes>
+        <theme name="defaultTheme" id="4"/>
+    </themes>
+    <components>
+        <grid name="ItNetworkOverview" id="1066">
+            <property name="borderBottomColor">#000000</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">medium</property>
+            <property name="borderLeftColor">#000000</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">medium</property>
+            <property name="borderRightColor">#000000</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">medium</property>
+            <property name="borderTopColor">#000000</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">medium</property>
+            <property name="width">100%</property>
+            <property name="dataSet">bp_itnetwork-main-data</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">Titel__(Informationsverbund)</property>
+                    <text-property name="displayName">Titel__(Informationsverbund)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Titel__(Informationsverbund)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Abkürzung__(Informationsverbund)</property>
+                    <text-property name="displayName">Abkürzung__(Informationsverbund)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Abkürzung__(Informationsverbund)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Anzahl__Mitarbeiter__(Informationsverbund)</property>
+                    <text-property name="displayName">Anzahl__Mitarbeiter__(Informationsverbund)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Anzahl__Mitarbeiter__(Informationsverbund)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Geltungsbereich__(Informationsverbund)</property>
+                    <text-property name="displayName">Geltungsbereich__(Informationsverbund)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Geltungsbereich__(Informationsverbund)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Reporting__-__Author__(Informationsverbund)</property>
+                    <text-property name="displayName">Reporting__-__Author__(Informationsverbund)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Reporting__-__Author__(Informationsverbund)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Reporting__-__Version__(Informationsverbund)</property>
+                    <text-property name="displayName">Reporting__-__Version__(Informationsverbund)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Reporting__-__Version__(Informationsverbund)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Reporting__-__Freigabe__durch__(Informationsverbund)</property>
+                    <text-property name="displayName">Reporting__-__Freigabe__durch__(Informationsverbund)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Reporting__-__Freigabe__durch__(Informationsverbund)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
+                    <text-property name="displayName">Vorgehensweise__der__Absicherung__(Informationsverbund)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Vorgehensweise__der__Absicherung__(Informationsverbund)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Übersicht"</expression>
+            </structure>
+            <column id="1067">
+                <property name="backgroundColor">#9AC3D6</property>
+                <property name="fontWeight">bold</property>
+                <property name="width">2.5416666666666665in</property>
+            </column>
+            <column id="1068">
+                <property name="width">5.197916666666667in</property>
+            </column>
+            <row id="1069">
+                <property name="backgroundColor">#9AC3D6</property>
+                <property name="fontSize">12pt</property>
+                <cell id="1070">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label name="NewLabel" id="1084">
+                        <text-property name="text" key="gookey">Informationsverbund:</text-property>
+                    </label>
+                </cell>
+                <cell id="1071">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <data name="NewData" id="3973">
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">Titel__(Informationsverbund)</property>
+                                <text-property name="displayName">Titel__(Informationsverbund)</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Titel__(Informationsverbund)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">Titel__(Informationsverbund)</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="5323">
+                <cell id="5324">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label name="NewLabel1" id="5327">
+                        <text-property name="text" key="main_label_abbr">Abkürzung:</text-property>
+                    </label>
+                </cell>
+                <cell id="5325">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <data name="NewData1" id="5326">
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">Abkürzung__(Informationsverbund)</property>
+                                <text-property name="displayName">Abkürzung__(Informationsverbund)</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Abkürzung__(Informationsverbund)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">Abkürzung__(Informationsverbund)</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="1075">
+                <cell id="1076">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label name="NewLabel2" id="1090">
+                        <text-property name="text" key="main_label_mitarbeiter">Mitarbeiter:</text-property>
+                    </label>
+                </cell>
+                <cell id="1077">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <data name="NewData2" id="3974">
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">Anzahl__Mitarbeiter__(Informationsverbund)</property>
+                                <text-property name="displayName">Anzahl__Mitarbeiter__(Informationsverbund)</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Anzahl__Mitarbeiter__(Informationsverbund)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">Anzahl__Mitarbeiter__(Informationsverbund)</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="1078">
+                <cell id="1079">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label name="NewLabel3" id="1091">
+                        <text-property name="text" key="main_label_scope">Geltungsbereich:</text-property>
+                    </label>
+                </cell>
+                <cell id="1080">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <data name="NewData3" id="3975">
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">Geltungsbereich__(Informationsverbund)</property>
+                                <text-property name="displayName">Geltungsbereich__(Informationsverbund)</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Geltungsbereich__(Informationsverbund)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">Geltungsbereich__(Informationsverbund)</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="1081">
+                <cell id="1082">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label name="NewLabel4" id="1092">
+                        <text-property name="text" key="main_label_date">Datum:</text-property>
+                    </label>
+                </cell>
+                <cell id="1083">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <text-data name="NewTextData" id="1093">
+                        <expression name="valueExpr">new Date()</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+            </row>
+            <row id="1941">
+                <cell id="1942">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label name="NewLabel5" id="1944">
+                        <text-property name="text" key="main_label_author">Autor:</text-property>
+                    </label>
+                </cell>
+                <cell id="1943">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <data name="NewData4" id="3976">
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">Reporting__-__Author__(Informationsverbund)</property>
+                                <text-property name="displayName">Reporting__-__Author__(Informationsverbund)</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Reporting__-__Author__(Informationsverbund)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">Reporting__-__Author__(Informationsverbund)</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="1938">
+                <cell id="1939">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label name="NewLabel6" id="1945">
+                        <text-property name="text" key="main_label_version">Version:</text-property>
+                    </label>
+                </cell>
+                <cell id="1940">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <data name="NewData5" id="3977">
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">Reporting__-__Version__(Informationsverbund)</property>
+                                <text-property name="displayName">Reporting__-__Version__(Informationsverbund)</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Reporting__-__Version__(Informationsverbund)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">Reporting__-__Version__(Informationsverbund)</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="1946">
+                <cell id="1947">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label name="NewLabel7" id="1949">
+                        <text-property name="text" key="main_label_clearence">Freigabe:</text-property>
+                    </label>
+                </cell>
+                <cell id="1948">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <data name="NewData6" id="3978">
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">Reporting__-__Freigabe__durch__(Informationsverbund)</property>
+                                <text-property name="displayName">Reporting__-__Freigabe__durch__(Informationsverbund)</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Reporting__-__Freigabe__durch__(Informationsverbund)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">Reporting__-__Freigabe__durch__(Informationsverbund)</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="3979">
+                <cell id="3980">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label name="NewLabel8" id="3983">
+                        <text-property name="text" key="main_label_strategy">Vorgehensweise der Absicherung:</text-property>
+                    </label>
+                </cell>
+                <cell id="3981">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <data name="NewData7" id="3982">
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
+                                <text-property name="displayName">Vorgehensweise__der__Absicherung__(Informationsverbund)</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Vorgehensweise__der__Absicherung__(Informationsverbund)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
+                    </data>
+                </cell>
+            </row>
+        </grid>
+    </components>
+    <page-setup>
+        <simple-master-page name="NewSimpleMasterPage" id="3"/>
+    </page-setup>
+</library>
