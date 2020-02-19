@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.service.tree;
 
+import sernet.verinice.model.bp.IBpGroup;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
@@ -44,6 +46,7 @@ public enum ChildrenExist {
     }
 
     public static boolean isAlwaysChildless(CnATreeElement element) {
-        return !(element instanceof IISO27kGroup) && !(element instanceof IBSIStrukturKategorie);
+        return !(element instanceof IISO27kGroup) && !(element instanceof IBSIStrukturKategorie)
+                && !(element instanceof IBpGroup) && !(element instanceof ItNetwork);
     }
 }
