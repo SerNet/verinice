@@ -55,6 +55,7 @@ public class SecurityLevelDecorator extends LabelProvider implements ILightweigh
 
             @Override
             public void loaded(BpModel model) {
+                CnAElementFactory.getInstance().removeLoadListener(this);
                 super.loaded(model);
                 model.addModITBOModelListener(getModelListener());
                 IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
