@@ -80,13 +80,13 @@ people to work on one ISMS - even across different locations.
   GitHub mirror
 
 # How to build
-To build the Verinice client, client update site, server and
-report designer all at once execute the following command:
+To build the Verinice client, client update site and server all 
+at once execute the following command:
 
 	./mvnw -Dtycho.disableP2Mirrors=true clean verify
 
-To see where the Verinice client, client update site, server
-and report designer build artifacts can then be found
+To see where the Verinice client, client update site and server
+build artifacts can then be found
 read the following sections.
 
 If you want to skip the junit tests you need to add the `-Dmaven.antrun.skip=true` parameter.
@@ -128,16 +128,6 @@ will be located under `sernet.verinice.releng.server.product/target/`.
 The WAR file is of course platform independent (in contrast to
 the Verinice client and report designer builds).
 
-## Verinice report designer
-
-The built artifacts will be located in
-`sernet.verinice.report.designer.tycho/target/products/`.
-Artifacts for the following platforms will be produced:
-
-* Linux GTK 64 bit
-* Windows 64 bit
-* Mac OS X 64 bit
-
 ## Versioning
 To update the version of the project
 
@@ -169,8 +159,4 @@ To update the version of the project
 	-	verinice
 
 	*sernet.gs.ui.rcp.main/etc/splashscreen/splash.xcf*
-
-	-	v.Designer
-
-	*sernet.verinice.oda.driver.designer/splash-screen/v.designer_splash_screen.xcf*
 
