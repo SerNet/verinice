@@ -45,7 +45,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh "./verinice-distribution/build.sh verify"
-                archiveArtifacts artifacts: 'sernet.verinice.releng.client.product/target/products/*.zip,sernet.verinice.report.designer.product/target/products/*.zip,sernet.verinice.releng.server.product/target/*.war,sernet.verinice.releng.client.product/target/repository/**', fingerprint: true
+                archiveArtifacts artifacts: 'sernet.verinice.releng.client.product/target/products/*.zip,sernet.verinice.releng.server.product/target/*.war,sernet.verinice.releng.client.product/target/repository/**', fingerprint: true
                 junit allowEmptyResults: true, testResults: '**/build/reports/**/*.xml'
                 perfReport filterRegex: '', sourceDataFiles: '**/build/reports/TEST*.xml'
             }

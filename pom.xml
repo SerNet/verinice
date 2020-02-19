@@ -19,7 +19,6 @@
 		<!-- products -->
 		<module>sernet.verinice.releng.client.product</module>
 		<module>sernet.verinice.releng.server.product</module>
-		<module>sernet.verinice.report.designer.product</module>
 
 		<!-- Features -->
 		<module>org.eclipse.e4.rcp.sernet</module>
@@ -32,7 +31,6 @@
 		<module>sernet.thirdparty.feature</module>
 		<module>sernet.verinice.lang.feature</module>
 		<module>sernet.verinice.extraresources.feature</module>
-		<module>sernet.verinice.report.designer.feature</module>
 		<module>sernet.verinice.app.feature</module>
 
 		<!-- Bundles -->
@@ -59,7 +57,6 @@
 		<module>sernet.verinice.fei.service</module>
 		<module>sernet.verinice.kerberos</module>
 		<module>sernet.verinice.oda.driver</module>
-		<module>sernet.verinice.oda.driver.designer</module>
 		<module>sernet.verinice.report.service</module>
 		<module>sernet.verinice.samt.rcp</module>
 		<module>sernet.verinice.samt.service</module>
