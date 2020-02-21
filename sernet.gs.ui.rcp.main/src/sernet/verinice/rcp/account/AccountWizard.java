@@ -22,6 +22,9 @@ package sernet.verinice.rcp.account;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.interfaces.ApplicationRoles;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
@@ -156,7 +159,16 @@ public class AccountWizard extends Wizard {
         }
         return isNew;
     }
-  
+
+    public static boolean isCurrentUserLocalAdmin() {
+        return getAuthService()
+                .currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+    }
+
+    public static IAuthService getAuthService() {
+        return ServiceFactory.lookupAuthService();
+    }
+
     public Configuration getAccount() {
         return account;
     }

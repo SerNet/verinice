@@ -25,8 +25,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.service.StringUtil;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.rcp.TextEventAdapter;
 
 /**
@@ -128,7 +126,7 @@ public class AuthenticationPage extends BaseWizardPage {
     }
 
     private boolean isPasswordManagedInternally() {
-        return getAuthService().isHandlingPasswords();
+        return AccountWizard.getAuthService().isHandlingPasswords();
     }
 
     private boolean isPassword() {
@@ -182,9 +180,4 @@ public class AuthenticationPage extends BaseWizardPage {
     public void setEmail(String email) {
         this.email = StringUtil.replaceEmptyStringByNull(email);
     }
-
-    private IAuthService getAuthService() {
-        return ServiceFactory.lookupAuthService();
-    }
-
 }

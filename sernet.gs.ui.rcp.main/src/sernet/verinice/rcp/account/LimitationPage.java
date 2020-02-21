@@ -30,9 +30,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.verinice.interfaces.ApplicationRoles;
-import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.common.configuration.Configuration;
 
@@ -73,11 +70,8 @@ public class LimitationPage extends BaseWizardPage {
         setTitle(Messages.LimitationPage_1);
         setMessage(Messages.LimitationPage_2);
 
-        final boolean currentUserIsLocalAdmin = getAuthService()
-                .currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
-
         cbAdmin = createCheckbox(composite, Messages.LimitationPage_3, isAdmin);
-        cbAdmin.setEnabled(!currentUserIsLocalAdmin && !isLocalAdmin);
+        cbAdmin.setEnabled(!AccountWizard.isCurrentUserLocalAdmin() && !isLocalAdmin);
         cbAdmin.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -93,14 +87,14 @@ public class LimitationPage extends BaseWizardPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isLocalAdmin = cbLocalAdmin.getSelection();
-                cbAdmin.setEnabled(!currentUserIsLocalAdmin && !isLocalAdmin);
+                cbAdmin.setEnabled(!AccountWizard.isCurrentUserLocalAdmin() && !isLocalAdmin);
                 cbScopeOnly.setEnabled(!isLocalAdmin);
                 configureStandartGroup();
                 changeGroupPage();
             }
         });
         cbScopeOnly = createCheckbox(composite, Messages.LimitationPage_4, isScopeOnly);
-        if (currentUserIsLocalAdmin) {
+        if (AccountWizard.isCurrentUserLocalAdmin()) {
             cbScopeOnly.setEnabled(!isAdmin && !isLocalAdmin);
         } else {
             cbScopeOnly.setEnabled(!isLocalAdmin);
@@ -247,9 +241,5 @@ public class LimitationPage extends BaseWizardPage {
 
     public void setWeb(boolean isWeb) {
         this.isWeb = isWeb;
-    }
-
-    private IAuthService getAuthService() {
-        return ServiceFactory.lookupAuthService();
     }
 }
