@@ -77,8 +77,7 @@ public class LimitationPage extends BaseWizardPage {
             public void widgetSelected(SelectionEvent e) {
                 isAdmin = cbAdmin.getSelection();
                 cbLocalAdmin.setEnabled(!isAdmin && !isScopeOnly);
-                configureStandartGroup();
-                changeGroupPage();
+                configureGroups();
             }
         });
         cbLocalAdmin = createCheckbox(composite, Messages.LimitationPage_8, isLocalAdmin);
@@ -89,8 +88,7 @@ public class LimitationPage extends BaseWizardPage {
                 isLocalAdmin = cbLocalAdmin.getSelection();
                 cbAdmin.setEnabled(!AccountWizard.isCurrentUserLocalAdmin() && !isLocalAdmin);
                 cbScopeOnly.setEnabled(!isLocalAdmin);
-                configureStandartGroup();
-                changeGroupPage();
+                configureGroups();
             }
         });
         cbScopeOnly = createCheckbox(composite, Messages.LimitationPage_4, isScopeOnly);
@@ -104,8 +102,7 @@ public class LimitationPage extends BaseWizardPage {
             public void widgetSelected(SelectionEvent e) {
                 isScopeOnly = cbScopeOnly.getSelection();
                 cbLocalAdmin.setEnabled(!isAdmin && !isScopeOnly);
-                configureStandartGroup();
-                changeGroupPage();
+                configureGroups();
             }
         });
         cbDesktop = createCheckbox(composite, Messages.LimitationPage_5, isDesktop);
@@ -129,6 +126,13 @@ public class LimitationPage extends BaseWizardPage {
                 isDeactivated = cbDeactivated.getSelection();
             }
         });
+    }
+
+    public void configureGroups() {
+        if (!AccountWizard.isCurrentUserLocalAdmin()) {
+            configureStandartGroup();
+            changeGroupPage();
+        }
     }
 
     private void changeGroupPage() {
