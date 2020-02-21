@@ -94,6 +94,7 @@ public class LicenseMgmtPage extends BaseWizardPage {
         containerGridData.grabExcessVerticalSpace = true;
 
         composite.setLayoutData(containerGridData);
+        composite.setEnabled(!AccountWizard.isCurrentUserLocalAdmin());
 
         setTitle(Messages.LicenseMgmtPage_Title);
         setMessage(Messages.LicenseMgmtPage_Text);
