@@ -32,6 +32,7 @@ import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.service.commands.LoadElementByTypeId;
+import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
@@ -43,6 +44,9 @@ import sernet.verinice.service.commands.SyncParameterException;
 public final class VNAImportHelper {
 
     private static final Logger log = Logger.getLogger(VNAImportHelper.class);
+
+    private static final String[] IMPORT_GROUP_TYPE_IDS = new String[] { ImportBsiGroup.TYPE_ID,
+            ImportIsoGroup.TYPE_ID, ImportBpGroup.TYPE_ID };
 
     public static SyncCommand importFile(String path, SyncParameter syncParameter)
             throws IOException, CommandException {
@@ -66,24 +70,33 @@ public final class VNAImportHelper {
         return importFile(filename, true, false, false, false);
     }
 
-    private static void removeAllElementsByType(String type,
-            IBaseDao<CnATreeElement, Integer> elementDao) throws CommandException {
-        LoadElementByTypeId loadElementByTypeId = new LoadElementByTypeId(type);
-        loadElementByTypeId = getCommandService().executeCommand(loadElementByTypeId);
+    private static void removeImportedData(IBaseDao<CnATreeElement, Integer> elementDao,
+            SyncCommand syncCommand) throws CommandException {
+        for (String typeId : IMPORT_GROUP_TYPE_IDS) {
+            LoadElementByTypeId loadElementByTypeId = new LoadElementByTypeId(typeId);
+            loadElementByTypeId = getCommandService().executeCommand(loadElementByTypeId);
 
-        for (CnATreeElement element : loadElementByTypeId.getElementList()) {
-            elementDao.delete(element);
+            for (CnATreeElement element : loadElementByTypeId.getElementList()) {
+                for (CnATreeElement child : element.getChildrenAsArray()) {
+                    if (syncCommand.getImportedElementUUIDs().contains(child.getUuid())) {
+                        log.info("Deleting imported element " + child);
+                        RemoveElement<CnATreeElement> removeElement = new RemoveElement<>(child);
+                        getCommandService().executeCommand(removeElement);
+                    }
+                }
+                if (element.getChildren().isEmpty()) {
+                    log.info("Deleting empty import group " + element);
+                    RemoveElement<CnATreeElement> removeElement = new RemoveElement<>(element);
+                    getCommandService().executeCommand(removeElement);
+                }
+            }
         }
     }
 
     public static void tearDown(SyncCommand syncCommand,
             IBaseDao<CnATreeElement, Integer> elementDao) throws CommandException {
         try {
-            // clean up the parents of imported cnatreeelements
-            removeAllElementsByType(ImportBsiGroup.TYPE_ID, elementDao);
-            removeAllElementsByType(ImportIsoGroup.TYPE_ID, elementDao);
-            removeAllElementsByType(ImportBpGroup.TYPE_ID, elementDao);
-
+            removeImportedData(elementDao, syncCommand);
         } catch (CommandException e) {
             log.error("deleting element of " + syncCommand + " failed", e);
             throw e;
