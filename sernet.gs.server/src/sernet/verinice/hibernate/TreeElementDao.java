@@ -201,8 +201,11 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
 
     private void updateIndex(CnATreeElement element) {
         try {
-            if (getSearchDao() != null && getJsonBuilder() != null) {
-                getSearchDao().updateOrIndex(element.getUuid(), getJsonBuilder().getJson(element));
+            if (getSearchDao() != null) {
+                IJsonBuilder builder = getJsonBuilder();
+                if (builder != null && builder.isIndexableElement(element)) {
+                    getSearchDao().updateOrIndex(element.getUuid(), builder.getJson(element));
+                }
             }
         } catch (Exception e) {
             String uuid = (element != null) ? element.getUuid() : null;

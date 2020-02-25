@@ -39,12 +39,9 @@ import sernet.verinice.interfaces.IElementTitleCache;
 import sernet.verinice.interfaces.search.IJsonBuilder;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.bp.elements.ItNetwork;
-import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
-import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
 
 /**
@@ -244,11 +241,6 @@ public class JsonBuilder implements IJsonBuilder {
     private String tryParseDate(String value) {
         long timeStamp = Long.parseLong(value);
         return simpleDateFormatter.getFormatedDate(timeStamp);
-    }
-
-    private static boolean isIndexableElement(CnATreeElement element) {
-        return !(element instanceof ImportIsoGroup || element instanceof ImportBsiGroup
-                || element instanceof ImportBpGroup);
     }
 
     public IElementTitleCache getTitleCache() {
