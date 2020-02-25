@@ -22,13 +22,13 @@ package sernet.gs.ui.rcp.main.reports;
 import sernet.gs.service.AbstractReportTemplateService;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.verinice.interfaces.IReportDepositService;
-import sernet.verinice.rcp.ReportTemplateSync;
+import sernet.verinice.rcp.ReportTemplateSyncer;
 
 /**
  * Caches report templates which are synchronized by the
  * {@link IReportDepositService}.
  * 
- * @see ReportTemplateSync
+ * @see ReportTemplateSyncer
  * @see LocalReportTemplateService
  * 
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -37,13 +37,12 @@ import sernet.verinice.rcp.ReportTemplateSync;
 public class ReportDepositCache extends AbstractReportTemplateService {
 
     @Override
-    public boolean isHandeledByReportDeposit() {
+    protected boolean isHandeledByReportDeposit() {
         return true;
     }
 
     @Override
-    public String getTemplateDirectory() {
+    protected String getTemplateDirectory() {
         return CnAWorkspace.getInstance().getRemoteReportTemplateDir();
     }
-
 }

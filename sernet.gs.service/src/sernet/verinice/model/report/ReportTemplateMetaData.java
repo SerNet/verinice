@@ -19,8 +19,6 @@ package sernet.verinice.model.report;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.eclipse.jdt.annotation.NonNull;
 
@@ -39,19 +37,11 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
     public static final String REPORT_LOCAL_DECORATOR = "(L)"; //$NON-NLS-1$
     public static final String REPORT_SERVER_DECORATOR = "(S)"; //$NON-NLS-1$
 
-    private String filename;
-
     private OutputFormat[] outputFormat;
 
     private String outputname;
 
     private String context;
-
-    /**
-     * contains checksums from the rptdesign file and also from all property
-     * files
-     **/
-    private Set<String> md5CheckSums;
 
     private boolean isServer;
 
@@ -60,19 +50,18 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
      */
     private boolean multipleRootObjects;
 
-    public ReportTemplateMetaData(String filename, String outputname, OutputFormat[] outputFormats,
-            boolean isServer, String[] md5CheckSums, boolean multipleRootObjects, String context) {
+    private FileMetaData fileMetaData;
 
-        this.filename = filename;
+    public ReportTemplateMetaData(@NonNull FileMetaData fileMetadata, String outputname,
+            OutputFormat[] outputFormats, boolean isServer, boolean multipleRootObjects,
+            String context) {
+
+        this.fileMetaData = fileMetadata;
         this.outputname = outputname;
         setOutputFormats(outputFormats);
         this.isServer = isServer;
         this.multipleRootObjects = multipleRootObjects;
         this.context = context;
-
-        if (md5CheckSums != null) {
-            this.md5CheckSums = new HashSet<String>(Arrays.asList(md5CheckSums));
-        }
     }
 
     /*
@@ -82,10 +71,8 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
      */
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((filename == null) ? 0 : filename.hashCode());
-        result = prime * result + ((md5CheckSums == null) ? 0 : md5CheckSums.hashCode());
+        int prime = 31;
+        int result = fileMetaData.hashCode();
         result = prime * result + Arrays.hashCode(outputFormat);
         result = prime * result + ((outputname == null) ? 0 : outputname.hashCode());
         result = prime * result + Boolean.valueOf(multipleRootObjects).hashCode();
@@ -110,18 +97,11 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
             return false;
         }
         ReportTemplateMetaData other = (ReportTemplateMetaData) obj;
-        if (filename == null) {
-            if (other.filename != null) {
+        if (fileMetaData == null) {
+            if (other.fileMetaData != null) {
                 return false;
             }
-        } else if (!filename.equals(other.filename)) {
-            return false;
-        }
-        if (md5CheckSums == null) {
-            if (other.md5CheckSums != null) {
-                return false;
-            }
-        } else if (!md5CheckSums.equals(other.md5CheckSums)) {
+        } else if (!fileMetaData.equals(other.fileMetaData)) {
             return false;
         }
         if (!Arrays.equals(outputFormat, other.outputFormat)) {
@@ -142,7 +122,7 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
     }
 
     public String getFilename() {
-        return filename;
+        return fileMetaData.getFilename();
     }
 
     public OutputFormat[] getOutputFormats() {

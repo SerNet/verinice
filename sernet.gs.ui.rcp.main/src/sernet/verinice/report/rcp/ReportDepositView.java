@@ -23,8 +23,6 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
 
-import javax.swing.text.TabExpander;
-
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
@@ -70,7 +68,7 @@ import sernet.verinice.interfaces.ReportDepositException;
 import sernet.verinice.interfaces.ReportTemplateServiceException;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.report.ReportTemplateMetaData;
-import sernet.verinice.rcp.ReportTemplateSync;
+import sernet.verinice.rcp.ReportTemplateSyncer;
 import sernet.verinice.rcp.RightsEnabledView;
 
 public class ReportDepositView extends RightsEnabledView {
@@ -142,7 +140,7 @@ public class ReportDepositView extends RightsEnabledView {
         contextColumn.setWidth(contextWidth);
         contextColumn.setText(Messages.ReportMetaDataContext);
         contextColumn.addSelectionListener(new SortSelectionAdapter(this, contextColumn, 1));
-        
+
         outputFormatColumn = new TableColumn(table, SWT.LEFT);
         outputFormatColumn.setWidth(outputFormatWidth);
         outputFormatColumn.setText(Messages.ReportDepositView_2);
@@ -495,7 +493,7 @@ public class ReportDepositView extends RightsEnabledView {
     private Object getContent() {
         try {
             Set<ReportTemplateMetaData> templateSet = getReportService()
-                    .getServerReportTemplates(Locale.getDefault().getLanguage());
+                    .getReportTemplates(Locale.getDefault().getLanguage());
             return templateSet.toArray(new ReportTemplateMetaData[templateSet.size()]);
         } catch (ReportTemplateServiceException e) {
             String msg = "Something went wrong with reading the propertyfiles";
@@ -525,7 +523,7 @@ public class ReportDepositView extends RightsEnabledView {
     }
 
     private void updateView() {
-        ReportTemplateSync.sync();
+        ReportTemplateSyncer.sync();
         setInput(getContent());
     }
 

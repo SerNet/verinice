@@ -54,6 +54,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
 import sernet.verinice.interfaces.ReportDepositException;
+import sernet.verinice.model.report.FileMetaData;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 
 /**
@@ -159,8 +160,8 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         reportContextLabelGd.grabExcessHorizontalSpace = false;
         reportContextLabelGd.horizontalSpan = 1;
         reportContextLabel.setLayoutData(reportNameLabelGd);
-        
-        reportContextCombo = new Combo(dialogContent,SWT.DROP_DOWN | SWT.READ_ONLY);
+
+        reportContextCombo = new Combo(dialogContent, SWT.DROP_DOWN | SWT.READ_ONLY);
         reportContextCombo.setItems(ReportTemplateMetaData.CONTEXTS);
         GridData reportContextGd = new GridData();
         reportContextGd.horizontalAlignment = SWT.FILL;
@@ -179,7 +180,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
                 widgetSelected(e);
             }
         });
-        
+
         allowMultipleRootObjects = new Button(dialogContent, SWT.CHECK);
         allowMultipleRootObjects.setText(Messages.ReportDepositView_25);
         GridData allowMultipleRootObjectsGd = new GridData();
@@ -318,10 +319,12 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
 
     private void updateTemplate() {
         try {
-            ReportTemplateMetaData metaData = new ReportTemplateMetaData(
-                    FilenameUtils.getName(getSelectedDesginFile()), getReportOutputName(),
-                    getReportOutputFormats(), true, null, allowMultipleRootObjects.getSelection(),
-                    getContext());
+            FileMetaData fileMetaDAta = new FileMetaData(
+                    FilenameUtils.getName(getSelectedDesginFile()), null);
+
+            ReportTemplateMetaData metaData = new ReportTemplateMetaData(fileMetaDAta,
+                    getReportOutputName(), getReportOutputFormats(), true,
+                    allowMultipleRootObjects.getSelection(), getContext());
             getReportService().update(metaData, getLanguage());
         } catch (ReportDepositException e) {
             LOG.error("Error while updating report template file", e); //$NON-NLS-1$
@@ -332,10 +335,11 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     private void addTemplate() {
         try {
             byte[] rptDesignFile = FileUtils.readFileToByteArray(new File(getSelectedDesginFile()));
-            ReportTemplateMetaData metaData = new ReportTemplateMetaData(
-                    FilenameUtils.getName(getSelectedDesginFile()), getReportOutputName(),
-                    getReportOutputFormats(), true, null, allowMultipleRootObjects.getSelection(),
-                    getContext());
+            FileMetaData fileMetaData = new FileMetaData(
+                    FilenameUtils.getName(getSelectedDesginFile()), null);
+            ReportTemplateMetaData metaData = new ReportTemplateMetaData(fileMetaData,
+                    getReportOutputName(), getReportOutputFormats(), true,
+                    allowMultipleRootObjects.getSelection(), getContext());
             getReportService().add(metaData, rptDesignFile, getLanguage());
         } catch (IOException | ReportDepositException e) {
             LOG.error("Error while adding new report template file", e); //$NON-NLS-1$

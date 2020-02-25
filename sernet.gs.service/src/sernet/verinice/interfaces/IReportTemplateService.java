@@ -19,29 +19,20 @@
  ******************************************************************************/
 package sernet.verinice.interfaces;
 
-import java.io.File;
-import java.util.Iterator;
 import java.util.Set;
-
-import org.apache.commons.io.FilenameUtils;
 
 import sernet.gs.service.AbstractReportTemplateService;
 import sernet.verinice.interfaces.report.IOutputFormat;
-import sernet.verinice.model.report.ReportTemplate;
+import sernet.verinice.model.report.FileMetaData;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 
 /**
- * Provides an interfaces for report metadata and retrieving full template
- * together with their report property files. A full report template is
- * represented {@link ReportTemplate}.
+ * Provides metadata & content of report templates and other report resources.
  *
  * <p>
- * There exists in abstract Implementation which is files system based:
+ * There is an abstract Implementation which is file system based:
  * {@link AbstractReportTemplateService}
  * </p>
- *
- * @see AbstractReportTemplateService
- *
  *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
@@ -53,7 +44,6 @@ public interface IReportTemplateService {
     }
 
     public static final String PROPERTIES_FILE_EXTENSION = "properties";
-    public static final char EXTENSION_SEPARATOR_CHAR = FilenameUtils.EXTENSION_SEPARATOR;
 
     public static final String PROPERTIES_FILENAME = "filename";
     public static final String PROPERTIES_OUTPUTFORMATS = "outputformats";
@@ -68,24 +58,19 @@ public interface IReportTemplateService {
 
     IOutputFormat[] getOutputFormats(OutputFormat[] format);
 
-    public ReportTemplate getReportTemplate(ReportTemplateMetaData metadata, String locale)
-            throws ReportTemplateServiceException;
+    /**
+     * Gets all report template resources (designs, libs, etc.).
+     */
+    public Set<FileMetaData> getAllResources() throws ReportTemplateServiceException;
 
-    public Set<ReportTemplateMetaData> getServerReportTemplates(String locale)
-            throws ReportTemplateServiceException;
-
-    public Set<ReportTemplateMetaData> getReportTemplateMetaData(String[] rptDesignFiles,
-            String locale) throws ReportTemplateServiceException;
-
-    public Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles, String locale)
-            throws ReportTemplateServiceException;
+    /**
+     * Gets all report template resources (designs, libs, etc.) for given locale
+     * (excludes all files specific to other locales).
+     */
+    public Set<FileMetaData> getAllResources(String locale) throws ReportTemplateServiceException;
 
     public Set<ReportTemplateMetaData> getReportTemplates(String locale)
             throws ReportTemplateServiceException;
 
-    public Iterator<File> listPropertiesFiles(String fileName);
-
-    @Deprecated
-    ReportTemplateMetaData getMetaData(File rptDesign, String locale)
-            throws ReportTemplateServiceException;
+    public byte[] readResource(String filename) throws ReportTemplateServiceException;
 }

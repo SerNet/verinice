@@ -80,7 +80,7 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.Preferences;
-import sernet.verinice.rcp.ReportTemplateSync;
+import sernet.verinice.rcp.ReportTemplateSyncer;
 import sernet.verinice.rcp.StartupImporter;
 import sernet.verinice.rcp.jobs.VeriniceWorkspaceJob;
 import sernet.verinice.service.commands.migration.DbVersion;
@@ -270,7 +270,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
         StartupImporter.importVna();
 
-        ReportTemplateSync.sync();
+        ReportTemplateSyncer.sync();
 
         // Log the system and application configuration
         ConfigurationLogger.logSystemProperties();
