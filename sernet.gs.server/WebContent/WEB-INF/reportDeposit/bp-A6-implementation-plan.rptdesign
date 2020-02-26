@@ -5,9 +5,6 @@
     <html-property name="description">The template for a mogs report in portrait format. It contains a configured overview grid.</html-property>
     <simple-property-list name="includeResource">
         <value>bp-A6-implementation-plan</value>
-        <value>bp-A6-implementation-plan_de</value>
-        <value>bp-A6-implementation-plan_it</value>
-        <value>bp-A6-implementation-plan_cs</value>
     </simple-property-list>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[function catalogIndex(key) {
@@ -32,20 +29,26 @@ function addLeadingZeros(str, leading) {
 	return arr.join("")
 }
 
+function formatDateFromString(str) {
+	if(str != null &amp;&amp; str != ""){
+		a = Packages.java.time.LocalDate.parse(str)
+		return a.format(Packages.java.time.format.DateTimeFormatter.ofPattern(reportContext.getMessage("date.format.string")))
+	}
+	return reportContext.getMessage("empty.date.string")
+}
+
+
 reportContext.setGlobalVariable("catalogIndex", catalogIndex)
-reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
+reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)
+reportContext.setGlobalVariable("formatDateFromString", formatDateFromString)
+
+]]></method>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
-    <list-property name="libraries">
-        <structure>
-            <property name="fileName">implementation-plan.rptlibrary</property>
-            <property name="namespace">implementation-plan</property>
-        </structure>
-    </list-property>
     <data-sources>
         <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44">
-            <property name="sncaUrl">http://localhost:8800/veriniceserver/GetHitroConfig</property>
-            <property name="serverURI">http://localhost:8800</property>
+            <property name="sncaUrl">http://localhost:8830/GetHitroConfig</property>
+            <property name="serverURI">http://localhost:8830</property>
         </oda-data-source>
     </data-sources>
     <data-sets>
@@ -739,6 +742,11 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <text-property name="displayName">Description</text-property>
                     <text-property name="heading">Description</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
+                    <text-property name="heading">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
+                </structure>
             </list-property>
             <list-property name="filter"/>
             <list-property name="parameters"/>
@@ -922,6 +930,11 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <structure>
                         <property name="position">36</property>
                         <property name="name">Description</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">37</property>
+                        <property name="name">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -1180,6 +1193,13 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
+                <structure>
+                    <property name="position">37</property>
+                    <property name="name">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <property name="nativeName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[{
   "followLinksOutsideOfScope": false,
@@ -1221,7 +1241,8 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
     "bp_application/bp_requirement/bp_safeguard.bp_safeguard_kosten_ptperiod AS Kosten__-__Zeitraum__(Maßnahme)",
     "bp_application/bp_requirement/bp_safeguard/bp_person.bp_person_last_name AS Nachname__(Person)",
     "bp_application/bp_requirement/bp_safeguard/bp_person.bp_person_first_name AS Vorname__(Person)",
-    "bp_application/bp_requirement/bp_safeguard:bp_person.description AS Description"
+    "bp_application/bp_requirement/bp_safeguard.bp_safeguard_implementation_by_date AS Description",
+    "bp_application/bp_requirement.bp_requirement_implementation_by_date AS Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)"
   ],
   "relationIds": [
     "rel_bp_safeguard_implementation_by",
@@ -1289,219 +1310,249 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">Datenbank-Id__(Informationsverbund)</property>
+                    <property name="alias">Datenbank-Id__(Informationsverbund)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Datenbank-Id__(Informationsverbund)</text-property>
                     <text-property name="heading">Datenbank-Id__(Informationsverbund)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Kürzel__(Informationsverbund)</property>
+                    <property name="alias">Kürzel__(Informationsverbund)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Kürzel__(Informationsverbund)</text-property>
                     <text-property name="heading">Kürzel__(Informationsverbund)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Titel__(Informationsverbund)</property>
+                    <property name="alias">Titel__(Informationsverbund)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Titel__(Informationsverbund)</text-property>
                     <text-property name="heading">Titel__(Informationsverbund)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Beschreibung__(Informationsverbund)</property>
+                    <property name="alias">Beschreibung__(Informationsverbund)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Beschreibung__(Informationsverbund)</text-property>
                     <text-property name="heading">Beschreibung__(Informationsverbund)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risikoanalyse__-__Risikoanalyse__erforderlich__(Informationsverbund)</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">Risikoanalyse__-__Risikoanalyse__erforderlich__(Informationsverbund)</text-property>
-                    <text-property name="heading">Risikoanalyse__-__Risikoanalyse__erforderlich__(Informationsverbund)</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">Datenbank-Id__(Baustein(e))</property>
+                    <property name="alias">Datenbank-Id__(Baustein(e))</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Datenbank-Id__(Baustein(e))</text-property>
                     <text-property name="heading">Datenbank-Id__(Baustein(e))</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Titel__(Baustein(e))</property>
+                    <property name="alias">Titel__(Baustein(e))</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Titel__(Baustein(e))</text-property>
                     <text-property name="heading">Titel__(Baustein(e))</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Identifier__(Baustein(e))</property>
+                    <property name="alias">Identifier__(Baustein(e))</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Identifier__(Baustein(e))</text-property>
                     <text-property name="heading">Identifier__(Baustein(e))</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Beschreibung__(Baustein(e))</property>
+                    <property name="alias">Beschreibung__(Baustein(e))</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Beschreibung__(Baustein(e))</text-property>
                     <text-property name="heading">Beschreibung__(Baustein(e))</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Bearbeitungsreihenfolge__(Baustein(e))</property>
+                    <property name="alias">Bearbeitungsreihenfolge__(Baustein(e))</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Bearbeitungsreihenfolge__(Baustein(e))</text-property>
                     <text-property name="heading">Bearbeitungsreihenfolge__(Baustein(e))</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Datenbank-Id__(Baustein-Anforderung)</property>
+                    <property name="alias">Datenbank-Id__(Baustein-Anforderung)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Datenbank-Id__(Baustein-Anforderung)</text-property>
                     <text-property name="heading">Datenbank-Id__(Baustein-Anforderung)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Titel__(Baustein-Anforderung)</property>
+                    <property name="alias">Titel__(Baustein-Anforderung)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Titel__(Baustein-Anforderung)</text-property>
                     <text-property name="heading">Titel__(Baustein-Anforderung)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Identifier__(Baustein-Anforderung)</property>
+                    <property name="alias">Identifier__(Baustein-Anforderung)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Identifier__(Baustein-Anforderung)</text-property>
                     <text-property name="heading">Identifier__(Baustein-Anforderung)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Baustein-Anforderung)</property>
+                    <property name="alias">Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Baustein-Anforderung)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Baustein-Anforderung)</text-property>
                     <text-property name="heading">Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Baustein-Anforderung)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Umsetzung__(Maßnahmenstärke)__-__Erläuterung__(Baustein-Anforderung)</property>
+                    <property name="alias">Umsetzung__(Maßnahmenstärke)__-__Erläuterung__(Baustein-Anforderung)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Umsetzung__(Maßnahmenstärke)__-__Erläuterung__(Baustein-Anforderung)</text-property>
                     <text-property name="heading">Umsetzung__(Maßnahmenstärke)__-__Erläuterung__(Baustein-Anforderung)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Umsetzung__(Maßnahmenstärke)__-__Aus__Maßnahme__ableiten__(Baustein-Anforderung)</property>
+                    <property name="alias">Umsetzung__(Maßnahmenstärke)__-__Aus__Maßnahme__ableiten__(Baustein-Anforderung)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Umsetzung__(Maßnahmenstärke)__-__Aus__Maßnahme__ableiten__(Baustein-Anforderung)</text-property>
                     <text-property name="heading">Umsetzung__(Maßnahmenstärke)__-__Aus__Maßnahme__ableiten__(Baustein-Anforderung)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Kosten__-__Personalkosten__fix__EUR__(Baustein-Anforderung)</property>
+                    <property name="alias">Kosten__-__Personalkosten__fix__EUR__(Baustein-Anforderung)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Kosten__-__Personalkosten__fix__EUR__(Baustein-Anforderung)</text-property>
                     <text-property name="heading">Kosten__-__Personalkosten__fix__EUR__(Baustein-Anforderung)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Kosten__-__Personalkosten__var__EUR__(Baustein-Anforderung)</property>
+                    <property name="alias">Kosten__-__Personalkosten__var__EUR__(Baustein-Anforderung)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Kosten__-__Personalkosten__var__EUR__(Baustein-Anforderung)</text-property>
                     <text-property name="heading">Kosten__-__Personalkosten__var__EUR__(Baustein-Anforderung)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Kosten__-__Sachkosten__fix__EUR__(Baustein-Anforderung)</property>
+                    <property name="alias">Kosten__-__Sachkosten__fix__EUR__(Baustein-Anforderung)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Kosten__-__Sachkosten__fix__EUR__(Baustein-Anforderung)</text-property>
                     <text-property name="heading">Kosten__-__Sachkosten__fix__EUR__(Baustein-Anforderung)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Kosten__-__Sachkosten__var__EUR__(Baustein-Anforderung)</property>
+                    <property name="alias">Kosten__-__Sachkosten__var__EUR__(Baustein-Anforderung)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Kosten__-__Sachkosten__var__EUR__(Baustein-Anforderung)</text-property>
                     <text-property name="heading">Kosten__-__Sachkosten__var__EUR__(Baustein-Anforderung)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Kosten__-__Zeitraum__(Baustein-Anforderung)</property>
+                    <property name="alias">Kosten__-__Zeitraum__(Baustein-Anforderung)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Kosten__-__Zeitraum__(Baustein-Anforderung)</text-property>
                     <text-property name="heading">Kosten__-__Zeitraum__(Baustein-Anforderung)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Kosten__-__Zeitraum__(Baustein-Anforderung)_1</property>
-                    <property name="analysis">dimension</property>
                     <text-property name="displayName">Kosten__-__Zeitraum__(Baustein-Anforderung)</text-property>
                     <text-property name="heading">Kosten__-__Zeitraum__(Baustein-Anforderung)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Datenbank-Id__(Maßnahme)</property>
+                    <property name="alias">Datenbank-Id__(Maßnahme)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Datenbank-Id__(Maßnahme)</text-property>
                     <text-property name="heading">Datenbank-Id__(Maßnahme)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Titel__(Maßnahme)</property>
+                    <property name="alias">Titel__(Maßnahme)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Titel__(Maßnahme)</text-property>
                     <text-property name="heading">Titel__(Maßnahme)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Identifier__(Maßnahme)</property>
+                    <property name="alias">Identifier__(Maßnahme)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Identifier__(Maßnahme)</text-property>
                     <text-property name="heading">Identifier__(Maßnahme)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Umsetzung__(Maßnahmenstärke)__-__Erläuterung__(Maßnahme)</property>
+                    <property name="alias">Umsetzung__(Maßnahmenstärke)__-__Erläuterung__(Maßnahme)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Umsetzung__(Maßnahmenstärke)__-__Erläuterung__(Maßnahme)</text-property>
                     <text-property name="heading">Umsetzung__(Maßnahmenstärke)__-__Erläuterung__(Maßnahme)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Maßnahme)</property>
+                    <property name="alias">Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Maßnahme)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Maßnahme)</text-property>
                     <text-property name="heading">Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Maßnahme)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Kosten__-__Personalkosten__fix__EUR__(Maßnahme)</property>
+                    <property name="alias">Kosten__-__Personalkosten__fix__EUR__(Maßnahme)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Kosten__-__Personalkosten__fix__EUR__(Maßnahme)</text-property>
                     <text-property name="heading">Kosten__-__Personalkosten__fix__EUR__(Maßnahme)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Kosten__-__Personalkosten__var__EUR__(Maßnahme)</property>
+                    <property name="alias">Kosten__-__Personalkosten__var__EUR__(Maßnahme)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Kosten__-__Personalkosten__var__EUR__(Maßnahme)</text-property>
                     <text-property name="heading">Kosten__-__Personalkosten__var__EUR__(Maßnahme)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Kosten__-__Sachkosten__fix__EUR__(Maßnahme)</property>
+                    <property name="alias">Kosten__-__Sachkosten__fix__EUR__(Maßnahme)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Kosten__-__Sachkosten__fix__EUR__(Maßnahme)</text-property>
                     <text-property name="heading">Kosten__-__Sachkosten__fix__EUR__(Maßnahme)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Kosten__-__Sachkosten__var__EUR__(Maßnahme)</property>
+                    <property name="alias">Kosten__-__Sachkosten__var__EUR__(Maßnahme)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Kosten__-__Sachkosten__var__EUR__(Maßnahme)</text-property>
                     <text-property name="heading">Kosten__-__Sachkosten__var__EUR__(Maßnahme)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Kosten__-__Zeitraum__(Maßnahme)</property>
+                    <property name="alias">Kosten__-__Zeitraum__(Maßnahme)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Kosten__-__Zeitraum__(Maßnahme)</text-property>
                     <text-property name="heading">Kosten__-__Zeitraum__(Maßnahme)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Kosten__-__Zeitraum__(Maßnahme)_1</property>
-                    <property name="analysis">dimension</property>
                     <text-property name="displayName">Kosten__-__Zeitraum__(Maßnahme)</text-property>
                     <text-property name="heading">Kosten__-__Zeitraum__(Maßnahme)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Nachname__(Person)</property>
+                    <property name="alias">Nachname__(Person)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Nachname__(Person)</text-property>
                     <text-property name="heading">Nachname__(Person)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Vorname__(Person)</property>
+                    <property name="alias">Vorname__(Person)</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Vorname__(Person)</text-property>
                     <text-property name="heading">Vorname__(Person)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Description</property>
+                    <property name="alias">Description</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Description</text-property>
                     <text-property name="heading">Description</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
+                    <text-property name="heading">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
                 </structure>
             </list-property>
             <list-property name="filter"/>
@@ -1530,162 +1581,162 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">Risikoanalyse__-__Risikoanalyse__erforderlich__(Informationsverbund)</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">6</property>
                         <property name="name">Datenbank-Id__(Baustein(e))</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">7</property>
+                        <property name="position">6</property>
                         <property name="name">Titel__(Baustein(e))</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
+                        <property name="position">7</property>
                         <property name="name">Identifier__(Baustein(e))</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
+                        <property name="position">8</property>
                         <property name="name">Beschreibung__(Baustein(e))</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
+                        <property name="position">9</property>
                         <property name="name">Bearbeitungsreihenfolge__(Baustein(e))</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">11</property>
+                        <property name="position">10</property>
                         <property name="name">Datenbank-Id__(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
+                        <property name="position">11</property>
                         <property name="name">Titel__(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">12</property>
                         <property name="name">Identifier__(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">13</property>
                         <property name="name">Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">14</property>
                         <property name="name">Umsetzung__(Maßnahmenstärke)__-__Erläuterung__(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">16</property>
+                        <property name="position">15</property>
                         <property name="name">Umsetzung__(Maßnahmenstärke)__-__Aus__Maßnahme__ableiten__(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">17</property>
+                        <property name="position">16</property>
                         <property name="name">Kosten__-__Personalkosten__fix__EUR__(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">18</property>
+                        <property name="position">17</property>
                         <property name="name">Kosten__-__Personalkosten__var__EUR__(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">19</property>
+                        <property name="position">18</property>
                         <property name="name">Kosten__-__Sachkosten__fix__EUR__(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">20</property>
+                        <property name="position">19</property>
                         <property name="name">Kosten__-__Sachkosten__var__EUR__(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">21</property>
+                        <property name="position">20</property>
                         <property name="name">Kosten__-__Zeitraum__(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">22</property>
+                        <property name="position">21</property>
                         <property name="name">Kosten__-__Zeitraum__(Baustein-Anforderung)_1</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">23</property>
+                        <property name="position">22</property>
                         <property name="name">Datenbank-Id__(Maßnahme)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">24</property>
+                        <property name="position">23</property>
                         <property name="name">Titel__(Maßnahme)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">25</property>
+                        <property name="position">24</property>
                         <property name="name">Identifier__(Maßnahme)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">26</property>
+                        <property name="position">25</property>
                         <property name="name">Umsetzung__(Maßnahmenstärke)__-__Erläuterung__(Maßnahme)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">27</property>
+                        <property name="position">26</property>
                         <property name="name">Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Maßnahme)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">28</property>
+                        <property name="position">27</property>
                         <property name="name">Kosten__-__Personalkosten__fix__EUR__(Maßnahme)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">29</property>
+                        <property name="position">28</property>
                         <property name="name">Kosten__-__Personalkosten__var__EUR__(Maßnahme)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">30</property>
+                        <property name="position">29</property>
                         <property name="name">Kosten__-__Sachkosten__fix__EUR__(Maßnahme)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">31</property>
+                        <property name="position">30</property>
                         <property name="name">Kosten__-__Sachkosten__var__EUR__(Maßnahme)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">32</property>
+                        <property name="position">31</property>
                         <property name="name">Kosten__-__Zeitraum__(Maßnahme)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">33</property>
+                        <property name="position">32</property>
                         <property name="name">Kosten__-__Zeitraum__(Maßnahme)_1</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">34</property>
+                        <property name="position">33</property>
                         <property name="name">Nachname__(Person)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">35</property>
+                        <property name="position">34</property>
                         <property name="name">Vorname__(Person)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">36</property>
+                        <property name="position">35</property>
                         <property name="name">Description</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">36</property>
+                        <property name="name">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -1722,225 +1773,225 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                 </structure>
                 <structure>
                     <property name="position">5</property>
-                    <property name="name">Risikoanalyse__-__Risikoanalyse__erforderlich__(Informationsverbund)</property>
-                    <property name="nativeName">Risikoanalyse__-__Risikoanalyse__erforderlich__(Informationsverbund)</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">6</property>
                     <property name="name">Datenbank-Id__(Baustein(e))</property>
                     <property name="nativeName">Datenbank-Id__(Baustein(e))</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">6</property>
                     <property name="name">Titel__(Baustein(e))</property>
                     <property name="nativeName">Titel__(Baustein(e))</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">7</property>
                     <property name="name">Identifier__(Baustein(e))</property>
                     <property name="nativeName">Identifier__(Baustein(e))</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">8</property>
                     <property name="name">Beschreibung__(Baustein(e))</property>
                     <property name="nativeName">Beschreibung__(Baustein(e))</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">9</property>
                     <property name="name">Bearbeitungsreihenfolge__(Baustein(e))</property>
                     <property name="nativeName">Bearbeitungsreihenfolge__(Baustein(e))</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">10</property>
                     <property name="name">Datenbank-Id__(Baustein-Anforderung)</property>
                     <property name="nativeName">Datenbank-Id__(Baustein-Anforderung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">11</property>
                     <property name="name">Titel__(Baustein-Anforderung)</property>
                     <property name="nativeName">Titel__(Baustein-Anforderung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">12</property>
                     <property name="name">Identifier__(Baustein-Anforderung)</property>
                     <property name="nativeName">Identifier__(Baustein-Anforderung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">13</property>
                     <property name="name">Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Baustein-Anforderung)</property>
                     <property name="nativeName">Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Baustein-Anforderung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">14</property>
                     <property name="name">Umsetzung__(Maßnahmenstärke)__-__Erläuterung__(Baustein-Anforderung)</property>
                     <property name="nativeName">Umsetzung__(Maßnahmenstärke)__-__Erläuterung__(Baustein-Anforderung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">15</property>
                     <property name="name">Umsetzung__(Maßnahmenstärke)__-__Aus__Maßnahme__ableiten__(Baustein-Anforderung)</property>
                     <property name="nativeName">Umsetzung__(Maßnahmenstärke)__-__Aus__Maßnahme__ableiten__(Baustein-Anforderung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">16</property>
                     <property name="name">Kosten__-__Personalkosten__fix__EUR__(Baustein-Anforderung)</property>
                     <property name="nativeName">Kosten__-__Personalkosten__fix__EUR__(Baustein-Anforderung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">17</property>
                     <property name="name">Kosten__-__Personalkosten__var__EUR__(Baustein-Anforderung)</property>
                     <property name="nativeName">Kosten__-__Personalkosten__var__EUR__(Baustein-Anforderung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">18</property>
                     <property name="name">Kosten__-__Sachkosten__fix__EUR__(Baustein-Anforderung)</property>
                     <property name="nativeName">Kosten__-__Sachkosten__fix__EUR__(Baustein-Anforderung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">20</property>
+                    <property name="position">19</property>
                     <property name="name">Kosten__-__Sachkosten__var__EUR__(Baustein-Anforderung)</property>
                     <property name="nativeName">Kosten__-__Sachkosten__var__EUR__(Baustein-Anforderung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">21</property>
+                    <property name="position">20</property>
                     <property name="name">Kosten__-__Zeitraum__(Baustein-Anforderung)</property>
                     <property name="nativeName">Kosten__-__Zeitraum__(Baustein-Anforderung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">22</property>
+                    <property name="position">21</property>
                     <property name="name">Kosten__-__Zeitraum__(Baustein-Anforderung)_1</property>
                     <property name="nativeName">Kosten__-__Zeitraum__(Baustein-Anforderung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">23</property>
+                    <property name="position">22</property>
                     <property name="name">Datenbank-Id__(Maßnahme)</property>
                     <property name="nativeName">Datenbank-Id__(Maßnahme)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">24</property>
+                    <property name="position">23</property>
                     <property name="name">Titel__(Maßnahme)</property>
                     <property name="nativeName">Titel__(Maßnahme)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">25</property>
+                    <property name="position">24</property>
                     <property name="name">Identifier__(Maßnahme)</property>
                     <property name="nativeName">Identifier__(Maßnahme)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">26</property>
+                    <property name="position">25</property>
                     <property name="name">Umsetzung__(Maßnahmenstärke)__-__Erläuterung__(Maßnahme)</property>
                     <property name="nativeName">Umsetzung__(Maßnahmenstärke)__-__Erläuterung__(Maßnahme)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">27</property>
+                    <property name="position">26</property>
                     <property name="name">Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Maßnahme)</property>
                     <property name="nativeName">Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Maßnahme)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">28</property>
+                    <property name="position">27</property>
                     <property name="name">Kosten__-__Personalkosten__fix__EUR__(Maßnahme)</property>
                     <property name="nativeName">Kosten__-__Personalkosten__fix__EUR__(Maßnahme)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">29</property>
+                    <property name="position">28</property>
                     <property name="name">Kosten__-__Personalkosten__var__EUR__(Maßnahme)</property>
                     <property name="nativeName">Kosten__-__Personalkosten__var__EUR__(Maßnahme)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">30</property>
+                    <property name="position">29</property>
                     <property name="name">Kosten__-__Sachkosten__fix__EUR__(Maßnahme)</property>
                     <property name="nativeName">Kosten__-__Sachkosten__fix__EUR__(Maßnahme)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">31</property>
+                    <property name="position">30</property>
                     <property name="name">Kosten__-__Sachkosten__var__EUR__(Maßnahme)</property>
                     <property name="nativeName">Kosten__-__Sachkosten__var__EUR__(Maßnahme)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">32</property>
+                    <property name="position">31</property>
                     <property name="name">Kosten__-__Zeitraum__(Maßnahme)</property>
                     <property name="nativeName">Kosten__-__Zeitraum__(Maßnahme)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">33</property>
+                    <property name="position">32</property>
                     <property name="name">Kosten__-__Zeitraum__(Maßnahme)_1</property>
                     <property name="nativeName">Kosten__-__Zeitraum__(Maßnahme)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">34</property>
+                    <property name="position">33</property>
                     <property name="name">Nachname__(Person)</property>
                     <property name="nativeName">Nachname__(Person)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">35</property>
+                    <property name="position">34</property>
                     <property name="name">Vorname__(Person)</property>
                     <property name="nativeName">Vorname__(Person)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">36</property>
+                    <property name="position">35</property>
                     <property name="name">Description</property>
                     <property name="nativeName">Description</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">36</property>
+                    <property name="name">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <property name="nativeName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -1954,7 +2005,6 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
     "bp_itnetwork.bp_itnetwork_abbr AS Kürzel__(Informationsverbund)",
     "bp_itnetwork.bp_itnetwork_name AS Titel__(Informationsverbund)",
     "bp_itnetwork.bp_itnetwork_description AS Beschreibung__(Informationsverbund)",
-    "bp_itnetwork.bp_itnetwork_riskanalysis_necessary AS Risikoanalyse__-__Risikoanalyse__erforderlich__(Informationsverbund)",
     "bp_itnetwork/bp_requirement<bp_requirement_group.dbid AS Datenbank-Id__(Baustein(e))",
     "bp_itnetwork/bp_requirement<bp_requirement_group.bp_requirement_group_name AS Titel__(Baustein(e))",
     "bp_itnetwork/bp_requirement<bp_requirement_group.bp_requirement_group_id AS Identifier__(Baustein(e))",
@@ -1985,7 +2035,8 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
     "bp_itnetwork/bp_requirement/bp_safeguard.bp_safeguard_kosten_ptperiod AS Kosten__-__Zeitraum__(Maßnahme)",
     "bp_itnetwork/bp_requirement/bp_safeguard/bp_person.bp_person_last_name AS Nachname__(Person)",
     "bp_itnetwork/bp_requirement/bp_safeguard/bp_person.bp_person_first_name AS Vorname__(Person)",
-    "bp_itnetwork/bp_requirement/bp_safeguard:bp_person.description AS Description"
+    "bp_itnetwork/bp_requirement/bp_safeguard.bp_safeguard_implementation_by_date AS Description",
+    "bp_itnetwork/bp_requirement.bp_requirement_implementation_by_date AS Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)"
   ],
   "relationIds": [
     "rel_bp_safeguard_implementation_by",
@@ -2158,7 +2209,7 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
     "bp_person.bp_person_first_name AS Vorname__(Person)",
     "bp_person.bp_person_last_name AS Nachname__(Person)",
     "bp_person/bp_requirement.dbid AS Datenbank-Id__(Baustein-Anforderung)",
-    "bp_person:bp_requirement.description AS Description"
+    "bp_person/bp_requirement.bp_requirement_implementation_by_date AS Description"
   ],
   "relationIds": [
     "rel_bp_requirement_implementation_by"
@@ -2940,12 +2991,6 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <text-property name="displayName">safeguard_labor_costs_var</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">itnetworks::Risikoanalyse__-__Risikoanalyse__erforderlich__(Informationsverbund)</property>
-                    <property name="alias">requires_analysis</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">requires_analysis</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">itnetworks::Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Baustein-Anforderung)</property>
                     <property name="alias">requirement_state</property>
                     <property name="analysis">dimension</property>
@@ -2981,6 +3026,11 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">requirement_implementor_descr</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">itnetworks::Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <property name="alias">itnetworks::Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <property name="analysis">dimension</property>
+                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -3006,162 +3056,162 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">requires_analysis</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">6</property>
                         <property name="name">module_id</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">7</property>
+                        <property name="position">6</property>
                         <property name="name">module_title</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
+                        <property name="position">7</property>
                         <property name="name">module_abbr</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
+                        <property name="position">8</property>
                         <property name="name">module_descr</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
+                        <property name="position">9</property>
                         <property name="name">module_order</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">11</property>
+                        <property name="position">10</property>
                         <property name="name">requirement_id</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
+                        <property name="position">11</property>
                         <property name="name">requirement_title</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">12</property>
                         <property name="name">requirement_abbr</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">13</property>
                         <property name="name">requirement_state</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">14</property>
                         <property name="name">requirement_implementation_descr</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">16</property>
+                        <property name="position">15</property>
                         <property name="name">requirement_deduce</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">17</property>
+                        <property name="position">16</property>
                         <property name="name">requirement_labor_costs_fix</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">18</property>
+                        <property name="position">17</property>
                         <property name="name">requirement_labor_costs_var</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">19</property>
+                        <property name="position">18</property>
                         <property name="name">requirement_material_costs_fix</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">20</property>
+                        <property name="position">19</property>
                         <property name="name">requirement_material_costs_var</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">21</property>
+                        <property name="position">20</property>
                         <property name="name">requirement_labor_costs_period</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">22</property>
+                        <property name="position">21</property>
                         <property name="name">requirement_material_costs_period</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">23</property>
+                        <property name="position">22</property>
                         <property name="name">safeguard_id</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">24</property>
+                        <property name="position">23</property>
                         <property name="name">safeguard_title</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">25</property>
+                        <property name="position">24</property>
                         <property name="name">safeguard_abbr</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">26</property>
+                        <property name="position">25</property>
                         <property name="name">safeguard_descr</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">27</property>
+                        <property name="position">26</property>
                         <property name="name">safeguard_state</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">28</property>
+                        <property name="position">27</property>
                         <property name="name">safeguard_labor_costs_fix</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">29</property>
+                        <property name="position">28</property>
                         <property name="name">safeguard_labor_costs_var</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">30</property>
+                        <property name="position">29</property>
                         <property name="name">safeguard_material_costs_fix</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">31</property>
+                        <property name="position">30</property>
                         <property name="name">safeguard_material_costs_var</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">32</property>
+                        <property name="position">31</property>
                         <property name="name">safeguard_material_costs_period</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">33</property>
+                        <property name="position">32</property>
                         <property name="name">safeguard_labor_costs_period</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">34</property>
+                        <property name="position">33</property>
                         <property name="name">safeguard_implementor_prename</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">35</property>
+                        <property name="position">34</property>
                         <property name="name">safeguard_implementor_surname</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">36</property>
+                        <property name="position">35</property>
                         <property name="name">safeguard_implementor_descr</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">36</property>
+                        <property name="name">itnetworks::Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
@@ -3893,6 +3943,11 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <text-property name="displayName">Description</text-property>
                     <text-property name="heading">Description</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
+                    <text-property name="heading">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
+                </structure>
             </list-property>
             <list-property name="filter"/>
             <list-property name="parameters"/>
@@ -4076,6 +4131,11 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <structure>
                         <property name="position">36</property>
                         <property name="name">Description</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">37</property>
+                        <property name="name">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -4334,6 +4394,13 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
+                <structure>
+                    <property name="position">37</property>
+                    <property name="name">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <property name="nativeName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[{
   "followLinksOutsideOfScope": false,
@@ -4375,7 +4442,8 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
     "bp_businessprocess/bp_requirement/bp_safeguard.bp_safeguard_kosten_ptperiod AS Kosten__-__Zeitraum__(Maßnahme)",
     "bp_businessprocess/bp_requirement/bp_safeguard/bp_person.bp_person_last_name AS Nachname__(Person)",
     "bp_businessprocess/bp_requirement/bp_safeguard/bp_person.bp_person_first_name AS Vorname__(Person)",
-    "bp_businessprocess/bp_requirement/bp_safeguard:bp_person.description AS Description"
+    "bp_businessprocess/bp_requirement/bp_safeguard.bp_safeguard_implementation_by_date AS Description",
+    "bp_businessprocess/bp_requirement.bp_requirement_implementation_by_date AS Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)"
   ],
   "relationIds": [
     "rel_bp_safeguard_implementation_by",
@@ -4652,6 +4720,11 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <text-property name="displayName">Description</text-property>
                     <text-property name="heading">Description</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
+                    <text-property name="heading">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
+                </structure>
             </list-property>
             <list-property name="filter"/>
             <list-property name="parameters"/>
@@ -4835,6 +4908,11 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <structure>
                         <property name="position">36</property>
                         <property name="name">Description</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">37</property>
+                        <property name="name">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -5093,6 +5171,13 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
+                <structure>
+                    <property name="position">37</property>
+                    <property name="name">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <property name="nativeName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[{
   "followLinksOutsideOfScope": false,
@@ -5134,7 +5219,8 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
     "bp_icssystem/bp_requirement/bp_safeguard.bp_safeguard_kosten_ptperiod AS Kosten__-__Zeitraum__(Maßnahme)",
     "bp_icssystem/bp_requirement/bp_safeguard/bp_person.bp_person_last_name AS Nachname__(Person)",
     "bp_icssystem/bp_requirement/bp_safeguard/bp_person.bp_person_first_name AS Vorname__(Person)",
-    "bp_icssystem/bp_requirement/bp_safeguard:bp_person.description AS Description"
+    "bp_icssystem/bp_requirement/bp_safeguard.bp_safeguard_implementation_by_date AS Description",
+    "bp_icssystem/bp_requirement.bp_requirement_implementation_by_date AS Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)"
   ],
   "relationIds": [
     "rel_bp_safeguard_implementation_by",
@@ -5411,6 +5497,11 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <text-property name="displayName">Description</text-property>
                     <text-property name="heading">Description</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
+                    <text-property name="heading">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
+                </structure>
             </list-property>
             <list-property name="filter"/>
             <list-property name="parameters"/>
@@ -5594,6 +5685,11 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <structure>
                         <property name="position">36</property>
                         <property name="name">Description</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">37</property>
+                        <property name="name">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -5852,6 +5948,13 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
+                <structure>
+                    <property name="position">37</property>
+                    <property name="name">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <property name="nativeName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[{
   "followLinksOutsideOfScope": false,
@@ -5893,7 +5996,8 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
     "bp_itsystem/bp_requirement/bp_safeguard.bp_safeguard_kosten_ptperiod AS Kosten__-__Zeitraum__(Maßnahme)",
     "bp_itsystem/bp_requirement/bp_safeguard/bp_person.bp_person_last_name AS Nachname__(Person)",
     "bp_itsystem/bp_requirement/bp_safeguard/bp_person.bp_person_first_name AS Vorname__(Person)",
-    "bp_itsystem/bp_requirement/bp_safeguard:bp_person.description AS Description"
+    "bp_itsystem/bp_requirement/bp_safeguard.bp_safeguard_implementation_by_date AS Description",
+    "bp_itsystem/bp_requirement.bp_requirement_implementation_by_date AS Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)"
   ],
   "relationIds": [
     "rel_bp_safeguard_implementation_by",
@@ -6170,6 +6274,11 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <text-property name="displayName">Description</text-property>
                     <text-property name="heading">Description</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
+                    <text-property name="heading">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
+                </structure>
             </list-property>
             <list-property name="filter"/>
             <list-property name="parameters"/>
@@ -6353,6 +6462,11 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <structure>
                         <property name="position">36</property>
                         <property name="name">Description</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">37</property>
+                        <property name="name">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -6611,6 +6725,13 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
+                <structure>
+                    <property name="position">37</property>
+                    <property name="name">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <property name="nativeName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[{
   "followLinksOutsideOfScope": false,
@@ -6652,7 +6773,8 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
     "bp_network/bp_requirement/bp_safeguard.bp_safeguard_kosten_ptperiod AS Kosten__-__Zeitraum__(Maßnahme)",
     "bp_network/bp_requirement/bp_safeguard/bp_person.bp_person_last_name AS Nachname__(Person)",
     "bp_network/bp_requirement/bp_safeguard/bp_person.bp_person_first_name AS Vorname__(Person)",
-    "bp_network/bp_requirement/bp_safeguard:bp_person.description AS Description"
+    "bp_network/bp_requirement/bp_safeguard.bp_safeguard_implementation_by_date AS Description",
+    "bp_network/bp_requirement.bp_requirement_implementation_by_date AS Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)"
   ],
   "relationIds": [
     "rel_bp_safeguard_implementation_by",
@@ -6929,6 +7051,11 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <text-property name="displayName">Description</text-property>
                     <text-property name="heading">Description</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
+                    <text-property name="heading">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
+                </structure>
             </list-property>
             <list-property name="filter"/>
             <list-property name="parameters"/>
@@ -7112,6 +7239,11 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <structure>
                         <property name="position">36</property>
                         <property name="name">Description</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">37</property>
+                        <property name="name">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -7370,6 +7502,13 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
+                <structure>
+                    <property name="position">37</property>
+                    <property name="name">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <property name="nativeName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[{
   "followLinksOutsideOfScope": false,
@@ -7411,7 +7550,8 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
     "bp_device/bp_requirement/bp_safeguard.bp_safeguard_kosten_ptperiod AS Kosten__-__Zeitraum__(Maßnahme)",
     "bp_device/bp_requirement/bp_safeguard/bp_person.bp_person_last_name AS Nachname__(Person)",
     "bp_device/bp_requirement/bp_safeguard/bp_person.bp_person_first_name AS Vorname__(Person)",
-    "bp_device/bp_requirement/bp_safeguard:bp_person.description AS Description"
+    "bp_device/bp_requirement/bp_safeguard.bp_safeguard_implementation_by_date AS Description",
+    "bp_device/bp_requirement.bp_requirement_implementation_by_date AS Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)"
   ],
   "relationIds": [
     "rel_bp_safeguard_implementation_by",
@@ -7693,6 +7833,11 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <text-property name="displayName">Description</text-property>
                     <text-property name="heading">Description</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
+                    <text-property name="heading">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
+                </structure>
             </list-property>
             <list-property name="filter"/>
             <list-property name="parameters"/>
@@ -7878,6 +8023,11 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                         <property name="name">Description</property>
                         <property name="dataType">string</property>
                     </structure>
+                    <structure>
+                        <property name="position">37</property>
+                        <property name="name">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
                 </list-property>
             </structure>
             <property name="dataSource">verinice</property>
@@ -7886,30 +8036,35 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <property name="position">1</property>
                     <property name="name">Datenbank-Id__(Raum)</property>
                     <property name="nativeName">Datenbank-Id__(Raum)</property>
+                    <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
                     <property name="name">Kürzel__(Raum)</property>
                     <property name="nativeName">Kürzel__(Raum)</property>
+                    <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
                     <property name="name">Titel__(Raum)</property>
                     <property name="nativeName">Titel__(Raum)</property>
+                    <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">4</property>
                     <property name="name">Beschreibung__(Raum)</property>
                     <property name="nativeName">Beschreibung__(Raum)</property>
+                    <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">5</property>
                     <property name="name">Risikoanalyse__-__Risikoanalyse__erforderlich__(Raum)</property>
                     <property name="nativeName">Risikoanalyse__-__Risikoanalyse__erforderlich__(Raum)</property>
+                    <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
@@ -8129,6 +8284,13 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
+                <structure>
+                    <property name="position">37</property>
+                    <property name="name">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <property name="nativeName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[{
   "followLinksOutsideOfScope": false,
@@ -8170,7 +8332,8 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
     "bp_room/bp_requirement/bp_safeguard.bp_safeguard_kosten_ptperiod AS Kosten__-__Zeitraum__(Maßnahme)",
     "bp_room/bp_requirement/bp_safeguard/bp_person.bp_person_last_name AS Nachname__(Person)",
     "bp_room/bp_requirement/bp_safeguard/bp_person.bp_person_first_name AS Vorname__(Person)",
-    "bp_room/bp_requirement/bp_safeguard:bp_person.description AS Description"
+    "bp_room/bp_requirement/bp_safeguard.bp_safeguard_implementation_by_date AS Description",
+    "bp_room/bp_requirement.bp_requirement_implementation_by_date AS Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)"
   ],
   "relationIds": [
     "rel_bp_safeguard_implementation_by",
@@ -10763,7 +10926,7 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                         <property name="fontSize">14pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
-                        <text-property name="text" key="outputname">A.6 Realisierungsplan</text-property>
+                        <text-property name="text" key="report.titel">A.6 Realisierungsplan</text-property>
                     </label>
                 </cell>
                 <cell id="1423">
@@ -11240,12 +11403,6 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">requires_analysis</property>
-                    <text-property name="displayName">requires_analysis</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["requires_analysis"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
                     <property name="name">module_id</property>
                     <text-property name="displayName">module_id</text-property>
                     <expression name="expression" type="javascript">dataSetRow["module_id"]</expression>
@@ -11441,8 +11598,19 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                 <structure>
                     <property name="name">safeguard_implementor_descr</property>
                     <text-property name="displayName">safeguard_implementor_descr</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["safeguard_implementor_descr"]</expression>
+                    <expression name="expression" type="javascript">//dataSetRow["safeguard_implementor_descr"]
+
+formatDateFromString(dataSetRow["safeguard_implementor_descr"])
+
+//if(dataSetRow["safeguard_implementor_descr"]!=""){
+
+//df = new Packages.java.text.SimpleDateFormat("yyyy-MM-dd");
+//myDate = df.parse(dataSetRow["safeguard_implementor_descr"]);
+//}else{
+//null
+//}</expression>
                     <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">requirement_implementor_id</property>
@@ -11489,7 +11657,35 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     </list-property>
                     <property name="allowExport">false</property>
                 </structure>
+                <structure>
+                    <property name="name">itnetworks::Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">itnetworks::Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">//Packages.java.time.LocalDate.parse(dataSetRow["itnetworks::Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)"])
+dataSetRow["itnetworks::Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)"]
+//formatDateFromString(dataSetRow["itnetworks::Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)"])
+
+
+//if(dataSetRow["itnetworks::Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)"]!=""){
+
+//myDate = df.parse(dataSetRow["itnetworks::Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)"]);
+
+
+//a = Packages.java.time.LocalDate.parse(dataSetRow["itnetworks::Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)"])
+//a.format(Packages.java.time.format.DateTimeFormatter.ofPattern("d.M.yyyy"))//
+//}</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">dateFormated_BA</property>
+                    <expression name="expression" type="javascript">formatDateFromString(dataSetRow["itnetworks::Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Informationsverbund"</expression>
+            </structure>
             <column id="8430">
                 <property name="width">5px</property>
             </column>
@@ -11643,21 +11839,6 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                             <property name="colSpan">3</property>
                             <property name="rowSpan">1</property>
                             <property name="textAlign">right</property>
-                            <data id="8280">
-                                <list-property name="mapRules">
-                                    <structure>
-                                        <expression name="testExpr" type="javascript">row["requires_analysis"]</expression>
-                                        <property name="operator">is-true</property>
-                                        <text-property name="display">Risikoanalyse erforderlich</text-property>
-                                    </structure>
-                                    <structure>
-                                        <expression name="testExpr" type="javascript">row["requires_analysis"]</expression>
-                                        <property name="operator">is-false</property>
-                                        <text-property name="display">Keine Risikoanalyse erforderlich</text-property>
-                                    </structure>
-                                </list-property>
-                                <property name="resultSetColumn">requires_analysis</property>
-                            </data>
                         </cell>
                     </row>
                     <row id="8281">
@@ -11784,8 +11965,11 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                                 <text-property name="text" key="implementationDue"></text-property>
                             </label>
                             <data id="8303">
+                                <structure name="dateTimeFormat">
+                                    <property name="category">Unformatted</property>
+                                </structure>
                                 <property name="display">inline</property>
-                                <property name="resultSetColumn">requirement_implementor_descr</property>
+                                <property name="resultSetColumn">dateFormated_BA</property>
                             </data>
                         </cell>
                         <cell id="8304">
@@ -12237,6 +12421,9 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                                 <text-property name="text" key="implementationDue"></text-property>
                             </label>
                             <data id="8379">
+                                <structure name="dateTimeFormat">
+                                    <property name="category">Unformatted</property>
+                                </structure>
                                 <property name="display">inline</property>
                                 <property name="resultSetColumn">safeguard_implementor_descr</property>
                             </data>
@@ -12533,6 +12720,7 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
             <property name="fontWeight">bold</property>
             <property name="pageBreakAfter">avoid</property>
             <property name="pageBreakBefore">auto</property>
+            <structure name="toc"/>
             <text-property name="text" key="businessprocesses">Geschäftsprozesse</text-property>
         </label>
         <table id="16563">
@@ -12766,8 +12954,9 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                 <structure>
                     <property name="name">safeguard_implementor_descr</property>
                     <text-property name="displayName">safeguard_implementor_descr</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["safeguard_implementor_descr"]</expression>
+                    <expression name="expression" type="javascript">formatDateFromString(dataSetRow["safeguard_implementor_descr"])</expression>
                     <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">requirement_implementor_id</property>
@@ -12796,8 +12985,9 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                 <structure>
                     <property name="name">requirement_implementor_descr</property>
                     <text-property name="displayName">requirement_implementor_descr</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["requirement_implementor_descr"]</expression>
+                    <expression name="expression" type="javascript">formatDateFromString(dataSetRow["requirement_implementor_descr"])</expression>
                     <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">requirements_exist</property>
@@ -12815,6 +13005,9 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <property name="allowExport">false</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Geschäftsprozesse"</expression>
+            </structure>
             <column id="16735">
                 <property name="width">5px</property>
             </column>
@@ -14092,8 +14285,9 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                 <structure>
                     <property name="name">safeguard_implementor_descr</property>
                     <text-property name="displayName">safeguard_implementor_descr</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["safeguard_implementor_descr"]</expression>
+                    <expression name="expression" type="javascript">formatDateFromString(dataSetRow["safeguard_implementor_descr"])</expression>
                     <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">requirement_implementor_id</property>
@@ -14122,8 +14316,9 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                 <structure>
                     <property name="name">requirement_implementor_descr</property>
                     <text-property name="displayName">requirement_implementor_descr</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["requirement_implementor_descr"]</expression>
+                    <expression name="expression" type="javascript">formatDateFromString(dataSetRow["requirement_implementor_descr"])</expression>
                     <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">requirements_exist</property>
@@ -14141,6 +14336,9 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <property name="allowExport">false</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Anwendungen"</expression>
+            </structure>
             <column id="16551">
                 <property name="width">5px</property>
             </column>
@@ -15184,6 +15382,7 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
             <property name="fontWeight">bold</property>
             <property name="pageBreakAfter">avoid</property>
             <property name="pageBreakBefore">auto</property>
+            <structure name="toc"/>
             <text-property name="text" key="itsystems">IT-Systeme</text-property>
         </label>
         <table id="16195">
@@ -15417,8 +15616,9 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                 <structure>
                     <property name="name">safeguard_implementor_descr</property>
                     <text-property name="displayName">safeguard_implementor_descr</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["safeguard_implementor_descr"]</expression>
+                    <expression name="expression" type="javascript">formatDateFromString(dataSetRow["safeguard_implementor_descr"])</expression>
                     <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">requirement_implementor_id</property>
@@ -15447,8 +15647,9 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                 <structure>
                     <property name="name">requirement_implementor_descr</property>
                     <text-property name="displayName">requirement_implementor_descr</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["requirement_implementor_descr"]</expression>
+                    <expression name="expression" type="javascript">formatDateFromString(dataSetRow["requirement_implementor_descr"])</expression>
                     <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">requirements_exist</property>
@@ -15466,6 +15667,9 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <property name="allowExport">false</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"IT-Systeme"</expression>
+            </structure>
             <column id="16367">
                 <property name="width">5px</property>
             </column>
@@ -16509,6 +16713,7 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
             <property name="fontWeight">bold</property>
             <property name="pageBreakAfter">avoid</property>
             <property name="pageBreakBefore">auto</property>
+            <structure name="toc"/>
             <text-property name="text" key="icssystems">ICS-Systeme</text-property>
         </label>
         <table id="16011">
@@ -16742,8 +16947,9 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                 <structure>
                     <property name="name">safeguard_implementor_descr</property>
                     <text-property name="displayName">safeguard_implementor_descr</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["safeguard_implementor_descr"]</expression>
+                    <expression name="expression" type="javascript">formatDateFromString(dataSetRow["safeguard_implementor_descr"])</expression>
                     <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">requirement_implementor_id</property>
@@ -16772,8 +16978,9 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                 <structure>
                     <property name="name">requirement_implementor_descr</property>
                     <text-property name="displayName">requirement_implementor_descr</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["requirement_implementor_descr"]</expression>
+                    <expression name="expression" type="javascript">formatDateFromString(dataSetRow["requirement_implementor_descr"])</expression>
                     <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">requirements_exist</property>
@@ -16791,6 +16998,9 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <property name="allowExport">false</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"ICS-Systeme"</expression>
+            </structure>
             <column id="16183">
                 <property name="width">5px</property>
             </column>
@@ -17834,6 +18044,7 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
             <property name="fontWeight">bold</property>
             <property name="pageBreakAfter">avoid</property>
             <property name="pageBreakBefore">auto</property>
+            <structure name="toc"/>
             <text-property name="text" key="devices">Andere/IoT-Systeme</text-property>
         </label>
         <table id="15827">
@@ -18067,8 +18278,9 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                 <structure>
                     <property name="name">safeguard_implementor_descr</property>
                     <text-property name="displayName">safeguard_implementor_descr</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["safeguard_implementor_descr"]</expression>
+                    <expression name="expression" type="javascript">formatDateFromString(dataSetRow["safeguard_implementor_descr"])</expression>
                     <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">requirement_implementor_id</property>
@@ -18097,8 +18309,9 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                 <structure>
                     <property name="name">requirement_implementor_descr</property>
                     <text-property name="displayName">requirement_implementor_descr</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["requirement_implementor_descr"]</expression>
+                    <expression name="expression" type="javascript">formatDateFromString(dataSetRow["requirement_implementor_descr"])</expression>
                     <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">requirements_exist</property>
@@ -18116,6 +18329,9 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <property name="allowExport">false</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Andere/IoT-Systeme"</expression>
+            </structure>
             <column id="15999">
                 <property name="width">5px</property>
             </column>
@@ -19159,6 +19375,7 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
             <property name="fontWeight">bold</property>
             <property name="pageBreakAfter">avoid</property>
             <property name="pageBreakBefore">auto</property>
+            <structure name="toc"/>
             <text-property name="text" key="networks">Kommunikationsverbindungen</text-property>
         </label>
         <table id="15643">
@@ -19392,8 +19609,9 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                 <structure>
                     <property name="name">safeguard_implementor_descr</property>
                     <text-property name="displayName">safeguard_implementor_descr</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["safeguard_implementor_descr"]</expression>
+                    <expression name="expression" type="javascript">formatDateFromString(dataSetRow["safeguard_implementor_descr"])</expression>
                     <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">requirement_implementor_id</property>
@@ -19422,8 +19640,9 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                 <structure>
                     <property name="name">requirement_implementor_descr</property>
                     <text-property name="displayName">requirement_implementor_descr</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["requirement_implementor_descr"]</expression>
+                    <expression name="expression" type="javascript">formatDateFromString(dataSetRow["requirement_implementor_descr"])</expression>
                     <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">requirements_exist</property>
@@ -19441,6 +19660,9 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <property name="allowExport">false</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Kommunikationsverbindungen"</expression>
+            </structure>
             <column id="15815">
                 <property name="width">5px</property>
             </column>
@@ -20484,6 +20706,7 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
             <property name="fontWeight">bold</property>
             <property name="pageBreakAfter">avoid</property>
             <property name="pageBreakBefore">auto</property>
+            <structure name="toc"/>
             <text-property name="text" key="rooms">Räume</text-property>
         </label>
         <table id="15459">
@@ -20717,8 +20940,9 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                 <structure>
                     <property name="name">safeguard_implementor_descr</property>
                     <text-property name="displayName">safeguard_implementor_descr</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["safeguard_implementor_descr"]</expression>
+                    <expression name="expression" type="javascript">formatDateFromString(dataSetRow["safeguard_implementor_descr"])</expression>
                     <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">requirement_implementor_id</property>
@@ -20747,8 +20971,9 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                 <structure>
                     <property name="name">requirement_implementor_descr</property>
                     <text-property name="displayName">requirement_implementor_descr</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["requirement_implementor_descr"]</expression>
+                    <expression name="expression" type="javascript">formatDateFromString(dataSetRow["requirement_implementor_descr"])</expression>
                     <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">requirements_exist</property>
@@ -20766,6 +20991,9 @@ reportContext.setGlobalVariable("addLeadingZeros", addLeadingZeros)]]></method>
                     <property name="allowExport">false</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Räume"</expression>
+            </structure>
             <column id="15631">
                 <property name="width">5px</property>
             </column>
