@@ -23,6 +23,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -58,14 +59,19 @@ public class BaseProtectionFilterBuilder {
     }
 
     public static @NonNull Collection<ViewerFilter> makeFilters(
-            BaseProtectionFilterParameters params) {
+            BaseProtectionFilterParameters params, IPreferenceStore prererenceStore) {
         Collection<ViewerFilter> viewerFilters = new ArrayList<>(7);
         Optional.ofNullable(createRequirementSafeguardFilter(params)).ifPresent(viewerFilters::add);
         Optional.ofNullable(createTypeFilter(params)).ifPresent(viewerFilters::add);
         Optional.ofNullable(createTagFilter(params)).ifPresent(viewerFilters::add);
         Optional.ofNullable(createHideEmptyGroupsFilter(params)).ifPresent(viewerFilters::add);
-        viewerFilters.add(createProceedingFilter());
+        viewerFilters.add(createProceedingFilter(prererenceStore));
         return viewerFilters;
+    }
+
+    public static @NonNull Collection<ViewerFilter> makeFilters(
+            BaseProtectionFilterParameters params) {
+        return makeFilters(params, Activator.getDefault().getPreferenceStore());
     }
 
     private static ViewerFilter createRequirementSafeguardFilter(
@@ -88,8 +94,8 @@ public class BaseProtectionFilterBuilder {
         return null;
     }
 
-    private static ViewerFilter createProceedingFilter() {
-        return new ProceedingFilter();
+    private static ViewerFilter createProceedingFilter(IPreferenceStore preferenceStore) {
+        return new ProceedingFilter(preferenceStore);
     }
 
     private static ViewerFilter createTagFilter(BaseProtectionFilterParameters filterParameters) {
@@ -235,9 +241,16 @@ public class BaseProtectionFilterBuilder {
     }
 
     private static final class ProceedingFilter extends ViewerFilter {
+
+        private final IPreferenceStore preferenceStore;
+
+        public ProceedingFilter(IPreferenceStore preferenceStore) {
+            this.preferenceStore = preferenceStore;
+        }
+
         @Override
         public boolean select(Viewer viewer, Object parentElement, Object element) {
-            boolean filterByProceeding = Activator.getDefault().getPreferenceStore()
+            boolean filterByProceeding = preferenceStore
                     .getBoolean(PreferenceConstants.FILTER_INFORMATION_NETWORKS_BY_PROCEEDING);
             if (filterByProceeding && element instanceof CnATreeElement) {
                 if (element instanceof BpThreat) {
