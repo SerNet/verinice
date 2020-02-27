@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _7ObUQNt0EeiRF6bz1CFgwg
-Runtime-Version: 2.4.1.201903190000
-Save-Time: 5/22/19 4:12 PM
+Runtime-Version: 2.5.0.202001211718
+Save-Time: 3/3/20, 1:36 PM
 Tags: report
 Testcase-Type: ecl
 
@@ -24,7 +24,7 @@ Entry-Name: .content
 proc "gen-rep" [val report] {
 	try {
 	    start-time-measure $report
-		gen-rep-com $report ISM "importierte Objekte/[Mein Unternehmen1] [5a79b4]"
+		gen-rep-com $report "ISM" "importierte Objekte/[Mein Unternehmen1] [5a79b4]"
 		stop-time-measure $report | write-lines [concat "file:" $basedir "/report-measure.csv"] true
 	} -catch {
 		log [concat "ERROR creating report " $report]
@@ -34,16 +34,16 @@ proc "gen-rep" [val report] {
 	}
 }
 
-log "Start report testing ISM"
+log "Start report testing ISM-ISO"
 enable-reporting-log
 
 ism-import-vna "reportTestData1.vna"
 
-gen-rep "(S) ISM: Erklärung zur Anwendbarkeit"
-gen-rep "(S) ISM: Export: Aufgaben (de)"
-gen-rep "(S) ISM: Export: Aufgaben (en)"
-gen-rep "(S) ISM: Sofortmeldung (VV BSIG)"
-gen-rep "(S) ISM: Statistische Gesamtmeldung (VV BSIG)"
+gen-rep "(S) ISM-ISO: Erklärung zur Anwendbarkeit"
+gen-rep "(S) ISM-ISO: Export: Aufgaben (de)"
+gen-rep "(S) ISM-ISO: Export: Aufgaben (en)"
+gen-rep "(S) ISM-ISO: Sofortmeldung (VV BSIG)"
+gen-rep "(S) ISM-ISO: Statistische Gesamtmeldung (VV BSIG)"
 
 delete-iso-model "importierte Objekte/[Mein Unternehmen1] [5a79b4]"
 
