@@ -60,8 +60,7 @@ public class BaseProtectionFilterBuilder {
     public static @NonNull Collection<ViewerFilter> makeFilters(
             BaseProtectionFilterParameters params) {
         Collection<ViewerFilter> viewerFilters = new ArrayList<>(7);
-        Optional.ofNullable(createImplementationStateFilter(params)).ifPresent(viewerFilters::add);
-        Optional.ofNullable(createSecurityLevelFilter(params)).ifPresent(viewerFilters::add);
+        Optional.ofNullable(createRequirementSafeguardFilter(params)).ifPresent(viewerFilters::add);
         Optional.ofNullable(createTypeFilter(params)).ifPresent(viewerFilters::add);
         Optional.ofNullable(createTagFilter(params)).ifPresent(viewerFilters::add);
         Optional.ofNullable(createHideEmptyGroupsFilter(params)).ifPresent(viewerFilters::add);
@@ -69,21 +68,14 @@ public class BaseProtectionFilterBuilder {
         return viewerFilters;
     }
 
-    private static ViewerFilter createImplementationStateFilter(
+    private static ViewerFilter createRequirementSafeguardFilter(
             BaseProtectionFilterParameters filterParameters) {
-        if (!filterParameters.getImplementationStatuses().isEmpty()) {
-            return new RecursiveTreeFilter(
-                    new ImplementationStatusFilter(filterParameters.getImplementationStatuses(),
-                            filterParameters.isHideEmptyGroups()));
-        }
-        return null;
-    }
-
-    private static ViewerFilter createSecurityLevelFilter(
-            BaseProtectionFilterParameters filterParameters) {
-        if (!filterParameters.getSecurityLevels().isEmpty()) {
-            return new RecursiveTreeFilter(new SecurityLevelFilter(
-                    filterParameters.getSecurityLevels(), filterParameters.isHideEmptyGroups()));
+        if (!filterParameters.getImplementationStatuses().isEmpty()
+                || !filterParameters.getSecurityLevels().isEmpty()) {
+            return new RecursiveTreeFilter(new RequirementSafeguardFilter(
+                    filterParameters.getImplementationStatuses(),
+                    filterParameters.getSecurityLevels(), filterParameters.isHideEmptyGroups(),
+                    filterParameters.getElementTypes()));
         }
         return null;
     }
@@ -125,37 +117,6 @@ public class BaseProtectionFilterBuilder {
             return new RecursiveTreeFilter(HideEmptyGroupsFilter.INSTANCE);
         }
         return null;
-    }
-
-    private static final class ImplementationStatusFilter extends ViewerFilter {
-        private final Collection<ImplementationStatus> selectedImplementationStatus;
-        private final boolean hideEmptyGroups;
-
-        ImplementationStatusFilter(Set<ImplementationStatus> selectedImplementationStatus,
-                boolean hideEmptyGroups) {
-            this.selectedImplementationStatus = selectedImplementationStatus;
-            this.hideEmptyGroups = hideEmptyGroups;
-        }
-
-        @Override
-        public boolean select(Viewer viewer, Object parentElement, Object element) {
-            if (!hideEmptyGroups && element instanceof Group || element instanceof ItNetwork) {
-                return true;
-            }
-            if (hideEmptyGroups && (element instanceof BpRequirementGroup
-                    || element instanceof SafeguardGroup)) {
-                return false;
-            }
-            if (element instanceof BpRequirement) {
-                return selectedImplementationStatus
-                        .contains(((BpRequirement) element).getImplementationStatus());
-            }
-            if (element instanceof Safeguard) {
-                return selectedImplementationStatus
-                        .contains(((Safeguard) element).getImplementationStatus());
-            }
-            return false;
-        }
     }
 
     private static final class TagFilter extends ViewerFilter {
@@ -216,14 +177,19 @@ public class BaseProtectionFilterBuilder {
         }
     }
 
-    private static final class SecurityLevelFilter extends ViewerFilter {
+    private static final class RequirementSafeguardFilter extends ViewerFilter {
+        private final Collection<ImplementationStatus> selectedImplementationStatus;
         private final Collection<SecurityLevel> selectedSecurityLevels;
+        private final Collection<String> selectedElementTypes;
         private final boolean hideEmptyGroups;
 
-        SecurityLevelFilter(Collection<SecurityLevel> selectedSecurityLevels,
-                boolean hideEmptyGroups) {
+        RequirementSafeguardFilter(Collection<ImplementationStatus> selectedImplementationStatus,
+                Collection<SecurityLevel> selectedSecurityLevels, boolean hideEmptyGroups,
+                Collection<String> selectedElementTypes) {
+            this.selectedImplementationStatus = selectedImplementationStatus;
             this.selectedSecurityLevels = selectedSecurityLevels;
             this.hideEmptyGroups = hideEmptyGroups;
+            this.selectedElementTypes = selectedElementTypes;
         }
 
         @Override
@@ -235,14 +201,26 @@ public class BaseProtectionFilterBuilder {
                     || element instanceof SafeguardGroup)) {
                 return false;
             }
-            if (element instanceof Safeguard) {
-                return selectedSecurityLevels.contains(((Safeguard) element).getSecurityLevel());
+            if (!emptyOrContains(selectedElementTypes, ((CnATreeElement) element).getTypeId())) {
+                return false;
             }
             if (element instanceof BpRequirement) {
-                return selectedSecurityLevels
-                        .contains(((BpRequirement) element).getSecurityLevel());
+                return (emptyOrContains(selectedImplementationStatus,
+                        ((BpRequirement) element).getImplementationStatus())
+                        && emptyOrContains(selectedSecurityLevels,
+                                ((BpRequirement) element).getSecurityLevel()));
             }
-            return false;
+            if (element instanceof Safeguard) {
+                return (emptyOrContains(selectedImplementationStatus,
+                        ((Safeguard) element).getImplementationStatus())
+                        && emptyOrContains(selectedSecurityLevels,
+                                ((Safeguard) element).getSecurityLevel()));
+            }
+            return true;
+        }
+
+        private static <T> boolean emptyOrContains(Collection<T> collection, T value) {
+            return collection.isEmpty() || collection.contains(value);
         }
     }
 
