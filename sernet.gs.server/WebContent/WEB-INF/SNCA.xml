@@ -10567,16 +10567,38 @@ Wurden bereits weitere Stellen informiert?
             reversename="person responsible" />
         <huirelation to="bp_safeguard" id="rel_bp_person_bp_safeguard" name="responsible for"
             reversename="person responsible" />
+
+        <huirelation to="bp_requirement_group" id="rel_bp_person_bp_requirement_group_additional"
+            name="additional responsibility" reversename="additional responsibilities" />
+        <huirelation to="bp_requirement_group" id="rel_bp_person_bp_requirement_group_general"
+            name="generally responsible for" reversename="person generally responsible" />
         <huirelation to="bp_requirement_group" id="rel_bp_person_bp_requirement_group_primarily"
             name="primarily responsible for" reversename="person primarily responsible" />
+
+        <huirelation to="bp_requirement" id="rel_bp_person_bp_requirement_additional"
+            name="additional responsibility" reversename="additional responsibilities" />
+        <huirelation to="bp_requirement" id="rel_bp_person_bp_requirement_general"
+            name="generally responsible for" reversename="person generally responsible" />
         <huirelation to="bp_requirement" id="rel_bp_person_bp_requirement_primarily" name="primarily responsible for"
             reversename="person primarily responsible" />
+
         <huirelation to="bp_threat" id="rel_bp_person_bp_threat_primarily" name="primarily responsible for"
             reversename="person primarily responsible" />
+
+        <huirelation to="bp_safeguard_group" id="rel_bp_person_bp_safeguard_group_additional"
+            name="additional responsibility" reversename="additional responsibilities" />
+        <huirelation to="bp_safeguard_group" id="rel_bp_person_bp_safeguard_group_general"
+            name="generally responsible for" reversename="person generally responsible" />
         <huirelation to="bp_safeguard_group" id="rel_bp_person_bp_safeguard_group_primarily" name="primarily responsible for"
             reversename="person primarily responsible" />
+
+        <huirelation to="bp_safeguard" id="rel_bp_person_bp_safeguard_additional"
+            name="additional responsibility" reversename="additional responsibilities" />
+        <huirelation to="bp_safeguard" id="rel_bp_person_bp_safeguard_general"
+            name="generally responsible for" reversename="person generally responsible" />
         <huirelation to="bp_safeguard" id="rel_bp_person_bp_safeguard_primarily" name="primarily responsible for"
             reversename="person primarily responsible" />
+
         <huirelation to="bp_businessprocess" id="rel_bp_person_bp_businessprocess_primarily" name="primarily responsible for"
             reversename="person primarily responsible" />
         <huirelation to="bp_application" id="rel_bp_person_bp_application_primarily" name="primarily responsible for"
