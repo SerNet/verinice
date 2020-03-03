@@ -21,8 +21,7 @@
         <!-- Enable session context management -->
         <property name="current_session_context_class">org.springframework.orm.hibernate3.SpringSessionContext</property>        <!-- Enable memory read write cache -->
        
-<!--         <property name="cache.provider_class">org.hibernate.cache.EhCacheProvider</property> -->
-        <property name="hibernate.cache.use_second_level_cache">false</property>
+        <property name="cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
 
         <!-- Echo all executed SQL to stdout -->
         <property name="show_sql">false</property>
