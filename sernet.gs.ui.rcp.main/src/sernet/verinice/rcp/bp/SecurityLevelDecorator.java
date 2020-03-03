@@ -21,53 +21,31 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.verinice.model.bp.DefaultBpModelListener;
-import sernet.verinice.model.bp.IBpModelListener;
 import sernet.verinice.model.bp.ISecurityLevelProvider;
 import sernet.verinice.model.bp.SecurityLevel;
-import sernet.verinice.model.bp.elements.BpModel;
-import sernet.verinice.model.common.ChangeLogEntry;
-import sernet.verinice.model.common.CnALink;
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Decorates {@link ISecurityLevelProvider} elements with an overlay indicating
  * the security level that they implement.
  */
 public class SecurityLevelDecorator extends LabelProvider implements ILightweightLabelDecorator {
-    /** Decorator ID (must match ID in plugin.xml) */
-    private static final String ID = "sernet.verinice.rcp.bp.securityLevelDecorator";
     private static final String IMAGE_BASIC = "overlays/sec_level_b.png";
     private static final String IMAGE_STANDARD = "overlays/sec_level_s.png";
     private static final String IMAGE_HIGH = "overlays/sec_level_e.png";
     private boolean enabled;
 
     public SecurityLevelDecorator() {
-        CnAElementFactory.getInstance().addLoadListener(new DefaultModelLoadListener() {
-
-            @Override
-            public void loaded(BpModel model) {
-                CnAElementFactory.getInstance().removeLoadListener(this);
-                super.loaded(model);
-                model.addModITBOModelListener(getModelListener());
-                IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
-                enabled = preferenceStore
-                        .getBoolean(PreferenceConstants.SHOW_SECURITY_LEVEL_DECORATOR);
-                preferenceStore.addPropertyChangeListener(event -> {
-                    if (event.getProperty()
-                            .equals(PreferenceConstants.SHOW_SECURITY_LEVEL_DECORATOR)) {
-                        enabled = (boolean) event.getNewValue();
-                        updateDecorations();
-                    }
-                });
+        IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+        enabled = preferenceStore.getBoolean(PreferenceConstants.SHOW_SECURITY_LEVEL_DECORATOR);
+        preferenceStore.addPropertyChangeListener(event -> {
+            if (event.getProperty().equals(PreferenceConstants.SHOW_SECURITY_LEVEL_DECORATOR)) {
+                enabled = (boolean) event.getNewValue();
+                updateDecorations();
             }
         });
     }
@@ -97,73 +75,7 @@ public class SecurityLevelDecorator extends LabelProvider implements ILightweigh
         }
     }
 
-    private IBpModelListener getModelListener() {
-        return new DefaultBpModelListener() {
-
-            @Override
-            public void childAdded(CnATreeElement category, CnATreeElement child) {
-                updateDecorations();
-            }
-
-            @Override
-            public void childChanged(CnATreeElement child) {
-                updateDecorations();
-            }
-
-            @Override
-            public void childRemoved(CnATreeElement category, CnATreeElement child) {
-                updateDecorations();
-            }
-
-            @Override
-            public void databaseChildAdded(CnATreeElement child) {
-                updateDecorations();
-            }
-
-            @Override
-            public void databaseChildChanged(CnATreeElement child) {
-                updateDecorations();
-            }
-
-            @Override
-            public void databaseChildRemoved(ChangeLogEntry entry) {
-                updateDecorations();
-            }
-
-            @Override
-            public void databaseChildRemoved(CnATreeElement child) {
-                updateDecorations();
-            }
-
-            @Override
-            public void linkAdded(CnALink link) {
-                updateDecorations();
-            }
-
-            @Override
-            public void linkChanged(CnALink old, CnALink link, Object source) {
-                updateDecorations();
-            }
-
-            @Override
-            public void linkRemoved(CnALink link) {
-                updateDecorations();
-            }
-
-            @Override
-            public void modelRefresh(Object object) {
-                updateDecorations();
-            }
-
-            @Override
-            public void modelReload(BpModel newModel) {
-                updateDecorations();
-            }
-        };
-    }
-
     private void updateDecorations() {
-        Display.getDefault()
-                .asyncExec(() -> PlatformUI.getWorkbench().getDecoratorManager().update(ID));
+        fireLabelProviderChanged(new LabelProviderChangedEvent(this));
     }
 }

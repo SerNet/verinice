@@ -34,6 +34,8 @@ import sernet.gs.ui.rcp.main.bsi.editors.EditorUtil;
 import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.IBpModelListener;
 import sernet.verinice.model.bp.elements.BpModel;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.catalog.CatalogModel;
@@ -174,6 +176,13 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
         try {
             getElementManager().elementChanged(child);
             updater.refresh(child);
+            String childType = child.getTypeId();
+            if (BpRequirement.TYPE_ID.equals(childType) || Safeguard.TYPE_ID.equals(childType)) {
+                RetrieveInfo retrieveInfo = new RetrieveInfo().setParent(true).setProperties(true)
+                        .setChildren(true);
+                CnATreeElement parent = Retriever.retrieveElement(child.getParent(), retrieveInfo);
+                updater.refresh(parent);
+            }
         } catch (Exception e) {
             LOG.error(ERROR_MESSAGE, e);
         }
