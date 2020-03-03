@@ -6,7 +6,7 @@ Element-Type: context
 Element-Version: 2.0
 Id: _K06wgI0fEei2UKUDmonytQ
 Runtime-Version: 2.4.2.201905080442
-Save-Time: 3/4/20, 8:34 AM
+Save-Time: 3/5/20, 9:58 AM
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
 Content-Type: text/ecl
@@ -18,6 +18,12 @@ global [val state_yes "sernet.gs.ui.rcp.main/icons/16-em-check.png"]
 [val state_no "sernet.gs.ui.rcp.main/icons/16-em-cross.png"]
 [val state_ignored "sernet.gs.ui.rcp.main/icons/progress_rem.gif"]
 
+[val security_level_none null]
+[val security_level_basic "sernet.gs.ui.rcp.main/icons/overlays/sec_level_b.png"]
+[val security_level_standard "sernet.gs.ui.rcp.main/icons/overlays/sec_level_s.png"]
+[val security_level_high "sernet.gs.ui.rcp.main/icons/overlays/sec_level_h.png"]
+
+[val group_decorator_overlay "sernet.gs.ui.rcp.main/icons/overlays/folder_decorator.png"]
 
 /**
 * Link the 'sourcename' in the 'path' to the 'targetname'. The target has to be a safeguard.
@@ -63,8 +69,27 @@ proc "set-implementation-status-deduction" [val targetpath] [val state] {
 	get-eclipse-window | key-type "M1+s"
 }
 
+proc "set-security-level" [val targetpath] [val state] {
+	let [ val targettitle [get-last $targetpath] ] {
+		get-view "Modernisierter IT-Grundschutz" | get-tree | select $targetpath | double-click
+		get-editor $targettitle | get-section "" | get-combo -after [get-label Vorgehensweise]
+			| select $state
+		get-eclipse-window | key-type "M1+s"	
+	}
+}
+
 proc "assert-implementation-status" [val itempath] [val state] {
 	get-view "Modernisierter IT-Grundschutz" | get-tree | get-item -path $itempath | get-property "image.path" | equals $state | verify-true
+}
+
+proc "assert-security-level" [val itempath] [val state] {
+	let [ val node [get-view "Modernisierter IT-Grundschutz" | get-tree | get-item -path $itempath ] ] {
+		let [ val decoratorPath [ $node | get-property "image.decorations[0].path" ]] {
+			let [ val expectedPath [ if [ $state | eq $security_level_none ] { $group_decorator_overlay } -else { $state } ] ] {
+				$decoratorPath | equals $expectedPath | verify-true
+			}
+		}
+	}
 }
 
 proc "remove-link-via-linkmaker" [val path] [val index] {

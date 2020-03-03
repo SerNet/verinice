@@ -1,0 +1,84 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _74j9YLaIEeiiZL0aNB5Nyg,_GdFy0F04EeqngKyiFJFSQA,_kpzJwJASEeiCTbb54-xhBQ,_lGnj8Ix1Eei2UKUDmonytQ,_4GRncI0bEei2UKUDmonytQ,_K06wgI0fEei2UKUDmonytQ
+Element-Name: security-level-decorator
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _wJljQF0xEeqngKyiFJFSQA
+Runtime-Version: 2.4.2.201905080442
+Save-Time: 3/5/20, 10:12 AM
+Tags: bp
+Testcase-Type: ecl
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+log "Start test security-level-decorator"
+
+create-bpmodel "testname"
+create-bpapplication "testname/Anwendungen" "testapp"
+create-bprequirementgroup "testname/Anwendungen/testapp" "module-1"
+create-bprequirement "testname/Anwendungen/testapp/module-1" "req-1"
+create-bprequirement "testname/Anwendungen/testapp/module-1" "req-2"
+create-bprequirement "testname/Anwendungen/testapp/module-1" "req-3"
+create-bprequirement "testname/Anwendungen/testapp/module-1" "req-4"
+set-security-level "testname/Anwendungen/testapp/module-1/.*req-2" BASIS
+set-security-level "testname/Anwendungen/testapp/module-1/.*req-3" STANDARD
+set-security-level "testname/Anwendungen/testapp/module-1/.*req-4" "ERHÖHT"
+
+create-bpsafeguardgroup "testname/Anwendungen/testapp" "safeguardgroup-1"
+create-bpsafeguard "testname/Anwendungen/testapp/safeguardgroup-1" "safeguard-1"
+create-bpsafeguard "testname/Anwendungen/testapp/safeguardgroup-1" "safeguard-2"
+create-bpsafeguard "testname/Anwendungen/testapp/safeguardgroup-1" "safeguard-3"
+create-bpsafeguard "testname/Anwendungen/testapp/safeguardgroup-1" "safeguard-4"
+set-security-level "testname/Anwendungen/testapp/safeguardgroup-1/.*safeguard-2" BASIS
+set-security-level "testname/Anwendungen/testapp/safeguardgroup-1/.*safeguard-3" STANDARD
+set-security-level "testname/Anwendungen/testapp/safeguardgroup-1/.*safeguard-4" "ERHÖHT"
+
+linksafeguard "testname/Anwendungen/testapp/module-1/.*req-1" "safeguard-1"
+linksafeguard "testname/Anwendungen/testapp/module-1/.*req-2" "safeguard-2"
+linksafeguard "testname/Anwendungen/testapp/module-1/.*req-3" "safeguard-3"
+linksafeguard "testname/Anwendungen/testapp/module-1/.*req-4" "safeguard-4"
+
+assert-security-level "testname/Anwendungen/testapp/safeguardgroup-1" $security_level_none
+assert-security-level "testname/Anwendungen/testapp/module-1" $security_level_none
+
+set-implementation-status "testname/Anwendungen/testapp/safeguardgroup-1/.*safeguard-1" Ja
+assert-security-level "testname/Anwendungen/testapp/safeguardgroup-1" $security_level_none
+assert-security-level "testname/Anwendungen/testapp/module-1" $security_level_none
+
+set-implementation-status "testname/Anwendungen/testapp/safeguardgroup-1/.*safeguard-2" Ja
+assert-security-level "testname/Anwendungen/testapp/safeguardgroup-1" $security_level_basic
+assert-security-level "testname/Anwendungen/testapp/module-1" $security_level_basic
+
+create-bpsafeguard "testname/Anwendungen/testapp/safeguardgroup-1" "safeguard-2b"
+set-security-level "testname/Anwendungen/testapp/safeguardgroup-1/.*safeguard-2b" BASIS
+linksafeguard "testname/Anwendungen/testapp/module-1/.*req-2" "safeguard-2b"
+assert-security-level "testname/Anwendungen/testapp/safeguardgroup-1" $security_level_none
+assert-security-level "testname/Anwendungen/testapp/module-1" $security_level_none
+
+remove-link-via-linkmaker "testname/Anwendungen/testapp/module-1/.*req-2" 1
+assert-security-level "testname/Anwendungen/testapp/safeguardgroup-1" $security_level_none
+assert-security-level "testname/Anwendungen/testapp/module-1" $security_level_basic
+
+linksafeguard "testname/Anwendungen/testapp/module-1/.*req-2" "safeguard-2b"
+delete-bpelement "testname/Anwendungen/testapp/safeguardgroup-1/.*safeguard-2b"
+assert-security-level "testname/Anwendungen/testapp/safeguardgroup-1" $security_level_basic
+assert-security-level "testname/Anwendungen/testapp/module-1" $security_level_basic
+
+with [get-view "Modernisierter IT-Grundschutz" | get-tree] {
+	select "testname/Anwendungen/testapp/safeguardgroup-1/.*safeguard-3"
+	get-menu -path "Masseneditor..." | click
+}
+with [get-window "Bearbeiten mehrerer Objekte"] {
+	get-section Umsetzung | get-combo -after [get-label Umsetzungsstatus] | select "Ja"
+	get-button OK | click
+}
+assert-security-level "testname/Anwendungen/testapp/safeguardgroup-1" $security_level_standard
+assert-security-level "testname/Anwendungen/testapp/module-1" $security_level_standard
+
+delete-bpelement "testname"
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
