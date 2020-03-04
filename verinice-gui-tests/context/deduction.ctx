@@ -5,8 +5,8 @@ Element-Name: deduction
 Element-Type: context
 Element-Version: 2.0
 Id: _K06wgI0fEei2UKUDmonytQ
-Runtime-Version: 2.4.1.201903190000
-Save-Time: 5/20/19 2:29 PM
+Runtime-Version: 2.4.2.201905080442
+Save-Time: 3/4/20, 8:34 AM
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
 Content-Type: text/ecl
@@ -33,7 +33,7 @@ proc linksafeguard [val sourcepath] [val targetname] {
 			get-button "Hinzufügen" | click
 		}
 		with [get-window "Elemente auswählen:"] {
-			get-table | select [ concat "(?:\[\] )?" $targetname ] -column Element
+			get-table | select [ concat "(?:\[.*\] )?" $targetname ] -column Element
 			get-button OK | click
 		}
 	}
