@@ -1,0 +1,135 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _74j9YLaIEeiiZL0aNB5Nyg,_I8zSMF7HEeqB5tpnutITaw,_kpzJwJASEeiCTbb54-xhBQ,_lGnj8Ix1Eei2UKUDmonytQ,_4GRncI0bEei2UKUDmonytQ,_K06wgI0fEei2UKUDmonytQ
+Element-Name: risk-decorator
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _ReP3YF7eEeqB5tpnutITaw
+Runtime-Version: 2.4.2.201905080442
+Save-Time: 3/9/20, 1:50 PM
+Tags: bp
+Testcase-Type: ecl
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+log "Start test risk-decorator"
+
+global
+[val risk_without_additional_safeguards "Risiko ohne zusätzliche Maßnahmen"]
+[val risk_with_additional_safeguards "Risiko mit zusätzlichen Maßnahmen"]
+[val risk_treatment_option "Risikobehandlungsoption"]
+[val risk_treatment "Risikobehandlung"]
+[val risk_treatment_transfer "Risikotransfer"]
+[val risk_treatment_reduction "Risikoreduktion"]
+
+[val frequency "Eintrittshäufigkeit"]
+[val impact "Auswirkung"]
+
+[val risk_decorator_none null]
+
+[val black [concat "#000000"]]
+[val gray [concat "#b4b4b4"]]
+[val red [concat "#ff1212"]]
+[val orange [concat "#ff8e43"]]
+[val yellow [concat "#ffff13"]]
+[val green [concat "#a0cf11"]]
+
+proc "create-bpthreatgroup2" [val elementpath] [val elementname] {
+	create-bpelement $elementpath $elementname "Neue Gefährdungen-Gruppe..." "Gefährdungen"
+}
+
+proc "set-risk-analysis-necessary" [val targetpath] [val state] {
+	set-boolean-property $targetpath Risikoanalyse "Risikoanalyse erforderlich" $state
+}
+
+proc "assert-risk-decorator" [val itempath] [val color] {
+	let [ val node [get-view "Modernisierter IT-Grundschutz" | get-tree | get-item -path $itempath ] ] {
+		log [concat "node for " $itempath ": " $node]
+		let [ val label [$node | get-text ] ] {
+			log [concat "label for " $itempath ": " $label]
+			let [ val colorCode 
+					[if [emit $label | contains  "- #"]{
+						emit $label | invoke substring [emit $label | invoke indexOf "#"]}
+					-else {emit null}]
+			]{
+				log [concat "colorCode for " $itempath ": " $colorCode]
+				emit $colorCode | eq $color | assert-true -message [concat "Expected "$itempath " to have color " $color " but got " $colorCode]
+			}
+		}
+	}
+}
+
+create-bpmodel "testname"
+create-bpapplication "testname/Anwendungen" "testapp"
+assert-risk-decorator "testname/Anwendungen/testapp" $risk_decorator_none
+create-bpthreatgroup2 "testname/Anwendungen/testapp" "threats"
+assert-risk-decorator "testname/Anwendungen/testapp/threats" $risk_decorator_none
+create-bpthreat "testname/Anwendungen/testapp/threats" "threat-1"
+assert-risk-decorator "testname/Anwendungen/testapp/threats.*/threat-1.*" $black
+assert-risk-decorator "testname/Anwendungen/testapp/threats.*" $black
+assert-risk-decorator "testname/Anwendungen/testapp" $risk_decorator_none
+
+set-select-property "testname/Anwendungen/testapp/threats.*/threat-1.*" $risk_without_additional_safeguards $frequency "mittel"
+set-select-property "testname/Anwendungen/testapp/threats.*/threat-1.*" $risk_without_additional_safeguards $impact "beträchtlich"
+assert-risk-decorator "testname/Anwendungen/testapp/threats.*/threat-1.*" $yellow
+assert-risk-decorator "testname/Anwendungen/testapp/threats.*" $yellow
+assert-risk-decorator "testname/Anwendungen/testapp" $risk_decorator_none
+
+link-bp-elements "testname/Anwendungen/testapp" "threat-1" "Gefährdung"
+assert-risk-decorator "testname/Anwendungen/testapp.*/threats.*/threat-1.*" $yellow
+assert-risk-decorator "testname/Anwendungen/testapp.*/threats.*" $yellow
+assert-risk-decorator "testname/Anwendungen/testapp.*" $risk_decorator_none
+set-risk-analysis-necessary "testname/Anwendungen/testapp" 1
+assert-risk-decorator "testname/Anwendungen/testapp.*" $yellow
+
+create-bpthreat "testname/Anwendungen/testapp.*/threats.*" "threat-2"
+assert-risk-decorator "testname/Anwendungen/testapp.*/threats.*/threat-2.*" $black
+assert-risk-decorator "testname/Anwendungen/testapp.*/threats.*" $black
+assert-risk-decorator "testname/Anwendungen/testapp.*" $yellow
+
+set-select-property "testname/Anwendungen/testapp.*/threats.*/threat-2.*" $risk_without_additional_safeguards $frequency "häufig"
+set-select-property "testname/Anwendungen/testapp.*/threats.*/threat-2.*" $risk_without_additional_safeguards $impact "beträchtlich"
+assert-risk-decorator "testname/Anwendungen/testapp.*/threats.*/threat-2.*" $orange
+assert-risk-decorator "testname/Anwendungen/testapp.*/threats.*" $orange
+assert-risk-decorator "testname/Anwendungen/testapp.*" $yellow
+
+link-bp-elements "testname/Anwendungen/testapp.*" "threat-2" "Gefährdung"
+assert-risk-decorator "testname/Anwendungen/testapp.*" $orange
+
+set-select-property "testname/Anwendungen/testapp.*/threats.*/threat-2.*" $risk_treatment_option $risk_treatment $risk_treatment_transfer
+assert-risk-decorator "testname/Anwendungen/testapp.*/threats.*/threat-2.*" $gray
+assert-risk-decorator "testname/Anwendungen/testapp.*/threats.*" $yellow
+assert-risk-decorator "testname/Anwendungen/testapp.*" $yellow
+
+set-select-property "testname/Anwendungen/testapp.*/threats.*/threat-2.*" $risk_treatment_option $risk_treatment $risk_treatment_reduction
+assert-risk-decorator "testname/Anwendungen/testapp.*/threats.*/threat-2.*" $black
+assert-risk-decorator "testname/Anwendungen/testapp.*/threats.*" $black
+assert-risk-decorator "testname/Anwendungen/testapp.*" $black
+
+with [get-view "Modernisierter IT-Grundschutz" | get-tree] {
+	select "testname/Anwendungen/testapp.*/threats.*/threat-2.*"
+	get-menu -path "Masseneditor..." | click
+}
+with [get-window "Bearbeiten mehrerer Objekte"] {
+	get-section $risk_treatment_option | get-combo -after [get-label $risk_treatment] | select $risk_treatment_reduction
+	with [get-section $risk_with_additional_safeguards] {
+		get-combo -after [get-label $frequency] | select "selten"
+		get-combo -after [get-label $impact] | select "begrenzt"
+	}
+	get-button OK | click
+}
+
+assert-risk-decorator "testname/Anwendungen/testapp.*/threats.*/threat-2.*" $green
+assert-risk-decorator "testname/Anwendungen/testapp.*/threats.*" $yellow
+assert-risk-decorator "testname/Anwendungen/testapp.*" $yellow
+
+delete-bpelement "testname/Anwendungen/testapp.*/threats.*/threat-1.*"
+assert-risk-decorator "testname/Anwendungen/testapp.*/threats.*/threat-2.*" $green
+assert-risk-decorator "testname/Anwendungen/testapp.*/threats.*" $green
+assert-risk-decorator "testname/Anwendungen/testapp.*" $green
+
+delete-bpelement "testname"
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
