@@ -427,6 +427,7 @@ ${verinice-workspace}
 -Dderby.locks.monitor=true
 -Dderby.locks.deadlockTrace=true
 -Djava.net.useSystemProxies=true
+-Dverinice.debug_bp_risk_analysis_decorator=true
 </echo>
 	</target>
 

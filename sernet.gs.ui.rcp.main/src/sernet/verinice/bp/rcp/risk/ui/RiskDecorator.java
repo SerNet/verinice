@@ -59,6 +59,9 @@ public class RiskDecorator extends LabelProvider implements ILightweightLabelDec
 
     private boolean decoratorEnabled;
 
+    private static final boolean ADD_COLOR_SUFFIX = Boolean
+            .parseBoolean(System.getProperty("verinice.debug_bp_risk_analysis_decorator"));
+
     private static final Map<RGB, ImageDescriptor> CACHED_OVERLAYS_PER_COLOR = new LinkedHashMap<RGB, ImageDescriptor>() {
 
         private static final long serialVersionUID = 3645241081387305815L;
@@ -109,6 +112,12 @@ public class RiskDecorator extends LabelProvider implements ILightweightLabelDec
             if (color != null) {
                 decoration.addOverlay(CACHED_OVERLAYS_PER_COLOR.computeIfAbsent(color,
                         RiskDecorator::createOverlay));
+                if (ADD_COLOR_SUFFIX) {
+                    String colorString = String.format("#%02x%02x%02x", color.red, color.green,
+                            color.blue);
+                    decoration.addSuffix(" - " + colorString);
+                }
+
             }
         }
     }
