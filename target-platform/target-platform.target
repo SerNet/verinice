@@ -16,31 +16,19 @@
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.birt.chart.cshelp.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.birt.cshelp.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.help.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/releases/2019-06/"/>
-</location>
-
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="javax.transaction" version="1.1.1.v201105210645"/>
 <unit id="javax.transaction.source" version="1.1.1.v201105210645"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180330011457/repository"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180330011457/repository/"/>
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.birt.rcp.feature.group" version="4.7.0.v201706222054"/>
-<repository location="http://updates.verinice.org/pub/verinice/updatesites/birt-rcp/"/>
+<unit id="org.eclipse.birt.report.engine.emitter.prototype.excel" version="0.0.0"/>
+<repository location="http://download.eclipse.org/birt/update-site/oxygen-interim/"/>
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.birt.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.birt.osgi.runtime.sdk.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.datatools.connectivity.feature.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.datatools.enablement.feature.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.datatools.enablement.sdk.feature.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.datatools.sdk.feature.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.datatools.sqldevtools.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.birt.osgi.runtime.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/releases/2019-06/"/>
 </location>
 
@@ -85,7 +73,7 @@
 <unit id="org.mozilla.javascript.source" version="1.7.5.v201504281450"/>
 <unit id="org.slf4j.api" version="1.7.10.v20170428-1633"/>
 <unit id="org.slf4j.api.source" version="1.7.10.v20170428-1633"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180330011457/repository"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180330011457/repository/"/>
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
