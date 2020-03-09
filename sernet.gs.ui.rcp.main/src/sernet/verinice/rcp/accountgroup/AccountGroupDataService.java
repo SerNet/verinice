@@ -38,13 +38,16 @@ import org.eclipse.swt.widgets.Display;
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.PersonAdapter;
 import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.service.account.AccountSearchParameter;
 import sernet.verinice.service.account.AccountSearchParameterFactory;
+import sernet.verinice.service.commands.LoadVisibleAccounts;
 
 /**
  * This class contains methods to load data for AccountGroupView.
@@ -59,6 +62,8 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     private IAccountService accountService;
+
+    private ICommandService commandService;
 
     private Map<String, Set<String>> accountGroupToConfiguration;
 
@@ -116,11 +121,11 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
         new LoadAccountGroupDataJob(Messages.loadDataJoblabel).schedule();
     }
 
-    public void loadData() {
+    public void loadData() throws CommandException {
         Activator.inheritVeriniceContextState();
         List<AccountGroup> accountGroups = accountService.listGroups();
         accountGroupToConfiguration = new TreeMap<>(new NumericStringComparator());
-        accounts = accountService.listAccounts();
+        accounts = loadVisibleLoginNames();
         for (AccountGroup accountGroup : accountGroups) {
             IAccountSearchParameter parameter = AccountSearchParameterFactory
                     .createAccountGroupParameter(accountGroup.getName());
@@ -140,6 +145,16 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
                 view.switchButtons(true);
             });
         }
+    }
+
+    private Set<String> loadVisibleLoginNames() throws CommandException {
+        LoadVisibleAccounts loadVisibleAccounts = new LoadVisibleAccounts();
+        loadVisibleAccounts = getCommandService().executeCommand(loadVisibleAccounts);
+        Set<String> loginNames = new HashSet<>();
+        for (Configuration account : loadVisibleAccounts.getAccountList()) {
+            loginNames.add(account.getUser());
+        }
+        return loginNames;
     }
 
     @Override
@@ -257,6 +272,13 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
         StringBuilder sb = new StringBuilder(PersonAdapter.getFullName(account.getPerson()));
         sb.append(" [").append(account.getUser()).append("]");
         return sb.toString();
+    }
+
+    public ICommandService getCommandService() {
+        if (commandService == null) {
+            commandService = ServiceFactory.lookupCommandService();
+        }
+        return commandService;
     }
 
 }
