@@ -331,6 +331,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             List<CnATreeElement> changedElements = command.getChangedElements();
             for (CnATreeElement cnATreeElement : changedElements) {
+                CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement);
                 updateRelatedProperties(cnATreeElement);
             }
         } catch (Exception e) {
