@@ -830,7 +830,7 @@ Possible editor areas include:
 	\item[SoA] This tag designates a control selected according to ISO 27001, appendix A and thus also appears in the report.
 	\item[VDA-ISA] This setting includes all of the input fields for the editor in the VDA security assessment perspective.
 	\item[VDA\_ISA\_Audit] Lets you additionally enter data relating to VDA-ISA for controls in the ISM perspective.
-	\item[VV-BSIG] Addtional input options for \emph{Allgemeine Verwaltungsvorschrift über das Meldeverfahren gemäß § 4 Abs. 6 BSIG}.
+	\item[VV-BSIG] Addtional input options for \emph{Allgemeine Verwaltungsvorschrift über das Meldeverfahren gemäß § 4 Abs. 6 BSIG} (Remark: This is a deprecated German BSI report format. The reports are no longer included in verinice. The attributes can still be extracted using a manual report query).
 	\item[Web] Only fields with that tag are displayed in the web frontend.  ``origin'', ``legal basis'', ``deadline for deletion'' und ``DSB statement''.
 \end{description}
 
@@ -2472,8 +2472,6 @@ data entered in the ISM perspective:
 \begin{itemize}
 \item \textbf{Statement of applicability}
 \item \textbf{ISM: Export: Tasks}
-\item \textbf{ISM: Immediately Announcement(VV BSIG)}
-\item \textbf{ISM: Statistical Overall Announcement (VV BSIG)}
 \item \textbf{Risk Calculation - Detailed Listing}
 \end{itemize}
 
@@ -2505,24 +2503,6 @@ standard reference document.
 \textbf{Export: Tasks:} This report includes an overview of all tasks that are
 active as workflow tasks. In it you will find information about objects, tasks,
 users, dates, etc.
-
-\textbf{Immediate report (Administrative Regulations of the German Information
-Security Law):} This report provides an immediate notification of an IT incident
-pursuant to section 4 paragraph 6 of the German Information Security Law. In
-order to get a valid report of this kind, you must create an incident as an
-incident object in the ISM View and fill in the applicable fields in section
-``VV BSIG''. All necessary descriptions such as government agencies, reporting,
-accessibility, date of reporting, external attack, data loss, security breach,
-information purpose, facts, etc. are displayed here.
-
-\textbf{Statistical cumulative report (Administrative Regulations of the German
-Information Security Law):} This report provides a statistical cumulative report
-of all reported IT incidents pursuant to section 4 paragraph 6 of the German
-Information Security Law. In order to get a valid report of this kind, you must
-create an incident as an incident object in the ISM-view and fill in the
-applicable fields in section ``VV BSIG''. All necessary descriptions such as
-classification, authorities, reporting, accessibility, reporting period, number
-of incidents, summary of events, warded off malware, etc. are displayed here.
 
 \textbf{Risk Calculation - Detailed Listing:} A report template that lists all
 combinations of assets/scenarios with corresponding risk values. The following
