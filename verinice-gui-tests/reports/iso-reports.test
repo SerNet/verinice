@@ -42,8 +42,6 @@ ism-import-vna "reportTestData1.vna"
 gen-rep "(S) ISM-ISO: Erklärung zur Anwendbarkeit"
 gen-rep "(S) ISM-ISO: Export: Aufgaben (de)"
 gen-rep "(S) ISM-ISO: Export: Aufgaben (en)"
-gen-rep "(S) ISM-ISO: Sofortmeldung (VV BSIG)"
-gen-rep "(S) ISM-ISO: Statistische Gesamtmeldung (VV BSIG)"
 
 delete-iso-model "importierte Objekte/[Mein Unternehmen1] [5a79b4]"
 
