@@ -22,6 +22,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
@@ -65,6 +66,9 @@ public class AccountServiceTest extends CommandServiceProvider {
     private AccountGroup accountGroupB = null;
     private AccountGroup accountGroupRandom = null;
 
+    @Resource(name = "authService")
+    private TestAuthenticationService authService;
+
     @Resource(name = "accountService")
     private IAccountService accountService;
 
@@ -77,6 +81,7 @@ public class AccountServiceTest extends CommandServiceProvider {
 
     @Before
     public void setUp() throws Exception {
+        authService.setRoles(new String[] { ApplicationRoles.ROLE_ADMIN });
         uuidList = new LinkedList<>();
         configurationNames = new HashSet<>();
         organization = createTestOrganization();

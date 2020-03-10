@@ -32,12 +32,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.ServerInitializer;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.IAuthService;
@@ -47,9 +51,12 @@ import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.IRightsServerHandler;
 import sernet.verinice.interfaces.IRightsService;
+import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.service.account.AccountSearchParameterFactory;
 
 /**
@@ -64,6 +71,10 @@ import sernet.verinice.service.account.AccountSearchParameterFactory;
 public class AccountService implements IAccountService, Serializable {
 
     private static final Logger LOG = Logger.getLogger(AccountService.class);
+
+    private static final String HQL_SELECT_VISIBLE_PERSONS = "select p.cnaTreeElement.dbId from Permission p where"
+            + " p.cnaTreeElement.objectType in ('" + Person.TYPE_ID + "','" + PersonIso.TYPE_ID
+            + "','" + BpPerson.TYPE_ID + "') and p.role in (:roles)";
 
     private IDao<AccountGroup, Serializable> accountGroupDao;
     private IBaseDao<Configuration, Serializable> configurationDao;
@@ -86,9 +97,28 @@ public class AccountService implements IAccountService, Serializable {
         HqlQuery hqlQuery = AccountSearchQueryFactory.createHql(parameter);
         List<Configuration> resultNoProps = getConfigurationDao().findByQuery(hqlQuery.getHql(),
                 hqlQuery.getParams());
+        if (!isAdmin()) {
+            resultNoProps = getReadableAccounts(resultNoProps);
+        }
         List<Configuration> result = initializeProperties(resultNoProps);
         Collections.sort(result);
         return result;
+    }
+
+    /**
+     * Filter out the non-visible accounts by loading the read permissions for
+     * persons.
+     * 
+     * @return Returns the readable accounts of the given accounts
+     */
+    private List<Configuration> getReadableAccounts(List<Configuration> accounts) {
+        List<String> roles = Arrays
+                .asList(getConfigurationService().getRoles(getAuthService().getUsername()));
+        List<?> readablePersonIds = getPermissionDao().findByQuery(HQL_SELECT_VISIBLE_PERSONS,
+                new String[] { "roles" }, new Object[] { roles });
+        return accounts.stream()
+                .filter(account -> readablePersonIds.contains(account.getPerson().getDbId()))
+                .collect(Collectors.toList());
     }
 
     private List<Configuration> initializeProperties(List<Configuration> resultNoProps) {
@@ -238,6 +268,9 @@ public class AccountService implements IAccountService, Serializable {
     public Set<String> listAccounts() {
         ServerInitializer.inheritVeriniceContextState();
         List<Configuration> configurations = getAllConfigurations();
+        if (!isAdmin()) {
+            configurations = getReadableAccounts(configurations);
+        }
         Set<String> accountNames = new HashSet<>();
 
         for (Configuration configuration : configurations) {
@@ -439,6 +472,18 @@ public class AccountService implements IAccountService, Serializable {
             }
             return accountGroupNames;
         }
+    }
+
+    private boolean isAdmin() {
+        return containsAdminRole(getAuthService().getRoles());
+    }
+
+    private boolean containsAdminRole(String[] roles) {
+        return arrayToStream(roles).anyMatch(ApplicationRoles.ROLE_ADMIN::equals);
+    }
+
+    private Stream<String> arrayToStream(String[] strings) {
+        return Optional.ofNullable(strings).map(Arrays::stream).orElseGet(Stream::empty);
     }
 
     public void createStandardGroups() {
