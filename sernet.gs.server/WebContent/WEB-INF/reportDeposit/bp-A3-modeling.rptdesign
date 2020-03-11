@@ -9162,6 +9162,78 @@ else &#13;
                                 <expression name="expression" type="javascript">dataSetRow["sortField"]</expression>
                                 <property name="dataType">integer</property>
                             </structure>
+                            <structure>
+                                <property name="name">concat-gp</property>
+                                <property name="dataType">string</property>
+                                <simple-property-list name="aggregateOn">
+                                    <value>gp</value>
+                                </simple-property-list>
+                                <property name="aggregateFunction">CONCATENATE</property>
+                                <list-property name="arguments">
+                                    <structure>
+                                        <property name="name">Expression</property>
+                                        <expression name="value" type="javascript">row["Titel"]</expression>
+                                    </structure>
+                                    <structure>
+                                        <property name="name">Separator</property>
+                                    </structure>
+                                    <structure>
+                                        <property name="name">Maxlength</property>
+                                    </structure>
+                                    <structure>
+                                        <property name="name">Showallvalues</property>
+                                    </structure>
+                                </list-property>
+                                <property name="allowExport">true</property>
+                            </structure>
+                            <structure>
+                                <property name="name">concat-req</property>
+                                <property name="dataType">string</property>
+                                <simple-property-list name="aggregateOn">
+                                    <value>req</value>
+                                </simple-property-list>
+                                <property name="aggregateFunction">CONCATENATE</property>
+                                <list-property name="arguments">
+                                    <structure>
+                                        <property name="name">Expression</property>
+                                        <expression name="value" type="javascript">row["Titel"]</expression>
+                                    </structure>
+                                    <structure>
+                                        <property name="name">Separator</property>
+                                    </structure>
+                                    <structure>
+                                        <property name="name">Maxlength</property>
+                                    </structure>
+                                    <structure>
+                                        <property name="name">Showallvalues</property>
+                                    </structure>
+                                </list-property>
+                                <property name="allowExport">true</property>
+                            </structure>
+                            <structure>
+                                <property name="name">concat-res</property>
+                                <property name="dataType">string</property>
+                                <simple-property-list name="aggregateOn">
+                                    <value>res</value>
+                                </simple-property-list>
+                                <property name="aggregateFunction">CONCATENATE</property>
+                                <list-property name="arguments">
+                                    <structure>
+                                        <property name="name">Expression</property>
+                                        <expression name="value" type="javascript">row["Titel"]</expression>
+                                    </structure>
+                                    <structure>
+                                        <property name="name">Separator</property>
+                                    </structure>
+                                    <structure>
+                                        <property name="name">Maxlength</property>
+                                    </structure>
+                                    <structure>
+                                        <property name="name">Showallvalues</property>
+                                    </structure>
+                                </list-property>
+                                <property name="allowExport">true</property>
+                            </structure>
                         </list-property>
                         <property name="repeatHeader">false</property>
                         <list-property name="sort">
@@ -9244,7 +9316,7 @@ else &#13;
                             <property name="groupName">gp</property>
                             <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Bausteine)"]</expression>
                             <structure name="toc">
-                                <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Bausteine)"]</expression>
+                                <expression name="expressionValue" type="javascript">row["Identifier__(Bausteine)"]</expression>
                             </structure>
                             <property name="repeatHeader">false</property>
                             <property name="hideDetail">false</property>
@@ -9265,7 +9337,7 @@ else &#13;
                             <property name="groupName">req</property>
                             <expression name="keyExpr" type="javascript">row["Identifier__(Bausteine)"]</expression>
                             <structure name="toc">
-                                <expression name="expressionValue" type="javascript">row["Identifier__(Bausteine)"]</expression>
+                                <expression name="expressionValue" type="javascript">row["Identifier__(Bausteine)"]+" "+row["Titel__(Bausteine)"]</expression>
                             </structure>
                             <property name="hideDetail">false</property>
                             <header>
@@ -9351,11 +9423,29 @@ else &#13;
                                         </grid>
                                     </cell>
                                 </row>
+                                <row id="8857">
+                                    <cell id="8858">
+                                        <property name="colSpan">4</property>
+                                        <property name="rowSpan">1</property>
+                                    </cell>
+                                    <cell id="8862"/>
+                                    <cell id="8863"/>
+                                    <cell id="8864"/>
+                                    <cell id="8865"/>
+                                    <cell id="8866"/>
+                                    <cell id="8867"/>
+                                    <cell id="8868"/>
+                                    <cell id="8869"/>
+                                    <cell id="8870"/>
+                                    <cell id="8871"/>
+                                    <cell id="8872"/>
+                                    <cell id="8873"/>
+                                </row>
                             </header>
                         </group>
                         <group id="7402">
                             <property name="groupName">res</property>
-                            <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Person)"]</expression>
+                            <expression name="keyExpr" type="javascript">row["l_titel"]</expression>
                             <property name="hideDetail">false</property>
                             <list-property name="sort">
                                 <structure>
@@ -9368,6 +9458,18 @@ else &#13;
                                 </structure>
                             </list-property>
                             <header>
+                                <row id="8783">
+                                    <list-property name="visibility">
+                                        <structure>
+                                            <property name="format">all</property>
+                                            <expression name="valueExpr" type="javascript">BirtStr.search("Hauptverantwortlicher", row["VerantwortlichConcat"], 0) >= 0</expression>
+                                        </structure>
+                                    </list-property>
+                                    <cell id="8784">
+                                        <property name="colSpan">16</property>
+                                        <property name="rowSpan">1</property>
+                                    </cell>
+                                </row>
                                 <row id="7814">
                                     <list-property name="visibility">
                                         <structure>
@@ -9380,7 +9482,7 @@ else &#13;
                                         <property name="rowSpan">1</property>
                                         <label id="7831">
                                             <property name="fontWeight">bold</property>
-                                            <text-property name="text">Hauptverantwortlicher:</text-property>
+                                            <text-property name="text">Grundsätzlich zuständig:</text-property>
                                         </label>
                                     </cell>
                                     <cell id="7819">
@@ -9393,7 +9495,7 @@ else &#13;
                                     <list-property name="visibility">
                                         <structure>
                                             <property name="format">all</property>
-                                            <expression name="valueExpr" type="javascript">row["Titel"].length &lt; 2</expression>
+                                            <expression name="valueExpr" type="javascript">row["l_titel"]==":"</expression>
                                         </structure>
                                     </list-property>
                                     <cell id="7404">
@@ -9425,7 +9527,7 @@ else &#13;
                                         <property name="rowSpan">1</property>
                                         <label id="8535">
                                             <property name="fontWeight">bold</property>
-                                            <text-property name="text">Verantwortlicher:</text-property>
+                                            <text-property name="text">Weitere Zuständigkeiten:</text-property>
                                         </label>
                                     </cell>
                                     <cell id="8523"/>
@@ -9668,7 +9770,7 @@ else &#13;
                                 <property name="name">VerantwortlichConcat</property>
                                 <property name="dataType">string</property>
                                 <simple-property-list name="aggregateOn">
-                                    <value>responsibility</value>
+                                    <value>req</value>
                                 </simple-property-list>
                                 <property name="aggregateFunction">CONCATENATE</property>
                                 <list-property name="arguments">
@@ -9813,7 +9915,7 @@ else &#13;
                             <property name="groupName">req</property>
                             <expression name="keyExpr" type="javascript">row["Identifier__(Bausteine)"]</expression>
                             <structure name="toc">
-                                <expression name="expressionValue" type="javascript">row["Identifier__(Bausteine)"]</expression>
+                                <expression name="expressionValue" type="javascript">row["Identifier__(Bausteine)"]+" "+row["Titel__(Bausteine)"]</expression>
                             </structure>
                             <property name="hideDetail">false</property>
                             <property name="pageBreakInside">avoid</property>
@@ -9916,7 +10018,7 @@ else &#13;
                         </group>
                         <group id="7107">
                             <property name="groupName">responsibility</property>
-                            <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Person)"]</expression>
+                            <expression name="keyExpr" type="javascript">row["Titel"]</expression>
                             <property name="hideDetail">false</property>
                             <list-property name="sort">
                                 <structure>
@@ -9943,7 +10045,7 @@ else
                                         <property name="rowSpan">1</property>
                                         <label id="8180">
                                             <property name="fontWeight">bold</property>
-                                            <text-property name="text">Hauptverantwortlicher:</text-property>
+                                            <text-property name="text">Grundsätzlich zuständig:</text-property>
                                         </label>
                                     </cell>
                                     <cell id="8151"/>
@@ -9998,7 +10100,7 @@ else
                                         <property name="rowSpan">1</property>
                                         <label id="8517">
                                             <property name="fontWeight">bold</property>
-                                            <text-property name="text">Verantwortlicher:</text-property>
+                                            <text-property name="text">Weitere Zuständigkeiten:</text-property>
                                         </label>
                                     </cell>
                                     <cell id="8505"/>
@@ -10257,7 +10359,7 @@ else &#13;
                                 <property name="name">VerantwortlichConcat</property>
                                 <property name="dataType">string</property>
                                 <simple-property-list name="aggregateOn">
-                                    <value>responsibility</value>
+                                    <value>req</value>
                                 </simple-property-list>
                                 <property name="aggregateFunction">CONCATENATE</property>
                                 <list-property name="arguments">
@@ -10409,7 +10511,7 @@ else &#13;
                             <property name="groupName">req</property>
                             <expression name="keyExpr" type="javascript">row["Identifier__(Bausteine)"]</expression>
                             <structure name="toc">
-                                <expression name="expressionValue" type="javascript">row["Titel__(Bausteine)"]</expression>
+                                <expression name="expressionValue" type="javascript">row["Identifier__(Bausteine)"]+" "+row["Titel__(Bausteine)"]</expression>
                             </structure>
                             <property name="hideDetail">false</property>
                             <list-property name="sort">
@@ -10513,7 +10615,7 @@ else &#13;
                         </group>
                         <group id="7180">
                             <property name="groupName">responsibility</property>
-                            <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Person)"]</expression>
+                            <expression name="keyExpr" type="javascript">row["Titel"]</expression>
                             <property name="hideDetail">false</property>
                             <list-property name="sort">
                                 <structure>
@@ -10540,7 +10642,7 @@ else
                                         <property name="rowSpan">1</property>
                                         <label id="8216">
                                             <property name="fontWeight">bold</property>
-                                            <text-property name="text">Hauptverantwortlicher:</text-property>
+                                            <text-property name="text">Grundsätzlich zuständig:</text-property>
                                         </label>
                                     </cell>
                                     <cell id="8187"/>
@@ -10596,7 +10698,7 @@ else
                                         <property name="rowSpan">1</property>
                                         <label id="8499">
                                             <property name="fontWeight">bold</property>
-                                            <text-property name="text">Verantwortlicher:</text-property>
+                                            <text-property name="text">Weitere Zuständigkeiten:</text-property>
                                         </label>
                                     </cell>
                                     <cell id="8487"/>
@@ -10839,7 +10941,7 @@ else &#13;
                                 <property name="name">VerantwortlichConcat</property>
                                 <property name="dataType">string</property>
                                 <simple-property-list name="aggregateOn">
-                                    <value>res</value>
+                                    <value>req</value>
                                 </simple-property-list>
                                 <property name="aggregateFunction">CONCATENATE</property>
                                 <list-property name="arguments">
@@ -10983,7 +11085,7 @@ else &#13;
                             <property name="groupName">req</property>
                             <expression name="keyExpr" type="javascript">row["Identifier__(Bausteine)"]</expression>
                             <structure name="toc">
-                                <expression name="expressionValue" type="javascript">row["Titel__(Bausteine)"]</expression>
+                                <expression name="expressionValue" type="javascript">row["Identifier__(Bausteine)"]+" "+row["Titel__(Bausteine)"]</expression>
                             </structure>
                             <property name="hideDetail">false</property>
                             <list-property name="sort">
@@ -11087,7 +11189,7 @@ else &#13;
                         </group>
                         <group id="7218">
                             <property name="groupName">res</property>
-                            <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Person)"]</expression>
+                            <expression name="keyExpr" type="javascript">row["Titel"]</expression>
                             <property name="hideDetail">false</property>
                             <list-property name="sort">
                                 <structure>
@@ -11114,7 +11216,7 @@ else
                                         <property name="rowSpan">1</property>
                                         <label id="8252">
                                             <property name="fontWeight">bold</property>
-                                            <text-property name="text">Hauptverantwortlicher:</text-property>
+                                            <text-property name="text">Grundsätzlich zuständig:</text-property>
                                         </label>
                                     </cell>
                                     <cell id="8223"/>
@@ -11170,7 +11272,7 @@ else
                                         <property name="rowSpan">1</property>
                                         <label id="8481">
                                             <property name="fontWeight">bold</property>
-                                            <text-property name="text">Verantwortlicher:</text-property>
+                                            <text-property name="text">Weitere Zuständigkeiten:</text-property>
                                         </label>
                                     </cell>
                                     <cell id="8469"/>
@@ -11413,7 +11515,7 @@ else &#13;
                                 <property name="name">VerantwortlichConcat</property>
                                 <property name="dataType">string</property>
                                 <simple-property-list name="aggregateOn">
-                                    <value>res</value>
+                                    <value>req</value>
                                 </simple-property-list>
                                 <property name="aggregateFunction">CONCATENATE</property>
                                 <list-property name="arguments">
@@ -11557,7 +11659,7 @@ else &#13;
                             <property name="groupName">req</property>
                             <expression name="keyExpr" type="javascript">row["Identifier__(Bausteine)"]</expression>
                             <structure name="toc">
-                                <expression name="expressionValue" type="javascript">row["Titel__(Bausteine)"]</expression>
+                                <expression name="expressionValue" type="javascript">row["Identifier__(Bausteine)"]+" "+row["Titel__(Bausteine)"]</expression>
                             </structure>
                             <property name="hideDetail">false</property>
                             <list-property name="sort">
@@ -11661,7 +11763,7 @@ else &#13;
                         </group>
                         <group id="7364">
                             <property name="groupName">res</property>
-                            <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Person)"]</expression>
+                            <expression name="keyExpr" type="javascript">row["Titel"]</expression>
                             <property name="hideDetail">false</property>
                             <list-property name="sort">
                                 <structure>
@@ -11688,7 +11790,7 @@ else
                                         <property name="rowSpan">1</property>
                                         <label id="7992">
                                             <property name="fontWeight">bold</property>
-                                            <text-property name="text">Hauptverantwortlicher:</text-property>
+                                            <text-property name="text">Grundsätzlich zuständig:</text-property>
                                         </label>
                                     </cell>
                                     <cell id="8259"/>
@@ -11743,7 +11845,7 @@ else
                                         <property name="rowSpan">1</property>
                                         <label id="8463">
                                             <property name="fontWeight">bold</property>
-                                            <text-property name="text">Verantwortlicher:</text-property>
+                                            <text-property name="text">Weitere Zuständigkeiten:</text-property>
                                         </label>
                                     </cell>
                                     <cell id="8451"/>
@@ -11986,7 +12088,7 @@ else &#13;
                                 <property name="name">VerantwortlichConcat</property>
                                 <property name="dataType">string</property>
                                 <simple-property-list name="aggregateOn">
-                                    <value>res</value>
+                                    <value>req</value>
                                 </simple-property-list>
                                 <property name="aggregateFunction">CONCATENATE</property>
                                 <list-property name="arguments">
@@ -12130,7 +12232,7 @@ else &#13;
                             <property name="groupName">req</property>
                             <expression name="keyExpr" type="javascript">row["Identifier__(Bausteine)"]</expression>
                             <structure name="toc">
-                                <expression name="expressionValue" type="javascript">row["Titel__(Bausteine)"]</expression>
+                                <expression name="expressionValue" type="javascript">row["Identifier__(Bausteine)"]+" "+row["Titel__(Bausteine)"]</expression>
                             </structure>
                             <property name="hideDetail">false</property>
                             <list-property name="sort">
@@ -12234,7 +12336,7 @@ else &#13;
                         </group>
                         <group id="7256">
                             <property name="groupName">res</property>
-                            <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Person)"]</expression>
+                            <expression name="keyExpr" type="javascript">row["Titel"]</expression>
                             <property name="hideDetail">false</property>
                             <list-property name="sort">
                                 <structure>
@@ -12261,7 +12363,7 @@ else
                                         <property name="rowSpan">1</property>
                                         <label id="8322">
                                             <property name="fontWeight">bold</property>
-                                            <text-property name="text">Hauptverantwortlicher:</text-property>
+                                            <text-property name="text">Grundsätzlich zuständig:</text-property>
                                         </label>
                                     </cell>
                                     <cell id="8293"/>
@@ -12316,7 +12418,7 @@ else
                                         <property name="rowSpan">1</property>
                                         <label id="8445">
                                             <property name="fontWeight">bold</property>
-                                            <text-property name="text">Verantwortlicher:</text-property>
+                                            <text-property name="text">Weitere Zuständigkeiten:</text-property>
                                         </label>
                                     </cell>
                                     <cell id="8433"/>
@@ -12554,7 +12656,7 @@ else &#13;
                                 <property name="name">VerantwortlichConcat</property>
                                 <property name="dataType">string</property>
                                 <simple-property-list name="aggregateOn">
-                                    <value>res</value>
+                                    <value>req</value>
                                 </simple-property-list>
                                 <property name="aggregateFunction">CONCATENATE</property>
                                 <list-property name="arguments">
@@ -12698,7 +12800,7 @@ else &#13;
                             <property name="groupName">req</property>
                             <expression name="keyExpr" type="javascript">row["Identifier__(Bausteine)"]</expression>
                             <structure name="toc">
-                                <expression name="expressionValue" type="javascript">row["Titel__(Bausteine)"]</expression>
+                                <expression name="expressionValue" type="javascript">row["Identifier__(Bausteine)"]+" "+row["Titel__(Bausteine)"]</expression>
                             </structure>
                             <property name="hideDetail">false</property>
                             <list-property name="sort">
@@ -12802,7 +12904,7 @@ else &#13;
                         </group>
                         <group id="7440">
                             <property name="groupName">res</property>
-                            <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Person)"]</expression>
+                            <expression name="keyExpr" type="javascript">row["Titel"]</expression>
                             <property name="hideDetail">false</property>
                             <list-property name="sort">
                                 <structure>
@@ -12829,7 +12931,7 @@ else
                                         <property name="rowSpan">1</property>
                                         <label id="8064">
                                             <property name="fontWeight">bold</property>
-                                            <text-property name="text">Hauptverantwortlicher:</text-property>
+                                            <text-property name="text">Grundsätzlich zuständig:</text-property>
                                         </label>
                                     </cell>
                                     <cell id="8329"/>
@@ -12884,7 +12986,7 @@ else
                                         <property name="rowSpan">1</property>
                                         <label id="8427">
                                             <property name="fontWeight">bold</property>
-                                            <text-property name="text">Verantwortlicher:</text-property>
+                                            <text-property name="text">Weitere Zuständigkeiten:</text-property>
                                         </label>
                                     </cell>
                                     <cell id="8415"/>
@@ -13120,7 +13222,7 @@ else &#13;
                                 <property name="name">VerantwortlichConcat</property>
                                 <property name="dataType">string</property>
                                 <simple-property-list name="aggregateOn">
-                                    <value>res</value>
+                                    <value>req</value>
                                 </simple-property-list>
                                 <property name="aggregateFunction">CONCATENATE</property>
                                 <list-property name="arguments">
@@ -13279,7 +13381,7 @@ else &#13;
                             <property name="groupName">req</property>
                             <expression name="keyExpr" type="javascript">row["Identifier__(Bausteine)"]</expression>
                             <structure name="toc">
-                                <expression name="expressionValue" type="javascript">row["Titel__(Bausteine)"]</expression>
+                                <expression name="expressionValue" type="javascript">row["Identifier__(Bausteine)"]+" "+row["Titel__(Bausteine)"]</expression>
                             </structure>
                             <property name="hideDetail">false</property>
                             <property name="pageBreakInside">avoid</property>
@@ -13383,7 +13485,7 @@ else &#13;
                         </group>
                         <group id="7478">
                             <property name="groupName">res</property>
-                            <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Person)"]</expression>
+                            <expression name="keyExpr" type="javascript">row["Titel"]</expression>
                             <property name="hideDetail">false</property>
                             <list-property name="sort">
                                 <structure>
@@ -13410,7 +13512,7 @@ else
                                         <property name="rowSpan">1</property>
                                         <label id="8100">
                                             <property name="fontWeight">bold</property>
-                                            <text-property name="text">Hauptverantwortlicher:</text-property>
+                                            <text-property name="text">Grundsätzlich zuständig:</text-property>
                                         </label>
                                     </cell>
                                     <cell id="8363"/>
@@ -13465,7 +13567,7 @@ else
                                         <property name="rowSpan">1</property>
                                         <label id="8409">
                                             <property name="fontWeight">bold</property>
-                                            <text-property name="text">Verantwortlicher:</text-property>
+                                            <text-property name="text">Weitere Zuständigkeiten:</text-property>
                                         </label>
                                     </cell>
                                     <cell id="8397"/>
