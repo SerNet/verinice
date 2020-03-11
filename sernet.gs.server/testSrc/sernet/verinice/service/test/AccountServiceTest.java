@@ -224,6 +224,17 @@ public class AccountServiceTest extends CommandServiceProvider {
     @Transactional
     @Rollback(true)
     @Test
+    public void testLocalAdmin() throws Exception {
+        authService.setRoles(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        List<Configuration> configurations = accountService
+                .findAccounts(AccountSearchParameterFactory.createLoginParameter(getLoginName()));
+        assertTrue("Account was found: " + getLoginName(), configurations.isEmpty());
+        authService.setRoles(new String[] { ApplicationRoles.ROLE_ADMIN });
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
     public void testFindByLogin() throws Exception {
         List<Configuration> configurations = accountService
                 .findAccounts(AccountSearchParameterFactory.createLoginParameter(getLoginName()));
