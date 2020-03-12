@@ -75,37 +75,27 @@ public final class Retriever {
     }
 
     public static CnATreeElement checkRetrieveElementAndChildren(final CnATreeElement element) {
-        RetrieveInfo ri = null;
-        CnATreeElement returnValue;
-        if (!isElementInitialized(element)) {
+        boolean elementInitialized = isElementInitialized(element);
+        boolean childrenInitialized = areChildrenInitialized(element);
+        if (elementInitialized && childrenInitialized) {
+            return element;
+        }
+        RetrieveInfo ri = new RetrieveInfo();
+        if (!elementInitialized) {
             if (LOG.isInfoEnabled()) {
                 LOG.info("Loading children of element: " + element.getDbId());
             }
-            if (ri == null) {
-                ri = new RetrieveInfo();
-            }
             ri.setProperties(true);
         }
-        if (!areChildrenInitialized(element)) {
+        if (!childrenInitialized) {
             if (LOG.isInfoEnabled()) {
                 LOG.info("Loading properties of element: " + element.getDbId());
             }
-            if (ri == null) {
-                ri = new RetrieveInfo();
-            }
             ri.setChildren(true);
         }
-        if (ri != null) {
-            returnValue = retrieveElement(element, ri);
-        } else {
-            returnValue = element;
-        }
-        return returnValue;
+        return retrieveElement(element, ri);
     }
 
-    /**
-     * @param cte
-     */
     public static CnATreeElement checkRetrieveParent(CnATreeElement element) {
         if (!isParentInitialized(element) && element != null) {
             if (LOG.isInfoEnabled()) {
@@ -181,10 +171,7 @@ public final class Retriever {
         if (properties.getProperties() == null) {
             return true;
         }
-        if (!Hibernate.isInitialized(properties.getProperties())) {
-            return false;
-        }
-        return true;
+        return !Hibernate.isInitialized(properties.getProperties());
     }
 
     public static boolean areChildrenInitialized(CnATreeElement element) {
@@ -222,14 +209,13 @@ public final class Retriever {
 
     public static boolean areLinksInitizialized(CnATreeElement element, boolean upLinks) {
         boolean elementIni = Hibernate.isInitialized(element);
-        boolean links = false;
-        if (elementIni) {
-            links = Hibernate.isInitialized(element.getLinksDown());
-            if (upLinks) {
-                links = links && Hibernate.isInitialized(element.getLinksUp());
-            }
+        if (!elementIni) {
+            return false;
         }
-        return elementIni && (element == null || links);
+        if (!Hibernate.isInitialized(element.getLinksDown())) {
+            return false;
+        }
+        return !upLinks || Hibernate.isInitialized(element.getLinksUp());
     }
 
     private Retriever() {

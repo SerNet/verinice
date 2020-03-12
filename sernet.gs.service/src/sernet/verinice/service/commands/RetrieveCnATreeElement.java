@@ -34,8 +34,9 @@ import sernet.verinice.model.iso27k.Organization;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-@SuppressWarnings("restriction")
 public class RetrieveCnATreeElement extends GenericCommand {
+
+    private static final long serialVersionUID = -2402504404366837672L;
 
     private CnATreeElement element;
 
@@ -45,17 +46,14 @@ public class RetrieveCnATreeElement extends GenericCommand {
 
     private String typeId;
 
-    private Map<String, Object> parameter;
+    private transient Map<String, Object> parameter;
 
     public RetrieveCnATreeElement(String typeId, Integer dbId) {
-        this.typeId = typeId;
-        this.dbId = dbId;
+        this(typeId, dbId, null, null);
     }
 
     public RetrieveCnATreeElement(String typeId, Integer dbId, RetrieveInfo retrieveInfo) {
-        this.typeId = typeId;
-        this.dbId = dbId;
-        this.retrieveInfo = retrieveInfo;
+        this(typeId, dbId, retrieveInfo, null);
     }
 
     public RetrieveCnATreeElement(String typeId, Integer dbId, RetrieveInfo retrieveInfo,
@@ -66,10 +64,6 @@ public class RetrieveCnATreeElement extends GenericCommand {
         this.parameter = parameter;
     }
 
-    /**
-     * @param dbId2
-     * @return
-     */
     public static RetrieveCnATreeElement getISO27KModelISMViewInstance(Integer dbId) {
         RetrieveCnATreeElement retrieveElement = new RetrieveCnATreeElement(ISO27KModel.TYPE_ID,
                 dbId);
@@ -109,11 +103,10 @@ public class RetrieveCnATreeElement extends GenericCommand {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
      */
     public void execute() {
+        @SuppressWarnings("unchecked")
         IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
         element = dao.retrieve(dbId, getRetrieveInfo());
         ElementFilter.filterChildrenOfElement(element, parameter);
@@ -135,17 +128,10 @@ public class RetrieveCnATreeElement extends GenericCommand {
         return retrieveInfo;
     }
 
-    /**
-     * @return the parameter
-     */
     public Map<String, Object> getParameter() {
         return parameter;
     }
 
-    /**
-     * @param parameter
-     *            the parameter to set
-     */
     public void setParameter(Map<String, Object> parameter) {
         this.parameter = parameter;
     }
