@@ -171,7 +171,7 @@ public final class Retriever {
         if (properties.getProperties() == null) {
             return true;
         }
-        return !Hibernate.isInitialized(properties.getProperties());
+        return Hibernate.isInitialized(properties.getProperties());
     }
 
     public static boolean areChildrenInitialized(CnATreeElement element) {
