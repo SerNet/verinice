@@ -36,96 +36,104 @@ import sernet.verinice.model.iso27k.Organization;
  */
 @SuppressWarnings("restriction")
 public class RetrieveCnATreeElement extends GenericCommand {
-    
-	private CnATreeElement element;
-	
-	private RetrieveInfo retrieveInfo;
 
-	private Integer dbId;
+    private CnATreeElement element;
+
+    private RetrieveInfo retrieveInfo;
+
+    private Integer dbId;
 
     private String typeId;
-    
+
     private Map<String, Object> parameter;
-	
+
     public RetrieveCnATreeElement(String typeId, Integer dbId) {
-	    this.typeId = typeId;
-		this.dbId = dbId;
-	}
-	
-	public RetrieveCnATreeElement(String typeId, Integer dbId, RetrieveInfo retrieveInfo) {
-	    this.typeId = typeId;
-		this.dbId = dbId;
-		this.retrieveInfo = retrieveInfo;
-	}
-	
-	public RetrieveCnATreeElement(String typeId, Integer dbId, RetrieveInfo retrieveInfo, Map<String, Object> parameter) {
+        this.typeId = typeId;
+        this.dbId = dbId;
+    }
+
+    public RetrieveCnATreeElement(String typeId, Integer dbId, RetrieveInfo retrieveInfo) {
+        this.typeId = typeId;
+        this.dbId = dbId;
+        this.retrieveInfo = retrieveInfo;
+    }
+
+    public RetrieveCnATreeElement(String typeId, Integer dbId, RetrieveInfo retrieveInfo,
+            Map<String, Object> parameter) {
         this.typeId = typeId;
         this.dbId = dbId;
         this.retrieveInfo = retrieveInfo;
         this.parameter = parameter;
     }
-	
-	
-	/**
-	 * @param dbId2
-	 * @return
-	 */
-	public static RetrieveCnATreeElement getISO27KModelISMViewInstance(Integer dbId) {
-		RetrieveCnATreeElement retrieveElement = new RetrieveCnATreeElement(ISO27KModel.TYPE_ID, dbId);
-		RetrieveInfo retrieveInfo = new RetrieveInfo();
-		retrieveInfo.setPermissions(true).setChildren(true).setChildrenProperties(true).setChildrenPermissions(true).setGrandchildren(true);
-		retrieveElement.setRetrieveInfo(retrieveInfo);
-		return retrieveElement;
-	}
-	
-	public static RetrieveCnATreeElement getOrganizationISMViewInstance(Integer dbId) {
-		RetrieveCnATreeElement retrieveElement = new RetrieveCnATreeElement(Organization.TYPE_ID, dbId);
-		RetrieveInfo retrieveInfo = new RetrieveInfo();
-		retrieveInfo.setPermissions(true).setProperties(true).setChildren(true).setChildrenPermissions(true).setChildrenProperties(true).setGrandchildren(true);
-		retrieveElement.setRetrieveInfo(retrieveInfo);
-		return retrieveElement;
-	}
-	
-	public static RetrieveCnATreeElement getGroupISMViewInstance(Integer dbId, String typeId) {
-		RetrieveCnATreeElement retrieveElement = new RetrieveCnATreeElement(typeId, dbId);
-		RetrieveInfo retrieveInfo = new RetrieveInfo();
-		retrieveInfo.setProperties(true).setPermissions(true).setChildren(true).setChildrenPermissions(true).setChildrenProperties(true).setGrandchildren(true).setParent(true).setSiblings(true);
-		retrieveElement.setRetrieveInfo(retrieveInfo);
-		return retrieveElement;
-	}
-	
-	public static RetrieveCnATreeElement getElementISMViewInstance(Integer dbId, String typeId) {
-		RetrieveCnATreeElement retrieveElement = new RetrieveCnATreeElement(typeId, dbId);
-		RetrieveInfo retrieveInfo = new RetrieveInfo();
-		retrieveInfo.setPermissions(true).setProperties(true).setChildren(true);
-		retrieveElement.setRetrieveInfo(retrieveInfo);
-		return retrieveElement;
-	}
-	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
-	 */
-	public void execute() {
-		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
-		element = dao.retrieve(dbId,getRetrieveInfo());
-		ElementFilter.filterChildrenOfElement(element, parameter);
-	}
+
+    /**
+     * @param dbId2
+     * @return
+     */
+    public static RetrieveCnATreeElement getISO27KModelISMViewInstance(Integer dbId) {
+        RetrieveCnATreeElement retrieveElement = new RetrieveCnATreeElement(ISO27KModel.TYPE_ID,
+                dbId);
+        RetrieveInfo retrieveInfo = new RetrieveInfo();
+        retrieveInfo.setPermissions(true).setChildren(true).setChildrenProperties(true)
+                .setChildrenPermissions(true).setGrandchildren(true);
+        retrieveElement.setRetrieveInfo(retrieveInfo);
+        return retrieveElement;
+    }
+
+    public static RetrieveCnATreeElement getOrganizationISMViewInstance(Integer dbId) {
+        RetrieveCnATreeElement retrieveElement = new RetrieveCnATreeElement(Organization.TYPE_ID,
+                dbId);
+        RetrieveInfo retrieveInfo = new RetrieveInfo();
+        retrieveInfo.setPermissions(true).setProperties(true).setChildren(true)
+                .setChildrenPermissions(true).setChildrenProperties(true).setGrandchildren(true);
+        retrieveElement.setRetrieveInfo(retrieveInfo);
+        return retrieveElement;
+    }
+
+    public static RetrieveCnATreeElement getGroupISMViewInstance(Integer dbId, String typeId) {
+        RetrieveCnATreeElement retrieveElement = new RetrieveCnATreeElement(typeId, dbId);
+        RetrieveInfo retrieveInfo = new RetrieveInfo();
+        retrieveInfo.setProperties(true).setPermissions(true).setChildren(true)
+                .setChildrenPermissions(true).setChildrenProperties(true).setGrandchildren(true)
+                .setParent(true).setSiblings(true);
+        retrieveElement.setRetrieveInfo(retrieveInfo);
+        return retrieveElement;
+    }
+
+    public static RetrieveCnATreeElement getElementISMViewInstance(Integer dbId, String typeId) {
+        RetrieveCnATreeElement retrieveElement = new RetrieveCnATreeElement(typeId, dbId);
+        RetrieveInfo retrieveInfo = new RetrieveInfo();
+        retrieveInfo.setPermissions(true).setProperties(true).setChildren(true);
+        retrieveElement.setRetrieveInfo(retrieveInfo);
+        return retrieveElement;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
+     */
+    public void execute() {
+        IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
+        element = dao.retrieve(dbId, getRetrieveInfo());
+        ElementFilter.filterChildrenOfElement(element, parameter);
+    }
 
     public void setElement(CnATreeElement element) {
-		this.element = element;
-	}
+        this.element = element;
+    }
 
-	public CnATreeElement getElement() {
-		return element;
-	}
+    public CnATreeElement getElement() {
+        return element;
+    }
 
-	public void setRetrieveInfo(RetrieveInfo retrieveInfo) {
-		this.retrieveInfo = retrieveInfo;
-	}
+    public void setRetrieveInfo(RetrieveInfo retrieveInfo) {
+        this.retrieveInfo = retrieveInfo;
+    }
 
-	public RetrieveInfo getRetrieveInfo() {
-		return retrieveInfo;
-	}
+    public RetrieveInfo getRetrieveInfo() {
+        return retrieveInfo;
+    }
 
     /**
      * @return the parameter
@@ -133,12 +141,13 @@ public class RetrieveCnATreeElement extends GenericCommand {
     public Map<String, Object> getParameter() {
         return parameter;
     }
-    
+
     /**
-     * @param parameter the parameter to set
+     * @param parameter
+     *            the parameter to set
      */
     public void setParameter(Map<String, Object> parameter) {
         this.parameter = parameter;
     }
- 
+
 }

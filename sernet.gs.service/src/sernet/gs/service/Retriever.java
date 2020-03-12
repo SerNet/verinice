@@ -38,89 +38,89 @@ import sernet.verinice.service.commands.RetrieveCnATreeElement;
  */
 public final class Retriever {
 
-	private static final Logger LOG = Logger.getLogger(Retriever.class);
-	
-	private static ICommandService commandService;
-	
-	public static CnATreeElement checkRetrieveElement(CnATreeElement element) {
-		if(!isElementInitialized(element)) {
-			if (LOG.isInfoEnabled()) {
-				LOG.info("Loading properties of element: " + element.getDbId());
-			}
-			element = retrieveElement(element,RetrieveInfo.getPropertyInstance());
-		}
-		return element;
-	}
-	
-	public static CnATreeElement checkRetrieveChildren(CnATreeElement element) {
-		if(!areChildrenInitialized(element)) {
-			if (LOG.isInfoEnabled()) {
-				LOG.info("Loading children of element: " + element.getDbId());
-			}
-			element = retrieveElement(element,RetrieveInfo.getChildrenInstance());
-		}
-		return element;
-	}
-	
-	public static CnATreeElement checkRetrievePermissions(CnATreeElement element) {
-        if(!arePermissionsInitialized(element)) {
+    private static final Logger LOG = Logger.getLogger(Retriever.class);
+
+    private static ICommandService commandService;
+
+    public static CnATreeElement checkRetrieveElement(CnATreeElement element) {
+        if (!isElementInitialized(element)) {
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Loading properties of element: " + element.getDbId());
+            }
+            element = retrieveElement(element, RetrieveInfo.getPropertyInstance());
+        }
+        return element;
+    }
+
+    public static CnATreeElement checkRetrieveChildren(CnATreeElement element) {
+        if (!areChildrenInitialized(element)) {
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Loading children of element: " + element.getDbId());
+            }
+            element = retrieveElement(element, RetrieveInfo.getChildrenInstance());
+        }
+        return element;
+    }
+
+    public static CnATreeElement checkRetrievePermissions(CnATreeElement element) {
+        if (!arePermissionsInitialized(element)) {
             if (LOG.isInfoEnabled()) {
                 LOG.info("Loading permissions of element: " + element.getDbId());
             }
             RetrieveInfo ri = new RetrieveInfo();
             ri.setPermissions(true);
-            element = retrieveElement(element,ri);
-        }
-        return element;
-    }
-	
-	public static CnATreeElement checkRetrieveElementAndChildren(final CnATreeElement element) {
-		RetrieveInfo ri = null;
-		CnATreeElement returnValue;
-		if(!isElementInitialized(element)) {
-			if (LOG.isInfoEnabled()) {
-				LOG.info("Loading children of element: " + element.getDbId());
-			}
-			if(ri==null) {
-				ri = new RetrieveInfo();
-			}
-			ri.setProperties(true);
-		}
-		if(!areChildrenInitialized(element)) {
-			if (LOG.isInfoEnabled()) {
-				LOG.info("Loading properties of element: " + element.getDbId());
-			}
-			if(ri==null) {
-				ri = new RetrieveInfo();
-			}
-			ri.setChildren(true);
-		}
-		if(ri!=null) {
-		    returnValue = retrieveElement(element,ri);
-		} else {
-		    returnValue = element;
-		}
-		return returnValue;
-	}
-	
-	/**
-     * @param cte
-     */
-    public static CnATreeElement checkRetrieveParent(CnATreeElement element) {
-        if(!isParentInitialized(element) && element!=null) {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("Loading parent of element: " + element.getDbId());
-            }
-            RetrieveInfo ri = new RetrieveInfo();   
-            ri.setParent(true);
-            element = retrieveElement(element,ri);
+            element = retrieveElement(element, ri);
         }
         return element;
     }
 
-    public static CnATreeElement checkRetrieveLinks(CnATreeElement element, boolean upLinks){
-        if(!areLinksInitizialized(element, upLinks) && element != null){
-            if(LOG.isInfoEnabled()){
+    public static CnATreeElement checkRetrieveElementAndChildren(final CnATreeElement element) {
+        RetrieveInfo ri = null;
+        CnATreeElement returnValue;
+        if (!isElementInitialized(element)) {
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Loading children of element: " + element.getDbId());
+            }
+            if (ri == null) {
+                ri = new RetrieveInfo();
+            }
+            ri.setProperties(true);
+        }
+        if (!areChildrenInitialized(element)) {
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Loading properties of element: " + element.getDbId());
+            }
+            if (ri == null) {
+                ri = new RetrieveInfo();
+            }
+            ri.setChildren(true);
+        }
+        if (ri != null) {
+            returnValue = retrieveElement(element, ri);
+        } else {
+            returnValue = element;
+        }
+        return returnValue;
+    }
+
+    /**
+     * @param cte
+     */
+    public static CnATreeElement checkRetrieveParent(CnATreeElement element) {
+        if (!isParentInitialized(element) && element != null) {
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Loading parent of element: " + element.getDbId());
+            }
+            RetrieveInfo ri = new RetrieveInfo();
+            ri.setParent(true);
+            element = retrieveElement(element, ri);
+        }
+        return element;
+    }
+
+    public static CnATreeElement checkRetrieveLinks(CnATreeElement element, boolean upLinks) {
+        if (!areLinksInitizialized(element, upLinks) && element != null) {
+            if (LOG.isInfoEnabled()) {
                 LOG.info("Loading links of element: " + element.getDbId());
             }
             RetrieveInfo ri = new RetrieveInfo();
@@ -129,114 +129,111 @@ public final class Retriever {
         }
         return element;
     }
-    
+
     public static boolean isParentInitialized(CnATreeElement element) {
-        return Hibernate.isInitialized(element) 
-            && (element==null || Hibernate.isInitialized(element.getParent())); 
+        return Hibernate.isInitialized(element)
+                && (element == null || Hibernate.isInitialized(element.getParent()));
 
     }
-	
-	private static boolean isElementInitialized(CnATreeElement element) {
-        if(element==null) {
+
+    private static boolean isElementInitialized(CnATreeElement element) {
+        if (element == null) {
             return true;
         }
-        if(!Hibernate.isInitialized(element)) {
+        if (!Hibernate.isInitialized(element)) {
             return false;
         }
         return isEntityInitialized(element.getEntity());
-	}
-	
+    }
+
     private static boolean isEntityInitialized(Entity entity) {
-        if(entity==null) {
+        if (entity == null) {
             return true;
         }
-        if(!Hibernate.isInitialized(entity)) {
+        if (!Hibernate.isInitialized(entity)) {
             return false;
         }
         return isPropertyListInitialize(entity.getTypedPropertyLists());
     }
 
     private static boolean isPropertyListInitialize(Map<String, PropertyList> typedPropertyLists) {
-        if(typedPropertyLists==null) {
+        if (typedPropertyLists == null) {
             return true;
         }
-        if(!Hibernate.isInitialized(typedPropertyLists)) {
+        if (!Hibernate.isInitialized(typedPropertyLists)) {
             return false;
         }
         for (PropertyList properties : typedPropertyLists.values()) {
-            if(!isPropertiesInitialized(properties)) {
+            if (!isPropertiesInitialized(properties)) {
                 return false;
             }
         }
         return true;
     }
 
-
     private static boolean isPropertiesInitialized(PropertyList properties) {
-        if(properties==null) {
+        if (properties == null) {
             return true;
         }
-        if(!Hibernate.isInitialized(properties)) {
+        if (!Hibernate.isInitialized(properties)) {
             return false;
         }
-        if(properties.getProperties()==null) {
+        if (properties.getProperties() == null) {
             return true;
         }
-        if(!Hibernate.isInitialized(properties.getProperties())) {
+        if (!Hibernate.isInitialized(properties.getProperties())) {
             return false;
         }
         return true;
     }
 
     public static boolean areChildrenInitialized(CnATreeElement element) {
-        return Hibernate.isInitialized(element) 
-            && (element==null || Hibernate.isInitialized(element.getChildren()));
+        return Hibernate.isInitialized(element)
+                && (element == null || Hibernate.isInitialized(element.getChildren()));
     }
-	
-	public static boolean arePermissionsInitialized(CnATreeElement element) {
-        return Hibernate.isInitialized(element) 
-            && (element==null || Hibernate.isInitialized(element.getPermissions()));
+
+    public static boolean arePermissionsInitialized(CnATreeElement element) {
+        return Hibernate.isInitialized(element)
+                && (element == null || Hibernate.isInitialized(element.getPermissions()));
     }
-	
-	public static CnATreeElement retrieveElement(final CnATreeElement element, RetrieveInfo ri)  {
-		RetrieveCnATreeElement retrieveCommand = new RetrieveCnATreeElement(
-				element.getTypeId(), 
-				element.getDbId(),
-				ri);
-		try {
-			retrieveCommand = getCommandService().executeCommand(retrieveCommand);
-		} catch (CommandException e1) {
-			LOG.error("Error while retrieving element", e1);
-			throw new RuntimeException("Error while retrieving element", e1);
-		}
-		return retrieveCommand.getElement();
-	}
-	
-	private static ICommandService getCommandService() {
-		if (commandService == null) {
-			commandService = createCommandServive();
-		}
-		return commandService;
-	}
 
-	private static ICommandService createCommandServive() {		
-	    return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
-	}
-	
-	public static boolean areLinksInitizialized(CnATreeElement element, boolean upLinks){
-	    boolean elementIni = Hibernate.isInitialized(element);
-	    boolean links = false;
-	    if(elementIni){
-	        links = Hibernate.isInitialized(element.getLinksDown());
-	        if(upLinks){
-	            links = links && Hibernate.isInitialized(element.getLinksUp());
-	        }
-	    }
-	    return elementIni && (element == null || links);
-	}
-	
-	private Retriever() {
+    public static CnATreeElement retrieveElement(final CnATreeElement element, RetrieveInfo ri) {
+        RetrieveCnATreeElement retrieveCommand = new RetrieveCnATreeElement(element.getTypeId(),
+                element.getDbId(), ri);
+        try {
+            retrieveCommand = getCommandService().executeCommand(retrieveCommand);
+        } catch (CommandException e1) {
+            LOG.error("Error while retrieving element", e1);
+            throw new RuntimeException("Error while retrieving element", e1);
+        }
+        return retrieveCommand.getElement();
+    }
 
-	}
-	
+    private static ICommandService getCommandService() {
+        if (commandService == null) {
+            commandService = createCommandServive();
+        }
+        return commandService;
+    }
+
+    private static ICommandService createCommandServive() {
+        return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
+    }
+
+    public static boolean areLinksInitizialized(CnATreeElement element, boolean upLinks) {
+        boolean elementIni = Hibernate.isInitialized(element);
+        boolean links = false;
+        if (elementIni) {
+            links = Hibernate.isInitialized(element.getLinksDown());
+            if (upLinks) {
+                links = links && Hibernate.isInitialized(element.getLinksUp());
+            }
+        }
+        return elementIni && (element == null || links);
+    }
+
+    private Retriever() {
+
+    }
+
 }
