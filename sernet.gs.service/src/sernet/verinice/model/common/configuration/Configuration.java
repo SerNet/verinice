@@ -602,20 +602,27 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 
     @Override
     public int hashCode() {
-        return dbId.hashCode();
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((dbId == null) ? 0 : dbId.hashCode());
+        return result;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null) {
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
             return false;
-        }
-        try {
-            Configuration that = (Configuration) o;
-            return this.dbId.equals(that.dbId);
-        } catch (ClassCastException cce) {
+        if (getClass() != obj.getClass())
             return false;
-        }
+        Configuration other = (Configuration) obj;
+        if (dbId == null) {
+            if (other.dbId != null)
+                return false;
+        } else if (!dbId.equals(other.dbId))
+            return false;
+        return true;
     }
 
     @Override
