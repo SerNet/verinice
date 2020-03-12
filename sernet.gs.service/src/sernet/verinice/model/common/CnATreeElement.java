@@ -183,7 +183,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
                 try {
                     getParent().childAdded(this, child);
                 } catch (Exception e) {
-                    log.error("Error while adding child", e);
+                    log.error("Error while adding " + child + " as a child of " + this, e);
                 }
             } else {
                 this.childAdded(this, child);
