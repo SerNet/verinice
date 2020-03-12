@@ -660,8 +660,10 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Login: ").append(getUser());
+        sb.append("\nroles: ").append(String.join(", ", getRoles(false)));
         sb.append("\nis deactivated: ").append(isDeactivatedUser());
         sb.append("\nis admin: ").append(isAdminUser());
+        sb.append("\nis local admin: ").append(isLocalAdminUser());
         sb.append("\nis scope only: ").append(isScopeOnly());
         sb.append("\nis web user: ").append(isWebUser());
         sb.append("\nis rcp user: ").append(isRcpUser());

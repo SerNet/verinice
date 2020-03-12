@@ -20,6 +20,8 @@ package sernet.verinice.service.commands;
 import java.io.Serializable;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
@@ -33,6 +35,8 @@ import sernet.verinice.model.common.configuration.Configuration;
 @SuppressWarnings("serial")
 public class LoadCurrentUserConfiguration extends GenericCommand
         implements IAuthAwareCommand, INoAccessControl {
+
+    private static final Logger log = Logger.getLogger(LoadCurrentUserConfiguration.class);
 
     private Configuration configuration = null;
 
@@ -48,8 +52,16 @@ public class LoadCurrentUserConfiguration extends GenericCommand
             if (user.equals(c.getUser())) {
                 c.getRoles();
                 configuration = c;
+                if (log.isDebugEnabled()) {
+                    log.debug("Account found: " + configuration);
+
+                }
                 return;
             }
+        }
+        if (log.isInfoEnabled()) {
+            log.info("No account with user name: " + user + " found in list with " + confs.size()
+                    + " entries.");
         }
     }
 
