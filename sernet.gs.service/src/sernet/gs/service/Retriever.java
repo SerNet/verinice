@@ -175,6 +175,7 @@ public final class Retriever {
     }
 
     public static boolean areChildrenInitialized(CnATreeElement element) {
+
         return Hibernate.isInitialized(element)
                 && (element == null || Hibernate.isInitialized(element.getChildren()));
     }
@@ -185,8 +186,7 @@ public final class Retriever {
     }
 
     public static CnATreeElement retrieveElement(final CnATreeElement element, RetrieveInfo ri) {
-        RetrieveCnATreeElement retrieveCommand = new RetrieveCnATreeElement(element.getTypeId(),
-                element.getDbId(), ri);
+        RetrieveCnATreeElement retrieveCommand = new RetrieveCnATreeElement(element.getDbId(), ri);
         try {
             retrieveCommand = getCommandService().executeCommand(retrieveCommand);
         } catch (CommandException e1) {
