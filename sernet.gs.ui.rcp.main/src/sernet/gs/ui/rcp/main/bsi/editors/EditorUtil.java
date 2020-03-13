@@ -95,8 +95,6 @@ public final class EditorUtil {
             return cnAElement.getLinksUp().stream().filter(
                     DeductionImplementationUtil::isRelevantLinkForImplementationStateDeduction)
                     .map(CnALink::getDependant).collect(Collectors.toList());
-        } else if (BpRequirement.TYPE_ID.equals(cnAElement.getTypeId())) {
-            return DeductionImplementationUtil.getSafeguardsFromRequirement(cnAElement);
         }
         return Collections.emptyList();
     }

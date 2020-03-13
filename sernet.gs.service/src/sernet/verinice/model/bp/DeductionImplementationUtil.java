@@ -59,7 +59,7 @@ public final class DeductionImplementationUtil {
     /**
      * Get the connected safeguards from a requirement.
      */
-    public static List<CnATreeElement> getSafeguardsFromRequirement(CnATreeElement requirement) {
+    private static List<CnATreeElement> getSafeguardsFromRequirement(CnATreeElement requirement) {
         return requirement.getLinksDown().stream()
                 .filter(DeductionImplementationUtil::isRelevantLinkForImplementationStateDeduction)
                 .map(CnALink::getDependency).collect(Collectors.toList());
