@@ -100,14 +100,13 @@ The built artifacts will be located in
 Artifacts for the following platforms will be produced:
 
 * Linux GTK 64 bit
-* Windows 32 and 64 bit
+* Windows 64 bit
 * Mac OS X 64 bit
 
 If you want to pack a JRE into the build, you can copy the JRE to
 
 sernet.verinice.extraresources.feature/linux/jre
 sernet.verinice.extraresources.feature/windows/jre
-sernet.verinice.extraresources.feature/windows32/jre
 sernet.verinice.extraresources.feature/macos/jre
 
 
@@ -136,7 +135,7 @@ The built artifacts will be located in
 Artifacts for the following platforms will be produced:
 
 * Linux GTK 64 bit
-* Windows 32 and 64 bit
+* Windows 64 bit
 * Mac OS X 64 bit
 
 ## Versioning
