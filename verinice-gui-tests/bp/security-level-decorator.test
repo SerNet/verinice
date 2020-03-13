@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _wJljQF0xEeqngKyiFJFSQA
 Runtime-Version: 2.4.2.201905080442
-Save-Time: 3/5/20, 10:12 AM
+Save-Time: 3/13/20, 9:14 AM
 Tags: bp
 Testcase-Type: ecl
 
@@ -76,6 +76,26 @@ with [get-window "Bearbeiten mehrerer Objekte"] {
 	get-section Umsetzung | get-combo -after [get-label Umsetzungsstatus] | select "Ja"
 	get-button OK | click
 }
+assert-security-level "testname/Anwendungen/testapp/safeguardgroup-1" $security_level_standard
+assert-security-level "testname/Anwendungen/testapp/module-1" $security_level_standard
+
+get-menu -path "Bearbeiten/Einstellungen..." | click
+with [get-window Benutzervorgaben] {
+    get-tree | select "Allgemeine Einstellungen"
+    get-button "Zeige Icon-Overlay für Implementierungsstatus nach BSI-IT Grundschutz 200-2" | uncheck
+    get-button "Anwenden und Schließen" | click
+}
+
+assert-security-level "testname/Anwendungen/testapp/safeguardgroup-1" $security_level_none
+assert-security-level "testname/Anwendungen/testapp/module-1" $security_level_none
+
+get-menu -path "Bearbeiten/Einstellungen..." | click
+with [get-window Benutzervorgaben] {
+    get-tree | select "Allgemeine Einstellungen"
+    get-button "Zeige Icon-Overlay für Implementierungsstatus nach BSI-IT Grundschutz 200-2" | check
+    get-button "Anwenden und Schließen" | click
+}
+
 assert-security-level "testname/Anwendungen/testapp/safeguardgroup-1" $security_level_standard
 assert-security-level "testname/Anwendungen/testapp/module-1" $security_level_standard
 
