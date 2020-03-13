@@ -345,9 +345,6 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
         } else {
             monitor.beginTask(Messages.BSIElementEditor_1, IProgressMonitor.UNKNOWN);
             save(true);
-            if (linkMaker != null) {
-                linkMaker.viewer.refresh();
-            }
             Optional.ofNullable(changeMetadata).ifPresent(value -> value.setElement(cnAElement));
             // Refresh other views in background
             Job job = new RefreshJob("Refresh application...",
