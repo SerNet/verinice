@@ -17,7 +17,7 @@ Entry-Name: .content
 
 proc "open-vlt" [val vlt] {
 	set-dialog-result File [concat $datadir [get-java-property "file.separator"] $vlt]
-	get-menu -path "Datei/Report-Abfrage/Abfrage öffnen..." | click -metaKeys ""
+	get-menu -path "Datei/Report-Abfrage/Abfrage öffnen..." | click
 }
 
 proc "exec-and-export" [val reportname] [val scopelist] [val filename] {
