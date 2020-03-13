@@ -1,0 +1,18 @@
+{
+  "followLinksOutsideOfScope": false,
+  "useAllScopes": false,
+  "scopeIds": [],
+  "columnPaths": [
+    "client.client_kuerzel AS Kürzel__(Client)",
+    "client.client_erlaeuterung AS Erläuterung__(Client)",
+    "client/anwendung.anwendung_kuerzel AS Kürzel__(Anwendung)",
+    "client/anwendung.anwendung_erlaeuterung AS Erläuterung__(Anwendung)",
+    "client:itverbund.title AS Titel",
+    "client:itverbund.description AS Beschreibung",
+    "client<clientskategorie.clientskategorie_name AS Name__(IT-Systeme__Clients)",
+    "client<clientskategorie.uuid AS UUID__(IT-Systeme__Clients)",
+    "client>riskanalysis.riskanalysis_name AS Name__(Risikoanalyse)",
+    "client>riskanalysis.uuid AS UUID__(Risikoanalyse)"
+  ],
+  "relationIds": []
+}

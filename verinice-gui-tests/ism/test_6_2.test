@@ -1,0 +1,84 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _fKpG0MvFEei8QokgLeP3Yw,_HQDeEI9NEeic2YXgdvyDUQ,_tlZuIIx1Eei2UKUDmonytQ,_lGnj8Ix1Eei2UKUDmonytQ,_mCQwkI9ZEeic2YXgdvyDUQ
+Element-Name: test_6_2
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _SlfjEGUPEeqN8MswvNs8LA
+Runtime-Version: 2.5.0.202001211718
+Save-Time: 3/13/20 10:52 AM
+Tags: ISM
+Testcase-Type: ecl
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+proc "open-vlt" [val vlt] {
+	set-dialog-result File [concat $datadir [get-java-property "file.separator"] $vlt]
+	get-menu -path "Datei/Report-Abfrage/Abfrage öffnen..." | click -metaKeys ""
+}
+
+proc "exec-and-export" [val reportname] [val scopelist] [val filename] {
+	get-editor $reportname | get-button "Abfrage ausführen (CSV)..." | click
+	$scopelist | each [val name] {
+		get-window -class CsvExportDialog | get-group "" | get-button $name | check
+	}
+	set-dialog-result File [concat $reportdir [get-java-property "file.separator"] $filename]
+	with [get-window -class CsvExportDialog] {
+		get-button "Datei wählen" | click
+		get-button OK | click
+	}
+}
+
+proc "try-dont-switch" {
+	try -command {
+		get-window "Wechseln zur zugeordneten Perspektive" | get-button Nein | click
+	} -catch {
+	}
+}
+
+proc "does-exist-in-other-perspecive" [val viewPathName] [val view] [val path] [val caption] {
+	get-menu -path [concat "Ansicht/Zeige View.../" $viewPathName] | click
+	try-dont-switch
+	get-view $view | get-tree | get-item -path $path | get-property caption | equals $caption | verify-true
+	get-view $view | close
+}
+
+proc "wait-for-imports-or-fail" {
+	try -times 40 -delay 10000 -command {
+		get-view ISM | get-tree | get-item -path "importierte Objekte/Beispiel: NoKyTo GmbH 2018 \\[DP\\]"
+			| get-property caption | equals "Beispiel: NoKyTo GmbH 2018 [DP]" | verify-true
+		does-exist-in-other-perspecive "Modernisierter IT-Grundschutz" "Modernisierter IT-Grundschutz"
+			"importierte Objekte/MODPLAST \\[SerNet-DM\\]" "MODPLAST [SerNet-DM]"
+		does-exist-in-other-perspecive "GS-Modell" Grundschutzmodell "importierte Objekte/  RECPLAST \\[SerNet\\]"
+			"RECPLAST [SerNet]"
+	}
+}
+
+log "6.2: 6.2 started"
+
+open-vlt "TestReportISM.vlt"
+open-vlt "TestReportMod.vlt"
+open-vlt "TestReportAlt.vlt"
+
+ism-import-vna "RECPLAST.vna"
+ism-import-vna "Beispiel_NoKyTo_GmbH_2018.vna"
+ism-import-vna "modplast-1.1.vna"
+
+wait-for-imports-or-fail
+
+log "6.2: starting to execute queries"
+
+exec-and-export "TestReportAlt.vlt" [list "Beispiel: NoKyTo GmbH 2018" MODPLAST RECPLAST] "TestReportAlt-All.csv"
+exec-and-export "TestReportAlt.vlt" [list "Beispiel: NoKyTo GmbH 2018"] "TestReportAlt.csv"
+
+exec-and-export "TestReportMod.vlt" [list "Beispiel: NoKyTo GmbH 2018" MODPLAST RECPLAST] "TestReportMod-All.csv"
+exec-and-export "TestReportAlt.vlt" [list MODPLAST] "TestReportMod.csv"
+
+exec-and-export"TestReportISM.vlt" [list "Beispiel: NoKyTo GmbH 2018" MODPLAST RECPLAST] "TestReportISM-All.csv"
+exec-and-export "TestReportAlt.vlt" [list RECPLAST] "TestReportISM.csv"
+
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
