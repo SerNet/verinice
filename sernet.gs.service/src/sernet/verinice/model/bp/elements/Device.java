@@ -43,26 +43,30 @@ import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
  */
 public class Device extends ElementWithChilds
         implements IBpElement, IAbbreviatedElement, IBpGroup, ITaggableElement, ITargetObject {
-    
+
     private static final long serialVersionUID = -9128276389080852414L;
-    
+
     public static final String TYPE_ID = "bp_device"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_device_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_device_tag"; //$NON-NLS-1$
     public static final String PROP_ABBR = "bp_device_abbr"; //$NON-NLS-1$
-    
+
     public static final String[] CHILD_TYPES = new String[] { BpRequirementGroup.TYPE_ID,
             SafeguardGroup.TYPE_ID, BpThreatGroup.TYPE_ID };
 
-    private final ILinkChangeListener linkChangeListener = new MaximumProtectionRequirementsValueListener(this);
-    private final IReevaluator protectionRequirementsProvider = new ProtectionRequirementsValueAdapter(this);
+    private final ILinkChangeListener linkChangeListener = new MaximumProtectionRequirementsValueListener(
+            this);
+    private final IReevaluator protectionRequirementsProvider = new ProtectionRequirementsValueAdapter(
+            this);
 
-    protected Device() {}
-    
+    protected Device() {
+    }
+
     public Device(CnATreeElement parent) {
         super(parent);
         init();
     }
+
     @Override
     public ILinkChangeListener getLinkChangeListener() {
         return linkChangeListener;
@@ -77,7 +81,7 @@ public class Device extends ElementWithChilds
     public String getTitle() {
         return getEntity().getPropertyValue(PROP_NAME);
     }
-    
+
     @Override
     public void setTitel(String name) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
