@@ -25,8 +25,6 @@ import java.util.stream.Stream;
 
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
@@ -35,7 +33,6 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElementScopeUtils;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.ChangeType;
-import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.ISecurityLevelProvider;
 import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.Proceeding;
@@ -77,15 +74,16 @@ public class BaseProtectionFilterBuilder {
 
     private static ViewerFilter createChangeTypeFilter(BaseProtectionFilterParameters params) {
         if (!params.getChangeTypes().isEmpty()) {
-            return new DynamicEnumPropertyFilter<>("change_type", ChangeType.class,
-                    params.getChangeTypes());
+            return new RecursiveTreeFilter(new DynamicEnumPropertyFilter<>("change_type",
+                    ChangeType.class, params.getChangeTypes()), 1);
         }
         return null;
     }
 
     private static ViewerFilter createReleaseFilter(BaseProtectionFilterParameters params) {
         if (!params.getReleases().isEmpty()) {
-            return new DynamicStringPropertyFilter("release", params.getReleases());
+            return new RecursiveTreeFilter(
+                    new DynamicStringPropertyFilter("release", params.getReleases()), 1);
         }
         return null;
     }

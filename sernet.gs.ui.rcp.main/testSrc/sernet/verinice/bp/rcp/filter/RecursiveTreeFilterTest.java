@@ -18,6 +18,7 @@
 package sernet.verinice.bp.rcp.filter;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -189,6 +190,84 @@ public class RecursiveTreeFilterTest {
                 .thenReturn(new Object[] { negativeGrandChild });
 
         RecursiveTreeFilter sut = new RecursiveTreeFilter(delegateFilterMock);
+
+        Assert.assertFalse(sut.select(viewerMock, parentMock, rootMock));
+        verify(delegateFilterMock, times(1)).select(viewerMock, parentMock, rootMock);
+        verify(delegateFilterMock, times(1)).select(viewerMock, rootMock, negativeChild);
+        verify(delegateFilterMock, times(1)).select(viewerMock, negativeChild, negativeGrandChild);
+    }
+
+    /**
+     * All descendants in the hierarchy are negative, but the result should be
+     * positive because the lowest level descendants are beyond the maximum
+     * depth.
+     */
+    @Test
+    public void negativeRootNegativeDescendantsLimitedDepth() {
+        ViewerFilter delegateFilterMock = mock(ViewerFilter.class);
+        ITreeContentProvider treeContentProviderMock = mock(ITreeContentProvider.class);
+
+        StructuredViewer viewerMock = mock(StructuredViewer.class);
+        when(viewerMock.getContentProvider()).thenReturn(treeContentProviderMock);
+
+        Object parentMock = mock(Object.class);
+
+        BpRequirementGroup rootMock = mock(BpRequirementGroup.class);
+        when(delegateFilterMock.select(viewerMock, parentMock, rootMock)).thenReturn(false);
+
+        BpRequirementGroup negativeChild = mock(BpRequirementGroup.class);
+        when(delegateFilterMock.select(viewerMock, rootMock, negativeChild)).thenReturn(false);
+
+        BpRequirement negativeGrandChild = mock(BpRequirement.class);
+        when(delegateFilterMock.select(viewerMock, negativeChild, negativeGrandChild))
+                .thenReturn(false);
+
+        when(treeContentProviderMock.getChildren(rootMock))
+                .thenReturn(new Object[] { negativeChild });
+
+        when(treeContentProviderMock.getChildren(negativeChild))
+                .thenReturn(new Object[] { negativeGrandChild });
+
+        RecursiveTreeFilter sut = new RecursiveTreeFilter(delegateFilterMock, 1);
+
+        Assert.assertTrue(sut.select(viewerMock, parentMock, rootMock));
+        verify(delegateFilterMock, times(1)).select(viewerMock, parentMock, rootMock);
+        verify(delegateFilterMock, times(1)).select(viewerMock, rootMock, negativeChild);
+        verify(delegateFilterMock, never()).select(viewerMock, negativeChild, negativeGrandChild);
+        verify(treeContentProviderMock, never()).getChildren(negativeChild);
+    }
+
+    /**
+     * All descendants are negative and the result should be negative because
+     * the maximum depth is large enough to go through all hierarchy levels.
+     */
+    @Test
+    public void negativeRootNegativeDescendantsSufficientDepth() {
+        ViewerFilter delegateFilterMock = mock(ViewerFilter.class);
+        ITreeContentProvider treeContentProviderMock = mock(ITreeContentProvider.class);
+
+        StructuredViewer viewerMock = mock(StructuredViewer.class);
+        when(viewerMock.getContentProvider()).thenReturn(treeContentProviderMock);
+
+        Object parentMock = mock(Object.class);
+
+        BpRequirementGroup rootMock = mock(BpRequirementGroup.class);
+        when(delegateFilterMock.select(viewerMock, parentMock, rootMock)).thenReturn(false);
+
+        BpRequirementGroup negativeChild = mock(BpRequirementGroup.class);
+        when(delegateFilterMock.select(viewerMock, rootMock, negativeChild)).thenReturn(false);
+
+        BpRequirement negativeGrandChild = mock(BpRequirement.class);
+        when(delegateFilterMock.select(viewerMock, negativeChild, negativeGrandChild))
+                .thenReturn(false);
+
+        when(treeContentProviderMock.getChildren(rootMock))
+                .thenReturn(new Object[] { negativeChild });
+
+        when(treeContentProviderMock.getChildren(negativeChild))
+                .thenReturn(new Object[] { negativeGrandChild });
+
+        RecursiveTreeFilter sut = new RecursiveTreeFilter(delegateFilterMock, 2);
 
         Assert.assertFalse(sut.select(viewerMock, parentMock, rootMock));
         verify(delegateFilterMock, times(1)).select(viewerMock, parentMock, rootMock);

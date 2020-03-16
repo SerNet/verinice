@@ -34,9 +34,23 @@ import sernet.verinice.model.common.CnATreeElement;
 class RecursiveTreeFilter extends ViewerFilter {
 
     private final ViewerFilter delegateFilter;
+    private final int maxDepth;
 
     RecursiveTreeFilter(ViewerFilter delegateFilter) {
+        this(delegateFilter, Integer.MAX_VALUE);
+    }
+
+    /**
+     * @param delegateFilter
+     *            A delegate filter to be applied to every element in the
+     *            hierarchy.
+     * @param maxDepth
+     *            The maximum recursion depth beyond which all child elements
+     *            are not checked but always shown.
+     */
+    RecursiveTreeFilter(ViewerFilter delegateFilter, int maxDepth) {
         this.delegateFilter = delegateFilter;
+        this.maxDepth = maxDepth;
     }
 
     /**
@@ -54,21 +68,28 @@ class RecursiveTreeFilter extends ViewerFilter {
 
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
+        return select(viewer, parentElement, element, 0);
+    }
+
+    private boolean select(Viewer viewer, Object parentElement, Object element, int depth) {
         CnATreeElement cnATreeElement = (CnATreeElement) element;
         if (delegateFilter.select(viewer, parentElement, cnATreeElement)) {
             return true;
         }
         if (checkChildren(cnATreeElement)) {
-            return containsMatchingChild(viewer, cnATreeElement);
+            if (depth == maxDepth) {
+                return true;
+            }
+            return containsMatchingChild(viewer, cnATreeElement, depth);
         }
         return false;
     }
 
-    private boolean containsMatchingChild(Viewer viewer, CnATreeElement cnATreeElement) {
+    private boolean containsMatchingChild(Viewer viewer, CnATreeElement cnATreeElement, int depth) {
         ITreeContentProvider provider = (ITreeContentProvider) ((StructuredViewer) viewer)
                 .getContentProvider();
         for (Object child : provider.getChildren(cnATreeElement)) {
-            if (select(viewer, cnATreeElement, child)) {
+            if (select(viewer, cnATreeElement, child, depth + 1)) {
                 return true;
             }
         }
