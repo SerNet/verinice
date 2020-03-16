@@ -21,6 +21,7 @@
 package sernet.gs.ui.rcp.main.common.model;
 
 import java.util.EnumSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -49,7 +50,8 @@ public final class LinkUtil {
     private LinkUtil() {
     }
 
-    public static void createLink(CnATreeElement source, CnATreeElement target, String relationId) {
+    public static CnALink createLink(CnATreeElement source, CnATreeElement target,
+            String relationId) {
         CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source, target,
                 relationId, false);
         try {
@@ -72,22 +74,26 @@ public final class LinkUtil {
                     && CnAElementFactory.isBpModelLoaded()) {
                 CnAElementFactory.getInstance().getBpModel().linkAdded(link);
             }
+            return link;
         } catch (CommandException e) {
             LOGGER.error("Link creation failed", e);
+            return null;
         }
     }
 
     public static void createLinks(Set<CnATreeElement> sources, CnATreeElement target,
             String relationId) {
         for (CnATreeElement source : sources) {
-            createLink(source, target, relationId);
+            Optional.ofNullable(createLink(source, target, relationId))
+                    .ifPresent(target::addLinkUp);
         }
     }
 
     public static void createLinks(CnATreeElement source, Set<CnATreeElement> targets,
             String relationId) {
         for (CnATreeElement target : targets) {
-            createLink(source, target, relationId);
+            Optional.ofNullable(createLink(source, target, relationId))
+                    .ifPresent(source::addLinkDown);
         }
     }
 
