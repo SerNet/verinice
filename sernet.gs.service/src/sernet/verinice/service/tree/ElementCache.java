@@ -132,7 +132,7 @@ public class ElementCache {
             }
             return cacheObject;
         } catch(Exception t) {
-            LOG.error("Error retrieving cached object for " + e, t);
+            LOG.error("Error while getting object",t);
             return null;
         }
     }
