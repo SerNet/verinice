@@ -111,6 +111,7 @@ public class BaseProtectionFilterDialog extends Dialog {
     public BaseProtectionFilterDialog(Shell parentShell,
             @NonNull BaseProtectionFilterParameters filterParameters,
             @NonNull BaseProtectionFilterParameters defaultFilterParams) {
+        
         super(parentShell);
         this.filterParameters = filterParameters;
         this.defaultFilterParams = defaultFilterParams;
@@ -120,6 +121,11 @@ public class BaseProtectionFilterDialog extends Dialog {
     protected void configureShell(Shell shell) {
         super.configureShell(shell);
         shell.setText(Messages.BaseProtectionFilterDialog_Title);
+    }
+    
+    @Override
+    protected boolean isResizable() {
+        return true;
     }
 
     /**
