@@ -76,9 +76,9 @@ import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 public class IconSelectDialog extends Dialog {
 
     private static final Logger LOG = Logger.getLogger(IconSelectDialog.class);
-    
+
     public static final String ICON_DIRECTORY = "tree-icons"; //$NON-NLS-1$
-    
+
     private static final FileFilter ICON_FILE_FILTER = new IconFileFilter();
 
     private static final int SIZE_Y = 370;
@@ -107,31 +107,34 @@ public class IconSelectDialog extends Dialog {
     }
 
     private void initComboValues() {
-        dirComboModel = new ComboModel<IconPathDescriptor>(new IComboModelLabelProvider<IconPathDescriptor>() {
-            @Override
-            public String getLabel(IconPathDescriptor descriptor) {
-                return descriptor.getName();
-            }
-        });
-        URL[] inconUrlArray = FileLocator.findEntries(Platform.getBundle(Activator.PLUGIN_ID), new Path(ICON_DIRECTORY), null);
+        dirComboModel = new ComboModel<IconPathDescriptor>(
+                new IComboModelLabelProvider<IconPathDescriptor>() {
+                    @Override
+                    public String getLabel(IconPathDescriptor descriptor) {
+                        return descriptor.getName();
+                    }
+                });
+        URL[] inconUrlArray = FileLocator.findEntries(Platform.getBundle(Activator.PLUGIN_ID),
+                new Path(ICON_DIRECTORY), null);
 
         try {
             for (URL inconUrl : inconUrlArray) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Icon dir: " + inconUrl); //$NON-NLS-1$
                 }
-                
+
                 URL realFileUrl = FileLocator.toFileURL(inconUrl);
                 String urlString = realFileUrl.toExternalForm();
-                urlString = urlString.replaceAll(" ","%20"); 
+                urlString = urlString.replaceAll(" ", "%20");
                 File baseDir = new File(URI.create(urlString));
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Icon dir (file system): " + baseDir.getPath()); //$NON-NLS-1$
                 }
                 String[] directories = baseDir.list(DirectoryFileFilter.INSTANCE);
                 for (String dir : directories) {
-                    if(!dir.startsWith(".")) { //$NON-NLS-1$
-                        dirComboModel.add(new IconPathDescriptor(dir, baseDir.getPath() + File.separator + dir));
+                    if (!dir.startsWith(".")) { //$NON-NLS-1$
+                        dirComboModel.add(new IconPathDescriptor(dir,
+                                baseDir.getPath() + File.separator + dir));
                     }
                 }
             }
@@ -161,9 +164,9 @@ public class IconSelectDialog extends Dialog {
      */
     @Override
     protected Control createDialogArea(Composite parent) {
-        
+
         final int gridDataSizeSubtrahend = 20;
-        
+
         Composite comp = (Composite) super.createDialogArea(parent);
 
         Label dirLabel = new Label(comp, SWT.NONE);
@@ -234,31 +237,40 @@ public class IconSelectDialog extends Dialog {
             iconDescriptorList.add(iconRow);
         }
         IconDescriptor[][] iconDescriptorArray = null;
-        iconDescriptorArray = iconDescriptorList.toArray(new IconDescriptor[iconDescriptorList.size()][NUMBER_OF_COLUMNS]);
+        iconDescriptorArray = iconDescriptorList
+                .toArray(new IconDescriptor[iconDescriptorList.size()][NUMBER_OF_COLUMNS]);
         viewer.setInput(iconDescriptorArray);
     }
 
     private void createTable(Composite parent) {
-        
+
         final int gdHeightSubtrahend = 100;
         final int iconRowSize = 10;
-        
+
         int style = SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER;
         style = style | SWT.SINGLE | SWT.FULL_SELECTION;
         viewer = new TableViewer(parent, style);
         viewer.setContentProvider(new ArrayContentProvider());
 
-        TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(viewer, new FocusCellOwnerDrawHighlighter(viewer));
-        ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy(viewer) {
+        TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(viewer,
+                new FocusCellOwnerDrawHighlighter(viewer));
+        ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy(
+                viewer) {
             @Override
             protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event) {
-                boolean retVal = event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL || event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION;
-                retVal = retVal || (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.CR);
-                return  retVal || event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
+                boolean retVal = event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL
+                        || event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION;
+                retVal = retVal || (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED
+                        && event.keyCode == SWT.CR);
+                return retVal || event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
             }
         };
 
-        TableViewerEditor.create(viewer, focusCellManager, actSupport, ColumnViewerEditor.TABBING_HORIZONTAL | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR | ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION);
+        TableViewerEditor.create(viewer, focusCellManager, actSupport,
+                ColumnViewerEditor.TABBING_HORIZONTAL
+                        | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR
+                        | ColumnViewerEditor.TABBING_VERTICAL
+                        | ColumnViewerEditor.KEYBOARD_ACTIVATION);
 
         Table table = viewer.getTable();
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -283,7 +295,9 @@ public class IconSelectDialog extends Dialog {
             public void mouseDown(MouseEvent e) {
                 ViewerCell cell = viewer.getCell(new Point(e.x, e.y));
                 if (cell != null) {
-                    selectedPath = getRelativePath(((IconDescriptor[]) cell.getElement())[cell.getColumnIndex()].getPath());
+                    selectedPath = getRelativePath(
+                            ((IconDescriptor[]) cell.getElement())[cell.getColumnIndex()]
+                                    .getPath());
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Icon: " + selectedPath); //$NON-NLS-1$
                     }
@@ -321,7 +335,7 @@ public class IconSelectDialog extends Dialog {
         if (path.contains(ICON_DIRECTORY)) {
             relative = path.substring(path.indexOf(ICON_DIRECTORY));
         }
-        if(relative.contains("\\")) { //$NON-NLS-1$
+        if (relative.contains("\\")) { //$NON-NLS-1$
             relative = relative.replace('\\', '/');
         }
         return relative;
@@ -341,9 +355,9 @@ public class IconSelectDialog extends Dialog {
     public boolean isDefaultIcon() {
         return defaultIcon;
     }
-    
+
     public boolean isSomethingSelected() {
-        return defaultIcon || getSelectedPath()!=null;
+        return defaultIcon || getSelectedPath() != null;
     }
 
     @Override
@@ -354,7 +368,8 @@ public class IconSelectDialog extends Dialog {
 
         // open the window right under the mouse pointer:
         Point cursorLocation = Display.getCurrent().getCursorLocation();
-        newShell.setLocation(new Point(cursorLocation.x - SIZE_X / 2, cursorLocation.y - SIZE_Y / 2));
+        newShell.setLocation(
+                new Point(cursorLocation.x - SIZE_X / 2, cursorLocation.y - SIZE_Y / 2));
 
     }
 }
@@ -364,7 +379,7 @@ class IconFileFilter implements FileFilter {
     @Override
     public boolean accept(File file) {
         boolean accept = false;
-        if(file!=null && file.getName()!=null) {
+        if (file != null && file.getName() != null) {
             String filename = file.getName().toLowerCase();
             accept = filename.endsWith("gif") || filename.endsWith("png"); //$NON-NLS-1$ //$NON-NLS-2$
         }
