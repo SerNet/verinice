@@ -110,7 +110,8 @@ public final class EditorUtil {
         if (cnAElement == null) {
             return;
         }
-        if (BpRequirement.TYPE_ID.equals(cnAElement.getTypeId())) {
+        if (BpRequirement.TYPE_ID.equals(cnAElement.getTypeId())
+                && DeductionImplementationUtil.isDeductiveImplementationEnabled(cnAElement)) {
             updateRequirementImplementationStatus(cnAElement);
         }
     }
