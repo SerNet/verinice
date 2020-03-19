@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _z5JZ0NeEEei2hNb8h7sUBw
-Runtime-Version: 2.3.0.201806262310
-Save-Time: 11/30/18 1:45 PM
+Runtime-Version: 2.4.2.201905080442
+Save-Time: 3/19/20, 4:17 PM
 Testcase-Type: ecl
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
@@ -67,8 +67,10 @@ try -command {
 		get-button OK | click
 	}
 	get-window "Export beendet" | get-button OK | click
-	get-view "Modernisierter IT-Grundschutz" | get-tree | select XYZXYZInformationsverbund | key-type Del
-	get-window "Wirklich löschen?" | get-button Ja | click
+} -finally {
+	delete-bpelement XYZXYZInformationsverbund
+}
+try -command {
 	get-view "Modernisierter IT-Grundschutz" | get-button "Importiere Informationsverbund aus Datei..." | click
 	set-dialog-result File [concat $datadir [get-java-property "file.separator"] "XYZXYZInformationsverbund.vna"]
 	with [get-window Import] {
