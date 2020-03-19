@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _z5JZ0NeEEei2hNb8h7sUBw
 Runtime-Version: 2.4.2.201905080442
-Save-Time: 3/19/20, 4:17 PM
+Save-Time: 3/19/20, 4:18 PM
 Testcase-Type: ecl
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
@@ -25,14 +25,16 @@ try -command {
 		select "XYZXYZInformationsverbund/Personen" | get-menu -path "Unterelemente zuklappen" | click
 		select "XYZXYZInformationsverbund/Personen" | get-menu -path "Unterelemente aufklappen" | click
 		select XYZXYZInformationsverbund | get-menu -path "Icon ändern..." | click
-	}
-	with [get-window Icon] {
-		get-combo -after [get-label Ordner] | select Grey
-		with [get-group "Wähle Icon" | get-table] {
-			get-cell 10 5 | double-click
+		with [get-window Icon] {
+			get-combo -after [get-label Ordner] | select Grey
+			with [get-group "Wähle Icon" | get-table] {
+				get-cell 10 5 | double-click
+			}
+			get-button OK | click
 		}
-		get-button OK | click
+		get-item XYZXYZInformationsverbund | get-property "image.path" | equals "sernet.gs.ui.rcp.main/tree-icons/Grey/Light.png" | verify-true
 	}
+
 	get-view "Modernisierter IT-Grundschutz" | get-tree | select XYZXYZInformationsverbund | get-menu -path "Notiz hi" +
 		"nzufügen ..." | click
 	with [get-editor "neue Notiz"] {
