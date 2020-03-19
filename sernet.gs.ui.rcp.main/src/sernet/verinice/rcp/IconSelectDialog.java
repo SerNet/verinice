@@ -44,11 +44,10 @@ import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -57,20 +56,15 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.verinice.iso27k.rcp.ComboModel;
-import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 
 /**
- * 
- * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class IconSelectDialog extends Dialog {
@@ -98,22 +92,13 @@ public class IconSelectDialog extends Dialog {
 
     private boolean defaultIcon = false;
 
-    /**
-     * @param parentShell
-     */
     protected IconSelectDialog(Shell parentShell) {
         super(parentShell);
         initComboValues();
     }
 
     private void initComboValues() {
-        dirComboModel = new ComboModel<IconPathDescriptor>(
-                new IComboModelLabelProvider<IconPathDescriptor>() {
-                    @Override
-                    public String getLabel(IconPathDescriptor descriptor) {
-                        return descriptor.getName();
-                    }
-                });
+        dirComboModel = new ComboModel<>(IconPathDescriptor::getName);
         URL[] inconUrlArray = FileLocator.findEntries(Platform.getBundle(Activator.PLUGIN_ID),
                 new Path(ICON_DIRECTORY), null);
 
@@ -125,7 +110,7 @@ public class IconSelectDialog extends Dialog {
 
                 URL realFileUrl = FileLocator.toFileURL(inconUrl);
                 String urlString = realFileUrl.toExternalForm();
-                urlString = urlString.replaceAll(" ", "%20");
+                urlString = urlString.replace(" ", "%20");
                 File baseDir = new File(URI.create(urlString));
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Icon dir (file system): " + baseDir.getPath()); //$NON-NLS-1$
@@ -156,8 +141,6 @@ public class IconSelectDialog extends Dialog {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets
      * .Composite)
@@ -200,14 +183,10 @@ public class IconSelectDialog extends Dialog {
         final Button defaultCheckbox = new Button(comp, SWT.CHECK);
         defaultCheckbox.setText(Messages.IconSelectDialog_7);
         defaultCheckbox.setSelection(false);
-        defaultCheckbox.addSelectionListener(new SelectionListener() {
+        defaultCheckbox.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 defaultIcon = defaultCheckbox.isEnabled();
-            }
-
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
             }
         });
 
@@ -216,18 +195,17 @@ public class IconSelectDialog extends Dialog {
     }
 
     private void loadIcons(String path) {
-        final int maxRowCount = 10;
         File internalDirectory = new File(path);
         File[] files = internalDirectory.listFiles(ICON_FILE_FILTER);
         Arrays.sort(files);
 
-        List<IconDescriptor[]> iconDescriptorList = new ArrayList<IconDescriptor[]>();
+        List<IconDescriptor[]> iconDescriptorList = new ArrayList<>();
         IconDescriptor[] iconRow = new IconDescriptor[NUMBER_OF_COLUMNS];
         int i = 0;
         for (File file : files) {
             iconRow[i] = new IconDescriptor(file);
             i++;
-            if (i == maxRowCount) {
+            if (i == NUMBER_OF_COLUMNS) {
                 iconDescriptorList.add(iconRow);
                 iconRow = new IconDescriptor[NUMBER_OF_COLUMNS];
                 i = 0;
@@ -247,8 +225,7 @@ public class IconSelectDialog extends Dialog {
         final int gdHeightSubtrahend = 100;
         final int iconRowSize = 10;
 
-        int style = SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER;
-        style = style | SWT.SINGLE | SWT.FULL_SELECTION;
+        int style = SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION;
         viewer = new TableViewer(parent, style);
         viewer.setContentProvider(new ArrayContentProvider());
 
@@ -277,19 +254,10 @@ public class IconSelectDialog extends Dialog {
         gd.heightHint = SIZE_X - gdHeightSubtrahend;
         table.setLayoutData(gd);
 
-        table.addListener(SWT.MeasureItem, new Listener() {
-            @Override
-            public void handleEvent(Event event) {
-                // height cannot be per row so simply set
-                event.height = getThumbnailSize() + ICON_SPACING;
-            }
-        });
+        table.addListener(SWT.MeasureItem,
+                event -> event.height = getThumbnailSize() + ICON_SPACING);
 
-        table.addMouseListener(new MouseListener() {
-
-            @Override
-            public void mouseUp(MouseEvent e) {
-            }
+        table.addMouseListener(new MouseAdapter() {
 
             @Override
             public void mouseDown(MouseEvent e) {
@@ -305,9 +273,6 @@ public class IconSelectDialog extends Dialog {
 
             }
 
-            @Override
-            public void mouseDoubleClick(MouseEvent e) {
-            }
         });
 
         for (int i = 0; i < iconRowSize; i++) {
@@ -326,10 +291,6 @@ public class IconSelectDialog extends Dialog {
         }
     }
 
-    /**
-     * @param path
-     * @return
-     */
     protected String getRelativePath(String path) {
         String relative = path;
         if (path.contains(ICON_DIRECTORY)) {
@@ -341,9 +302,6 @@ public class IconSelectDialog extends Dialog {
         return relative;
     }
 
-    /**
-     * @return
-     */
     protected int getThumbnailSize() {
         return THUMBNAIL_SIZE;
     }
