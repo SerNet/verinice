@@ -111,7 +111,7 @@ public class BaseProtectionFilterDialog extends Dialog {
     public BaseProtectionFilterDialog(Shell parentShell,
             @NonNull BaseProtectionFilterParameters filterParameters,
             @NonNull BaseProtectionFilterParameters defaultFilterParams) {
-        
+
         super(parentShell);
         this.filterParameters = filterParameters;
         this.defaultFilterParams = defaultFilterParams;
@@ -122,7 +122,7 @@ public class BaseProtectionFilterDialog extends Dialog {
         super.configureShell(shell);
         shell.setText(Messages.BaseProtectionFilterDialog_Title);
     }
-    
+
     @Override
     protected boolean isResizable() {
         return true;
@@ -137,31 +137,47 @@ public class BaseProtectionFilterDialog extends Dialog {
     protected Control createDialogArea(Composite parent) {
         Composite container = (Composite) super.createDialogArea(parent);
 
-        Label intro = new Label(container, SWT.NONE);
+        ScrolledComposite sc = new ScrolledComposite(container, SWT.V_SCROLL);
+        sc.setExpandHorizontal(true);
+        sc.setExpandVertical(true);
+        sc.setMinSize(300, 300);
+
+        Composite content = new Composite(sc, SWT.NONE);
+        sc.setContent(content);
+        content.setLayout(new GridLayout());
+
+        GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
+        data.heightHint = 500;
+        sc.setLayoutData(data);
+
+        Label intro = new Label(content, SWT.NONE);
         intro.setText(Messages.BaseProtectionFilterDialog_IntroText);
 
-        addFiltersForRequirementsAndSafeguards(container);
+        addFiltersForRequirementsAndSafeguards(content);
         try {
-            addReleaseGroup(container);
+            addReleaseGroup(content);
         } catch (CommandException ex) {
             throw new RuntimeException("Failed to initialize release filter.", ex);
         }
-        addChangeTypeGroup(container);
-        addRiskLabelGroup(container);
-        addRiskAnalysisNecessaryGroup(container);
-        addAuditPerformedGroup(container);
+        addChangeTypeGroup(content);
+        addRiskLabelGroup(content);
+        addRiskAnalysisNecessaryGroup(content);
+        addAuditPerformedGroup(content);
 
-        addElementTypesGroup(container);
+        addElementTypesGroup(content);
         try {
-            addTagsGroup(container);
+            addTagsGroup(content);
         } catch (CommandException e) {
             throw new RuntimeException("Failed to initialize filter", e);
         }
-        addApplyTagFilterToItNetworksGroup(container);
-        addHideEmptyGroup(container);
+        addApplyTagFilterToItNetworksGroup(content);
+        addHideEmptyGroup(content);
 
         setValues(filterParameters);
-        return container;
+
+        sc.setMinSize(content.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+
+        return parent;
     }
 
     private void addFiltersForRequirementsAndSafeguards(Composite parent) {
