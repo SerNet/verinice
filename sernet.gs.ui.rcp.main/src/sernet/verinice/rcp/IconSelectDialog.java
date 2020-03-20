@@ -34,6 +34,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
@@ -280,6 +281,11 @@ public class IconSelectDialog extends Dialog {
             imageColumn.setLabelProvider(new IconCellProvider(i));
             imageColumn.getColumn().setWidth(getThumbnailSize() + ICON_SPACING);
         }
+        // TableViewer seems to have issues if all columns use
+        // OwnerDrawLabelProviders, so we add an empty zero-width column
+        TableViewerColumn emptyColumn = new TableViewerColumn(viewer, SWT.LEFT);
+        emptyColumn.getColumn().setWidth(0);
+        emptyColumn.setLabelProvider(new ColumnLabelProvider());
 
         if (!dirComboModel.isEmpty()) {
             dirComboModel.setSelectedIndex(2);
