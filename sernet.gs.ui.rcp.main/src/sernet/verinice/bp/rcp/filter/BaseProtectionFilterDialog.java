@@ -137,18 +137,18 @@ public class BaseProtectionFilterDialog extends Dialog {
     protected Control createDialogArea(Composite parent) {
         Composite container = (Composite) super.createDialogArea(parent);
 
-        ScrolledComposite sc = new ScrolledComposite(container, SWT.V_SCROLL);
-        sc.setExpandHorizontal(true);
-        sc.setExpandVertical(true);
-        sc.setMinSize(300, 300);
+        ScrolledComposite scrollOfComposition = new ScrolledComposite(container, SWT.V_SCROLL);
+        scrollOfComposition.setExpandHorizontal(true);
+        scrollOfComposition.setExpandVertical(true);
+        scrollOfComposition.setMinSize(300, 300);
 
-        Composite content = new Composite(sc, SWT.NONE);
-        sc.setContent(content);
+        Composite content = new Composite(scrollOfComposition, SWT.NONE);
+        scrollOfComposition.setContent(content);
         content.setLayout(new GridLayout());
 
         GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
         data.heightHint = 500;
-        sc.setLayoutData(data);
+        scrollOfComposition.setLayoutData(data);
 
         Label intro = new Label(content, SWT.NONE);
         intro.setText(Messages.BaseProtectionFilterDialog_IntroText);
@@ -175,13 +175,14 @@ public class BaseProtectionFilterDialog extends Dialog {
 
         setValues(filterParameters);
 
-        sc.setMinSize(content.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+        scrollOfComposition.setMinSize(content.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
         return parent;
     }
 
     private void addFiltersForRequirementsAndSafeguards(Composite parent) {
         Group boxesComposite = new Group(parent, SWT.BORDER);
+        boxesComposite.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, false, false));
         GridLayout layout = new GridLayout();
         boxesComposite.setLayout(layout);
         boxesComposite
