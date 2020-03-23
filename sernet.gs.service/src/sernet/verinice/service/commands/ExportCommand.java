@@ -200,6 +200,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             throw new RuntimeCommandException("Exception while exporting", e);
         } finally {
             getCache().removeAll();
+            manager.shutdown();
         }
 
     }
@@ -651,12 +652,6 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
 
     public void setFilePath(final String filePath) {
         this.filePath = filePath;
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        CacheManager.getInstance().shutdown();
-        super.finalize();
     }
 
     private synchronized Cache getCache() {

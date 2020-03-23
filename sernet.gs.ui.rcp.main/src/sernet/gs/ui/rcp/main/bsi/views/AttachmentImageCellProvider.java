@@ -20,6 +20,7 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.UUID;
 
 import net.sf.ehcache.Cache;
@@ -27,6 +28,8 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.Status;
 
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 
@@ -76,13 +79,10 @@ public class AttachmentImageCellProvider extends ImageCellProvider {
         return thumb;
     }
     
-    protected void finalize() throws Throwable {
-        shutdownCache();
-        super.finalize();
-    }
-    
-    public void shutdownCache() {
-        CacheManager.getInstance().shutdown();
+    @Override
+    public void dispose(ColumnViewer viewer, ViewerColumn column) {
+        super.dispose(viewer, column);
+        Optional.ofNullable(manager).ifPresent(CacheManager::shutdown);
         manager=null;
     }
     

@@ -669,9 +669,6 @@ public class FileView extends RightsEnabledView
                 attachment.removeAllListener();
             }
         }
-        if (imageCellProvider != null) {
-            imageCellProvider.shutdownCache();
-        }
     }
 
     public static String getImageForMimeType(String mimeType) {
