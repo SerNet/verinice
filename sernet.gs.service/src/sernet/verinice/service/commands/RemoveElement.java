@@ -218,11 +218,13 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
          * Using the children as an array ensure that there won't be a
          * ConcurrentModificationException while deleting the elements.
          */
-        CnATreeElement[] children = element.getChildrenAsArray();
+        if (element instanceof IBSIStrukturElement) {
+            CnATreeElement[] children = element.getChildrenAsArray();
 
-        for (int i = 0; i < children.length; i++) {
-            if (children[i] instanceof FinishedRiskAnalysis) {
-                removeRiskAnalysis((FinishedRiskAnalysis) children[i]);
+            for (int i = 0; i < children.length; i++) {
+                if (children[i] instanceof FinishedRiskAnalysis) {
+                    removeRiskAnalysis((FinishedRiskAnalysis) children[i]);
+                }
             }
         }
 
