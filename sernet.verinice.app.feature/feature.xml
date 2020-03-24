@@ -288,4 +288,31 @@ Library.
       <import feature="sernet.verinice.extraresources.feature" version="1.0.0.qualifier"/>
    </requires>
 
+   <plugin
+         id="sernet.verinice.extraresources.jre_linux_64"
+         os="linux"
+         ws="gtk"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="sernet.verinice.extraresources.jre_macos_64"
+         os="macosx"
+         ws="cocoa"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="sernet.verinice.extraresources.jre_win_64"
+         os="win32"
+         ws="win32"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
 </feature>
