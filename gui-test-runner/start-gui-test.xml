@@ -244,6 +244,16 @@ lang        : ${verinice.lang}
 		<property name="v-launcher" refid="verinice-starter"/>
 		<basename property="verinice.starter" file="${v-launcher}"/>
 		<echo>found verinice.starter:  ${verinice.starter}</echo>
+		
+        <path id="verinice-jre">
+            <dirset  dir="${verinice-aut-path}/plugins">
+                <include name="sernet.verinice.extraresources.jre_*" />
+            </dirset>
+        </path>
+        <property name="v-jre" refid="verinice-jre"/>
+        <basename property="verinice.jre" file="${v-jre}"/>
+        <echo>found verinice.jre:  ${verinice.jre}</echo>
+		
 	</target>
 	
 	<!-- - - - - - - - - - - - - - - - - - 
@@ -411,6 +421,8 @@ ${verinice.lang}
 ${verinice-workspace}
 -debug
 -consolelog
+-vm
+plugins/${verinice.jre}/jre/bin
 -vmargs
 -Xms512m
 -Xmx2048m
