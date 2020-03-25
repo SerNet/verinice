@@ -54,6 +54,13 @@
 							</p:calendar>
 						</c:when>
 
+						<!-- Field for PropertyType: For the case that we have a combobox or
+						whatever we only want to display the text -->
+						<c:when
+							test="#{(not huiProperty.isText) and (not huiProperty.isEditable) and (not huiProperty.isURL)}">
+							<h:outputText value="#{huiProperty.displayValue}" />
+						</c:when>
+
 						<!-- Field for PropertyType: multiselection -->
 						<c:when test="#{huiProperty.isMultiselect}">
 							<p:selectCheckboxMenu value="#{huiProperty.selectedOptions}"
@@ -64,13 +71,6 @@
 								<p:ajax event="change" listener="#{edit.onChange}" />
 								<p:ajax event="toggleSelect" listener="#{edit.onChange}" />
 							</p:selectCheckboxMenu>
-						</c:when>
-
-						<!-- Field for PropertyType: For the case that we have a combobox or
-						whatever we only want to display the text -->
-						<c:when
-							test="#{(not huiProperty.isText) and (not huiProperty.isEditable) and (not huiProperty.isURL)}">
-							<h:outputText value="#{huiProperty.displayValue}" />
 						</c:when>
 
 						<!-- Field for PropertyType: singleoption -->
