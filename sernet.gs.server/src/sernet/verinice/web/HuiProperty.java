@@ -26,8 +26,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.faces.model.SelectItem;
 
@@ -341,6 +343,14 @@ public class HuiProperty implements Serializable {
         if (getIsSingleSelect()) {
             return Optional.ofNullable(getSelectedOption())
                     .orElse(Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE));
+        }
+        if (getIsMultiselect()) {
+            List<String> selectedOptions = getSelectedOptions();
+            Map<String, String> availableOptionLabelsById = propertyType.getOptions().stream()
+                    .collect(
+                            Collectors.toMap(IMLPropertyOption::getId, IMLPropertyOption::getName));
+            return selectedOptions.stream().map(availableOptionLabelsById::get)
+                    .collect(Collectors.joining(", "));
         }
         return getValue();
     }
