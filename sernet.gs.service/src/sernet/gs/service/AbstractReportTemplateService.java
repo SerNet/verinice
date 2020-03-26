@@ -165,7 +165,7 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
      *
      *
      */
-    private static String sanitizeLocale(String locale, String path) {
+    static String sanitizeLocale(String locale, String path) {
 
         if (locale.length() > 2 && locale.contains(String.valueOf('_'))) {
             locale = locale.substring(0, locale.indexOf(String.valueOf('_')));
