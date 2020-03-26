@@ -1,17 +1,6 @@
-buildscript {
-	repositories {
-		mavenLocal()
-		mavenCentral()
-	    maven {
-      		url 'http://oss.sonatype.org/content/repositories/snapshots/'
-    	}
-	}
-	dependencies {
-		classpath 'org.standardout:bnd-platform:1.7.0-SNAPSHOT'
-	}
+plugins {
+  id "org.standardout.bnd-platform" version "1.7.0"
 }
-
-apply plugin: 'org.standardout.bnd-platform'
 
 repositories {
 	jcenter()
@@ -160,8 +149,4 @@ platform {
 		plugin('org.apache.servicemix.bundles:org.apache.servicemix.bundles.spring-orm:4.3.7.RELEASE_1')
 	}
 */
-}
-
-task wrapper(type: Wrapper) {
-	gradleVersion = '4.7'
 }
