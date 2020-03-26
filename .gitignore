@@ -1,6 +1,7 @@
 **/bin
 **/target
-*/**/build
+*/**/build/*
+!*/**/build/build/run-junit.xml
 **/.gradle
 
 gui-test-runner/result
