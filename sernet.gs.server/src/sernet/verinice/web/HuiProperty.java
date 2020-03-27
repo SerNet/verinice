@@ -20,6 +20,7 @@
 package sernet.verinice.web;
 
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -351,6 +352,11 @@ public class HuiProperty implements Serializable {
                             Collectors.toMap(IMLPropertyOption::getId, IMLPropertyOption::getName));
             return selectedOptions.stream().map(availableOptionLabelsById::get)
                     .collect(Collectors.joining(", "));
+        }
+        if (getIsDate()) {
+            return Optional.ofNullable(getDate())
+                    .map(DateFormat.getDateInstance(DateFormat.SHORT)::format)
+                    .orElse(StringUtils.EMPTY);
         }
         return getValue();
     }
