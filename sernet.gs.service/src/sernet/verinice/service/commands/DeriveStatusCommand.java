@@ -432,7 +432,7 @@ public class DeriveStatusCommand extends ChangeLoggingCommand implements IChange
     }
     
     private void shutdownCache() {
-        CacheManager.getInstance().shutdown();
+        manager.shutdown();
         manager=null;
     }
     

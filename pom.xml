@@ -61,6 +61,9 @@
 		<module>sernet.verinice.samt.rcp</module>
 		<module>sernet.verinice.samt.service</module>
 		<module>waffle</module>
+		<module>sernet.verinice.extraresources.jre_linux_64</module>
+		<module>sernet.verinice.extraresources.jre_macos_64</module>
+		<module>sernet.verinice.extraresources.jre_win_64</module>
 	</modules>
 
 	<build>

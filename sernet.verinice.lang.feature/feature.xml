@@ -5,12 +5,12 @@
       version="1.20.0.qualifier"
       provider-name="SerNet">
 
-   <description url="http://www.verinice.com">
+   <description url="https://verinice.com">
       Additional languages for verinice.
    </description>
 
-   <copyright url="http://www.verinice.com">
-      Copyright 1997 - 2018 SerNet GmbH and others.
+   <copyright url="https://verinice.com">
+      Copyright 1997 - 2020 SerNet GmbH and others.
    </copyright>
 
    <license url="http://www.gnu.org/licenses/lgpl-3.0-standalone.html">

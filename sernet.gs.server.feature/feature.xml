@@ -5,11 +5,11 @@
       version="1.1.1.qualifier"
       provider-name="sernet.de">
 
-   <description url="http://www.verinice.com">
+   <description url="https://verinice.com">
       Integrated server components for verinice - the Open Source ISMS tool.
    </description>
 
-   <copyright url="https://www.verinice.com">
+   <copyright url="https://verinice.com">
       Copyright 1997 - 2020 SerNet GmbH and others.
    </copyright>
 

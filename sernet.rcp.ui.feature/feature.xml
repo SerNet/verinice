@@ -5,12 +5,12 @@
       version="1.0.0.qualifier"
       provider-name="SERNET">
 
-   <description url="http://verinice.com">
+   <description url="https://verinice.com">
       The Verinice Open Source ISMS Tool.
    </description>
 
-   <copyright url="http://www.verinice.com/">
-      Copyright 1997 - 2017 SerNet GmbH and others.
+   <copyright url="https://verinice.com/">
+      Copyright 1997 - 2020 SerNet GmbH and others.
    </copyright>
 
    <license url="http://www.gnu.org/licenses/lgpl-3.0-standalone.html">
