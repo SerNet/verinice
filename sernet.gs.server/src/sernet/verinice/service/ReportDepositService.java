@@ -76,8 +76,8 @@ public class ReportDepositService extends AbstractReportTemplateService
             } else {
                 locale = "_" + locale.toLowerCase();
             }
-            String propertiesFilename = FilenameUtils.removeExtension(metadata.getFilename()) + locale
-                    + FilenameUtils.EXTENSION_SEPARATOR + PROPERTIES_FILE_EXTENSION;
+            String propertiesFilename = FilenameUtils.removeExtension(metadata.getFilename())
+                    + locale + FilenameUtils.EXTENSION_SEPARATOR + PROPERTIES_FILE_EXTENSION;
             File depositDir = reportDeposit.getFile();
 
             File propFile = new File(depositDir, propertiesFilename);
