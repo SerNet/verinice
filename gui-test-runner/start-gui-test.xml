@@ -422,7 +422,7 @@ ${verinice-workspace}
 -debug
 -consolelog
 -vm
-plugins/${verinice.jre}/jre/bin
+plugins/${verinice.jre}/jre/bin/java
 -vmargs
 -Xms512m
 -Xmx2048m
