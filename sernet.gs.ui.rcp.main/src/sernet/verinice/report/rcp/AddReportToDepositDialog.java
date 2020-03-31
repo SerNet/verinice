@@ -325,7 +325,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
             ReportTemplateMetaData metaData = new ReportTemplateMetaData(fileMetaDAta,
                     getReportOutputName(), getReportOutputFormats(), true,
                     allowMultipleRootObjects.getSelection(), getContext());
-            getReportService().update(metaData, getLanguage());
+            getReportService().update(metaData, Locale.getDefault());
         } catch (ReportDepositException e) {
             LOG.error("Error while updating report template file", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.ReportDepositView_23);
@@ -340,15 +340,11 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
             ReportTemplateMetaData metaData = new ReportTemplateMetaData(fileMetaData,
                     getReportOutputName(), getReportOutputFormats(), true,
                     allowMultipleRootObjects.getSelection(), getContext());
-            getReportService().add(metaData, rptDesignFile, getLanguage());
+            getReportService().add(metaData, rptDesignFile, Locale.getDefault());
         } catch (IOException | ReportDepositException e) {
             LOG.error("Error while adding new report template file", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.AddReportToDepositDialog_3);
         }
-    }
-
-    private String getLanguage() {
-        return Locale.getDefault().getLanguage();
     }
 
     public void selectTemplateFile() {

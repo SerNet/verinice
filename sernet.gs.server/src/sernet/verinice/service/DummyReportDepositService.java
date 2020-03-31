@@ -19,6 +19,7 @@ package sernet.verinice.service;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -36,15 +37,15 @@ public class DummyReportDepositService extends AbstractReportTemplateService
     private static final Logger LOG = Logger.getLogger(DummyReportDepositService.class);
 
     @Override
-    public void add(ReportTemplateMetaData metadata, byte[] file, String locale) {
+    public void add(ReportTemplateMetaData metadata, byte[] file, Locale locale) {
     }
 
     @Override
-    public void remove(ReportTemplateMetaData metadata, String locale) {
+    public void remove(ReportTemplateMetaData metadata, Locale locale) {
     }
 
     @Override
-    public void update(ReportTemplateMetaData metadata, String locale) {
+    public void update(ReportTemplateMetaData metadata, Locale locale) {
     }
 
     @Override

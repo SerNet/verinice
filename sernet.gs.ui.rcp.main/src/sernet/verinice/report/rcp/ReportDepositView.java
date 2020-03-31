@@ -515,7 +515,7 @@ public class ReportDepositView extends RightsEnabledView {
             ReportTemplateMetaData sel = (ReportTemplateMetaData) iterator.next();
             try {
                 ServiceFactory.lookupReportDepositService().remove(sel,
-                        Locale.getDefault().getLanguage());
+                        Locale.getDefault());
             } catch (ReportDepositException e) {
                 ExceptionUtil.log(e, "Error deleting Reporttemplate:\t" + sel.getOutputname());
             }

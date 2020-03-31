@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Locale;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
@@ -30,6 +31,7 @@ import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
 
 import sernet.gs.service.AbstractReportTemplateService;
+import sernet.gs.service.PropertiesFileUtil;
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.ReportDepositException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
@@ -45,22 +47,14 @@ public class ReportDepositService extends AbstractReportTemplateService
     }
 
     @Override
-    public void add(ReportTemplateMetaData metadata, byte[] file, String locale)
+    public void add(ReportTemplateMetaData metadata, byte[] file, Locale locale)
             throws ReportDepositException {
         try {
-            if ("en".equalsIgnoreCase(locale)) {
-                locale = "";
-            } else {
-                locale = "_" + locale.toLowerCase();
-            }
-            String filename = metadata.getFilename();
-            filename = filename.substring(filename.lastIndexOf(File.separatorChar) + 1);
-            File serverDepositPath;
-            serverDepositPath = reportDeposit.getFile();
-            String newFilePath = serverDepositPath.getPath() + File.separatorChar + filename;
-            FileUtils.writeByteArrayToFile(new File(newFilePath), file);
+            File reportFileToStore = new File(reportDeposit.getFile(),
+                    FilenameUtils.getName(metadata.getFilename()));
+            FileUtils.writeByteArrayToFile(reportFileToStore, file);
             writePropertiesFile(convertToProperties(metadata),
-                    new File(ensurePropertiesExtension(newFilePath, locale)), "");
+                    PropertiesFileUtil.getPropertiesFile(reportFileToStore, locale), "");
         } catch (IOException ex) {
             LOG.error("problems while adding report", ex);
             throw new ReportDepositException(ex);
@@ -68,19 +62,13 @@ public class ReportDepositService extends AbstractReportTemplateService
     }
 
     @Override
-    public void remove(ReportTemplateMetaData metadata, String locale)
+    public void remove(ReportTemplateMetaData metadata, Locale locale)
             throws ReportDepositException {
         try {
-            if ("en".equalsIgnoreCase(locale)) {
-                locale = "";
-            } else {
-                locale = "_" + locale.toLowerCase();
-            }
-            String propertiesFilename = FilenameUtils.removeExtension(metadata.getFilename())
-                    + locale + FilenameUtils.EXTENSION_SEPARATOR + PROPERTIES_FILE_EXTENSION;
+            File propertiesFilename = PropertiesFileUtil.getPropertiesFile(new File(metadata.getFilename()), locale);
             File depositDir = reportDeposit.getFile();
 
-            File propFile = new File(depositDir, propertiesFilename);
+            File propFile = new File(depositDir, propertiesFilename.getPath());
             deleteFile(propFile);
 
             File rptFile = new File(depositDir, metadata.getFilename());
@@ -106,10 +94,10 @@ public class ReportDepositService extends AbstractReportTemplateService
     }
 
     @Override
-    public void update(ReportTemplateMetaData metadata, String locale)
+    public void update(ReportTemplateMetaData metadata, Locale locale)
             throws ReportDepositException {
         try {
-            updateSafe(metadata, locale);
+            updateSafe(metadata, locale.getLanguage());
         } catch (IOException ex) {
             throw new ReportDepositException(ex);
         }
@@ -159,37 +147,6 @@ public class ReportDepositService extends AbstractReportTemplateService
                 Boolean.toString(metaData.isMultipleRootObjects()));
         props.setProperty(PROPERTIES_CONTEXT, metaData.getContext());
         return props;
-    }
-
-    private String ensurePropertiesExtension(String filename, String locale) {
-        if (filename.contains(String.valueOf('.'))) {
-            filename = filename.substring(0, filename.lastIndexOf('.'));
-        }
-        String oldLocale = locale;
-        locale = removeUnderscores(locale);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("changed:\t" + oldLocale + "\tto:\t" + locale);
-        }
-        if (locale != null && !(locale.equals("")) && !filename.endsWith(locale)) {
-            if (!filename.endsWith("_")) {
-                filename = filename + "_";
-            }
-            filename = filename + locale;
-
-        }
-        return filename + FilenameUtils.EXTENSION_SEPARATOR
-                + IReportDepositService.PROPERTIES_FILE_EXTENSION;
-    }
-
-    private String removeUnderscores(String locale) {
-        if (locale.startsWith("_")) {
-            locale = removeUnderscores(locale.substring(1));
-        }
-        if (locale.endsWith("_")) {
-            locale = removeUnderscores(locale.substring(0, locale.length() - 1));
-        }
-
-        return locale;
     }
 
     @Override

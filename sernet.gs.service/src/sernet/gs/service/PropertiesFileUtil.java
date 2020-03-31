@@ -40,8 +40,23 @@ public class PropertiesFileUtil {
         final String localeSuffix = "en".equals(locale.getLanguage()) ? ""
                 : "_" + locale.getLanguage();
         final Function<File, String> getPath = File::getPath;
-        return getPath.andThen(FilenameUtils::removeExtension).andThen(s -> s.concat(localeSuffix))
-                .andThen(s -> s.concat(".properties")).andThen(File::new).apply(file);
+        return getPath.andThen(FilenameUtils::removeExtension).andThen(append(localeSuffix))
+                .andThen(append(FilenameUtils.EXTENSION_SEPARATOR)).andThen(append("properties"))
+                .andThen(File::new).apply(file);
+    }
+
+    /**
+     * Returns a function, that appends the given string to a string.
+     */
+    private static Function<String, String> append(final String str) {
+        return s -> s.concat(str);
+    }
+
+    /**
+     * Returns a function, that appends the given string to a string.
+     */
+    private static Function<String, String> append(final char str) {
+        return append(String.valueOf(str));
     }
 
     private PropertiesFileUtil() {

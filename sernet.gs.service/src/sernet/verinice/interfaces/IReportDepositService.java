@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.verinice.interfaces;
 
+import java.util.Locale;
+
 import sernet.verinice.model.report.ReportTemplateMetaData;
 
 /**
@@ -28,11 +30,11 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
  */
 public interface IReportDepositService extends IReportTemplateService {
 
-    void add(ReportTemplateMetaData metadata, byte[] file, String locale)
+    void add(ReportTemplateMetaData metadata, byte[] file, Locale locale)
             throws ReportDepositException;
 
-    void remove(ReportTemplateMetaData metadata, String locale) throws ReportDepositException;
+    void remove(ReportTemplateMetaData metadata, Locale locale) throws ReportDepositException;
 
-    void update(ReportTemplateMetaData metadata, String locale) throws ReportDepositException;
+    void update(ReportTemplateMetaData metadata, Locale locale) throws ReportDepositException;
 
 }

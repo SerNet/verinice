@@ -136,7 +136,7 @@ public class ReportDepositTest extends CommandServiceProvider {
         List<ReportTemplateMetaData> addedMetadataList = addAllFilesToDeposit();
         checkMetadataInDeposit(addedMetadataList, true);
         for (ReportTemplateMetaData metadata : addedMetadataList) {
-            depositService.remove(metadata, getLanguage());
+            depositService.remove(metadata, Locale.ENGLISH);
         }
         checkMetadataInDeposit(addedMetadataList, false);
     }
@@ -148,7 +148,7 @@ public class ReportDepositTest extends CommandServiceProvider {
         for (ReportTemplateMetaData metadata : metadataSet) {
             metadata.setOutputname(getOutputname());
             metadata.setOutputFormats(getOutputFormats());
-            depositService.update(metadata, getLanguage());
+            depositService.update(metadata, Locale.ENGLISH);
         }
         metadataSet = depositService.getReportTemplates(getLanguage());
         for (ReportTemplateMetaData metadata : metadataSet) {
@@ -181,7 +181,7 @@ public class ReportDepositTest extends CommandServiceProvider {
                 randomTemplate.getOutputname(), toTest, randomTemplate.isServer(), false,
                 randomTemplate.getContext());
 
-        depositService.update(updatedData, getLanguage());
+        depositService.update(updatedData, Locale.ENGLISH);
         ReportTemplateMetaData storedData = getReportMetaDataFromDeposit(
                 checkServerLocation(randomTemplate.getFilename()), depositService);
         assertArrayEquals(toTest, storedData.getOutputFormats());
@@ -189,7 +189,7 @@ public class ReportDepositTest extends CommandServiceProvider {
 
         updatedData = new ReportTemplateMetaData(fileMetaData, randomTemplate.getOutputname(),
                 toTest, randomTemplate.isServer(), true, randomTemplate.getContext());
-        depositService.update(updatedData, getLanguage());
+        depositService.update(updatedData, Locale.ENGLISH);
         storedData = getReportMetaDataFromDeposit(checkServerLocation(randomTemplate.getFilename()),
                 depositService);
         assertTrue(storedData.isMultipleRootObjects());
@@ -275,7 +275,7 @@ public class ReportDepositTest extends CommandServiceProvider {
         File rptFile = new File(dir, fileName);
         byte[] fileData = FileUtil.getFileData(rptFile);
         ReportTemplateMetaData metadata = getReportMetaDataFromDeposit(fileName, templateUtil);
-        depositService.add(metadata, fileData, getLanguage());
+        depositService.add(metadata, fileData, Locale.ENGLISH);
         return metadata;
     }
 
