@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
@@ -263,8 +264,12 @@ public class ValidationService implements IValidationService {
                 .add(createDbIdRestriction(elmtDbId)).add(createPropertyIdRestriction(propertyType))
                 .add(createHintIdRestriction(hintID)).add(createScopeIdRestriction(scopeId));
 
-        CnAValidation validation = (CnAValidation) getCnaValidationDAO().findByCriteria(criteria)
-                .get(0);
+        List existingValidations = getCnaValidationDAO().findByCriteria(criteria);
+        if (existingValidations.isEmpty()) {
+            log.warn("No validations fround to delete");
+            return null;
+        }
+        CnAValidation validation = (CnAValidation) existingValidations.get(0);
         return deleteValidation(validation);
     }
 
@@ -290,10 +295,11 @@ public class ValidationService implements IValidationService {
     private List<String> processValidationMap(Map<String, Boolean> validationMap,
             CnATreeElement elmt, PropertyType type,
             List<CnAValidation> existingValidationsForType) {
-        ArrayList<String> hintsOfFailedValidations = new ArrayList<>();
+        ArrayList<String> hintsOfFailedValidations = new ArrayList<>(validationMap.size());
         for (Entry<String, Boolean> entry : validationMap.entrySet()) {
-            boolean validationExists = existingValidationsForType.stream()
-                    .anyMatch(validation -> validation.getHintId().equals(entry.getKey()));
+            Optional<CnAValidation> existingValidation = existingValidationsForType.stream()
+                    .filter(validation -> validation.getHintId().equals(entry.getKey())).findAny();
+            boolean validationExists = existingValidation.isPresent();
 
             boolean elmtIsValid = entry.getValue().booleanValue();
             if (!elmtIsValid) {
@@ -309,7 +315,8 @@ public class ValidationService implements IValidationService {
             } else if (validationExists) { // validation
                                            // condition is
                                            // fulfilled
-                deleteValidation(elmt.getDbId(), type.getId(), entry.getKey(), elmt.getScopeId());
+                deleteValidation(existingValidation.get());
+                existingValidationsForType.remove(existingValidation.get());
                 if (log.isDebugEnabled()) {
                     log.debug("Validation:\t(" + type.getId() + ", " + entry.getValue() + ", "
                             + entry.getKey() + ") deleted");
@@ -331,7 +338,7 @@ public class ValidationService implements IValidationService {
             CnATreeElement elmt, List<CnAValidation> existingValidationsForElement) {
         List<CnAValidation> existingValidationsForType = existingValidationsForElement.stream()
                 .filter(validation -> validation.getPropertyId().equals(type.getId()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(ArrayList::new));
 
         List<String> invalidHints = getInvalidPropertyHints(type, elmt, existingValidationsForType);
         if (map.containsKey(type)) {
@@ -354,8 +361,12 @@ public class ValidationService implements IValidationService {
         DetachedCriteria criteria = DetachedCriteria.forClass(CnAValidation.class)
                 .add(createDbIdRestriction(elmtDbId)).add(createPropertyIdRestriction(propertyType))
                 .add(createScopeIdRestriction(scopeId));
-        CnAValidation validation = (CnAValidation) getCnaValidationDAO().findByCriteria(criteria)
-                .get(0);
+        List existingValidations = getCnaValidationDAO().findByCriteria(criteria);
+        if (existingValidations.isEmpty()) {
+            log.warn("No validations fround to delete");
+            return null;
+        }
+        CnAValidation validation = (CnAValidation) existingValidations.get(0);
         getCnaValidationDAO().delete(validation);
         return validation;
     }

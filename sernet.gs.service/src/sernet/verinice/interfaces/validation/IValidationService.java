@@ -107,13 +107,16 @@ public interface IValidationService {
     /**
      * Deletes a validation
      * 
-     * @param elmtDbId
-     * @param propertyType
-     * @param hintID
+     * @deprecated should not be used anymore since the outcome is undefined
      */
+    @Deprecated
     CnAValidation deleteValidation(Integer elmtDbId, String propertyType, String hintID,
             Integer scopeId);
 
+    /**
+     * @deprecated should not be used anymore since the outcome is undefined
+     */
+    @Deprecated
     CnAValidation deleteValidation(Integer elmtDbId, String propertyType, Integer scopeId);
 
     CnAValidation deleteValidation(CnAValidation validation);
