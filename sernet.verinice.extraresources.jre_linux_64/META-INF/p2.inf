@@ -1,5 +1,5 @@
 instructions.configure=\
-org.eclipse.equinox.p2.touchpoint.eclipse.setJvm(jvm:${artifact.location}/jre/bin);
+org.eclipse.equinox.p2.touchpoint.eclipse.setJvm(jvm:${artifact.location}/jre/lib/amd64/server/libjvm.so);
 instructions.unconfigure=\
 org.eclipse.equinox.p2.touchpoint.eclipse.setJvm(jvm:null);
 instructions.install = \
