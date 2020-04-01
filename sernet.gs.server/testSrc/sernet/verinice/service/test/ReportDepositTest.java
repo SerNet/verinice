@@ -310,12 +310,4 @@ public class ReportDepositTest extends CommandServiceProvider {
 
         return DigestUtils.md5Hex(FileUtils.readFileToByteArray(new File(filePath)));
     }
-
-    private Iterator<File> listPropertiesFiles(String fileName, String dir) {
-        String baseName = FilenameUtils.removeExtension(fileName);
-        IOFileFilter filter = new RegexFileFilter(baseName + "\\_?.*\\.properties",
-                IOCase.INSENSITIVE);
-        Iterator<File> iter = FileUtils.iterateFiles(new File(dir), filter, null);
-        return iter;
-    }
 }
