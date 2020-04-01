@@ -92,9 +92,16 @@ public class ElasticsearchClientFactory implements DisposableBean {
                 LOG.debug("Creating index " + ISearchDao.INDEX_NAME + "...");
             }
             try {
+                Builder analysisConf = getAnylysisConf();
+                if (LOG.isDebugEnabled()) {
+                    Map<String, String> map = analysisConf.internalMap();
+                    for (Entry<String, String> e : map.entrySet()) {
+                        LOG.debug("ES Settings:\t<" + e.getKey() + ", " + e.getValue() + ">");
+                    }
+                }
                 client.admin().indices().prepareCreate(ISearchDao.INDEX_NAME)
-                        .setSettings(getAnylysisConf())
-                        .addMapping(ElementDao.TYPE_NAME, getMapping()).execute().actionGet();
+                        .setSettings(analysisConf).addMapping(ElementDao.TYPE_NAME, getMapping())
+                        .execute().actionGet();
             } catch (IndexAlreadyExistsException e) {
                 // https://github.com/elastic/elasticsearch/issues/8105
                 LOG.warn("Index " + ISearchDao.INDEX_NAME
