@@ -32,7 +32,6 @@
 	<property name="junit-report" location="${test-results}/results.xml" />
 	<property name="html-report" location="${test-results}/results.html" />
 	<property name="auts" location="${test-results}/aut" />
-	<property name="verinice-aut-path" location="${auts}/verinice" />
 	<property name="v-designer-aut-path" location="${auts}/v.Designer" />
 	<!-- workspaces -->
 	<property name="wrks-path" location="${test-results}/wrks" />
@@ -49,12 +48,46 @@
 		<os family="windows" />
 	</condition>
 	<condition property="isLinux" value="true">
-		<os family="unix" />
+		<os family="unix" name="Linux" />
+	</condition>
+	<condition property="isMac" value="true">
+	  <os family="mac" />
 	</condition>
 	<condition property="no-war-copy">
 		<isset property="no-server-deployment"/>
 	</condition>
 
+	<!-- set up OS-specific paths -->
+	<target name="setupPathsLinux" if="isLinux">
+		<property name="verinice-directory-name" value="verinice" />
+		<property name="verinice-executable" value="verinice" />
+		<property name="verinice-ini-location" value="verinice.ini" />
+		<property name="verinice-plugins-location" value="plugins" />
+		<property name="verinice-plugins-location-relative-from-executable" value="plugins" />
+		<property name="java-library-location" value="lib/amd64/server/libjvm.so" />
+		<property name="java-binary-location" value="bin/java" />
+	</target>
+	<target name="setupPathsWindows" if="isWindows">
+		<property name="verinice-directory-name" value="verinice" />
+		<property name="verinice-executable" value="verinice.exe" />
+		<property name="verinice-ini-location" value="verinice.ini" />
+		<property name="verinice-plugins-location" value="plugins" />
+		<property name="verinice-plugins-location-relative-from-executable" value="plugins" />
+		<property name="java-library-location" value="bin/server/jvm.dll" />
+		<property name="java-binary-location" value="bin/java.exe" />
+	</target>
+	<target name="setupPathsMac" if="isMac">
+		<property name="verinice-directory-name" value="verinice.app" />
+		<property name="verinice-executable" value="Contents/MacOS/verinice" />
+		<property name="verinice-ini-location" value="Contents/Eclipse/verinice.ini" />
+		<property name="verinice-plugins-location" value="Contents/Eclipse/plugins" />
+		<property name="verinice-plugins-location-relative-from-executable" value="../Eclipse/plugins" />
+		<property name="java-library-location" value="lib/jli/libjli.dylib" />
+		<property name="java-binary-location" value="bin/java" />
+	</target>
+	<target name="setupPaths" depends="setupPathsLinux, setupPathsWindows, setupPathsMac">
+		<property name="verinice-aut-path" location="${auts}/${verinice-directory-name}" />
+	</target>
     <target name="patch-properties">
         <replace file="${server-work-dir}/verinice/WEB-INF/veriniceserver-plain.properties.local" summary="true">
             <replacefilter token="# jdbc.url=jdbc:postgresql://127.0.0.1:5432/verinicedb" 
@@ -187,7 +220,7 @@ catalina.base : ${server-work-dir}
 	</java>
 </target>
 
-	<target name="init" depends="clean, configure.rcptt.runner">
+	<target name="init" depends="clean, configure.rcptt.runner, setupPaths">
 		<mkdir dir="${test-results}" />
 		<mkdir dir="${auts}" />
 		<mkdir dir="${images}" />
@@ -228,7 +261,7 @@ lang        : ${verinice.lang}
 	<target name="configure.runners" >
 		<echo>Configure verinice at ${verinice-aut-path}</echo>
 		<path id="verinice-runner">
-			<fileset dir="${verinice-aut-path}/plugins">
+			<fileset dir="${verinice-aut-path}/${verinice-plugins-location}">
 				<include name="org.eclipse.equinox.launcher_*.jar" />
 			</fileset>
 		</path>
@@ -237,7 +270,7 @@ lang        : ${verinice.lang}
 		<echo>found verinice.launcher:  ${verinice.launcher}</echo>
 
 		<path id="verinice-starter">
-			<dirset  dir="${verinice-aut-path}/plugins">
+			<dirset  dir="${verinice-aut-path}/${verinice-plugins-location}">
 				<include name="org.eclipse.equinox.launcher.*" />
 			</dirset>
 		</path>
@@ -246,12 +279,12 @@ lang        : ${verinice.lang}
 		<echo>found verinice.starter:  ${verinice.starter}</echo>
 		
         <path id="verinice-jre">
-            <dirset  dir="${verinice-aut-path}/plugins">
+            <dirset  dir="${verinice-aut-path}/${verinice-plugins-location}">
                 <include name="sernet.verinice.extraresources.jre_*" />
             </dirset>
         </path>
         <property name="v-jre" refid="verinice-jre"/>
-        <basename property="verinice.jre" file="${v-jre}"/>
+        <property name="verinice.jre" location="${v-jre}"/>
         <echo>found verinice.jre:  ${verinice.jre}</echo>
 		
 	</target>
@@ -313,7 +346,7 @@ lang        : ${verinice.lang}
 		</copy>
 	</target>
 
-	<target name="unzip.archive.windows" depends="find.current.zip" unless="isLinux">
+	<target name="unzip.archive.windows" depends="find.current.zip" if="isWindows">
 		<echo>unzip ${verinice.zip} to  ${auts}</echo>
 		<unzip src="${verinice.zip}" dest="${auts}" />
 		<antcall target="delete.zip" />
@@ -375,7 +408,7 @@ lang        : ${verinice.lang}
 	<target name="configure-v-designer-aut" depends="unzip.v-designer.archive">
 		<delete file="${v-designer-aut-path}/v-designer.ini" />
 		<echo file="${v-designer-aut-path}/v-designer.ini">-startup
-plugins/org.eclipse.equinox.launcher_${verinice.launcher.version}.jar
+${verinice-plugins-location-relative-from-executable}/org.eclipse.equinox.launcher_${verinice.launcher.version}.jar
 --launcher.library
 ${starterPlugin}
 -data
@@ -396,8 +429,7 @@ workspace
          ================================= -->
 	<target name="start.verinice.client" depends="configure.verinice" description="start a verinice instance">
 		<echo>Start verinice: ${verince.program} on ${os.name}</echo>
-		<exec executable="${verince.program}" dir="${verinice.dir}" spawn="true" osfamily="unix"/>
-		<exec executable="${verince.program}.exe" dir="${verinice.dir}" spawn="true" osfamily="windows"/>
+		<exec executable="${verince.program}" dir="${verinice-aut-path}" spawn="true"/>
 		<echo>wait for verinice ...</echo>
 		<waitfor maxwait="${verinice.timeout}" maxwaitunit="second" timeoutproperty="timeout">
 			<http url="http://localhost:${verinice.server.port}/GetHitroConfig" />
@@ -409,12 +441,12 @@ workspace
           target: configure.verinice                      
          - - - - - - - - - - - - - - - - - -->
 	<target name="configure.verinice" depends="unzip.archive.linux, unzip.archive.windows, configure.runners">
-		<delete file="${verinice.dir}/verinice.ini" />
-		<echo>${verinice-workspace}::${verinice.dir}</echo>
-		<echo file="${verinice.dir}/verinice.ini">-startup
-plugins/${verinice.launcher}
+		<delete file="${verinice-aut-path}/${verinice-ini-location}" />
+		<echo>${verinice-workspace}::${verinice-aut-path}</echo>
+		<echo file="${verinice-aut-path}/${verinice-ini-location}">-startup
+${verinice-plugins-location-relative-from-executable}/${verinice.launcher}
 --launcher.library
-plugins/${verinice.starter}
+${verinice-plugins-location-relative-from-executable}/${verinice.starter}
 -nl
 ${verinice.lang}
 -data
@@ -422,7 +454,7 @@ ${verinice-workspace}
 -debug
 -consolelog
 -vm
-plugins/${verinice.jre}/jre/bin/java
+${verinice.jre}/jre/${java-library-location}
 -vmargs
 -Xms512m
 -Xmx2048m
@@ -562,7 +594,6 @@ plugins/${verinice.jre}/jre/bin/java
 		<attribute name="target" />
 		<sequential>
 			<echo>running server tests with target: @{target}</echo>
-	    	<property name="verinice.dir" location="${auts}/verinice" />
 	        <antcall target="configure.verinice" />
 	        <antcall target="configure-aut" />
 	        <echo file="${verinice-sever-workspace}/.metadata/.plugins/org.eclipse.core.runtime/.settings/sernet.gs.ui.rcp.main.prefs" >
@@ -588,11 +619,15 @@ plugins/${verinice.jre}/jre/bin/java
 		<attribute name="target" />
 		<sequential>
 			<echo>running client tests with target: @{target}</echo>
-			<property name="verinice.dir" location="${auts}/verinice" />
-			<property name="verince.program" location="${verinice.dir}/verinice" />
+			<property name="verince.program" location="${verinice-aut-path}/${verinice-executable}" />
 
 			<antcall target="configure-aut" />
 			<antcall target="start.verinice.client" />
+			<!--
+				RCPTT expects that the vm parameter points to the binary, not the shared lib
+				https://bugs.eclipse.org/bugs/show_bug.cgi?id=515501.
+			 -->
+			<replace file="${verinice-aut-path}/${verinice-ini-location}" token="${java-library-location}" value="${java-binary-location}"/>
 			<antcall target="@{target}">
 				<param name="aut-path" value="${verinice-aut-path}" />
 				<param name="aut-workspace" value="${verinice-aut-workspace}" />
@@ -623,8 +658,7 @@ plugins/${verinice.jre}/jre/bin/java
           target: test-v-designer             
          ================================= -->
 	<target name="test-v-designer" depends="init" description="Runs the gui tests for v-designer.">
-		<property name="verinice.dir" location="${auts}/verinice" />
-		<property name="verince.program" location="${verinice.dir}/verinice" />
+		<property name="verince.program" location="${verinice-aut-path}/verinice" />
 
 		<antcall target="configure-v-designer-aut">
 		</antcall>
