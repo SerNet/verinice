@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.reports;
 
 import java.util.List;
+import java.util.Locale;
 
 import sernet.verinice.model.report.ReportTemplateMetaData;
 
@@ -26,6 +27,6 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
  */
 public interface IReportSupplier {
     
-    public List<ReportTemplateMetaData> getReportTemplates(String locale);
+    public List<ReportTemplateMetaData> getReportTemplates(Locale locale);
 
 }

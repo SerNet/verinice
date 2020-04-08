@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -49,7 +50,7 @@ public class ReportSupplierImpl implements IReportSupplier {
     }
 
     @Override
-    public List<ReportTemplateMetaData> getReportTemplates(String locale) {
+    public List<ReportTemplateMetaData> getReportTemplates(Locale locale) {
         try {
             return Arrays.asList(getReportMetaData(locale));
         } catch (ReportTemplateServiceException e) {
@@ -58,7 +59,7 @@ public class ReportSupplierImpl implements IReportSupplier {
         return new ArrayList<ReportTemplateMetaData>(0);
     }
 
-    private ReportTemplateMetaData[] getReportMetaData(String locale)
+    private ReportTemplateMetaData[] getReportMetaData(Locale locale)
             throws ReportTemplateServiceException {
 
         LocalReportTemplateService localReportTemplateUtil = new LocalReportTemplateService();
@@ -66,9 +67,9 @@ public class ReportSupplierImpl implements IReportSupplier {
 
         Set<ReportTemplateMetaData> metadata = new HashSet<ReportTemplateMetaData>();
         int size = 0;
-        metadata.addAll(localReportTemplateUtil.getReportTemplates(locale));
+        metadata.addAll(localReportTemplateUtil.getReportTemplates(locale.getLanguage()));
         size = metadata.size();
-        metadata.addAll(serverReportTemplateUtil.getReportTemplates(locale));
+        metadata.addAll(serverReportTemplateUtil.getReportTemplates(locale.getLanguage()));
         if (LOG.isDebugEnabled()) {
             LOG.debug(size + " Report templates loaded from workspacefolder:\t"
                     + IReportService.VERINICE_REPORTS_LOCAL);

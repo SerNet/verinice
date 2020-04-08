@@ -129,7 +129,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         try {
             // adding the server templates
             List<ReportTemplateMetaData> list = getSupplier()
-                    .getReportTemplates(Locale.getDefault().getLanguage());
+                    .getReportTemplates(Locale.getDefault());
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Locale used on system (client):\t" + Locale.getDefault().getLanguage());
                 LOG.debug(list.size() + " Reporttemplates loaded from deposit folders");
