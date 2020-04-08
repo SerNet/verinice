@@ -92,7 +92,6 @@ public final class ActionRightIDs {
     public static final String SHOWALLFILES = "showallfiles";
     public static final String SHOWCHARTVIEW = "showchartview";
     public static final String SHOWPREFERENCES = "showpreferences";
-    public static final String SIMPLEAUDITVIEW = "simpleauditview";
     public static final String TODO = "todo";
     public static final String TASKVIEW = "taskview";
     public static final String TASKDELETE = "taskdelete";

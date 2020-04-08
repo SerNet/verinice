@@ -96,7 +96,6 @@
             <action id="searchview" />
             <action id="showchartview" />
             <action id="showpreferences" />
-            <action id="simpleauditview" />
             <action id="taskview" />
             <action id="todo" />
             <action id="unify" />
@@ -225,8 +224,6 @@
             <action id="showchartview" />
             <action id="showpreferences" />
             <action id="showpreferences" />
-            <action id="simpleauditview" />
-            <action id="simpleauditview" />
             <action id="taskview" />
             <action id="taskview" />
             <action id="taskwithreleaseprocess" />
@@ -312,7 +309,6 @@
             <action id="searchview" />
             <action id="showchartview" />
             <action id="showpreferences" />
-            <action id="simpleauditview" />
             <action id="taskchangeassignee" />
             <action id="taskchangeduedate" />
             <action id="taskdelete" />
@@ -396,7 +392,6 @@
             <action id="searchview" />
             <action id="showchartview" />
             <action id="showpreferences" />
-            <action id="simpleauditview" />
             <action id="taskchangeassignee" />
             <action id="taskchangeduedate" />
             <action id="taskdelete" />
@@ -480,7 +475,6 @@
             <action id="showallfiles" />
             <action id="showchartview" />
             <action id="showpreferences" />
-            <action id="simpleauditview" />
             <action id="taskchangeassignee" />
             <action id="taskchangeduedate" />
             <action id="taskdelete" />

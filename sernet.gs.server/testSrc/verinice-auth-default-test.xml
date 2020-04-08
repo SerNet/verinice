@@ -97,7 +97,6 @@
             <action id="searchview" />
             <action id="showchartview" />
             <action id="showpreferences" />
-            <action id="simpleauditview" />
             <action id="taskview" />
             <action id="todo" />
             <action id="unify" />
@@ -188,7 +187,6 @@
           <action id="searchview" />
             <action id="showchartview" />
             <action id="showpreferences" />
-            <action id="simpleauditview" />
             <action id="taskview" />
             <action id="taskwithreleaseprocess" />
             <action id="todo"/>
@@ -231,7 +229,6 @@
             <action id="searchview" />
             <action id="showchartview" />
             <action id="showpreferences" />
-            <action id="simpleauditview" />
             <action id="taskview" />
             <action id="taskwithreleaseprocess" />
             <action id="todo"/>
@@ -311,7 +308,6 @@
           <action id="searchview" />
             <action id="showchartview" />
             <action id="showpreferences" />
-            <action id="simpleauditview" />
           <action id="taskchangeassignee" />
           <action id="taskchangeduedate" />
           <action id="taskwithreleaseprocess" />
@@ -394,7 +390,6 @@
             <action id="searchview" /> 
             <action id="showchartview" /> 
             <action id="showpreferences" /> 
-            <action id="simpleauditview" /> 
             <action id="taskchangeassignee" /> 
             <action id="taskchangeduedate" /> 
             <action id="taskwithreleaseprocess" /> 
@@ -477,7 +472,6 @@
           <action id="searchview" />
             <action id="showchartview" />
             <action id="showpreferences" />
-            <action id="simpleauditview" />
           <action id="taskchangeassignee" />
           <action id="taskchangeduedate" />
           <action id="taskwithreleaseprocess" />

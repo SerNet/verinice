@@ -94,7 +94,6 @@
             <action id="showallfiles" />
             <action id="showchartview" />
             <action id="showpreferences" />
-            <action id="simpleauditview" />
             <action id="todo"/>
             <action id="unify" />
             <action id="xmlexport"/>

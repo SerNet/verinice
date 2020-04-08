@@ -32,7 +32,6 @@ import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
 
 import sernet.gs.ui.rcp.main.actions.ShowCheatSheetAction;
-import sernet.verinice.samt.audit.rcp.AuditPerspective;
 
 /**
  * This action is called by a link an the intro/welcome page of verinice.
