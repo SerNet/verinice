@@ -336,11 +336,11 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
     }
 
     @Override
-    public Set<FileMetaData> getAllResources(String locale) {
+    public Set<FileMetaData> getAllResources(Locale locale) {
         return toMeta(getAllResourceFilenames().filter(filename -> {
             Matcher matcher = PROPERTIES_FILENAME_LOCALE_PATTERN.matcher(filename);
             if (matcher.find()) {
-                return matcher.group(1).equals(locale);
+                return matcher.group(1).equals(locale.getLanguage());
             }
             return true;
         }));

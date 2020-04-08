@@ -114,7 +114,7 @@ public class ReportTemplateSyncer extends WorkspaceJob implements IModelLoadList
         JobScheduler.scheduleInitJob(syncReportsJob);
     }
 
-    private void syncReportFiles(String locale)
+    private void syncReportFiles(Locale locale)
             throws ReportTemplateServiceException, ReportDepositException, IOException {
 
         Set<FileMetaData> localFiles = localReportDeposit.getAllResources();
@@ -207,9 +207,8 @@ public class ReportTemplateSyncer extends WorkspaceJob implements IModelLoadList
 
         try {
             Activator.inheritVeriniceContextState();
-            String locale = getLocale();
 
-            syncReportFiles(locale);
+            syncReportFiles(Locale.getDefault());
         } catch (ReportDepositException e) {
             status = errorHandler(e);
         } catch (IOException e) {
@@ -219,10 +218,6 @@ public class ReportTemplateSyncer extends WorkspaceJob implements IModelLoadList
         }
 
         return status;
-    }
-
-    private String getLocale() {
-        return Locale.getDefault().getLanguage();
     }
 
     private IStatus errorHandler(Exception e) {

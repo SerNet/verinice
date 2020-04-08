@@ -68,7 +68,7 @@ public interface IReportTemplateService {
      * Gets all report template resources (designs, libs, etc.) for given locale
      * (excludes all files specific to other locales).
      */
-    public Set<FileMetaData> getAllResources(String locale) throws ReportTemplateServiceException;
+    public Set<FileMetaData> getAllResources(Locale locale) throws ReportTemplateServiceException;
 
     public Set<ReportTemplateMetaData> getReportTemplates(Locale locale)
             throws ReportTemplateServiceException;
