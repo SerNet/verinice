@@ -65,8 +65,6 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
  */
 public class ReportDepositTest extends CommandServiceProvider {
 
-    private static final String LANGUAGE = Locale.ENGLISH.getLanguage();
-
     private static final String REPORT_DIR = "/reports";
     private static final String RPTSUFFIX = ".rptdesign";
     private static final String DEPOSIT_DIR_PART_1 = "WEB-INF";
@@ -139,13 +137,13 @@ public class ReportDepositTest extends CommandServiceProvider {
     @Test
     public void testUpdateInServerDeposit() throws Exception {
         addAllFilesToDeposit();
-        Set<ReportTemplateMetaData> metadataSet = depositService.getReportTemplates(getLanguage());
+        Set<ReportTemplateMetaData> metadataSet = depositService.getReportTemplates(Locale.ENGLISH);
         for (ReportTemplateMetaData metadata : metadataSet) {
             metadata.setOutputname(getOutputname());
             metadata.setOutputFormats(getOutputFormats());
             depositService.update(metadata, Locale.ENGLISH);
         }
-        metadataSet = depositService.getReportTemplates(getLanguage());
+        metadataSet = depositService.getReportTemplates(Locale.ENGLISH);
         for (ReportTemplateMetaData metadata : metadataSet) {
             assertEquals("Output name is not: " + getOutputname(), getOutputname(),
                     metadata.getOutputname());
@@ -157,7 +155,7 @@ public class ReportDepositTest extends CommandServiceProvider {
     @Test
     public void testUpdatingProperties() throws Exception {
         addAllFilesToDeposit();
-        Set<ReportTemplateMetaData> metadataSet = depositService.getReportTemplates(getLanguage());
+        Set<ReportTemplateMetaData> metadataSet = depositService.getReportTemplates(Locale.ENGLISH);
         ReportTemplateMetaData randomTemplate = metadataSet
                 .toArray(new ReportTemplateMetaData[metadataSet.size()])[new Random()
                         .nextInt(metadataSet.size())];
@@ -200,7 +198,7 @@ public class ReportDepositTest extends CommandServiceProvider {
 
     private void checkMetadataInDeposit(List<ReportTemplateMetaData> checkMetadataList,
             boolean expected) throws ReportTemplateServiceException {
-        Set<ReportTemplateMetaData> metadataSet = depositService.getReportTemplates(getLanguage());
+        Set<ReportTemplateMetaData> metadataSet = depositService.getReportTemplates(Locale.ENGLISH);
         for (ReportTemplateMetaData metadata : checkMetadataList) {
             if (expected) {
                 assertTrue(
@@ -228,10 +226,6 @@ public class ReportDepositTest extends CommandServiceProvider {
         return metadata1.getFilename().equals(metadata2.getFilename())
                 && Arrays.equals(metadata1.getOutputFormats(), metadata2.getOutputFormats())
                 && metadata1.getOutputname().equals(metadata2.getOutputname());
-    }
-
-    private String getLanguage() {
-        return LANGUAGE;
     }
 
     private List<ReportTemplateMetaData> addAllFilesToDeposit()
@@ -276,7 +270,7 @@ public class ReportDepositTest extends CommandServiceProvider {
 
     private ReportTemplateMetaData getReportMetaDataFromDeposit(String filename,
             IReportTemplateService templateUtil) throws ReportTemplateServiceException {
-        return templateUtil.getReportTemplates(getLanguage()).stream()
+        return templateUtil.getReportTemplates(Locale.ENGLISH).stream()
                 .filter(rt -> rt.getFilename().equals(filename)).findFirst()
                 .orElseThrow(() -> new RuntimeException("File not found: " + filename));
     }

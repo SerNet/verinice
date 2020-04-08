@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -261,12 +262,12 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
     }
 
     @Override
-    public Set<ReportTemplateMetaData> getReportTemplates(String locale)
+    public Set<ReportTemplateMetaData> getReportTemplates(Locale locale)
             throws ReportTemplateServiceException {
         Set<ReportTemplateMetaData> set = new HashSet<>();
 
         for (String designFilePath : getReportTemplateFileNames()) {
-            set.add(toMeta(new File(designFilePath), locale));
+            set.add(toMeta(new File(designFilePath), locale.getLanguage()));
         }
         return set;
     }

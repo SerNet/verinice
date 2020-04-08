@@ -493,7 +493,7 @@ public class ReportDepositView extends RightsEnabledView {
     private Object getContent() {
         try {
             Set<ReportTemplateMetaData> templateSet = getReportService()
-                    .getReportTemplates(Locale.getDefault().getLanguage());
+                    .getReportTemplates(Locale.getDefault());
             return templateSet.toArray(new ReportTemplateMetaData[templateSet.size()]);
         } catch (ReportTemplateServiceException e) {
             String msg = "Something went wrong with reading the propertyfiles";

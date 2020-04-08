@@ -67,9 +67,9 @@ public class ReportSupplierImpl implements IReportSupplier {
 
         Set<ReportTemplateMetaData> metadata = new HashSet<ReportTemplateMetaData>();
         int size = 0;
-        metadata.addAll(localReportTemplateUtil.getReportTemplates(locale.getLanguage()));
+        metadata.addAll(localReportTemplateUtil.getReportTemplates(locale));
         size = metadata.size();
-        metadata.addAll(serverReportTemplateUtil.getReportTemplates(locale.getLanguage()));
+        metadata.addAll(serverReportTemplateUtil.getReportTemplates(locale));
         if (LOG.isDebugEnabled()) {
             LOG.debug(size + " Report templates loaded from workspacefolder:\t"
                     + IReportService.VERINICE_REPORTS_LOCAL);

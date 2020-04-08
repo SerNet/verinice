@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.interfaces;
 
+import java.util.Locale;
 import java.util.Set;
 
 import sernet.gs.service.AbstractReportTemplateService;
@@ -69,7 +70,7 @@ public interface IReportTemplateService {
      */
     public Set<FileMetaData> getAllResources(String locale) throws ReportTemplateServiceException;
 
-    public Set<ReportTemplateMetaData> getReportTemplates(String locale)
+    public Set<ReportTemplateMetaData> getReportTemplates(Locale locale)
             throws ReportTemplateServiceException;
 
     public byte[] readResource(String filename) throws ReportTemplateServiceException;
