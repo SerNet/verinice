@@ -97,15 +97,15 @@ public class ReportDepositService extends AbstractReportTemplateService
     public void update(ReportTemplateMetaData metadata, Locale locale)
             throws ReportDepositException {
         try {
-            updateSafe(metadata, locale.getLanguage());
+            updateSafe(metadata, locale);
         } catch (IOException ex) {
             throw new ReportDepositException(ex);
         }
     }
 
-    private void updateSafe(ReportTemplateMetaData metadata, String locale)
+    private void updateSafe(ReportTemplateMetaData metadata, Locale locale)
             throws IOException, ReportDepositException {
-        File propertiesFile = getPropertiesFile(getTemplateDirectory() + metadata.getFilename(),
+        File propertiesFile = PropertiesFileUtil.getPropertiesFile(new File(getTemplateDirectory(), metadata.getFilename()),
                 locale);
         if (propertiesFile.exists()) {
 
@@ -119,7 +119,7 @@ public class ReportDepositService extends AbstractReportTemplateService
             writePropertiesFile(props, propertiesFile, "");
         } else {
             writePropertiesFile(convertToProperties(metadata),
-                    getPropertiesFile(metadata.getFilename(), locale),
+                    PropertiesFileUtil.getPropertiesFile(new File(metadata.getFilename()), locale),
                     "Default Properties for verinice-" + "Report " + metadata.getOutputname()
                             + "\nauto-generated content");
         }

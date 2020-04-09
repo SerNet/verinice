@@ -44,8 +44,6 @@ public interface IReportTemplateService {
         PDF, HTML, XLS, ODS, ODT, DOC
     }
 
-    public static final String PROPERTIES_FILE_EXTENSION = "properties";
-
     public static final String PROPERTIES_FILENAME = "filename";
     public static final String PROPERTIES_OUTPUTFORMATS = "outputformats";
     public static final String PROPERTIES_OUTPUTNAME = "outputname";

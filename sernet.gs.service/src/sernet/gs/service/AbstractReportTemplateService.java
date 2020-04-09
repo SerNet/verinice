@@ -96,8 +96,8 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
         throw new ReportTemplateServiceException(ex);
     }
 
-    protected Properties parseAndExtendMetaData(File rptDesign, String locale) throws IOException {
-        File propFile = getPropertiesFile(rptDesign, locale);
+    protected Properties parseAndExtendMetaData(File rptDesign, Locale locale) throws IOException {
+        File propFile = PropertiesFileUtil.getPropertiesFile(rptDesign, locale);
         Properties props = new Properties();
         FileInputStream fis = new FileInputStream(propFile.getAbsoluteFile());
         props.load(fis);
@@ -128,65 +128,15 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
         return props;
     }
 
-    public void parseAndExtendMetaData(String[] rptDesignFiles, String locale) throws IOException {
+    public void parseAndExtendMetaData(String[] rptDesignFiles, Locale locale) throws IOException {
         for (String rptDesignFile : rptDesignFiles) {
             parseAndExtendMetaData(new File(rptDesignFile), locale);
         }
     }
 
-    private File getPropertiesFile(File rptDesign, String locale) {
-        String path = rptDesign.getPath();
-        return getPropertiesFile(path, locale);
-    }
-
-    protected File getPropertiesFile(String path, String locale) {
-        locale = sanitizeLocale(locale, path);
-        path = FilenameUtils.removeExtension(path);
-        return new File(
-                path + locale + FilenameUtils.EXTENSION_SEPARATOR + PROPERTIES_FILE_EXTENSION);
-    }
-
-    /**
-     * Generates a properties file suffix. It does not take into account
-     * regions, so the string is empty, when it is the default english or the
-     * default is already in the properties path.
-     *
-     * <p>
-     * Examples
-     * </p>
-     *
-     * sanitizeLocale(de_DE, "path/report_de.properties") -> ""
-     * sanitizeLocale(de, "path/report_de.properties") -> "" sanitizeLocale(DE,
-     * "path/report_de.properties") -> "" sanitizeLocale(DE,
-     * "path/report.properties") -> "_de" sanitizeLocale(en_UK,
-     * "path/report.properties") -> ""
-     *
-     * As we do not deal with dialects like en_UK here, we just take the
-     * leftside locale (e.g. "en")
-     *
-     *
-     */
-    static String sanitizeLocale(String locale, String path) {
-
-        if (locale.length() > 2 && locale.contains(String.valueOf('_'))) {
-            locale = locale.substring(0, locale.indexOf(String.valueOf('_')));
-        }
-
-        if (!locale.isEmpty()) {
-            if ("en".equalsIgnoreCase(locale) || path.contains(
-                    "_" + locale + FilenameUtils.EXTENSION_SEPARATOR + PROPERTIES_FILE_EXTENSION)) {
-                locale = "";
-            } else {
-                locale = "_" + locale.toLowerCase();
-            }
-        }
-
-        return locale;
-    }
-
-    private Properties createDefaultProperties(String path, String name, String locale)
+    private Properties createDefaultProperties(File path, String name, Locale locale)
             throws IOException, PropertyFileExistsException {
-        File propFile = getPropertiesFile(path, locale);
+        File propFile = PropertiesFileUtil.getPropertiesFile(path, locale);
         if (propFile.exists()) {
             throw new PropertyFileExistsException();
         } else {
@@ -267,7 +217,7 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
         Set<ReportTemplateMetaData> set = new HashSet<>();
 
         for (String designFilePath : getReportTemplateFileNames()) {
-            set.add(toMeta(new File(designFilePath), locale.getLanguage()));
+            set.add(toMeta(new File(designFilePath), locale));
         }
         return set;
     }
@@ -346,11 +296,11 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
         }));
     }
 
-    private ReportTemplateMetaData toMeta(File rptDesign, String locale)
+    private ReportTemplateMetaData toMeta(File rptDesign, Locale locale)
             throws ReportTemplateServiceException {
         try {
             Properties props;
-            File propertiesFile = getPropertiesFile(rptDesign, locale);
+            File propertiesFile = PropertiesFileUtil.getPropertiesFile(rptDesign, locale);
             if (propertiesFile.exists()) {
                 props = parseAndExtendMetaData(rptDesign, locale);
             } else {
@@ -362,8 +312,7 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
                     FileUtils.writeByteArrayToFile(propertiesFile, firstEntry.getValue());
                     props = parseAndExtendMetaData(rptDesign, locale);
                 } else {
-                    props = createDefaultProperties(rptDesign.getPath(), rptDesign.getName(),
-                            locale);
+                    props = createDefaultProperties(rptDesign, rptDesign.getName(), locale);
                 }
             }
 
