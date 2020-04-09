@@ -31,8 +31,6 @@ import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -84,7 +82,6 @@ public class ExportDialog extends TitleAreaDialog {
     private Text sourceIdText;
     private Text txtLocation;
     private String defaultFolder;
-    private Button useDefaultFolderButton;
     private boolean useDefaultFolder = true;
     private String organizationTitle = DEFAULT_ORGANIZATION_TITLE;
 
@@ -105,10 +102,6 @@ public class ExportDialog extends TitleAreaDialog {
         this.filePath = filePath;
     }
 
-    /**
-     * @param activeShell
-     * @param selectedOrganization
-     */
     public ExportDialog(Shell activeShell, CnATreeElement selectedOrganization) {
         super(activeShell);
         setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
@@ -241,12 +234,7 @@ public class ExportDialog extends TitleAreaDialog {
             gd.horizontalSpan = 2;
             gd.minimumWidth = sourceIdTextMinimumWidth;
             sourceIdText.setLayoutData(gd);
-            sourceIdText.addModifyListener(new ModifyListener() {
-                @Override
-                public void modifyText(ModifyEvent e) {
-                    sourceId = sourceIdText.getText();
-                }
-            });
+            sourceIdText.addModifyListener(e -> sourceId = sourceIdText.getText());
 
             setSourceId(organizationWidget.getSelectedElement());
 
@@ -319,7 +307,7 @@ public class ExportDialog extends TitleAreaDialog {
 
             });
 
-            useDefaultFolderButton = new Button(sourceIdComposite, SWT.CHECK);
+            Button useDefaultFolderButton = new Button(sourceIdComposite, SWT.CHECK);
             useDefaultFolderButton.setText(Messages.ExportDialog_3);
             useDefaultFolderButton.setSelection(useDefaultFolder);
             useDefaultFolderButton.setEnabled(true);
@@ -353,9 +341,6 @@ public class ExportDialog extends TitleAreaDialog {
         }
         if (title != null) {
             organizationTitle = StringUtil.convertToFileName(title);
-            // organizationTitle = title.replaceAll("[^a-zA-Z]", ""); //hier ist
-            // es das Umlaute-Problem, die werden ersetzt und nicht ordentlich
-            // ausgeschrieben!!!
         } else {
             organizationTitle = DEFAULT_ORGANIZATION_TITLE;
         }
@@ -396,9 +381,6 @@ public class ExportDialog extends TitleAreaDialog {
         return path;
     }
 
-    /**
-     * @return
-     */
     protected String getDefaultExtension() {
         return VeriniceArchive.EXTENSION_VERINICE_ARCHIVE;
     }
@@ -418,8 +400,6 @@ public class ExportDialog extends TitleAreaDialog {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.jface.dialogs.Dialog#okPressed()
      */
     @Override
@@ -478,16 +458,10 @@ public class ExportDialog extends TitleAreaDialog {
         this.format = exportFormat;
     }
 
-    /**
-     * @return
-     */
     public Set<CnATreeElement> getSelectedElementSet() {
         return organizationWidget.getSelectedElementSet();
     }
 
-    /**
-     * @return
-     */
     public CnATreeElement getSelectedElement() {
         return organizationWidget.getSelectedElement();
     }
