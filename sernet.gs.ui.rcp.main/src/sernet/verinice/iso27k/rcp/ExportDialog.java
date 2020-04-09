@@ -52,6 +52,7 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.iso27k.rcp.action.ExportAction;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.sync.VeriniceArchive;
@@ -143,7 +144,16 @@ public class ExportDialog extends TitleAreaDialog {
         composite.setLayoutData(gd);
 
         try {
-            organizationWidget = new ScopeMultiselectWidget(composite, selection, selectedElement);
+            organizationWidget = new ScopeMultiselectWidget(composite, selection, selectedElement) {
+                @Override
+                protected boolean isItemVisible(CnATreeElement item) {
+                    String parentType = item.getParent().getTypeId();
+                    if (CatalogModel.TYPE_ID.equals(parentType)) {
+                        return false;
+                    }
+                    return super.isItemVisible(item);
+                }
+            };
             setOrgTitle();
 
         } catch (CommandException ex) {
