@@ -21,6 +21,10 @@ package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import org.junit.Test;
 
 import sernet.verinice.service.linktable.ILinkTableConfiguration;
@@ -34,11 +38,10 @@ import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
  */
 public class VeriniceLinkTableTest {
 
-    private static final String NAME = VeriniceLinkTableTest.class.getSimpleName();
-    private static final String FILE_NAME = NAME + ".vlt";
-
     @Test
-    public void testWrite() {
+    public void testWrite() throws IOException {
+        Path tempFile = Files.createTempFile(VeriniceLinkTableTest.class.getSimpleName(), ".vlt");
+        tempFile.toFile().deleteOnExit();
         LinkTableConfiguration.Builder builder = new LinkTableConfiguration.Builder();
         builder.addScopeId(204060)
         .addColumnPath("incident_scenario.incident_scenario_name")
@@ -57,13 +60,9 @@ public class VeriniceLinkTableTest {
         .addLinkTypeId("rel_control_incscen")
         .addLinkTypeId("rel_person_incscen_modl");
         LinkTableConfiguration before = builder.build();
-        VeriniceLinkTableIO.write(before, getFilePath());
-        ILinkTableConfiguration after = VeriniceLinkTableIO.readLinkTableConfiguration(getFilePath());
+        VeriniceLinkTableIO.write(before, tempFile.toString());
+        ILinkTableConfiguration after = VeriniceLinkTableIO.readLinkTableConfiguration(tempFile.toString());
         assertTrue(before.equals(after));
-    }
-
-    private String getFilePath() {
-        return "./" + FILE_NAME;
     }
 
 }

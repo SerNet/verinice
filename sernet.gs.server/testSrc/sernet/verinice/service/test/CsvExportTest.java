@@ -26,10 +26,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.opencsv.CSVReader;
@@ -47,17 +50,25 @@ import sernet.verinice.service.csv.ICsvExport;
  */
 public class CsvExportTest {
 
-    private static final Object FILE_SUFFIX = "csv";
     private static final int MAX_ROWS = 500;
     private static final int MAX_COLUMNS = 50;
     private static final int MAX_WORDS = 10;
     private static final LoremIpsum LOREM = new LoremIpsum();
     private static final char SEMICOLON = ';';
 
+    private String outputFilePath;
+
+    @Before
+    public void allocateExportFile() throws IOException {
+        Path outputFile = Files.createTempFile(CsvExportTest.class.getSimpleName(), ".csv");
+        outputFile.toFile().deleteOnExit();
+        outputFilePath = outputFile.toString();
+    }
+
     @Test
     public void testTable() throws CsvExportException, FileNotFoundException, IOException {
         ICsvExport exporter = new CsvExport();
-        exporter.setFilePath(getFilePath());
+        exporter.setFilePath(outputFilePath);
         exporter.setSeperator(SEMICOLON);
         exporter.setCharset(VeriniceCharset.CHARSET_DEFAULT);
         List<String[]> table = createTable(MAX_COLUMNS,MAX_ROWS);
@@ -68,7 +79,7 @@ public class CsvExportTest {
     @Test
     public void testRandomTable() throws CsvExportException, FileNotFoundException, IOException {
         ICsvExport exporter = new CsvExport();
-        exporter.setFilePath(getFilePath());
+        exporter.setFilePath(outputFilePath);
         exporter.setSeperator(SEMICOLON);
         exporter.setCharset(VeriniceCharset.CHARSET_DEFAULT);
         List<String[]> table = createRandomTable();
@@ -77,7 +88,7 @@ public class CsvExportTest {
     }
 
     private void checkExportFile(List<String[]> table) throws FileNotFoundException, IOException {
-        File exportFile = new File(getFilePath());
+        File exportFile = new File(outputFilePath);
         assertTrue("Export file does not exists", exportFile.exists());
         CSVReader reader = null;
         try {
@@ -155,13 +166,6 @@ public class CsvExportTest {
 
     private int getMaxWords() {
         return MAX_WORDS;
-    }
-
-    private String getFilePath() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(this.getClass().getSimpleName().toString());
-        sb.append(".").append(FILE_SUFFIX);
-        return sb.toString();
     }
 
 }
