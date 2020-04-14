@@ -21,7 +21,7 @@
     <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl de -consoleLog -debug"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms512m -Xmx4g -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost &#10;-Djavax.activation.debug=true &#10;-Dosgi.parentClassloader=ext &#10;-Djavax.xml.soap.SOAPFactory=org.apache.axis.soap.SOAPFactoryImpl &#10;-Djavax.xml.soap.MessageFactory=org.apache.axis.soap.MessageFactoryImpl &#10;-Djavax.xml.soap.SOAPConnectionFactory=org.apache.axis.soap.SOAPConnectionFactoryImpl&#10;-Dorg.osgi.framework.system.packages.extra=sun.misc"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms512m -Xmx4g -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost -Djavax.activation.debug=true -Dosgi.parentClassloader=ext -Djavax.xml.soap.SOAPFactory=org.apache.axis.soap.SOAPFactoryImpl -Djavax.xml.soap.MessageFactory=org.apache.axis.soap.MessageFactoryImpl -Djavax.xml.soap.SOAPConnectionFactory=org.apache.axis.soap.SOAPConnectionFactoryImpl -Dorg.osgi.framework.system.packages.extra=sun.misc"/>
     <stringAttribute key="pde.version" value="3.3"/>
     <stringAttribute key="product" value="sernet.gs.ui.rcp.main.product"/>
     <stringAttribute key="productFile" value="/sernet.verinice.releng.client.product/sernet.verinice.releng.client.product"/>
@@ -103,6 +103,7 @@
         <setEntry value="org.apache.felix.scr@1:true"/>
         <setEntry value="org.apache.lucene.analyzers-common@default:default"/>
         <setEntry value="org.apache.lucene.analyzers-smartcn@default:default"/>
+        <setEntry value="org.apache.lucene.core*8.4.1.v20200122-1459@default:default"/>
         <setEntry value="org.apache.servicemix.bundles.commons-beanutils@default:default"/>
         <setEntry value="org.apache.servicemix.bundles.elasticsearch@default:default"/>
         <setEntry value="org.apache.xmlgraphics@default:default"/>
@@ -223,6 +224,14 @@
         <setEntry value="org.eclipse.e4.ui.di.nl_de@default:false"/>
         <setEntry value="org.eclipse.e4.ui.di.nl_it@default:false"/>
         <setEntry value="org.eclipse.e4.ui.di@default:default"/>
+        <setEntry value="org.eclipse.e4.ui.dialogs.nl_cs@default:false"/>
+        <setEntry value="org.eclipse.e4.ui.dialogs.nl_de@default:false"/>
+        <setEntry value="org.eclipse.e4.ui.dialogs.nl_it@default:false"/>
+        <setEntry value="org.eclipse.e4.ui.dialogs@default:default"/>
+        <setEntry value="org.eclipse.e4.ui.ide.nl_cs@default:false"/>
+        <setEntry value="org.eclipse.e4.ui.ide.nl_de@default:false"/>
+        <setEntry value="org.eclipse.e4.ui.ide.nl_it@default:false"/>
+        <setEntry value="org.eclipse.e4.ui.ide@default:default"/>
         <setEntry value="org.eclipse.e4.ui.model.workbench.nl_de@default:false"/>
         <setEntry value="org.eclipse.e4.ui.model.workbench.nl_it@default:false"/>
         <setEntry value="org.eclipse.e4.ui.model.workbench@default:default"/>
@@ -234,6 +243,9 @@
         <setEntry value="org.eclipse.e4.ui.widgets.nl_it@default:false"/>
         <setEntry value="org.eclipse.e4.ui.widgets@default:default"/>
         <setEntry value="org.eclipse.e4.ui.workbench.addons.swt@default:default"/>
+        <setEntry value="org.eclipse.e4.ui.workbench.renderers.swt.nl_cs@default:default"/>
+        <setEntry value="org.eclipse.e4.ui.workbench.renderers.swt.nl_de@default:default"/>
+        <setEntry value="org.eclipse.e4.ui.workbench.renderers.swt.nl_it@default:default"/>
         <setEntry value="org.eclipse.e4.ui.workbench.renderers.swt@default:default"/>
         <setEntry value="org.eclipse.e4.ui.workbench.swt@default:default"/>
         <setEntry value="org.eclipse.e4.ui.workbench3.nl_de@default:false"/>
@@ -345,6 +357,7 @@
         <setEntry value="org.eclipse.ui.forms.nl_de@default:false"/>
         <setEntry value="org.eclipse.ui.forms.nl_it@default:false"/>
         <setEntry value="org.eclipse.ui.forms@default:default"/>
+        <setEntry value="org.eclipse.ui.ide.nl_cs@default:false"/>
         <setEntry value="org.eclipse.ui.ide.nl_de@default:false"/>
         <setEntry value="org.eclipse.ui.ide.nl_it@default:false"/>
         <setEntry value="org.eclipse.ui.ide@default:default"/>
@@ -364,6 +377,10 @@
         <setEntry value="org.eclipse.ui.workbench.nl_it@default:false"/>
         <setEntry value="org.eclipse.ui.workbench@default:default"/>
         <setEntry value="org.eclipse.ui@default:default"/>
+        <setEntry value="org.eclipse.urischeme.nl_cs@default:false"/>
+        <setEntry value="org.eclipse.urischeme.nl_de@default:false"/>
+        <setEntry value="org.eclipse.urischeme.nl_it@default:false"/>
+        <setEntry value="org.eclipse.urischeme@default:default"/>
         <setEntry value="org.hibernate.commons-annotations@default:default"/>
         <setEntry value="org.hibernate.javax.persistence.hibernate-jpa-2.0-api@default:default"/>
         <setEntry value="org.jgrapht.core@default:default"/>
