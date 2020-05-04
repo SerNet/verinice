@@ -5377,6 +5377,15 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         <huipropertygroup name="Calculated Total Risk" id="asset_riskgroup" tags="Risk">
             <huiproperty
              tags="Risk"
+                name="Confidentiality business impact with all controls" id="asset_confidentiality_with_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
+                name="Confidentiality business impact with planned controls" id="asset_confidentiality_with_planned_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
+                name="Confidentiality business impact with implemented controls" id="asset_confidentiality_with_implemented_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
                 name="Confidentiality risk value" id="asset_riskvalue_c" editable="false"/>
             <huiproperty
              tags="Risk"
@@ -5387,6 +5396,15 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
 
             <huiproperty
              tags="Risk"
+                name="Integrity business impact with all controls" id="asset_integrity_with_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
+                name="Integrity business impact with planned controls" id="asset_integrity_with_planned_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
+                name="Integrity business impact with implemented controls" id="asset_integrity_with_implemented_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
                 name="Integrity risk value" id="asset_riskvalue_i" editable="false"/>
             <huiproperty
              tags="Risk"
@@ -5395,6 +5413,15 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
              tags="Risk"
                 name="Integrity risk with planned controls" id="asset_riskwplancontrolvalue_i" editable="false"/>
 
+            <huiproperty
+             tags="Risk"
+                name="Availability business impact with all controls" id="asset_availability_with_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
+                name="Availability business impact with planned controls" id="asset_availability_with_planned_controls" editable="false"/>
+            <huiproperty
+             tags="Risk"
+                name="Availability business impact with implemented controls" id="asset_availability_with_implemented_controls" editable="false"/>
             <huiproperty
              tags="Risk"
                 name="Availability risk value" id="asset_riskvalue_a" editable="false"/>
@@ -8062,6 +8089,12 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
             <huiproperty id="process_va_anz_ma" name="Anzahl Mitarbeiter" />
             <huiproperty id="process_va_ort_bem" name="Bemerkungen" inputtype="text" />
+            <huiproperty
+              id="process_va_interviewed_on"
+              name="Befragung durchgeführt am"
+              inputtype="date">
+              <defaultRule class="Today"/>
+          </huiproperty>
         </huipropertygroup>
 
         <huipropertygroup tags="Privacy" id="process_va_gemensemVerantwortliche" name="Gemeinsame Verantwortliche Art.26 DSGVO">
@@ -8532,7 +8565,7 @@ Wurden bereits weitere Stellen informiert?
                     id="loeschfrist_dokument"
                     isURL="true" />
         </huipropertygroup>
-	     <huipropertygroup id="process_dsfa_needed_group" name="Datenschutzfolgenabschätzung (DSFA) erfoderlich" tags="Privacy">
+	     <huipropertygroup id="process_dsfa_needed_group" name="Datenschutz-Folgenabschätzung (DSFA) erfoderlich" tags="Privacy">
 	      <huiproperty id="process_is_dsgvo_blacklisted" inputtype="singleoption" max="1" name="Verarbeitung ist auf Negativliste geführt" tags="Privacy">
 	        <option id="process_is_dsgvo_blacklisted_yes" name="Ja" value="0"/>
 	        <option id="process_is_dsgvo_blacklisted_no" name="Nein" value="1"/>
@@ -8608,7 +8641,7 @@ Wurden bereits weitere Stellen informiert?
 	    </huipropertygroup>
         <huipropertygroup tags="Privacy" id="process_stellungnahmedsb_group" name="Stellungnahme DSB">
             <depends option="process_privacy_yesno" value="1" />
-            <huiproperty tags="Privacy" id="process_stellungnahmedsb_vorpruefung" name="Datenschutzfolgeabschätzung erforderlich?" inputtype="singleoption">
+            <huiproperty tags="Privacy" id="process_stellungnahmedsb_vorpruefung" name="Datenschutz-Folgenabschätzung erforderlich?" inputtype="singleoption">
                 <option id="process_stellungnahmedsb_vorpruefung_1" name="Ja" />
                 <option id="process_stellungnahmedsb_vorpruefung_2" name="Nein" />
             </huiproperty>
@@ -9163,7 +9196,10 @@ Wurden bereits weitere Stellen informiert?
             reversename="located in" />
         <huirelation to="bp_person" id="rel_bp_itnetwork_bp_person"
             name="person primarily responsible"
-            reversename="primarily responsible for " />
+            reversename="primarily responsible for" />
+        <huirelation to="bp_person" id="rel_bp_itnetwork_bp_person_dps"
+            name="data protection supervisor"
+            reversename="data protection supervisor for" />
         <huirelation to="bp_incident" id="rel_bp_itnetwork_bp_incident"
             name="was affected by"
             reversename="affected" />
@@ -9643,6 +9679,12 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
             <huiproperty id="bp_businessprocess_va_anz_ma" name="Anzahl Mitarbeiter" />
             <huiproperty id="bp_businessprocess_va_ort_bem" name="Bemerkungen" inputtype="text" />
+            <huiproperty
+               id="bp_businessprocess_va_interviewed_on"
+               name="Befragung durchgeführt am"
+               inputtype="date">
+               <defaultRule class="Today"/>
+           </huiproperty>
         </huipropertygroup>
 
         <huipropertygroup tags="Privacy" id="bp_businessprocess_va_gemensemVerantwortliche" name="Gemeinsame Verantwortliche Art.26 DSGVO">
@@ -9651,9 +9693,6 @@ Wurden bereits weitere Stellen informiert?
                 <option id="bp_businessprocess_va_gemenVerantwo_2" name="Nein" />
             </huiproperty>
 
-            <huiproperty id="bp_businessprocess_va_gemenVerant_Kontaktd" name="Angaben zum gemeinsam Verantwortlichen">
-                <depends option="bp_businessprocess_va_gemenVerant" value="bp_businessprocess_va_gemenVerantwo_1" />
-            </huiproperty>
             <huiproperty id="bp_businessprocess_va_gemenVerant_name" name="Name">
                 <depends option="bp_businessprocess_va_gemenVerant" value="bp_businessprocess_va_gemenVerantwo_1" />
             </huiproperty>
@@ -10112,7 +10151,7 @@ Wurden bereits weitere Stellen informiert?
                     id="bp_businessprocess_loeschfrist_dokument"
                     isURL="true" />
         </huipropertygroup>
-	    <huipropertygroup id="bp_businessprocess_dsfa_needed_group" name="Datenschutzfolgenabschätzung (DSFA) erfoderlich" tags="Privacy">
+	    <huipropertygroup id="bp_businessprocess_dsfa_needed_group" name="Datenschutz-Folgenabschätzung (DSFA) erfoderlich" tags="Privacy">
 	      <huiproperty id="bp_businessprocess_is_dsgvo_blacklisted" inputtype="singleoption" max="1" name="Verarbeitung ist auf Negativliste geführt" tags="Privacy">
 	        <option id="bp_businessprocess_is_dsgvo_blacklisted_yes" name="Ja" value="0"/>
 	        <option id="bp_businessprocess_is_dsgvo_blacklisted_no" name="Nein" value="1"/>
@@ -10188,7 +10227,7 @@ Wurden bereits weitere Stellen informiert?
 	    </huipropertygroup>
         <huipropertygroup tags="Privacy" id="bp_businessprocess_stellungnahmedsb_group" name="Stellungnahme DSB">
             <depends option="bp_businessprocess_privacy_yesno" value="1" />
-            <huiproperty tags="Privacy" id="bp_businessprocess_stellungnahmedsb_vorpruefung" name="Datenschutzfolgeabschätzung erforderlich?" inputtype="singleoption">
+            <huiproperty tags="Privacy" id="bp_businessprocess_stellungnahmedsb_vorpruefung" name="Datenschutz-Folgenabschätzung erforderlich?" inputtype="singleoption">
                 <option id="bp_businessprocess_stellungnahmedsb_vorpruefung_1" name="Ja" />
                 <option id="bp_businessprocess_stellungnahmedsb_vorpruefung_2" name="Nein" />
             </huiproperty>
@@ -10528,16 +10567,38 @@ Wurden bereits weitere Stellen informiert?
             reversename="person responsible" />
         <huirelation to="bp_safeguard" id="rel_bp_person_bp_safeguard" name="responsible for"
             reversename="person responsible" />
+
+        <huirelation to="bp_requirement_group" id="rel_bp_person_bp_requirement_group_additional"
+            name="additional responsibility" reversename="additional responsibilities" />
+        <huirelation to="bp_requirement_group" id="rel_bp_person_bp_requirement_group_general"
+            name="generally responsible for" reversename="person generally responsible" />
         <huirelation to="bp_requirement_group" id="rel_bp_person_bp_requirement_group_primarily"
             name="primarily responsible for" reversename="person primarily responsible" />
+
+        <huirelation to="bp_requirement" id="rel_bp_person_bp_requirement_additional"
+            name="additional responsibility" reversename="additional responsibilities" />
+        <huirelation to="bp_requirement" id="rel_bp_person_bp_requirement_general"
+            name="generally responsible for" reversename="person generally responsible" />
         <huirelation to="bp_requirement" id="rel_bp_person_bp_requirement_primarily" name="primarily responsible for"
             reversename="person primarily responsible" />
+
         <huirelation to="bp_threat" id="rel_bp_person_bp_threat_primarily" name="primarily responsible for"
             reversename="person primarily responsible" />
+
+        <huirelation to="bp_safeguard_group" id="rel_bp_person_bp_safeguard_group_additional"
+            name="additional responsibility" reversename="additional responsibilities" />
+        <huirelation to="bp_safeguard_group" id="rel_bp_person_bp_safeguard_group_general"
+            name="generally responsible for" reversename="person generally responsible" />
         <huirelation to="bp_safeguard_group" id="rel_bp_person_bp_safeguard_group_primarily" name="primarily responsible for"
             reversename="person primarily responsible" />
+
+        <huirelation to="bp_safeguard" id="rel_bp_person_bp_safeguard_additional"
+            name="additional responsibility" reversename="additional responsibilities" />
+        <huirelation to="bp_safeguard" id="rel_bp_person_bp_safeguard_general"
+            name="generally responsible for" reversename="person generally responsible" />
         <huirelation to="bp_safeguard" id="rel_bp_person_bp_safeguard_primarily" name="primarily responsible for"
             reversename="person primarily responsible" />
+
         <huirelation to="bp_businessprocess" id="rel_bp_person_bp_businessprocess_primarily" name="primarily responsible for"
             reversename="person primarily responsible" />
         <huirelation to="bp_application" id="rel_bp_person_bp_application_primarily" name="primarily responsible for"
@@ -10644,6 +10705,30 @@ Wurden bereits weitere Stellen informiert?
 		</huiproperty>
         
         <huiproperty id="bp_person_document" isURL="true" name="Document" />
+
+        <huipropertygroup id="bp_person_dpo_information" name="General information relating to the data protection officer (DPO)">
+            <huiproperty id="bp_person_dpo" inputtype="singleoption" name="Data protection officer (DPO)">
+                <option id="bp_person_dpo_external" name="External DPO"/>
+                <option id="bp_person_dpo_internal" name="Internal DPO"/>
+            </huiproperty>
+            <huiproperty id="bp_person_dpo_contact" inputtype="text" name="Contact details DPO"/>
+            <huiproperty id="bp_person_dpo_written" inputtype="booleanoption" name="Written appointment of DPO"/>
+            <huiproperty id="bp_person_dpo_written_document" isURL="true" name="Document"/>
+            <huiproperty id="bp_person_dpo_date_appointment" inputtype="date" name="Date of appointment">
+                <defaultRule class="Today"/>
+            </huiproperty>
+            <huiproperty id="bp_person_dpo_knowledge" inputtype="booleanoption" name="Expert knowledge and personal reliability"/>
+            <huiproperty id="bp_person_dpo_education" required="false"
+                inputtype="multioption" name="Professional title and education">
+                <option id="bp_person_dpo_education_law" name="Graduate in law"/>
+                <option id="bp_person_dpo_education_scientist" name="Computer scientist"/>
+                <option id="bp_person_dpo_education_economics" name="Graduate of economics"/>
+                <option id="bp_person_dpo_education_hr" name="HR administrator"/>
+                <option id="bp_person_dpo_education_other_option" name="Other graduates"/>
+            </huiproperty>
+            <huiproperty id="bp_person_dpo_education_other" name="Other graduates"/>
+        </huipropertygroup>
+
     </huientity>
     <huientity id="bp_person_group" name="Person Group">
         <huiproperty id="bp_person_group_name" name="Title" required="true" />
@@ -10653,7 +10738,7 @@ Wurden bereits weitere Stellen informiert?
 
     <huientity id="bp_requirement" name="Requirement">
         <huirelation to="bp_safeguard" id="rel_bp_requirement_bp_safeguard" name="fulfilled through" reversename="fulfills" />
-        <huirelation to="bp_threat" id="rel_bp_requirement_bp_threat" name="reduces probability" reversename="probability reduced by" />
+        <huirelation to="bp_threat" id="rel_bp_requirement_bp_threat" name="reduces risk" reversename="risk reduced by" />
 
         <huirelation to="bp_itnetwork" id="rel_bp_requirement_bp_itnetwork" name="models"  reversename="modeled with" />
         <huirelation to="bp_businessprocess" id="rel_bp_requirement_bp_businessprocess"  name="models" reversename="modeled with" />
@@ -10666,6 +10751,10 @@ Wurden bereits weitere Stellen informiert?
    		<huirelation id="rel_bp_requirement_next_revision_by" name="next revision by" reversename="next revision of" to="bp_person"/>
    		<huirelation id="rel_bp_requirement_last_revision_by" name="last revision by" reversename="last revision of" to="bp_person"/>
    		<huirelation id="rel_bp_requirement_implementation_by" name="implementation by" reversename="implementation of" to="bp_person"/>
+        <huirelation to="bp_person" id="rel_bp_requirement_bp_person_auditor" name="auditor"
+            reversename="audited" />
+        <huirelation to="bp_person" id="rel_bp_requirement_bp_person_interviewee"
+            name="interviewee" reversename="interviewed about" />
 
         <huiproperty id="bp_requirement_id" name="Identifier" />
         <huiproperty id="bp_requirement_name" name="Title" required="true" />
@@ -10685,6 +10774,14 @@ Wurden bereits weitere Stellen informiert?
             editable="false">
             <defaultRule class="Today" />
         </huiproperty>
+        <huiproperty id="bp_requirement_release" name="Release" editable="false" />
+        <huiproperty id="bp_requirement_change_type" name="Change type" inputtype="multioption" editable="false">
+            <option id="bp_requirement_change_type_new" name="New" />
+            <option id="bp_requirement_change_type_changed" name="Changed" />
+            <option id="bp_requirement_change_type_reordered" name="Reordered" />
+            <option id="bp_requirement_change_type_removed" name="Removed" />
+        </huiproperty>
+        <huiproperty id="bp_requirement_change_details" name="Change details" inputtype="text" editable="false" />
         <huiproperty defaultValue="1" id="bp_requirement_value_method_confidentiality"
             inputtype="booleanoption" name="Affects Confidentiality" tags="Risk" />
         <huiproperty defaultValue="1" id="bp_requirement_value_method_integrity"
@@ -10704,6 +10801,71 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
             <huiproperty id="bp_requirement_implementation_desc" name="Description"
                 required="false" inputtype="text" focus="true" />
+            <huiproperty id="bp_requirement_implementation_by_date" name="Implementation by"
+                required="false" inputtype="date">
+                <defaultRule class="Today" />
+            </huiproperty>
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_requirement_audit" name="IT-Baseline Audit" tags="GS-Audit">
+            <huiproperty id="bp_requirement_audit_performed" name="Audit performed"
+                inputtype="booleanoption" />
+            <huiproperty id="bp_requirement_audit_method" name="Methods" inputtype="multioption">
+                <option id="bp_requirement_audit_method_documentation"
+                    name="Documentation Review"/>
+                <option id="bp_requirement_audit_method_interview" name="Interviews"/>
+                <option id="bp_requirement_audit_method_visitation" name="Visitation"/>
+                <option id="bp_requirement_audit_method_review"
+                    name="Review of contracts or records"/>
+                <option id="bp_requirement_audit_method_third_party"
+                    name="Using third party documents (i.e. other auditor's notes)"/>
+                <option id="bp_requirement_audit_method_observation"
+                    name="Observation of actions and procedures"/>
+            </huiproperty>
+            <huiproperty id="bp_requirement_audit_questions" name="Questions" inputtype="text"
+                textrows="10"/>
+            <huiproperty id="bp_requirement_audit_observations" name="Observations" 
+                inputtype="text" textrows="10"/>
+            <huiproperty id="bp_requirement_audit_report" name="Report" inputtype="text"
+                textrows="10"/>
+            <huiproperty id="bp_requirement_audit_date" name="Audited on" inputtype="date">
+                <defaultRule class="Today"/>
+            </huiproperty>
+            <huiproperty id="bp_requirement_audit_state" name="State"
+                inputtype="numericoption" min="0" max="1">
+                <option id="bp_requirement_audit_state_0" name="correct" value="0"/>
+                <option id="bp_requirement_audit_state_1" name="inadequate" value="1"/>
+            </huiproperty>
+            <huiproperty id="bp_requirement_audit_deviation" name="Non-Conformity"
+                inputtype="numericoption" min="0" max="3">
+                <option id="bp_requirement_audit_deviation_0" name="No" value="0"/>
+                <option id="bp_requirement_audit_deviation_1" name="Observation" value="1"/>
+                <option id="bp_requirement_audit_deviation_2" name="Minor" value="2"/>
+                <option id="bp_requirement_audit_deviation_3" name="Major" value="3"/>
+            </huiproperty>
+            <huiproperty id="bp_requirement_audit_deadline" name="Deadline for correction"
+                inputtype="date">
+                <defaultRule class="Today"/>
+            </huiproperty>
+            <huiproperty id="bp_requirement_audit_improvement_done" name="Improvement occurs?"
+                inputtype="booleanoption" defaultValue="0"/>
+            <huiproperty id="bp_requirement_audit_improvement" name="Improvement" inputtype="text"
+                textrows="10"/>
+            <huiproperty id="bp_requirement_audit_vote" name="Auditor vote" inputtype="text"
+                textrows="10"/>
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_requirement_revision" name="Revision">
+            <huiproperty id="bp_requirement_revision_previous_revision_date" inputtype="date" name="Previous revision date">
+                <defaultRule class="Today"/>
+            </huiproperty>
+            <huiproperty id="bp_requirement_revision_revision_remark" inputtype="text" name="Remark"/>
+            <huiproperty id="bp_requirement_revision_next_revision_date" inputtype="date" name="Next revision date">
+                <defaultRule class="Today">
+                    <param id="bp_requirement_revision_next_revision_date_changeField">YEAR</param>
+                    <param id="bp_requirement_revision_next_revision_date_timeDifference">2</param>
+                </defaultRule>
+            </huiproperty>
         </huipropertygroup>
     <huipropertygroup id="bp_requirement_group_kosten" name="Kosten" tags="Finance">
       <huiproperty id="bp_requirement_kosten_ptfix" name="Personalkosten fix EUR" tags="Finance"/>
@@ -10785,6 +10947,14 @@ Wurden bereits weitere Stellen informiert?
             editable="false">
             <defaultRule class="Today" />
         </huiproperty>
+        <huiproperty id="bp_requirement_group_release" name="Release" editable="false"/>
+        <huiproperty id="bp_requirement_group_change_type" name="Change type" inputtype="multioption" editable="false">
+            <option id="bp_requirement_group_change_type_new" name="New" />
+            <option id="bp_requirement_group_change_type_changed" name="Changed" />
+            <option id="bp_requirement_group_change_type_reordered" name="Reordered" />
+            <option id="bp_requirement_group_change_type_removed" name="Removed" />
+        </huiproperty>
+        <huiproperty id="bp_requirement_group_change_details" name="Change details" inputtype="text" editable="false" />
     </huientity>
 
     <huientity id="bp_threat" name="Threat">
@@ -10811,6 +10981,14 @@ Wurden bereits weitere Stellen informiert?
             name="Elemental Threat Content" showInObjectBrowser="true" visible="false" />
         <huiproperty id="bp_threat_desc" inputtype="text" name="Description"
             showInObjectBrowser="false" visible="true" />
+        <huiproperty id="bp_threat_release" name="Release" editable="false" />
+        <huiproperty id="bp_threat_change_type" name="Change type" inputtype="multioption" editable="false">
+            <option id="bp_threat_change_type_new" name="New" />
+            <option id="bp_threat_change_type_changed" name="Changed" />
+            <option id="bp_threat_change_type_reordered" name="Reordered" />
+            <option id="bp_threat_change_type_removed" name="Removed" />
+        </huiproperty>
+        <huiproperty id="bp_threat_change_details" name="Change details" inputtype="text" editable="false" />
         <huiproperty id="bp_threat_vulnerability" inputtype="singleoption" name="Vulnerability">
             <option id="bp_threat_vulnerability_organisational_deficiencies" name="Organisational deficiencies"/>
             <option id="bp_threat_vulnerability_technical_vulnerabilities" name="Technical vulnerabilities"/>
@@ -10916,6 +11094,14 @@ Wurden bereits weitere Stellen informiert?
             inputtype="text" name="Threatgroup Content" showInObjectBrowser="true" visible="false" />
         <huiproperty id="bp_threat_group_desc" inputtype="text" name="Description" />
         <huiproperty id="bp_threat_group_tag" name="Tags" />
+        <huiproperty id="bp_threat_group_release" name="Release" editable="false" />
+        <huiproperty id="bp_threat_group_change_type" name="Change type" inputtype="multioption" editable="false">
+            <option id="bp_threat_group_change_type_new" name="New" />
+            <option id="bp_threat_group_change_type_changed" name="Changed" />
+            <option id="bp_threat_group_change_type_reordered" name="Reordered" />
+            <option id="bp_threat_group_change_type_removed" name="Removed" />
+        </huiproperty>
+        <huiproperty id="bp_threat_group_change_details" name="Change details" inputtype="text" editable="false" />
     </huientity>
 
     <huientity id="bp_network" name="Network">
@@ -11315,6 +11501,14 @@ Wurden bereits weitere Stellen informiert?
             editable="false">
             <defaultRule class="Today" />
         </huiproperty>
+        <huiproperty id="bp_safeguard_release" name="Release" editable="false" />
+        <huiproperty id="bp_safeguard_change_type" name="Change type" inputtype="multioption" editable="false">
+            <option id="bp_safeguard_change_type_new" name="New" />
+            <option id="bp_safeguard_change_type_changed" name="Changed" />
+            <option id="bp_safeguard_change_type_reordered" name="Reordered" />
+            <option id="bp_safeguard_change_type_removed" name="Removed" />
+        </huiproperty>
+        <huiproperty id="bp_safeguard_change_details" name="Change details" inputtype="text" editable="false" />
         <huiproperty defaultValue="1" id="bp_safeguard_value_method_confidentiality"
             inputtype="booleanoption" name="Affects Confidentiality" tags="Risk" />
         <huiproperty defaultValue="1" id="bp_safeguard_value_method_integrity"
@@ -11331,6 +11525,22 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
             <huiproperty id="bp_safeguard_implementation_desc" name="Description"
                 required="false" inputtype="text" focus="true" />
+            <huiproperty id="bp_safeguard_implementation_by_date" name="Implementation by"
+                required="false" inputtype="date">
+                <defaultRule class="Today" />
+            </huiproperty>
+        </huipropertygroup>
+        <huipropertygroup id="bp_safeguard_revision" name="Revision">
+            <huiproperty id="bp_safeguard_revision_previous_revision_date" inputtype="date" name="Previous revision date">
+                <defaultRule class="Today"/>
+            </huiproperty>
+            <huiproperty id="bp_safeguard_revision_revision_remark" inputtype="text" name="Remark"/>
+            <huiproperty id="bp_safeguard_revision_next_revision_date" inputtype="date" name="Next revision date">
+                <defaultRule class="Today">
+                    <param id="bp_safeguard_revision_next_revision_date_changeField">YEAR</param>
+                    <param id="bp_safeguard_revision_next_revision_date_timeDifference">2</param>
+                </defaultRule>
+            </huiproperty>
         </huipropertygroup>
     <huipropertygroup id="bp_safeguard_group_kosten" name="Kosten" tags="Finance">
       <huiproperty id="bp_safeguard_kosten_ptfix" name="Personalkosten fix EUR" tags="Finance"/>
@@ -11401,6 +11611,14 @@ Wurden bereits weitere Stellen informiert?
             inputtype="text" name="Safeguardgroup Content" showInObjectBrowser="true" visible="false" />
         <huiproperty id="bp_safeguard_group_desc" inputtype="text" name="Description" />
         <huiproperty id="bp_safeguard_group_tag" name="Tags" />
+        <huiproperty id="bp_safeguard_group_release" name="Release" editable="false" />
+        <huiproperty id="bp_safeguard_group_change_type" name="Change type" inputtype="multioption" editable="false">
+            <option id="bp_safeguard_group_change_type_new" name="New" />
+            <option id="bp_safeguard_group_change_type_changed" name="Changed" />
+            <option id="bp_safeguard_group_change_type_reordered" name="Reordered" />
+            <option id="bp_safeguard_group_change_type_removed" name="Removed" />
+        </huiproperty>
+        <huiproperty id="bp_safeguard_group_change_details" name="Change details" inputtype="text" editable="false" />
     </huientity>
 
     <huientity

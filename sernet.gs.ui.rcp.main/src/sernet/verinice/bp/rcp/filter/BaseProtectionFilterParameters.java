@@ -19,28 +19,28 @@
 package sernet.verinice.bp.rcp.filter;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.eclipse.jdt.annotation.NonNull;
 
 import sernet.gs.service.CollectionUtil;
+import sernet.verinice.model.bp.ChangeType;
 import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.SecurityLevel;
 
 public class BaseProtectionFilterParameters {
-    private @NonNull Set<ImplementationStatus> implementationStatuses;
-    private @NonNull Set<SecurityLevel> securityLevels;
-    private @NonNull Set<String> elementTypes;
-    private @NonNull Set<String> tags;
+    private @NonNull Optional<Boolean> auditPerformed = Optional.empty();
+    private @NonNull Set<ImplementationStatus> implementationStatuses = new HashSet<>();
+    private @NonNull Optional<Boolean> riskAnalysisNecessary = Optional.empty();
+    private @NonNull Set<String> riskLabels = new HashSet<>();
+    private @NonNull Set<SecurityLevel> securityLevels = new HashSet<>();
+    private @NonNull Set<ChangeType> changeTypes = new HashSet<>();
+    private @NonNull Set<String> elementTypes = new HashSet<>();
+    private @NonNull Set<String> releases = new HashSet<>();
+    private @NonNull Set<String> tags = new HashSet<>();
     private boolean applyTagFilterToItNetworks;
     private boolean hideEmptyGroups;
-
-    private BaseProtectionFilterParameters() {
-        implementationStatuses = new HashSet<>();
-        securityLevels = new HashSet<>();
-        elementTypes = new HashSet<>();
-        tags = new HashSet<>();
-    }
 
     public static Builder builder() {
         return new Builder();
@@ -71,11 +71,21 @@ public class BaseProtectionFilterParameters {
         BaseProtectionFilterParameters other = (BaseProtectionFilterParameters) obj;
         if (applyTagFilterToItNetworks != other.applyTagFilterToItNetworks)
             return false;
+        if (!auditPerformed.equals(other.auditPerformed))
+            return false;
+        if (!changeTypes.equals(other.changeTypes))
+            return false;
         if (!elementTypes.equals(other.elementTypes))
             return false;
         if (hideEmptyGroups != other.hideEmptyGroups)
             return false;
         if (!implementationStatuses.equals(other.implementationStatuses))
+            return false;
+        if (!releases.equals(other.releases))
+            return false;
+        if (!riskAnalysisNecessary.equals(other.riskAnalysisNecessary))
+            return false;
+        if (!riskLabels.equals(other.riskLabels))
             return false;
         if (!securityLevels.equals(other.securityLevels))
             return false;
@@ -84,8 +94,28 @@ public class BaseProtectionFilterParameters {
         return true;
     }
 
+    public Optional<Boolean> getAuditPerformed() {
+        return auditPerformed;
+    }
+
+    public Set<ChangeType> getChangeTypes() {
+        return changeTypes;
+    }
+
     public @NonNull Set<ImplementationStatus> getImplementationStatuses() {
         return implementationStatuses;
+    }
+
+    public Set<String> getReleases() {
+        return releases;
+    }
+
+    public Optional<Boolean> getRiskAnalysisNecessary() {
+        return riskAnalysisNecessary;
+    }
+
+    public Set<String> getRiskLabels() {
+        return riskLabels;
     }
 
     public @NonNull Set<SecurityLevel> getSecurityLevels() {
@@ -148,6 +178,31 @@ public class BaseProtectionFilterParameters {
                 @NonNull Set<ImplementationStatus> selectedImplementationStatus) {
             parameters.implementationStatuses = CollectionUtil
                     .unmodifiableSet(selectedImplementationStatus);
+            return this;
+        }
+
+        public Builder withAuditPerformed(Optional<Boolean> auditPerformed) {
+            parameters.auditPerformed = auditPerformed;
+            return this;
+        }
+
+        public Builder withChangeTypes(Set<ChangeType> changeTypes) {
+            parameters.changeTypes = changeTypes;
+            return this;
+        }
+
+        public Builder withReleases(@NonNull Set<String> releases) {
+            parameters.releases = releases;
+            return this;
+        }
+
+        public Builder withRiskAnalysisNecessary(Optional<Boolean> riskanalysisNecessary) {
+            parameters.riskAnalysisNecessary = riskanalysisNecessary;
+            return this;
+        }
+
+        public Builder withRiskLabels(Set<String> risks) {
+            parameters.riskLabels = risks;
             return this;
         }
     }

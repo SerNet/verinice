@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="verinice" uid="sernet.verinice.releng.client" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.18.0.full" useFeatures="true" includeLaunchers="true">
+<product name="verinice" uid="sernet.verinice.releng.client" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.20.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/sernet.gs.ui.rcp.main/verinice_icons/about_img.png"/>
       <text>
-         SerNet verinice 1.18.1 - Codename &apos;Mangalore&apos;
+         SerNet verinice 1.20.0 - Codename &apos;Unstad&apos;
 
 (c) SerNet Service Network GmbH and others
-1996–2019
+1996–2020
 
 Contact the authors:
 verinice@sernet.de
@@ -17,7 +17,7 @@ verinice@sernet.de
 or
 
 Visit our homepage:
-http://www.verinice.org
+https://www.verinice.com
 
 Contributors:
 Alexander Koderman
@@ -34,7 +34,10 @@ Carmen Probst
 Sebastian Hagedorn
 Johannes Stillig
 Christian Eschenlohr
+Julia Haas
+Sirin Torun
 Benjamin Weißenfels
+Stanislav Strigunov
 Joachim Seifert
 Moritz Reiter
 Alexander von Ossowski
@@ -47,6 +50,9 @@ Alexander Ben Nasrallah
 Jochen Kemnade
 Antonio Marino
 Finn Westendorf
+Robert Schmidt
+Jewgeni Spomer
+Jonas Jordan
 
 Artwork:
 Blackbit						www.blackbit.de
@@ -790,7 +796,7 @@ Public License instead of this License.  But first, please read
    </plugins>
 
    <features>
-      <feature id="sernet.verinice.app.feature" version="1.0.0.qualifier"/>
+      <feature id="sernet.verinice.app.feature" version="1.20.0.qualifier"/>
    </features>
 
    <configurations>

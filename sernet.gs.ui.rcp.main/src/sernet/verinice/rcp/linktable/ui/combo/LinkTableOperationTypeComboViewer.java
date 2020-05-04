@@ -171,13 +171,13 @@ public class LinkTableOperationTypeComboViewer extends LinkTableComboViewer {
      */
     @Override
     public LinkTableComboViewer copy(LinkTableComboViewer leftCombo, Composite newParent,
-            Control formerElement) {
+            Control formerElement, LinkTableColumn linkTableColumn) {
         if (operationType == LinkTableOperationType.RELATION) {
             Composite newParentComposite = new Composite(newParent, SWT.NONE);
             newParentComposite.setLayout(new FormLayout());
             newParentComposite.setLayoutData(getDefaultFormData(formerElement));
 
-            LinkTableComboViewer newViewer = createCopy(leftCombo, ltrColumn, newParentComposite);
+            LinkTableComboViewer newViewer = createCopy(leftCombo, linkTableColumn, newParentComposite);
 
             newViewer.getCombo().select(this.getCombo().getSelectionIndex());
             if (rightCombo != null) {
@@ -192,7 +192,7 @@ public class LinkTableOperationTypeComboViewer extends LinkTableComboViewer {
             }
             return newViewer;
         } else {
-            return super.copy(leftCombo, newParent, formerElement);
+            return super.copy(leftCombo, newParent, formerElement, linkTableColumn);
         }
     }
 }

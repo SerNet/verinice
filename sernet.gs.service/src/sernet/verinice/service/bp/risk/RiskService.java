@@ -17,6 +17,11 @@
  ******************************************************************************/
 package sernet.verinice.service.bp.risk;
 
+import java.util.List;
+
+import org.eclipse.jdt.annotation.NonNull;
+
+import sernet.verinice.model.bp.risk.Risk;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateContext;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateResult;
@@ -38,9 +43,29 @@ public interface RiskService {
             RiskConfigurationUpdateContext updateContext);
 
     /**
+     * Queries distinct risk labels from all network configurations.
+     */
+    public List<String> findAllRiskLabels();
+
+    /**
      * Return the risk configuration for a given IT network's ID. If there is no
      * explicit configuration for the given network, <code>null</code> is
      * returned.
+     * 
+     * @deprecated Use findRiskConfigurationOrDefault.
      */
+    @Deprecated()
     RiskConfiguration findRiskConfiguration(Integer itNetworkID);
+
+    /**
+     * Return the risk configuration for a given IT network's ID. If there is no
+     * explicit configuration for the given network, a default configuration is
+     * returned.
+     */
+    RiskConfiguration findRiskConfigurationOrDefault(Integer itNetworkID);
+
+    /**
+     * Look up risk with given ID in given scope / network.
+     */
+    public Risk getRisk(@NonNull String riskId, @NonNull Integer networkId);
 }

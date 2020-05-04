@@ -60,6 +60,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
+import sernet.gs.ui.rcp.main.actions.ShowBulkEditAccountsAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.bsi.actions.NaturalizeAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
@@ -132,6 +133,7 @@ public class BaseProtectionView extends RightsEnabledView
 
     private Action linkWithEditorAction;
     private ShowBulkEditAction bulkEditAction;
+    private ShowBulkEditAccountsAction bulkEditAccountsAction;
     private ExpandAction expandAction;
     private Action expandAllAction;
     private CollapseAction collapseAction;
@@ -313,6 +315,7 @@ public class BaseProtectionView extends RightsEnabledView
         manager.add(new Separator());
         manager.add(new GroupMarker("special")); //$NON-NLS-1$
         manager.add(bulkEditAction);
+        manager.add(bulkEditAccountsAction);
         manager.add(accessControlEditAction);
         manager.add(naturalizeAction);
         manager.add(new Separator());
@@ -327,6 +330,8 @@ public class BaseProtectionView extends RightsEnabledView
 
         bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(),
                 Messages.BaseProtectionView_BulkEdit);
+        bulkEditAccountsAction = new ShowBulkEditAccountsAction(getViewSite().getWorkbenchWindow(),
+                sernet.gs.ui.rcp.main.Messages.ContextMenuAccountBulkEditor);
 
         BSIModelViewDropListener bsiDropAdapter;
         metaDropAdapter = new MetaDropAdapter(viewer);

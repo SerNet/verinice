@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 
@@ -142,6 +143,8 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
             if (authService.isPermissionHandlingNeeded()) {
                 element = addPermissions(element);
             }
+            Optional.ofNullable(element).map(CnATreeElement::getEntity)
+                    .ifPresent(entity -> entity.trackCreation(getAuthService().getUsername()));
             element = saveElement();
         } catch (Exception e) {
             LOG.error("Error while creating element", e);

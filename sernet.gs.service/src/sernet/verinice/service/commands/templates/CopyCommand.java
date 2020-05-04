@@ -85,7 +85,6 @@ public class CopyCommand extends GenericCommand {
     }
 
     private static final int FLUSH_LEVEL = 10;
-    private final boolean flush = false;
 
     private String uuidGroup;
     private boolean copyAttachments = false;
@@ -318,7 +317,7 @@ public class CopyCommand extends GenericCommand {
     private Attachment createAttachmentCopy(final CnATreeElement destinationElement, final Attachment sourceAttachment) {
         final Attachment newAttachmentEntity = new Attachment();
         newAttachmentEntity.getEntity().copyEntity(sourceAttachment.getEntity());
-        newAttachmentEntity.setCnATreeElementId(destinationElement.getDbId());
+        newAttachmentEntity.setCnATreeElement(destinationElement);
         newAttachmentEntity.setCnAElementTitel(destinationElement.getTitle());
         return newAttachmentEntity;
     }

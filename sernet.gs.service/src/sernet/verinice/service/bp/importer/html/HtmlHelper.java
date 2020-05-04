@@ -33,13 +33,15 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
 import ITBP2VNA.generated.module.BibItem;
+import ITBP2VNA.generated.module.Cia;
 import ITBP2VNA.generated.module.Document;
-import ITBP2VNA.generated.module.Description;
+import ITBP2VNA.generated.module.Document.Crossreferences;
 import ITBP2VNA.generated.module.Document.ThreatScenario.SpecificThreats;
 import ITBP2VNA.generated.module.Requirement;
 import ITBP2VNA.generated.module.SpecificThreat;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.service.bp.importer.ImportUtils;
 import sernet.verinice.service.bp.importer.Messages;
 
 /**
@@ -71,8 +73,6 @@ public final class HtmlHelper {
     private static final String HTML_OPEN_LIST_ITEM = "<li>"; //$NON-NLS-1$
     private static final String HTML_CLOSE_LIST_ITEM = "</li>"; //$NON-NLS-1$
     private static final String HTML_BR = "<br>"; //$NON-NLS-1$
-    private static final String HTML_OPEN_STRONG = "<strong>"; //$NON-NLS-1$
-    private static final String HTML_CLOSE_STRONG = "</strong>"; //$NON-NLS-1$
 
     private static final Set<String> HTML_TAG_BLACKLIST = new HashSet<>();
 
@@ -95,12 +95,6 @@ public final class HtmlHelper {
      * 1 Chaptertitle 1.0 Chaptertitle 1.2.3 Chaptertitle
      * 
      * to not create subchapters, set the int to -1
-     * 
-     * @param chapter
-     * @param subChapter
-     * @param subSubChapter
-     * @param headline
-     * @return
      */
     private static String generateChapterHeader(int chapter, int subChapter, int subSubChapter,
             String headline) {
@@ -139,15 +133,14 @@ public final class HtmlHelper {
      * 
      * this method gathers all that information and creates a html-structure
      * around it to format it in a pretty way
-     * 
      */
-    public static String getCompleteModuleXMLText(Document module, String modelingHint) {
+    public static String getCompleteModuleXMLText(Document module) {
         StringBuilder descriptionBuilder = new StringBuilder();
 
         int chapter = 1;
         int subChapter = 0;
 
-        chapter = getModuleIntroduction(module, descriptionBuilder, chapter, modelingHint);
+        chapter = getModuleIntroduction(module, descriptionBuilder, chapter);
 
         descriptionBuilder.append(getModuleSpecificThreats(module, chapter));
 
@@ -158,10 +151,15 @@ public final class HtmlHelper {
         subChapter = 1;
 
         descriptionBuilder.append(getModuleReqMain(module, chapter, subChapter));
+        chapter = getModuleDescriptionSuffix(module, descriptionBuilder, chapter);
+        chapter++;
+        descriptionBuilder
+                .append(generateChapterHeader(chapter, -1, -1, Messages.Cross_References_Table));
+        descriptionBuilder.append(HTML_OPEN_PARAGRAPH);
+        descriptionBuilder.append(Messages.Cross_References_Table_Explanation);
+        descriptionBuilder.append(HTML_CLOSE_PARAGRAPH);
         descriptionBuilder.append(
                 ToHtmlTableTransformer.createCrossreferenceTable(module.getCrossreferences()));
-        descriptionBuilder.append(getModuleDescriptionSuffix(module, chapter));
-
         return descriptionBuilder.toString();
     }
 
@@ -169,50 +167,51 @@ public final class HtmlHelper {
      * generates the part of the {@link BpRequirementGroup} (Module)
      * object-browser-property that describes the {@link BpRequirement} further
      * Information (the literature notes) related to the module
-     * 
-     * @param module
-     * @param descriptionBuilder
-     * @param chapter
      */
-    private static String getModuleDescriptionSuffix(Document module, int chapter) {
-        StringBuilder sb = new StringBuilder();
-        int subChapter;
-        sb.append(HTML_OPEN_PARAGRAPH);
+    private static int getModuleDescriptionSuffix(Document module, StringBuilder descriptionBuilder,
+            int chapter) {
+        int subChapter = 1;
+        descriptionBuilder.append(HTML_OPEN_PARAGRAPH);
 
-        if (module.getBibliography() != null) {
+        if (module.getBibliography() != null
+                || !StringUtils.isEmpty(module.getAdvancedInformationText())) {
 
             chapter++;
-            sb.append(generateChapterHeader(chapter, -1, -1, Messages.Further_Information));
+            descriptionBuilder
+                    .append(generateChapterHeader(chapter, -1, -1, Messages.Further_Information));
+            if (!StringUtils.isEmpty(module.getAdvancedInformationText())) {
+                descriptionBuilder.append(
+                        generateChapterHeader(chapter, subChapter, -1, Messages.Noteworthy));
+                subChapter++;
+                descriptionBuilder.append(module.getAdvancedInformationText());
+            }
 
-            subChapter = 1;
-            sb.append(generateChapterHeader(chapter, subChapter, -1, Messages.Literature));
-            for (BibItem bibItem : module.getBibliography().getBibItem()) {
-                StringBuilder bibBuilder = new StringBuilder();
-                bibBuilder.append(HTML_OPEN_UL);
-                bibBuilder.append(HTML_OPEN_LIST_ITEM);
-                bibBuilder.append(bibItem.getShortHand()).append(" ");
-                String descriptionText = bibItem.getDescription();
-                descriptionText = descriptionText.replaceAll("<p>", "");
-                descriptionText = descriptionText.replaceAll("</p>", "");
-                descriptionText = descriptionText.replaceAll("<br />", "");
-                bibBuilder.append(descriptionText);
-                bibBuilder.append(HTML_CLOSE_LIST_ITEM);
-                bibBuilder.append(HTML_CLOSE_UL);
-                sb.append(bibBuilder.toString());
+            if (module.getBibliography() != null) {
+                descriptionBuilder.append(
+                        generateChapterHeader(chapter, subChapter, -1, Messages.Literature));
+                for (BibItem bibItem : module.getBibliography().getBibItem()) {
+                    StringBuilder bibBuilder = new StringBuilder();
+                    bibBuilder.append(HTML_OPEN_UL);
+                    bibBuilder.append(HTML_OPEN_LIST_ITEM);
+                    bibBuilder.append(bibItem.getShortHand()).append(" ");
+                    String descriptionText = bibItem.getDescription();
+                    descriptionText = descriptionText.replaceAll("<p>", "");
+                    descriptionText = descriptionText.replaceAll("</p>", "");
+                    descriptionText = descriptionText.replaceAll("<br />", "");
+                    bibBuilder.append(descriptionText);
+                    bibBuilder.append(HTML_CLOSE_LIST_ITEM);
+                    bibBuilder.append(HTML_CLOSE_UL);
+                    descriptionBuilder.append(bibBuilder.toString());
+                }
             }
         }
-        return sb.toString();
+        return chapter;
     }
 
     /**
      * generates the part of the {@link BpRequirementGroup} (Module)
      * object-browser-property that describes the {@link BpRequirement} defined
      * within that module
-     * 
-     * @param module
-     * @param descriptionBuilder
-     * @param chapter
-     * @param subChapter
      */
     private static String getModuleReqMain(Document module, int chapter, int subChapter) {
         StringBuilder sb = new StringBuilder();
@@ -221,7 +220,8 @@ public final class HtmlHelper {
         sb.append(Messages.Basic_Requirements_Intro);
         sb.append(HTML_CLOSE_PARAGRAPH);
         sb.append(getModuleRequirementDescription(
-                module.getRequirements().getBasicRequirements().getRequirement()));
+                module.getRequirements().getBasicRequirements().getRequirement(),
+                module.getCrossreferences()));
 
         sb.append(HTML_CLOSE_PARAGRAPH);
 
@@ -230,7 +230,8 @@ public final class HtmlHelper {
         sb.append(Messages.Standard_Requirements_Intro);
         sb.append(HTML_CLOSE_PARAGRAPH);
         sb.append(getModuleRequirementDescription(
-                module.getRequirements().getStandardRequirements().getRequirement()));
+                module.getRequirements().getStandardRequirements().getRequirement(),
+                module.getCrossreferences()));
 
         sb.append(HTML_CLOSE_OPEN_PARAGRAPH);
 
@@ -241,7 +242,8 @@ public final class HtmlHelper {
         sb.append(HTML_CLOSE_PARAGRAPH);
 
         sb.append(getModuleRequirementDescription(
-                module.getRequirements().getHighLevelRequirements().getRequirement()));
+                module.getRequirements().getHighLevelRequirements().getRequirement(),
+                module.getCrossreferences()));
 
         sb.append(HTML_CLOSE_PARAGRAPH);
         return sb.toString();
@@ -250,10 +252,6 @@ public final class HtmlHelper {
     /**
      * get Introduction of Requirements-Description of description of
      * {@link BpRequirementGroup} (Module)
-     * 
-     * @param module
-     * @param descriptionBuilder
-     * @param chapter
      */
     private static String getModuleReqIntro(Document module, int chapter) {
         StringBuilder sb = new StringBuilder();
@@ -304,19 +302,12 @@ public final class HtmlHelper {
      * 
      * creates the specific-threats describing part of the
      * {@link BpRequirementGroup} (Module) description
-     * 
-     * @param module
-     * @param descriptionBuilder
-     * @param chapter
      */
     private static String getModuleSpecificThreats(Document module, int chapter) {
         int subChapter;
         StringBuilder sb = new StringBuilder();
         sb.append(generateChapterHeader(chapter, -1, -1, Messages.Threat_Situation));
-
-        Description description = module.getThreatScenario().getDescription();
-        String descriptionText = getAnyElementDescription("", -1, -1, -1, description.getAny());
-        sb.append(descriptionText);
+        sb.append(module.getThreatScenario().getDescription());
 
         SpecificThreats specificThreats = module.getThreatScenario().getSpecificThreats();
 
@@ -325,9 +316,7 @@ public final class HtmlHelper {
             sb.append(HTML_OPEN_PARAGRAPH);
             sb.append(
                     generateChapterHeader(chapter, subChapter++, -1, specificThreat.getHeadline()));
-            String threatDescriptionText = getAnyElementDescription("",
-                                       -1, -1 , -1, specificThreat.getDescription().getAny());
-            sb.append(threatDescriptionText);
+            sb.append(specificThreat.getDescription());
             sb.append(HTML_CLOSE_PARAGRAPH);
         }
         return sb.toString();
@@ -335,27 +324,12 @@ public final class HtmlHelper {
 
     /**
      * creates the intro of a {@link BpRequirementGroup} (Module) description
-     * 
-     * @param module
-     * @param descriptionBuilder
-     * @param chapter
-     * @return
      */
     private static int getModuleIntroduction(Document module, StringBuilder descriptionBuilder,
-            int chapter, String modelingHint) {
+            int chapter) {
         descriptionBuilder.append(HTML_OPEN_H1);
         descriptionBuilder.append(module.getFullTitle());
         descriptionBuilder.append(HTML_CLOSE_H1);
-        if (modelingHint != null) {
-            descriptionBuilder.append(HTML_OPEN_PARAGRAPH);
-            descriptionBuilder.append(HTML_OPEN_STRONG);
-            descriptionBuilder.append(Messages.Modeling_Hint);
-            descriptionBuilder.append(HTML_CLOSE_STRONG);
-            descriptionBuilder.append(HTML_BR);
-            descriptionBuilder.append(modelingHint);
-            descriptionBuilder.append(HTML_CLOSE_PARAGRAPH);
-        }
-        
         descriptionBuilder.append(generateChapterHeader(chapter, -1, -1, Messages.Description));
         descriptionBuilder.append(getModuleDescriptionStart(module, chapter++));
         return chapter;
@@ -364,9 +338,6 @@ public final class HtmlHelper {
     /**
      * returns the description (three parts (Introduction, Purpose,
      * Differentiation)) of a module {@link BpRequirementGroup}
-     * 
-     * @param module
-     * @param descriptionBuilder
      */
     private static String getModuleDescriptionStart(Document module, int chapter) {
         StringBuilder sb = new StringBuilder();
@@ -410,11 +381,9 @@ public final class HtmlHelper {
 
     /**
      * returns the description of a {@link BpRequirement} HTML-Formatted
-     * 
-     * @param requirements
-     * @return
      */
-    private static String getModuleRequirementDescription(List<Requirement> requirements) {
+    private static String getModuleRequirementDescription(List<Requirement> requirements,
+            Crossreferences crossreferences) {
         StringBuilder sb = new StringBuilder();
 
         for (Requirement requirement : requirements) {
@@ -423,7 +392,8 @@ public final class HtmlHelper {
             sb.append(" ");
             sb.append(getRequirementResponsibleDescription(requirement));
             sb.append(" ");
-            sb.append(getRequirementCIA(requirement));
+            sb.append(getRequirementCIA(
+                    ImportUtils.getCiaForRequirement(requirement, crossreferences)));
             sb.append(HTML_CLOSE_H1);
             sb.append(HTML_OPEN_PARAGRAPH);
             sb.append(getAnyElementDescription("", -1, -1, -1,
@@ -436,8 +406,6 @@ public final class HtmlHelper {
 
     /**
      * returns the description-prefix of a {@link BpRequirement} HTML-Formatted
-     * 
-     * @param requirement
      */
     private static String getRequirementDescriptionStart(Requirement requirement) {
         StringBuilder sb = new StringBuilder();
@@ -450,8 +418,6 @@ public final class HtmlHelper {
     /**
      * returns a string that is the suffix to a {@link BpRequirement} title,
      * that contains all responsible roles
-     * 
-     * @param requirement
      */
     private static String getRequirementResponsibleDescription(Requirement requirement) {
         StringBuilder sb = new StringBuilder();
@@ -477,36 +443,29 @@ public final class HtmlHelper {
      * requirement
      * 
      * C for Confidentiality I for Integrity A for Availabiltiy
-     * 
-     * @param requirement
      */
-    private static String getRequirementCIA(Requirement requirement) {
-        StringBuilder sb = new StringBuilder();
+    private static String getRequirementCIA(Cia cia) {
+        String confidentiality = (Boolean.parseBoolean(cia.getConfidentiality())) ? "C" : "";
+        String integrity = (Boolean.parseBoolean(cia.getIntegrity())) ? "I" : "";
+        String availitbility = (Boolean.parseBoolean(cia.getAvailability())) ? "A" : "";
 
-        String confidentiality = (Boolean.parseBoolean(requirement.getCia().getConfidentiality()))
-                ? "C"
-                : "";
-        String integrity = (Boolean.parseBoolean(requirement.getCia().getIntegrity())) ? "I" : "";
-        String availitbility = (Boolean.parseBoolean(requirement.getCia().getAvailability())) ? "A"
-                : "";
+        String ciaStr = confidentiality + integrity + availitbility;
 
-        String cia = confidentiality + integrity + availitbility;
+        if (StringUtils.isNotEmpty(ciaStr)) {
+            StringBuilder sb = new StringBuilder(5);
+            sb.append('(');
+            sb.append(ciaStr);
+            sb.append(')');
+            return sb.toString();
 
-        if (StringUtils.isNotEmpty(cia)) {
-            cia = "(" + cia + ")";
-            sb.append(cia);
         }
 
-        return sb.toString();
+        return StringUtils.EMPTY;
     }
 
     /**
      * transforms mixed HTML/XML-Content (given by a {@link List} of
      * {@link Element} to a html-formatted String
-     * 
-     * @param title
-     * @param anyElements
-     * @return
      */
     public static String getAnyElementDescription(String title, int chapter, int subChapter,
             int subSubChapter, List<Element> anyElements) {
@@ -529,9 +488,6 @@ public final class HtmlHelper {
     /**
      * searches for a text-element in a tree given by an {@link Element} and
      * returns it
-     * 
-     * @param sb
-     * @param element
      */
     private static String extractContentFromObject(Object element) {
         StringBuilder sb = new StringBuilder();
@@ -546,11 +502,6 @@ public final class HtmlHelper {
     /**
      * transforms mixed HTML/XML-Content (given by a {@link List} of
      * {@link Object} to a html-formatted String
-     * 
-     * @param title
-     * @param headlineLevel
-     * @param anyObjects
-     * @return
      */
     public static String getAnyObjectDescription(String title, int headlineLevel,
             List<Object> anyObjects) {
@@ -585,9 +536,6 @@ public final class HtmlHelper {
      * 
      * blacklists known BSI-XML-Structure defining strings to not appear as
      * html-tags in the output
-     * 
-     * @param element
-     * @return
      */
     private static String unwrapText(Node element) {
         StringBuilder sb = new StringBuilder();

@@ -21,6 +21,15 @@ hibernate.config.resource=classpath:/server_hibernate_oracle.cfg.xml
 #jdbc.username=verinice
 #jdbc.password=verinice
 
+jdbc.ds.pool.minPoolSize=10
+jdbc.ds.pool.initialPoolSize=10
+jdbc.ds.pool.maxPoolSize=60
+jdbc.ds.pool.acquireIncrement=5
+jdbc.ds.pool.numHelperThreads=6
+jdbc.ds.pool.maxStatementsPerConnection=100
+jdbc.ds.pool.checkoutTimeout=10000
+jdbc.ds.pool.idleConnectionTestPeriod=180
+
 ##################################################
 #Alternative database: connection settings for Oracle
 #also change hibernate config above!!!

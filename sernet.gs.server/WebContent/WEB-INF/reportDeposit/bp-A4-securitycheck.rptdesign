@@ -7,6 +7,16 @@
         <value>bp-A4-securitycheck</value>
     </simple-property-list>
     <property name="units">in</property>
+    <method name="initialize"><![CDATA[function formatDateFromString(str) {
+	if(str != null &amp;&amp; str != ""){
+		a = Packages.java.time.LocalDate.parse(str)
+		return a.format(Packages.java.time.format.DateTimeFormatter.ofPattern(reportContext.getMessage("date.format.string")))
+	}
+	return reportContext.getMessage("empty.date.string")
+}
+
+reportContext.setGlobalVariable("formatDateFromString", formatDateFromString)
+]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">fixed layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -33,8 +43,8 @@
     </parameters>
     <data-sources>
         <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44">
-            <property name="sncaUrl">http://localhost:8800/GetHitroConfig</property>
-            <property name="serverURI">http://localhost:8800</property>
+            <property name="sncaUrl">http://localhost:8830/GetHitroConfig</property>
+            <property name="serverURI">http://localhost:8830</property>
         </oda-data-source>
     </data-sources>
     <data-sets>
@@ -450,6 +460,12 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
                     <text-property name="displayName">Beschreibung</text-property>
                     <text-property name="heading">Beschreibung</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</text-property>
+                    <text-property name="heading">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</text-property>
+                </structure>
             </list-property>
             <list-property name="filter">
                 <structure>
@@ -495,6 +511,11 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
                     </structure>
                     <structure>
                         <property name="position">7</property>
+                        <property name="name">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
                         <property name="name">p_name</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -544,6 +565,12 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
+                    <property name="nativeName">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[{
   "followLinksOutsideOfScope": false,
@@ -555,7 +582,8 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
     "bp_requirement/bp_person.dbid AS Datenbank-Id__(Person)",
     "bp_requirement/bp_person.bp_person_first_name AS Vorname__(Person)",
     "bp_requirement/bp_person.bp_person_last_name AS Nachname__(Person)",
-    "bp_requirement:bp_person.description AS Beschreibung"
+    "bp_requirement:bp_person.description AS Beschreibung",
+    "bp_requirement.bp_requirement_implementation_by_date AS Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)"
   ],
   "relationIds": []
 }]]></xml-property>
@@ -961,6 +989,12 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
                     <text-property name="displayName">Nachname__(Person)</text-property>
                     <text-property name="heading">Nachname__(Person)</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">Umsetzung__-__Umsetzung__bis__(Maßnahme)</text-property>
+                    <text-property name="heading">Umsetzung__-__Umsetzung__bis__(Maßnahme)</text-property>
+                </structure>
             </list-property>
             <list-property name="filter">
                 <structure>
@@ -1006,6 +1040,11 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
                     </structure>
                     <structure>
                         <property name="position">7</property>
+                        <property name="name">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
                         <property name="name">p_name</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -1055,6 +1094,12 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
+                    <property name="nativeName">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[{
   "followLinksOutsideOfScope": false,
@@ -1066,7 +1111,8 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
     "bp_safeguard:bp_person.description AS Beschreibung",
     "bp_safeguard/bp_person.dbid AS Datenbank-Id__(Person)",
     "bp_safeguard/bp_person.bp_person_first_name AS Vorname__(Person)",
-    "bp_safeguard/bp_person.bp_person_last_name AS Nachname__(Person)"
+    "bp_safeguard/bp_person.bp_person_last_name AS Nachname__(Person)",
+    "bp_safeguard.bp_safeguard_implementation_by_date AS Umsetzung__-__Umsetzung__bis__(Maßnahme)"
   ],
   "relationIds": []
 }]]></xml-property>
@@ -2331,7 +2377,13 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
                     <text-property name="displayName">Beschreibung-Mnhm</text-property>
                     <text-property name="heading">Beschreibung-Mnhm</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
+                    <text-property name="displayName">Umsetzung__-__Umsetzung__bis__(Maßnahme)</text-property>
+                    <text-property name="heading">Umsetzung__-__Umsetzung__bis__(Maßnahme)</text-property>
+                </structure>
             </list-property>
+            <list-property name="parameters"/>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
@@ -2432,6 +2484,11 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
                     <structure>
                         <property name="position">20</property>
                         <property name="name">Beschreibung-Mnhm</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">21</property>
+                        <property name="name">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -2578,6 +2635,13 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
+                <structure>
+                    <property name="position">21</property>
+                    <property name="name">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
+                    <property name="nativeName">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[{
   "followLinksOutsideOfScope": false,
@@ -2604,7 +2668,8 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
     "bp_itnetwork/bp_requirement<bp_requirement_group.dbid AS Datenbank-Id-Bausteine",
     "bp_itnetwork/bp_requirement/bp_safeguard.bp_safeguard_name AS Titel-Mnhm",
     "bp_itnetwork/bp_requirement/bp_safeguard.bp_safeguard_id AS Identifier-Mnhm",
-    "bp_itnetwork/bp_requirement/bp_safeguard.bp_safeguard_desc AS Beschreibung-Mnhm"
+    "bp_itnetwork/bp_requirement/bp_safeguard.bp_safeguard_desc AS Beschreibung-Mnhm",
+    "bp_itnetwork/bp_requirement/bp_safeguard.bp_safeguard_implementation_by_date AS Umsetzung__-__Umsetzung__bis__(Maßnahme)"
   ],
   "relationIds": []
 }]]></xml-property>
@@ -8740,6 +8805,12 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
+                    <text-property name="displayName">Umsetzung__-__Umsetzung__bis__(Maßnahme)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Umsetzung__-__Umsetzung__bis__(Maßnahme)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">reportContext.getMessage("section_title_itnetwork")</expression>
@@ -9168,8 +9239,9 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                                     <structure>
                                         <property name="name">Beschreibung</property>
                                         <text-property name="displayName">Beschreibung</text-property>
-                                        <expression name="expression" type="javascript">dataSetRow["Beschreibung"]</expression>
+                                        <expression name="expression" type="javascript">formatDateFromString(row._outer["Umsetzung__-__Umsetzung__bis__(Maßnahme)"])</expression>
                                         <property name="dataType">string</property>
+                                        <property name="allowExport">true</property>
                                     </structure>
                                     <structure>
                                         <property name="name">sortKey</property>
@@ -9585,8 +9657,9 @@ else {&#13;
                                     <structure>
                                         <property name="name">Beschreibung</property>
                                         <text-property name="displayName">Beschreibung</text-property>
-                                        <expression name="expression" type="javascript">dataSetRow["Beschreibung"]</expression>
+                                        <expression name="expression" type="javascript">formatDateFromString(row._outer["Umsetzung__-__Umsetzung__bis__(Maßnahme)"])</expression>
                                         <property name="dataType">string</property>
+                                        <property name="allowExport">true</property>
                                     </structure>
                                 </list-property>
                                 <list-property name="sort">
@@ -10532,6 +10605,13 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                                         <property name="dataType">integer</property>
                                         <property name="allowExport">true</property>
                                     </structure>
+                                    <structure>
+                                        <property name="name">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
+                                        <text-property name="displayName">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</text-property>
+                                        <expression name="expression" type="javascript">formatDateFromString(dataSetRow["Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)"])</expression>
+                                        <property name="dataType">string</property>
+                                        <property name="allowExport">true</property>
+                                    </structure>
                                 </list-property>
                                 <list-property name="sort">
                                     <structure>
@@ -10643,7 +10723,7 @@ else {&#13;
                                                         <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
                                                     </structure>
                                                 </list-property>
-                                                <property name="resultSetColumn">Beschreibung</property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
                                             </data>
                                         </cell>
                                     </row>
@@ -10930,10 +11010,11 @@ else {&#13;
                                         <property name="allowExport">true</property>
                                     </structure>
                                     <structure>
-                                        <property name="name">Beschreibung</property>
-                                        <text-property name="displayName">Beschreibung</text-property>
-                                        <expression name="expression" type="javascript">dataSetRow["Beschreibung"]</expression>
+                                        <property name="name">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
+                                        <text-property name="displayName">Umsetzung__-__Umsetzung__bis__(Maßnahme)</text-property>
+                                        <expression name="expression" type="javascript">formatDateFromString(dataSetRow["Umsetzung__-__Umsetzung__bis__(Maßnahme)"])</expression>
                                         <property name="dataType">string</property>
+                                        <property name="allowExport">true</property>
                                     </structure>
                                 </list-property>
                                 <list-property name="sort">
@@ -11000,7 +11081,7 @@ else {&#13;
                                                         <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
                                                     </structure>
                                                 </list-property>
-                                                <property name="resultSetColumn">Beschreibung</property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
                                             </data>
                                         </cell>
                                     </row>
@@ -11879,6 +11960,13 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                                         <property name="dataType">integer</property>
                                         <property name="allowExport">true</property>
                                     </structure>
+                                    <structure>
+                                        <property name="name">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
+                                        <text-property name="displayName">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</text-property>
+                                        <expression name="expression" type="javascript">formatDateFromString(dataSetRow["Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)"])</expression>
+                                        <property name="dataType">string</property>
+                                        <property name="allowExport">true</property>
+                                    </structure>
                                 </list-property>
                                 <list-property name="sort">
                                     <structure>
@@ -11990,7 +12078,7 @@ else {&#13;
                                                         <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
                                                     </structure>
                                                 </list-property>
-                                                <property name="resultSetColumn">Beschreibung</property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
                                             </data>
                                         </cell>
                                     </row>
@@ -12282,6 +12370,13 @@ else {&#13;
                                         <expression name="expression" type="javascript">dataSetRow["Beschreibung"]</expression>
                                         <property name="dataType">string</property>
                                     </structure>
+                                    <structure>
+                                        <property name="name">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
+                                        <text-property name="displayName">Umsetzung__-__Umsetzung__bis__(Maßnahme)</text-property>
+                                        <expression name="expression" type="javascript">formatDateFromString(dataSetRow["Umsetzung__-__Umsetzung__bis__(Maßnahme)"])</expression>
+                                        <property name="dataType">string</property>
+                                        <property name="allowExport">true</property>
+                                    </structure>
                                 </list-property>
                                 <list-property name="sort">
                                     <structure>
@@ -12347,7 +12442,7 @@ else {&#13;
                                                         <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
                                                     </structure>
                                                 </list-property>
-                                                <property name="resultSetColumn">Beschreibung</property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
                                             </data>
                                         </cell>
                                     </row>
@@ -13226,6 +13321,13 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                                         <property name="dataType">integer</property>
                                         <property name="allowExport">true</property>
                                     </structure>
+                                    <structure>
+                                        <property name="name">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
+                                        <text-property name="displayName">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</text-property>
+                                        <expression name="expression" type="javascript">formatDateFromString(dataSetRow["Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)"])</expression>
+                                        <property name="dataType">string</property>
+                                        <property name="allowExport">true</property>
+                                    </structure>
                                 </list-property>
                                 <list-property name="sort">
                                     <structure>
@@ -13337,7 +13439,7 @@ else {&#13;
                                                         <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
                                                     </structure>
                                                 </list-property>
-                                                <property name="resultSetColumn">Beschreibung</property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
                                             </data>
                                         </cell>
                                     </row>
@@ -13629,6 +13731,13 @@ else {&#13;
                                         <expression name="expression" type="javascript">dataSetRow["Beschreibung"]</expression>
                                         <property name="dataType">string</property>
                                     </structure>
+                                    <structure>
+                                        <property name="name">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
+                                        <text-property name="displayName">Umsetzung__-__Umsetzung__bis__(Maßnahme)</text-property>
+                                        <expression name="expression" type="javascript">formatDateFromString(dataSetRow["Umsetzung__-__Umsetzung__bis__(Maßnahme)"])</expression>
+                                        <property name="dataType">string</property>
+                                        <property name="allowExport">true</property>
+                                    </structure>
                                 </list-property>
                                 <list-property name="sort">
                                     <structure>
@@ -13694,7 +13803,7 @@ else {&#13;
                                                         <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
                                                     </structure>
                                                 </list-property>
-                                                <property name="resultSetColumn">Beschreibung</property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
                                             </data>
                                         </cell>
                                     </row>
@@ -14573,6 +14682,13 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                                         <property name="dataType">integer</property>
                                         <property name="allowExport">true</property>
                                     </structure>
+                                    <structure>
+                                        <property name="name">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
+                                        <text-property name="displayName">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</text-property>
+                                        <expression name="expression" type="javascript">formatDateFromString(dataSetRow["Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)"])</expression>
+                                        <property name="dataType">string</property>
+                                        <property name="allowExport">true</property>
+                                    </structure>
                                 </list-property>
                                 <list-property name="sort">
                                     <structure>
@@ -14684,7 +14800,7 @@ else {&#13;
                                                         <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
                                                     </structure>
                                                 </list-property>
-                                                <property name="resultSetColumn">Beschreibung</property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
                                             </data>
                                         </cell>
                                     </row>
@@ -14976,6 +15092,13 @@ else {&#13;
                                         <expression name="expression" type="javascript">dataSetRow["Beschreibung"]</expression>
                                         <property name="dataType">string</property>
                                     </structure>
+                                    <structure>
+                                        <property name="name">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
+                                        <text-property name="displayName">Umsetzung__-__Umsetzung__bis__(Maßnahme)</text-property>
+                                        <expression name="expression" type="javascript">formatDateFromString(dataSetRow["Umsetzung__-__Umsetzung__bis__(Maßnahme)"])</expression>
+                                        <property name="dataType">string</property>
+                                        <property name="allowExport">true</property>
+                                    </structure>
                                 </list-property>
                                 <list-property name="sort">
                                     <structure>
@@ -15041,7 +15164,7 @@ else {&#13;
                                                         <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
                                                     </structure>
                                                 </list-property>
-                                                <property name="resultSetColumn">Beschreibung</property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
                                             </data>
                                         </cell>
                                     </row>
@@ -15920,6 +16043,13 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                                         <property name="dataType">integer</property>
                                         <property name="allowExport">true</property>
                                     </structure>
+                                    <structure>
+                                        <property name="name">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
+                                        <text-property name="displayName">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</text-property>
+                                        <expression name="expression" type="javascript">formatDateFromString(dataSetRow["Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)"])</expression>
+                                        <property name="dataType">string</property>
+                                        <property name="allowExport">true</property>
+                                    </structure>
                                 </list-property>
                                 <list-property name="sort">
                                     <structure>
@@ -16031,7 +16161,7 @@ else {&#13;
                                                         <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
                                                     </structure>
                                                 </list-property>
-                                                <property name="resultSetColumn">Beschreibung</property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
                                             </data>
                                         </cell>
                                     </row>
@@ -16323,6 +16453,13 @@ else {&#13;
                                         <expression name="expression" type="javascript">dataSetRow["Beschreibung"]</expression>
                                         <property name="dataType">string</property>
                                     </structure>
+                                    <structure>
+                                        <property name="name">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
+                                        <text-property name="displayName">Umsetzung__-__Umsetzung__bis__(Maßnahme)</text-property>
+                                        <expression name="expression" type="javascript">formatDateFromString(dataSetRow["Umsetzung__-__Umsetzung__bis__(Maßnahme)"])</expression>
+                                        <property name="dataType">string</property>
+                                        <property name="allowExport">true</property>
+                                    </structure>
                                 </list-property>
                                 <list-property name="sort">
                                     <structure>
@@ -16388,7 +16525,7 @@ else {&#13;
                                                         <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
                                                     </structure>
                                                 </list-property>
-                                                <property name="resultSetColumn">Beschreibung</property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
                                             </data>
                                         </cell>
                                     </row>
@@ -17267,6 +17404,13 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                                         <property name="dataType">integer</property>
                                         <property name="allowExport">true</property>
                                     </structure>
+                                    <structure>
+                                        <property name="name">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
+                                        <text-property name="displayName">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</text-property>
+                                        <expression name="expression" type="javascript">formatDateFromString(dataSetRow["Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)"])</expression>
+                                        <property name="dataType">string</property>
+                                        <property name="allowExport">true</property>
+                                    </structure>
                                 </list-property>
                                 <list-property name="sort">
                                     <structure>
@@ -17378,7 +17522,7 @@ else {&#13;
                                                         <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
                                                     </structure>
                                                 </list-property>
-                                                <property name="resultSetColumn">Beschreibung</property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
                                             </data>
                                         </cell>
                                     </row>
@@ -17670,6 +17814,13 @@ else {&#13;
                                         <expression name="expression" type="javascript">dataSetRow["Beschreibung"]</expression>
                                         <property name="dataType">string</property>
                                     </structure>
+                                    <structure>
+                                        <property name="name">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
+                                        <text-property name="displayName">Umsetzung__-__Umsetzung__bis__(Maßnahme)</text-property>
+                                        <expression name="expression" type="javascript">formatDateFromString(dataSetRow["Umsetzung__-__Umsetzung__bis__(Maßnahme)"])</expression>
+                                        <property name="dataType">string</property>
+                                        <property name="allowExport">true</property>
+                                    </structure>
                                 </list-property>
                                 <list-property name="sort">
                                     <structure>
@@ -17735,7 +17886,7 @@ else {&#13;
                                                         <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
                                                     </structure>
                                                 </list-property>
-                                                <property name="resultSetColumn">Beschreibung</property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
                                             </data>
                                         </cell>
                                     </row>
@@ -18620,6 +18771,13 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                                         <property name="dataType">integer</property>
                                         <property name="allowExport">true</property>
                                     </structure>
+                                    <structure>
+                                        <property name="name">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
+                                        <text-property name="displayName">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</text-property>
+                                        <expression name="expression" type="javascript">formatDateFromString(dataSetRow["Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)"])</expression>
+                                        <property name="dataType">string</property>
+                                        <property name="allowExport">true</property>
+                                    </structure>
                                 </list-property>
                                 <list-property name="sort">
                                     <structure>
@@ -18731,7 +18889,7 @@ else {&#13;
                                                         <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
                                                     </structure>
                                                 </list-property>
-                                                <property name="resultSetColumn">Beschreibung</property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
                                             </data>
                                         </cell>
                                     </row>
@@ -19023,6 +19181,13 @@ else {&#13;
                                         <expression name="expression" type="javascript">dataSetRow["Beschreibung"]</expression>
                                         <property name="dataType">string</property>
                                     </structure>
+                                    <structure>
+                                        <property name="name">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
+                                        <text-property name="displayName">Umsetzung__-__Umsetzung__bis__(Maßnahme)</text-property>
+                                        <expression name="expression" type="javascript">formatDateFromString(dataSetRow["Umsetzung__-__Umsetzung__bis__(Maßnahme)"])</expression>
+                                        <property name="dataType">string</property>
+                                        <property name="allowExport">true</property>
+                                    </structure>
                                 </list-property>
                                 <list-property name="sort">
                                     <structure>
@@ -19088,7 +19253,7 @@ else {&#13;
                                                         <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
                                                     </structure>
                                                 </list-property>
-                                                <property name="resultSetColumn">Beschreibung</property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
                                             </data>
                                         </cell>
                                     </row>

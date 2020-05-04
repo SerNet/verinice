@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
@@ -55,7 +56,7 @@ public class ReportDepositService extends AbstractReportTemplateService
             String filename = metadata.getFilename();
             filename = filename.substring(filename.lastIndexOf(File.separatorChar) + 1);
             File serverDepositPath;
-            serverDepositPath = getReportDeposit().getFile();
+            serverDepositPath = reportDeposit.getFile();
             String newFilePath = serverDepositPath.getPath() + File.separatorChar + filename;
             FileUtils.writeByteArrayToFile(new File(newFilePath), file);
             writePropertiesFile(convertToProperties(metadata),
@@ -75,14 +76,11 @@ public class ReportDepositService extends AbstractReportTemplateService
             } else {
                 locale = "_" + locale.toLowerCase();
             }
-            String filename = metadata.getFilename();
-            filename = filename.substring(0,
-                    filename.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR));
-            filename = filename + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR
-                    + IReportDepositService.PROPERTIES_FILE_EXTENSION;
-            File depositDir = getReportDeposit().getFile();
+            String propertiesFilename = FilenameUtils.removeExtension(metadata.getFilename()) + locale
+                    + FilenameUtils.EXTENSION_SEPARATOR + PROPERTIES_FILE_EXTENSION;
+            File depositDir = reportDeposit.getFile();
 
-            File propFile = new File(depositDir, filename);
+            File propFile = new File(depositDir, propertiesFilename);
             deleteFile(propFile);
 
             File rptFile = new File(depositDir, metadata.getFilename());
@@ -108,22 +106,6 @@ public class ReportDepositService extends AbstractReportTemplateService
     }
 
     @Override
-    public String getDepositLocation() throws ReportDepositException {
-        try {
-            if (getReportDeposit() != null) {
-                String location = getReportDeposit().getFile().getAbsolutePath();
-                if (!(location.endsWith(String.valueOf(File.separatorChar)))) {
-                    location = location + File.separatorChar;
-                }
-                return location;
-            }
-            return "";
-        } catch (IOException ex) {
-            throw new ReportDepositException(ex);
-        }
-    }
-
-    @Override
     public void update(ReportTemplateMetaData metadata, String locale)
             throws ReportDepositException {
         try {
@@ -135,7 +117,7 @@ public class ReportDepositService extends AbstractReportTemplateService
 
     private void updateSafe(ReportTemplateMetaData metadata, String locale)
             throws IOException, ReportDepositException {
-        File propertiesFile = getPropertiesFile(getDepositLocation() + metadata.getFilename(),
+        File propertiesFile = getPropertiesFile(getTemplateDirectory() + metadata.getFilename(),
                 locale);
         if (propertiesFile.exists()) {
 
@@ -145,6 +127,7 @@ public class ReportDepositService extends AbstractReportTemplateService
             props.setProperty(PROPERTIES_OUTPUTNAME, metadata.getOutputname());
             props.setProperty(PROPERTIES_MULTIPLE_ROOT_OBJECTS,
                     Boolean.toString(metadata.isMultipleRootObjects()));
+            props.setProperty(PROPERTIES_CONTEXT, metadata.getContext());
             writePropertiesFile(props, propertiesFile, "");
         } else {
             writePropertiesFile(convertToProperties(metadata),
@@ -174,6 +157,7 @@ public class ReportDepositService extends AbstractReportTemplateService
         props.setProperty(PROPERTIES_FILENAME, metaData.getFilename());
         props.setProperty(PROPERTIES_MULTIPLE_ROOT_OBJECTS,
                 Boolean.toString(metaData.isMultipleRootObjects()));
+        props.setProperty(PROPERTIES_CONTEXT, metaData.getContext());
         return props;
     }
 
@@ -193,7 +177,7 @@ public class ReportDepositService extends AbstractReportTemplateService
             filename = filename + locale;
 
         }
-        return filename + IReportDepositService.EXTENSION_SEPARATOR_CHAR
+        return filename + FilenameUtils.EXTENSION_SEPARATOR
                 + IReportDepositService.PROPERTIES_FILE_EXTENSION;
     }
 
@@ -209,15 +193,22 @@ public class ReportDepositService extends AbstractReportTemplateService
     }
 
     @Override
-    public boolean isHandeledByReportDeposit() {
+    protected boolean isHandeledByReportDeposit() {
         return true;
     }
 
     @Override
-    public String getTemplateDirectory() {
+    protected String getTemplateDirectory() {
         try {
-            return getDepositLocation();
-        } catch (ReportDepositException ex) {
+            if (reportDeposit != null) {
+                String location = reportDeposit.getFile().getAbsolutePath();
+                if (!(location.endsWith(String.valueOf(File.separatorChar)))) {
+                    location = location + File.separatorChar;
+                }
+                return location;
+            }
+            return "";
+        } catch (IOException ex) {
             LOG.error("error while locating report template directory", ex);
             throw new RuntimeException(ex);
         }

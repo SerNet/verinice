@@ -19,7 +19,9 @@ package sernet.verinice.bp.rcp.filter;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.dialogs.Dialog;
@@ -47,6 +49,8 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.bp.ChangeType;
 import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bp.elements.Application;
@@ -64,6 +68,8 @@ import sernet.verinice.model.bp.elements.Network;
 import sernet.verinice.model.bp.elements.Room;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.common.ElementFilter;
+import sernet.verinice.service.bp.risk.RiskService;
+import sernet.verinice.service.commands.QueryDynamicPropertyValuesCommand;
 
 /**
  * The filter dialog for the base protection view
@@ -79,9 +85,11 @@ public class BaseProtectionFilterDialog extends Dialog {
     private static final int VIEWER_TABLE_WIDTH = 470;
     private static final int VIEWER_TABLE_HEIGHT = 135;
 
+    private Set<Button> changeTypeButtons = new HashSet<>();
     private Set<Button> implementationStatusButtons = new HashSet<>();
-
+    private Set<Button> releaseButtons = new HashSet<>();
     private Set<Button> qualifierButtons = new HashSet<>();
+    private Set<Button> risklabelButtons = new HashSet<>();
 
     private CheckboxTableViewer elementTypeSelector;
 
@@ -89,6 +97,9 @@ public class BaseProtectionFilterDialog extends Dialog {
 
     private Button applyTagFilterToItNetworksCheckbox;
     private Button hideEmptyGroupsCheckbox;
+
+    private OptionalBooleanDropDown auditPerformedDropdown;
+    private OptionalBooleanDropDown riskAnalysisNecessaryDropDown;
 
     private @NonNull BaseProtectionFilterParameters filterParameters;
     private final @NonNull BaseProtectionFilterParameters defaultFilterParams;
@@ -100,6 +111,7 @@ public class BaseProtectionFilterDialog extends Dialog {
     public BaseProtectionFilterDialog(Shell parentShell,
             @NonNull BaseProtectionFilterParameters filterParameters,
             @NonNull BaseProtectionFilterParameters defaultFilterParams) {
+
         super(parentShell);
         this.filterParameters = filterParameters;
         this.defaultFilterParams = defaultFilterParams;
@@ -111,6 +123,11 @@ public class BaseProtectionFilterDialog extends Dialog {
         shell.setText(Messages.BaseProtectionFilterDialog_Title);
     }
 
+    @Override
+    protected boolean isResizable() {
+        return true;
+    }
+
     /**
      * Create contents of the dialog.
      *
@@ -120,32 +137,58 @@ public class BaseProtectionFilterDialog extends Dialog {
     protected Control createDialogArea(Composite parent) {
         Composite container = (Composite) super.createDialogArea(parent);
 
-        Label intro = new Label(container, SWT.NONE);
+        ScrolledComposite scrollOfComposition = new ScrolledComposite(container, SWT.V_SCROLL);
+        scrollOfComposition.setExpandHorizontal(true);
+        scrollOfComposition.setExpandVertical(true);
+        scrollOfComposition.setMinSize(300, 300);
+
+        Composite content = new Composite(scrollOfComposition, SWT.NONE);
+        scrollOfComposition.setContent(content);
+        content.setLayout(new GridLayout());
+
+        GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
+        data.heightHint = 500;
+        scrollOfComposition.setLayoutData(data);
+
+        Label intro = new Label(content, SWT.NONE);
         intro.setText(Messages.BaseProtectionFilterDialog_IntroText);
 
-        addFiltersForRequirementsAndSafeguards(container);
-        addElementTypesGroup(container);
+        addFiltersForRequirementsAndSafeguards(content);
         try {
-            addTagsGroup(container);
+            addReleaseGroup(content);
+        } catch (CommandException ex) {
+            throw new RuntimeException("Failed to initialize release filter.", ex);
+        }
+        addChangeTypeGroup(content);
+        addRiskLabelGroup(content);
+        addRiskAnalysisNecessaryGroup(content);
+        addAuditPerformedGroup(content);
+
+        addElementTypesGroup(content);
+        try {
+            addTagsGroup(content);
         } catch (CommandException e) {
             throw new RuntimeException("Failed to initialize filter", e);
         }
-        addApplyTagFilterToItNetworksGroup(container);
-        addHideEmptyGroup(container);
+        addApplyTagFilterToItNetworksGroup(content);
+        addHideEmptyGroup(content);
 
         setValues(filterParameters);
-        return container;
+
+        scrollOfComposition.setMinSize(content.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+
+        return parent;
     }
 
     private void addFiltersForRequirementsAndSafeguards(Composite parent) {
         Group boxesComposite = new Group(parent, SWT.BORDER);
+        boxesComposite.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, false, false));
         GridLayout layout = new GridLayout();
         boxesComposite.setLayout(layout);
         boxesComposite
                 .setText(Messages.BaseProtectionFilterDialog_FiltersForRequirementsAndSafeguards);
         addImplementationStatusGroup(boxesComposite);
         addQualiferGroup(boxesComposite);
-
     }
 
     private void addImplementationStatusGroup(Composite parent) {
@@ -176,6 +219,76 @@ public class BaseProtectionFilterDialog extends Dialog {
         }
         qualifierButtons.add(addButton(boxesComposite, null,
                 Messages.BaseProtectionFilterDialog_Property_Value_Null));
+    }
+
+    private void addAuditPerformedGroup(Composite container) {
+        Group boxesComposite = new Group(container, SWT.NONE);
+        boxesComposite.setText(Messages.BaseProtectionFilterDialog_AuditPerformed);
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1);
+        boxesComposite.setLayoutData(gridData);
+        GridLayout layout = new GridLayout(1, false);
+        boxesComposite.setLayout(layout);
+
+        auditPerformedDropdown = new OptionalBooleanDropDown(boxesComposite);
+    }
+
+    private void addChangeTypeGroup(Composite parent) {
+        ChangeType[] choices = ChangeType.values();
+
+        Group boxesComposite = new Group(parent, SWT.NONE);
+        boxesComposite.setText(Messages.BaseProtectionFilterDialog_ChangeType);
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1);
+        boxesComposite.setLayoutData(gridData);
+        GridLayout layout = new GridLayout(choices.length + 1, false);
+        boxesComposite.setLayout(layout);
+
+        for (final ChangeType changeType : choices) {
+            changeTypeButtons.add(addButton(boxesComposite, changeType, changeType.getLabel()));
+        }
+    }
+
+    private void addReleaseGroup(Composite parent) throws CommandException {
+        QueryDynamicPropertyValuesCommand command = new QueryDynamicPropertyValuesCommand();
+        command.setPropertyType("release");
+        command = createCommandService().executeCommand(command);
+        List<String> choices = command.getValues();
+
+        Group boxesComposite = new Group(parent, SWT.NONE);
+        boxesComposite.setText(Messages.BaseProtectionFilterDialog_Releases);
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1);
+        boxesComposite.setLayoutData(gridData);
+        GridLayout layout = new GridLayout(choices.size() + 1, false);
+        boxesComposite.setLayout(layout);
+
+        for (final String release : choices) {
+            releaseButtons.add(addButton(boxesComposite, release, release));
+        }
+    }
+
+    private void addRiskAnalysisNecessaryGroup(Composite container) {
+        Group boxesComposite = new Group(container, SWT.NONE);
+        boxesComposite.setText(Messages.BaseProtectionFilterDialog_RiskanalysisNecessary);
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1);
+        boxesComposite.setLayoutData(gridData);
+        GridLayout layout = new GridLayout(1, false);
+        boxesComposite.setLayout(layout);
+
+        riskAnalysisNecessaryDropDown = new OptionalBooleanDropDown(boxesComposite);
+    }
+
+    private void addRiskLabelGroup(Composite parent) {
+        List<String> choices = getRiskService().findAllRiskLabels();
+
+        Group boxesComposite = new Group(parent, SWT.NONE);
+        boxesComposite.setText(Messages.BaseProtectionFilterDialog_Risk);
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1);
+        boxesComposite.setLayoutData(gridData);
+        GridLayout layout = new GridLayout(choices.size() + 1, false);
+        boxesComposite.setLayout(layout);
+
+        for (final String risk : choices) {
+            risklabelButtons.add(addButton(boxesComposite, risk, risk));
+        }
     }
 
     private Button addButton(Group container, final Object value, String label) {
@@ -270,6 +383,10 @@ public class BaseProtectionFilterDialog extends Dialog {
     }
 
     private void setValues(BaseProtectionFilterParameters params) {
+        for (Button button : changeTypeButtons) {
+            boolean isSelected = params.getChangeTypes().contains(button.getData());
+            button.setSelection(isSelected);
+        }
         for (Button button : implementationStatusButtons) {
             boolean isSelected = params.getImplementationStatuses().contains(button.getData());
             button.setSelection(isSelected);
@@ -278,6 +395,16 @@ public class BaseProtectionFilterDialog extends Dialog {
             boolean isSelected = params.getSecurityLevels().contains(button.getData());
             button.setSelection(isSelected);
         }
+        for (Button button : releaseButtons) {
+            boolean isSelected = params.getReleases().contains(button.getData());
+            button.setSelection(isSelected);
+        }
+        for (Button button : risklabelButtons) {
+            boolean isSelected = params.getRiskLabels().contains(button.getData());
+            button.setSelection(isSelected);
+        }
+        auditPerformedDropdown.select(params.getAuditPerformed());
+        riskAnalysisNecessaryDropDown.select(params.getRiskAnalysisNecessary());
         elementTypeSelector.setCheckedElements(
                 params.getElementTypes().toArray(new String[params.getElementTypes().size()]));
         tagsSelector
@@ -321,6 +448,18 @@ public class BaseProtectionFilterDialog extends Dialog {
             }
         }
 
+        Set<String> releases = releaseButtons.stream().filter(b -> b.getSelection())
+                .map(b -> (String) b.getData()).collect(Collectors.toSet());
+
+        Optional<Boolean> auditPerformed = auditPerformedDropdown.getSelection();
+        Optional<Boolean> riskanalysisNecessary = riskAnalysisNecessaryDropDown.getSelection();
+
+        Set<String> riskLabels = risklabelButtons.stream().filter(b -> b.getSelection())
+                .map(b -> (String) b.getData()).collect(Collectors.toSet());
+
+        Set<ChangeType> changeTypes = changeTypeButtons.stream().filter(b -> b.getSelection())
+                .map(b -> (ChangeType) b.getData()).collect(Collectors.toSet());
+
         Object[] checkedElements = elementTypeSelector.getCheckedElements();
         Set<String> types = new HashSet<>(checkedElements.length);
         for (Object checkedElementType : checkedElements) {
@@ -333,16 +472,26 @@ public class BaseProtectionFilterDialog extends Dialog {
         }
 
         filterParameters = BaseProtectionFilterParameters.builder()
-                .withImplementationStatuses(statuses).withSecurityLevels(levels)
-                .withElementTypes(types).withTags(tags)
+                .withAuditPerformed(auditPerformed).withImplementationStatuses(statuses)
+                .withSecurityLevels(levels).withElementTypes(types).withTags(tags)
+                .withChangeTypes(changeTypes).withReleases(releases)
+                .withRiskAnalysisNecessary(riskanalysisNecessary).withRiskLabels(riskLabels)
                 .withApplyTagFilterToItNetworks(applyTagFilterToItNetworksCheckbox.getSelection())
                 .withHideEmptyGroups(hideEmptyGroupsCheckbox.getSelection()).build();
 
         return super.close();
     }
 
+    private RiskService getRiskService() {
+        return (RiskService) VeriniceContext.get(VeriniceContext.ITBP_RISK_SERVICE);
+    }
+
     private static HUITypeFactory getTypeFactory() {
         return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+    }
+
+    private ICommandService createCommandService() {
+        return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
     }
 
     public @NonNull BaseProtectionFilterParameters getFilterParameters() {

@@ -61,7 +61,9 @@
 					value="jdbc.url=${server-database-url}" />
         	<replacefilter token="# admin.username=admin" value="admin.username=verinice"/>
         	<replacefilter token="# veriniceserver.grundschutzKataloge=/WEB-INF/it-grundschutz_el14_html_de.zip" 
-        		value="veriniceserver.grundschutzKataloge=${test-data}/it-grundschutz_el14_html_de.zip"/>
+        		value="veriniceserver.grundschutzKataloge=file:${test-data}/it-grundschutz_el14_html_de.zip"/>
+        	<replacefilter token="# veriniceserver.datenschutzBaustein=/WEB-INF/B1.5-Datenschutz-2008-08-26.zip" 
+        		value="veriniceserver.datenschutzBaustein=file:${test-data}/B1.5-Datenschutz-2008-08-26.zip"/>
         </replace>
         <replace file="${server-work-dir}/verinice/WEB-INF/classes/log4j.xml" summary="true">
             <replacefilter token="${catalina.home}/logs/verinice-server.log" 
@@ -242,6 +244,16 @@ lang        : ${verinice.lang}
 		<property name="v-launcher" refid="verinice-starter"/>
 		<basename property="verinice.starter" file="${v-launcher}"/>
 		<echo>found verinice.starter:  ${verinice.starter}</echo>
+		
+        <path id="verinice-jre">
+            <dirset  dir="${verinice-aut-path}/plugins">
+                <include name="sernet.verinice.extraresources.jre_*" />
+            </dirset>
+        </path>
+        <property name="v-jre" refid="verinice-jre"/>
+        <basename property="verinice.jre" file="${v-jre}"/>
+        <echo>found verinice.jre:  ${verinice.jre}</echo>
+		
 	</target>
 	
 	<!-- - - - - - - - - - - - - - - - - - 
@@ -409,6 +421,8 @@ ${verinice.lang}
 ${verinice-workspace}
 -debug
 -consolelog
+-vm
+plugins/${verinice.jre}/jre/bin/java
 -vmargs
 -Xms512m
 -Xmx2048m
@@ -422,6 +436,10 @@ ${verinice-workspace}
 -Dimages=${images}
 -Dbasepath=${test-results}
 -Dtest-data=${test-data}
+-Dderby.locks.monitor=true
+-Dderby.locks.deadlockTrace=true
+-Djava.net.useSystemProxies=true
+-Dverinice.debug_bp_risk_analysis_decorator=true
 </echo>
 	</target>
 
@@ -549,7 +567,7 @@ ${verinice-workspace}
 	        <antcall target="configure-aut" />
 	        <echo file="${verinice-sever-workspace}/.metadata/.plugins/org.eclipse.core.runtime/.settings/sernet.gs.ui.rcp.main.prefs" >
 	eclipse.preferences.version=1
-	cna_derbywarning=true
+	cna_derbywarning=false
 	gs_cna_vnserver_uri=${server.test.url}
 	gs_cna_operationmode=gs_cna_operationmode_withserver
 	</echo>

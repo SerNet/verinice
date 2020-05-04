@@ -19,7 +19,10 @@
  ******************************************************************************/
 package sernet.verinice.interfaces.search;
 
+import sernet.verinice.model.bp.groups.ImportBpGroup;
+import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
 
 /**
  * Implementing classes creates JSON documents for indexing in ElasticSearch
@@ -32,4 +35,9 @@ public interface IJsonBuilder {
      * @return A JSON document from an element for indexing in ElasticSearch
      */
     String getJson(CnATreeElement element);
+
+    default boolean isIndexableElement(CnATreeElement element) {
+        return !(element instanceof ImportIsoGroup || element instanceof ImportBsiGroup
+                || element instanceof ImportBpGroup);
+    }
 }

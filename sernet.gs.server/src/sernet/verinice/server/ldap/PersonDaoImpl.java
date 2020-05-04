@@ -3,6 +3,7 @@ package sernet.verinice.server.ldap;
 import java.util.List;
 
 import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 
 import org.springframework.ldap.core.AttributesMapper;
@@ -10,11 +11,6 @@ import org.springframework.ldap.core.LdapTemplate;
 
 import sernet.verinice.interfaces.ldap.IPersonDao;
 import sernet.verinice.interfaces.ldap.PersonParameter;
-import sernet.verinice.model.bp.elements.BpPerson;
-import sernet.verinice.model.bsi.Person;
-import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.Domain;
-import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.service.ldap.PersonInfo;
 
 public class PersonDaoImpl implements IPersonDao {
@@ -29,18 +25,6 @@ public class PersonDaoImpl implements IPersonDao {
     @Override
     public List<PersonInfo> getPersonList(PersonParameter parameter) {
         return ldapTemplate.search(getBase(), getUserFilter(parameter), new LdapPersonMapper());
-    }
-
-    /*
-     * @see
-     * sernet.verinice.interfaces.ldap.IPersonDao#getPersonList(sernet.verinice.
-     * interfaces.ldap.PersonParameter, sernet.verinice.model.common.Domain)
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<PersonInfo> getPersonList(PersonParameter parameter, Domain importDomain) {
-        return ldapTemplate.search(getBase(), getUserFilter(parameter),
-                new LdapPersonMapper(importDomain));
     }
 
     private String getUserFilter(PersonParameter parameter) {
@@ -104,127 +88,49 @@ public class PersonDaoImpl implements IPersonDao {
     }
 
     private static final class LdapPersonMapper implements AttributesMapper {
-        private Domain importDomain = Domain.ISM;
-
-        public LdapPersonMapper() {
-            super();
-        }
-
-        public LdapPersonMapper(Domain importDomain) {
-            super();
-            this.importDomain = importDomain;
-        }
 
         public Object mapFromAttributes(Attributes attrs) throws NamingException {
-            CnATreeElement person;
-            switch (importDomain) {
-            case ISM:
-                person = new PersonIso();
-                break;
-            case BASE_PROTECTION_OLD:
-                person = new Person(null);
-                break;
-            case BASE_PROTECTION:
-                person = new BpPerson(null);
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown domain " + importDomain);
-            }
 
-            String login = determineLogin(attrs);
-            setGivenName(attrs, person);
-            setSurname(attrs, person);
-            setEmailPhone(attrs, person);
-            String title = determineTitle(attrs);
-            String department = determineDepartment(attrs);
-            String company = determineCompany(attrs);
+            String login = getFirstMatchOrNull(attrs, "sAMAccountName", "userPrincipalName", /*
+                                                                                              * pre
+                                                                                              * windows
+                                                                                              * 2000
+                                                                                              */
+                    "uid" /* OpenLDAP */ );
+            String givenName = determineGivenName(attrs);
+            String surname = determineSurname(attrs);
+            String email = getFirstMatchOrNull(attrs, "mail" /* AD */);
+            String phone = getFirstMatchOrNull(attrs, "telephoneNumber" /* AD */);
+            String title = getFirstMatchOrNull(attrs, "title" /* AD */ );
+            String department = getFirstMatchOrNull(attrs, "department" /* AD */,
+                    "subDepartment"/* LDAP */ );
+            String company = getFirstMatchOrNull(attrs, "company" /* AD */,
+                    "companyCode" /* LDAP */
+            );
 
-            return new PersonInfo(person, login, title, department, company);
+            return new PersonInfo(login, title, department, company, givenName, surname, email,
+                    phone);
         }
 
-        private String determineCompany(Attributes attrs) throws NamingException {
-            String company = null;
-            if (attrs.get("company") != null) {
-                // AD
-                company = (String) attrs.get("company").get();
-            } else if (attrs.get("companyCode") != null) {
-                // LDAP
-                company = (String) attrs.get("companyCode").get();
-            }
-            return company;
-        }
-
-        private String determineDepartment(Attributes attrs) throws NamingException {
-            String department = null;
-            if (attrs.get("department") != null) {
-                // AD
-                department = (String) attrs.get("department").get();
-            } else if (attrs.get("subDepartment") != null) {
-                // LDAP
-                department = (String) attrs.get("subDepartment").get();
-            }
-            return department;
-        }
-
-        private String determineTitle(Attributes attrs) throws NamingException {
-            String title = null;
-            if (attrs.get("title") != null) {
-                // AD
-                title = (String) attrs.get("title").get();
-            }
-            return title;
-        }
-
-        private void setEmailPhone(Attributes attrs, CnATreeElement person) throws NamingException {
-            if (attrs.get("telephoneNumber") != null) {
-                // AD
-                setPersonPhone(person, ((String) attrs.get("telephoneNumber").get()));
-            }
-            if (attrs.get("mail") != null) {
-                // AD
-                setPersonEmail(person, ((String) attrs.get("mail").get()));
-            }
-        }
-
-        private void setSurname(Attributes attrs, CnATreeElement person) throws NamingException {
+        private String determineSurname(Attributes attrs) throws NamingException {
             String surname = null;
             if (attrs.get("sn") != null) {
                 // AD
-                setPersonSurname(person, (String) attrs.get("sn").get());
+                return (String) attrs.get("sn").get();
             } else {
                 // OpenLDAP
-                surname = getSurname((String) attrs.get("cn").get());
-                if (surname != null) {
-                    setPersonSurname(person, surname);
-                }
+                return getSurname((String) attrs.get("cn").get());
             }
         }
 
-        private void setGivenName(Attributes attrs, CnATreeElement person) throws NamingException {
+        private String determineGivenName(Attributes attrs) throws NamingException {
             if (attrs.get("givenName") != null) {
                 // AD
-                setPersonName(person, (String) attrs.get("givenName").get());
+                return (String) attrs.get("givenName").get();
             } else {
                 // OpenLDAP
-                String forname = getForename((String) attrs.get("cn").get());
-                if (forname != null) {
-                    setPersonName(person, forname);
-                }
+                return getForename((String) attrs.get("cn").get());
             }
-        }
-
-        private String determineLogin(Attributes attrs) throws NamingException {
-            String login = null;
-            if (attrs.get("sAMAccountName") != null) {
-                login = (String) attrs.get("sAMAccountName").get();
-            } else if (attrs.get("userPrincipalName") != null) {
-                // pre windows 2000:
-                login = (String) attrs.get("userPrincipalName").get();
-            } else if (attrs.get("uid") != null) {
-                // OpenLDAP
-                login = (String) attrs.get("uid").get();
-            }
-            return login;
         }
 
         private String getForename(String fullName) {
@@ -250,67 +156,15 @@ public class PersonDaoImpl implements IPersonDao {
             return surname;
         }
 
-        private void setPersonEmail(CnATreeElement person, String data) {
-            if (person instanceof Person) {
-                setPersonProperty(person, Person.P_EMAIL, data);
-            } else if (person instanceof PersonIso) {
-                setPersonProperty(person, PersonIso.PROP_EMAIL, data);
-            } else if (person instanceof BpPerson) {
-                setPersonProperty(person, BpPerson.PROP_EMAIL, data);
-            } else {
-                throwUnsupportedType(person);
+        private static String getFirstMatchOrNull(Attributes attrs, String... attributeNames)
+                throws NamingException {
+            for (String attributeName : attributeNames) {
+                Attribute attribute = attrs.get(attributeName);
+                if (attribute != null) {
+                    return (String) attribute.get();
+                }
             }
-
+            return null;
         }
-
-        private void setPersonSurname(CnATreeElement person, String data) {
-            if (person instanceof Person) {
-                setPersonProperty(person, Person.P_NAME, data);
-            } else if (person instanceof PersonIso) {
-                setPersonProperty(person, PersonIso.PROP_SURNAME, data);
-            } else if (person instanceof BpPerson) {
-                setPersonProperty(person, BpPerson.PROP_LAST_NAME, data);
-            } else {
-                throwUnsupportedType(person);
-            }
-        }
-
-        private void setPersonName(CnATreeElement person, String data) {
-            if (person instanceof Person) {
-                setPersonProperty(person, Person.P_VORNAME, data);
-            } else if (person instanceof PersonIso) {
-                setPersonProperty(person, PersonIso.PROP_NAME, data);
-            } else if (person instanceof BpPerson) {
-                setPersonProperty(person, BpPerson.PROP_FIRST_NAME, data);
-            } else {
-                throwUnsupportedType(person);
-            }
-        }
-
-        private void setPersonPhone(CnATreeElement person, String data) {
-            if (person instanceof Person) {
-                setPersonProperty(person, Person.P_PHONE, data);
-            } else if (person instanceof PersonIso) {
-                setPersonProperty(person, PersonIso.PROP_TELEFON, data);
-            } else if (person instanceof BpPerson) {
-                setPersonProperty(person, BpPerson.PROP_PHONE, data);
-            } else {
-                throwUnsupportedType(person);
-            }
-
-        }
-
-        private static void setPersonProperty(CnATreeElement person, String propertyName,
-                String value) {
-            person.getEntity().setSimpleValue(person.getEntityType().getPropertyType(propertyName),
-                    value);
-        }
-
-        private static void throwUnsupportedType(CnATreeElement person) {
-            throw new UnsupportedOperationException(
-                    "Cannot handle person with unsupported type " + person.getClass());
-        }
-
     }
-
 }

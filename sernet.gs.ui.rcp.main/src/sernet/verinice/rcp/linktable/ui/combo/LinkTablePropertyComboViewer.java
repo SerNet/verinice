@@ -76,7 +76,9 @@ public class LinkTablePropertyComboViewer extends LinkTableComboViewer {
      */
     @Override
     protected void doSelectionChanged() {
-        // nothing to do
+        if (interactive) {
+            ltrColumn.clearAlias();
+        }
     }
 
     /*

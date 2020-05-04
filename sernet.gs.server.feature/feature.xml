@@ -5,12 +5,12 @@
       version="1.1.1.qualifier"
       provider-name="sernet.de">
 
-   <description url="http://www.verinice.com">
+   <description url="https://verinice.com">
       Integrated server components for verinice - the Open Source ISMS tool.
    </description>
 
-   <copyright url="http://www.verinice.com">
-      Copyright 1997 - 2019 SerNet GmbH and others.
+   <copyright url="https://verinice.com">
+      Copyright 1997 - 2020 SerNet GmbH and others.
    </copyright>
 
    <license url="http://www.gnu.org/licenses/lgpl-3.0-standalone.html">

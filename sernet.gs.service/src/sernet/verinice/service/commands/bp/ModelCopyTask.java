@@ -25,11 +25,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RuntimeCommandException;
+import sernet.hui.common.connect.Property;
+import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IDAOFactory;
@@ -44,6 +49,8 @@ import sernet.verinice.service.commands.CopyCommand;
 public abstract class ModelCopyTask implements Runnable {
 
     private static final Logger LOG = Logger.getLogger(ModelCopyTask.class);
+    private static final Pattern RELEASE_PATTERN = Pattern.compile("(\\d{4})-(\\d+)");
+    private static final String TITLE_REMOVED = "ENTFALLEN";
 
     protected final ICommandService commandService;
     protected final IDAOFactory daoFactory;
@@ -54,19 +61,26 @@ public abstract class ModelCopyTask implements Runnable {
     private final Set<CnATreeElement> targetElements;
     private final Predicate<CnATreeElement> elementFilter;
 
+    private final String elementReleaseProperty;
+    private final String groupReleaseProperty;
+
     // key: element from compendium, value: element from scope
     private Map<CnATreeElement, CnATreeElement> existingGroupsByCompendiumGroup;
 
     public ModelCopyTask(ICommandService commandService, IDAOFactory daoFactory,
             ModelingData modelingData, String handledGroupTypeId,
-            Predicate<CnATreeElement> elementFilter) {
+            Predicate<CnATreeElement> elementFilter, String elementReleaseProperty,
+            String groupReleaseProperty) {
         this.commandService = commandService;
         this.daoFactory = daoFactory;
         this.modelingData = modelingData;
         this.handledGroupTypeId = handledGroupTypeId;
         this.elementFilter = elementFilter;
+        this.elementReleaseProperty = elementReleaseProperty;
+        this.groupReleaseProperty = groupReleaseProperty;
         this.elementTypeId = CnATypeMapper.getElementTypeIdFromGroupTypeId(handledGroupTypeId);
         this.targetElements = modelingData.getTargetElements();
+
     }
 
     @Override
@@ -101,8 +115,25 @@ public abstract class ModelCopyTask implements Runnable {
     protected abstract void afterSkipExistingElement(CnATreeElement targetObject,
             CnATreeElement existingElement, CnATreeElement compendiumElement);
 
+    protected abstract void updateExistingGroup(CnATreeElement targetObject,
+            CnATreeElement existingGroup, CnATreeElement compendiumGroup, boolean group);
+
+    protected abstract void updateExistingElement(CnATreeElement targetObject,
+            CnATreeElement existingElement, CnATreeElement compendiumElement,
+            boolean elementRemoved);
+
     protected void handleExistingGroup(CnATreeElement groupFromCompendium,
             CnATreeElement groupFromScope) throws CommandException {
+        String scopeGroupRelease = groupFromScope.getEntity()
+                .getRawPropertyValue(groupReleaseProperty);
+        String compendiumGroupRelease = groupFromCompendium.getEntity()
+                .getRawPropertyValue(groupReleaseProperty);
+        if (canUpdateFrom(scopeGroupRelease, compendiumGroupRelease)) {
+            boolean elementRemoved = isElementRemoved(groupFromCompendium);
+            updateExistingGroup(groupFromScope.getParent(), groupFromScope, groupFromCompendium,
+                    elementRemoved);
+        }
+
         Map<String, CnATreeElement> compendiumElementsByIdentifier = getIdMapOfChildren(
                 groupFromCompendium);
         Map<String, CnATreeElement> scopeelementyByIdentifier = getIdMapOfChildren(groupFromScope);
@@ -110,14 +141,25 @@ public abstract class ModelCopyTask implements Runnable {
         for (Map.Entry<String, CnATreeElement> entry : compendiumElementsByIdentifier.entrySet()) {
             CnATreeElement compendiumElement = entry.getValue();
             if (!scopeelementyByIdentifier.containsKey(entry.getKey())) {
-                if (elementFilter == null || elementFilter.test(compendiumElement)) {
+                if (!isElementRemoved(compendiumElement)
+                        && (elementFilter == null || elementFilter.test(compendiumElement))) {
                     missingElements.add(compendiumElement);
                 }
             } else {
                 CnATreeElement scopeElement = scopeelementyByIdentifier.get(entry.getKey());
                 modelingData.addMappingForExistingElement(compendiumElement, scopeElement);
-                afterSkipExistingElement(groupFromScope.getParent(), scopeElement,
-                        compendiumElement);
+                String scopeElementRelease = scopeElement.getEntity()
+                        .getRawPropertyValue(elementReleaseProperty);
+                String compendiumElementRelease = compendiumElement.getEntity()
+                        .getRawPropertyValue(elementReleaseProperty);
+                if (canUpdateFrom(scopeElementRelease, compendiumElementRelease)) {
+                    boolean elementRemoved = isElementRemoved(compendiumElement);
+                    updateExistingElement(groupFromScope.getParent(), scopeElement,
+                            compendiumElement, elementRemoved);
+                } else {
+                    afterSkipExistingElement(groupFromScope.getParent(), scopeElement,
+                            compendiumElement);
+                }
             }
         }
         if (!missingElements.isEmpty()) {
@@ -127,6 +169,56 @@ public abstract class ModelCopyTask implements Runnable {
                     modelingData);
             commandService.executeCommand(copyCommand);
         }
+    }
+
+    private static boolean isElementRemoved(CnATreeElement compendiumElement) {
+        return TITLE_REMOVED.equals(compendiumElement.getTitle());
+    }
+
+    /**
+     * Checks whether an update from one version to another is possible.<br>
+     * An update is possible if the compendium release is higher and does not
+     * skip major versions (i.e. years).<br>
+     * Supported:
+     * <ul>
+     * <li>2019-0 -> 2019-5
+     * <li>2019-0 -> 2020-0
+     * <li>2019-1 -> 2020-0
+     * <li>2019-0 -> 2020-3
+     *
+     * </ul>
+     * Unsupported:
+     * <ul>
+     * <li>2019-0 -> 2018-0
+     * <li>2019-0 -> 2019-0
+     * <li>2019-0 -> 2021-0
+     * </ul>
+     *
+     * @param scopeElementRelease
+     *            the scope element's release version
+     * @param compendiumElementRelease
+     *            the compendium element's release version
+     * @return <code>true</code> if the update is supported, <code>false</code>
+     *         otherwise
+     */
+    static boolean canUpdateFrom(String scopeElementRelease, String compendiumElementRelease) {
+        if (StringUtils.isEmpty(scopeElementRelease)
+                || StringUtils.isEmpty(compendiumElementRelease)) {
+            return false;
+        }
+        Matcher scopeReleaseMatcher = RELEASE_PATTERN.matcher(scopeElementRelease);
+        Matcher compendiumReleaseMatcher = RELEASE_PATTERN.matcher(compendiumElementRelease);
+        if (!scopeReleaseMatcher.matches() || !compendiumReleaseMatcher.matches()) {
+            return false;
+        }
+        int scopeYearParsed = Integer.parseInt(scopeReleaseMatcher.group(1));
+        int compendiumYearParsed = Integer.parseInt(compendiumReleaseMatcher.group(1));
+        if (compendiumYearParsed < scopeYearParsed || compendiumYearParsed > scopeYearParsed + 1) {
+            return false;
+        }
+        return compendiumYearParsed > scopeYearParsed
+                || Integer.parseInt(compendiumReleaseMatcher.group(2)) > Integer
+                        .parseInt(scopeReleaseMatcher.group(2));
     }
 
     private Map<String, CnATreeElement> getIdMapOfChildren(CnATreeElement element) {
@@ -155,7 +247,9 @@ public abstract class ModelCopyTask implements Runnable {
         for (CnATreeElement group : getGroupsFromCompendium()) {
             CnATreeElement existingGroup = getElementFromChildren(targetChildren, group);
             if (existingGroup == null) {
-                missingGroups.add(group);
+                if (!isElementRemoved(group)) {
+                    missingGroups.add(group);
+                }
             } else if (isSuitableType(existingGroup, group)) {
                 existingGroupsByCompendiumGroup.put(group, existingGroup);
             }
@@ -192,6 +286,35 @@ public abstract class ModelCopyTask implements Runnable {
 
     }
 
+    protected void copyProperties(CnATreeElement compendiumElement, CnATreeElement existingElement,
+            String... propertyIds) {
+        Map<String, PropertyList> compendiumElementPropertyLists = compendiumElement.getEntity()
+                .getTypedPropertyLists();
+        Map<String, PropertyList> existingElementPropertyLists = existingElement.getEntity()
+                .getTypedPropertyLists();
+
+        for (String propertyId : propertyIds) {
+            PropertyList compendiumElementPropertyList = compendiumElementPropertyLists
+                    .get(propertyId);
+            PropertyList existingElementPropertyList = existingElementPropertyLists.get(propertyId);
+            if (compendiumElementPropertyList != null) {
+                if (existingElementPropertyList == null) {
+                    existingElementPropertyList = new PropertyList(
+                            compendiumElementPropertyList.getProperties().size());
+                    existingElementPropertyLists.put(propertyId, existingElementPropertyList);
+                } else {
+                    existingElementPropertyList.getProperties().clear();
+                }
+                for (Property property : compendiumElementPropertyList.getProperties()) {
+                    Property newProperty = property.copy(existingElement.getEntity());
+                    existingElementPropertyList.add(newProperty);
+                }
+            } else if (existingElementPropertyList != null) {
+                compendiumElementPropertyLists.remove(propertyId);
+            }
+        }
+    }
+
     private final class ModelingCopyCommand extends CopyCommand {
         private static final long serialVersionUID = 6836616806403844422L;
 
@@ -216,7 +339,8 @@ public abstract class ModelCopyTask implements Runnable {
 
         @Override
         protected boolean copyDescendant(CnATreeElement descendant, CnATreeElement groupToCopyTo) {
-            return elementFilter == null || elementFilter.test(descendant);
+            return !isElementRemoved(descendant)
+                    && (elementFilter == null || elementFilter.test(descendant));
         }
     }
 

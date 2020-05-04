@@ -146,17 +146,17 @@ public abstract class LinkTableComboViewer extends ComboViewer
     protected abstract LinkTableComboViewer createChild(Composite parent);
 
     public LinkTableComboViewer copy(LinkTableComboViewer leftCombo, Composite newParent,
-            Control formerElement) {
+            Control formerElement, LinkTableColumn linkTableColumn) {
         Composite newParentComposite = new Composite(newParent, SWT.NONE);
         newParentComposite.setLayout(new FormLayout());
         newParentComposite.setLayoutData(getDefaultFormData(formerElement));
 
-        LinkTableComboViewer newViewer = createCopy(leftCombo, ltrColumn, newParentComposite);
+        LinkTableComboViewer newViewer = createCopy(leftCombo, linkTableColumn, newParentComposite);
 
         newViewer.getCombo().select(this.getCombo().getSelectionIndex());
         if (rightCombo != null) {
             newViewer.rightCombo = rightCombo.copy(newViewer, newParentComposite,
-                    newViewer.getCombo());
+                    newViewer.getCombo(), linkTableColumn);
             newViewer.rightCombo.leftCombo = newViewer;
         }
         return newViewer;

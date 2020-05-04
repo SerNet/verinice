@@ -95,8 +95,6 @@ public final class EditorUtil {
             return cnAElement.getLinksUp().stream().filter(
                     DeductionImplementationUtil::isRelevantLinkForImplementationStateDeduction)
                     .map(CnALink::getDependant).collect(Collectors.toList());
-        } else if (BpRequirement.TYPE_ID.equals(cnAElement.getTypeId())) {
-            return DeductionImplementationUtil.getSafeguardsFromRequirement(cnAElement);
         }
         return Collections.emptyList();
     }
@@ -112,7 +110,8 @@ public final class EditorUtil {
         if (cnAElement == null) {
             return;
         }
-        if (BpRequirement.TYPE_ID.equals(cnAElement.getTypeId())) {
+        if (BpRequirement.TYPE_ID.equals(cnAElement.getTypeId())
+                && DeductionImplementationUtil.isDeductiveImplementationEnabled(cnAElement)) {
             updateRequirementImplementationStatus(cnAElement);
         }
     }

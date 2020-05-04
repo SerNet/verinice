@@ -33,23 +33,26 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 public class LocalReportTemplateService extends AbstractReportTemplateService {
 
     @Override
-    public boolean isHandeledByReportDeposit() {
+    protected boolean isHandeledByReportDeposit() {
         return false;
     }
 
     @Override
-    public String getTemplateDirectory() {
+    protected String getTemplateDirectory() {
         return getLocalReportPath();
     }
 
     private String getLocalReportPath() {
 
-        String templateDir = Activator.getDefault().getIReportTemplateDirectoryService().getDirectory();
+        String templateDir = Activator.getDefault().getIReportTemplateDirectoryService()
+                .getDirectory();
 
         if (templateDir == null) {
-            templateDir = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.REPORT_LOCAL_TEMPLATE_DIRECTORY);
+            templateDir = Activator.getDefault().getPreferenceStore()
+                    .getString(PreferenceConstants.REPORT_LOCAL_TEMPLATE_DIRECTORY);
         } else {
-            Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.REPORT_LOCAL_TEMPLATE_DIRECTORY, templateDir);
+            Activator.getDefault().getPreferenceStore()
+                    .setValue(PreferenceConstants.REPORT_LOCAL_TEMPLATE_DIRECTORY, templateDir);
         }
         return templateDir;
     }

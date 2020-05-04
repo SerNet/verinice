@@ -77,9 +77,9 @@ public class TemplateSelectionComponent extends ElementSelectionComponent {
     protected void loadElementsFromDb() throws CommandException {
         LoadTemplateCandidates command;
         if (isScopeOnly()) {
-            command = new LoadTemplateCandidates(this.inputElement.getUuid(), getTypeId(), getScopeId(), getGroupId());
+            command = new LoadTemplateCandidates(this.inputElement.getUuid(), getTypeIds(), getScopeId(), getGroupId());
         } else {
-            command = new LoadTemplateCandidates(this.inputElement.getUuid(), getTypeId());
+            command = new LoadTemplateCandidates(this.inputElement.getUuid(), getTypeIds());
         }
         command = ServiceFactory.lookupCommandService().executeCommand(command);
         showElementsInTable(new ArrayList<CnATreeElement>(command.getTemplateCandidates()));

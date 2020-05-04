@@ -65,6 +65,7 @@ import sernet.gs.ui.rcp.main.actions.OpenSearchViewAction;
 import sernet.gs.ui.rcp.main.actions.OpenViewAction;
 import sernet.gs.ui.rcp.main.actions.ReloadAction;
 import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
+import sernet.gs.ui.rcp.main.actions.ShowBulkEditAccountsAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
 import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
@@ -176,6 +177,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IWorkbenchAction pasteAction;
 
     private ShowBulkEditAction bulkEditAction;
+
+    private ShowBulkEditAccountsAction bulkEditAccountsAction;
 
     private ShowAccessControlEditAction accessControlEditAction;
 
@@ -307,7 +310,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         this.reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
         this.importGstoolAction = new ImportGstoolAction(window,
                 Messages.ApplicationActionBarAdvisor_15);
-        this.importCSVAction = new ImportCSVAction(window, Messages.ApplicationActionBarAdvisor_30);
+        this.importCSVAction = new ImportCSVAction(Messages.ApplicationActionBarAdvisor_30);
         this.importPersonFromLdap = new ImportPersonFromLdap(window,
                 Messages.ApplicationActionBarAdvisor_32);
         this.importGSNotesAction = new ImportGstoolNotesAction(window,
@@ -316,6 +319,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         this.showPreferencesAction = new ShowPreferencesAction();
         this.bulkEditAction = new ShowBulkEditAction(window,
                 Messages.ApplicationActionBarAdvisor_16);
+        this.bulkEditAccountsAction = new ShowBulkEditAccountsAction(window,
+                sernet.gs.ui.rcp.main.actions.Messages.EditMultipleAccountsTogether);
         this.runRiskAnalysisAction = new RiskAnalysisAction(window);
         this.accessControlEditAction = new ShowAccessControlEditAction(window,
                 Messages.ApplicationActionBarAdvisor_17);
@@ -349,13 +354,13 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                 this.openTodoViewAction, this.openAuditViewAction, this.openTaskViewAction,
                 this.openValidationViewAction, this.reloadAction, this.importGstoolAction,
                 this.importCSVAction, this.importPersonFromLdap, this.importGSNotesAction,
-                this.showPreferencesAction, this.bulkEditAction, this.runRiskAnalysisAction,
-                this.accessControlEditAction, this.profileEditAction, this.konsolidatorAction,
-                gsmbasicsecuritycheckAction, bausteinZuordnungAction, gsmbausteinZuordnungAction,
-                this.openDocumentViewAction, this.introAction, this.openGroupViewAction,
-                this.openReportdepositViewAction, this.openSearchViewAction,
-                this.openGSToolMappingViewAction, this.openBpViewAction, this.openCatalogViewAction)
-                .forEach(this::register);
+                this.showPreferencesAction, this.bulkEditAction, this.bulkEditAccountsAction,
+                this.runRiskAnalysisAction, this.accessControlEditAction, this.profileEditAction,
+                this.konsolidatorAction, gsmbasicsecuritycheckAction, bausteinZuordnungAction,
+                gsmbausteinZuordnungAction, this.openDocumentViewAction, this.introAction,
+                this.openGroupViewAction, this.openReportdepositViewAction,
+                this.openSearchViewAction, this.openGSToolMappingViewAction, this.openBpViewAction,
+                this.openCatalogViewAction).forEach(this::register);
 
         Optional.ofNullable(window.getActivePage()).map(IWorkbenchPage::getPerspective)
                 .ifPresent(this::enableOrDisableActionsForPerspective);
@@ -421,6 +426,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                 IWorkbenchActionConstants.M_EDIT);
 
         editMenu.add(this.bulkEditAction);
+        editMenu.add(this.bulkEditAccountsAction);
         editMenu.add(this.runRiskAnalysisAction);
         editMenu.add(this.accessControlEditAction);
         editMenu.add(this.profileEditAction);
@@ -565,6 +571,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         myToolbar.add(new Separator(VeriniceActionConstants.TOOLBAR_REPORT));
         myToolbar.add(new Separator());
         myToolbar.add(this.bulkEditAction);
+        myToolbar.add(this.bulkEditAccountsAction);
         myToolbar.add(this.accessControlEditAction);
         myToolbar.add(this.profileEditAction);
         myToolbar.add(this.konsolidatorAction);

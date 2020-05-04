@@ -20,9 +20,6 @@
 			<security:protect
 				method="sernet.verinice.service.ReportDepositService.update"
 				access="ACTION_ID_REPORTDEPOSITEDIT" />
-			<security:protect
-				method="sernet.verinice.service.ReportDepositService.getDepositLocation"
-				access="ACTION_ID_REPORTDEPOSIT" />
 		</security:intercept-methods>
 	</bean>
 

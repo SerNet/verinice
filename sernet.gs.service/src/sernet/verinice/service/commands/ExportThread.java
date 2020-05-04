@@ -20,19 +20,19 @@
 package sernet.verinice.service.commands;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
+import de.sernet.sync.data.SyncFile;
+import de.sernet.sync.data.SyncObject;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.Status;
-
-import org.apache.log4j.Logger;
-
 import sernet.gs.service.NotifyingThread;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.ServerInitializer;
@@ -45,8 +45,6 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import de.sernet.sync.data.SyncFile;
-import de.sernet.sync.data.SyncObject;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -55,51 +53,53 @@ import de.sernet.sync.data.SyncObject;
 public class ExportThread extends NotifyingThread {
 
     private static final Logger LOG = Logger.getLogger(ExportThread.class);
-    
+
     private static final Object LOCK = new Object();
-    
+
     private Cache cache = null;
-    
+
     private IBaseDao<CnATreeElement, Serializable> dao;
-    
+
     private IBaseDao<Attachment, Serializable> attachmentDao;
-    
+
     private HUITypeFactory huiTypeFactory;
-    
-    private ExportTransaction transaction;
-    
+
+    private ThreadLocal<ExportTransaction> transaction;
+
     private Set<CnALink> linkSet;
-    
+
     private Set<Attachment> attachmentSet;
 
     private Set<String> exportedTypes;
-    
+
     private Set<EntityType> exportedEntityTypes;
-    
+
     private List<CnATreeElement> changedElementList;
-    
+
     private Object exportFormat;
 
     private boolean reImport;
-    
+
     private boolean veriniceArchive;
-    
-    private Map<String,String> entityTypesBlackList;
-    
-    private Map<Class,Class> entityClassBlackList;
-    
+
+    private Map<String, String> entityTypesBlackList;
+
+    private Map<Class, Class> entityClassBlackList;
+
     private String sourceId;
-    
+
     private ICommandService commandService;
-    
+
     private ExportReferenceTypes exportReferenceTypes;
-    
+
     public ExportThread(ExportTransaction transaction) {
         super();
-        this.transaction = transaction;
+        this.transaction = ThreadLocal.withInitial(() -> transaction);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.gs.service.NotifyingThread#doRun()
      */
     @Override
@@ -121,36 +121,37 @@ public class ExportThread extends NotifyingThread {
     }
 
     /**
-     * Export (i.e. "create XML representation of" the given cnATreeElement
-     * and its successors. For this, child elements are exported recursively.
-     * All elements that have been processed are returned as a list of
-     * {@code syncObject}s with their respective attributes, represented
-     * as {@code syncAttribute}s.
+     * Export (i.e. "create XML representation of" the given cnATreeElement and
+     * its successors. For this, child elements are exported recursively. All
+     * elements that have been processed are returned as a list of
+     * {@code syncObject}s with their respective attributes, represented as
+     * {@code syncAttribute}s.
      * 
      * @param element
      * @return List<Element>
-     * @throws CommandException 
+     * @throws CommandException
      */
     public void export() throws CommandException {
 
         exportReferenceTypes = new ExportReferenceTypes(getCommandService());
 
-        CnATreeElement element = transaction.getElement();
+        CnATreeElement element = transaction.get().getElement();
         if (LOG.isDebugEnabled()) {
             LOG.debug("Exporting element: " + element.getUuid());
-        } 
-        
-        /**
-         * Export the given CnATreeElement, if it is NOT blacklisted (i.e. an IT network
-         * or category element) AND, if we should restrict the exported objects to certain
-         * entity types, this element's entity type IS allowed:
+        }
+
+        /*
+         * Export the given CnATreeElement, if it is NOT blacklisted (i.e. an IT
+         * network or category element) AND, if we should restrict the exported
+         * objects to certain entity types, this element's entity type IS
+         * allowed:
          **/
 
         String typeId = element.getTypeId();
-        if(checkElement(element)) {
-            element = hydrate( element );
-            transaction.setElement(element);
-            
+        if (checkElement(element)) {
+            element = hydrate(element);
+            transaction.get().setElement(element);
+
             String extId = ExportFactory.createExtId(element);
 
             exportReferenceTypes.addReference2ExtId(element.getDbId(), extId);
@@ -158,115 +159,135 @@ public class ExportThread extends NotifyingThread {
             SyncObject syncObject = new SyncObject();
             syncObject.setExtId(extId);
             syncObject.setExtObjectType(typeId);
-            if(element.getIconPath()!=null) {
+            if (element.getIconPath() != null) {
                 syncObject.setIcon(element.getIconPath());
             }
 
             List<de.sernet.sync.data.SyncAttribute> attributes = syncObject.getSyncAttribute();
-            
+
             /**
              * Retrieve all properties from the entity:
-             */     
+             */
             Entity entity = element.getEntity();
 
             // Category instance may have no Entity attached to it
             // For those we do not store any property values.
             if (entity != null) {
-                ExportFactory.transform(entity, attributes, typeId, getHuiTypeFactory(), exportReferenceTypes);
+                ExportFactory.transform(entity, attributes, typeId, getHuiTypeFactory(),
+                        exportReferenceTypes);
             }
 
             EntityType entityType = element.getEntityType();
-            if(entityType!=null) {
-                // Add the elements EntityType to the set of exported EntityTypes in order to
+            if (entityType != null) {
+                // Add the elements EntityType to the set of exported
+                // EntityTypes in order to
                 // use it for the mapping generation later on.
                 getExportedEntityTypes().add(entityType);
             } else {
-                // Instance has no EntityType. This is fine but still some mapping
+                // Instance has no EntityType. This is fine but still some
+                // mapping
                 // information is needed. We save the typeId for later then.
                 getExportedTypes().add(typeId);
             }
             // add links to linkSet
             addLinks(element);
-                    
-            if(isVeriniceArchive()) {
+
+            if (isVeriniceArchive()) {
                 // export attachments of the element
                 exportAttachments(element, syncObject);
                 getExportedEntityTypes().add(getHuiTypeFactory().getEntityType(Attachment.TYPE_ID));
             }
-            
-            transaction.setTarget(syncObject);
-            
+
+            transaction.get().setTarget(syncObject);
+
             /**
              * Save source id to re-import element later
              */
-            if(isReImport()) {
+            if (isReImport()) {
                 element.setSourceId(getSourceId());
-                if(element.getExtId()==null) {
+                if (element.getExtId() == null) {
                     element.setExtId(extId);
                 }
-                getDao().merge(element);
                 getChangedElementList().add(element);
             }
-        } else if(LOG.isDebugEnabled()) { // else if(checkElement(element))
+        } else if (LOG.isDebugEnabled()) { 
             LOG.debug("Element is not exported: Type " + typeId + ", uuid: " + element.getUuid());
-        }       
+        }
     }
-    
-    private CnATreeElement hydrate(CnATreeElement element)
-    { 
-        if (element == null){
-            return element;
+
+    private CnATreeElement hydrate(CnATreeElement element) {
+        if (element == null) {
+            return null;
         }
         CnATreeElement elementFromCache = getElementFromCache(element);
-        if(elementFromCache!=null) {
+        if (elementFromCache != null) {
             return elementFromCache;
-        }  
+        }
         
+        // Loading links that point back to parents may cause endless loops in Hibernate's CriteriaLoader, depending on
+        // the structure of the exported data (see issue VN-2648).
+        // Split loading of children and links to prevent this from happening:
         RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance();
-        ri.setLinksDown(true);
-        ri.setLinksUp(true);
+        ri.setLinksDown(false);
+        ri.setLinksUp(false);
         element = getDao().retrieve(element.getDbId(), ri);
         
-        cacheElement(element);       
+        ri = new RetrieveInfo();
+        ri.setLinksDown(true);
+        ri.setLinksUp(true);
+        CnATreeElement elementWithLinks = getDao().retrieve(element.getDbId(), ri);
+        element.setLinksDown(elementWithLinks.getLinksDown());
+        element.setLinksUp(elementWithLinks.getLinksUp());
+        
+        cacheElement(element);
         
         if (LOG.isDebugEnabled()) {
             LOG.debug("Element: " + element.getTitle() + " hydrated, UUID: " + element.getUuid());
         }
-             
+        
         return element;
     }
+
     
     private CnATreeElement getElementFromCache(CnATreeElement element) {
         CnATreeElement fromCache = null;
         synchronized (LOCK) {
-            if(Status.STATUS_ALIVE.equals(cache.getStatus())) {
+            if (Status.STATUS_ALIVE.equals(cache.getStatus())) {
                 Element cachedElement = getCache().get(element.getUuid());
-                if(cachedElement!=null) {
+                if (cachedElement != null) {
                     fromCache = (CnATreeElement) cachedElement.getValue();
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Element from cache: " + element.getTitle() + ", UUID: " + element.getUuid());
+                        LOG.debug("Element from cache: " + element.getTitle() + ", UUID: "
+                                + element.getUuid());
                     }
                 }
             } else {
-                LOG.warn("Cache is not alive. Can't put element to cache, uuid: " + element.getUuid());
+                LOG.warn("Cache is not alive. Can't put element to cache, uuid: "
+                        + element.getUuid());
             }
         }
         return fromCache;
     }
 
     private void cacheElement(CnATreeElement element) {
-        synchronized (LOCK) {
-            if(Status.STATUS_ALIVE.equals(cache.getStatus())) {
+        synchronized(LOCK) {
+            if (Status.STATUS_ALIVE.equals(cache.getStatus())
+                    && getElementFromCache(element) == null
+            ) {
+                LOG.debug("Put element into cache: " + element.getTitle() + " : " + element.getDbId());
                 getCache().put(new Element(element.getUuid(), element));
             } else {
-                LOG.warn("Cache is not alive. Can't put element to cache, uuid: " + element.getUuid());
+                LOG.warn("Cache is not alive. Can't put element to cache, uuid: "
+                        + element.getUuid());
             }
         }
     }
-    
-    private void exportAttachments(CnATreeElement element, SyncObject syncObject) throws CommandException {
-        if(element!=null) {
-            LoadAttachmentsUserFiltered command = new LoadAttachmentsUserFiltered(element.getDbId());
+
+    private void exportAttachments(CnATreeElement element, SyncObject syncObject)
+            throws CommandException {
+        if (element != null) {
+            LoadAttachmentsUserFiltered command = new LoadAttachmentsUserFiltered(
+                    element.getDbId());
             command = getCommandService().executeCommand(command);
             List<Attachment> fileList = command.getResult();
             List<SyncFile> fileListXml = syncObject.getFile();
@@ -276,9 +297,10 @@ public class ExportThread extends NotifyingThread {
                 String extId = ExportFactory.createExtId(attachment);
                 syncFile.setExtId(extId);
                 syncFile.setFile(ExportFactory.createZipFileName(attachment));
-                ExportFactory.transform(entity, syncFile.getSyncAttribute(), Attachment.TYPE_ID, getHuiTypeFactory(), exportReferenceTypes);
+                ExportFactory.transform(entity, syncFile.getSyncAttribute(), Attachment.TYPE_ID,
+                        getHuiTypeFactory(), exportReferenceTypes);
                 fileListXml.add(syncFile);
-                if(isReImport()) {
+                if (isReImport()) {
                     attachment.setExtId(extId);
                     attachment.setSourceId(getSourceId());
                     getAttachmentDao().saveOrUpdate(attachment);
@@ -286,76 +308,72 @@ public class ExportThread extends NotifyingThread {
             }
             // Add all files to attachment set, to export file data later
             getAttachmentSet().addAll(fileList);
-        }     
+        }
     }
-    
+
     private void addLinks(CnATreeElement element) {
         try {
             getLinkSet().addAll(element.getLinksDown());
             getLinkSet().addAll(element.getLinksUp());
         } catch (Exception e) {
-            LOG.error("error while getting links of element: " + element.getTitle() + "(" + element.getTypeId() + "), UUID: " + element.getUuid(), e);
+            LOG.error("error while getting links of element: " + element.getTitle() + "("
+                    + element.getTypeId() + "), UUID: " + element.getUuid(), e);
         }
     }
-    
+
     private boolean checkElement(CnATreeElement element) {
-        return (getEntityTypesBlackList() == null || getEntityTypesBlackList().get(element.getTypeId()) == null)
-         && (getEntityClassBlackList() == null || getEntityClassBlackList().get(element.getClass()) == null);
+        return (getEntityTypesBlackList() == null
+                || getEntityTypesBlackList().get(element.getTypeId()) == null)
+                && (getEntityClassBlackList() == null
+                        || getEntityClassBlackList().get(element.getClass()) == null);
     }
-    
-    public SyncObject getSyncObject() {
-        return getTransaction().getTarget();
-    }
-    
-    public Set<CnALink> getLinkSet() {
-        if(linkSet==null) {
-            linkSet = new HashSet<CnALink>();
+
+    public synchronized Set<CnALink> getLinkSet() {
+        if (linkSet == null) {
+            linkSet = new HashSet<>();
         }
         return linkSet;
     }
-    
-    public Set<Attachment> getAttachmentSet() {
-        if(attachmentSet==null) {
-            attachmentSet = new HashSet<Attachment>();
+
+    public synchronized Set<Attachment> getAttachmentSet() {
+        if (attachmentSet == null) {
+            attachmentSet = new HashSet<>();
         }
         return attachmentSet;
     }
-   
+
     public ICommandService getCommandService() {
         return commandService;
     }
 
-
     public ExportTransaction getTransaction() {
-        return transaction;
+        return transaction.get();
     }
 
     public void setTransaction(ExportTransaction transaction) {
-        this.transaction = transaction;
+        this.transaction.set(transaction);
     }
 
-    public void setLinkSet(Set<CnALink> linkSet) {
-        this.linkSet = linkSet;
-    }
+   
 
     public void setAttachmentSet(Set<Attachment> attachmentSet) {
         this.attachmentSet = attachmentSet;
     }
-    
+
     public Set<EntityType> getExportedEntityTypes() {
-        if(exportedEntityTypes==null) {
-            exportedEntityTypes = new HashSet<EntityType>();
+        if (exportedEntityTypes == null) {
+            exportedEntityTypes = new HashSet<>();
         }
         return exportedEntityTypes;
     }
 
     public Set<String> getExportedTypes() {
-        if(exportedTypes==null) {
-            exportedTypes = new HashSet<String>();
+        if (exportedTypes == null) {
+            exportedTypes = new HashSet<>();
         }
         return exportedTypes;
     }
-    
+
     public void setExportedEntityTypes(Set<EntityType> exportedEntityTypes) {
         this.exportedEntityTypes = exportedEntityTypes;
     }
@@ -365,8 +383,8 @@ public class ExportThread extends NotifyingThread {
     }
 
     public List<CnATreeElement> getChangedElementList() {
-        if(changedElementList==null) {
-            changedElementList = new LinkedList<CnATreeElement>();
+        if (changedElementList == null) {
+            changedElementList = new LinkedList<>();
         }
         return changedElementList;
     }
@@ -374,7 +392,7 @@ public class ExportThread extends NotifyingThread {
     public void setChangedElementList(List<CnATreeElement> changedElementList) {
         this.changedElementList = changedElementList;
     }
-    
+
     public Object getExportFormat() {
         return exportFormat;
     }
@@ -394,7 +412,7 @@ public class ExportThread extends NotifyingThread {
     public Map<String, String> getEntityTypesBlackList() {
         return entityTypesBlackList;
     }
-   
+
     public Map<Class, Class> getEntityClassBlackList() {
         return entityClassBlackList;
     }
@@ -427,11 +445,10 @@ public class ExportThread extends NotifyingThread {
         this.commandService = commandService;
     }
 
-
     protected HUITypeFactory getHuiTypeFactory() {
         return huiTypeFactory;
     }
-    
+
     public void setHuiTypeFactory(HUITypeFactory huiTypeFactory) {
         this.huiTypeFactory = huiTypeFactory;
     }
@@ -439,7 +456,6 @@ public class ExportThread extends NotifyingThread {
     private IBaseDao<CnATreeElement, Serializable> getDao() {
         return dao;
     }
-
 
     public void setDao(IBaseDao<CnATreeElement, Serializable> dao) {
         this.dao = dao;
@@ -449,11 +465,9 @@ public class ExportThread extends NotifyingThread {
         return attachmentDao;
     }
 
-
     public void setAttachmentDao(IBaseDao<Attachment, Serializable> attachmentDao) {
         this.attachmentDao = attachmentDao;
     }
-
 
     public Cache getCache() {
         return cache;

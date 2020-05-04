@@ -39,6 +39,11 @@ public class BpThreatGroup extends Group<BpThreat> implements IBpGroup, ITaggabl
     public static final String TYPE_ID = "bp_threat_group"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_threat_group_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_threat_group_tag"; //$NON-NLS-1$
+    public static final String PROP_RELEASE = "bp_threat_group_release"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_TYPE = "bp_threat_group_change_type"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_TYPE_REMOVED = "bp_threat_group_change_type_removed"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_DETAILS = "bp_threat_group_change_details"; //$NON-NLS-1$
+    public static final String PROP_OBJECTBROWSER_CONTENT = "bp_threat_group_objectbrowser_content"; //$NON-NLS-1$
 
     public static final String[] CHILD_TYPES = new String[] { BpThreat.TYPE_ID };
 

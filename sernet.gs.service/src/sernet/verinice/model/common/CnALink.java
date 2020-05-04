@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -126,6 +125,9 @@ public class CnALink implements Serializable, ITypedElement {
         // maintain bi-directional association:
         dependency.addLinkUp(this);
         dependant.addLinkDown(this);
+
+        dependency.linkAdded(this);
+        dependant.linkAdded(this);
         this.linkType = linkTypeFor(dependency);
     }
 
@@ -349,14 +351,14 @@ public class CnALink implements Serializable, ITypedElement {
         dependant.removeLinkDown(this);
         dependency.removeLinkUp(this);
 
-        Stream.of(dependant, dependency).forEach(element -> {
-            if (element.isProtectionRequirementsProvider()) {
-                element.fireIntegritaetChanged(new CascadingTransaction());
-                element.fireVerfuegbarkeitChanged(new CascadingTransaction());
-                element.fireVertraulichkeitChanged(new CascadingTransaction());
-                element.fireValueChanged(new CascadingTransaction());
-            }
-        });
+        dependant.linkRemoved(this);
+        dependency.linkRemoved(this);
+
+        if (dependency.isProtectionRequirementsProvider()) {
+            dependency.fireIntegritaetChanged(new CascadingTransaction());
+            dependency.fireVerfuegbarkeitChanged(new CascadingTransaction());
+            dependency.fireVertraulichkeitChanged(new CascadingTransaction());
+        }
     }
 
     public CnATreeElement getDependant() {
@@ -538,5 +540,4 @@ public class CnALink implements Serializable, ITypedElement {
         }
 
     }
-
 }

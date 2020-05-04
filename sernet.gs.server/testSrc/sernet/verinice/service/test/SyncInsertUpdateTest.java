@@ -33,6 +33,7 @@ import java.util.Queue;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.junit.Assert;
 import org.junit.Test;
 
 import sernet.gs.service.RetrieveInfo;
@@ -113,6 +114,14 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
                 anwendung1.getParent().getDbId(), anwendung2.getParent().getDbId());
 
         assertEquals("updated flag is set to false", 0, syncCommand.getPotentiallyUpdated());
+        assertEquals("internalAdmin", anwendung1.getEntity().getCreatedBy());
+        Assert.assertNotNull(anwendung1.getEntity().getCreatedAt());
+        Assert.assertNull(anwendung1.getEntity().getChangedBy());
+        Assert.assertNull(anwendung1.getEntity().getChangedAt());
+        assertEquals("internalAdmin", anwendung2.getEntity().getCreatedBy());
+        Assert.assertNotNull(anwendung2.getEntity().getCreatedAt());
+        Assert.assertNull(anwendung2.getEntity().getChangedBy());
+        Assert.assertNull(anwendung2.getEntity().getChangedAt());
 
     }
 
@@ -197,6 +206,9 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
         assertEquals("AnwendungenKategorie must still have only 1 child", 1,
                 anwendungenKategorieBeforeImport.getChildren().size());
 
+        Assert.assertEquals("internalAdmin", anwendungAfterImport.getEntity().getChangedBy());
+        Assert.assertNotNull(anwendungAfterImport.getEntity().getChangedAt());
+
     }
 
     @Test
@@ -223,6 +235,15 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
                 .getSimpleValue("anwendung_status");
         String anwendungsStatusAfter = anwendung2.getEntity().getSimpleValue("anwendungs_status");
         assertFalse(anwendungsStatusBefore.equals(anwendungsStatusAfter));
+
+        assertEquals("internalAdmin", anwendung1.getEntity().getCreatedBy());
+        Assert.assertNotNull(anwendung1.getEntity().getCreatedAt());
+        assertEquals("internalAdmin", anwendung1.getEntity().getChangedBy());
+        Assert.assertNotNull(anwendung1.getEntity().getChangedAt());
+        assertEquals("internalAdmin", anwendung2.getEntity().getCreatedBy());
+        Assert.assertNotNull(anwendung2.getEntity().getCreatedAt());
+        Assert.assertNull(anwendung2.getEntity().getChangedBy());
+        Assert.assertNull(anwendung2.getEntity().getChangedAt());
     }
 
     @Test

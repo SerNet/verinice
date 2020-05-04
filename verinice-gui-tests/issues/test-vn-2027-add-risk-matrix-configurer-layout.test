@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _GDbF8L_sEeiBGdyBeGVxCg
 Runtime-Version: 2.3.0.201806262310
-Save-Time: 12/6/18 11:41 AM
+Save-Time: 7/1/19 11:09 AM
 Tags: bp, risk
 Testcase-Type: ecl
 
@@ -43,9 +43,8 @@ with [get-editor "risk-matrix-test"] {
 
 screen-shot-editor "risk-matrix-test" "Risikomatrix" "/risk-matrix-1.png"
 
-get-editor "risk-matrix-test" |get-label "Klicken um Werte zu erhöhen, Shift und klicken um Werte zu verkleinern"
-    | get-property "getLayoutData().horizontalSpan" | equals 5 | verify-true
 with [get-editor "risk-matrix-test"] {
+    get-risk-matrix-width | equals 4 | verify-true
     get-tab-folder | get-tab-item Auswirkung | click
     get-button "+" | click
     get-editbox -index 8 | set-text "test-1  ee"
@@ -63,9 +62,7 @@ with [get-editor "risk-matrix-test"] {
     get-editbox -index 9 | click-text
     get-tab-folder | get-tab-item Risikomatrix | click
 }
-get-editor "risk-matrix-test" | get-label "Klicken um Werte zu erhöhen, Shift und klicken um Werte zu verkleinern" 
-    -after [get-label "Eintrittshäufigkeit" -after [get-label "test-2"]] 
-    | get-property "getLayoutData().horizontalSpan" | equals 6 | verify-true
+get-editor "risk-matrix-test" | get-risk-matrix-width | equals 5 | verify-true
 get-eclipse-window | key-type "M1+s"
 get-window "Konfiguration der Risikoanalyse" | get-button OK | click
 with [get-editor "risk-matrix-test"] {
@@ -75,9 +72,9 @@ with [get-editor "risk-matrix-test"] {
     get-button "-" | click
     get-tab-folder | get-tab-item Risikomatrix | click
 }
-get-editor "risk-matrix-test" | get-label "Klicken um Werte zu erhöhen, Shift und klicken um Werte zu verkleinern" 
-  | get-property "getLayoutData().horizontalSpan" | equals 3 | verify-true
+
 with [get-editor "risk-matrix-test"] {
+    get-risk-matrix-width | equals 2 | verify-true
     get-tab-folder | get-tab-item Auswirkung | click
     get-button "-" | click
     get-button "-" | click

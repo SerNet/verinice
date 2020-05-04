@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>sernet.verinice</groupId>
 	<artifactId>sernet.verinice.tycho.root</artifactId>
-	<version>1.0.0</version>
+	<version>1.20.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<properties>
-		<tycho.version>1.1.0</tycho.version>
+		<tycho.version>1.4.0</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -19,7 +19,6 @@
 		<!-- products -->
 		<module>sernet.verinice.releng.client.product</module>
 		<module>sernet.verinice.releng.server.product</module>
-		<module>sernet.verinice.report.designer.product</module>
 
 		<!-- Features -->
 		<module>org.eclipse.e4.rcp.sernet</module>
@@ -32,7 +31,6 @@
 		<module>sernet.thirdparty.feature</module>
 		<module>sernet.verinice.lang.feature</module>
 		<module>sernet.verinice.extraresources.feature</module>
-		<module>sernet.verinice.report.designer.feature</module>
 		<module>sernet.verinice.app.feature</module>
 
 		<!-- Bundles -->
@@ -59,14 +57,30 @@
 		<module>sernet.verinice.fei.service</module>
 		<module>sernet.verinice.kerberos</module>
 		<module>sernet.verinice.oda.driver</module>
-		<module>sernet.verinice.oda.driver.designer</module>
 		<module>sernet.verinice.report.service</module>
 		<module>sernet.verinice.samt.rcp</module>
 		<module>sernet.verinice.samt.service</module>
 		<module>waffle</module>
+		<module>sernet.verinice.extraresources.jre_linux_64</module>
+		<module>sernet.verinice.extraresources.jre_macos_64</module>
+		<module>sernet.verinice.extraresources.jre_win_64</module>
 	</modules>
 
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-versions-plugin</artifactId>
+					<version>${tycho.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-packaging-plugin</artifactId>
+					<version>${tycho.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
@@ -83,7 +97,7 @@
 						<artifact>
 							<groupId>sernet.verinice</groupId>
 							<artifactId>target-platform</artifactId>
-							<version>1.0.0</version>
+							<version>1.20.0-SNAPSHOT</version>
 						</artifact>
 					</target>
 					<environments>
@@ -91,11 +105,6 @@
 							<os>linux</os>
 							<ws>gtk</ws>
 							<arch>x86_64</arch>
-						</environment>
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86</arch>
 						</environment>
 						<environment>
 							<os>win32</os>
@@ -109,6 +118,16 @@
 						</environment>
 					</environments>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-versions-plugin</artifactId>
+				<version>${tycho.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-packaging-plugin</artifactId>
+				<version>${tycho.version}</version>
 			</plugin>
 		</plugins>
 	</build>

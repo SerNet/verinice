@@ -34,6 +34,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
@@ -44,11 +45,10 @@ import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -57,28 +57,23 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.verinice.iso27k.rcp.ComboModel;
-import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 
 /**
- * 
- * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class IconSelectDialog extends Dialog {
 
     private static final Logger LOG = Logger.getLogger(IconSelectDialog.class);
-    
+
     public static final String ICON_DIRECTORY = "tree-icons"; //$NON-NLS-1$
-    
+
     private static final FileFilter ICON_FILE_FILTER = new IconFileFilter();
 
     private static final int SIZE_Y = 370;
@@ -98,40 +93,34 @@ public class IconSelectDialog extends Dialog {
 
     private boolean defaultIcon = false;
 
-    /**
-     * @param parentShell
-     */
     protected IconSelectDialog(Shell parentShell) {
         super(parentShell);
         initComboValues();
     }
 
     private void initComboValues() {
-        dirComboModel = new ComboModel<IconPathDescriptor>(new IComboModelLabelProvider<IconPathDescriptor>() {
-            @Override
-            public String getLabel(IconPathDescriptor descriptor) {
-                return descriptor.getName();
-            }
-        });
-        URL[] inconUrlArray = FileLocator.findEntries(Platform.getBundle(Activator.PLUGIN_ID), new Path(ICON_DIRECTORY), null);
+        dirComboModel = new ComboModel<>(IconPathDescriptor::getName);
+        URL[] inconUrlArray = FileLocator.findEntries(Platform.getBundle(Activator.PLUGIN_ID),
+                new Path(ICON_DIRECTORY), null);
 
         try {
             for (URL inconUrl : inconUrlArray) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Icon dir: " + inconUrl); //$NON-NLS-1$
                 }
-                
+
                 URL realFileUrl = FileLocator.toFileURL(inconUrl);
                 String urlString = realFileUrl.toExternalForm();
-                urlString = urlString.replaceAll(" ","%20"); 
+                urlString = urlString.replace(" ", "%20");
                 File baseDir = new File(URI.create(urlString));
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Icon dir (file system): " + baseDir.getPath()); //$NON-NLS-1$
                 }
                 String[] directories = baseDir.list(DirectoryFileFilter.INSTANCE);
                 for (String dir : directories) {
-                    if(!dir.startsWith(".")) { //$NON-NLS-1$
-                        dirComboModel.add(new IconPathDescriptor(dir, baseDir.getPath() + File.separator + dir));
+                    if (!dir.startsWith(".")) { //$NON-NLS-1$
+                        dirComboModel.add(new IconPathDescriptor(dir,
+                                baseDir.getPath() + File.separator + dir));
                     }
                 }
             }
@@ -153,17 +142,15 @@ public class IconSelectDialog extends Dialog {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets
      * .Composite)
      */
     @Override
     protected Control createDialogArea(Composite parent) {
-        
+
         final int gridDataSizeSubtrahend = 20;
-        
+
         Composite comp = (Composite) super.createDialogArea(parent);
 
         Label dirLabel = new Label(comp, SWT.NONE);
@@ -197,14 +184,10 @@ public class IconSelectDialog extends Dialog {
         final Button defaultCheckbox = new Button(comp, SWT.CHECK);
         defaultCheckbox.setText(Messages.IconSelectDialog_7);
         defaultCheckbox.setSelection(false);
-        defaultCheckbox.addSelectionListener(new SelectionListener() {
+        defaultCheckbox.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 defaultIcon = defaultCheckbox.isEnabled();
-            }
-
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
             }
         });
 
@@ -213,18 +196,17 @@ public class IconSelectDialog extends Dialog {
     }
 
     private void loadIcons(String path) {
-        final int maxRowCount = 10;
         File internalDirectory = new File(path);
         File[] files = internalDirectory.listFiles(ICON_FILE_FILTER);
         Arrays.sort(files);
 
-        List<IconDescriptor[]> iconDescriptorList = new ArrayList<IconDescriptor[]>();
+        List<IconDescriptor[]> iconDescriptorList = new ArrayList<>();
         IconDescriptor[] iconRow = new IconDescriptor[NUMBER_OF_COLUMNS];
         int i = 0;
         for (File file : files) {
             iconRow[i] = new IconDescriptor(file);
             i++;
-            if (i == maxRowCount) {
+            if (i == NUMBER_OF_COLUMNS) {
                 iconDescriptorList.add(iconRow);
                 iconRow = new IconDescriptor[NUMBER_OF_COLUMNS];
                 i = 0;
@@ -234,56 +216,57 @@ public class IconSelectDialog extends Dialog {
             iconDescriptorList.add(iconRow);
         }
         IconDescriptor[][] iconDescriptorArray = null;
-        iconDescriptorArray = iconDescriptorList.toArray(new IconDescriptor[iconDescriptorList.size()][NUMBER_OF_COLUMNS]);
+        iconDescriptorArray = iconDescriptorList
+                .toArray(new IconDescriptor[iconDescriptorList.size()][NUMBER_OF_COLUMNS]);
         viewer.setInput(iconDescriptorArray);
     }
 
     private void createTable(Composite parent) {
-        
+
         final int gdHeightSubtrahend = 100;
         final int iconRowSize = 10;
-        
-        int style = SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER;
-        style = style | SWT.SINGLE | SWT.FULL_SELECTION;
+
+        int style = SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION;
         viewer = new TableViewer(parent, style);
         viewer.setContentProvider(new ArrayContentProvider());
 
-        TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(viewer, new FocusCellOwnerDrawHighlighter(viewer));
-        ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy(viewer) {
+        TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(viewer,
+                new FocusCellOwnerDrawHighlighter(viewer));
+        ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy(
+                viewer) {
             @Override
             protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event) {
-                boolean retVal = event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL || event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION;
-                retVal = retVal || (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.CR);
-                return  retVal || event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
+                boolean retVal = event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL
+                        || event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION;
+                retVal = retVal || (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED
+                        && event.keyCode == SWT.CR);
+                return retVal || event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
             }
         };
 
-        TableViewerEditor.create(viewer, focusCellManager, actSupport, ColumnViewerEditor.TABBING_HORIZONTAL | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR | ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION);
+        TableViewerEditor.create(viewer, focusCellManager, actSupport,
+                ColumnViewerEditor.TABBING_HORIZONTAL
+                        | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR
+                        | ColumnViewerEditor.TABBING_VERTICAL
+                        | ColumnViewerEditor.KEYBOARD_ACTIVATION);
 
         Table table = viewer.getTable();
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         gd.heightHint = SIZE_X - gdHeightSubtrahend;
         table.setLayoutData(gd);
 
-        table.addListener(SWT.MeasureItem, new Listener() {
-            @Override
-            public void handleEvent(Event event) {
-                // height cannot be per row so simply set
-                event.height = getThumbnailSize() + ICON_SPACING;
-            }
-        });
+        table.addListener(SWT.MeasureItem,
+                event -> event.height = getThumbnailSize() + ICON_SPACING);
 
-        table.addMouseListener(new MouseListener() {
-
-            @Override
-            public void mouseUp(MouseEvent e) {
-            }
+        table.addMouseListener(new MouseAdapter() {
 
             @Override
             public void mouseDown(MouseEvent e) {
                 ViewerCell cell = viewer.getCell(new Point(e.x, e.y));
                 if (cell != null) {
-                    selectedPath = getRelativePath(((IconDescriptor[]) cell.getElement())[cell.getColumnIndex()].getPath());
+                    selectedPath = getRelativePath(
+                            ((IconDescriptor[]) cell.getElement())[cell.getColumnIndex()]
+                                    .getPath());
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Icon: " + selectedPath); //$NON-NLS-1$
                     }
@@ -291,9 +274,6 @@ public class IconSelectDialog extends Dialog {
 
             }
 
-            @Override
-            public void mouseDoubleClick(MouseEvent e) {
-            }
         });
 
         for (int i = 0; i < iconRowSize; i++) {
@@ -301,6 +281,11 @@ public class IconSelectDialog extends Dialog {
             imageColumn.setLabelProvider(new IconCellProvider(i));
             imageColumn.getColumn().setWidth(getThumbnailSize() + ICON_SPACING);
         }
+        // TableViewer seems to have issues if all columns use
+        // OwnerDrawLabelProviders, so we add an empty zero-width column
+        TableViewerColumn emptyColumn = new TableViewerColumn(viewer, SWT.LEFT);
+        emptyColumn.getColumn().setWidth(0);
+        emptyColumn.setLabelProvider(new ColumnLabelProvider());
 
         if (!dirComboModel.isEmpty()) {
             dirComboModel.setSelectedIndex(2);
@@ -312,24 +297,17 @@ public class IconSelectDialog extends Dialog {
         }
     }
 
-    /**
-     * @param path
-     * @return
-     */
     protected String getRelativePath(String path) {
         String relative = path;
         if (path.contains(ICON_DIRECTORY)) {
             relative = path.substring(path.indexOf(ICON_DIRECTORY));
         }
-        if(relative.contains("\\")) { //$NON-NLS-1$
+        if (relative.contains("\\")) { //$NON-NLS-1$
             relative = relative.replace('\\', '/');
         }
         return relative;
     }
 
-    /**
-     * @return
-     */
     protected int getThumbnailSize() {
         return THUMBNAIL_SIZE;
     }
@@ -341,9 +319,9 @@ public class IconSelectDialog extends Dialog {
     public boolean isDefaultIcon() {
         return defaultIcon;
     }
-    
+
     public boolean isSomethingSelected() {
-        return defaultIcon || getSelectedPath()!=null;
+        return defaultIcon || getSelectedPath() != null;
     }
 
     @Override
@@ -354,7 +332,8 @@ public class IconSelectDialog extends Dialog {
 
         // open the window right under the mouse pointer:
         Point cursorLocation = Display.getCurrent().getCursorLocation();
-        newShell.setLocation(new Point(cursorLocation.x - SIZE_X / 2, cursorLocation.y - SIZE_Y / 2));
+        newShell.setLocation(
+                new Point(cursorLocation.x - SIZE_X / 2, cursorLocation.y - SIZE_Y / 2));
 
     }
 }
@@ -364,7 +343,7 @@ class IconFileFilter implements FileFilter {
     @Override
     public boolean accept(File file) {
         boolean accept = false;
-        if(file!=null && file.getName()!=null) {
+        if (file != null && file.getName() != null) {
             String filename = file.getName().toLowerCase();
             accept = filename.endsWith("gif") || filename.endsWith("png"); //$NON-NLS-1$ //$NON-NLS-2$
         }

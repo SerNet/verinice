@@ -129,9 +129,12 @@ public abstract class HtmlWriter {
                 List<PropertyType> htmlProperties = entityType.getObjectBrowserPropertyTypes();
                 Iterator<PropertyType> iterator = htmlProperties.iterator();
                 while (iterator.hasNext()) {
-                    sb.append(buildObjectBrowserContent(cnaTreeElement, iterator.next()));
-                    if (iterator.hasNext()) {
-                        sb.append("<br><br>");
+                    String html = buildObjectBrowserContent(cnaTreeElement, iterator.next());
+                    if (!StringUtils.isEmpty(html)) {
+                        sb.append(html);
+                        if (iterator.hasNext()) {
+                            sb.append("<br><br>");
+                        }
                     }
                 }
             }

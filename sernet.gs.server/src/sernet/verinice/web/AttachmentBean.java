@@ -48,27 +48,26 @@ import sernet.verinice.service.commands.SaveNote;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- * 
  */
 @ManagedBean(name = "attachment")
 @SessionScoped
 public class AttachmentBean {
 
     private static final Logger LOG = Logger.getLogger(AttachmentBean.class);
-    
+
     private CnATreeElement element;
     private List<Attachment> attachments;
     private boolean autoUpload = true;
     private boolean useFlash = false;
 
     public void init() {
-        attachments = loadAttachments();  
+        attachments = loadAttachments();
     }
 
     public void handleFileUpload(FileUploadEvent event) throws CommandException, IOException {
         UploadedFile item = event.getFile();
         Attachment attachment = new Attachment();
-        attachment.setCnATreeElementId(getElement().getDbId());
+        attachment.setCnATreeElement(getElement());
         attachment.setCnAElementTitel(getElement().getTitle());
         String filename = FilenameUtils.getName(item.getFileName());
         attachment.setTitel(filename);
@@ -76,77 +75,86 @@ public class AttachmentBean {
         attachment.setFilePath(item.getFileName());
         attachment.setText(Messages.getString("AttachmentBean.0")); //$NON-NLS-1$
         attachment.setFileSize(String.valueOf(item.getContents().length));
-        
-        SaveNote command = new SaveNote(attachment);     
+
+        SaveNote command = new SaveNote(attachment);
         command = getCommandService().executeCommand(command);
         attachment = (Attachment) command.getAddition();
-        
+
         AttachmentFileCreationFactory.createAttachmentFile(attachment, item.getContents());
-        
+
         attachments.add(attachment);
         Collections.sort(attachments);
     }
 
-    /**
-     * @return the attachments
-     */
     public List<Attachment> getAttachments() {
-        if(attachments==null) {
+        if (attachments == null) {
             attachments = loadAttachments();
         }
         return attachments;
     }
-    
+
     private List<Attachment> loadAttachments() {
         List<Attachment> result = Collections.emptyList();
-        try {   
-            if(getElement()!=null) {
+        try {
+            if (getElement() != null) {
                 result = loadAttachmentsByCommand();
-            }        
-        } catch(Exception e) {
+            }
+        } catch (Exception e) {
             LOG.error("Error while loading attachment", e); //$NON-NLS-1$
         }
         return result;
     }
 
-
-    /**
-     * @return 
-     * @throws CommandException
-     */
     private List<Attachment> loadAttachmentsByCommand() throws CommandException {
-        LoadAttachmentsUserFiltered command = new LoadAttachmentsUserFiltered(getElement().getDbId());      
-        command = getCommandService().executeCommand(command);      
+        LoadAttachmentsUserFiltered command = new LoadAttachmentsUserFiltered(
+                getElement().getDbId());
+        command = getCommandService().executeCommand(command);
         List<Attachment> result = command.getResult();
-        if(result!=null) {         
+        if (result != null) {
             for (final Attachment attachment : result) {
                 // set transient cna-element-titel
-                attachment.setCnAElementTitel(getElement().getTitle());                
+                attachment.setCnAElementTitel(getElement().getTitle());
             }
             Collections.sort(result);
         }
         return result;
     }
-    
+
     public void download() throws CommandException, IOException {
-        String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"); //$NON-NLS-1$
-        String name = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("name"); //$NON-NLS-1$
-        LoadAttachmentFile command = new LoadAttachmentFile(Integer.valueOf(id));      
-        command = getCommandService().executeCommand(command);      
+        String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+                .get("id"); //$NON-NLS-1$
+        String name = FacesContext.getCurrentInstance().getExternalContext()
+                .getRequestParameterMap().get("name"); //$NON-NLS-1$
+        LoadAttachmentFile command = new LoadAttachmentFile(Integer.valueOf(id));
+        command = getCommandService().executeCommand(command);
         AttachmentFile attachmentFile = command.getAttachmentFile();
-        
+
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
-        response.reset(); // Some JSF component library or some Filter might have set some headers in the buffer beforehand. We want to get rid of them, else it may collide.
-        response.setContentLength(attachmentFile.getFileData().length); // Set it with the file size. This header is optional. It will work if it's omitted, but the download progress will be unknown.
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + name + "\""); // The Save As popup magic is done here. You can give it any file name you want, this only won't work in MSIE, it will use current request URL as file name instead. //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext()
+                .getResponse();
+        /*
+         * Some JSF component library or some Filter might have set some headers
+         * in the buffer beforehand. We want to get rid of them, else it may
+         * collide.
+         */
+        response.reset();
+        /*
+         * Set it with the file size. This header is optional. It will work if
+         * it's omitted, but the download progress will be unknown.
+         */
+        response.setContentLength(attachmentFile.getFileData().length);
+        /*
+         * The Save As popup magic is done here. You can give it any file name
+         * you want, this only won't work in MSIE, it will use current request
+         * URL as file name instead.
+         */
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + name + "\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         OutputStream output = response.getOutputStream();
         output.write(attachmentFile.getFileData());
-                 
+
         facesContext.responseComplete();
     }
-
 
     public boolean isAutoUpload() {
         return autoUpload;
@@ -164,15 +172,12 @@ public class AttachmentBean {
         this.useFlash = useFlash;
     }
 
-    /**
-     * @return the element
-     */
     protected CnATreeElement getElement() {
         return element;
     }
 
     public void setElement(CnATreeElement element) {
-        this.element = element; 
+        this.element = element;
     }
 
     private ICommandService getCommandService() {

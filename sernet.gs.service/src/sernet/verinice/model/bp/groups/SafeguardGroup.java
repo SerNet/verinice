@@ -20,10 +20,15 @@
 package sernet.verinice.model.bp.groups;
 
 import java.util.Collection;
+import java.util.List;
 
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpGroup;
+import sernet.verinice.model.bp.IImplementableSecurityLevelProvider;
+import sernet.verinice.model.bp.ISecurityLevelProvider;
+import sernet.verinice.model.bp.SecurityLevel;
+import sernet.verinice.model.bp.SecurityLevelUtil;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
@@ -34,27 +39,33 @@ import sernet.verinice.model.iso27k.Group;
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
 public class SafeguardGroup extends Group<Safeguard>
-        implements IBpGroup, IIdentifiableElement, ITaggableElement {
-    
-    private static final long serialVersionUID = -6689926582876183790L;
-    
-    public static final String TYPE_ID = "bp_safeguard_group";
-    
-    @SuppressWarnings("unused")
-    private static final String PROP_DESC = "bp_safeguard_group_objectbrowser_content"; //$NON-NLS-1$
+        implements IBpGroup, ISecurityLevelProvider, IIdentifiableElement, ITaggableElement {
 
-    private static final String PROP_NAME = "bp_safeguard_group_name"; //$NON-NLS-1$
-    
+    private static final long serialVersionUID = -6689926582876183790L;
+
+    public static final String TYPE_ID = "bp_safeguard_group";
+
+    public static final String PROP_DESC = "bp_safeguard_group_objectbrowser_content"; //$NON-NLS-1$
+
+    public static final String PROP_NAME = "bp_safeguard_group_name"; //$NON-NLS-1$
+
     private static final String PROP_ID = "bp_safeguard_group_id"; //$NON-NLS-1$
 
     public static final String PROP_TAG = "bp_safeguard_group_tag"; //$NON-NLS-1$
 
+    public static final String PROP_RELEASE = "bp_safeguard_group_release"; //$NON-NLS-1$
 
-    
-    public static final String[] CHILD_TYPES = new String[] {Safeguard.TYPE_ID};
-    
-    protected SafeguardGroup() {}
-    
+    public static final String PROP_CHANGE_TYPE = "bp_safeguard_group_change_type"; //$NON-NLS-1$
+
+    public static final String PROP_CHANGE_TYPE_REMOVED = "bp_safeguard_group_change_type_removed"; //$NON-NLS-1$
+
+    public static final String PROP_CHANGE_DETAILS = "bp_safeguard_group_change_details"; //$NON-NLS-1$
+
+    public static final String[] CHILD_TYPES = new String[] { Safeguard.TYPE_ID };
+
+    protected SafeguardGroup() {
+    }
+
     public SafeguardGroup(CnATreeElement parent) {
         super(parent);
         init();
@@ -64,22 +75,22 @@ public class SafeguardGroup extends Group<Safeguard>
     public String getTypeId() {
         return TYPE_ID;
     }
-    
+
     @Override
     public String[] getChildTypes() {
         return CHILD_TYPES;
-    }  
-    
+    }
+
     @Override
     public String getTitle() {
         return getEntity().getPropertyValue(PROP_NAME);
     }
-    
+
     @Override
     public void setTitel(String title) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
     }
-    
+
     @Override
     public String getIdentifier() {
         return getEntity().getPropertyValue(PROP_ID);
@@ -99,4 +110,9 @@ public class SafeguardGroup extends Group<Safeguard>
         return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
+    @Override
+    public SecurityLevel getSecurityLevel() {
+        List<IImplementableSecurityLevelProvider> providers = SecurityLevelUtil.findProviders(this);
+        return SecurityLevelUtil.getImplementedSecurityLevel(providers);
+    }
 }

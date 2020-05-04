@@ -68,7 +68,7 @@ import sernet.verinice.interfaces.ReportDepositException;
 import sernet.verinice.interfaces.ReportTemplateServiceException;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.report.ReportTemplateMetaData;
-import sernet.verinice.rcp.ReportTemplateSync;
+import sernet.verinice.rcp.ReportTemplateSyncer;
 import sernet.verinice.rcp.RightsEnabledView;
 
 public class ReportDepositView extends RightsEnabledView {
@@ -116,10 +116,12 @@ public class ReportDepositView extends RightsEnabledView {
 
     private void createTable(Composite parent) {
         TableColumn reportNameColumn;
+        TableColumn contextColumn;
         TableColumn outputFormatColumn;
         TableColumn templateColumn;
 
         final int reportNameWidth = 200;
+        final int contextWidth = 100;
         final int outputFormatWidth = 200;
         final int templateWidth = 100;
 
@@ -134,16 +136,21 @@ public class ReportDepositView extends RightsEnabledView {
         reportNameColumn.setText(Messages.ReportDepositView_1);
         reportNameColumn.addSelectionListener(new SortSelectionAdapter(this, reportNameColumn, 0));
 
+        contextColumn = new TableColumn(table, SWT.LEFT);
+        contextColumn.setWidth(contextWidth);
+        contextColumn.setText(Messages.ReportMetaDataContext);
+        contextColumn.addSelectionListener(new SortSelectionAdapter(this, contextColumn, 1));
+
         outputFormatColumn = new TableColumn(table, SWT.LEFT);
         outputFormatColumn.setWidth(outputFormatWidth);
         outputFormatColumn.setText(Messages.ReportDepositView_2);
         outputFormatColumn
-                .addSelectionListener(new SortSelectionAdapter(this, outputFormatColumn, 1));
+                .addSelectionListener(new SortSelectionAdapter(this, outputFormatColumn, 2));
 
         templateColumn = new TableColumn(table, SWT.LEFT);
         templateColumn.setWidth(templateWidth);
         templateColumn.setText(Messages.ReportDepositView_3);
-        templateColumn.addSelectionListener(new SortSelectionAdapter(this, templateColumn, 2));
+        templateColumn.addSelectionListener(new SortSelectionAdapter(this, templateColumn, 3));
 
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
@@ -301,6 +308,8 @@ public class ReportDepositView extends RightsEnabledView {
                 case 0:
                     return data.getOutputname(); // $NON-NLS-1$
                 case 1:
+                    return data.getContext();
+                case 2:
                     StringBuilder sb = new StringBuilder();
                     OutputFormat[] formats = data.getOutputFormats();
                     for (int i = 0; i < formats.length; i++) {
@@ -310,7 +319,7 @@ public class ReportDepositView extends RightsEnabledView {
                         }
                     }
                     return sb.toString(); // $NON-NLS-1$
-                case 2:
+                case 3:
                     return data.getFilename(); // $NON-NLS-1$
                 default:
                     return null;
@@ -400,6 +409,9 @@ public class ReportDepositView extends RightsEnabledView {
                             data2.getDecoratedOutputname());
                     break;
                 case 1:
+                    rc = data1.getContext().compareTo(data2.getContext());
+                    break;
+                case 2:
                     // implement a sorted list here that needs to be compared
                     String s1 = getSortedOutputFormatsString(data1.getOutputFormats());
                     String s2 = getSortedOutputFormatsString(data2.getOutputFormats());
@@ -407,7 +419,7 @@ public class ReportDepositView extends RightsEnabledView {
                         rc = s1.compareTo(s2);
                     }
                     break;
-                case 2:
+                case 3:
                     rc = comporeToLowerCase(data1.getFilename(), data2.getFilename());
                     break;
                 default:
@@ -481,7 +493,7 @@ public class ReportDepositView extends RightsEnabledView {
     private Object getContent() {
         try {
             Set<ReportTemplateMetaData> templateSet = getReportService()
-                    .getServerReportTemplates(Locale.getDefault().getLanguage());
+                    .getReportTemplates(Locale.getDefault().getLanguage());
             return templateSet.toArray(new ReportTemplateMetaData[templateSet.size()]);
         } catch (ReportTemplateServiceException e) {
             String msg = "Something went wrong with reading the propertyfiles";
@@ -511,7 +523,7 @@ public class ReportDepositView extends RightsEnabledView {
     }
 
     private void updateView() {
-        ReportTemplateSync.sync();
+        ReportTemplateSyncer.sync();
         setInput(getContent());
     }
 

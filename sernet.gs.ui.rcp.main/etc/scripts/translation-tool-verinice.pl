@@ -208,7 +208,7 @@ sub findTranslatableFiles {
    my @ret;
    find(sub {
      my $file = $File::Find::name;
-     push(@ret, $file) if ($file !~ m#(/src/test/)|(/target/)|(\.svn)# && $file =~ /(.*essages.properties)$|(plugin.properties)$|(bundle.properties)$/);
+     push(@ret, $file) if ($file !~ m#(/src/test/)|(/target/)|(\.svn)|(/sernet/verinice/service/bp/importer/)# && $file =~ /(.*essages.properties)$|(plugin.properties)$|(bundle.properties)$/);
    }, $dir);
    return @ret;
 }

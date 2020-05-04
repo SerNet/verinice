@@ -19,8 +19,8 @@ package sernet.verinice.model.report;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+
+import org.eclipse.jdt.annotation.NonNull;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
@@ -30,59 +30,59 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
     private static final long serialVersionUID = 1208760677224489421L;
 
     private static final NumericStringComparator NSC = new NumericStringComparator();
-    
-    public static final String REPORT_LOCAL_DECORATOR = "(L)";
-    public static final String REPORT_SERVER_DECORATOR = "(S)";
-    
-    private String filename;
+
+    public static final String[] CONTEXTS = { "ISM-ISO", "ISM-ISA", "ISM-DS", "ITGS", "ITGS-DS", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+            "ITGS-alt", Messages.ReportTemplateMetaDataUnspecified }; //$NON-NLS-1$
+
+    public static final String REPORT_LOCAL_DECORATOR = "(L)"; //$NON-NLS-1$
+    public static final String REPORT_SERVER_DECORATOR = "(S)"; //$NON-NLS-1$
 
     private OutputFormat[] outputFormat;
 
     private String outputname;
 
-    /**
-     * contains checksums from the rptdesign file and also from all property
-     * files
-     **/
-    private Set<String> md5CheckSums;
+    private String context;
 
     private boolean isServer;
-    
+
     /**
      * Can this report run with multiple root objects.
      */
     private boolean multipleRootObjects;
 
-    public ReportTemplateMetaData(String filename, String outputname, OutputFormat[] outputFormats,
-            boolean isServer, String[] md5CheckSums, boolean multipleRootObjects) {
+    private FileMetaData fileMetaData;
 
-        this.filename = filename;
+    public ReportTemplateMetaData(@NonNull FileMetaData fileMetadata, String outputname,
+            OutputFormat[] outputFormats, boolean isServer, boolean multipleRootObjects,
+            String context) {
+
+        this.fileMetaData = fileMetadata;
         this.outputname = outputname;
         setOutputFormats(outputFormats);
         this.isServer = isServer;
         this.multipleRootObjects = multipleRootObjects;
-
-        if (md5CheckSums != null) {
-            this.md5CheckSums = new HashSet<String>(Arrays.asList(md5CheckSums));
-        }
+        this.context = context;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((filename == null) ? 0 : filename.hashCode());
-        result = prime * result + ((md5CheckSums == null) ? 0 : md5CheckSums.hashCode());
+        int prime = 31;
+        int result = fileMetaData.hashCode();
         result = prime * result + Arrays.hashCode(outputFormat);
         result = prime * result + ((outputname == null) ? 0 : outputname.hashCode());
         result = prime * result + Boolean.valueOf(multipleRootObjects).hashCode();
+        result = prime * result + getContext().hashCode();
         return result;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -97,18 +97,11 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
             return false;
         }
         ReportTemplateMetaData other = (ReportTemplateMetaData) obj;
-        if (filename == null) {
-            if (other.filename != null) {
+        if (fileMetaData == null) {
+            if (other.fileMetaData != null) {
                 return false;
             }
-        } else if (!filename.equals(other.filename)) {
-            return false;
-        }
-        if (md5CheckSums == null) {
-            if (other.md5CheckSums != null) {
-                return false;
-            }
-        } else if (!md5CheckSums.equals(other.md5CheckSums)) {
+        } else if (!fileMetaData.equals(other.fileMetaData)) {
             return false;
         }
         if (!Arrays.equals(outputFormat, other.outputFormat)) {
@@ -124,12 +117,12 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
         if (multipleRootObjects != other.multipleRootObjects) {
             return false;
         }
-            
+
         return true;
     }
 
     public String getFilename() {
-        return filename;
+        return fileMetaData.getFilename();
     }
 
     public OutputFormat[] getOutputFormats() {
@@ -137,15 +130,15 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
     }
 
     public void setOutputFormats(OutputFormat[] outputFormats) {
-        this.outputFormat = (outputFormats!=null) ? outputFormats.clone() : null;
+        this.outputFormat = (outputFormats != null) ? outputFormats.clone() : null;
     }
-    
+
     public String getDecoratedOutputname() {
         String name;
-        if(isServer()){
-            name = (ReportTemplateMetaData.REPORT_SERVER_DECORATOR + " " + getOutputname());
+        if (isServer()) {
+            name = (ReportTemplateMetaData.REPORT_SERVER_DECORATOR + " " + getOutputname()); //$NON-NLS-1$
         } else {
-            name = (ReportTemplateMetaData.REPORT_LOCAL_DECORATOR + " " + getOutputname());
+            name = (ReportTemplateMetaData.REPORT_LOCAL_DECORATOR + " " + getOutputname()); //$NON-NLS-1$
         }
         return name;
     }
@@ -177,5 +170,16 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
 
     public void setMultipleRootObject(boolean multipleRootObjects) {
         this.multipleRootObjects = multipleRootObjects;
+    }
+
+    public @NonNull String getContext() {
+        if (context == null) {
+            return ""; //$NON-NLS-1$
+        }
+        return context;
+    }
+
+    public void setContext(String context) {
+        this.context = context;
     }
 }

@@ -21,28 +21,28 @@ import static org.apache.commons.io.FilenameUtils.concat;
 
 import java.io.IOException;
 
+import sernet.verinice.interfaces.IReportTemplateService;
 import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportMetaDataException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 
 public interface IReportService {
-    
-    String VERINICE_REPORTS_LOCAL = concat(concat(System.getProperty(
-            IVeriniceConstants.USER_HOME),
-            "verinice"),
-            "report_templates_local"); //$NON-NLS-1$
-    
+
+    String VERINICE_REPORTS_LOCAL = concat(
+            concat(System.getProperty(IVeriniceConstants.USER_HOME), "verinice"),
+            IReportTemplateService.REPORT_DEPOSIT_CLIENT_LOCAL); // $NON-NLS-1$
+
     String VERINICE_REPORTS_REMOTE = "report_templates_remote"; //$NON-NLS-1$
 
+    IReportType[] getReportTypes();
 
-	IReportType[] getReportTypes();
-	
-	IOutputFormat getOutputFormat(String formatLabel);
-	
-	IOutputFormat[] getOutputFormats(String[] formatLabel);
-	
-	ReportTemplateMetaData[] getReportTemplates(String[] rptDesignFiles) throws IOException, ReportMetaDataException, PropertyFileExistsException;
-	
-	public Object getRenderOptions(String format);
+    IOutputFormat getOutputFormat(String formatLabel);
+
+    IOutputFormat[] getOutputFormats(String[] formatLabel);
+
+    ReportTemplateMetaData[] getReportTemplates(String[] rptDesignFiles)
+            throws IOException, ReportMetaDataException, PropertyFileExistsException;
+
+    public Object getRenderOptions(String format);
 }

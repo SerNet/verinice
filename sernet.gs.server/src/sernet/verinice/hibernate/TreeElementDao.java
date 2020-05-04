@@ -92,7 +92,7 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         if (entity instanceof CnATreeElement) {
             CnATreeElement elmt = (CnATreeElement) entity;
             index(elmt);
-            fireChange(elmt);
+            notifyChangedElement(elmt);
         }
     }
 
@@ -188,13 +188,13 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
             CnATreeElement element = (CnATreeElement) mergedElement;
             index(element);
             if (fireChange) {
-                fireChange(element);
+                notifyChangedElement(element);
             }
         }
 
         if (fireChange && mergedElement instanceof CnALink) {
             CnALink link = (CnALink) mergedElement;
-            fireChange(link.getDependency());
+            notifyChangedElement(link.getDependency());
         }
 
         return mergedElement;
@@ -207,8 +207,11 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
 
     private void updateIndex(CnATreeElement element) {
         try {
-            if (getSearchDao() != null && getJsonBuilder() != null) {
-                getSearchDao().updateOrIndex(element.getUuid(), getJsonBuilder().getJson(element));
+            if (getSearchDao() != null) {
+                IJsonBuilder builder = getJsonBuilder();
+                if (builder != null && builder.isIndexableElement(element)) {
+                    getSearchDao().updateOrIndex(element.getUuid(), builder.getJson(element));
+                }
             }
         } catch (Exception e) {
             String uuid = (element != null) ? element.getUuid() : null;
@@ -234,20 +237,20 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
     }
 
     /**
-     * Causes changes in protection level (schutzbedarf) to be propagated.
+     * Calls change listener methods on changed element. Causes changes in
+     * protection level (schutzbedarf) to be propagated.
      * 
      * @param elmt
-     *            the element that had its protection level or protection level
-     *            description changed.
+     *            the element that was changed.
      */
-    protected void fireChange(CnATreeElement elmt) {
+    protected void notifyChangedElement(CnATreeElement elmt) {
+        elmt.valuesChanged();
         if (LOG_INHERIT.isDebug()) {
             LOG_INHERIT.debug("fireChange...");
         }
         elmt.fireIntegritaetChanged(new CascadingTransaction());
         elmt.fireVerfuegbarkeitChanged(new CascadingTransaction());
         elmt.fireVertraulichkeitChanged(new CascadingTransaction());
-        elmt.fireValueChanged(new CascadingTransaction());
     }
 
     @Override

@@ -18,8 +18,6 @@ public class LoadLdapUser extends GenericCommand implements ILdapCommand, Serial
 
     private List<PersonInfo> personList;
 
-    private Domain importDomain = Domain.ISM; // default case
-
     public LoadLdapUser() {
         super();
     }
@@ -29,14 +27,14 @@ public class LoadLdapUser extends GenericCommand implements ILdapCommand, Serial
         this.parameter = parameter;
     }
 
+    @Deprecated
     public LoadLdapUser(PersonParameter paramater, Domain importDomain) {
         this(paramater);
-        this.importDomain = importDomain;
     }
 
     @Override
     public void execute() {
-        personList = getLdapService().getPersonList(getParameter(), importDomain);
+        personList = getLdapService().getPersonList(getParameter());
     }
 
     public PersonParameter getParameter() {

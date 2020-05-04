@@ -25,44 +25,42 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.service.StringUtil;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.rcp.TextEventAdapter;
 
 /**
- * Wizard page of wizard {@link AccountWizard}.
+ * Wizard page of wizard {@link AccountWizard} which shows user name, password
+ * and email address.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class AuthenticationPage extends BaseWizardPage {
 
-    private static final Logger LOG = Logger.getLogger(AuthenticationPage.class);    
+    private static final Logger LOG = Logger.getLogger(AuthenticationPage.class);
     public static final String PAGE_NAME = "account-wizard-authentication-page"; //$NON-NLS-1$
-     
+
     private String login;
     private String password;
     private String password2;
     private String email;
-    
-    private Text textLogin;  
-    private Text textPassword;    
+
+    private Text textLogin;
+    private Text textPassword;
     private Text textPassword2;
-    private Text textEmail; 
-    
-    
+    private Text textEmail;
+
     protected AuthenticationPage() {
         super(PAGE_NAME);
     }
-   
+
     @Override
     protected void initGui(Composite composite) {
         setTitle(sernet.verinice.rcp.account.Messages.AuthenticationPage_1);
         setMessage(createMessage());
-        
+
         createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_3);
         textLogin = createTextfield(composite);
-        setText(textLogin,getLogin());
-        textLogin.addKeyListener(new TextEventAdapter() {   
+        setText(textLogin, getLogin());
+        textLogin.addKeyListener(new TextEventAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 login = StringUtil.replaceEmptyStringByNull(textLogin.getText());
@@ -70,20 +68,20 @@ public class AuthenticationPage extends BaseWizardPage {
             }
         });
 
-        if(isPasswordManagedInternally()) {   
-            createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_4);       
+        if (isPasswordManagedInternally()) {
+            createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_4);
             textPassword = createPasswordField(composite);
-            textPassword.addKeyListener(new TextEventAdapter() {   
+            textPassword.addKeyListener(new TextEventAdapter() {
                 @Override
                 public void keyReleased(KeyEvent e) {
                     password = StringUtil.replaceEmptyStringByNull(textPassword.getText());
                     setPageComplete(isPageComplete());
                 }
             });
-    
-            createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_5);     
+
+            createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_5);
             textPassword2 = createPasswordField(composite);
-            textPassword2.addKeyListener(new TextEventAdapter() {   
+            textPassword2.addKeyListener(new TextEventAdapter() {
                 @Override
                 public void keyReleased(KeyEvent e) {
                     password2 = StringUtil.replaceEmptyStringByNull(textPassword2.getText());
@@ -91,11 +89,11 @@ public class AuthenticationPage extends BaseWizardPage {
                 }
             });
         }
-        
+
         createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_6);
         textEmail = createTextfield(composite);
         setText(textEmail, getEmail());
-        textEmail.addKeyListener(new TextEventAdapter() {   
+        textEmail.addKeyListener(new TextEventAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 email = StringUtil.replaceEmptyStringByNull(textEmail.getText());
@@ -105,7 +103,7 @@ public class AuthenticationPage extends BaseWizardPage {
     }
 
     private String createMessage() {
-        if(isPasswordManagedInternally()) { 
+        if (isPasswordManagedInternally()) {
             return Messages.AuthenticationPage_2;
         } else {
             return Messages.AuthenticationPage_0;
@@ -116,42 +114,38 @@ public class AuthenticationPage extends BaseWizardPage {
     protected void initData() throws Exception {
         // nothing to do
     }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
-     */
+
     @Override
     public boolean isPageComplete() {
-        boolean complete = (getLogin()!=null) 
-                && isPassword()
-                && (getEmail()!=null);
+        boolean complete = (getLogin() != null) && isPassword() && (getEmail() != null);
         boolean isPasswordValid = validatePassword();
         if (LOG.isDebugEnabled()) {
             LOG.debug("page complete: " + complete); //$NON-NLS-1$
         }
         return complete && isPasswordValid;
     }
-    
+
     private boolean isPasswordManagedInternally() {
-        return getAuthService().isHandlingPasswords();
+        return AccountWizard.getAuthService().isHandlingPasswords();
     }
 
     private boolean isPassword() {
-        return (getPassword()!=null && getPassword2()!=null) || (getPassword()==null && getPassword2()==null);
+        return (getPassword() != null && getPassword2() != null)
+                || (getPassword() == null && getPassword2() == null);
     }
 
     private boolean validatePassword() {
         boolean valid = isPassword();
-		
-		if (valid && getPassword() != null) {
-				valid = getPassword().equals(getPassword2());
-				if (!valid) {
-					setErrorMessage(sernet.verinice.rcp.account.Messages.AuthenticationPage_7);
-				} else {
-					setErrorMessage(null);
-					setMessage(sernet.verinice.rcp.account.Messages.AuthenticationPage_8);
-				}
-			}
+
+        if (valid && getPassword() != null) {
+            valid = getPassword().equals(getPassword2());
+            if (!valid) {
+                setErrorMessage(sernet.verinice.rcp.account.Messages.AuthenticationPage_7);
+            } else {
+                setErrorMessage(null);
+                setMessage(sernet.verinice.rcp.account.Messages.AuthenticationPage_8);
+            }
+        }
         return valid;
     }
 
@@ -186,9 +180,4 @@ public class AuthenticationPage extends BaseWizardPage {
     public void setEmail(String email) {
         this.email = StringUtil.replaceEmptyStringByNull(email);
     }
-    
-    private IAuthService getAuthService() {
-        return ServiceFactory.lookupAuthService();
-    }
-
 }

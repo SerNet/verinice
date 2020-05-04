@@ -13,7 +13,7 @@ echo [enter]
 read
 
 
-find ./ ! -path '*classes*' ! -path '*.metadata*' ! -path '*bin*' ! -path '*target*' \
+find ./ ! -path '*classes*' ! -path '*.metadata*' ! -path '*bin*' ! -path '*target*' ! -path './sernet.gs.service/src/sernet/verinice/service/bp/importer/messages.properties' \
 -iname '*messages*.properties' \
 -or -iname 'plugin*.properties' \
 -or -iname 'bundle*.properties' \

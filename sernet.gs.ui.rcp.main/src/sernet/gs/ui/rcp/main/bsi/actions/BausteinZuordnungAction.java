@@ -18,7 +18,6 @@
 package sernet.gs.ui.rcp.main.bsi.actions;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -57,7 +56,7 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
     public static final String ID = "sernet.gs.ui.rcp.main.bausteinzuordnungaction"; //$NON-NLS-1$
 
     private final IWorkbenchWindow window;
-    
+
     public BausteinZuordnungAction(IWorkbenchWindow window) {
         super(ActionRightIDs.BAUSTEINZUORDNUNG, Messages.BausteinZuordnungAction_1);
         this.window = window;
@@ -68,12 +67,13 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
         setToolTipText(Messages.BausteinZuordnungAction_2);
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
      */
     @Override
     public void doRun() {
-        IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection(BsiModelView.ID);
+        IStructuredSelection selection = (IStructuredSelection) window.getSelectionService()
+                .getSelection(BsiModelView.ID);
         if (selection == null) {
             return;
         }
@@ -85,10 +85,11 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
             return;
         }
 
-        try {          
+        try {
             String[] modulesNumberArray = dialog.getSelectedSubtype().getSplitBausteine();
             for (String moduleNumber : modulesNumberArray) {
-                Baustein module = BSIKatalogInvisibleRoot.getInstance().getBausteinByKapitel(moduleNumber);
+                Baustein module = BSIKatalogInvisibleRoot.getInstance()
+                        .getBausteinByKapitel(moduleNumber);
                 if (module == null) {
                     LOG.debug("No mudule found for nr.: " + moduleNumber); //$NON-NLS-1$
                 } else {
@@ -116,6 +117,7 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
         if (!element.getChildren().isEmpty()) {
             RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance();
             ri.setChildrenProperties(true);
+            ri.setParent(true);
             elementInitialized = Retriever.retrieveElement(element, ri);
         }
         if (!elementInitialized.containsBausteinUmsetzung(nodule.getId())) {
@@ -128,12 +130,10 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
             }
         }
     }
-    
-    @SuppressWarnings("rawtypes")
+
     protected List<IBSIStrukturElement> getSelectedElements(IStructuredSelection selection) {
         final List<IBSIStrukturElement> selectedElements = new ArrayList<>(selection.size());
-        for (Iterator iter = selection.iterator(); iter.hasNext();) {
-            Object o = iter.next();
+        for (Object o : selection.toList()) {
             if (o instanceof IBSIStrukturElement) {
                 selectedElements.add((IBSIStrukturElement) o);
             }
@@ -142,7 +142,6 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
     }
 
     @Override
-    @SuppressWarnings("rawtypes")
     public void selectionChanged(IWorkbenchPart part, ISelection input) {
         if (isServerRunning()) {
             setEnabled(checkRights());
@@ -153,14 +152,13 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
                 setEnabled(false);
                 return;
             }
-            for (Iterator iter = selection.iterator(); iter.hasNext();) {
-                Object o = iter.next();
+            for (Object o : selection.toList()) {
                 if (!(o instanceof IBSIStrukturElement)) {
                     setEnabled(false);
                     return;
                 }
             }
-            if(checkRights()){
+            if (checkRights()) {
                 setEnabled(true);
             }
             return;

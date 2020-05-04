@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
 
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
@@ -58,12 +59,27 @@ public class URLControl extends AbstractHuiControl {
 
     public URLControl(Entity entity, PropertyType type, Composite parent, boolean editable,
             boolean showValidationHint, boolean useValidationGuiHints) {
-    	super(parent);
+        super(parent);
         this.entity = entity;
         this.type = type;
         this.editable = editable;
         this.showValidationHint = showValidationHint;
         this.useValidationGUIHints = useValidationGuiHints;
+    }
+
+    private boolean shouldOpen(String path) {
+        if (path == null || path.length() < 1) {
+            return false;
+        }
+        return askIfShouldOpen(path);
+    }
+    
+    private boolean askIfShouldOpen(String path) {
+        MessageBox messageBox = new MessageBox(Display.getCurrent().getActiveShell(),
+                SWT.ICON_WARNING | SWT.YES | SWT.NO);
+        messageBox.setText(Messages.getString("URLControl.2")); //$NON-NLS-1
+        messageBox.setMessage(Messages.getString("URLControl.3") + "\n\n" + path); //$NON-NLS-1
+        return messageBox.open() == SWT.YES;
     }
 
     public void create() {
@@ -72,7 +88,6 @@ public class URLControl extends AbstractHuiControl {
             refontLabel(true);
         }
         label.setText(type.getName());
-
         Composite container = new Composite(composite, SWT.NULL);
         GridLayout contLayout = new GridLayout(3, false);
         contLayout.horizontalSpacing = 5;
@@ -91,7 +106,7 @@ public class URLControl extends AbstractHuiControl {
         link.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
         link.addListener(SWT.Selection, new Listener() {
             public void handleEvent(Event event) {
-                if (getHref() != null && getHref().length() > 0) {
+                if (shouldOpen(getHref())) {
                     Program.launch(getHref());
                 }
             }

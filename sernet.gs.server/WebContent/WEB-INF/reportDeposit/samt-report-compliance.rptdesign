@@ -554,16 +554,34 @@ else &#13;
                 <structure>
                     <property name="name">calcMaturity</property>
                     <expression name="expression">if (row["Reifegrad__(ISA__Control)"] != "" &amp;&amp; BirtStr.charLength(row["Reifegrad__(ISA__Control)"]) > 0) {&#13;
-	if (row["Reifegrad__(ISA__Control)"] == -1) //NA&#13;
+	if (row["Reifegrad__(ISA__Control)_int"] == -1) //NA&#13;
 		-1&#13;
-	else if (row["Reifegrad__(ISA__Control)"] == -2) //unbearbeitet&#13;
+	else if (row["Reifegrad__(ISA__Control)_int"] == -2) //unbearbeitet&#13;
 		0&#13;
-	else if (row["Reifegrad__(ISA__Control)"] > row["Schwellwert__2__(ISA__Control)"])&#13;
-		row["Schwellwert__2__(ISA__Control)"]&#13;
+	else if (row["Reifegrad__(ISA__Control)_int"] > row["Schwellwert__2__(ISA__Control)_int"])&#13;
+		row["Schwellwert__2__(ISA__Control)_int"]&#13;
 	else &#13;
-		row["Reifegrad__(ISA__Control)"]&#13;
+		row["Reifegrad__(ISA__Control)_int"]&#13;
 }&#13;
 else 0</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">targetMaturity</property>
+                    <expression name="expression">if (row["Reifegrad__(ISA__Control)_int"] == -1) 
+  "NA";
+else
+  row["Schwellwert__2__(ISA__Control)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Reifegrad__(ISA__Control)_int</property>
+                    <expression name="expression">parseInt(row["Reifegrad__(ISA__Control)"])</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">Schwellwert__2__(ISA__Control)_int</property>
+                    <expression name="expression">parseInt(row["Schwellwert__2__(ISA__Control)"])</expression>
                     <property name="dataType">integer</property>
                 </structure>
             </list-property>
@@ -651,6 +669,21 @@ else 0</expression>
                     <structure>
                         <property name="position">9</property>
                         <property name="name">calcMaturity</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">targetMaturity</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">Reifegrad__(ISA__Control)_int</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">Schwellwert__2__(ISA__Control)_int</property>
                         <property name="dataType">integer</property>
                     </structure>
                 </list-property>
@@ -1316,14 +1349,14 @@ else &#13;
                 <structure>
                     <property name="name">calcMaturity</property>
                     <expression name="expression">if (row["Reifegrad__(ISA__Control)"] != "" &amp;&amp; BirtStr.charLength(row["Reifegrad__(ISA__Control)"]) > 0) { &#13;
-	if (row["Reifegrad__(ISA__Control)"] == -1) //NA&#13;
+	if (row["Reifegrad__(ISA__Control)_int"] == -1) //NA&#13;
 		-1&#13;
-	else if (row["Reifegrad__(ISA__Control)"] == -2) //unbearbeitet&#13;
+	else if (row["Reifegrad__(ISA__Control)_int"] == -2) //unbearbeitet&#13;
 		0&#13;
-	else if (row["Reifegrad__(ISA__Control)"] > row["Schwellwert__2__(ISA__Control)"])&#13;
-		row["Schwellwert__2__(ISA__Control)"]&#13;
+	else if (row["Reifegrad__(ISA__Control)_int"] > row["Schwellwert__2__(ISA__Control)_int"])&#13;
+		row["Schwellwert__2__(ISA__Control)_int"]&#13;
 	else &#13;
-		row["Reifegrad__(ISA__Control)"]&#13;
+		row["Reifegrad__(ISA__Control)_int"]&#13;
 } else 0</expression>
                     <property name="dataType">integer</property>
                 </structure>
@@ -1334,6 +1367,24 @@ else if (row["nr_header"] == '23.13') 3&#13;
 else if (row["nr_header"] == '23.7') 1&#13;
 else if (row["nr_header"] == '23.9') 2&#13;
 else 99</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">targetMaturity</property>
+                    <expression name="expression">if (row["Reifegrad__(ISA__Control)_int"] == -1) 
+  "NA";
+else
+  row["Schwellwert__2__(ISA__Control)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Reifegrad__(ISA__Control)_int</property>
+                    <expression name="expression">parseInt(row["Reifegrad__(ISA__Control)"])</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">Schwellwert__2__(ISA__Control)_int</property>
+                    <expression name="expression">parseInt(row["Schwellwert__2__(ISA__Control)"])</expression>
                     <property name="dataType">integer</property>
                 </structure>
             </list-property>
@@ -1454,6 +1505,21 @@ else 99</expression>
                     <structure>
                         <property name="position">13</property>
                         <property name="name">sortkey</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">targetMaturity</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">Reifegrad__(ISA__Control)_int</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">Schwellwert__2__(ISA__Control)_int</property>
                         <property name="dataType">integer</property>
                     </structure>
                 </list-property>
@@ -1661,16 +1727,34 @@ else &#13;
                 <structure>
                     <property name="name">calcMaturity</property>
                     <expression name="expression">if (row["Reifegrad__(ISA__Control)"] != "" &amp;&amp; BirtStr.charLength(row["Reifegrad__(ISA__Control)"]) > 0) {&#13;
-	if (row["Reifegrad__(ISA__Control)"] == -1)&#13;
-		row["Schwellwert__2__(ISA__Control)"]&#13;
-	else if (row["Reifegrad__(ISA__Control)"] == -2)&#13;
+	if (row["Reifegrad__(ISA__Control)_int"] == -1)&#13;
+		row["Schwellwert__2__(ISA__Control)_int"]&#13;
+	else if (row["Reifegrad__(ISA__Control)_int"] == -2)&#13;
 		0&#13;
-	else if (row["Reifegrad__(ISA__Control)"] > row["Schwellwert__2__(ISA__Control)"])&#13;
-		row["Schwellwert__2__(ISA__Control)"]&#13;
+	else if (row["Reifegrad__(ISA__Control)_int"] > row["Schwellwert__2__(ISA__Control)_int"])&#13;
+		row["Schwellwert__2__(ISA__Control)_int"]&#13;
 	else &#13;
-		row["Reifegrad__(ISA__Control)"]&#13;
+		row["Reifegrad__(ISA__Control)_int"]&#13;
 }&#13;
 else 0</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">targetMaturity</property>
+                    <expression name="expression">if (row["Reifegrad__(ISA__Control)_int"] == -1) 
+  "NA";
+else
+  row["Schwellwert__2__(ISA__Control)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Reifegrad__(ISA__Control)_int</property>
+                    <expression name="expression">parseInt(row["Reifegrad__(ISA__Control)"])</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">Schwellwert__2__(ISA__Control)_int</property>
+                    <expression name="expression">parseInt(row["Schwellwert__2__(ISA__Control)"])</expression>
                     <property name="dataType">integer</property>
                 </structure>
             </list-property>
@@ -1786,6 +1870,21 @@ else 0</expression>
                     <structure>
                         <property name="position">12</property>
                         <property name="name">calcMaturity</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">targetMaturity</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">Reifegrad__(ISA__Control)_int</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">Schwellwert__2__(ISA__Control)_int</property>
                         <property name="dataType">integer</property>
                     </structure>
                 </list-property>
@@ -3195,7 +3294,7 @@ else &#13;
                     <property name="paddingLeft">2pt</property>
                     <property name="paddingBottom">2pt</property>
                     <label id="2411">
-                        <text-property name="text">Version: 4.1.0</text-property>
+                        <text-property name="text">4.1.1</text-property>
                     </label>
                 </cell>
             </row>
@@ -3824,6 +3923,13 @@ else &#13;
                 </structure>
             </list-property>
         </extended-item>
+        <text id="3740">
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="paddingTop">20pt</property>
+            <property name="paddingBottom">5pt</property>
+            <text-property name="content" key="spiderChartHeading"><![CDATA[]]></text-property>
+        </text>
         <extended-item extensionName="Chart" id="3580">
             <property name="cube">Data Cube</property>
             <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithoutAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/RadarChartModelType">
@@ -4622,7 +4728,10 @@ function beforeDrawAxisLabel( axis, label, icsc )
           <Visible>false</Visible>
         </Label>
         <DataDefinition>
-          <Definition>data[&quot;Summary Field/calcMaturity&quot;] / data[&quot;Summary Field/calcCount&quot;]</Definition>
+          <Definition>if (data[&quot;Summary Field/calcCount&quot;] > 0)
+    data[&quot;Summary Field/calcMaturity&quot;] / data[&quot;Summary Field/calcCount&quot;]
+else
+    0</Definition>
           <Grouping>
             <GroupType>Text</GroupType>
             <AggregateExpression>Sum</AggregateExpression>
@@ -4987,7 +5096,10 @@ function beforeDrawAxisLabel( axis, label, icsc )
           <Visible>false</Visible>
         </Label>
         <DataDefinition>
-          <Definition>data[&quot;Summary Field/schwellwert&quot;] / data[&quot;Summary Field/calcCount&quot;]</Definition>
+          <Definition>if (data[&quot;Summary Field/calcCount&quot;] > 0)
+    data[&quot;Summary Field/schwellwert&quot;] / data[&quot;Summary Field/calcCount&quot;]
+else
+    0</Definition>
           <Grouping>
             <Enabled>false</Enabled>
             <GroupType>Text</GroupType>
@@ -7944,6 +8056,12 @@ function beforeDrawAxisLabel( axis, label, icsc )
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">targetMaturity</property>
+                    <text-property name="displayName">targetMaturity</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["targetMaturity"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
             <property name="repeatHeader">false</property>
             <property name="pageBreakInterval">0</property>
@@ -8120,10 +8238,8 @@ function beforeDrawAxisLabel( axis, label, icsc )
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
-                        <data id="2824">
-                            <property name="fontWeight">bold</property>
-                            <property name="textAlign">center</property>
-                            <property name="resultSetColumn">cbSchwellwert__2__(ISA__Control)</property>
+                        <data id="3737">
+                            <property name="resultSetColumn">targetMaturity</property>
                         </data>
                     </cell>
                     <cell id="916">
@@ -8685,6 +8801,12 @@ if(locale.contains("de")){
                     </list-property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">targetMaturity</property>
+                    <text-property name="displayName">targetMaturity</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["targetMaturity"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
             <property name="repeatHeader">false</property>
             <property name="pageBreakInterval">0</property>
@@ -8875,8 +8997,8 @@ if(locale.contains("de")){
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
-                        <data id="2990">
-                            <property name="resultSetColumn">cbSchwellwert__2__(ISA__Control)</property>
+                        <data id="3736">
+                            <property name="resultSetColumn">targetMaturity</property>
                         </data>
                     </cell>
                     <cell id="2991">
@@ -9354,6 +9476,12 @@ if(locale.contains("de")){
                     </list-property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">targetMaturity</property>
+                    <text-property name="displayName">targetMaturity</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["targetMaturity"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
             <property name="repeatHeader">false</property>
             <property name="pageBreakInterval">0</property>
@@ -9601,8 +9729,8 @@ if(locale.contains("de")){
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
-                        <data id="2887">
-                            <property name="resultSetColumn">cbSchwellwert__2__(ISA__Control)</property>
+                        <data id="3735">
+                            <property name="resultSetColumn">targetMaturity</property>
                         </data>
                     </cell>
                     <cell id="2888">

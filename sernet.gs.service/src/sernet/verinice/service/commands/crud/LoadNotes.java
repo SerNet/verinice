@@ -37,86 +37,87 @@ import sernet.verinice.model.bsi.Note;
 
 public class LoadNotes extends GenericCommand {
 
-	private static final Logger log = Logger.getLogger(LoadNotes.class);
-	
-	private final NoteSorter sorter = new NoteSorter();
+    private static final Logger log = Logger.getLogger(LoadNotes.class);
 
-	private Integer cnAElementId;
-	
-	private List<Note> noteList;
-	
-	public List<Note> getNoteList() {
-		return noteList;
-	}
+    private final NoteSorter sorter = new NoteSorter();
 
-	public void setNoteList(List<Note> noteList) {
-		this.noteList = noteList;
-	}
+    private Integer cnAElementId;
 
-	public LoadNotes(Integer cnAElementId) {
-		super();
-		this.cnAElementId = cnAElementId;
-	}
+    private List<Note> noteList;
 
-	public void execute() {
-		if (log.isDebugEnabled()) {
-			log.debug("executing, id is: " + getCnAElementId() + "...");
-		}
-		if(getCnAElementId()!=null) {
-			IBaseDao<Note, Serializable> dao = getDaoFactory().getDAO(Note.class);
-			DetachedCriteria crit = DetachedCriteria.forClass(Note.class);
-			crit.add(Restrictions.eq("cnATreeElementId", getCnAElementId()));
-			crit.setFetchMode("entity", FetchMode.JOIN);
-			crit.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
-			crit.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
-			crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-			List<Note> internalNoteList = dao.findByCriteria(crit);
-			if (log.isDebugEnabled()) {
-				log.debug("number of notes found: " + internalNoteList.size());
-			}
-			for (Note note : internalNoteList) {
-				Entity entity = note.getEntity();
-				if(entity!=null) {
-					for (PropertyList pl : entity.getTypedPropertyLists().values()) {
-						for (Property p : pl.getProperties()) {
-							p.setParent(entity);
-						}
-					}
-				}
-			}
-			Collections.sort(internalNoteList, sorter);
-			setNoteList(internalNoteList);
-		}
-	}
+    public List<Note> getNoteList() {
+        return noteList;
+    }
 
-	public void setCnAElementId(Integer cnAElementId) {
-		this.cnAElementId = cnAElementId;
-	}
+    public void setNoteList(List<Note> noteList) {
+        this.noteList = noteList;
+    }
 
+    public LoadNotes(Integer cnAElementId) {
+        super();
+        this.cnAElementId = cnAElementId;
+    }
 
-	public Integer getCnAElementId() {
-		return cnAElementId;
-	}
-	
-	class NoteSorter implements Comparator<Note>, Serializable {
+    public void execute() {
+        if (log.isDebugEnabled()) {
+            log.debug("executing, id is: " + getCnAElementId() + "...");
+        }
+        if (getCnAElementId() != null) {
+            IBaseDao<Note, Serializable> dao = getDaoFactory().getDAO(Note.class);
+            DetachedCriteria crit = DetachedCriteria.forClass(Note.class);
+            crit.add(Restrictions.eq("cnATreeElement.dbId", getCnAElementId()));
+            crit.setFetchMode("entity", FetchMode.JOIN);
+            crit.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
+            crit.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
+            crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+            List<Note> internalNoteList = dao.findByCriteria(crit);
+            if (log.isDebugEnabled()) {
+                log.debug("number of notes found: " + internalNoteList.size());
+            }
+            for (Note note : internalNoteList) {
+                Entity entity = note.getEntity();
+                if (entity != null) {
+                    for (PropertyList pl : entity.getTypedPropertyLists().values()) {
+                        for (Property p : pl.getProperties()) {
+                            p.setParent(entity);
+                        }
+                    }
+                }
+            }
+            Collections.sort(internalNoteList, sorter);
+            setNoteList(internalNoteList);
+        }
+    }
 
-		/* (non-Javadoc)
-		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-		 */
-		public int compare(Note o1, Note o2) {
-			int result = -1;
-			if(o1!=null && o1.getTitel()!=null) {
-				if(o2==null || o2.getTitel()==null) {
-					result = 1;
-				} else {
-					result = o1.getTitel().compareTo(o2.getTitel());
-				}
-			} else if(o2==null || o2.getTitel()==null) {
-				result = 0;
-			}
-			return result;
-		}
-		
-	}
+    public void setCnAElementId(Integer cnAElementId) {
+        this.cnAElementId = cnAElementId;
+    }
+
+    public Integer getCnAElementId() {
+        return cnAElementId;
+    }
+
+    class NoteSorter implements Comparator<Note>, Serializable {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+         */
+        public int compare(Note o1, Note o2) {
+            int result = -1;
+            if (o1 != null && o1.getTitel() != null) {
+                if (o2 == null || o2.getTitel() == null) {
+                    result = 1;
+                } else {
+                    result = o1.getTitel().compareTo(o2.getTitel());
+                }
+            } else if (o2 == null || o2.getTitel() == null) {
+                result = 0;
+            }
+            return result;
+        }
+
+    }
 
 }

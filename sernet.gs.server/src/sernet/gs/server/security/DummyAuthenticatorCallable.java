@@ -49,9 +49,9 @@ import org.springframework.security.context.SecurityContextImpl;
  *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-abstract public class DummyAuthenticatorCallable<T> implements Callable<T> {
+public abstract class DummyAuthenticatorCallable<T> implements Callable<T> {
 
-    private static DummyAuthentication DUMMY_AUTHENTICATION = new DummyAuthentication();
+    private static DummyAuthentication dummyAuthentication = new DummyAuthentication();
 
     /**
      * Never call this method directly. It makes sure that a security is set and
@@ -60,23 +60,22 @@ abstract public class DummyAuthenticatorCallable<T> implements Callable<T> {
      * Usually this method is executed by an {@link CompletionService}.
      */
     @Override
-    final public T call() throws Exception {
+    public final T call() throws Exception {
         try {
             initializeSecurityContext();
-            T t = doCall();
-            return t;
+            return doCall();
         } finally {
             removeSecurityContext();
         }
 
     }
 
-    abstract public T doCall();
+    public abstract T doCall();
 
     private void initializeSecurityContext() {
         if (isNoAuthenticationAvailable()) {
             SecurityContext ctx = new SecurityContextImpl();
-            ctx.setAuthentication(DUMMY_AUTHENTICATION);
+            ctx.setAuthentication(dummyAuthentication);
             SecurityContextHolder.setContext(ctx);
         }
     }
@@ -87,5 +86,5 @@ abstract public class DummyAuthenticatorCallable<T> implements Callable<T> {
 
     private void removeSecurityContext() {
         SecurityContextHolder.clearContext();
-    };
+    }
 }

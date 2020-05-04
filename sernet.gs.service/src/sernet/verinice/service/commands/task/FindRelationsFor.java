@@ -37,6 +37,8 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class FindRelationsFor extends GenericCommand {
 
+    private static final long serialVersionUID = 1L;
+
     private Integer dbId;
     private CnATreeElement elmt;
     private String typeId;
@@ -50,24 +52,27 @@ public class FindRelationsFor extends GenericCommand {
      * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
      */
     public void execute() {
+        @SuppressWarnings("unchecked")
         IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
         elmt = dao.findById(dbId);
 
-        if (elmt != null) {
-            Set<CnALink> linksDown = elmt.getLinksDown();
-            for (CnALink cnALink : linksDown) {
-                for (PropertyList pl : cnALink.getDependency().getEntity().getTypedPropertyLists()
-                        .values()) {
-                    Hibernate.initialize(pl.getProperties());
-                }
-            }
+        if (elmt == null) {
+            return;
+        }
 
-            Set<CnALink> linksUp = elmt.getLinksUp();
-            for (CnALink cnALink : linksUp) {
-                for (PropertyList pl : cnALink.getDependant().getEntity().getTypedPropertyLists()
-                        .values()) {
-                    Hibernate.initialize(pl.getProperties());
-                }
+        Set<CnALink> linksDown = elmt.getLinksDown();
+        for (CnALink cnALink : linksDown) {
+            for (PropertyList pl : cnALink.getDependency().getEntity().getTypedPropertyLists()
+                    .values()) {
+                Hibernate.initialize(pl.getProperties());
+            }
+        }
+
+        Set<CnALink> linksUp = elmt.getLinksUp();
+        for (CnALink cnALink : linksUp) {
+            for (PropertyList pl : cnALink.getDependant().getEntity().getTypedPropertyLists()
+                    .values()) {
+                Hibernate.initialize(pl.getProperties());
             }
         }
     }

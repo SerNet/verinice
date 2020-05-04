@@ -21,10 +21,15 @@ package sernet.verinice.model.bp.groups;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpGroup;
+import sernet.verinice.model.bp.IImplementableSecurityLevelProvider;
+import sernet.verinice.model.bp.ISecurityLevelProvider;
+import sernet.verinice.model.bp.SecurityLevel;
+import sernet.verinice.model.bp.SecurityLevelUtil;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
@@ -35,18 +40,22 @@ import sernet.verinice.model.iso27k.Group;
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
 public class BpRequirementGroup extends Group<BpRequirement>
-        implements IBpGroup, IIdentifiableElement, ITaggableElement {
+        implements IBpGroup, ISecurityLevelProvider, IIdentifiableElement, ITaggableElement {
 
     private static final long serialVersionUID = 7752776589962581996L;
 
     public static final String TYPE_ID = "bp_requirement_group";
     public static final String PROP_NAME = "bp_requirement_group_name"; //$NON-NLS-1$
-    private static final String PROP_OBJECTBROWSER_DESC = "bp_requirement_group_objectbrowser_content"; //$NON-NLS-1$
+    public static final String PROP_OBJECTBROWSER_DESC = "bp_requirement_group_objectbrowser_content"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_requirement_group_id"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_requirement_group_tag"; //$NON-NLS-1$
-    private static final String PROP_LAST_CHANGE = "bp_requirement_group_last_change"; //$NON-NLS-1$
+    public static final String PROP_LAST_CHANGE = "bp_requirement_group_last_change"; //$NON-NLS-1$
 
-    private static final String PROP_IMPLEMENTATION_ORDER = "bp_requirement_group_impl_seq"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_ORDER = "bp_requirement_group_impl_seq"; //$NON-NLS-1$
+    public static final String PROP_RELEASE = "bp_requirement_group_release"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_TYPE = "bp_requirement_group_change_type"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_TYPE_REMOVED = "bp_requirement_group_change_type_removed"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_DETAILS = "bp_requirement_group_change_details"; //$NON-NLS-1$
 
     public static final String[] CHILD_TYPES = new String[] { BpRequirement.TYPE_ID,
             BpRequirementGroup.TYPE_ID };
@@ -119,10 +128,15 @@ public class BpRequirementGroup extends Group<BpRequirement>
     public String getFullTitle() {
         return joinPrefixAndTitle(getIdentifier(), getTitle());
     }
-    
+
     @Override
     public Collection<String> getTags() {
         return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
+    @Override
+    public SecurityLevel getSecurityLevel() {
+        List<IImplementableSecurityLevelProvider> providers = SecurityLevelUtil.findProviders(this);
+        return SecurityLevelUtil.getImplementedSecurityLevel(providers);
+    }
 }

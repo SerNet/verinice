@@ -20,9 +20,11 @@
 package sernet.verinice.service.commands.templates;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
@@ -55,7 +57,7 @@ public class LoadTemplateCandidates extends GenericCommand {
     private static final long serialVersionUID = 1847024646098773061L;
 
     private String uuid;
-    private String typeId;
+    private Collection<String> typeIds;
     private Integer scopeId;
     private Integer groupId;
 
@@ -64,10 +66,10 @@ public class LoadTemplateCandidates extends GenericCommand {
     /**
      * @param implElement
      */
-    public LoadTemplateCandidates(String uuid, String typeId, Integer scopeId, Integer groupId) {
+    public LoadTemplateCandidates(String uuid, Collection<String> typeIds, Integer scopeId, Integer groupId) {
         super();
         this.uuid = uuid;
-        this.typeId = checkTypeId(typeId);
+        this.typeIds = typeIds.stream().map(this::checkTypeId).collect(Collectors.toSet());
         this.scopeId = scopeId;
         this.groupId = groupId;
     }
@@ -93,7 +95,7 @@ public class LoadTemplateCandidates extends GenericCommand {
         return typeId;
     }
 
-    public LoadTemplateCandidates(String uuid, String typeId) {
+    public LoadTemplateCandidates(String uuid, Collection<String> typeId) {
         this(uuid, typeId, null, null);
     }
 
@@ -116,7 +118,7 @@ public class LoadTemplateCandidates extends GenericCommand {
         crit.setFetchMode("entity", FetchMode.JOIN);
         crit.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
         crit.setFetchMode("children", FetchMode.JOIN);
-        crit.add(Restrictions.eq("objectType", typeId));
+        crit.add(Restrictions.in("objectType", typeIds));
         crit.add(Restrictions.eq("templateTypeValue", CnATreeElement.TemplateType.TEMPLATE.name()));
         crit.add(Restrictions.ne("uuid", uuid));
         if (!element.getImplementedTemplateUuids().isEmpty()) {

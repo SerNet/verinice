@@ -43,27 +43,31 @@ import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
  */
 public class Network extends ElementWithChilds
         implements IBpElement, IAbbreviatedElement, IBpGroup, ITaggableElement, ITargetObject {
-    
+
     private static final long serialVersionUID = -5306479716342566201L;
-    
+
     public static final String TYPE_ID = "bp_network"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_network_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_network_tag"; //$NON-NLS-1$
-    public static final String PROP_ABBR = "bp_network_abbr"; //$NON-NLS-1$
+    public static final String PROP_ABBR = "bp_network_abbr";
+    public static final String PROP_RISKANALYSIS_NECESSARY = "bp_network_riskanalysis_necessary";//$NON-NLS-1$
 
     public static final String[] CHILD_TYPES = new String[] { BpRequirementGroup.TYPE_ID,
             SafeguardGroup.TYPE_ID, BpThreatGroup.TYPE_ID };
-    
-    private final ILinkChangeListener linkChangeListener = new MaximumProtectionRequirementsValueListener(this);
-    private final IReevaluator protectionRequirementsProvider = new ProtectionRequirementsValueAdapter(this);
 
-    protected Network() {}
-    
+    private final ILinkChangeListener linkChangeListener = new MaximumProtectionRequirementsValueListener(
+            this);
+    private final IReevaluator protectionRequirementsProvider = new ProtectionRequirementsValueAdapter(
+            this);
+
+    protected Network() {
+    }
+
     public Network(CnATreeElement parent) {
         super(parent);
         init();
     }
-    
+
     @Override
     public ILinkChangeListener getLinkChangeListener() {
         return linkChangeListener;
@@ -73,12 +77,12 @@ public class Network extends ElementWithChilds
     public IReevaluator getProtectionRequirementsProvider() {
         return protectionRequirementsProvider;
     }
-   
+
     @Override
     public String getTitle() {
         return getEntity().getPropertyValue(PROP_NAME);
     }
-    
+
     @Override
     public void setTitel(String name) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
@@ -93,7 +97,7 @@ public class Network extends ElementWithChilds
     public String[] getChildTypes() {
         return CHILD_TYPES;
     }
-    
+
     @Override
     public Collection<String> getTags() {
         return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));

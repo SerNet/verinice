@@ -37,14 +37,13 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -55,6 +54,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
 import sernet.verinice.interfaces.ReportDepositException;
+import sernet.verinice.model.report.FileMetaData;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 
 /**
@@ -65,6 +65,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     private static final Logger LOG = Logger.getLogger(AddReportToDepositDialog.class);
 
     private Text reportName;
+    private Combo reportContextCombo;
 
     private Button outputTypePDFCheckbox;
     private Button outputTypeHTMLCheckbox;
@@ -106,9 +107,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         super.configureShell(newShell);
         newShell.setText(
                 isEditMode() ? Messages.ReportDepositView_17 : Messages.ReportDepositView_5);
-        // newShell.setSize(SIZE_X, SIZE_Y);
 
-        // open the window right under the mouse pointer:
         Point cursorLocation = Display.getCurrent().getCursorLocation();
         newShell.setLocation(
                 new Point(cursorLocation.x - SIZE_X / 2, cursorLocation.y - SIZE_Y / 2));
@@ -152,6 +151,36 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         reportNameTextGd.horizontalSpan = 2;
         reportName.setLayoutData(reportNameTextGd);
 
+        Label reportContextLabel = new Label(dialogContent, SWT.NONE);
+        reportContextLabel.setText(Messages.ReportMetaDataContext);
+
+        GridData reportContextLabelGd = new GridData();
+        reportContextLabelGd.horizontalAlignment = SWT.FILL;
+        reportContextLabelGd.verticalAlignment = SWT.CENTER;
+        reportContextLabelGd.grabExcessHorizontalSpace = false;
+        reportContextLabelGd.horizontalSpan = 1;
+        reportContextLabel.setLayoutData(reportNameLabelGd);
+
+        reportContextCombo = new Combo(dialogContent, SWT.DROP_DOWN | SWT.READ_ONLY);
+        reportContextCombo.setItems(ReportTemplateMetaData.CONTEXTS);
+        GridData reportContextGd = new GridData();
+        reportContextGd.horizontalAlignment = SWT.FILL;
+        reportContextGd.verticalAlignment = SWT.TOP;
+        reportContextGd.grabExcessHorizontalSpace = true;
+        reportContextGd.horizontalSpan = 2;
+        reportContextCombo.setLayoutData(reportContextGd);
+        reportContextCombo.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                getButton(IDialogConstants.OK_ID).setEnabled(true);
+            }
+
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }
+        });
+
         allowMultipleRootObjects = new Button(dialogContent, SWT.CHECK);
         allowMultipleRootObjects.setText(Messages.ReportDepositView_25);
         GridData allowMultipleRootObjectsGd = new GridData();
@@ -185,9 +214,6 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         oflData.horizontalSpan = 3;
         oflData.grabExcessHorizontalSpace = true;
         outputFormatGroup.setLayoutData(oflData);
-
-        // Label outputFormatLabel = new Label(checkboxComposite, SWT.NONE);
-        // outputFormatLabel.setText(Messages.ReportDepositView_2);
 
         outputTypePDFCheckbox = new Button(outputFormatGroup, SWT.CHECK);
         outputTypePDFCheckbox.setText(OutputFormat.PDF.toString());
@@ -243,20 +269,8 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
 
     private void prepareEditMode() {
         reportName.setText(editTemplate.getOutputname());
-        reportName.addListener(SWT.CHANGED, new Listener() {
-            public void handleEvent(Event event) {
-                if (!reportName.getText().isEmpty()
-                        && !reportName.getText().equals(editTemplate.getOutputname())) {
-                    event.doit = true;
-                    getButton(IDialogConstants.OK_ID).setEnabled(true);
-
-                } else if (reportName.getText().equals(editTemplate.getOutputname())) {
-                    event.doit = false;
-                    getButton(IDialogConstants.OK_ID).setEnabled(false);
-                }
-            }
-        });
-
+        reportName.addListener(SWT.CHANGED,
+                event -> getButton(IDialogConstants.OK_ID).setEnabled(true));
         outputTypePDFCheckbox = checkboxEditMode(outputTypePDFCheckbox, OutputFormat.PDF);
         outputTypeHTMLCheckbox = checkboxEditMode(outputTypeHTMLCheckbox, OutputFormat.HTML);
         outputTypeWordCheckbox = checkboxEditMode(outputTypeWordCheckbox, OutputFormat.DOC);
@@ -266,20 +280,11 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         reportTemplateText.setText(editTemplate.getFilename());
         reportTemplateText.setEnabled(false);
         reportTemplateSelectButton.setEnabled(false);
-        reportTemplateSelectButton.setEnabled(false);
         allowMultipleRootObjects.setSelection(editTemplate.isMultipleRootObjects());
         allowMultipleRootObjects.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                if (editTemplate.isMultipleRootObjects() != allowMultipleRootObjects
-                        .getSelection()) {
-                    e.doit = true;
-                    getButton(IDialogConstants.OK_ID).setEnabled(true);
-
-                } else {
-                    e.doit = false;
-                    getButton(IDialogConstants.OK_ID).setEnabled(false);
-                }
+                getButton(IDialogConstants.OK_ID).setEnabled(true);
             }
 
             @Override
@@ -287,6 +292,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
                 widgetSelected(e);
             }
         });
+        reportContextCombo.setText(editTemplate.getContext());
     }
 
     private Button checkboxEditMode(Button checkbox, OutputFormat format) {
@@ -313,9 +319,12 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
 
     private void updateTemplate() {
         try {
-            ReportTemplateMetaData metaData = new ReportTemplateMetaData(
-                    FilenameUtils.getName(getSelectedDesginFile()), getReportOutputName(),
-                    getReportOutputFormats(), true, null, allowMultipleRootObjects.getSelection());
+            FileMetaData fileMetaDAta = new FileMetaData(
+                    FilenameUtils.getName(getSelectedDesginFile()), null);
+
+            ReportTemplateMetaData metaData = new ReportTemplateMetaData(fileMetaDAta,
+                    getReportOutputName(), getReportOutputFormats(), true,
+                    allowMultipleRootObjects.getSelection(), getContext());
             getReportService().update(metaData, getLanguage());
         } catch (ReportDepositException e) {
             LOG.error("Error while updating report template file", e); //$NON-NLS-1$
@@ -326,9 +335,11 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     private void addTemplate() {
         try {
             byte[] rptDesignFile = FileUtils.readFileToByteArray(new File(getSelectedDesginFile()));
-            ReportTemplateMetaData metaData = new ReportTemplateMetaData(
-                    FilenameUtils.getName(getSelectedDesginFile()), getReportOutputName(),
-                    getReportOutputFormats(), true, null, allowMultipleRootObjects.getSelection());
+            FileMetaData fileMetaData = new FileMetaData(
+                    FilenameUtils.getName(getSelectedDesginFile()), null);
+            ReportTemplateMetaData metaData = new ReportTemplateMetaData(fileMetaData,
+                    getReportOutputName(), getReportOutputFormats(), true,
+                    allowMultipleRootObjects.getSelection(), getContext());
             getReportService().add(metaData, rptDesignFile, getLanguage());
         } catch (IOException | ReportDepositException e) {
             LOG.error("Error while adding new report template file", e); //$NON-NLS-1$
@@ -369,6 +380,10 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         return reportName.getText();
     }
 
+    private String getContext() {
+        return reportContextCombo.getText();
+    }
+
     private OutputFormat[] getReportOutputFormats() {
         ArrayList<OutputFormat> list = new ArrayList<>(0);
         if (outputTypeExcelCheckbox.getSelection()) {
@@ -392,14 +407,6 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         return list.toArray(new OutputFormat[list.size()]);
     }
 
-    private boolean outputFormatEquals() {
-        if (editTemplate != null) {
-            return Arrays.equals(getReportOutputFormats(), editTemplate.getOutputFormats());
-        }
-
-        return false;
-    }
-
     private boolean isAnyFormatSelected() {
         return outputTypeExcelCheckbox.getSelection() || outputTypeHTMLCheckbox.getSelection()
                 || outputTypeODSCheckbox.getSelection() || outputTypeODTCheckbox.getSelection()
@@ -419,14 +426,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
             checkBoxSelectionListener = new SelectionListener() {
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-                    if (!outputFormatEquals()) {
-                        e.doit = true;
-                        getButton(IDialogConstants.OK_ID).setEnabled(true);
-
-                    } else {
-                        e.doit = false;
-                        getButton(IDialogConstants.OK_ID).setEnabled(false);
-                    }
+                    getButton(IDialogConstants.OK_ID).setEnabled(true);
                 }
 
                 @Override

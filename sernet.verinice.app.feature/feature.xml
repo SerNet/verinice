@@ -2,15 +2,15 @@
 <feature
       id="sernet.verinice.app.feature"
       label="Application Feature"
-      version="1.0.0.qualifier"
+      version="1.20.0.qualifier"
       provider-name="SerNet">
 
-   <description url="http://www.verinice.com">
+   <description url="https://verinice.com">
       The application feature.
    </description>
 
-   <copyright url="http://www.verinice.com">
-      Copyright 1997 - 2019 SerNet GmbH and others.
+   <copyright url="https://verinice.com">
+      Copyright 1997 - 2020 SerNet GmbH and others.
    </copyright>
 
    <license url="http://www.gnu.org/licenses/lgpl-3.0-standalone.html">
@@ -284,8 +284,35 @@ Library.
    <requires>
       <import feature="sernet.gs.server.feature" version="1.1.1.qualifier"/>
       <import feature="sernet.rcp.ui.feature" version="1.0.0.qualifier"/>
-      <import feature="sernet.verinice.lang.feature" version="1.0.0"/>
+      <import feature="sernet.verinice.lang.feature" version="1.19.0.qualifier"/>
       <import feature="sernet.verinice.extraresources.feature" version="1.0.0.qualifier"/>
    </requires>
+
+   <plugin
+         id="sernet.verinice.extraresources.jre_linux_64"
+         os="linux"
+         ws="gtk"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="sernet.verinice.extraresources.jre_macos_64"
+         os="macosx"
+         ws="cocoa"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="sernet.verinice.extraresources.jre_win_64"
+         os="win32"
+         ws="win32"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>

@@ -40,7 +40,6 @@ import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.interfaces.updatenews.IUpdateNewsService;
 import sernet.verinice.interfaces.validation.IValidationService;
-import sernet.verinice.service.bp.migration.ModelingMigrationDatabaseService;
 import sernet.verinice.service.model.IObjectModelService;
 
 @SuppressWarnings("restriction")
@@ -206,11 +205,6 @@ public abstract class ServiceFactory {
 
     public static IEncryptionService lookupEncryptionService() {
         return (IEncryptionService) VeriniceContext.get(VeriniceContext.ENCRYPTION_SERVICE);
-    }
-
-    public static ModelingMigrationDatabaseService lookupModelingMigrationService() {
-        return (ModelingMigrationDatabaseService) VeriniceContext
-                .get(VeriniceContext.MODELING_MIGRATION_SERVICE);
     }
 
     /**

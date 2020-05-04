@@ -20,13 +20,17 @@
 package sernet.verinice.model.bp.elements;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
+import sernet.gs.service.StringUtil;
 import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.hui.common.connect.IPerson;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.configuration.Configuration;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -35,7 +39,7 @@ import sernet.verinice.model.common.CnATreeElement;
 public class BpPerson extends CnATreeElement
         implements IBpElement, IAbbreviatedElement, ITaggableElement, IPerson {
 
-    private static final long serialVersionUID = -1764245620965365934L;
+    private static final long serialVersionUID = 976554080854876269L;
 
     public static final String TYPE_ID = "bp_person"; //$NON-NLS-1$
     public static final String PROP_LAST_NAME = "bp_person_last_name"; //$NON-NLS-1$
@@ -46,12 +50,22 @@ public class BpPerson extends CnATreeElement
     public static final String PROP_ABBR = "bp_person_abbr"; //$NON-NLS-1$
     public static final String PROP_TITLE = "bp_person_title"; //$NON-NLS-1$
 
+    private Set<Configuration> configurations = new HashSet<>(1);
+
     protected BpPerson() {
     }
 
     public BpPerson(CnATreeElement parent) {
         super(parent);
         init();
+    }
+
+    public Set<Configuration> getConfigurations() {
+        return configurations;
+    }
+
+    public void setConfigurations(Set<Configuration> configurations) {
+        this.configurations = configurations;
     }
 
     @Override
@@ -103,7 +117,7 @@ public class BpPerson extends CnATreeElement
 
     @Override
     public String getSalutation() {
-        return getEntity().getRawPropertyValue(PROP_TITLE);
+        return StringUtil.replaceEmptyStringByNull(getEntity().getPropertyValue(PROP_TITLE));
     }
 
     @Override

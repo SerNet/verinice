@@ -30,6 +30,9 @@ public class Messages extends NLS {
     public static String riskConfigurationMatrixUsage;
     public static String riskConfigurationMatrixFrequencyAxis;
     public static String riskConfigurationMatrixImpactAxis;
+    public static String riskConfigurationReset;
+    public static String riskConfigurationResetAll;
+    public static String riskConfigurationResetTooltip;
 
     public static String RiskValuesConfigurator_chooseColor;
 

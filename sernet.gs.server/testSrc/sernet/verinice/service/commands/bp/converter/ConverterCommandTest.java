@@ -328,7 +328,7 @@ public class ConverterCommandTest extends CommandServiceProvider {
         elementDao.saveOrUpdate(itVerbund);
 
         Note noteForServer = new Note();
-        noteForServer.setCnATreeElementId(server.getDbId());
+        noteForServer.setCnATreeElement(server);
         noteForServer.setText("Hello World!");
         additionDao.saveOrUpdate(noteForServer);
 
@@ -349,7 +349,7 @@ public class ConverterCommandTest extends CommandServiceProvider {
         assertNotNull(itSystem);
 
         List notesForServer = additionDao.findByCriteria(DetachedCriteria.forClass(Note.class)
-                .add(Restrictions.eq("cnATreeElementId", itSystem.getDbId())));
+                .add(Restrictions.eq("cnATreeElement.dbId", itSystem.getDbId())));
 
         assertEquals(1, notesForServer.size());
         Note note = (Note) notesForServer.get(0);
@@ -368,7 +368,7 @@ public class ConverterCommandTest extends CommandServiceProvider {
         elementDao.saveOrUpdate(itVerbund);
 
         Attachment attachmentForRaum = new Attachment();
-        attachmentForRaum.setCnATreeElementId(raum.getDbId());
+        attachmentForRaum.setCnATreeElement(raum);
         attachmentForRaum.setTitel("example.txt");
         attachmentForRaum.setText("An example attachment");
         attachmentForRaum.setDate(new Date());
@@ -391,7 +391,7 @@ public class ConverterCommandTest extends CommandServiceProvider {
 
         List attachmentsForRoom = additionDao
                 .findByCriteria(DetachedCriteria.forClass(Attachment.class)
-                        .add(Restrictions.eq("cnATreeElementId", room.getDbId())));
+                        .add(Restrictions.eq("cnATreeElement.dbId", room.getDbId())));
 
         assertEquals(1, attachmentsForRoom.size());
         Attachment attachment = (Attachment) attachmentsForRoom.get(0);

@@ -47,7 +47,8 @@ public class RiskServiceImplTest extends AbstractModernizedBaseProtection {
     @Test
     public void cacheIsUpdatedWhenUpdatingConfiguration() throws CommandException {
         ItNetwork itNetwork = createNewBPOrganization();
-        Assert.assertEquals(null, riskService.findRiskConfiguration(itNetwork.getDbId()));
+        Assert.assertEquals(DefaultRiskConfiguration.getInstance(),
+                riskService.findRiskConfigurationOrDefault(itNetwork.getDbId()));
 
         RiskConfiguration newRiskConfiguration = DefaultRiskConfiguration.getInstance().withRisk(
                 highestFrequencyInDefaultConfig, highestImpactInDefaultConfig,
@@ -58,7 +59,7 @@ public class RiskServiceImplTest extends AbstractModernizedBaseProtection {
                 Collections.emptyList(), Collections.emptyList());
         riskService.updateRiskConfiguration(riskConfigurationUpdateContext);
         Assert.assertEquals(newRiskConfiguration,
-                riskService.findRiskConfiguration(itNetwork.getDbId()));
+                riskService.findRiskConfigurationOrDefault(itNetwork.getDbId()));
     }
 
     @Test

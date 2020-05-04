@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.service.tree;
 
+import sernet.verinice.model.bp.IBpGroup;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
@@ -28,13 +30,13 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
  *
  */
 public enum ChildrenExist {
-    
+
     YES, NO, UNKNOWN;
-    
+
     public static ChildrenExist convert(Boolean hasChildren) {
         ChildrenExist childrenState = ChildrenExist.UNKNOWN;
-        if(hasChildren!=null) {
-            if(hasChildren.booleanValue()) {
+        if (hasChildren != null) {
+            if (hasChildren.booleanValue()) {
                 childrenState = ChildrenExist.YES;
             } else {
                 childrenState = ChildrenExist.NO;
@@ -42,9 +44,9 @@ public enum ChildrenExist {
         }
         return childrenState;
     }
-    
+
     public static boolean isAlwaysChildless(CnATreeElement element) {
-        return !(element instanceof IISO27kGroup)
-            && !(element instanceof IBSIStrukturKategorie);
+        return !(element instanceof IISO27kGroup) && !(element instanceof IBSIStrukturKategorie)
+                && !(element instanceof IBpGroup) && !(element instanceof ItNetwork);
     }
 }

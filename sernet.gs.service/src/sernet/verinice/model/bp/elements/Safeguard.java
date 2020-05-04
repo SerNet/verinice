@@ -24,36 +24,29 @@ import java.util.Date;
 
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITaggableElement;
-import sernet.verinice.interfaces.IReevaluator;
-import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.IBpElement;
-import sernet.verinice.model.bp.ISecurityLevelProvider;
+import sernet.verinice.model.bp.IImplementableSecurityLevelProvider;
 import sernet.verinice.model.bp.ImplementationStatus;
-import sernet.verinice.model.bp.Reevaluator;
 import sernet.verinice.model.bp.SecurityLevel;
+import sernet.verinice.model.bp.SecurityLevelUtil;
 import sernet.verinice.model.bsi.TagHelper;
-import sernet.verinice.model.common.AbstractLinkChangeListener;
-import sernet.verinice.model.common.CascadingTransaction;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.ILinkChangeListener;
-import sernet.verinice.model.common.TransactionAbortedException;
 
 /**
  * @author Daniel Murygin dm[at]sernet.de
  *
  */
-public class Safeguard extends CnATreeElement
-        implements IBpElement, IIdentifiableElement, ITaggableElement, ISecurityLevelProvider {
+public class Safeguard extends CnATreeElement implements IBpElement, IIdentifiableElement,
+        ITaggableElement, IImplementableSecurityLevelProvider {
 
     private static final long serialVersionUID = -3597661958061483411L;
 
     public static final String TYPE_ID = "bp_safeguard"; //$NON-NLS-1$
     public static final String PROP_OBJECTBROWSER_DESC = "bp_safeguard_objectbrowser_content"; //$NON-NLS-1$
-    private static final String PROP_NAME = "bp_safeguard_name"; //$NON-NLS-1$
+    public static final String PROP_NAME = "bp_safeguard_name"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_safeguard_id"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_safeguard_tag"; //$NON-NLS-1$
-    private static final String PROP_LAST_CHANGE = "bp_safeguard_last_change"; //$NON-NLS-1$
+    public static final String PROP_LAST_CHANGE = "bp_safeguard_last_change"; //$NON-NLS-1$
     public static final String PROP_CONFIDENTIALITY = "bp_safeguard_value_method_confidentiality";//$NON-NLS-1$
     public static final String PROP_INTEGRITY = "bp_safeguard_value_method_integrity";//$NON-NLS-1$
     public static final String PROP_AVAILABILITY = "bp_safeguard_value_method_availability";//$NON-NLS-1$
@@ -68,38 +61,12 @@ public class Safeguard extends CnATreeElement
     public static final String PROP_IMPLEMENTATION_STATUS_YES = "bp_safeguard_implementation_status_yes"; //$NON-NLS-1$
     public static final String PROP_IMPLEMENTATION_STATUS_PARTIALLY = "bp_safeguard_implementation_status_partially"; //$NON-NLS-1$
     public static final String PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE = "bp_safeguard_implementation_status_na"; //$NON-NLS-1$
-
-    private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
-    private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
-
-        private static final long serialVersionUID = 9205866080876674150L;
-
-        @Override
-        public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
-            if (ta.hasBeenVisited(Safeguard.this)) {
-                return;
-            }
-
-            Safeguard.this.getLinksUp().stream().filter(
-                    DeductionImplementationUtil::isRelevantLinkForImplementationStateDeduction)
-                    .map(CnALink::getDependant)
-                    .filter(DeductionImplementationUtil::isDeductiveImplementationEnabled)
-                    .forEach(DeductionImplementationUtil::setImplementationStatusToRequirement);
-
-        }
-    };
+    public static final String PROP_RELEASE = "bp_safeguard_release"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_TYPE = "bp_safeguard_change_type"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_TYPE_REMOVED = "bp_safeguard_change_type_removed"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_DETAILS = "bp_safeguard_change_details"; //$NON-NLS-1$
 
     protected Safeguard() {
-    }
-
-    @Override
-    public ILinkChangeListener getLinkChangeListener() {
-        return linkChangeListener;
-    }
-
-    @Override
-    public IReevaluator getProtectionRequirementsProvider() {
-        return protectionRequirementsProvider;
     }
 
     public Safeguard(CnATreeElement parent) {
@@ -291,5 +258,10 @@ public class Safeguard extends CnATreeElement
     @Override
     public Collection<String> getTags() {
         return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
+    }
+
+    @Override
+    public boolean getImplementationPending() {
+        return SecurityLevelUtil.getImplementationPending(getImplementationStatus());
     }
 }

@@ -53,21 +53,18 @@ import sernet.verinice.service.sync.VeriniceArchive;
  *
  */
 public final class ExportFactory {
-    
+
     private static final Logger LOG = Logger.getLogger(ExportFactory.class);
-    
+
     private static final int BUFFER = 2048;
-    
-    private ExportFactory(){}
-    
+
+    private ExportFactory() {
+    }
+
     /**
-     * Creates a SyncLink instance out of a {@link CnALink} instance.
-     * SyncLink is a JAXB Xml class generated out of verinice import and export
-     * XML schema files:
-     * sernet/verinice/service/sync
-     *  sync.xsd
-     *  data.xsd
-     *  mapping.xsd
+     * Creates a SyncLink instance out of a {@link CnALink} instance. SyncLink
+     * is a JAXB Xml class generated out of verinice import and export XML
+     * schema files: sernet/verinice/service/sync sync.xsd data.xsd mapping.xsd
      * 
      * @param syncLink
      * @param link
@@ -77,31 +74,28 @@ public final class ExportFactory {
         syncLink.setDependant(ExportFactory.createExtId(link.getDependant()));
         syncLink.setDependency(ExportFactory.createExtId(link.getDependency()));
         syncLink.setRelationId(link.getRelationId());
-        if(link.getComment()!=null && !link.getComment().isEmpty()) {
+        if (link.getComment() != null && !link.getComment().isEmpty()) {
             syncLink.setComment(link.getComment());
         }
-        syncLinkXmlList.add(syncLink);     
+        syncLinkXmlList.add(syncLink);
     }
-    
-  
-    
+
     /**
-     * Creates new SyncAttribute instances out of the properties of 
-     * an entity. The newly created instances are added to syncAttributeList.
+     * Creates new SyncAttribute instances out of the properties of an entity.
+     * The newly created instances are added to syncAttributeList.
      * 
-     * SyncLSyncAttributeink is a JAXB Xml class generated out of verinice import and export
-     * XML schema files:
-     * sernet/verinice/service/sync
-     *  sync.xsd
-     *  data.xsd
-     *  mapping.xsd
+     * SyncLSyncAttributeink is a JAXB Xml class generated out of verinice
+     * import and export XML schema files: sernet/verinice/service/sync sync.xsd
+     * data.xsd mapping.xsd
      * 
      * @param entity
      * @param syncAttributeList
      * @param typeId
      * @param huiTypeFactory
      */
-    public static void transform(Entity entity, List<SyncAttribute> syncAttributeList, String typeId, HUITypeFactory huiTypeFactory, ExportReferenceTypes exportReferenceTypes) {
+    public static void transform(Entity entity, List<SyncAttribute> syncAttributeList,
+            String typeId, HUITypeFactory huiTypeFactory,
+            ExportReferenceTypes exportReferenceTypes) {
         Map<String, PropertyList> properties = entity.getTypedPropertyLists();
         for (String propertyTypeId : properties.keySet()) {
 
@@ -122,7 +116,8 @@ public final class ExportFactory {
                     exportReferenceTypes.mapEntityDatabaseId2ExtId(syncAttribute, propertyList);
 
                 } else {
-                    entity.exportProperties(propertyTypeId, syncAttribute.getValue(), syncAttribute.getLimitedLicense(), syncAttribute.getLicenseContentId());
+                    entity.exportProperties(propertyTypeId, syncAttribute.getValue(),
+                            syncAttribute.getLimitedLicense(), syncAttribute.getLicenseContentId());
                 }
 
                 if (!syncAttribute.getValue().isEmpty()) {
@@ -135,50 +130,52 @@ public final class ExportFactory {
     private static boolean isReference(PropertyType propertyType) {
         return propertyType != null && propertyType.isReference();
     }
-    
+
     /**
      * Serializes jaxbObject to an output stream.
      * 
      * @param jaxbObject
      * @param os
      */
-    public static void marshal( Object jaxbObject, OutputStream os ) {
-        try {       
-            JAXBContext context = JAXBContext.newInstance( jaxbObject.getClass() );
+    public static void marshal(Object jaxbObject, OutputStream os) {
+        try {
+            JAXBContext context = JAXBContext.newInstance(jaxbObject.getClass());
             Marshaller m = context.createMarshaller();
-            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
-            m.setProperty(Marshaller.JAXB_ENCODING,VeriniceCharset.CHARSET_UTF_8.name());
+            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            m.setProperty(Marshaller.JAXB_ENCODING, VeriniceCharset.CHARSET_UTF_8.name());
             m.marshal(jaxbObject, os);
         } catch (JAXBException e) {
             throw new DataBindingException(e);
-        } 
+        }
     }
-    
-    public static void createZipEntry(ZipOutputStream zipOut, String entryName, byte[] data) throws IOException {
+
+    public static void createZipEntry(ZipOutputStream zipOut, String entryName, byte[] data)
+            throws IOException {
         zipOut.putNextEntry(new ZipEntry(entryName));
         ByteArrayInputStream in = new ByteArrayInputStream(data);
         while (true) {
             int nRead = in.read(data, 0, data.length);
-            if (nRead <= 0){
-              break;
+            if (nRead <= 0) {
+                break;
             }
             zipOut.write(data, 0, nRead);
         }
         in.close();
     }
-    
-    public static void createZipEntry(ZipOutputStream zipOut, String entryName, InputStream in) throws IOException {
-        zipOut.putNextEntry(new ZipEntry(entryName));     
+
+    public static void createZipEntry(ZipOutputStream zipOut, String entryName, InputStream in)
+            throws IOException {
+        zipOut.putNextEntry(new ZipEntry(entryName));
         BufferedInputStream origin = new BufferedInputStream(in, BUFFER);
         byte[] dataBlock = new byte[BUFFER];
         int count;
-        while((count = origin.read(dataBlock, 0, BUFFER)) != -1) {
+        while ((count = origin.read(dataBlock, 0, BUFFER)) != -1) {
             zipOut.write(dataBlock, 0, count);
         }
         origin.close();
         in.close();
     }
-    
+
     /**
      * @param attachment
      */
@@ -186,55 +183,56 @@ public final class ExportFactory {
         StringBuilder sb = new StringBuilder();
         sb.append(VeriniceArchive.FILES).append("/");
         sb.append(attachment.getDbId()).append("-");
-        // avoid problems with non-ASCII file names 
+        // avoid problems with non-ASCII file names
         String fileName = attachment.getFileName();
         fileName = ExportFactory.replaceNonAsciiChars(fileName);
         sb.append(fileName);
         return sb.toString().replaceAll(" ", "_");
     }
-    
+
     /**
      * Creates an ext-id for a tree-element
      * 
-     * @param element a tree-element
+     * @param element
+     *            a tree-element
      * @return ext-id for the tree-element
      */
     public static String createExtId(CnATreeElement element) {
-        if(element==null) {
+        if (element == null) {
             return null;
         }
         String extId = element.getExtId();
-        if(extId==null || extId.isEmpty()) {
-            if(element.getEntity()!=null) {
-                extId = element.getEntity().getId();
-            } else {
-                extId = element.getId();
-            }
-        }
-        return extId;
-    }
-    
-    /**
-     * Creates an ext-id for an attachment
-     * 
-     * @param attachment an attachment of a tree-element
-     * @return ext-id for the attachment
-     */
-    public static String createExtId(Attachment attachment) {
-        String extId = attachment.getExtId();
-        if(extId==null || extId.isEmpty()) {
-            extId = attachment.getEntity().getId();
+        if (extId == null || extId.isEmpty()) {
+            extId = element.getUuid();
         }
         return extId;
     }
 
     /**
-     * Replaces German non-ASCII chars in fileName,
-     * which creates problems in Zip-Archives.
-     * See: http://stackoverflow.com/questions/106367/add-non-ascii-file-names-to-zip-in-java
+     * Creates an ext-id for an attachment
      * 
-     * All other non-ASCII are still a known problem.
-     * You can use commons-compress as solution...
+     * @param attachment
+     *            an attachment of a tree-element
+     * @return ext-id for the attachment
+     */
+    public static String createExtId(Attachment attachment) {
+        if (attachment == null) {
+            return null;
+        }
+        String extId = attachment.getExtId();
+        if (extId == null || extId.isEmpty()) {
+            extId = attachment.getEntity().getUuid();
+        }
+        return extId;
+    }
+
+    /**
+     * Replaces German non-ASCII chars in fileName, which creates problems in
+     * Zip-Archives. See:
+     * http://stackoverflow.com/questions/106367/add-non-ascii-file-names-to-zip-in-java
+     * 
+     * All other non-ASCII are still a known problem. You can use
+     * commons-compress as solution...
      * 
      * @param fileName
      * @return fileName without German non-ASCII chars
@@ -251,7 +249,4 @@ public final class ExportFactory {
         return result;
     }
 
-
-
-    
 }

@@ -1,0 +1,66 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _kD9CUIxPEei2UKUDmonytQ,_lGnj8Ix1Eei2UKUDmonytQ,_tlZuIIx1Eei2UKUDmonytQ,_4GRncI0bEei2UKUDmonytQ
+Element-Name: bp-reports-dev
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _W_WkkGN1Eeqa88EHP3rFxA
+Runtime-Version: 2.5.0.202001211718
+Save-Time: 3/16/20 11:58 AM
+Tags: report, dev, skipExecution
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This is a test for report developer, it generate and shows a defined report.
+This reduce the testing to replay the test. (one click)
+
+The test is for the modernized bp perspective and the organization to use need to be imported.
+Change the global val for your need:
+
+-testOrg the organization to use
+-reportName the report to execute
+-outputfile where to write the report file
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+global [val testOrg "importierte Objekte/TEST Testorganisation VN-2671 [VN-2671]"]
+[val reportName "(L) ITGS: A.4 Grundschutz-Check"]
+[val outputfile "/home/urszeidler/etc/issues/vn-2671/ITGS_A.4_-reptest.pdf"]
+
+
+
+proc "gen-rep" [val report] {
+	try {
+        start-time-measure $report
+		gen-rep-com $report "Modernisierter IT-Grundschutz" $testOrg
+        stop-time-measure $report | write-lines [concat "file:" $basedir "/report-measure.csv"] true
+	} -catch {
+		log [concat "ERROR creating report " $report]
+		try {
+			get-window Fehler | get-button OK | click
+		} -catch {}
+	}
+}
+
+log "Start local dev"
+
+
+get-view "Modernisierter IT-Grundschutz" | get-tree 
+    | select $testOrg | get-menu -path "Erzeuge Report..." | click 
+    
+get-window Report | get-group "" | get-combo -after [get-label "Report auswählen:"] 
+    | select $reportName
+set-dialog-result File $outputfile
+with [get-window Report] {
+    get-group "" | get-button "Auswählen..." | click 
+    get-button OK | click 
+}
+get-window "Report erfolgreich erzeugt" | get-button "Öffnen" | click 
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

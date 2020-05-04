@@ -22,12 +22,10 @@ import java.io.Serializable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.LinkValidator;
 import sernet.gs.service.RetrieveInfo;
-import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.RelationNotDefinedException;
@@ -127,7 +125,7 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
 
             // only validate, if relationtype is set
             if (StringUtils.isEmpty(relationId)
-                    || isRelationValid(dependant, dependency, relationId)) {
+                    || LinkValidator.isRelationValid(dependant, dependency, relationId)) {
                 link = new CnALink(dependant, dependency, relationId, comment);
                 linkDao.merge(link, true);
             } else {
@@ -171,42 +169,6 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
 
     public CnALink getLink() {
         return link;
-    }
-
-    /**
-     * gets all possible relations outgoing from entityType of sourceElement
-     * targeting the entityType of destinationElement. If one of those equals
-     * linkType, return true else return false (relationtype for source and
-     * destination is not defined in SNCA.xml )
-     * 
-     * @param sourceElement
-     * @param destinationElement
-     * @param relationType
-     * @return
-     */
-
-    private static boolean isRelationValid(CnATreeElement sourceElement,
-            CnATreeElement destinationElement, String relationType) {
-        if (CnALink.Id.NO_TYPE.equals(relationType)) { // special dnd itgs case
-                                                       // which is allowed
-                                                       // always
-            return true;
-        }
-        // special handling for links between elements of itgs model
-        if (sourceElement instanceof IBSIStrukturElement
-                && destinationElement instanceof IBSIStrukturElement) {
-            return true;
-        }
-
-        for (HuiRelation relation : HUITypeFactory.getInstance().getPossibleRelations(
-                sourceElement.getEntityType().getId(),
-                destinationElement.getEntityType().getId())) {
-            if (relationType.equals(relation.getId())) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
 }

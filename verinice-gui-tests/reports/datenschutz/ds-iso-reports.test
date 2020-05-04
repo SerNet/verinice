@@ -1,0 +1,67 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _HQDeEI9NEeic2YXgdvyDUQ,_lGnj8Ix1Eei2UKUDmonytQ,_tlZuIIx1Eei2UKUDmonytQ,_mCQwkI9ZEeic2YXgdvyDUQ
+Element-Name: ds-iso-reports
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: __FCqwLeBEemQsPgL8NII9Q
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 3/2/20 4:55 PM
+Tags: report, ds
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Create all the dataprotection reports. Uses "NoKyTo.vna".
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+proc "gen-rep" [val report] {
+	try {
+	    start-time-measure $report
+		gen-rep-com $report ISM "importierte Objekte/Datenschutzmodul 3.0 [ISM_DSM_3.1]"
+		stop-time-measure $report | write-lines [concat "file:" $basedir "/report-measure.csv"] true
+	} -catch {
+		log [concat "ERROR creating report " $report]
+		try {
+			get-window "Fehler" | get-button OK | click
+		} -catch {}
+	}
+}
+
+log "Start report testing DSM"
+enable-reporting-log
+set-local-reporting-repository [concat $datadir [get-java-property "file.separator"] "dsm"  
+ [get-java-property "file.separator"] "Reports"
+ [get-java-property "file.separator"] "Verzeichnis_von_Verarbeitungstätigkeiten_DS-GVO" ]
+
+ism-import-vna [concat "dsm" [get-java-property "file.separator"] "Beispiel_und_Vorlage" [get-java-property "file.separator"] "Datenschutzmodul-3.0.vna"]
+
+gen-rep "(L) ISM: DS-GVO: Verzeichnis von Verarbeitungstätigkeiten"
+
+
+set-local-reporting-repository [concat $datadir [get-java-property "file.separator"] "dsm"  
+ [get-java-property "file.separator"] "Reports"
+ [get-java-property "file.separator"] "Uebersichtreports_DS-GVO" ]
+
+
+gen-rep "(L) ISM: DS-GVO: Umsetzung von technischen und organisatorischen Maßnahmen"
+gen-rep "(L) ISM: DS-GVO: Übersicht der verwendeten Assets für Verarbeitungen"
+gen-rep "(L) ISM: DS-GVO: Übersicht über Löschfristen für Verarbeitungen"
+gen-rep "(L) ISM: DS-GVO: Übersicht über Verarbeitungsgruppe und Verarbeitung"
+gen-rep "(L) ISM: DS-GVO: Übersicht über Datenschutzvorfälle"
+gen-rep "(L) ISM: DS-GVO: Übersicht über Fachkundenachweise"
+gen-rep "(L) ISM: DS-GVO: Auflistung Datentransfer"
+gen-rep "(L) ISM: DS-GVO: Übersicht über interne und externe Anfragen"
+gen-rep "(L) ISM: DS-GVO: Auflistung der Auftragsverarbeitungen mit zugehörigen Auftraggebern"
+gen-rep "(L) ISM: DS-GVO: Übersicht der Auftragnehmer mit zugehöriger Verarbeitung"
+
+delete-iso-model "importierte Objekte/Datenschutzmodul 3.0 [ISM_DSM_3.1]"
+
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

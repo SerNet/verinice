@@ -80,13 +80,13 @@ people to work on one ISMS - even across different locations.
   GitHub mirror
 
 # How to build
-To build the Verinice client, client update site, server and
-report designer all at once execute the following command:
+To build the Verinice client, client update site and server all 
+at once execute the following command:
 
 	./mvnw -Dtycho.disableP2Mirrors=true clean verify
 
-To see where the Verinice client, client update site, server
-and report designer build artifacts can then be found
+To see where the Verinice client, client update site and server
+build artifacts can then be found
 read the following sections.
 
 If you want to skip the junit tests you need to add the `-Dmaven.antrun.skip=true` parameter.
@@ -100,14 +100,13 @@ The built artifacts will be located in
 Artifacts for the following platforms will be produced:
 
 * Linux GTK 64 bit
-* Windows 32 and 64 bit
+* Windows 64 bit
 * Mac OS X 64 bit
 
 If you want to pack a JRE into the build, you can copy the JRE to
 
 sernet.verinice.extraresources.feature/linux/jre
 sernet.verinice.extraresources.feature/windows/jre
-sernet.verinice.extraresources.feature/windows32/jre
 sernet.verinice.extraresources.feature/macos/jre
 
 
@@ -129,13 +128,35 @@ will be located under `sernet.verinice.releng.server.product/target/`.
 The WAR file is of course platform independent (in contrast to
 the Verinice client and report designer builds).
 
-## Verinice report designer
+## Versioning
+To update the version of the project
 
-The built artifacts will be located in
-`sernet.verinice.report.designer.tycho/target/products/`.
-Artifacts for the following platforms will be produced:
+1.	run
 
-* Linux GTK 64 bit
-* Windows 32 and 64 bit
-* Mac OS X 64 bit
+		./mvnw -Dtycho.mode=maven -DnewVersion=x.y.z.qualifier tycho-versions:set-version
+
+	Note that *qualifier* is meant literately and is treated as a *magic string*
+	by tycho/osgi, i.e.
+
+		./mvnw -DnewVersion=1.19.0.qualifier tycho-versions:set-version
+
+	will write *1.19.0-SNAPSHOT* into update pom.xml files and *1.19.0.qualifier*
+	into into updated feature.xml files. The final product version gets a
+	timestamp, e.g.*1.19.0.201908011226*. See
+	(https://www.eclipse.org/tycho/sitedocs/tycho-packaging-plugin/plugin-info.html)[Plugin
+	Documentation] for details.
+
+2.	update version and codename in the about text in **Branding > About Dialog** of
+	*sernet.verinice.releng.client.product/sernet.verinice.releng.client.product* and
+
+3.	synchronize the about text with the plugin (**Overview > Testing >
+	Synchronize**) again in *sernet.verinice.releng.client.product/sernet.verinice.releng.client.product*.
+
+4.	Update the version macro in the manuals.
+
+5.	Update the version in the splash screens of
+
+	-	verinice
+
+	*sernet.gs.ui.rcp.main/etc/splashscreen/splash.xcf*
 

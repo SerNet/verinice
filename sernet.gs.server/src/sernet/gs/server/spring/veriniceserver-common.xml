@@ -101,6 +101,7 @@ This variant:
             <entry key="individualService" value-ref="individualService" />
             <entry key="layoutConfig" value-ref="layoutConfig" />
             <entry key="itbpRiskService" value-ref="itbpRiskService" />
+            <entry key="sessionFactory" value-ref="sessionFactory" />
         </map>
     </property>
 	</bean>
@@ -111,14 +112,14 @@ This variant:
 		<property name="jdbcUrl" value="${jdbc.url}" />
 		<property name="user" value="${jdbc.username}" />
 		<property name="password" value="${jdbc.password}" />
-		<property name="minPoolSize" value="10" />
-		<property name="initialPoolSize" value="10" />
-		<property name="maxPoolSize" value="60" />
-		<property name="acquireIncrement" value="5" />
-		<property name="maxStatements" value="100" />
-		<property name="checkoutTimeout" value="10000" />
-		<property name="idleConnectionTestPeriod" value="180" />
-        <property name="numHelperThreads" value="6" />
+		<property name="minPoolSize" value="${jdbc.ds.pool.minPoolSize}" />
+		<property name="initialPoolSize" value="${jdbc.ds.pool.initialPoolSize}" />
+		<property name="maxPoolSize" value="${jdbc.ds.pool.maxPoolSize}" />
+		<property name="acquireIncrement" value="${jdbc.ds.pool.acquireIncrement}" />
+		<property name="maxStatementsPerConnection" value="${jdbc.ds.pool.maxStatementsPerConnection}" />
+		<property name="checkoutTimeout" value="${jdbc.ds.pool.checkoutTimeout}" />
+		<property name="idleConnectionTestPeriod" value="${jdbc.ds.pool.idleConnectionTestPeriod}" />
+        <property name="numHelperThreads" value="${jdbc.ds.pool.numHelperThreads}" />
 	</bean>
 
 	<bean id="sessionFactory" depends-on="schemaCreator" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
@@ -431,61 +432,6 @@ This variant:
                 <bean class="org.bouncycastle.jce.provider.BouncyCastleProvider"/>
             </list>
         </property>
-    </bean>
-    
-    <bean id="migrateElementJobImpl" class="sernet.verinice.service.bp.migration.MigrateElementJobImpl" scope="prototype">  
-        <property name="commandService" ref="hibernateCommandService" />
-        <property name="linkDao" ref="cnaLinkDao" />
-    </bean>
-    <bean id="migrateElementJob" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"  scope="prototype">
-        <property name="transactionManager" ref="txManager" />
-        <property name="target" ref="migrateElementJobImpl" />
-        <property name="transactionAttributes">
-            <props>
-                <prop key="migrateModeling">PROPAGATION_REQUIRED</prop>
-            </props>
-        </property>
-    </bean> 
-    
-    <bean id="migrateItNetworkJobImpl" class="sernet.verinice.service.bp.migration.MigrateItNetworkJob" scope="prototype">
-        <property name="graphService" ref="graphService" />
-        <property name="commandService" ref="hibernateCommandService" />
-        <property name="elementDao" ref="cnaTreeElementDao" />
-        <property name="migrateElementJobFactory">
-          <bean class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
-            <property name="targetBeanName">
-              <idref local="migrateElementJob" />
-            </property>
-          </bean>
-        </property>
-    </bean>
-    
-    <!-- This service migrates the modeling data in ITBP from version 1.16 to 1.17 -->
-    <bean id="modelingMigrationServiceImpl" class="sernet.verinice.service.bp.migration.ModelingMigrationServiceImpl">
-        <property name="commandService" ref="hibernateCommandService" />
-        <property name="migrateItNetworkJobFactory">
-          <bean class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
-            <property name="targetBeanName">
-              <idref local="migrateItNetworkJobImpl" />
-            </property>
-          </bean>
-        </property>
-    </bean>
-    
-    <bean id="modelingMigrationServiceExecuter" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-        <property name="transactionManager" ref="txManager" />
-        <property name="target" ref="modelingMigrationServiceImpl" />
-        <property name="transactionAttributes">
-            <props>
-                <prop key="isMigrationRequired">PROPAGATION_REQUIRES_NEW</prop>
-            </props>
-        </property>
-    </bean>
-    
-     <!-- This service migrates the modeling data in ITBP from version 1.16 to 1.17 -->
-    <bean id="modelingMigrationService" class="sernet.verinice.service.bp.migration.ModelingMigrationDatabaseServiceImpl">
-        <property name="modelingMigrationService" ref="modelingMigrationServiceExecuter" />
-        <property name="elementDao" ref="cnaTreeElementDao" />
     </bean>
     
 </beans>

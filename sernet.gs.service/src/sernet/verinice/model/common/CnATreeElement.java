@@ -18,6 +18,7 @@
 package sernet.verinice.model.common;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -44,6 +45,7 @@ import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.LinkKategorie;
+import sernet.verinice.model.bsi.Note;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.Schutzbedarf;
 import sernet.verinice.model.iso27k.IISO27kGroup;
@@ -201,21 +203,22 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
      * {@link TemplateType#IMPLEMENTATION})</li> </ui>
      * <li>Module 3...</li> </ui> </ui>
      * </p>
-     * 
+     *
      * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
      * @see sernet.gs.server.DeleteOrphanTemplateRelationsJob
      */
 	public enum TemplateType { NONE, TEMPLATE, IMPLEMENTATION }
 	public String templateTypeValue = TemplateType.NONE.name();
-	
+
     /**
      * Holds references to {@link TemplateType#TEMPLATE}s which are implemented
      * in this {@link CnATreeElement}.
-     * 
+     *
      * @see TemplateType
      * @see sernet.gs.server.DeleteOrphanTemplateRelationsJob
      */
     private Set<String> implementedTemplateUuids = new HashSet<String>();
+    private Set<Note> notes = new HashSet<>(1);
 
     @Override
     public boolean equals(Object obj) {
@@ -251,7 +254,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
                 try {
                     getParent().childAdded(this, child);
                 } catch (Exception e) {
-                    log.error("Error while adding child", e);
+                    log.error("Error while adding " + child + " as a child of " + this, e);
                 }
             } else {
                 this.childAdded(this, child);
@@ -289,7 +292,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
     /**
      * Remove all links from and to this item.
-     * 
+     *
      */
     public void removeAllLinks() {
         CopyOnWriteArrayList<CnALink> linksDown = new CopyOnWriteArrayList<CnALink>(getLinksDown());
@@ -476,6 +479,60 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
     public void setPropertyValue(String typeId, String value) {
         getEntity().setPropertyValue(typeId, value);
+    }
+
+    public boolean hasDynamicProperty(@NonNull String propertyType) {
+        EntityType entityType = getEntityType();
+        return entityType != null
+                && entityType.hasPropertyType(getDynamicPropertyName(propertyType));
+    }
+
+    /**
+     * Gets dynamic (SNCA) string property value or null if property is absent.
+     *
+     * @param propertyType
+     *            Dynamic property name (without entity type prefix).
+     */
+    public String getDynamicStringProperty(@NonNull String propertyType) {
+        return getEntity().getRawPropertyValue(getDynamicPropertyName(propertyType));
+    }
+
+    /**
+     * Gets dynamic (SNCA) boolean property value.
+     *
+     * @param propertyType
+     *            Dynamic property name (without entity type prefix).
+     */
+    public Boolean getDynamicBooleanProperty(@NonNull String propertyType) {
+        return getEntity().isFlagged(getDynamicPropertyName(propertyType));
+    }
+
+    /**
+     * Gets dynamic (SNCA) enum property value or null if the value is not a
+     * member of given enum type or the property is absent.
+     *
+     * @param propertyType
+     *            Dynamic property name (without entity type prefix).
+     * @param enumType
+     *            Enum class of property.
+     */
+    public <T extends Enum<T>> T getDynamicEnumProperty(@NonNull String propertyType,
+            Class<T> enumType) {
+        // The actual value is prefixed with entity type & property type
+        // (entity_type_property_type_value).
+        String prefixedValue = getDynamicStringProperty(propertyType);
+        if (prefixedValue != null) {
+            String isolatedValue = prefixedValue
+                    .substring(getTypeId().length() + propertyType.length() + 2).toUpperCase();
+            try {
+                return Enum.valueOf(enumType, isolatedValue);
+            } catch (IllegalArgumentException ex) {
+                log.warn(MessageFormat.format(
+                        "Dynamic SNCA property {0} on entity type {1} has unexpected value.",
+                        propertyType, getTypeId()), ex);
+            }
+        }
+        return null;
     }
 
     public void setSimpleProperty(String typeId, String value) {
@@ -758,20 +815,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     }
 
     /**
-     * Signal a value change of this {@link CnATreeElement} to the
-     * {@link IReevaluator} when an IReevaluator is present.
-     */
-    public void fireValueChanged(CascadingTransaction ta) {
-        if (isProtectionRequirementsProvider()) {
-            if (LOG_INHERIT.isInfo()) {
-                LOG_INHERIT.info(
-                        this.getTypeId() + " is provider, update value of: " + this.getTitle());
-            }
-            getProtectionRequirementsProvider().updateValue(ta);
-        }
-    }
-
-    /**
      * Replace a displayed item in tree with another one. Used to replace
      * displaed objects with reloaded ones from thje database.
      *
@@ -814,6 +857,14 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
         return files;
     }
 
+    public Set<Note> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(Set<Note> notes) {
+        this.notes = notes;
+    }
+
     public void setFiles(Set<Attachment> files) {
         this.files = files;
     }
@@ -836,6 +887,19 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     @Override
     public void databaseChildRemoved(ChangeLogEntry entry) {
         getModelChangeListener().databaseChildRemoved(entry);
+    }
+
+    public void valuesChanged() {
+        getLinksUp().forEach(l -> l.getDependant().linkDependencyChanged(l));
+        getLinksDown().forEach(l -> l.getDependency().linkDependantChanged(l));
+    }
+
+    public void linkDependantChanged(CnALink link) {
+        // override this in model classes
+    }
+
+    public void linkDependencyChanged(CnALink link) {
+        // override this in model classes
     }
 
     @Override
@@ -883,8 +947,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     @Override
     public String toString() {
         return new StringBuilder("type: ").append(getTypeId()).append(", uuid: ").append(getUuid())
-                .append(", dbid: ").append(getDbId())
-                .toString();
+                .append(", dbid: ").append(getDbId()).toString();
     }
 
     @Override
@@ -901,9 +964,9 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
     /**
      * Returns the TemplateTypeValue of this {@link CnATreeElement}.
-     * 
+     *
      * @return the TemplateType
-     * 
+     *
      * @see TemplateType
      */
     public TemplateType getTemplateType() {
@@ -912,10 +975,10 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
     /**
      * Sets the TemplateTypeValue of this {@link CnATreeElement}.
-     * 
+     *
      * @param templateType
      *            the templateType to set
-     * 
+     *
      * @see TemplateType
      */
     public void setTemplateType(TemplateType templateType) {
@@ -924,9 +987,9 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
     /**
      * Returns the TemplateTypeValue of this {@link CnATreeElement}.
-     * 
+     *
      * @return the templateTypeValue
-     * 
+     *
      * @see TemplateType
      */
     public String getTemplateTypeValue() {
@@ -935,10 +998,10 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
     /**
      * Sets the TemplateTypeValue of this {@link CnATreeElement}.
-     * 
+     *
      * @param templateTypeValue
      *            the templateTypeValue to set
-     * 
+     *
      * @see TemplateType
      */
     public void setTemplateTypeValue(String templateTypeValue) {
@@ -962,7 +1025,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     public boolean isImplementation() {
         return TemplateType.IMPLEMENTATION.equals(this.getTemplateType());
     }
-    
+
     /**
      * @return true if this {@link CnATreeElement} is a
      *         {@link TemplateType#TEMPLATE} or
@@ -986,7 +1049,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     /**
      * Set new references to {@link TemplateType#TEMPLATE} which are implemented
      * in this {@link CnATreeElement}
-     * 
+     *
      * @param implementedTemplateUuids
      *            the UUIds of {@link TemplateType#TEMPLATE}s
      * @see TemplateType
@@ -1035,6 +1098,10 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
     public boolean isBpPerson() {
         return BpPerson.class.equals(getClass()) || BpPerson.TYPE_ID.equals(getTypeId());
+    }
+
+    private String getDynamicPropertyName(String propertyType) {
+        return getTypeId() + "_" + propertyType;
     }
 
     /**

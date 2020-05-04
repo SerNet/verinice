@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import sernet.gs.service.Retriever;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.common.CnALink;
@@ -59,10 +60,11 @@ public final class DeductionImplementationUtil {
     /**
      * Get the connected safeguards from a requirement.
      */
-    public static List<CnATreeElement> getSafeguardsFromRequirement(CnATreeElement requirement) {
+    private static List<CnATreeElement> getSafeguardsFromRequirement(CnATreeElement requirement) {
         return requirement.getLinksDown().stream()
                 .filter(DeductionImplementationUtil::isRelevantLinkForImplementationStateDeduction)
-                .map(CnALink::getDependency).collect(Collectors.toList());
+                .map(CnALink::getDependency).map(Retriever::checkRetrieveElement)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -191,6 +193,7 @@ public final class DeductionImplementationUtil {
             return false;
         }
         String rawValue = BpRequirement.toRawValue(status);
+        requirement.getEntity().trackChange("system");
         requirement.setSimpleProperty(BpRequirement.PROP_IMPLEMENTATION_STATUS, rawValue);
         return true;
     }

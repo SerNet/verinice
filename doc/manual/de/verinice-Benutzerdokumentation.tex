@@ -61,7 +61,7 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
-\newcommand*{\vnversion}{1.18}
+\newcommand*{\vnversion}{1.20}
 \title{verinice Benutzerhandbuch \vnversion{}}
 \author{SerNet GmbH}
 
@@ -200,7 +200,7 @@ unterstützt:
 
 Laden Sie den für Ihr Betriebssystem geeigneten \textit{verinice}-Client vom
 Download-Bereich der
-\textit{verinice}-Website\footnote{\url{http://www.verinice.org/\#download}}.
+\textit{verinice}-Website\footnote{\url{https://www.verinice.org/\#download}}.
 \textit{verinice} wird als Archiv im \textit{ZIP}- oder \textit{TGZ}-Format
 angeboten. Weitere Installationsschritte sind nicht nötig. \textit{verinice}
 kann über ausführbare Datei, die sich in dem Ordner befindet, in den das Archiv
@@ -908,7 +908,7 @@ Mögliche Editor-Bereiche sind:
 	\item[SoA] Dieser Tag erlaubt ein Control zu kennzeichnen, welches nach der ISO 27001, Anhang A ausgewählt wurde und damit auch im Report auftaucht.
 	\item[VDA-ISA] Diese Einstellung beinhaltet alle Eingabefelder für den Editor in der VDA-Security-Assessment-Perspektive.
 	\item[VDA\_ISA\_Audit] Zeigt in der ISM-Perspektive zusätzliche Felder zu einem VDA ISA Self-Assessment an, z.B. Risikoeinstufung.
-	\item[VV-BSIG] Zusätzlich Eingabemöglichkeiten zur \emph{Allgemeinen Verwaltungsvorschrift über das Meldeverfahren gemäß § 4 Abs. 6 BSIG}.
+	\item[VV-BSIG] Zusätzlich Eingabemöglichkeiten zur \emph{Allgemeinen Verwaltungsvorschrift über das Meldeverfahren gemäß § 4 Abs. 6 BSIG} (Anmerkung: diese Felder stammen aus einem inzwischen abgekündigten Reportformat des BSI. Die entsprechenden Reports sind daher nicht mehr verfügbar. Eine Ausgabe ist allerdings nach wie vor über eine manuelle Report-Abfrage möglich.).
 	\item[Web] Nur Felder mit diesem Tag werden im Web-Frontend angezeigt.
 \end{description}
 
@@ -2511,8 +2511,6 @@ zusammengefasste Dokumentationsmöglichkeiten zur Verfügung:
 \begin{itemize}
 \item \textbf{Erklärung zur Anwendbarkeit}
 \item \textbf{Export: Aufgaben}
-\item \textbf{Sofortmeldung (VV BSIG)}
-\item \textbf{Statistische Gesamtmeldung (VV BSIG)}
 \item \textbf{Risikoberechnung - Detaillierte Auflistung}
 \end{itemize}
 
@@ -2548,22 +2546,6 @@ Standards ISO 27001.
 \textbf{Export: Aufgaben:} Dieser Report beinhaltet eine Übersicht aller
 Aufgaben, die als Workflow-Aufgaben aktiv sind. Darin finden sich Informationen
 zu: Objekt, Aufgabe, Benutzer, Datum usw.
-
-\textbf{Sofortmeldung (VV BSIG):} Dieser Report stellt eine Sofortmeldung eines
-IT-Vorfalls gemäß §4 Abs. 6 BSIG dar. Um einen gültigen Report dieser Art zu
-erhalten, müssen Sie einen Vorfall als Incident-Objekt im ISM-View anlegen und
-dort die zutreffenden Felder im Bereich ``VV BSIG'' befüllen. Alle notwendigen
-Beschreibungen wie Behörden, Meldende, Erreichbarkeit, Meldedatum, externer
-Angriff, Datenverlust, Sicherheitslücke, Zweck der Informationen, Sachverhalt
-usw. werden hierbei ausgegeben.
-
-\textbf{Statistische Gesamtmeldung (VV BSIG):} Dieser Report stellt eine
-statistische Gesamtmeldung aller erfassten IT-Vorfälle gemäß §4 Abs. 6 BSIG dar.
-Um einen gültigen Report dieser Art zu erhalten, müssen Sie einen Vorfall als
-Incident-Objekt im ISM-View anlegen und dort die zutreffenden Felder im Bereich
-``VV BSIG'' befüllen. Alle notwendigen Beschreibungen wie Einstufung, Behörden,
-Meldende, Erreichbarkeit, Berichtszeitraum, Anzahl der Vorfälle, Zusammenfassung
-der Ereignisse, abgewehrtes Schadprogramm usw. werden hierbei ausgegeben.
 
 \textbf{Risikoberechnung - Detaillierte Auflistung:} Eine Reportvorlage, die
 alle Szenario/Asset-Kombinationen mit den dazugehörigen Risiko-Werten abbildet.

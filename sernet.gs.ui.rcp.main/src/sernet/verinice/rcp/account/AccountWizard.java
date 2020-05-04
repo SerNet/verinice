@@ -22,17 +22,20 @@ package sernet.verinice.rcp.account;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.interfaces.ApplicationRoles;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
- * Wizard to create and edit user account. 
+ * Wizard to create and edit user account.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class AccountWizard extends Wizard {
-    
+
     private Configuration account;
-    
+
     private PersonPage personPage;
     private AuthenticationPage authenticationPage;
     private LimitationPage limitationPage;
@@ -40,31 +43,34 @@ public class AccountWizard extends Wizard {
     private NotificationPage notificationPage;
     private AuditorNotificationPage auditorNotificationPage;
     private LicenseMgmtPage licenseMgmtPage;
-    
+
     public AccountWizard(Configuration account) {
-        super(); 
+        super();
         this.account = account;
         init();
     }
-    
+
     private void init() {
         setNeedsProgressMonitor(true);
         setWindowTitle(Messages.AccountWizard_0);
+        if (isNewAccount() && AccountWizard.isCurrentUserLocalAdmin() && account != null) {
+            account.deleteAllRoles();
+        }
     }
 
-    /* (non-Javadoc)
+    /*
      * @see org.eclipse.jface.wizard.Wizard#addPages()
      */
     @Override
     public void addPages() {
-        personPage = new PersonPage();             
+        personPage = new PersonPage();
         addPage(personPage);
         authenticationPage = new AuthenticationPage();
         addPage(authenticationPage);
         limitationPage = new LimitationPage(account);
         addPage(limitationPage);
         groupPage = new GroupPage(account);
-        addPage(groupPage);     
+        addPage(groupPage);
         licenseMgmtPage = new LicenseMgmtPage(account);
         addPage(licenseMgmtPage);
         notificationPage = new NotificationPage();
@@ -72,7 +78,7 @@ public class AccountWizard extends Wizard {
         auditorNotificationPage = new AuditorNotificationPage();
         addPage(auditorNotificationPage);
         ProfilePage profilePage = new ProfilePage();
-        addPage(profilePage); 
+        addPage(profilePage);
 
         if (this.account != null) {
             personPage.setPerson(account.getPerson());
@@ -87,7 +93,7 @@ public class AccountWizard extends Wizard {
             limitationPage.setDeactivated(account.isDeactivatedUser());
             licenseMgmtPage.setUser(account.getUser());
             licenseMgmtPage.setAssignedLicenseIds(account.getAssignedLicenseIds());
-            
+
             licenseMgmtPage.setSendEmail(account.getNotificationLicense());
             notificationPage.setNotification(getAccount().isNotificationEnabled());
             notificationPage.setGlobal(getAccount().isNotificationGlobal());
@@ -95,17 +101,19 @@ public class AccountWizard extends Wizard {
             notificationPage.setDeadlineWarning(getAccount().isNotificationExpirationEnabled());
             notificationPage.setDeadlineInDays(getAccount().getNotificationExpirationDays());
             auditorNotificationPage.setGlobal(getAccount().isAuditorNotificationGlobal());
-            auditorNotificationPage.setDeadlineWarning(getAccount().isAuditorNotificationExpirationEnabled());
-            auditorNotificationPage.setDeadlineInDays(getAccount().getAuditorNotificationExpirationDays());
+            auditorNotificationPage
+                    .setDeadlineWarning(getAccount().isAuditorNotificationExpirationEnabled());
+            auditorNotificationPage
+                    .setDeadlineInDays(getAccount().getAuditorNotificationExpirationDays());
             profilePage.setLogin(account.getUser());
-        } 
+        }
     }
 
-    /* (non-Javadoc)
+    /*
      * @see org.eclipse.jface.wizard.Wizard#performFinish()
      */
     @Override
-    public boolean performFinish() {       
+    public boolean performFinish() {
         getAccount().setPerson(personPage.getPerson());
         getAccount().setUserNew(authenticationPage.getLogin());
         getAccount().setPassNew(authenticationPage.getPassword());
@@ -116,28 +124,28 @@ public class AccountWizard extends Wizard {
         getAccount().setWebUser(limitationPage.isWeb());
         getAccount().setRcpUser(limitationPage.isDesktop());
         getAccount().setIsDeactivatedUser(limitationPage.isDeactivated());
-        
+
         groupPage.syncCheckboxesToAccountGroups();
 
         getAccount().setNotificationEnabled(notificationPage.isNotification());
         getAccount().setNotificationGlobal(notificationPage.isGlobal());
         getAccount().setNotificationMeasureModification(notificationPage.isModifyReminder());
         getAccount().setNotificationExpirationEnabled(notificationPage.isDeadlineWarning());
-        
+
         getAccount().setNotificationExpirationDays(notificationPage.getDeadlineInDays());
-        
+
         getAccount().setAuditorNotificationGlobal(auditorNotificationPage.isGlobal());
-        getAccount().setAuditorNotificationExpirationEnabled(auditorNotificationPage.isDeadlineWarning());
-        
-        getAccount().setAuditorNotificationExpirationDays(auditorNotificationPage.getDeadlineInDays());
-        
+        getAccount().setAuditorNotificationExpirationEnabled(
+                auditorNotificationPage.isDeadlineWarning());
+
+        getAccount()
+                .setAuditorNotificationExpirationDays(auditorNotificationPage.getDeadlineInDays());
+
         getAccount().setNotificationLicense(licenseMgmtPage.isSendEmail());
-        
+
         return true;
     }
 
-
-    
     @Override
     public IWizardPage getStartingPage() {
         IWizardPage startingPage = super.getStartingPage();
@@ -146,7 +154,7 @@ public class AccountWizard extends Wizard {
         }
         return startingPage;
     }
-    
+
     private boolean isNewAccount() {
         boolean isNew = true;
         if (account != null) {
@@ -154,7 +162,16 @@ public class AccountWizard extends Wizard {
         }
         return isNew;
     }
-  
+
+    public static boolean isCurrentUserLocalAdmin() {
+        return getAuthService()
+                .currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+    }
+
+    public static IAuthService getAuthService() {
+        return ServiceFactory.lookupAuthService();
+    }
+
     public Configuration getAccount() {
         return account;
     }

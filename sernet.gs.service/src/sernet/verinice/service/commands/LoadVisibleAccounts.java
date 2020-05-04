@@ -32,35 +32,35 @@ import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IConfigurationService;
+import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.service.account.AccountSearchParameter;
 
 /**
- * This command loads all accounts (Configurations)
- * which are visible for the user which executes this command.
+ * This command loads all accounts (Configurations) which are visible for the
+ * user which executes this command.
  * 
- * A account is visible for a user if the user
- * has the right to read the related person object. 
+ * A account is visible for a user if the user has the right to read the related
+ * person object.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
 public class LoadVisibleAccounts extends GenericCommand implements IAuthAwareCommand {
-    
-    String hql = "select p.cnaTreeElement.dbId from Permission p where"
-            + " p.cnaTreeElement.objectType in "
-            + "('person','person-iso') and p.role in (:roles)";
-   
+
+    private static final String HQL = "select p.cnaTreeElement.dbId from Permission p where"
+            + " p.cnaTreeElement.objectType in " + "('" + Person.TYPE_ID + "','" + PersonIso.TYPE_ID
+            + "','" + BpPerson.TYPE_ID + "') and p.role in (:roles)";
+
     private transient IAuthService authService;
- 
+
     private List<Configuration> accountList;
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ICommand#execute()
-     */
+
     @Override
-    public void execute() { 
+    public void execute() {
         if (isAdmin()) {
             accountList = getAllAccounts();
         } else {
@@ -68,17 +68,17 @@ public class LoadVisibleAccounts extends GenericCommand implements IAuthAwareCom
         }
     }
 
+    @SuppressWarnings("rawtypes")
     private List<Configuration> getVisibleAccounts() {
-        List<String> roles = Arrays.asList(
-                getConfigurationService().getRoles(
-                        getAuthService().getUsername()));
-        List visibleElementIdList = getDao().findByQuery(
-                hql, new String[]{"roles"}, new Object[]{roles});
+        List<String> roles = Arrays
+                .asList(getConfigurationService().getRoles(getAuthService().getUsername()));
+        List visibleElementIdList = getDao().findByQuery(HQL, new String[] { "roles" },
+                new Object[] { roles });
         List<Configuration> allAccounts = getAllAccounts();
         List<Configuration> visibleAccounts = new LinkedList<>();
         for (Configuration account : allAccounts) {
             if (visibleElementIdList.contains(account.getPerson().getDbId())) {
-                visibleAccounts.add(account); 
+                visibleAccounts.add(account);
             }
         }
         return visibleAccounts;
@@ -87,22 +87,22 @@ public class LoadVisibleAccounts extends GenericCommand implements IAuthAwareCom
     private List<Configuration> getAllAccounts() {
         return getAccountService().findAccounts(AccountSearchParameter.newInstance());
     }
-    
+
     private boolean isAdmin() {
         return containsAdminRole(getAuthService().getRoles());
     }
-    
+
     private boolean containsAdminRole(String[] roles) {
         if (roles != null) {
             for (String r : roles) {
                 if (ApplicationRoles.ROLE_ADMIN.equals(r)) {
                     return true;
                 }
-            }   
+            }
         }
         return false;
     }
- 
+
     public List<Configuration> getAccountList() {
         return accountList;
     }
@@ -110,15 +110,15 @@ public class LoadVisibleAccounts extends GenericCommand implements IAuthAwareCom
     protected IBaseDao<Permission, Serializable> getDao() {
         return getDaoFactory().getDAO(Permission.class);
     }
-    
+
     protected IAccountService getAccountService() {
         return (IAccountService) VeriniceContext.get(VeriniceContext.ACCOUNT_SERVICE);
     }
-    
+
     protected IConfigurationService getConfigurationService() {
         return (IConfigurationService) VeriniceContext.get(VeriniceContext.CONFIGURATION_SERVICE);
     }
-    
+
     public IAuthService getAuthService() {
         return authService;
     }

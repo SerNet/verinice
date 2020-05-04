@@ -1,0 +1,848 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <simple-property-list name="includeResource">
+        <value>bp_audit</value>
+        <value>bp_enum</value>
+    </simple-property-list>
+    <list-property name="includeScripts">
+        <property>formatter.js</property>
+        <property>bp_enum_formatter.js</property>
+    </list-property>
+    <property name="units">in</property>
+    <property name="theme">defaultTheme</property>
+    <list-property name="libraries">
+        <structure>
+            <property name="fileName">verinice_data_source.rptlibrary</property>
+            <property name="namespace">verinice_data_source</property>
+        </structure>
+    </list-property>
+    <data-sources>
+        <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="76956"
+ extends="verinice_data_source.verinice"/>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="verinice.oda.linktable.driver.dataSet.id" name="bp_requirement" id="76823">
+            <property name="nullsOrdering">nulls lowest</property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">Identifier__(Module-Requirement)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">Identifier__(Module-Requirement)</text-property>
+                    <text-property name="heading">Identifier__(Module-Requirement)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Description__(Module-Requirement)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">Description__(Module-Requirement)</text-property>
+                    <text-property name="heading">Description__(Module-Requirement)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">UUID__(Module-Requirement)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">UUID__(Module-Requirement)</text-property>
+                    <text-property name="heading">UUID__(Module-Requirement)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Implementation__-__Implementation__Status__(Module-Requirement)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">Implementation__-__Implementation__Status__(Module-Requirement)</text-property>
+                    <text-property name="heading">Implementation__-__Implementation__Status__(Module-Requirement)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Implementation__-__Deduce__Implementation__Status__from__Safeguard__(Module-Requirement)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">Implementation__-__Deduce__Implementation__Status__from__Safeguard__(Module-Requirement)</text-property>
+                    <text-property name="heading">Implementation__-__Deduce__Implementation__Status__from__Safeguard__(Module-Requirement)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Title__(Module-Requirement)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">Title__(Module-Requirement)</text-property>
+                    <text-property name="heading">Title__(Module-Requirement)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">IT-Baseline__Audit__-__Audited__on__(Module-Requirement)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">IT-Baseline__Audit__-__Audited__on__(Module-Requirement)</text-property>
+                    <text-property name="heading">IT-Baseline__Audit__-__Audited__on__(Module-Requirement)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">IT-Baseline__Audit__-__Methods__(Module-Requirement)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">IT-Baseline__Audit__-__Methods__(Module-Requirement)</text-property>
+                    <text-property name="heading">IT-Baseline__Audit__-__Methods__(Module-Requirement)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">IT-Baseline__Audit__-__State__(Module-Requirement)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">IT-Baseline__Audit__-__State__(Module-Requirement)</text-property>
+                    <text-property name="heading">IT-Baseline__Audit__-__State__(Module-Requirement)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">IT-Baseline__Audit__-__Deadline__for__correction__(Module-Requirement)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">IT-Baseline__Audit__-__Deadline__for__correction__(Module-Requirement)</text-property>
+                    <text-property name="heading">IT-Baseline__Audit__-__Deadline__for__correction__(Module-Requirement)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">IT-Baseline__Audit__-__Non-Conformity__(Module-Requirement)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">IT-Baseline__Audit__-__Non-Conformity__(Module-Requirement)</text-property>
+                    <text-property name="heading">IT-Baseline__Audit__-__Non-Conformity__(Module-Requirement)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">IT-Baseline__Audit__-__Questions__(Module-Requirement)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">IT-Baseline__Audit__-__Questions__(Module-Requirement)</text-property>
+                    <text-property name="heading">IT-Baseline__Audit__-__Questions__(Module-Requirement)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">IT-Baseline__Audit__-__Improvement__(Module-Requirement)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">IT-Baseline__Audit__-__Improvement__(Module-Requirement)</text-property>
+                    <text-property name="heading">IT-Baseline__Audit__-__Improvement__(Module-Requirement)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">IT-Baseline__Audit__-__Improvement__occurs</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">IT-Baseline__Audit__-__Improvement__occurs</text-property>
+                    <text-property name="heading">IT-Baseline__Audit__-__Improvement__occurs</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">IT-Baseline__Audit__-__Audit__performed__(Module-Requirement)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">IT-Baseline__Audit__-__Audit__performed__(Module-Requirement)</text-property>
+                    <text-property name="heading">IT-Baseline__Audit__-__Audit__performed__(Module-Requirement)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Description__(Module(s))</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">Description__(Module(s))</text-property>
+                    <text-property name="heading">Description__(Module(s))</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">UUID__(Module(s))</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">UUID__(Module(s))</text-property>
+                    <text-property name="heading">UUID__(Module(s))</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Identifier__(Module(s))</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">Identifier__(Module(s))</text-property>
+                    <text-property name="heading">Identifier__(Module(s))</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Implementation__Order__(Module(s))</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">Implementation__Order__(Module(s))</text-property>
+                    <text-property name="heading">Implementation__Order__(Module(s))</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Release__(Module(s))</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">Release__(Module(s))</text-property>
+                    <text-property name="heading">Release__(Module(s))</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Title__(Module(s))</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">Title__(Module(s))</text-property>
+                    <text-property name="heading">Title__(Module(s))</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Title</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">Title</text-property>
+                    <text-property name="heading">Title</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">First__name__(Person)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">First__name__(Person)</text-property>
+                    <text-property name="heading">First__name__(Person)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Last__name__(Person)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">Last__name__(Person)</text-property>
+                    <text-property name="heading">Last__name__(Person)</text-property>
+                </structure>
+            </list-property>
+            <list-property name="filter">
+                <structure>
+                    <property name="operator">is-true</property>
+                    <expression name="expr" type="javascript">row["IT-Baseline__Audit__-__Audit__performed__(Module-Requirement)"]</expression>
+                </structure>
+            </list-property>
+            <list-property name="parameters"/>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">Identifier__(Module-Requirement)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">Description__(Module-Requirement)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">UUID__(Module-Requirement)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">Implementation__-__Implementation__Status__(Module-Requirement)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">Implementation__-__Deduce__Implementation__Status__from__Safeguard__(Module-Requirement)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">Title__(Module-Requirement)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">IT-Baseline__Audit__-__Audited__on__(Module-Requirement)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">IT-Baseline__Audit__-__Methods__(Module-Requirement)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">IT-Baseline__Audit__-__State__(Module-Requirement)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">IT-Baseline__Audit__-__Deadline__for__correction__(Module-Requirement)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">IT-Baseline__Audit__-__Non-Conformity__(Module-Requirement)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">IT-Baseline__Audit__-__Questions__(Module-Requirement)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">IT-Baseline__Audit__-__Improvement__(Module-Requirement)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">IT-Baseline__Audit__-__Improvement__occurs</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">IT-Baseline__Audit__-__Audit__performed__(Module-Requirement)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">Description__(Module(s))</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
+                        <property name="name">UUID__(Module(s))</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">18</property>
+                        <property name="name">Identifier__(Module(s))</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">19</property>
+                        <property name="name">Implementation__Order__(Module(s))</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">20</property>
+                        <property name="name">Release__(Module(s))</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">21</property>
+                        <property name="name">Title__(Module(s))</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">22</property>
+                        <property name="name">Title</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
+                        <property name="name">First__name__(Person)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">24</property>
+                        <property name="name">Last__name__(Person)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">verinice</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">Identifier__(Module-Requirement)</property>
+                    <property name="nativeName">Identifier__(Module-Requirement)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">Description__(Module-Requirement)</property>
+                    <property name="nativeName">Description__(Module-Requirement)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">UUID__(Module-Requirement)</property>
+                    <property name="nativeName">UUID__(Module-Requirement)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">Implementation__-__Implementation__Status__(Module-Requirement)</property>
+                    <property name="nativeName">Implementation__-__Implementation__Status__(Module-Requirement)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">Implementation__-__Deduce__Implementation__Status__from__Safeguard__(Module-Requirement)</property>
+                    <property name="nativeName">Implementation__-__Deduce__Implementation__Status__from__Safeguard__(Module-Requirement)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">Title__(Module-Requirement)</property>
+                    <property name="nativeName">Title__(Module-Requirement)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">IT-Baseline__Audit__-__Audited__on__(Module-Requirement)</property>
+                    <property name="nativeName">IT-Baseline__Audit__-__Audited__on__(Module-Requirement)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">IT-Baseline__Audit__-__Methods__(Module-Requirement)</property>
+                    <property name="nativeName">IT-Baseline__Audit__-__Methods__(Module-Requirement)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">IT-Baseline__Audit__-__State__(Module-Requirement)</property>
+                    <property name="nativeName">IT-Baseline__Audit__-__State__(Module-Requirement)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">IT-Baseline__Audit__-__Deadline__for__correction__(Module-Requirement)</property>
+                    <property name="nativeName">IT-Baseline__Audit__-__Deadline__for__correction__(Module-Requirement)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">IT-Baseline__Audit__-__Non-Conformity__(Module-Requirement)</property>
+                    <property name="nativeName">IT-Baseline__Audit__-__Non-Conformity__(Module-Requirement)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">IT-Baseline__Audit__-__Questions__(Module-Requirement)</property>
+                    <property name="nativeName">IT-Baseline__Audit__-__Questions__(Module-Requirement)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">IT-Baseline__Audit__-__Improvement__(Module-Requirement)</property>
+                    <property name="nativeName">IT-Baseline__Audit__-__Improvement__(Module-Requirement)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">IT-Baseline__Audit__-__Improvement__occurs</property>
+                    <property name="nativeName">IT-Baseline__Audit__-__Improvement__occurs</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">IT-Baseline__Audit__-__Audit__performed__(Module-Requirement)</property>
+                    <property name="nativeName">IT-Baseline__Audit__-__Audit__performed__(Module-Requirement)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">Description__(Module(s))</property>
+                    <property name="nativeName">Description__(Module(s))</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
+                    <property name="name">UUID__(Module(s))</property>
+                    <property name="nativeName">UUID__(Module(s))</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">Identifier__(Module(s))</property>
+                    <property name="nativeName">Identifier__(Module(s))</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">19</property>
+                    <property name="name">Implementation__Order__(Module(s))</property>
+                    <property name="nativeName">Implementation__Order__(Module(s))</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">20</property>
+                    <property name="name">Release__(Module(s))</property>
+                    <property name="nativeName">Release__(Module(s))</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">21</property>
+                    <property name="name">Title__(Module(s))</property>
+                    <property name="nativeName">Title__(Module(s))</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">22</property>
+                    <property name="name">Title</property>
+                    <property name="nativeName">Title</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">23</property>
+                    <property name="name">First__name__(Person)</property>
+                    <property name="nativeName">First__name__(Person)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">24</property>
+                    <property name="name">Last__name__(Person)</property>
+                    <property name="nativeName">Last__name__(Person)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{
+  "followLinksOutsideOfScope": false,
+  "useAllScopes": false,
+  "scopeIds": [],
+  "columnPaths": [
+    "bp_requirement.bp_requirement_id AS Identifier__(Module-Requirement)",
+    "bp_requirement.bp_requirement_desc AS Description__(Module-Requirement)",
+    "bp_requirement.uuid AS UUID__(Module-Requirement)",
+    "bp_requirement.bp_requirement_implementation_status AS Implementation__-__Implementation__Status__(Module-Requirement)",
+    "bp_requirement.bp_requirement_implementation_deduce AS Implementation__-__Deduce__Implementation__Status__from__Safeguard__(Module-Requirement)",
+    "bp_requirement.bp_requirement_name AS Title__(Module-Requirement)",
+    "bp_requirement.bp_requirement_audit_date AS IT-Baseline__Audit__-__Audited__on__(Module-Requirement)",
+    "bp_requirement.bp_requirement_audit_method AS IT-Baseline__Audit__-__Methods__(Module-Requirement)",
+    "bp_requirement.bp_requirement_audit_state AS IT-Baseline__Audit__-__State__(Module-Requirement)",
+    "bp_requirement.bp_requirement_audit_deadline AS IT-Baseline__Audit__-__Deadline__for__correction__(Module-Requirement)",
+    "bp_requirement.bp_requirement_audit_deviation AS IT-Baseline__Audit__-__Non-Conformity__(Module-Requirement)",
+    "bp_requirement.bp_requirement_audit_questions AS IT-Baseline__Audit__-__Questions__(Module-Requirement)",
+    "bp_requirement.bp_requirement_audit_improvement AS IT-Baseline__Audit__-__Improvement__(Module-Requirement)",
+    "bp_requirement.bp_requirement_audit_improvement_done AS IT-Baseline__Audit__-__Improvement__occurs",
+    "bp_requirement.bp_requirement_audit_performed AS IT-Baseline__Audit__-__Audit__performed__(Module-Requirement)",
+    "bp_requirement<bp_requirement_group.bp_requirement_group_desc AS Description__(Module(s))",
+    "bp_requirement<bp_requirement_group.uuid AS UUID__(Module(s))",
+    "bp_requirement<bp_requirement_group.bp_requirement_group_id AS Identifier__(Module(s))",
+    "bp_requirement<bp_requirement_group.bp_requirement_group_impl_seq AS Implementation__Order__(Module(s))",
+    "bp_requirement<bp_requirement_group.bp_requirement_group_release AS Release__(Module(s))",
+    "bp_requirement<bp_requirement_group.bp_requirement_group_name AS Title__(Module(s))",
+    "bp_requirement:bp_person.title AS Title",
+    "bp_requirement/bp_person.bp_person_first_name AS First__name__(Person)",
+    "bp_requirement/bp_person.bp_person_last_name AS Last__name__(Person)"
+  ],
+  "relationIds": []
+}]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>Parent__Id__(Module-Requirement)</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>Parent__Id__(Module-Requirement)</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>Parent__Id__(Module-Requirement)</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>Description__(Module-Requirement)</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>Description__(Module-Requirement)</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>Description__(Module-Requirement)</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>Identifier__(Module-Requirement)</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>Identifier__(Module-Requirement)</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>Identifier__(Module-Requirement)</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <themes>
+        <theme name="defaultTheme" id="4">
+            <styles>
+                <style name="defaultCell" id="76895">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="paddingTop">3pt</property>
+                    <property name="paddingLeft">3pt</property>
+                    <property name="paddingBottom">3pt</property>
+                    <property name="paddingRight">3pt</property>
+                </style>
+                <style name="sub-header-row" id="5477">
+                    <property name="backgroundColor">#C9C9C9</property>
+                </style>
+            </styles>
+        </theme>
+    </themes>
+    <components>
+        <grid name="Module" id="76797">
+            <property name="borderBottomStyle">none</property>
+            <property name="borderLeftStyle">none</property>
+            <property name="borderRightStyle">none</property>
+            <property name="borderTopStyle">none</property>
+            <property name="marginTop">0pt</property>
+            <property name="pageBreakInside">avoid</property>
+            <structure name="toc"/>
+            <column id="76798"/>
+            <column id="76799"/>
+            <column id="76800"/>
+            <column id="76801"/>
+            <row id="76802">
+                <cell id="76803">
+                    <property name="colSpan">4</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">defaultCell</property>
+                    <label name="ModuleHeader" id="76950">
+                        <property name="style">sub-header-row</property>
+                        <property name="textAlign">center</property>
+                        <text-property name="text" key="module"></text-property>
+                    </label>
+                </cell>
+            </row>
+            <row id="76807">
+                <cell id="76808">
+                    <property name="style">defaultCell</property>
+                    <text-data name="ModuleIdentifier" id="76951">
+                        <expression name="valueExpr">row["Identifier__(Module(s))"]</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+                <cell id="76809">
+                    <property name="style">defaultCell</property>
+                    <text-data name="ModuleTitle" id="76952">
+                        <expression name="valueExpr">row["Title__(Module(s))"]</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+                <cell id="76810">
+                    <property name="style">defaultCell</property>
+                    <text-data name="ImplOrder" id="76953">
+                        <expression name="valueExpr">row["Implementation__Order__(Module(s))"]</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+                <cell id="76811">
+                    <property name="style">defaultCell</property>
+                    <text-data name="Release" id="76954">
+                        <expression name="valueExpr">row["Release__(Module(s))"]</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+            </row>
+            <row id="76816">
+                <cell id="76817">
+                    <property name="colSpan">4</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">defaultCell</property>
+                    <text-data name="Description" id="76955">
+                        <expression name="valueExpr">getLabeledVal("description", row["Description__(Module(s))"])</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+            </row>
+        </grid>
+        <grid name="Requirement" id="76831">
+            <property name="pageBreakInside">avoid</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">Auditor</property>
+                    <expression name="expression" type="javascript">Total.first(row["PersonName"], row["Title"] == getMessage("rel_bp_requirement_bp_person_auditor_name"))</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Interviewee</property>
+                    <expression name="expression" type="javascript">Total.first(row["PersonName"], row["Title"] == getMessage("rel_bp_requirement_bp_person_interviewee_name"))</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">PersonName</property>
+                    <expression name="expression" type="javascript">row["First__name__(Person)"] + " " + row["Last__name__(Person)"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <column id="76832"/>
+            <column id="76833"/>
+            <column id="76834"/>
+            <column id="76835"/>
+            <row id="76836">
+                <cell id="76837">
+                    <property name="colSpan">4</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">defaultCell</property>
+                    <label name="NewLabel1" id="76876">
+                        <property name="style">sub-header-row</property>
+                        <property name="textAlign">center</property>
+                        <text-property name="text" key="implementation"></text-property>
+                    </label>
+                </cell>
+            </row>
+            <row id="76841">
+                <cell id="76842">
+                    <property name="style">defaultCell</property>
+                    <text-data name="Identifier" id="76936">
+                        <expression name="valueExpr">row["Identifier__(Module-Requirement)"]</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+                <cell id="76843">
+                    <property name="style">defaultCell</property>
+                    <text-data name="Title" id="76937">
+                        <expression name="valueExpr">row["Title__(Module-Requirement)"]</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+                <cell id="76844">
+                    <property name="style">defaultCell</property>
+                    <text-data name="ImplStatus" id="76938">
+                        <method name="onRender"><![CDATA[applyImplementationStatusStyle(this, row["Implementation__-__Implementation__Status__(Module-Requirement)"])]]></method>
+                        <expression name="valueExpr">getLabeledVal("implementation_status", row["Implementation__-__Implementation__Status__(Module-Requirement)"])</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+                <cell id="76845">
+                    <property name="style">defaultCell</property>
+                    <text-data name="DeduceImpl" id="76939">
+                        <expression name="valueExpr">getLabeledVal("deduce_implementation", yesOrNo(row["Implementation__-__Deduce__Implementation__Status__from__Safeguard__(Module-Requirement)"]))</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+            </row>
+            <row id="76846">
+                <cell id="76847">
+                    <property name="colSpan">4</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">defaultCell</property>
+                    <text-data name="ModuleDescrpition" id="76948">
+                        <expression name="valueExpr" type="javascript">getLabeledVal("description", row["Description__(Module-Requirement)"])</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+            </row>
+            <row id="76851">
+                <cell id="76852">
+                    <property name="style">defaultCell</property>
+                    <text-data name="AuditDate" id="76935">
+                        <expression name="valueExpr">getLabeledVal("audit_date", formatDate(row["IT-Baseline__Audit__-__Audited__on__(Module-Requirement)"]))</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+                <cell id="76853">
+                    <property name="style">defaultCell</property>
+                    <text-data name="Auditor" id="76933">
+                        <expression name="valueExpr">getLabeledVal("auditor", row["Auditor"])</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+                <cell id="76854">
+                    <property name="style">defaultCell</property>
+                    <text-data name="Interviewee" id="76934">
+                        <expression name="valueExpr">getLabeledVal("interviewee", row["Interviewee"])</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+                <cell id="76855">
+                    <property name="style">defaultCell</property>
+                    <text-data name="Methods" id="76940">
+                        <expression name="valueExpr">getLabeledVal("methods", row["IT-Baseline__Audit__-__Methods__(Module-Requirement)"])</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+            </row>
+            <row id="76856">
+                <cell id="76857">
+                    <property name="colSpan">2</property>
+                    <property name="rowSpan">3</property>
+                    <property name="style">defaultCell</property>
+                    <text-data name="Questions" id="76941">
+                        <expression name="valueExpr">getLabeledVal("questions", row["IT-Baseline__Audit__-__Questions__(Module-Requirement)"])</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+                <cell id="76859">
+                    <property name="colSpan">2</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">defaultCell</property>
+                    <text-data name="State" id="76942">
+                        <expression name="valueExpr">getLabeledEnumVal("audit_state", row["IT-Baseline__Audit__-__State__(Module-Requirement)"])</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+            </row>
+            <row id="76861">
+                <cell id="76864">
+                    <property name="colSpan">2</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">defaultCell</property>
+                    <text-data name="NonConformity" id="76943">
+                        <expression name="valueExpr">getLabeledEnumVal("deviation", row["IT-Baseline__Audit__-__Non-Conformity__(Module-Requirement)"])</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+            </row>
+            <row id="76866">
+                <cell id="76869">
+                    <property name="colSpan">2</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">defaultCell</property>
+                    <text-data name="DeadlineForCorrection" id="76944">
+                        <expression name="valueExpr">getLabeledVal("deadline_for_correction", formatDate(row["IT-Baseline__Audit__-__Deadline__for__correction__(Module-Requirement)"]))</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+            </row>
+            <row id="76871">
+                <cell id="76872">
+                    <property name="style">defaultCell</property>
+                    <text-data name="ImprovementOccurred" id="76945">
+                        <expression name="valueExpr">getLabeledVal("improvement_occurred", yesOrNo(row["IT-Baseline__Audit__-__Improvement__occurs"]))</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+                <cell id="76873">
+                    <property name="colSpan">3</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">defaultCell</property>
+                    <text-data name="Improvement" id="76946">
+                        <expression name="valueExpr">getLabeledVal("improvement", row["IT-Baseline__Audit__-__Improvement__(Module-Requirement)"])</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+            </row>
+        </grid>
+    </components>
+    <page-setup>
+        <simple-master-page name="NewSimpleMasterPage" id="3"/>
+    </page-setup>
+</library>

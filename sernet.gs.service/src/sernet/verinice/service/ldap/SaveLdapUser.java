@@ -33,7 +33,6 @@ import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
-import sernet.verinice.service.commands.CnATypeMapper;
 import sernet.verinice.service.commands.CreateConfiguration;
 import sernet.verinice.service.commands.SaveConfiguration;
 import sernet.verinice.service.commands.UsernameExistsRuntimeException;
@@ -57,14 +56,13 @@ public class SaveLdapUser extends ChangeLoggingCommand
 
     private Map<Domain, CnATreeElement> containerMap = new EnumMap<>(Domain.class);
 
-    public SaveLdapUser() {
-        super();
-        this.stationId = ChangeLogEntry.STATION_ID;
-    }
+    private Domain targetDomain;
 
-    public SaveLdapUser(Set<PersonInfo> personSet) {
-        this();
+    public SaveLdapUser(Set<PersonInfo> personSet, Domain targetDomain) {
         this.personSet = personSet;
+        this.targetDomain = targetDomain;
+        this.stationId = ChangeLogEntry.STATION_ID;
+
     }
 
     @Override
@@ -122,9 +120,9 @@ public class SaveLdapUser extends ChangeLoggingCommand
     }
 
     private CnATreeElement createPerson(PersonInfo personInfo) {
-        CnATreeElement person = personInfo.getPerson();
-        Domain domain = CnATypeMapper.getDomainFromTypeId(person.getTypeId());
-        CnATreeElement parent = loadContainer(person.getClass(), domain);
+
+        CnATreeElement person = new PersonConverter().apply(personInfo, targetDomain);
+        CnATreeElement parent = loadContainer(person.getClass(), targetDomain);
         person.setParentAndScope(parent);
         if (authService.isPermissionHandlingNeeded()) {
             person.setPermissions(Permission.clonePermissionSet(person, parent.getPermissions()));
@@ -135,6 +133,7 @@ public class SaveLdapUser extends ChangeLoggingCommand
 
         person = dao.merge(person);
         dao.flush();
+        parent.addChild(person);
         savedPersonList.add(person);
         return person;
     }

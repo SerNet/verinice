@@ -17,14 +17,14 @@
  ******************************************************************************/
 package sernet.verinice.bp.rcp.filter;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
@@ -32,7 +32,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElementScopeUtils;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.connect.ITaggableElement;
-import sernet.verinice.model.bp.IBpGroup;
+import sernet.verinice.model.bp.ChangeType;
 import sernet.verinice.model.bp.ISecurityLevelProvider;
 import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.Proceeding;
@@ -41,7 +41,9 @@ import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.ImportBpGroup;
+import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementFilter;
 import sernet.verinice.model.iso27k.Group;
@@ -56,29 +58,63 @@ public class BaseProtectionFilterBuilder {
     }
 
     public static @NonNull Collection<ViewerFilter> makeFilters(
-            BaseProtectionFilterParameters params) {
-        Collection<ViewerFilter> viewerFilters = new ArrayList<>(7);
-        Optional.ofNullable(createImplementationStateFilter(params)).ifPresent(viewerFilters::add);
-        Optional.ofNullable(createSecurityLevelFilter(params)).ifPresent(viewerFilters::add);
-        Optional.ofNullable(createTypeFilter(params)).ifPresent(viewerFilters::add);
-        Optional.ofNullable(createTagFilter(params)).ifPresent(viewerFilters::add);
-        Optional.ofNullable(createHideEmptyGroupsFilter(params)).ifPresent(viewerFilters::add);
-        viewerFilters.add(createProceedingFilter());
-        return viewerFilters;
+            BaseProtectionFilterParameters params, IPreferenceStore prererenceStore) {
+        return Stream.of(createRequirementSafeguardFilter(params),
+                createAuditPerformedFilter(params), createChangeTypeFilter(params),
+                createReleaseFilter(params), createRiskAnalysisNecessaryFilter(params),
+                createRiskLabelFilter(params), createTypeFilter(params), createTagFilter(params),
+                createHideEmptyGroupsFilter(params), createProceedingFilter(prererenceStore))
+                .filter(Objects::nonNull).collect(Collectors.toList());
     }
 
-    private static ViewerFilter createImplementationStateFilter(
-            BaseProtectionFilterParameters filterParameters) {
-        if (!filterParameters.getImplementationStatuses().isEmpty()) {
-            return new ImplementationStatusFilter(filterParameters.getImplementationStatuses());
+    private static ViewerFilter createAuditPerformedFilter(BaseProtectionFilterParameters params) {
+        return params.getAuditPerformed()
+                .map(v -> new DynamicBooleanPropertyFilter("audit_performed", v)).orElse(null);
+    }
+
+    private static ViewerFilter createChangeTypeFilter(BaseProtectionFilterParameters params) {
+        if (!params.getChangeTypes().isEmpty()) {
+            return new RecursiveTreeFilter(new DynamicEnumPropertyFilter<>("change_type",
+                    ChangeType.class, params.getChangeTypes()), 1);
         }
         return null;
     }
 
-    private static ViewerFilter createSecurityLevelFilter(
+    private static ViewerFilter createReleaseFilter(BaseProtectionFilterParameters params) {
+        if (!params.getReleases().isEmpty()) {
+            return new RecursiveTreeFilter(
+                    new DynamicStringPropertyFilter("release", params.getReleases()), 1);
+        }
+        return null;
+    }
+
+    private static ViewerFilter createRiskAnalysisNecessaryFilter(
+            BaseProtectionFilterParameters params) {
+        return params.getRiskAnalysisNecessary()
+                .map(v -> new DynamicBooleanPropertyFilter("riskanalysis_necessary", v))
+                .orElse(null);
+    }
+
+    public static @NonNull Collection<ViewerFilter> makeFilters(
+            BaseProtectionFilterParameters params) {
+        return makeFilters(params, Activator.getDefault().getPreferenceStore());
+    }
+
+    private static ViewerFilter createRiskLabelFilter(BaseProtectionFilterParameters params) {
+        if (!params.getRiskLabels().isEmpty()) {
+            return new RiskLabelFilter(params.getRiskLabels());
+        }
+        return null;
+    }
+
+    private static ViewerFilter createRequirementSafeguardFilter(
             BaseProtectionFilterParameters filterParameters) {
-        if (!filterParameters.getSecurityLevels().isEmpty()) {
-            return new SecurityLevelFilter(filterParameters.getSecurityLevels());
+        if (!filterParameters.getImplementationStatuses().isEmpty()
+                || !filterParameters.getSecurityLevels().isEmpty()) {
+            return new RecursiveTreeFilter(new RequirementSafeguardFilter(
+                    filterParameters.getImplementationStatuses(),
+                    filterParameters.getSecurityLevels(), filterParameters.isHideEmptyGroups(),
+                    filterParameters.getElementTypes()));
         }
         return null;
     }
@@ -91,8 +127,8 @@ public class BaseProtectionFilterBuilder {
         return null;
     }
 
-    private static ViewerFilter createProceedingFilter() {
-        return new ProceedingFilter();
+    private static ViewerFilter createProceedingFilter(IPreferenceStore preferenceStore) {
+        return new ProceedingFilter(preferenceStore);
     }
 
     private static ViewerFilter createTagFilter(BaseProtectionFilterParameters filterParameters) {
@@ -120,27 +156,6 @@ public class BaseProtectionFilterBuilder {
             return new RecursiveTreeFilter(HideEmptyGroupsFilter.INSTANCE);
         }
         return null;
-    }
-
-    private static final class ImplementationStatusFilter extends ViewerFilter {
-        private final Collection<ImplementationStatus> selectedImplementationStatus;
-
-        ImplementationStatusFilter(Set<ImplementationStatus> selectedImplementationStatus) {
-            this.selectedImplementationStatus = selectedImplementationStatus;
-        }
-
-        @Override
-        public boolean select(Viewer viewer, Object parentElement, Object element) {
-            if (element instanceof BpRequirement) {
-                return selectedImplementationStatus
-                        .contains(((BpRequirement) element).getImplementationStatus());
-            }
-            if (element instanceof Safeguard) {
-                return selectedImplementationStatus
-                        .contains(((Safeguard) element).getImplementationStatus());
-            }
-            return true;
-        }
     }
 
     private static final class TagFilter extends ViewerFilter {
@@ -201,23 +216,50 @@ public class BaseProtectionFilterBuilder {
         }
     }
 
-    private static final class SecurityLevelFilter extends ViewerFilter {
+    private static final class RequirementSafeguardFilter extends ViewerFilter {
+        private final Collection<ImplementationStatus> selectedImplementationStatus;
         private final Collection<SecurityLevel> selectedSecurityLevels;
+        private final Collection<String> selectedElementTypes;
+        private final boolean hideEmptyGroups;
 
-        SecurityLevelFilter(Collection<SecurityLevel> selectedSecurityLevels) {
+        RequirementSafeguardFilter(Collection<ImplementationStatus> selectedImplementationStatus,
+                Collection<SecurityLevel> selectedSecurityLevels, boolean hideEmptyGroups,
+                Collection<String> selectedElementTypes) {
+            this.selectedImplementationStatus = selectedImplementationStatus;
             this.selectedSecurityLevels = selectedSecurityLevels;
+            this.hideEmptyGroups = hideEmptyGroups;
+            this.selectedElementTypes = selectedElementTypes;
         }
 
         @Override
         public boolean select(Viewer viewer, Object parentElement, Object element) {
-            if (element instanceof Safeguard) {
-                return selectedSecurityLevels.contains(((Safeguard) element).getSecurityLevel());
+            if (!hideEmptyGroups && element instanceof Group || element instanceof ItNetwork) {
+                return true;
+            }
+            if (hideEmptyGroups && (element instanceof BpRequirementGroup
+                    || element instanceof SafeguardGroup)) {
+                return false;
+            }
+            if (!emptyOrContains(selectedElementTypes, ((CnATreeElement) element).getTypeId())) {
+                return false;
             }
             if (element instanceof BpRequirement) {
-                return selectedSecurityLevels
-                        .contains(((BpRequirement) element).getSecurityLevel());
+                return (emptyOrContains(selectedImplementationStatus,
+                        ((BpRequirement) element).getImplementationStatus())
+                        && emptyOrContains(selectedSecurityLevels,
+                                ((BpRequirement) element).getSecurityLevel()));
+            }
+            if (element instanceof Safeguard) {
+                return (emptyOrContains(selectedImplementationStatus,
+                        ((Safeguard) element).getImplementationStatus())
+                        && emptyOrContains(selectedSecurityLevels,
+                                ((Safeguard) element).getSecurityLevel()));
             }
             return true;
+        }
+
+        private static <T> boolean emptyOrContains(Collection<T> collection, T value) {
+            return collection.isEmpty() || collection.contains(value);
         }
     }
 
@@ -232,9 +274,16 @@ public class BaseProtectionFilterBuilder {
     }
 
     private static final class ProceedingFilter extends ViewerFilter {
+
+        private final IPreferenceStore preferenceStore;
+
+        public ProceedingFilter(IPreferenceStore preferenceStore) {
+            this.preferenceStore = preferenceStore;
+        }
+
         @Override
         public boolean select(Viewer viewer, Object parentElement, Object element) {
-            boolean filterByProceeding = Activator.getDefault().getPreferenceStore()
+            boolean filterByProceeding = preferenceStore
                     .getBoolean(PreferenceConstants.FILTER_INFORMATION_NETWORKS_BY_PROCEEDING);
             if (filterByProceeding && element instanceof CnATreeElement) {
                 if (element instanceof BpThreat) {
@@ -263,56 +312,6 @@ public class BaseProtectionFilterBuilder {
             // scope is no it network. This state is
             // undefined.
             return true;
-        }
-    }
-
-    /**
-     * A viewer filter that can be used with tree structures. In order for an
-     * element to be selected (i.e. shown), the element itself or any descendant
-     * must match the delegate filter.
-     */
-    private static class RecursiveTreeFilter extends ViewerFilter {
-
-        private final ViewerFilter delegateFilter;
-
-        RecursiveTreeFilter(ViewerFilter delegateFilter) {
-            this.delegateFilter = delegateFilter;
-        }
-
-        /**
-         * Override this method to specify whether an element's children are
-         * checked. For example, this can be used to abort the checks at a
-         * specific level of the tree.
-         *
-         * @param cnATreeElement
-         *            the current element
-         * @return whether to check the elements of the given element
-         */
-        protected boolean checkChildren(CnATreeElement cnATreeElement) {
-            return (cnATreeElement instanceof ItNetwork || cnATreeElement instanceof IBpGroup);
-        }
-
-        @Override
-        public boolean select(Viewer viewer, Object parentElement, Object element) {
-            CnATreeElement cnATreeElement = (CnATreeElement) element;
-            if (delegateFilter.select(viewer, parentElement, cnATreeElement)) {
-                return true;
-            }
-            if (checkChildren(cnATreeElement)) {
-                return containsMatchingChild(viewer, cnATreeElement);
-            }
-            return false;
-        }
-
-        private boolean containsMatchingChild(Viewer viewer, CnATreeElement cnATreeElement) {
-            ITreeContentProvider provider = (ITreeContentProvider) ((StructuredViewer) viewer)
-                    .getContentProvider();
-            for (Object child : provider.getChildren(cnATreeElement)) {
-                if (select(viewer, cnATreeElement, child)) {
-                    return true;
-                }
-            }
-            return false;
         }
     }
 }

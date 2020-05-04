@@ -54,6 +54,7 @@ public class ElasticsearchClientFactory implements DisposableBean {
     private static final String SEPERATOR_LANGUAGE = "_";
     private static final String SEPERATOR_EXTENSION = ".";
     private static final String JSON_EXTENSION = "json";
+    private static final Locale LOCALE_DEFAULT = Locale.ENGLISH;
 
     private Node node = null;
     private Client client = null;
@@ -92,9 +93,16 @@ public class ElasticsearchClientFactory implements DisposableBean {
                 LOG.debug("Creating index " + ISearchDao.INDEX_NAME + "...");
             }
             try {
+                Builder analysisConf = getAnylysisConf();
+                if (LOG.isDebugEnabled()) {
+                    Map<String, String> map = analysisConf.internalMap();
+                    for (Entry<String, String> e : map.entrySet()) {
+                        LOG.debug("ES Settings:\t<" + e.getKey() + ", " + e.getValue() + ">");
+                    }
+                }
                 client.admin().indices().prepareCreate(ISearchDao.INDEX_NAME)
-                        .setSettings(getAnylysisConf())
-                        .addMapping(ElementDao.TYPE_NAME, getMapping()).execute().actionGet();
+                        .setSettings(analysisConf).addMapping(ElementDao.TYPE_NAME, getMapping())
+                        .execute().actionGet();
             } catch (IndexAlreadyExistsException e) {
                 // https://github.com/elastic/elasticsearch/issues/8105
                 LOG.warn("Index " + ISearchDao.INDEX_NAME
@@ -106,14 +114,26 @@ public class ElasticsearchClientFactory implements DisposableBean {
     }
 
     private Builder getAnylysisConf() {
-        return ImmutableSettings.settingsBuilder()
-                .loadFromClasspath(getSearchAnalysisConfiguration());
+        String configurationPath = getSearchAnalysisConfiguration(Locale.getDefault());
+        if (!fileExists(configurationPath)) {
+            LOG.warn("Can not find ElasticSearch configuration for locale: " + Locale.getDefault()
+                    + ". Using configuration for default locale: " + LOCALE_DEFAULT + " instead.");
+            configurationPath = getSearchAnalysisConfiguration(LOCALE_DEFAULT);
+        }
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Loading ElasticSearch analysis configuration: " + configurationPath);
+        }
+        return ImmutableSettings.settingsBuilder().loadFromClasspath(configurationPath);
     }
 
-    private String getSearchAnalysisConfiguration() {
+    private boolean fileExists(String path) {
+        return ElasticsearchClientFactory.class.getClassLoader().getResource(path) != null;
+    }
+
+    private String getSearchAnalysisConfiguration(Locale locale) {
         return new StringBuilder().append(SERNET_VERINICE_SEARCH_ANALYSIS_JSON)
-                .append(SEPERATOR_LANGUAGE).append(Locale.getDefault().getLanguage())
-                .append(SEPERATOR_EXTENSION).append(JSON_EXTENSION).toString().toLowerCase();
+                .append(SEPERATOR_LANGUAGE).append(locale.getLanguage()).append(SEPERATOR_EXTENSION)
+                .append(JSON_EXTENSION).toString().toLowerCase();
     }
 
     private String getMapping() {

@@ -206,6 +206,8 @@ public final class ImageCache {
     public static final String OPEN_EDIT = "edtsrclkup_co.gif";
 
     public static final String CASCADE = "application_cascade.png";
+    public static final String ACCOUNTS_BULK = "accounts_bulk.png";
+
     public static final String SECURITY = "16-security-lock.png";
 
     public static final String KONSOLIDATOR = "konsolidator.png";

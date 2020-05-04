@@ -669,9 +669,6 @@ public class FileView extends RightsEnabledView
                 attachment.removeAllListener();
             }
         }
-        if (imageCellProvider != null) {
-            imageCellProvider.shutdownCache();
-        }
     }
 
     public static String getImageForMimeType(String mimeType) {
@@ -943,7 +940,7 @@ public class FileView extends RightsEnabledView
             return;
         }
         Attachment attachment = new Attachment();
-        attachment.setCnATreeElementId(getCurrentCnaElement().getDbId());
+        attachment.setCnATreeElement(getCurrentCnaElement());
         attachment.setCnAElementTitel(getCurrentCnaElement().getTitle());
         attachment.setTitel(file.getName());
         attachment.setDate(Calendar.getInstance().getTime());

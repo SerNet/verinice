@@ -20,6 +20,7 @@
 package sernet.verinice.rcp;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -31,8 +32,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
@@ -54,7 +53,9 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ApplicationRoles;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthService;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IRightsServiceClient;
 import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
@@ -65,57 +66,54 @@ import sernet.verinice.model.auth.OriginType;
 import sernet.verinice.model.auth.Profile;
 import sernet.verinice.model.auth.ProfileRef;
 import sernet.verinice.model.auth.Userprofile;
+import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.service.account.AccountLoader;
+import sernet.verinice.service.commands.LoadVisibleAccounts;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- * 
  */
-@SuppressWarnings("restriction")
 public class UserprofileDialog extends TitleAreaDialog {
 
     private static final Logger LOG = Logger.getLogger(UserprofileDialog.class);
-    
+
     private Combo comboLogin;
     private ComboModel<String> comboModel;
-    
+
     private TableViewer tableSelected;
     private TableViewer table;
     private TableViewer tableAction;
-    private ProfileLabelProvider profileLabelProvider = new ProfileLabelProvider(); 
+    private ProfileLabelProvider profileLabelProvider = new ProfileLabelProvider();
     private ProfileTableComparator profileTableComparator = new ProfileTableComparator();
-    
+
     private Button addAllButton;
     private Button removeAllButton;
-    
+
     private Auth auth;
     private Userprofile userprofile;
-    private List<ProfileRef> selectedProfiles = new ArrayList<ProfileRef>();   
+    private List<ProfileRef> selectedProfiles = new ArrayList<>();
     private List<ProfileRef> unselectedProfiles;
-    private List<Profile> allProfiles;    
+    private List<Profile> allProfiles;
 
     private ProfileRef selectedProfileRef;
-    
+
     private IRightsServiceClient rightsService;
-    
+    private ICommandService commandService;
+
     public UserprofileDialog(Shell parent) {
         super(parent);
         auth = getRightService().getConfiguration();
         setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
         allProfiles = auth.getProfiles().getProfile();
-        unselectedProfiles = new ArrayList<ProfileRef>(allProfiles.size());    
+        unselectedProfiles = new ArrayList<>(allProfiles.size());
     }
-    
+
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
         newShell.setText(Messages.UserprofileDialog_0);
     }
 
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-     */
     @Override
     protected Control createDialogArea(Composite parent) {
         final int fourColCompCharHeight = 20;
@@ -123,14 +121,13 @@ public class UserprofileDialog extends TitleAreaDialog {
         final int leftCompCharHeight = 40;
         final int rightCompCharHeight = leftCompCharHeight;
         final int rightButtonCompositeWidthHint = rightCompCharHeight;
-        
-        
+
         setTitle(Messages.UserprofileDialog_1);
         String message = Messages.UserprofileDialog_2;
-        if(auth.getType().equals(ConfigurationType.BLACKLIST)) {
+        if (auth.getType().equals(ConfigurationType.BLACKLIST)) {
             message = message + Messages.UserprofileDialog_19;
         }
-        if(auth.getType().equals(ConfigurationType.WHITELIST)) {
+        if (auth.getType().equals(ConfigurationType.WHITELIST)) {
             message = message + Messages.UserprofileDialog_20;
         }
         setMessage(message);
@@ -148,26 +145,26 @@ public class UserprofileDialog extends TitleAreaDialog {
         gridLayout.marginHeight = 0;
         gridLayout.marginWidth = 0;
         comboComposite.setLayout(gridLayout);
-        
+
         Label label = new Label(comboComposite, SWT.WRAP);
         label.setText(Messages.UserprofileDialog_3);
 
         comboLogin = new Combo(comboComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
         comboLogin.addSelectionListener(new SelectionAdapter() {
-              @Override
+            @Override
             public void widgetSelected(SelectionEvent e) {
-                  comboModel.setSelectedIndex(comboLogin.getSelectionIndex());
-                  loadProfiles();
-              }
+                comboModel.setSelectedIndex(comboLogin.getSelectionIndex());
+                loadProfiles();
+            }
 
-            });
-        comboModel = new ComboModel<String>(new IComboModelLabelProvider() {
+        });
+        comboModel = new ComboModel<>(new IComboModelLabelProvider() {
             @Override
             public String getLabel(Object label) {
                 return (String) label;
-            }       
+            }
         });
-        
+
         Composite fourColumnComposite = new Composite(composite, SWT.NONE);
         gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         gridData.heightHint = convertHeightInCharsToPixels(fourColCompCharHeight);
@@ -234,7 +231,8 @@ public class UserprofileDialog extends TitleAreaDialog {
 
         initializeContent();
 
-        String username = ((IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE)).getUsername();
+        String username = ((IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE))
+                .getUsername();
         loadProfiles(username);
         comboModel.setSelectedObject(username);
         comboLogin.select(comboModel.getSelectedIndex());
@@ -244,25 +242,18 @@ public class UserprofileDialog extends TitleAreaDialog {
         return composite;
     }
 
-    /**
-     * 
-     */
-
     private void initializeContent() {
         tableSelected.setInput(selectedProfiles);
 
         setUnselected();
         table.setInput(unselectedProfiles);
 
-        Set<String> nameSet = new HashSet<String>();
-        for (String username : getRightService().getUsernames()) {
-            if (username != null && !username.isEmpty()) {
-                nameSet.add(username);
-            }
-        }
-
+        Set<String> nameSet = new HashSet<>();
         try {
-            boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+            nameSet.addAll(loadUserNames());
+
+            boolean isLocalAdmin = getAuthService()
+                    .currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
 
             if (isLocalAdmin) {
                 nameSet.addAll(AccountLoader.loadGroupNamesForLocalAdmin());
@@ -283,11 +274,23 @@ public class UserprofileDialog extends TitleAreaDialog {
         comboLogin.setItems(comboModel.getLabelArray());
     }
 
+    private Collection<String> loadUserNames() throws CommandException {
+        LoadVisibleAccounts command = new LoadVisibleAccounts();
+        command = getCommandService().executeCommand(command);
+        List<Configuration> accountList = command.getAccountList();
+        Set<String> userNames = new HashSet<>();
+        for (Configuration account : accountList) {
+            userNames.add(account.getUser());
+        }
+        return userNames;
+    }
+
     private void setUnselected() {
         unselectedProfiles.clear();
 
         for (Profile profile : allProfiles) {
-            if (isLocalAdminCreator(profile) && !containsProfileRef(selectedProfiles, profile.getName())) {
+            if (isLocalAdminCreator(profile)
+                    && !containsProfileRef(selectedProfiles, profile.getName())) {
                 // create a reference to the profile
                 ProfileRef profileRef = new ProfileRef();
                 profileRef.setName(profile.getName());
@@ -297,10 +300,11 @@ public class UserprofileDialog extends TitleAreaDialog {
     }
 
     private boolean isLocalAdminCreator(Profile profile) {
-        boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        boolean isLocalAdmin = getAuthService()
+                .currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
         return !isLocalAdmin || (isLocalAdmin && AccountLoader.isLocalAdminCreator(profile));
     }
-    
+
     private boolean containsProfileRef(List<ProfileRef> profileRefs, String profileName) {
         boolean contains = false;
         for (ProfileRef profileRef : profileRefs) {
@@ -316,21 +320,21 @@ public class UserprofileDialog extends TitleAreaDialog {
         String selected = comboModel.getSelectedObject();
         loadProfiles(selected);
     }
-    
+
     private void loadProfiles(String username) {
         allProfiles = auth.getProfiles().getProfile();
         table.remove(unselectedProfiles);
         tableSelected.remove(selectedProfiles);
         boolean profileFound = false;
-        for (Userprofile internalUserprofile :  auth.getUserprofiles().getUserprofile()) {
-            if(username.equals(internalUserprofile.getLogin())) {
+        for (Userprofile internalUserprofile : auth.getUserprofiles().getUserprofile()) {
+            if (username.equals(internalUserprofile.getLogin())) {
                 this.userprofile = internalUserprofile;
                 selectedProfiles = internalUserprofile.getProfileRef();
                 profileFound = true;
                 break;
             }
         }
-        if(!profileFound) {
+        if (!profileFound) {
             // create a new one
             Userprofile internalUserprofile = new Userprofile();
             internalUserprofile.setLogin(username);
@@ -339,9 +343,11 @@ public class UserprofileDialog extends TitleAreaDialog {
             selectedProfiles = internalUserprofile.getProfileRef();
         }
         setUnselected();
-        boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        boolean isLocalAdmin = getAuthService()
+                .currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
         if (isLocalAdmin) {
-            List<ProfileRef> selectedLocalAdminProfileRefs = new ArrayList<ProfileRef>(selectedProfiles.size());
+            List<ProfileRef> selectedLocalAdminProfileRefs = new ArrayList<>(
+                    selectedProfiles.size());
             for (ProfileRef profileRef : selectedProfiles) {
                 if (AccountLoader.isLocalAdminCreator(getProfil(profileRef))) {
                     selectedLocalAdminProfileRefs.add(profileRef);
@@ -358,7 +364,7 @@ public class UserprofileDialog extends TitleAreaDialog {
         removeAllButton.setEnabled(!selectedProfiles.isEmpty());
         addAllButton.setEnabled(!unselectedProfiles.isEmpty());
     }
-    
+
     private Profile getProfil(ProfileRef profileRef) {
         for (Profile profile : allProfiles) {
             if (profile.getName().equals(profileRef.getName())) {
@@ -368,23 +374,27 @@ public class UserprofileDialog extends TitleAreaDialog {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.dialogs.Dialog#okPressed()
      */
     @Override
     protected void okPressed() {
         try {
-            getRightService().updateConfiguration(auth);          
-        } catch(Exception e) {
+            getRightService().updateConfiguration(auth);
+        } catch (Exception e) {
             final String message = "Error while saving userprofiles.";
             LOG.error(message, e);
             MessageDialog.openError(this.getShell(), "Error", message);
         } finally {
             super.okPressed();
         }
-     }
-    
-    /* (non-Javadoc)
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.dialogs.Dialog#cancelPressed()
      */
     @Override
@@ -397,57 +407,54 @@ public class UserprofileDialog extends TitleAreaDialog {
         Label label = new Label(parent, SWT.WRAP);
         label.setText(title);
         label.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
-        
+
         int style = SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL;
 
         TableViewer internalTable = new TableViewer(parent, style | SWT.MULTI);
 
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true,true);
+        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         internalTable.getControl().setLayoutData(gd);
 
         internalTable.setUseHashlookup(true);
 
         return internalTable;
     }
-    
+
     private void createButtons(Composite parent) {
         Label spacer = new Label(parent, SWT.NONE);
-        spacer.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,false));
+        spacer.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
         final Button addButton = new Button(parent, SWT.PUSH);
-        addButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,false));
+        addButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
         addButton.setText(Messages.UserprofileDialog_7);
         addButton.setEnabled(!table.getSelection().isEmpty());
-        
+
         addAllButton = new Button(parent, SWT.PUSH);
-        addAllButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP,true, false));
+        addAllButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
         addAllButton.setText(Messages.UserprofileDialog_8);
         addAllButton.setEnabled(!unselectedProfiles.isEmpty());
 
         final Button removeButton = new Button(parent, SWT.PUSH);
-        removeButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP,true, false));
+        removeButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
         removeButton.setText(Messages.UserprofileDialog_9);
         removeButton.setEnabled(!table.getSelection().isEmpty());
-      
+
         removeAllButton = new Button(parent, SWT.PUSH);
         removeAllButton.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, false, false));
         removeAllButton.setText(Messages.UserprofileDialog_10);
         removeAllButton.setEnabled(!selectedProfiles.isEmpty());
 
-        table.addSelectionChangedListener(new ISelectionChangedListener() {          
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                IStructuredSelection selection = (IStructuredSelection) table.getSelection();
-                List selectionList = selection.toList();
-                addButton.setEnabled(!selectionList.isEmpty());
-                if(!selectionList.isEmpty()) {
-                    ProfileRef profileRef = (ProfileRef) selectionList.get(0);
-                    loadActions(profileRef.getName());
-                } else {
-                    loadActions(null);
-                }
+        table.addSelectionChangedListener((SelectionChangedEvent event) -> {
+            IStructuredSelection selection = (IStructuredSelection) table.getSelection();
+            List selectionList = selection.toList();
+            addButton.setEnabled(!selectionList.isEmpty());
+            if (!selectionList.isEmpty()) {
+                ProfileRef profileRef = (ProfileRef) selectionList.get(0);
+                loadActions(profileRef.getName());
+            } else {
+                loadActions(null);
             }
-         });
+        });
 
         addButton.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -458,29 +465,23 @@ public class UserprofileDialog extends TitleAreaDialog {
             }
         });
 
-        table.addDoubleClickListener(new IDoubleClickListener() {           
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                addSelection();
-                removeAllButton.setEnabled(true);
-                addAllButton.setEnabled(!table.getSelection().isEmpty());
-            }
+        table.addDoubleClickListener((DoubleClickEvent event) -> {
+            addSelection();
+            removeAllButton.setEnabled(true);
+            addAllButton.setEnabled(!table.getSelection().isEmpty());
         });
 
-        tableSelected.addSelectionChangedListener(new ISelectionChangedListener() {
-                    @Override
-                    public void selectionChanged(SelectionChangedEvent event) {
-                        IStructuredSelection selection = (IStructuredSelection) tableSelected.getSelection();
-                        List selectionList = selection.toList();
-                        removeButton.setEnabled(!selectionList.isEmpty());
-                        if(!selectionList.isEmpty()) {
-                            ProfileRef profileRef = (ProfileRef) selectionList.get(0);
-                            loadActions(profileRef.getName());   
-                        } else {
-                            loadActions(null);
-                        }
-                    }
-                });
+        tableSelected.addSelectionChangedListener((SelectionChangedEvent event) -> {
+            IStructuredSelection selection = (IStructuredSelection) tableSelected.getSelection();
+            List selectionList = selection.toList();
+            removeButton.setEnabled(!selectionList.isEmpty());
+            if (!selectionList.isEmpty()) {
+                ProfileRef profileRef = (ProfileRef) selectionList.get(0);
+                loadActions(profileRef.getName());
+            } else {
+                loadActions(null);
+            }
+        });
 
         removeButton.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -491,22 +492,15 @@ public class UserprofileDialog extends TitleAreaDialog {
             }
         });
 
-        tableSelected.addDoubleClickListener(new IDoubleClickListener() {
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                removeSelection();
-                addAllButton.setEnabled(true);
-                removeAllButton.setEnabled(!selectedProfiles.isEmpty());
-            }
+        tableSelected.addDoubleClickListener((DoubleClickEvent event) -> {
+            removeSelection();
+            addAllButton.setEnabled(true);
+            removeAllButton.setEnabled(!selectedProfiles.isEmpty());
         });
 
         addAllButton.addSelectionListener(new SelectionAdapter() {
-            /* (non-Javadoc)
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-             */
             @Override
-            @SuppressWarnings({ "unchecked", "rawtypes" })
-            public void widgetSelected(SelectionEvent e) { 
+            public void widgetSelected(SelectionEvent e) {
                 selectedProfiles.addAll(unselectedProfiles);
                 unselectedProfiles.clear();
                 table.refresh();
@@ -518,9 +512,6 @@ public class UserprofileDialog extends TitleAreaDialog {
         });
 
         removeAllButton.addSelectionListener(new SelectionAdapter() {
-            /* (non-Javadoc)
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-             */
             @Override
             public void widgetSelected(SelectionEvent e) {
                 unselectedProfiles.addAll(selectedProfiles);
@@ -534,67 +525,58 @@ public class UserprofileDialog extends TitleAreaDialog {
         });
 
     }
-    
-    /**
-     * @param name
-     */
+
     protected void loadActions(String name) {
-        if(name!=null) {
+        if (name != null) {
             for (Profile profile : allProfiles) {
-                if(profile.getName().equals(name)) {
+                if (profile.getName().equals(name)) {
                     tableAction.setInput(profile.getAction());
                     break;
                 }
-            }  
+            }
         } else {
-            tableAction.setInput(Collections.<Action>emptyList());
+            tableAction.setInput(Collections.<Action> emptyList());
         }
     }
 
     private void createProfileButtons(Composite parent) {
         Label spacer = new Label(parent, SWT.NONE);
-        spacer.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, false,false));
+        spacer.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, false, false));
 
         final Button newButton = new Button(parent, SWT.PUSH);
-        newButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,false));
+        newButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
         newButton.setText(Messages.UserprofileDialog_11);
-        
+
         final Button editButton = new Button(parent, SWT.PUSH);
-        editButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,false));
+        editButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
         editButton.setText(Messages.UserprofileDialog_12);
         editButton.setEnabled(!table.getSelection().isEmpty());
 
         final Button removeButton = new Button(parent, SWT.PUSH);
-        removeButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,false));
+        removeButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
         removeButton.setText(Messages.UserprofileDialog_13);
         removeButton.setEnabled(!table.getSelection().isEmpty());
 
-        table.addSelectionChangedListener(new ISelectionChangedListener() {          
-            
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-                List selectionList = selection.toList();
-                if(selectionList!=null && selectionList.size()==1 && selectionList.get(0) instanceof ProfileRef) {
-                    selectedProfileRef = (ProfileRef)selectionList.get(0);
-                }
-                editButton.setEnabled(selectionList!=null && !selectionList.isEmpty());
-                removeButton.setEnabled(selectionList!=null && !selectionList.isEmpty());
+        table.addSelectionChangedListener((SelectionChangedEvent event) -> {
+            IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+            List selectionList = selection.toList();
+            if (selectionList != null && selectionList.size() == 1
+                    && selectionList.get(0) instanceof ProfileRef) {
+                selectedProfileRef = (ProfileRef) selectionList.get(0);
             }
+            editButton.setEnabled(selectionList != null && !selectionList.isEmpty());
+            removeButton.setEnabled(selectionList != null && !selectionList.isEmpty());
         });
-        
-        tableSelected.addSelectionChangedListener(new ISelectionChangedListener() {          
-            
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-                List selectionList = selection.toList();
-                if(selectionList!=null && selectionList.size()==1 && selectionList.get(0) instanceof ProfileRef) {
-                    selectedProfileRef = (ProfileRef)selectionList.get(0);
-                }
-                editButton.setEnabled(selectionList!=null && !selectionList.isEmpty());
-                removeButton.setEnabled(selectionList!=null && !selectionList.isEmpty());
+
+        tableSelected.addSelectionChangedListener((SelectionChangedEvent event) -> {
+            IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+            List selectionList = selection.toList();
+            if (selectionList != null && selectionList.size() == 1
+                    && selectionList.get(0) instanceof ProfileRef) {
+                selectedProfileRef = (ProfileRef) selectionList.get(0);
             }
+            editButton.setEnabled(selectionList != null && !selectionList.isEmpty());
+            removeButton.setEnabled(selectionList != null && !selectionList.isEmpty());
         });
 
         newButton.addSelectionListener(new SelectionAdapter() {
@@ -603,7 +585,7 @@ public class UserprofileDialog extends TitleAreaDialog {
                 newProfile();
             }
         });
-        
+
         editButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -619,51 +601,52 @@ public class UserprofileDialog extends TitleAreaDialog {
         });
 
     }
-    
+
     protected void editProfile() {
-        if(selectedProfileRef!=null) {
-            final ProfileDialog profiledialog = new ProfileDialog(getShell(),this.auth,selectedProfileRef.getName());
+        if (selectedProfileRef != null) {
+            final ProfileDialog profiledialog = new ProfileDialog(getShell(), this.auth,
+                    selectedProfileRef.getName());
             if (profiledialog.open() == Window.OK) {
                 this.auth = profiledialog.getAuth();
                 loadProfiles();
                 return;
             }
-        }    
+        }
     }
 
     protected void deleteProfile() {
-        if(selectedProfileRef!=null) {       
+        if (selectedProfileRef != null) {
             for (Profile p : auth.getProfiles().getProfile()) {
-                if(p.getName().equals(selectedProfileRef.getName()) && p.getOrigin().equals(OriginType.DEFAULT)) {
-                    MessageDialog.openError(this.getShell(), Messages.UserprofileDialog_15, Messages.UserprofileDialog_16);
+                if (p.getName().equals(selectedProfileRef.getName())
+                        && p.getOrigin().equals(OriginType.DEFAULT)) {
+                    MessageDialog.openError(this.getShell(), Messages.UserprofileDialog_15,
+                            Messages.UserprofileDialog_16);
                     return;
                 }
             }
-            
-            if(MessageDialog.openConfirm(this.getShell(), 
-                    Messages.UserprofileDialog_14, 
+
+            if (MessageDialog.openConfirm(this.getShell(), Messages.UserprofileDialog_14,
                     NLS.bind(Messages.UserprofileDialog_18, selectedProfileRef.getName()))) {
                 Profile profile = new Profile();
                 profile.setName(selectedProfileRef.getName());
                 auth.getProfiles().getProfile().remove(profile);
-                        
-                for (Userprofile internalUserprofile : auth.getUserprofiles().getUserprofile()) {      
+
+                for (Userprofile internalUserprofile : auth.getUserprofiles().getUserprofile()) {
                     internalUserprofile.getProfileRef().remove(selectedProfileRef);
-                }          
-                loadProfiles(); 
+                }
+                loadProfiles();
             }
         }
     }
 
     protected void newProfile() {
-        final ProfileDialog profiledialog = new ProfileDialog(getShell(),this.auth,null);
+        final ProfileDialog profiledialog = new ProfileDialog(getShell(), this.auth, null);
         if (profiledialog.open() == Window.OK) {
             this.auth = profiledialog.getAuth();
             loadProfiles();
             return;
         }
     }
-
 
     /**
      * Moves selected elements in the tree into the table
@@ -680,7 +663,7 @@ public class UserprofileDialog extends TitleAreaDialog {
         table.getControl().setFocus();
         userprofile.setOrigin(null);
     }
-    
+
     /**
      * Moves the selected elements in the table into the tree
      */
@@ -691,7 +674,7 @@ public class UserprofileDialog extends TitleAreaDialog {
         unselectedProfiles.addAll(selectionList);
         Object[] selectedElements = selection.toArray();
         table.add(selectedElements);
-        tableSelected.remove(selectedElements); 
+        tableSelected.remove(selectedElements);
         table.setSelection(selection);
         tableSelected.getControl().setFocus();
         userprofile.setOrigin(null);
@@ -699,9 +682,17 @@ public class UserprofileDialog extends TitleAreaDialog {
 
     IRightsServiceClient getRightService() {
         if (rightsService == null) {
-            rightsService = (IRightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+            rightsService = (IRightsServiceClient) VeriniceContext
+                    .get(VeriniceContext.RIGHTS_SERVICE);
         }
         return rightsService;
+    }
+
+    private ICommandService getCommandService() {
+        if (commandService == null) {
+            commandService = (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
+        }
+        return commandService;
     }
 
     private IAuthService getAuthService() {

@@ -14,7 +14,16 @@
 				<exclude>/WEB-INF/lib/sernet*.jar</exclude>
 			</excludes>
 		</fileSet>
-
+		
+		<fileSet>
+			<directory>${project.build.directory}/../../</directory>
+			<outputDirectory>/</outputDirectory>
+			<includes>
+				<include>LICENSE</include>
+				<include>TCOracle.pdf</include>
+			</includes>
+		</fileSet>
+		
 		<fileSet>
 			<directory>${project.build.directory}/products/sernet.verinice.releng.server.product/linux/gtk/x86_64/plugins/</directory>
 			<outputDirectory>/WEB-INF/lib</outputDirectory>

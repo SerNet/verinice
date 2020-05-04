@@ -25,32 +25,31 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Composite;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.IAccountService;
-import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
- * Wizard page of wizard {@link AccountWizard}.
+ * Wizard page of wizard {@link AccountWizard} which shows the groups an account
+ * is a member of.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class GroupPage extends BaseWizardPage {
 
-    private static final Logger LOG = Logger.getLogger(GroupPage.class);    
+    private static final Logger LOG = Logger.getLogger(GroupPage.class);
     public static final String PAGE_NAME = "account-wizard-group-page"; //$NON-NLS-1$
-     
+
     private Configuration account;
-    
+
     private AccountGroupMultiselectWidget groupWidget;
-    
+
     private IAccountService accountService;
-    
+
     protected GroupPage() {
-        super(PAGE_NAME);      
+        super(PAGE_NAME);
     }
-    
+
     protected GroupPage(Configuration account) {
         super(PAGE_NAME);
         this.account = account;
@@ -60,49 +59,41 @@ public class GroupPage extends BaseWizardPage {
     protected void initGui(Composite composite) {
         setTitle(Messages.GroupPage_1);
         setMessage(Messages.GroupPage_2);
-        
         groupWidget = new AccountGroupMultiselectWidget(composite, account);
-        final boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
-        groupWidget.setEnabled(!isLocalAdmin);
+        groupWidget.setEnabled(!AccountWizard.isCurrentUserLocalAdmin());
     }
 
     @Override
     protected void initData() throws Exception {
+        // No data needs to be loaded
     }
-    
+
     public void syncCheckboxesToAccountGroups() {
-        account.deleteAllRoles();    
+        account.deleteAllRoles();
         for (AccountGroup accountGroup : getGroupsFromWidget()) {
             account.addRole(accountGroup.getName());
         }
     }
-    
+
     public void reSelectStandartGroups(Set<String> standartGroupSet) {
         deselectStandartGroups();
         this.groupWidget.resetData();
-        
     }
-    
+
     private void deselectStandartGroups() {
         Set<AccountGroup> allStandartAccountGroups = AccountGroup.createStandartGroupSet();
         for (AccountGroup accountGroup : allStandartAccountGroups) {
-            this.groupWidget.removeSelectedElements(accountGroup);      
+            this.groupWidget.removeSelectedElements(accountGroup);
         }
     }
-        
-    
+
     public void selectStandartGroups(Set<String> standartGroupNames) {
         Set<AccountGroup> accountGroupSet = AccountGroup.createSetForNames(standartGroupNames);
         for (AccountGroup accountGroup : accountGroupSet) {
-            this.groupWidget.selectCheckboxForElement(accountGroup);      
-        }    
+            this.groupWidget.selectCheckboxForElement(accountGroup);
+        }
     }
 
-    
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
-     */
     @Override
     public boolean isPageComplete() {
         boolean complete = true;
@@ -111,12 +102,10 @@ public class GroupPage extends BaseWizardPage {
         }
         return complete;
     }
-    
+
     public Set<AccountGroup> getGroupsFromWidget() {
         return groupWidget.getSelectedElementSet();
     }
-    
-  
 
     public void setAccount(Configuration account) {
         this.account = account;
@@ -132,9 +121,5 @@ public class GroupPage extends BaseWizardPage {
 
     private IAccountService createAccountServive() {
         return ServiceFactory.lookupAccountService();
-    }
-
-    private IAuthService getAuthService() {
-        return ServiceFactory.lookupAuthService();
     }
 }

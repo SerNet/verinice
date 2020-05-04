@@ -1,0 +1,18 @@
+{
+  "followLinksOutsideOfScope": false,
+  "useAllScopes": false,
+  "scopeIds": [],
+  "columnPaths": [
+    "bp_application.bp_application_abbr AS Kürzel__(Anwendung)",
+    "bp_application.bp_application_description AS Beschreibung__(Anwendung)",
+    "bp_application/bp_application.bp_application_abbr AS Kürzel__(Anwendung)",
+    "bp_application/bp_application.bp_application_count AS Anzahl__(Anwendung)",
+    "bp_application:bp_itsystem.title AS Titel",
+    "bp_application:bp_itsystem.description AS Beschreibung",
+    "bp_application<bp_application_group.bp_application_group_name AS Titel__(Anwendungen)",
+    "bp_application<bp_application_group.bp_application_group_desc AS Beschreibung__(Anwendungen)",
+    "bp_application>bp_threat_group.bp_threat_group_name AS Titel__(Gefährdungen)",
+    "bp_application>bp_threat_group.bp_threat_group_desc AS Beschreibung__(Gefährdungen)"
+  ],
+  "relationIds": []
+}

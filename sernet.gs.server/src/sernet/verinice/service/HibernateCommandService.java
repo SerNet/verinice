@@ -199,7 +199,7 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
         if (set != null) {
             for (String actionId : set) {
                 if (!rightsServerHandler.isEnabled(username, actionId))
-                    // Should the message not be translateable also see
+                    // Should the message not be translatable also see
                     // sernet.gs.server.ServerExceptionHandler
                     throw new AccessDeniedException("Im Rechteprofil ist das Ausführen dieser Aktion nicht erlaubt.");
             }

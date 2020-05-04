@@ -57,6 +57,7 @@ public class LinkTableColumn {
     private LinkTableComposite ltrParent;
     private int columnNumber;
     private String name;
+    private String alias;
     private Button deleteButton;
     private Composite columnContainer;
 
@@ -73,7 +74,7 @@ public class LinkTableColumn {
         this.contentService = copy.getContentService();
         createColumn();
         firstCombo = (LinkTableElementComboViewer) copy.getFirstCombo().copy(null, columnContainer,
-                selectButton);
+                selectButton, this);
     }
 
     public LinkTableColumn(LinkTableComposite parent, int style, int number) {
@@ -93,6 +94,7 @@ public class LinkTableColumn {
             addFirstCombo();
             firstCombo.setInteractive(false);
             firstCombo.setColumnPath(ColumnPathParser.removeAlias(path));
+            alias = ColumnPathParser.extractAlias(path);
             firstCombo.setInteractive(true);
         });
     }
@@ -218,12 +220,19 @@ public class LinkTableColumn {
         return ltrParent;
     }
 
-    public String getColumnPath() {
-        String columnPath = firstCombo.getColumnPath();
-        return createAlias(columnPath);
+    public void clearAlias() {
+        alias = null;
     }
 
-    public String createAlias(String columnPath) {
+    public String getColumnPath() {
+        String columnPath = firstCombo.getColumnPath();
+        if (alias == null) {
+            alias = buildAlias(columnPath);
+        }
+        return columnPath + " AS " + alias;
+    }
+
+    private String buildAlias(String columnPath) {
         String[] columnPathElements = COLUMN_NAVIGATOR_TOKEN.split(columnPath);
         String message;
 
@@ -259,7 +268,7 @@ public class LinkTableColumn {
         message = StringUtils.replaceEachRepeatedly(message,
                 new String[] { "/", ":", ".", "<", ">" }, new String[] { "", "", "", "", "" });
         message = message.replaceAll(" ", "__");
-        return columnPath + " AS " + message;
+        return message;
     }
 
     public Button getSelectButton() {

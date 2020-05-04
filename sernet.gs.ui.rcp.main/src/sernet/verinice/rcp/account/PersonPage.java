@@ -1,11 +1,15 @@
 package sernet.verinice.rcp.account;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.DialogPage;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -17,10 +21,10 @@ import org.eclipse.swt.widgets.Label;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.Retriever;
+import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.ComboModel;
-import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 import sernet.verinice.model.bp.elements.BpPerson;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.groups.BpPersonGroup;
@@ -78,10 +82,14 @@ public class PersonPage extends BaseWizardPage {
         comboScope.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                comboModelScope.setSelectedIndex(comboScope.getSelectionIndex());
+                int selectionIndex = comboScope.getSelectionIndex();
+                if (selectionIndex == 0) {
+                    person = null;
+                }
+                comboModelScope.setSelectedIndex(selectionIndex);
                 scope = comboModelScope.getSelectedObject();
                 checkIfScopeIsPersonScope();
-                personComponent.setTypeId(getPersonTypeId());
+                personComponent.setTypeIds(getPersonTypeIds());
                 personComponent.setScopeId(getScopeId());
                 personComponent.loadElements();
                 loadGroups();
@@ -104,30 +112,23 @@ public class PersonPage extends BaseWizardPage {
         });
 
         final Composite personComposite = createEmptyComposite(parent);
-        personComponent = new ElementSelectionComponent(personComposite, getPersonTypeId(),
-                getGroupId());
+        personComponent = new ElementSelectionComponent(personComposite, getPersonTypeIds(),
+                getScopeId(), getGroupId());
         personComponent.setScopeOnly(true);
         personComponent.setShowScopeCheckbox(false);
         personComponent.setHeight(200);
         personComponent.init();
-        personComponent.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                selectPerson();
-            }
-        });
+        personComponent.getViewer().addSelectionChangedListener(event -> selectPerson());
         personLabel = new Label(parent, SWT.NONE);
 
         showSelectedPerson();
     }
 
     protected void checkIfScopeIsPersonScope() {
-        if (scope != null && person != null) {
-            if (scope.getDbId() != person.getScopeId()) {
-                deselectPerson();
-            }
-        }
+        if (scope != null && person != null && !scope.getDbId().equals(person.getScopeId())) {
+            deselectPerson();
 
+        }
     }
 
     private void deselectPerson() {
@@ -188,20 +189,8 @@ public class PersonPage extends BaseWizardPage {
     }
 
     protected void initData() throws Exception {
-        comboModelScope = new ComboModel<>(
-                new IComboModelLabelProvider<CnATreeElement>() {
-                    @Override
-                    public String getLabel(CnATreeElement element) {
-                        return element.getTitle();
-                    }
-                });
-        comboModelGroup = new ComboModel<>(
-                new IComboModelLabelProvider<CnATreeElement>() {
-                    @Override
-                    public String getLabel(CnATreeElement element) {
-                        return element.getTitle();
-                    }
-                });
+        comboModelScope = new ComboModel<>(CnATreeElement::getTitle);
+        comboModelGroup = new ComboModel<>(CnATreeElement::getTitle);
         loadScopes();
         personComponent.loadElements();
     }
@@ -233,19 +222,16 @@ public class PersonPage extends BaseWizardPage {
 
         comboModelScope.sort();
         comboModelScope.addNoSelectionObject(Messages.PersonPage_8);
-        getDisplay().syncExec(new Runnable() {
-            @Override
-            public void run() {
-                comboScope.setItems(comboModelScope.getLabelArray());
-                if (scope != null) {
-                    comboModelScope.setSelectedObject(scope);
-                    comboScope.select(comboModelScope.getSelectedIndex());
-                    personComponent.setScopeId(getScopeId());
-                    loadGroups();
-                } else {
-                    comboScope.select(0);
-                    comboModelScope.setSelectedIndex(comboScope.getSelectionIndex());
-                }
+        getDisplay().syncExec(() -> {
+            comboScope.setItems(comboModelScope.getLabelArray());
+            if (scope != null) {
+                comboModelScope.setSelectedObject(scope);
+                comboScope.select(comboModelScope.getSelectedIndex());
+                personComponent.setScopeId(getScopeId());
+                loadGroups();
+            } else {
+                comboScope.select(0);
+                comboModelScope.setSelectedIndex(comboScope.getSelectionIndex());
             }
         });
     }
@@ -264,26 +250,26 @@ public class PersonPage extends BaseWizardPage {
     private void loadGroups() {
         try {
             comboModelGroup.clear();
-            String groupTypeId = findGroupTypeIdByPersonTypeId(getPersonTypeId());
-            if (groupTypeId != null) {
-                loadPersonGroups(groupTypeId);
+            Set<String> groupTypeIds = getPersonTypeIds().stream()
+                    .map(PersonPage::findGroupTypeIdByPersonTypeId).filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
+
+            if (!groupTypeIds.isEmpty()) {
+                loadPersonGroups(groupTypeIds);
             }
-            getDisplay().syncExec(new Runnable() {
-                @Override
-                public void run() {
-                    comboGroup.setItems(comboModelGroup.getLabelArray());
-                    if (group != null) {
-                        comboModelGroup.setSelectedObject(group);
-                        selectFirstIfNoGroupIsSelected();
-                        comboGroup.select(comboModelGroup.getSelectedIndex());
-                    } else {
-                        comboGroup.select(0);
-                        comboModelGroup.setSelectedIndex(comboGroup.getSelectionIndex());
-                    }
-                    group = comboModelGroup.getSelectedObject();
-                    personComponent.setGroupId(getGroupId());
-                    personComponent.loadElementsAndSelect(person);
+            getDisplay().syncExec(() -> {
+                comboGroup.setItems(comboModelGroup.getLabelArray());
+                if (group != null) {
+                    comboModelGroup.setSelectedObject(group);
+                    selectFirstIfNoGroupIsSelected();
+                    comboGroup.select(comboModelGroup.getSelectedIndex());
+                } else {
+                    comboGroup.select(0);
+                    comboModelGroup.setSelectedIndex(comboGroup.getSelectionIndex());
                 }
+                group = comboModelGroup.getSelectedObject();
+                personComponent.setGroupId(getGroupId());
+                personComponent.loadElementsAndSelect(person);
             });
         } catch (Exception e) {
             LOG.error("Error while loading groups", e); //$NON-NLS-1$
@@ -291,11 +277,19 @@ public class PersonPage extends BaseWizardPage {
         }
     }
 
-    private void loadPersonGroups(String typeId) throws CommandException {
-        LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(typeId,
-                getScopeId());
-        command = getCommandService().executeCommand(command);
-        comboModelGroup.addAll(command.getElements());
+    private void loadPersonGroups(Set<String> typeIds) {
+        List<CnATreeElement> elements = typeIds.stream().flatMap(typeId -> {
+            LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(typeId,
+                    getScopeId());
+            try {
+                command = getCommandService().executeCommand(command);
+            } catch (CommandException e) {
+                throw new RuntimeCommandException(e);
+            }
+            return command.getElements().stream();
+        }).collect(Collectors.toList());
+
+        comboModelGroup.addAll(elements);
         comboModelGroup.sort();
         comboModelGroup.addNoSelectionObject(Messages.PersonPage_9);
     }
@@ -321,16 +315,12 @@ public class PersonPage extends BaseWizardPage {
         }
     }
 
-    private void loadScope() {
+    private void loadScope(String personTypeId) {
         try {
-            String personTypeId = getPersonTypeId();
-            if (personTypeId == null) {
-                return;
-            }
             String typeId;
-            if (BpPerson.TYPE_ID.equals(getPersonTypeId())) {
+            if (BpPerson.TYPE_ID.equals(personTypeId)) {
                 typeId = ItNetwork.TYPE_ID;
-            } else if (Person.TYPE_ID.equals(getPersonTypeId())) {
+            } else if (Person.TYPE_ID.equals(personTypeId)) {
                 typeId = ITVerbund.TYPE_ID;
             } else {
                 typeId = Organization.TYPE_ID;
@@ -363,20 +353,21 @@ public class PersonPage extends BaseWizardPage {
         return id;
     }
 
-    private String getPersonTypeId() {
+    private Set<String> getPersonTypeIds() {
         if (person != null) {
-            return person.getTypeId();
+            return Collections.singleton(person.getTypeId());
         }
         if (scope == null) {
-            return PersonIso.TYPE_ID;
+            return new HashSet<>(
+                    Arrays.asList(Person.TYPE_ID, PersonIso.TYPE_ID, BpPerson.TYPE_ID));
         }
 
         if (scope.isItNetwork()) {
-            return BpPerson.TYPE_ID;
+            return Collections.singleton(BpPerson.TYPE_ID);
         } else if (scope.isItVerbund()) {
-            return Person.TYPE_ID;
+            return Collections.singleton(Person.TYPE_ID);
         } else {
-            return PersonIso.TYPE_ID;
+            return Collections.singleton(PersonIso.TYPE_ID);
         }
     }
 
@@ -396,7 +387,7 @@ public class PersonPage extends BaseWizardPage {
     public void setPerson(CnATreeElement person) {
         this.person = person;
         if (person != null) {
-            loadScope();
+            loadScope(person.getTypeId());
             loadGroup(person);
         }
     }

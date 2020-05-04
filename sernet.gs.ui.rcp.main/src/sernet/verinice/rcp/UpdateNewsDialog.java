@@ -19,7 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.rcp;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -54,6 +53,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.bsi.views.listeners.DisableContextMenuListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
 /**
@@ -119,6 +119,8 @@ public class UpdateNewsDialog extends Dialog {
         dialogComposite.setLayoutData(gridData);
         
         Browser browser = new Browser(dialogComposite, SWT.RESIZE);
+        browser.setJavascriptEnabled(false);
+        browser.addMenuDetectListener(new DisableContextMenuListener());
         gridData = new GridData(
                 GridData.FILL_BOTH | GridData.GRAB_VERTICAL | GridData.GRAB_HORIZONTAL);
         gridData.horizontalSpan = 4;
@@ -126,7 +128,6 @@ public class UpdateNewsDialog extends Dialog {
         gridData.minimumHeight = (int)parent.getClientArea().height / 2;
         browser.setLayoutData(gridData);
         browser.setText(message);
-        browser.setJavascriptEnabled(false);
         browser.addLocationListener(new LocationListener() {
             
             @Override

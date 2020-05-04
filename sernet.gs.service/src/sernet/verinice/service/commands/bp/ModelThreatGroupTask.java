@@ -55,7 +55,8 @@ public class ModelThreatGroupTask extends ModelCopyTask {
         super(commandService, daoFactory, modelingData, BpThreatGroup.TYPE_ID,
                 element -> element.getLinksUp().stream().map(CnALink::getDependant)
                         .map(modelingData::getScopeElementByCompendiumElement)
-                        .anyMatch(Objects::nonNull));
+                        .anyMatch(Objects::nonNull),
+                BpThreat.PROP_RELEASE, BpThreatGroup.PROP_RELEASE);
         this.requirementGroups = modelingData.getRequirementGroups();
     }
 
@@ -91,6 +92,38 @@ public class ModelThreatGroupTask extends ModelCopyTask {
     protected void afterSkipExistingElement(CnATreeElement targetObject,
             CnATreeElement existingElement, CnATreeElement compendiumElement) {
         afterHandleElement(targetObject, existingElement, compendiumElement);
+    }
+
+    @Override
+    protected void updateExistingElement(CnATreeElement targetObject,
+            CnATreeElement existingElement, CnATreeElement compendiumElement,
+            boolean elementRemoved) {
+        copyProperties(compendiumElement, existingElement, BpThreat.PROP_RELEASE,
+                BpThreat.PROP_CHANGE_DETAILS, BpThreat.PROP_CONFIDENTIALITY,
+                BpThreat.PROP_INTEGRITY, BpThreat.PROP_AVAILABILITY);
+        if (elementRemoved) {
+            existingElement.setPropertyValue(BpThreat.PROP_CHANGE_TYPE,
+                    BpThreat.PROP_CHANGE_TYPE_REMOVED);
+        } else {
+            copyProperties(compendiumElement, existingElement, BpThreat.PROP_NAME,
+                    BpThreat.PROP_CHANGE_TYPE, BpThreat.PROP_OBJECTBROWSER_DESC);
+        }
+        afterHandleElement(targetObject, existingElement, compendiumElement);
+
+    }
+
+    @Override
+    protected void updateExistingGroup(CnATreeElement targetObject, CnATreeElement existingGroup,
+            CnATreeElement compendiumGroup, boolean groupRemoved) {
+        copyProperties(compendiumGroup, existingGroup, BpThreatGroup.PROP_RELEASE,
+                BpThreatGroup.PROP_CHANGE_DETAILS);
+        if (groupRemoved) {
+            existingGroup.setPropertyValue(BpThreatGroup.PROP_CHANGE_TYPE,
+                    BpThreatGroup.PROP_CHANGE_TYPE_REMOVED);
+        } else {
+            copyProperties(compendiumGroup, existingGroup, BpThreatGroup.PROP_CHANGE_TYPE,
+                    BpThreatGroup.PROP_OBJECTBROWSER_CONTENT);
+        }
     }
 
     private void afterHandleElement(CnATreeElement targetObject, CnATreeElement threatFromScope,

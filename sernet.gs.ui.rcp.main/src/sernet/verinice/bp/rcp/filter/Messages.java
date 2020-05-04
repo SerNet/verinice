@@ -23,11 +23,16 @@ public class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.verinice.bp.rcp.filter.messages"; //$NON-NLS-1$
     public static String BaseProtectionFilterDialog_Title;
     public static String BaseProtectionFilterDialog_FiltersForRequirementsAndSafeguards;
+    public static String BaseProtectionFilterDialog_AuditPerformed;
+    public static String BaseProtectionFilterDialog_ChangeType;
     public static String BaseProtectionFilterDialog_ImplementationState;
     public static String BaseProtectionFilterDialog_IntroText;
     public static String BaseProtectionFilterDialog_Objects;
     public static String BaseProtectionFilterDialog_Tags;
     public static String BaseProtectionFilterDialog_Qualifier;
+    public static String BaseProtectionFilterDialog_Releases;
+    public static String BaseProtectionFilterDialog_Risk;
+    public static String BaseProtectionFilterDialog_RiskanalysisNecessary;
     public static String BaseProtectionFilterDialog_Apply_Tag_Filter_To_IT_Networks;
     public static String BaseProtectionFilterDialog_Hide_Empty_Groups;
     public static String BaseProtectionFilterDialog_Clear;

@@ -1,19 +1,19 @@
 /*******************************************************************************
  * Copyright (c) 2012 Daniel Murygin.
  *
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU Lesser General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- * This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program. 
+ * along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
@@ -24,6 +24,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -55,6 +57,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.CnaTreeElementTitleFilter;
@@ -88,7 +91,7 @@ public class ElementSelectionComponent {
     private List<CnATreeElement> elementList;
     private Integer scopeId;
     private Integer groupId;
-    private String typeId;
+    private Set<String> typeIDs;
     private boolean scopeOnly;
     private boolean showScopeCheckbox;
     private static final String COLUMN_IMG = "_img"; //$NON-NLS-1$
@@ -106,9 +109,14 @@ public class ElementSelectionComponent {
 
     public ElementSelectionComponent(Composite container, String type, Integer scopeId,
             Integer groupId) {
+        this(container, Collections.singleton(type), scopeId, groupId);
+    }
+
+    public ElementSelectionComponent(Composite container, Set<String> typeIDs, Integer scopeId,
+            Integer groupId) {
         super();
         this.container = container;
-        this.typeId = type;
+        this.typeIDs = typeIDs;
         this.scopeId = scopeId;
         this.groupId = groupId;
         scopeOnly = true;
@@ -233,7 +241,7 @@ public class ElementSelectionComponent {
     }
 
     public void loadElementsAndSelect(final CnATreeElement selected) {
-        if (typeId == null || typeId.length() == 0) {
+        if (typeIDs == null || typeIDs.isEmpty()) {
             return;
         }
         viewer.setInput(Collections
@@ -300,14 +308,22 @@ public class ElementSelectionComponent {
     }
 
     protected void loadElementsFromDb() throws CommandException {
-        LoadCnAElementByEntityTypeId command;
-        if (scopeOnly) {
-            command = new LoadCnAElementByEntityTypeId(typeId, getScopeId(), getGroupId());
-        } else {
-            command = new LoadCnAElementByEntityTypeId(typeId);
-        }
-        command = ServiceFactory.lookupCommandService().executeCommand(command);
-        showElementsInTable(command.getElements());
+        List<CnATreeElement> elements = typeIDs.stream().flatMap(typeId -> {
+            LoadCnAElementByEntityTypeId command;
+            if (scopeOnly) {
+                command = new LoadCnAElementByEntityTypeId(typeId, getScopeId(), getGroupId());
+            } else {
+                command = new LoadCnAElementByEntityTypeId(typeId);
+            }
+            try {
+                command = ServiceFactory.lookupCommandService().executeCommand(command);
+            } catch (CommandException e) {
+                throw new RuntimeCommandException(e);
+            }
+            return command.getElements().stream();
+        }).collect(Collectors.toList());
+
+        showElementsInTable(elements);
     }
 
     protected void showElementsInTable(final List<CnATreeElement> list) {
@@ -359,12 +375,16 @@ public class ElementSelectionComponent {
         this.groupId = groupId;
     }
 
-    public String getTypeId() {
-        return typeId;
+    public void setTypeId(String typeId) {
+        this.typeIDs = Collections.singleton(typeId);
     }
 
-    public void setTypeId(String typeId) {
-        this.typeId = typeId;
+    public void setTypeIds(Set<String> typeIds) {
+        this.typeIDs = typeIds;
+    }
+
+    public Set<String> getTypeIds() {
+        return typeIDs;
     }
 
     public Integer getHeight() {

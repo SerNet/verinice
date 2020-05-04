@@ -1,17 +1,17 @@
 /*******************************************************************************
  * Copyright (c) 2009 Alexander Koderman <ak[at]sernet[dot]de>.
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU Lesser General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- *     This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ *     This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
- *     You should have received a copy of the GNU Lesser General Public 
- * License along with this program. 
+ *     You should have received a copy of the GNU Lesser General Public
+ * License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
@@ -19,8 +19,10 @@ package sernet.gs.ui.rcp.main.common.model;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -28,6 +30,7 @@ import org.eclipse.swt.widgets.Display;
 import org.hibernate.StaleObjectStateException;
 
 import sernet.gs.model.Baustein;
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -69,6 +72,8 @@ import sernet.verinice.rcp.Preferences;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.CreateLink;
 import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
+import sernet.verinice.service.commands.LoadElementsByUuid;
+import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.RemoveLink;
 import sernet.verinice.service.commands.SaveElement;
 import sernet.verinice.service.commands.UpdateElement;
@@ -85,9 +90,9 @@ import sernet.verinice.service.commands.templates.LoadModelingTemplateSettings;
 
 /**
  * DAO class for model objects. Uses Hibernate as persistence framework.
- * 
+ *
  * @author koderman[at]sernet[dot]de
- * 
+ *
  */
 
 public final class CnAElementHome {
@@ -170,10 +175,10 @@ public final class CnAElementHome {
     /**
      * Creates a new instance of class clazz as a child of container. The new
      * instance is saved in the database.
-     * 
+     *
      * A localized title of the instance is set on the server which locale may
      * differ from the clients locale.
-     * 
+     *
      * @param container
      *            The parent of the new instance
      * @param clazz
@@ -188,12 +193,12 @@ public final class CnAElementHome {
     /**
      * Creates a new instance of class clazz as a child of container. The new
      * instance is saved in the database.
-     * 
+     *
      * If you pass a typeId (HUI-Type-id) a localized title of the instance is
      * set on the cliant via HUITypeFactory from message bundle. If typeId is
      * null a localized title of the instance is set on the server which locale
      * may differ from the clients locale.
-     * 
+     *
      * @param container
      *            The parent of the new instance
      * @param clazz
@@ -322,7 +327,7 @@ public final class CnAElementHome {
 
     /**
      * Load object with given ID for given class.
-     * 
+     *
      * @param clazz
      * @param id
      * @return
@@ -334,12 +339,20 @@ public final class CnAElementHome {
         return command.getFound();
     }
 
+    public Set<CnATreeElement> loadElementsByUUID(Collection<String> elementUUIDs,
+            RetrieveInfo retrieveInfo) throws CommandException {
+        LoadElementsByUuid<CnATreeElement> elementLoader = new LoadElementsByUuid<>(
+                elementUUIDs.stream().collect(Collectors.toList()), retrieveInfo);
+        elementLoader = getCommandService().executeCommand(elementLoader);
+        return elementLoader.getElements();
+    }
+
     /**
      * Load whole model from DB (lazy). Proxies will be instantiated by
      * hibernate on first access.
-     * 
+     *
      * @param nullMonitor
-     * 
+     *
      * @return BSIModel object which is the top level object of the model
      *         hierarchy.
      * @throws Exception
@@ -357,9 +370,9 @@ public final class CnAElementHome {
     /**
      * Refresh given object from the database, looses all changes made in
      * memory, sets element and all properties to actual state in database.
-     * 
+     *
      * Does not reload children or other collections of this object.
-     * 
+     *
      * @param cnAElement
      * @throws CommandException
      */
@@ -386,7 +399,7 @@ public final class CnAElementHome {
     /**
      * Returns whether it is allowed to perform a delete operation on the given
      * element.
-     * 
+     *
      * @param cte
      * @return
      */
@@ -414,12 +427,12 @@ public final class CnAElementHome {
     /**
      * Returns whether it is allowed to perform a delete operation on the given
      * {@link CnALink} element.
-     * 
+     *
      * <p>
      * The link can be deleted if write permissions exist on the
      * {@link CnATreeElement} instance the link belongs to.
      * </p>
-     * 
+     *
      * @param cte
      * @return
      */
@@ -430,7 +443,7 @@ public final class CnAElementHome {
     /**
      * Returns whether it is allowed to perform the creation of a new child
      * element on the given element.
-     * 
+     *
      * @param cte
      * @return
      */
@@ -442,7 +455,7 @@ public final class CnAElementHome {
     /**
      * Returns whether it is allowed to perform modifications to properties of
      * this element.
-     * 
+     *
      * @param cte
      * @return
      */
@@ -708,7 +721,7 @@ public final class CnAElementHome {
 
     /**
      * Creates an specific update command for an element.
-     * 
+     *
      * @param element
      * @return update command
      */

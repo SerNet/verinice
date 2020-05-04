@@ -3,15 +3,14 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.verinice.org/auth verinice-auth.xsd">
 
-    <!-- This is the default configuration of access rights to application actions. -->
-    <!-- End users should NEVER edit this file! Use verinice-auth.xml instead. -->
-    <!-- Settings in verinice-auth.xml overwrites settings in this file. -->
+    <!-- This is the default configuration of the access rights for the actions in the application. -->
+    <!-- End users should never edit this file, only make changes to the verinice-auth.xml file. -->
+    <!-- The entries in the verinice-auth.xml file overwrite the settings in this file. -->
 
     <profiles>
         <!-- Each profile in this document defines a collection -->
         <!-- of application actions. All actions in verinice are -->
-        <!-- defined in property file verinice-action.properties. -->
-
+        <!-- defined in class sernet.verinice.interfaces.ActionRightIDs. -->
 
         <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
              When adding actions here, don't forget to add
@@ -21,17 +20,17 @@
 
         <profile name="user-default-profile" origin="default">
         <!-- missing actions:
-            "accountsettings"
             "accesscontrol"
+            "accountsettings"
             "convertitnetwork"
             "editprofile"
-            "taskdelete"
-            "taskshowall"
+            "searchreindex"
+            "showallfiles"
             "taskchangeassignee"
             "taskchangeduedate"
-            "taskwithreleaseprocess"
-            "searchreindex"
-            "showallfiles" -->
+            "taskdelete"
+            "taskshowall"
+            "taskwithreleaseprocess" -->
             <action id="addbpelement"/>
             <action id="addbpgroup"/>
             <action id="addbsielement" />
@@ -61,6 +60,7 @@
             <action id="changeicon" />
             <action id="changeownpassword" />
             <action id="cnavalidation" />
+            <action id="convertitnetwork" />
             <action id="creategreenbonetasks" />
             <action id="createindividualtasks" />
             <action id="createisatasks" />
@@ -129,7 +129,7 @@
             "xmlimport"
             "searchreindex
             "showallfiles"
-            "addsecurityassessment"-->
+            "addsecurityassessment" -->
             <action id="addbpelement"/>
             <action id="addbpgroup"/>
             <action id="addbsielement" />
@@ -246,17 +246,17 @@
         <profile name="admin-scope-default-profile" origin="default">
         <!-- missing actions:
             "accountsettings"
-            "addismorg"
-            "additnetwork"
-            "additverbund"
-            "addsecurityassessment"
-            "editprofile"
-            "gsnotesimport"
-            "gstoolimport"
-            "importldap"
-            "showallfiles"
-            "taskshowall"
-            "xmlimport"  -->
+          	"addismorg"
+          	"additnetwork"
+          	"additverbund"
+          	"addsecurityassessment"
+          	"editprofile"
+          	"gsnotesimport"
+          	"gstoolimport"
+          	"importldap"
+          	"showallfiles"
+          	"taskshowall"
+          	"xmlimport"  -->
             <action id="accesscontrol" />
             <action id="addbpelement"/>
             <action id="addbpgroup"/>
@@ -331,15 +331,15 @@
         </profile>
 
         <profile name="admin-local-default-profile" origin="default" >
-         <!-- missing actions:
+         	<!-- missing actions:
             "addismorg"
             "additnetwork"
             "additverbund"
             "gsnotesimport"
             "gstoolimport"
             "importldap"
-            "showallfiles"
-            "taskshowall" -->
+            "taskshowall"
+            "showallfiles"-->
             <action id="accesscontrol" />
             <action id="accountsettings" />
             <action id="addbpelement"/>
@@ -418,7 +418,7 @@
         </profile>
 
         <profile name="admin-default-profile" origin="default" >
-        <!-- this user is allowed to do everything -->
+        	<!-- this user is allowed to do everything -->
             <action id="accesscontrol" />
             <action id="accountsettings" />
             <action id="addbpelement"/>
@@ -497,8 +497,8 @@
             <action id="taskshowall" />
             <action id="taskview" />
             <action id="taskwithreleaseprocess" />
-            <action id="templates"/>
             <action id="todo"/>
+            <action id="templates"/>
             <action id="unify" />
             <action id="xmlexport"/>
             <action id="xmlimport"/>

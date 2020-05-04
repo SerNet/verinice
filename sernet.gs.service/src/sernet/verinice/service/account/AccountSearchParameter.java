@@ -16,15 +16,10 @@ public class AccountSearchParameter implements IAccountSearchParameter, Serializ
     private Integer scopeId;
     private String accountGroup;
 
-    
-
     public static AccountSearchParameter newInstance() {
         return new AccountSearchParameter();
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IAccountSearchParameter#getLogin()
-     */
+
     @Override
     public String getLogin() {
         return login;
@@ -37,12 +32,12 @@ public class AccountSearchParameter implements IAccountSearchParameter, Serializ
     }
 
     @Override
-    public String getAccountGroup(){
+    public String getAccountGroup() {
         return this.accountGroup;
     }
 
     @Override
-    public IAccountSearchParameter setAccountGroup(String accountGroup){
+    public IAccountSearchParameter setAccountGroup(String accountGroup) {
         this.accountGroup = accountGroup;
         return this;
     }
@@ -112,28 +107,28 @@ public class AccountSearchParameter implements IAccountSearchParameter, Serializ
         this.scopeId = scopeId;
         return this;
     }
-    
+
     @Override
     public IAccountSearchParameter setParameter(String name, Object value) {
-        if(FAMILY_NAME.equals(name)) {
+        if (FAMILY_NAME.equals(name)) {
             setFamilyName((String) value);
         }
-        if(FIRST_NAME.equals(name)) {
+        if (FIRST_NAME.equals(name)) {
             setFirstName((String) value);
         }
-        if(LOGIN.equals(name)) {
+        if (LOGIN.equals(name)) {
             setLogin((String) value);
         }
-        if(IS_ADMIN.equals(name)) {
+        if (IS_ADMIN.equals(name)) {
             setIsAdmin((Boolean) value);
         }
         if (IS_LOCAL_ADMIN.equals(name)) {
             setIsLocalAdmin((Boolean) value);
         }
-        if(IS_SCOPE_ONLY.equals(name)) {
+        if (IS_SCOPE_ONLY.equals(name)) {
             setIsScopeOnly((Boolean) value);
         }
-        if(SCOPE_ID.equals(name)) {
+        if (SCOPE_ID.equals(name)) {
             setScopeId((Integer) value);
         }
         return this;
@@ -142,31 +137,31 @@ public class AccountSearchParameter implements IAccountSearchParameter, Serializ
     @Override
     public int getNumberOfAccountParameter() {
         int n = 0;
-        if(getLogin()!=null) {
+        if (getLogin() != null) {
             n++;
         }
-        if(getAccountGroup()!=null){
+        if (getAccountGroup() != null) {
             n++;
         }
-        if(isAdmin()!=null) {
+        if (isAdmin() != null) {
             n++;
         }
         if (isLocalAdmin() != null) {
             n++;
         }
-        if(isScopeOnly()!=null) {
+        if (isScopeOnly() != null) {
             n++;
         }
         return n;
     }
-    
+
     @Override
     public int getNumberOfPersonParameter() {
         int n = 0;
-        if(getFamilyName()!=null) {
+        if (getFamilyName() != null) {
             n++;
         }
-        if(getFirstName()!=null) {
+        if (getFirstName() != null) {
             n++;
         }
         return n;
@@ -174,17 +169,17 @@ public class AccountSearchParameter implements IAccountSearchParameter, Serializ
 
     @Override
     public boolean isParameter() {
-        return isAccountParameter() || isPersonParameter() || getScopeId()!=null;
-    } 
-    
+        return isAccountParameter() || isPersonParameter() || getScopeId() != null;
+    }
+
     @Override
     public boolean isAccountParameter() {
-        return getNumberOfAccountParameter()>0 ;
-    } 
-    
+        return getNumberOfAccountParameter() > 0;
+    }
+
     @Override
     public boolean isPersonParameter() {
-        return getNumberOfPersonParameter()>0;
+        return getNumberOfPersonParameter() > 0;
     }
 
 }

@@ -9,5 +9,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/xstream/xstream-1.2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/miglayout/miglayout-3.7.1-swt.jar"/>
 	<classpathentry exported="true" kind="lib" path="testlib/jlorem-1.3.jar" sourcepath="/home/dm/temp/16/jlorem/src/main/java"/>
+	<classpathentry exported="true" kind="lib" path="testlib/mockito-all-1.10.19.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

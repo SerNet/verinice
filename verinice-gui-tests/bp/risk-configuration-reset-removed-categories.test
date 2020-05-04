@@ -1,0 +1,61 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _TFXtsMMrEei5b6pcMYmFfw,_lGnj8Ix1Eei2UKUDmonytQ,_4GRncI0bEei2UKUDmonytQ,_kD9CUIxPEei2UKUDmonytQ
+Element-Name: risk-configuration-reset-removed-categories
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _Isnk4Jl5EemYB_kqc3dy6Q
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 7/2/19 1:39 PM
+Tags: bp, risk, deduction
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Resetting impacts shall leave the other values as is but change the matrix.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+log "rest-existing-risk-configuration"
+
+bp-import-vna "IT_with_edited_risk_configuration_-_removed.vna"
+get-view "Modernisierter IT-Grundschutz" | get-tree 
+    | select "importierte Objekte/IT with edited risk configuration - removed \\[50288d\\]" | double-click
+with [get-editor "IT with edited risk…"] {    
+    get-tab-folder | get-tab-item "Risikokategorie" | click
+    get-button "Standardwerte wiederherstellen" | click
+    let [val "lastTextBox" [get-editbox -index 7]] {
+        $lastTextBox | get-property "getText()"  | equals "Die bereits umgesetzten oder zumindest im Sicherheitskonzept vorgesehenen Sicherheitsmaßnahmen bieten keinen ausreichenden Schutz vor der jeweiligen Gefährdung. In der Praxis werden sehr hohe Risiken selten akzeptiert." | verify-true
+        get-button -after $lastTextBox | get-property "getText()" | equals "-" | verify-true
+    }
+
+    get-tab-folder | get-tab-item "Auswirkung" | click
+    let [val "lastTextBox" [get-editbox -index 5]] {
+        $lastTextBox | get-property "getText()"  | equals "Die Schadensauswirkungen können beträchtlich sein." | verify-true
+        get-button -after $lastTextBox | get-property "getText()" | equals "-" | verify-true
+    }
+    
+    get-tab-folder | get-tab-item "Eintrittshäufigkeit" | click
+    let [val "lastTextBox" [get-editbox -index 5]] {
+        $lastTextBox | get-property "getText()"  | equals "Ereignis tritt einmal im Jahr bis einmal pro Monat ein." | verify-true
+        get-button -after $lastTextBox | get-property "getText()" | equals "-" | verify-true
+    }
+
+    get-tab-folder | get-tab-item Risikomatrix | click
+    get-risk-matrix-width | equals 3 | verify-true
+    key-type "M1+s"
+}
+
+with [get-window "Konfiguration der Risikoanalyse"] {
+    get-label "Die Änderung der Konfiguration der Risikoanalyse ist abgeschlossen. Es wurden keine Gefährdungen verändert."
+    get-button OK | click
+}
+
+delete-bpelement "importierte Objekte/IT with edited risk configuration - removed \\[50288d\\]"
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

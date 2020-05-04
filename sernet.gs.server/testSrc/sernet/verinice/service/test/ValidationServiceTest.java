@@ -40,6 +40,9 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.validation.IValidationService;
+import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.elements.Room;
+import sernet.verinice.model.bp.groups.RoomGroup;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
@@ -56,7 +59,7 @@ import sernet.verinice.service.commands.crud.LoadElementForEditor;
  */
 @TransactionConfiguration(transactionManager="txManager", defaultRollback=false)
 @Transactional
-public class ValidationServiceTest extends CommandServiceProvider {
+public class ValidationServiceTest extends AbstractModernizedBaseProtection {
     
     private static final Logger LOG = Logger.getLogger(ValidationServiceTest.class);
 
@@ -155,6 +158,27 @@ public class ValidationServiceTest extends CommandServiceProvider {
         deleteElement(topic);
         deleteElement(org);
         
+    }
+
+    @Test
+    // VN-2736
+    public void resolveValidationIssuesForRequiredMultiSelectProperty() throws Exception {
+        ItNetwork itNetwork = createNewBPOrganization();
+        RoomGroup rooms = createGroup(itNetwork, RoomGroup.class, "Rooms");
+        Room room = createElement(rooms, Room.class, "Room 1");
+        validationService.createValidationForSingleElement(room);
+        List<CnAValidation> validations = getSingleElementValidations(room);
+        assertEquals(2, validations.size());
+
+        room.setSimpleProperty(Room.PROP_ABBR, "R1");
+        room.getEntity().setPropertyValue("bp_room_user",
+                "bp_room_user_1,bp_room_user_2,bp_room_user_3");
+        room = update(room);
+        validationService.createValidationForSingleElement(room);
+        validations = getSingleElementValidations(room);
+        assertEquals(0, validations.size());
+
+        deleteElement(itNetwork);
     }
 
     private CnATreeElement loadElementByUuid(String uuId) throws CommandException {

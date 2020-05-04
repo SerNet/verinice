@@ -19,8 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.elements;
 
-import static sernet.verinice.model.bp.DeductionImplementationUtil.isDeductiveImplementationEnabled;
-
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,26 +26,22 @@ import java.util.Map;
 
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITaggableElement;
-import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.IBpElement;
-import sernet.verinice.model.bp.ISecurityLevelProvider;
+import sernet.verinice.model.bp.IImplementableSecurityLevelProvider;
 import sernet.verinice.model.bp.ImplementationStatus;
-import sernet.verinice.model.bp.Reevaluator;
 import sernet.verinice.model.bp.SecurityLevel;
+import sernet.verinice.model.bp.SecurityLevelUtil;
 import sernet.verinice.model.bsi.TagHelper;
-import sernet.verinice.model.common.AbstractLinkChangeListener;
-import sernet.verinice.model.common.CascadingTransaction;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.ILinkChangeListener;
-import sernet.verinice.model.common.TransactionAbortedException;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class BpRequirement extends CnATreeElement
-        implements IBpElement, IIdentifiableElement, ITaggableElement, ISecurityLevelProvider {
+public class BpRequirement extends CnATreeElement implements IBpElement, IIdentifiableElement,
+        ITaggableElement, IImplementableSecurityLevelProvider {
 
     private static final long serialVersionUID = 6621062615495040741L;
 
@@ -74,6 +68,10 @@ public class BpRequirement extends CnATreeElement
     private static final String PROP_IMPLEMENTATION_STATUS_YES = "bp_requirement_implementation_status_yes"; //$NON-NLS-1$
     private static final String PROP_IMPLEMENTATION_STATUS_PARTIALLY = "bp_requirement_implementation_status_partially"; //$NON-NLS-1$
     private static final String PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE = "bp_requirement_implementation_status_na"; //$NON-NLS-1$
+    public static final String PROP_RELEASE = "bp_requirement_release"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_TYPE = "bp_requirement_change_type"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_TYPE_REMOVED = "bp_requirement_change_type_removed"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_DETAILS = "bp_requirement_change_details"; //$NON-NLS-1$
 
     public static final String REL_BP_REQUIREMENT_BP_THREAT = "rel_bp_requirement_bp_threat"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_SAFEGUARD = "rel_bp_requirement_bp_safeguard"; //$NON-NLS-1$
@@ -107,38 +105,12 @@ public class BpRequirement extends CnATreeElement
                 BpRequirement.REL_BP_REQUIREMENT_BP_ROOM);
     }
 
-    private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
-
-    private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
-
-        private static final long serialVersionUID = -3220319074711927103L;
-
-        @Override
-        public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
-            if (isDeductiveImplementationEnabled(BpRequirement.this)
-                    && !ta.hasBeenVisited(BpRequirement.this)) {
-                DeductionImplementationUtil
-                        .setImplementationStatusToRequirement(BpRequirement.this);
-            }
-        }
-    };
-
     protected BpRequirement() {
     }
 
     public BpRequirement(CnATreeElement parent) {
         super(parent);
         init();
-    }
-
-    @Override
-    public ILinkChangeListener getLinkChangeListener() {
-        return linkChangeListener;
-    }
-
-    @Override
-    public IReevaluator getProtectionRequirementsProvider() {
-        return protectionRequirementsProvider;
     }
 
     @Override
@@ -350,4 +322,45 @@ public class BpRequirement extends CnATreeElement
         return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
+    @Override
+    public boolean getImplementationPending() {
+        return SecurityLevelUtil.getImplementationPending(getImplementationStatus());
+    }
+
+    @Override
+    public void linkAdded(CnALink link) {
+        super.linkAdded(link);
+        reevaluateLink(link);
+    }
+
+    @Override
+    public void linkDependencyChanged(CnALink link) {
+        super.linkDependencyChanged(link);
+        reevaluateLink(link);
+    }
+
+    @Override
+    public void linkRemoved(CnALink link) {
+        super.linkRemoved(link);
+        reevaluateLink(link);
+    }
+
+    @Override
+    public void valuesChanged() {
+        super.valuesChanged();
+        // PROP_IMPLEMENTATION_DEDUCE might have changed -> update status.
+        updateImplementationStatus();
+    }
+
+    private void reevaluateLink(CnALink link) {
+        if (DeductionImplementationUtil.isRelevantLinkForImplementationStateDeduction(link)) {
+            updateImplementationStatus();
+        }
+    }
+
+    private void updateImplementationStatus() {
+        if (DeductionImplementationUtil.isDeductiveImplementationEnabled(this)) {
+            DeductionImplementationUtil.setImplementationStatusToRequirement(this);
+        }
+    }
 }

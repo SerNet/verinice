@@ -22,13 +22,16 @@ package sernet.verinice.model.bp.elements;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import sernet.gs.service.StringUtil;
+import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.bp.risk.RiskService;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -39,13 +42,13 @@ public class BpThreat extends CnATreeElement
     private static final long serialVersionUID = -7182966153863832177L;
 
     public static final String PROP_OBJECTBROWSER_DESC = "bp_threat_objectbrowser_content"; //$NON-NLS-1$
-    private static final String PROP_NAME = "bp_threat_name"; //$NON-NLS-1$
+    public static final String PROP_NAME = "bp_threat_name"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_threat_id"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_threat_tag"; //$NON-NLS-1$
 
-    private static final String PROP_CONFIDENIALITY = "bp_threat_value_method_confidentiality"; //$NON-NLS-1$
-    private static final String PROP_INTEGRITY = "bp_threat_value_method_integrity"; //$NON-NLS-1$
-    private static final String PROP_AVAILABILITY = "bp_threat_value_method_availability"; //$NON-NLS-1$
+    public static final String PROP_CONFIDENTIALITY = "bp_threat_value_method_confidentiality"; //$NON-NLS-1$
+    public static final String PROP_INTEGRITY = "bp_threat_value_method_integrity"; //$NON-NLS-1$
+    public static final String PROP_AVAILABILITY = "bp_threat_value_method_availability"; //$NON-NLS-1$
     public static final String PROP_FREQUENCY_WITHOUT_SAFEGUARDS = "bp_threat_risk_without_safeguards_frequency";//$NON-NLS-1$
     public static final String PROP_IMPACT_WITHOUT_SAFEGUARDS = "bp_threat_risk_without_safeguards_impact";//$NON-NLS-1$
     public static final String PROP_RISK_WITHOUT_SAFEGUARDS = "bp_threat_risk_without_safeguards_risk";//$NON-NLS-1$
@@ -56,6 +59,14 @@ public class BpThreat extends CnATreeElement
     public static final String PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS = "bp_threat_risk_with_additional_safeguards_impact";//$NON-NLS-1$
     public static final String PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS = "bp_threat_risk_with_additional_safeguards_risk";//$NON-NLS-1$
     public static final String PROP_RISK_TREATMENT_OPTION = "bp_threat_risk_treatment_option";//$NON-NLS-1$
+    public static final String PROP_RELEASE = "bp_threat_release"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_TYPE = "bp_threat_change_type"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_TYPE_REMOVED = "bp_threat_change_type_removed"; //$NON-NLS-1$
+    public static final String PROP_CHANGE_DETAILS = "bp_threat_change_details"; //$NON-NLS-1$
+    public static final String PROP_RISK_TREATMENT_OPTION_RISK_REDUCTION = "bp_threat_risk_treatment_option_risk_reduction"; //$NON-NLS-1$
+    public static final String PROP_RISK_TREATMENT_OPTION_TRANSFER_OF_RISK = "bp_threat_risk_treatment_option_transfer_of_risk"; //$NON-NLS-1$
+    public static final String PROP_RISK_TREATMENT_OPTION_RISK_AVOIDANCE = "bp_threat_risk_treatment_option_risk_avoidance"; //$NON-NLS-1$
+    public static final String PROP_RISK_TREATMENT_OPTION_RISK_ACCEPTANCE = "bp_threat_risk_treatment_option_risk_acceptance"; //$NON-NLS-1$
 
     public static final String TYPE_ID = "bp_threat"; //$NON-NLS-1$
 
@@ -128,13 +139,13 @@ public class BpThreat extends CnATreeElement
     }
 
     public boolean isConfidentiality() {
-        String value = getEntity().getPropertyValue(PROP_CONFIDENIALITY);
+        String value = getEntity().getPropertyValue(PROP_CONFIDENTIALITY);
         return Boolean.getBoolean(value);
     }
 
     public void setConfidentiality(boolean isConfidentiality) {
         int value = (isConfidentiality) ? 1 : 0;
-        setNumericProperty(PROP_CONFIDENIALITY, value);
+        setNumericProperty(PROP_CONFIDENTIALITY, value);
     }
 
     public boolean isIntegrity() {
@@ -274,4 +285,13 @@ public class BpThreat extends CnATreeElement
 
     }
 
+    public String getRiskLabel() {
+        String riskId = Optional.ofNullable(getRiskWithAdditionalSafeguards())
+                .orElseGet(this::getRiskWithoutAdditionalSafeguards);
+        if (riskId != null) {
+            return ((RiskService) VeriniceContext.get(VeriniceContext.ITBP_RISK_SERVICE))
+                    .getRisk(riskId, getScopeId()).getLabel();
+        }
+        return null;
+    }
 }

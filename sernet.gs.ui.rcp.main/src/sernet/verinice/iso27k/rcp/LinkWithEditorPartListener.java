@@ -21,6 +21,7 @@ package sernet.verinice.iso27k.rcp;
 
 import java.util.Optional;
 
+import org.apache.log4j.Logger;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchPartReference;
@@ -43,7 +44,7 @@ import org.eclipse.ui.IWorkbenchPartReference;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class LinkWithEditorPartListener implements IPartListener2 {
-
+    private static final Logger LOG = Logger.getLogger(LinkWithEditorPartListener.class);
     /**
      * 
      */
@@ -68,6 +69,11 @@ public class LinkWithEditorPartListener implements IPartListener2 {
     @Override
     public void partActivated(IWorkbenchPartReference ref) {
         if (ref.getPart(true) instanceof IEditorPart) {
+            if(this.view.getViewSite().getPage() == null) {
+                LOG.info("partActivated ---> page is null "+this.view.getViewSite());
+                return;
+            }
+            
             IEditorPart editor = this.view.getViewSite().getPage().getActiveEditor();
             Optional.ofNullable(editor).ifPresent(view::editorActivated);
         }
@@ -109,6 +115,11 @@ public class LinkWithEditorPartListener implements IPartListener2 {
     private void refreshLinkedState(IWorkbenchPartReference ref) {
         // This refreshes the linked state on startup and delayed opening
         if (ref.getId().equals(this.view.getViewSite().getId())) {
+            if(this.view.getViewSite().getPage() == null) {
+                LOG.info("refreshLinkedState ---> page is null "+this.view.getViewSite());
+                return;
+            }
+            
             IEditorPart editor = view.getViewSite().getPage().getActiveEditor();
             if (editor != null) {
                 if (ref.getPart(true) == this.view) {

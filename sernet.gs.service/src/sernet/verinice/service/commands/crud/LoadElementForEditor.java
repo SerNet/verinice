@@ -32,6 +32,8 @@ import sernet.verinice.model.common.HydratorUtil;
 
 public class LoadElementForEditor<T extends CnATreeElement> extends GenericCommand {
 
+    private static final long serialVersionUID = 1L;
+
     private static final Logger log = Logger.getLogger(LoadElementForEditor.class);
 
     private T element;

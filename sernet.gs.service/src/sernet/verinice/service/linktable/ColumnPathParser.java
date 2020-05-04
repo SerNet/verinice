@@ -205,8 +205,7 @@ public abstract class ColumnPathParser {
         String alias = pathElementList.get(toIndex);
 
         if ("as".equalsIgnoreCase(alias)) {
-            String aliasValue = pathElementList.get(pathElementList.size() - 1);
-            return aliasValue.replace("_", " ");
+            return pathElementList.get(pathElementList.size() - 1);
         }
 
         return StringUtils.EMPTY;

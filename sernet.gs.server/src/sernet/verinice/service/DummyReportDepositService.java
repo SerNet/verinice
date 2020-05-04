@@ -17,19 +17,10 @@
  ******************************************************************************/
 package sernet.verinice.service;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOCase;
-import org.apache.commons.io.filefilter.IOFileFilter;
-import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
@@ -37,11 +28,10 @@ import org.eclipse.core.runtime.Path;
 import sernet.gs.server.Activator;
 import sernet.gs.service.AbstractReportTemplateService;
 import sernet.verinice.interfaces.IReportDepositService;
-import sernet.verinice.interfaces.ReportTemplateServiceException;
-import sernet.verinice.model.report.ReportTemplate;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 
-public class DummyReportDepositService extends AbstractReportTemplateService implements IReportDepositService {
+public class DummyReportDepositService extends AbstractReportTemplateService
+        implements IReportDepositService {
 
     private static final Logger LOG = Logger.getLogger(DummyReportDepositService.class);
 
@@ -54,50 +44,19 @@ public class DummyReportDepositService extends AbstractReportTemplateService imp
     }
 
     @Override
-    public Set<ReportTemplateMetaData> getServerReportTemplates(String locale) throws ReportTemplateServiceException {
-        return getReportTemplates(getServerRptDesigns(), locale);
-    }
-
-    @Override
-    public String getDepositLocation() {
-        return getReportDepositPath();
-    }
-
-    @Override
     public void update(ReportTemplateMetaData metadata, String locale) {
     }
 
     @Override
-    public ReportTemplate getReportTemplate(ReportTemplateMetaData metadata, String locale) throws ReportTemplateServiceException {
-        try {
-
-            String filePath = getReportDepositPath() + File.separatorChar + metadata.getFilename();
-            byte[] rptdesign = FileUtils.readFileToByteArray(new File(filePath));
-            Map<String, byte[]> propertiesFile = getPropertiesFiles(metadata.getFilename());
-            return new ReportTemplate(metadata, rptdesign, propertiesFile);
-
-        } catch (IOException ex) {
-            handleException("error while fetching reports in standalone mode", ex);
-        }
-
-        return null;
+    protected boolean isHandeledByReportDeposit() {
+        return true;
     }
 
-    @SuppressWarnings("unchecked")
-    private String[] getServerRptDesigns() {
-        List<String> list = new ArrayList<String>(0);
-        // // DirFilter = null means no subdirectories
-        IOFileFilter filter = new SuffixFileFilter("rptdesign", IOCase.INSENSITIVE);
-        Iterator<File> iter = FileUtils.iterateFiles(new File(getReportDepositPath()), filter, null);
-        while (iter.hasNext()) {
-            list.add(iter.next().getAbsolutePath());
-        }
-        return list.toArray(new String[list.size()]);
-    }
-
-    public String getReportDepositPath() {
+    @Override
+    protected String getTemplateDirectory() {
         try {
-            URL url = FileLocator.find(Activator.getDefault().getBundle(), new Path("/WebContent/WEB-INF/reportDeposit/"), null);
+            URL url = FileLocator.find(Activator.getDefault().getBundle(),
+                    new Path("/WebContent/WEB-INF/reportDeposit/"), null);
             URL fileUrl = FileLocator.toFileURL(url);
             return FileUtils.toFile(fileUrl).getAbsolutePath();
         } catch (IOException ex) {
@@ -106,15 +65,4 @@ public class DummyReportDepositService extends AbstractReportTemplateService imp
 
         return null;
     }
-
-    @Override
-    public boolean isHandeledByReportDeposit() {
-        return true;
-    }
-
-    @Override
-    public String getTemplateDirectory() {
-        return getReportDepositPath();
-    }
-
 }

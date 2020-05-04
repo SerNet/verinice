@@ -52,7 +52,7 @@ public class ElementEntityDao extends TreeElementDao<Entity, Integer> implements
      * 
      * @see sernet.verinice.interfaces.IElementEntityDao#mergeEntityOfElement(sernet.verinice.model.common.CnATreeElement, boolean)
      */
-    public CnATreeElement mergeEntityOfElement(CnATreeElement element, boolean fireChange) {
+    public CnATreeElement mergeEntityOfElement(CnATreeElement element, boolean notifyElement) {
         if(LOG_INHERIT.isDebug()) {
             LOG_INHERIT.debug("mergeEntityOfElement");
         }
@@ -65,8 +65,8 @@ public class ElementEntityDao extends TreeElementDao<Entity, Integer> implements
             getHibernateTemplate().load(element, element.getDbId());
         }
         
-        if (fireChange) {
-            fireChange(element);
+        if (notifyElement) {
+            notifyChangedElement(element);
         }
         
         index(element);

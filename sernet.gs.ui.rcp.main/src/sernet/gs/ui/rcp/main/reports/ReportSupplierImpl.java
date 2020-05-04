@@ -58,19 +58,22 @@ public class ReportSupplierImpl implements IReportSupplier {
         return new ArrayList<ReportTemplateMetaData>(0);
     }
 
-    private ReportTemplateMetaData[] getReportMetaData(String locale) throws ReportTemplateServiceException {
+    private ReportTemplateMetaData[] getReportMetaData(String locale)
+            throws ReportTemplateServiceException {
 
         LocalReportTemplateService localReportTemplateUtil = new LocalReportTemplateService();
         ReportDepositCache serverReportTemplateUtil = new ReportDepositCache();
 
         Set<ReportTemplateMetaData> metadata = new HashSet<ReportTemplateMetaData>();
         int size = 0;
-        metadata.addAll(localReportTemplateUtil.getReportTemplates(localReportTemplateUtil.getReportTemplateFileNames(), locale));
+        metadata.addAll(localReportTemplateUtil.getReportTemplates(locale));
         size = metadata.size();
-        metadata.addAll(serverReportTemplateUtil.getReportTemplates(serverReportTemplateUtil.getReportTemplateFileNames(), locale));
+        metadata.addAll(serverReportTemplateUtil.getReportTemplates(locale));
         if (LOG.isDebugEnabled()) {
-            LOG.debug(size + " Report templates loaded from workspacefolder:\t" + IReportService.VERINICE_REPORTS_LOCAL);
-            LOG.debug(metadata.size() - size + " Report templates loaded from workspacefolder:\t" + IReportService.VERINICE_REPORTS_REMOTE);
+            LOG.debug(size + " Report templates loaded from workspacefolder:\t"
+                    + IReportService.VERINICE_REPORTS_LOCAL);
+            LOG.debug(metadata.size() - size + " Report templates loaded from workspacefolder:\t"
+                    + IReportService.VERINICE_REPORTS_REMOTE);
         }
 
         return metadata.toArray(new ReportTemplateMetaData[metadata.size()]);

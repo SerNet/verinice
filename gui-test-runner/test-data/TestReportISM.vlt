@@ -1,0 +1,18 @@
+{
+  "followLinksOutsideOfScope": false,
+  "useAllScopes": false,
+  "scopeIds": [],
+  "columnPaths": [
+    "asset.asset_type AS Art__des__Assets__(Asset)",
+    "asset.asset_description AS Beschreibung__(Asset)",
+    "asset/incident_scenario.incident_scenario_name AS Titel__(Szenario)",
+    "asset/incident_scenario.incscen_explanation AS Erklärung__(Szenario)",
+    "asset:person-iso.title AS Titel",
+    "asset:person-iso.description AS Beschreibung",
+    "asset<assetgroup.assetgroup_name AS Titel__(Assets)",
+    "asset<assetgroup.assetgroup_desc AS Beschreibung__(Assets)",
+    "asset>control.control_abbr AS Abkürzung__(Control)",
+    "asset>control.control_desc AS Beschreibung__(Control)"
+  ],
+  "relationIds": []
+}
