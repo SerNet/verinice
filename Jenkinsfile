@@ -58,14 +58,12 @@ pipeline {
                     string(name: 'job_to_copy_from', value: "${currentBuild.fullProjectName}"),
                     string(name: 'build_to_copy_from', value: '<TriggeredBuildSelector plugin="copyartifact@1.42.1">  <upstreamFilterStrategy>UseGlobalSetting</upstreamFilterStrategy>  <allowUpstreamDependencies>false</allowUpstreamDependencies></TriggeredBuildSelector>')
                 ]
-                /*
                 build job: 'verinice-server-rcptt-test', wait: false, parameters: [
                     gitParameter(name: 'BRANCH_OR_TAG', value: "${env.GIT_BRANCH}"),
                     string(name: 'artifact_selector', value: 'sernet.verinice.releng.client.product/target/products/*linux.gtk.x86_64*.zip'),
                     string(name: 'job_to_copy_from', value: "${currentBuild.fullProjectName}"),
                     string(name: 'build_to_copy_from', value: '<TriggeredBuildSelector plugin="copyartifact@1.42.1">  <upstreamFilterStrategy>UseGlobalSetting</upstreamFilterStrategy>  <allowUpstreamDependencies>false</allowUpstreamDependencies></TriggeredBuildSelector>')
                 ]
-                */
                 /*
                 build job: 'verinice-rcptt-custom-test', wait: false, parameters: [
                     gitParameter(name: 'BRANCH_OR_TAG', value: "${env.GIT_BRANCH}"),
