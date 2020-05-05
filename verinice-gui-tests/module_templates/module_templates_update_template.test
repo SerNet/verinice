@@ -25,22 +25,28 @@ with [get-view Grundschutzmodell | get-tree] {
         set-text "Anwendung-Template"
         key-type "M1+s"
     }
-    select "  IT-Verbund Template/Anwendungen/A- Anwendung-Template" | get-menu -path "Modellierungs-Template" | click
-    select "  IT-Verbund Template/Anwendungen/A- Anwendung-Template" | get-menu -path "Neuer benutzerdefinierter Baustein" | click
+    get-editor Anwendung | close
+    with ["  IT-Verbund Template/Anwendungen/A- Anwendung-Template"] {
+      get-menu -path "Modellierungs-Template" | click
+      get-menu -path "Neuer benutzerdefinierter Baustein" | click
+    }
     with [get-editor "" | get-section "" | get-editbox -after [get-label Name]] {
         set-text "Baustein"
         key-type "M1+s"
     }
+    get-editor Baustein | close
     select "  IT-Verbund Template/Anwendungen/A- Anwendung-Template/Baustein" | get-menu -path "Neue benutzerdefinierte Maßnahme" | click
     with [get-editor "" | get-section "" | get-editbox -after [get-label Name]] {
         set-text "Maßnahme Zentral"
         key-type "M1+s"
     }
+    get-editor "Maßnahme Zentral" | close
     select "  IT-Verbund Template/Anwendungen/A- Anwendung-Template/Baustein" | get-menu -path "Neue benutzerdefinierte Maßnahme" | click
     with [get-editor "" | get-section "" | get-editbox -after [get-label Name]] {
         set-text "Maßnahme Normal"
         key-type "M1+s"
     }
+    get-editor "Maßnahme Normal" | close
     select "  IT-Verbund Template/Anwendungen/A- Anwendung-Template/Baustein/Maßnahme Zentral []" | get-menu -path "Zentral gepflegt" | click
 
     select "  IT-Verbund Template/Anwendungen/A- Anwendung-Template" | get-menu -path "Kopieren" | click
