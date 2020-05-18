@@ -314,7 +314,6 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
             addTemplate();
         }
         super.okPressed();
-
     }
 
     private void updateTemplate() {

@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.service.NumericStringComparator;
+import sernet.gs.service.StringUtil;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ServiceComponent;
@@ -114,7 +115,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     private IReportType chosenReportType;
 
-    // estimated size of dialog for placement (doesnt have to be exact):
+    // estimated size of dialog for placement (doesn't have to be exact):
     private static final int SIZE_X = 750;
     private static final int SIZE_Y = 550;
 
@@ -131,13 +132,13 @@ public class GenerateReportDialog extends TitleAreaDialog {
             List<ReportTemplateMetaData> list = getSupplier()
                     .getReportTemplates(Locale.getDefault());
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Locale used on system (client):\t" + Locale.getDefault().getLanguage());
-                LOG.debug(list.size() + " Reporttemplates loaded from deposit folders");
+                LOG.debug("Locale used on system (client):\t" + Locale.getDefault().getLanguage()); //$NON-NLS-1$
+                LOG.debug(list.size() + " Reporttemplates loaded from deposit folders"); //$NON-NLS-1$
             }
             sortList(list);
             reportTemplates = list.toArray(new ReportTemplateMetaData[list.size()]);
         } catch (Exception e) {
-            String msg = "Error reading reports from deposit";
+            String msg = "Error reading reports from deposit"; //$NON-NLS-1$
             ExceptionUtil.log(e, msg);
         }
     }
@@ -194,8 +195,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse
      * .swt.widgets.Composite)
@@ -216,7 +215,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         setTitle(Messages.GenerateReportDialog_0);
         StringBuilder dialogMessage = new StringBuilder();
         dialogMessage.append(Messages.GenerateReportDialog_7);
-        dialogMessage.append(" ");
+        dialogMessage.append(" "); //$NON-NLS-1$
         dialogMessage.append(Messages.GenerateReportDialog_36);
         setMessage(dialogMessage.toString());
 
@@ -296,7 +295,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 }
                 setupOutputFilepath();
             }
-
         });
 
         Label labelFile = new Label(reportGroup, SWT.NONE);
@@ -310,7 +308,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
             public void keyPressed(KeyEvent e) {
                 getButton(IDialogConstants.OK_ID).setEnabled(true);
             }
-
         });
 
         textFile.setEditable(FILENAME_MANUAL);
@@ -390,14 +387,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
      * @return sorted Array (for access later on)
      */
     private ReportTemplateMetaData[] fillReportCombo() {
-
         Arrays.sort(reportTemplates, (template1, template2) -> comparator
                 .compare(template1.getDecoratedOutputname(), template2.getDecoratedOutputname()));
-
-        for (ReportTemplateMetaData data : reportTemplates) {
-            comboReportType.add(data.getDecoratedOutputname());
-        }
-
+        Arrays.stream(reportTemplates).forEach(x -> comboReportType.add(x.getDecoratedOutputname()));
         return reportTemplates;
     }
 
@@ -421,11 +413,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
         dlg.setFilterExtensions(extensionList.toArray(new String[extensionList.size()]));
         dlg.setFileName(getDefaultOutputFilename());
         dlg.setOverwrite(true);
-        String path;
+        String path = defaultFolder;
         if (isFilePath()) {
             path = getOldFolderPath();
-        } else {
-            path = defaultFolder;
         }
         if (LOG.isDebugEnabled()) {
             LOG.debug("File dialog path set to: " + path); //$NON-NLS-1$
@@ -482,7 +472,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
             for (CnATreeElement elmt : preSelectedElments) {
                 sb.append(elmt.getTitle());
                 if (preSelectedElments.indexOf(elmt) != preSelectedElments.size() - 1) {
-                    sb.append(" & ");
+                    sb.append(" & "); //$NON-NLS-1$
                 }
                 auditIDList.add(elmt.getDbId());
             }
@@ -497,7 +487,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         // call is initiated from applicationbar, so let user choose from all
         // accessible scopes
 
-        scopes.addAll(loadScopes());
+        scopes.addAll(loadOrganizations());
         scopes.addAll(loadITVerbuende());
         scopes.addAll(loadItNetworks());
 
@@ -577,23 +567,23 @@ public class GenerateReportDialog extends TitleAreaDialog {
     protected String getDefaultOutputFilename() {
         String outputFileName = chosenReportMetaData.getOutputname();
         if (outputFileName == null || outputFileName.isEmpty()) {
-            outputFileName = "unknown";
+            outputFileName = "unknown"; //$NON-NLS-1$
         }
         StringBuilder sb = new StringBuilder(outputFileName);
-        String scopeName = convertToFileName(scopeCombo.getText());
+        String scopeName = StringUtil.convertToFileName(scopeCombo.getText());
         if (scopeName != null && !scopeName.isEmpty()) {
-            sb.append("_").append(scopeName);
+            sb.append("_").append(scopeName); //$NON-NLS-1$
         }
         if (useDate) {
-            String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-            sb.append("_").append(date);
+            String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date()); //$NON-NLS-1$
+            sb.append("_").append(date); //$NON-NLS-1$
         }
         if (chosenOutputFormat != null) {
-            sb.append(".").append(chosenOutputFormat.getFileSuffix());
+            sb.append(".").append(chosenOutputFormat.getFileSuffix()); //$NON-NLS-1$
         } else {
-            sb.append(".pdf");
+            sb.append(".pdf"); //$NON-NLS-1$
         }
-        return convertToFileName(sb.toString());
+        return StringUtil.convertToFileName(sb.toString());
     }
 
     @Override
@@ -648,9 +638,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
             }
             outputFile = new File(f);
         } catch (Exception e) {
-            LOG.error("Error while creating report.", e);
-            MessageDialog.openError(getShell(), "Error",
-                    "An error occurred while creating report.");
+            LOG.error("Error while creating report.",e); //$NON-NLS-1$
+            MessageDialog.openError(getShell(), "Error", //$NON-NLS-1$
+                    "An error occurred while creating report."); //$NON-NLS-1$
             return;
         }
         super.okPressed();
@@ -709,9 +699,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
         return chosenOutputFormat;
     }
 
-    /**
-     * @deprecated
-     */
     @Deprecated
     public IReportType getReportType() {
         return chosenReportType;
@@ -735,7 +722,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         return (rootElements != null) ? rootElements.clone() : null;
     }
 
-    private List<Organization> loadScopes() {
+    private List<Organization> loadOrganizations() {
         LoadCnATreeElementTitles<Organization> compoundLoader = new LoadCnATreeElementTitles<>(
                 Organization.class);
         try {
@@ -770,31 +757,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
         return compoundLoader.getElements();
     }
 
-    private static String convertToFileName(String label) {
-        String filename = "scope"; //$NON-NLS-1$
-        if (label != null) {
-            filename = label.replace(' ', '_');
-            filename = filename.replace("ä", "\u00E4"); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("ü", "\u00FC"); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("ö", "\u00F6"); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("Ä", "\u00C4"); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("Ü", "\u00DC"); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("Ö", "\u00D6"); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("ß", "\u00DF"); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace(":", ""); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("\\", ""); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace(";", ""); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("<", ""); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace(">", ""); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("|", ""); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("/", ""); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        return filename;
-    }
-
     private void filterReportTypes() {
         ArrayList<ReportTemplateMetaData> list = new ArrayList<>();
-        if (useCase != null && !useCase.equals("") && reportTemplates.length > 0) {
+        if (useCase != null && !useCase.equals("") && reportTemplates.length > 0) { //$NON-NLS-1$
             for (ReportTemplateMetaData data : reportTemplates) {
                 /*
                  * TODO: add use case to template properties for filtering
