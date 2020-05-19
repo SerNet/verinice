@@ -19,20 +19,20 @@ package sernet.verinice.model.report;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNull;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.report.ReportTemplateMetaData.ReportContext;
 
 public class ReportTemplateMetaData implements Serializable, Comparable<ReportTemplateMetaData> {
 
     private static final long serialVersionUID = 1208760677224489421L;
 
     private static final NumericStringComparator NSC = new NumericStringComparator();
-
-    public static final String[] CONTEXTS = { "ISM-ISO", "ISM-ISA", "ISM-DS", "ITGS", "ITGS-DS", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-            "ITGS-alt", Messages.ReportTemplateMetaDataUnspecified }; //$NON-NLS-1$
 
     public static final String REPORT_LOCAL_DECORATOR = "(L)"; //$NON-NLS-1$
     public static final String REPORT_SERVER_DECORATOR = "(S)"; //$NON-NLS-1$
@@ -41,7 +41,7 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
 
     private String outputname;
 
-    private String context;
+    private @NonNull ReportContext context;
 
     private boolean isServer;
 
@@ -54,7 +54,7 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
 
     public ReportTemplateMetaData(@NonNull FileMetaData fileMetadata, String outputname,
             OutputFormat[] outputFormats, boolean isServer, boolean multipleRootObjects,
-            String context) {
+            @NonNull ReportContext context) {
 
         this.fileMetaData = fileMetadata;
         this.outputname = outputname;
@@ -172,14 +172,40 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
         this.multipleRootObjects = multipleRootObjects;
     }
 
-    public @NonNull String getContext() {
-        if (context == null) {
-            return ""; //$NON-NLS-1$
-        }
+    public @NonNull ReportContext getContext() {
         return context;
     }
 
-    public void setContext(String context) {
+    public void setContext(@NonNull ReportContext context) {
         this.context = context;
+    }
+
+    public enum ReportContext {
+        ISM_ISO, ISM_ISA, ISM_DS, ITGS, ITGS_DS, ITGS_ALT, UNSPECIFIED;
+
+        public static List<ReportContext> getValidContexts(@NonNull CnATreeElement element) {
+            if (element.isOrganization()) {
+                return Arrays.asList(ReportContext.ISM_DS, ReportContext.ISM_ISA,
+                        ReportContext.ISM_ISO, ReportContext.UNSPECIFIED);
+            } else if (element.isItNetwork()) {
+                return Arrays.asList(ReportContext.ITGS, ReportContext.ITGS_DS,
+                        ReportContext.UNSPECIFIED);
+            } else if (element.isItVerbund()) {
+                return Arrays.asList(ReportContext.ITGS_ALT, ReportContext.UNSPECIFIED);
+            }
+            return Arrays.asList(ReportContext.UNSPECIFIED);
+        }
+
+        public static ReportContext fromString(String context) {
+            try {
+                return ReportContext.valueOf(context.toUpperCase().replace('-', '_'));
+            } catch (Exception ignored) {
+            }
+            return ReportContext.UNSPECIFIED;
+        }
+
+        public String prettyString() {
+            return name().replace('_', '-').replace("ALT", "alt");
+        }
     }
 }

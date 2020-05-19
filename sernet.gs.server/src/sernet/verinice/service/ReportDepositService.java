@@ -115,7 +115,7 @@ public class ReportDepositService extends AbstractReportTemplateService
             props.setProperty(PROPERTIES_OUTPUTNAME, metadata.getOutputname());
             props.setProperty(PROPERTIES_MULTIPLE_ROOT_OBJECTS,
                     Boolean.toString(metadata.isMultipleRootObjects()));
-            props.setProperty(PROPERTIES_CONTEXT, metadata.getContext());
+            props.setProperty(PROPERTIES_CONTEXT, metadata.getContext().prettyString());
             writePropertiesFile(props, propertiesFile, "");
         } else {
             writePropertiesFile(convertToProperties(metadata),
@@ -145,7 +145,7 @@ public class ReportDepositService extends AbstractReportTemplateService
         props.setProperty(PROPERTIES_FILENAME, metaData.getFilename());
         props.setProperty(PROPERTIES_MULTIPLE_ROOT_OBJECTS,
                 Boolean.toString(metaData.isMultipleRootObjects()));
-        props.setProperty(PROPERTIES_CONTEXT, metaData.getContext());
+        props.setProperty(PROPERTIES_CONTEXT, metaData.getContext().prettyString());
         return props;
     }
 

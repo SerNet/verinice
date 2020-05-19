@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -56,6 +57,7 @@ import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
 import sernet.verinice.interfaces.ReportDepositException;
 import sernet.verinice.model.report.FileMetaData;
 import sernet.verinice.model.report.ReportTemplateMetaData;
+import sernet.verinice.model.report.ReportTemplateMetaData.ReportContext;
 
 /**
  *
@@ -162,7 +164,8 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         reportContextLabel.setLayoutData(reportNameLabelGd);
 
         reportContextCombo = new Combo(dialogContent, SWT.DROP_DOWN | SWT.READ_ONLY);
-        reportContextCombo.setItems(ReportTemplateMetaData.CONTEXTS);
+        reportContextCombo.setItems(Arrays.stream(ReportContext.values()).map(ReportContext::prettyString)
+                .collect(Collectors.toList()).toArray(new String[ReportContext.values().length]));
         GridData reportContextGd = new GridData();
         reportContextGd.horizontalAlignment = SWT.FILL;
         reportContextGd.verticalAlignment = SWT.TOP;
@@ -292,7 +295,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
                 widgetSelected(e);
             }
         });
-        reportContextCombo.setText(editTemplate.getContext());
+        reportContextCombo.setText(editTemplate.getContext().prettyString());
     }
 
     private Button checkboxEditMode(Button checkbox, OutputFormat format) {
@@ -304,7 +307,8 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     @Override
     protected void okPressed() {
         if (!isAnyFormatSelected() || getReportOutputName() == null
-                || getSelectedDesginFile() == null) {
+                || getSelectedDesginFile() == null
+                || reportContextCombo.getSelectionIndex() == -1) {
             ExceptionUtil.log(new RuntimeException(), Messages.ReportDepositView_12);
             return;
         }
@@ -375,8 +379,8 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         return reportName.getText();
     }
 
-    private String getContext() {
-        return reportContextCombo.getText();
+    private ReportContext getContext() {
+        return ReportContext.fromString(reportContextCombo.getText());
     }
 
     private OutputFormat[] getReportOutputFormats() {

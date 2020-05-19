@@ -308,7 +308,7 @@ public class ReportDepositView extends RightsEnabledView {
                 case 0:
                     return data.getOutputname(); // $NON-NLS-1$
                 case 1:
-                    return data.getContext();
+                    return data.getContext().prettyString();
                 case 2:
                     StringBuilder sb = new StringBuilder();
                     OutputFormat[] formats = data.getOutputFormats();

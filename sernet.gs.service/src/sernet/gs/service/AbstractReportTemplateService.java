@@ -62,6 +62,7 @@ import sernet.verinice.model.report.ODTOutputFormat;
 import sernet.verinice.model.report.PDFOutputFormat;
 import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
+import sernet.verinice.model.report.ReportTemplateMetaData.ReportContext;
 import sernet.verinice.model.report.WordOutputFormat;
 
 /**
@@ -179,7 +180,8 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
                 props.getProperty(IReportDepositService.PROPERTIES_MULTIPLE_ROOT_OBJECTS, "false"));
 
         return new ReportTemplateMetaData(fileMetaData, outputName, outputFormats,
-                isHandeledByReportDeposit(), multipleRootObjects, context);
+                isHandeledByReportDeposit(), multipleRootObjects,
+                ReportContext.fromString(context));
     }
 
     protected Map<String, byte[]> getPropertiesFiles(String fileName) throws IOException {

@@ -56,6 +56,7 @@ import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.report.ReportTemplateMetaData;
+import sernet.verinice.model.report.ReportTemplateMetaData.ReportContext;
 import sernet.verinice.service.commands.crud.LoadCnATreeElementTitles;
 
 public class GenerateReportDialog extends TitleAreaDialog {
@@ -70,6 +71,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
     static final int DATA_SCOPE_MINIMUM_WIDTH = 200;
     static final int DATA_SCOPE_COMBO_MINIMUM_WIDTH = 500;
     private static final int MARGIN_WIDTH = 10;
+
+    private CnATreeElement selectedScope;
 
     private Combo comboReportType;
 
@@ -95,7 +98,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     private Combo scopeCombo;
 
-    private List<CnATreeElement> scopes;
+    private List<CnATreeElement> scopes = new ArrayList<>();
 
     private Integer auditId = null;
 
@@ -159,8 +162,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
         } else {
             this.useCase = IReportType.USE_CASE_ID_ALWAYS_REPORT;
         }
-        CnATreeElement cnaElmt = (CnATreeElement) reportScope;
 
+        CnATreeElement cnaElmt = (CnATreeElement) reportScope;
+        selectedScope = cnaElmt;
         this.auditId = cnaElmt.getDbId();
         this.auditName = cnaElmt.getTitle();
         if (LOG.isDebugEnabled()) {
@@ -205,6 +209,11 @@ public class GenerateReportDialog extends TitleAreaDialog {
         getButton(IDialogConstants.OK_ID).setEnabled(false);
     }
 
+    private ReportTemplateMetaData getReportByOutputname(String name) {
+        return Arrays.stream(reportTemplates).filter(x -> x.getDecoratedOutputname().equals(name))
+                .findFirst().orElse(null);
+    }
+
     @Override
     protected Control createDialogArea(Composite parent) {
         initDefaultFolder();
@@ -244,12 +253,15 @@ public class GenerateReportDialog extends TitleAreaDialog {
             public void widgetSelected(SelectionEvent e) {
 
                 if (reportTemplates.length > 0) {
-                    chosenReportMetaData = reportTemplates[comboReportType.getSelectionIndex()];
+                    String rpt = comboReportType.getItems()[comboReportType.getSelectionIndex()];
+                    // why rpt? comboReportType.getText() and e.text are null.
+                    chosenReportMetaData = getReportByOutputname(rpt);
                     chosenReportType = reportTypes[0];
                 }
-
-                setupComboOutputFormatContent();
-                setupComboScopes();
+                if (!isContextMenuCall()) {
+                    setupComboOutputFormatContent();
+                    setupComboScopes(chosenReportMetaData.getContext());
+                }
             }
         });
 
@@ -275,7 +287,17 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 selectScope();
             }
         });
-
+        if (!isContextMenuCall()) {
+            Button reset = new Button(reportGroup, SWT.RIGHT);
+            reset.setText(Messages.GenerateReportDialog_40);
+            reset.addSelectionListener(new SelectionAdapter() {
+                @Override
+                public void widgetSelected(SelectionEvent event) {
+                    setupComboScopes(ReportContext.UNSPECIFIED);
+                    onlyShowSuitableReports(Arrays.asList(ReportContext.values()));
+                }
+            });
+        }
         Label reportGroupLabel = new Label(reportGroup, SWT.SEPARATOR | SWT.HORIZONTAL);
         reportGroupLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
         Label labelOutputFormat = new Label(reportGroup, SWT.NONE);
@@ -389,7 +411,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
     private ReportTemplateMetaData[] fillReportCombo() {
         Arrays.sort(reportTemplates, (template1, template2) -> comparator
                 .compare(template1.getDecoratedOutputname(), template2.getDecoratedOutputname()));
-        Arrays.stream(reportTemplates).forEach(x -> comboReportType.add(x.getDecoratedOutputname()));
+        Arrays.stream(reportTemplates)
+                .forEach(x -> comboReportType.add(x.getDecoratedOutputname()));
         return reportTemplates;
     }
 
@@ -449,12 +472,14 @@ public class GenerateReportDialog extends TitleAreaDialog {
         openFileButton.setEnabled(filenameManual);
     }
 
+    private void setupComboScopes() {
+        setupComboScopes(ReportContext.UNSPECIFIED);
+    }
+
     /**
      * Load list of scopes for user selection of top level element for report.
      */
-    private void setupComboScopes() {
-        scopes = new ArrayList<>();
-
+    private void setupComboScopes(ReportContext context) {
         // check if audit was selected by context menu:
         if (this.auditId != null && isContextMenuCall()) {
             scopeCombo.removeAll();
@@ -462,6 +487,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
             rootElement = auditId;
             scopeCombo.setEnabled(false);
             scopeCombo.select(0);
+            onlyShowSuitableReports(selectedScope);
             scopeCombo.redraw();
             return;
         } else if (this.preSelectedElments != null && !this.preSelectedElments.isEmpty()
@@ -481,16 +507,12 @@ public class GenerateReportDialog extends TitleAreaDialog {
             scopeCombo.setEnabled(false);
             scopeCombo.select(0);
             scopeCombo.redraw();
+            onlyShowSuitableReports(preSelectedElments.get(0));
             return;
 
         }
-        // call is initiated from applicationbar, so let user choose from all
-        // accessible scopes
 
-        scopes.addAll(loadOrganizations());
-        scopes.addAll(loadITVerbuende());
-        scopes.addAll(loadItNetworks());
-
+        loadScopes(context);
         List<String> scopeTitles = new ArrayList<>();
 
         Collections.sort(scopes, (o1, o2) -> o1.getTitle().compareToIgnoreCase(o2.getTitle()));
@@ -508,6 +530,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
         String[] titles = scopeTitles.toArray(new String[scopeTitles.size()]);
         scopeCombo.setItems(titles);
+        scopeCombo.select(0);
 
     }
 
@@ -838,7 +861,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
     }
 
     /**
-     * Select the scope aka root element.
+     * Select the scope aka root element and only shows reports for the same
+     * context.
      */
     private void selectScope() {
         getButton(IDialogConstants.OK_ID).setEnabled(true);
@@ -857,6 +881,63 @@ public class GenerateReportDialog extends TitleAreaDialog {
         } else {
             rootElement = scopes.get(s).getDbId();
         }
+        onlyShowSuitableReports(getSelectedScopeElement());
     }
 
+    private CnATreeElement getSelectedScopeElement() {
+        return scopes.stream().filter(x -> x.getTitle().equals(scopeCombo.getText())).findFirst()
+                .orElse(null);
+    }
+
+    private void onlyShowSuitableReports(CnATreeElement element) {
+        if (element == null) {
+            return;
+        }
+        onlyShowSuitableReports(ReportContext.getValidContexts(element));
+    }
+
+    private void onlyShowSuitableReports(List<ReportContext> validDomains) {
+        comboReportType.removeAll();
+        for (ReportTemplateMetaData data : reportTemplates) {
+            ReportContext context = data.getContext();
+            // Add all reports that match the selected context + all that are
+            // "unspecified" or not set yet.
+            if (validDomains.contains(context)) {
+                comboReportType.add(data.getDecoratedOutputname());
+            }
+        }
+        comboReportType.select(0);
+    }
+
+    /**
+     * Loads scopes filtered by {@code context} into {@code scopes}.
+     * 
+     * Loads all scopes for Optional.empty.
+     */
+    private void loadScopes(ReportContext context) {
+        scopes.clear();
+        switch (context) {
+        case ISM_DS:
+        case ISM_ISA:
+        case ISM_ISO:
+            scopes.addAll(loadOrganizations());
+            break;
+
+        case ITGS:
+        case ITGS_DS:
+            scopes.addAll(loadItNetworks());
+            break;
+
+        case ITGS_ALT:
+            scopes.addAll(loadITVerbuende());
+            break;
+
+        case UNSPECIFIED:
+        default:
+            scopes.addAll(loadOrganizations());
+            scopes.addAll(loadItNetworks());
+            scopes.addAll(loadITVerbuende());
+        }
+
+    }
 }
