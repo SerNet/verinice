@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -53,10 +54,12 @@ import sernet.verinice.interfaces.report.IReportType;
 import sernet.verinice.interfaces.validation.IValidationService;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.model.report.ReportTemplateMetaData.ReportContext;
+import sernet.verinice.service.commands.crud.LoadCnAElementByType;
 import sernet.verinice.service.commands.crud.LoadCnATreeElementTitles;
 
 public class GenerateReportDialog extends TitleAreaDialog {
@@ -759,14 +762,16 @@ public class GenerateReportDialog extends TitleAreaDialog {
     }
 
     private List<ItNetwork> loadItNetworks() {
-        LoadCnATreeElementTitles<ItNetwork> compoundLoader = new LoadCnATreeElementTitles<>(
+        LoadCnAElementByType<ItNetwork> compoundLoader = new LoadCnAElementByType<>(
                 ItNetwork.class);
         try {
             compoundLoader = ServiceFactory.lookupCommandService().executeCommand(compoundLoader);
         } catch (Exception e) {
             ExceptionUtil.log(e, Messages.GenerateReportDialog_38);
         }
-        return compoundLoader.getElements();
+        return compoundLoader.getElements().stream()
+                .filter(x -> !CatalogModel.TYPE_ID.equals(x.getParent().getTypeId()))
+                .collect(Collectors.toList());
     }
 
     private List<ITVerbund> loadITVerbuende() {
