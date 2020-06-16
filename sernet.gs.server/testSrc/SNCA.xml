@@ -4699,7 +4699,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
 
         <huirelation to="audit" id="rel_org_audit" />
         <huirelation to="auditgroup" id="rel_org_auditgroup" />
-        <huirelation to="person-iso" id="rel_org_personiso_vv_bsig" name="VV BSIG Reporting Person" reversename="VV BSIG Reported Org"/>
+        <huirelation to="person-iso" id="rel_org_personiso_vv_bsig" name="BSIG Reporting Person" reversename="BSIG Reported Org"/>
 
         <huirelation to="controlgroup" id="rel_org_controlgroup"
             name="impact reduced by" reversename="reduces impact of" tooltip=""/>
@@ -4710,7 +4710,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             id="org_name"
             focus="true"
             required="true"
-            tags="Basic,VDA-ISA, VDA_ISA_Audit" />
+            tags="Basic, VDA_ISA_Audit" />
         <huiproperty
             name="Abbreviation"
             id="org_abbr"
@@ -4720,40 +4720,40 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             name="Description"
             id="org_description"
             inputtype="text"
-            tags="Basic,VDA-ISA" />
+            tags="Basic" />
 
         <huiproperty
            name="Company Group" id="org_isa_compgroup"
-           tags="VDA-ISA" />
+           tags="" />
         <huiproperty
            name="Location" id="org_isa_loc"
-           tags="VDA-ISA" />
+           tags="" />
         <huiproperty
            name="Address" id="org_isa_addr"
            inputtype="text"
-           tags="VDA-ISA" />
+           tags="" />
         <huiproperty
            name="Website" id="org_isa_web"
-           tags="VDA-ISA" />
+           tags="" />
     <huiproperty
            name="Allg. E-Mail Kontakt" id="org_isa_allg_Mail"
-           tags="VDA-ISA" />
+           tags="" />
         <huiproperty
            name="Short company description" id="org_isa_compdesc"
            inputtype="text"
-           tags="VDA-ISA" />
+           tags="" />
         <huiproperty
            name="D_B D-U-N-S Nr." id="org_isa_duns"
-           tags="VDA-ISA" />
+           tags="" />
         <huiproperty
            name="Contact" id="org_isa_cont"
-           tags="VDA-ISA" />
+           tags="" />
         <huiproperty
            name="Contact Phone" id="org_isa_contphone"
-           tags="VDA-ISA" />
+           tags="" />
         <huiproperty
            name="Contact email" id="org_isa_contmail"
-           tags="VDA-ISA" />
+           tags="" />
         <huiproperty
             id="org_tag"
             name="Tags"
@@ -4761,7 +4761,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
          <huiproperty
             id="org_created"
             inputtype="date"
-            tags="Risk,VDA-ISA"
+            tags="Risk"
             >
             <defaultRule class="Today" />
         </huiproperty>
@@ -4852,7 +4852,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                 </defaultRule>
             </huiproperty>
         </huipropertygroup>
-        <huipropertygroup name="VV BSIG" id="org_vv_bsig">
+        <huipropertygroup name="BSIG" id="org_vv_bsig">
             <huiproperty name="Authority" id="org_vv_bsig_authority"/>
             <huiproperty name="Availability Phone" id="org_vv_bsig_availability_phone" />
             <huiproperty name="Availability Email" id="org_vv_bsig_availability_email" />
@@ -4865,6 +4865,10 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             <huiproperty name="Adresse" id="org_ds_AB_adress" />
             <huiproperty name="Telefonnummer" id="org_ds_tel" />
             <huiproperty name="E-Mail-Adresse" id="org_ds_email" />
+            <huiproperty
+           			 name="Link to the supervisory authority"
+           			 id="org_ds_link"
+          			  isURL="true" />
         </huipropertygroup>
 
     <huipropertygroup tags="Privacy" id="org_ds_eu" name="Vertreter innerhalb der Europäischen Union">
@@ -5541,6 +5545,9 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
 
         <huirelation to="incident" id="rel_person_incident_rep"
             name="reported" reversename="reported by" tooltip="" />
+            
+        <huirelation to="incident" id="rel_person_incident_cp"
+            name="is contact person for" reversename="contact person" />
 
         <huirelation to="samt_topic" id="rel_person_samt_topic_interviewed"
             name="interviewed about"    reversename="interviewed" tooltip="" />
@@ -6859,19 +6866,56 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             name="Event(s)"
             id="incident_desc"
             inputtype="text"
-            showInObjectBrowser="true"/>
+            showInObjectBrowser="true"
+            visible="false"/>
 	<huiproperty
 	    name="Date"
 	    id="incident_date"
-	    inputtype="date">
+	    inputtype="date"
+	    visible="false">
             <defaultRule class="Today" />
         </huiproperty>
+        <huiproperty id="incident_vv_bsig_circumstances" name="Circumstances"
+                    inputtype="text"
+                    textrows="10">
+                    <defaultRule class="SimpleValue">
+                        <param id="incident_vv_bsig_circumstances_default">Leitfragen:
+Was wurde festgestellt / was ist passiert?
+Wer, bzw. was ist betroffen?
+Welcher Schaden wurde bereits festgestellt?
+Ist eine Kompromittierung weiterer
+Systeme in anderen Organisationen wahrscheinlich?
+Wurden bereits (Gegen-)
+Maßnahmen ergriffen? Wenn ja, welche?
+Wurden bereits weitere Stellen informiert?
+</param>
+                    </defaultRule>
+                </huiproperty>
         <huiproperty
             name="Document"
             id="incident_document"
             isURL="true" />
-        <huipropertygroup name="VV BSIG" id="incident_vv_bsig" tags="VV-BSIG">
-            <huiproperty name="VV BSIG Type" id="incident_vv_bsig_type" inputtype="singleoption">
+            
+            <huiproperty
+                    id="incident_bsig_is-incident"
+                    name="Is it an information security incident?"
+                    inputtype="booleanoption" defaultValue="0" >
+                </huiproperty>
+                
+                <huiproperty
+                    id="incident_bsig_dp-breach"
+                    name="Is this a personal data breach?"
+                    inputtype="booleanoption" defaultValue="0" >
+                </huiproperty>
+                
+                <huiproperty
+                    id="incident_bsig_report"
+                    name="Is a report necessary?"
+                    inputtype="booleanoption" defaultValue="0" >
+                </huiproperty>
+            
+        <huipropertygroup name="General information about the incident" id="incident_vv_bsig" tags="§_8b_Absatz_4_BSIG">
+            <huiproperty name="VV BSIG Type" id="incident_vv_bsig_type" inputtype="singleoption" visible="false">
                 <option name="Parried Malware" id="incident_vv_bsig_parried_malware" />
                 <option name="Successful Malware Installation" id="incident_vv_bsig_succ_malware_installation" />
                 <option name="System intrusion" id="incident_vv_bsig_system_intrusion" />
@@ -6898,7 +6942,8 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                 name="Classification of external Attack"
                 id="incident_vv_bsig_classification_external_attack"
                 required="false"
-                inputtype="multioption">
+                inputtype="multioption"
+                visible="false">
 
                 <option
                     id="incident_vv_bsig_classification_external_attack_directed"
@@ -6929,7 +6974,8 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                 name="Classification of data loss"
                 id="incident_vv_bsig_classification_data_loss"
                 required="false"
-                inputtype="multioption">
+                inputtype="multioption"
+                visible="false">
                 <option
                     id="incident_vv_bsig_classification_data_loss_itsystem_theft"
                     name="Theft or loss of IT-System" />
@@ -6945,11 +6991,12 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             </huiproperty>
             <huiproperty id="incident_vv_bsig_classification_security_vulnerability"
                 name="Classification IT-Security-Vulnerability"
-                inputtype="booleanoption" defaultValue="0"/>
+                inputtype="booleanoption" defaultValue="0" visible="false"/>
             <huiproperty id="incident_vv_bsig_classification_swhw_component_error"
                 name="Classification Soft- Hardware Component Error"
                 required="false"
-                inputtype="multioption">
+                inputtype="multioption"
+                visible="false">
                 <option
                     id="incident_vv_bsig_classification_swhw_component_error_severe_resources_cancellation"
                     name="Severe Cancellation of Resources" />
@@ -6962,14 +7009,15 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             </huiproperty>
             <huiproperty id="incident_vv_bsig_classification_policy_violation"
                 name="Violation of IT-Security-Policy"
-                inputtype="booleanoption" defaultValue="0"/>
+                inputtype="booleanoption" defaultValue="0" visible="false"/>
             <huiproperty id="incident_vv_bsig_classification_internal_reasons"
                 name="Internal Reasons"
-                inputtype="booleanoption" defaultValue="0"/>
+                inputtype="booleanoption" defaultValue="0" visible="false"/>
             <huiproperty id="incident_vv_bsig_classification_external_influences"
                 name="External Influences"
                 required="false"
-                inputtype="multioption">
+                inputtype="multioption"
+                visible="false">
                 <option
                     id="incident_vv_bsig_classification_external_influences_forces_of_nature"
                     name="Forces of Nature" />
@@ -6979,10 +7027,11 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             </huiproperty>
             <huiproperty id="incident_vv_bsig_classification_particular_findings"
                 name="Particular Findings"
-                inputtype="booleanoption" defaultValue="0"/>
+                inputtype="booleanoption" defaultValue="0" visible="false"/>
             <huiproperty id="incident_vv_bsig_purpose_of_information"
                 name="Purpose of Information"
-                inputtype="multioption">
+                inputtype="multioption"
+                visible="false">
                 <option
                     id="incident_vv_bsig_purpose_of_information_attention"
                     name="For your Attention"/>
@@ -7005,31 +7054,962 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                     id="incident_vv_bsig_purpose_of_information_processing"
                     name="Incident processing by BSI-IT-LZ"/>
                 </huiproperty>
-                <huiproperty id="incident_vv_bsig_circumstances" name="Circumstances"
-                    inputtype="text"
-                    textrows="10">
-                    <defaultRule class="SimpleValue">
-                        <param id="incident_vv_bsig_circumstances_default">Leitfragen:
-Was wurde festgestellt / was ist passiert?
-Wer, bzw. was ist betroffen?
-Welcher Schaden wurde bereits festgestellt?
-Ist eine Kompromittierung weiterer
-Systeme in anderen Organisationen wahrscheinlich?
-Wurden bereits (Gegen-)
-Maßnahmen ergriffen? Wenn ja, welche?
-Wurden bereits weitere Stellen informiert?
-</param>
-                    </defaultRule>
-                </huiproperty>
+                
                 <huiproperty id="incident_vv_bsig_procedure_proposals" name="Procedure Proposals"
                     inputtype="text"
                     textrows="10"
-                    />
+                    visible="false"/>
                 <huiproperty id="incident_vv_bsig_miscellaneous" name="Miscellaneous"
                     inputtype="text"
                     textrows="10"
-                    />
-        </huipropertygroup>
+                    visible="false"/>
+                    
+                <huiproperty id="incident_bsig_notification_type"
+                name="Notification type"
+                inputtype="multioption" tooltip="Multiple answers possible">
+                <option
+                    id="incident_bsig_notification_voluntary"
+                    name="Voluntary reporting without legal obligation"/>
+                <option
+                    id="incident_bsig_notification_initial"
+                    name="Initial report in accordance with legal obligation (e.g. BSIG, DS-GVO, ...)"/>
+                <option
+                    id="incident_bsig_notification_follow-up"
+                    name="Follow-up message"/>
+                <option
+                    id="incident_bsig_notification_final"
+                    name="Final message"/>
+                </huiproperty>    
+                
+                <huiproperty id="incident_bsig_incident_number" inputtype="line" name="Incident number" />
+	        		
+	      	<huiproperty id="incident_bsig_current_assessment"
+                name="Current assessment of the situation"
+                inputtype="singleoption" tooltip="RED (failure of critical supply service expected or occurred at local, regional, national level) ORANGE (impairment of the critical supply service up to emergency operation expected or occurred) YELLOW (increased anomalies in the Critical Information Infrastructure, but no impairment of the supply service occurred or only minor impairments are expected) GREEN (no anomalies in the Critical Information Infrastructure)">
+                <option
+                    id="incident_bsig_current_assessment_red"
+                    name="Red"/>
+                <option
+                    id="incident_bsig_current_assessment_orange"
+                    name="Orange"/>
+                <option
+                    id="incident_bsig_current_assessment_yellow"
+                    name="Yellow"/>
+                <option
+                    id="incident_bsig_current_assessment_green"
+                    name="Green"/>
+                </huiproperty>
+                
+                <huiproperty
+	   				 name="Date of last status"
+	   				 id="incident_bsig_date_last_status"
+	   				 inputtype="date">
+	   				 <defaultRule class="Today" />
+      		  </huiproperty>
+      		  
+      		  <huiproperty id="incident_bsig_time_last_status" inputtype="line" name="Time of last status" tooltip="Time format hh:mm, e.g. 19:53"/>
+                
+               <huiproperty id="incident_bsig_sector"
+                name="Sector or industry concerned"
+                inputtype="singleoption" >
+                <option
+                    id="incident_bsig_sector_electricity"
+                    name="Electricity"/>
+                <option
+                    id="incident_bsig_sector_gas"
+                    name="Gas"/>
+                <option
+                    id="incident_bsig_sector_mineral_oil"
+                    name="Mineral oil"/>
+                <option
+                    id="incident_bsig_sector_food_industry"
+                    name="Food industry"/>
+                    <option
+                    id="incident_bsig_sector_food_trade"
+                    name="Food trade"/>
+                <option
+                    id="incident_bsig_sector_banks"
+                    name="Banks"/>
+                <option
+                    id="incident_bsig_sector_stock_exchanges"
+                    name="Stock exchanges"/>
+                <option
+                    id="incident_bsig_sector_insurance"
+                    name="Insurance"/>
+                    <option
+                    id="incident_bsig_sector_financial_service_providers"
+                    name="Financial service providers"/>
+                <option
+                    id="incident_bsig_sector_public_water_supply"
+                    name="Public water supply"/>
+                <option
+                    id="incident_bsig_sector_public_sewage_disposal"
+                    name="Public sewage disposal"/>
+                <option
+                    id="incident_bsig_sector_information_technology"
+                    name="Information technology"/>
+                    <option
+                    id="incident_bsig_sector_telecommunications"
+                    name="Telecommunications"/>
+                <option
+                    id="incident_bsig_sector_medical_care_service"
+                    name="Medical care service"/>
+                <option
+                    id="incident_bsig_sector_medicines_and_vaccines"
+                    name="Medicines and vaccines"/>
+                <option
+                    id="incident_bsig_sector_laboratories"
+                    name="Laboratories"/>
+                    <option
+                    id="incident_bsig_sector_aviation"
+                    name="Aviation"/>
+                <option
+                    id="incident_bsig_sector_maritime_transport"
+                    name="Maritime transport"/>
+                <option
+                    id="incident_bsig_sector_inland_waterway_transport"
+                    name="Inland waterway transport"/>
+                <option
+                    id="incident_bsig_sector_rail_transport"
+                    name="Rail transport"/>
+                    <option
+                    id="incident_bsig_sector_road_traffic"
+                    name="Road traffic"/>
+                <option
+                    id="incident_bsig_sector_logistics"
+                    name="Logistics"/> 
+                 <option
+                    id="incident_bsig_sector_others"
+                    name="Others"/>     
+                </huiproperty>
+                
+                <huiproperty id="incident_bsig_sector_others2" inputtype="line" name="Others" />
+                <huiproperty id="incident_bsig_critical_services" inputtype="line" name="Affected critical services" />
+                <huiproperty id="incident_bsig_plant_types" inputtype="line" name="Affected plant types" tooltip="Number and plant name"/>
+                
+                <huiproperty id="incident_bsig_processors"
+                name="Did the incident occur at a contract processor?"
+                inputtype="singleoption" >
+                <depends option="incident_bsig_dp-breach" value="1"/>
+                <option
+                    id="incident_bsig_processors_yes"
+                    name="Yes"/>
+                <option
+                    id="incident_bsig_processors_no"
+                    name="No"/>
+                 </huiproperty>
+                 
+                 <huiproperty id="incident_bsig_processors_name" inputtype="text" name="Name the processors">
+                 <depends option="incident_bsig_dp-breach" value="1"/>
+                 </huiproperty>
+                
+            </huipropertygroup>
+            
+            <huipropertygroup name="Description of the incident" id="incident_bsig_incident" tags="§_8b_Absatz_4_BSIG">
+            	<huiproperty id="incident_bsig_violated_values"
+                name="Violated values of information security"
+                inputtype="multioption" >
+                <option
+                    id="incident_bsig_availability"
+                    name="availability"/>
+                <option
+                    id="incident_bsig_integrity"
+                    name="integrity"/>
+                <option
+                    id="incident_bsig_authenticity"
+                    name="authenticity"/>
+                <option
+                    id="incident_bsig_confidentiality"
+                    name="confidentiality"/>
+                </huiproperty>
+                
+                <huiproperty id="incident_bsig_occurred_asset" inputtype="text" name="What occurred on which asset?" tooltip="Summary"/>
+                <huiproperty id="incident_bsig_occurred_reason" inputtype="text" name="How did it occur?"/>
+                <huiproperty id="incident_bsig_safeguards" inputtype="text" name="Initiated safeguards"/>
+                
+                <huiproperty
+	   				 name="Date of the incident"
+	   				 id="incident_bsig_date_incident"
+	   				 inputtype="date">
+	   				 <defaultRule class="Today" />
+      		  </huiproperty>
+      		  
+      		  <huiproperty id="incident_bsig_time_incident" inputtype="line" name="Time of the incident" tooltip="Time format hh:mm, e.g. 19:53"/>
+                
+                <huiproperty
+	   				 name="Discoverydate of the incident"
+	   				 id="incident_bsig_date_discovery"
+	   				 inputtype="date">
+	   				 <defaultRule class="Today" />
+      		  </huiproperty>
+      		  
+      		  <huiproperty id="incident_bsig_time_discovery" inputtype="line" name="Discoverytime of the incident" tooltip="Time format hh:mm, e.g. 19:53"/>
+                
+                <huiproperty id="incident_bsig_continuing"
+                name="The incident is still continuing"
+                inputtype="singleoption" >
+                <option
+                    id="incident_bsig_continuing_yes"
+                    name="Yes"/>
+                <option
+                    id="incident_bsig_continuing_no"
+                    name="No"/>
+                </huiproperty>
+                                
+                <huiproperty id="incident_bsig_duration" inputtype="line" name="Duration of the incident" tooltip="Format dd:hh:mm, e.g. 07:13:45">
+                <depends option="incident_bsig_continuing" value="incident_bsig_continuing_no" /> 
+                </huiproperty>
+                              
+            	<huiproperty id="incident_bsig_noticed"
+                name="How was the incident noticed?"
+                inputtype="multioption" tooltip="Multiple answers possible">
+                <option
+                    id="incident_bsig_noticed_system_failure"
+                    name="System failure"/>
+                <option
+                    id="incident_bsig_noticed_system_maintenance"
+                    name="System maintenance"/>
+                <option
+                    id="incident_bsig_noticed_third_parties"
+                    name="Information from third parties"/>
+                <option
+                    id="incident_bsig_noticed_BSI"
+                    name="Notes of the BSI"/>
+                    <option
+                    id="incident_bsig_noticed_system_malfunction"
+                    name="System malfunction"/>
+                <option
+                    id="incident_bsig_noticed_monitoring"
+                    name="Technical (network) monitoring"/>
+                <option
+                    id="incident_bsig_noticed_stolen_information"
+                    name="Disclosure of stolen information by third parties"/>
+                <option
+                    id="incident_bsig_noticed_log_files"
+                    name="Evaluation of log files"/>
+                    <option
+                    id="incident_bsig_noticed_test_operation"
+                    name="Test operation"/>
+                <option
+                    id="incident_bsig_noticed_audit"
+                    name="Audit, testing, certification"/>
+                <option
+                    id="incident_bsig_noticed_others"
+                    name="Others"/>
+                </huiproperty>
+                
+                <huiproperty id="incident_bsig_noticed_others2" inputtype="line" name="Others"/>
+                
+                <huiproperty id="incident_bsig_dp_notification"
+                name="Notification within 72 hours"
+                inputtype="singleoption">
+                <depends option="incident_bsig_dp-breach" value="1"/>
+                <option
+                    id="incident_bsig_dp_notification_yes"
+                    name="Yes"/>
+                <option
+                    id="incident_bsig_dp_notification_no"
+                    name="No"/>
+                </huiproperty>
+                
+                <huiproperty id="incident_bsig_dp_notification_reason" inputtype="text" name="Reason">
+                <depends option="incident_bsig_dp-breach" value="1"/>
+                </huiproperty>
+                
+                </huipropertygroup>
+            
+            <huipropertygroup name="Suspected or actual causes" id="incident_bsig_causes" tags="§_8b_Absatz_4_BSIG">
+            	<huiproperty id="incident_bsig_physical_damage"
+                name="Physical damage"
+                inputtype="multioption" tooltip="Multiple answers possible">
+                <option
+                    id="incident_bsig_physical_damage_destruction"
+                    name="Destruction of equipment"/>
+                <option
+                    id="incident_bsig_physical_damage_manipulation"
+                    name="Manipulation of devices"/>
+                <option
+                    id="incident_bsig_physical_damage_theft"
+                    name="Theft of equipment"/>
+                <option
+                    id="incident_bsig_physical_damage_loss"
+                    name="Loss of equipment"/>
+                </huiproperty>
+                
+                <huiproperty id="incident_bsig_technical_failure"
+                name="Technical failure"
+                inputtype="multioption" tooltip="Multiple answers possible">
+                <option
+                    id="incident_bsig_technical_failure_hardware"
+                    name="Hardware failure"/>
+                <option
+                    id="incident_bsig_technical_failure_software"
+                    name="Faulty software"/>
+                <option
+                    id="incident_bsig_technical_failure_overload"
+                    name="Overload"/>
+                <option
+                    id="incident_bsig_technical_failure_system"
+                    name="System malfunction"/>
+                </huiproperty>
+                
+                <huiproperty id="incident_bsig_organizational_cause"
+                name="Organizational cause"
+                inputtype="multioption" tooltip="Multiple answers possible">
+                <option
+                    id="incident_bsig_organizational_cause_incorrect"
+                    name="Incorrect operation"/>
+                <option
+                    id="incident_bsig_organizational_cause_social"
+                    name="Social engineering"/>
+                <option
+                    id="incident_bsig_organizational_cause_unauthorised"
+                    name="Unauthorised use of resources"/>
+                </huiproperty>
+                
+                <huiproperty id="incident_bsig_infrastructure"
+                name="Failure of the infrastructure used"
+                inputtype="multioption" tooltip="Multiple answers possible">
+                <option
+                    id="incident_bsig_infrastructure_power"
+                    name="Power failure"/>
+                <option
+                    id="incident_bsig_infrastructure_cooling"
+                    name="Cooling failure"/>
+                <option
+                    id="incident_bsig_infrastructure_network"
+                    name="Network failure"/>
+                </huiproperty>
+                
+                <huiproperty id="incident_bsig_technical"
+                name="Technical attack"
+                inputtype="multioption" tooltip="Multiple answers possible">
+                <option
+                    id="incident_bsig_technical_system_resources"
+                    name="Use of system resources (spam relay, botnet client, CandC server, dropzone server)"/>
+                <option
+                    id="incident_bsig_technical_execution"
+                    name="Code execution"/>
+                <option
+                    id="incident_bsig_technical_weakness"
+                    name="Protocol weakness"/>
+                <option
+                    id="incident_bsig_technical_escalation"
+                    name="Privilege escalation"/>
+                    <option
+                    id="incident_bsig_technical_injection"
+                    name="Injection attack"/>
+                <option
+                    id="incident_bsig_technical_css"
+                    name="Cross-site scripting"/>
+                <option
+                    id="incident_bsig_technical_csrf"
+                    name="Cross-site request forgery"/>
+                <option
+                    id="incident_bsig_technical_algorithms"
+                    name="Weak algorithms / keys"/>
+                    <option
+                    id="incident_bsig_technical_webapplication-based"
+                    name="Web application-based attacks, e.g. drive-by exploits"/>
+                <option
+                    id="incident_bsig_technical_webapplications"
+                    name="Attacks on web applications, e.g. SQL injection, buffer overflow"/>
+                <option
+                    id="incident_bsig_technical_applications"
+                    name="Attacks on applications or services like DNS, SMTP, FTP"/>
+                <option
+                    id="incident_bsig_technical_passwords"
+                    name="Systematic testing of passwords"/>
+                    <option
+                    id="incident_bsig_technical_malware_infection"
+                    name="Malware infection, e.g. through Trojans, rootkits for the purpose of taking control, data manipulation or data leakage"/>
+                <option
+                    id="incident_bsig_technical_ransomware"
+                    name="Ransomware e.g. blocking of IT systems for blackmail purposes"/>
+                <option
+                    id="incident_bsig_technical_adware"
+                    name="Adware, scareware e.g. for fraudulent purposes"/>
+                <option
+                    id="incident_bsig_technical_malware"
+                    name="Multifunctional malware e.g. viruses, worms, riskware"/>
+                    <option
+                    id="incident_bsig_technical_e-mail"
+                    name="Initial attack by e-mail"/>
+                <option
+                    id="incident_bsig_technical_websites"
+                    name="Initial attack via websites (Watering hole attack)"/>
+                <option
+                    id="incident_bsig_technical_hardware"
+                    name="Initial attack via manipulated hardware (e.g. USB stick)"/>
+                <option
+                    id="incident_bsig_technical_information"
+                    name="Disclosure of internal information"/>
+                    <option
+                    id="incident_bsig_technical_access_rights"
+                    name="Unauthorised acquisition of special access rights, e.g. administration rights"/>
+                <option
+                    id="incident_bsig_technical_authorizations"
+                    name="Misuse of authorizations (in particular of access rights), e.g. by external parties via remote maintenance access"/>
+                <option
+                    id="incident_bsig_technical_identity"
+                    name="Concealment of an identity"/>
+                <option
+                    id="incident_bsig_technical_access_data"
+                    name="Theft of access data, e.g. identity theft, phishing, spear phishing, pharming, skimming"/>
+                    <option
+                    id="incident_bsig_technical_certificates"
+                    name="Theft or falsification of certificates"/>
+                <option
+                    id="incident_bsig_technical_internet_domains"
+                    name="Unlawful registration of Internet domains (cyberquatting)"/>
+                <option
+                    id="incident_bsig_technical_flooding"
+                    name="Flooding, e.g. (D)DoS"/>
+                <option
+                    id="incident_bsig_technical_system_crash"
+                    name="Targeted system crash, e.g. packet fragmentation"/>
+                </huiproperty>
+                
+                <huiproperty id="incident_bsig_causes_others" inputtype="line" name="Others"/>
+                <huiproperty id="incident_bsig_causes_details" inputtype="text" name="Details" tooltip="e.g. CVE, name of the malware, additional information,..."/>
+                </huipropertygroup>
+                
+                <huipropertygroup name="Affected data" id="incident_bsig_dp_affected_data" tags="§_8b_Absatz_4_BSIG">
+            	    <huiproperty id="incident_bsig_dp_personal_data"
+                name="Categories of personal data"
+                inputtype="multioption" >
+                <depends option="incident_bsig_dp-breach" value="1"/>
+                <option
+                    id="incident_bsig_dp_personal_data_health"
+                    name="Personal data concerning health"/>
+                <option
+                    id="incident_bsig_dp_personal_data_criminal"
+                    name="Data relating to criminal offence"/>
+                <option
+                    id="incident_bsig_dp_personal_data_bank"
+                    name="Bank and credit card account details"/>
+                    <option
+                    id="incident_bsig_dp_personal_data_sexual"
+                    name="Data concerning a natural person's sex life or sexual orientation "/>
+                <option
+                    id="incident_bsig_dp_personal_data_philosophical"
+                    name="Data revealing religious or philosophical beliefs"/>
+                <option
+                    id="incident_bsig_dp_personal_data_ethnic"
+                    name="Data revealing racial or ethnic origin"/>
+                    <option
+                    id="incident_bsig_dp_personal_data_biometric"
+                    name="Biometric data"/>
+                <option
+                    id="incident_bsig_dp_personal_data_genetic"
+                    name="Genetic data"/>
+                <option
+                    id="incident_bsig_dp_personal_data_political"
+                    name="Data revealing political opinions"/>
+                    <option
+                    id="incident_bsig_dp_personal_data_trade-union"
+                    name="Personal data revealing trade-union membership"/>
+                <option
+                    id="incident_bsig_dp_personal_data_scientific"
+                    name="Scientific research"/>
+                <option
+                    id="incident_bsig_dp_personal_data_secrecy"
+                    name="Professional secrecy"/>
+                    <option
+                    id="incident_bsig_dp_personal_data_certificates"
+                    name="Certificates"/>
+                <option
+                    id="incident_bsig_dp_personal_data_martricle"
+                    name="Martricle number"/>
+                <option
+                    id="incident_bsig_dp_personal_data_participants"
+                    name="Lists of participants"/>
+                    <option
+                    id="incident_bsig_dp_personal_data_birth"
+                    name="Date of birth"/>
+                <option
+                    id="incident_bsig_dp_personal_data_E-mail"
+                    name="E-mail addresses"/>
+                <option
+                    id="incident_bsig_dp_personal_data_postal"
+                    name="Postal addresses"/>
+                    <option
+                    id="incident_bsig_dp_personal_data_photos"
+                    name="Photos "/>
+                <option
+                    id="incident_bsig_dp_personal_data_video"
+                    name="Video recordings"/>
+                <option
+                    id="incident_bsig_dp_personal_data_location"
+                    name="Location"/>
+                    <option
+                    id="incident_bsig_dp_personal_data_tax"
+                    name="Tax number"/>
+                <option
+                    id="incident_bsig_dp_personal_data_identity"
+                    name="Identity card number"/>
+                <option
+                    id="incident_bsig_dp_personal_data_identification"
+                    name="Other identification number "/>
+                    <option
+                    id="incident_bsig_dp_personal_data_passwords"
+                    name="Passwords"/>
+                <option
+                    id="incident_bsig_dp_personal_data_economic"
+                    name="Economic circumstances"/>
+                <option
+                    id="incident_bsig_dp_personal_data_unknown"
+                    name="Unknown"/>
+                    <option
+                    id="incident_bsig_dp_personal_data_other"
+                    name="Other data"/>
+                </huiproperty>
+            
+            <huiproperty id="incident_bsig_dp_personal_data_other2" inputtype="text" name="Other data">
+            <depends option="incident_bsig_dp-breach" value="1"/>
+            </huiproperty>
+            
+            <huiproperty id="incident_bsig_dp_number_personal_data" inputtype="line" name="Approximate number of personal data records concerned">
+            <depends option="incident_bsig_dp-breach" value="1"/>
+            </huiproperty>
+            
+                 <huiproperty id="incident_bsig_dp_data_subjects"
+                name="Categories of data subjects "
+                inputtype="multioption" >
+                <depends option="incident_bsig_dp-breach" value="1"/>
+                <option
+                    id="incident_bsig_dp_data_subjects_employees"
+                    name="Employees"/>
+                <option
+                    id="incident_bsig_dp_data_subjects_customers"
+                    name="Customers"/>
+                <option
+                    id="incident_bsig_dp_data_subjects_patients"
+                    name="Patients "/>
+                <option
+                    id="incident_bsig_dp_data_subjects_association"
+                    name="Association or federation members"/>
+                <option
+                    id="incident_bsig_dp_data_subjects_user"
+                    name="User"/>
+                <option
+                    id="incident_bsig_dp_data_subjects_students"
+                    name="Students"/>
+                <option
+                    id="incident_bsig_dp_data_subjects_pupils"
+                    name="Pupils"/>
+                <option
+                    id="incident_bsig_dp_data_subjects_children"
+                    name="Children/Minors "/>
+                <option
+                    id="incident_bsig_dp_data_subjects_vulnerable"
+                    name="Particularly vulnerable persons (e.g. disabled Persons, persons in need of care)"/>
+                    <option
+                    id="incident_bsig_dp_data_subjects_public"
+                    name="Public figures"/>
+                <option
+                    id="incident_bsig_dp_data_subjects_other"
+                    name="Other Data subjects"/>
+                 </huiproperty>
+            
+                <huiproperty id="incident_bsig_dp_data_subjects_other2" inputtype="text" name="Other data subjects">
+                <depends option="incident_bsig_dp-breach" value="1"/>
+                </huiproperty>
+                
+                <huiproperty id="incident_bsig_dp_number_data_subjects" inputtype="line" name="Approximate number of data subjects concerned">
+                 <depends option="incident_bsig_dp-breach" value="1"/>
+                 </huiproperty>
+            
+            
+               <huiproperty id="incident_bsig_dp_consequences"
+                name="Likely consequences and impact of the personal data breach on data subjects"
+                inputtype="multioption" >
+                <depends option="incident_bsig_dp-breach" value="1"/>
+                <option
+                    id="incident_bsig_dp_consequences_none"
+                    name="None"/>
+                <option
+                    id="incident_bsig_dp_consequences_loss"
+                    name="Loss of control over their personal data "/>
+                <option
+                    id="incident_bsig_dp_consequences_limitation"
+                    name="Limitation of their rights"/>
+                <option
+                    id="incident_bsig_dp_consequences_discrimination"
+                    name="Discrimination"/>
+                <option
+                    id="incident_bsig_dp_consequences_endangerment"
+                    name="Endangerment of life"/>
+                <option
+                    id="incident_bsig_dp_consequences_fraud"
+                    name="Identity theft or fraud"/>
+                <option
+                    id="incident_bsig_dp_consequences_financial"
+                    name="Financial loss"/>
+                <option
+                    id="incident_bsig_dp_consequences_job"
+                    name="Job loss"/>
+                <option
+                    id="incident_bsig_dp_consequences_existence"
+                    name="Threat to existence"/>
+                    <option
+                    id="incident_bsig_dp_consequences_pseudonymisation"
+                    name="Unauthorised reversal of pseudonymisation"/>
+                <option
+                    id="incident_bsig_dp_consequences_damage"
+                    name="Damage to reputation "/>
+                    <option
+                    id="incident_bsig_dp_consequences_confidentiality"
+                    name="Loss of confidentiality of personal data protected by professional secrecy"/>
+                <option
+                    id="incident_bsig_dp_consequences_economic"
+                    name="Any other significant economic or social disadvantage to the natural person concerned"/>
+                <option
+                    id="incident_bsig_dp_consequences_known"
+                    name="Not yet known"/>
+                <option
+                    id="incident_bsig_dp_consequences_other"
+                    name="Other"/>
+                 </huiproperty>
+            
+                <huiproperty id="incident_bsig_dp_consequences_other2" inputtype="text" name="Other">
+                <depends option="incident_bsig_dp-breach" value="1"/>
+                </huiproperty>
+                
+                <huiproperty id="incident_bsig_dp_consequences_explanation" inputtype="text" name="Explanation">
+                <depends option="incident_bsig_dp-breach" value="1"/>
+                </huiproperty>
+                
+                <huiproperty id="incident_bsig_dp_level"
+                name="Level of effect for data subject"
+                inputtype="singleoption" >
+                <depends option="incident_bsig_dp-breach" value="1"/>
+                <option
+                    id="incident_bsig_dp_level_negligible "
+                    name="Negligible "/>
+                <option
+                    id="incident_bsig_dp_level_limited"
+                    name="Limited"/>
+                <option
+                    id="incident_bsig_dp_level_significant"
+                    name="Significant"/>
+                <option
+                    id="incident_bsig_dp_level_maximum"
+                    name="Maximum"/>
+                </huiproperty>
+            
+            	 <huiproperty id="incident_bsig_dp_safeguards" inputtype="text" name="Measures taken/planned to deal with the incident">
+                   <depends option="incident_bsig_dp-breach" value="1"/>
+                   </huiproperty>
+            
+            
+            	<huiproperty id="incident_bsig_dp_supervisory_authority"
+                name="Notification to the supervisory authority"
+                inputtype="singleoption" >
+                <depends option="incident_bsig_dp-breach" value="1"/>
+                <option
+                    id="incident_bsig_dp_supervisory_authority_yes"
+                    name="Yes"/>
+                <option
+                    id="incident_bsig_dp_supervisory_authority_no"
+                    name="No"/>
+                </huiproperty>
+            
+                <huiproperty id="incident_bsig_dp_supervisory_authority_reason" inputtype="text" name="Reason">
+                <depends option="incident_bsig_dp-breach" value="1"/>
+                </huiproperty>
+            
+                <huiproperty id="incident_bsig_dp_risk"
+                name="Is the personal data breach likely to present a high risk to the data subjects?"
+                inputtype="singleoption" >
+                <depends option="incident_bsig_dp-breach" value="1"/>
+                <option
+                    id="incident_bsig_dp_risk_yes"
+                    name="Yes"/>
+                <option
+                    id="incident_bsig_dp_risk_no"
+                    name="No"/>
+                </huiproperty>
+                
+                <huiproperty id="incident_bsig_dp_informed"
+                name="Have the data subjects been informed about the breach?"
+                inputtype="singleoption" >
+                <depends option="incident_bsig_dp-breach" value="1"/>
+                <option
+                    id="incident_bsig_dp_informed_yes"
+                    name="Yes"/>
+                <option
+                    id="incident_bsig_dp_informed_no"
+                    name="No"/>
+                </huiproperty>
+                
+                <huiproperty id="incident_bsig_dp_informed_time" inputtype="line" name="Time of notification">
+                <depends option="incident_bsig_dp-breach" value="1"/>
+                </huiproperty>
+                
+                 <huiproperty id="incident_bsig_dp_informed_comments" inputtype="text" name="Comments">
+                 <depends option="incident_bsig_dp-breach" value="1"/>
+                 </huiproperty>
+                 
+                  <huiproperty id="incident_bsig_dp_informed_form" inputtype="text" name="Form of notification">
+                  <depends option="incident_bsig_dp-breach" value="1"/>
+                  </huiproperty>
+                  
+                  <huiproperty
+           			 name="Document"
+           			 id="incident_bsig_dp_document"
+          			  isURL="true" >
+          			  <depends option="incident_bsig_dp-breach" value="1"/>
+                  </huiproperty>
+                 
+                </huipropertygroup>
+            
+            <huipropertygroup name="General information about the information technology attack" id="incident_bsig_information_technology_attack" tags="§_8b_Absatz_4_BSIG">
+                <huiproperty
+                    id="incident_bsig_information_technology_attack_yes-no"
+                    name="This is not an information technology attack"
+                    tooltip="In this case it is not necessary to fill in the following fields."
+                    inputtype="booleanoption" defaultValue="0" >
+                </huiproperty>
+                
+                <huiproperty id="incident_bsig_attacktype"
+                name="Type of attack"
+                inputtype="singleoption" >
+                <depends option="incident_bsig_information_technology_attack_yes-no" value="0"/>
+                <option
+                    id="incident_bsig_attacktype_targeted"
+                    name="Targeted attack"/>
+                <option
+                    id="incident_bsig_attacktype_undirected"
+                    name="Undirected attack "/>
+                <option
+                    id="incident_bsig_attacktype_unknown"
+                    name="Unknown"/>
+                </huiproperty>
+                
+                <huiproperty id="incident_bsig_presumed_number" inputtype="line" name="Presumed number" tooltip="In case of multiple attacks, please indicate the presumed number.">
+                <depends option="incident_bsig_information_technology_attack_yes-no" value="0"/>
+                 </huiproperty>
+                 
+                <huiproperty id="incident_bsig_motivation"
+                name="Presumed motivation"
+                inputtype="multioption" tooltip="Multiple answers possible">
+                 <depends option="incident_bsig_information_technology_attack_yes-no" value="0"/>
+                <option
+                    id="incident_bsig_motivation_unknown"
+                    name="Unknown"/>
+                <option
+                    id="incident_bsig_motivation_financial"
+                    name="Financial"/>
+                <option
+                    id="incident_bsig_motivation_personal"
+                    name="Personal"/>
+                <option
+                    id="incident_bsig_motivation_political"
+                    name="Political"/>
+                <option
+                    id="incident_bsig_motivation_criminal"
+                    name="Criminal"/>
+                <option
+                    id="incident_bsig_motivation_terrorist"
+                    name="Terrorist background (obligation for the BSI to forward the report to the BKA)"/>
+                <option
+                    id="incident_bsig_motivation_intelligence_service"
+                    name="Intelligence service background (obligation for the BSI to forward the report to the BfV)"/>
+                <option
+                    id="incident_bsig_motivation_others"
+                    name="Others"/>
+                </huiproperty>
+                
+                <huiproperty id="incident_bsig_motivation_others2" inputtype="line" name="Others">
+                <depends option="incident_bsig_information_technology_attack_yes-no" value="0"/>
+                 </huiproperty>
+                
+                <huiproperty id="incident_bsig_collected_data"
+                name="Collected data in the course of the analysis"
+                inputtype="multioption" tooltip="Multiple answers possible">
+                 <depends option="incident_bsig_information_technology_attack_yes-no" value="0"/>
+                <option
+                    id="incident_bsig_collected_data_malware_samples"
+                    name="Malware samples"/>
+                <option
+                    id="incident_bsig_collected_data_file_names"
+                    name="File names"/>
+                <option
+                    id="incident_bsig_collected_data_log_files"
+                    name="Log files"/>
+                <option
+                    id="incident_bsig_collected_data_URLs"
+                    name="URLs"/>
+                <option
+                    id="incident_bsig_collected_data_hash_totals"
+                    name="Hash totals"/>
+                <option
+                    id="incident_bsig_collected_data_signatures"
+                    name="Signatures"/>
+                <option
+                    id="incident_bsig_collected_data_IP_addresses"
+                    name="IP addresses"/>
+                <option
+                    id="incident_bsig_collected_data_none"
+                    name="None"/>
+                <option
+                    id="incident_bsig_collected_data_others"
+                    name="Others"/>
+                </huiproperty>
+                
+                <huiproperty id="incident_bsig_collected_data_others2" inputtype="line" name="Others">
+                <depends option="incident_bsig_information_technology_attack_yes-no" value="0"/>
+                 </huiproperty>
+                
+                <huiproperty id="incident_bsig_law_enforcement"
+                name="Law enforcement"
+                inputtype="singleoption">
+                 <depends option="incident_bsig_information_technology_attack_yes-no" value="0"/>
+                <option
+                    id="incident_bsig_law_enforcement_unknown"
+                    name="Unknown / not specified"/>
+                <option
+                    id="incident_bsig_law_enforcement_no_charges"
+                    name="No criminal charges have been filed"/>
+                <option
+                    id="incident_bsig_law_enforcement_charges"
+                    name="Criminal charges have been filed"/>
+                <option
+                    id="incident_bsig_law_enforcement_BKA"
+                    name="Forwarding of the report to BKA by BSI is desired"/>
+                <option
+                    id="incident_bsig_law_enforcement_identified"
+                    name="Perpetrator was identified"/>
+               
+                </huiproperty>
+                
+                <huiproperty id="incident_bsig_law_enforcement_reference_number" inputtype="line" name="Reference number">
+                 <depends option="incident_bsig_information_technology_attack_yes-no" value="0"/>
+                 </huiproperty>
+                <huiproperty id="incident_bsig_law_enforcement_Police_station" inputtype="line" name="Police station">
+                 <depends option="incident_bsig_information_technology_attack_yes-no" value="0"/>
+                 </huiproperty>
+                <huiproperty id="incident_bsig_law_enforcement_federal_state" inputtype="line" name="Federal state ">
+                 <depends option="incident_bsig_information_technology_attack_yes-no" value="0"/>
+                 </huiproperty>
+                
+                </huipropertygroup>
+                
+                <huipropertygroup name="Information on the failure or impairment of critical services" id="incident_bsig_information_failure" tags="§_8b_Absatz_4_BSIG">
+                   <huiproperty id="incident_bsig_failure"
+                name="Did the incident lead to a failure / impairment"
+                inputtype="singleoption" tooltip="Did the incident lead to a failure or to an impairment of the functionality of the Critical Infrastructure (i.e. the critical services)?">
+                <option
+                    id="incident_bsig_failure_yes"
+                    name="Yes, to a failure"/>
+                <option
+                    id="incident_bsig_failure_impairment"
+                    name="Yes, to an impairment"/>
+                <option
+                    id="incident_bsig_failure_no"
+                    name="No"/>
+                </huiproperty>
+                
+                <huiproperty id="incident_bsig_failure_no_detail" inputtype="text" name="Safeguards" tooltip="What circumstances or safeguards are in place to ensure that the functionality of the Critical Infrastructure is not compromised?">
+                     <depends option="incident_bsig_failure" value="incident_bsig_failure_no"/>
+                 </huiproperty>
+            
+                <huiproperty id="incident_bsig_functionality" inputtype="text" name="To what extent is the functionality impaired" tooltip="To what extent is the functioning of the Critical Infrastructure (i.e. the availability of critical services) impaired or could it be impaired? Among others, which systems and components are affected or could be affected?"/>
+            
+                 <huiproperty id="incident_bsig_people"
+                name="How many people could be affected?"
+                inputtype="singleoption" tooltip="To the best of your knowledge, how many people could be affected by the impairment / failure of the critical infrastructure?">
+                <option
+                    id="incident_bsig_people_1"
+                    name="less than 250,000 inhabitants (or less than 50% of the threshold specified in the BSI-KritisV for your plant)"/>
+                <option
+                    id="incident_bsig_people_2"
+                    name="250,000 to 500,000 inhabitants (or 50% to 100% of the threshold specified in the BSI-KritisV for your plant)"/>
+                <option
+                    id="incident_bsig_people_3"
+                    name="500,000 to 1,000,000 inhabitants (or 100% to 200% of the threshold specified in the BSI-KritisV for your plant)"/>
+                <option
+                    id="incident_bsig_people_4"
+                    name="1,000,000 to 5,000,000 inhabitants (or 200% to 1000% of the threshold specified in the BSI-KritisV for your installation)"/>
+                <option
+                    id="incident_bsig_people_5"
+                    name="more than 5,000,000 inhabitants (or more than 1000% of the threshold specified in the BSI-KritisV for your installation)"/>
+                <option
+                    id="incident_bsig_people_6"
+                    name="No statement can be made"/>
+                </huiproperty>
+                
+                <huiproperty id="incident_bsig_geographical_spread" inputtype="text" name="Geographical spread" tooltip="What is the (potential) geographical spread of the impairment / failure of the functioning of the Critical Infrastructure (i.e. the critical services)? - City, region, county, state, federal territory"/>
+            
+               <huiproperty id="incident_bsig_cross-border"
+                name="Is the incident (potentially) cross-border?"
+                inputtype="singleoption">
+                <option
+                    id="incident_bsig_cross-border_yes"
+                    name="Yes"/>
+                <option
+                    id="incident_bsig_cross-border_no"
+                    name="No"/>
+                </huiproperty>
+            
+            
+                <huiproperty id="incident_bsig_affected_states" inputtype="text" name="Affected states">
+                	<depends option="incident_bsig_cross-border" value="incident_bsig_cross-border_yes"/>
+                 </huiproperty>
+                 
+                 <huiproperty id="incident_bsig_duration_failure"
+                name="Duration of the impairment / failure"
+                inputtype="singleoption" tooltip="From when to when was the impairment/failure of the functionality of the Critical Infrastructure (i.e. the critical services)">
+                <option
+                    id="incident_bsig_duration_from-to"
+                    name="From - to"/>
+                <option
+                    id="incident_bsig_duration_continues"
+                    name="Impact continues"/>
+                </huiproperty>
+                 
+            <huiproperty
+	   				 name="From (Date)"
+	   				 id="incident_bsig_date_failure_from"
+	   				 inputtype="date">
+	   				 <defaultRule class="Today" />
+      		  </huiproperty>
+      		  
+      		  <huiproperty id="incident_bsig_time_failure_from" inputtype="line" name="From (Time)" tooltip="Time format hh:mm, e.g. 19:53"/>
+                 
+                <huiproperty
+	   				 name="To (Date)"
+	   				 id="incident_bsig_date_failure_to"
+	   				 inputtype="date">
+	   				 <defaultRule class="Today" />
+      		  </huiproperty>
+      		  
+      		  <huiproperty id="incident_bsig_time_failure_to" inputtype="line" name="To (Time)" tooltip="Time format hh:mm, e.g. 19:53"/>
+                 
+            <huiproperty
+	   				 name="Date of detection of the impairment / failure"
+	   				 id="incident_bsig_date_detection"
+	   				 inputtype="date" tooltip="When was the impairment / failure of the functionality of the Critical Infrastructure (i.e. the critical services) identified?">
+	   				 <defaultRule class="Today" />
+      		  </huiproperty>
+      		  
+      		  <huiproperty id="incident_bsig_time_detection" inputtype="line" name="Time of detection of the impairment / failure" tooltip="When was the impairment / failure of the functionality of the Critical Infrastructure (i.e. the critical services) identified? - Time format hh:mm, e.g. 19:53"/>
+                 
+                <huiproperty id="incident_bsig_safeguards_reduce" inputtype="text" name="Safeguards to reduce / prevent" tooltip="What measures have been taken to reduce or remedy the impairment / failure of the functioning of the Critical Infrastructure (i.e. the critical service)?"/>
+                 
+                </huipropertygroup>
+                
+                
+            <huipropertygroup name="Others" id="incident_bsig_others" tags="§_8b_Absatz_4_BSIG">
+            
+            	<huiproperty id="incident_bsig_others_information" inputtype="text" name="Further Information" tooltip="Voluntary indication"/>
+                <huiproperty id="incident_bsig_others_evaluation" inputtype="text" name="Further evaluations" tooltip="Voluntary indication"/>
+                <huiproperty id="incident_bsig_others_further" inputtype="text" name="Further" tooltip="Voluntary indication"/>
+                
+            </huipropertygroup>
+            
+            
     </huientity>
 
     <huientity
@@ -7428,6 +8408,11 @@ Wurden bereits weitere Stellen informiert?
             name="distributed to" reversename="receives" tooltip=""/>
         <huirelation to="person-iso" id="rel_document_person_reads"
             name="actually read by" reversename="actually reads" tooltip=""/>
+        <huirelation to="person-iso" id="rel_document_person_revision"
+            name="revision by" reversename="revision of" tooltip=""/>
+            
+        <huirelation to="document" id="rel_document_document"
+            name="Reference document" reversename="Reference document" tooltip=""/>
 
         <huirelation to="mnums" id="rel_mnums_doc"
             name="dokumentiert" reversename="relevantes Dokument" tooltip="" />
@@ -7449,6 +8434,11 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
             name="Abbreviation"
             id="document_abbr" />
+          <huiproperty 
+            id="document_description2"
+            name="Description"
+            inputtype="text"
+            showInObjectBrowser="true"/>   
         <huiproperty
             id="document_tag"
             name="Tags"
@@ -7467,15 +8457,68 @@ Wurden bereits weitere Stellen informiert?
             <option name="Research information" id="document_type_research" />
             <option name="Manual" id="document_type_manual" />
             <option name="Training materials" id="document_type_training" />
-            <option name="Other" id="document_type_other" />
+            <option name="Others" id="document_type_other" />
         </huiproperty>
+        
+        <huiproperty name="Others" id="document_type_other2" inputtype="line">
+        <depends option="document_type" value="document_type_other"/>
+        </huiproperty>
+
         <huiproperty
             id="document_classfc" name="Classification" inputtype="singleoption" >
+           <option name="Strictly confidential" id="document_classfc_strictly_confidential"/>
            <option name="Confidential" id="document_classfc_confidential"/>
            <option name="Internal Use" id="document_classfc_internal"/>
            <option name="Public" id="document_classfc_public"/>
         </huiproperty>
+
+         <huiproperty id="document_version" name="Version" inputtype="line"/>
+         
         <huiproperty
+            name="Document State" id="document_approval" inputtype="singleoption">
+            <option name="N.A." id="document_approval_na" />
+            <option name="Draft" id="document_approval_draft" />
+            <option name="In revision" id="document_approval_revision" />
+            <option name="Approval requested" id="document_approval_request" />
+            <option name="Approved" id="document_approval_yes" />
+            <option name="Obsolete" id="document_approval_obsolete" />
+        </huiproperty>   
+        
+        <huiproperty
+                id="document_approval_date"
+                name="Date of approval"
+                inputtype="date">
+                <defaultRule class="Today">
+                </defaultRule>
+                </huiproperty>
+            
+       <huipropertygroup id="document_revisiongroup" name="Revision" tags="Revision" >
+            <huiproperty
+                id="document_lastrev"
+                name="Last revision"
+                tags="Revision"
+                inputtype="date">
+                <defaultRule class="Today">
+                </defaultRule>
+            </huiproperty>
+            <huiproperty
+                name="Notes"
+                id="document_revision_notes"
+                tags="Revision"
+                inputtype="text" />
+            <huiproperty
+                id="document_nextrev"
+                name="Next revision"
+                tags="Revision"
+                inputtype="date">
+                <defaultRule class="Today">
+                    <param id="document_nextrev_changeField">MONTH</param>
+                    <param id="document_nextrev_timeDifference">2</param>
+                </defaultRule>
+            </huiproperty>
+            </huipropertygroup>
+ 
+         <huiproperty
             id="document_description"
             name="Description"
             visible="false"
@@ -8611,7 +9654,7 @@ Wurden bereits weitere Stellen informiert?
 	        <option id="process_dsfa_criteria_test_7" name="Abgleich oder Zusammenführen von Datensätzen"/>
 	        <option id="process_dsfa_criteria_test_8" name="Daten zu schutzbedürftigen Betroffenen"/>
 	        <option id="process_dsfa_criteria_test_9" name="Innovative Nutzung oder Verwendung von technologischen und organisatorischen Lösungen"/>
-	        <option id="process_dsfa_criteria_test_10" name="Datentransfer außerhalb der EU"/>
+<!--	        <option id="process_dsfa_criteria_test_10" name="Datentransfer außerhalb der EU"/> -->
 	        <option id="process_dsfa_criteria_test_11" name="Systematische Überwachung"/>
 	      </huiproperty>
 	      <huiproperty id="process_dsfa_criteria_match" inputtype="singleoption" max="1" name="Zwei oder mehr o.g Kriterien zu" tags="Privacy">
@@ -9203,6 +10246,9 @@ Wurden bereits weitere Stellen informiert?
         <huirelation to="bp_incident" id="rel_bp_itnetwork_bp_incident"
             name="was affected by"
             reversename="affected" />
+        <huirelation to="bp_person" id="rel_bp_itnetwork_bp_person_bsig" name="BSIG Reporting Person" reversename="BSIG Reported Org"/>
+            
+            
 
         <huiproperty id="bp_itnetwork_name" name="Title" required="true" />
         <huiproperty id="bp_itnetwork_abbr" name="Abbreviation" />
@@ -9216,6 +10262,16 @@ Wurden bereits weitere Stellen informiert?
                 <option id="bp_itnetwork_qualifier_high" name="HIGH" value="2"/>
         </huiproperty>
         <huiproperty id="bp_itnetwork_document" isURL="true" name="Document" />
+        
+         <huipropertygroup id="bp_itnetwork_contact_info_group" name="ContactInfo">
+		    <huiproperty name="Address" id="bp_itnetwork_addr" inputtype="text" />
+	        <huiproperty name="Website" id="bp_itnetwork_web" />
+	    	<huiproperty name="Allg. E-Mail Kontakt" id="bp_itnetwork_allg_Mail"  />
+	        <huiproperty name="Contact" id="bp_itnetwork_cont" />
+	        <huiproperty name="Contact Phone" id="bp_itnetwork_contphone" />
+	        <huiproperty name="Contact email" id="bp_itnetwork_contmail" />
+	    </huipropertygroup>
+        
         <huipropertygroup id="bp_itnetwork_report" name="Reporting" tags="Dok.mgmt.">
             <huiproperty id="bp_itnetwork_author" name="Author" tags="Dok.mgmt." />
             <huiproperty id="bp_itnetwork_version" name="Version" tags="Dok.mgmt." />
@@ -9389,26 +10445,20 @@ Wurden bereits weitere Stellen informiert?
                 </defaultRule>
             </huiproperty>
         </huipropertygroup>
-        <huipropertygroup id="bp_itnetwork_vv_bsig" name="VV BSIG">
+        <huipropertygroup id="bp_itnetwork_vv_bsig" name="BSIG">
             <huiproperty id="bp_itnetwork_vv_bsig_authority" name="Authority" />
             <huiproperty id="bp_itnetwork_vv_bsig_availability_phone" name="Availability Phone" />
             <huiproperty id="bp_itnetwork_vv_bsig_availability_email" name="Availability E-Mail" />
             <huiproperty id="bp_itnetwork_vv_bsig_enquiry_phone" name="Enquiry Phone" />
             <huiproperty id="bp_itnetwork_vv_bsig_equiry_email" name="Enquiry E-Mail" />
         </huipropertygroup>
-        <huipropertygroup id="bp_itnetwork_contact_info_group" name="ContactInfo">
-		    <huiproperty name="Address" id="bp_itnetwork_addr" inputtype="text" />
-	        <huiproperty name="Website" id="bp_itnetwork_web" />
-	    	<huiproperty name="Allg. E-Mail Kontakt" id="bp_itnetwork_allg_Mail"  />
-	        <huiproperty name="Contact" id="bp_itnetwork_cont" />
-	        <huiproperty name="Contact Phone" id="bp_itnetwork_contphone" />
-	        <huiproperty name="Contact email" id="bp_itnetwork_contmail" />
-	    </huipropertygroup>
+       
         <huipropertygroup id="bp_itnetwork_data_protection_group" name="Data protection supervisory authority">
             <huiproperty id="bp_itnetwork_data_protection_authority" name="Competent supervisory authority" />
             <huiproperty id="bp_itnetwork_data_protection_adress" name="Address" />
             <huiproperty id="bp_itnetwork_data_protection_telephone" name="Phone" />
             <huiproperty id="bp_itnetwork_data_protection_email" name="Email" />
+             <huiproperty id="bp_itnetwork_data_protection_authority_link" isURL="true" name="Link to the supervisory authority" />
         </huipropertygroup>
         <huiproperty id="bp_itnetwork_risk_configuration" name="Risk configuration" visible="false" inputtype="text"/>
 
@@ -10197,7 +11247,7 @@ Wurden bereits weitere Stellen informiert?
 	        <option id="bp_businessprocess_dsfa_criteria_test_7" name="Abgleich oder Zusammenführen von Datensätzen"/>
 	        <option id="bp_businessprocess_dsfa_criteria_test_8" name="Daten zu schutzbedürftigen Betroffenen"/>
 	        <option id="bp_businessprocess_dsfa_criteria_test_9" name="Innovative Nutzung oder Verwendung von technologischen und organisatorischen Lösungen"/>
-	        <option id="bp_businessprocess_dsfa_criteria_test_10" name="Datentransfer außerhalb der EU"/>
+<!--	        <option id="bp_businessprocess_dsfa_criteria_test_10" name="Datentransfer außerhalb der EU" /> -->
 	        <option id="bp_businessprocess_dsfa_criteria_test_11" name="Systematische Überwachung"/>
 	      </huiproperty>
 	      <huiproperty id="bp_businessprocess_dsfa_criteria_match" inputtype="singleoption" max="1" name="Zwei oder mehr o.g Kriterien zu" tags="Privacy">
@@ -10567,6 +11617,12 @@ Wurden bereits weitere Stellen informiert?
             reversename="person responsible" />
         <huirelation to="bp_safeguard" id="rel_bp_person_bp_safeguard" name="responsible for"
             reversename="person responsible" />
+            
+        <huirelation to="bp_incident" id="rel_bp_person_bp_incident_rep"
+            name="reported" reversename="reported by" tooltip="" />
+            
+        <huirelation to="bp_incident" id="rel_bp_person_bp_incident_cp"
+            name="is contact person for" reversename="contact person" />    
 
         <huirelation to="bp_requirement_group" id="rel_bp_person_bp_requirement_group_additional"
             name="additional responsibility" reversename="additional responsibilities" />
@@ -11644,6 +12700,10 @@ Wurden bereits weitere Stellen informiert?
             name="distributed to" reversename="receives" tooltip=""/>
         <huirelation to="bp_person" id="rel_bp_document_person_reads"
             name="actually read by" reversename="actually reads" tooltip=""/>
+        <huirelation to="bp_person" id="rel_bp_document_person_revision"
+            name="revision by" reversename="revision of" tooltip=""/>
+        <huirelation to="bp_document" id="rel_bp_document_document"
+            name="Reference document" reversename="Reference document" tooltip=""/>
         <huirelation to="bp_requirement" id="rel_bp_document_requirement"
             name="documents" reversename="related document" tooltip=""/>
         <huirelation to="bp_threat" id="rel_bp_document_threat"
@@ -11667,6 +12727,11 @@ Wurden bereits weitere Stellen informiert?
             id="bp_document_name"
             required="true"/>
         <huiproperty
+            id="bp_document_description2"
+            name="Description"
+            inputtype="text"
+            showInObjectBrowser="true"/> 
+        <huiproperty
             id="bp_document_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
@@ -11684,14 +12749,68 @@ Wurden bereits weitere Stellen informiert?
             <option name="Research information" id="bp_document_type_research" />
             <option name="Manual" id="bp_document_type_manual" />
             <option name="Training materials" id="bp_document_type_training" />
-            <option name="Other" id="bp_document_type_other" />
+            <option name="Others" id="bp_document_type_other" />
         </huiproperty>
+        
+        <huiproperty name="Others" id="bp_document_type_other2" inputtype="line">
+        <depends option="bp_document_type" value="bp_document_type_other"/>
+        </huiproperty>
+        
         <huiproperty
             id="bp_document_classfc" name="Classification" inputtype="singleoption" >
+            <option name="Strictly confidential" id="bp_document_classfc_strictly_confidential"/>
            <option name="Confidential" id="bp_document_classfc_confidential"/>
            <option name="Internal Use" id="bp_document_classfc_internal"/>
            <option name="Public" id="bp_document_classfc_public"/>
         </huiproperty>
+        
+        <huiproperty id="bp_document_version" name="Version" inputtype="line"/>
+         
+        <huiproperty
+            name="Document State" id="bp_document_approval" inputtype="singleoption">
+            <option name="N.A." id="bp_document_approval_na" />
+            <option name="Draft" id="bp_document_approval_draft" />
+            <option name="In revision" id="bp_document_approval_revision" />
+            <option name="Approval requested" id="bp_document_approval_request" />
+            <option name="Approved" id="bp_document_approval_yes" />
+            <option name="Obsolete" id="bp_document_approval_obsolete" />
+        </huiproperty>   
+        
+        <huiproperty
+                id="bp_document_approval_date"
+                name="Date of approval"
+                inputtype="date">
+                <defaultRule class="Today">
+                </defaultRule>
+                </huiproperty>
+            
+       <huipropertygroup id="bp_document_revisiongroup" name="Revision" tags="Revision" >
+            <huiproperty
+                id="bp_document_lastrev"
+                name="Last revision"
+                tags="Revision"
+                inputtype="date">
+                <defaultRule class="Today">
+                </defaultRule>
+            </huiproperty>
+            <huiproperty
+                name="Notes"
+                id="bp_document_revision_notes"
+                tags="Revision"
+                inputtype="text" />
+            <huiproperty
+                id="bp_document_nextrev"
+                name="Next revision"
+                tags="Revision"
+                inputtype="date">
+                <defaultRule class="Today">
+                    <param id="bp_document_nextrev_changeField">MONTH</param>
+                    <param id="bp_document_nextrev_timeDifference">2</param>
+                </defaultRule>
+            </huiproperty>
+            </huipropertygroup>
+        
+        
         <huiproperty
             id="bp_document_description"
             name="Description"
@@ -11738,7 +12857,7 @@ Wurden bereits weitere Stellen informiert?
             name="predicted as" reversename="occurred as" tooltip="" />
 
         <huirelation to="bp_requirement" id="rel_bp_incident_requirement"
-            name="in future prevented by" reversename="reaction to" tooltip="" />
+            name="was responded by" reversename="response to" tooltip="" />
 
         <huiproperty
             name="Abbreviation"
@@ -11751,23 +12870,58 @@ Wurden bereits weitere Stellen informiert?
             id="bp_incident_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty id="bp_incident_vv_bsig_circumstances" name="Circumstances"
+                    inputtype="text"
+                    textrows="10">
+                    <defaultRule class="SimpleValue">
+                        <param id="bp_incident_vv_bsig_circumstances_default">Leitfragen:
+Was wurde festgestellt / was ist passiert?
+Wer, bzw. was ist betroffen?
+Welcher Schaden wurde bereits festgestellt?
+Ist eine Kompromittierung weiterer
+Systeme in anderen Organisationen wahrscheinlich?
+Wurden bereits (Gegen-)
+Maßnahmen ergriffen? Wenn ja, welche?
+Wurden bereits weitere Stellen informiert?
+</param>
+                    </defaultRule>
+                </huiproperty>
         <huiproperty
             name="Event(s)"
             id="bp_incident_desc"
             inputtype="text"
-            showInObjectBrowser="true"/>
+            showInObjectBrowser="true" visible="false"/>
     <huiproperty
         name="Date"
         id="bp_incident_date"
-        inputtype="date">
+        inputtype="date" visible="false">
             <defaultRule class="Today" />
         </huiproperty>
         <huiproperty
             name="Document"
             id="bp_incident_document"
             isURL="true" />
-        <huipropertygroup name="VV BSIG" id="bp_incident_vv_bsig" tags="VV-BSIG">
-            <huiproperty name="VV BSIG Type" id="bp_incident_vv_bsig_type" inputtype="singleoption">
+            
+            <huiproperty
+                    id="bp_incident_bsig_is-incident"
+                    name="Is it an information security incident?"
+                    inputtype="booleanoption" defaultValue="0" >
+                </huiproperty>
+                
+                <huiproperty
+                    id="bp_incident_bsig_dp-breach"
+                    name="Is this a personal data breach?"
+                    inputtype="booleanoption" defaultValue="0" >
+                </huiproperty>
+                
+                <huiproperty
+                    id="bp_incident_bsig_report"
+                    name="Is a report necessary?"
+                    inputtype="booleanoption" defaultValue="0" >
+                </huiproperty>
+                
+        <huipropertygroup name="General information about the incident" id="bp_incident_vv_bsig" tags="§_8b_Absatz_4_BSIG">
+            <huiproperty name="VV BSIG Type" id="bp_incident_vv_bsig_type" inputtype="singleoption" visible="false">
                 <option name="Parried Malware" id="bp_incident_vv_bsig_parried_malware" />
                 <option name="Successful Malware Installation" id="bp_incident_vv_bsig_succ_malware_installation" />
                 <option name="System intrusion" id="bp_incident_vv_bsig_system_intrusion" />
@@ -11794,8 +12948,7 @@ Wurden bereits weitere Stellen informiert?
                 name="Classification of external Attack"
                 id="bp_incident_vv_bsig_classification_external_attack"
                 required="false"
-                inputtype="multioption">
-
+                inputtype="multioption" visible="false">
                 <option
                     id="bp_incident_vv_bsig_classification_external_attack_directed"
                     name="Directed" />
@@ -11825,7 +12978,7 @@ Wurden bereits weitere Stellen informiert?
                 name="Classification of data loss"
                 id="bp_incident_vv_bsig_classification_data_loss"
                 required="false"
-                inputtype="multioption">
+                inputtype="multioption" visible="false">
                 <option
                     id="bp_incident_vv_bsig_classification_data_loss_itsystem_theft"
                     name="Theft or loss of IT-System" />
@@ -11841,11 +12994,11 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
             <huiproperty id="bp_incident_vv_bsig_classification_security_vulnerability"
                 name="Classification IT-Security Vulnerability"
-                inputtype="booleanoption" defaultValue="0"/>
+                inputtype="booleanoption" defaultValue="0" visible="false"/>
             <huiproperty id="bp_incident_vv_bsig_classification_swhw_component_error"
                 name="Classification Soft-/ Hardware Component Error"
                 required="false"
-                inputtype="multioption">
+                inputtype="multioption" visible="false">
                 <option
                     id="bp_incident_vv_bsig_classification_swhw_component_error_severe_resources_cancellation"
                     name="Severe Cancellation of Resources" />
@@ -11858,14 +13011,14 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
             <huiproperty id="bp_incident_vv_bsig_classification_policy_violation"
                 name="Violation of IT-Security Policy"
-                inputtype="booleanoption" defaultValue="0"/>
+                inputtype="booleanoption" defaultValue="0" visible="false"/>
             <huiproperty id="bp_incident_vv_bsig_classification_internal_reasons"
                 name="Internal Reasons"
-                inputtype="booleanoption" defaultValue="0"/>
+                inputtype="booleanoption" defaultValue="0" visible="false"/>
             <huiproperty id="bp_incident_vv_bsig_classification_external_influences"
                 name="External Influences"
                 required="false"
-                inputtype="multioption">
+                inputtype="multioption" visible="false">
                 <option
                     id="bp_incident_vv_bsig_classification_external_influences_forces_of_nature"
                     name="Forces of Nature" />
@@ -11875,10 +13028,10 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
             <huiproperty id="bp_incident_vv_bsig_classification_particular_findings"
                 name="Particular Findings"
-                inputtype="booleanoption" defaultValue="0"/>
+                inputtype="booleanoption" defaultValue="0" visible="false"/>
             <huiproperty id="bp_incident_vv_bsig_purpose_of_information"
                 name="Purpose of Information"
-                inputtype="multioption">
+                inputtype="multioption" visible="false">
                 <option
                     id="bp_incident_vv_bsig_purpose_of_information_attention"
                     name="For your Attention"/>
@@ -11901,29 +13054,959 @@ Wurden bereits weitere Stellen informiert?
                     id="bp_incident_vv_bsig_purpose_of_information_processing"
                     name="Incident processing by BSI-IT-LZ"/>
                 </huiproperty>
-                <huiproperty id="bp_incident_vv_bsig_circumstances" name="Circumstances"
-                    inputtype="text"
-                    textrows="10">
-                    <defaultRule class="SimpleValue">
-                        <param id="bp_incident_vv_bsig_circumstances_default">Leitfragen:
-Was wurde festgestellt / was ist passiert?
-Wer, bzw. was ist betroffen?
-Welcher Schaden wurde bereits festgestellt?
-Ist eine Kompromittierung weiterer
-Systeme in anderen Organisationen wahrscheinlich?
-Wurden bereits (Gegen-)
-Maßnahmen ergriffen? Wenn ja, welche?
-Wurden bereits weitere Stellen informiert?
-</param>
-                    </defaultRule>
-                </huiproperty>
+                
                 <huiproperty id="bp_incident_vv_bsig_procedure_proposals" name="Procedure Proposals"
                     inputtype="text"
-                    textrows="10" />
+                    textrows="10" visible="false" />
                 <huiproperty id="bp_incident_vv_bsig_miscellaneous" name="Miscellaneous"
                     inputtype="text"
-                    textrows="10" />
-        </huipropertygroup>
+                    textrows="10" visible="false" />
+        
+        
+        <huiproperty id="bp_incident_bsig_notification_type"
+                name="Notification type"
+                inputtype="multioption" tooltip="Multiple answers possible">
+                <option
+                    id="bp_incident_bsig_notification_voluntary"
+                    name="Voluntary reporting without legal obligation"/>
+                <option
+                    id="bp_incident_bsig_notification_initial"
+                    name="Initial report in accordance with legal obligation BSIG §8b (4)"/>
+                <option
+                    id="bp_incident_bsig_notification_follow-up"
+                    name="Follow-up message"/>
+                <option
+                    id="bp_incident_bsig_notification_final"
+                    name="Final message"/>
+                </huiproperty>    
+                
+                <huiproperty id="bp_incident_bsig_incident_number" inputtype="line" name="Incident number" />
+	        		
+	      	<huiproperty id="bp_incident_bsig_current_assessment"
+                name="Current assessment of the situation"
+                inputtype="singleoption" tooltip="RED (failure of critical supply service expected or occurred at local, regional, national level) ORANGE (impairment of the critical supply service up to emergency operation expected or occurred) YELLOW (increased anomalies in the Critical Information Infrastructure, but no impairment of the supply service occurred or only minor impairments are expected) GREEN (no anomalies in the Critical Information Infrastructure)">
+                <option
+                    id="bp_incident_bsig_current_assessment_red"
+                    name="Red"/>
+                <option
+                    id="bp_incident_bsig_current_assessment_orange"
+                    name="Orange"/>
+                <option
+                    id="bp_incident_bsig_current_assessment_yellow"
+                    name="Yellow"/>
+                <option
+                    id="bp_incident_bsig_current_assessment_green"
+                    name="Green"/>
+                </huiproperty>
+                
+                <huiproperty
+	   				 name="Date of last status"
+	   				 id="bp_incident_bsig_date_last_status"
+	   				 inputtype="date">
+	   				 <defaultRule class="Today" />
+      		  </huiproperty>
+      		  
+      		  <huiproperty id="bp_incident_bsig_time_last_status" inputtype="line" name="Time of last status" tooltip="Time format hh:mm, e.g. 19:53"/>
+                
+               <huiproperty id="bp_incident_bsig_sector"
+                name="Sector or industry concerned"
+                inputtype="singleoption" >
+                <option
+                    id="bp_incident_bsig_sector_electricity"
+                    name="Electricity"/>
+                <option
+                    id="bp_incident_bsig_sector_gas"
+                    name="Gas"/>
+                <option
+                    id="bp_incident_bsig_sector_mineral_oil"
+                    name="Mineral oil"/>
+                <option
+                    id="bp_incident_bsig_sector_food_industry"
+                    name="Food industry"/>
+                    <option
+                    id="bp_incident_bsig_sector_food_trade"
+                    name="Food trade"/>
+                <option
+                    id="bp_incident_bsig_sector_banks"
+                    name="Banks"/>
+                <option
+                    id="bp_incident_bsig_sector_stock_exchanges"
+                    name="Stock exchanges"/>
+                <option
+                    id="bp_incident_bsig_sector_insurance"
+                    name="Insurance"/>
+                    <option
+                    id="bp_incident_bsig_sector_financial_service_providers"
+                    name="Financial service providers"/>
+                <option
+                    id="bp_incident_bsig_sector_public_water_supply"
+                    name="Public water supply"/>
+                <option
+                    id="bp_incident_bsig_sector_public_sewage_disposal"
+                    name="Public sewage disposal"/>
+                <option
+                    id="bp_incident_bsig_sector_information_technology"
+                    name="Information technology"/>
+                    <option
+                    id="bp_incident_bsig_sector_telecommunications"
+                    name="Telecommunications"/>
+                <option
+                    id="bp_incident_bsig_sector_medical_care_service"
+                    name="Medical care service"/>
+                <option
+                    id="bp_incident_bsig_sector_medicines_and_vaccines"
+                    name="Medicines and vaccines"/>
+                <option
+                    id="bp_incident_bsig_sector_laboratories"
+                    name="Laboratories"/>
+                    <option
+                    id="bp_incident_bsig_sector_aviation"
+                    name="Aviation"/>
+                <option
+                    id="bp_incident_bsig_sector_maritime_transport"
+                    name="Maritime transport"/>
+                <option
+                    id="bp_incident_bsig_sector_inland_waterway_transport"
+                    name="Inland waterway transport"/>
+                <option
+                    id="bp_incident_bsig_sector_rail_transport"
+                    name="Rail transport"/>
+                    <option
+                    id="bp_incident_bsig_sector_road_traffic"
+                    name="Road traffic"/>
+                <option
+                    id="bp_incident_bsig_sector_logistics"
+                    name="Logistics"/> 
+                <option
+                    id="bp_incident_bsig_sector_others"
+                    name="Others"/> 
+                </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_sector_others2" inputtype="line" name="Others" />
+                <huiproperty id="bp_incident_bsig_critical_services" inputtype="line" name="Affected critical services" />
+                <huiproperty id="bp_incident_bsig_plant_types" inputtype="line" name="Affected plant types" tooltip="Number and plant name"/>
+                
+                <huiproperty id="bp_incident_bsig_processors"
+                name="Did the incident occur at a contract processor?"
+                inputtype="singleoption" >
+                <depends option="bp_incident_bsig_dp-breach" value="1"/>
+                <option
+                    id="bp_incident_bsig_processors_yes"
+                    name="Yes"/>
+                <option
+                    id="bp_incident_bsig_processors_no"
+                    name="No"/>
+                 </huiproperty>
+                 
+                 <huiproperty id="bp_incident_bsig_processors_name" inputtype="text" name="Name the processors">
+                 <depends option="bp_incident_bsig_dp-breach" value="1"/>
+                 </huiproperty>
+                 
+            </huipropertygroup>
+            
+            <huipropertygroup name="Description of the incident" id="bp_incident_bsig_incident" tags="§_8b_Absatz_4_BSIG">
+            	<huiproperty id="bp_incident_bsig_violated_values"
+                name="Violated values of information security"
+                inputtype="multioption" >
+                <option
+                    id="bp_incident_bsig_availability"
+                    name="availability"/>
+                <option
+                    id="bp_incident_bsig_integrity"
+                    name="integrity"/>
+                <option
+                    id="bp_incident_bsig_authenticity"
+                    name="authenticity"/>
+                <option
+                    id="bp_incident_bsig_confidentiality"
+                    name="confidentiality"/>
+                </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_occurred_asset" inputtype="text" name="What occurred on which asset?" tooltip="Summary"/>
+                <huiproperty id="bp_incident_bsig_occurred_reason" inputtype="text" name="How did it occur?"/>
+                <huiproperty id="bp_incident_bsig_safeguards" inputtype="text" name="Initiated safeguards"/>
+                
+                <huiproperty
+	   				 name="Date of the incident"
+	   				 id="bp_incident_bsig_date_incident"
+	   				 inputtype="date">
+	   				 <defaultRule class="Today" />
+      		  </huiproperty>
+      		  
+      		  <huiproperty id="bp_incident_bsig_time_incident" inputtype="line" name="Time of the incident" tooltip="Time format hh:mm, e.g. 19:53"/>
+                
+                <huiproperty
+	   				 name="Discoverydate of the incident"
+	   				 id="bp_incident_bsig_date_discovery"
+	   				 inputtype="date">
+	   				 <defaultRule class="Today" />
+      		  </huiproperty>
+      		  
+      		  <huiproperty id="bp_incident_bsig_time_discovery" inputtype="line" name="Discoverytime of the incident" tooltip="Time format hh:mm, e.g. 19:53"/>
+                
+                <huiproperty id="bp_incident_bsig_continuing"
+                name="The incident is still continuing"
+                inputtype="singleoption" >
+                <option
+                    id="bp_incident_bsig_continuing_yes"
+                    name="Yes"/>
+                <option
+                    id="bp_incident_bsig_continuing_no"
+                    name="No"/>
+                </huiproperty>
+                                
+                <huiproperty id="bp_incident_bsig_duration" inputtype="line" name="Duration of the incident" tooltip="Format dd:hh:mm, e.g. 07:13:45">
+                <depends option="bp_incident_bsig_continuing" value="bp_incident_bsig_continuing_no" /> 
+                </huiproperty>
+                              
+            	<huiproperty id="bp_incident_bsig_noticed"
+                name="How was the incident noticed?"
+                inputtype="multioption" tooltip="Multiple answers possible">
+                <option
+                    id="bp_incident_bsig_noticed_system_failure"
+                    name="System failure"/>
+                <option
+                    id="bp_incident_bsig_noticed_system_maintenance"
+                    name="System maintenance"/>
+                <option
+                    id="bp_incident_bsig_noticed_third_parties"
+                    name="Information from third parties"/>
+                <option
+                    id="bp_incident_bsig_noticed_BSI"
+                    name="Notes of the BSI"/>
+                    <option
+                    id="bp_incident_bsig_noticed_system_malfunction"
+                    name="System malfunction"/>
+                <option
+                    id="bp_incident_bsig_noticed_monitoring"
+                    name="Technical (network) monitoring"/>
+                <option
+                    id="bp_incident_bsig_noticed_stolen_information"
+                    name="Disclosure of stolen information by third parties"/>
+                <option
+                    id="bp_incident_bsig_noticed_log_files"
+                    name="Evaluation of log files"/>
+                <option
+                    id="bp_incident_bsig_noticed_test_operation"
+                    name="Test operation"/>
+                <option
+                    id="bp_incident_bsig_noticed_audit"
+                    name="Audit, testing, certification"/>
+                <option
+                    id="bp_incident_bsig_noticed_others"
+                    name="Others"/>
+                </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_noticed_others2" inputtype="line" name="Others"/>
+                
+                <huiproperty id="bp_incident_bsig_dp_notification"
+                name="Notification within 72 hours"
+                inputtype="singleoption">
+                <depends option="bp_incident_bsig_dp-breach" value="1"/>
+                <option
+                    id="bp_incident_bsig_dp_notification_yes"
+                    name="Yes"/>
+                <option
+                    id="bp_incident_bsig_dp_notification_no"
+                    name="No"/>
+                </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_dp_notification_reason" inputtype="text" name="Reason">
+                <depends option="bp_incident_bsig_dp-breach" value="1"/>
+                </huiproperty>
+                
+                </huipropertygroup>
+            
+            <huipropertygroup name="Suspected or actual causes" id="bp_incident_bsig_causes" tags="§_8b_Absatz_4_BSIG">
+            	<huiproperty id="bp_incident_bsig_physical_damage"
+                name="Physical damage"
+                inputtype="multioption" tooltip="Multiple answers possible">
+                <option
+                    id="bp_incident_bsig_physical_damage_destruction"
+                    name="Destruction of equipment"/>
+                <option
+                    id="bp_incident_bsig_physical_damage_manipulation"
+                    name="Manipulation of devices"/>
+                <option
+                    id="bp_incident_bsig_physical_damage_theft"
+                    name="Theft of equipment"/>
+                <option
+                    id="bp_incident_bsig_physical_damage_loss"
+                    name="Loss of equipment"/>
+                </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_technical_failure"
+                name="Technical failure"
+                inputtype="multioption" tooltip="Multiple answers possible">
+                <option
+                    id="bp_incident_bsig_technical_failure_hardware"
+                    name="Hardware failure"/>
+                <option
+                    id="bp_incident_bsig_technical_failure_software"
+                    name="Faulty software"/>
+                <option
+                    id="bp_incident_bsig_technical_failure_overload"
+                    name="Overload"/>
+                <option
+                    id="bp_incident_bsig_technical_failure_system"
+                    name="System malfunction"/>
+                </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_organizational_cause"
+                name="Organizational cause"
+                inputtype="multioption" tooltip="Multiple answers possible">
+                <option
+                    id="bp_incident_bsig_organizational_cause_incorrect"
+                    name="Incorrect operation"/>
+                <option
+                    id="bp_incident_bsig_organizational_cause_social"
+                    name="Social engineering"/>
+                <option
+                    id="bp_incident_bsig_organizational_cause_unauthorised"
+                    name="Unauthorised use of resources"/>
+                </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_infrastructure"
+                name="Failure of the infrastructure used"
+                inputtype="multioption" tooltip="Multiple answers possible">
+                <option
+                    id="bp_incident_bsig_infrastructure_power"
+                    name="Power failure"/>
+                <option
+                    id="bp_incident_bsig_infrastructure_cooling"
+                    name="Cooling failure"/>
+                <option
+                    id="bp_incident_bsig_infrastructure_network"
+                    name="Network failure"/>
+                </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_technical"
+                name="Technical attack"
+                inputtype="multioption" tooltip="Multiple answers possible">
+                <option
+                    id="bp_incident_bsig_technical_system_resources"
+                    name="Use of system resources (spam relay, botnet client, CandC server, dropzone server)"/>
+                <option
+                    id="bp_incident_bsig_technical_execution"
+                    name="Code execution"/>
+                <option
+                    id="bp_incident_bsig_technical_weakness"
+                    name="Protocol weakness"/>
+                <option
+                    id="bp_incident_bsig_technical_escalation"
+                    name="Privilege escalation"/>
+                <option
+                    id="bp_incident_bsig_technical_injection"
+                    name="Injection attack"/>
+                <option
+                    id="bp_incident_bsig_technical_css"
+                    name="Cross-site scripting"/>
+                <option
+                    id="bp_incident_bsig_technical_csrf"
+                    name="Cross-site request forgery"/>
+                <option
+                    id="bp_incident_bsig_technical_algorithms"
+                    name="Weak algorithms / keys"/>
+                    <option
+                    id="bp_incident_bsig_technical_webapplication-based"
+                    name="Web application-based attacks, e.g. drive-by exploits"/>
+                <option
+                    id="bp_incident_bsig_technical_webapplications"
+                    name="Attacks on web applications, e.g. SQL injection, buffer overflow"/>
+                <option
+                    id="bp_incident_bsig_technical_applications"
+                    name="Attacks on applications or services like DNS, SMTP, FTP"/>
+                <option
+                    id="bp_incident_bsig_technical_passwords"
+                    name="Systematic testing of passwords"/>
+                    <option
+                    id="bp_incident_bsig_technical_malware_infection"
+                    name="Malware infection, e.g. through Trojans, rootkits for the purpose of taking control, data manipulation or data leakage"/>
+                <option
+                    id="bp_incident_bsig_technical_ransomware"
+                    name="Ransomware e.g. blocking of IT systems for blackmail purposes"/>
+                <option
+                    id="bp_incident_bsig_technical_adware"
+                    name="Adware, scareware e.g. for fraudulent purposes"/>
+                <option
+                    id="bp_incident_bsig_technical_malware"
+                    name="Multifunctional malware e.g. viruses, worms, riskware"/>
+                    <option
+                    id="bp_incident_bsig_technical_e-mail"
+                    name="Initial attack by e-mail"/>
+                <option
+                    id="bp_incident_bsig_technical_websites"
+                    name="Initial attack via websites (Watering hole attack)"/>
+                <option
+                    id="bp_incident_bsig_technical_hardware"
+                    name="Initial attack via manipulated hardware (e.g. USB stick)"/>
+                <option
+                    id="bp_incident_bsig_technical_information"
+                    name="Disclosure of internal information"/>
+                    <option
+                    id="bp_incident_bsig_technical_access_rights"
+                    name="Unauthorised acquisition of special access rights, e.g. administration rights"/>
+                <option
+                    id="bp_incident_bsig_technical_authorizations"
+                    name="Misuse of authorizations (in particular of access rights), e.g. by external parties via remote maintenance access"/>
+                <option
+                    id="bp_incident_bsig_technical_identity"
+                    name="Concealment of an identity"/>
+                <option
+                    id="bp_incident_bsig_technical_access_data"
+                    name="Theft of access data, e.g. identity theft, phishing, spear phishing, pharming, skimming"/>
+                    <option
+                    id="bp_incident_bsig_technical_certificates"
+                    name="Theft or falsification of certificates"/>
+                <option
+                    id="bp_incident_bsig_technical_internet_domains"
+                    name="Unlawful registration of Internet domains (cyberquatting)"/>
+                <option
+                    id="bp_incident_bsig_technical_flooding"
+                    name="Flooding, e.g. (D)DoS"/>
+                <option
+                    id="bp_incident_bsig_technical_system_crash"
+                    name="Targeted system crash, e.g. packet fragmentation"/>
+                </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_causes_others" inputtype="line" name="Others"/>
+                <huiproperty id="bp_incident_bsig_causes_details" inputtype="text" name="Details" tooltip="e.g. CVE, name of the malware, additional information,..."/>
+                </huipropertygroup>
+                
+                <huipropertygroup name="Affected data" id="bp_incident_bsig_dp_affected_data" tags="§_8b_Absatz_4_BSIG">
+            	    <huiproperty id="bp_incident_bsig_dp_personal_data"
+                name="Categories of personal data"
+                inputtype="multioption" >
+                <depends option="bp_incident_bsig_dp-breach" value="1"/>
+                <option
+                    id="bp_incident_bsig_dp_personal_data_health"
+                    name="Personal data concerning health"/>
+                <option
+                    id="bp_incident_bsig_dp_personal_data_criminal"
+                    name="Data relating to criminal offence"/>
+                <option
+                    id="bp_incident_bsig_dp_personal_data_bank"
+                    name="Bank and credit card account details"/>
+                    <option
+                    id="bp_incident_bsig_dp_personal_data_sexual"
+                    name="Data concerning a natural person's sex life or sexual orientation "/>
+                <option
+                    id="bp_incident_bsig_dp_personal_data_philosophical"
+                    name="Data revealing religious or philosophical beliefs"/>
+                <option
+                    id="bp_incident_bsig_dp_personal_data_ethnic"
+                    name="Data revealing racial or ethnic origin"/>
+                    <option
+                    id="bp_incident_bsig_dp_personal_data_biometric"
+                    name="Biometric data"/>
+                <option
+                    id="bp_incident_bsig_dp_personal_data_genetic"
+                    name="Genetic data"/>
+                <option
+                    id="bp_incident_bsig_dp_personal_data_political"
+                    name="Data revealing political opinions"/>
+                    <option
+                    id="bp_incident_bsig_dp_personal_data_trade-union"
+                    name="Personal data revealing trade-union membership"/>
+                <option
+                    id="bp_incident_bsig_dp_personal_data_scientific"
+                    name="Scientific research"/>
+                <option
+                    id="bp_incident_bsig_dp_personal_data_secrecy"
+                    name="Professional secrecy"/>
+                    <option
+                    id="bp_incident_bsig_dp_personal_data_certificates"
+                    name="Certificates"/>
+                <option
+                    id="bp_incident_bsig_dp_personal_data_martricle"
+                    name="Martricle number"/>
+                <option
+                    id="bp_incident_bsig_dp_personal_data_participants"
+                    name="Lists of participants"/>
+                    <option
+                    id="bp_incident_bsig_dp_personal_data_birth"
+                    name="Date of birth"/>
+                <option
+                    id="bp_incident_bsig_dp_personal_data_E-mail"
+                    name="E-mail addresses"/>
+                <option
+                    id="bp_incident_bsig_dp_personal_data_postal"
+                    name="Postal addresses"/>
+                    <option
+                    id="bp_incident_bsig_dp_personal_data_photos"
+                    name="Photos "/>
+                <option
+                    id="bp_incident_bsig_dp_personal_data_video"
+                    name="Video recordings"/>
+                <option
+                    id="bp_incident_bsig_dp_personal_data_location"
+                    name="Location"/>
+                    <option
+                    id="bp_incident_bsig_dp_personal_data_tax"
+                    name="Tax number"/>
+                <option
+                    id="bp_incident_bsig_dp_personal_data_identity"
+                    name="Identity card number"/>
+                <option
+                    id="bp_incident_bsig_dp_personal_data_identification"
+                    name="Other identification number "/>
+                    <option
+                    id="bp_incident_bsig_dp_personal_data_passwords"
+                    name="Passwords"/>
+                <option
+                    id="bp_incident_bsig_dp_personal_data_economic"
+                    name="Economic circumstances"/>
+                <option
+                    id="bp_incident_bsig_dp_personal_data_unknown"
+                    name="Unknown"/>
+                    <option
+                    id="bp_incident_bsig_dp_personal_data_other"
+                    name="Other data"/>
+                </huiproperty>
+            
+            <huiproperty id="bp_incident_bsig_dp_personal_data_other2" inputtype="text" name="Other data">
+            <depends option="bp_incident_bsig_dp-breach" value="1"/>
+            </huiproperty>
+            
+            <huiproperty id="bp_incident_bsig_dp_number_personal_data" inputtype="line" name="Approximate number of personal data records concerned">
+            <depends option="bp_incident_bsig_dp-breach" value="1"/>
+            </huiproperty>
+            
+                 <huiproperty id="bp_incident_bsig_dp_data_subjects"
+                name="Categories of data subjects "
+                inputtype="multioption" >
+                <depends option="bp_incident_bsig_dp-breach" value="1"/>
+                <option
+                    id="bp_incident_bsig_dp_data_subjects_employees"
+                    name="Employees"/>
+                <option
+                    id="bp_incident_bsig_dp_data_subjects_customers"
+                    name="Customers"/>
+                <option
+                    id="bp_incident_bsig_dp_data_subjects_patients"
+                    name="Patients "/>
+                <option
+                    id="bp_incident_bsig_dp_data_subjects_association"
+                    name="Association or federation members"/>
+                <option
+                    id="bp_incident_bsig_dp_data_subjects_user"
+                    name="User"/>
+                <option
+                    id="bp_incident_bsig_dp_data_subjects_students"
+                    name="Students"/>
+                <option
+                    id="bp_incident_bsig_dp_data_subjects_pupils"
+                    name="Pupils"/>
+                <option
+                    id="bp_incident_bsig_dp_data_subjects_children"
+                    name="Children/Minors "/>
+                <option
+                    id="bp_incident_bsig_dp_data_subjects_vulnerable"
+                    name="Particularly vulnerable persons (e.g. disabled Persons, persons in need of care)"/>
+                    <option
+                    id="bp_incident_bsig_dp_data_subjects_public"
+                    name="Public figures"/>
+                <option
+                    id="bp_incident_bsig_dp_data_subjects_other"
+                    name="Other Data subjects"/>
+                 </huiproperty>
+            
+                <huiproperty id="bp_incident_bsig_dp_data_subjects_other2" inputtype="text" name="Other data subjects">
+                <depends option="bp_incident_bsig_dp-breach" value="1"/>
+                </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_dp_number_data_subjects" inputtype="line" name="Approximate number of data subjects concerned">
+                 <depends option="bp_incident_bsig_dp-breach" value="1"/>
+                 </huiproperty>
+            
+            
+               <huiproperty id="bp_incident_bsig_dp_consequences"
+                name="Likely consequences and impact of the personal data breach on data subjects"
+                inputtype="multioption" >
+                <depends option="bp_incident_bsig_dp-breach" value="1"/>
+                <option
+                    id="bp_incident_bsig_dp_consequences_none"
+                    name="None"/>
+                <option
+                    id="bp_incident_bsig_dp_consequences_loss"
+                    name="Loss of control over their personal data "/>
+                <option
+                    id="bp_incident_bsig_dp_consequences_limitation"
+                    name="Limitation of their rights"/>
+                <option
+                    id="bp_incident_bsig_dp_consequences_discrimination"
+                    name="Discrimination"/>
+                <option
+                    id="bp_incident_bsig_dp_consequences_endangerment"
+                    name="Endangerment of life"/>
+                <option
+                    id="bp_incident_bsig_dp_consequences_fraud"
+                    name="Identity theft or fraud"/>
+                <option
+                    id="bp_incident_bsig_dp_consequences_financial"
+                    name="Financial loss"/>
+                <option
+                    id="bp_incident_bsig_dp_consequences_job"
+                    name="Job loss"/>
+                <option
+                    id="bp_incident_bsig_dp_consequences_existence"
+                    name="Threat to existence"/>
+                    <option
+                    id="bp_incident_bsig_dp_consequences_pseudonymisation"
+                    name="Unauthorised reversal of pseudonymisation"/>
+                <option
+                    id="bp_incident_bsig_dp_consequences_damage"
+                    name="Damage to reputation "/>
+                    <option
+                    id="bp_incident_bsig_dp_consequences_confidentiality"
+                    name="Loss of confidentiality of personal data protected by professional secrecy"/>
+                <option
+                    id="bp_incident_bsig_dp_consequences_economic"
+                    name="Any other significant economic or social disadvantage to the natural person concerned"/>
+                <option
+                    id="bp_incident_bsig_dp_consequences_known"
+                    name="Not yet known"/>
+                <option
+                    id="bp_incident_bsig_dp_consequences_other"
+                    name="Other"/>
+                 </huiproperty>
+            
+                <huiproperty id="bp_incident_bsig_dp_consequences_other2" inputtype="text" name="Other">
+                <depends option="bp_incident_bsig_dp-breach" value="1"/>
+                </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_dp_consequences_explanation" inputtype="text" name="Explanation">
+                <depends option="bp_incident_bsig_dp-breach" value="1"/>
+                </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_dp_level"
+                name="Level of effect for data subject"
+                inputtype="singleoption" >
+                <depends option="bp_incident_bsig_dp-breach" value="1"/>
+                <option
+                    id="bp_incident_bsig_dp_level_negligible "
+                    name="Negligible "/>
+                <option
+                    id="bp_incident_bsig_dp_level_limited"
+                    name="Limited"/>
+                <option
+                    id="bp_incident_bsig_dp_level_significant"
+                    name="Significant"/>
+                <option
+                    id="bp_incident_bsig_dp_level_maximum"
+                    name="Maximum"/>
+                </huiproperty>
+            
+            	 <huiproperty id="bp_incident_bsig_dp_safeguards" inputtype="text" name="Measures taken/planned to deal with the incident">
+                   <depends option="bp_incident_bsig_dp-breach" value="1"/>
+                   </huiproperty>
+            
+            
+            	<huiproperty id="bp_incident_bsig_dp_supervisory_authority"
+                name="Notification to the supervisory authority"
+                inputtype="singleoption" >
+                <depends option="bp_incident_bsig_dp-breach" value="1"/>
+                <option
+                    id="bp_incident_bsig_dp_supervisory_authority_yes"
+                    name="Yes"/>
+                <option
+                    id="bp_incident_bsig_dp_supervisory_authority_no"
+                    name="No"/>
+                </huiproperty>
+            
+                <huiproperty id="bp_incident_bsig_dp_supervisory_authority_reason" inputtype="text" name="Reason">
+                <depends option="bp_incident_bsig_dp-breach" value="1"/>
+                </huiproperty>
+            
+                <huiproperty id="bp_incident_bsig_dp_risk"
+                name="Is the personal data breach likely to present a high risk to the data subjects?"
+                inputtype="singleoption" >
+                <depends option="bp_incident_bsig_dp-breach" value="1"/>
+                <option
+                    id="bp_incident_bsig_dp_risk_yes"
+                    name="Yes"/>
+                <option
+                    id="bp_incident_bsig_dp_risk_no"
+                    name="No"/>
+                </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_dp_informed"
+                name="Have the data subjects been informed about the breach?"
+                inputtype="singleoption" >
+                <depends option="bp_incident_bsig_dp-breach" value="1"/>
+                <option
+                    id="bp_incident_bsig_dp_informed_yes"
+                    name="Yes"/>
+                <option
+                    id="bp_incident_bsig_dp_informed_no"
+                    name="No"/>
+                </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_dp_informed_time" inputtype="line" name="Time of notification">
+                <depends option="bp_incident_bsig_dp-breach" value="1"/>
+                </huiproperty>
+                
+                 <huiproperty id="bp_incident_bsig_dp_informed_comments" inputtype="text" name="Comments">
+                 <depends option="bp_incident_bsig_dp-breach" value="1"/>
+                 </huiproperty>
+                 
+                  <huiproperty id="bp_incident_bsig_dp_informed_form" inputtype="text" name="Form of notification">
+                  <depends option="bp_incident_bsig_dp-breach" value="1"/>
+                  </huiproperty>
+                  
+                  <huiproperty
+           			 name="Document"
+           			 id="bp_incident_bsig_dp_document"
+          			  isURL="true" >
+          			  <depends option="bp_incident_bsig_dp-breach" value="1"/>
+                  </huiproperty>
+                 
+                </huipropertygroup>
+            
+            <huipropertygroup name="General information about the information technology attack" id="bp_incident_bsig_information_technology_attack" tags="§_8b_Absatz_4_BSIG">
+                <huiproperty
+                    id="bp_incident_bsig_information_technology_attack_yes-no"
+                    name="This is not an information technology attack"
+                    tooltip="In this case it is not necessary to fill in the following fields."
+                    inputtype="booleanoption" defaultValue="0" >
+                </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_attacktype"
+                name="Type of attack"
+                inputtype="singleoption" >
+                <depends option="bp_incident_bsig_information_technology_attack_yes-no" value="0"/>
+                <option
+                    id="bp_incident_bsig_attacktype_targeted"
+                    name="Targeted attack"/>
+                <option
+                    id="bp_incident_bsig_attacktype_undirected"
+                    name="Undirected attack "/>
+                <option
+                    id="bp_incident_bsig_attacktype_unknown"
+                    name="Unknown"/>
+                </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_presumed_number" inputtype="line" name="Presumed number" tooltip="In case of multiple attacks, please indicate the presumed number.">
+                <depends option="bp_incident_bsig_information_technology_attack_yes-no" value="0"/>
+                 </huiproperty>
+                 
+                <huiproperty id="bp_incident_bsig_motivation"
+                name="Presumed motivation"
+                inputtype="multioption" tooltip="Multiple answers possible">
+                 <depends option="bp_incident_bsig_information_technology_attack_yes-no" value="0"/>
+                <option
+                    id="bp_incident_bsig_motivation_unknown"
+                    name="Unknown"/>
+                <option
+                    id="bp_incident_bsig_motivation_financial"
+                    name="Financial"/>
+                <option
+                    id="bp_incident_bsig_motivation_personal"
+                    name="Personal"/>
+                <option
+                    id="bp_incident_bsig_motivation_political"
+                    name="Political"/>
+                <option
+                    id="bp_incident_bsig_motivation_criminal"
+                    name="Criminal"/>
+                <option
+                    id="bp_incident_bsig_motivation_terrorist"
+                    name="Terrorist background (obligation for the BSI to forward the report to the BKA)"/>
+                <option
+                    id="bp_incident_bsig_motivation_intelligence_service"
+                    name="Intelligence service background (obligation for the BSI to forward the report to the BfV)"/>
+                <option
+                    id="bp_incident_bsig_motivation_others"
+                    name="Others"/>
+                </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_motivation_others2" inputtype="line" name="Others">
+                <depends option="bp_incident_bsig_information_technology_attack_yes-no" value="0"/>
+                 </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_collected_data"
+                name="Collected data in the course of the analysis"
+                inputtype="multioption" tooltip="Multiple answers possible">
+                 <depends option="bp_incident_bsig_information_technology_attack_yes-no" value="0"/>
+                <option
+                    id="bp_incident_bsig_collected_data_malware_samples"
+                    name="Malware samples"/>
+                <option
+                    id="bp_incident_bsig_collected_data_file_names"
+                    name="File names"/>
+                <option
+                    id="bp_incident_bsig_collected_data_log_files"
+                    name="Log files"/>
+                <option
+                    id="bp_incident_bsig_collected_data_URLs"
+                    name="URLs"/>
+                <option
+                    id="bp_incident_bsig_collected_data_hash_totals"
+                    name="Hash totals"/>
+                <option
+                    id="bp_incident_bsig_collected_data_signatures"
+                    name="Signatures"/>
+                <option
+                    id="bp_incident_bsig_collected_data_IP_addresses"
+                    name="IP addresses"/>
+                <option
+                    id="bp_incident_bsig_collected_data_none"
+                    name="None"/>
+                <option
+                    id="bp_incident_bsig_collected_data_others"
+                    name="Others"/>
+                </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_collected_data_others2" inputtype="line" name="Others">
+                <depends option="bp_incident_bsig_information_technology_attack_yes-no" value="0"/>
+                 </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_law_enforcement"
+                name="Law enforcement"
+                inputtype="singleoption">
+                 <depends option="bp_incident_bsig_information_technology_attack_yes-no" value="0"/>
+                <option
+                    id="bp_incident_bsig_law_enforcement_unknown"
+                    name="Unknown / not specified"/>
+                <option
+                    id="bp_incident_bsig_law_enforcement_no_charges"
+                    name="No criminal charges have been filed"/>
+                <option
+                    id="bp_incident_bsig_law_enforcement_charges"
+                    name="Criminal charges have been filed"/>
+                <option
+                    id="bp_incident_bsig_law_enforcement_BKA"
+                    name="Forwarding of the report to BKA by BSI is desired"/>
+                <option
+                    id="bp_incident_bsig_law_enforcement_identified"
+                    name="Perpetrator was identified"/>
+               
+                </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_law_enforcement_reference_number" inputtype="line" name="Reference number">
+                 <depends option="bp_incident_bsig_information_technology_attack_yes-no" value="0"/>
+                 </huiproperty>
+                <huiproperty id="bp_incident_bsig_law_enforcement_Police_station" inputtype="line" name="Police station">
+                 <depends option="bp_incident_bsig_information_technology_attack_yes-no" value="0"/>
+                 </huiproperty>
+                <huiproperty id="bp_incident_bsig_law_enforcement_federal_state" inputtype="line" name="Federal state ">
+                 <depends option="bp_incident_bsig_information_technology_attack_yes-no" value="0"/>
+                 </huiproperty>
+                
+                </huipropertygroup>
+                
+                <huipropertygroup name="Information on the failure or impairment of critical services" id="bp_incident_bsig_information_failure" tags="§_8b_Absatz_4_BSIG">
+                   <huiproperty id="bp_incident_bsig_failure"
+                name="Did the incident lead to a failure / impairment"
+                inputtype="singleoption" tooltip="Did the incident lead to a failure or to an impairment of the functionality of the Critical Infrastructure (i.e. the critical services)?">
+                <option
+                    id="bp_incident_bsig_failure_yes"
+                    name="Yes, to a failure"/>
+                <option
+                    id="bp_incident_bsig_failure_impairment"
+                    name="Yes, to an impairment"/>
+                <option
+                    id="bp_incident_bsig_failure_no"
+                    name="No"/>
+                </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_failure_no_detail" inputtype="text" name="Safeguards" tooltip="What circumstances or safeguards are in place to ensure that the functionality of the Critical Infrastructure is not compromised?">
+                     <depends option="bp_incident_bsig_failure" value="incident_bsig_failure_no"/>
+                 </huiproperty>
+            
+                <huiproperty id="bp_incident_bsig_functionality" inputtype="text" name="To what extent is the functionality impaired" tooltip="To what extent is the functioning of the Critical Infrastructure (i.e. the availability of critical services) impaired or could it be impaired? Among others, which systems and components are affected or could be affected?"/>
+            
+                 <huiproperty id="bp_incident_bsig_people"
+                name="How many people could be affected?"
+                inputtype="singleoption" tooltip="To the best of your knowledge, how many people could be affected by the impairment / failure of the critical infrastructure?">
+                <option
+                    id="bp_incident_bsig_people_1"
+                    name="less than 250,000 inhabitants (or less than 50% of the threshold specified in the BSI-KritisV for your plant)"/>
+                <option
+                    id="bp_incident_bsig_people_2"
+                    name="250,000 to 500,000 inhabitants (or 50% to 100% of the threshold specified in the BSI-KritisV for your plant)"/>
+                <option
+                    id="bp_incident_bsig_people_3"
+                    name="500,000 to 1,000,000 inhabitants (or 100% to 200% of the threshold specified in the BSI-KritisV for your plant)"/>
+                <option
+                    id="bp_incident_bsig_people_4"
+                    name="1,000,000 to 5,000,000 inhabitants (or 200% to 1000% of the threshold specified in the BSI-KritisV for your installation)"/>
+                <option
+                    id="bp_incident_bsig_people_5"
+                    name="more than 5,000,000 inhabitants (or more than 1000% of the threshold specified in the BSI-KritisV for your installation)"/>
+                <option
+                    id="bp_incident_bsig_people_6"
+                    name="No statement can be made"/>
+                </huiproperty>
+                
+                <huiproperty id="bp_incident_bsig_geographical_spread" inputtype="text" name="Geographical spread" tooltip="What is the (potential) geographical spread of the impairment / failure of the functioning of the Critical Infrastructure (i.e. the critical services)? - City, region, county, state, federal territory"/>
+            
+               <huiproperty id="bp_incident_bsig_cross-border"
+                name="Is the incident (potentially) cross-border?"
+                inputtype="singleoption">
+                <option
+                    id="bp_incident_bsig_cross-border_yes"
+                    name="Yes"/>
+                <option
+                    id="bp_incident_bsig_cross-border_no"
+                    name="No"/>
+                </huiproperty>
+            
+            
+                <huiproperty id="bp_incident_bsig_affected_states" inputtype="text" name="Affected states">
+                	<depends option="bp_incident_bsig_cross-border" value="incident_bsig_cross-border_yes"/>
+                 </huiproperty>
+                 
+                 <huiproperty id="bp_incident_bsig_duration_failure"
+                name="Duration of the impairment / failure"
+                inputtype="singleoption" tooltip="From when to when was the impairment/failure of the functionality of the Critical Infrastructure (i.e. the critical services)">
+                <option
+                    id="bp_incident_bsig_duration_from-to"
+                    name="From - to"/>
+                <option
+                    id="bp_incident_bsig_duration_continues"
+                    name="Impact continues"/>
+                </huiproperty>
+                 
+            <huiproperty
+	   				 name="From (Date)"
+	   				 id="bp_incident_bsig_date_failure_from"
+	   				 inputtype="date">
+	   				 <defaultRule class="Today" />
+      		  </huiproperty>
+      		  
+      		  <huiproperty id="bp_incident_bsig_time_failure_from" inputtype="line" name="From (Time)" tooltip="Time format hh:mm, e.g. 19:53"/>
+                 
+                <huiproperty
+	   				 name="To (Date)"
+	   				 id="bp_incident_bsig_date_failure_to"
+	   				 inputtype="date">
+	   				 <defaultRule class="Today" />
+      		  </huiproperty>
+      		  
+      		  <huiproperty id="bp_incident_bsig_time_failure_to" inputtype="line" name="To (Time)" tooltip="Time format hh:mm, e.g. 19:53"/>
+                 
+            <huiproperty
+	   				 name="Date of detection of the impairment / failure"
+	   				 id="bp_incident_bsig_date_detection"
+	   				 inputtype="date" tooltip="When was the impairment / failure of the functionality of the Critical Infrastructure (i.e. the critical services) identified?">
+	   				 <defaultRule class="Today" />
+      		  </huiproperty>
+      		  
+      		  <huiproperty id="bp_incident_bsig_time_detection" inputtype="line" name="Time of detection of the impairment / failure" tooltip="When was the impairment / failure of the functionality of the Critical Infrastructure (i.e. the critical services) identified? - Time format hh:mm, e.g. 19:53"/>
+                 
+                <huiproperty id="bp_incident_bsig_safeguards_reduce" inputtype="text" name="Safeguards to reduce / prevent" tooltip="What measures have been taken to reduce or remedy the impairment / failure of the functioning of the Critical Infrastructure (i.e. the critical service)?"/>
+                 
+                </huipropertygroup>
+                
+                
+            <huipropertygroup name="Others" id="bp_incident_bsig_others" tags="§_8b_Absatz_4_BSIG">
+            
+            	<huiproperty id="bp_incident_bsig_others_information" inputtype="text" name="Further Information" tooltip="Voluntary indication"/>
+                <huiproperty id="bp_incident_bsig_others_evaluation" inputtype="text" name="Further evaluations" tooltip="Voluntary indication"/>
+                <huiproperty id="bp_incident_bsig_others_further" inputtype="text" name="Further" tooltip="Voluntary indication"/>
+                
+            </huipropertygroup>
     </huientity>
 
     <huientity
