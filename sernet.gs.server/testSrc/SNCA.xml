@@ -4710,7 +4710,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             id="org_name"
             focus="true"
             required="true"
-            tags="Basic, VDA_ISA_Audit" />
+            tags="Basic,VDA-ISA, VDA_ISA_Audit" />
         <huiproperty
             name="Abbreviation"
             id="org_abbr"
@@ -4720,40 +4720,40 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             name="Description"
             id="org_description"
             inputtype="text"
-            tags="Basic" />
+            tags="Basic,VDA-ISA" />
 
         <huiproperty
            name="Company Group" id="org_isa_compgroup"
-           tags="" />
+           tags="Basic,VDA-ISA" />
         <huiproperty
            name="Location" id="org_isa_loc"
-           tags="" />
+           tags="Basic,VDA-ISA" />
         <huiproperty
            name="Address" id="org_isa_addr"
            inputtype="text"
-           tags="" />
+           tags="Basic,VDA-ISA" />
         <huiproperty
            name="Website" id="org_isa_web"
-           tags="" />
+           tags="Basic,VDA-ISA" />
     <huiproperty
            name="Allg. E-Mail Kontakt" id="org_isa_allg_Mail"
-           tags="" />
+           tags="Basic,VDA-ISA" />
         <huiproperty
            name="Short company description" id="org_isa_compdesc"
            inputtype="text"
-           tags="" />
+           tags="Basic,VDA-ISA" />
         <huiproperty
            name="D_B D-U-N-S Nr." id="org_isa_duns"
-           tags="" />
+           tags="Basic,VDA-ISA" />
         <huiproperty
            name="Contact" id="org_isa_cont"
-           tags="" />
+           tags="Basic,VDA-ISA" />
         <huiproperty
            name="Contact Phone" id="org_isa_contphone"
-           tags="" />
+           tags="Basic,VDA-ISA" />
         <huiproperty
            name="Contact email" id="org_isa_contmail"
-           tags="" />
+           tags="Basic,VDA-ISA" />
         <huiproperty
             id="org_tag"
             name="Tags"
@@ -4761,7 +4761,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
          <huiproperty
             id="org_created"
             inputtype="date"
-            tags="Risk"
+            tags="Risk,VDA-ISA"
             >
             <defaultRule class="Today" />
         </huiproperty>
