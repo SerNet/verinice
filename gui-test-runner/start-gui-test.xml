@@ -158,7 +158,7 @@
 <!-- - - - - - - - - - - - - - - - - - 
           target: copy.war.file                      
          - - - - - - - - - - - - - - - - - -->
-<target name="copy.war.file" unless="no-war-copy">
+<target name="copy.war.file" unless="no-war-copy" depends="find.current.war">
     <unzip dest="${server-work-dir}/verinice" src="${war-file}" />
     <mkdir dir="${server-work-dir}/verinice/WEB-INF/elasticsearch" />
     <mkdir dir="${server-work-dir}/verinice/WEB-INF/vnl" />
@@ -314,20 +314,35 @@ lang        : ${verinice.lang}
 	</target>
 
 
-	<!-- - - - - - - - - - - - - - - - - - 
+    <!-- - - - - - - - - - - - - - - - - - 
           target: find.current.zip                      
          - - - - - - - - - - - - - - - - - -->
-	<target name="find.current.v-designer.zip" unless="v-designer.zip">
-		<path id="v-designer-zip-file">
-			<fileset dir="${basedir}">
-				<include name="${v-designer.zip.selector}" />
-			</fileset>
-		</path>
+    <target name="find.current.v-designer.zip" unless="v-designer.zip">
+        <path id="v-designer-zip-file">
+            <fileset dir="${basedir}">
+                <include name="${v-designer.zip.selector}" />
+            </fileset>
+        </path>
 
-		<pathconvert targetos="unix" property="v-designer.zip" refid="v-designer-zip-file"/>
+        <pathconvert targetos="unix" property="v-designer.zip" refid="v-designer-zip-file"/>
 
-		<echo>found:  ${v-designer.zip}</echo>
-	</target>
+        <echo>found:  ${v-designer.zip}</echo>
+    </target>
+
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: find.current.war                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="find.current.war" unless="war-file">
+        <path id="war-file-1">
+            <fileset dir="${basedir}">
+                <include name="${war.file.selector}" />
+            </fileset>
+        </path>
+
+        <pathconvert targetos="unix" property="war-file" refid="war-file-1"/>
+
+        <echo>found:  ${war-file}</echo>
+    </target>
 
 	<!-- - - - - - - - - - - - - - - - - - 
           target: unzip.archive.linux                      
