@@ -30947,6 +30947,18 @@ row["red_count"]
 }</expression>
                                 <property name="dataType">integer</property>
                             </structure>
+                            <structure>
+                                <property name="name">color_sort</property>
+                                <expression name="expression" type="javascript">if(row["color"]=="red"){
+100
+}else if(row["color"]=="yellow"){
+10
+}else{
+0
+}</expression>
+                                <property name="dataType">string</property>
+                                <property name="allowExport">true</property>
+                            </structure>
                         </list-property>
                         <method name="onRender"><![CDATA[if(Total.count() < 1){
 reportContext.setGlobalVariable("error", "true");
@@ -30980,7 +30992,7 @@ reportContext.setGlobalVariable("asset_pre_control", Total.count());]]></method>
                             <property name="hideDetail">false</property>
                             <list-property name="sort">
                                 <structure>
-                                    <expression name="key" type="javascript">row["isRed"]</expression>
+                                    <expression name="key" type="javascript">row["color_sort"]</expression>
                                     <property name="direction">desc</property>
                                     <property name="strength">-1</property>
                                 </structure>
@@ -31169,6 +31181,18 @@ row["red_impl_count"]
                                 <property name="dataType">integer</property>
                                 <property name="allowExport">true</property>
                             </structure>
+                            <structure>
+                                <property name="name">color_sort</property>
+                                <expression name="expression" type="javascript">if(row["color_impl"]=="red"){
+100
+}else if(row["color_impl"]=="yellow"){
+10
+}else{
+0
+}</expression>
+                                <property name="dataType">integer</property>
+                                <property name="allowExport">true</property>
+                            </structure>
                         </list-property>
                         <method name="onRender"><![CDATA[if(Total.count() < 1){
 reportContext.setGlobalVariable("error", "true");
@@ -31212,7 +31236,7 @@ reportContext.setGlobalVariable("asset_impl_control", Total.count());]]></method
                             <property name="hideDetail">false</property>
                             <list-property name="sort">
                                 <structure>
-                                    <expression name="key" type="javascript">row["isRed"]</expression>
+                                    <expression name="key" type="javascript">row["color_sort"]</expression>
                                     <property name="direction">desc</property>
                                     <property name="strength">-1</property>
                                 </structure>
