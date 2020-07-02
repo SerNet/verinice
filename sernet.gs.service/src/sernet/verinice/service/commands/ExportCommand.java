@@ -48,11 +48,9 @@ import de.sernet.sync.sync.SyncRequest;
 import de.sernet.sync.sync.SyncRequest.SyncVnaSchemaVersion;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
 import net.sf.ehcache.Statistics;
 import net.sf.ehcache.Status;
 import sernet.gs.service.IThreadCompleteListener;
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.EntityType;
@@ -122,6 +120,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     private transient Set<Integer> riskAnalysisIdSet;
     private transient Set<EntityType> exportedEntityTypes;
     private transient Set<String> exportedTypes;
+    private transient Set<Integer> exportedElementIds;
     private transient CacheManager manager = null;
     private transient String cacheId = null;
     private transient Cache cache = null;
@@ -157,6 +156,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         this.changedElements = Collections.synchronizedList(new LinkedList<>());
         this.linkSet = Collections.synchronizedSet(new HashSet<>());
         this.attachmentSet = Collections.synchronizedSet(new HashSet<>());
+        this.exportedElementIds = Collections.synchronizedSet(new HashSet<>());
         this.riskAnalysisIdSet = Collections.synchronizedSet(new HashSet<>());
         this.exportedTypes = Collections.synchronizedSet(new HashSet<>());
         this.exportedEntityTypes = Collections.synchronizedSet(new HashSet<>());
@@ -310,20 +310,14 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
 
     private void exportLinks(final SyncData syncData) {
         for (final CnALink link : linkSet) {
-            CnATreeElement dependant = link.getDependant();
-            dependant = getFromCache(dependant);
-            if (dependant == null) {
+            if (!exportedElementIds.contains(link.getId().getDependantId())) {
                 log.warn("Dependant of link not found. Check access rights. " + link.getId());
                 continue;
             }
-            link.setDependant(dependant);
-            CnATreeElement dependency = link.getDependency();
-            dependency = getFromCache(dependency);
-            if (dependency == null) {
+            if (!exportedElementIds.contains(link.getId().getDependencyId())) {
                 log.warn("Dependency of link not found. Check access rights. " + link.getId());
                 continue;
             }
-            link.setDependency(dependency);
             ExportFactory.transform(link, syncData.getSyncLink());
         }
     }
@@ -540,23 +534,6 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         }
     }
 
-    private CnATreeElement getFromCache(CnATreeElement element) {
-        final Element cachedElement = getCache().get(element.getUuid());
-        if (cachedElement != null) {
-            element = (CnATreeElement) cachedElement.getValue();
-            if (log.isDebugEnabled()) {
-                log.debug("Element from cache: " + element.getTitle() + ", UUID: "
-                        + element.getUuid());
-            }
-        } else {
-            element = getDao().retrieve(element.getDbId(), RetrieveInfo.getPropertyInstance());
-            if (element != null) {
-                getCache().put(new Element(element.getUuid(), element));
-            }
-        }
-        return element;
-    }
-
     private void configureThread(final ExportThread thread) {
         thread.setCommandService(getCommandService());
         thread.setCache(getCache());
@@ -580,6 +557,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         exportedTypes.addAll(exportThread.getExportedTypes());
         changedElements.addAll(exportThread.getChangedElementList());
         final CnATreeElement element = getElementFromThread(exportThread);
+        exportedElementIds.add(element.getDbId());
         if (element != null && FinishedRiskAnalysis.TYPE_ID.equals(element.getTypeId())) {
             riskAnalysisIdSet.add(element.getDbId());
         }
