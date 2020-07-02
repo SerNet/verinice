@@ -80,14 +80,12 @@ import sernet.verinice.service.sync.VnaSchemaVersion;
  * is 3. You can configure maximum number of threads in
  * veriniceserver-common.xml:
  * 
- * <bean id="hibernateCommandService" class="sernet.verinice.service.HibernateCommandService"> 
- * <!-- Set properties for command instances here --> 
- * <!-- Key is <COMMAND_CLASS_NAME>.<PROPERTY_NAME> --> 
- * <property name="properties"> 
- * <props> 
- *   <prop key="sernet.verinice.service.commands.ExportCommand.maxNumberOfThreads">5</prop>
- * </props> 
- * </property> </bean>
+ * <bean id="hibernateCommandService" class=
+ * "sernet.verinice.service.HibernateCommandService"> <!-- Set properties for
+ * command instances here --> <!-- Key is <COMMAND_CLASS_NAME>.<PROPERTY_NAME>
+ * --> <property name="properties"> <props> <prop key=
+ * "sernet.verinice.service.commands.ExportCommand.maxNumberOfThreads">5</prop>
+ * </props> </property> </bean>
  * 
  * @author <andreas[at]becker[dot]name>
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -303,7 +301,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     private void exportElement(final ExportTransaction exportTransaction) throws CommandException {
         final ExportThread jobThread = new ExportThread(exportTransaction);
         configureThread(jobThread);
-        synchronized(LOCK) {
+        synchronized (LOCK) {
             jobThread.export();
             getValuesFromThread(jobThread);
         }
@@ -331,7 +329,8 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     }
 
     private void exportChildren(final ExportTransaction transaction) throws CommandException {
-        log.debug("Call exportChildren in ExportCommand hashcode " + this.hashCode() + "for object " + transaction.getElement().getTitle());
+        log.debug("Call exportChildren in ExportCommand hashcode " + this.hashCode() + "for object "
+                + transaction.getElement().getTitle());
         final int timeOutFactor = 40;
         final CnATreeElement element = transaction.getElement();
         final Set<CnATreeElement> children = element.getChildren();
@@ -339,7 +338,8 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             children.addAll(getRiskAnalysisOrphanElements(element));
         }
 
-        final List<ExportTransaction> transactionList = Collections.synchronizedList(new ArrayList<>());
+        final List<ExportTransaction> transactionList = Collections
+                .synchronizedList(new ArrayList<>());
 
         taskExecutor = Executors.newFixedThreadPool(getMaxNumberOfThreads());
         if (!children.isEmpty()) {
@@ -357,9 +357,8 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
                         final ExportThread exportThread = (ExportThread) thread;
                         synchronized (LOCK) {
                             if (exportThread.getTransaction().getTarget() != null) {
-                                transaction.getTarget().getChildren().add(
-                                        exportThread.getTransaction().getTarget()
-                                );
+                                transaction.getTarget().getChildren()
+                                        .add(exportThread.getTransaction().getTarget());
                             }
                             getValuesFromThread(exportThread);
                         }
@@ -394,7 +393,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
                 element.getDbId());
         loader = getCommandService().executeCommand(loader);
         FinishedRiskAnalysisLists lists = loader.getFoundLists();
-        if(lists != null) {
+        if (lists != null) {
             returnValue.addAll(lists.getAssociatedGefaehrdungen());
         }
         return returnValue;
