@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.elasticsearch.action.ActionRequestValidationException;
@@ -49,6 +50,7 @@ import org.elasticsearch.index.query.TermsFilterBuilder;
 import org.elasticsearch.indices.IndexMissingException;
 
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IConfigurationService;
@@ -203,16 +205,20 @@ public abstract class BaseDao implements ISearchDao {
     
     
     @Override
-    public MultiSearchRequestBuilder prepareQueryWithAllFields(String typeId, VeriniceQuery query, String username){
-        Map<String, String> map = new ConcurrentHashMap<String, String>();
-        for(String property : HUITypeFactory.getInstance().getEntityType(typeId).getAllPropertyTypeIds()){
+    public MultiSearchRequestBuilder prepareQueryWithAllFields(String typeId, VeriniceQuery query,
+            String username) {
+        Map<String, String> map = new ConcurrentHashMap<>();
+        List<String> propertyTypes = JsonBuilder
+                .filterIndexRelevantProperties(HUITypeFactory.getInstance().getEntityType(typeId))
+                .map(PropertyType::getId).collect(Collectors.toList());
+        for (String property : propertyTypes) {
             map.put(property, query.getQuery());
         }
-        for(String field : EXTRA_FIELDS){
+        for (String field : EXTRA_FIELDS) {
             map.put(field, query.getQuery());
         }
         return buildQueryIterative(map, typeId, username, query);
-        
+
     }
     
     @Override

@@ -21,7 +21,10 @@ package sernet.verinice.search;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -32,7 +35,6 @@ import org.elasticsearch.common.xcontent.XContentFactory;
 import sernet.gs.service.Retriever;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
-import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.IElementTitleCache;
@@ -129,12 +131,26 @@ public class JsonBuilder implements IJsonBuilder {
 
         if (element.getEntity() != null && element.getEntityType() != null
                 && entityType.getAllPropertyTypeIds() != null) {
-            builder = addProperties(builder, entityType.getAllPropertyTypeIds(),
-                    element.getEntity());
+            List<PropertyType> list = filterIndexRelevantProperties(entityType)
+                    .collect(Collectors.toList());
+
+            addProperties(builder, list, element.getEntity());
         }
         return builder.endObject().string();
     }
 
+    /**
+     * Returns the filtered stream of the properties.<br/>
+     * Bools are ignored.<br/>
+     * Refs are ignored.<br/>
+     */
+    public static Stream<PropertyType> filterIndexRelevantProperties(EntityType entityType) {
+        // bools are ignored, reference types are ignored (VN-1204)
+        return entityType.getAllPropertyTypes().stream()
+                .filter(p -> !p.isBooleanSelect() && !p.isReference());
+       }
+
+    
     private static void addPermissions(XContentBuilder builder, CnATreeElement element)
             throws IOException {
         element = Retriever.checkRetrievePermissions(element);
@@ -160,15 +176,10 @@ public class JsonBuilder implements IJsonBuilder {
         builder.endArray();
     }
 
-    private XContentBuilder addProperties(XContentBuilder builder, String[] propertyTypeIds,
-            Entity e) throws IOException {
-        HUITypeFactory factory = HUITypeFactory.getInstance();
-        for (String propertyTypeId : propertyTypeIds) {
-            PropertyType propertyType = factory.getPropertyType(e.getEntityType(), propertyTypeId);
-            // reference types are ignored (VN-1204)
-            if (!propertyType.isReference()) {
-                builder.field(propertyTypeId, mapPropertyString(e, propertyType));
-            }
+    private XContentBuilder addProperties(XContentBuilder builder,
+            List<PropertyType> propertyTypeIds, Entity e) throws IOException {
+        for (PropertyType propertyType : propertyTypeIds) {
+            builder.field(propertyType.getId(), mapPropertyString(e, propertyType));
         }
         return builder;
     }
