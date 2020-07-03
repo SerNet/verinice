@@ -1,0 +1,129 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _74j9YLaIEeiiZL0aNB5Nyg,_kD9CUIxPEei2UKUDmonytQ,_lGnj8Ix1Eei2UKUDmonytQ,_4GRncI0bEei2UKUDmonytQ,_9AEX8Pk3EeiLXcsCitNBjg
+Element-Name: bp_search-performance
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _W8LIoLr0EeqPG55LOVDeqg
+Runtime-Version: 2.5.0.202001211718
+Save-Time: 7/3/20 8:33 PM
+Tags: bp, performance
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Test the modeling in the modernized base protection.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+proc "verify-search-icon" [val element] [val name] [val iconname] {
+    measure-search $name
+    try -times 5 -delay 1000 -command {
+        get-view Suche | get-table | get-item -path $element -column Element | get-property "image.path" | equals
+            [concat "sernet.gs.ui.rcp.main/icons/base-protection/" $iconname ".png"] | verify-true
+    }
+}
+
+
+proc "measure-search" [val query] {
+    try {
+        get-view Suche
+    } -catch {
+        get-button Suche | click
+    }
+    with [get-view Suche] {
+        get-editbox -after [get-label Limit] | set-text $query
+        start-time-measure "execute.search"
+        get-button "Suchen ..." | click
+        stop-time-measure "execute.search" | write-lines [concat "file:" $basedir "/search-measure.csv"] true
+    }
+}
+
+proc "measure-create-bpmodel" [val name]{
+    try {
+        start-time-measure "create-bpmodel"
+        create-bpmodel $name
+        stop-time-measure "create-bpmodel" | write-lines [concat "file:" $basedir "/search-measure.csv"] true
+    } -catch {
+        get-window Fehler | get-button OK | click
+        log [concat "error modeling :" $target]
+    }
+}
+
+proc "measure-create-bpapplication" [val elementpath] [val elementname]{
+    try {
+        start-time-measure "create-bpapplication"
+        create-bpapplication $elementpath $elementname
+        stop-time-measure "create-bpapplication" | write-lines [concat "file:" $basedir "/search-measure.csv"] true
+    } -catch {
+        get-window Fehler | get-button OK | click
+        log [concat "error modeling :" $target]
+    }
+}
+
+proc "measure-create-bproom" [val elementpath] [val elementname]{
+    try {
+        start-time-measure "create-bproom"
+        create-bproom $elementpath $elementname
+        stop-time-measure "create-bproom" | write-lines [concat "file:" $basedir "/search-measure.csv"] true
+    } -catch {
+        get-window Fehler | get-button OK | click
+        log [concat "error modeling :" $target]
+    }
+}
+
+
+log "search performance"
+
+
+
+create-bpmodel 1337
+create-bpprocess "1337/Geschäftsprozesse" Pr0c
+create-bpapplication "1337/Anwendungen" "4pp"
+create-bpitsystem "1337/IT-Systeme" "1t"
+create-bpicssystem "1337/ICS-Systeme" "1c5"
+create-bpnetwork "1337/Kommunikationsverbindungen" N3t
+create-bproom "1337/Räume" R00m
+create-bpperson "1337/Personen" P3r50n
+
+verify-search-icon Pr0c Pr0c business_process
+verify-search-icon P3r50n P3r50n bp_person
+verify-search-icon R00m R00m room
+verify-search-icon N3t N3t network
+
+measure-delete "delete-itverbund-search" 1337
+
+measure-create-bpmodel testname
+// "a3" "a4" "a5" "a6" "a7" "a8" "a9" "a10"
+list aweay1 Room77 "Room 123" "My little room" "Senegal" "Ganzemale" "room-300" Testroom "room-7875" | each [val name] {
+	measure-create-bproom "testname/Räume" $name
+}
+
+list aweay1 Room77 "Room 123" "My little room" "Senegal" "Ganzemale" "room-300" Testroom "room-7875" | each [val name] {
+    verify-search-icon $name $name room
+}
+
+get-view Suche | get-button "Suchindex aktualisieren" | click
+get-window "Bitte bestätigen" | get-button OK | click
+
+list a1 a2 a3 a4 a5 a6 a7 a8 a9 a10| each [val name] {
+    try -times 200 -delay 100  -command {
+        start-time-measure "refresh-index"
+        get-view Suche | get-button "Suchindex aktualisieren" | get-property "getEnabled()" | equals true | verify-true
+    }
+    stop-time-measure "refresh-index" | write-lines [concat "file:" $basedir "/search-measure.csv"] true
+}
+
+list aweay1 Room77 "Room 123" "My little room" "Senegal" "Ganzemale" "room-300" Testroom "room-7875" | each [val name] {
+    verify-search-icon $name $name room
+}
+
+
+measure-delete "delete-itverbund-search" testname
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
