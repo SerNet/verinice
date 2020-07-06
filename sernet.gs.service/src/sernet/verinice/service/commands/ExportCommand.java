@@ -557,9 +557,11 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         exportedTypes.addAll(exportThread.getExportedTypes());
         changedElements.addAll(exportThread.getChangedElementList());
         final CnATreeElement element = getElementFromThread(exportThread);
-        exportedElementIds.add(element.getDbId());
-        if (element != null && FinishedRiskAnalysis.TYPE_ID.equals(element.getTypeId())) {
-            riskAnalysisIdSet.add(element.getDbId());
+        if (element != null) {
+            exportedElementIds.add(element.getDbId());
+            if (FinishedRiskAnalysis.TYPE_ID.equals(element.getTypeId())) {
+                riskAnalysisIdSet.add(element.getDbId());
+            }
         }
     }
 
