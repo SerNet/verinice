@@ -273,11 +273,10 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     }
 
     private void exportElement(final ExportTransaction exportTransaction) throws CommandException {
-        final ExportThread jobThread = new ExportThread(exportTransaction);
-        configureThread(jobThread);
-        jobThread.export();
-        getValuesFromThread(jobThread);
-
+        final ExportTask task = new ExportTask(exportTransaction);
+        configureTask(task);
+        task.export();
+        getValuesFromTask(task);
         exportChildren(exportTransaction);
     }
 
@@ -315,15 +314,14 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
                 }
                 final ExportTransaction childTransaction = new ExportTransaction(child);
                 transactionList.add(childTransaction);
-                final ExportThread thread = new ExportThread(childTransaction);
-                configureThread(thread);
+                final ExportTask task = new ExportTask(childTransaction);
+                configureTask(task);
 
-                thread.export();
-                if (thread.getTransaction().getTarget() != null) {
-                    transaction.getTarget().getChildren().add(thread.getTransaction().getTarget());
+                task.export();
+                if (task.getTransaction().getTarget() != null) {
+                    transaction.getTarget().getChildren().add(task.getTransaction().getTarget());
                 }
-                getValuesFromThread(thread);
-
+                getValuesFromTask(task);
             }
         }
 
@@ -471,29 +469,26 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         }
     }
 
-    private void configureThread(final ExportThread thread) {
-        thread.setCommandService(getCommandService());
-        thread.setCache(cache);
-        thread.setDao(getDao());
-        thread.setAttachmentDao(getDaoFactory().getDAO(Attachment.class));
-        thread.setHuiTypeFactory(getHuiTypeFactory());
-        thread.setSourceId(sourceId);
-        thread.setVeriniceArchive(isVeriniceArchive());
-        thread.setReImport(isReImport());
-        thread.setEntityTypesBlackList(getEntityTypesBlackList());
-        thread.setEntityClassBlackList(getEntityClassBlackList());
+    private void configureTask(final ExportTask task) {
+        task.setCommandService(getCommandService());
+        task.setCache(cache);
+        task.setDao(getDao());
+        task.setAttachmentDao(getDaoFactory().getDAO(Attachment.class));
+        task.setHuiTypeFactory(getHuiTypeFactory());
+        task.setSourceId(sourceId);
+        task.setVeriniceArchive(isVeriniceArchive());
+        task.setReImport(isReImport());
+        task.setEntityTypesBlackList(getEntityTypesBlackList());
+        task.setEntityClassBlackList(getEntityClassBlackList());
     }
 
-    /**
-     * @param exportThread
-     */
-    private void getValuesFromThread(final ExportThread exportThread) {
-        linkSet.addAll(exportThread.getLinkSet());
-        attachmentSet.addAll(exportThread.getAttachmentSet());
-        exportedEntityTypes.addAll(exportThread.getExportedEntityTypes());
-        exportedTypes.addAll(exportThread.getExportedTypes());
-        changedElements.addAll(exportThread.getChangedElementList());
-        final CnATreeElement element = getElementFromThread(exportThread);
+    private void getValuesFromTask(final ExportTask exportTask) {
+        linkSet.addAll(exportTask.getLinkSet());
+        attachmentSet.addAll(exportTask.getAttachmentSet());
+        exportedEntityTypes.addAll(exportTask.getExportedEntityTypes());
+        exportedTypes.addAll(exportTask.getExportedTypes());
+        changedElements.addAll(exportTask.getChangedElementList());
+        final CnATreeElement element = getElementFromTask(exportTask);
         if (element != null) {
             exportedElementIds.add(element.getDbId());
             if (FinishedRiskAnalysis.TYPE_ID.equals(element.getTypeId())) {
@@ -502,11 +497,11 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         }
     }
 
-    private CnATreeElement getElementFromThread(final ExportThread exportThread) {
-        if (exportThread == null || exportThread.getTransaction() == null) {
+    private CnATreeElement getElementFromTask(final ExportTask exportTask) {
+        if (exportTask == null || exportTask.getTransaction() == null) {
             return null;
         }
-        return exportThread.getTransaction().getElement();
+        return exportTask.getTransaction().getElement();
     }
 
     private boolean isVeriniceArchive() {

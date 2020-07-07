@@ -48,9 +48,9 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class ExportThread {
+public class ExportTask {
 
-    private static final Logger LOG = Logger.getLogger(ExportThread.class);
+    private static final Logger LOG = Logger.getLogger(ExportTask.class);
 
     private Cache cache = null;
 
@@ -86,7 +86,7 @@ public class ExportThread {
 
     private ExportReferenceTypes exportReferenceTypes;
 
-    public ExportThread(ExportTransaction transaction) {
+    public ExportTask(ExportTransaction transaction) {
         this.transaction = transaction;
     }
 
