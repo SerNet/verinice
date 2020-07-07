@@ -24,7 +24,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -32,9 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
@@ -50,7 +46,6 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Statistics;
 import net.sf.ehcache.Status;
-import sernet.gs.service.IThreadCompleteListener;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.EntityType;
@@ -74,28 +69,12 @@ import sernet.verinice.service.sync.VnaSchemaVersion;
 /**
  * Creates an VNA or XML representation for the given list of CnATreeElements.
  * 
- * ExportCommand uses multiple threads to load data. Default number of threads
- * is 3. You can configure maximum number of threads in
- * veriniceserver-common.xml:
- * 
- * <bean id="hibernateCommandService" class=
- * "sernet.verinice.service.HibernateCommandService"> <!-- Set properties for
- * command instances here --> <!-- Key is <COMMAND_CLASS_NAME>.<PROPERTY_NAME>
- * --> <property name="properties"> <props> <prop key=
- * "sernet.verinice.service.commands.ExportCommand.maxNumberOfThreads">5</prop>
- * </props> </property> </bean>
- * 
  * @author <andreas[at]becker[dot]name>
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
 public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggingCommand {
     private static final Logger log = Logger.getLogger(ExportCommand.class);
-
-    private static final Object LOCK = new Object();
-
-    public static final String PROP_MAX_NUMBER_OF_THREADS = "maxNumberOfThreads";
-    public static final int DEFAULT_NUMBER_OF_THREADS = 3;
 
     // Configuration fields set by client
     private final List<CnATreeElement> elements;
@@ -124,7 +103,6 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     private transient CacheManager manager = null;
     private transient Cache cache = null;
     private transient IBaseDao<CnATreeElement, Serializable> dao;
-    private transient ExecutorService taskExecutor;
 
     public ExportCommand(final List<CnATreeElement> elements, final String sourceId,
             final boolean reImport) {
@@ -152,13 +130,13 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     }
 
     private void createFields() {
-        this.changedElements = Collections.synchronizedList(new LinkedList<>());
-        this.linkSet = Collections.synchronizedSet(new HashSet<>());
-        this.attachmentSet = Collections.synchronizedSet(new HashSet<>());
-        this.exportedElementIds = Collections.synchronizedSet(new HashSet<>());
-        this.riskAnalysisIdSet = Collections.synchronizedSet(new HashSet<>());
-        this.exportedTypes = Collections.synchronizedSet(new HashSet<>());
-        this.exportedEntityTypes = Collections.synchronizedSet(new HashSet<>());
+        this.changedElements = new LinkedList<>();
+        this.linkSet = new HashSet<>();
+        this.attachmentSet = new HashSet<>();
+        this.exportedElementIds = new HashSet<>();
+        this.riskAnalysisIdSet = new HashSet<>();
+        this.exportedTypes = new HashSet<>();
+        this.exportedEntityTypes = new HashSet<>();
     }
 
     /*
@@ -213,9 +191,6 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
      * @throws CommandException
      */
     private byte[] export() throws CommandException {
-        if (log.isInfoEnabled()) {
-            log.info("Max number of threads is: " + getMaxNumberOfThreads());
-        }
 
         cache = createCache();
 
@@ -300,10 +275,9 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     private void exportElement(final ExportTransaction exportTransaction) throws CommandException {
         final ExportThread jobThread = new ExportThread(exportTransaction);
         configureThread(jobThread);
-        synchronized (LOCK) {
-            jobThread.export();
-            getValuesFromThread(jobThread);
-        }
+        jobThread.export();
+        getValuesFromThread(jobThread);
+
         exportChildren(exportTransaction);
     }
 
@@ -326,17 +300,14 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             log.debug("Call exportChildren in ExportCommand hashcode " + this.hashCode()
                     + "for object " + transaction.getElement().getTitle());
         }
-        final int timeOutFactor = 40;
         final CnATreeElement element = transaction.getElement();
         final Set<CnATreeElement> children = element.getChildren();
         if (FinishedRiskAnalysis.TYPE_ID.equals(element.getTypeId())) {
             children.addAll(getRiskAnalysisOrphanElements(element));
         }
 
-        final List<ExportTransaction> transactionList = Collections
-                .synchronizedList(new ArrayList<>());
+        final List<ExportTransaction> transactionList = new ArrayList<>();
 
-        taskExecutor = Executors.newFixedThreadPool(getMaxNumberOfThreads());
         if (!children.isEmpty()) {
             for (final CnATreeElement child : children) {
                 if (log.isDebugEnabled()) {
@@ -347,25 +318,14 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
                 final ExportThread thread = new ExportThread(childTransaction);
                 configureThread(thread);
 
-                // Multi thread:
-                thread.addListener(new IThreadCompleteListener() {
-                    @Override
-                    public void notifyOfThreadComplete(final Thread thread) {
-                        final ExportThread exportThread = (ExportThread) thread;
-                        synchronized (LOCK) {
-                            if (exportThread.getTransaction().getTarget() != null) {
-                                transaction.getTarget().getChildren()
-                                        .add(exportThread.getTransaction().getTarget());
-                            }
-                            getValuesFromThread(exportThread);
-                        }
-                    }
-                });
-                taskExecutor.execute(thread);
+                thread.export();
+                if (thread.getTransaction().getTarget() != null) {
+                    transaction.getTarget().getChildren().add(thread.getTransaction().getTarget());
+                }
+                getValuesFromThread(thread);
+
             }
         }
-
-        awaitTermination(transactionList.size() * timeOutFactor);
 
         if (log.isDebugEnabled() && !transactionList.isEmpty()) {
             log.debug(transactionList.size() + " export threads finished.");
@@ -464,32 +424,6 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         getDao().clear();
         if (log.isDebugEnabled()) {
             log.debug("Hibernate session cleared.");
-        }
-    }
-
-    /**
-     * @param timeout
-     *            in seconds
-     */
-    private void awaitTermination(final int timeout) {
-        final int secondsUntilTimeOut = 60;
-        taskExecutor.shutdown();
-        try {
-            // Wait a while for existing tasks to terminate
-            if (!taskExecutor.awaitTermination(timeout, TimeUnit.SECONDS)) {
-                log.error("Export executer timeout reached: " + timeout
-                        + "s. Terminating execution now.");
-                taskExecutor.shutdownNow(); // Cancel currently executing tasks
-                // Wait a while for tasks to respond to being cancelled
-                if (!taskExecutor.awaitTermination(secondsUntilTimeOut, TimeUnit.SECONDS)) {
-                    log.error("Export executer did not terminate.");
-                }
-            }
-        } catch (final InterruptedException ie) {
-            // (Re-)Cancel if current thread also interrupted
-            taskExecutor.shutdownNow();
-            // Preserve interrupt status
-            Thread.currentThread().interrupt();
         }
     }
 
@@ -647,7 +581,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         return c;
     }
 
-    public synchronized CacheManager getManager() {
+    private CacheManager getManager() {
         if (manager == null || Status.STATUS_SHUTDOWN.equals(manager.getStatus())) {
             manager = CacheManager.create();
         }
@@ -705,34 +639,6 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             attachmentSet = new HashSet<>();
         }
         return attachmentSet;
-    }
-
-    /**
-     * You can configure maximum number of threads in veriniceserver-common.xml:
-     * 
-     * <bean id="hibernateCommandService" class=
-     * "sernet.verinice.service.HibernateCommandService"> <!-- Set properties
-     * for command instances here --> <!-- Key is
-     * <COMMAND_CLASS_NAME>.<PROPERTY_NAME> --> <property name="properties">
-     * <props> <prop key=
-     * "sernet.verinice.service.commands.ExportCommand.maxNumberOfThreads">5</prop>
-     * </props> </property> </bean>
-     * 
-     * @return
-     */
-    private int getMaxNumberOfThreads() {
-        int number = DEFAULT_NUMBER_OF_THREADS;
-        final Object prop = getProperties().get(PROP_MAX_NUMBER_OF_THREADS);
-        if (prop != null) {
-            try {
-                number = Integer.valueOf((String) prop);
-            } catch (final Exception e) {
-                log.error("Error while readind max number of " + "thread from property: "
-                        + PROP_MAX_NUMBER_OF_THREADS + ", value is: " + prop, e);
-                number = DEFAULT_NUMBER_OF_THREADS;
-            }
-        }
-        return number;
     }
 
 }

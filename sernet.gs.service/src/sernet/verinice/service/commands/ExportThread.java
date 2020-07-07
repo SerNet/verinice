@@ -33,9 +33,7 @@ import de.sernet.sync.data.SyncObject;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.Status;
-import sernet.gs.service.NotifyingThread;
 import sernet.gs.service.RetrieveInfo;
-import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -50,11 +48,9 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class ExportThread extends NotifyingThread {
+public class ExportThread {
 
     private static final Logger LOG = Logger.getLogger(ExportThread.class);
-
-    private static final Object LOCK = new Object();
 
     private Cache cache = null;
 
@@ -91,31 +87,7 @@ public class ExportThread extends NotifyingThread {
     private ExportReferenceTypes exportReferenceTypes;
 
     public ExportThread(ExportTransaction transaction) {
-        super();
         this.transaction = transaction;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.gs.service.NotifyingThread#doRun()
-     */
-    @Override
-    public void doRun() {
-        try {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Starting export job asyncronly...");
-            }
-            ServerInitializer.inheritVeriniceContextState();
-            // Every thread has it's own Hibernate session
-            // configure filter in this session
-            getCommandService().configureFilter(getDao());
-            export();
-            getCommandService().disableFilter(getDao());
-        } catch (CommandException e) {
-            LOG.error("Error while exporting", e);
-        }
-
     }
 
     /**
@@ -249,38 +221,33 @@ public class ExportThread extends NotifyingThread {
 
     private CnATreeElement getElementFromCache(CnATreeElement element) {
         CnATreeElement fromCache = null;
-        synchronized (LOCK) {
-            if (Status.STATUS_ALIVE.equals(cache.getStatus())) {
-                Element cachedElement = getCache().get(element.getUuid());
-                if (cachedElement != null) {
-                    fromCache = (CnATreeElement) cachedElement.getValue();
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Element from cache: " + element.getTitle() + ", UUID: "
-                                + element.getUuid());
-                    }
+        if (Status.STATUS_ALIVE.equals(cache.getStatus())) {
+            Element cachedElement = getCache().get(element.getUuid());
+            if (cachedElement != null) {
+                fromCache = (CnATreeElement) cachedElement.getValue();
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Element from cache: " + element.getTitle() + ", UUID: "
+                            + element.getUuid());
                 }
-            } else {
-                LOG.warn("Cache is not alive. Can't put element to cache, uuid: "
-                        + element.getUuid());
             }
+        } else {
+            LOG.warn("Cache is not alive. Can't put element to cache, uuid: " + element.getUuid());
         }
+
         return fromCache;
     }
 
     private void cacheElement(CnATreeElement element) {
-        synchronized (LOCK) {
-            if (Status.STATUS_ALIVE.equals(cache.getStatus())
-                    && getElementFromCache(element) == null) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Put element into cache: " + element.getTitle() + " : "
-                            + element.getDbId());
-                }
-                getCache().put(new Element(element.getUuid(), element));
-            } else {
-                LOG.warn("Cache is not alive. Can't put element to cache, uuid: "
-                        + element.getUuid());
+        if (Status.STATUS_ALIVE.equals(cache.getStatus()) && getElementFromCache(element) == null) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Put element into cache: " + element.getTitle() + " : "
+                        + element.getDbId());
             }
+            getCache().put(new Element(element.getUuid(), element));
+        } else {
+            LOG.warn("Cache is not alive. Can't put element to cache, uuid: " + element.getUuid());
         }
+
     }
 
     private void exportAttachments(CnATreeElement element, SyncObject syncObject)
@@ -328,14 +295,14 @@ public class ExportThread extends NotifyingThread {
                         || getEntityClassBlackList().get(element.getClass()) == null);
     }
 
-    public synchronized Set<CnALink> getLinkSet() {
+    public Set<CnALink> getLinkSet() {
         if (linkSet == null) {
             linkSet = new HashSet<>();
         }
         return linkSet;
     }
 
-    public synchronized Set<Attachment> getAttachmentSet() {
+    public Set<Attachment> getAttachmentSet() {
         if (attachmentSet == null) {
             attachmentSet = new HashSet<>();
         }
