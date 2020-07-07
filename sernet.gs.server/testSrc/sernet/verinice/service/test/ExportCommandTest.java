@@ -19,71 +19,194 @@
  ******************************************************************************/
 package sernet.verinice.service.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.xml.bind.JAXB;
 
 import org.apache.log4j.Logger;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
 
+import de.sernet.sync.data.SyncObject;
+import de.sernet.sync.sync.SyncRequest;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.ExportCommand;
+import sernet.verinice.service.commands.LoadCnAElementByExternalID;
+import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
-import sernet.verinice.service.test.helper.vnaimport.BeforeAllVNAImportHelper;
+import sernet.verinice.service.sync.VeriniceArchive;
+import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
 
 /**
  * Tests the command to export data to a VNA.
  * 
  */
-public class ExportCommandTest extends BeforeAllVNAImportHelper {
+public class ExportCommandTest extends CommandServiceProvider {
 
-    private static final Logger LOG = Logger
-            .getLogger(ExportCommandTest.class);
+    private static final Logger LOG = Logger.getLogger(ExportCommandTest.class);
 
-    private static final String VNA_FILENAME = "Export_Test.vna";
-    private static final String SOURCE_ID = "41a219";
-    private static final String EXT_ID_BP_ITNETWORK = "1f581c34-b512-46ba-ab74-7d9b776748dc";
-    
-    /**
-     * Tests the command by loading only processes that are relevant for data
-     * privacy and additionally filtering out all target objects of the type "room" from
-     * the result.
-     * @throws CommandException 
-     * 
-     * @throws Exception
-     */
+    private static final String VNA_FILENAME_Export_test = "Export_Test.vna";
+    private static final String SOURCE_ID_Export_test = "41a219";
+    private static final String EXT_ID_BP_ITNETWORK_Export_test = "1f581c34-b512-46ba-ab74-7d9b776748dc";
+
+    private static final String VNA_FILENAME_testVnaImport = "testVnaImport.vna";
+    private static final String SOURCE_ID_testVnaImport = "CommandServiceTest";
+    private static final String EXT_ID_ORGANIZATION_testVnaImport = "ENTITY_191053";
+
+    private static final String VNA_FILENAME_modplast = "modplast-1.1.vna";
+    private static final String SOURCE_ID_modplast = "SerNet-DM";
+    private static final String EXT_ID_BP_ITNETWORK_modplast = "ENTITY_159007";
+
+    private static ICommandService commandServiceStaticRef;
+
+    @Before
+    public void importVNAs() throws IOException, CommandException, SyncParameterException {
+        if (commandServiceStaticRef == null) {
+            SyncParameter syncParameter = new SyncParameter(true, true, true, false,
+                    SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
+            VNAImportHelper.importFile(
+                    ExportCommandTest.class.getResource(VNA_FILENAME_Export_test).getPath(),
+                    syncParameter);
+            VNAImportHelper.importFile(
+                    ExportCommandTest.class.getResource(VNA_FILENAME_testVnaImport).getPath(),
+                    syncParameter);
+            VNAImportHelper.importFile(
+                    ExportCommandTest.class.getResource(VNA_FILENAME_modplast).getPath(),
+                    syncParameter);
+            commandServiceStaticRef = commandService;
+        }
+    }
+
+    @AfterClass
+    public static void removeImportedData() throws CommandException {
+        List<CnATreeElement> elementsToRemove = new LinkedList<>();
+
+        LoadCnAElementByExternalID command = new LoadCnAElementByExternalID(SOURCE_ID_Export_test,
+                EXT_ID_BP_ITNETWORK_Export_test, false, false);
+        commandServiceStaticRef.executeCommand(command);
+        elementsToRemove.addAll(command.getElements());
+
+        command = new LoadCnAElementByExternalID(SOURCE_ID_testVnaImport,
+                EXT_ID_ORGANIZATION_testVnaImport, false, false);
+        commandServiceStaticRef.executeCommand(command);
+        elementsToRemove.addAll(command.getElements());
+
+        command = new LoadCnAElementByExternalID(SOURCE_ID_modplast, EXT_ID_BP_ITNETWORK_modplast,
+                false, false);
+        commandServiceStaticRef.executeCommand(command);
+        elementsToRemove.addAll(command.getElements());
+
+        RemoveElement<CnATreeElement> removeElement = new RemoveElement<>(elementsToRemove);
+        commandServiceStaticRef.executeCommand(removeElement);
+    }
+
     @Test
-    public void exportScope() throws CommandException  {
+    public void exportScope() throws CommandException {
         // Given:
-        CnATreeElement org = loadElement(SOURCE_ID, EXT_ID_BP_ITNETWORK);
+        CnATreeElement org = loadElement(SOURCE_ID_Export_test, EXT_ID_BP_ITNETWORK_Export_test,
+                false, false, false);
 
         // When:
-        ExportCommand cmd = new ExportCommand(Arrays.asList(org),
-                "testSourceId", 
-                false // no re-import
+        ExportCommand cmd = new ExportCommand(Arrays.asList(org), "testSourceId", false // no
+                                                                                        // re-import
         );
         cmd = commandService.executeCommand(cmd);
 
         // Then:
-        assertTrue("Export did not produce any data.", 
-                cmd.getResult() != null && cmd.getResult().length>0);
-    }
-    
-    @Override
-    protected String getFilePath() {
-        return this.getClass().getResource(VNA_FILENAME).getPath();
-    }
-    
-    @Override
-    protected SyncParameter getSyncParameter() throws SyncParameterException {
-        return new SyncParameter(true, true, true, false,
-                SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
-    }
-    
+        assertTrue("Export did not produce any data.",
+                cmd.getResult() != null && cmd.getResult().length > 0);
+        VeriniceArchive vna = new VeriniceArchive(cmd.getResult());
 
-    
-    
+        SyncRequest syncRequest = JAXB.unmarshal(new ByteArrayInputStream(vna.getVeriniceXml()),
+                SyncRequest.class);
+        assertEquals(1, syncRequest.getSyncData().getSyncObject().size());
+        assertEquals(11, syncRequest.getSyncData().getSyncObject().get(0).getChildren().size());
+        List<SyncObject> allSyncObjects = getAllSyncObjects(syncRequest);
+        assertEquals(351, allSyncObjects.size());
+        assertEquals(0, allSyncObjects.stream().flatMap(o -> o.getFile().stream()).count());
+        assertEquals(983, syncRequest.getSyncData().getSyncLink().size());
+
+    }
+
+    @Test
+    public void exportScopeWithAttachments()
+            throws CommandException, IOException, SyncParameterException {
+
+        // Given:
+        CnATreeElement org = loadElement(SOURCE_ID_testVnaImport, EXT_ID_ORGANIZATION_testVnaImport,
+                false, false, false);
+
+        // When:
+        ExportCommand cmd = new ExportCommand(Arrays.asList(org), "testSourceId", false // no
+                                                                                        // re-import
+        );
+        cmd = commandService.executeCommand(cmd);
+
+        // Then:
+        assertTrue("Export did not produce any data.",
+                cmd.getResult() != null && cmd.getResult().length > 0);
+        VeriniceArchive vna = new VeriniceArchive(cmd.getResult());
+
+        SyncRequest syncRequest = JAXB.unmarshal(new ByteArrayInputStream(vna.getVeriniceXml()),
+                SyncRequest.class);
+        assertEquals(1, syncRequest.getSyncData().getSyncObject().size());
+        assertEquals(4, syncRequest.getSyncData().getSyncObject().get(0).getChildren().size());
+        List<SyncObject> allSyncObjects = getAllSyncObjects(syncRequest);
+        assertEquals(29, allSyncObjects.size());
+        assertEquals(2, allSyncObjects.stream().flatMap(o -> o.getFile().stream()).count());
+        assertEquals(20, syncRequest.getSyncData().getSyncLink().size());
+    }
+
+    @Test
+    public void exportModplast() throws CommandException {
+        // Given:
+        CnATreeElement org = loadElement(SOURCE_ID_modplast, EXT_ID_BP_ITNETWORK_modplast, false,
+                false, false);
+
+        // When:
+        ExportCommand cmd = new ExportCommand(Arrays.asList(org), "testSourceId", false // no
+                                                                                        // re-import
+        );
+        cmd = commandService.executeCommand(cmd);
+
+        // Then:
+        assertTrue("Export did not produce any data.",
+                cmd.getResult() != null && cmd.getResult().length > 0);
+        VeriniceArchive vna = new VeriniceArchive(cmd.getResult());
+
+        SyncRequest syncRequest = JAXB.unmarshal(new ByteArrayInputStream(vna.getVeriniceXml()),
+                SyncRequest.class);
+        assertEquals(1, syncRequest.getSyncData().getSyncObject().size());
+        assertEquals(18, syncRequest.getSyncData().getSyncObject().get(0).getChildren().size());
+        List<SyncObject> allSyncObjects = getAllSyncObjects(syncRequest);
+        assertEquals(5366, allSyncObjects.size());
+        assertEquals(0, allSyncObjects.stream().flatMap(o -> o.getFile().stream()).count());
+        assertEquals(18322, syncRequest.getSyncData().getSyncLink().size());
+
+    }
+
+    private List<SyncObject> getAllSyncObjects(SyncRequest syncRequest) {
+        List<SyncObject> result = new ArrayList<>();
+        syncRequest.getSyncData().getSyncObject()
+                .forEach(o -> addSyncObjectAndDescendants(result, o));
+        return result;
+    }
+
+    private void addSyncObjectAndDescendants(List<SyncObject> result, SyncObject o) {
+        result.add(o);
+        o.getChildren().forEach(child -> addSyncObjectAndDescendants(result, child));
+    }
 
 }

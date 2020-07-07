@@ -331,9 +331,14 @@ public abstract class CommandServiceProvider extends UuidLoader {
     }
 
     protected CnATreeElement loadElement(String sourceId, String extId) throws CommandException {
-        LoadCnAElementByExternalID command = new LoadCnAElementByExternalID(sourceId, extId, false,
-                true);
-        command.setProperties(true);
+        return loadElement(sourceId, extId, true, false, true);
+    }
+
+    protected CnATreeElement loadElement(String sourceId, String extId, boolean loadLinksUp,
+            boolean loadLinksDown, boolean loadProperties) throws CommandException {
+        LoadCnAElementByExternalID command = new LoadCnAElementByExternalID(sourceId, extId,
+                loadLinksDown, loadLinksUp);
+        command.setProperties(loadProperties);
         command = commandService.executeCommand(command);
         List<CnATreeElement> elementList = command.getElements();
         assertEquals(
