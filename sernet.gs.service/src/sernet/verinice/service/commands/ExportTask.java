@@ -103,7 +103,7 @@ public class ExportTask {
      */
     public SyncObject export() throws CommandException {
 
-        exportReferenceTypes = new ExportReferenceTypes(getCommandService());
+        exportReferenceTypes = new ExportReferenceTypes(commandService);
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Exporting element: " + element.getUuid());
@@ -141,7 +141,7 @@ public class ExportTask {
             // Category instance may have no Entity attached to it
             // For those we do not store any property values.
             if (entity != null) {
-                ExportFactory.transform(entity, attributes, typeId, getHuiTypeFactory(),
+                ExportFactory.transform(entity, attributes, typeId, huiTypeFactory,
                         exportReferenceTypes);
             }
 
@@ -160,17 +160,17 @@ public class ExportTask {
             // add links to linkSet
             addLinks(element);
 
-            if (isVeriniceArchive()) {
+            if (veriniceArchive) {
                 // export attachments of the element
                 exportAttachments(element, syncObject);
-                getExportedEntityTypes().add(getHuiTypeFactory().getEntityType(Attachment.TYPE_ID));
+                getExportedEntityTypes().add(huiTypeFactory.getEntityType(Attachment.TYPE_ID));
             }
 
             /**
              * Save source id to re-import element later
              */
-            if (isReImport()) {
-                element.setSourceId(getSourceId());
+            if (reImport) {
+                element.setSourceId(sourceId);
                 if (element.getExtId() == null) {
                     element.setExtId(extId);
                 }
@@ -199,12 +199,12 @@ public class ExportTask {
         RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance();
         ri.setLinksDown(false);
         ri.setLinksUp(false);
-        element = getDao().retrieve(element.getDbId(), ri);
+        element = dao.retrieve(element.getDbId(), ri);
 
         ri = new RetrieveInfo();
         ri.setLinksDown(true);
         ri.setLinksUp(true);
-        CnATreeElement elementWithLinks = getDao().retrieve(element.getDbId(), ri);
+        CnATreeElement elementWithLinks = dao.retrieve(element.getDbId(), ri);
         element.setLinksDown(elementWithLinks.getLinksDown());
         element.setLinksUp(elementWithLinks.getLinksUp());
 
@@ -220,7 +220,7 @@ public class ExportTask {
     private CnATreeElement getElementFromCache(CnATreeElement element) {
         CnATreeElement fromCache = null;
         if (Status.STATUS_ALIVE.equals(cache.getStatus())) {
-            Element cachedElement = getCache().get(element.getUuid());
+            Element cachedElement = cache.get(element.getUuid());
             if (cachedElement != null) {
                 fromCache = (CnATreeElement) cachedElement.getValue();
                 if (LOG.isDebugEnabled()) {
@@ -241,7 +241,7 @@ public class ExportTask {
                 LOG.debug("Put element into cache: " + element.getTitle() + " : "
                         + element.getDbId());
             }
-            getCache().put(new Element(element.getUuid(), element));
+            cache.put(new Element(element.getUuid(), element));
         } else {
             LOG.warn("Cache is not alive. Can't put element to cache, uuid: " + element.getUuid());
         }
@@ -253,7 +253,7 @@ public class ExportTask {
         if (element != null) {
             LoadAttachmentsUserFiltered command = new LoadAttachmentsUserFiltered(
                     element.getDbId());
-            command = getCommandService().executeCommand(command);
+            command = commandService.executeCommand(command);
             List<Attachment> fileList = command.getResult();
             List<SyncFile> fileListXml = syncObject.getFile();
             for (Attachment attachment : fileList) {
@@ -263,12 +263,12 @@ public class ExportTask {
                 syncFile.setExtId(extId);
                 syncFile.setFile(ExportFactory.createZipFileName(attachment));
                 ExportFactory.transform(entity, syncFile.getSyncAttribute(), Attachment.TYPE_ID,
-                        getHuiTypeFactory(), exportReferenceTypes);
+                        huiTypeFactory, exportReferenceTypes);
                 fileListXml.add(syncFile);
-                if (isReImport()) {
+                if (reImport) {
                     attachment.setExtId(extId);
-                    attachment.setSourceId(getSourceId());
-                    getAttachmentDao().saveOrUpdate(attachment);
+                    attachment.setSourceId(sourceId);
+                    attachmentDao.saveOrUpdate(attachment);
                 }
             }
             // Add all files to attachment set, to export file data later
@@ -287,10 +287,10 @@ public class ExportTask {
     }
 
     private boolean checkElement(CnATreeElement element) {
-        return (getEntityTypesBlackList() == null
-                || getEntityTypesBlackList().get(element.getTypeId()) == null)
-                && (getEntityClassBlackList() == null
-                        || getEntityClassBlackList().get(element.getClass()) == null);
+        return (entityTypesBlackList == null
+                || entityTypesBlackList.get(element.getTypeId()) == null)
+                && (entityClassBlackList == null
+                        || entityClassBlackList.get(element.getClass()) == null);
     }
 
     public Set<CnALink> getLinkSet() {
@@ -305,10 +305,6 @@ public class ExportTask {
             attachmentSet = new HashSet<>();
         }
         return attachmentSet;
-    }
-
-    public ICommandService getCommandService() {
-        return commandService;
     }
 
     public Set<EntityType> getExportedEntityTypes() {
@@ -332,24 +328,8 @@ public class ExportTask {
         return changedElementList;
     }
 
-    public boolean isReImport() {
-        return reImport;
-    }
-
-    public boolean isVeriniceArchive() {
-        return veriniceArchive;
-    }
-
     public void setVeriniceArchive(boolean veriniceArchive) {
         this.veriniceArchive = veriniceArchive;
-    }
-
-    public Map<String, String> getEntityTypesBlackList() {
-        return entityTypesBlackList;
-    }
-
-    public Map<Class, Class> getEntityClassBlackList() {
-        return entityClassBlackList;
     }
 
     public void setReImport(boolean reImport) {
@@ -364,10 +344,6 @@ public class ExportTask {
         this.entityClassBlackList = entityClassBlackList;
     }
 
-    public String getSourceId() {
-        return sourceId;
-    }
-
     public void setSourceId(String sourceId) {
         this.sourceId = sourceId;
     }
@@ -376,32 +352,16 @@ public class ExportTask {
         this.commandService = commandService;
     }
 
-    protected HUITypeFactory getHuiTypeFactory() {
-        return huiTypeFactory;
-    }
-
     public void setHuiTypeFactory(HUITypeFactory huiTypeFactory) {
         this.huiTypeFactory = huiTypeFactory;
-    }
-
-    private IBaseDao<CnATreeElement, Serializable> getDao() {
-        return dao;
     }
 
     public void setDao(IBaseDao<CnATreeElement, Serializable> dao) {
         this.dao = dao;
     }
 
-    public IBaseDao<Attachment, Serializable> getAttachmentDao() {
-        return attachmentDao;
-    }
-
     public void setAttachmentDao(IBaseDao<Attachment, Serializable> attachmentDao) {
         this.attachmentDao = attachmentDao;
-    }
-
-    public Cache getCache() {
-        return cache;
     }
 
     public void setCache(Cache cache) {
