@@ -36,6 +36,8 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import de.sernet.sync.data.SyncData;
 import de.sernet.sync.data.SyncObject;
@@ -46,8 +48,10 @@ import de.sernet.sync.sync.SyncRequest;
 import de.sernet.sync.sync.SyncRequest.SyncVnaSchemaVersion;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
 import net.sf.ehcache.Statistics;
 import net.sf.ehcache.Status;
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.EntityType;
@@ -205,6 +209,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         }
 
         for (final CnATreeElement element : elements) {
+            seedCache(element.getScopeId());
             SyncObject exported = exportElement(element);
             syncData.getSyncObject().add(exported);
         }
@@ -232,6 +237,20 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         final ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ExportFactory.marshal(syncRequest, bos);
         return bos.toByteArray();
+    }
+
+    private void seedCache(Integer scopeId) {
+        addToElementsCache(scopeId);
+    }
+
+    private void addToElementsCache(Integer scopeId) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class)
+                .add(Restrictions.eq("scopeId", scopeId));
+        RetrieveInfo retrieveInfo = RetrieveInfo.getPropertyChildrenInstance();
+        retrieveInfo.configureCriteria(criteria);
+        @SuppressWarnings("unchecked")
+        List<CnATreeElement> elementsToCache = getDao().findByCriteria(criteria);
+        elementsToCache.forEach(element -> getCache().put(new Element(element.getDbId(), element)));
     }
 
     private SyncVnaSchemaVersion createVersionData() {

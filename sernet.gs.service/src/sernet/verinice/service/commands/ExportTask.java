@@ -220,7 +220,7 @@ public class ExportTask {
     private CnATreeElement getElementFromCache(CnATreeElement element) {
         CnATreeElement fromCache = null;
         if (Status.STATUS_ALIVE.equals(cache.getStatus())) {
-            Element cachedElement = cache.get(element.getUuid());
+            Element cachedElement = cache.get(element.getDbId());
             if (cachedElement != null) {
                 fromCache = (CnATreeElement) cachedElement.getValue();
                 if (LOG.isDebugEnabled()) {
@@ -241,7 +241,7 @@ public class ExportTask {
                 LOG.debug("Put element into cache: " + element.getTitle() + " : "
                         + element.getDbId());
             }
-            cache.put(new Element(element.getUuid(), element));
+            cache.put(new Element(element.getDbId(), element));
         } else {
             LOG.warn("Cache is not alive. Can't put element to cache, uuid: " + element.getUuid());
         }
