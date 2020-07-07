@@ -33,10 +33,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.annotation.NonNull;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
@@ -108,7 +110,8 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     private transient Set<String> exportedTypes;
     private transient Set<Integer> exportedElementIds;
     private transient CacheManager manager = null;
-    private transient Cache cache = null;
+    private transient Cache elementCache = null;
+    private transient Cache attachmentsCache = null;
     private transient IBaseDao<CnATreeElement, Serializable> dao;
     private transient Map<Integer, Collection<Integer>> elementIdsByParentId;
 
@@ -183,7 +186,8 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             log.error("Exception while exporting", e);
             throw new RuntimeCommandException("Exception while exporting", e);
         } finally {
-            cache.removeAll();
+            elementCache.removeAll();
+            attachmentsCache.removeAll();
             manager.shutdown();
         }
 
@@ -201,7 +205,8 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
      */
     private byte[] export() throws CommandException {
 
-        cache = createCache();
+        elementCache = createElementCache();
+        attachmentsCache = createAttachmentsCache();
 
         final SyncVnaSchemaVersion formatVersion = createVersionData();
 
@@ -212,7 +217,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         }
 
         for (final CnATreeElement element : elements) {
-            seedCache(element.getScopeId());
+            seedCaches(element.getScopeId());
             SyncObject exported = exportElement(element);
             syncData.getSyncObject().add(exported);
         }
@@ -224,8 +229,11 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         exportLinks(syncData);
 
         if (log.isDebugEnabled()) {
-            final Statistics s = cache.getStatistics();
-            log.debug("Cache size: " + s.getObjectCount() + ", hits: " + s.getCacheHits());
+            Statistics s = elementCache.getStatistics();
+            log.debug("Element cache size: " + s.getObjectCount() + ", hits: " + s.getCacheHits());
+            s = attachmentsCache.getStatistics();
+            log.debug("Attachments cache size: " + s.getObjectCount() + ", hits: "
+                    + s.getCacheHits());
         }
 
         final SyncMapping syncMapping = new SyncMapping();
@@ -242,8 +250,9 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         return bos.toByteArray();
     }
 
-    private void seedCache(Integer scopeId) {
+    private void seedCaches(Integer scopeId) {
         addToElementsCache(scopeId);
+        addToAttachmentsCache(scopeId);
     }
 
     private void addToElementsCache(Integer scopeId) {
@@ -257,7 +266,21 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             elementIdsByParentId
                     .computeIfAbsent(element.getParentId(), parentId -> new LinkedList<>())
                     .add(element.getDbId());
-            getCache().put(new Element(element.getDbId(), element));
+            elementCache.put(new Element(element.getDbId(), element));
+        });
+    }
+
+    private void addToAttachmentsCache(Integer scopeId) {
+        @NonNull
+        IBaseDao<Attachment, Serializable> attachmentDao = getDaoFactory().getDAO(Attachment.class);
+        @SuppressWarnings("unchecked")
+        List<Attachment> attachments = attachmentDao.findByCriteria(
+                DetachedCriteria.forClass(Attachment.class).createAlias("cnATreeElement", "element")
+                        .add(Restrictions.eq("element.scopeId", scopeId)));
+        Map<Integer, List<Attachment>> attachmentsByElementId = attachments.stream().collect(
+                Collectors.groupingBy(attachment -> attachment.getCnATreeElement().getDbId()));
+        attachmentsByElementId.forEach((dbId, attachmentsForElement) -> {
+            attachmentsCache.put(new Element(dbId, attachmentsForElement));
         });
     }
 
@@ -364,7 +387,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         }
         HashSet<CnATreeElement> childrenFromCache = new HashSet<>(childIDs.size());
         for (Integer childId : childIDs) {
-            Element entry = getCache().get(childId);
+            Element entry = elementCache.get(childId);
             if (entry == null || entry.getValue() == null) {
                 log.info("Failed to look up children for " + element + " from cache");
                 return element.getChildren();
@@ -510,7 +533,8 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
 
     private void configureTask(final ExportTask task) {
         task.setCommandService(getCommandService());
-        task.setCache(cache);
+        task.setElementCache(elementCache);
+        task.setAttachmentsCache(attachmentsCache);
         task.setDao(getDao());
         task.setAttachmentDao(getDaoFactory().getDAO(Attachment.class));
         task.setHuiTypeFactory(getHuiTypeFactory());
@@ -604,15 +628,26 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         this.filePath = filePath;
     }
 
-    private Cache createCache() {
+    private Cache createElementCache() {
         final int maxElementsInMemory = 20000;
         final int timeToLiveSeconds = 1800;
         final int timeToIdleSeconds = timeToLiveSeconds;
-        String cacheId = UUID.randomUUID().toString();
-        Cache c = new Cache(cacheId, maxElementsInMemory, false, false, timeToLiveSeconds,
-                timeToIdleSeconds);
-        getManager().addCache(c);
-        return c;
+        String elementCacheId = UUID.randomUUID().toString();
+        elementCache = new Cache(elementCacheId, maxElementsInMemory, false, false,
+                timeToLiveSeconds, timeToIdleSeconds);
+        getManager().addCache(elementCache);
+        return elementCache;
+    }
+
+    private Cache createAttachmentsCache() {
+        final int maxElementsInMemory = 20000;
+        final int timeToLiveSeconds = 1800;
+        final int timeToIdleSeconds = timeToLiveSeconds;
+        String attachmentsCacheId = UUID.randomUUID().toString();
+        attachmentsCache = new Cache(attachmentsCacheId, maxElementsInMemory, true, false,
+                timeToLiveSeconds, timeToIdleSeconds);
+        getManager().addCache(attachmentsCache);
+        return attachmentsCache;
     }
 
     private CacheManager getManager() {

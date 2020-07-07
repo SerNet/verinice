@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -52,7 +53,9 @@ public class ExportTask {
 
     private static final Logger LOG = Logger.getLogger(ExportTask.class);
 
-    private Cache cache = null;
+    private Cache elementCache = null;
+
+    private Cache attachmentsCache = null;
 
     private IBaseDao<CnATreeElement, Serializable> dao;
 
@@ -219,8 +222,8 @@ public class ExportTask {
 
     private CnATreeElement getElementFromCache(CnATreeElement element) {
         CnATreeElement fromCache = null;
-        if (Status.STATUS_ALIVE.equals(cache.getStatus())) {
-            Element cachedElement = cache.get(element.getDbId());
+        if (Status.STATUS_ALIVE.equals(elementCache.getStatus())) {
+            Element cachedElement = elementCache.get(element.getDbId());
             if (cachedElement != null) {
                 fromCache = (CnATreeElement) cachedElement.getValue();
                 if (LOG.isDebugEnabled()) {
@@ -236,12 +239,13 @@ public class ExportTask {
     }
 
     private void cacheElement(CnATreeElement element) {
-        if (Status.STATUS_ALIVE.equals(cache.getStatus()) && getElementFromCache(element) == null) {
+        if (Status.STATUS_ALIVE.equals(elementCache.getStatus())
+                && getElementFromCache(element) == null) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Put element into cache: " + element.getTitle() + " : "
                         + element.getDbId());
             }
-            cache.put(new Element(element.getDbId(), element));
+            elementCache.put(new Element(element.getDbId(), element));
         } else {
             LOG.warn("Cache is not alive. Can't put element to cache, uuid: " + element.getUuid());
         }
@@ -251,29 +255,31 @@ public class ExportTask {
     private void exportAttachments(CnATreeElement element, SyncObject syncObject)
             throws CommandException {
         if (element != null) {
-            LoadAttachmentsUserFiltered command = new LoadAttachmentsUserFiltered(
-                    element.getDbId());
-            command = commandService.executeCommand(command);
-            List<Attachment> fileList = command.getResult();
-            List<SyncFile> fileListXml = syncObject.getFile();
-            for (Attachment attachment : fileList) {
-                SyncFile syncFile = new SyncFile();
-                Entity entity = attachment.getEntity();
-                String extId = ExportFactory.createExtId(attachment);
-                syncFile.setExtId(extId);
-                syncFile.setFile(ExportFactory.createZipFileName(attachment));
-                ExportFactory.transform(entity, syncFile.getSyncAttribute(), Attachment.TYPE_ID,
-                        huiTypeFactory, exportReferenceTypes);
-                fileListXml.add(syncFile);
-                if (reImport) {
-                    attachment.setExtId(extId);
-                    attachment.setSourceId(sourceId);
-                    attachmentDao.saveOrUpdate(attachment);
-                }
-            }
-            // Add all files to attachment set, to export file data later
-            getAttachmentSet().addAll(fileList);
+            Optional.ofNullable(attachmentsCache.get(element.getDbId())).map(Element::getValue)
+                    .ifPresent(value -> {
+                        List<Attachment> fileList = (List<Attachment>) value;
+                        List<SyncFile> fileListXml = syncObject.getFile();
+                        for (Attachment attachment : fileList) {
+                            SyncFile syncFile = new SyncFile();
+                            Entity entity = attachment.getEntity();
+                            String extId = ExportFactory.createExtId(attachment);
+                            syncFile.setExtId(extId);
+                            syncFile.setFile(ExportFactory.createZipFileName(attachment));
+                            ExportFactory.transform(entity, syncFile.getSyncAttribute(),
+                                    Attachment.TYPE_ID, huiTypeFactory, exportReferenceTypes);
+                            fileListXml.add(syncFile);
+                            if (reImport) {
+                                attachment.setExtId(extId);
+                                attachment.setSourceId(sourceId);
+                                attachmentDao.saveOrUpdate(attachment);
+                            }
+                        }
+                        // Add all files to attachment set, to export file data
+                        // later
+                        getAttachmentSet().addAll(fileList);
+                    });
         }
+
     }
 
     private void addLinks(CnATreeElement element) {
@@ -364,8 +370,12 @@ public class ExportTask {
         this.attachmentDao = attachmentDao;
     }
 
-    public void setCache(Cache cache) {
-        this.cache = cache;
+    public void setElementCache(Cache cache) {
+        this.elementCache = cache;
+    }
+
+    public void setAttachmentsCache(Cache cache) {
+        this.attachmentsCache = cache;
     }
 
     public CnATreeElement getElement() {
