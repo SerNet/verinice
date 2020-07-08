@@ -268,6 +268,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
                     .add(element.getDbId());
             elementCache.put(new Element(element.getDbId(), element));
         });
+        loadLinks(scopeId);
     }
 
     private void addToAttachmentsCache(Integer scopeId) {
@@ -281,6 +282,21 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
                 Collectors.groupingBy(attachment -> attachment.getCnATreeElement().getDbId()));
         attachmentsByElementId.forEach((dbId, attachmentsForElement) -> {
             attachmentsCache.put(new Element(dbId, attachmentsForElement));
+        });
+    }
+
+    private void loadLinks(Integer scopeId) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class)
+                .add(Restrictions.eq("scopeId", scopeId));
+        RetrieveInfo retrieveInfo = new RetrieveInfo();
+        retrieveInfo.setLinksDown(true);
+        retrieveInfo.setLinksUp(true);
+        retrieveInfo.configureCriteria(criteria);
+        @SuppressWarnings("unchecked")
+        List<CnATreeElement> elementsWithLinks = getDao().findByCriteria(criteria);
+        elementsWithLinks.forEach(element -> {
+            linkSet.addAll(element.getLinksDown());
+            linkSet.addAll(element.getLinksUp());
         });
     }
 
@@ -546,7 +562,6 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     }
 
     private void getValuesFromTask(final ExportTask exportTask) {
-        linkSet.addAll(exportTask.getLinkSet());
         attachmentSet.addAll(exportTask.getAttachmentSet());
         exportedEntityTypes.addAll(exportTask.getExportedEntityTypes());
         exportedTypes.addAll(exportTask.getExportedTypes());

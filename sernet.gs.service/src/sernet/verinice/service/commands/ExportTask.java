@@ -42,7 +42,6 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.Attachment;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -64,8 +63,6 @@ public class ExportTask {
     private HUITypeFactory huiTypeFactory;
 
     private CnATreeElement element;
-
-    private Set<CnALink> linkSet;
 
     private Set<Attachment> attachmentSet;
 
@@ -160,8 +157,6 @@ public class ExportTask {
                 // information is needed. We save the typeId for later then.
                 getExportedTypes().add(typeId);
             }
-            // add links to linkSet
-            addLinks(element);
 
             if (veriniceArchive) {
                 // export attachments of the element
@@ -195,21 +190,10 @@ public class ExportTask {
             return elementFromCache;
         }
 
-        // Loading links that point back to parents may cause endless loops in
-        // Hibernate's CriteriaLoader, depending on
-        // the structure of the exported data (see issue VN-2648).
-        // Split loading of children and links to prevent this from happening:
         RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
         ri.setLinksDown(false);
         ri.setLinksUp(false);
         element = dao.retrieve(element.getDbId(), ri);
-
-        ri = new RetrieveInfo();
-        ri.setLinksDown(true);
-        ri.setLinksUp(true);
-        CnATreeElement elementWithLinks = dao.retrieve(element.getDbId(), ri);
-        element.setLinksDown(elementWithLinks.getLinksDown());
-        element.setLinksUp(elementWithLinks.getLinksUp());
 
         cacheElement(element);
 
@@ -282,28 +266,11 @@ public class ExportTask {
 
     }
 
-    private void addLinks(CnATreeElement element) {
-        try {
-            getLinkSet().addAll(element.getLinksDown());
-            getLinkSet().addAll(element.getLinksUp());
-        } catch (Exception e) {
-            LOG.error("error while getting links of element: " + element.getTitle() + "("
-                    + element.getTypeId() + "), UUID: " + element.getUuid(), e);
-        }
-    }
-
     private boolean checkElement(CnATreeElement element) {
         return (entityTypesBlackList == null
                 || entityTypesBlackList.get(element.getTypeId()) == null)
                 && (entityClassBlackList == null
                         || entityClassBlackList.get(element.getClass()) == null);
-    }
-
-    public Set<CnALink> getLinkSet() {
-        if (linkSet == null) {
-            linkSet = new HashSet<>();
-        }
-        return linkSet;
     }
 
     public Set<Attachment> getAttachmentSet() {
