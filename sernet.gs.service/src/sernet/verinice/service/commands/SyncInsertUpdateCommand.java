@@ -106,8 +106,6 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     private static final Logger logrt = Logger
             .getLogger(SyncInsertUpdateCommand.class.getName() + ".rt");
 
-    private static final int FLUSH_LEVEL = 50;
-
     private String sourceId;
     private boolean sourceIdExists;
     private transient SyncMapping syncMapping;
@@ -421,9 +419,6 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             }
 
             merged++;
-            if (merged % FLUSH_LEVEL == 0) {
-                flushAndClearDao(dao);
-            }
         }
 
         if (isVeriniceArchive()) {
@@ -1062,19 +1057,6 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
     private void finalizeDaos() {
         daoMap.clear();
-    }
-
-    private void flushAndClearDao(IBaseDao<CnATreeElement, Serializable> dao) {
-        long flushstart = 0;
-        if (logrt.isDebugEnabled()) {
-            flushstart = System.currentTimeMillis();
-        }
-        dao.flush();
-        dao.clear();
-        if (logrt.isDebugEnabled()) {
-            long time = System.currentTimeMillis() - flushstart;
-            logrt.debug("Flushed, runtime: " + time + " ms");
-        }
     }
 
     private void logRuntime(long start) {
