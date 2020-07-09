@@ -36,36 +36,40 @@ public class SyncParameter implements Serializable {
     private boolean insert;
     private boolean update;
     private boolean delete;
-    private boolean integrate; 
-   
-    public static final Integer EXPORT_FORMAT_VERINICE_ARCHIV = 0; 
-    public static final Integer EXPORT_FORMAT_XML_PURE = 1;  
+    private boolean integrate;
+
+    public static final Integer EXPORT_FORMAT_VERINICE_ARCHIV = 0;
+    public static final Integer EXPORT_FORMAT_XML_PURE = 1;
     public static final Integer EXPORT_FORMAT_DEFAULT = EXPORT_FORMAT_VERINICE_ARCHIV;
-    
+
     private Integer format = EXPORT_FORMAT_DEFAULT;
 
     private boolean importAsCatalog;
 
-    public SyncParameter(boolean insert, boolean update, boolean delete, boolean integrate, boolean importAsCatalog, Integer format) throws SyncParameterException {
+    public SyncParameter(boolean insert, boolean update, boolean delete, boolean integrate,
+            boolean importAsCatalog, Integer format) throws SyncParameterException {
         super();
         this.insert = insert;
         this.update = update;
         this.delete = delete;
         this.integrate = integrate;
         this.importAsCatalog = importAsCatalog;
-        if(format!=null) {
+        if (format != null) {
             this.format = format;
         }
-        
+
         validateAndCorrectParameters();
     }
 
-    public SyncParameter(boolean insert, boolean update, boolean delete, boolean integrate, Integer format) throws SyncParameterException {
+    public SyncParameter(boolean insert, boolean update, boolean delete, boolean integrate,
+            Integer format) throws SyncParameterException {
         this(insert, update, delete, integrate, false, format);
-      }
+    }
 
-    public SyncParameter(boolean insertState, boolean updateState, boolean deleteState, boolean integrate ) throws SyncParameterException {
-        this(insertState, updateState, deleteState, true, false, SyncParameter.EXPORT_FORMAT_DEFAULT);
+    public SyncParameter(boolean insertState, boolean updateState, boolean deleteState,
+            boolean integrate) throws SyncParameterException {
+        this(insertState, updateState, deleteState, true, false,
+                SyncParameter.EXPORT_FORMAT_DEFAULT);
     }
 
     public boolean isInsert() {
@@ -107,7 +111,7 @@ public class SyncParameter implements Serializable {
     public void setFormat(Integer format) {
         this.format = format;
     }
-    
+
     private void validateAndCorrectParameters() throws SyncParameterException {
         if (!(this.insert || this.update || this.delete || this.integrate)) {
             throw new SyncParameterException();

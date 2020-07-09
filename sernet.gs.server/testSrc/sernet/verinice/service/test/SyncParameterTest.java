@@ -50,12 +50,14 @@ public class SyncParameterTest extends ContextConfiguration {
 
     @Resource(name = "commandService")
     protected ICommandService commandService;
-    
+
     @Test
-    public void testSyncSettingsWithInsertUpdateDelete() throws IOException, CommandException, SyncParameterException {
+    public void testSyncSettingsWithInsertUpdateDelete()
+            throws IOException, CommandException, SyncParameterException {
         try {
             for (boolean[] arguments : new BooleanCombinator(4).getBooleanList()) {
-                SyncParameter syncParameter = new SyncParameter(arguments[0], arguments[1], arguments[2], arguments[3]);
+                SyncParameter syncParameter = new SyncParameter(arguments[0], arguments[1],
+                        arguments[2], arguments[3]);
                 importFromByteArray(syncParameter, IT_NETWORK_VNA);
                 importFromFile(syncParameter, IT_NETWORK_VNA);
             }
@@ -66,7 +68,8 @@ public class SyncParameterTest extends ContextConfiguration {
     }
 
     @Test(expected = SyncParameterException.class)
-    public void testSyncSettingsInsertUpdateDeleteFormat() throws IOException, CommandException, SyncParameterException {
+    public void testSyncSettingsInsertUpdateDeleteFormat()
+            throws IOException, CommandException, SyncParameterException {
         try {
             testSyncSettingsInVNAFormat(IT_NETWORK_VNA);
             testSyncSettingsInXMLPureFormat(IT_NETWORK_XML);
@@ -74,9 +77,10 @@ public class SyncParameterTest extends ContextConfiguration {
             log.debug("reading test file failed");
             throw ex;
         }
-    }    
+    }
 
-    private void testSyncSettingsInVNAFormat(String file) throws IOException, CommandException, SyncParameterException {
+    private void testSyncSettingsInVNAFormat(String file)
+            throws IOException, CommandException, SyncParameterException {
 
         for (SyncParameter syncParameter : getAllSyncParameterCombinations()) {
             importFromByteArray(syncParameter, file);
@@ -85,10 +89,12 @@ public class SyncParameterTest extends ContextConfiguration {
 
     }
 
-    private void testSyncSettingsInXMLPureFormat(String file) throws IOException, CommandException, SyncParameterException {
+    private void testSyncSettingsInXMLPureFormat(String file)
+            throws IOException, CommandException, SyncParameterException {
 
         for (boolean[] arguments : new BooleanCombinator(4).getBooleanList()) {
-            SyncParameter syncParameter = new SyncParameter(arguments[0], arguments[1], arguments[2], arguments[3], SyncParameter.EXPORT_FORMAT_XML_PURE);
+            SyncParameter syncParameter = new SyncParameter(arguments[0], arguments[1],
+                    arguments[2], arguments[3], SyncParameter.EXPORT_FORMAT_XML_PURE);
             importFromByteArray(syncParameter, file);
             // testVnAImportFromFile(syncParameter, file);
         }
@@ -98,21 +104,27 @@ public class SyncParameterTest extends ContextConfiguration {
 
         List<SyncParameter> syncParameterCombinations = new ArrayList<SyncParameter>(0);
         for (boolean[] arguments : new BooleanCombinator(4).getBooleanList()) {
-            syncParameterCombinations.add(new SyncParameter(arguments[0], arguments[1], arguments[2], arguments[3], SyncParameter.EXPORT_FORMAT_DEFAULT));
-            syncParameterCombinations.add(new SyncParameter(arguments[0], arguments[1], arguments[2], arguments[3], SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV));
+            syncParameterCombinations.add(new SyncParameter(arguments[0], arguments[1],
+                    arguments[2], arguments[3], SyncParameter.EXPORT_FORMAT_DEFAULT));
+            syncParameterCombinations.add(new SyncParameter(arguments[0], arguments[1],
+                    arguments[2], arguments[3], SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV));
         }
 
         return syncParameterCombinations;
     }
 
-    private void importFromByteArray(SyncParameter syncParameter, String file) throws IOException, CommandException {
-        byte[] it_network_vna = FileUtils.readFileToByteArray(new File(getClass().getResource(file).getPath()));
+    private void importFromByteArray(SyncParameter syncParameter, String file)
+            throws IOException, CommandException {
+        byte[] it_network_vna = FileUtils
+                .readFileToByteArray(new File(getClass().getResource(file).getPath()));
         SyncCommand syncCommand = new SyncCommand(syncParameter, it_network_vna);
         commandService.executeCommand(syncCommand);
     }
 
-    private void importFromFile(SyncParameter syncParameter, String file) throws IOException, CommandException {
-        SyncCommand syncCommand = new SyncCommand(syncParameter, getFilePathRelativeToThisClass(file));
+    private void importFromFile(SyncParameter syncParameter, String file)
+            throws IOException, CommandException {
+        SyncCommand syncCommand = new SyncCommand(syncParameter,
+                getFilePathRelativeToThisClass(file));
         commandService.executeCommand(syncCommand);
     };
 
