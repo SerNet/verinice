@@ -68,7 +68,7 @@ public class SyncParameter implements Serializable {
 
     public SyncParameter(boolean insertState, boolean updateState, boolean deleteState,
             boolean integrate) throws SyncParameterException {
-        this(insertState, updateState, deleteState, true, false,
+        this(insertState, updateState, deleteState, integrate, false,
                 SyncParameter.EXPORT_FORMAT_DEFAULT);
     }
 
