@@ -48,9 +48,16 @@ public class LoadSubtreeIds extends GenericCommand {
 
     private Set<Integer> dbIdsOfSubtree = new HashSet<>();
 
+    private String typeId;
+
     public LoadSubtreeIds(CnATreeElement element) {
+        this(element, null);
+    }
+
+    public LoadSubtreeIds(CnATreeElement element, String typeId) {
         super();
         this.element = element;
+        this.typeId = typeId;
     }
 
     /*
@@ -61,16 +68,20 @@ public class LoadSubtreeIds extends GenericCommand {
         validateElement(this.element);
 
         List<Object[]> parentChildRelationships = loadDbAndParentIdsOfScope(element.getScopeId());
-        Map<Integer, Set<Integer>> childIdsByParentId = parentChildRelationships.stream()
-                .collect(Collectors.groupingBy(item -> (Integer) item[1],
-                        Collectors.mapping(item -> (Integer) item[0], Collectors.toSet())));
+        Map<Object, List<Object[]>> childIdsByParentId = parentChildRelationships.stream()
+                .collect(Collectors.groupingBy(item -> (Integer) item[1]));
 
-        Set<Integer> childrenOnCurrentLevel = Collections.singleton(element.getDbId());
+        Set<Object[]> childrenOnCurrentLevel = Collections
+                .singleton(new Object[] { element.getDbId(), null, element.getTypeId() });
         while (!childrenOnCurrentLevel.isEmpty()) {
-            Set<Integer> childrenOnNextLevel = new HashSet<>();
-            for (Integer elementId : childrenOnCurrentLevel) {
-                dbIdsOfSubtree.add(elementId);
-                Set<Integer> children = childIdsByParentId.get(elementId);
+            Set<Object[]> childrenOnNextLevel = new HashSet<>();
+            for (Object[] childData : childrenOnCurrentLevel) {
+                Integer childId = (Integer) childData[0];
+                String childType = (String) childData[2];
+                if (typeId == null || typeId.equals(childType)) {
+                    dbIdsOfSubtree.add(childId);
+                }
+                List<Object[]> children = childIdsByParentId.get(childId);
                 if (children != null) {
                     childrenOnNextLevel.addAll(children);
                 }
@@ -92,7 +103,7 @@ public class LoadSubtreeIds extends GenericCommand {
                     ProjectionList projectionList = Projections.projectionList();
                     projectionList.add(Projections.property("dbId"));
                     projectionList.add(Projections.property("parentId"));
-
+                    projectionList.add(Projections.property("objectType"));
                     criteria.setProjection(projectionList);
                     return criteria.list();
                 });
