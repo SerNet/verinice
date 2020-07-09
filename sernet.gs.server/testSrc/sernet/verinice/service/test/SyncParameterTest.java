@@ -56,6 +56,10 @@ public class SyncParameterTest extends ContextConfiguration {
             throws IOException, CommandException, SyncParameterException {
         try {
             for (boolean[] arguments : new BooleanCombinator(4).getBooleanList()) {
+                if (!arguments[0] && !arguments[1] && !arguments[2] && !arguments[3]) {
+                    // skip invalid combination
+                    continue;
+                }
                 SyncParameter syncParameter = new SyncParameter(arguments[0], arguments[1],
                         arguments[2], arguments[3]);
                 importFromByteArray(syncParameter, IT_NETWORK_VNA);
