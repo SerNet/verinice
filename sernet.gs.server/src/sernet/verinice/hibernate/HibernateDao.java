@@ -35,7 +35,8 @@ import sernet.verinice.interfaces.IDao;
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class HibernateDao<T, ID extends Serializable> extends HibernateDaoSupport implements IDao<T, ID>  {
+public class HibernateDao<T, ID extends Serializable> extends HibernateDaoSupport
+        implements IDao<T, ID> {
 
     protected Class<T> type;
 
@@ -44,8 +45,10 @@ public class HibernateDao<T, ID extends Serializable> extends HibernateDaoSuppor
     public HibernateDao(Class<T> type) {
         this.type = type;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.IDao#delete(java.lang.Object)
      */
     @Override
@@ -55,10 +58,12 @@ public class HibernateDao<T, ID extends Serializable> extends HibernateDaoSuppor
         }
         // TODO akoderman update protection requirements on delete (see how it's
         // done during merge())
-        getHibernateTemplate().delete(entity);  
+        getHibernateTemplate().delete(entity);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.IDao#findAll()
      */
     @Override
@@ -71,8 +76,12 @@ public class HibernateDao<T, ID extends Serializable> extends HibernateDaoSuppor
         return findByCriteria(criteria);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDao#findByCriteria(org.hibernate.criterion.DetachedCriteria)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.IDao#findByCriteria(org.hibernate.criterion.
+     * DetachedCriteria)
      */
     @Override
     public List<T> findByCriteria(DetachedCriteria criteria) {
@@ -80,7 +89,9 @@ public class HibernateDao<T, ID extends Serializable> extends HibernateDaoSuppor
         return getHibernateTemplate().findByCriteria(criteria);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.IDao#findById(java.io.Serializable)
      */
     @Override
@@ -88,23 +99,31 @@ public class HibernateDao<T, ID extends Serializable> extends HibernateDaoSuppor
         return (T) getHibernateTemplate().load(type, id);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDao#findByQuery(java.lang.String, java.lang.Object[])
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.IDao#findByQuery(java.lang.String,
+     * java.lang.Object[])
      */
     @Override
     public List<T> findByQuery(String hqlQuery, Object[] params) {
         return getHibernateTemplate().find(hqlQuery, params);
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDao#findByQuery(java.lang.String, java.lang.Object[])
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.IDao#findByQuery(java.lang.String,
+     * java.lang.Object[])
      */
     @Override
     public List<T> findByQuery(String hqlQuery, String[] paramNames, Object[] paramValues) {
         return getHibernateTemplate().findByNamedParam(hqlQuery, paramNames, paramValues);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.IDao#merge(java.lang.Object)
      */
     @Override
@@ -112,14 +131,16 @@ public class HibernateDao<T, ID extends Serializable> extends HibernateDaoSuppor
         return (T) getHibernateTemplate().merge(entity);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.IDao#saveOrUpdate(java.lang.Object)
      */
     @Override
     public void saveOrUpdate(T entity) {
         getHibernateTemplate().saveOrUpdate(entity);
     }
-    
+
     @Override
     public <E> E initializeAndUnproxy(E entity) {
         if (entity == null) {
@@ -128,11 +149,12 @@ public class HibernateDao<T, ID extends Serializable> extends HibernateDaoSuppor
 
         Hibernate.initialize(entity);
         if (entity instanceof HibernateProxy) {
-            entity = (E) ((HibernateProxy) entity).getHibernateLazyInitializer().getImplementation();
+            entity = (E) ((HibernateProxy) entity).getHibernateLazyInitializer()
+                    .getImplementation();
         }
         return entity;
     }
-    
+
     public List findByCallback(HibernateCallback hcb) {
         return getHibernateTemplate().executeFind(hcb);
     }
@@ -152,17 +174,17 @@ public class HibernateDao<T, ID extends Serializable> extends HibernateDaoSuppor
     public void flush() {
         getHibernateTemplate().flush();
     }
-    
+
     public void clear() {
         getHibernateTemplate().clear();
     }
-    
+
     public void reload(T element, Serializable id) {
         // FIXME ak we need to get rid of load() becuase it does not check read
         // access!
         getHibernateTemplate().load(element, id);
     }
-    
+
     public boolean contains(T element) {
         return getHibernateTemplate().contains(element);
     }

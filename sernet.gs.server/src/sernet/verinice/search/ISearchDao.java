@@ -37,44 +37,46 @@ import sernet.verinice.model.search.VeriniceQuery;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public interface ISearchDao {
-    
+
     static final String FIELD_PERMISSION = "permission-roles";
     static final String INDEX_NAME = "verinice";
     static final String PATTERN_IS_READ_ALLOWED = "^[\\w]+\\(r+.*\\)";
     static final String PATTERN_IS_WRITE_ALLOWED = "^[\\w]+\\(.*w+\\)";
-    
+
     public String getIndex();
-    
+
     public String getType();
 
     public ActionResponse updateOrIndex(String id, String json);
-    
+
     public ActionResponse update(String id, String json);
-    
+
     public IndexResponse index(String id, String json);
-    
+
     public DeleteResponse delete(String id);
 
     public void clear();
-    
+
     public SearchResponse findAll();
-    
+
     public SearchResponse find(String title);
-    
+
     public SearchResponse find(String title, Operator operator);
-    
+
     public SearchResponse findByPhrase(String title);
-    
+
     public SearchResponse findByPhrase(String phrase, String entityType);
 
     public SearchResponse find(String property, String title);
 
     public SearchResponse find(String property, String title, Operator operator);
-    
-    public MultiSearchRequestBuilder prepareQueryWithAllFields(String typeId, VeriniceQuery query, String username);
-    
-    public MultiSearchRequestBuilder prepareQueryWithSpecializedFields(Map<String, String> fieldmap, String typeId, String username);
-    
+
+    public MultiSearchRequestBuilder prepareQueryWithAllFields(String typeId, VeriniceQuery query,
+            String username);
+
+    public MultiSearchRequestBuilder prepareQueryWithSpecializedFields(Map<String, String> fieldmap,
+            String typeId, String username);
+
     public MultiSearchResponse executeMultiSearch(MultiSearchRequestBuilder srb);
 
     /**

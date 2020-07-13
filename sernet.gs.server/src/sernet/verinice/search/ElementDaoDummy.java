@@ -36,7 +36,9 @@ import sernet.verinice.model.search.VeriniceQuery;
  */
 public class ElementDaoDummy implements IElementSearchDao {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.search.ISearchDao#getIndex()
      */
     @Override
@@ -44,7 +46,9 @@ public class ElementDaoDummy implements IElementSearchDao {
         return INDEX_NAME;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.search.ISearchDao#getType()
      */
     @Override
@@ -52,31 +56,42 @@ public class ElementDaoDummy implements IElementSearchDao {
         return ElementDao.TYPE_NAME;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.search.ISearchDao#updateOrIndex(java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.search.ISearchDao#updateOrIndex(java.lang.String,
+     * java.lang.String)
      */
     @Override
     public ActionResponse updateOrIndex(String id, String json) {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.search.ISearchDao#update(java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.search.ISearchDao#update(java.lang.String,
+     * java.lang.String)
      */
     @Override
     public ActionResponse update(String id, String json) {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.search.ISearchDao#index(java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.search.ISearchDao#index(java.lang.String,
+     * java.lang.String)
      */
     @Override
     public IndexResponse index(String id, String json) {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.search.ISearchDao#delete(java.lang.String)
      */
     @Override
@@ -84,14 +99,18 @@ public class ElementDaoDummy implements IElementSearchDao {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.search.ISearchDao#clear()
      */
     @Override
     public void clear() {
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.search.ISearchDao#findAll()
      */
     @Override
@@ -99,7 +118,9 @@ public class ElementDaoDummy implements IElementSearchDao {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.search.ISearchDao#find(java.lang.String)
      */
     @Override
@@ -107,15 +128,20 @@ public class ElementDaoDummy implements IElementSearchDao {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.search.ISearchDao#find(java.lang.String, org.elasticsearch.index.query.MatchQueryBuilder.Operator)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.search.ISearchDao#find(java.lang.String,
+     * org.elasticsearch.index.query.MatchQueryBuilder.Operator)
      */
     @Override
     public SearchResponse find(String title, Operator operator) {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.search.ISearchDao#findByPhrase(java.lang.String)
      */
     @Override
@@ -123,64 +149,95 @@ public class ElementDaoDummy implements IElementSearchDao {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.search.ISearchDao#findByPhrase(java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.search.ISearchDao#findByPhrase(java.lang.String,
+     * java.lang.String)
      */
     @Override
     public SearchResponse findByPhrase(String phrase, String entityType) {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.search.ISearchDao#find(java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.search.ISearchDao#find(java.lang.String,
+     * java.lang.String)
      */
     @Override
     public SearchResponse find(String property, String title) {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.search.ISearchDao#find(java.lang.String, java.lang.String, org.elasticsearch.index.query.MatchQueryBuilder.Operator)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.search.ISearchDao#find(java.lang.String,
+     * java.lang.String,
+     * org.elasticsearch.index.query.MatchQueryBuilder.Operator)
      */
     @Override
     public SearchResponse find(String property, String title, Operator operator) {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.search.ISearchDao#prepareQueryWithAllFields(java.lang.String, sernet.verinice.model.search.VeriniceQuery, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.search.ISearchDao#prepareQueryWithAllFields(java.lang.
+     * String, sernet.verinice.model.search.VeriniceQuery, java.lang.String)
      */
     @Override
-    public MultiSearchRequestBuilder prepareQueryWithAllFields(String typeId, VeriniceQuery query, String username) {
+    public MultiSearchRequestBuilder prepareQueryWithAllFields(String typeId, VeriniceQuery query,
+            String username) {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.search.ISearchDao#prepareQueryWithSpecializedFields(java.util.Map, java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.search.ISearchDao#prepareQueryWithSpecializedFields(java.
+     * util.Map, java.lang.String, java.lang.String)
      */
     @Override
-    public MultiSearchRequestBuilder prepareQueryWithSpecializedFields(Map<String, String> fieldmap, String typeId, String username) {
+    public MultiSearchRequestBuilder prepareQueryWithSpecializedFields(Map<String, String> fieldmap,
+            String typeId, String username) {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.search.ISearchDao#executeMultiSearch(org.elasticsearch.action.search.MultiSearchRequestBuilder)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.search.ISearchDao#executeMultiSearch(org.elasticsearch.
+     * action.search.MultiSearchRequestBuilder)
      */
     @Override
     public MultiSearchResponse executeMultiSearch(MultiSearchRequestBuilder srb) {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.search.ISearchDao#find(java.lang.String, sernet.verinice.model.search.VeriniceQuery)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.search.ISearchDao#find(java.lang.String,
+     * sernet.verinice.model.search.VeriniceQuery)
      */
     @Override
     public MultiSearchResponse find(String typeId, VeriniceQuery query) {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.search.IElementSearchDao#findAndGroupByType(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.search.IElementSearchDao#findAndGroupByType(java.lang.
+     * String)
      */
     @Override
     public SearchResponse findAndGroupByType(String term) {

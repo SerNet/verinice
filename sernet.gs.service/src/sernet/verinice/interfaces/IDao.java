@@ -46,9 +46,9 @@ public interface IDao<T, ID extends Serializable> {
     public abstract List findByQuery(String hqlQuery, Object[] params);
 
     public abstract List<T> findByQuery(String hqlQuery, String[] paramNames, Object[] paramValues);
-    
+
     public abstract List findByCriteria(DetachedCriteria criteria);
-    
+
     public abstract <E> E initializeAndUnproxy(E entity);
 
 }
