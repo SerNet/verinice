@@ -39,6 +39,8 @@ public interface IDao<T, ID extends Serializable> {
 
     public abstract void delete(T entity);
 
+    public abstract void delete(List<T> entities);
+
     public abstract T findById(ID id);
 
     public abstract List<@NonNull T> findAll();

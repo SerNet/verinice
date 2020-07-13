@@ -19,9 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.search;
 
+import java.util.List;
 import java.util.Map;
 
 import org.elasticsearch.action.ActionResponse;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.MultiSearchRequestBuilder;
@@ -96,6 +98,11 @@ public class ElementDaoDummy implements IElementSearchDao {
      */
     @Override
     public DeleteResponse delete(String id) {
+        return null;
+    }
+
+    @Override
+    public BulkResponse delete(List<String> ids) {
         return null;
     }
 

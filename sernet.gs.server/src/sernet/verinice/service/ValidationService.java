@@ -460,10 +460,7 @@ public class ValidationService implements IValidationService {
         ServerInitializer.inheritVeriniceContextState();
         DetachedCriteria criteria = DetachedCriteria.forClass(CnAValidation.class)
                 .add(createDbIdRestriction(elmtDbId)).add(createScopeIdRestriction(scopeId));
-        for (CnAValidation validation : (List<CnAValidation>) getCnaValidationDAO()
-                .findByCriteria(criteria)) {
-            getCnaValidationDAO().delete(validation);
-        }
+        getCnaValidationDAO().delete(getCnaValidationDAO().findByCriteria(criteria));
     }
 
     /*
@@ -524,10 +521,7 @@ public class ValidationService implements IValidationService {
         DetachedCriteria criteria = DetachedCriteria.forClass(CnAValidation.class)
                 .add(Restrictions.in("elmtDbId", dbIds))
                 .add(createScopeIdRestriction(elmt.getScopeId()));
-        for (CnAValidation validation : (List<CnAValidation>) getCnaValidationDAO()
-                .findByCriteria(criteria)) {
-            getCnaValidationDAO().delete(validation);
-        }
+        getCnaValidationDAO().delete(getCnaValidationDAO().findByCriteria(criteria));
     }
 
     /*

@@ -30,6 +30,9 @@ import org.apache.log4j.Logger;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.ActionRequestValidationException;
 import org.elasticsearch.action.ActionResponse;
+import org.elasticsearch.action.bulk.BulkRequestBuilder;
+import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.action.delete.DeleteRequestBuilder;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.MultiSearchRequestBuilder;
@@ -155,6 +158,23 @@ public abstract class BaseDao implements ISearchDao {
             LOG.debug("Index removed, uuid: " + id);
         }
         return response;
+    }
+
+    @Override
+    public BulkResponse delete(List<String> ids) {
+        BulkRequestBuilder request = getClient().prepareBulk().setRefresh(true);
+        for (String id : ids) {
+            DeleteRequestBuilder deleteRequest = getClient().prepareDelete(getIndex(), getType(),
+                    id);
+            request.add(deleteRequest);
+        }
+        request.execute().actionGet();
+        BulkResponse response = request.execute().actionGet();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Index removed, uuids: " + ids);
+        }
+        return response;
+
     }
 
     /*

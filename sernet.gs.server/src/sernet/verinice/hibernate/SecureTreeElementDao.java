@@ -114,6 +114,16 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
         indexDelete(entity);
     }
 
+    @Override
+    public void delete(List<CnATreeElement> entities) {
+        for (CnATreeElement cnATreeElement : entities) {
+            checkRights(cnATreeElement);
+        }
+        super.delete(entities);
+        indexDelete(entities);
+
+    }
+
     /*
      * (non-Javadoc)
      * 

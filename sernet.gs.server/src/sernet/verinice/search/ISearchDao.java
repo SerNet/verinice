@@ -20,9 +20,11 @@
  ******************************************************************************/
 package sernet.verinice.search;
 
+import java.util.List;
 import java.util.Map;
 
 import org.elasticsearch.action.ActionResponse;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.MultiSearchRequestBuilder;
@@ -54,6 +56,8 @@ public interface ISearchDao {
     public IndexResponse index(String id, String json);
 
     public DeleteResponse delete(String id);
+
+    public BulkResponse delete(List<String> ids);
 
     public void clear();
 

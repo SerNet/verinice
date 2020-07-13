@@ -19,6 +19,7 @@ package sernet.verinice.hibernate;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.DetachedCriteria;
@@ -227,6 +228,13 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
     protected void indexDelete(CnATreeElement element) {
         if (getSearchDao() != null) {
             getSearchDao().delete(element.getUuid());
+        }
+    }
+
+    protected void indexDelete(List<CnATreeElement> elements) {
+        if (getSearchDao() != null) {
+            getSearchDao().delete(
+                    elements.stream().map(CnATreeElement::getUuid).collect(Collectors.toList()));
         }
     }
 

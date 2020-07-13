@@ -61,6 +61,17 @@ public class HibernateDao<T, ID extends Serializable> extends HibernateDaoSuppor
         getHibernateTemplate().delete(entity);
     }
 
+    @Override
+    public void delete(List<T> entities) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Deleting elements: " + entities);
+        }
+        // TODO akoderman update protection requirements on delete (see how it's
+        // done during merge())
+        getHibernateTemplate().deleteAll(entities);
+
+    }
+
     /*
      * (non-Javadoc)
      * 
