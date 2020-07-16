@@ -346,11 +346,7 @@ public class LinkMaker extends Composite implements IRelationTable {
                     .getSelection();
             DirectedHuiRelation selectedRelation = (DirectedHuiRelation) selection
                     .getFirstElement();
-            if (selectedRelation != null) {
-                addLinkButton.setEnabled(true);
-            } else {
-                addLinkButton.setEnabled(false);
-            }
+            addLinkButton.setEnabled(writeable && selectedRelation != null);
         });
     }
 
