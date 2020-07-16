@@ -103,6 +103,8 @@ public class ElementSelectionComponent {
 
     private Integer height;
 
+    private boolean includeCompendiumElements;
+
     public ElementSelectionComponent(Composite container, String type, Integer scopeId) {
         this(container, type, scopeId, null);
     }
@@ -304,13 +306,17 @@ public class ElementSelectionComponent {
         this.showScopeCheckbox = showScopeCheckbox;
     }
 
+    public void setIncludeCompendiumElements(boolean includeCompendiumElements) {
+        this.includeCompendiumElements = includeCompendiumElements;
+    }
+
     private void loadElementsFromDb() {
         List<CnATreeElement> elements = typeIDs.stream().flatMap(typeId -> {
             LoadCnAElementByEntityTypeId command;
             if (scopeOnly) {
                 command = new LoadCnAElementByEntityTypeId(typeId, getScopeId(), getGroupId());
             } else {
-                command = new LoadCnAElementByEntityTypeId(typeId);
+                command = new LoadCnAElementByEntityTypeId(typeId, includeCompendiumElements);
             }
             try {
                 command = ServiceFactory.lookupCommandService().executeCommand(command);

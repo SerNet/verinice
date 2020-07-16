@@ -50,19 +50,15 @@ public class CnATreeElementSelectionDialog extends Dialog {
 
     private boolean scopeOnly = true, showScopeCheckbox = true;
 
+    private boolean includeCompendiumElements;
+
     /**
      * @param shell
      * @param selectedType
      */
     public CnATreeElementSelectionDialog(Shell shell, String selectedType,
             CnATreeElement inputElmt) {
-        super(shell);
-        int style = SWT.MAX | SWT.CLOSE | SWT.TITLE;
-        style = style | SWT.BORDER | SWT.APPLICATION_MODAL;
-        setShellStyle(style | SWT.RESIZE);
-        this.entityType = selectedType;
-        this.inputElmt = inputElmt;
-
+        this(shell, selectedType, inputElmt, true);
     }
 
     /**
@@ -71,6 +67,17 @@ public class CnATreeElementSelectionDialog extends Dialog {
      */
     public CnATreeElementSelectionDialog(String referencedEntityType, CnATreeElement inputElmt2) {
         this(Display.getCurrent().getActiveShell(), referencedEntityType, inputElmt2);
+    }
+
+    public CnATreeElementSelectionDialog(Shell shell, String selectedType, CnATreeElement inputElmt,
+            boolean includeCompendiumElements) {
+        super(shell);
+        this.includeCompendiumElements = includeCompendiumElements;
+        int style = SWT.MAX | SWT.CLOSE | SWT.TITLE;
+        style = style | SWT.BORDER | SWT.APPLICATION_MODAL;
+        setShellStyle(style | SWT.RESIZE);
+        this.entityType = selectedType;
+        this.inputElmt = inputElmt;
     }
 
     @Override
@@ -99,6 +106,7 @@ public class CnATreeElementSelectionDialog extends Dialog {
         selectionComponent = new ElementSelectionComponent(container, this.entityType, scopeId);
         selectionComponent.setScopeOnly(scopeOnly);
         selectionComponent.setShowScopeCheckbox(showScopeCheckbox);
+        selectionComponent.setIncludeCompendiumElements(includeCompendiumElements);
         selectionComponent.init();
         selectionComponent.loadElements();
 

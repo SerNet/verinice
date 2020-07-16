@@ -58,7 +58,7 @@ final class CreateLinkSelectionListener implements SelectionListener {
                 .getValue();
 
         CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(shell,
-                selectedElementType, linkMaker.inputElmt);
+                selectedElementType, linkMaker.inputElmt, false);
 
         if (dialog.open() != Window.OK) {
             return;
