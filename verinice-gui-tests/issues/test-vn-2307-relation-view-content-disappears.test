@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _K7ivkNajEei2hNb8h7sUBw
-Runtime-Version: 2.4.1.201903190000
-Save-Time: 4/16/19 10:46 AM
+Runtime-Version: 2.5.1.M3
+Save-Time: 7/16/20, 3:21 PM
 Tags: bp, issue
 Testcase-Type: ecl
 
@@ -29,5 +29,7 @@ get-menu -path "Ansicht/View neu laden" | click
 wait 1000 //TODO better check for task completion
 
 get-view "Verknüpfungen" | get-table | get-item "erfüllt" -column "Verknüpfung"
+
+delete-bpelement "importierte Objekte/Informationsverbund-1 \\[b71753\\]"
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

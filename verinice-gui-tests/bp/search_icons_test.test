@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _EAi7sPh1EeiSda4Ee126Dw
-Runtime-Version: 2.3.0.201806262310
-Save-Time: 1/7/19 1:26 PM
+Runtime-Version: 2.5.1.M3
+Save-Time: 7/16/20, 2:42 PM
 Testcase-Type: ecl
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
@@ -71,5 +71,7 @@ verify-search-icon "Einsatzkriterien für IoT-Geräte" "SYS.4.4.M1" safeguard
 
 verify-search-icon "Zentrale Administration von Laptops" "SYS.3.1.A16" bp_requirement //TODO: remove " " from "Laptops " in compendium SYS.3.1.A16
 verify-search-icon "Zentrale Administration von Laptops" "SYS.3.1.M16" safeguard
+
+delete-bpelement "1337"
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
