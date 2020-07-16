@@ -24,12 +24,14 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -46,6 +48,7 @@ public class LoadCnAElementByEntityTypeId extends GenericCommand {
     private String typeId;
     private Integer scopeId;
     private Integer groupId;
+    private boolean includeCatalogElements;
 
     private List<CnATreeElement> list = new ArrayList<CnATreeElement>();
 
@@ -58,6 +61,15 @@ public class LoadCnAElementByEntityTypeId extends GenericCommand {
     }
 
     public LoadCnAElementByEntityTypeId(String typeId, Integer scopeId, Integer groupId) {
+        this(typeId, scopeId, groupId, true);
+    }
+
+    public LoadCnAElementByEntityTypeId(String typeId, boolean includeCatalogElements) {
+        this(typeId, null, null, includeCatalogElements);
+    }
+
+    public LoadCnAElementByEntityTypeId(String typeId, Integer scopeId, Integer groupId,
+            boolean includeCatalogElements) {
         if (MassnahmenUmsetzung.TYPE_ID.equals(typeId)) {
             typeId = MassnahmenUmsetzung.HIBERNATE_TYPE_ID;
         }
@@ -68,6 +80,7 @@ public class LoadCnAElementByEntityTypeId extends GenericCommand {
         this.typeId = typeId;
         this.scopeId = scopeId;
         this.groupId = groupId;
+        this.includeCatalogElements = includeCatalogElements;
     }
 
     @SuppressWarnings("unchecked")
@@ -86,6 +99,13 @@ public class LoadCnAElementByEntityTypeId extends GenericCommand {
         }
         if (groupId != null) {
             crit.add(Restrictions.eq("parentId", groupId));
+        }
+        if (!includeCatalogElements) {
+            List<Integer> catalogScopeDBIds = dao.findByCriteria(
+                    DetachedCriteria.forClass(CnATreeElement.class).createAlias("parent", "parent")
+                            .add(Restrictions.eq("parent.objectType", CatalogModel.TYPE_ID))
+                            .setProjection(Projections.property("dbId")));
+            crit.add(Restrictions.not(Restrictions.in("scopeId", catalogScopeDBIds)));
         }
         crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         list = dao.findByCriteria(crit);
