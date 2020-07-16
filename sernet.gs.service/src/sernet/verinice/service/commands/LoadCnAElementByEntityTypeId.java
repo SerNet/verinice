@@ -43,8 +43,8 @@ import sernet.verinice.model.common.CnATreeElement;
 @SuppressWarnings("serial")
 public class LoadCnAElementByEntityTypeId extends GenericCommand {
 
-    private String typeId;   
-    private Integer scopeId;   
+    private String typeId;
+    private Integer scopeId;
     private Integer groupId;
 
     private List<CnATreeElement> list = new ArrayList<CnATreeElement>();
@@ -52,43 +52,44 @@ public class LoadCnAElementByEntityTypeId extends GenericCommand {
     public LoadCnAElementByEntityTypeId(String typeId) {
         this(typeId, null, null);
     }
-    
+
     public LoadCnAElementByEntityTypeId(String typeId, Integer scopeId) {
         this(typeId, scopeId, null);
     }
-    
+
     public LoadCnAElementByEntityTypeId(String typeId, Integer scopeId, Integer groupId) {
-        if(MassnahmenUmsetzung.TYPE_ID.equals(typeId)) {
+        if (MassnahmenUmsetzung.TYPE_ID.equals(typeId)) {
             typeId = MassnahmenUmsetzung.HIBERNATE_TYPE_ID;
         }
-        if(BausteinUmsetzung.TYPE_ID.equals(typeId)) {
+        if (BausteinUmsetzung.TYPE_ID.equals(typeId)) {
             typeId = BausteinUmsetzung.HIBERNATE_TYPE_ID;
         }
 
         this.typeId = typeId;
         this.scopeId = scopeId;
-        this.groupId= groupId;
+        this.groupId = groupId;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public void execute() {        
-        IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
-        
-        DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);      
+    public void execute() {
+        IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory()
+                .getDAO(CnATreeElement.class);
+
+        DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);
         crit.setFetchMode("entity", FetchMode.JOIN);
         crit.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
         crit.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
         crit.add(Restrictions.eq("objectType", typeId));
-        if(scopeId!=null) {
+        if (scopeId != null) {
             crit.add(Restrictions.eq("scopeId", scopeId));
         }
-        if(groupId!=null) {
+        if (groupId != null) {
             crit.add(Restrictions.eq("parentId", groupId));
         }
         crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         list = dao.findByCriteria(crit);
-    }    
+    }
 
     public List<CnATreeElement> getElements() {
         return list;

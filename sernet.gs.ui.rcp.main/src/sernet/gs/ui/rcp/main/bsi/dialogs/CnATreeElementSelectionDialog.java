@@ -33,37 +33,38 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.ElementSelectionComponent;
 
 /**
- * Dialog to allow speedy selection of multiple elements of a given type, with filter function.
+ * Dialog to allow speedy selection of multiple elements of a given type, with
+ * filter function.
  * 
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
 public class CnATreeElementSelectionDialog extends Dialog {
 
-    private String entityType; 
+    private String entityType;
 
     private CnATreeElement inputElmt;
-    
+
     private ElementSelectionComponent selectionComponent;
-    
-    private boolean scopeOnly=true, showScopeCheckbox=true;
-    
+
+    private boolean scopeOnly = true, showScopeCheckbox = true;
+
     /**
      * @param shell
      * @param selectedType
      */
-    public CnATreeElementSelectionDialog(Shell shell, String selectedType, CnATreeElement inputElmt) {
+    public CnATreeElementSelectionDialog(Shell shell, String selectedType,
+            CnATreeElement inputElmt) {
         super(shell);
         int style = SWT.MAX | SWT.CLOSE | SWT.TITLE;
         style = style | SWT.BORDER | SWT.APPLICATION_MODAL;
         setShellStyle(style | SWT.RESIZE);
         this.entityType = selectedType;
         this.inputElmt = inputElmt;
-        
+
     }
-    
+
     /**
      * @param referencedEntityType
      * @param inputElmt2
@@ -81,17 +82,18 @@ public class CnATreeElementSelectionDialog extends Dialog {
         final int cursorLocationYSubtrahend = 250;
         newShell.setText(Messages.CnATreeElementSelectionDialog_2);
         newShell.setSize(shellWidth, shellHeight);
-        
+
         // open the window right under the mouse pointer:
         Point cursorLocation = Display.getCurrent().getCursorLocation();
-        newShell.setLocation(new Point(cursorLocation.x-cursorLocationXSubtrahend, cursorLocation.y-cursorLocationYSubtrahend));
+        newShell.setLocation(new Point(cursorLocation.x - cursorLocationXSubtrahend,
+                cursorLocation.y - cursorLocationYSubtrahend));
     }
-    
+
     @Override
     protected Control createDialogArea(Composite parent) {
         Composite container = (Composite) super.createDialogArea(parent);
         Integer scopeId = null;
-        if(this.inputElmt!=null) {
+        if (this.inputElmt != null) {
             scopeId = this.inputElmt.getScopeId();
         }
         selectionComponent = new ElementSelectionComponent(container, this.entityType, scopeId);
@@ -100,7 +102,7 @@ public class CnATreeElementSelectionDialog extends Dialog {
         selectionComponent.init();
         selectionComponent.loadElements();
 
-        selectionComponent.getViewer().addDoubleClickListener(new IDoubleClickListener() {           
+        selectionComponent.getViewer().addDoubleClickListener(new IDoubleClickListener() {
             @Override
             public void doubleClick(DoubleClickEvent event) {
                 close();
@@ -118,18 +120,16 @@ public class CnATreeElementSelectionDialog extends Dialog {
 
     public void setScopeOnly(boolean scopeOnly) {
         this.scopeOnly = scopeOnly;
-        if(selectionComponent!=null) {
+        if (selectionComponent != null) {
             selectionComponent.setScopeOnly(scopeOnly);
         }
     }
 
     public void setShowScopeCheckbox(boolean showScopeCheckbox) {
         this.showScopeCheckbox = showScopeCheckbox;
-        if(selectionComponent!=null) {
+        if (selectionComponent != null) {
             selectionComponent.setShowScopeCheckbox(showScopeCheckbox);
         }
     }
 
 }
-
-

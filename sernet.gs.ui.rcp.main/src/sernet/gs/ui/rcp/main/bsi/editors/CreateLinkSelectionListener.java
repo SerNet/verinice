@@ -57,8 +57,8 @@ final class CreateLinkSelectionListener implements SelectionListener {
         String selectedElementType = ((Entry<String, String>) elementTypeNamesAndIds[selectionIndex])
                 .getValue();
 
-        CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(
-                shell, selectedElementType, linkMaker.inputElmt);
+        CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(shell,
+                selectedElementType, linkMaker.inputElmt);
 
         if (dialog.open() != Window.OK) {
             return;
