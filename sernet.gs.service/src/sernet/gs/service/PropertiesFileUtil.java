@@ -36,12 +36,17 @@ public class PropertiesFileUtil {
      * <p>
      * Basically the file extension is replaced by _<language>.properties. "en"
      * is considered the default language and not added to the file path.
+     * 
+     * <p>
+     * If the given files's basename already ends with the _<language> suffix,
+     * it is not appended again.
      */
     public static File getPropertiesFile(final File file, final Locale locale) {
         final String localeSuffix = "en".equals(locale.getLanguage()) ? ""
                 : "_" + locale.getLanguage();
         final Function<File, String> getPath = File::getPath;
-        return getPath.andThen(FilenameUtils::removeExtension).andThen(append(localeSuffix))
+        return getPath.andThen(FilenameUtils::removeExtension)
+                .andThen(s -> s.endsWith(localeSuffix) ? s : s.concat(localeSuffix))
                 .andThen(append(FilenameUtils.EXTENSION_SEPARATOR_STR))
                 .andThen(append("properties")).andThen(File::new).apply(file);
     }

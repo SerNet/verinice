@@ -35,8 +35,9 @@ public class PropertiesFileUtilTest {
 
         assertEquals(new File("/tmp/test_de.properties"), PropertiesFileUtil
                 .getPropertiesFile(new File("/tmp/test.rtpdesign"), Locale.GERMANY));
-        assertEquals(new File("/tmp/test_de_de.properties"), PropertiesFileUtil
-                .getPropertiesFile(new File("/tmp/test_de.rtpdesign"), Locale.GERMANY));
+        assertEquals("Locale shall only be present once. (VN-2754)",
+                new File("/tmp/test_de.properties"), PropertiesFileUtil
+                        .getPropertiesFile(new File("/tmp/test_de.rtpdesign"), Locale.GERMANY));
 
         assertEquals(new File("/tmp/test__de.properties"), PropertiesFileUtil
                 .getPropertiesFile(new File("/tmp/test_.rtpdesign"), Locale.GERMANY));
