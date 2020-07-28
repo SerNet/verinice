@@ -28,13 +28,19 @@ public class PropertiesFileUtilTest {
 
     @Test
     public void testGetPropertiesFileName() {
-        assertEquals(new File("/tmp/test.properties"), PropertiesFileUtil.getPropertiesFile(new File("/tmp/test.rtpdesign"), Locale.ENGLISH));
-        assertEquals(new File("/tmp/test_de.properties"), PropertiesFileUtil.getPropertiesFile(new File("/tmp/test_de.rtpdesign"), Locale.ENGLISH));
+        assertEquals(new File("/tmp/test.properties"), PropertiesFileUtil
+                .getPropertiesFile(new File("/tmp/test.rtpdesign"), Locale.ENGLISH));
+        assertEquals(new File("/tmp/test_de.properties"), PropertiesFileUtil
+                .getPropertiesFile(new File("/tmp/test_de.rtpdesign"), Locale.ENGLISH));
 
-        assertEquals(new File("/tmp/test_de.properties"), PropertiesFileUtil.getPropertiesFile(new File("/tmp/test.rtpdesign"), Locale.GERMANY));
-        assertEquals(new File("/tmp/test_de_de.properties"), PropertiesFileUtil.getPropertiesFile(new File("/tmp/test_de.rtpdesign"), Locale.GERMANY));
+        assertEquals(new File("/tmp/test_de.properties"), PropertiesFileUtil
+                .getPropertiesFile(new File("/tmp/test.rtpdesign"), Locale.GERMANY));
+        assertEquals(new File("/tmp/test_de_de.properties"), PropertiesFileUtil
+                .getPropertiesFile(new File("/tmp/test_de.rtpdesign"), Locale.GERMANY));
 
-        assertEquals(new File("/tmp/test__de.properties"), PropertiesFileUtil.getPropertiesFile(new File("/tmp/test_.rtpdesign"), Locale.GERMANY));
-        assertEquals(new File("/tmp/test_de__de.properties"), PropertiesFileUtil.getPropertiesFile(new File("/tmp/test_de_.rtpdesign"), Locale.GERMANY));
+        assertEquals(new File("/tmp/test__de.properties"), PropertiesFileUtil
+                .getPropertiesFile(new File("/tmp/test_.rtpdesign"), Locale.GERMANY));
+        assertEquals(new File("/tmp/test_de__de.properties"), PropertiesFileUtil
+                .getPropertiesFile(new File("/tmp/test_de_.rtpdesign"), Locale.GERMANY));
     }
 }
