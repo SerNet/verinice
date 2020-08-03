@@ -52,7 +52,7 @@ public final class FirstLinkedElementsLoader extends GraphElementLoader {
     }
 
     /**
-     * Loads all the elements in the uuidToLoad collection. 
+     * Loads all the elements in the uuidToLoad collection.
      */
     @SuppressWarnings("unchecked")
     private List<CnATreeElement> getObjects(Collection<String> uuidToLoad) {
@@ -65,14 +65,6 @@ public final class FirstLinkedElementsLoader extends GraphElementLoader {
         criteria.setFetchMode("entity", FetchMode.JOIN);
         criteria.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
         criteria.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
-        criteria.setFetchMode("linksDown", FetchMode.JOIN);
-        criteria.setFetchMode("linksDown.dependency", FetchMode.JOIN);
-        criteria.setFetchMode("linksDown.dependency.entity", FetchMode.JOIN);
-        criteria.setFetchMode("linksDown.dependency.entity.typedPropertyLists", FetchMode.JOIN);
-        criteria.setFetchMode("linksUp", FetchMode.JOIN);
-        criteria.setFetchMode("linksUp.dependency", FetchMode.JOIN);
-        criteria.setFetchMode("linksUp.dependency.entity", FetchMode.JOIN);
-        criteria.setFetchMode("linksUp.dependency.entity.typedPropertyLists", FetchMode.JOIN);
 
         return getCnaTreeElementDao().findByCriteria(criteria);
     }
