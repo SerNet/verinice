@@ -10,17 +10,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.TableEditor;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -65,10 +64,10 @@ public class PropertiesSelectionPage extends WizardPage {
         this.setTitle(Messages.PropertiesSelectionPage_0);
         this.setDescription(Messages.PropertiesSelectionPage_1);
         setPageComplete(false);
-        combos = new Vector<CCombo>();
-        propertyIDs = new Vector<String>();
-        texts = new Vector<Text>();
-        csvContent = new ArrayList<List<String>>();
+        combos = new ArrayList<>();
+        propertyIDs = new ArrayList<>();
+        texts = new ArrayList<>();
+        csvContent = new ArrayList<>();
     }
 
     /*
@@ -80,18 +79,9 @@ public class PropertiesSelectionPage extends WizardPage {
     @Override
     public void createControl(Composite parent) {
 
-        final int layoutMarginWidth = 5;
-        final int layoutMarginHeight = 10;
-        final int layoutSpacing = 3;
         final int gdVerticalSpan = 4;
         final int mainTableItemHeightFactor = 20;
         final int tableColumnDefaultWidth = 225;
-
-        FillLayout layout = new FillLayout();
-        layout.type = SWT.VERTICAL;
-        layout.marginWidth = layoutMarginWidth;
-        layout.marginHeight = layoutMarginHeight;
-        layout.spacing = layoutSpacing;
 
         GridLayout gridLayout = new GridLayout(1, false);
         gridLayout.marginWidth = 0;
@@ -105,7 +95,7 @@ public class PropertiesSelectionPage extends WizardPage {
         lab.setText(Messages.PropertiesSelectionPage_2);
         lab.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 
-        mainTable = new Table(container, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
+        mainTable = new Table(container, SWT.NONE);
         GridData gridData = new GridData(GridData.FILL, GridData.FILL, true, true);
         gridData.verticalSpan = gdVerticalSpan;
         int listHeight = mainTable.getItemHeight() * mainTableItemHeightFactor;
@@ -119,9 +109,9 @@ public class PropertiesSelectionPage extends WizardPage {
         String[] titles = { Messages.PropertiesSelectionPage_3,
                 Messages.PropertiesSelectionPage_4 };
 
-        for (int i = 0; i < 2; i++) {
+        for (String title : titles) {
             TableColumn column = new TableColumn(mainTable, SWT.NONE);
-            column.setText(titles[i]);
+            column.setText(title);
             column.setWidth(tableColumnDefaultWidth);
         }
     }
@@ -132,9 +122,8 @@ public class PropertiesSelectionPage extends WizardPage {
 
     // if next is pressed call this method to fill the table with content
     public void fillTable() throws IOException {
-        TableEditor editor;
         // get entities from verinice
-        if (propertyIDs.size() > 0) {
+        if (!propertyIDs.isEmpty()) {
             propertyIDs.clear();
         }
         String[] propertyNames = null;
@@ -155,8 +144,8 @@ public class PropertiesSelectionPage extends WizardPage {
         }
 
         if (items != null) {
-            for (int i = 0; i < items.length; i++) {
-                items[i].dispose();
+            for (TableItem item : items) {
+                item.dispose();
             }
         }
 
@@ -175,15 +164,16 @@ public class PropertiesSelectionPage extends WizardPage {
             text.dispose();
         }
         // get the combos in default state
-        if (this.combos.size() > 0) {
+        if (!this.combos.isEmpty()) {
             combos.clear();
             texts.clear();
         }
         // fill the combos with content
         for (int i = 0; i < items.length; i++) {
-            editor = new TableEditor(mainTable);
+            TableEditor editor = new TableEditor(mainTable);
             Text text = new Text(mainTable, SWT.NONE);
-            text.setText(propertyColumns[i + 1]);
+            String currentCsvColumn = propertyColumns[i + 1];
+            text.setText(currentCsvColumn);
             text.setEditable(false);
             editor.grabHorizontal = true;
             editor.setEditor(text, items[i], 0);
@@ -191,51 +181,30 @@ public class PropertiesSelectionPage extends WizardPage {
 
             editor = new TableEditor(mainTable);
             final CCombo combo = new CCombo(mainTable, SWT.NONE);
-            combo.addSelectionListener(new SelectionListener() {
-                @Override
-                public void widgetDefaultSelected(SelectionEvent e) {
-                }
-
+            combo.setEditable(false);
+            combo.addSelectionListener(new SelectionAdapter() {
                 @Override
                 public void widgetSelected(SelectionEvent e) {
                     setPageComplete(validateCCombos());
                 }
             });
-            combo.setText(""); //$NON-NLS-1$
+            combo.setText(StringUtils.EMPTY);
+            boolean itemFound = false;
             for (int j = 0; j < propertyNames.length; j++) {
-                combo.add(propertyNames[j]);
+                String propertyName = propertyNames[j];
+                combo.add(propertyName);
+                if (!itemFound && propertyName.equals(currentCsvColumn)) {
+                    combo.select(j);
+                    itemFound = true;
+                }
             }
             combos.add(combo);
-            boolean itemFound = selectItemByName(combo, propertyColumns[i + 1], propertyNames);
             if (itemFound) {
                 setPageComplete(true);
             }
             editor.grabHorizontal = true;
             editor.setEditor(combo, items[i], 1);
         }
-    }
-
-    /**
-     * Pre-select property if it has the same name as a CSV table column.
-     * Returns true if item was found and selected.
-     * 
-     * @param combo
-     *            A combo box
-     * @param cString
-     *            Combo box item titles
-     * @param string
-     *            Title to select
-     * @return True if item was selected, false if not.
-     */
-    private boolean selectItemByName(CCombo combo, String name, String[] cString) {
-        for (int i = 0; i < cString.length; i++) {
-            String propName = cString[i];
-            if (name.equalsIgnoreCase(propName)) {
-                combo.select(i);
-                return true;
-            }
-        }
-        return false;
     }
 
     // check if the properties are selected
@@ -270,11 +239,11 @@ public class PropertiesSelectionPage extends WizardPage {
         return valid;
     }
 
-    public List<Vector<String>> getPropertyTable() throws IOException {
-        List<Vector<String>> table = new Vector<Vector<String>>();
+    public List<List<String>> getPropertyTable() throws IOException {
+        List<List<String>> table = new ArrayList<>();
         String[] spalten = getFirstLine();
         for (int i = 1; i < spalten.length; i++) {
-            Vector<String> temp = new Vector<String>();
+            List<String> temp = new ArrayList<>();
             // first column (ext-id) is not displayed: i-1
             int index = combos.get(i - 1).getSelectionIndex();
             if (index != -1) {
@@ -321,16 +290,17 @@ public class PropertiesSelectionPage extends WizardPage {
 
     // get property and values of the csv
     private void readFile() throws IOException {
-        CSVReader reader = new CSVReader(
+        try (CSVReader reader = new CSVReader(
                 new BufferedReader(
                         new InputStreamReader(new FileInputStream(csvDatei), getCharset())),
-                getSeparator(), '"', false);
-        // ignore first line
-        columnHeaders = reader.readNext();
-        this.csvContent.clear();
-        String[] nextLine = null;
-        while ((nextLine = reader.readNext()) != null) {
-            this.csvContent.add(Arrays.asList(nextLine));
+                getSeparator(), '"', false)) {
+            // ignore first line
+            columnHeaders = reader.readNext();
+            this.csvContent.clear();
+            String[] nextLine = null;
+            while ((nextLine = reader.readNext()) != null) {
+                this.csvContent.add(Arrays.asList(nextLine));
+            }
         }
     }
 
