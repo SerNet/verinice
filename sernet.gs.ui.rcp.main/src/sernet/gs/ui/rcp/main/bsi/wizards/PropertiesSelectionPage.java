@@ -42,7 +42,7 @@ import sernet.hui.common.connect.PropertyTypeNameComparator;
 public class PropertiesSelectionPage extends WizardPage {
 
     private static final Logger LOG = Logger.getLogger(PropertiesSelectionPage.class);
-    
+
     private static final char DEFAULT_SEPARATOR = ';';
 
     private char separator = DEFAULT_SEPARATOR;
@@ -74,20 +74,19 @@ public class PropertiesSelectionPage extends WizardPage {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
-     * .Composite)
+     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
+     * widgets .Composite)
      */
     @Override
     public void createControl(Composite parent) {
-        
+
         final int layoutMarginWidth = 5;
         final int layoutMarginHeight = 10;
         final int layoutSpacing = 3;
         final int gdVerticalSpan = 4;
         final int mainTableItemHeightFactor = 20;
         final int tableColumnDefaultWidth = 225;
-        
+
         FillLayout layout = new FillLayout();
         layout.type = SWT.VERTICAL;
         layout.marginWidth = layoutMarginWidth;
@@ -117,7 +116,8 @@ public class PropertiesSelectionPage extends WizardPage {
         mainTable.setLinesVisible(true);
 
         // set the columns of the table
-        String[] titles = { Messages.PropertiesSelectionPage_3, Messages.PropertiesSelectionPage_4 };
+        String[] titles = { Messages.PropertiesSelectionPage_3,
+                Messages.PropertiesSelectionPage_4 };
 
         for (int i = 0; i < 2; i++) {
             TableColumn column = new TableColumn(mainTable, SWT.NONE);
@@ -134,14 +134,15 @@ public class PropertiesSelectionPage extends WizardPage {
     public void fillTable() throws IOException {
         TableEditor editor;
         // get entities from verinice
-        if (propertyIDs.size() > 0){
+        if (propertyIDs.size() > 0) {
             propertyIDs.clear();
         }
         String[] propertyNames = null;
-        
+
         if (entityId != null) {
             Activator.inheritVeriniceContextState();
-            EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(entityId);         
+            EntityType entityType = HitroUtil.getInstance().getTypeFactory()
+                    .getEntityType(entityId);
             List<PropertyType> propertyTypes = entityType.getAllPropertyTypes();
             Collections.sort(propertyTypes, PropertyTypeNameComparator.getInstance());
             propertyNames = new String[propertyTypes.size()];
@@ -154,7 +155,7 @@ public class PropertiesSelectionPage extends WizardPage {
         }
 
         if (items != null) {
-            for (int i = 0; i < items.length; i++){
+            for (int i = 0; i < items.length; i++) {
                 items[i].dispose();
             }
         }
@@ -187,14 +188,14 @@ public class PropertiesSelectionPage extends WizardPage {
             editor.grabHorizontal = true;
             editor.setEditor(text, items[i], 0);
             texts.add(text);
-            
-            
+
             editor = new TableEditor(mainTable);
             final CCombo combo = new CCombo(mainTable, SWT.NONE);
             combo.addSelectionListener(new SelectionListener() {
                 @Override
                 public void widgetDefaultSelected(SelectionEvent e) {
                 }
+
                 @Override
                 public void widgetSelected(SelectionEvent e) {
                     setPageComplete(validateCCombos());
@@ -202,11 +203,11 @@ public class PropertiesSelectionPage extends WizardPage {
             });
             combo.setText(""); //$NON-NLS-1$
             for (int j = 0; j < propertyNames.length; j++) {
-                combo.add(propertyNames[j]);         
+                combo.add(propertyNames[j]);
             }
             combos.add(combo);
-            boolean itemFound = selectItemByName(combo, propertyColumns[i+1], propertyNames);
-            if(itemFound) {
+            boolean itemFound = selectItemByName(combo, propertyColumns[i + 1], propertyNames);
+            if (itemFound) {
                 setPageComplete(true);
             }
             editor.grabHorizontal = true;
@@ -218,9 +219,12 @@ public class PropertiesSelectionPage extends WizardPage {
      * Pre-select property if it has the same name as a CSV table column.
      * Returns true if item was found and selected.
      * 
-     * @param combo A combo box
-     * @param cString Combo box item titles
-     * @param string Title to select
+     * @param combo
+     *            A combo box
+     * @param cString
+     *            Combo box item titles
+     * @param string
+     *            Title to select
      * @return True if item was selected, false if not.
      */
     private boolean selectItemByName(CCombo combo, String name, String[] cString) {
@@ -238,25 +242,26 @@ public class PropertiesSelectionPage extends WizardPage {
     private boolean validateCCombos() {
         boolean valid = false;
         try {
-        for (CCombo combo : this.combos) {
-            if (combo.getSelectionIndex() > -1) {
-                valid = true;
-                break;
+            for (CCombo combo : this.combos) {
+                if (combo.getSelectionIndex() > -1) {
+                    valid = true;
+                    break;
+                }
             }
-        }
-        if (valid) {
-            for (int i = 0; i < this.combos.size() - 1; i++) {
-                for (int j = i + 1; j < this.combos.size() - 1; j++) {
-                    int is = combos.get(i).getSelectionIndex();
-                    int js = combos.get(j).getSelectionIndex();
-                    if(is>-1 && js>-1 && combos.get(i).getItem(is).equals(combos.get(j).getItem(js))) {
-                        valid = false;
-                        break;
+            if (valid) {
+                for (int i = 0; i < this.combos.size() - 1; i++) {
+                    for (int j = i + 1; j < this.combos.size() - 1; j++) {
+                        int is = combos.get(i).getSelectionIndex();
+                        int js = combos.get(j).getSelectionIndex();
+                        if (is > -1 && js > -1
+                                && combos.get(i).getItem(is).equals(combos.get(j).getItem(js))) {
+                            valid = false;
+                            break;
+                        }
                     }
                 }
             }
-        }
-        } catch(Exception e) {
+        } catch (Exception e) {
             LOG.error("Error while validating combo boxes.", e);
         }
         if (LOG.isDebugEnabled()) {
@@ -317,10 +322,9 @@ public class PropertiesSelectionPage extends WizardPage {
     // get property and values of the csv
     private void readFile() throws IOException {
         CSVReader reader = new CSVReader(
-                new BufferedReader(new InputStreamReader(new FileInputStream(csvDatei), getCharset())), 
-                getSeparator(), 
-                '"', 
-                false);
+                new BufferedReader(
+                        new InputStreamReader(new FileInputStream(csvDatei), getCharset())),
+                getSeparator(), '"', false);
         // ignore first line
         columnHeaders = reader.readNext();
         this.csvContent.clear();
