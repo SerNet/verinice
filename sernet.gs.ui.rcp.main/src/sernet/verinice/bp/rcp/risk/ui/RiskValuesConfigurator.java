@@ -41,7 +41,7 @@ import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 
 public final class RiskValuesConfigurator extends StackConfigurator<Risk> {
 
-    private static final int MAX_NUMBER_OF_RISKS = 5;
+    private static final int MAX_NUMBER_OF_RISKS = 6;
     private static final int COLOR_BUTTON_WIDTH = 30;
 
     public RiskValuesConfigurator(Composite parent, List<Risk> editorState,
