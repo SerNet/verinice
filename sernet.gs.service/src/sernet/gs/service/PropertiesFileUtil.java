@@ -30,10 +30,11 @@ public class PropertiesFileUtil {
 
     /**
      * <p>
-     * Returns the properties file to a given file depending on the locale.
+     * Returns the properties file that corresponds to a given file depending on
+     * the locale.
      *
      * <p>
-     * Basically the file extension is replaces by _<language>.properties. "en"
+     * Basically the file extension is replaced by _<language>.properties. "en"
      * is considered the default language and not added to the file path.
      */
     public static File getPropertiesFile(final File file, final Locale locale) {
@@ -41,22 +42,15 @@ public class PropertiesFileUtil {
                 : "_" + locale.getLanguage();
         final Function<File, String> getPath = File::getPath;
         return getPath.andThen(FilenameUtils::removeExtension).andThen(append(localeSuffix))
-                .andThen(append(FilenameUtils.EXTENSION_SEPARATOR)).andThen(append("properties"))
-                .andThen(File::new).apply(file);
+                .andThen(append(FilenameUtils.EXTENSION_SEPARATOR_STR))
+                .andThen(append("properties")).andThen(File::new).apply(file);
     }
 
     /**
-     * Returns a function, that appends the given string to a string.
+     * Returns a function that appends the given string to a string.
      */
     private static Function<String, String> append(final String str) {
         return s -> s.concat(str);
-    }
-
-    /**
-     * Returns a function, that appends the given string to a string.
-     */
-    private static Function<String, String> append(final char str) {
-        return append(String.valueOf(str));
     }
 
     private PropertiesFileUtil() {
