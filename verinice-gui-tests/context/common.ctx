@@ -5,8 +5,8 @@ Element-Name: common
 Element-Type: context
 Element-Version: 2.0
 Id: _lGnj8Ix1Eei2UKUDmonytQ
-Runtime-Version: 2.4.1.201903190000
-Save-Time: 4/16/19 3:45 PM
+Runtime-Version: 2.5.1.M3
+Save-Time: 8/6/20, 10:56 AM
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
 Content-Type: text/ecl
@@ -15,27 +15,33 @@ Entry-Name: .ecl.context
 global [val basedir [get-java-property basepath]] [val datadir [get-java-property "test-data"]] [val imagedir
 	[get-java-property images]]
 
+proc "get-screenshot-path" [val filename -input] {
+  concat $imagedir [ get-java-property "file.separator" ] $filename
+}
+
 /* Take a screenshot of the window. */
 proc "screen-shot-window" [val name] {
-	get-eclipse-window | get-object | save-screenshot -out [concat $imagedir [get-java-property "file.separator"] $name]
+	get-eclipse-window | screen-shot-ui-control $name
 }
 
 /* Take a screenshot of the window. */
 proc "screen-shot" [val windowname] [val name] {
-	get-window $windowname | get-object | save-screenshot -out [concat $imagedir [get-java-property "file.separator"] $name]
+	get-window $windowname | screen-shot-ui-control $name
 }
 
 proc "screen-shot-view" [val view] [val name] {
-	get-view $view | get-tree | get-object | invoke getParent | invoke getParent | invoke getParent | save-screenshot
-		-out [concat $imagedir "/" $name]
+	get-view $view | get-tree | get-object | invoke getParent | invoke getParent | invoke getParent | save-screenshot [get-screenshot-path $name]
 }
 
 proc "screen-shot-editor" [val editor] [val tabname] [val name] {
 	with [get-editor $editor] {
 		get-tab-folder | get-tab-item $tabname | click
-		get-tab-folder | get-object | invoke getParent | save-screenshot -out [concat $imagedir [get-java-property
-			"file.separator"] $name]
+		get-tab-folder | get-object | invoke getParent | save-screenshot [get-screenshot-path $name]
 	}
+}
+
+proc "screen-shot-ui-control" [val control -input] [val filename] {
+  emit $control | get-object | save-screenshot [get-screenshot-path $filename]
 }
 
 /* Selects an element of a view and attaches a file to it. */
