@@ -222,8 +222,7 @@ public class PropertiesSelectionPage extends WizardPage {
                     for (int j = i + 1; j < this.combos.size() - 1; j++) {
                         int is = combos.get(i).getSelectionIndex();
                         int js = combos.get(j).getSelectionIndex();
-                        if (is > -1 && js > -1
-                                && combos.get(i).getItem(is).equals(combos.get(j).getItem(js))) {
+                        if (is > -1 && js == is) {
                             valid = false;
                             break;
                         }
