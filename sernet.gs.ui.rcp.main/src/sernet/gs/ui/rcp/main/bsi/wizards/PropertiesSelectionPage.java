@@ -192,7 +192,7 @@ public class PropertiesSelectionPage extends WizardPage {
             boolean itemFound = false;
             for (int j = 0; j < propertyNames.length; j++) {
                 String propertyName = propertyNames[j];
-                combo.add(propertyName);
+                combo.add(propertyName + " (" + propertyIDs.get(j) + ")");
                 if (!itemFound && propertyName.equals(currentCsvColumn)) {
                     combo.select(j);
                     itemFound = true;
