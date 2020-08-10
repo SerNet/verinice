@@ -31,6 +31,13 @@ pipeline {
                     }
                     if (env.TAG_NAME){
                         currentBuild.keepLog = true
+                        def targetPlatform = 'target-platform/target-platform.target'
+                        def content = readFile(file: targetPlatform, encoding: 'UTF-8')
+                        def repositoryLocations = content.findAll(/location\s*=\s*"([^"]+)"/){it[1]}
+                        def repositoriesOnBob = repositoryLocations.findAll{it =~ /\bbob\b/}
+                        if (!repositoriesOnBob.isEmpty()){
+                            error("Target platform uses repositories on bob: $repositoriesOnBob")
+                        }
                     }
                 }
                 buildDescription "${env.GIT_BRANCH} ${env.GIT_COMMIT[0..8]}"
