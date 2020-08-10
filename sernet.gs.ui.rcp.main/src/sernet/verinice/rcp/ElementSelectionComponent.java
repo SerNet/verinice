@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -69,6 +70,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
+import sernet.verinice.service.commands.LoadContainingObjects;
 import sernet.verinice.service.commands.LoadElementTitles;
 
 /**
@@ -98,12 +100,15 @@ public class ElementSelectionComponent {
     private static final String COLUMN_SCOPE_ID = "_scope_id"; //$NON-NLS-1$
     private static final String COLUMN_LABEL = "_label"; //$NON-NLS-1$
     private static Map<Integer, String> titleMap = new HashMap<>();
+    private Map<Integer, CnATreeElement> containingObjectsByElementId;
 
     private List<CnATreeElement> selectedElements = new ArrayList<>();
 
     private Integer height;
 
     private boolean includeCompendiumElements;
+
+    private boolean showContainingObject;
 
     public ElementSelectionComponent(Composite container, String type, Integer scopeId) {
         this(container, type, scopeId, null);
@@ -132,6 +137,8 @@ public class ElementSelectionComponent {
         final int column1Width = 25;
         final int column2Width = 200;
         final int column3Width = 150;
+        final int pathColomnWidth = 250;
+
         final int formData2Numerator = 100;
         final int formData3Numerator = formData2Numerator;
         container.setLayout(new FormLayout());
@@ -220,6 +227,16 @@ public class ElementSelectionComponent {
         column3.getColumn().setWidth(column3Width);
         column3.getColumn().setResizable(true);
         column3.setLabelProvider(new ScopeIdColumnCellLabelProvider());
+
+        // path column:
+        if (showContainingObject) {
+            TableViewerColumn containingObject = new TableViewerColumn(viewer, SWT.LEFT);
+            containingObject.getColumn().setText(Messages.ContainingObject);
+            containingObject.getColumn().setWidth(pathColomnWidth);
+            containingObject.getColumn().setResizable(true);
+            containingObject.setLabelProvider(new ContainingObjectLabelProvider());
+
+        }
 
         viewer.setColumnProperties(new String[] { COLUMN_IMG, COLUMN_SCOPE_ID, COLUMN_LABEL });
         viewer.setContentProvider(new ArrayContentProvider());
@@ -310,6 +327,10 @@ public class ElementSelectionComponent {
         this.includeCompendiumElements = includeCompendiumElements;
     }
 
+    public void setShowContainingObject(boolean showContainingObject) {
+        this.showContainingObject = showContainingObject;
+    }
+
     private void loadElementsFromDb() {
         List<CnATreeElement> elements = typeIDs.stream().flatMap(typeId -> {
             LoadCnAElementByEntityTypeId command;
@@ -325,7 +346,16 @@ public class ElementSelectionComponent {
             }
             return command.getElements().stream();
         }).collect(Collectors.toList());
+        if (showContainingObject && !elements.isEmpty()) {
+            try {
+                LoadContainingObjects command = new LoadContainingObjects(elements);
+                command = ServiceFactory.lookupCommandService().executeCommand(command);
+                containingObjectsByElementId = command.getResult();
 
+            } catch (CommandException e) {
+                log.error("Error loading parent target object", e);
+            }
+        }
         showElementsInTable(elements);
     }
 
@@ -477,4 +507,20 @@ public class ElementSelectionComponent {
             cell.setImage(image);
         }
     }
+
+    private final class ContainingObjectLabelProvider extends CellLabelProvider {
+        @Override
+        public void update(ViewerCell cell) {
+            if (cell.getElement() instanceof PlaceHolder) {
+                cell.setText(((PlaceHolder) cell.getElement()).getTitle());
+                return;
+            }
+            CnATreeElement containingObject = containingObjectsByElementId
+                    .get(((CnATreeElement) cell.getElement()).getDbId());
+            Optional.ofNullable(containingObject).ifPresent(targetObject -> cell
+                    .setText(CnATreeElementLabelGenerator.getElementTitle(targetObject)));
+
+        }
+    }
+
 }

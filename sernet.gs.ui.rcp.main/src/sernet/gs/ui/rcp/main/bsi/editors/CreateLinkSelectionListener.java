@@ -35,6 +35,8 @@ import sernet.gs.ui.rcp.main.bsi.dialogs.CnATreeElementSelectionDialog;
 import sernet.gs.ui.rcp.main.common.model.LinkUtil;
 import sernet.hui.common.connect.DirectedHuiRelation;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Domain;
+import sernet.verinice.service.commands.CnATypeMapper;
 
 /**
  * @author Moritz Reiter
@@ -56,10 +58,11 @@ final class CreateLinkSelectionListener implements SelectionListener {
         @SuppressWarnings("unchecked")
         String selectedElementType = ((Entry<String, String>) elementTypeNamesAndIds[selectionIndex])
                 .getValue();
+        boolean showContainingObject = CnATypeMapper
+                .getDomainFromTypeId(selectedElementType) != Domain.BASE_PROTECTION_OLD;
 
         CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(shell,
-                selectedElementType, linkMaker.inputElmt, false);
-
+                selectedElementType, linkMaker.inputElmt, false, showContainingObject);
         if (dialog.open() != Window.OK) {
             return;
         }

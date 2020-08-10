@@ -52,6 +52,8 @@ public class CnATreeElementSelectionDialog extends Dialog {
 
     private boolean includeCompendiumElements;
 
+    private boolean showContainingObject;
+
     /**
      * @param shell
      * @param selectedType
@@ -71,8 +73,14 @@ public class CnATreeElementSelectionDialog extends Dialog {
 
     public CnATreeElementSelectionDialog(Shell shell, String selectedType, CnATreeElement inputElmt,
             boolean includeCompendiumElements) {
+        this(shell, selectedType, inputElmt, includeCompendiumElements, false);
+    }
+
+    public CnATreeElementSelectionDialog(Shell shell, String selectedType, CnATreeElement inputElmt,
+            boolean includeCompendiumElements, boolean showContainingObject) {
         super(shell);
         this.includeCompendiumElements = includeCompendiumElements;
+        this.showContainingObject = showContainingObject;
         int style = SWT.MAX | SWT.CLOSE | SWT.TITLE;
         style = style | SWT.BORDER | SWT.APPLICATION_MODAL;
         setShellStyle(style | SWT.RESIZE);
@@ -83,7 +91,7 @@ public class CnATreeElementSelectionDialog extends Dialog {
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
-        final int shellWidth = 400;
+        final int shellWidth = showContainingObject ? 650 : 400;
         final int shellHeight = 500;
         final int cursorLocationXSubtrahend = 200;
         final int cursorLocationYSubtrahend = 250;
@@ -107,6 +115,7 @@ public class CnATreeElementSelectionDialog extends Dialog {
         selectionComponent.setScopeOnly(scopeOnly);
         selectionComponent.setShowScopeCheckbox(showScopeCheckbox);
         selectionComponent.setIncludeCompendiumElements(includeCompendiumElements);
+        selectionComponent.setShowContainingObject(showContainingObject);
         selectionComponent.init();
         selectionComponent.loadElements();
 
