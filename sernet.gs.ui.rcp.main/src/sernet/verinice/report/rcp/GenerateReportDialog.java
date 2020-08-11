@@ -3,7 +3,6 @@ package sernet.verinice.report.rcp;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +15,13 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -77,7 +83,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     private CnATreeElement selectedScope;
 
-    private Combo comboReportType;
+    private ComboViewer comboReportType;
 
     private Combo comboOutputFormat;
 
@@ -187,11 +193,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
         getButton(IDialogConstants.OK_ID).setEnabled(false);
     }
 
-    private ReportTemplateMetaData getReportByOutputname(String name) {
-        return Arrays.stream(reportTemplates).filter(x -> x.getDecoratedOutputname().equals(name))
-                .findFirst().orElse(null);
-    }
-
     @Override
     protected Control createDialogArea(Composite parent) {
         initDefaultFolder();
@@ -239,25 +240,37 @@ public class GenerateReportDialog extends TitleAreaDialog {
         gdLabelReportType.widthHint = 190;
         labelReportType.setLayoutData(gdLabelReportType);
 
-        comboReportType = new Combo(reportGroup, SWT.READ_ONLY);
-        comboReportType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-
-        fillReportCombo();
-
-        comboReportType.addSelectionListener(new SelectionAdapter() {
+        comboReportType = new ComboViewer(reportGroup, SWT.READ_ONLY) {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            protected void handleInvalidSelection(ISelection invalidSelection,
+                    ISelection newSelection) {
+                Object firstElement = getElementAt(0);
+                super.handleInvalidSelection(invalidSelection,
+                        new StructuredSelection(firstElement));
+            }
+        };
+        comboReportType.getCombo()
+                .setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+        comboReportType.setContentProvider(ArrayContentProvider.getInstance());
+        comboReportType.setLabelProvider(new LabelProvider() {
+            @Override
+            public String getText(Object element) {
+                return ((ReportTemplateMetaData) element).getDecoratedOutputname();
+            }
+        });
+        comboReportType.setInput(reportTemplates);
+        comboReportType.addSelectionChangedListener(e -> {
 
-                if (reportTemplates.length > 0) {
-                    String rpt = comboReportType.getItems()[comboReportType.getSelectionIndex()];
-                    // why rpt? comboReportType.getText() and e.text are null.
-                    chosenReportMetaData = getReportByOutputname(rpt);
-                    chosenReportType = reportTypes[0];
-                }
-                setupComboOutputFormatContent();
-                if (!isContextMenuCall()) {
-                    setupComboScopes(chosenReportMetaData.getContext());
-                }
+            if (reportTemplates.length > 0) {
+                chosenReportMetaData = (ReportTemplateMetaData) e.getStructuredSelection()
+                        .getFirstElement();
+                chosenReportType = reportTypes[0];
+            }
+            setupComboOutputFormatContent();
+            if (!isContextMenuCall()) {
+                setupComboScopes(
+                        ((ReportTemplateMetaData) e.getStructuredSelection().getFirstElement())
+                                .getContext());
             }
         });
 
@@ -272,11 +285,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
         scopeCombo = new Combo(reportGroup, SWT.READ_ONLY);
         scopeCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-        scopeCombo.addSelectionListener(new SelectionListener() {
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
-                widgetSelected(e);
-            }
+        scopeCombo.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -290,7 +299,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 @Override
                 public void widgetSelected(SelectionEvent event) {
                     setupComboScopes(ReportContext.UNSPECIFIED);
-                    onlyShowSuitableReports(Arrays.asList(ReportContext.values()));
+                    comboReportType.resetFilters();
+                    comboReportType
+                            .setSelection(new StructuredSelection(comboReportType.getElementAt(0)));
                 }
             });
         }
@@ -383,10 +394,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
         openFileButton.setEnabled(FILENAME_MANUAL);
 
-        comboReportType.select(0);
+        comboReportType.setSelection(new StructuredSelection(comboReportType.getElementAt(0)));
         if (reportTemplates.length > 0) {
             chosenReportType = reportTypes[0];
-            chosenReportMetaData = reportTemplates[comboReportType.getSelectionIndex()];
         } else {
             showNoReportsExistant();
         }
@@ -395,11 +405,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
         composite.pack();
         return composite;
-    }
-
-    private void fillReportCombo() {
-        Arrays.stream(reportTemplates)
-                .forEach(x -> comboReportType.add(x.getDecoratedOutputname()));
     }
 
     private Group createGroup(final Composite composite) {
@@ -523,15 +528,14 @@ public class GenerateReportDialog extends TitleAreaDialog {
     private void setupComboOutputFormatContent() {
         comboOutputFormat.removeAll();
         if (reportTemplates.length > 0) {
-            for (IOutputFormat of : getDepositService().getOutputFormats(
-                    reportTemplates[comboReportType.getSelectionIndex()].getOutputFormats())) {
+            for (IOutputFormat of : getDepositService()
+                    .getOutputFormats(chosenReportMetaData.getOutputFormats())) {
                 comboOutputFormat.add(of.getLabel());
             }
             comboOutputFormat.select(0);
-            if (chosenReportMetaData != null) {
-                chosenOutputFormat = getDepositService().getOutputFormat(chosenReportMetaData
-                        .getOutputFormats()[comboOutputFormat.getSelectionIndex()]);
-            }
+            chosenOutputFormat = getDepositService().getOutputFormat(
+                    chosenReportMetaData.getOutputFormats()[comboOutputFormat.getSelectionIndex()]);
+
         } else {
             showNoReportsExistant();
         }
@@ -625,12 +629,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
             }
 
             String f = textFile.getText();
-            if (reportTemplates.length > 0) {
-                chosenReportMetaData = reportTemplates[comboReportType.getSelectionIndex()];
-            } else {
-                showNoReportsExistant();
-                return;
-            }
+
             chosenOutputFormat = getDepositService().getOutputFormat(
                     chosenReportMetaData.getOutputFormats()[comboOutputFormat.getSelectionIndex()]);
 
@@ -854,20 +853,15 @@ public class GenerateReportDialog extends TitleAreaDialog {
         if (element == null) {
             return;
         }
-        onlyShowSuitableReports(ReportContext.getValidContexts(element));
-    }
+        List<ReportContext> validDomains = ReportContext.getValidContexts(element);
 
-    private void onlyShowSuitableReports(List<ReportContext> validDomains) {
-        comboReportType.removeAll();
-        for (ReportTemplateMetaData data : reportTemplates) {
-            ReportContext context = data.getContext();
-            // Add all reports that match the selected context + all that are
-            // "unspecified" or not set yet.
-            if (validDomains.contains(context)) {
-                comboReportType.add(data.getDecoratedOutputname());
+        comboReportType.setFilters(new ViewerFilter() {
+            @Override
+            public boolean select(Viewer viewer, Object parentElement, Object element) {
+                ReportContext context = ((ReportTemplateMetaData) element).getContext();
+                return validDomains.contains(context);
             }
-        }
-        comboReportType.select(0);
+        });
     }
 
     /**
