@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -85,7 +86,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     private ComboViewer comboReportType;
 
-    private Combo comboOutputFormat;
+    private ComboViewer comboOutputFormat;
 
     private Text textFile;
 
@@ -313,17 +314,29 @@ public class GenerateReportDialog extends TitleAreaDialog {
         labelOutputFormat.setLayoutData(gdLabelOutputFormat);
         labelOutputFormat.setText(Messages.GenerateReportDialog_9);
 
-        comboOutputFormat = new Combo(reportGroup, SWT.READ_ONLY);
-        comboOutputFormat.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-        comboOutputFormat.addSelectionListener(new SelectionAdapter() {
+        comboOutputFormat = new ComboViewer(reportGroup, SWT.READ_ONLY) {
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                if (chosenReportMetaData != null) {
-                    chosenOutputFormat = getDepositService().getOutputFormat(chosenReportMetaData
-                            .getOutputFormats()[comboOutputFormat.getSelectionIndex()]);
-                }
-                setupOutputFilepath();
+            protected void handleInvalidSelection(ISelection invalidSelection,
+                    ISelection newSelection) {
+                Object firstElement = getElementAt(0);
+                super.handleInvalidSelection(invalidSelection,
+                        new StructuredSelection(firstElement));
             }
+        };
+        comboOutputFormat.setContentProvider(ArrayContentProvider.getInstance());
+        comboOutputFormat.setLabelProvider(new LabelProvider() {
+            @Override
+            public String getText(Object element) {
+                return ((IOutputFormat) element).getLabel();
+            }
+        });
+        comboOutputFormat.getCombo()
+                .setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+        comboOutputFormat.addSelectionChangedListener(e -> {
+            if (chosenReportMetaData != null) {
+                chosenOutputFormat = (IOutputFormat) e.getStructuredSelection().getFirstElement();
+            }
+            setupOutputFilepath();
         });
 
         Label labelFile = new Label(reportGroup, SWT.NONE);
@@ -423,6 +436,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         if (chosenOutputFormat != null && chosenOutputFormat.getFileSuffix() != null) {
             extensionList.add("*." + chosenOutputFormat.getFileSuffix()); //$NON-NLS-1$
         }
+
         extensionList.add("*.*"); //$NON-NLS-1$
         dlg.setFilterExtensions(extensionList.toArray(new String[extensionList.size()]));
         dlg.setFileName(getDefaultOutputFilename());
@@ -526,16 +540,12 @@ public class GenerateReportDialog extends TitleAreaDialog {
     }
 
     private void setupComboOutputFormatContent() {
-        comboOutputFormat.removeAll();
         if (reportTemplates.length > 0) {
-            for (IOutputFormat of : getDepositService()
-                    .getOutputFormats(chosenReportMetaData.getOutputFormats())) {
-                comboOutputFormat.add(of.getLabel());
-            }
-            comboOutputFormat.select(0);
-            chosenOutputFormat = getDepositService().getOutputFormat(
-                    chosenReportMetaData.getOutputFormats()[comboOutputFormat.getSelectionIndex()]);
-
+            List<IOutputFormat> supportedOutputFormats = Stream
+                    .of(chosenReportMetaData.getOutputFormats())
+                    .map(getDepositService()::getOutputFormat).collect(Collectors.toList());
+            comboOutputFormat.setInput(supportedOutputFormats);
+            comboOutputFormat.setSelection(new StructuredSelection(supportedOutputFormats.get(0)));
         } else {
             showNoReportsExistant();
         }
@@ -629,9 +639,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
             }
 
             String f = textFile.getText();
-
-            chosenOutputFormat = getDepositService().getOutputFormat(
-                    chosenReportMetaData.getOutputFormats()[comboOutputFormat.getSelectionIndex()]);
 
             // This just appends the chosen report's extension if the existing
             // suffix does not match. Could be enhanced.
