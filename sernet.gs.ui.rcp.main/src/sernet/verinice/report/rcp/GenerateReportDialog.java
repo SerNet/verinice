@@ -87,8 +87,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     private ReportTemplateMetaData[] reportTemplates;
 
-    private IReportType[] reportTypes;
-
     private IOutputFormat chosenOutputFormat;
 
     private ReportTemplateMetaData chosenReportMetaData;
@@ -132,21 +130,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         setShellStyle(getShellStyle() | SWT.MAX);
         this.auditId = null;
         this.auditName = null;
-        reportTypes = ServiceComponent.getDefault().getReportService().getReportTypes();
-        try {
-            // adding the server templates
-            List<ReportTemplateMetaData> list = getSupplier()
-                    .getReportTemplates(Locale.getDefault());
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Locale used on system (client):\t" + Locale.getDefault().getLanguage()); //$NON-NLS-1$
-                LOG.debug(list.size() + " Reporttemplates loaded from deposit folders"); //$NON-NLS-1$
-            }
-            sortList(list);
-            reportTemplates = list.toArray(new ReportTemplateMetaData[list.size()]);
-        } catch (Exception e) {
-            String msg = "Error reading reports from deposit"; //$NON-NLS-1$
-            ExceptionUtil.log(e, msg);
-        }
+
     }
 
     /**
@@ -211,7 +195,22 @@ public class GenerateReportDialog extends TitleAreaDialog {
     @Override
     protected Control createDialogArea(Composite parent) {
         initDefaultFolder();
-
+        IReportType[] reportTypes = ServiceComponent.getDefault().getReportService()
+                .getReportTypes();
+        try {
+            // adding the server templates
+            List<ReportTemplateMetaData> list = getSupplier()
+                    .getReportTemplates(Locale.getDefault());
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Locale used on system (client):\t" + Locale.getDefault().getLanguage()); //$NON-NLS-1$
+                LOG.debug(list.size() + " Reporttemplates loaded from deposit folders"); //$NON-NLS-1$
+            }
+            sortList(list);
+            reportTemplates = list.toArray(new ReportTemplateMetaData[list.size()]);
+        } catch (Exception e) {
+            String msg = "Error reading reports from deposit"; //$NON-NLS-1$
+            ExceptionUtil.log(e, msg);
+        }
         if (useCase != null) {
             filterReportTypes();
         }
