@@ -688,26 +688,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
         return false;
     }
 
-    @Override
-    protected void cancelPressed() {
-        resetFormValues();
-        super.cancelPressed();
-    }
-
-    private void resetFormValues() {
-        if (preSelectedElments != null) {
-            preSelectedElments = null;
-        }
-        if (auditId != null) {
-            auditId = null;
-        }
-        setupComboScopes();
-        comboReportType.select(0);
-        if (reportTemplates.length > 0) {
-            chosenReportMetaData = reportTemplates[comboReportType.getSelectionIndex()];
-        }
-    }
-
     public File getOutputFile() {
         return outputFile;
     }
