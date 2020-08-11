@@ -149,11 +149,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
         }
     }
 
-    public GenerateReportDialog(Shell parentShell, String useCase) {
-        this(parentShell);
-        this.useCase = useCase;
-    }
-
     /**
      * @param shell
      * @param reportScope
@@ -175,7 +170,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         }
     }
 
-    public GenerateReportDialog(Shell shell, List<?> objects) {
+    public GenerateReportDialog(Shell shell, List<?> objects, String useCase) {
         this(shell);
         List<CnATreeElement> elmts = new ArrayList<>();
         for (Object object : objects) {
@@ -183,10 +178,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
             elmts.add(cnaElmt);
         }
         this.preSelectedElments = elmts;
-    }
-
-    public GenerateReportDialog(Shell shell, List<?> objects, String useCase) {
-        this(shell, objects);
         this.useCase = useCase;
     }
 
@@ -664,7 +655,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
             }
             outputFile = new File(f);
         } catch (Exception e) {
-            LOG.error("Error while creating report.",e); //$NON-NLS-1$
+            LOG.error("Error while creating report.", e); //$NON-NLS-1$
             MessageDialog.openError(getShell(), "Error", //$NON-NLS-1$
                     "An error occurred while creating report."); //$NON-NLS-1$
             return;
