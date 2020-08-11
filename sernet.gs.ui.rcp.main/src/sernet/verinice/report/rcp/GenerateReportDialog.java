@@ -205,8 +205,11 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 LOG.debug("Locale used on system (client):\t" + Locale.getDefault().getLanguage()); //$NON-NLS-1$
                 LOG.debug(list.size() + " Reporttemplates loaded from deposit folders"); //$NON-NLS-1$
             }
-            sortList(list);
-            reportTemplates = list.toArray(new ReportTemplateMetaData[list.size()]);
+
+            reportTemplates = list.stream()
+                    .sorted((template1, template2) -> comparator.compare(
+                            template1.getDecoratedOutputname(), template2.getDecoratedOutputname()))
+                    .toArray(ReportTemplateMetaData[]::new);
         } catch (Exception e) {
             String msg = "Error reading reports from deposit"; //$NON-NLS-1$
             ExceptionUtil.log(e, msg);
@@ -239,7 +242,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         comboReportType = new Combo(reportGroup, SWT.READ_ONLY);
         comboReportType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 
-        reportTemplates = fillReportCombo();
+        fillReportCombo();
 
         comboReportType.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -394,19 +397,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
         return composite;
     }
 
-    /**
-     * adds decorators ( "(L)" or "(S)" ) as a prefix to the report names, sorts
-     * alphabetically: (locally stored templates before server-sided templates)
-     * adds sorted name list to the reportCombo
-     * 
-     * @return sorted Array (for access later on)
-     */
-    private ReportTemplateMetaData[] fillReportCombo() {
-        Arrays.sort(reportTemplates, (template1, template2) -> comparator
-                .compare(template1.getDecoratedOutputname(), template2.getDecoratedOutputname()));
+    private void fillReportCombo() {
         Arrays.stream(reportTemplates)
                 .forEach(x -> comboReportType.add(x.getDecoratedOutputname()));
-        return reportTemplates;
     }
 
     private Group createGroup(final Composite composite) {
@@ -826,13 +819,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
     private void showNoReportsExistant() {
         MessageDialog.openWarning(Display.getDefault().getActiveShell(),
                 Messages.GenerateReportDialog_28, Messages.ReportDepositView_24);
-    }
-
-    private void sortList(List<ReportTemplateMetaData> list) {
-        Collections.sort(list, (o1, o2) -> {
-            NumericStringComparator nsc = new NumericStringComparator();
-            return nsc.compare(o1.getOutputname(), o2.getOutputname());
-        });
     }
 
     /**
