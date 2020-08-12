@@ -18,3 +18,4 @@ Export-Package: com.google.common.io,
  waffle.windows.auth,
  waffle.windows.auth.impl
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Automatic-Module-Name: waffle

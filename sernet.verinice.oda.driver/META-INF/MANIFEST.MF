@@ -39,4 +39,5 @@ Require-Bundle: org.eclipse.equinox.ds;bundle-version="1.1.1",
  sernet.springclient;bundle-version="1.2.2",
  com.springsource.org.apache.commons.lang;bundle-version="2.4.0",
  org.eclipse.ui
+Automatic-Module-Name: sernet.verinice.oda.driver
  

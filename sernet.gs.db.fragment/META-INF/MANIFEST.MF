@@ -14,3 +14,4 @@ Bundle-ClassPath: .,
 Export-Package: 
  org.apache.derby.jdbc
 Bundle-Vendor: SerNet GmbH
+Automatic-Module-Name: sernet.gs.db.fragment

@@ -103,3 +103,4 @@ Require-Bundle: com.springsource.org.hibernate;bundle-version="3.2.6",
  org.springframework.transaction;bundle-version="2.5.6",
  com.springsource.javax.el;bundle-version="2.1.0",
  org.springframework.orm;bundle-version="2.5.6"
+Automatic-Module-Name: jbpm

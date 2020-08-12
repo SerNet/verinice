@@ -22,3 +22,4 @@ Export-Package: gnu.mail.handler,
  javax.mail.internet,
  javax.mail.search,
  javax.mail.util
+Automatic-Module-Name: gnumail

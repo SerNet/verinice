@@ -123,3 +123,4 @@ Eclipse-RegisterBuddy: sernet.verinice.oda.driver,com.springsource.org.hibernate
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Service-Component: OSGI-INF/component-user.xml, OSGI-INF/uiservice.xml
+Automatic-Module-Name: sernet.gs.ui.rcp.main

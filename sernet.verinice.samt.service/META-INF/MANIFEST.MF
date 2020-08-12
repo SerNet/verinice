@@ -16,3 +16,4 @@ Export-Package: sernet.verinice.samt.service
 Import-Package: org.eclipse.core.runtime,
  org.osgi.framework
 Bundle-ClassPath: .
+Automatic-Module-Name: sernet.verinice.samt.service

@@ -6,3 +6,4 @@ Bundle-Version: 1.23.0.qualifier
 Bundle-Vendor: SerNet GmbH
 Fragment-Host: org.ops4j.pax.web.pax-web-bundle;bundle-version="0.6.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: sernet.gs.pax.web.fragment

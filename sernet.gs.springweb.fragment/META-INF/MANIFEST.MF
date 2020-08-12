@@ -6,3 +6,4 @@ Bundle-Version: 1.1.1
 Fragment-Host: org.springframework.web
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: net.sf.cglib.proxy
+Automatic-Module-Name: sernet.gs.springweb.fragment

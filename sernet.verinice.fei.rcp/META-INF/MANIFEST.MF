@@ -22,3 +22,4 @@ Import-Package: org.eclipse.core.runtime;version="3.4.0",
  org.eclipse.core.runtime.jobs,
  org.eclipse.osgi.util
 Bundle-ClassPath: .
+Automatic-Module-Name: sernet.verinice.fei.rcp

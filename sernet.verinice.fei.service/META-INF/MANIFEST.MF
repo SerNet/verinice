@@ -12,3 +12,4 @@ Import-Package: org.eclipse.core.runtime,
  org.osgi.framework
 Export-Package: sernet.verinice.fei.service
 Bundle-ClassPath: .
+Automatic-Module-Name: sernet.verinice.fei.service

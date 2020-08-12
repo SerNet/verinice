@@ -24,3 +24,4 @@ Import-Package: org.apache.commons.io,
  org.osgi.framework,
  org.osgi.service.component
 Bundle-ClassPath: .
+Automatic-Module-Name: sernet.verinice.samt.rcp

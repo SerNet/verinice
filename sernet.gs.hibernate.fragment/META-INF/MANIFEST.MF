@@ -10,4 +10,5 @@ Bundle-ClassPath: lib/mssql/jackcess-1.1.18.jar,lib/mssql/jtds-1.2.2.j
 Export-Package: com.healthmarketscience.jackcess;uses:="org.apache.com
  mons.logging,new com.healthmarketscience.jackcess",net.sourceforge.jt
  ds.jdbc;uses:="net.sourceforge.jtds.util,javax.transaction.xa"
+Automatic-Module-Name: sernet.gs.hibernate.fragment
 

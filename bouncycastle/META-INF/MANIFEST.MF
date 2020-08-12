@@ -112,3 +112,4 @@ Export-Package: org.bouncycastle,
  org.bouncycastle.x509.examples,
  org.bouncycastle.x509.extension,
  org.bouncycastle.x509.util
+Automatic-Module-Name: bouncycastle

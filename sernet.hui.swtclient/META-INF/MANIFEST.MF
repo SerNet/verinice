@@ -18,3 +18,4 @@ Require-Bundle: org.eclipse.core.commands;bundle-version="3.5.0",
  com.springsource.org.apache.log4j;bundle-version="1.2.15"
 Import-Package: org.eclipse.osgi.util
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: sernet.hui.swtclient
