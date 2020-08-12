@@ -31,8 +31,8 @@ import org.apache.log4j.Logger;
 
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IHibernateCommandService;
-import sun.misc.ObjectInputFilter;
-import sun.misc.ObjectInputFilter.Config;
+import java.io.ObjectInputFilter;
+import java.io.ObjectInputFilter.Config;
 
 /**
  * Initialize environemnt on Verinice server on startup.

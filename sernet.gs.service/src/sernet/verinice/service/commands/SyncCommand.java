@@ -37,6 +37,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXB;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
 
@@ -115,23 +117,6 @@ public class SyncCommand extends GenericCommand
     public SyncCommand(SyncParameter parameter, String path) {
         this.parameter = parameter;
         this.path = path;
-        this.stationId = ChangeLogEntry.STATION_ID;
-    }
-
-    /**
-     * Works like
-     * {@link #SyncCommand(String, boolean, boolean, boolean, byte[])} but does
-     * the JAXB serialization under the hood automatically.
-     * 
-     * Called by ImportCSVWizard
-     */
-    public SyncCommand(SyncParameter parameter, SyncRequest sr) {
-        this.parameter = parameter;
-
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        JAXB.marshal(sr, bos);
-
-        this.fileData = bos.toByteArray();
         this.stationId = ChangeLogEntry.STATION_ID;
     }
 

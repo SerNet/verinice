@@ -12,6 +12,6 @@ Require-Bundle: org.eclipse.equinox.preferences,
  org.eclipse.ui,
  sernet.gs.service,
  sernet.gs.ui.rcp.main
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ClassPath: .
 Automatic-Module-Name: sernet.verinice.bp.importer

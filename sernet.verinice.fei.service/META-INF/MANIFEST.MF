@@ -4,7 +4,7 @@ Bundle-Name: sernet.verinice.fei.service
 Bundle-SymbolicName: sernet.verinice.fei.service
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: SerNet GmbH
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: com.springsource.org.apache.log4j;bundle-version="1.2.15",
  sernet.gs.service,
  sernet.hui.common

@@ -5,7 +5,7 @@ Bundle-SymbolicName: sernet.verinice.report.service;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: sernet.verinice.report.service.Activator
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Eclipse-RegisterBuddy: sernet.verinice.oda.driver
 Require-Bundle: com.ibm.icu;bundle-version="4.4.2",
  org.eclipse.equinox.ds;bundle-version="1.1.1",

@@ -96,7 +96,7 @@ Export-Package: ITBP2VNA.generated.implementationhint,
  sernet.verinice.service.risk,
  sernet.verinice.service.sync,
  sernet.verinice.service.tree
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Eclipse-RegisterBuddy: sernet.springclient,com.springsource.org.hibernate
 Require-Bundle: com.springsource.org.apache.commons.io;bundle-version="1.4.0",
  com.springsource.org.apache.log4j;bundle-version="1.2.15",
@@ -121,8 +121,10 @@ Require-Bundle: com.springsource.org.apache.commons.io;bundle-version="1.4.0",
  org.apache.commons.collections,
  org.jgrapht.core;bundle-version="1.2.0",
  org.springframework.beans;bundle-version="2.5.6",
- com.sun.xml.bind.jaxb-osgi;bundle-version="2.3.3",
- jakarta.xml.bind-api;bundle-version="2.3.3"
+ jakarta.xml.bind-api;bundle-version="2.3.3",
+ javax.jws;bundle-version="2.0.0",
+ jakarta.activation-api;bundle-version="1.2.2",
+ javax.xml.ws;bundle-version="2.1.0"
 Import-Package: org.eclipse.osgi.util,
  org.hibernate,
  org.hibernate.criterion,

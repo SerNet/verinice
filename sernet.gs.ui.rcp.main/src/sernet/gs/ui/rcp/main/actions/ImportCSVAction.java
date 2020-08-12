@@ -1,7 +1,11 @@
 package sernet.gs.ui.rcp.main.actions;
 
+import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -9,6 +13,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
+import org.osgi.framework.wiring.BundleWiring;
 
 import de.sernet.sync.sync.SyncRequest;
 import sernet.gs.service.RetrieveInfo;
@@ -96,9 +101,16 @@ public class ImportCSVAction extends RightsEnabledAction {
         }
     }
 
-    protected void doImport() throws CommandException, SyncParameterException {
+    protected void doImport() throws CommandException, SyncParameterException, JAXBException {
+        ClassLoader classLoader = Activator.getDefault().getBundle().adapt(BundleWiring.class)
+                .getClassLoader();
+        JAXBContext context = JAXBContext.newInstance(
+                SyncRequest.class.getPackage().getName(), classLoader);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        context.createMarshaller().marshal(sr, bos);
+        
         SyncCommand command = new SyncCommand(new SyncParameter(insert, update, delete, false,
-                SyncParameter.EXPORT_FORMAT_XML_PURE), sr);
+                SyncParameter.EXPORT_FORMAT_XML_PURE), bos.toByteArray());
 
         command = ServiceFactory.lookupCommandService().executeCommand(command);
 

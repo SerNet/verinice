@@ -13,6 +13,6 @@ Import-Package: org.apache.log4j;version="1.2.15",
  waffle.windows.auth
 Bundle-ActivationPolicy: lazy
 Eclipse-PlatformFilter: (& (osgi.ws=win32) (osgi.os=win32) (osgi.arch=x86_64))
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ClassPath: .
 Automatic-Module-Name: sernet.verinice.kerberos

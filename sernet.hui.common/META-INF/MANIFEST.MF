@@ -17,5 +17,5 @@ Require-Bundle: org.eclipse.core.commands;bundle-version="3.5.0",
  com.springsource.org.apache.commons.lang;bundle-version="2.4.0"
 Import-Package: org.eclipse.osgi.util,
  org.apache.log4j
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: sernet.hui.common

@@ -97,7 +97,9 @@ Require-Bundle: com.springsource.org.apache.log4j;bundle-version="1.2.15",
  org.eclipse.core.databinding;bundle-version="1.7.400",
  org.eclipse.core.databinding.property;bundle-version="1.7.0",
  org.eclipse.jface.databinding;bundle-version="1.9.0",
- org.eclipse.core.databinding.beans
+ org.eclipse.core.databinding.beans,
+ com.sun.xml.bind.jaxb-osgi;bundle-version="2.3.3",
+ jakarta.xml.bind-api;bundle-version="2.3.3"
 Import-Package: javax.xml.rpc.encoding,
  org.apache.axis.encoding.ser,
  org.eclipse.core.runtime,
@@ -117,10 +119,11 @@ Import-Package: javax.xml.rpc.encoding,
  org.jfree.experimental.chart.swt,
  org.jfree.ui,
  org.osgi.framework,
+ org.osgi.framework.wiring;version="1.2.0",
  org.osgi.util.tracker,
  sernet.gs.ui.rcp.main.common.model
 Eclipse-RegisterBuddy: sernet.verinice.oda.driver,com.springsource.org.hibernate
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Service-Component: OSGI-INF/component-user.xml, OSGI-INF/uiservice.xml
 Automatic-Module-Name: sernet.gs.ui.rcp.main

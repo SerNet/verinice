@@ -21,7 +21,7 @@ Export-Package: sernet.verinice.oda.driver.impl;
    org.eclipse.datatools.connectivity.oda",
  sernet.verinice.oda.driver.impl.filters,
  sernet.verinice.oda.linktable.driver.impl
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: SerNet
 Service-Component: OSGI-INF/component.xml

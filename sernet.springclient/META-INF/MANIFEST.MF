@@ -38,5 +38,5 @@ Import-Package: org.apache.derby.iapi.error;resolution:=optional,
  org.springframework.beans.factory,
  org.springframework.security.ui.digestauth;version="2.0.5.RELEASE"
 Eclipse-BuddyPolicy: global
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: sernet.springclient

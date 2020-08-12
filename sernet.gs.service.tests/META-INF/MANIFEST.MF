@@ -5,7 +5,7 @@ Bundle-SymbolicName: sernet.gs.service.tests
 Bundle-Version: 1.12.0.qualifier
 Fragment-Host: sernet.gs.service;bundle-version="1.12.0"
 Automatic-Module-Name: sernet.gs.service.test
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.junit;bundle-version="4.12.0",
  jakarta.xml.bind-api;bundle-version="2.3.3"
 Import-Package: javax.servlet

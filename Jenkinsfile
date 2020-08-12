@@ -8,10 +8,10 @@ pipeline {
     environment {
         // In case the build server exports a custom JAVA_HOME, we fix the JAVA_HOME
         // to the one used by the docker image.
-        JAVA_HOME='/usr/lib/jvm/java-1.8.0-openjdk'
+        JAVA_HOME='/usr/lib/jvm/java-11-openjdk'
     }
     parameters {
-        string(name: 'jreversion', defaultValue: 'jdk8u292-b10', description: 'Download and pack a JRE with this version. See https://adoptopenjdk.net/archive.html for a list of possible versions.', trim: true)
+        string(name: 'jreversion', defaultValue: 'jdk-11.0.8+10', description: 'Download and pack a JRE with this version. See https://adoptopenjdk.net/archive.html for a list of possible versions.', trim: true)
         booleanParam(name: 'runIntegrationTests', defaultValue: true, description: 'Run integration tests')
         booleanParam(name: 'runRCPTTTests', defaultValue: true, description: 'Run RCPTT tests')
         booleanParam(name: 'dists', defaultValue: false, description: 'Run distribution steps, i.e. build RPMs files etc.')

@@ -2,6 +2,9 @@ pipeline {
     agent {
         label 'linux-gui-performance-tester'
     }
+    environment {
+        JAVA_HOME = '/usr/lib/jvm/java-11-openjdk-amd64/'
+    }
     options {
         buildDiscarder(logRotator(numToKeepStr: '30'))
         disableConcurrentBuilds()
