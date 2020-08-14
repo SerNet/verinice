@@ -43,6 +43,7 @@ import sernet.verinice.interfaces.IFinishedRiskAnalysisListsDao;
 import sernet.verinice.interfaces.INoAccessControl;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
@@ -54,6 +55,7 @@ import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.ChangeLogEntry;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 
@@ -158,25 +160,38 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
             // we need to delete them by hand. This is not an optimal solution
             // and should be replaced by Hibernate event listeners someday.
             // (see VN-2084)
-            LoadSubtreeIds getDescendantSafeguardIDs = new LoadSubtreeIds(element,
-                    Safeguard.TYPE_ID);
-            getDescendantSafeguardIDs = getCommandService()
-                    .executeCommand(getDescendantSafeguardIDs);
-            Set<Integer> safeguardIDs = getDescendantSafeguardIDs.getDbIdsOfSubtree();
-            if (!safeguardIDs.isEmpty()) {
-                IBaseDao<@NonNull Safeguard, Serializable> safeguardDao = getDaoFactory()
-                        .getDAO(Safeguard.class);
-                final List<Safeguard> safeguards = safeguardDao.findByCriteria(DetachedCriteria
-                        .forClass(Safeguard.class).add(Restrictions.in("id", safeguardIDs)));
-                for (Safeguard safeguard : safeguards) {
-                    safeguard.remove();
+            if (element.isScope()) {
+                // remove links from safeguards to requirements outside this
+                // scope
+                @NonNull
+                IBaseDao<CnALink, Serializable> linkDao = getDaoFactory().getDAO(CnALink.class);
+                @SuppressWarnings("unchecked")
+                List<CnALink> linksToDelete = linkDao.findByCriteria(DetachedCriteria
+                        .forClass(CnALink.class).createAlias("dependant", "dependant")
+                        .createAlias("dependency", "dependency")
+                        .add(Restrictions.eq("id.typeId",
+                                BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD))
+                        .add(Restrictions.eq("dependency.scopeId", element.getDbId()))
+                        .add(Restrictions.ne("dependant.scopeId", element.getDbId())));
+                linksToDelete.forEach(CnALink::remove);
+            } else {
+                LoadSubtreeIds getDescendantSafeguardIDs = new LoadSubtreeIds(element,
+                        Safeguard.TYPE_ID);
+                getDescendantSafeguardIDs = getCommandService()
+                        .executeCommand(getDescendantSafeguardIDs);
+                Set<Integer> safeguardIDs = getDescendantSafeguardIDs.getDbIdsOfSubtree();
+                if (!safeguardIDs.isEmpty()) {
+                    IBaseDao<@NonNull Safeguard, Serializable> safeguardDao = getDaoFactory()
+                            .getDAO(Safeguard.class);
+                    final List<Safeguard> safeguards = safeguardDao.findByCriteria(DetachedCriteria
+                            .forClass(Safeguard.class).add(Restrictions.in("id", safeguardIDs)));
+                    for (Safeguard safeguard : safeguards) {
+                        safeguard.remove();
+                    }
+                    safeguardDao.delete(safeguards);
                 }
-                safeguardDao.delete(safeguards);
-
             }
-        }
-
-        else if (element.isPerson()) {
+        } else if (element.isPerson()) {
             removeConfiguration(element);
         }
 

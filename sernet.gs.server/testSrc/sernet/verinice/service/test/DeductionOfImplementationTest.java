@@ -465,6 +465,35 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
 
     }
 
+    @Transactional
+    @Test
+    public void testDeductionWorksWhenRemovingScopeWithSafeguardThatIsUsedFromAnotherScope()
+            throws CommandException {
+        ItNetwork itNetwork1 = createNewBPOrganization();
+        ItNetwork itNetwork2 = createNewBPOrganization();
+
+        BpRequirementGroup requirementGroup = createRequirementGroup(itNetwork2);
+        BpRequirement requirement = createBpRequirement(requirementGroup);
+        requirement = prepareRequirement(requirement);
+
+        SafeguardGroup safeguardGroup = createSafeguardGroup(itNetwork1);
+        Safeguard safeguard = createSafeguard(safeguardGroup);
+        safeguard = updateSafeguard(safeguard, ImplementationStatus.YES);
+
+        createLink(requirement, safeguard);
+        assertEquals("Must be option 'yes'.", ImplementationStatus.YES,
+                getImplementationStatus(requirement));
+
+        RemoveElement<ItNetwork> removeItNetwork = new RemoveElement<>(itNetwork1);
+        elementDao.flush();
+        elementDao.clear();
+        removeItNetwork = commandService.executeCommand(removeItNetwork);
+
+        CnATreeElement requirementReloaded = reloadElement(requirement);
+        assertNull(getImplementationStatus(requirementReloaded));
+
+    }
+
     /**
      * Two requirements linked to one safeguard. Opposite link direction.
      */
