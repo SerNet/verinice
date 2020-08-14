@@ -11,7 +11,7 @@ pipeline {
         JAVA_HOME='/usr/lib/jvm/java-1.8.0-openjdk'
     }
     parameters {
-        string(name: 'jreversion', defaultValue: 'jdk8u242-b08', description: 'Download and pack a JRE with this version. See https://adoptopenjdk.net/archive.html for a list of possible versions.', trim: true)
+        string(name: 'jreversion', defaultValue: 'jdk8u265-b01', description: 'Download and pack a JRE with this version. See https://adoptopenjdk.net/archive.html for a list of possible versions.', trim: true)
         booleanParam(name: 'dists', defaultValue: false, description: 'Run distribution steps, i.e. build RPMs files etc.')
         // We need an extra flag. Unfortunately it is not possible to find out, if a password is left empty.
         booleanParam(name: 'distSign', defaultValue: false, description: 'Sign RPM packages')
