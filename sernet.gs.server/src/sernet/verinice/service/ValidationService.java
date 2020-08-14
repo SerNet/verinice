@@ -503,16 +503,23 @@ public class ValidationService implements IValidationService {
         if (elmt == null) {
             return;
         }
-        LoadSubtreeIds loadSubtreeIdsCommand = new LoadSubtreeIds(elmt);
-        loadSubtreeIdsCommand = getCommandService().executeCommand(loadSubtreeIdsCommand);
-        List<Integer> dbIdsOfSubtree = new ArrayList<>(loadSubtreeIdsCommand.getDbIdsOfSubtree());
-        // Delete validation in partitions due to Oracle limitations
-        Collection<List<Integer>> partitions = CollectionUtil.partition(dbIdsOfSubtree, 1000);
-        if (log.isDebugEnabled()) {
-            log.debug("Deleting validations in " + partitions.size() + " partition(s)");
-        }
-        for (List<Integer> partition : partitions) {
-            deleteValidations(elmt, partition);
+        if (elmt.isScope()) {
+            DetachedCriteria criteria = DetachedCriteria.forClass(CnAValidation.class)
+                    .add(createScopeIdRestriction(elmt.getScopeId()));
+            getCnaValidationDAO().delete(getCnaValidationDAO().findByCriteria(criteria));
+        } else {
+            LoadSubtreeIds loadSubtreeIdsCommand = new LoadSubtreeIds(elmt);
+            loadSubtreeIdsCommand = getCommandService().executeCommand(loadSubtreeIdsCommand);
+            List<Integer> dbIdsOfSubtree = new ArrayList<>(
+                    loadSubtreeIdsCommand.getDbIdsOfSubtree());
+            // Delete validation in partitions due to Oracle limitations
+            Collection<List<Integer>> partitions = CollectionUtil.partition(dbIdsOfSubtree, 1000);
+            if (log.isDebugEnabled()) {
+                log.debug("Deleting validations in " + partitions.size() + " partition(s)");
+            }
+            for (List<Integer> partition : partitions) {
+                deleteValidations(elmt, partition);
+            }
         }
     }
 
