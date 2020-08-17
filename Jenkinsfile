@@ -136,5 +136,8 @@ pipeline {
         failure {
             emailext body: '${JELLY_SCRIPT,template="text"}', subject: '$DEFAULT_SUBJECT', to: 'dm@sernet.de, uz@sernet.de, an@sernet.de, fw@sernet.de, ak@sernet.de'
         }
+        success {
+            sh './verinice-distribution/build.sh clean'
+        }
     }
 }
