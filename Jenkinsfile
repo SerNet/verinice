@@ -15,7 +15,7 @@ pipeline {
         booleanParam(name: 'dists', defaultValue: false, description: 'Run distribution steps, i.e. build RPMs files etc.')
         // We need an extra flag. Unfortunately it is not possible to find out, if a password is left empty.
         booleanParam(name: 'distSign', defaultValue: false, description: 'Sign RPM packages')
-        password(name: 'GNUPGPASSPHRASE', defaultValue: null, description: 'The passphrase of the key stored in KEYDIR/verinice.public.')
+        password(name: 'GNUPGPASSPHRASE', description: 'The passphrase of the key stored in KEYDIR/verinice.public.')
     }
     options {
         buildDiscarder(logRotator(numToKeepStr: '3'))
