@@ -210,7 +210,7 @@ public class ExportThread extends NotifyingThread {
                 }
                 getChangedElementList().add(element);
             }
-        } else if (LOG.isDebugEnabled()) { 
+        } else if (LOG.isDebugEnabled()) {
             LOG.debug("Element is not exported: Type " + typeId + ", uuid: " + element.getUuid());
         }
     }
@@ -223,32 +223,32 @@ public class ExportThread extends NotifyingThread {
         if (elementFromCache != null) {
             return elementFromCache;
         }
-        
-        // Loading links that point back to parents may cause endless loops in Hibernate's CriteriaLoader, depending on
+
+        // Loading links that point back to parents may cause endless loops in
+        // Hibernate's CriteriaLoader, depending on
         // the structure of the exported data (see issue VN-2648).
         // Split loading of children and links to prevent this from happening:
         RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance();
         ri.setLinksDown(false);
         ri.setLinksUp(false);
         element = getDao().retrieve(element.getDbId(), ri);
-        
+
         ri = new RetrieveInfo();
         ri.setLinksDown(true);
         ri.setLinksUp(true);
         CnATreeElement elementWithLinks = getDao().retrieve(element.getDbId(), ri);
         element.setLinksDown(elementWithLinks.getLinksDown());
         element.setLinksUp(elementWithLinks.getLinksUp());
-        
+
         cacheElement(element);
-        
+
         if (LOG.isDebugEnabled()) {
             LOG.debug("Element: " + element.getTitle() + " hydrated, UUID: " + element.getUuid());
         }
-        
+
         return element;
     }
 
-    
     private CnATreeElement getElementFromCache(CnATreeElement element) {
         CnATreeElement fromCache = null;
         synchronized (LOCK) {
@@ -270,11 +270,11 @@ public class ExportThread extends NotifyingThread {
     }
 
     private void cacheElement(CnATreeElement element) {
-        synchronized(LOCK) {
+        synchronized (LOCK) {
             if (Status.STATUS_ALIVE.equals(cache.getStatus())
-                    && getElementFromCache(element) == null
-            ) {
-                LOG.debug("Put element into cache: " + element.getTitle() + " : " + element.getDbId());
+                    && getElementFromCache(element) == null) {
+                LOG.debug("Put element into cache: " + element.getTitle() + " : "
+                        + element.getDbId());
                 getCache().put(new Element(element.getUuid(), element));
             } else {
                 LOG.warn("Cache is not alive. Can't put element to cache, uuid: "
@@ -353,8 +353,6 @@ public class ExportThread extends NotifyingThread {
     public void setTransaction(ExportTransaction transaction) {
         this.transaction.set(transaction);
     }
-
-   
 
     public void setAttachmentSet(Set<Attachment> attachmentSet) {
         this.attachmentSet = attachmentSet;
