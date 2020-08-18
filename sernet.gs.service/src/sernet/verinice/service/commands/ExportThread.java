@@ -64,7 +64,7 @@ public class ExportThread extends NotifyingThread {
 
     private HUITypeFactory huiTypeFactory;
 
-    private ThreadLocal<ExportTransaction> transaction;
+    private ExportTransaction transaction;
 
     private Set<CnALink> linkSet;
 
@@ -92,7 +92,7 @@ public class ExportThread extends NotifyingThread {
 
     public ExportThread(ExportTransaction transaction) {
         super();
-        this.transaction = ThreadLocal.withInitial(() -> transaction);
+        this.transaction = transaction;
     }
 
     /*
@@ -133,7 +133,7 @@ public class ExportThread extends NotifyingThread {
 
         exportReferenceTypes = new ExportReferenceTypes(getCommandService());
 
-        CnATreeElement element = transaction.get().getElement();
+        CnATreeElement element = transaction.getElement();
         if (LOG.isDebugEnabled()) {
             LOG.debug("Exporting element: " + element.getUuid());
         }
@@ -148,7 +148,7 @@ public class ExportThread extends NotifyingThread {
         String typeId = element.getTypeId();
         if (checkElement(element)) {
             element = hydrate(element);
-            transaction.get().setElement(element);
+            transaction.setElement(element);
 
             String extId = ExportFactory.createExtId(element);
 
@@ -196,7 +196,7 @@ public class ExportThread extends NotifyingThread {
                 getExportedEntityTypes().add(getHuiTypeFactory().getEntityType(Attachment.TYPE_ID));
             }
 
-            transaction.get().setTarget(syncObject);
+            transaction.setTarget(syncObject);
 
             /**
              * Save source id to re-import element later
@@ -345,7 +345,7 @@ public class ExportThread extends NotifyingThread {
     }
 
     public ExportTransaction getTransaction() {
-        return transaction.get();
+        return transaction;
     }
 
     public Set<EntityType> getExportedEntityTypes() {
