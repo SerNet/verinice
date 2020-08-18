@@ -76,8 +76,6 @@ public class ExportThread extends NotifyingThread {
 
     private List<CnATreeElement> changedElementList;
 
-    private Object exportFormat;
-
     private boolean reImport;
 
     private boolean veriniceArchive;
@@ -350,14 +348,6 @@ public class ExportThread extends NotifyingThread {
         return transaction.get();
     }
 
-    public void setTransaction(ExportTransaction transaction) {
-        this.transaction.set(transaction);
-    }
-
-    public void setAttachmentSet(Set<Attachment> attachmentSet) {
-        this.attachmentSet = attachmentSet;
-    }
-
     public Set<EntityType> getExportedEntityTypes() {
         if (exportedEntityTypes == null) {
             exportedEntityTypes = new HashSet<>();
@@ -372,27 +362,11 @@ public class ExportThread extends NotifyingThread {
         return exportedTypes;
     }
 
-    public void setExportedEntityTypes(Set<EntityType> exportedEntityTypes) {
-        this.exportedEntityTypes = exportedEntityTypes;
-    }
-
-    public void setExportedTypes(Set<String> exportedTypes) {
-        this.exportedTypes = exportedTypes;
-    }
-
     public List<CnATreeElement> getChangedElementList() {
         if (changedElementList == null) {
             changedElementList = new LinkedList<>();
         }
         return changedElementList;
-    }
-
-    public void setChangedElementList(List<CnATreeElement> changedElementList) {
-        this.changedElementList = changedElementList;
-    }
-
-    public Object getExportFormat() {
-        return exportFormat;
     }
 
     public boolean isReImport() {
@@ -413,10 +387,6 @@ public class ExportThread extends NotifyingThread {
 
     public Map<Class, Class> getEntityClassBlackList() {
         return entityClassBlackList;
-    }
-
-    public void setExportFormat(Object exportFormat) {
-        this.exportFormat = exportFormat;
     }
 
     public void setReImport(boolean reImport) {
