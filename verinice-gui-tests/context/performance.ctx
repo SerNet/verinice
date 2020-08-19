@@ -5,8 +5,8 @@ Element-Name: performance
 Element-Type: context
 Element-Version: 2.0
 Id: _9AEX8Pk3EeiLXcsCitNBjg
-Runtime-Version: 2.4.2.201905080442
-Save-Time: 6/27/19 2:57 PM
+Runtime-Version: 2.5.1.M3
+Save-Time: 8/19/20, 10:45 AM
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
 Content-Type: text/ecl
@@ -16,6 +16,21 @@ proc "measure-delete" [val measurement] [val target] {
 	try {
 		start-time-measure $measurement
 		delete-bpelement $target
+		stop-time-measure $measurement | write-lines [concat "file:" $basedir [get-java-property "file.separator"] "delete-measure.csv"] true
+	} -catch {
+	try	{
+			get-window Fehler | get-button OK | click
+		} -catch {
+		 log [concat "no dialog :" $target "  <-> " $measurement]
+		}
+		log [concat "error deleting :" $target "  <-> " $measurement]
+	}
+}
+
+proc "measure-delete-catalog" [val measurement] [val target] {
+	try {
+		start-time-measure $measurement
+		delete-catalog-element $target
 		stop-time-measure $measurement | write-lines [concat "file:" $basedir [get-java-property "file.separator"] "delete-measure.csv"] true
 	} -catch {
 	try	{
