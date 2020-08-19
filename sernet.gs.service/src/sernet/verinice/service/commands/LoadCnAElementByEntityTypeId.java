@@ -105,7 +105,9 @@ public class LoadCnAElementByEntityTypeId extends GenericCommand {
                     DetachedCriteria.forClass(CnATreeElement.class).createAlias("parent", "parent")
                             .add(Restrictions.eq("parent.objectType", CatalogModel.TYPE_ID))
                             .setProjection(Projections.property("dbId")));
-            crit.add(Restrictions.not(Restrictions.in("scopeId", catalogScopeDBIds)));
+            if (!catalogScopeDBIds.isEmpty()) {
+                crit.add(Restrictions.not(Restrictions.in("scopeId", catalogScopeDBIds)));
+            }
         }
         crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         list = dao.findByCriteria(crit);

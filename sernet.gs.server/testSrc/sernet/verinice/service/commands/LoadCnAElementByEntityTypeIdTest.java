@@ -1,12 +1,12 @@
 package sernet.verinice.service.commands;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,24 +23,10 @@ import sernet.verinice.service.test.AbstractModernizedBaseProtection;
 @Transactional
 public class LoadCnAElementByEntityTypeIdTest extends AbstractModernizedBaseProtection {
 
-    private BpRequirement requirement;
-    private BpRequirement requirementCatalog;
-
-    @Before
-    public void setup() throws CommandException {
-        ItNetwork itNetwork = createNewBPOrganization();
-        BpRequirementGroup requirementGroup = createRequirementGroup(itNetwork);
-        requirement = createBpRequirement(requirementGroup);
-
-        CatalogModel catalogModel = loadCatalogModel();
-        ItNetwork catalog1 = new ItNetwork(catalogModel);
-        elementDao.saveOrUpdate(catalog1);
-        BpRequirementGroup requirementGroupCatalog = createRequirementGroup(catalog1);
-        requirementCatalog = createBpRequirement(requirementGroupCatalog);
-    }
-
     @Test
     public void loadAllRequirements() throws CommandException {
+        BpRequirement requirement = createItNetworkWithRequirement();
+        BpRequirement requirementCatalog = createCatalogWithRequirement();
 
         LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(
                 BpRequirement.TYPE_ID);
@@ -54,6 +40,8 @@ public class LoadCnAElementByEntityTypeIdTest extends AbstractModernizedBaseProt
 
     @Test
     public void loadAllRequirementsThatAreNotCatalogElements() throws CommandException {
+        BpRequirement requirement = createItNetworkWithRequirement();
+        BpRequirement requirementCatalog = createCatalogWithRequirement();
 
         LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(
                 BpRequirement.TYPE_ID, false);
@@ -61,7 +49,37 @@ public class LoadCnAElementByEntityTypeIdTest extends AbstractModernizedBaseProt
         List<CnATreeElement> elements = command.getElements();
         assertEquals(1, elements.size());
         assertEquals(requirement, elements.get(0));
+        assertFalse(elements.contains(requirementCatalog));
 
+    }
+
+    @Test
+    public void loadAllRequirementsThatAreNotCatalogElementsWhenThereAreNoCatalogs()
+            throws CommandException {
+        BpRequirement requirement = createItNetworkWithRequirement();
+        LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(
+                BpRequirement.TYPE_ID, false);
+        command = commandService.executeCommand(command);
+        List<CnATreeElement> elements = command.getElements();
+        assertEquals(1, elements.size());
+        assertEquals(requirement, elements.get(0));
+
+    }
+
+    protected BpRequirement createItNetworkWithRequirement() throws CommandException {
+        ItNetwork itNetwork = createNewBPOrganization();
+        BpRequirementGroup requirementGroup = createRequirementGroup(itNetwork);
+        BpRequirement requirement = createBpRequirement(requirementGroup);
+        return requirement;
+    }
+
+    protected BpRequirement createCatalogWithRequirement() throws CommandException {
+        CatalogModel catalogModel = loadCatalogModel();
+        ItNetwork catalog1 = new ItNetwork(catalogModel);
+        elementDao.saveOrUpdate(catalog1);
+        BpRequirementGroup requirementGroupCatalog = createRequirementGroup(catalog1);
+        BpRequirement requirementCatalog = createBpRequirement(requirementGroupCatalog);
+        return requirementCatalog;
     }
 
     private CatalogModel loadCatalogModel() {
