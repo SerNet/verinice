@@ -254,8 +254,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
                     chosenReportMetaData = getReportByOutputname(rpt);
                     chosenReportType = reportTypes[0];
                 }
+                setupComboOutputFormatContent();
                 if (!isContextMenuCall()) {
-                    setupComboOutputFormatContent();
                     setupComboScopes(chosenReportMetaData.getContext());
                 }
             }
