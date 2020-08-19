@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _eIxkENhQEei99sMdPrmmsw
-Runtime-Version: 2.4.1.201903190000
-Save-Time: 5/20/19 2:28 PM
+Runtime-Version: 2.5.1.M3
+Save-Time: 8/19/20, 10:46 AM
 Tags: bp
 Testcase-Type: ecl
 
@@ -95,5 +95,6 @@ set-and-check-implementation-status "Modellverbund/Andere\\/IoT-Systeme/Der Küh
 set-and-check-implementation-status "Modellverbund/Kommunikationsverbindungen/Das Netzwerk/SYS.2.1 Allgemeiner Client/SYS.2.1.M2 .*"
 
 delete-bpelement Modellverbund
+delete-compendium
 // get-view Kataloge | get-tree | select "IT-Grundschutz-Kompendium 4.0" | get-menu -path "Löschen" | click
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

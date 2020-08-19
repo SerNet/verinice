@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _EAi7sPh1EeiSda4Ee126Dw
 Runtime-Version: 2.5.1.M3
-Save-Time: 7/16/20, 2:42 PM
+Save-Time: 8/19/20, 10:46 AM
 Testcase-Type: ecl
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
@@ -73,5 +73,6 @@ verify-search-icon "Zentrale Administration von Laptops" "SYS.3.1.A16" bp_requir
 verify-search-icon "Zentrale Administration von Laptops" "SYS.3.1.M16" safeguard
 
 delete-bpelement "1337"
+delete-compendium
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
