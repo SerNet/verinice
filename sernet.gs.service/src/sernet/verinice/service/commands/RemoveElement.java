@@ -50,6 +50,7 @@ import sernet.verinice.model.bsi.PersonenKategorie;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
@@ -130,7 +131,8 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     }
 
     private void removeElement(T element) throws CommandException {
-        if (element instanceof IBpElement) {
+        if (element instanceof IBpElement
+                && !CatalogModel.TYPE_ID.equals(element.getParent().getTypeId())) {
             // We could be removing an element that has a safeguard as one
             // of its children. Since we want our manual event listeners to be
             // fired for those and their links as well (via element.remove()),
