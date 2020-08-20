@@ -209,6 +209,13 @@ catalina.base : ${server-work-dir}
     <waitfor maxwait="40" maxwaitunit="second" timeoutproperty="timeout">
         <http url="${server.test.url}" />
     </waitfor>
+	<fail message="Failed to start verinice.PRO server">
+	    <condition>
+	      <not>
+	        <http url="${server.test.url}" />
+	      </not>
+	    </condition>
+	 </fail>
     <echo>Tomcat server started</echo>
 </target>
 
@@ -449,6 +456,13 @@ workspace
 		<waitfor maxwait="${verinice.timeout}" maxwaitunit="second" timeoutproperty="timeout">
 			<http url="http://localhost:${verinice.server.port}/GetHitroConfig" />
 		</waitfor>
+		<fail message="Failed to start verinice instance">
+		    <condition>
+		      <not>
+		        <http url="http://localhost:${verinice.server.port}/GetHitroConfig" />
+		      </not>
+		    </condition>
+		 </fail>
 	</target>
 
 
