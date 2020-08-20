@@ -527,34 +527,37 @@ public class RiskAnalysisJob {
         int controlEffectA = control.getNumericProperty(Control.PROP_EFFECTIVENESS_AVAILABILITY);
 
         // Reduce regardless of implementation status
-        asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_C,
-                asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_C) - controlEffectC);
-        asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_I,
-                asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_I) - controlEffectI);
-        asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_A,
-                asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_A) - controlEffectA);
+        asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_C, positiveOrZero(
+                asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_C) - controlEffectC));
+        asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_I, positiveOrZero(
+                asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_I) - controlEffectI));
+        asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_A, positiveOrZero(
+                asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_A) - controlEffectA));
 
         // Reduce if implementation status is "planned"
         if (Control.isPlanned(control.getEntity())) {
             asset.setNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_C,
-                    asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_C)
-                            - controlEffectC);
+                    positiveOrZero(
+                            asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_C)
+                                    - controlEffectC));
             asset.setNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_I,
-                    asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_I)
-                            - controlEffectI);
+                    positiveOrZero(
+                            asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_I)
+                                    - controlEffectI));
             asset.setNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_A,
-                    asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_A)
-                            - controlEffectA);
+                    positiveOrZero(
+                            asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_A)
+                                    - controlEffectA));
         }
 
         // Reduce if implementation status is "implemented"
         if (Control.isImplemented(control.getEntity())) {
-            asset.setNumericProperty(Asset.ASSET_CONTROLRISK_C,
-                    asset.getNumericProperty(Asset.ASSET_CONTROLRISK_C) - controlEffectC);
-            asset.setNumericProperty(Asset.ASSET_CONTROLRISK_I,
-                    asset.getNumericProperty(Asset.ASSET_CONTROLRISK_I) - controlEffectI);
-            asset.setNumericProperty(Asset.ASSET_CONTROLRISK_A,
-                    asset.getNumericProperty(Asset.ASSET_CONTROLRISK_A) - controlEffectA);
+            asset.setNumericProperty(Asset.ASSET_CONTROLRISK_C, positiveOrZero(
+                    asset.getNumericProperty(Asset.ASSET_CONTROLRISK_C) - controlEffectC));
+            asset.setNumericProperty(Asset.ASSET_CONTROLRISK_I, positiveOrZero(
+                    asset.getNumericProperty(Asset.ASSET_CONTROLRISK_I) - controlEffectI));
+            asset.setNumericProperty(Asset.ASSET_CONTROLRISK_A, positiveOrZero(
+                    asset.getNumericProperty(Asset.ASSET_CONTROLRISK_A) - controlEffectA));
         }
 
     }
