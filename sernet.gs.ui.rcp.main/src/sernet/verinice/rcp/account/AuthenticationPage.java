@@ -60,47 +60,35 @@ public class AuthenticationPage extends BaseWizardPage {
         createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_3);
         textLogin = createTextfield(composite);
         setText(textLogin, getLogin());
-        textLogin.addKeyListener(new TextEventAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                login = StringUtil.replaceEmptyStringByNull(textLogin.getText());
-                setPageComplete(isPageComplete());
-            }
+        textLogin.addModifyListener(e -> {
+            login = StringUtil.replaceEmptyStringByNull(textLogin.getText());
+            setPageComplete(isPageComplete());
         });
 
         if (isPasswordManagedInternally()) {
             createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_4);
             textPassword = createPasswordField(composite);
-            textPassword.addKeyListener(new TextEventAdapter() {
-                @Override
-                public void keyReleased(KeyEvent e) {
-                    password = StringUtil.replaceEmptyStringByNull(textPassword.getText());
-                    setPageComplete(isPageComplete());
-                }
+            textPassword.addModifyListener(e -> {
+                password = StringUtil.replaceEmptyStringByNull(textPassword.getText());
+                setPageComplete(isPageComplete());
             });
 
             createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_5);
             textPassword2 = createPasswordField(composite);
-            textPassword2.addKeyListener(new TextEventAdapter() {
-                @Override
-                public void keyReleased(KeyEvent e) {
-                    password2 = StringUtil.replaceEmptyStringByNull(textPassword2.getText());
-                    setPageComplete(isPageComplete());
-                }
+            textPassword2.addModifyListener(e -> {
+                password2 = StringUtil.replaceEmptyStringByNull(textPassword2.getText());
+                setPageComplete(isPageComplete());
             });
         }
 
         createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_6);
         textEmail = createTextfield(composite);
         setText(textEmail, getEmail());
-        textEmail.addKeyListener(new TextEventAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                email = StringUtil.replaceEmptyStringByNull(textEmail.getText());
-                setPageComplete(isPageComplete());
-            }
+        textEmail.addModifyListener(e -> {
+            email = StringUtil.replaceEmptyStringByNull(textEmail.getText());
+            setPageComplete(isPageComplete());
         });
-    }
+     }
 
     private String createMessage() {
         if (isPasswordManagedInternally()) {
