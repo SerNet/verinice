@@ -103,14 +103,18 @@ proc "import-compendium" {
 	try {
 		get-view Kataloge | get-tree | get-item -path "IT-Grundschutz-Kompendium 4.0"
 	} -catch {
-		get-view Kataloge | get-button "Importiere Katalog aus Datei..." | click
-		set-dialog-result File [concat $datadir [get-java-property "file.separator"] "IT-Grundschutz-Kompendium_4.0.vna"]
-		with [get-window Import] {
-			get-group Datei | get-button "Datei auswählen..." | click
-			get-button OK | click
-		}
-		wait-for-import Kataloge "IT-Grundschutz-Kompendium 4.0"
+		import-catalog "IT-Grundschutz-Kompendium_4.0.vna" "IT-Grundschutz-Kompendium 4.0"
 	}
+}
+
+proc "import-catalog" [val filename] [val catalogname] {
+	get-view Kataloge | get-button "Importiere Katalog aus Datei..." | click
+	set-dialog-result File [concat $datadir [get-java-property "file.separator"] $filename]
+	with [get-window Import] {
+		get-group Datei | get-button "Datei auswählen..." | click
+		get-button OK | click
+	}
+	wait-for-import Kataloge $catalogname
 }
 
 proc "delete-catalog-element" [val name] {
