@@ -8703,7 +8703,7 @@
                                         <structure>
                                             <property name="name">itverbund_normal_wirkung</property>
                                             <text-property name="displayName">itverbund_normal_wirkung</text-property>
-                                            <expression name="expression" type="javascript">dataSetRow["Schutzbedarfskategorie__unkritisch__-__Innen-____Außenwirkung__(Informationsverbund)"]</expression>
+                                            <expression name="expression" type="javascript">dataSetRow["Schutzbedarfskategorie__Normal__-__Innen-____Außenwirkung__(Informationsverbund)"]</expression>
                                             <property name="dataType">string</property>
                                         </structure>
                                     </list-property>
