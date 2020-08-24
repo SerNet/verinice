@@ -36,83 +36,106 @@ import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
- * Extends {@link TreeElementDao} to check write and delete authorization for {@link CnATreeElement}s.
- * Use this for CnATreeElement-Daos in Spring configuration
+ * Extends {@link TreeElementDao} to check write and delete authorization for
+ * {@link CnATreeElement}s. Use this for CnATreeElement-Daos in Spring
+ * configuration
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer> {
 
-	private final Logger log = Logger.getLogger(SecureTreeElementDao.class);
+    private final Logger log = Logger.getLogger(SecureTreeElementDao.class);
 
-	private IAuthService authService;
-	private IBaseDao<Configuration, Integer> configurationDao;
-	private IBaseDao<Permission, Integer> permissionDao;
-	private IConfigurationService configurationService;
-	
-	public SecureTreeElementDao(Class<CnATreeElement> type) {
+    private IAuthService authService;
+    private IBaseDao<Configuration, Integer> configurationDao;
+    private IBaseDao<Permission, Integer> permissionDao;
+    private IConfigurationService configurationService;
+
+    public SecureTreeElementDao(Class<CnATreeElement> type) {
         super(type);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.hibernate.HibernateDao#findByCriteria(org.hibernate.criterion.DetachedCriteria)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.hibernate.HibernateDao#findByCriteria(org.hibernate.
+     * criterion.DetachedCriteria)
      */
     @Override
     public List<CnATreeElement> findByCriteria(DetachedCriteria criteria) {
-	    beforeExecution();
-	    List<CnATreeElement> result = super.findByCriteria(criteria);
-	    afterExecution();
-	    return result;
-	}
+        beforeExecution();
+        List<CnATreeElement> result = super.findByCriteria(criteria);
+        afterExecution();
+        return result;
+    }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDao#findByQuery(java.lang.String, java.lang.Object[])
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.IDao#findByQuery(java.lang.String,
+     * java.lang.Object[])
      */
     @Override
     public List<CnATreeElement> findByQuery(String hqlQuery, Object[] params) {
         beforeExecution();
-        List<CnATreeElement> result = super.findByQuery(hqlQuery,params);
+        List<CnATreeElement> result = super.findByQuery(hqlQuery, params);
         afterExecution();
         return result;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.hibernate.HibernateDao#findByQuery(java.lang.String, java.lang.String[], java.lang.Object[])
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.hibernate.HibernateDao#findByQuery(java.lang.String,
+     * java.lang.String[], java.lang.Object[])
      */
-    public List<CnATreeElement> findByQuery(String hqlQuery, String[] paramNames, Object[] paramValues) {
+    public List<CnATreeElement> findByQuery(String hqlQuery, String[] paramNames,
+            Object[] paramValues) {
         beforeExecution();
-        List<CnATreeElement> result = super.findByQuery(hqlQuery,paramNames,paramValues);
+        List<CnATreeElement> result = super.findByQuery(hqlQuery, paramNames, paramValues);
         afterExecution();
         return result;
     }
-	
-	/* (non-Javadoc)
-     * @see sernet.verinice.hibernate.ISecureDao#delete(sernet.verinice.model.common.CnATreeElement)
-     */
-    @Override
-	public void delete(CnATreeElement entity) {
-		checkRights(entity);
-		super.delete(entity);
-		indexDelete(entity);
-	}
 
-	/* (non-Javadoc)
-     * @see sernet.verinice.hibernate.ISecureDao#merge(sernet.verinice.model.common.CnATreeElement, boolean)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.hibernate.ISecureDao#delete(sernet.verinice.model.common.
+     * CnATreeElement)
      */
     @Override
-	public CnATreeElement merge(CnATreeElement entity, boolean fireChange) {
-		// check rights only while updating
-		if(entity.getDbId()!=null) {
-			checkRights(entity);
-		}
-		return super.merge(entity, fireChange);
-	}
+    public void delete(CnATreeElement entity) {
+        checkRights(entity);
+        super.delete(entity);
+        indexDelete(entity);
+    }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.hibernate.TreeElementDao#checkRights(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.hibernate.ISecureDao#merge(sernet.verinice.model.common.
+     * CnATreeElement, boolean)
      */
     @Override
-    public void checkRights(CnATreeElement entity) /*throws SecurityException*/ {
+    public CnATreeElement merge(CnATreeElement entity, boolean fireChange) {
+        // check rights only while updating
+        if (entity.getDbId() != null) {
+            checkRights(entity);
+        }
+        return super.merge(entity, fireChange);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.hibernate.TreeElementDao#checkRights(java.lang.Object)
+     */
+    @Override
+    public void checkRights(
+            CnATreeElement entity) /* throws SecurityException */ {
         checkRights(entity, getAuthService().getUsername());
     }
 
@@ -126,43 +149,46 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
         checkRights(id, scopeId, getAuthService().getUsername());
     }
 
-	/* (non-Javadoc)
-	 * @see sernet.verinice.hibernate.TreeElementDao#checkRights(java.lang.Object, java.lang.String)
-	 */
-	@Override
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.hibernate.TreeElementDao#checkRights(java.lang.Object,
+     * java.lang.String)
+     */
+    @Override
     public void checkRights(CnATreeElement element, String username) {
-	    if (log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Checking rights for entity: " + element + " and username: " + username);
-        } 
+        }
         checkRights(element.getDbId(), element.getScopeId(), username);
     }
 
     private void checkRights(Integer dbId, Integer scopeId, String username) {
-	    if (isPermissionHandlingNeeded()) {
+        if (isPermissionHandlingNeeded()) {
             doCheckRights(dbId, scopeId, username);
         }
     }
 
     private void doCheckRights(Integer dbId, Integer scopeId, String username) {
         String[] roleArray = getDynamicRoles(username);
-        if(roleArray==null) {
+        if (roleArray == null) {
             log.error("Role array is null for user: " + username);
         }
-        if(!hasAdminRole(roleArray)) {	    
+        if (!hasAdminRole(roleArray)) {
             checkRightsForNonAdmin(dbId, username, roleArray);
         }
         if (isScopeOnly() && scopeId != null
                 && !scopeId.equals(getConfigurationService().getScopeId(username))) {
             final String message = "User: " + username
                     + " has no right to write CnATreeElement with id: " + dbId;
-                log.warn(message);
-                throw new SecurityException(message);
+            log.warn(message);
+            throw new SecurityException(message);
         }
     }
 
     @SuppressWarnings("unchecked")
-    protected void checkRightsForNonAdmin(Integer dbId, String username,
-            String[] roleArray) {
+    protected void checkRightsForNonAdmin(Integer dbId, String username, String[] roleArray) {
         String hql = createHql(roleArray);
 
         Object[] params = new Object[] { dbId, Boolean.TRUE };
@@ -177,7 +203,7 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
                 log.debug(integer);
             }
         }
-        if(idList==null || idList.isEmpty()) {
+        if (idList == null || idList.isEmpty()) {
             final String message = "User: " + username
                     + " has no right to write CnATreeElement with id: " + dbId;
             log.warn(message);
@@ -188,7 +214,8 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
     protected String createHql(String[] roleArray) {
         String roleParam = createRoleParam(roleArray);
         StringBuilder sb = new StringBuilder();
-        sb.append("select p.dbId from Permission p where p.cnaTreeElement.dbId = ? and p.role in (");
+        sb.append(
+                "select p.dbId from Permission p where p.cnaTreeElement.dbId = ? and p.role in (");
         // workaraound, because adding roles as ? param does not work
         sb.append(roleParam);
         sb.append(") and p.writeAllowed = ?");
@@ -201,7 +228,7 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
             String name = roleArray[i];
             String escaped = name.replace("\\", "\\\\");
             sb.append("'").append(escaped).append("'");
-            if(i<roleArray.length-1) {
+            if (i < roleArray.length - 1) {
                 sb.append(",");
             }
         }
@@ -209,20 +236,20 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
     }
 
     private void beforeExecution() {
-        if(isPermissionHandlingNeeded()) {
+        if (isPermissionHandlingNeeded()) {
             enableFilter();
         }
     }
 
     private void afterExecution() {
-        if(isPermissionHandlingNeeded()) {
+        if (isPermissionHandlingNeeded()) {
             disableFilter();
         }
     }
 
     private void enableFilter() {
-        if(!hasAdminRole(authService.getRoles())) {
-            if(log.isDebugEnabled()) {
+        if (!hasAdminRole(authService.getRoles())) {
+            if (log.isDebugEnabled()) {
                 log.debug("Enabling security access filter for user: " + authService.getUsername());
             }
             setAccessFilterEnabled(true);
@@ -231,8 +258,8 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
     }
 
     public void disableFilter() {
-        if(!hasAdminRole(authService.getRoles())) {
-            if(log.isDebugEnabled()) {
+        if (!hasAdminRole(authService.getRoles())) {
+            if (log.isDebugEnabled()) {
                 log.debug("Disabling security access filter.");
             }
             setAccessFilterEnabled(false);
@@ -241,13 +268,15 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
     }
 
     private void setScopeFilterEnabled(boolean enable) {
-        if(getConfigurationService().isScopeOnly(authService.getUsername()) && enable) {
-            final Integer userScopeId = getConfigurationService().getScopeId(authService.getUsername());
+        if (getConfigurationService().isScopeOnly(authService.getUsername()) && enable) {
+            final Integer userScopeId = getConfigurationService()
+                    .getScopeId(authService.getUsername());
             getHibernateTemplate().enableFilter("scopeFilter").setParameter("scopeId", userScopeId);
         } else {
             getHibernateTemplate().execute(new HibernateCallback() {
                 @Override
-                public Object doInHibernate(Session session) throws HibernateException, SQLException {
+                public Object doInHibernate(Session session)
+                        throws HibernateException, SQLException {
                     session.disableFilter("scopeFilter");
                     return null;
                 }
@@ -274,53 +303,52 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
     }
 
     private boolean isPermissionHandlingNeeded() {
-        return getAuthService().isPermissionHandlingNeeded() 
-                && !(getAuthService().getAdminUsername().equals(getAuthService().getUsername())) ;
+        return getAuthService().isPermissionHandlingNeeded()
+                && !(getAuthService().getAdminUsername().equals(getAuthService().getUsername()));
     }
-	
 
     private boolean isScopeOnly() {
         return getConfigurationService().isScopeOnly(getAuthService().getUsername());
     }
 
-	private boolean hasAdminRole(String[] roles) {
-	    if(roles!=null) {
-    		for (String r : roles) {
-    			if (ApplicationRoles.ROLE_ADMIN.equals(r)){
-    				return true;
-    			}
-    		}
-	    }
-		return false;
-	}
+    private boolean hasAdminRole(String[] roles) {
+        if (roles != null) {
+            for (String r : roles) {
+                if (ApplicationRoles.ROLE_ADMIN.equals(r)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
-	private String[] getDynamicRoles(String username) {
-		return getConfigurationService().getRoles(username);
-	}
+    private String[] getDynamicRoles(String username) {
+        return getConfigurationService().getRoles(username);
+    }
 
-	public void setAuthService(IAuthService authService) {
-		this.authService = authService;
-	}
+    public void setAuthService(IAuthService authService) {
+        this.authService = authService;
+    }
 
-	public IAuthService getAuthService() {
-		return authService;
-	}
+    public IAuthService getAuthService() {
+        return authService;
+    }
 
-	public void setConfigurationDao(IBaseDao<Configuration, Integer> configurationDao) {
-		this.configurationDao = configurationDao;
-	}
+    public void setConfigurationDao(IBaseDao<Configuration, Integer> configurationDao) {
+        this.configurationDao = configurationDao;
+    }
 
-	public IBaseDao<Configuration, Integer> getConfigurationDao() {
-		return configurationDao;
-	}
+    public IBaseDao<Configuration, Integer> getConfigurationDao() {
+        return configurationDao;
+    }
 
-	public void setPermissionDao(IBaseDao<Permission, Integer> permissionDao) {
-		this.permissionDao = permissionDao;
-	}
+    public void setPermissionDao(IBaseDao<Permission, Integer> permissionDao) {
+        this.permissionDao = permissionDao;
+    }
 
-	public IBaseDao<Permission, Integer> getPermissionDao() {
-		return permissionDao;
-	}
+    public IBaseDao<Permission, Integer> getPermissionDao() {
+        return permissionDao;
+    }
 
     public IConfigurationService getConfigurationService() {
         return configurationService;
