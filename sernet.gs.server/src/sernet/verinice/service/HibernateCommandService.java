@@ -28,6 +28,8 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.security.AccessDeniedException;
 
@@ -50,6 +52,7 @@ import sernet.verinice.interfaces.graph.IGraphService;
 import sernet.verinice.interfaces.ldap.ILdapCommand;
 import sernet.verinice.interfaces.ldap.ILdapService;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.UsernameExistsRuntimeException;
@@ -369,7 +372,14 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
                 @Override
                 public Object doInHibernate(Session session)
                         throws HibernateException, SQLException {
-                    session.enableFilter("scopeFilter").setParameter("scopeId", userScopeId);
+                    @SuppressWarnings("unchecked")
+                    List<Integer> allowedScopeIds = session.createCriteria(CnATreeElement.class)
+                            .createAlias("parent", "parent")
+                            .add(Restrictions.eq("parent.objectType", CatalogModel.TYPE_ID))
+                            .setProjection(Projections.property("dbId")).list();
+                    allowedScopeIds.add(userScopeId);
+                    session.enableFilter("scopeFilter").setParameterList("scopeIds",
+                            allowedScopeIds);
                     return null;
                 }
             });

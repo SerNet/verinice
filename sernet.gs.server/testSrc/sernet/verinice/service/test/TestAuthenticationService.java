@@ -37,6 +37,7 @@ public class TestAuthenticationService implements IAuthService {
     private static final String[] NO_ROLES = new String[0];
     private String[] roles;
     private String username;
+    private boolean permissionHandlingNeeded = false;
 
     @Override
     public String[] getRoles() {
@@ -74,7 +75,7 @@ public class TestAuthenticationService implements IAuthService {
 
     @Override
     public boolean isPermissionHandlingNeeded() {
-        return false;
+        return permissionHandlingNeeded;
     }
 
     @Override
@@ -103,5 +104,17 @@ public class TestAuthenticationService implements IAuthService {
     @Override
     public boolean currentUserHasRole(String[] allowedRoles) {
         return false;
+    }
+
+    public void setPermissionHandlingNeeded(boolean permissionHandlingNeeded) {
+        this.permissionHandlingNeeded = permissionHandlingNeeded;
+
+    }
+
+    public void reset() {
+        this.permissionHandlingNeeded = false;
+        this.username = INTERNAL_ADMIN;
+        this.roles = null;
+
     }
 }

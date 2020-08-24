@@ -24,6 +24,8 @@ import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.gs.service.SecurityException;
@@ -31,6 +33,7 @@ import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IConfigurationService;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
@@ -271,7 +274,22 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
         if (getConfigurationService().isScopeOnly(authService.getUsername()) && enable) {
             final Integer userScopeId = getConfigurationService()
                     .getScopeId(authService.getUsername());
-            getHibernateTemplate().enableFilter("scopeFilter").setParameter("scopeId", userScopeId);
+
+            getHibernateTemplate().execute(new HibernateCallback() {
+                @Override
+                public Object doInHibernate(Session session)
+                        throws HibernateException, SQLException {
+                    @SuppressWarnings("unchecked")
+                    List<Integer> allowedScopeIds = session.createCriteria(CnATreeElement.class)
+                            .createAlias("parent", "parent")
+                            .add(Restrictions.eq("parent.objectType", CatalogModel.TYPE_ID))
+                            .setProjection(Projections.property("dbId")).list();
+                    allowedScopeIds.add(userScopeId);
+                    session.enableFilter("scopeFilter").setParameterList("scopeIds",
+                            allowedScopeIds);
+                    return null;
+                }
+            });
         } else {
             getHibernateTemplate().execute(new HibernateCallback() {
                 @Override
