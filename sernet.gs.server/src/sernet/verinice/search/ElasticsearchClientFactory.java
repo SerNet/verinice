@@ -5,16 +5,24 @@ import java.io.InputStream;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.log4j.Logger;
+import org.elasticsearch.action.UnavailableShardsException;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
+import org.elasticsearch.action.admin.indices.stats.IndicesStatsResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.network.NetworkUtils;
 import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.ImmutableSettings.Builder;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.IndexException;
+import org.elasticsearch.index.shard.IndexShardException;
 import org.elasticsearch.indices.IndexAlreadyExistsException;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.node.NodeBuilder;
@@ -63,6 +71,7 @@ public class ElasticsearchClientFactory implements DisposableBean {
     public void init() {
         if (node == null || node.isClosed()) {
             // Build and start the node
+
             node = NodeBuilder.nodeBuilder().settings(buildNodeSettings()).node();
             if (LOG.isDebugEnabled()) {
                 for (Entry<String, String> entry : node.settings().getAsMap().entrySet()) {
@@ -71,7 +80,6 @@ public class ElasticsearchClientFactory implements DisposableBean {
             }
             // Get a client
             client = node.client();
-            configure();
             Map<String, String> map = ImmutableSettings.builder().internalMap();
             for (Entry<String, String> e : map.entrySet()) {
                 LOG.error("ES Setting:\t<" + e.getKey() + ", " + e.getValue() + ">");
@@ -83,33 +91,69 @@ public class ElasticsearchClientFactory implements DisposableBean {
                     // have any replicas available, so yellow is ok for us
                     .setWaitForYellowStatus().setTimeout(TimeValue.timeValueMinutes(1)).execute()
                     .actionGet();
+            ensureValidIndex();
         }
     }
 
-    private void configure() {
-        if (!client.admin().indices().prepareExists(ISearchDao.INDEX_NAME).execute().actionGet()
-                .isExists()) {
+    /**
+     * Ensure the index can be used further on, create or recreate the index
+     * when nessesary.
+     * 
+     */
+    private void ensureValidIndex() {
+        try {
+            IndicesExistsResponse existsResponse = client.admin().indices()
+                    .prepareExists(ISearchDao.INDEX_NAME).setLocal(true).execute().actionGet();
+            if (!existsResponse.isExists()) {
+                createIndex();
+                return;
+            }
+            IndicesStatsResponse indexStatsResponse = client.admin().indices()
+                    .prepareStats(ISearchDao.INDEX_NAME).execute().actionGet();
+            int successfulShards = indexStatsResponse.getSuccessfulShards();
+            if (successfulShards == 0) {
+                LOG.warn("No shards: " + indexStatsResponse);
+
+            }
+
+            String uuid = UUID.randomUUID().toString();
+            client.prepareIndex(ISearchDao.INDEX_NAME, "test", uuid).setRefresh(true)
+                    .setSource("{}", XContentType.JSON).setTimeout(TimeValue.timeValueSeconds(20))
+                    .execute().actionGet();
+
+            client.prepareDelete(ISearchDao.INDEX_NAME, "test", uuid).setRefresh(true)
+                    .setTimeout(TimeValue.timeValueSeconds(20)).execute().actionGet();
+        } catch (IndexException | UnavailableShardsException e) {
+            LOG.warn("Index seems corrupt, removing.", e);
+            client.admin().indices().delete(new DeleteIndexRequest(ISearchDao.INDEX_NAME))
+                    .actionGet();
+            createIndex();
+        }
+    }
+
+    private void createIndex() {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Creating index " + ISearchDao.INDEX_NAME + "...");
+        }
+        try {
+            Builder analysisConf = getAnylysisConf();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Creating index " + ISearchDao.INDEX_NAME + "...");
-            }
-            try {
-                Builder analysisConf = getAnylysisConf();
-                if (LOG.isDebugEnabled()) {
-                    Map<String, String> map = analysisConf.internalMap();
-                    for (Entry<String, String> e : map.entrySet()) {
-                        LOG.debug("ES Settings:\t<" + e.getKey() + ", " + e.getValue() + ">");
-                    }
+                Map<String, String> map = analysisConf.internalMap();
+                for (Entry<String, String> e : map.entrySet()) {
+                    LOG.debug("ES Settings:\t<" + e.getKey() + ", " + e.getValue() + ">");
                 }
-                client.admin().indices().prepareCreate(ISearchDao.INDEX_NAME)
-                        .setSettings(analysisConf).addMapping(ElementDao.TYPE_NAME, getMapping())
-                        .execute().actionGet();
-            } catch (IndexAlreadyExistsException e) {
-                // https://github.com/elastic/elasticsearch/issues/8105
-                LOG.warn("Index " + ISearchDao.INDEX_NAME
-                        + " already existed when trying to create it, trying to use it.");
             }
-        } else if (LOG.isDebugEnabled()) {
-            LOG.debug("Index " + ISearchDao.INDEX_NAME + " exists");
+            client.admin().indices().prepareCreate(ISearchDao.INDEX_NAME).setSettings(analysisConf)
+                    .addMapping(ElementDao.TYPE_NAME, getMapping()).execute().actionGet();
+        } catch (IndexShardException e) {// we can recover here by deleting the
+                                         // index and create again
+            client.admin().indices().delete(new DeleteIndexRequest(ISearchDao.INDEX_NAME))
+                    .actionGet();
+            createIndex();
+        } catch (IndexAlreadyExistsException e) {
+            // https://github.com/elastic/elasticsearch/issues/8105
+            LOG.warn("Index " + ISearchDao.INDEX_NAME
+                    + " already existed when trying to create it, trying to use it.");
         }
     }
 

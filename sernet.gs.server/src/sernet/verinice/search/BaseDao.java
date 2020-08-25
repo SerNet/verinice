@@ -27,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.ActionRequestValidationException;
 import org.elasticsearch.action.ActionResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -38,6 +39,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.engine.DocumentMissingException;
 import org.elasticsearch.index.query.AndFilterBuilder;
 import org.elasticsearch.index.query.FilterBuilders;
@@ -90,7 +92,13 @@ public abstract class BaseDao implements ISearchDao {
      */
     @Override
     public ActionResponse updateOrIndex(String id, String json) {
-        return update(id, json);
+        try {
+            return update(id, json);
+        } catch (ElasticsearchException e) {
+            LOG.error("Error while updating the element :" + id + " reason: " + e.getMessage());
+            LOG.error(e.getDetailedMessage());
+            return null;
+        }
     }
 
     /*
@@ -102,7 +110,8 @@ public abstract class BaseDao implements ISearchDao {
     public ActionResponse update(String id, String json) {
         try {
             UpdateResponse response = getClient().prepareUpdate(getIndex(), getType(), id)
-                    .setRefresh(true).setDoc(json).execute().actionGet();
+                    .setRefresh(true).setDoc(json).setTimeout(TimeValue.timeValueSeconds(10))
+                    .execute().actionGet();
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Index updated, uuid: " + response.getId() + ", version: "
                         + response.getVersion());
