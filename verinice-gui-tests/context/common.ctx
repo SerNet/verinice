@@ -6,7 +6,7 @@ Element-Type: context
 Element-Version: 2.0
 Id: _lGnj8Ix1Eei2UKUDmonytQ
 Runtime-Version: 2.5.1.M3
-Save-Time: 8/19/20, 10:36 AM
+Save-Time: 8/26/20, 2:01 PM
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
 Content-Type: text/ecl
@@ -120,6 +120,10 @@ proc "delete-catalog-element" [val name] {
 
 proc "delete-compendium" {
 	delete-catalog-element "IT-Grundschutz-Kompendium 4.0"
+}
+
+proc "get-object-browser-text" {
+	get-view Objektbrowser | get-control Browser | get-property text
 }
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998--

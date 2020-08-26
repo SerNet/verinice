@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -142,8 +143,8 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
     }
 
     private static String defaultImage() {
-        return String.format("file:///%s/html/about.html", CnAWorkspace //$NON-NLS-1$
-                .getInstance().getWorkdir()); // $NON-NLS-1$
+        return Paths.get(CnAWorkspace.getInstance().getWorkdir()).resolve("html")//$NON-NLS-1$
+                .resolve("about.html").toUri().toString();//$NON-NLS-1$
     }
 
     private void hookPageSelection() {
