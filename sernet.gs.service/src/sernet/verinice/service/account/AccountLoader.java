@@ -25,6 +25,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 
@@ -146,10 +148,14 @@ public final class AccountLoader {
     }
 
     public static boolean isEditAllowed(Configuration account) {
-        final boolean isAdmin = getAuthService()
-                .currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
-        final boolean isLocalAdmin = getAuthService()
-                .currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        Set<String> currentUserRoles = Stream.of(getAuthService().getRoles())
+                .collect(Collectors.toSet());
+        return isEditAllowed(account, currentUserRoles);
+    }
+
+    public static boolean isEditAllowed(Configuration account, Set<String> currentUserRoles) {
+        final boolean isAdmin = currentUserRoles.contains(ApplicationRoles.ROLE_ADMIN);
+        final boolean isLocalAdmin = currentUserRoles.contains(ApplicationRoles.ROLE_LOCAL_ADMIN);
         return isAdmin || (isLocalAdmin && !account.isAdminUser());
     }
 

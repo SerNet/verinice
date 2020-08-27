@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
@@ -67,10 +68,12 @@ import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.iso27k.rcp.ComboModel;
@@ -385,7 +388,8 @@ public class AccountView extends RightsEnabledView {
         viewer.setContentProvider(contentProvider);
         Map<Integer, LicenseMessageInfos> lmColumnsMap = new HashMap<>();
 
-        viewer.setLabelProvider(new AccountLabelProvider(lmColumnsMap, viewer));
+        viewer.setLabelProvider(new AccountLabelProvider(lmColumnsMap, viewer,
+                Stream.of(getAuthService().getRoles()).collect(Collectors.toSet())));
         Table table = viewer.getTable();
 
         int columnIndex = 0;
@@ -793,6 +797,10 @@ public class AccountView extends RightsEnabledView {
 
     private IAccountService createAccountServive() {
         return ServiceFactory.lookupAccountService();
+    }
+
+    private static IAuthService getAuthService() {
+        return (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
     }
 
     @Override

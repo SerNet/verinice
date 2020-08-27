@@ -1,6 +1,7 @@
 package sernet.verinice.rcp.account;
 
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -29,10 +30,14 @@ class AccountLabelProvider extends ColumnLabelProvider implements ITableLabelPro
 
     private TableViewer viewer;
 
-    public AccountLabelProvider(Map<Integer, LicenseMessageInfos> lmInfosMap, TableViewer viewer) {
+    private final Set<String> currentUserRoles;
+
+    public AccountLabelProvider(Map<Integer, LicenseMessageInfos> lmInfosMap, TableViewer viewer,
+            Set<String> currentUserRoles) {
         super();
         this.lmInfosMap = lmInfosMap;
         this.viewer = viewer;
+        this.currentUserRoles = currentUserRoles;
     }
 
     @Override
@@ -139,7 +144,8 @@ class AccountLabelProvider extends ColumnLabelProvider implements ITableLabelPro
      */
     @Override
     public Color getForeground(Object o) {
-        if (o instanceof Configuration && !AccountLoader.isEditAllowed((Configuration) o)) {
+        if (o instanceof Configuration
+                && !AccountLoader.isEditAllowed((Configuration) o, currentUserRoles)) {
             return SWTResourceManager.getColor(SWT.COLOR_GRAY);
         }
         return super.getForeground(o);
