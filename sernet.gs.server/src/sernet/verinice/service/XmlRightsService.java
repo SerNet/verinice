@@ -388,8 +388,7 @@ public class XmlRightsService implements IRightsService {
                 "inner join conf.entity as entity " + //$NON-NLS-1$
                 "inner join entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
                 "inner join propertyList.properties as props " + //$NON-NLS-1$
-                "inner join conf.entity as entity2 " + //$NON-NLS-1$
-                "inner join entity2.typedPropertyLists as propertyList2 " + //$NON-NLS-1$
+                "inner join entity.typedPropertyLists as propertyList2 " + //$NON-NLS-1$
                 "inner join propertyList2.properties as roleprops " + //$NON-NLS-1$
                 "where props.propertyType = ? " + //$NON-NLS-1$
                 "and props.propertyValue like ? " + //$NON-NLS-1$
