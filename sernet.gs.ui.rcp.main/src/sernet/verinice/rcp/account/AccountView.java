@@ -141,6 +141,8 @@ public class AccountView extends RightsEnabledView {
     private AccountContentProvider contentProvider = new AccountContentProvider();
     private ISelectionListener selectionListener;
 
+    private Map<String, Integer> columnIndexesByLicenseId;
+
     private void init() throws CommandException {
         findAccounts();
         loadScopes();
@@ -388,7 +390,7 @@ public class AccountView extends RightsEnabledView {
         viewer.setContentProvider(contentProvider);
         Map<Integer, LicenseMessageInfos> lmColumnsMap = new HashMap<>();
 
-        viewer.setLabelProvider(new AccountLabelProvider(lmColumnsMap, viewer,
+        viewer.setLabelProvider(new AccountLabelProvider(lmColumnsMap,
                 Stream.of(getAuthService().getRoles()).collect(Collectors.toSet())));
         Table table = viewer.getTable();
 
@@ -407,7 +409,7 @@ public class AccountView extends RightsEnabledView {
         createTableColumn(Messages.AccountView_21, BOOLEAN_COLUMN_WIDTH, columnIndex++, "");
 
         try {
-            creatLMColumns(lmColumnsMap, columnIndex);
+            columnIndexesByLicenseId = creatLMColumns(lmColumnsMap, columnIndex);
         } catch (LicenseManagementException e) {
             String msg = "Error creating license-mgmt-Colums";
             ExceptionUtil.log(e, msg);
@@ -426,14 +428,14 @@ public class AccountView extends RightsEnabledView {
      * @return
      * @throws LicenseManagementException
      */
-    private int creatLMColumns(Map<Integer, LicenseMessageInfos> lmColumnsMap, int columnIndex)
-            throws LicenseManagementException {
+    private Map<String, Integer> creatLMColumns(Map<Integer, LicenseMessageInfos> lmColumnsMap,
+            int columnIndex) throws LicenseManagementException {
         List<LicenseMessageInfos> licenseInfos = new ArrayList<>();
         licenseInfos.addAll(getLMService().getAllLicenseMessageInfos());
 
         Collections.sort(licenseInfos, (infos0, infos1) -> infos0.getContentId()
                 .compareToIgnoreCase(infos1.getContentId()));
-
+        Map<String, Integer> columnIndexesByLicenseId = new HashMap<>(licenseInfos.size());
         for (int index = 0; index < licenseInfos.size(); index++) {
 
             LicenseMessageInfos infos = licenseInfos.get(index);
@@ -443,12 +445,12 @@ public class AccountView extends RightsEnabledView {
                 infos.setAccountViewColumnHeader(
                         getLMColumnHeader(infos.getContentId(), index + 1));
                 lmColumnsMap.put(columnIndex, infos);
-
+                columnIndexesByLicenseId.put(infos.getLicenseId(), columnIndex);
                 createTableColumn(infos.getAccountViewColumnHeader(), BOOLEAN_COLUMN_WIDTH,
                         columnIndex++, infos.getAccountWizardLabel());
             }
         }
-        return columnIndex;
+        return columnIndexesByLicenseId;
     }
 
     private String getLMColumnHeader(String contentId, int index) {
@@ -623,8 +625,13 @@ public class AccountView extends RightsEnabledView {
             LOG.debug("findAccounts called..."); //$NON-NLS-1$
         }
         final List<Configuration> accountList = getAccountService().findAccounts(parameter);
+
         getDisplay().syncExec(() -> {
             viewer.setInput(accountList);
+            columnIndexesByLicenseId.forEach((licenseId, columnIndex) -> {
+                String newTooltip = LicenseMgmtPage.getLicenseLabelString(licenseId);
+                viewer.getTable().getColumn(columnIndex).setToolTipText(newTooltip);
+            });
             Stream.of(viewer.getTable().getColumns()).forEach(TableColumn::pack);
         });
     }
