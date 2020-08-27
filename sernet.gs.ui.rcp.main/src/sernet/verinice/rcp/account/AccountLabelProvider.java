@@ -22,20 +22,19 @@ import sernet.verinice.service.account.AccountLoader;
 class AccountLabelProvider extends ColumnLabelProvider implements ITableLabelProvider {
 
     private static final Logger LOG = Logger.getLogger(AccountLabelProvider.class);
-    
+
     boolean titleMapInitialized = false;
-    
+
     private Map<Integer, LicenseMessageInfos> lmInfosMap;
-    
+
     private TableViewer viewer;
-    
-    public AccountLabelProvider(Map<Integer, LicenseMessageInfos> lmInfosMap,
-            TableViewer viewer) {
+
+    public AccountLabelProvider(Map<Integer, LicenseMessageInfos> lmInfosMap, TableViewer viewer) {
         super();
         this.lmInfosMap = lmInfosMap;
         this.viewer = viewer;
     }
-    
+
     @Override
     public String getColumnText(Object element, int columnIndex) {
         try {
@@ -45,12 +44,12 @@ class AccountLabelProvider extends ColumnLabelProvider implements ITableLabelPro
             Configuration account = (Configuration) element;
             GenericPerson person = new GenericPerson(account.getPerson());
             Integer scopeId = account.getPerson().getScopeId();
-            switch (columnIndex) { 
+            switch (columnIndex) {
             case 0:
                 return ElementTitleCache.getInstance().get(scopeId);
-            case 1:               
+            case 1:
                 return person.getParentName();
-            case 2:   
+            case 2:
                 return account.getUser();
             case 3:
                 return person.getName();
@@ -61,7 +60,7 @@ class AccountLabelProvider extends ColumnLabelProvider implements ITableLabelPro
             case 6:
                 return convertToX(account.isLocalAdminUser());
             case 7:
-                return convertToX(account.isScopeOnly()); 
+                return convertToX(account.isScopeOnly());
             case 8:
                 return convertToX(account.isWebUser());
             case 9:
@@ -83,39 +82,35 @@ class AccountLabelProvider extends ColumnLabelProvider implements ITableLabelPro
         }
     }
 
-    private String getLMColumnLabel(int columnIndex, Configuration account){
+    private String getLMColumnLabel(int columnIndex, Configuration account) {
         LicenseMessageInfos infos = lmInfosMap.get(columnIndex);
-        int newCount = 
-                ServiceFactory.lookupLicenseManagementService().
-                getLicenseIdAllocationCount(infos.getLicenseId());
+        int newCount = ServiceFactory.lookupLicenseManagementService()
+                .getLicenseIdAllocationCount(infos.getLicenseId());
         String licenseId = infos.getLicenseId();
-        if (infos.getAssignedUsers()!=newCount){
+        if (infos.getAssignedUsers() != newCount) {
             refreshColumnTooltip(columnIndex, newCount);
         }
-        if(infos.getValidUntil().isBefore(LocalDate.now())){
+        if (infos.getValidUntil().isBefore(LocalDate.now())) {
             return Messages.AccountView_LicenseExpired;
         }
-        return convertToX(
-                account.getAssignedLicenseIds().
-                contains(licenseId));
+        return convertToX(account.getAssignedLicenseIds().contains(licenseId));
     }
 
     /**
-     * refreshes assignmentcount in columntooltip after
-     * new license has been assigned to user
+     * refreshes assignmentcount in columntooltip after new license has been
+     * assigned to user
      * 
      * @param columnIndex
      * @param newCount
      */
     private void refreshColumnTooltip(int columnIndex, int newCount) {
-        String oldColumnTooltip = 
-                viewer.getTable().getColumn(columnIndex).getToolTipText();
+        String oldColumnTooltip = viewer.getTable().getColumn(columnIndex).getToolTipText();
         StringBuilder replacement = new StringBuilder();
         replacement.append("- (");
         replacement.append(String.valueOf(newCount));
         replacement.append("/");
-        String newColumnTooltip = 
-                oldColumnTooltip.replaceFirst("- \\(\\d/", replacement.toString());
+        String newColumnTooltip = oldColumnTooltip.replaceFirst("- \\(\\d/",
+                replacement.toString());
         viewer.getTable().getColumn(columnIndex).setToolTipText(newColumnTooltip);
     }
 
