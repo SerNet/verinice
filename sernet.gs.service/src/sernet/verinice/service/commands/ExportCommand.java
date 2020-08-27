@@ -323,8 +323,10 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     }
 
     private void exportChildren(final ExportTransaction transaction) throws CommandException {
-        log.debug("Call exportChildren in ExportCommand hashcode " + this.hashCode() + "for object "
-                + transaction.getElement().getTitle());
+        if (log.isDebugEnabled()) {
+            log.debug("Call exportChildren in ExportCommand hashcode " + this.hashCode()
+                    + "for object " + transaction.getElement().getTitle());
+        }
         final int timeOutFactor = 40;
         final CnATreeElement element = transaction.getElement();
         final Set<CnATreeElement> children = element.getChildren();
@@ -338,7 +340,9 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         taskExecutor = Executors.newFixedThreadPool(getMaxNumberOfThreads());
         if (!children.isEmpty()) {
             for (final CnATreeElement child : children) {
-                log.debug("Create export job for child " + child.getDbId());
+                if (log.isDebugEnabled()) {
+                    log.debug("Create export job for child " + child.getDbId());
+                }
                 final ExportTransaction childTransaction = new ExportTransaction(child);
                 transactionList.add(childTransaction);
                 final ExportThread thread = new ExportThread(childTransaction);

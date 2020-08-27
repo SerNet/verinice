@@ -271,8 +271,10 @@ public class ExportThread extends NotifyingThread {
         synchronized (LOCK) {
             if (Status.STATUS_ALIVE.equals(cache.getStatus())
                     && getElementFromCache(element) == null) {
-                LOG.debug("Put element into cache: " + element.getTitle() + " : "
-                        + element.getDbId());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Put element into cache: " + element.getTitle() + " : "
+                            + element.getDbId());
+                }
                 getCache().put(new Element(element.getUuid(), element));
             } else {
                 LOG.warn("Cache is not alive. Can't put element to cache, uuid: "
