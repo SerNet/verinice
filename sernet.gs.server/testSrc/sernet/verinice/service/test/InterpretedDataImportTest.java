@@ -25,7 +25,9 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.hibernate.criterion.DetachedCriteria;
+import org.junit.Assert;
 import org.junit.Test;
+import org.junit.matchers.StringContains;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +41,61 @@ import sernet.verinice.service.commands.SyncParameterException;
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
 @Transactional
 public class InterpretedDataImportTest extends CommandServiceProvider {
+
+    @Test
+    public void importDataWithInvalidImplementationStatus()
+            throws IOException, SyncParameterException {
+        try (InputStream is = InterpretedDataImportTest.class.getResourceAsStream(
+                "Informationsverbund-VN-2752-invalid-implementation-status.vna")) {
+            byte[] bytes = IOUtils.toByteArray(is);
+            SyncParameter parameter = new SyncParameter(true, false, false, false);
+            SyncCommand syncCommand = new SyncCommand(parameter, bytes);
+            try {
+                commandService.executeCommand(syncCommand);
+                Assert.fail("Import should have failed with an exception");
+            } catch (CommandException e) {
+                Throwable unwrapped = syncCommand.getErrorCause().getCause();
+                Assert.assertThat(unwrapped.getMessage(), StringContains.containsString(
+                        "Invalid value found for option property bp_requirement_implementation_status"));
+            }
+        }
+    }
+
+    @Test
+    public void importDataWithInvalidProceeding() throws IOException, SyncParameterException {
+        try (InputStream is = InterpretedDataImportTest.class
+                .getResourceAsStream("Informationsverbund-VN-2752-invalid-proceeding.vna")) {
+            byte[] bytes = IOUtils.toByteArray(is);
+            SyncParameter parameter = new SyncParameter(true, false, false, false);
+            SyncCommand syncCommand = new SyncCommand(parameter, bytes);
+            try {
+                commandService.executeCommand(syncCommand);
+                Assert.fail("Import should have failed with an exception");
+            } catch (CommandException e) {
+                Throwable unwrapped = syncCommand.getErrorCause().getCause();
+                Assert.assertThat(unwrapped.getMessage(), StringContains.containsString(
+                        "Invalid value found for option property bp_itnetwork_qualifier"));
+            }
+        }
+    }
+
+    @Test
+    public void importDataWithInvalidSecurityLevel() throws IOException, SyncParameterException {
+        try (InputStream is = InterpretedDataImportTest.class
+                .getResourceAsStream("Informationsverbund-VN-2752-invalid-security-level.vna")) {
+            byte[] bytes = IOUtils.toByteArray(is);
+            SyncParameter parameter = new SyncParameter(true, false, false, false);
+            SyncCommand syncCommand = new SyncCommand(parameter, bytes);
+            try {
+                commandService.executeCommand(syncCommand);
+                Assert.fail("Import should have failed with an exception");
+            } catch (CommandException e) {
+                Throwable unwrapped = syncCommand.getErrorCause().getCause();
+                Assert.assertThat(unwrapped.getMessage(), StringContains.containsString(
+                        "Invalid value found for option property bp_safeguard_qualifier"));
+            }
+        }
+    }
 
     @Test
     public void importDataWithTranslatedSecurityLevel()

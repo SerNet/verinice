@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -56,6 +58,9 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.elements.BpModel;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
@@ -355,7 +360,10 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 try {
                     propertyValueChanged |= elementInDB.getEntity().importProperties(huiTypeFactory,
                             attrIntId, attrValues, syncaAttribute.getLimitedLicense(),
-                            syncaAttribute.getLicenseContentId(), licenseManagementValid);
+                            syncaAttribute.getLicenseContentId(), licenseManagementValid,
+                            Arrays.asList(BpRequirement.PROP_QUALIFIER,
+                                    BpRequirement.PROP_IMPLEMENTATION_STATUS,
+                                    Safeguard.PROP_QUALIFIER, ItNetwork.PROP_QUALIFIER));
                 } catch (IndexOutOfBoundsException e) {
                     log.error("wrong number of arguments while importing", e);
                 }
@@ -559,7 +567,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 } else {
                     String attrIntId = mat.getIntId();
                     attachment.getEntity().importProperties(huiTypeFactory, attrIntId, attrValues,
-                            sa.getLimitedLicense(), sa.getLicenseContentId(), false);
+                            sa.getLimitedLicense(), sa.getLicenseContentId(), false,
+                            Collections.emptySet());
                 }
             }
             if (log.isDebugEnabled()) {

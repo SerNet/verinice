@@ -22,6 +22,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -480,7 +481,8 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
      */
     public boolean importProperties(HUITypeFactory huiTypeFactory, String propertyTypeId,
             List<String> foreignProperties, List<Boolean> foreignLimitedLicense,
-            List<String> foreignContentId, boolean licenseManagement) {
+            List<String> foreignContentId, boolean licenseManagement,
+            Collection<String> propertiesRequiringExactMatches) {
         boolean propertyValueChanged = false;
         PropertyList pl = typedPropertyLists.get(propertyTypeId);
         if (pl == null) {
@@ -516,7 +518,8 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         for (int i = 0; i < foreignProperties.size(); i++) {
             String value = foreignProperties.get(i);
             Property p = properties.get(i);
-            value = checkPropertyValue(propertyTypeId, propertyType, value);
+            value = checkPropertyValue(propertyTypeId, propertyType, value,
+                    propertiesRequiringExactMatches.contains(propertyTypeId));
             if (!Objects.equals(value, p.getPropertyValue())) {
                 propertyValueChanged = true;
                 p.setPropertyValue(value);
@@ -537,7 +540,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     }
 
     private String checkPropertyValue(String propertyTypeId, PropertyType propertyType,
-            String value) {
+            String value, boolean propertyValueMustBeValidOption) {
         String rawValue = value;
         if (propertyType != null && propertyType.isSingleSelect() && value != null
                 && !value.isEmpty()) {
@@ -551,9 +554,15 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                     found = true;
                 }
             }
-            if (!found && logger.isInfoEnabled()) {
-                logger.info("No value found for option property: " + propertyTypeId + " of entity: "
-                        + this.entityType + ". Importing unmapped value: " + value);
+            if (!found) {
+                if (propertyValueMustBeValidOption) {
+                    throw new IllegalArgumentException("Invalid value found for option property "
+                            + propertyTypeId + " of entity " + this.entityType + ": " + value);
+                } else if (logger.isInfoEnabled()) {
+                    logger.info(
+                            "No value found for option property: " + propertyTypeId + " of entity: "
+                                    + this.entityType + ". Importing unmapped value: " + value);
+                }
             }
         }
         return rawValue;
