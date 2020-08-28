@@ -198,7 +198,9 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
         case "":
             return null;
         default:
-            throw new IllegalStateException("Unknown security level '" + qualifier + "'");
+            throw new IllegalStateException(
+                    "Failed to determine security level for bp_requirement id " + getDbId()
+                            + ", invalid value '" + qualifier + "'");
         }
     }
 
@@ -245,7 +247,13 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
 
     public ImplementationStatus getImplementationStatus() {
         String rawValue = getEntity().getRawPropertyValue(PROP_IMPLEMENTATION_STATUS);
-        return getImplementationStatus(rawValue);
+        try {
+            return getImplementationStatus(rawValue);
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException(
+                    "Failed to determine implementation status for bp_requirement id " + getDbId(),
+                    e);
+        }
     }
 
     public void setImplementationStatus(ImplementationStatus implementationStatus) {

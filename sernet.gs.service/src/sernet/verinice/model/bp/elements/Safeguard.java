@@ -126,7 +126,9 @@ public class Safeguard extends CnATreeElement implements IBpElement, IIdentifiab
         case "":
             return null;
         default:
-            throw new IllegalStateException("Unknown security level '" + qualifier + "'");
+            throw new IllegalStateException(
+                    "Failed to determine security level for bp_safeguard id " + getDbId()
+                            + ", invalid value '" + qualifier + "'");
         }
     }
 
@@ -193,7 +195,13 @@ public class Safeguard extends CnATreeElement implements IBpElement, IIdentifiab
 
     public ImplementationStatus getImplementationStatus() {
         String rawValue = getEntity().getRawPropertyValue(PROP_IMPLEMENTATION_STATUS);
-        return getImplementationStatus(rawValue);
+        try {
+            return getImplementationStatus(rawValue);
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException(
+                    "Failed to determine implementation status for bp_safeguard id " + getDbId(),
+                    e);
+        }
     }
 
     public static ImplementationStatus getImplementationStatus(String rawValue) {

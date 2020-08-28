@@ -150,7 +150,8 @@ public class ItNetwork extends CnATreeElement
         case "":
             return null;
         default:
-            throw new IllegalStateException("Unknown proceeding '" + qualifier + "'");
+            throw new IllegalStateException("Failed to determine proceeding for bp_itnetwork id "
+                    + getDbId() + ", invalid value '" + qualifier + "'");
         }
     }
 
