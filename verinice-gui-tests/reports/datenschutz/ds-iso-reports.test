@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: __FCqwLeBEemQsPgL8NII9Q
-Runtime-Version: 2.3.0.201806262310
-Save-Time: 3/2/20 4:55 PM
+Runtime-Version: 2.5.0.202001211718
+Save-Time: 9/1/20 5:39 PM
 Tags: report, ds
 Testcase-Type: ecl
 
@@ -32,6 +32,7 @@ proc "gen-rep" [val report] {
 			get-window "Fehler" | get-button OK | click
 		} -catch {}
 	}
+	test-for-report-file "ds-iso-reports" $report "" ".pdf"
 }
 
 log "Start report testing DSM"
@@ -62,6 +63,6 @@ gen-rep "(L) ISM: DS-GVO: Auflistung der Auftragsverarbeitungen mit zugehörigen
 gen-rep "(L) ISM: DS-GVO: Übersicht der Auftragnehmer mit zugehöriger Verarbeitung"
 
 delete-iso-model "importierte Objekte/Datenschutzmodul 3.0 [ISM_DSM_3.1]"
-
+test-for-report-errors "ds-iso-reports"
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

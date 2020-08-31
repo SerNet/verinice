@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _IY3Q0E7aEemuCsPaiy5gOQ
-Runtime-Version: 2.3.0.201806262310
-Save-Time: 2/27/20 4:11 PM
+Runtime-Version: 2.5.0.202001211718
+Save-Time: 9/1/20 5:34 PM
 Tags: report
 Testcase-Type: ecl
 
@@ -24,17 +24,18 @@ Entry-Name: .content
 
 global [val selectedObject "importierte Objekte/verinice Risk Catalogue pursuant to ISO IEC 27001:2013 EN [VRC20160829]"]
 
-proc "gen-rep" [val report] [val quallifier ""]{
+proc "gen-rep" [val report] [val qualifier ""]{
 	try {
-	    start-time-measure [concat $quallifier $report]
-		gen-rep-com $report ISM $selectedObject $quallifier
-		stop-time-measure [concat $quallifier $report] | write-lines [concat "file:" $basedir "/report-measure.csv"] true
+	    start-time-measure [concat $qualifier $report]
+		gen-rep-com $report ISM $selectedObject $qualifier
+		stop-time-measure [concat $qualifier $report] | write-lines [concat "file:" $basedir "/report-measure.csv"] true
 	} -catch {
-		log [concat "ERROR creating report " $report " for " $quallifier]
+		log [concat "ERROR creating report " $report " for " $qualifier]
 		try {
 			get-window "Fehler" | get-button OK | click
 		} -catch {}
 	}
+	test-for-report-file "iso-risk-ltr-reports" $report $qualifier 
 }
 
 log "Start report testing risk-ISM-ltr"
@@ -54,5 +55,6 @@ gen-rep "(S) ISM-ISO: Risikobehandlung" "Verinice_Risk_Catalogue"
 measure-delete "Verinice_Risk_Catalogue" $selectedObject
 
 log "stop report testing risk-ISM-ltr"
+test-for-report-errors "iso-risk-ltr-reports"
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

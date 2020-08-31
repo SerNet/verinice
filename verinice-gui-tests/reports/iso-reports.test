@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _7ObUQNt0EeiRF6bz1CFgwg
 Runtime-Version: 2.5.0.202001211718
-Save-Time: 3/3/20, 1:36 PM
+Save-Time: 9/1/20 5:32 PM
 Tags: report
 Testcase-Type: ecl
 
@@ -21,10 +21,10 @@ Create all the old bp reports. Uses "reportTestData1.vna".
 Content-Type: text/ecl
 Entry-Name: .content
 
-proc "gen-rep" [val report] {
+proc "gen-rep" [val report] [val qualifier "ISM-ISO"] [val suffix ".pdf"]{
 	try {
 	    start-time-measure $report
-		gen-rep-com $report "ISM" "importierte Objekte/[Mein Unternehmen1] [5a79b4]"
+		gen-rep-com $report "ISM" "importierte Objekte/[Mein Unternehmen1] [5a79b4]" $qualifier $suffix
 		stop-time-measure $report | write-lines [concat "file:" $basedir "/report-measure.csv"] true
 	} -catch {
 		log [concat "ERROR creating report " $report]
@@ -32,6 +32,7 @@ proc "gen-rep" [val report] {
 			get-window "Fehler" | get-button OK | click
 		} -catch {}
 	}
+	test-for-report-file "iso-reports" $report $qualifier $suffix
 }
 
 log "Start report testing ISM-ISO"
@@ -40,10 +41,10 @@ enable-reporting-log
 ism-import-vna "reportTestData1.vna"
 
 gen-rep "(S) ISM-ISO: Erklärung zur Anwendbarkeit"
-gen-rep "(S) ISM-ISO: Export: Aufgaben (de)"
-gen-rep "(S) ISM-ISO: Export: Aufgaben (en)"
+gen-rep "(S) ISM-ISO: Export: Aufgaben (de)" "ISM-ISO" ".xls"
+gen-rep "(S) ISM-ISO: Export: Aufgaben (en)" "ISM-ISO" ".xls"
 
 delete-iso-model "importierte Objekte/[Mein Unternehmen1] [5a79b4]"
-
+test-for-report-errors "iso-reports"
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _4p4koHx6Eem8dP2aL_a6MA
-Runtime-Version: 2.3.0.201806262310
-Save-Time: 2/27/20 4:12 PM
+Runtime-Version: 2.5.0.202001211718
+Save-Time: 9/1/20 5:29 PM
 Tags: report
 Testcase-Type: ecl
 
@@ -33,6 +33,7 @@ proc "gen-rep" [val report] {
 			get-window Fehler | get-button OK | click
 		} -catch {}
 	}
+	test-for-report-file "vda-reports" $report "" ".pdf"
 }
 
 log "Start report testing VDA ISA"
@@ -44,5 +45,6 @@ gen-rep "(S) ISM-ISA: Information Security Assessment Report"
 gen-rep "(S) ISM-ISA: Information Security Assessment Report (mit Diagramm)"
 
 delete-iso-model "importierte Objekte/Abnahme Organisation \\[39256e\\]"
+test-for-report-errors "vda-reports"
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

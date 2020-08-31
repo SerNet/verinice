@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _mEARsE-jEemuCsPaiy5gOQ
-Runtime-Version: 2.3.0.201806262310
-Save-Time: 2/27/20 4:11 PM
+Runtime-Version: 2.5.0.202001211718
+Save-Time: 9/1/20 5:36 PM
 Tags: report
 Testcase-Type: ecl
 
@@ -26,25 +26,26 @@ global
 [val selectedObject "Imported Objects/verinice Risk Catalogue pursuant to ISO IEC 27001:2013 EN [VRC20160829]"]
 [val selectedObject1 "Imported Objects/Risk Test [860357]"]
 
-proc "gen-rep-ism" [val report] [val quallifier ""]{
+proc "gen-rep-ism" [val report] [val qualifier ""]{
 	try {
-	    start-time-measure [concat $quallifier $report]
-		gen-rep-com-en $report "Information Security Model" $selectedObject $quallifier
-		stop-time-measure [concat $quallifier $report] | write-lines [concat "file:" $basedir "/report-measure.csv"] true
+	    start-time-measure [concat $qualifier $report]
+		gen-rep-com-en $report "Information Security Model" $selectedObject $qualifier
+		stop-time-measure [concat $qualifier $report] | write-lines [concat "file:" $basedir "/report-measure.csv"] true
 	} -catch {
-		log [concat "ERROR creating report " $report " for " $quallifier]
+		log [concat "ERROR creating report " $report " for " $qualifier]
 		try {
 			get-window "Error" | get-button OK | click
 		} -catch {}
 	}
+    test-for-report-file "iso-risk-ltr-reports-en" $report $qualifier
 }
 
-proc "gen-rep-com-en" [val report] [val view] [val object] [val quallifier ""] {
+proc "gen-rep-com-en" [val report] [val view] [val object] [val qualifier ""] {
     get-view $view | get-tree | select $object | get-menu -path "Create Report..." | click
     log [concat "create report: " $report]
 
     get-window Report | get-group "" | get-combo -after [get-label "Choose Report:"] | select $report
-    set-dialog-result File [concat $reportdir [get-java-property "file.separator"] $quallifier $report ".pdf"]
+    set-dialog-result File [concat $reportdir [get-java-property "file.separator"] $qualifier $report ".pdf"]
     with [get-window Report] {
         get-group "" -index 0 | get-button "Browse..." | click
         get-button OK | click
@@ -92,7 +93,7 @@ get-window "Really delete?" | get-button Yes | click
 
 
 log "stop report testing en-risk-ISM-ltr" 
-
+test-for-report-errors "iso-risk-ltr-reports-en"
 
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

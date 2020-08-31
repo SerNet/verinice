@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _h3eNsNthEeiRF6bz1CFgwg
-Runtime-Version: 2.3.0.201806262310
-Save-Time: 2/27/20 4:08 PM
+Runtime-Version: 2.5.0.202001211718
+Save-Time: 9/1/20 4:11 PM
 Tags: report
 Testcase-Type: ecl
 
@@ -32,6 +32,7 @@ proc "gen-rep" [val report] {
 			get-window "Fehler" | get-button OK | click
 		} -catch {}
 	}
+	test-for-report-file "bp-old-reports" $report "" ".pdf"
 }
 
 log "Start report testing old bp"
@@ -57,6 +58,6 @@ gen-rep "(S) ITGS-alt: Kosten Nutzen Analyse BSI 100-4"
 
 
 delete-bp-old-element "importierte Objekte/  RECPLAST [SerNet]"
-
+test-for-report-errors "bp-old-reports"
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

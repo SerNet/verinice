@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _XwXG4Nt5EeiRF6bz1CFgwg
-Runtime-Version: 2.3.0.201806262310
-Save-Time: 2/27/20 4:11 PM
+Runtime-Version: 2.5.0.202001211718
+Save-Time: 9/1/20 5:27 PM
 Tags: report
 Testcase-Type: ecl
 
@@ -21,10 +21,10 @@ Create risk reports. Uses "Risk_Test.vna".
 Content-Type: text/ecl
 Entry-Name: .content
 
-proc "gen-rep" [val report] {
+proc "gen-rep" [val report] [val qualifier ""] [val suffix ".pdf"]{
 	try {
 	    start-time-measure $report
-		gen-rep-com $report ISM "importierte Objekte/Risk Test [860357]"
+		gen-rep-com $report ISM "importierte Objekte/Risk Test [860357]" $qualifier $suffix
 		stop-time-measure $report | write-lines [concat "file:" $basedir "/report-measure.csv"] true
 	} -catch {
 		log [concat "ERROR creating report " $report]
@@ -32,6 +32,7 @@ proc "gen-rep" [val report] {
 			get-window "Fehler" | get-button OK | click
 		} -catch {}
 	}
+	test-for-report-file "iso-risk-reports" $report $qualifier $suffix
 }
 
 log "Start report testing ISM"
@@ -39,10 +40,10 @@ enable-reporting-log
 
 ism-import-vna "Risk_Test.vna"
 
-gen-rep "(S) ISM-ISO: Risikoberechnung - Detaillierte Auflistung numerisch (de)"
-gen-rep "(S) ISM-ISO: Risikoberechnung - Detaillierte Auflistung numerisch (en)"
+gen-rep "(S) ISM-ISO: Risikoberechnung - Detaillierte Auflistung numerisch (de)" "" ".xls"
+gen-rep "(S) ISM-ISO: Risikoberechnung - Detaillierte Auflistung numerisch (en)" "" ".xls"
 
 delete-iso-model "importierte Objekte/Risk Test [860357]"
-
+test-for-report-errors "iso-risk-reports"
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

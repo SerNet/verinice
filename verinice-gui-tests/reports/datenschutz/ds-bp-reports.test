@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _3Uii4LeBEemQsPgL8NII9Q
-Runtime-Version: 2.3.0.201806262310
-Save-Time: 3/2/20 3:31 PM
+Runtime-Version: 2.5.0.202001211718
+Save-Time: 9/1/20 5:37 PM
 Tags: report
 Testcase-Type: ecl
 
@@ -33,6 +33,7 @@ proc "gen-rep" [val report] {
 			get-window Fehler | get-button OK | click
 		} -catch {}
 	}
+	test-for-report-file "ds-bp-reports" $report "" ".pdf"
 }
 
 log "Start report testing mogs DSM"
@@ -49,5 +50,6 @@ gen-rep "(L) Modernisierter BSI IT-Grundschutz: DS-GVO: Verzeichnis von Verarbei
 
 
 delete-bpelement "importierte Objekte/Informationsverbund-1 [b71753]"
+test-for-report-errors "ds-bp-reports"
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
