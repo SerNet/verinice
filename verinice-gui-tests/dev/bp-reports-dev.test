@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _W_WkkGN1Eeqa88EHP3rFxA
-Runtime-Version: 2.5.0.202001211718
-Save-Time: 3/16/20 11:58 AM
+Runtime-Version: 2.5.1.M3
+Save-Time: 9/1/20, 10:10 AM
 Tags: report, dev, skipExecution
 Testcase-Type: ecl
 
@@ -55,11 +55,10 @@ log "Start local dev"
 get-view "Modernisierter IT-Grundschutz" | get-tree 
     | select $testOrg | get-menu -path "Erzeuge Report..." | click 
     
-get-window Report | get-group "" | get-combo -after [get-label "Report auswählen:"] 
-    | select $reportName
-set-dialog-result File $outputfile
 with [get-window Report] {
-    get-group "" | get-button "Auswählen..." | click 
+	get-group "" | get-combo -after [get-label "Report auswählen:"] 
+    | select $reportName
+	set-dialog-result File $outputfile
     get-button OK | click 
 }
 get-window "Report erfolgreich erzeugt" | get-button "Öffnen" | click 

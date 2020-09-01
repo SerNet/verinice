@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _ARUA4LwcEeiMwqclopDlpA
-Runtime-Version: 2.4.2.201905080442
-Save-Time: 2/11/20 1:09 PM
+Runtime-Version: 2.5.1.M3
+Save-Time: 9/1/20, 10:07 AM
 Tags: bp_old, clientOnlyTest
 Testcase-Type: ecl
 
@@ -24,10 +24,7 @@ with [get-window Report] {
     get-group "" | get-combo -after [get-label "Report auswählen:"] 
         | select "(S) ITGS-alt: A.1 Strukturanalyse"
     get-group "" -index 0 | get-combo -after [get-label "Geltungsbereich:"] | select "IT-Verbund"
-}
-set-dialog-result File [concat $reportdir [get-java-property "file.separator"] "A.1 Strukturanalyse-4.20.pdf"]
-with [get-window Report] {
-    get-group "" -index 0 | get-button "Auswählen..." | click
+    set-dialog-result File [concat $reportdir [get-java-property "file.separator"] "A.1 Strukturanalyse-4.20.pdf"]
     get-button OK | click
 }
 get-window "Report erfolgreich erzeugt" | get-button OK | click
