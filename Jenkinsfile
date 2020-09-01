@@ -74,6 +74,7 @@ pipeline {
             steps {
                 triggerRCPTTBuild 'verinice-client-rcptt'
                 // triggerRCPTTBuild 'verinice-client-rcptt-mac', 'macosx.cocoa.x86_64'
+                // triggerRCPTTBuild 'verinice-client-rcptt-windows', 'win32.win32.x86_64'
                 // triggerRCPTTBuild 'verinice-server-rcptt-test'
                 // triggerRCPTTBuild 'verinice-rcptt-custom-test', 'linux.gtk.x86_64', 'bp*.test'
                 // triggerRCPTTBuild 'verinice-rcptt-performance'
