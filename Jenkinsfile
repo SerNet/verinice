@@ -1,3 +1,16 @@
+def triggerRCPTTBuild(String jobName, String artifactBasenameSelector = 'linux.gtk.x86_64', String testList = null){
+	def parameters = [
+        gitParameter(name: 'BRANCH_OR_TAG', value: "${env.GIT_BRANCH}"),
+        string(name: 'artifact_selector', value: "sernet.verinice.releng.client.product/target/products/*${artifactBasenameSelector}*.zip"),
+        string(name: 'job_to_copy_from', value: "${currentBuild.fullProjectName}"),
+        string(name: 'build_to_copy_from', value: "<SpecificBuildSelector plugin=\"copyartifact@1.42.1\"><buildNumber>${env.BUILD_NUMBER}</buildNumber></SpecificBuildSelector>"),
+    ]
+    if (testList != null){
+        parameters << string(name: 'test-list', value: testList)
+    }
+    build job: jobName, wait: false, parameters: parameters
+}
+
 pipeline {
     agent {
         dockerfile {
@@ -59,53 +72,12 @@ pipeline {
         }
         stage('Trigger RCPTT') {
             steps {
-                build job: 'verinice-client-rcptt', wait: false, parameters: [
-                    gitParameter(name: 'BRANCH_OR_TAG', value: "${env.GIT_BRANCH}"),
-                    string(name: 'artifact_selector', value: 'sernet.verinice.releng.client.product/target/products/*linux.gtk.x86_64*.zip'),
-                    string(name: 'job_to_copy_from', value: "${currentBuild.fullProjectName}"),
-                    string(name: 'build_to_copy_from', value: "<SpecificBuildSelector plugin=\"copyartifact@1.42.1\"><buildNumber>${env.BUILD_NUMBER}</buildNumber></SpecificBuildSelector>")
-                ]
-                /*
-                build job: 'verinice-client-rcptt-mac', wait: false, parameters: [
-                    gitParameter(name: 'BRANCH_OR_TAG', value: "${env.GIT_BRANCH}"),
-                    string(name: 'artifact_selector', value: 'sernet.verinice.releng.client.product/target/products/*macosx.cocoa.x86_64*.zip'),
-                    string(name: 'job_to_copy_from', value: "${currentBuild.fullProjectName}"),
-                    string(name: 'build_to_copy_from', value: "<SpecificBuildSelector plugin=\"copyartifact@1.42.1\"><buildNumber>${env.BUILD_NUMBER}</buildNumber></SpecificBuildSelector>")
-                ]
-                */
-                /*
-                build job: 'verinice-server-rcptt-test', wait: false, parameters: [
-                    gitParameter(name: 'BRANCH_OR_TAG', value: "${env.GIT_BRANCH}"),
-                    string(name: 'artifact_selector', value: 'sernet.verinice.releng.client.product/target/products/*linux.gtk.x86_64*.zip'),
-                    string(name: 'job_to_copy_from', value: "${currentBuild.fullProjectName}"),
-                    string(name: 'build_to_copy_from', value: "<SpecificBuildSelector plugin=\"copyartifact@1.42.1\"><buildNumber>${env.BUILD_NUMBER}</buildNumber></SpecificBuildSelector>")
-                ]
-                */
-                /*
-                build job: 'verinice-rcptt-custom-test', wait: false, parameters: [
-                    gitParameter(name: 'BRANCH_OR_TAG', value: "${env.GIT_BRANCH}"),
-                    string(name: 'artifact_selector', value: 'sernet.verinice.releng.client.product/target/products/*linux.gtk.x86_64*.zip'),
-                    string(name: 'job_to_copy_from', value: "${currentBuild.fullProjectName}"),
-                    string(name: 'build_to_copy_from', value: "<SpecificBuildSelector plugin=\"copyartifact@1.42.1\"><buildNumber>${env.BUILD_NUMBER}</buildNumber></SpecificBuildSelector>"),
-                    string(name: 'test-list', value: "bp*.test"),
-                ]
-                */
-                /*
-                build job: 'verinice-rcptt-performance', wait: false, parameters: [
-                    gitParameter(name: 'BRANCH_OR_TAG', value: "${env.GIT_BRANCH}"),
-                    string(name: 'artifact_selector', value: 'sernet.verinice.releng.client.product/target/products/*linux.gtk.x86_64*.zip'),
-                    string(name: 'job_to_copy_from', value: "${currentBuild.fullProjectName}"),
-                    string(name: 'build_to_copy_from', value: "<SpecificBuildSelector plugin=\"copyartifact@1.42.1\"><buildNumber>${env.BUILD_NUMBER}</buildNumber></SpecificBuildSelector>")
-                ]
-                */
-				/*
-                build job: 'verinice-rcptt-server-performance', wait: false, parameters: [
-                    gitParameter(name: 'BRANCH_OR_TAG', value: "${env.GIT_BRANCH}"),
-                    string(name: 'artifact_selector', value: 'sernet.verinice.releng.client.product/target/products/*linux.gtk.x86_64*.zip'),
-                    string(name: 'job_to_copy_from', value: "${currentBuild.fullProjectName}"),
-                    string(name: 'build_to_copy_from', value: "<SpecificBuildSelector plugin=\"copyartifact@1.42.1\"><buildNumber>${env.BUILD_NUMBER}</buildNumber></SpecificBuildSelector>")
-                ]
-                */
+                triggerRCPTTBuild 'verinice-client-rcptt'
+                // triggerRCPTTBuild 'verinice-client-rcptt-mac', 'macosx.cocoa.x86_64'
+                // triggerRCPTTBuild 'verinice-server-rcptt-test'
+                // triggerRCPTTBuild 'verinice-rcptt-custom-test', 'linux.gtk.x86_64', 'bp*.test'
+                // triggerRCPTTBuild 'verinice-rcptt-performance'
+                // triggerRCPTTBuild 'verinice-rcptt-server-performance'
             }
         }
         stage('Documentation') {
