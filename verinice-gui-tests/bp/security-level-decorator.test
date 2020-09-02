@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _wJljQF0xEeqngKyiFJFSQA
-Runtime-Version: 2.4.2.201905080442
-Save-Time: 3/13/20, 9:14 AM
+Runtime-Version: 2.5.1.M3
+Save-Time: 9/2/20, 4:00 PM
 Tags: bp
 Testcase-Type: ecl
 
@@ -16,6 +16,7 @@ Content-Type: text/ecl
 Entry-Name: .content
 
 log "Start test security-level-decorator"
+get-view Objektbrowser | close
 
 create-bpmodel "testname"
 create-bpapplication "testname/Anwendungen" "testapp"

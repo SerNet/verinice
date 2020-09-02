@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _8q560MdVEeqUkvkXcrRm8Q
 Runtime-Version: 2.5.1.M3
-Save-Time: 8/19/20, 10:46 AM
+Save-Time: 9/2/20, 4:07 PM
 Tags: bp, issue
 Testcase-Type: ecl
 
@@ -15,6 +15,7 @@ Testcase-Type: ecl
 Content-Type: text/ecl
 Entry-Name: .content
 
+get-view Objektbrowser | close
 import-compendium
 
 get-view Kataloge | get-tree | select "IT-Grundschutz-Kompendium 4.0/Bausteine/Prozess-Bausteine/CON/CON.1 Kryptokonzept/CON.1.A1.*" | double-click
