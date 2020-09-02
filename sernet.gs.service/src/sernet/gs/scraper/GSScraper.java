@@ -144,7 +144,8 @@ public class GSScraper {
             getTitleExp = staticContext.compileQuery(patterns.getTitlePattern());
             titleContext = new DynamicQueryContext(config);
 
-            massnahmenVerantwortlicheExp = staticContext.compileQuery(patterns.getMassnahmeVerantwortlichePattern());
+            massnahmenVerantwortlicheExp = staticContext
+                    .compileQuery(patterns.getMassnahmeVerantwortlichePattern());
             massnahmenVerantowrtlicheContext = new DynamicQueryContext(config);
 
         } catch (XPathException e) {
@@ -156,12 +157,15 @@ public class GSScraper {
 
     private void createBrokenRoleReplacements() {
         String itSicherheitsManagement = "IT-Sicherheitsmanagement";
-        brokenRoles.put("Behörden-/Unter-nehmensleitung", new String[] { "Behörden-/Unternehmensleitung" });
+        brokenRoles.put("Behörden-/Unter-nehmensleitung",
+                new String[] { "Behörden-/Unternehmensleitung" });
         brokenRoles.put("IT-Sicherheits-management", new String[] { itSicherheitsManagement });
         brokenRoles.put("IT-Sicherheitsmanagement-Team", new String[] { itSicherheitsManagement });
-        brokenRoles.put("IT-Sicherheitsmanagement Administrator", new String[] { itSicherheitsManagement, "Administrator" });
+        brokenRoles.put("IT-Sicherheitsmanagement Administrator",
+                new String[] { itSicherheitsManagement, "Administrator" });
         brokenRoles.put("Leiter IT Administrator", new String[] { "Leiter IT", "Administrator" });
-        brokenRoles.put("Leiter IT IT-Sicherheitsmanagement", new String[] { "Leiter IT", itSicherheitsManagement });
+        brokenRoles.put("Leiter IT IT-Sicherheitsmanagement",
+                new String[] { "Leiter IT", itSicherheitsManagement });
     }
 
     public List<Baustein> getBausteine(String kapitel) throws GSServiceException, IOException {
@@ -188,7 +192,8 @@ public class GSScraper {
                 if ("".equals(this.language)) {
                     // use default if nothing is set
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Could not determine language of ITGS-Catalogue, using the default (german)");
+                        LOG.debug(
+                                "Could not determine language of ITGS-Catalogue, using the default (german)");
                     }
                     this.language = CATALOG_LANGUAGE_GERMAN;
 
@@ -272,7 +277,8 @@ public class GSScraper {
         filename0 = fileName.replaceAll("\\.\\./", "");
         filename0 = fileName.replaceAll("/", "_");
 
-        FileInputStream fin = new FileInputStream(dir.getAbsolutePath() + File.separator + filename0);
+        FileInputStream fin = new FileInputStream(
+                dir.getAbsolutePath() + File.separator + filename0);
         ObjectInputStream ois = new ObjectInputStream(fin);
         ArrayList result = (ArrayList) ois.readObject();
         ois.close();
@@ -311,16 +317,19 @@ public class GSScraper {
             if (!success) {
                 throw new IOException("Could not create directory");
             }
-            Logger.getLogger(this.getClass()).debug("Creating GS cache dir " + dir.getAbsolutePath());
+            Logger.getLogger(this.getClass())
+                    .debug("Creating GS cache dir " + dir.getAbsolutePath());
         }
 
         try {
-            FileOutputStream fout = new FileOutputStream(dir.getAbsolutePath() + File.separator + fileName);
+            FileOutputStream fout = new FileOutputStream(
+                    dir.getAbsolutePath() + File.separator + fileName);
             ObjectOutputStream oos = new ObjectOutputStream(fout);
             oos.writeObject(object);
             oos.close();
         } catch (Exception e) {
-            Logger.getLogger(this.getClass()).error("Fehler beim Schreiben von Objekt in Festplatten-Cache", e);
+            Logger.getLogger(this.getClass())
+                    .error("Fehler beim Schreiben von Objekt in Festplatten-Cache", e);
         }
     }
 
@@ -399,7 +408,8 @@ public class GSScraper {
         }
     }
 
-    private ArrayList<Massnahme> fillResult(ArrayList<Massnahme> result) throws XPathException, GSServiceException {
+    private ArrayList<Massnahme> fillResult(ArrayList<Massnahme> result)
+            throws XPathException, GSServiceException {
         SequenceIterator iterator = getMassnahmenExp.iterator(massnahmenContext);
 
         // normal pattern for massnahmen:
@@ -435,7 +445,9 @@ public class GSScraper {
                 if (matcher.group(GROUP5) != null && matcher.group(GROUP5).length() > 0) {
                     mn.setSiegelstufe(matcher.group(GROUP5).charAt(0));
                 } else {
-                    Logger.getLogger(this.getClass()).error("Konnte Siegelstufe nicht bestimmen für: " + mn.getId() + "\n Setze auf Stufe A (höchste).");
+                    Logger.getLogger(this.getClass())
+                            .error("Konnte Siegelstufe nicht bestimmen für: " + mn.getId()
+                                    + "\n Setze auf Stufe A (höchste).");
                     mn.setSiegelstufe('A');
                 }
                 addRoles(mn);
@@ -455,7 +467,9 @@ public class GSScraper {
                     if (matcher.group(GROUP4) != null && matcher.group(GROUP4).length() > 0) {
                         mn.setSiegelstufe(matcher.group(GROUP4).charAt(0));
                     } else {
-                        Logger.getLogger(this.getClass()).error("Konnte Siegelstufe nicht bestimmen für: " + mn.getId() + "\n Setze auf Stufe A (höchste).");
+                        Logger.getLogger(this.getClass())
+                                .error("Konnte Siegelstufe nicht bestimmen für: " + mn.getId()
+                                        + "\n Setze auf Stufe A (höchste).");
                         mn.setSiegelstufe('A');
                     }
                     addRoles(mn);
@@ -470,8 +484,10 @@ public class GSScraper {
     private void addRoles(Massnahme mn) throws GSServiceException, XPathException {
         Node root = source.parseMassnahmenDocument(mn.getUrl());
 
-        massnahmenVerantowrtlicheContext.setContextItem(new DocumentWrapper(root, mn.getUrl(), config));
-        SequenceIterator iterator = massnahmenVerantwortlicheExp.iterator(massnahmenVerantowrtlicheContext);
+        massnahmenVerantowrtlicheContext
+                .setContextItem(new DocumentWrapper(root, mn.getUrl(), config));
+        SequenceIterator iterator = massnahmenVerantwortlicheExp
+                .iterator(massnahmenVerantowrtlicheContext);
 
         int foundItems = 0;
 
@@ -552,7 +568,8 @@ public class GSScraper {
         return source.getGefaehrdungAsStream(url);
     }
 
-    public List<Gefaehrdung> getGefaehrdungen(String baustein) throws GSServiceException, IOException {
+    public List<Gefaehrdung> getGefaehrdungen(String baustein)
+            throws GSServiceException, IOException {
         ArrayList<Gefaehrdung> result = new ArrayList<Gefaehrdung>();
         try {
             List fromCache = getFromCache("gefaehrdungen_", baustein);
