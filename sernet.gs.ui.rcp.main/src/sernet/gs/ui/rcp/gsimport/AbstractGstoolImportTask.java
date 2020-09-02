@@ -26,7 +26,6 @@ import org.hibernate.Hibernate;
 
 import sernet.gs.reveng.importData.GSVampire;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 
 /**

@@ -19,15 +19,12 @@
  ******************************************************************************/
 package sernet.verinice.search;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.SimpleTrigger;
-import org.quartz.Trigger;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.scheduling.quartz.JobDetailBean;
 

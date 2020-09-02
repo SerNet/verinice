@@ -23,7 +23,6 @@ import java.util.List;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Organization;
 
 /**
  * Find containing organization / scope starting from given element

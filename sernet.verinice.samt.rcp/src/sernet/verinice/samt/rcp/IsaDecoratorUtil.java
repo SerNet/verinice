@@ -19,6 +19,11 @@
 
 package sernet.verinice.samt.rcp;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.jface.viewers.IDecoration;
 
 import sernet.gs.service.Retriever;
@@ -27,11 +32,6 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.samt.SamtTopic;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * A service for computations needed to show decorators for a "Security Assessment".

@@ -26,7 +26,6 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-
 import org.eclipse.datatools.connectivity.oda.IBlob;
 import org.eclipse.datatools.connectivity.oda.IClob;
 import org.eclipse.datatools.connectivity.oda.IResultSet;

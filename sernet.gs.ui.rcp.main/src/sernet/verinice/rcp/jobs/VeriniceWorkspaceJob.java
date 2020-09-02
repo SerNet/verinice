@@ -21,7 +21,10 @@ package sernet.verinice.rcp.jobs;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 
 /**
  * @author Ruth Motza <rm[at]sernet[dot]de>

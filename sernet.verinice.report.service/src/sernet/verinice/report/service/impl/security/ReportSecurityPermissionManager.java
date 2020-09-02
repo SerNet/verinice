@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.PropertyPermission;
 import java.util.logging.LoggingPermission;
+
 import sernet.verinice.interfaces.report.IReportPermissionHandler;
 import sernet.verinice.interfaces.report.IReportPermissionHandler.PermissionClassname;
 import sernet.verinice.report.service.impl.security.permissionhandling.DefaultPermissionHandler;

@@ -26,7 +26,6 @@ import java.util.List;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

@@ -21,14 +21,13 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.UUID;
 
+import org.apache.log4j.Logger;
+
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.Statistics;
 import net.sf.ehcache.Status;
-
-import org.apache.log4j.Logger;
-
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;

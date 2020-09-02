@@ -19,6 +19,9 @@
  ******************************************************************************/
 package sernet.springclient;
 
+import static sernet.verinice.service.auth.KerberosTicketService.SECURITY_PACKAGE;
+import static sernet.verinice.service.auth.KerberosTicketService.WWW_AUTHENTICATE;
+
 import java.io.IOException;
 
 import org.apache.commons.httpclient.Header;
@@ -28,7 +31,6 @@ import org.apache.log4j.Logger;
 import org.springframework.remoting.httpinvoker.HttpInvokerClientConfiguration;
 
 import sernet.verinice.service.auth.KerberosTicketService;
-import static sernet.verinice.service.auth.KerberosTicketService.*;
 
 public class KerberosExecuter extends AbstractExecuter {
 

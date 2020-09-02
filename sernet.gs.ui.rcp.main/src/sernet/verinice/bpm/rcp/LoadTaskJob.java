@@ -28,7 +28,6 @@ import org.apache.log4j.Logger;
 import sernet.gs.service.NotifyingThread;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;

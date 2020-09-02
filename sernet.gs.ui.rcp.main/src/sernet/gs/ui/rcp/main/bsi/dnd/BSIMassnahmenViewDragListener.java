@@ -31,10 +31,7 @@ import org.eclipse.swt.dnd.DragSourceListener;
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IBSIStrukturElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ItemTransfer;
-import sernet.verinice.service.iso27k.Item;
 
 public class BSIMassnahmenViewDragListener implements DragSourceListener {
 

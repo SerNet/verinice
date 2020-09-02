@@ -23,16 +23,15 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
-import net.sf.ehcache.Status;
-
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
+import net.sf.ehcache.Status;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.rcp.ImageCellProvider;
 

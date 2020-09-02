@@ -1,6 +1,8 @@
 
 package sernet.verinice.samt.rcp;
 
+import java.math.BigDecimal;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
@@ -10,8 +12,6 @@ import sernet.gs.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.samt.rcp.IsaDecoratorUtil.DecoratorColor;
-
-import java.math.BigDecimal;
 
 @SuppressWarnings("restriction")
 public class IsaDecoratorForAudit extends LabelProvider implements ILightweightLabelDecorator {

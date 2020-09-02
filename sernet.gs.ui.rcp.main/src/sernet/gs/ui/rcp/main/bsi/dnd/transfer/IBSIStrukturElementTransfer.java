@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dnd.transfer;
 
-import org.apache.log4j.Logger;
 import org.eclipse.swt.dnd.TransferData;
 
 import sernet.verinice.model.bsi.BausteinUmsetzung;

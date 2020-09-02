@@ -19,6 +19,10 @@
  ******************************************************************************/
 package sernet.verinice.web;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 
 import sernet.gs.web.Util;
@@ -28,10 +32,6 @@ import sernet.hui.common.connect.HitroUtil;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CreateElement;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 
 public class CreateElementHandler implements IActionHandler {
 

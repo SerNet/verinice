@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search;
 
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;

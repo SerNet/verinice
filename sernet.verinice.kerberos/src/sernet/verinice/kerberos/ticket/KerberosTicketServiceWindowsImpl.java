@@ -23,6 +23,10 @@ import javax.naming.AuthenticationNotSupportedException;
 
 import org.apache.log4j.Logger;
 
+import com.google.common.io.BaseEncoding;
+import com.sun.jna.platform.win32.Sspi;
+import com.sun.jna.platform.win32.Sspi.SecBufferDesc;
+
 import sernet.verinice.kerberos.Activator;
 import sernet.verinice.kerberos.preferences.PreferenceConstants;
 import sernet.verinice.service.auth.KerberosTicketService;
@@ -31,12 +35,8 @@ import waffle.windows.auth.impl.WindowsAccountImpl;
 import waffle.windows.auth.impl.WindowsCredentialsHandleImpl;
 import waffle.windows.auth.impl.WindowsSecurityContextImpl;
 
-import com.google.common.io.BaseEncoding;
-import com.sun.jna.platform.win32.Sspi;
-import com.sun.jna.platform.win32.Sspi.SecBufferDesc;
-
 /**
- * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
+ * @author Benjamin Weiï¿½enfels <bw[at]sernet[dot]de>
  *
  */
 public class KerberosTicketServiceWindowsImpl implements KerberosTicketService {

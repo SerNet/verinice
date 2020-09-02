@@ -17,17 +17,14 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
-import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
-import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 
 /**
  *  Provides text or image for each column per item in the CheckboxTableViewer.

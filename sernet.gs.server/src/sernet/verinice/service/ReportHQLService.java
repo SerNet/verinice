@@ -27,12 +27,12 @@ import org.hibernate.hql.ast.HqlParser;
 import org.hibernate.hql.ast.util.ASTPrinter;
 import org.hibernate.hql.ast.util.ASTUtil;
 
-import sernet.verinice.interfaces.IReportHQLService;
-import sernet.verinice.model.common.CnALink;
-import sernet.verinice.model.common.CnATreeElement;
 import antlr.RecognitionException;
 import antlr.TokenStreamException;
 import antlr.collections.AST;
+import sernet.verinice.interfaces.IReportHQLService;
+import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  *

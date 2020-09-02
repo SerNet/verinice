@@ -51,7 +51,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sernet.gs.ui.rcp.main.ServiceComponent;
-import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.model.report.AbstractOutputFormat;

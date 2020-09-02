@@ -18,25 +18,15 @@
 package sernet.gs.ui.rcp.main.bsi.dnd;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.swt.dnd.TransferData;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinElementTransfer;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinUmsetzungTransfer;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IBSIStrukturElementTransfer;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kGroupTransfer;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ItemTransfer;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;

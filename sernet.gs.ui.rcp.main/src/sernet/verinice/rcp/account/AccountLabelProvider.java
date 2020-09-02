@@ -9,7 +9,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Display;
 import org.threeten.bp.LocalDate;
 
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;

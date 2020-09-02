@@ -20,7 +20,6 @@
 package sernet.verinice.iso27k.service;
 
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Group;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>

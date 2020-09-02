@@ -21,8 +21,6 @@ package sernet.verinice.iso27k.rcp;
 
 import java.text.Collator;
 
-import org.aspectj.weaver.Iterators.Getter;
-
 /**
  * Object in a {@link ComboModel}
  * 

@@ -19,16 +19,13 @@
  ******************************************************************************/ 
 package sernet.verinice.bpm.rcp;
 
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 
 import sernet.verinice.interfaces.bpm.ITask;
-import sernet.verinice.model.bpm.TaskInformation;
 
 /**
  * GUI action which compares changed element properties of task.

@@ -22,7 +22,6 @@ package sernet.verinice.rcp.search.tables;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.search.ISearchService;

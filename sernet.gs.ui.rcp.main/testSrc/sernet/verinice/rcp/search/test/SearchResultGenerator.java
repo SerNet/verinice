@@ -25,8 +25,8 @@ import java.util.UUID;
 
 import net._01001111.text.LoremIpsum;
 import sernet.verinice.model.search.Occurence;
-import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
+import sernet.verinice.model.search.VeriniceSearchResultTable;
 
 /**
  * Creates a random search result with lorem ipsum content for unit testing.

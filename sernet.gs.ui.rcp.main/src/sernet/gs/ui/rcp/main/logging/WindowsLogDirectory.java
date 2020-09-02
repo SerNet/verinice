@@ -21,7 +21,7 @@ package sernet.gs.ui.rcp.main.logging;
 
 import java.io.File;
 
-import org.apache.commons.io.*;
+import org.apache.commons.io.FilenameUtils;
 
 
 /**

@@ -20,7 +20,6 @@
 package sernet.verinice.search;
 
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */

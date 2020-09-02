@@ -1,33 +1,15 @@
 package sernet.gs.reveng.importData;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.CharacterCodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CharsetEncoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import javax.swing.JEditorPane;
-import javax.swing.JTextPane;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.Document;
-import javax.swing.text.StyleContext;
-import javax.swing.text.rtf.RTFEditorKit;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +19,6 @@ import sernet.gs.reveng.MbBaustId;
 import sernet.gs.reveng.MbRolleTxt;
 import sernet.gs.reveng.MbZeiteinheitenTxt;
 import sernet.gs.reveng.NZielobjekt;
-import sernet.gs.reveng.NZobEsa;
 import sernet.gs.reveng.NZobSb;
 
 public class TestGSVampire {

@@ -21,8 +21,6 @@ package sernet.gs.ui.rcp.main.logging;
 
 import static org.apache.commons.io.FilenameUtils.getFullPath;
 
-import java.io.File;
-
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  * 

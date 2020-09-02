@@ -17,9 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.bp.rcp.action;
 
-import org.eclipse.jface.resource.ImageDescriptor;
-
-import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.common.CnATreeElement;

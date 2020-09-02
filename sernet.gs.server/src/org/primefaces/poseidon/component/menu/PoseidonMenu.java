@@ -15,18 +15,19 @@
  */
 package org.primefaces.poseidon.component.menu;
 
-import org.primefaces.component.menu.AbstractMenu;
-import javax.faces.context.FacesContext;
-import javax.faces.component.UINamingContainer;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UINamingContainer;
 import javax.faces.component.UIOutput;
 import javax.faces.component.UIViewRoot;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ComponentSystemEvent;
 import javax.faces.event.ComponentSystemEventListener;
 import javax.faces.event.ListenerFor;
 import javax.faces.event.PostAddToViewEvent;
+
 import org.primefaces.component.api.Widget;
+import org.primefaces.component.menu.AbstractMenu;
 
 @ListenerFor(sourceClass = PoseidonMenu.class, systemEventClass = PostAddToViewEvent.class)
 public class PoseidonMenu extends AbstractMenu implements Widget,ComponentSystemEventListener {

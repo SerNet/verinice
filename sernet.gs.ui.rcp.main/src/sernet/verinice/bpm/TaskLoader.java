@@ -20,13 +20,9 @@
 package sernet.verinice.bpm;
 
 import java.util.Date;
-import java.util.List;
 
 import sernet.verinice.bpm.rcp.TaskChangeRegistry;
-import sernet.verinice.interfaces.bpm.ITask;
-import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
-import sernet.verinice.model.bpm.TaskParameter;
 
 /**
  * Loads new tasks using the ITaskService.

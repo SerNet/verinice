@@ -32,8 +32,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
-import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
+import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.rcp.search.column.IColumn;
 import sernet.verinice.rcp.search.column.IColumnStore;
 import sernet.verinice.rcp.search.column.IconColumn;

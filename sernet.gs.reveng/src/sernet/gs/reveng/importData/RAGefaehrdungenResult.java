@@ -1,6 +1,5 @@
 package sernet.gs.reveng.importData;
 
-import sernet.gs.reveng.MGsiegelTxt;
 import sernet.gs.reveng.MbGefaehr;
 import sernet.gs.reveng.MbGefaehrTxt;
 import sernet.gs.reveng.NZielobjekt;

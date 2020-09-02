@@ -7,7 +7,6 @@ import sernet.gs.reveng.MbBaust;
 import sernet.gs.reveng.MbMassn;
 import sernet.gs.reveng.ModZobjBst;
 import sernet.gs.reveng.ModZobjBstMass;
-import sernet.gs.reveng.ModZobjBstMassMitarb;
 import sernet.gs.reveng.NmbNotiz;
 
 public class NotizenMassnahmeResult implements Serializable {

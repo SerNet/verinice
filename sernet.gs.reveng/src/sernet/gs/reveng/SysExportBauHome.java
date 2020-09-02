@@ -3,7 +3,9 @@ package sernet.gs.reveng;
 // Generated Jun 5, 2015 1:28:34 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.List;
+
 import javax.naming.InitialContext;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.LockMode;

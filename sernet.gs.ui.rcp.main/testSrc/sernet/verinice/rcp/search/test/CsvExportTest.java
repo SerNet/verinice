@@ -33,14 +33,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import net._01001111.text.LoremIpsum;
-
 import org.junit.Test;
 
+import com.opencsv.CSVReader;
+
+import net._01001111.text.LoremIpsum;
 import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.preferences.SearchPreferencePage;
-import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
+import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.rcp.search.SearchResultTableConverter;
 import sernet.verinice.rcp.search.column.ColumnStore;
 import sernet.verinice.rcp.search.column.IColumn;
@@ -48,8 +49,6 @@ import sernet.verinice.rcp.search.column.IColumnStore;
 import sernet.verinice.service.csv.CsvExport;
 import sernet.verinice.service.csv.CsvExportException;
 import sernet.verinice.service.csv.ICsvExport;
-
-import com.opencsv.CSVReader;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

@@ -29,15 +29,15 @@ import javax.jws.soap.SOAPBinding;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
+import de.sernet.service.vna.FileType;
+import de.sernet.service.vna.Response;
+import de.sernet.service.vna.Vna;
+import de.sernet.service.vna_service.VnaService;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
-import de.sernet.service.vna.FileType;
-import de.sernet.service.vna.Response;
-import de.sernet.service.vna.Vna;
-import de.sernet.service.vna_service.VnaService;
 
 /**
  * Apache CXF Web service implementation which imports VNAs.

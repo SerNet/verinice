@@ -19,7 +19,11 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dnd.transfer;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.OptionalDataException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.dnd.ByteArrayTransfer;

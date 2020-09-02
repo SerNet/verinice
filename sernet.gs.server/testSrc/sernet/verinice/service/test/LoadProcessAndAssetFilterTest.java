@@ -21,8 +21,12 @@ package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static sernet.verinice.oda.driver.impl.filters.Filters.*;
 import static sernet.verinice.model.iso27k.Process.PROP_NAME;
+import static sernet.verinice.oda.driver.impl.filters.Filters.and;
+import static sernet.verinice.oda.driver.impl.filters.Filters.is;
+import static sernet.verinice.oda.driver.impl.filters.Filters.noneOf;
+import static sernet.verinice.oda.driver.impl.filters.Filters.notAll;
+import static sernet.verinice.oda.driver.impl.filters.Filters.or;
 
 import java.util.List;
 
@@ -32,7 +36,6 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.graph.IGraphService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.SyncParameter;

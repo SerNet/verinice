@@ -1,16 +1,16 @@
 package sernet.verinice.samt.rcp;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
-import sernet.verinice.interfaces.ActionRightIDs;
-import org.eclipse.ui.IViewActionDelegate;
-import org.eclipse.ui.IViewPart;
 
 public class ShowSamtViewAction extends ShowSomeViewAction implements IViewActionDelegate, RightEnabledUserInteraction {
 

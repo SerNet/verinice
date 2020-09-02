@@ -20,12 +20,10 @@
 package sernet.verinice.rcp.account;
 
 import org.apache.log4j.Logger;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.service.StringUtil;
-import sernet.verinice.rcp.TextEventAdapter;
 
 /**
  * Wizard page of wizard {@link AccountWizard} which shows user name, password

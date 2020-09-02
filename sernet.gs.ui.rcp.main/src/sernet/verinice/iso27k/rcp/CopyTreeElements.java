@@ -29,7 +29,6 @@ import sernet.verinice.iso27k.service.IProgressTask;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.IProgressRunnable;
 import sernet.verinice.service.commands.CopyLinksCommand;
-import sernet.verinice.service.commands.CopyLinksCommand.CopyLinksMode;
 
 /**
  * Operation with copies elements and adds them to a group.

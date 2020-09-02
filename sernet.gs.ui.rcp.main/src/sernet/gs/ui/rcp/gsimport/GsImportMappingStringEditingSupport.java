@@ -17,8 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.gsimport;
 
-import java.io.IOException;
-
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;

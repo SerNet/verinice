@@ -11,13 +11,13 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.osgi.util.NLS;
 
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import de.sernet.sync.data.SyncAttribute;
 import de.sernet.sync.data.SyncData;
 import de.sernet.sync.data.SyncObject;
 import de.sernet.sync.mapping.SyncMapping;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
 import de.sernet.sync.sync.SyncRequest;
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 
 public class ImportCSVWizard extends Wizard {
     private static final Logger LOG = Logger.getLogger(ImportCSVWizard.class);

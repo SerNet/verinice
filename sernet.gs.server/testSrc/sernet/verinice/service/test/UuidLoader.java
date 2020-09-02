@@ -23,9 +23,6 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
-import javax.annotation.Resource;
-
-import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.BSIModel;

@@ -22,14 +22,18 @@ package sernet.gs.ui.rcp.main.bsi.dnd;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.TransferData;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
-import sernet.verinice.interfaces.*;
+import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.action.DropPerformer;
 import sernet.verinice.model.common.CnATreeElement;

@@ -22,16 +22,11 @@ package sernet.verinice.service;
 import java.util.HashMap;
 
 import org.apache.log4j.Logger;
-import org.springframework.security.context.SecurityContext;
-import org.springframework.security.context.SecurityContextHolder;
 
-import sernet.gs.server.security.DummyAuthentication;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IElementTitleCache;
-import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.LoadElementTitles;
 
 /**

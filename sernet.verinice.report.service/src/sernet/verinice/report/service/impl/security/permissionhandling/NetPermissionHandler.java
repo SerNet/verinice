@@ -19,9 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.report.service.impl.security.permissionhandling;
 
-import static sernet.verinice.report.service.impl.security.permissionhandling.AbstractPermissionHandler.METHODNAME_GETPROJECTEDCOLUMNS;
-import static sernet.verinice.report.service.impl.security.permissionhandling.AbstractPermissionHandler.METHODNAME_GETRESULTITERATOR;
-
 import java.security.Permission;
 
 /**

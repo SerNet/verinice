@@ -24,12 +24,12 @@ import javax.jws.soap.SOAPBinding;
 
 import org.apache.log4j.Logger;
 
+import de.sernet.sync.sync.SyncResponse;
+import de.sernet.sync.sync_service.SyncService;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameterException;
-import de.sernet.sync.sync.SyncResponse;
-import de.sernet.sync.sync_service.SyncService;
 
 @WebService(targetNamespace = "http://www.sernet.de/sync/sync-service", name = "sync-service")
 @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
