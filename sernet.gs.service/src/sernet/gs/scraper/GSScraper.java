@@ -273,9 +273,7 @@ public class GSScraper {
         if (!dir.exists()) {
             return null;
         }
-        String filename0 = null;
-        filename0 = fileName.replace("../", "");
-        filename0 = fileName.replace("/", "_");
+        String filename0 = fileName.replace("../", "").replace("/", "_");
 
         FileInputStream fin = new FileInputStream(
                 dir.getAbsolutePath() + File.separator + filename0);
