@@ -195,9 +195,9 @@ public final class HtmlHelper {
                     bibBuilder.append(HTML_OPEN_LIST_ITEM);
                     bibBuilder.append(bibItem.getShortHand()).append(" ");
                     String descriptionText = bibItem.getDescription();
-                    descriptionText = descriptionText.replaceAll("<p>", "");
-                    descriptionText = descriptionText.replaceAll("</p>", "");
-                    descriptionText = descriptionText.replaceAll("<br />", "");
+                    descriptionText = descriptionText.replace("<p>", "");
+                    descriptionText = descriptionText.replace("</p>", "");
+                    descriptionText = descriptionText.replace("<br />", "");
                     bibBuilder.append(descriptionText);
                     bibBuilder.append(HTML_CLOSE_LIST_ITEM);
                     bibBuilder.append(HTML_CLOSE_UL);

@@ -86,7 +86,7 @@ public abstract class LinkTableComboViewer extends ComboViewer
 
             @Override
             public String getText(Object element) {
-                return getLabelText(element).replaceAll("\n", "");
+                return getLabelText(element).replace("\n", "");
             }
         });
         this.setInput(new Object());

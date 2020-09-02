@@ -383,7 +383,7 @@ public class LinkTableUtil {
         }
         message = StringUtils.replaceEachRepeatedly(message,
                 new String[] { "/", ":", ".", "<", ">" }, new String[] { "", "", "", "", "" });
-        message = message.replaceAll(" ", "_");
+        message = message.replace(" ", "_");
 
         return columnPath + ALIAS_DELIMITER + message;
     }

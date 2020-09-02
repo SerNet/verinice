@@ -267,7 +267,7 @@ public class LinkTableColumn {
         }
         message = StringUtils.replaceEachRepeatedly(message,
                 new String[] { "/", ":", ".", "<", ">" }, new String[] { "", "", "", "", "" });
-        message = message.replaceAll(" ", "__");
+        message = message.replace(" ", "__");
         return message;
     }
 

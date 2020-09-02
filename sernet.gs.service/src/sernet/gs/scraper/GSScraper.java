@@ -214,9 +214,9 @@ public class GSScraper {
                     break;
                 }
                 String found = baust.getStringValue();
-                found = found.replaceAll("\n", "");
-                found = found.replaceAll(".html", "");
-                found = found.replaceAll(".htm", "");
+                found = found.replace("\n", "");
+                found = found.replace(".html", "");
+                found = found.replace(".htm", "");
 
                 Matcher matcher = patterns.getBaustPat().matcher(found);
                 if (matcher.matches()) {
@@ -274,8 +274,8 @@ public class GSScraper {
             return null;
         }
         String filename0 = null;
-        filename0 = fileName.replaceAll("\\.\\./", "");
-        filename0 = fileName.replaceAll("/", "_");
+        filename0 = fileName.replace("../", "");
+        filename0 = fileName.replace("/", "_");
 
         FileInputStream fin = new FileInputStream(
                 dir.getAbsolutePath() + File.separator + filename0);
@@ -305,8 +305,8 @@ public class GSScraper {
     }
 
     private void writeToFile(String fileName, ArrayList b) throws IOException {
-        String fileName0 = fileName.replaceAll("\\.\\./", "");
-        fileName0 = fileName0.replaceAll("/", "_");
+        String fileName0 = fileName.replace("../", "");
+        fileName0 = fileName0.replace("/", "_");
         writeToFile(b, fileName0);
     }
 
@@ -427,12 +427,12 @@ public class GSScraper {
             }
             String found = mnNode.getStringValue();
             // clear up paths, remove relative paths (don't work in zipfile)
-            found = found.replaceAll("\n", "");
-            found = found.replaceAll(".html", "");
-            found = found.replaceAll(".htm", "");
+            found = found.replace("\n", "");
+            found = found.replace(".html", "");
+            found = found.replace(".htm", "");
             found = found.replaceAll("\\.\\./\\.\\./m/m\\d\\d/", "");
-            found = found.replaceAll("\\.\\./m/", "");
-            found = found.replaceAll("\\.\\./\\.\\./", "");
+            found = found.replace("../m/", "");
+            found = found.replace("../../", "");
 
             Matcher matcher = pat.matcher(found);
             if (matcher.matches()) {
@@ -498,7 +498,7 @@ public class GSScraper {
             }
             foundItems++;
             String allRoles = roleNode.getStringValue();
-            allRoles = allRoles.replaceAll("\n", "");
+            allRoles = allRoles.replace("\n", "");
 
             if (allRoles != null && allRoles.length() > 0) {
                 String[] rolesInit = allRoles.split(", *");
@@ -597,11 +597,11 @@ public class GSScraper {
                     break;
                 }
                 String found = gfNode.getStringValue();
-                found = found.replaceAll("\n", "");
-                found = found.replaceAll(".html", "");
-                found = found.replaceAll(".htm", "");
+                found = found.replace("\n", "");
+                found = found.replace(".html", "");
+                found = found.replace(".htm", "");
                 found = found.replaceAll("\\.\\./\\.\\./g/g\\d\\d/", "");
-                found = found.replaceAll("../g/", "");
+                found = found.replace("../g/", "");
 
                 Matcher matcher = pat.matcher(found);
                 if (matcher.matches()) {

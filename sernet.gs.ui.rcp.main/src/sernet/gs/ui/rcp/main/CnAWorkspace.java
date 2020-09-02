@@ -170,7 +170,7 @@ public class CnAWorkspace {
 
     public synchronized void prepareWorkDir() {
         URL url = Platform.getInstanceLocation().getURL();
-        String path = url.getPath().replaceAll("/", "\\" + File.separator); //$NON-NLS-1$ //$NON-NLS-2$
+        String path = url.getPath().replace("/", File.separator); //$NON-NLS-1$
         workDir = (new File(path)).getAbsolutePath();
         confDir = new File(url.getPath() + File.separator + CONF); // $NON-NLS-1$
     }

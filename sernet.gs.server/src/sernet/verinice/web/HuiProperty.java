@@ -112,7 +112,7 @@ public class HuiProperty implements Serializable {
             try {
                 int n = getIndexOf(getValue(), '"', 0);
                 String[] a = (getValue()).substring(n).split(">");
-                return a[0].replaceAll("\"", "");
+                return a[0].replace("\"", "");
             } catch (Exception e) {
                 LOG.warn("Something went wrong on reading the URLValue", e);
             }
@@ -125,7 +125,7 @@ public class HuiProperty implements Serializable {
             try {
                 int n = getIndexOf(getValue(), '"', 0);
                 String[] a = (getValue()).substring(n).split(">");
-                return a[1].replaceAll("</a", "");
+                return a[1].replace("</a", "");
             } catch (Exception e) {
                 LOG.warn("Something went wrong on reading the URLText", e);
             }

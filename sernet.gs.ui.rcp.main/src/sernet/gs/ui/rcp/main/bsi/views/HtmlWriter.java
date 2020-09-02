@@ -522,8 +522,8 @@ public abstract class HtmlWriter {
         line = line.replaceAll("<a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
         line = line.replaceAll("</a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
         line = line.replaceAll("<img.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
-        line = line.replaceAll("<em>", ""); //$NON-NLS-1$ //$NON-NLS-2$
-        line = line.replaceAll("</em>", ""); //$NON-NLS-1$ //$NON-NLS-2$
+        line = line.replace("<em>", ""); //$NON-NLS-1$ //$NON-NLS-2$
+        line = line.replace("</em>", ""); //$NON-NLS-1$ //$NON-NLS-2$
         return line;
     }
 
