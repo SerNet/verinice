@@ -430,7 +430,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         return reportGroup;
     }
 
-    public void selectOutputFile() {
+    private void selectOutputFile() {
         FileDialog dlg = new FileDialog(getParentShell(), SWT.SAVE);
         ArrayList<String> extensionList = new ArrayList<>();
         if (chosenOutputFormat != null && chosenOutputFormat.getFileSuffix() != null) {
@@ -587,7 +587,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     }
 
-    protected String getDefaultOutputFilename() {
+    private String getDefaultOutputFilename() {
         String outputFileName = chosenReportMetaData.getOutputname();
         if (outputFileName == null || outputFileName.isEmpty()) {
             outputFileName = "unknown"; //$NON-NLS-1$
@@ -767,7 +767,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         reportTemplates = list.toArray(new ReportTemplateMetaData[list.size()]);
     }
 
-    public boolean isContextMenuCall() {
+    private boolean isContextMenuCall() {
         return isContextMenuCall;
     }
 
