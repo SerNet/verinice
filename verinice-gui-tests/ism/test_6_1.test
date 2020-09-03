@@ -6,14 +6,26 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _xUiAIMeuEeipUK6ek91lPA
-Runtime-Version: 2.5.0.202001211718
-Save-Time: 3/13/20 10:52 AM
+Runtime-Version: 2.5.1.M3
+Save-Time: 9/3/20, 12:25 PM
 Tags: ISM
 Testcase-Type: ecl
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
 Content-Type: text/ecl
 Entry-Name: .content
+
+proc "file-in-dir" [val dirname] [val filename] {
+	concat $dirname [get-java-property "file.separator"] $filename
+}
+
+proc "file-in-report-dir" [val filename] {
+	file-in-dir $reportdir $filename
+}
+
+proc "file-in-data-dir" [val filename] {
+	file-in-dir $datadir $filename
+}
 
 proc "edit-empty-row" [val offset] [val selection1] [val selection2] [val selection3] {
 	with [get-editor "Neue Abfrage [UNGÜLTIG]"] {
@@ -32,12 +44,12 @@ proc "copy-edit-last" [val offset] [val selection] {
 
 proc "close-and-reopen-query" [val filename] {
 	get-editor $filename | close
-	set-dialog-result File [concat $reportdir [get-java-property "file.separator"] $filename]
+	set-dialog-result File [file-in-report-dir $filename]
 	get-menu -path "Datei/Report-Abfrage/Abfrage öffnen..." | click
 }
 
 proc "save-report" [val filename] {
-	set-dialog-result File [concat $reportdir [get-java-property "file.separator"] $filename]
+	set-dialog-result File [file-in-report-dir $filename]
 	get-eclipse-window | key-type "M1+s"
 }
 proc "new-query" [val selection1] [val selection2] {
@@ -55,9 +67,9 @@ proc "copy-edit-end" [val selection] {
 }
 
 proc "compare-vlts" {
-	read-file [concat $reportdir [get-java-property "file.separator"] "TestReportISM.vlt"] | equals [read-file -uri [concat $datadir [get-java-property "file.separator"] "TestReportISM.vlt"]] | verify-true
-	read-file [concat $reportdir [get-java-property "file.separator"] "TestReportMod.vlt"] | equals [read-file -uri [concat $datadir [get-java-property "file.separator"] "TestReportMod.vlt"]] | verify-true
-	read-file [concat $reportdir [get-java-property "file.separator"] "TestReportAlt.vlt"] | equals [read-file -uri [concat $datadir [get-java-property "file.separator"] "TestReportAlt.vlt"]] | verify-true
+	read-file [file-in-report-dir "TestReportISM.vlt"] | equals [read-file -uri [file-in-data-dir "TestReportISM.vlt"]] | verify-true
+	read-file [file-in-report-dir "TestReportMod.vlt"] | equals [read-file -uri [file-in-data-dir "TestReportMod.vlt"]] | verify-true
+	read-file [file-in-report-dir "TestReportAlt.vlt"] | equals [read-file -uri [file-in-data-dir "TestReportAlt.vlt"]] | verify-true
 }
 
 log "test_6.1"
