@@ -5,8 +5,8 @@ Element-Name: reports
 Element-Type: context
 Element-Version: 2.0
 Id: _tlZuIIx1Eei2UKUDmonytQ
-Runtime-Version: 2.5.1.M3
-Save-Time: 9/2/20, 12:25 PM
+Runtime-Version: 2.5.0.202001211718
+Save-Time: 9/7/20 11:22 AM
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
 Content-Type: text/ecl
@@ -90,6 +90,7 @@ proc "enable-reporting-log" {
 
 /* set the report deposite for the reporting * */
 proc "set-local-reporting-repository" [val path]{
+    log [concat "setlocal report repository to " $path]
 	get-menu -path "Bearbeiten/Einstellungen..." | click
 	get-window Benutzervorgaben | get-tree | select Reports
 	set-dialog-result Folder $path
