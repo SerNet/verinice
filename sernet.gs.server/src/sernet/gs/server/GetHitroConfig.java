@@ -17,9 +17,11 @@
  ******************************************************************************/
 package sernet.gs.server;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -27,6 +29,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import sernet.hui.common.connect.HUITypeFactory;
@@ -36,31 +39,16 @@ import sernet.hui.common.connect.SNCAMessages;
  * Servlet implementation class GetHitroConfig
  */
 public class GetHitroConfig extends HttpServlet {
-    private final Logger log = Logger.getLogger(GetHitroConfig.class);
+
+    private static final Logger log = Logger.getLogger(GetHitroConfig.class);
 
     private static final long serialVersionUID = 1L;
 
-    // copy binary data using 100K buffer:
-    static final int BUFF_SIZE = 100000;
-
-    static final byte[] BUFFER = new byte[BUFF_SIZE];
-
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public GetHitroConfig() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
     /*
-     * (non-Javadoc)
-     * 
      * @see javax.servlet.GenericServlet#init(javax.servlet.ServletConfig)
      */
     @Override
     public void init(ServletConfig config) throws ServletException {
-        // TODO Auto-generated method stub
         super.init(config);
         config.getServletContext();
     }
@@ -71,13 +59,11 @@ public class GetHitroConfig extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        OutputStream out = null;
-        InputStream in = null;
         try {
             String basePath = getInitParameter("snca.xml.path");
             if (basePath == null) {
                 String message = "init parameter snca.xml.path is not set in web.xml";
-                response.getWriter().append(message);
+                sendErrorMessage(response, message);
                 throw new RuntimeException(message);
             } else {
                 String fileName = HUITypeFactory.HUI_CONFIGURATION_FILE;
@@ -90,52 +76,48 @@ public class GetHitroConfig extends HttpServlet {
                             || !resourceParameter.startsWith(SNCAMessages.BUNDLE_NAME)
                             || !resourceParameter.endsWith(SNCAMessages.BUNDLE_EXTENSION)) {
                         String message = "illegal parameter: " + resourceParameter;
-                        response.getWriter().append(message);
+                        sendErrorMessage(response, message);
                         throw new RuntimeException(message);
                     }
                     fileName = resourceParameter;
                 }
-                String path = basePath + "/" + fileName;
+                String path = basePath + File.separator + fileName;
                 if (log.isDebugEnabled()) {
                     log.debug("returning: " + path);
                 }
-                in = getServletContext().getResourceAsStream(path);
-                if (in == null) {
-                    String message = "Resource not found: " + path;
-                    response.getWriter().append(message);
-                    // check if an language only file is searched (i.e.
-                    // snca-messages_de.properties)
-                    // or an language-region file (i.e.
-                    // snca-messages_de_DE.properties)
-                    if (fileName.matches("snca\\-messages_[A-Za-z]{2}_[A-Za-z]{2}\\.properties")) {
-                        if (log.isInfoEnabled()) {
-                            log.info(message);
+
+                try (InputStream in = getServletContext().getResourceAsStream(path)) {
+                    if (in == null) {
+                        String message = "Resource not found: " + path;
+                        sendErrorMessage(response, message);
+                        // check if an language only file is searched (i.e.
+                        // snca-messages_de.properties)
+                        // or an language-region file (i.e.
+                        // snca-messages_de_DE.properties)
+                        if (fileName
+                                .matches("snca\\-messages_[A-Za-z]{2}_[A-Za-z]{2}\\.properties")) {
+                            if (log.isInfoEnabled()) {
+                                log.info(message);
+                            }
+                        } else {
+                            throw new RuntimeException(message);
                         }
                     } else {
-                        throw new RuntimeException(message);
-                    }
-                } else {
-                    out = response.getOutputStream();
-                    while (true) {
-                        synchronized (BUFFER) {
-                            int amountRead = in.read(BUFFER);
-                            if (amountRead == -1) {
-                                break;
-                            }
-                            out.write(BUFFER, 0, amountRead);
+                        try (OutputStream out = response.getOutputStream()) {
+                            IOUtils.copy(in, out);
                         }
                     }
                 }
             }
         } catch (IOException e) {
             log.error("Error while getting hitro config or resource bundle.", e);
-        } finally {
-            if (in != null) {
-                in.close();
-            }
-            if (out != null) {
-                out.close();
-            }
+        }
+    }
+
+    protected void sendErrorMessage(HttpServletResponse response, String message)
+            throws IOException {
+        try (PrintWriter writer = response.getWriter()) {
+            writer.append(message);
         }
     }
 }
