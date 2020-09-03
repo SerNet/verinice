@@ -727,6 +727,7 @@ ${verinice.jre}/jre/${java-library-location}
 			<fileset refid="verinice-app-aut-logs" />
 		</move>
 		<antcall target="fix-junit-result-xml"/>
+		<antcall target="fix-metric-csv"/>
 		<delete dir="${auts}" failonerror="false"/>
 		<delete dir="${runner-workspace}" failonerror="false" />
 		<delete dir="${wrks-path}" failonerror="false" />
@@ -759,6 +760,19 @@ ${verinice.jre}/jre/${java-library-location}
       	   <replaceregex pattern="\)" replace="" />
     	   </filterchain>
     	</concat>
+        <condition property="no-metric">
+            <not>
+                <available file="${test-results}/performance-metric.csv" />
+            </not>
+        </condition>
+        <antcall target="process-metric" />
+    </target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: process-metric                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="process-metric" unless="no-metric">
+           <exec executable="${runner-project-path}/etc/scripts/process-metric.sh"/> 
     </target>
 
 

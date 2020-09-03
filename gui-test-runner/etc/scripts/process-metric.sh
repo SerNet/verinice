@@ -1,6 +1,6 @@
 ## process the csv data
 
-cd build/result 
+cd gui-test-runner/result 
 
 
 awk '
