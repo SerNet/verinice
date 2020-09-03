@@ -516,7 +516,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         for (int i = 0; i < foreignProperties.size(); i++) {
             String value = foreignProperties.get(i);
             Property p = properties.get(i);
-            checkPropertyValue(propertyTypeId, propertyType, value);
+            value = checkPropertyValue(propertyTypeId, propertyType, value);
             if (!Objects.equals(value, p.getPropertyValue())) {
                 propertyValueChanged = true;
                 p.setPropertyValue(value);
@@ -536,15 +536,16 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         return propertyValueChanged;
     }
 
-    private void checkPropertyValue(String propertyTypeId, PropertyType propertyType,
+    private String checkPropertyValue(String propertyTypeId, PropertyType propertyType,
             String value) {
+        String rawValue = value;
         if (propertyType != null && propertyType.isSingleSelect() && value != null
                 && !value.isEmpty()) {
             List<IMLPropertyOption> optionList = propertyType.getOptions();
             boolean found = false;
             for (IMLPropertyOption option : optionList) {
                 if (value.equals(option.getName())) {
-                    value = option.getId();
+                    rawValue = option.getId();
                     found = true;
                 } else if (value.equals(option.getId())) {
                     found = true;
@@ -555,6 +556,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                         + this.entityType + ". Importing unmapped value: " + value);
             }
         }
+        return rawValue;
     }
 
     /**
