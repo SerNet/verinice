@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.server;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -81,7 +80,7 @@ public class GetHitroConfig extends HttpServlet {
                     }
                     fileName = resourceParameter;
                 }
-                String path = basePath + File.separator + fileName;
+                String path = basePath + "/" + fileName;
                 if (log.isDebugEnabled()) {
                     log.debug("returning: " + path);
                 }
