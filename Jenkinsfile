@@ -1,7 +1,6 @@
-def triggerRCPTTBuild(String jobName, String artifactBasenameSelector = 'linux.gtk.x86_64', String testList = null){
+def triggerRCPTTBuild(String jobName, String testList = null){
 	def parameters = [
         gitParameter(name: 'BRANCH_OR_TAG', value: "${env.GIT_BRANCH}"),
-        string(name: 'artifact_selector', value: "sernet.verinice.releng.client.product/target/products/*${artifactBasenameSelector}*.zip"),
         string(name: 'job_to_copy_from', value: "${currentBuild.fullProjectName}"),
         string(name: 'build_to_copy_from', value: "<SpecificBuildSelector plugin=\"copyartifact@1.42.1\"><buildNumber>${env.BUILD_NUMBER}</buildNumber></SpecificBuildSelector>"),
     ]
@@ -73,10 +72,10 @@ pipeline {
         stage('Trigger RCPTT') {
             steps {
                 triggerRCPTTBuild 'verinice-client-rcptt'
-                // triggerRCPTTBuild 'verinice-client-rcptt-mac', 'macosx.cocoa.x86_64'
-                // triggerRCPTTBuild 'verinice-client-rcptt-windows', 'win32.win32.x86_64'
+                // triggerRCPTTBuild 'verinice-client-rcptt-mac'
+                // triggerRCPTTBuild 'verinice-client-rcptt-windows'
                 // triggerRCPTTBuild 'verinice-server-rcptt-test'
-                // triggerRCPTTBuild 'verinice-rcptt-custom-test', 'linux.gtk.x86_64', 'bp*.test'
+                // triggerRCPTTBuild 'verinice-rcptt-custom-test', 'bp*.test'
                 // triggerRCPTTBuild 'verinice-rcptt-performance'
                 // triggerRCPTTBuild 'verinice-rcptt-server-performance'
             }
