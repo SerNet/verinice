@@ -5,7 +5,8 @@ def triggerRCPTTBuild(String jobName, String testList = null){
         string(name: 'build_to_copy_from', value: "<SpecificBuildSelector plugin=\"copyartifact@1.42.1\"><buildNumber>${env.BUILD_NUMBER}</buildNumber></SpecificBuildSelector>"),
     ]
     if (testList != null){
-        parameters << string(name: 'test-list', value: testList)
+        parameters << string(name: 'test-list', value: testList)// support the old jobs
+        parameters << string(name: 'TEST_LIST', value: testList)
     }
     build job: jobName, wait: false, parameters: parameters
 }
@@ -71,15 +72,29 @@ pipeline {
         }
         stage('Trigger RCPTT') {
             steps {
-                triggerRCPTTBuild 'verinice-client-rcptt'
-                // triggerRCPTTBuild 'verinice-client-rcptt-mac'
-                // triggerRCPTTBuild 'verinice-client-rcptt-windows'
+                // normal client rcptt
+                triggerRCPTTBuild 'rcptt-client-test'
+                
+                // custom client rcptt
+                // triggerRCPTTBuild 'rcptt-client-test', 'bp*.test'
+                
+                // server test
                 // triggerRCPTTBuild 'verinice-server-rcptt-test'
-                // triggerRCPTTBuild 'verinice-rcptt-custom-test', 'bp*.test'
+
+                // report verinice en and de
+                // triggerRCPTTBuild 'rcptt-all-report-tests'
+                
+                // product tests
+                // triggerRCPTTBuild 'rcptt-product-report-test'
+                
+                // performance tests rcptt
                 // triggerRCPTTBuild 'verinice-rcptt-performance'
                 // triggerRCPTTBuild 'verinice-rcptt-server-performance'
-                // triggerRCPTTBuild 'verinice-rcptt-reporting-de'
-                // triggerRCPTTBuild 'verinice-rcptt-reporting-en'
+                
+                // legacy jobs
+                // triggerRCPTTBuild 'verinice-client-rcptt'
+                // triggerRCPTTBuild 'verinice-client-rcptt-mac'
+                // triggerRCPTTBuild 'verinice-client-rcptt-windows'
             }
         }
         stage('Documentation') {

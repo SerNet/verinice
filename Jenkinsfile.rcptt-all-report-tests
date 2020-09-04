@@ -1,0 +1,84 @@
+def triggerRCPTTBuild(String rcpttJob, String testList = null, String lang = "de"){
+    def parameters = [gitParameter(name: 'BRANCH_OR_TAG', value: "${params.BRANCH_OR_TAG}"), 
+               string(name: 'job_to_copy_from', value: "${params.job_to_copy_from}"),
+               string(name: 'build_to_copy_from', value: "${params.build_to_copy_from}"),
+               string(name: 'SERVER_TIMEOUT', value: '360'), 
+               string(name: 'TEST_OPTIONS', value: 'testExecTimeout=45000;execTimeout=410000;reportingIncludeIgnoredWaitDetails=true;passedTestDetails=true;runtimeEnableActivityLogs=true;q7ImageCapture=true;jobHangTimeout=900000;contextRunnableTimeout=900000'), 
+                ]
+                
+    def targetFolder = "test-result/products_" + lang 
+    if (rcpttJob == "rcptt-client-test"){
+        parameters << booleanParam(name: 'runReportingTests', value: true)
+        parameters << string(name: 'LANGUAGE', value: lang)
+        parameters << string(name: 'TEST_LIST', value: testList)
+        targetFolder = "test-result/vn_" + lang 
+    }
+    
+    def triggeredBuild = build job: rcpttJob, 
+      wait: true, 
+      propagate: false,
+      parameters: parameters
+    
+    copyArtifacts filter: 'gui-test-runner/result/results.junit.xml,gui-test-runner/result/metric.csv,gui-test-runner/result/reports/*.*', 
+      fingerprintArtifacts: true, 
+      flatten: true, optional: true,
+      projectName: rcpttJob, 
+      selector: specific(triggeredBuild.getNumber().toString()),
+      target: targetFolder
+    
+}
+pipeline {
+    agent any
+    options {
+        buildDiscarder logRotator(numToKeepStr: '10', artifactNumToKeepStr: '300')
+    }
+    parameters {
+        gitParameter branch: '', branchFilter: '.*', defaultValue: 'develop' , quickFilterEnabled: true, selectedValue: 'NONE', sortMode: 'NONE', tagFilter: '*', type: 'PT_BRANCH_TAG', 
+          description: 'The branch or that that the tests are taken from', name: 'BRANCH_OR_TAG'
+        string name: 'job_to_copy_from', defaultValue: 'verinice/develop', 
+          description: '''The job that the AUT is copied from<br/>
+        Please note that slashes in the branch-name must be escaped as %2F, e.g. <code>verinice/feature%2Fvn-0000-make-everything-great</code>.'''
+        buildSelector name: 'build_to_copy_from',
+          description: 'The build number of the job that the AUT is copied from'
+    }
+    stages {
+        stage('verinice-reports') {
+           steps {
+                sh 'env'
+                buildDescription "${env.GIT_BRANCH} ${env.GIT_COMMIT[0..8]}"
+                
+                dir("test-result") {
+                    deleteDir()
+                }
+                // verinice reports
+                triggerRCPTTBuild 'rcptt-client-test', '*reports.test', 'de'
+                triggerRCPTTBuild 'rcptt-client-test', '*reports-en.test', 'en'
+                //product tests
+                triggerRCPTTBuild 'rcptt-product-report-test'
+
+                junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], 
+                  testResults: 'test-result/**/results.junit.xml'
+                perfReport filterRegex: '', sourceDataFiles: 'test-result/**/results.junit.xml'
+                echo 'archive' 
+                archiveArtifacts artifacts: 'test-result/**/*.*',
+                  allowEmptyArchive: true
+                
+           }
+        }
+    }
+    post {
+          always {
+                notifyBitbucket stashServerBaseUrl: 'https://git.verinice.org/bb', 
+                  credentialsId: 'bitbucket', 
+                  commitSha1: '', 
+                  considerUnstableAsSuccess: false, 
+                  disableInprogressNotification: false, 
+                  ignoreUnverifiedSSLPeer: false, 
+                  includeBuildNumberInKey: false, 
+                  prependParentProjectKey: false, 
+                  buildStatus: currentBuild.result, 
+                  buildName: currentBuild.fullDisplayName, 
+                  projectKey: ''
+          }
+    }
+}
