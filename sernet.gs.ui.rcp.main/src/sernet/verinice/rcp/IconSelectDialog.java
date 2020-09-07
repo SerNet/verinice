@@ -45,8 +45,6 @@ import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -258,22 +256,15 @@ public class IconSelectDialog extends Dialog {
         table.addListener(SWT.MeasureItem,
                 event -> event.height = getThumbnailSize() + ICON_SPACING);
 
-        table.addMouseListener(new MouseAdapter() {
-
-            @Override
-            public void mouseDown(MouseEvent e) {
-                ViewerCell cell = viewer.getCell(new Point(e.x, e.y));
-                if (cell != null) {
-                    selectedPath = getRelativePath(
-                            ((IconDescriptor[]) cell.getElement())[cell.getColumnIndex()]
-                                    .getPath());
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Icon: " + selectedPath); //$NON-NLS-1$
-                    }
+        viewer.addSelectionChangedListener(event -> {
+            ViewerCell cell = focusCellManager.getFocusCell();
+            if (cell != null) {
+                selectedPath = getRelativePath(
+                        ((IconDescriptor[]) cell.getElement())[cell.getColumnIndex()].getPath());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Icon: " + selectedPath); //$NON-NLS-1$
                 }
-
             }
-
         });
 
         for (int i = 0; i < iconRowSize; i++) {
