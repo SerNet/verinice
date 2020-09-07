@@ -64,48 +64,51 @@ import sernet.verinice.model.search.VeriniceQuery;
 public abstract class BaseDao implements ISearchDao {
 
     private static final Logger LOG = Logger.getLogger(BaseDao.class);
-    
+
     private ElasticsearchClientFactory clientFactory;
-    
+
     private IConfigurationService configurationService;
     private IAuthService authService;
-    
+
     /**
-     * {@link ISearchService.ES_FIELD_UUID} and {@link ISearchService.ES_FIELD_PERMISSION_ROLES} missing here, since they should not be searchable 
+     * {@link ISearchService.ES_FIELD_UUID} and
+     * {@link ISearchService.ES_FIELD_PERMISSION_ROLES} missing here, since they
+     * should not be searchable
      */
-    private final List<String> EXTRA_FIELDS = Arrays.asList(new String[]{
-            ISearchService.ES_FIELD_UUID,
-            ISearchService.ES_FIELD_TITLE,
-            ISearchService.ES_FIELD_ELEMENT_TYPE,
-            ISearchService.ES_FIELD_ICON_PATH,
-            ISearchService.ES_FIELD_DBID,
-            ISearchService.ES_FIELD_EXT_ID,
-            ISearchService.ES_FIELD_SOURCE_ID,
-            ISearchService.ES_FIELD_SCOPE_ID,
-            ISearchService.ES_FIELD_PARENT_ID});
-    
-  
-    /* (non-Javadoc)
-     * @see sernet.verinice.search.ISearchDao#updateOrIndex(java.lang.String, java.lang.String)
+    private final List<String> EXTRA_FIELDS = Arrays
+            .asList(new String[] { ISearchService.ES_FIELD_UUID, ISearchService.ES_FIELD_TITLE,
+                    ISearchService.ES_FIELD_ELEMENT_TYPE, ISearchService.ES_FIELD_ICON_PATH,
+                    ISearchService.ES_FIELD_DBID, ISearchService.ES_FIELD_EXT_ID,
+                    ISearchService.ES_FIELD_SOURCE_ID, ISearchService.ES_FIELD_SCOPE_ID,
+                    ISearchService.ES_FIELD_PARENT_ID });
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.search.ISearchDao#updateOrIndex(java.lang.String,
+     * java.lang.String)
      */
     @Override
     public ActionResponse updateOrIndex(String id, String json) {
         return update(id, json);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.search.ISearchDao#index(java.lang.String)
      */
     @Override
-    public ActionResponse update(String id, String json) { 
+    public ActionResponse update(String id, String json) {
         try {
-            UpdateResponse response = getClient().prepareUpdate(getIndex(),getType(),id).setRefresh(true)             
-                    .setDoc(json).execute().actionGet();
+            UpdateResponse response = getClient().prepareUpdate(getIndex(), getType(), id)
+                    .setRefresh(true).setDoc(json).execute().actionGet();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Index updated, uuid: " + response.getId() + ", version: " + response.getVersion());
+                LOG.debug("Index updated, uuid: " + response.getId() + ", version: "
+                        + response.getVersion());
             }
             return response;
-        } catch (DocumentMissingException e) {          
+        } catch (DocumentMissingException e) {
             return index(id, json);
         } catch (RuntimeException e) {
             throw e;
@@ -114,57 +117,61 @@ public abstract class BaseDao implements ISearchDao {
             throw new RuntimeException(e);
         }
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.search.ISearchDao#index(java.lang.String)
      */
     @Override
-    public IndexResponse index(String id, String json) {  
-        IndexResponse response = getClient().prepareIndex(getIndex(), getType(), id)
-        .setSource(json)
-        .execute()
-        .actionGet();
+    public IndexResponse index(String id, String json) {
+        IndexResponse response = getClient().prepareIndex(getIndex(), getType(), id).setSource(json)
+                .execute().actionGet();
         if (LOG.isDebugEnabled()) {
             LOG.debug("Index created, uuid: " + response.getId());
         }
         return response;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.search.ISearchDao#delete(java.lang.String)
      */
     @Override
     public DeleteResponse delete(String id) {
         DeleteResponse response = getClient().prepareDelete(getIndex(), getType(), id)
-        .setRefresh(true) 
-        .execute()
-        .actionGet();
+                .setRefresh(true).execute().actionGet();
         if (LOG.isDebugEnabled()) {
             LOG.debug("Index removed, uuid: " + id);
         }
         return response;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.search.ISearchDao#find(java.lang.String)
      */
     @Override
     public SearchResponse findAll() {
         return getClient().prepareSearch(getIndex()).setTypes(getType())
-                .setQuery(QueryBuilders.matchAllQuery())
-                .execute()
-                .actionGet();
+                .setQuery(QueryBuilders.matchAllQuery()).execute().actionGet();
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.search.ISearchDao#find(java.lang.String)
      */
     @Override
     public SearchResponse find(String title) {
         return find(title, Operator.OR);
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.search.ISearchDao#find(java.lang.String)
      */
     @Override
@@ -172,38 +179,40 @@ public abstract class BaseDao implements ISearchDao {
         long startTime = System.currentTimeMillis();
         SearchResponse response = getClient().prepareSearch(getIndex()).setTypes(getType())
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                .setQuery(QueryBuilders.matchQuery("_all", title).operator(operator))
-                .execute()
+                .setQuery(QueryBuilders.matchQuery("_all", title).operator(operator)).execute()
                 .actionGet();
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Time for executing find():\t" + String.valueOf((System.currentTimeMillis() - startTime) / 1000) + " seconds");
+            LOG.debug("Time for executing find():\t"
+                    + String.valueOf((System.currentTimeMillis() - startTime) / 1000) + " seconds");
         }
 
         return response;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.search.ISearchDao#find(java.lang.String)
      */
     @Override
     public SearchResponse findByPhrase(String title) {
-        SearchRequestBuilder requestBuilder = getClient().prepareSearch(getIndex()).setTypes(getType())
-                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+        SearchRequestBuilder requestBuilder = getClient().prepareSearch(getIndex())
+                .setTypes(getType()).setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
                 .setQuery(QueryBuilders.matchPhraseQuery("_all", title))
                 .setHighlighterPostTags(Occurence.HTML_CLOSING_TAG)
                 .setHighlighterPreTags(Occurence.HTML_OPEN_TAG);
 
-        requestBuilder = HighlightFieldAdder.addAll(requestBuilder);       
+        requestBuilder = HighlightFieldAdder.addAll(requestBuilder);
         return requestBuilder.execute().actionGet();
     }
-    
+
     @Override
     public MultiSearchResponse find(String typeId, VeriniceQuery query) {
-        MultiSearchRequestBuilder request = prepareQueryWithAllFields(typeId, query, getAuthService().getUsername());
+        MultiSearchRequestBuilder request = prepareQueryWithAllFields(typeId, query,
+                getAuthService().getUsername());
         return executeMultiSearch(request);
     }
-    
-    
+
     @Override
     public MultiSearchRequestBuilder prepareQueryWithAllFields(String typeId, VeriniceQuery query,
             String username) {
@@ -220,45 +229,48 @@ public abstract class BaseDao implements ISearchDao {
         return buildQueryIterative(map, typeId, username, query);
 
     }
-    
+
     @Override
-    public MultiSearchRequestBuilder prepareQueryWithSpecializedFields(Map<String, String> fieldmap, String typeId, String username){
+    public MultiSearchRequestBuilder prepareQueryWithSpecializedFields(Map<String, String> fieldmap,
+            String typeId, String username) {
         MultiSearchRequestBuilder multiSearchBuilder = getClient().prepareMultiSearch();
 
-        for(String field : fieldmap.keySet()){
+        for (String field : fieldmap.keySet()) {
             String value = null;
-            if(fieldmap.containsKey(field)){
+            if (fieldmap.containsKey(field)) {
                 value = fieldmap.get(field);
             }
-            if(value != null){
-                SearchRequestBuilder srb = getClient().prepareSearch(getIndex()).setTypes(getType()).setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+            if (value != null) {
+                SearchRequestBuilder srb = getClient().prepareSearch(getIndex()).setTypes(getType())
+                        .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
                         .setQuery(QueryBuilders.matchPhraseQuery(field, value))
-                        .setPostFilter(FilterBuilders.boolFilter().must(FilterBuilders.termFilter(ISearchService.ES_FIELD_ELEMENT_TYPE, typeId)));
-                if(LOG.isDebugEnabled()){
+                        .setPostFilter(FilterBuilders.boolFilter().must(FilterBuilders
+                                .termFilter(ISearchService.ES_FIELD_ELEMENT_TYPE, typeId)));
+                if (LOG.isDebugEnabled()) {
                     LOG.debug("SingleSearchQuery for <" + field + ">:\t" + srb.toString());
                 }
-                multiSearchBuilder.add(srb); 
-                        
+                multiSearchBuilder.add(srb);
+
             }
         }
-        
+
         return multiSearchBuilder;
     }
-    
-    private MultiSearchRequestBuilder buildQueryIterative(Map<String, String> map, String typeId, String username, VeriniceQuery query){
+
+    private MultiSearchRequestBuilder buildQueryIterative(Map<String, String> map, String typeId,
+            String username, VeriniceQuery query) {
         MultiSearchRequestBuilder requestBuilder = getClient().prepareMultiSearch();
         // only 1 call per query, instead of calling
         // isPermissionHandlingNeeded() from within for-loop
         boolean permissionHandlingNeeded = isPermissionHandlingNeeded();
-        for(String field : map.keySet()){
+        for (String field : map.keySet()) {
             String value = map.get(field);
             SearchRequestBuilder searchBuilder = getClient().prepareSearch(getIndex())
-                    .setTypes(getType())
-                    .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                    .setTypes(getType()).setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
                     .setHighlighterPostTags(Occurence.HTML_CLOSING_TAG)
                     .setHighlighterPreTags(Occurence.HTML_OPEN_TAG);
 
-            if(value != null && !value.isEmpty()){
+            if (value != null && !value.isEmpty()) {
                 MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchPhraseQuery(field, value);
                 searchBuilder = searchBuilder.setQuery(matchQueryBuilder);
             } else {
@@ -266,28 +278,29 @@ public abstract class BaseDao implements ISearchDao {
                 MatchAllQueryBuilder matchQueryBuilder = QueryBuilders.matchAllQuery();
                 searchBuilder = searchBuilder.setQuery(matchQueryBuilder);
             }
-                   
+
             searchBuilder = HighlightFieldAdder.add(field, searchBuilder);
-            TermsFilterBuilder typeBuilder = FilterBuilders.inFilter(ISearchService.ES_FIELD_ELEMENT_TYPE, new String[]{typeId});
+            TermsFilterBuilder typeBuilder = FilterBuilders
+                    .inFilter(ISearchService.ES_FIELD_ELEMENT_TYPE, new String[] { typeId });
             AndFilterBuilder andBuilder = FilterBuilders.andFilter(typeBuilder);
-            
+
             if (permissionHandlingNeeded) {
-                andBuilder = andBuilder.add(createPermissionFilter(username));              
+                andBuilder = andBuilder.add(createPermissionFilter(username));
                 if (query.isScopeOnly()) { // scopeOnly is not needed if no
                                            // permission handling is needed
                     andBuilder = andBuilder.add(createScopeOnlyFilter(username));
                 }
             }
-            
-            if(query.getScopeId() != -1){
+
+            if (query.getScopeId() != -1) {
                 // vermutlich besser als suchkriterium als als filter anwenden
                 andBuilder = andBuilder.add(createScopeIdFilter(query.getScopeId()));
             }
 
             searchBuilder = searchBuilder.setPostFilter(andBuilder);
-            
+
             searchBuilder = searchBuilder.setFrom(0);
-            if(query.getLimit() > 0){
+            if (query.getLimit() > 0) {
                 searchBuilder = searchBuilder.setSize(query.getLimit());
             }
 
@@ -296,57 +309,57 @@ public abstract class BaseDao implements ISearchDao {
             requestBuilder = requestBuilder.add(searchBuilder);
         }
 
-
         return requestBuilder;
     }
 
     private boolean isPermissionHandlingNeeded() {
-        return getAuthService()!=null 
-                && getAuthService().isPermissionHandlingNeeded() 
+        return getAuthService() != null && getAuthService().isPermissionHandlingNeeded()
                 && !hasAdminRole(getAuthService().getRoles());
     }
-    
+
     private boolean hasAdminRole(String[] roles) {
-        if(roles!=null) {
+        if (roles != null) {
             for (String r : roles) {
                 if (ApplicationRoles.ROLE_ADMIN.equals(r))
                     return true;
-            }   
+            }
         }
         return false;
     }
-    
+
     private TermFilterBuilder createScopeOnlyFilter(String username) {
-        return FilterBuilders.termFilter(ISearchService.ES_FIELD_SCOPE_ID, getConfigurationService().getScopeId(username));
+        return FilterBuilders.termFilter(ISearchService.ES_FIELD_SCOPE_ID,
+                getConfigurationService().getScopeId(username));
     }
 
     private TermsFilterBuilder createPermissionFilter(String username) {
-        return FilterBuilders.inFilter(ISearchService.ES_FIELD_PERMISSION_ROLES + "." + ISearchService.ES_FIELD_PERMISSION_NAME, getRoleString(username).toArray());
+        return FilterBuilders.inFilter(
+                ISearchService.ES_FIELD_PERMISSION_ROLES + "."
+                        + ISearchService.ES_FIELD_PERMISSION_NAME,
+                getRoleString(username).toArray());
     }
-    
-    private TermFilterBuilder createScopeIdFilter(int scopeId){
+
+    private TermFilterBuilder createScopeIdFilter(int scopeId) {
         return FilterBuilders.termFilter(ISearchService.ES_FIELD_SCOPE_ID, scopeId);
     }
-    
-  
-    
+
     @Override
-    public MultiSearchResponse executeMultiSearch (MultiSearchRequestBuilder srb){
-        try{
+    public MultiSearchResponse executeMultiSearch(MultiSearchRequestBuilder srb) {
+        try {
             return srb.execute().actionGet();
-        } catch (ActionRequestValidationException e){
+        } catch (ActionRequestValidationException e) {
             LOG.error("Request is not valid", e);
-            
-        } catch (Exception t){
+
+        } catch (Exception t) {
             LOG.error("Something went wrong in executin multisearchrequest", t);
         }
         return null;
     }
-    
-    @Override 
-    public SearchResponse findByPhrase(String phrase, String entityType){
-        SearchRequestBuilder requestBuilder = getClient().prepareSearch(getIndex()).setTypes(getType())
-                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+
+    @Override
+    public SearchResponse findByPhrase(String phrase, String entityType) {
+        SearchRequestBuilder requestBuilder = getClient().prepareSearch(getIndex())
+                .setTypes(getType()).setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
                 .setQuery(QueryBuilders.matchPhraseQuery("_all", phrase))
                 .setHighlighterPostTags(Occurence.HTML_CLOSING_TAG)
                 .setHighlighterPreTags(Occurence.HTML_OPEN_TAG);
@@ -354,60 +367,62 @@ public abstract class BaseDao implements ISearchDao {
         requestBuilder = HighlightFieldAdder.addAll(requestBuilder);
         return requestBuilder.execute().actionGet();
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.search.ISearchDao#find(java.lang.String)
      */
     @Override
     public SearchResponse find(String property, String title) {
         return find(property, title, Operator.OR);
     }
-    
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.search.ISearchDao#find(java.lang.String)
      */
     @Override
     public SearchResponse find(String property, String title, Operator operator) {
         SearchRequestBuilder requestBuilder = getClient().prepareSearch(getIndex())
                 .setTypes(getType())
-                .setQuery(QueryBuilders.matchQuery(property, title)
-                .operator(operator))
-                .setSize(20)
+                .setQuery(QueryBuilders.matchQuery(property, title).operator(operator)).setSize(20)
                 .setHighlighterPostTags(Occurence.HTML_CLOSING_TAG)
                 .setHighlighterPreTags(Occurence.HTML_OPEN_TAG);
 
-        if("_all".equals(property)){
+        if ("_all".equals(property)) {
             requestBuilder = HighlightFieldAdder.addAll(requestBuilder);
-         } else {
-             requestBuilder.addHighlightedField(property);
-         }
+        } else {
+            requestBuilder.addHighlightedField(property);
+        }
         return requestBuilder.execute().actionGet();
     }
-    
+
     @Override
     public void clear() {
         try {
-           getClient().prepareDeleteByQuery(getIndex())
-               .setQuery(QueryBuilders.termsQuery("_type", getType()))
-               .execute()
-               .actionGet();
+            getClient().prepareDeleteByQuery(getIndex())
+                    .setQuery(QueryBuilders.termsQuery("_type", getType())).execute().actionGet();
 
-        } catch (IndexMissingException ex){
-            LOG.error("error occurred while deleting index: \"" + getIndex() + "\". This index seems not to exists so it is no problem to ignore this error", ex);
+        } catch (IndexMissingException ex) {
+            LOG.error("error occurred while deleting index: \"" + getIndex()
+                    + "\". This index seems not to exists so it is no problem to ignore this error",
+                    ex);
         }
 
-
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.search.ISearchDao#getIndex()
      */
     @Override
     public String getIndex() {
         return INDEX_NAME;
     }
-    
+
     public Client getClient() {
         return getClientFactory().getClient();
     }
@@ -419,21 +434,20 @@ public abstract class BaseDao implements ISearchDao {
     public void setClientFactory(ElasticsearchClientFactory clientFactory) {
         this.clientFactory = clientFactory;
     }
-    
-    private List<String> getRoleString(String username){
-        List<String> applicationRoles = Arrays.asList(new String[] { ApplicationRoles.ROLE_ADMIN, ApplicationRoles.ROLE_LOCAL_ADMIN,
-              ApplicationRoles.ROLE_GUEST,
-              ApplicationRoles.ROLE_LDAPUSER, 
-              ApplicationRoles.ROLE_USER,
-              ApplicationRoles.ROLE_WEB});
-      List<String> userRoles = new ArrayList<String>(0);
-      String[] roles = getConfigurationService().getRoles(username);
-      for(int i = 0; i < roles.length; i++){
-          if(!applicationRoles.contains(roles[i])){
-              userRoles.add(roles[i].toLowerCase());
-          }
-      }
-      return userRoles;
+
+    private List<String> getRoleString(String username) {
+        List<String> applicationRoles = Arrays.asList(
+                new String[] { ApplicationRoles.ROLE_ADMIN, ApplicationRoles.ROLE_LOCAL_ADMIN,
+                        ApplicationRoles.ROLE_GUEST, ApplicationRoles.ROLE_LDAPUSER,
+                        ApplicationRoles.ROLE_USER, ApplicationRoles.ROLE_WEB });
+        List<String> userRoles = new ArrayList<String>(0);
+        String[] roles = getConfigurationService().getRoles(username);
+        for (int i = 0; i < roles.length; i++) {
+            if (!applicationRoles.contains(roles[i])) {
+                userRoles.add(roles[i].toLowerCase());
+            }
+        }
+        return userRoles;
     }
 
     /**
@@ -444,12 +458,13 @@ public abstract class BaseDao implements ISearchDao {
     }
 
     /**
-     * @param confService the confService to set
+     * @param confService
+     *            the confService to set
      */
     public void setConfigurationService(IConfigurationService confService) {
         this.configurationService = confService;
     }
-    
+
     public IAuthService getAuthService() {
         return authService;
     }
@@ -457,5 +472,5 @@ public abstract class BaseDao implements ISearchDao {
     public void setAuthService(IAuthService authService) {
         this.authService = authService;
     }
-    
+
 }
