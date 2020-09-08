@@ -20,17 +20,23 @@
 package sernet.verinice.rcp;
 
 import java.io.File;
-import java.io.FileFilter;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.nio.file.DirectoryStream;
+import java.nio.file.DirectoryStream.Filter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -60,6 +66,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 
+import sernet.gs.service.CollectionUtil;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.verinice.iso27k.rcp.ComboModel;
 
@@ -72,7 +79,7 @@ public class IconSelectDialog extends Dialog {
 
     public static final String ICON_DIRECTORY = "tree-icons"; //$NON-NLS-1$
 
-    private static final FileFilter ICON_FILE_FILTER = new IconFileFilter();
+    private static final DirectoryStream.Filter<Path> ICON_FILE_FILTER = new IconFileFilter();
 
     private static final int SIZE_Y = 370;
     private static final int SIZE_X = 485;
@@ -99,7 +106,7 @@ public class IconSelectDialog extends Dialog {
     private void initComboValues() {
         dirComboModel = new ComboModel<>(IconPathDescriptor::getName);
         URL[] inconUrlArray = FileLocator.findEntries(Platform.getBundle(Activator.PLUGIN_ID),
-                new Path(ICON_DIRECTORY), null);
+                new org.eclipse.core.runtime.Path(ICON_DIRECTORY), null);
 
         try {
             for (URL inconUrl : inconUrlArray) {
@@ -194,29 +201,17 @@ public class IconSelectDialog extends Dialog {
     }
 
     private void loadIcons(String path) {
-        File internalDirectory = new File(path);
-        File[] files = internalDirectory.listFiles(ICON_FILE_FILTER);
-        Arrays.sort(files);
-
-        List<IconDescriptor[]> iconDescriptorList = new ArrayList<>();
-        IconDescriptor[] iconRow = new IconDescriptor[NUMBER_OF_COLUMNS];
-        int i = 0;
-        for (File file : files) {
-            iconRow[i] = new IconDescriptor(file);
-            i++;
-            if (i == NUMBER_OF_COLUMNS) {
-                iconDescriptorList.add(iconRow);
-                iconRow = new IconDescriptor[NUMBER_OF_COLUMNS];
-                i = 0;
-            }
+        Path internalDirectory = Paths.get(path);
+        try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(internalDirectory,
+                ICON_FILE_FILTER)) {
+            Stream<Path> icons = StreamSupport.stream(directoryStream.spliterator(), false);
+            List<Path> iconsAsList = icons.sorted().collect(Collectors.toList());
+            Collection<List<Path>> iconsInChunks = CollectionUtil.partition(iconsAsList,
+                    NUMBER_OF_COLUMNS);
+            viewer.setInput(iconsInChunks);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load icons from " + path, e);
         }
-        if (i != 0) {
-            iconDescriptorList.add(iconRow);
-        }
-        IconDescriptor[][] iconDescriptorArray = null;
-        iconDescriptorArray = iconDescriptorList
-                .toArray(new IconDescriptor[iconDescriptorList.size()][NUMBER_OF_COLUMNS]);
-        viewer.setInput(iconDescriptorArray);
     }
 
     private void createTable(Composite parent) {
@@ -260,7 +255,7 @@ public class IconSelectDialog extends Dialog {
             ViewerCell cell = focusCellManager.getFocusCell();
             if (cell != null) {
                 selectedPath = getRelativePath(
-                        ((IconDescriptor[]) cell.getElement())[cell.getColumnIndex()].getPath());
+                        ((List<Path>) cell.getElement()).get(cell.getColumnIndex()).toString());
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Icon: " + selectedPath); //$NON-NLS-1$
                 }
@@ -329,15 +324,11 @@ public class IconSelectDialog extends Dialog {
     }
 }
 
-class IconFileFilter implements FileFilter {
+class IconFileFilter implements Filter<Path> {
 
     @Override
-    public boolean accept(File file) {
-        boolean accept = false;
-        if (file != null && file.getName() != null) {
-            String filename = file.getName().toLowerCase();
-            accept = filename.endsWith("gif") || filename.endsWith("png"); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        return accept;
+    public boolean accept(Path path) {
+        String filename = path.getFileName().toString().toLowerCase();
+        return filename.endsWith("gif") || filename.endsWith("png"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 }

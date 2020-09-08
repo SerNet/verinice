@@ -19,6 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.rcp;
 
+import java.nio.file.Path;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
@@ -49,12 +52,14 @@ public class IconCellProvider extends ImageCellProvider {
     @Override
     protected Image getImage(Object element) {
         Image image = null;
-        if (element instanceof IconDescriptor[]) {
-            IconDescriptor[] iconDescriptors = (IconDescriptor[]) element;
-            if (iconDescriptors[column] != null) {
-                image = getImage((iconDescriptors[column]).getImageDescriptor());
+
+        if (element instanceof List<?>) {
+            List<?> iconsPathsCurrentRow = (List<?>) element;
+            Path path = (Path) iconsPathsCurrentRow.get(column);
+            if (path != null) {
+                image = getImage(ImageDescriptor.createFromFile(null, path.toString()));
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Image: " + iconDescriptors[column].getPath());
+                    LOG.debug("Image: " + path.toString());
                 }
             }
         }
