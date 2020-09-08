@@ -33,22 +33,17 @@ import sernet.gs.ui.rcp.main.ImageCache;
 public class IconCellProvider extends ImageCellProvider {
 
     private static final Logger LOG = Logger.getLogger(IconCellProvider.class);
-    
+
     private int column;
-    
+
     private static final int COLUMN_AMOUNT = 20;
-    
-    /**
-     * @param thumbnailSize
-     */
+
     protected IconCellProvider(int column) {
         super(COLUMN_AMOUNT);
         this.column = column;
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.ImageCellProvider#getImage(java.lang.Object)
      */
     @Override
@@ -56,7 +51,7 @@ public class IconCellProvider extends ImageCellProvider {
         Image image = null;
         if (element instanceof IconDescriptor[]) {
             IconDescriptor[] iconDescriptors = (IconDescriptor[]) element;
-            if(iconDescriptors[column]!=null) {
+            if (iconDescriptors[column] != null) {
                 image = getImage((iconDescriptors[column]).getImageDescriptor());
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Image: " + iconDescriptors[column].getPath());
@@ -67,13 +62,13 @@ public class IconCellProvider extends ImageCellProvider {
     }
 
     public Image getImage(ImageDescriptor id) {
-        if (id == null){
+        if (id == null) {
             return null;
         }
         Image image = id.createImage(false);
         if (image == null) {
             image = getImage(ImageCache.UNKNOWN);
-        } 
+        }
 
         return image;
     }
