@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _mEARsE-jEemuCsPaiy5gOQ
-Runtime-Version: 2.5.0.202001211718
-Save-Time: 9/1/20 5:36 PM
+Runtime-Version: 2.5.1.M3
+Save-Time: 9/17/20, 12:10 PM
 Tags: report
 Testcase-Type: ecl
 
@@ -40,17 +40,23 @@ proc "gen-rep-ism" [val report] [val qualifier ""]{
     test-for-report-file "iso-risk-ltr-reports-en" $report $qualifier
 }
 
-proc "gen-rep-com-en" [val report] [val view] [val object] [val qualifier ""] {
+proc "gen-rep-com-en" [val report] [val view] [val object] [val qualifier ""] [val suffix ".pdf"] {
     get-view $view | get-tree | select $object | get-menu -path "Create Report..." | click
-    log [concat "create report: " $report]
-
-    get-window Report | get-group "" | get-combo -after [get-label "Choose Report:"] | select $report
-    set-dialog-result File [concat $reportdir [get-java-property "file.separator"] $qualifier $report ".pdf"]
-    with [get-window Report] {
-        get-group "" -index 0 | get-button "Browse..." | click
-        get-button OK | click
+    log [concat "create report: " $report " write to file: " [to-report-file $report $qualifier $suffix]]
+    try {
+    
+        get-window Report | get-group "" | get-combo -after [get-label "Choose Report:"] | select $report
+        set-dialog-result File [to-report-file $report $qualifier $suffix]
+        get-window Report | get-button OK | click 
+        get-window "Report generation successful" | get-button OK | click
+    } -catch {
+    log [concat "ERROR configuring report creation dialog for " $report " on " $object]
+    try {
+        get-window Report | get-button Cancel | click
+	    } -catch {
+	    //there is not always such window
+	    }
     }
-    get-window "Report generation successful" | get-button OK | click
 }
 
 
