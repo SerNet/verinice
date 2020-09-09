@@ -37,7 +37,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.auth.Action;
 import sernet.verinice.model.auth.Auth;
@@ -81,19 +80,12 @@ public class RightManagementTest extends CommandServiceProvider {
 
     @Resource(name = "rightsService")
     protected IRightsService rightsService;
-    @Resource(name = "authService")
-    protected IAuthService authService;
 
     /**
      * Ensure that the interalAdmin is set. Clear the profiles.
      */
     @After
     public void tearDown() {
-        if (authService instanceof TestAuthenticationService) {
-            ((TestAuthenticationService) authService)
-                    .setUsername(TestAuthenticationService.INTERNAL_ADMIN);
-        }
-
         Auth conf = rightsService.getConfiguration();
         Profiles profiles = conf.getProfiles();
         Iterator<Profile> iterator = profiles.getProfile().iterator();

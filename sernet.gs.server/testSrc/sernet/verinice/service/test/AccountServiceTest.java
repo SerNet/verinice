@@ -66,9 +66,6 @@ public class AccountServiceTest extends CommandServiceProvider {
     private AccountGroup accountGroupB = null;
     private AccountGroup accountGroupRandom = null;
 
-    @Resource(name = "authService")
-    private TestAuthenticationService authService;
-
     @Resource(name = "accountService")
     private IAccountService accountService;
 

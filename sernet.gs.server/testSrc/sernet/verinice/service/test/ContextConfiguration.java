@@ -26,6 +26,7 @@ import java.util.stream.Stream;
 import javax.annotation.Resource;
 
 import org.hibernate.criterion.DetachedCriteria;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -66,7 +67,10 @@ public abstract class ContextConfiguration  {
 
     @Resource(name="cnaTreeElementDao")
     protected IBaseDao<CnATreeElement, Integer> elementDao;
-    
+
+    @Resource(name = "authService")
+    protected TestAuthenticationService authService;
+
     @Before
     public void ensureModelsAreCreated() {
         if (elementDao.findByCriteria(DetachedCriteria.forClass(BSIModel.class)).isEmpty()) {
@@ -78,6 +82,11 @@ public abstract class ContextConfiguration  {
         if (elementDao.findByCriteria(DetachedCriteria.forClass(CatalogModel.class)).isEmpty()) {
             elementDao.merge(new CatalogModel());
         }
+    }
+
+    @After
+    public void resetAuthenticationService() {
+        authService.reset();
     }
 
     protected static Set<CnATreeElement> getChildrenWithTypeId(CnATreeElement element,

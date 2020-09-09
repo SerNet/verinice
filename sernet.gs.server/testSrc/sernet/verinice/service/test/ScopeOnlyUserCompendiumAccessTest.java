@@ -22,7 +22,6 @@ import javax.annotation.Resource;
 
 import org.hamcrest.CoreMatchers;
 import org.hibernate.criterion.DetachedCriteria;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,9 +44,6 @@ import sernet.verinice.model.common.configuration.Configuration;
 public class ScopeOnlyUserCompendiumAccessTest extends AbstractModernizedBaseProtection {
 
     private final String userName = "scope-only-user";
-
-    @Resource(name = "authService")
-    private TestAuthenticationService authService;
 
     @Resource(name = "configurationDao")
     private IDao<Configuration, Serializable> configurationDao;
@@ -76,11 +72,6 @@ public class ScopeOnlyUserCompendiumAccessTest extends AbstractModernizedBasePro
         authService.setPermissionHandlingNeeded(true);
         authService.setUsername(userName);
 
-    }
-
-    @After
-    public void disablePermissionHandling() {
-        authService.reset();
     }
 
     @Test
