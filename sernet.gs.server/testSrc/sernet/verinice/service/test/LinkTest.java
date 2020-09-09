@@ -37,6 +37,8 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.connect.EntityType;
@@ -73,6 +75,8 @@ import sernet.verinice.service.commands.RemoveElement;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@Transactional
+@TransactionConfiguration(transactionManager = "txManager")
 public class LinkTest extends CommandServiceProvider {
 
     private static final Logger LOG = Logger.getLogger(LinkTest.class);
@@ -134,17 +138,6 @@ public class LinkTest extends CommandServiceProvider {
         for (CnATreeElement element : elements) {
             element = checkLinksInElement(element);
         } 
-        
-        
-        // remove
-        RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(organization);
-        commandService.executeCommand(removeCommand);
-        for (String uuid: uuidList) {
-            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuid);
-            command = commandService.executeCommand(command);
-            CnATreeElement element = command.getElement();
-            assertNull("Organization was not deleted.", element);
-        } 
     }
 
     /**
@@ -173,8 +166,6 @@ public class LinkTest extends CommandServiceProvider {
                 assertEquals(RelationNotDefinedException.class, e.getCause().getCause().getClass());
             }
         }
-
-
     }
 
     protected CnATreeElement checkLinksInElement(CnATreeElement element) {

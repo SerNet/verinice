@@ -30,6 +30,8 @@ import javax.annotation.Resource;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
@@ -52,6 +54,8 @@ import sernet.verinice.service.XmlRightsService;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@Transactional
+@TransactionConfiguration(transactionManager = "txManager")
 public class RightsServiceTest extends UuidLoader {
 
     public static final String[] adminActionIds = { ActionRightIDs.ACCOUNTSETTINGS,

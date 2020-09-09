@@ -289,6 +289,7 @@ public class RemoveElementTest extends CommandServiceProvider {
     public void tearDown() throws CommandException {
         removeElement(itVerbund);
         removeElement(organization);
+        removeElement(itNetwork);
 
         // clean up the parents of imported cnatreeelements
         removeAllElementsByType(ImportBsiGroup.TYPE_ID);
@@ -296,5 +297,6 @@ public class RemoveElementTest extends CommandServiceProvider {
 
         this.itVerbund = null;
         this.organization = null;
+        this.itNetwork = null;
     }
 }

@@ -35,7 +35,7 @@ import sernet.verinice.service.commands.crud.LoadReportElementWithLinks;
 /**
  * Test class for command ReportElementWithLinks
  */
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
+@TransactionConfiguration(transactionManager = "txManager")
 @Transactional
 @SuppressWarnings("restriction")
 public class ReportElementWithLinksCommandTest extends HibernateInstanceOfInterfaceTest {

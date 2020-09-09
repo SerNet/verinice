@@ -47,7 +47,7 @@ import sernet.verinice.service.commands.LoadElementByUuid;
  * This test checks whether entity instances loaded by Hibernate that contain
  * proxies implement interfaces defined in the Entity classes.
  */
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
+@TransactionConfiguration(transactionManager = "txManager")
 @Transactional
 @SuppressWarnings("restriction")
 public class HibernateInstanceOfInterfaceTest extends CommandServiceProvider {

@@ -3,6 +3,8 @@ package sernet.verinice.service.linktable;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bp.elements.BpThreat;
@@ -13,6 +15,8 @@ import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationCache;
 import sernet.verinice.service.test.AbstractModernizedBaseProtection;
 
+@Transactional
+@TransactionConfiguration(transactionManager = "txManager")
 public class BpRiskValuePropertyAdapterTest extends AbstractModernizedBaseProtection {
 
     @Test

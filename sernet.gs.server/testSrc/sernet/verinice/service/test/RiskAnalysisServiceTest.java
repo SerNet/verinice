@@ -23,7 +23,6 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
-import org.junit.After;
 import org.junit.Test;
 
 import sernet.verinice.interfaces.CommandException;
@@ -50,12 +49,6 @@ public class RiskAnalysisServiceTest extends BeforeEachVNAImportHelper {
 
     @Resource(name = "riskAnalysisService")
     RiskAnalysisService riskAnalysisService;
-
-    @Override
-    @After
-    public void tearDown() throws CommandException {
-        // Do nor delete data after testing
-    }
 
     @Test
     public void testRiskAnalysis() throws CommandException {

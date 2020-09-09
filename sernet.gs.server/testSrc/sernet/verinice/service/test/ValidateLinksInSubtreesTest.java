@@ -29,6 +29,7 @@ import sernet.verinice.model.bp.elements.Application;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.groups.ApplicationGroup;
 import sernet.verinice.model.common.CnALink;
+import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.ValidateLinksInSubtrees;
 
 public class ValidateLinksInSubtreesTest extends AbstractModernizedBaseProtection {
@@ -57,6 +58,7 @@ public class ValidateLinksInSubtreesTest extends AbstractModernizedBaseProtectio
         assertEquals(1, invalidLinks.size());
         CnALink invalidLink = invalidLinks.iterator().next();
         assertEquals("invalid_link_type", invalidLink.getRelationId());
+        commandService.executeCommand(new RemoveElement<>(network));
     }
 
 }

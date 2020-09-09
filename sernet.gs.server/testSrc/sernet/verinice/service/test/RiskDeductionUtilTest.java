@@ -8,7 +8,6 @@ import static org.junit.Assert.assertEquals;
 import java.util.Collections;
 
 import org.junit.Test;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,12 +25,10 @@ import sernet.verinice.service.bp.risk.RiskDeductionUtil;
  * @author urszeidler
  *
  */
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
+@TransactionConfiguration(transactionManager = "txManager")
 @Transactional
 public class RiskDeductionUtilTest extends AbstractModernizedBaseProtection {
 
-    @Transactional
-    @Rollback(true)
     @Test
     public void testRiskDeductionWithSparseConfig() throws Exception {
         ItNetwork itNetwork = createNewBPOrganization();
@@ -59,8 +56,6 @@ public class RiskDeductionUtilTest extends AbstractModernizedBaseProtection {
 
     }
 
-    @Transactional
-    @Rollback(true)
     @Test
     public void testDeductionOfFrequencyWithSafeguards() throws Exception {
 
@@ -97,8 +92,6 @@ public class RiskDeductionUtilTest extends AbstractModernizedBaseProtection {
 
     }
 
-    @Transactional
-    @Rollback(true)
     @Test
     public void setAndUnsetRiskProperties() throws Exception {
 
