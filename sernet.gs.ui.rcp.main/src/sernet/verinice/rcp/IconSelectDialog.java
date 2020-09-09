@@ -40,14 +40,9 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ColumnViewerEditor;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
@@ -219,29 +214,12 @@ public class IconSelectDialog extends Dialog {
         final int gdHeightSubtrahend = 100;
         final int iconRowSize = 10;
 
-        int style = SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION;
+        int style = SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.SINGLE;
         viewer = new TableViewer(parent, style);
         viewer.setContentProvider(new ArrayContentProvider());
 
         TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(viewer,
                 new FocusCellOwnerDrawHighlighter(viewer));
-        ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy(
-                viewer) {
-            @Override
-            protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event) {
-                boolean retVal = event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL
-                        || event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION;
-                retVal = retVal || (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED
-                        && event.keyCode == SWT.CR);
-                return retVal || event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
-            }
-        };
-
-        TableViewerEditor.create(viewer, focusCellManager, actSupport,
-                ColumnViewerEditor.TABBING_HORIZONTAL
-                        | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR
-                        | ColumnViewerEditor.TABBING_VERTICAL
-                        | ColumnViewerEditor.KEYBOARD_ACTIVATION);
 
         Table table = viewer.getTable();
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
