@@ -25,7 +25,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,11 +42,11 @@ import org.apache.commons.lang.math.RandomUtils;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.threeten.bp.LocalDate;
 
 import sernet.gs.service.VeriniceCharset;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
@@ -122,9 +121,9 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper {
         return false;
     }
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws MalformedURLException {
-        // nothing to do
+    @Before
+    public void enableAdminMode() {
+        authService.setRoles(new String[] { ApplicationRoles.ROLE_ADMIN });
     }
 
     @Override
