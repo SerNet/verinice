@@ -267,11 +267,6 @@ public class IconSelectDialog extends Dialog {
             imageColumn.setLabelProvider(new IconCellProvider(i));
             imageColumn.getColumn().setWidth(getThumbnailSize() + ICON_SPACING);
         }
-        // TableViewer seems to have issues if all columns use
-        // OwnerDrawLabelProviders, so we add an empty zero-width column
-        TableViewerColumn emptyColumn = new TableViewerColumn(viewer, SWT.LEFT);
-        emptyColumn.getColumn().setWidth(0);
-        emptyColumn.setLabelProvider(new ColumnLabelProvider());
 
         if (!dirComboModel.isEmpty()) {
             dirComboModel.setSelectedIndex(2);
