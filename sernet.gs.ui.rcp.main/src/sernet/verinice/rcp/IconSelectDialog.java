@@ -214,7 +214,7 @@ public class IconSelectDialog extends Dialog {
         final int gdHeightSubtrahend = 100;
         final int iconRowSize = 10;
 
-        int style = SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.SINGLE;
+        int style = SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.SINGLE | SWT.VIRTUAL;
         viewer = new TableViewer(parent, style);
         viewer.setContentProvider(new ArrayContentProvider());
 
