@@ -68,6 +68,7 @@ public class ScopeOnlyUserCompendiumAccessTest extends AbstractModernizedBasePro
         catalog1 = new ItNetwork(catalogModel);
         elementDao.saveOrUpdate(catalog1);
         catalog1.setScopeId(catalog1.getDbId());
+        elementDao.saveOrUpdate(catalog1);
 
         authService.setPermissionHandlingNeeded(true);
         authService.setUsername(userName);
