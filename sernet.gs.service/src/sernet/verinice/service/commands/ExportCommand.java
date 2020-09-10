@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -109,6 +110,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     private transient CacheManager manager = null;
     private transient Cache cache = null;
     private transient IBaseDao<CnATreeElement, Serializable> dao;
+    private transient Map<Integer, Collection<Integer>> elementIdsByParentId;
 
     public ExportCommand(final List<CnATreeElement> elements, final String sourceId,
             final boolean reImport) {
@@ -143,6 +145,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         this.riskAnalysisIdSet = new HashSet<>();
         this.exportedTypes = new HashSet<>();
         this.exportedEntityTypes = new HashSet<>();
+        this.elementIdsByParentId = new HashMap<>();
     }
 
     /*
@@ -246,11 +249,16 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     private void addToElementsCache(Integer scopeId) {
         DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class)
                 .add(Restrictions.eq("scopeId", scopeId));
-        RetrieveInfo retrieveInfo = RetrieveInfo.getPropertyChildrenInstance();
+        RetrieveInfo retrieveInfo = RetrieveInfo.getPropertyInstance();
         retrieveInfo.configureCriteria(criteria);
         @SuppressWarnings("unchecked")
         List<CnATreeElement> elementsToCache = getDao().findByCriteria(criteria);
-        elementsToCache.forEach(element -> getCache().put(new Element(element.getDbId(), element)));
+        elementsToCache.forEach(element -> {
+            elementIdsByParentId
+                    .computeIfAbsent(element.getParentId(), parentId -> new LinkedList<>())
+                    .add(element.getDbId());
+            getCache().put(new Element(element.getDbId(), element));
+        });
     }
 
     private SyncVnaSchemaVersion createVersionData() {
@@ -320,7 +328,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             log.debug("Call exportChildren in ExportCommand hashcode " + this.hashCode()
                     + "for object " + element.getTitle());
         }
-        final Set<CnATreeElement> children = element.getChildren();
+        final Set<CnATreeElement> children = getElementChildren(element);
         if (FinishedRiskAnalysis.TYPE_ID.equals(element.getTypeId())) {
             children.addAll(getRiskAnalysisOrphanElements(element));
         }
@@ -347,6 +355,24 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             }
         }
         return exportedChildren;
+    }
+
+    protected Set<CnATreeElement> getElementChildren(final CnATreeElement element) {
+        Collection<Integer> childIDs = elementIdsByParentId.get(element.getDbId());
+        if (childIDs == null) {
+            return Collections.emptySet();
+        }
+        HashSet<CnATreeElement> childrenFromCache = new HashSet<>(childIDs.size());
+        for (Integer childId : childIDs) {
+            Element entry = getCache().get(childId);
+            if (entry == null || entry.getValue() == null) {
+                log.info("Failed to look up children for " + element + " from cache");
+                return element.getChildren();
+            }
+            CnATreeElement elementFromCache = (CnATreeElement) entry.getValue();
+            childrenFromCache.add(elementFromCache);
+        }
+        return childrenFromCache;
     }
 
     private boolean checkElement(final CnATreeElement element) {

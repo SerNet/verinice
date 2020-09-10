@@ -196,7 +196,7 @@ public class ExportTask {
         // Hibernate's CriteriaLoader, depending on
         // the structure of the exported data (see issue VN-2648).
         // Split loading of children and links to prevent this from happening:
-        RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance();
+        RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
         ri.setLinksDown(false);
         ri.setLinksUp(false);
         element = dao.retrieve(element.getDbId(), ri);
