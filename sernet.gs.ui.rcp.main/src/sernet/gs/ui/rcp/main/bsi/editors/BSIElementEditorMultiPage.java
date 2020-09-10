@@ -47,6 +47,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.MultiPageEditorPart;
@@ -553,7 +554,14 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
 
     @Override
     public void setFocus() {
-        huiComposite.resetInitialFocus();
+        if (getActivePage() == 0) {
+            IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                    .getActivePage();
+            IEditorPart active = page.getActiveEditor();
+            if (active == this) {
+                huiComposite.resetInitialFocus();
+            }
+        }
     }
 
     @Override
