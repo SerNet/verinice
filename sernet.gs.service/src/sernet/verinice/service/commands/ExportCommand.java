@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -37,6 +38,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import de.sernet.sync.data.SyncData;
+import de.sernet.sync.data.SyncObject;
 import de.sernet.sync.mapping.SyncMapping;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
@@ -197,16 +199,14 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         final SyncVnaSchemaVersion formatVersion = createVersionData();
 
         final SyncData syncData = new SyncData();
-        final ExportTransaction exportTransaction = new ExportTransaction();
 
         if (log.isInfoEnabled()) {
             log.info("Exporting elements...");
         }
 
         for (final CnATreeElement element : elements) {
-            exportTransaction.setElement(element);
-            exportElement(exportTransaction);
-            syncData.getSyncObject().add(exportTransaction.getTarget());
+            SyncObject exported = exportElement(element);
+            syncData.getSyncObject().add(exported);
         }
 
         if (log.isInfoEnabled()) {
@@ -272,12 +272,13 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         this.exportRiskAnalysis = exportRiskAnalysis;
     }
 
-    private void exportElement(final ExportTransaction exportTransaction) throws CommandException {
-        final ExportTask task = new ExportTask(exportTransaction);
+    private SyncObject exportElement(final CnATreeElement element) throws CommandException {
+        final ExportTask task = new ExportTask(element);
         configureTask(task);
-        task.export();
+        SyncObject syncObject = task.export();
         getValuesFromTask(task);
-        exportChildren(exportTransaction);
+        syncObject.getChildren().addAll(exportChildren(task.getElement()));
+        return syncObject;
     }
 
     private void exportLinks(final SyncData syncData) {
@@ -294,46 +295,39 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         }
     }
 
-    private void exportChildren(final ExportTransaction transaction) throws CommandException {
+    private Collection<? extends SyncObject> exportChildren(final CnATreeElement element)
+            throws CommandException {
         if (log.isDebugEnabled()) {
             log.debug("Call exportChildren in ExportCommand hashcode " + this.hashCode()
-                    + "for object " + transaction.getElement().getTitle());
+                    + "for object " + element.getTitle());
         }
-        final CnATreeElement element = transaction.getElement();
         final Set<CnATreeElement> children = element.getChildren();
         if (FinishedRiskAnalysis.TYPE_ID.equals(element.getTypeId())) {
             children.addAll(getRiskAnalysisOrphanElements(element));
         }
 
-        final List<ExportTransaction> transactionList = new ArrayList<>();
+        final List<SyncObject> exportedChildren = new ArrayList<>();
 
         if (!children.isEmpty()) {
             for (final CnATreeElement child : children) {
                 if (log.isDebugEnabled()) {
                     log.debug("Create export job for child " + child.getDbId());
                 }
-                final ExportTransaction childTransaction = new ExportTransaction(child);
-                transactionList.add(childTransaction);
-                final ExportTask task = new ExportTask(childTransaction);
+                final ExportTask task = new ExportTask(child);
                 configureTask(task);
 
-                task.export();
-                if (task.getTransaction().getTarget() != null) {
-                    transaction.getTarget().getChildren().add(task.getTransaction().getTarget());
+                SyncObject exportedChild = task.export();
+                if (exportedChild != null) {
+                    exportedChildren.add(exportedChild);
+                    if (checkElement(child)) {
+                        exportedChild.getChildren().addAll(exportChildren(task.getElement()));
+                    }
                 }
                 getValuesFromTask(task);
+
             }
         }
-
-        if (log.isDebugEnabled() && !transactionList.isEmpty()) {
-            log.debug(transactionList.size() + " export threads finished.");
-        }
-
-        for (final ExportTransaction childTransaction : transactionList) {
-            if (checkElement(childTransaction.getElement())) {
-                exportChildren(childTransaction);
-            }
-        }
+        return exportedChildren;
     }
 
     private boolean checkElement(final CnATreeElement element) {
@@ -498,10 +492,10 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     }
 
     private CnATreeElement getElementFromTask(final ExportTask exportTask) {
-        if (exportTask == null || exportTask.getTransaction() == null) {
+        if (exportTask == null) {
             return null;
         }
-        return exportTask.getTransaction().getElement();
+        return exportTask.getElement();
     }
 
     private boolean isVeriniceArchive() {

@@ -60,7 +60,7 @@ public class ExportTask {
 
     private HUITypeFactory huiTypeFactory;
 
-    private ExportTransaction transaction;
+    private CnATreeElement element;
 
     private Set<CnALink> linkSet;
 
@@ -86,8 +86,8 @@ public class ExportTask {
 
     private ExportReferenceTypes exportReferenceTypes;
 
-    public ExportTask(ExportTransaction transaction) {
-        this.transaction = transaction;
+    public ExportTask(CnATreeElement element) {
+        this.element = element;
     }
 
     /**
@@ -101,11 +101,10 @@ public class ExportTask {
      * @return List<Element>
      * @throws CommandException
      */
-    public void export() throws CommandException {
+    public SyncObject export() throws CommandException {
 
         exportReferenceTypes = new ExportReferenceTypes(getCommandService());
 
-        CnATreeElement element = transaction.getElement();
         if (LOG.isDebugEnabled()) {
             LOG.debug("Exporting element: " + element.getUuid());
         }
@@ -120,7 +119,6 @@ public class ExportTask {
         String typeId = element.getTypeId();
         if (checkElement(element)) {
             element = hydrate(element);
-            transaction.setElement(element);
 
             String extId = ExportFactory.createExtId(element);
 
@@ -168,8 +166,6 @@ public class ExportTask {
                 getExportedEntityTypes().add(getHuiTypeFactory().getEntityType(Attachment.TYPE_ID));
             }
 
-            transaction.setTarget(syncObject);
-
             /**
              * Save source id to re-import element later
              */
@@ -180,9 +176,11 @@ public class ExportTask {
                 }
                 getChangedElementList().add(element);
             }
+            return syncObject;
         } else if (LOG.isDebugEnabled()) {
             LOG.debug("Element is not exported: Type " + typeId + ", uuid: " + element.getUuid());
         }
+        return null;
     }
 
     private CnATreeElement hydrate(CnATreeElement element) {
@@ -313,10 +311,6 @@ public class ExportTask {
         return commandService;
     }
 
-    public ExportTransaction getTransaction() {
-        return transaction;
-    }
-
     public Set<EntityType> getExportedEntityTypes() {
         if (exportedEntityTypes == null) {
             exportedEntityTypes = new HashSet<>();
@@ -412,5 +406,9 @@ public class ExportTask {
 
     public void setCache(Cache cache) {
         this.cache = cache;
+    }
+
+    public CnATreeElement getElement() {
+        return element;
     }
 }
