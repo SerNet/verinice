@@ -5,8 +5,8 @@ Element-Name: iso
 Element-Type: context
 Element-Version: 2.0
 Id: _mCQwkI9ZEeic2YXgdvyDUQ
-Runtime-Version: 2.3.0.201806262310
-Save-Time: 11/7/18 10:00 AM
+Runtime-Version: 2.5.0.202001211718
+Save-Time: 9/11/20 11:40 AM
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
 Content-Type: text/ecl
@@ -21,7 +21,16 @@ proc "create-iso-element" [val path] [val elementname] [val elementtype] [val ne
 }
 
 proc "create-iso-asset" [val path] [val elementname] {
-	create-iso-element $path $elementname "Neues Asset..." Asset
+    create-iso-element $path $elementname "Neues Asset..." Asset
+}
+
+proc "create-iso-person" [val path] [val elementname] {
+    get-view ISM | get-tree | select $path | get-menu -path "Neue Person..." | click
+    with [get-editor Person | get-section "" | get-editbox -after [get-label Nachname]] {
+        set-text $elementname
+        key-type "M1+s"
+    }
+    
 }
 
 proc "create-iso-org" [val elementname] {

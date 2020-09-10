@@ -217,6 +217,7 @@ catalina.base : ${server-work-dir}
 	    </condition>
 	 </fail>
     <echo>Tomcat server started</echo>
+	<copy file="${test-data}/MY_LIC.vnl" tofile="${server-work-dir}/verinice/WEB-INF/vnl/test-lic.vnl"/>
 </target>
 
 <target name="stop-tomcat-server" unless="no-server-deployment">
