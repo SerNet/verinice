@@ -153,7 +153,7 @@ public class LoadAncestorsTest extends CommandServiceProvider {
 
     @After
     public void removeElements() throws CommandException {
-        removeOrganization(organization);
+        removeElement(organization);
     }
 
     /**

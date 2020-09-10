@@ -101,20 +101,20 @@ public class RemoveElementTest extends CommandServiceProvider {
 
     @Test
     public void removeITVerbund() throws CommandException {
-        removeElement(itVerbund);
+        executeRemoveCommand(itVerbund);
         assertElementIsDeleted(itVerbund);
     }
 
     @Test
     public void removeOrganization() throws CommandException {
-        removeElement(organization);
+        executeRemoveCommand(organization);
         assertElementIsDeleted(organization);
     }
 
     @Test
     public void removeKategorieFromVerbund() throws CommandException {
         GebaeudeKategorie gebaeudeKategorie = createElement(GebaeudeKategorie.class, itVerbund);
-        removeElement(gebaeudeKategorie);
+        executeRemoveCommand(gebaeudeKategorie);
         assertElementIsDeleted(gebaeudeKategorie);
     }
 
@@ -122,7 +122,7 @@ public class RemoveElementTest extends CommandServiceProvider {
     public void removeElementFromKategorie() throws CommandException {
         GebaeudeKategorie gebaeudeKategorie = createElement(GebaeudeKategorie.class, itVerbund);
         Gebaeude gebaeude = createElement(Gebaeude.class, gebaeudeKategorie);
-        removeElement(gebaeude);
+        executeRemoveCommand(gebaeude);
         assertElementIsDeleted(gebaeude);
     }
 
@@ -130,7 +130,7 @@ public class RemoveElementTest extends CommandServiceProvider {
     public void removeParentKategorie() throws CommandException {
         GebaeudeKategorie gebaeudeKategorie = createElement(GebaeudeKategorie.class, itVerbund);
         Gebaeude gebaeude = createElement(Gebaeude.class, gebaeudeKategorie);
-        removeElement(gebaeudeKategorie);
+        executeRemoveCommand(gebaeudeKategorie);
         assertElementIsDeleted(gebaeude);
     }
 
@@ -144,7 +144,7 @@ public class RemoveElementTest extends CommandServiceProvider {
             for (int i = documents; i > 0; i--) {
                 createElement(Document.class, element);
             }
-            RemoveElement<CnATreeElement> removeCommand = removeElement(element);
+            RemoveElement<CnATreeElement> removeCommand = executeRemoveCommand(element);
 
             for (Document doc : documentList) {
                 assertElementIsDeleted(doc);
@@ -160,7 +160,7 @@ public class RemoveElementTest extends CommandServiceProvider {
 
         Configuration configuration = commandService.executeCommand(new CreateConfiguration(person))
                 .getConfiguration();
-        removeElement(person);
+        executeRemoveCommand(person);
         assertElementIsDeleted(person);
 
         configuration = commandService.executeCommand(new LoadConfiguration(person))
@@ -175,7 +175,7 @@ public class RemoveElementTest extends CommandServiceProvider {
 
         Configuration configuration = commandService.executeCommand(new CreateConfiguration(person))
                 .getConfiguration();
-        removeElement(person);
+        executeRemoveCommand(person);
         assertElementIsDeleted(person);
 
         configuration = commandService.executeCommand(new LoadConfiguration(person))
@@ -190,7 +190,7 @@ public class RemoveElementTest extends CommandServiceProvider {
 
         Configuration configuration = commandService.executeCommand(new CreateConfiguration(person))
                 .getConfiguration();
-        removeElement(person);
+        executeRemoveCommand(person);
         assertElementIsDeleted(person);
 
         configuration = commandService.executeCommand(new LoadConfiguration(person))
@@ -215,7 +215,7 @@ public class RemoveElementTest extends CommandServiceProvider {
         ImportBsiGroup importBsiGroup = createElement(ImportBsiGroup.class, bSIModel);
         ITVerbund itVerbund = createElement(ITVerbund.class, importBsiGroup);
 
-        removeElement(itVerbund);
+        executeRemoveCommand(itVerbund);
         assertElementIsDeleted(itVerbund);
     }
 
@@ -242,11 +242,11 @@ public class RemoveElementTest extends CommandServiceProvider {
         for (CnATreeElement element : elements) {
             if (element instanceof ITVerbund) {
                 element = loadElement(element.getSourceId(), element.getExtId());
-                removeElement((ITVerbund) element);
+                executeRemoveCommand((ITVerbund) element);
                 assertElementIsDeleted(element);
             } else if (element instanceof Organization) {
                 element = loadElement(element.getSourceId(), element.getExtId());
-                removeElement((Organization) element);
+                executeRemoveCommand((Organization) element);
                 assertElementIsDeleted(element);
             }
         }
@@ -270,7 +270,7 @@ public class RemoveElementTest extends CommandServiceProvider {
         return createElementCommand.getNewElement();
     }
 
-    private <T extends CnATreeElement> RemoveElement<T> removeElement(T element)
+    private <T extends CnATreeElement> RemoveElement<T> executeRemoveCommand(T element)
             throws CommandException {
         RemoveElement<T> removeCommand = new RemoveElement<T>(element);
         return commandService.executeCommand(removeCommand);
@@ -281,15 +281,15 @@ public class RemoveElementTest extends CommandServiceProvider {
         loadElementByTypeId = commandService.executeCommand(loadElementByTypeId);
 
         for (CnATreeElement element : loadElementByTypeId.getElementList()) {
-            removeElement(element);
+            executeRemoveCommand(element);
         }
     }
 
     @After
     public void tearDown() throws CommandException {
-        removeElement(itVerbund);
-        removeElement(organization);
-        removeElement(itNetwork);
+        executeRemoveCommand(itVerbund);
+        executeRemoveCommand(organization);
+        executeRemoveCommand(itNetwork);
 
         // clean up the parents of imported cnatreeelements
         removeAllElementsByType(ImportBsiGroup.TYPE_ID);

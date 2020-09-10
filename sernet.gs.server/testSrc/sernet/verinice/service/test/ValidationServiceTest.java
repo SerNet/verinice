@@ -20,7 +20,6 @@ package sernet.verinice.service.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import java.util.LinkedList;
@@ -51,7 +50,6 @@ import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.model.validation.CnAValidation;
 import sernet.verinice.service.commands.LoadElementByUuid;
-import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.service.commands.UpdateElementEntity;
 import sernet.verinice.service.commands.crud.LoadElementForEditor;
@@ -229,20 +227,6 @@ public class ValidationServiceTest extends AbstractModernizedBaseProtection {
         deleteValidations(element);
         removeElement(element);
         LOG.debug("Element " + uuid + " deleted");
-    }
-
-    private void removeElement(CnATreeElement element) {
-        RemoveElement<CnATreeElement> deleteElement = new RemoveElement<>(element);
-        try {
-            commandService.executeCommand(deleteElement);
-            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(
-                    element.getUuid());
-            command = commandService.executeCommand(command);
-            CnATreeElement e2 = command.getElement();
-            assertNull("Organization was not deleted.", e2);
-        } catch (CommandException e) {
-            LOG.error("Error while deleting element", e);
-        }
     }
 
     private void deleteValidations(CnATreeElement element) throws CommandException {

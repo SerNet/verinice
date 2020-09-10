@@ -163,7 +163,7 @@ public class AttachmentTest extends CommandServiceProvider {
             assertNull("Addition was not deleted.", addition);
         }
         checkOrganization(org);
-        removeOrganization(org);
+        removeElement(org);
     }
 
     private AttachmentFile loadFileDataFromDB(Attachment attachmentFromDB) throws CommandException {

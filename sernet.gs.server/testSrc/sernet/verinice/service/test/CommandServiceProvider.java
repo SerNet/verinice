@@ -307,20 +307,13 @@ public abstract class CommandServiceProvider extends UuidLoader {
                 (equals) == (value == element.getEntity().getInt(propertyId)));
     }
 
-    /**
-     * Removes all with {@link #registerElementsWithUuid(String)} registered
-     * Elements from the Database.
-     * 
-     * @throws CommandException
-     */
-    protected void removeOrganization(Organization org) throws CommandException {
-        RemoveElement<CnATreeElement> removeCommand = new RemoveElement<>(org);
+    protected void removeElement(CnATreeElement element) throws CommandException {
+        RemoveElement<CnATreeElement> removeCommand = new RemoveElement<>(element);
         commandService.executeCommand(removeCommand);
 
-        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<>(org.getUuid());
+        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<>(element.getUuid());
         command = commandService.executeCommand(command);
-        CnATreeElement element = command.getElement();
-        assertNull("organization " + org.getUuid() + " was not deleted.", element);
+        assertNull("Element " + element.getUuid() + " was not deleted.", command.getElement());
     }
 
     protected CnATreeElement updateElement(CnATreeElement element) throws CommandException {
