@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +30,7 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.junit.matchers.JUnitMatchers;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -178,6 +180,18 @@ public class ValidationServiceTest extends AbstractModernizedBaseProtection {
         validations = getSingleElementValidations(room);
         assertEquals(0, validations.size());
 
+        deleteElement(itNetwork);
+    }
+
+    @Test
+    public void testGetPropertyTypesToValidate() throws CommandException {
+        ItNetwork itNetwork = createNewBPOrganization();
+        validationService.createValidationForSingleElement(itNetwork);
+
+        List<String> propertyTypesToValidate = validationService
+                .getPropertyTypesToValidate(itNetwork.getEntity(), itNetwork.getDbId());
+        assertEquals(propertyTypesToValidate.size(), 1);
+        assertThat(propertyTypesToValidate, JUnitMatchers.hasItem(ItNetwork.PROP_QUALIFIER));
         deleteElement(itNetwork);
     }
 

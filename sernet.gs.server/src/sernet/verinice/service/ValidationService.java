@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
@@ -473,18 +474,20 @@ public class ValidationService implements IValidationService {
     public List<String> getPropertyTypesToValidate(Entity entity, Integer dbid) {
 
         ServerInitializer.inheritVeriniceContextState();
-
+        List<CnAValidation> existingValidationsForElement = getValidations(null, dbid);
+        Set<String> typesForExistingValidations = existingValidationsForElement.stream()
+                .map(CnAValidation::getPropertyId).collect(Collectors.toSet());
         List<String> failedValidationPropertyTypes = new ArrayList<>(0);
         for (Object pElement : getHuiTypeFactory().getEntityType(entity.getEntityType())
                 .getAllPropertyTypes()) {
             if (pElement instanceof PropertyType) {
-                if (isValidationExistant(dbid, ((PropertyType) pElement).getId())) {
+                if (typesForExistingValidations.contains(((PropertyType) pElement).getId())) {
                     failedValidationPropertyTypes.add(((PropertyType) pElement).getId());
                 }
             } else if (pElement instanceof PropertyGroup) {
                 PropertyGroup pGroup = (PropertyGroup) pElement;
                 for (PropertyType pType : pGroup.getPropertyTypes()) {
-                    if (isValidationExistant(dbid, pType.getId())) {
+                    if (typesForExistingValidations.contains(((PropertyType) pElement).getId())) {
                         failedValidationPropertyTypes.add(pType.getId());
                     }
                 }
