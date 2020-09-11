@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,12 +53,18 @@ public class AccountServiceTest extends CommandServiceProvider {
     private static final String LOGIN_B = "login_b";
     private static final String LOGIN_C = "login_c";
     private static final String LOGIN_D = "login_d";
+    private static final String LOGIN_LOCAL_ADMIN_A = "login_local_a";
+    private static final String LOGIN_LOCAL_ADMIN_B = "login_local_b";
 
     private static final String FIRST_NAME_A = "first_a";
     private static final String FIRST_NAME_B = "first_b";
+    private static final String FIRST_NAME_LOCAL_ADMIN_A = "first_local_a";
+    private static final String FIRST_NAME_LOCAL_ADMIN_B = "first_local_b";
 
     private static final String FAMILY_NAME_A = "family_a";
     private static final String FAMILY_NAME_B = "family_b";
+    private static final String FAMILY_NAME_LOCAL_ADMIN_A = "family_local_a";
+    private static final String FAMILY_NAME_LOCAL_ADMIN_B = "family_local_b";
 
     private static final String ACCOUNT_GROUP_A = "test_1";
     private static final String ACCOUNT_GROUP_B = "test_2";
@@ -222,11 +229,26 @@ public class AccountServiceTest extends CommandServiceProvider {
     @Rollback(true)
     @Test
     public void testLocalAdmin() throws Exception {
+        authService.setUsername(LOGIN_LOCAL_ADMIN_A);
         authService.setRoles(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        authService.setPermissionHandlingNeeded(true);
+
         List<Configuration> configurations = accountService
                 .findAccounts(AccountSearchParameterFactory.createLoginParameter(getLoginName()));
         assertTrue("Account was found: " + getLoginName(), configurations.isEmpty());
+
+        configurations = accountService.findAccounts(
+                AccountSearchParameterFactory.createLoginParameter(LOGIN_LOCAL_ADMIN_A));
+        assertTrue("Account was not found: " + LOGIN_LOCAL_ADMIN_A, configurations.size() == 1);
+        assertTrue("Login was not: " + LOGIN_LOCAL_ADMIN_A,
+                configurations.get(0).getUser().equals(LOGIN_LOCAL_ADMIN_A));
+
+        configurations = accountService.findAccounts(
+                AccountSearchParameterFactory.createLoginParameter(LOGIN_LOCAL_ADMIN_B));
+        assertTrue("Account was found: " + LOGIN_LOCAL_ADMIN_B, configurations.isEmpty());
+
         authService.setRoles(new String[] { ApplicationRoles.ROLE_ADMIN });
+        authService.setPermissionHandlingNeeded(false);
     }
 
     @Transactional
@@ -309,7 +331,7 @@ public class AccountServiceTest extends CommandServiceProvider {
     public void testFindByScopeId() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(
                 AccountSearchParameterFactory.createScopeParameter(organization.getDbId()));
-        assertNumber(configurations, 7);
+        assertNumber(configurations, 9);
     }
 
     @Transactional
@@ -455,16 +477,43 @@ public class AccountServiceTest extends CommandServiceProvider {
                 .setFamilyName(FAMILY_NAME_A).setFirstName(FIRST_NAME_B);
         createAccount(personGroup, paramter);
 
+        paramter = new AccountSearchParameter();
+        paramter.setLogin(LOGIN_LOCAL_ADMIN_A).setIsLocalAdmin(true).setIsAdmin(false)
+                .setIsScopeOnly(false).setFamilyName(FAMILY_NAME_LOCAL_ADMIN_A)
+                .setFirstName(FIRST_NAME_LOCAL_ADMIN_A);
+        Set<Permission> permissions = new HashSet<>();
+        permissions.add(Permission.createPermission(null, LOGIN_LOCAL_ADMIN_A, true, true));
+        permissions.add(Permission.createPermission(null, LOGIN_LOCAL_ADMIN_B, true, false));
+        createAccount(personGroup, paramter, permissions);
+
+        paramter = new AccountSearchParameter();
+        paramter.setLogin(LOGIN_LOCAL_ADMIN_B).setIsLocalAdmin(true).setIsAdmin(false)
+                .setIsScopeOnly(false).setFamilyName(FAMILY_NAME_LOCAL_ADMIN_B)
+                .setFirstName(FIRST_NAME_LOCAL_ADMIN_B);
+        permissions = new HashSet<>();
+        permissions.add(Permission.createPermission(null, LOGIN_LOCAL_ADMIN_A, true, false));
+        permissions.add(Permission.createPermission(null, LOGIN_LOCAL_ADMIN_B, true, true));
+        createAccount(personGroup, paramter, permissions);
+
         return org;
     }
 
     private void createAccount(Group<CnATreeElement> personGroup, IAccountSearchParameter paramter)
             throws CommandException {
+        createAccount(personGroup, paramter, Collections.emptySet());
+    }
+
+    private void createAccount(Group<CnATreeElement> personGroup, IAccountSearchParameter paramter,
+            Set<Permission> permissions) throws CommandException {
         PersonIso person = (PersonIso) createNewElement(personGroup, PersonIso.class);
         uuidList.add(person.getUuid());
         person.setName(paramter.getFirstName());
         if (paramter.getFamilyName() != null) {
             person.setSurname(paramter.getFamilyName());
+        }
+        for (Permission permission : permissions) {
+            permission.setCnaTreeElement(person);
+            person.addPermission(permission);
         }
         saveElement(person);
         Configuration configuration = createAccount(person);
