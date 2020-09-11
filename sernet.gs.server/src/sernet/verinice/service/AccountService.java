@@ -72,9 +72,9 @@ public class AccountService implements IAccountService, Serializable {
 
     private static final Logger LOG = Logger.getLogger(AccountService.class);
 
-    private static final String HQL_SELECT_VISIBLE_PERSONS = "select p.cnaTreeElement.dbId from Permission p where"
+    private static final String HQL_SELECT_WRITABLE_PERSONS = "select p.cnaTreeElement.dbId from Permission p where"
             + " p.cnaTreeElement.objectType in ('" + Person.TYPE_ID + "','" + PersonIso.TYPE_ID
-            + "','" + BpPerson.TYPE_ID + "') and p.role in (:roles)";
+            + "','" + BpPerson.TYPE_ID + "') and p.role in (:roles) and p.writeAllowed = true";
 
     private IDao<AccountGroup, Serializable> accountGroupDao;
     private IBaseDao<Configuration, Serializable> configurationDao;
@@ -98,7 +98,7 @@ public class AccountService implements IAccountService, Serializable {
         List<Configuration> resultNoProps = getConfigurationDao().findByQuery(hqlQuery.getHql(),
                 hqlQuery.getParams());
         if (!isAdmin()) {
-            resultNoProps = getReadableAccounts(resultNoProps);
+            resultNoProps = getWritableAccounts(resultNoProps);
         }
         List<Configuration> result = initializeProperties(resultNoProps);
         Collections.sort(result);
@@ -106,18 +106,18 @@ public class AccountService implements IAccountService, Serializable {
     }
 
     /**
-     * Filter out the non-visible accounts by loading the read permissions for
+     * Filter out the non-writable accounts by loading the write permissions for
      * persons.
      * 
-     * @return Returns the readable accounts of the given accounts
+     * @return Returns the writable accounts of the given accounts
      */
-    private List<Configuration> getReadableAccounts(List<Configuration> accounts) {
+    private List<Configuration> getWritableAccounts(List<Configuration> accounts) {
         List<String> roles = Arrays
                 .asList(getConfigurationService().getRoles(getAuthService().getUsername()));
-        List<?> readablePersonIds = getPermissionDao().findByQuery(HQL_SELECT_VISIBLE_PERSONS,
+        List<?> writablePersonIds = getPermissionDao().findByQuery(HQL_SELECT_WRITABLE_PERSONS,
                 new String[] { "roles" }, new Object[] { roles });
         return accounts.stream()
-                .filter(account -> readablePersonIds.contains(account.getPerson().getDbId()))
+                .filter(account -> writablePersonIds.contains(account.getPerson().getDbId()))
                 .collect(Collectors.toList());
     }
 
@@ -269,7 +269,7 @@ public class AccountService implements IAccountService, Serializable {
         ServerInitializer.inheritVeriniceContextState();
         List<Configuration> configurations = getAllConfigurations();
         if (!isAdmin()) {
-            configurations = getReadableAccounts(configurations);
+            configurations = getWritableAccounts(configurations);
         }
         Set<String> accountNames = new HashSet<>();
 
