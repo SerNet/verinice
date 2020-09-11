@@ -114,7 +114,12 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
     }
 
     private Path getFullPath(String fileName) {
-        return Paths.get(getTempDirName()).resolve(fileName);
+        Path tmpDir = Paths.get(getTempDirName());
+        Path fullPath = tmpDir.resolve(fileName).normalize();
+        if (!fullPath.startsWith(tmpDir)) {
+            throw new IllegalArgumentException("File " + fileName + " not contained in archive");
+        }
+        return fullPath;
     }
 
     /**
@@ -136,14 +141,13 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
                 if (!ze.isDirectory()) {
                     String fileName = ze.getName();
                     Path newPath = tmpDir.resolve(fileName);
-                    Files.createDirectories(newPath.getParent());
 
                     boolean stillInTempFolder = newPath.normalize().startsWith(tmpDir);
                     if (!stillInTempFolder) {
                         throw new VeriniceArchiveNotValidException(
                                 "Path Traversal in VNA detected! Stopping import.");
                     }
-
+                    Files.createDirectories(newPath.getParent());
                     Files.copy(zis, newPath, StandardCopyOption.REPLACE_EXISTING);
 
                     if (LOG.isDebugEnabled()) {

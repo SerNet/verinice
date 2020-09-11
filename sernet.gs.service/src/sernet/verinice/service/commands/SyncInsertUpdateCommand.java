@@ -85,6 +85,7 @@ import sernet.verinice.service.bp.LoadBpModel;
 import sernet.verinice.service.iso27k.LoadImportObjectsHolder;
 import sernet.verinice.service.model.LoadModel;
 import sernet.verinice.service.sync.IVeriniceArchive;
+import sernet.verinice.service.sync.VeriniceArchiveNotValidException;
 
 /**
  * This command is used as a sub-command of {@link SyncCommand} to insert and
@@ -604,7 +605,13 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             String fileName = entry.getKey();
             Attachment attachment = entry.getValue();
             AttachmentFile attachmentFile = dao.findById(attachment.getDbId());
-            attachmentFile.setFileData(veriniceArchive.getFileData(fileName));
+            try {
+                attachmentFile.setFileData(veriniceArchive.getFileData(fileName));
+            } catch (IllegalArgumentException e) {
+                throw new VeriniceArchiveNotValidException(
+                        "Unable to retrieve file data for " + fileName + ", VNA file is corrupt",
+                        e);
+            }
             if (attachmentFile.getFileData() != null) {
                 saveFileCommand.setElement(attachmentFile);
                 saveFileCommand = getCommandService().executeCommand(saveFileCommand);

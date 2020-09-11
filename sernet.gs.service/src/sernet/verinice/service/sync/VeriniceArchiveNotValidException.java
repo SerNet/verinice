@@ -39,4 +39,8 @@ public class VeriniceArchiveNotValidException extends RuntimeException {
         super(message);
     }
 
+    public VeriniceArchiveNotValidException(String message, IllegalArgumentException cause) {
+        super(message, cause);
+    }
+
 }
