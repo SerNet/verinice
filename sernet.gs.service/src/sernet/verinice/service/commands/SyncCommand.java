@@ -21,8 +21,13 @@
  ******************************************************************************/
 package sernet.verinice.service.commands;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -33,7 +38,6 @@ import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXB;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import de.sernet.sync.sync.SyncRequest;
@@ -151,13 +155,18 @@ public class SyncCommand extends ChangeLoggingCommand
         try {
             long start = getStartTimestamp();
 
-            if (path != null && fileData == null) {
-                fileData = FileUtils.readFileToByteArray(new File(path));
-            }
-
             if (veriniceArchive == null) {
-                loadVeriniceArchive(fileData);
-                fileData = null;
+                if (fileData != null) {
+                    try (InputStream is = new ByteArrayInputStream(fileData)) {
+                        loadVeriniceArchive(is);
+                    }
+                    fileData = null;
+                } else if (path != null) {
+                    try (InputStream is = Files.newInputStream(Paths.get(path),
+                            StandardOpenOption.READ)) {
+                        loadVeriniceArchive(is);
+                    }
+                }
             }
 
             VnaSchemaVersion vnaSchemaVersion = getCommandService().getVnaSchemaVersion();
@@ -247,13 +256,12 @@ public class SyncCommand extends ChangeLoggingCommand
         return start;
     }
 
-    private void loadVeriniceArchive(byte[] syncRequestSerialized) {
-        byte[] request = (syncRequestSerialized != null) ? syncRequestSerialized.clone() : null;
+    private void loadVeriniceArchive(InputStream is) throws IOException {
         if (isVeriniceArchive()) {
-            veriniceArchive = new VeriniceArchive(request);
+            veriniceArchive = new VeriniceArchive(is);
         }
         if (SyncParameter.EXPORT_FORMAT_XML_PURE.equals(parameter.getFormat())) {
-            veriniceArchive = new PureXml(request);
+            veriniceArchive = new PureXml(is);
         }
         logXml();
     }

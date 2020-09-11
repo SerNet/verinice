@@ -20,10 +20,13 @@
 package sernet.verinice.service.sync;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Set;
 
 import javax.xml.bind.JAXB;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import de.sernet.sync.data.SyncData;
@@ -57,18 +60,14 @@ public class PureXml implements IVeriniceArchive {
 
     private Exception error;
 
-    public PureXml(byte[] veriniceXml) {
-        super();
-        setVeriniceXml(veriniceXml);
+    public PureXml(InputStream is) throws IOException {
+        veriniceXml = IOUtils.toByteArray(is);
     }
 
     public PureXml() {
-        super();
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.service.sync.IPureXml#getVeriniceXml()
      */
     @Override
@@ -127,11 +126,8 @@ public class PureXml implements IVeriniceArchive {
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.verinice.service.sync.IVeriniceArchive#getFileData(java.lang.String
-     * )
+     * @see sernet.verinice.service.sync.IVeriniceArchive#getFileData(java.lang.
+     * String )
      */
     @Override
     public byte[] getFileData(String fileName) {
@@ -139,8 +135,6 @@ public class PureXml implements IVeriniceArchive {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.service.sync.IVeriniceArchive#clear()
      */
     @Override
@@ -155,8 +149,6 @@ public class PureXml implements IVeriniceArchive {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.service.sync.IVeriniceArchive#getSyncRiskAnalysis()
      */
     @Override
@@ -167,8 +159,6 @@ public class PureXml implements IVeriniceArchive {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.service.sync.IVeriniceArchive#getRiskAnalysisXml()
      */
     @Override
@@ -179,8 +169,6 @@ public class PureXml implements IVeriniceArchive {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.service.sync.VnaSchemaChecker#checkVnaSchema()
      */
     @Override
@@ -200,12 +188,11 @@ public class PureXml implements IVeriniceArchive {
             return true;
         }
 
-
         importedVnaSchemaVersion = VnaSchemaVersion.createVnaSchemaVersion(syncVnaSchemaVersion);
         String schemaVersion = vnaSchemaVersion.getVnaSchemaVersion();
 
         // Every schema is compatible to itself:
-        if(schemaVersion.equals(importedVnaSchemaVersion.getVnaSchemaVersion())) {
+        if (schemaVersion.equals(importedVnaSchemaVersion.getVnaSchemaVersion())) {
             return true;
         }
 
@@ -219,20 +206,20 @@ public class PureXml implements IVeriniceArchive {
 
         // lookup if the compatible schemas of the current verinice is listed in
         // the compatible versions of the vna.
-        for(String compatibleSchemaVersion : vnaSchemaVersion.getCompatibleSchemaVersions()){
-            for(String syncSchemaVersion : importedVnaSchemaVersion.getCompatibleSchemaVersions()){
+        for (String compatibleSchemaVersion : vnaSchemaVersion.getCompatibleSchemaVersions()) {
+            for (String syncSchemaVersion : importedVnaSchemaVersion
+                    .getCompatibleSchemaVersions()) {
                 if (compatibleSchemaVersion.equals(syncSchemaVersion))
                     return true;
             }
         }
 
         error = new VnaSchemaException("No compatible version found!",
-                vnaSchemaVersion.getVnaSchemaVersion(), 
+                vnaSchemaVersion.getVnaSchemaVersion(),
                 importedVnaSchemaVersion.getCompatibleSchemaVersions());
 
         return false;
     }
-
 
     @Override
     public Exception getErrorCause() {

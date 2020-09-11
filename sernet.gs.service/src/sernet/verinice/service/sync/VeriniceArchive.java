@@ -21,11 +21,12 @@ package sernet.verinice.service.sync;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -57,13 +58,6 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
     public static final String RISK_XSD = "risk.xsd"; //$NON-NLS-1$
     public static final String README_TXT = "readme.txt"; //$NON-NLS-1$
 
-    public static final String[] ALL_STATIC_FILES = new String[] { VERINICE_XML, RISK_XML, DATA_XSD,
-            MAPPING_XSD, SYNC_XSD, RISK_XSD, README_TXT, };
-
-    static {
-        Arrays.sort(ALL_STATIC_FILES);
-    }
-
     private Risk riskData = null;
 
     private String uuid;
@@ -71,10 +65,6 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
     private String tempFileName = null;
 
     public static final String FILES = "files"; //$NON-NLS-1$
-
-    static final int BUFFER = 2048;
-
-    private Map<String, byte[]> contentMap;
 
     /**
      * Creates a verinice archive instance out of <code>data</code>.
@@ -84,7 +74,7 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
      * @throws VeriniceArchiveNotValidException
      *             In case of a missing entry
      */
-    public VeriniceArchive(byte[] data) throws VeriniceArchiveNotValidException {
+    public VeriniceArchive(InputStream data) throws VeriniceArchiveNotValidException {
         super();
         uuid = UUID.randomUUID().toString();
         if (LOG.isDebugEnabled()) {
@@ -101,22 +91,30 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
         }
     }
 
+    /**
+     * Creates a verinice archive instance out of <code>data</code>.
+     * 
+     * @param data
+     *            data of a verinice archive (zip archive)
+     * @throws VeriniceArchiveNotValidException
+     *             In case of a missing entry
+     */
+    public VeriniceArchive(byte[] data) throws VeriniceArchiveNotValidException {
+        this(new ByteArrayInputStream(data));
+    }
+
     @Override
     public byte[] getFileData(String fileName) {
-        String fullPath = getFullPath(fileName);
+        Path fullPath = getFullPath(fileName);
         try {
-            return FileUtils.readFileToByteArray(new File(fullPath));
-        } catch (Exception e) {
-            LOG.error("Error while loading file data: " + fullPath, e);
-            return null;
+            return Files.readAllBytes(fullPath);
+        } catch (IOException e) {
+            throw new RuntimeException("Error while loading file data: " + fullPath, e);
         }
     }
 
-    private String getFullPath(String fileName) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getTempDirName()).append(File.separator).append(fileName);
-        String fullPath = sb.toString();
-        return fullPath;
+    private Path getFullPath(String fileName) {
+        return Paths.get(getTempDirName()).resolve(fileName);
     }
 
     /**
@@ -126,50 +124,39 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
      *            Data of a zip archive
      * @throws IOException
      */
-    public void extractZipEntries(byte[] zipFileData) throws IOException {
-        byte[] buffer = new byte[1024];
-        ;
-        new File(getTempDirName()).mkdirs();
+    private void extractZipEntries(InputStream zipFileData) throws IOException {
+        Path tmpDir = Paths.get(getTempDirName());
+        Files.createDirectories(tmpDir);
         // get the zip file content
-        ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(zipFileData));
-        // get the zipped file list entry
-        ZipEntry ze = zis.getNextEntry();
+        try (ZipInputStream zis = new ZipInputStream(zipFileData)) {
+            // get the zipped file list entry
+            ZipEntry ze = zis.getNextEntry();
 
-        while (ze != null) {
-            if (!ze.isDirectory()) {
-                String fileName = ze.getName();
-                File newFile = new File(getTempDirName() + File.separator + fileName);
-                new File(newFile.getParent()).mkdirs();
+            while (ze != null) {
+                if (!ze.isDirectory()) {
+                    String fileName = ze.getName();
+                    Path newPath = tmpDir.resolve(fileName);
+                    Files.createDirectories(newPath.getParent());
 
-                boolean stillInTempFolder = newFile.toPath().normalize()
-                        .startsWith(getTempDirName());
-                if (!stillInTempFolder) {
-                    throw new VeriniceArchiveNotValidException(
-                            "Path Traversal in VNA detected! Stopping import.");
+                    boolean stillInTempFolder = newPath.normalize().startsWith(tmpDir);
+                    if (!stillInTempFolder) {
+                        throw new VeriniceArchiveNotValidException(
+                                "Path Traversal in VNA detected! Stopping import.");
+                    }
+
+                    Files.copy(zis, newPath, StandardCopyOption.REPLACE_EXISTING);
+
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("File unzipped: " + newPath.toAbsolutePath().toString());
+                    }
                 }
-
-                FileOutputStream fos = new FileOutputStream(newFile);
-
-                int len;
-                while ((len = zis.read(buffer)) > 0) {
-                    fos.write(buffer, 0, len);
-                }
-
-                fos.close();
-
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("File unzipped: " + newFile.getAbsoluteFile());
-                }
+                ze = zis.getNextEntry();
             }
-            ze = zis.getNextEntry();
+            zis.closeEntry();
         }
-        zis.closeEntry();
-        zis.close();
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.service.sync.IVeriniceArchive#getSyncRiskAnalysis()
      */
     @Override
@@ -181,16 +168,7 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
     }
 
     private boolean isRiskAnalysis() {
-        return new File(getFullPath(RISK_XML)).exists();
-    }
-
-    /**
-     * Returns all entry names of the archive.
-     * 
-     * @return all entry names
-     */
-    public Set<String> getEntrySet() {
-        return contentMap.keySet();
+        return Files.exists(getFullPath(RISK_XML));
     }
 
     /**
@@ -205,8 +183,6 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.service.sync.IVeriniceArchive#getRiskAnalysisXml()
      */
     @Override
@@ -214,23 +190,7 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
         return (isRiskAnalysis()) ? getFileData(RISK_XML) : null;
     }
 
-    /**
-     * Returns true if all necessary entries exist
-     * 
-     * @throws VeriniceArchiveNotValidException
-     *             In case of a missing entry
-     */
-    public void checkArchive() {
-        if (contentMap.get(VERINICE_XML) == null) {
-            throw new VeriniceArchiveNotValidException(
-                    "File missing in verinice archive: " + VERINICE_XML);
-        }
-
-    }
-
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.service.sync.IVeriniceArchive#clear()
      */
     @Override
