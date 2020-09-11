@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _z5JZ0NeEEei2hNb8h7sUBw
 Runtime-Version: 2.5.1.M3
-Save-Time: 9/8/20, 12:58 PM
+Save-Time: 9/15/20, 8:36 AM
 Testcase-Type: ecl
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
@@ -28,8 +28,12 @@ try -command {
 		select XYZXYZInformationsverbund | get-menu -path "Icon ändern..." | click
 		with [get-window Icon] {
 			get-combo -after [get-label Ordner] | select Grey
-			with [get-group "Wähle Icon" | get-table] {
-				get-cell 10 5 | double-click
+			with [get-group "Wähle Icon" | get-canvas] {
+				screen-shot-ui-control "icon-select-dialog.png"
+				key-type Down -times 11
+				key-type Right -times 5
+				screen-shot-ui-control "icon-select-dialog-icon-selected.png"
+				get-property "getSelection().GalleryItem[0].getData().toString()" | equals "tree-icons/Grey/Light.png" | verify-true
 			}
 			get-button OK | click
 		}

@@ -328,6 +328,7 @@
         <setEntry value="org.eclipse.jface.text.nl_it@default:false"/>
         <setEntry value="org.eclipse.jface.text@default:default"/>
         <setEntry value="org.eclipse.jface@default:default"/>
+        <setEntry value="org.eclipse.nebula.widgets.gallery@default:default"/>
         <setEntry value="org.eclipse.osgi.compatibility.state@default:false"/>
         <setEntry value="org.eclipse.osgi.nl_de@default:false"/>
         <setEntry value="org.eclipse.osgi.nl_it@default:false"/>

@@ -21,6 +21,7 @@ package sernet.verinice.rcp;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.DirectoryStream;
@@ -28,9 +29,6 @@ import java.nio.file.DirectoryStream.Filter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -39,15 +37,15 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TableViewerFocusCellManager;
-import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
+import org.eclipse.nebula.widgets.gallery.Gallery;
+import org.eclipse.nebula.widgets.gallery.GalleryItem;
+import org.eclipse.nebula.widgets.gallery.NoGroupRenderer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -59,9 +57,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
 
-import sernet.gs.service.CollectionUtil;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.verinice.iso27k.rcp.ComboModel;
 
@@ -78,14 +74,11 @@ public class IconSelectDialog extends Dialog {
 
     private static final int SIZE_Y = 370;
     private static final int SIZE_X = 485;
-    private static final int NUMBER_OF_COLUMNS = 10;
-    private static final int ICON_SPACING = 10;
-    private static final int THUMBNAIL_SIZE = 20;
+    private static final int ICON_SPACING = 6;
+    private static final int THUMBNAIL_SIZE = 25;
 
     private Combo dirCombo;
     private ComboModel<IconPathDescriptor> dirComboModel;
-
-    private TableViewer viewer;
 
     private IconPathDescriptor directory;
 
@@ -158,14 +151,7 @@ public class IconSelectDialog extends Dialog {
         dirCombo = new Combo(comp, SWT.VERTICAL | SWT.DROP_DOWN | SWT.BORDER | SWT.READ_ONLY);
         GridData gd = new GridData(SWT.FILL, SWT.TOP, true, false);
         dirCombo.setLayoutData(gd);
-        dirCombo.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                dirComboModel.setSelectedIndex(dirCombo.getSelectionIndex());
-                directory = dirComboModel.getSelectedObject();
-                loadIcons(directory.getPath());
-            }
-        });
+
         showComboValues();
 
         Group group = new Group(comp, SWT.NONE);
@@ -176,9 +162,46 @@ public class IconSelectDialog extends Dialog {
         gd.minimumWidth = SIZE_Y - gridDataSizeSubtrahend;
         gd.heightHint = SIZE_X - gridDataSizeSubtrahend;
         group.setLayoutData(gd);
+        Gallery gallery = new Gallery(group, SWT.V_SCROLL);
+        GridData gd2 = new GridData(SWT.FILL, SWT.FILL, true, true);
+        gd2.heightHint = SIZE_X - 100;
+        gallery.setLayoutData(gd2);
 
-        createTable(group);
+        NoGroupRenderer gr = new NoGroupRenderer();
+        gr.setItemSize(THUMBNAIL_SIZE, THUMBNAIL_SIZE);
+        gr.setMinMargin(ICON_SPACING);
+        gr.setAutoMargin(true);
+        gallery.setGroupRenderer(gr);
+        DefaultGalleryItemRenderer ir = new DefaultGalleryItemRenderer();
+        ir.setShowRoundedSelectionCorners(false);
+        gallery.setItemRenderer(ir);
 
+        dirCombo.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                dirComboModel.setSelectedIndex(dirCombo.getSelectionIndex());
+                directory = dirComboModel.getSelectedObject();
+                loadIcons(gallery, directory.getPath());
+            }
+        });
+        gallery.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                selectedPath = (String) e.data;
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Icon: " + selectedPath); //$NON-NLS-1$
+                }
+            }
+        });
+
+        if (!dirComboModel.isEmpty()) {
+            dirComboModel.setSelectedIndex(2);
+            dirCombo.select(2);
+            directory = dirComboModel.getSelectedObject();
+            loadIcons(gallery, directory.getPath());
+        } else {
+            loadIcons(gallery, ICON_DIRECTORY + "silk"); //$NON-NLS-1$
+        }
         group.layout();
 
         final Button defaultCheckbox = new Button(comp, SWT.CHECK);
@@ -195,68 +218,32 @@ public class IconSelectDialog extends Dialog {
         return comp;
     }
 
-    private void loadIcons(String path) {
+    private void loadIcons(Gallery gallery, String path) {
         Path internalDirectory = Paths.get(path);
         try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(internalDirectory,
                 ICON_FILE_FILTER)) {
             Stream<Path> icons = StreamSupport.stream(directoryStream.spliterator(), false);
-            List<Path> iconsAsList = icons.sorted().collect(Collectors.toList());
-            Collection<List<Path>> iconsInChunks = CollectionUtil.partition(iconsAsList,
-                    NUMBER_OF_COLUMNS);
-            viewer.setInput(iconsInChunks);
+            gallery.removeAll();
+
+            GalleryItem galleryGroup = new GalleryItem(gallery, SWT.NONE);
+
+            icons.sorted().forEach(icon -> {
+                try {
+                    Image image = ImageDescriptor.createFromURL(icon.toUri().toURL()).createImage();
+                    GalleryItem item = new GalleryItem(galleryGroup, SWT.NONE);
+                    item.addDisposeListener(e -> image.dispose());
+                    item.setData(getRelativePath(icon.toString()));
+                    item.setImage(image);
+                } catch (MalformedURLException e) {
+                    LOG.error("Error creating gallery item for " + icon, e);
+                }
+            });
         } catch (IOException e) {
             throw new RuntimeException("Failed to load icons from " + path, e);
         }
     }
 
-    private void createTable(Composite parent) {
-
-        final int gdHeightSubtrahend = 100;
-        final int iconRowSize = 10;
-
-        int style = SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.SINGLE | SWT.VIRTUAL;
-        viewer = new TableViewer(parent, style);
-        viewer.setContentProvider(new ArrayContentProvider());
-
-        TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(viewer,
-                new FocusCellOwnerDrawHighlighter(viewer));
-
-        Table table = viewer.getTable();
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gd.heightHint = SIZE_X - gdHeightSubtrahend;
-        table.setLayoutData(gd);
-
-        table.addListener(SWT.MeasureItem,
-                event -> event.height = getThumbnailSize() + ICON_SPACING);
-
-        viewer.addSelectionChangedListener(event -> {
-            ViewerCell cell = focusCellManager.getFocusCell();
-            if (cell != null) {
-                selectedPath = getRelativePath(
-                        ((List<Path>) cell.getElement()).get(cell.getColumnIndex()).toString());
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Icon: " + selectedPath); //$NON-NLS-1$
-                }
-            }
-        });
-
-        for (int i = 0; i < iconRowSize; i++) {
-            TableViewerColumn imageColumn = new TableViewerColumn(viewer, SWT.LEFT);
-            imageColumn.setLabelProvider(new IconCellProvider(i));
-            imageColumn.getColumn().setWidth(getThumbnailSize() + ICON_SPACING);
-        }
-
-        if (!dirComboModel.isEmpty()) {
-            dirComboModel.setSelectedIndex(2);
-            dirCombo.select(2);
-            directory = dirComboModel.getSelectedObject();
-            loadIcons(directory.getPath());
-        } else {
-            loadIcons(ICON_DIRECTORY + "silk"); //$NON-NLS-1$
-        }
-    }
-
-    protected String getRelativePath(String path) {
+    private static String getRelativePath(String path) {
         String relative = path;
         if (path.contains(ICON_DIRECTORY)) {
             relative = path.substring(path.indexOf(ICON_DIRECTORY));
@@ -265,10 +252,6 @@ public class IconSelectDialog extends Dialog {
             relative = relative.replace('\\', '/');
         }
         return relative;
-    }
-
-    protected int getThumbnailSize() {
-        return THUMBNAIL_SIZE;
     }
 
     public String getSelectedPath() {
