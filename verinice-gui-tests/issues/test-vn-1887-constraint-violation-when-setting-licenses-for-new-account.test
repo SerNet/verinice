@@ -1,0 +1,149 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _HQDeEI9NEeic2YXgdvyDUQ,_lGnj8Ix1Eei2UKUDmonytQ,_mCQwkI9ZEeic2YXgdvyDUQ
+Element-Name: test-vn-1887-constrain-violation-when-setting-licenses-for-new-account
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _VDN98PNSEeqwCKWASISJvg
+Runtime-Version: 2.5.0.202001211718
+Save-Time: 10/5/20 10:37 AM
+Tags: ISO, issue, serverOnlyTest
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Test if an account can be created when a license file is present. Also when the account is newly created.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+log "test-vn-1887-constrain-violation-when-setting-licenses-for-new-account"
+
+ism-import-vna  MY_LIC.vna
+
+get-view ISM | get-tree | select "importierte Objekte/MyLic [64522f]/Controls [64522f]/Control [64522f]"
+screen-shot-window "lic-content.png"
+
+get-button Accounts | click
+get-view Accounts | get-button "New Account..." | click
+
+with [get-window Account] {
+	get-table | select testPerson -column Element
+	get-button "Weiter >" | click
+	with [get-editbox -after [get-label "Login Name"]] {
+		set-text aaaaa
+	}
+	try {
+		with [get-editbox -after [get-label Kennwort]] {
+			set-text [decrypt "0sf0Ku9NJzUSf4qa+L0SaA=="]
+		}
+		with [get-editbox -after [get-label "Kennwort wiederholen"]] {
+			set-text [decrypt "0sf0Ku9NJzUSf4qa+L0SaA=="]
+		}
+	} -catch {
+		// when we disable the authentification in the webapp these textfields don't exist so we skip them silently
+	}
+	with [get-editbox -after [get-label "E-Mail"]] {
+		set-text aaaaa
+	}
+	//get-button Fertigstellen | click
+	
+    screen-shot Account "create-account-2.png"
+	get-button "Weiter >" | click
+    screen-shot Account  "create-account-3.png"
+    get-button "Weiter >" | click
+    screen-shot Account  "create-account-4.png"
+    get-button "Weiter >" | click
+    screen-shot Account  "create-account-5.png"
+    get-button "1. MY_LIC - 2021-01-01 - (0/5)" | check
+    screen-shot Account  "create-account-5-checked.png"
+    get-button "Weiter >" | click
+    screen-shot Account "create-account-6.png"
+    get-button "Weiter >" | click
+    screen-shot Account "create-account-7.png"
+    get-button "Weiter >" | click
+    screen-shot Account "create-account-8.png"
+    get-button Fertigstellen | click
+	
+}
+
+
+create-iso-person "importierte Objekte/MyLic [64522f]/Personen [64522f]" "person1_lic"
+
+get-view Accounts | get-button "New Account..." | click 
+with [get-window Account] {
+    get-table | select "person1_lic" -column Element
+    get-button "Weiter >" | click 
+    get-editbox -after [get-label "Login Name"] | set-text qqqq
+    get-editbox -after [get-label "E-Mail"] | set-text qqqqqq
+    with [get-button "Weiter >"] {
+        click 
+        click 
+        click 
+    }
+    screen-shot Account "create-account-with-lic-5.png"
+    get-button "1. MY_LIC - 2021-01-01 - (1/5)" | check
+    with [get-button "Weiter >"] {
+        click 
+        click 
+        click 
+    }
+    screen-shot Account "create-account-with-lic-8.png"
+    get-button Fertigstellen | click 
+}
+
+get-view Accounts | get-table | select [get-item -path MyLic -index 1] | select [get-item -path MyLic -index 1] 
+    | double-click
+screen-shot Account "verify-account-1.png"
+with [get-window Account] {
+    with [get-button "Weiter >"] {
+        click 
+        screen-shot Account "verify-account-2.png"
+        click 
+        screen-shot Account "verify-account-3.png"
+        click 
+        screen-shot Account "verify-account-4.png"
+        click 
+        screen-shot Account "verify-account-5.png"
+        click 
+        screen-shot Account "verify-account-6.png"
+        click 
+        screen-shot Account "verify-account-7.png"
+    }
+    get-button Fertigstellen | click 
+}
+
+get-view Accounts | get-table | select [get-item -path MyLic -index 1] | select [get-item -path MyLic -index 1] 
+    | double-click
+screen-shot Account "verify-account-1.png"
+with [get-window Account] {
+        get-editbox -after [get-label "Login Name"] | set-text "changed-name"
+        get-editbox -after [get-label "E-Mail"] | set-text "changed-email"
+        get-button "Weiter >"| click 
+        get-button "Weiter >"| click 
+        get-button "Weiter >"| click 
+        get-button "1. MY_LIC - 2021-01-01 - (2/5)" | uncheck
+        get-button "1. MY_LIC - 2021-01-01 - (1/5)" | check
+        get-button Abbrechen | click 
+}
+
+// refresh the view
+get-view Accounts | close
+get-button Accounts | click
+
+// test that nothing hanged
+with [get-view Accounts | get-table] {
+    get-item -path MyLic -index 1 | get-property "columns[2]" | equals qqqq | verify-true
+    get-item -path MyLic -index 1 | get-property "columns[3]" | equals "person1_lic" | verify-true
+    get-item -path MyLic -index 1 | get-property "columns[4]" | equals qqqqqq | verify-true
+}
+
+delete-iso-model "importierte Objekte/MyLic [64522f]"
+log "test-vn-1887-constrain-violation-when-setting-licenses-for-new-account"
+
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

@@ -19,38 +19,30 @@
  ******************************************************************************/
 package sernet.verinice.rcp.account;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.threeten.bp.LocalDate;
 
-import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.licensemanagement.LicenseManagementEntry;
 import sernet.verinice.model.licensemanagement.LicenseManagementException;
-import sernet.verinice.service.commands.SaveConfiguration;
 
 /**
  * Page for {@link AccountWizard} that enables to configure
@@ -62,16 +54,35 @@ import sernet.verinice.service.commands.SaveConfiguration;
  */
 public class LicenseMgmtPage extends BaseWizardPage {
 
+    private static final Logger LOG = Logger.getLogger(LicenseMgmtPage.class);
+    private static final String BASIC_LICENSE_FORMAT = "%s - %s - (%s/%s)"; //$NON-NLS-1$
+    public static final String PAGE_NAME = "account-wizard-license-mgmt-page"; //$NON-NLS-1$
+
+    /**
+     * Hold the license data.
+     */
+    private static class LicenseEntry {
+        private static final String LICENSE_FORMAT = "%d. %s - %s - (%d/%d) %s"; //$NON-NLS-1$
+        private Integer index;
+        private Integer currentUser;
+        private String plainLicenseId;
+        private LocalDate validUntil;
+        private Integer validUser;
+        private String contentId;
+        private String validMsg;
+
+        private String toLicenseLabel(Integer offset) {
+            return String.format(LICENSE_FORMAT, index, contentId, validUntil, currentUser + offset,
+                    validUser, validMsg);
+        }
+    }
+
     ILicenseManagementService licenseService;
 
-    private static final Logger LOG = Logger.getLogger(LicenseMgmtPage.class);
-    public static final String PAGE_NAME = "account-wizard-license-mgmt-page"; //$NON-NLS-1$
+    private String user;
 
     private Set<String> assignedLicenseIds;
     private Set<Button> checkboxes;
-    private Map<String, LicenseManagementEntry> licenseEntryMap;
-    private Map<String, String> licenseIdToLabelMap;
-    private String user;
     private boolean sendEmail;
     private Configuration account;
 
@@ -79,14 +90,12 @@ public class LicenseMgmtPage extends BaseWizardPage {
         super(PAGE_NAME);
         this.licenseService = ServiceFactory.lookupLicenseManagementService();
         this.checkboxes = new HashSet<>();
-        this.licenseEntryMap = new HashMap<>();
-        this.licenseIdToLabelMap = new HashMap<>();
         this.account = account;
     }
 
+
     @Override
     protected void initGui(Composite composite) {
-
         GridData containerGridData = new GridData();
         containerGridData.horizontalAlignment = SWT.LEFT;
         containerGridData.verticalAlignment = SWT.CENTER;
@@ -100,13 +109,15 @@ public class LicenseMgmtPage extends BaseWizardPage {
         setMessage(Messages.LicenseMgmtPage_Text);
 
         try {
-            List<LicenseManagementEntry> licenseList = getSortedExistingLicenses();
-
-            if (!licenseList.isEmpty()) {
-                for (int index = 0; index < licenseList.size(); index++) {
-                    createLicenseIdCheckbox(composite, licenseList.get(index), index);
-                }
-            } else {
+            Set<LicenseManagementEntry> licenseList = licenseService.getExistingLicenses();
+            List<LicenseEntry> lEntries = licenseList.stream().map(this::createLicenseEntry)
+                    .sorted((o1, o2) -> o1.toLicenseLabel(0).compareTo(o2.toLicenseLabel(0)))
+                    .collect(Collectors.toList());
+            lEntries.stream().forEach(le -> {
+                le.index = lEntries.indexOf(le) + 1;
+                createCheckbox(composite, le);
+            });
+            if (lEntries.isEmpty()) {
                 Label label = new Label(composite, SWT.NONE);
                 label.setText(Messages.LicenseMgmtPage_NoLicenseAvailable);
             }
@@ -159,225 +170,15 @@ public class LicenseMgmtPage extends BaseWizardPage {
         }
     }
 
-    /**
-     * Sorts all in the system existing licenses by their label as shown in the
-     * wizard page and returns them as a list
-     * 
-     * @return
-     * @throws LicenseManagementException
-     */
-    private List<LicenseManagementEntry> getSortedExistingLicenses()
-            throws LicenseManagementException {
-        List<LicenseManagementEntry> licenseList = new ArrayList<>();
-        licenseList.addAll(licenseService.getExistingLicenses());
-        Collections.sort(licenseList, new Comparator<LicenseManagementEntry>() {
-            NumericStringComparator ncs = new NumericStringComparator();
-
-            @Override
-            public int compare(LicenseManagementEntry entry1, LicenseManagementEntry entry2) {
-                String licenseId1 = licenseService.decrypt(entry1,
-                        LicenseManagementEntry.COLUMN_LICENSEID);
-                String licenseId2 = licenseService.decrypt(entry2,
-                        LicenseManagementEntry.COLUMN_LICENSEID);
-                String label1 = getLicenseLabel(licenseId1, false);
-                String label2 = getLicenseLabel(licenseId2, false);
-                return ncs.compare(label1, label2);
-            }
-        });
-        return licenseList;
-    }
-
-    /**
-     * Creates a check box for a given instance of
-     * {@link de.sernet.model.licensemanagement.LicenseManagementEntry} , adds
-     * an increasing index number as a prefix and optionally a expired label
-     */
-    private void createLicenseIdCheckbox(Composite composite, LicenseManagementEntry entry,
-            int index) {
-        Button checkbox = new Button(composite, SWT.CHECK);
-
-        String plainLicenseId = licenseService.decrypt(entry,
-                LicenseManagementEntry.COLUMN_LICENSEID);
-
-        String checkboxText = getCheckboxText(entry, index, true);
-        checkbox.setText(checkboxText);
-        licenseEntryMap.put(plainLicenseId, entry);
-        checkbox.addSelectionListener(getCheckboxSelectionListener());
-        checkboxes.add(checkbox);
-
-        validateCheckboxStatus();
-    }
-
-    private String getCheckboxText(LicenseManagementEntry entry, int index, boolean update) {
-        String plainLicenseId = licenseService.decrypt(entry,
-                LicenseManagementEntry.COLUMN_LICENSEID);
-        LocalDate validUntil = licenseService.decrypt(entry,
-                LicenseManagementEntry.COLUMN_VALIDUNTIL);
-
-        StringBuilder sb = new StringBuilder();
-        if (update) {
-            index += 1;
-        }
-        sb.append(index).append(". ");
-        sb.append(getLicenseLabel(plainLicenseId, update));
-        if (validUntil.isBefore(LocalDate.now())) {
-            sb.append(Messages.LicenseMgmtPage_License_Expired);
-        }
-        return sb.toString();
-    }
-
-    private SelectionListener getCheckboxSelectionListener() {
-        return new SelectionListener() {
-            @Override
-            public void widgetSelected(SelectionEvent event) {
-                if (event.getSource() instanceof Button) {
-                    final Button checkbox = (Button) event.getSource();
-                    Display.getDefault().asyncExec(() -> triggerLicenseCheckbox(checkbox));
-                }
-            }
-
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
-                // do nothing
-            }
-        };
-    }
-
-    private void triggerLicenseCheckbox(Button checkbox) {
-        String checkboxText = checkbox.getText();
-        String licenseIdLabel = getLicenseLabelFromCheckboxText(checkboxText);
-        String licenseId = getLicenseIdForLabel(licenseIdLabel);
-        try {
-            if (checkbox.getSelection()) {
-                getAccount(false).addLicensedContentId(licenseId);
-                assignedLicenseIds.add(licenseId);
-            } else {
-                getAccount(false).removeLicensedContentId(licenseId);
-                assignedLicenseIds.remove(licenseId);
-            }
-            SaveConfiguration<Configuration> saveConfig = new SaveConfiguration<>(getAccount(false),
-                    false);
-            ServiceFactory.lookupCommandService().executeCommand(saveConfig);
-            refreshCheckboxLabel(checkbox);
-        } catch (CommandException e) {
-            LOG.error("Something went wrong with adding license-assignments", e);
-        }
-        validateCheckboxStatus();
-    }
-
-    protected void refreshCheckboxLabel(Button checkbox) {
-        if (checkbox != null) {
-            String licenseIdLabel = getLicenseIdForLabel(
-                    getLicenseLabelFromCheckboxText(checkbox.getText()));
-            LicenseManagementEntry entry = licenseEntryMap.get(licenseIdLabel);
-            int index = Integer.parseInt(checkbox.getText().substring(0, 1));
-            String updatedText = getCheckboxText(entry, index, false);
-            checkbox.setText(updatedText);
-        }
-    }
-
-    /**
-     * Gets the licenseId that belongs to a given label of the wizard page
-     */
-    private String getLicenseIdForLabel(String label) {
-        for (Entry<String, String> entry : licenseIdToLabelMap.entrySet()) {
-            if (label.equals(entry.getValue())) {
-                return entry.getKey();
-            }
-        }
-        return label;
-    }
-
-    /**
-     * Removes index count and optionally added "expired"-hint from check box
-     * label
-     */
-    private String getLicenseLabelFromCheckboxText(String checkboxText) {
-        if (checkboxText.endsWith(Messages.LicenseMgmtPage_License_Expired)) {
-            checkboxText = checkboxText.substring(checkboxText.indexOf(". ") + 2,
-                    checkboxText.lastIndexOf(Messages.LicenseMgmtPage_License_Expired));
-        } else {
-            checkboxText = checkboxText.substring(checkboxText.indexOf(". ") + 2);
-        }
-        return checkboxText;
-    }
-
-    /**
-     * Ensures that check boxes are only selectable if the license they are
-     * representing still has free slots to assign if no slots available and
-     * check box unchecked, check box gets disabled if no slots available and
-     * check box checked, check box gets enabled if license is expired and check
-     * box unchecked, check box gets disabled if license if expired and check
-     * box checked, check box gets enabled and disabled when unchecked
-     */
-    private void validateCheckboxStatus() {
-        try {
-            for (Button checkbox : checkboxes) {
-                String checkboxText = checkbox.getText();
-
-                String licenseIdLabel = getLicenseIdForLabel(
-                        getLicenseLabelFromCheckboxText(checkboxText));
-
-                LicenseManagementEntry entry = licenseEntryMap.get(licenseIdLabel);
-                boolean hasFreeSlots = licenseService
-                        .hasLicenseIdAssignableSlots(entry.getLicenseID());
-                if (hasFreeSlots) {
-                    checkbox.setEnabled(true);
-                } else {
-                    if (!checkbox.getSelection()) {
-                        checkbox.setEnabled(false);
-                    }
-                }
-                if (checkbox.getText().endsWith(Messages.LicenseMgmtPage_License_Expired)) {
-                    checkbox.setEnabled(false);
-                }
-                if (checkbox.getSelection()) {
-                    checkbox.setEnabled(true);
-                }
-            }
-        } catch (LicenseManagementException e) {
-            String msg = "Error validating license-Data";
-            ExceptionUtil.log(e, msg);
-            LOG.error(msg, e);
-        }
-    }
-
-    /**
-     * Initializes the check boxes of the wizardpage with the data given by the
-     * wizard
-     */
     @Override
     protected void initData() throws Exception {
-        for (Button checkbox : checkboxes) {
-            String label = getLicenseIdForLabel(
-                    getLicenseLabelFromCheckboxText(checkbox.getText()));
-
-            if (assignedLicenseIds.contains(label)) {
-                checkbox.setSelection(true);
-                checkbox.setEnabled(true);
-            }
-        }
+        // no further setup
     }
+
 
     @Override
     public boolean isPageComplete() {
         return true;
-    }
-
-    /**
-     * @return the assignedLicenseIds
-     */
-    public Set<String> getAssignedLicenseIds() {
-        assignedLicenseIds = new HashSet<>();
-        for (Button checkbox : checkboxes) {
-            if (checkbox.getSelection()) {
-                String checkboxText = checkbox.getText();
-                String licenseLabel = getLicenseLabelFromCheckboxText(checkboxText);
-                String licenseId = getLicenseIdForLabel(licenseLabel);
-                assignedLicenseIds.add(licenseId);
-            }
-        }
-        return assignedLicenseIds;
     }
 
     /**
@@ -388,36 +189,15 @@ public class LicenseMgmtPage extends BaseWizardPage {
         this.assignedLicenseIds = assignedLicenseIds;
     }
 
-    public String getUser() {
-        return user;
-    }
-
     public void setUser(String user) {
         this.user = user;
-    }
-
-    private String getLicenseLabel(String licenseId, boolean update) {
-        if (update && licenseIdToLabelMap.containsKey(licenseId)) {
-            return licenseIdToLabelMap.get(licenseId);
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append(getLicenseLabelString(licenseId));
-        String label = sb.toString();
-        licenseIdToLabelMap.put(licenseId, label);
-        return label;
     }
 
     /**
      * Builds the string that labels a given licenseId in the client
      */
     public static String getLicenseLabelString(String licenseId) {
-        StringBuilder sb = new StringBuilder();
-        final String singleSpace = " ";
         final String licenseIdDelimiter = "###";
-        final String openBracket = "(";
-        final String closingBracket = ")";
-        final String dash = "-";
-        final String slash = "/";
         StringTokenizer tokenizer = new StringTokenizer(licenseId, licenseIdDelimiter);
         if (tokenizer.countTokens() != 3) {
             return licenseId;
@@ -429,11 +209,8 @@ public class LicenseMgmtPage extends BaseWizardPage {
         String assignedUsers = String.valueOf(ServiceFactory.lookupLicenseManagementService()
                 .getLicenseIdAllocationCount(licenseId));
 
-        sb.append(contentId).append(singleSpace);
-        sb.append(dash).append(singleSpace).append(validUntil).append(singleSpace).append(dash);
-        sb.append(singleSpace).append(openBracket).append(assignedUsers);
-        sb.append(slash).append(validUsers).append(closingBracket);
-        return sb.toString();
+        return String.format(BASIC_LICENSE_FORMAT, contentId, validUntil, validUsers,
+                assignedUsers);
     }
 
     public boolean isSendEmail() {
@@ -444,15 +221,52 @@ public class LicenseMgmtPage extends BaseWizardPage {
         this.sendEmail = sendEmail;
     }
 
-    public Configuration getAccount(boolean reload) {
-        if (reload) {
-            account = ServiceFactory.lookupAccountService().getAccountById(account.getDbId());
-        }
-        return account;
-    }
-
     public void setAccount(Configuration account) {
         this.account = account;
+    }
+
+
+    private void createCheckbox(Composite composite, final LicenseEntry licenseEntry) {
+        final Button checkbox = new Button(composite, SWT.CHECK);
+        checkboxes.add(checkbox);
+        boolean isLicenseAssigned = assignedLicenseIds.contains(licenseEntry.plainLicenseId);
+        final Integer uncheckOffset = isLicenseAssigned ? -1 : 0;
+        final Integer checkOffset = isLicenseAssigned ? 0 : 1;
+
+        checkbox.setSelection(isLicenseAssigned);
+        checkbox.setEnabled(licenseEntry.currentUser < licenseEntry.validUser || isLicenseAssigned);
+        checkbox.setText(licenseEntry.toLicenseLabel(0));
+        checkbox.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if (checkbox.getSelection()) {
+                    account.addLicensedContentId(licenseEntry.plainLicenseId);
+                    assignedLicenseIds.add(licenseEntry.plainLicenseId);
+                    checkbox.setText(licenseEntry.toLicenseLabel(checkOffset));
+                } else {
+                    account.removeLicensedContentId((licenseEntry.plainLicenseId));
+                    assignedLicenseIds.remove(licenseEntry.plainLicenseId);
+                    checkbox.setText(licenseEntry.toLicenseLabel(uncheckOffset));
+                }
+            }
+        });
+    }
+
+    /**
+     * create the data from the license entry.
+     */
+    private LicenseEntry createLicenseEntry(LicenseManagementEntry entry) {
+        LicenseEntry dh = new LicenseEntry();
+        dh.plainLicenseId = licenseService.decrypt(entry, LicenseManagementEntry.COLUMN_LICENSEID);
+        dh.contentId = licenseService.decrypt(entry, LicenseManagementEntry.COLUMN_CONTENTID);
+        dh.validUntil = licenseService.decrypt(entry, LicenseManagementEntry.COLUMN_VALIDUNTIL);
+        dh.validUser = licenseService.decrypt(entry, LicenseManagementEntry.COLUMN_VALIDUSERS);
+    
+        dh.currentUser = licenseService.getLicenseIdAllocationCount(dh.plainLicenseId);
+        dh.validMsg = dh.validUntil.isBefore(LocalDate.now())
+                ? Messages.LicenseMgmtPage_License_Expired
+                : "";
+        return dh;
     }
 
 }
