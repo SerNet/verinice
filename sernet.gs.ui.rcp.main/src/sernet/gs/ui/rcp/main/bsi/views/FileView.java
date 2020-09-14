@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -600,7 +601,9 @@ public class FileView extends RightsEnabledView
                     if (!tempDir.endsWith(String.valueOf(File.separatorChar))) {
                         tempDir = tempDir + File.separatorChar;
                     }
-                    String path = tempDir + attachment.getFileName();
+                    String fileName = attachment.getFileName();
+                    fileName = Paths.get(fileName).getFileName().toString();
+                    String path = tempDir + fileName;
                     try {
                         attachmentFile.writeFileData(path);
                         Program.launch(path);
