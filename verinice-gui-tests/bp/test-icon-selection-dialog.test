@@ -1,0 +1,84 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _lGnj8Ix1Eei2UKUDmonytQ,_kD9CUIxPEei2UKUDmonytQ,_4GRncI0bEei2UKUDmonytQ
+Element-Name: test-icon-selection-dialog
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _6nluAOX7EeqROoOxl5ROXA
+Runtime-Version: 2.5.1.M3
+Save-Time: 9/15/20, 11:48 AM
+Tags: bp
+Testcase-Type: ecl
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+log "Icon selection dialog"
+
+get-view Objektbrowser | close
+
+proc "select-verify-icon-mouse" [val element -input] [val type] [val x] [val y] [val expected]{
+	with [get-view "Modernisierter IT-Grundschutz" | get-tree ] {
+		select $element | get-menu -path "Icon ändern..." | click -metaKeys ""
+	
+		with [get-window Icon] {
+		    with [get-combo -after [get-label Ordner]] {
+		        select $type
+		    }
+		    with [get-group "Wähle Icon" | get-canvas] {
+		        mouse-press $x $y button1
+		        screen-shot-ui-control [concat "icon-select-dialog-icon-selected-" $x "-" $y".png"]
+		        get-property "getSelection().GalleryItem[0].getData().toString()" | equals $expected | verify-true
+		    }
+		    get-button OK | click -metaKeys ""
+		}
+	
+		get-item $element | get-property "image.path" | equals [concat "sernet.gs.ui.rcp.main/" $expected] | verify-true
+		screen-shot-ui-control [concat "icon-select-dialog-icon-selected-" $x "-" $y "-done.png"]
+	}
+}
+
+proc "select-verify-icon-keyboard" [val element -input] [val type] [val index] [val expected]{
+	with [get-view "Modernisierter IT-Grundschutz" | get-tree ] {
+		select $element | get-menu -path "Icon ändern..." | click -metaKeys ""
+	
+		with [get-window Icon] {
+		    with [get-combo -after [get-label Ordner]] {
+		        select $type
+		    }
+		    with [get-group "Wähle Icon" | get-canvas] {
+		        key-type Right -times $index
+		        screen-shot-ui-control [concat "icon-select-dialog-icon-selected-" $index ".png"]
+				get-property "getSelection().GalleryItem[0].getData().toString()" | equals $expected | verify-true
+		    }
+		    get-button OK | click -metaKeys ""
+		}
+	
+		get-item $element | get-property "image.path" | equals [concat "sernet.gs.ui.rcp.main/" $expected] | verify-true
+		screen-shot-ui-control [concat "icon-select-dialog-icon-selected-" $index "-done.png"]
+	}
+}
+
+create-bpmodel IconInformationsverbund
+
+with IconInformationsverbund {
+	select-verify-icon-mouse Blue 185 322 "tree-icons/Blue/Light.png"
+	select-verify-icon-mouse Blue 85 322 "tree-icons/Blue/Info2.png"
+	
+	select-verify-icon-keyboard Blue 78 "tree-icons/Blue/Email.png"
+	
+	select-verify-icon-keyboard Grey 106 "tree-icons/Grey/Light.png"
+	select-verify-icon-keyboard Grey 102 "tree-icons/Grey/Info.png"
+	
+	select-verify-icon-mouse Grey 185 322 "tree-icons/Grey/Light.png"
+	select-verify-icon-mouse Grey 85 322 "tree-icons/Grey/Info2.png"
+	
+}
+
+delete-bpelement IconInformationsverbund
+
+log "Icon selection dialog ended"
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
