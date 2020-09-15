@@ -97,11 +97,7 @@ public class DateSelectionControl extends AbstractHuiControl {
         containerLData.grabExcessHorizontalSpace = true;
         container.setLayoutData(containerLData);
 
-        if (isWindows()) {
-            dateTime = new DateTime(container, SWT.DATE | SWT.MEDIUM | SWT.DROP_DOWN);
-        } else {
-            dateTime = new DateTime(container, SWT.CALENDAR | SWT.MEDIUM | SWT.DROP_DOWN);
-        }
+        dateTime = new DateTime(container, SWT.DATE | SWT.MEDIUM | SWT.DROP_DOWN);
 
         GridData label36LData = new GridData();
         label36LData.verticalAlignment = GridData.CENTER;
