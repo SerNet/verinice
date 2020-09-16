@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _da8IYI6UEemQEJ_oU9hklw
-Runtime-Version: 2.5.0.202001211718
-Save-Time: 7/3/20 5:23 PM
+Runtime-Version: 2.5.1.M3
+Save-Time: 9/16/20, 12:15 PM
 Tags: bp, performance
 Testcase-Type: ecl
 
@@ -42,8 +42,10 @@ try -command {
 	delete-bpelement $path_in_tree_verbund1
 }
 
+start-time-measure "import-vna-modplast"
 bp-import-vna "modplast-1.1.vna"
 wait-for-import "Modernisierter IT-Grundschutz" $path_in_tree_modplast
+stop-time-measure "import-vna-modplast" | write-lines [concat "file:" $basedir "/import-measure.csv"] true
 try -command {
 	repeat -times 3 -command {
 		measure-export "export-modplast" $path_in_tree_modplast
