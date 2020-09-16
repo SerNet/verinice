@@ -30,7 +30,7 @@ import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
 
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
+@TransactionConfiguration(transactionManager = "txManager")
 @Transactional
 public class ImportPerformanceTest extends CommandServiceProvider {
 

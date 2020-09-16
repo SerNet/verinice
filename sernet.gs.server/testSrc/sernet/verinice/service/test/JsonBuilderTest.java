@@ -52,7 +52,7 @@ import sernet.verinice.model.iso27k.PersonGroup;
 import sernet.verinice.search.JsonBuilder;
 import sernet.verinice.service.commands.UpdatePermissions;
 
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
+@TransactionConfiguration(transactionManager = "txManager")
 @Transactional
 public class JsonBuilderTest extends AbstractModernizedBaseProtection {
 
@@ -63,7 +63,6 @@ public class JsonBuilderTest extends AbstractModernizedBaseProtection {
 
     @Test
     @Transactional
-    @Rollback(true)
     public void testNonIndexableElements() {
         Assert.assertEquals(null, jsonBuilder.getJson(new ImportBpGroup(null)));
         Assert.assertEquals(null, jsonBuilder.getJson(new ImportIsoGroup(null)));
@@ -72,7 +71,6 @@ public class JsonBuilderTest extends AbstractModernizedBaseProtection {
 
     @Test
     @Transactional
-    @Rollback(true)
     public void testIndexBpPerson() throws CommandException {
         ItNetwork network = createNewBPOrganization();
         PersonGroup persons = createGroup(network, PersonGroup.class);
@@ -87,7 +85,6 @@ public class JsonBuilderTest extends AbstractModernizedBaseProtection {
 
     @Test
     @Transactional
-    @Rollback(true)
     public void testIndexElementLoadedWithoutPermissions() throws CommandException {
         ItNetwork network = createNewBPOrganization();
         PersonGroup persons = createGroup(network, PersonGroup.class);

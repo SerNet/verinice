@@ -19,7 +19,7 @@ import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.test.AbstractModernizedBaseProtection;
 
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
+@TransactionConfiguration(transactionManager = "txManager")
 @Transactional
 public class LoadCnAElementByEntityTypeIdTest extends AbstractModernizedBaseProtection {
 

@@ -59,7 +59,7 @@ import sernet.verinice.service.commands.crud.LoadElementForEditor;
 /**
  *
  */
-@TransactionConfiguration(transactionManager="txManager", defaultRollback=false)
+@TransactionConfiguration(transactionManager = "txManager")
 @Transactional
 public class ValidationServiceTest extends AbstractModernizedBaseProtection {
     

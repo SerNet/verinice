@@ -21,7 +21,7 @@ import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateContext;
 import sernet.verinice.service.test.AbstractModernizedBaseProtection;
 
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
+@TransactionConfiguration(transactionManager = "txManager")
 @Transactional
 public class RiskServiceImplTest extends AbstractModernizedBaseProtection {
 

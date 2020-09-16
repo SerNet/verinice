@@ -32,7 +32,6 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.matchers.JUnitMatchers;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,7 +53,7 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.test.AbstractModernizedBaseProtection;
 
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
+@TransactionConfiguration(transactionManager = "txManager")
 @Transactional
 public class ModelingTest extends AbstractModernizedBaseProtection {
 
@@ -64,7 +63,6 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void modelModuleOnItNetwork() throws CommandException {
         CatalogModel catalogModel = loadCatalogModel();
@@ -142,7 +140,6 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void modelTwoModules() throws CommandException {
         CatalogModel catalogModel = loadCatalogModel();
@@ -245,7 +242,6 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void modelOneOfTwoModulesSharingAThreat() throws CommandException {
         CatalogModel catalogModel = loadCatalogModel();
@@ -313,7 +309,6 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void modelWithoutSafeguards() throws CommandException {
         CatalogModel catalogModel = loadCatalogModel();
@@ -380,7 +375,6 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void modelModuleOnItNetworkWithDummySafeguards() throws CommandException {
         CatalogModel catalogModel = loadCatalogModel();
@@ -438,7 +432,6 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void modelWithDummySafeguardsWhereSafeguardGroupExistsInOtherElement()
             throws CommandException {
@@ -478,7 +471,6 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void modelModuleWithOneExistingRequirement() throws CommandException {
         CatalogModel catalogModel = loadCatalogModel();
@@ -565,7 +557,6 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void modelModuleWithExistingSafeguard() throws CommandException {
         CatalogModel catalogModel = loadCatalogModel();
@@ -616,7 +607,6 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void modelModuleWithExistingRequirementAndSafeguardButNoLinks() throws CommandException {
         CatalogModel catalogModel = loadCatalogModel();
@@ -673,7 +663,6 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void modelModuleWithExistingRequirementAndSafeguardAndLinkBetweenRequirementAndTargetObject()
             throws CommandException {
@@ -730,7 +719,6 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void modelModuleWithExistingThreat() throws CommandException {
         CatalogModel catalogModel = loadCatalogModel();
@@ -780,7 +768,6 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void modelModuleWithExistingElementsButNoLinks() throws CommandException {
         CatalogModel catalogModel = loadCatalogModel();
@@ -856,7 +843,6 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void doNotCopyThreatThatIsNotLinkedToModeledRequirements() throws CommandException {
         CatalogModel catalogModel = loadCatalogModel();
@@ -928,7 +914,6 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void updateExistingRequirement() throws CommandException {
         CatalogModel catalogModel = loadCatalogModel();
@@ -974,7 +959,6 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void updateExistingRequirementWithRemovedVersion() throws CommandException {
         CatalogModel catalogModel = loadCatalogModel();
@@ -1020,7 +1004,6 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void doNotUpdateExistingRequirementWithNewerRelease() throws CommandException {
         CatalogModel catalogModel = loadCatalogModel();
@@ -1063,7 +1046,6 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void updateExistingSafeguardGroup() throws CommandException {
         CatalogModel catalogModel = loadCatalogModel();
@@ -1111,7 +1093,6 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void updateExistingThreatWithRemovedVersion() throws CommandException {
         CatalogModel catalogModel = loadCatalogModel();
@@ -1163,7 +1144,6 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void doNotCopyRemovedElementIfNotPresentInExistingModule() throws CommandException {
         CatalogModel catalogModel = loadCatalogModel();
@@ -1199,7 +1179,6 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void doNotCopyRemovedElementIfNotPresentInNewModule() throws CommandException {
         CatalogModel catalogModel = loadCatalogModel();
@@ -1232,7 +1211,6 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void doNotCopyRemovedGroupIfNotPresentInNewModule() throws CommandException {
         CatalogModel catalogModel = loadCatalogModel();

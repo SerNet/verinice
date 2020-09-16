@@ -19,7 +19,6 @@ import javax.annotation.Resource;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,7 +44,7 @@ import sernet.verinice.service.commands.UpdateElementEntity;
 import sernet.verinice.service.test.helper.util.BFSTravers;
 import sernet.verinice.service.test.helper.util.CnATreeTraverser;
 
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
+@TransactionConfiguration(transactionManager = "txManager")
 @Transactional
 public class AccountServiceTest extends CommandServiceProvider {
 
@@ -94,7 +93,6 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testCreateGroup() {
 
@@ -105,7 +103,6 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testDeleteAccountGroup() {
 
@@ -116,7 +113,6 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testDeleteAccountGroupByName() {
 
@@ -135,7 +131,6 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testAddRole() {
         addRoles();
@@ -168,7 +163,6 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testDeleteRole() {
         addRoles();
@@ -193,7 +187,6 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void countConnectObjectsForGroup() {
         addRoles();
@@ -214,7 +207,6 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testListGroupNames() {
 
@@ -226,7 +218,6 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testLocalAdmin() throws Exception {
         authService.setUsername(LOGIN_LOCAL_ADMIN_A);
@@ -252,7 +243,6 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testFindByLogin() throws Exception {
         List<Configuration> configurations = accountService
@@ -266,7 +256,6 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testFindByFirstName() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(
@@ -280,7 +269,6 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testFindByFamilyName() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(
@@ -294,7 +282,6 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testFindByIsAdmin() throws Exception {
         List<Configuration> configurations = accountService
@@ -310,7 +297,6 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testFindByIsScopeOnly() throws Exception {
         List<Configuration> configurations = accountService
@@ -326,7 +312,6 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testFindByScopeId() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(
@@ -335,7 +320,6 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testFindByAll() throws Exception {
         IAccountSearchParameter parameter = AccountSearchParameterFactory
@@ -358,7 +342,6 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testFindByIsNotAdmin() throws Exception {
         List<Configuration> configurations2 = accountService
@@ -370,7 +353,6 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testGetById() throws Exception {
         List<Configuration> configurations = accountService
@@ -387,7 +369,6 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testRemove() throws Exception {
         List<Configuration> configurations = accountService
@@ -397,7 +378,6 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testDisable() throws Exception {
         List<Configuration> configurations = accountService

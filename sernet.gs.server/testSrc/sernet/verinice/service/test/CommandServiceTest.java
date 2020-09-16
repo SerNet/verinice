@@ -35,7 +35,6 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,7 +71,7 @@ import sernet.verinice.service.commands.crud.LoadElementForEditor;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
+@TransactionConfiguration(transactionManager = "txManager")
 @Transactional
 public class CommandServiceTest extends CommandServiceProvider {
 
@@ -98,7 +97,6 @@ public class CommandServiceTest extends CommandServiceProvider {
      */
     @Test
     @Transactional
-    @Rollback(true)
     public void testOpenEditor() throws Exception {
         Calendar now = Calendar.getInstance();
         currentDate = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT)
@@ -307,7 +305,6 @@ public class CommandServiceTest extends CommandServiceProvider {
 
     @Test
     @Transactional
-    @Rollback(true)
     public void testVnaImport() throws Exception {
         importVna();
 

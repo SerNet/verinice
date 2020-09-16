@@ -39,7 +39,7 @@ import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
 
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
+@TransactionConfiguration(transactionManager = "txManager")
 @Transactional
 public class ScopeOnlyUserCompendiumAccessTest extends AbstractModernizedBaseProtection {
 

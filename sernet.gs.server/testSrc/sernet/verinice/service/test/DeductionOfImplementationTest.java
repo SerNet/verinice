@@ -35,7 +35,6 @@ import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,7 +61,7 @@ import sernet.verinice.service.commands.UpdateElement;
  * @author uz[at]sernet.de
  *
  */
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
+@TransactionConfiguration(transactionManager = "txManager")
 @Transactional
 public class DeductionOfImplementationTest extends AbstractModernizedBaseProtection {
     private static final Logger LOG = Logger.getLogger(DeductionOfImplementationTest.class);
@@ -92,7 +91,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
      * @throws CommandException
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testSetImplementationStatusToRequirement() throws CommandException {
         Duo<Safeguard, BpRequirement> duo = createTestElements();
@@ -124,7 +122,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
      *
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testDefaultDeductionAfterLink() throws CommandException {
         Duo<Safeguard, BpRequirement> duo = createTestElements();
@@ -141,7 +138,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
      *
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testDefaultDeductionAfterLinkOppositeDirection() throws CommandException {
         Duo<Safeguard, BpRequirement> duo = createTestElements();
@@ -158,7 +154,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
      *
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testDefaultDeductionBeforeLink() throws CommandException {
         Duo<Safeguard, BpRequirement> duo = createTestElements();
@@ -197,7 +192,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
      *
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testDefaultDeductionBeforeLinkOppositeDirection() throws CommandException {
         Duo<Safeguard, BpRequirement> duo = createTestElements();
@@ -235,7 +229,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
      *
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testDefaultDeductionSwitchedOff() throws CommandException {
         Duo<Safeguard, BpRequirement> duo = createTestElements();
@@ -257,7 +250,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
      *
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testDefaultDeductionSwitchedOffOppositeDirection() throws CommandException {
         Duo<Safeguard, BpRequirement> duo = createTestElements();
@@ -275,7 +267,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testDeductionWorksWhenRemovingLink() throws CommandException {
         ItNetwork itNetwork = createNewBPOrganization();
@@ -306,7 +297,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void resetImplementationStatusWhenRemovingLastLink() throws CommandException {
         ItNetwork itNetwork = createNewBPOrganization();
@@ -332,7 +322,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testDeductionWorksWhenRemovingSafeguard() throws CommandException {
         ItNetwork itNetwork = createNewBPOrganization();
@@ -365,7 +354,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void resetImplementationStatusWhenRemovingLastSafeguard() throws CommandException {
         ItNetwork itNetwork = createNewBPOrganization();
@@ -392,7 +380,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void resetImplementationStatusWhenRemovingLastSafeguardWhenOtherDownwardLinkPresent()
             throws CommandException {
@@ -423,7 +410,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void resetImplementationStatusWhenEnablingStatusDeductionAndNoSafeguardsAreLinked()
             throws CommandException {
@@ -448,7 +434,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testDeductionWorksWhenRemovingSafeguardGroup() throws CommandException {
         ItNetwork itNetwork = createNewBPOrganization();
@@ -484,7 +469,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
      * Two requirements linked to one safeguard. Opposite link direction.
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testOneSafeGuardTwoRequirements() throws Exception {
         ItNetwork itNetwork = createNewBPOrganization();
@@ -509,7 +493,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
      * Two requirements linked to one safeguard .
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testOneSafeGuardTwoRequirementsOppositeDirection() throws Exception {
         ItNetwork itNetwork = createNewBPOrganization();
@@ -536,7 +519,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
      * @throws Exception
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testOneRequirementNSafeguards() throws Exception {
         Duo<BpRequirement, List<Safeguard>> duo = createNSafeguards(5);
@@ -568,7 +550,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
      * @throws Exception
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testOneRequirementNSafeguards_Yes() throws Exception {
         Duo<BpRequirement, List<Safeguard>> duo = createNSafeguards(5);
@@ -609,7 +590,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
      * @throws Exception
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testOneRequirementNSafeguards_No() throws Exception {
         Duo<BpRequirement, List<Safeguard>> duo = createNSafeguards(5);
@@ -655,7 +635,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
      * @throws Exception
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testOneRequirementNSafeguards_No_with_no_not_applicable() throws Exception {
         Duo<BpRequirement, List<Safeguard>> duo = createNSafeguards(5);
@@ -685,7 +664,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
      * @throws Exception
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testOneRequirementNSafeguards_NoHalf() throws Exception {
         Duo<BpRequirement, List<Safeguard>> duo = createNSafeguards(10);
@@ -737,7 +715,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testThreeSafeguard() {
 
@@ -767,7 +744,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     }
 
     @Transactional
-    @Rollback(true)
     @Test
     public void testFiveSafeguard() {
 

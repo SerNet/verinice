@@ -53,7 +53,7 @@ import sernet.verinice.model.iso27k.Group;
  * @author uz[at]sernet.de
  *
  */
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
+@TransactionConfiguration(transactionManager = "txManager")
 @Transactional
 public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtection {
 
@@ -113,7 +113,6 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
      * Checks the basic implementation requirements.
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testProtectionRequirements() throws Exception {
         ItNetwork network = createNewBPOrganization();
@@ -153,7 +152,6 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
      * </pre>
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testBasicDeduction() throws Exception {
         ItNetwork network = createNewBPOrganization();
@@ -200,7 +198,6 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
      * @throws Exception
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testAllRelevantTypes() throws Exception {
         ItNetwork network = createNewBPOrganization();
@@ -242,7 +239,6 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
      * @throws Exception
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testTwoSources() throws Exception {
         ItNetwork network = createNewBPOrganization();
@@ -291,7 +287,6 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
      * @throws Exception
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testRingDeduction() throws Exception {
         List<BusinessProcess> elements = new ArrayList<>();
@@ -352,7 +347,6 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
      * @throws CommandException
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testStopDeduction() throws CommandException {
         ItNetwork network = createNewBPOrganization();

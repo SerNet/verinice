@@ -87,7 +87,7 @@ import sernet.verinice.service.commands.AttachmentFileCreationFactory;
 import sernet.verinice.service.commands.LoadAttachmentFile;
 import sernet.verinice.service.test.CommandServiceProvider;
 
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
+@TransactionConfiguration(transactionManager = "txManager")
 @Transactional
 public class ConverterCommandTest extends CommandServiceProvider {
 

@@ -36,7 +36,7 @@ import sernet.verinice.interfaces.IReportHQLService;
 /**
  *
  */
-@TransactionConfiguration(transactionManager="txManager", defaultRollback=false)
+@TransactionConfiguration(transactionManager="txManager")
 @Transactional
 public class ReportHQLServiceTest extends ContextConfiguration{
     

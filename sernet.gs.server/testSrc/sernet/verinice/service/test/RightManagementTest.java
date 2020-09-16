@@ -31,7 +31,6 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Test;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,7 +63,7 @@ import sernet.verinice.service.commands.UpdateElement;
  * @author urszeidler
  *
  */
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
+@TransactionConfiguration(transactionManager = "txManager")
 @Transactional
 public class RightManagementTest extends CommandServiceProvider {
     private static final Logger LOG = Logger.getLogger(CommandServiceProvider.class);
@@ -111,7 +110,6 @@ public class RightManagementTest extends CommandServiceProvider {
      * @throws CommandException
      */
     @Transactional
-    @Rollback(true)
     @Test(expected = CommandException.class)
     public void testUserNotAllowedToDelete() throws CommandException {
         Organization organization = createOrganization();
@@ -147,7 +145,6 @@ public class RightManagementTest extends CommandServiceProvider {
      * @throws CommandException
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testUserAllowedToDelete() throws CommandException {
         Organization organization = createOrganization();
@@ -186,7 +183,6 @@ public class RightManagementTest extends CommandServiceProvider {
      * @throws CommandException
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testDefaultUserAllowedToDelete() throws CommandException {
         Organization organization = createOrganization();
@@ -222,7 +218,6 @@ public class RightManagementTest extends CommandServiceProvider {
      * @throws CommandException
      */
     @Transactional
-    @Rollback(true)
     @Test
     public void testAdminUserAllowedToDelete() throws CommandException {
         Organization organization = createOrganization();
