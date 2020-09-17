@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _xUiAIMeuEeipUK6ek91lPA
 Runtime-Version: 2.5.1.M3
-Save-Time: 9/17/20, 11:14 AM
+Save-Time: 9/17/20, 12:01 PM
 Tags: ISM
 Testcase-Type: ecl
 
@@ -33,6 +33,7 @@ proc "read-file-in-data-dir" [val filename] {
 	  | invoke replace "Ã¤" "ä"
 	  | invoke replace "Ã¼" "ü"
 	  | invoke replace "Ã¼" "ü"
+	  | invoke replace "\r" ""
 }
 
 proc "edit-empty-row" [val offset] [val selection1] [val selection2] [val selection3] {
