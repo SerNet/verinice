@@ -78,6 +78,8 @@ pipeline {
                 // triggerRCPTTBuild 'verinice-rcptt-custom-test', 'bp*.test'
                 // triggerRCPTTBuild 'verinice-rcptt-performance'
                 // triggerRCPTTBuild 'verinice-rcptt-server-performance'
+                // triggerRCPTTBuild 'verinice-rcptt-reporting-de'
+                // triggerRCPTTBuild 'verinice-rcptt-reporting-en'
             }
         }
         stage('Documentation') {
