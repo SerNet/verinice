@@ -34,7 +34,10 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.Retriever;
@@ -57,14 +60,15 @@ import sernet.verinice.service.commands.UpdateElement;
 import sernet.verinice.service.test.helper.util.BFSTravers;
 import sernet.verinice.service.test.helper.util.CnATreeTraverser;
 import sernet.verinice.service.test.helper.util.CnATreeTraverser.CallBack;
-import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
 import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  * 
  */
-public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
+@Transactional
+@TransactionConfiguration(transactionManager = "txManager")
+public class SyncInsertUpdateTest extends CommandServiceProvider {
 
     private static final Logger log = Logger.getLogger(SyncInsertUpdateTest.class);
 
@@ -97,6 +101,12 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
     private static final String CLIENT_EXT_ID = "ENTITY_10072";
 
     private static final CnATreeTraverser cnATreeTraverser = new BFSTravers();
+
+    @Before
+    public void setUp() throws IOException, CommandException, SyncParameterException {
+        VNAImportHelper.importFile(getAbsoluteFilePath(VNA_FILE), new SyncParameter(true, true,
+                true, false, SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV));
+    }
 
     @Test
     public void insertTest() throws IOException, CommandException, SyncParameterException {
@@ -181,6 +191,11 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
     public void updateTest() throws IOException, CommandException, SyncParameterException {
 
         Anwendung anwendungBeforeImport = (Anwendung) loadElement(SOURCE_ID, ANWENDUNG_1_EXT_ID);
+        String anwendungsPersonenBezogenBefore = anwendungBeforeImport.getEntity()
+                .getSimpleValue("anwendung_persbez");
+        String anwendungsStatusBefore = anwendungBeforeImport.getEntity()
+                .getSimpleValue("anwendung_status");
+        String anwendungsKuerzelBefore = anwendungBeforeImport.getKuerzel();
         AnwendungenKategorie anwendungenKategorieBeforeImport = (AnwendungenKategorie) loadElement(
                 SOURCE_ID, ANWENDUNGEN_KATEGORIE_EXT_ID);
 
@@ -190,19 +205,15 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
 
         Anwendung anwendungAfterImport = (Anwendung) loadElement(SOURCE_ID, ANWENDUNG_1_EXT_ID);
 
-        String anwendungsStatusBefore = anwendungBeforeImport.getEntity()
-                .getSimpleValue("anwendung_status");
         String anwendungsStatusAfter = anwendungAfterImport.getEntity()
                 .getSimpleValue("anwendungs_status");
         assertFalse(anwendungsStatusBefore.equals(anwendungsStatusAfter));
 
-        String anwendungsPersonenBezogenBefore = anwendungBeforeImport.getEntity()
-                .getSimpleValue("anwendung_persbez");
         String anwendungsPersonenBezogenAfter = anwendungAfterImport.getEntity()
                 .getSimpleValue("anwendung_persbez");
         assertFalse(anwendungsPersonenBezogenBefore.equals(anwendungsPersonenBezogenAfter));
 
-        assertEquals(anwendungBeforeImport.getKuerzel(), anwendungAfterImport.getKuerzel());
+        assertEquals(anwendungsKuerzelBefore, anwendungAfterImport.getKuerzel());
         assertEquals("AnwendungenKategorie must still have only 1 child", 1,
                 anwendungenKategorieBeforeImport.getChildren().size());
 
@@ -368,17 +379,6 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
 
     private String getAbsoluteFilePath(String path) {
         return getClass().getResource(path).getPath();
-    }
-
-    @Override
-    protected String getFilePath() {
-        return getAbsoluteFilePath(VNA_FILE);
-    }
-
-    @Override
-    protected SyncParameter getSyncParameter() throws SyncParameterException {
-        return new SyncParameter(true, true, true, false,
-                SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
     }
 
     private void validateImportExtId(CnATreeElement element) throws CommandException {
