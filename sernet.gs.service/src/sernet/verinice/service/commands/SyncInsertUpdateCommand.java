@@ -32,8 +32,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
@@ -135,6 +137,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
     private transient Map<Integer, Map<Integer, Set<String>>> existingLinksForScope;
 
+    private transient Map<String, List<CnATreeElement>> existingElementsForScope;
+
     private ImportReferenceTypes importReferenceTypes;
 
     public SyncInsertUpdateCommand(String sourceId, SyncData syncData, SyncMapping syncMapping,
@@ -180,17 +184,31 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 if (sourceIdExists) {
                     existingLinksForScope = new HashMap<>();
                     log.info("Loading existing links for scope " + sourceId);
-                    DetachedCriteria criteria = DetachedCriteria.forClass(CnALink.class)
-                            .createAlias("dependant", "dependant")
+                    DetachedCriteria criteriaExistingLinks = DetachedCriteria
+                            .forClass(CnALink.class).createAlias("dependant", "dependant")
                             .createAlias("dependency", "dependency")
                             .add(Restrictions.or(Restrictions.eq("dependant.sourceId", sourceId),
                                     Restrictions.eq("dependency.sourceId", sourceId)));
                     @SuppressWarnings("unchecked")
-                    List<CnALink> result = getDao(CnALink.class).findByCriteria(criteria);
-                    result.forEach(link -> existingLinksForScope
+                    List<CnALink> resultExistingLinks = getDao(CnALink.class)
+                            .findByCriteria(criteriaExistingLinks);
+                    resultExistingLinks.forEach(link -> existingLinksForScope
                             .computeIfAbsent(link.getDependant().getDbId(), id -> new HashMap<>())
                             .computeIfAbsent(link.getDependency().getDbId(), id -> new HashSet<>())
                             .add(link.getRelationId()));
+
+                    log.info("Loading existing elements for scope " + sourceId);
+                    DetachedCriteria criteriaExistingElements = DetachedCriteria
+                            .forClass(CnATreeElement.class)
+                            .add(Restrictions.eq("sourceId", sourceId))
+                            .add(Restrictions.isNotNull("extId"))
+                            .setFetchMode("linksDown", FetchMode.JOIN)
+                            .setFetchMode("linksUp", FetchMode.JOIN);
+                    @SuppressWarnings("unchecked")
+                    List<CnATreeElement> resultExistingElements = getDao(CnATreeElement.class)
+                            .findByCriteria(criteriaExistingElements);
+                    existingElementsForScope = resultExistingElements.stream()
+                            .collect(Collectors.groupingBy(CnATreeElement::getExtId));
                 }
             }
             List<SyncObject> soList = syncData.getSyncObject();
@@ -261,7 +279,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
         CnATreeElement elementInDB = null;
         if (sourceIdExists && !parameter.isImportAsCatalog()) {
-            elementInDB = findDbElement(sourceId, extId, true, true);
+            elementInDB = getExistingElement(extId);
         }
 
         boolean updatingExistingElement = false;
@@ -633,7 +651,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         String dependencyId = syncLink.getDependency();
         CnATreeElement dependant = idElementMap.get(dependantId);
         if (dependant == null) {
-            dependant = findDbElement(this.sourceId, dependantId, true, true);
+            dependant = getExistingElement(dependantId);
             if (dependant == null) {
                 log.warn("Can not import link. dependant not found in "
                         + "xml file and db, dependant ext-id: " + dependantId
@@ -645,7 +663,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         }
         CnATreeElement dependency = idElementMap.get(dependencyId);
         if (dependency == null) {
-            dependency = findDbElement(this.sourceId, dependencyId, true, true);
+            dependency = getExistingElement(dependencyId);
             if (dependency == null) {
                 log.warn("Can not import link. dependency not found in "
                         + "xml file and db, dependency ext-id: " + dependencyId
@@ -810,34 +828,11 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         return null;
     }
 
-    /**
-     * Query element (by externalID) from DB, which has been previously
-     * synchronized from the given sourceID.
-     * 
-     * @param sourceId
-     * @param externalId
-     * @return the CnATreeElement from the query or null, if nothing was found
-     * @throws RuntimeException
-     *             if more than one element is found
-     */
-    private CnATreeElement findDbElement(String sourceId, String externalId, boolean fetchLinksDown,
-            boolean fetchLinksUp) {
-        CnATreeElement result = null;
-        // use a new crudCommand (load by external, source id):
-        LoadCnAElementByExternalID command = new LoadCnAElementByExternalID(sourceId, externalId,
-                fetchLinksDown, fetchLinksUp);
-        command.setParent(true);
-        try {
-            command = getCommandService().executeCommand(command);
-        } catch (CommandException e) {
-            final String message = "Error while loading element by source and external ID";
-            log.error(message, e);
-            throw new RuntimeCommandException(message, e);
-        }
-        List<CnATreeElement> foundElements = command.getElements();
+    private CnATreeElement getExistingElement(String externalId) {
+        List<CnATreeElement> foundElements = existingElementsForScope.get(externalId);
         if (foundElements != null) {
             if (foundElements.size() == 1) {
-                result = foundElements.get(0);
+                return foundElements.get(0);
             }
             if (foundElements.size() > 1) {
                 final String message = "Found more than one element with source-id: " + sourceId
@@ -846,7 +841,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 throw new RuntimeCommandException(message);
             }
         }
-        return result;
+        return null;
     }
 
     /**
@@ -1091,6 +1086,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     public void clear() {
         super.clear();
         existingLinksForScope = null;
+        existingElementsForScope = null;
     }
 
 }
