@@ -717,6 +717,9 @@ ${verinice.jre}/jre/${java-library-location}
 		<fileset dir="${aut-workspace}/.metadata" id="verinice-app-aut-logs">
 			<include name="*.log*" />
 		</fileset>
+		<fileset dir="${runner-workspace}/.metadata" id="erunner-logs">
+			<include name="*.log*" />
+		</fileset>
 
 		<move todir="${log}/verinice" failonerror="false">
 			<fileset refid="verinice-logs" />
@@ -725,6 +728,9 @@ ${verinice.jre}/jre/${java-library-location}
 		<move todir="${log}/verinice-aut" failonerror="false">
 			<fileset refid="verinice-aut-logs" />
 			<fileset refid="verinice-app-aut-logs" />
+		</move>
+		<move todir="${log}/erunner" failonerror="false">
+			<fileset refid="erunner-logs" />
 		</move>
 		<antcall target="fix-junit-result-xml"/>
 		<antcall target="fix-metric-csv"/>
