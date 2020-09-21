@@ -47,6 +47,7 @@ import de.sernet.sync.data.SyncObject;
 import de.sernet.sync.mapping.SyncMapping;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
+import de.sernet.sync.risk.Risk;
 import de.sernet.sync.sync.SyncRequest;
 import de.sernet.sync.sync.SyncRequest.SyncVnaSchemaVersion;
 import net.sf.ehcache.Cache;
@@ -101,8 +102,6 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     private final String stationId;
 
     // Fields used on server only
-    private transient byte[] xmlData;
-    private transient byte[] xmlDataRiskAnalysis;
     private transient Set<CnALink> linkSet;
     private transient Set<Attachment> attachmentSet;
     private transient Set<Integer> riskAnalysisIdSet;
@@ -160,8 +159,8 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     public void execute() {
         try {
             createFields();
-            xmlData = export();
-            xmlDataRiskAnalysis = exportRiskAnalyses();
+            SyncRequest syncRequest = export();
+            Risk risk = exportRiskAnalyses();
             if (isReImport()) {
                 if (log.isInfoEnabled()) {
                     log.info("Prepare reimport is enabled. Saving the IDS of "
@@ -171,9 +170,12 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             }
 
             if (isVeriniceArchive()) {
-                result = createVeriniceArchive();
+                result = createVeriniceArchive(syncRequest, risk);
             } else {
-                result = xmlData;
+                final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                ExportFactory.marshal(syncRequest, bos);
+                result = bos.toByteArray();
+
             }
             if (filePath != null) {
                 FileUtils.writeByteArrayToFile(new File(filePath), result);
@@ -203,7 +205,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
      * @return XML representation of elements
      * @throws CommandException
      */
-    private byte[] export() throws CommandException {
+    private SyncRequest export() throws CommandException {
 
         elementCache = createElementCache();
         attachmentsCache = createAttachmentsCache();
@@ -245,9 +247,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         syncRequest.setSyncMapping(syncMapping);
         syncRequest.setSyncVnaSchemaVersion(formatVersion);
 
-        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ExportFactory.marshal(syncRequest, bos);
-        return bos.toByteArray();
+        return syncRequest;
     }
 
     private void seedCaches(Integer scopeId) {
@@ -313,7 +313,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         return formatVersion;
     }
 
-    private byte[] exportRiskAnalyses() {
+    private Risk exportRiskAnalyses() {
         if (!isRiskAnalysis()) {
             return null;
         }
@@ -321,9 +321,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         exporter.setCommandService(getCommandService());
         exporter.setRiskAnalysisIdSet(riskAnalysisIdSet);
         exporter.run();
-        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ExportFactory.marshal(exporter.getRisk(), bos);
-        return bos.toByteArray();
+        return exporter.getRisk();
     }
 
     private boolean isRiskAnalysis() {
@@ -438,14 +436,14 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
      * @return the verinice archive as byte[]
      * @throws CommandException
      */
-    private byte[] createVeriniceArchive() throws CommandException {
-        try {
-            final ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-            final ZipOutputStream zipOut = new ZipOutputStream(byteOut);
+    private byte[] createVeriniceArchive(SyncRequest syncRequest, Risk risk)
+            throws CommandException {
+        try (final ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+                final ZipOutputStream zipOut = new ZipOutputStream(byteOut)) {
 
-            ExportFactory.createZipEntry(zipOut, VeriniceArchive.VERINICE_XML, xmlData);
+            ExportFactory.createZipEntry(zipOut, VeriniceArchive.VERINICE_XML, syncRequest);
             if (isRiskAnalysis()) {
-                ExportFactory.createZipEntry(zipOut, VeriniceArchive.RISK_XML, xmlDataRiskAnalysis);
+                ExportFactory.createZipEntry(zipOut, VeriniceArchive.RISK_XML, risk);
             }
             ExportFactory.createZipEntry(zipOut, VeriniceArchive.DATA_XSD,
                     StreamFactory.getDataXsdAsStream());
@@ -469,9 +467,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
                 }
                 command.setAttachmentFile(null);
             }
-
-            zipOut.close();
-            byteOut.close();
+            zipOut.closeEntry();
             return byteOut.toByteArray();
         } catch (final IOException e) {
             log.error("Error while creating zip output stream", e);

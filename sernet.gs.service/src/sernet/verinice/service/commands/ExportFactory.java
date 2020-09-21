@@ -19,7 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.service.commands;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +33,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import de.sernet.sync.data.SyncAttribute;
@@ -55,8 +55,6 @@ import sernet.verinice.service.sync.VeriniceArchive;
 public final class ExportFactory {
 
     private static final Logger LOG = Logger.getLogger(ExportFactory.class);
-
-    private static final int BUFFER = 2048;
 
     private ExportFactory() {
     }
@@ -149,30 +147,23 @@ public final class ExportFactory {
         }
     }
 
-    public static void createZipEntry(ZipOutputStream zipOut, String entryName, byte[] data)
+    public static void createZipEntry(ZipOutputStream zipOut, String entryName, Object jaxbObject)
             throws IOException {
         zipOut.putNextEntry(new ZipEntry(entryName));
-        ByteArrayInputStream in = new ByteArrayInputStream(data);
-        while (true) {
-            int nRead = in.read(data, 0, data.length);
-            if (nRead <= 0) {
-                break;
-            }
-            zipOut.write(data, 0, nRead);
+        marshal(jaxbObject, zipOut);
+    }
+
+    public static void createZipEntry(ZipOutputStream zipOut, String entryName, byte[] data)
+            throws IOException {
+        try (ByteArrayInputStream is = new ByteArrayInputStream(data)) {
+            createZipEntry(zipOut, entryName, is);
         }
-        in.close();
     }
 
     public static void createZipEntry(ZipOutputStream zipOut, String entryName, InputStream in)
             throws IOException {
         zipOut.putNextEntry(new ZipEntry(entryName));
-        BufferedInputStream origin = new BufferedInputStream(in, BUFFER);
-        byte[] dataBlock = new byte[BUFFER];
-        int count;
-        while ((count = origin.read(dataBlock, 0, BUFFER)) != -1) {
-            zipOut.write(dataBlock, 0, count);
-        }
-        origin.close();
+        IOUtils.copy(in, zipOut);
         in.close();
     }
 
