@@ -465,6 +465,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
     public void setParent(CnATreeElement parent) {
         this.parent = parent;
+        this.parentId = parent == null ? null : parent.getDbId();
     }
 
     public void setParentAndScope(CnATreeElement parent) {
