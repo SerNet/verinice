@@ -14,7 +14,7 @@ jdbc.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 jdbc.url=jdbc:h2:mem:verinicedb;MODE=PostgreSQL
 jdbc.ds.pool.minPoolSize=5
 jdbc.ds.pool.initialPoolSize=5
-jdbc.ds.pool.maxPoolSize=5
+jdbc.ds.pool.maxPoolSize=15
 jdbc.ds.pool.acquireIncrement=1
 jdbc.ds.pool.numHelperThreads=3
 jdbc.ds.pool.maxStatementsPerConnection=200
