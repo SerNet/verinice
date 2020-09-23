@@ -6,7 +6,7 @@ Element-Type: context
 Element-Version: 2.0
 Id: _9AEX8Pk3EeiLXcsCitNBjg
 Runtime-Version: 2.5.1.M3
-Save-Time: 8/19/20, 10:45 AM
+Save-Time: 9/23/20, 5:26 AM
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
 Content-Type: text/ecl
@@ -58,10 +58,10 @@ proc "measure-ism-import-vna" [val measurement] [val filename] {
     }
 }
 
-proc "measure-export" [val measurement] [val target] {
+proc "measure-export" [val measurement] [val target] [val prepareForReimport [bool false]]{
     try {
         start-time-measure $measurement
-        bp-export-vna $target [concat [get-java-property "java.io.tmpdir"] [get-java-property "file.separator"] "export.vna"]
+        bp-export-vna $target [concat [get-java-property "java.io.tmpdir"] [get-java-property "file.separator"] "export.vna"] $prepareForReimport
         try -times 500 -delay 1000 -command {
             get-window "Export beendet" | get-button OK | click
         }

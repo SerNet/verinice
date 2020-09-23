@@ -5,8 +5,8 @@ Element-Name: bp
 Element-Type: context
 Element-Version: 2.0
 Id: _4GRncI0bEei2UKUDmonytQ
-Runtime-Version: 2.4.2.201905080442
-Save-Time: 3/6/20, 12:12 PM
+Runtime-Version: 2.5.1.M3
+Save-Time: 9/23/20, 1:08 PM
 Tags: bp
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
@@ -198,13 +198,14 @@ proc "click-matrix" [val row] [val col] [val editor -input] {
 }
 
 /* Exports an information network as a vna file in the bp view. */
-proc "bp-export-vna" [val path] [val file] {
+proc "bp-export-vna" [val path] [val file] [val prepareForReimport [bool false]] {
 	log [concat "export " $path " to " $file]
 
 	with [get-view "Modernisierter IT-Grundschutz" | get-tree] {
 		select $path | get-menu -path "Exportiere..." | click
-		set-dialog-result File $file
 		with [get-window " "] {
+			get-checkbox -text "Für Re-Import vorbereiten" | set-value $prepareForReimport
+			set-dialog-result File $file
 			get-button "Datei wählen" | click
 			get-button OK | click
 		}
