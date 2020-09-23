@@ -10477,6 +10477,94 @@ Wurden bereits weitere Stellen informiert?
 	        <huiproperty id="bp_itnetwork_ds_eu_tel" name="Telefonnummer" />
 	        <huiproperty id="bp_itnetwork_ds_eu_email" name="E-Mail-Adresse" />
 	    </huipropertygroup>
+
+        <huipropertygroup id="bp_itnetwork_profile_formalities" name="Profile: Formalities" tags="ITGS-Profil">
+            <huiproperty id="bp_itnetwork_profile_formalities_title" name="Title" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_formalities_author" name="Author" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_formalities_publisher" name="Publisher" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_formalities_registrationnumber" name="Registration-number" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_formalities_version" name="Version" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_formalities_status" name="Status" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_formalities_revisioncycle" name="Revision cycle" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_formalities_confidentiality" name="Confidentiality" tags="ITGS-Profil"/>
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_itnetwork_profile_documenthistory" name="Profile: Document history" tags="ITGS-Profil">
+            <huiproperty id="bp_itnetwork_profile_documenthistory_documenthist" name="Document history" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+        </huipropertygroup>
+
+         <huipropertygroup id="bp_itnetwork_profile_preface" name="Profile: Preface" tags="ITGS-Profil">
+            <huiproperty id="bp_itnetwork_profile_preface_pre" name="Preface" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_itnetwork_profile_disclaimer" name="Profile: Disclaimer" tags="ITGS-Profil">
+            <huiproperty id="bp_itnetwork_profile_disclaimer_discl" name="Disclaimer" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_itnetwork_profile_copyright" name="Profile: Copyright" tags="ITGS-Profil">
+            <huiproperty id="bp_itnetwork_profile_copyright_copy" name="Copyright" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_itnetwork_profile_author" name="Profile: Author list" tags="ITGS-Profil">
+            <huiproperty id="bp_itnetwork_profile_author_auth" name="Author list" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_itnetwork_profile_managementsum" name="Profile: Management Summary" tags="ITGS-Profil">
+            <huiproperty id="bp_itnetwork_profile_managementsum_targetgroup" name="Target group" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_managementsum_objective" name="Objective" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_managementsum_tasks" name="Tasks of the management level" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_managementsum_background" name="Background" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_managementsum_recommendedaction" name="Recommended action" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_itnetwork_profile_scopedef" name="Profile: Determining the scope" tags="ITGS-Profil">
+            <huiproperty id="bp_itnetwork_profile_scopedef_targetgroup" name="Target group" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_scopedef_protectionrequirements" name="Protection requirements" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_scopedef_approachitgs" name="Approach according to IT-Grundschutz" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_scopedef_coverage" name="Coverage procedure" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_scopedef_isocompatibility" name="ISO27001 compatibility" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_scopedef_conditions" name="Conditions" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_scopedef_obligation" name="Obligation-to-fulfill" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_itnetwork_profile_demarcation" name="Profile: Demarcation of the information network" tags="ITGS-Profil">
+            <huiproperty id="bp_itnetwork_profile_demarcation_compotents" name="Components of the information network" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_demarcation_notconsideredobj" name="Objects not considered" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_demarcation_referenceotheritgsprofile" name="Reference to other IT Grundschutz profiles" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_itnetwork_profile_refarchitecture" name="Profile: Reference architecture" tags="ITGS-Profil">
+            <huiproperty id="bp_itnetwork_profile_refarchitecture_objinvestigation" name="Research object" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_refarchitecture_deviations" name="Dealing with deviations" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_itnetwork_profile_requirements" name="Profile: Requirements" tags="ITGS-Profil">
+            <huiproperty id="bp_itnetwork_profile_requirements_processmodules" name="Process Modules" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_requirements_systemmodules" name="System Modules" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_itnetwork_profile_applicationnotes" name="Profile: Application Notes" tags="ITGS-Profil">
+            <huiproperty id="bp_itnetwork_profile_applicationnotes_notes" name="Application Notes" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_applicationnotes_outsourcing" name="Outsourcing" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_newprojects" name="New projects" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_itnetwork_profile_risktreatment" name="Profile: Risk treatment" tags="ITGS-Profil">
+            <huiproperty id="bp_itnetwork_profile_risktreatment_risk" name="Risk treatment" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_itnetwork_profile_supportinfo" name="Profile: Supporting information" tags="ITGS-Profil">
+            <huiproperty id="bp_itnetwork_profile_supportinfo_supp" name="Supporting information" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_itnetwork_profile_notesprofile" name="Profile: Notes on the profile" tags="ITGS-Profil">
+            <huiproperty id="bp_itnetwork_profile_notesprofile_notes" name="Notes on the profile" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_itnetwork_profile_attachment" name="Profile: Appendix" tags="ITGS-Profil">
+            <huiproperty id="bp_itnetwork_profile_attachment_abbreviations" name="Abbreviations" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+            <huiproperty id="bp_itnetwork_profile_attachment_credentials" name="Credentials" inputtype="text" textrows="6" tags="ITGS-Profil"/>
+        </huipropertygroup>
     </huientity>
 
     <huientity id="bp_application" name="Application">

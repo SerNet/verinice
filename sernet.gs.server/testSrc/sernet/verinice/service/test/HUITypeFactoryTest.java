@@ -61,7 +61,7 @@ public class HUITypeFactoryTest extends CommandServiceProvider {
             + "/testSrc/SNCA.xml";
     private static final int MAX_NUM_TO_TEST = 100;
     private static final int ALL_ENTITY_TYPES_SIZE = 88;
-    private static final int ALL_TAGS_SIZE = 22;
+    private static final int ALL_TAGS_SIZE = 23;
     private static final int ALL_URL_PROPERY_TYPES_SIZE = 46;
 
     @Resource(name = "huiTypeFactory")
@@ -103,11 +103,13 @@ public class HUITypeFactoryTest extends CommandServiceProvider {
             for (String toTypeID : testTypeIds) {
                 Set<HuiRelation> relations = huiTypeFactory.getPossibleRelations(fromTypeID,
                         toTypeID);
-                assertTrue("Relations from " + fromTypeID + " does not contain all relations from "
-                        + fromTypeID + " to " + toTypeID,
+                assertTrue(
+                        "Relations from " + fromTypeID + " does not contain all relations from "
+                                + fromTypeID + " to " + toTypeID,
                         huiTypeFactory.getPossibleRelationsFrom(fromTypeID).containsAll(relations));
-                assertTrue("Relations to " + toTypeID + " does not contain all relations from "
-                        + fromTypeID + " to " + toTypeID,
+                assertTrue(
+                        "Relations to " + toTypeID + " does not contain all relations from "
+                                + fromTypeID + " to " + toTypeID,
                         huiTypeFactory.getPossibleRelationsTo(toTypeID).containsAll(relations));
             }
         }
@@ -197,7 +199,8 @@ public class HUITypeFactoryTest extends CommandServiceProvider {
         assertEquals(" (!)", huiTypeFactory.getMessage("", "", false));
         assertEquals("", huiTypeFactory.getMessage("", null, true));
         assertEquals("", huiTypeFactory.getMessage("", "", true));
-        assertTrue("Mitarbeiter".equals(huiTypeFactory.getMessage("person", "", true)) || "Employee".equals(huiTypeFactory.getMessage("person", "", true)));
+        assertTrue("Mitarbeiter".equals(huiTypeFactory.getMessage("person", "", true))
+                || "Employee".equals(huiTypeFactory.getMessage("person", "", true)));
         assertEquals("", huiTypeFactory.getMessage("", "", true));
 
         for (String typeID : huiTypeFactory.getAllTypeIds()) {
