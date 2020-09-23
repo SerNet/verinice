@@ -219,7 +219,11 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         }
 
         for (final CnATreeElement element : elements) {
-            seedCaches(element.getScopeId());
+            try {
+                seedCaches(element.getScopeId());
+            } catch (InterruptedException e) {
+                throw new RuntimeException("Interrupted while seeding caches", e);
+            }
             SyncObject exported = exportElement(element);
             syncData.getSyncObject().add(exported);
         }
@@ -250,25 +254,30 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         return syncRequest;
     }
 
-    private void seedCaches(Integer scopeId) {
+    private void seedCaches(Integer scopeId) throws InterruptedException {
         addToElementsCache(scopeId);
         addToAttachmentsCache(scopeId);
     }
 
-    private void addToElementsCache(Integer scopeId) {
-        DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class)
-                .add(Restrictions.eq("scopeId", scopeId));
-        RetrieveInfo retrieveInfo = RetrieveInfo.getPropertyInstance();
-        retrieveInfo.configureCriteria(criteria);
-        @SuppressWarnings("unchecked")
-        List<CnATreeElement> elementsToCache = getDao().findByCriteria(criteria);
-        elementsToCache.forEach(element -> {
-            elementIdsByParentId
-                    .computeIfAbsent(element.getParentId(), parentId -> new LinkedList<>())
-                    .add(element.getDbId());
-            elementCache.put(new Element(element.getDbId(), element));
-        });
+    private void addToElementsCache(Integer scopeId) throws InterruptedException {
+        Thread loadElementsThread = new Thread(() -> {
+            DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class)
+                    .add(Restrictions.eq("scopeId", scopeId));
+            RetrieveInfo retrieveInfo = RetrieveInfo.getPropertyInstance();
+            retrieveInfo.configureCriteria(criteria);
+            @SuppressWarnings("unchecked")
+            List<CnATreeElement> elementsToCache = getDao().findByCriteria(criteria);
+            elementsToCache.forEach(element -> {
+                elementIdsByParentId
+                        .computeIfAbsent(element.getParentId(), parentId -> new LinkedList<>())
+                        .add(element.getDbId());
+                elementCache.put(new Element(element.getDbId(), element));
+            });
+        }, "export-" + scopeId + "-load-elements");
+        loadElementsThread.start();
+
         loadLinks(scopeId);
+        loadElementsThread.join();
     }
 
     private void addToAttachmentsCache(Integer scopeId) {
