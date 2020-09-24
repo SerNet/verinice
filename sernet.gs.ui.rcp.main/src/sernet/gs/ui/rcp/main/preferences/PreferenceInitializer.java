@@ -74,6 +74,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
         store.setDefault(PreferenceConstants.HUI_TAGS, PreferenceConstants.HUI_TAGS_ALL);
         store.setDefault(PreferenceConstants.HUI_TAGS_STRICT, false);
+        store.setDefault(PreferenceConstants.HUI_TAGS_DEFAULT_EXCLUDED, "ITGS-Profil");
+
         store.setDefault(PreferenceConstants.SHOW_DBID_DECORATOR, false);
 
         store.setDefault(PreferenceConstants.SHOW_GSMISM_DECORATOR, false);

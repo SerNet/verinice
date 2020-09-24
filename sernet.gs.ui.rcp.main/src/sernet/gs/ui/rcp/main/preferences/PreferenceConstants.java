@@ -129,6 +129,7 @@ public class PreferenceConstants {
     public static final String HUI_TAGS = "hui_tags";
     public static final String HUI_TAGS_ALL = "hui_tags_all";
     public static final String HUI_TAGS_STRICT = "hui_tags_strict";
+    public static final String HUI_TAGS_DEFAULT_EXCLUDED = "hui_tags_default_excluded";
 
     public static final String THUMBNAIL_SIZE = "thumbnail_size";
 

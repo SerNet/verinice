@@ -21,6 +21,7 @@ package sernet.verinice.rcp;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.Collection;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -101,8 +102,10 @@ public final class Preferences {
         String[] tags = null;
         if (PreferenceConstants.HUI_TAGS_ALL.equals(tagString)) {
             Set<String> allTagsSet = HitroUtil.getInstance().getTypeFactory().getAllTags();
-            tags = new String[allTagsSet.size()];
-            tags = allTagsSet.toArray(tags);
+            Collection<String> tagsExcludedByDefault = TagHelper.getTags(
+                    getPreferenceStore().getString(PreferenceConstants.HUI_TAGS_DEFAULT_EXCLUDED));
+            tags = allTagsSet.stream().filter(tag -> !tagsExcludedByDefault.contains(tag))
+                    .toArray(String[]::new);
         } else {
             tags = TagHelper.getTags(tagString).stream().toArray(String[]::new);
         }
