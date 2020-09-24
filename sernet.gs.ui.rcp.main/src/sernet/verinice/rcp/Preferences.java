@@ -21,12 +21,15 @@ package sernet.verinice.rcp;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.hui.common.connect.HitroUtil;
+import sernet.snutils.TagHelper;
 
 /**
  * This class provides methods for convenient read-only access to the
@@ -93,5 +96,17 @@ public final class Preferences {
         return Activator.getDefault().getPreferenceStore();
     }
 
+    public static final String[] getEditorTags() {
+        String tagString = getPreferenceStore().getString(PreferenceConstants.HUI_TAGS);
+        String[] tags = null;
+        if (PreferenceConstants.HUI_TAGS_ALL.equals(tagString)) {
+            Set<String> allTagsSet = HitroUtil.getInstance().getTypeFactory().getAllTags();
+            tags = new String[allTagsSet.size()];
+            tags = allTagsSet.toArray(tags);
+        } else {
+            tags = TagHelper.getTags(tagString).stream().toArray(String[]::new);
+        }
+        return tags;
+    }
 
 }

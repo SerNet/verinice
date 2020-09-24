@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
@@ -76,7 +75,6 @@ import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.hui.swt.widgets.IHuiControlFactory;
 import sernet.snutils.AssertException;
 import sernet.snutils.FormInputParser;
-import sernet.snutils.TagHelper;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.bp.rcp.risk.ui.FrequencyConfigurator;
 import sernet.verinice.bp.rcp.risk.ui.ImpactConfigurator;
@@ -97,6 +95,7 @@ import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateContex
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateResult;
 import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.rcp.Preferences;
 import sernet.verinice.service.bp.risk.RiskService;
 import sernet.verinice.service.commands.crud.LoadElementForEditor;
 
@@ -260,7 +259,7 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
                 setPartName(getPartName() + Messages.BSIElementEditor_7);
             }
 
-            String[] tags = BSIElementEditorMultiPage.getEditorTags();
+            String[] tags = Preferences.getEditorTags();
 
             boolean strict = Activator.getDefault().getPluginPreferences()
                     .getBoolean(PreferenceConstants.HUI_TAGS_STRICT);
@@ -576,20 +575,6 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
                 .closeEditor(((BSIElementEditorInput) getEditorInput()).getId());
 
         super.dispose();
-    }
-
-    public static final String[] getEditorTags() {
-        String tagString = Activator.getDefault().getPluginPreferences()
-                .getString(PreferenceConstants.HUI_TAGS);
-        String[] tags = null;
-        if (PreferenceConstants.HUI_TAGS_ALL.equals(tagString)) {
-            Set<String> allTagsSet = HitroUtil.getInstance().getTypeFactory().getAllTags();
-            tags = new String[allTagsSet.size()];
-            tags = allTagsSet.toArray(tags);
-        } else {
-            tags = TagHelper.getTags(tagString).stream().toArray(String[]::new);
-        }
-        return tags;
     }
 
     /**

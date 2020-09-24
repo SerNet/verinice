@@ -32,7 +32,6 @@ import org.eclipse.swt.widgets.Shell;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorMultiPage;
 import sernet.gs.ui.rcp.main.bsi.editors.InputHelperFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.connect.Entity;
@@ -40,6 +39,7 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.hui.swt.widgets.IHuiControlFactory;
 import sernet.snutils.DBException;
+import sernet.verinice.rcp.Preferences;
 
 public class BulkEditDialog extends Dialog {
 
@@ -89,7 +89,7 @@ public class BulkEditDialog extends Dialog {
                     entity = new Entity(entType.getId());
                 }
 
-                String[] tags = BSIElementEditorMultiPage.getEditorTags();
+                String[] tags = Preferences.getEditorTags();
                 boolean strict = Activator.getDefault().getPluginPreferences()
                         .getBoolean(PreferenceConstants.HUI_TAGS_STRICT);
 

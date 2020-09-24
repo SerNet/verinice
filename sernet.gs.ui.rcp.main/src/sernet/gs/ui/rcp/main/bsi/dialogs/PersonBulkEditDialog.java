@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorMultiPage;
 import sernet.gs.ui.rcp.main.bsi.editors.InputHelperFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
@@ -46,6 +45,7 @@ import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.snutils.DBException;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.rcp.Preferences;
 
 /**
  * Dialog for editing account data bulk style
@@ -124,7 +124,7 @@ public class PersonBulkEditDialog extends TitleAreaDialog {
                 // is always Configuration here
                 entity = new Entity(Configuration.TYPE_ID);
 
-                String[] tags = BSIElementEditorMultiPage.getEditorTags();
+                String[] tags = Preferences.getEditorTags();
 
                 boolean strict = Activator.getDefault().getPluginPreferences()
                         .getBoolean(PreferenceConstants.HUI_TAGS_STRICT);
