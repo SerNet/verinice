@@ -76,15 +76,16 @@ public class ScopeOnlyUserCompendiumAccessTest extends AbstractModernizedBasePro
     }
 
     @Test
-    public void scopeOnlyUserWithoutPermissinCannotAccessCatalogElements() {
+    public void scopeOnlyUserWithoutPermissionCannotAccessCatalogElements() {
         Assert.assertThat(elementDao.findAll(), CoreMatchers.not(JUnitMatchers.hasItems(catalog1)));
     }
 
     @Test
     public void scopeOnlyUserWithPermissionCanAccessCatalogElements() {
+        authService.setPermissionHandlingNeeded(false);
         catalog1.addPermission(Permission.createPermission(catalog1, userName, true, false));
         elementDao.saveOrUpdate(catalog1);
-
+        authService.setPermissionHandlingNeeded(true);
         Assert.assertThat(elementDao.findAll(), JUnitMatchers.hasItems(catalog1));
     }
 }
