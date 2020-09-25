@@ -628,15 +628,17 @@ public final class CnAElementFactory {
             throws CommandException {
         if (!(container.isScope() || Audit.TYPE_ID.equals(container.getTypeId()))) {
             String iconPath = container.getIconPath();
-            child.setIconPath(iconPath);
-            Activator.inheritVeriniceContextState();
-            UpdateElement<CnATreeElement> updateCommand = new UpdateElement<>(child, false,
-                    ChangeLogEntry.STATION_ID);
-            getCommandService().executeCommand(updateCommand);
-            if (logger.isDebugEnabled()) {
-                logger.debug("IconPath of containerElement:\t" + iconPath);
-                logger.debug(
-                        "IconPath of child (after setter was called):\t" + child.getIconPath());
+            if (iconPath != null) {
+                child.setIconPath(iconPath);
+                Activator.inheritVeriniceContextState();
+                UpdateElement<CnATreeElement> updateCommand = new UpdateElement<>(child, false,
+                        ChangeLogEntry.STATION_ID);
+                getCommandService().executeCommand(updateCommand);
+                if (logger.isDebugEnabled()) {
+                    logger.debug("IconPath of containerElement:\t" + iconPath);
+                    logger.debug(
+                            "IconPath of child (after setter was called):\t" + child.getIconPath());
+                }
             }
         }
         return child;
