@@ -748,7 +748,26 @@ reportContext.setGlobalVariable("formatDateFromString", formatDateFromString)
                     <text-property name="heading">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
                 </structure>
             </list-property>
-            <list-property name="filter"/>
+            <list-property name="filter">
+                <structure>
+                    <property name="operator">in</property>
+                    <expression name="expr" type="javascript">row["Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                    <simple-property-list name="value1">
+                        <value>reportContext.getMessage("partially", reportContext.getLocale())</value>
+                        <value>reportContext.getMessage("no", reportContext.getLocale())</value>
+                        <value>""</value>
+                    </simple-property-list>
+                </structure>
+                <structure>
+                    <property name="operator">in</property>
+                    <expression name="expr" type="javascript">row["Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Maßnahme)"]</expression>
+                    <simple-property-list name="value1">
+                        <value>reportContext.getMessage("partially", reportContext.getLocale())</value>
+                        <value>reportContext.getMessage("no", reportContext.getLocale())</value>
+                        <value>""</value>
+                    </simple-property-list>
+                </structure>
+            </list-property>
             <list-property name="parameters"/>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -1555,7 +1574,26 @@ reportContext.setGlobalVariable("formatDateFromString", formatDateFromString)
                     <text-property name="heading">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
                 </structure>
             </list-property>
-            <list-property name="filter"/>
+            <list-property name="filter">
+                <structure>
+                    <property name="operator">in</property>
+                    <expression name="expr" type="javascript">row["Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                    <simple-property-list name="value1">
+                        <value>reportContext.getMessage("partially", reportContext.getLocale())</value>
+                        <value>reportContext.getMessage("no", reportContext.getLocale())</value>
+                        <value>""</value>
+                    </simple-property-list>
+                </structure>
+                <structure>
+                    <property name="operator">in</property>
+                    <expression name="expr" type="javascript">row["Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Maßnahme)"]</expression>
+                    <simple-property-list name="value1">
+                        <value>reportContext.getMessage("partially", reportContext.getLocale())</value>
+                        <value>reportContext.getMessage("no", reportContext.getLocale())</value>
+                        <value>""</value>
+                    </simple-property-list>
+                </structure>
+            </list-property>
             <list-property name="parameters"/>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -3949,7 +3987,26 @@ reportContext.setGlobalVariable("formatDateFromString", formatDateFromString)
                     <text-property name="heading">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
                 </structure>
             </list-property>
-            <list-property name="filter"/>
+            <list-property name="filter">
+                <structure>
+                    <property name="operator">in</property>
+                    <expression name="expr" type="javascript">row["Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                    <simple-property-list name="value1">
+                        <value>reportContext.getMessage("partially", reportContext.getLocale())</value>
+                        <value>reportContext.getMessage("no", reportContext.getLocale())</value>
+                        <value>""</value>
+                    </simple-property-list>
+                </structure>
+                <structure>
+                    <property name="operator">in</property>
+                    <expression name="expr" type="javascript">row["Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Maßnahme)"]</expression>
+                    <simple-property-list name="value1">
+                        <value>reportContext.getMessage("partially", reportContext.getLocale())</value>
+                        <value>reportContext.getMessage("no", reportContext.getLocale())</value>
+                        <value>""</value>
+                    </simple-property-list>
+                </structure>
+            </list-property>
             <list-property name="parameters"/>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -4726,7 +4783,26 @@ reportContext.setGlobalVariable("formatDateFromString", formatDateFromString)
                     <text-property name="heading">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
                 </structure>
             </list-property>
-            <list-property name="filter"/>
+            <list-property name="filter">
+                <structure>
+                    <property name="operator">in</property>
+                    <expression name="expr" type="javascript">row["Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                    <simple-property-list name="value1">
+                        <value>reportContext.getMessage("partially", reportContext.getLocale())</value>
+                        <value>reportContext.getMessage("no", reportContext.getLocale())</value>
+                        <value>""</value>
+                    </simple-property-list>
+                </structure>
+                <structure>
+                    <property name="operator">in</property>
+                    <expression name="expr" type="javascript">row["Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Maßnahme)"]</expression>
+                    <simple-property-list name="value1">
+                        <value>reportContext.getMessage("partially", reportContext.getLocale())</value>
+                        <value>reportContext.getMessage("no", reportContext.getLocale())</value>
+                        <value>""</value>
+                    </simple-property-list>
+                </structure>
+            </list-property>
             <list-property name="parameters"/>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -5503,7 +5579,26 @@ reportContext.setGlobalVariable("formatDateFromString", formatDateFromString)
                     <text-property name="heading">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
                 </structure>
             </list-property>
-            <list-property name="filter"/>
+            <list-property name="filter">
+                <structure>
+                    <property name="operator">in</property>
+                    <expression name="expr" type="javascript">row["Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                    <simple-property-list name="value1">
+                        <value>reportContext.getMessage("partially", reportContext.getLocale())</value>
+                        <value>reportContext.getMessage("no", reportContext.getLocale())</value>
+                        <value>""</value>
+                    </simple-property-list>
+                </structure>
+                <structure>
+                    <property name="operator">in</property>
+                    <expression name="expr" type="javascript">row["Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Maßnahme)"]</expression>
+                    <simple-property-list name="value1">
+                        <value>reportContext.getMessage("partially", reportContext.getLocale())</value>
+                        <value>reportContext.getMessage("no", reportContext.getLocale())</value>
+                        <value>""</value>
+                    </simple-property-list>
+                </structure>
+            </list-property>
             <list-property name="parameters"/>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -6280,7 +6375,26 @@ reportContext.setGlobalVariable("formatDateFromString", formatDateFromString)
                     <text-property name="heading">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
                 </structure>
             </list-property>
-            <list-property name="filter"/>
+            <list-property name="filter">
+                <structure>
+                    <property name="operator">in</property>
+                    <expression name="expr" type="javascript">row["Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                    <simple-property-list name="value1">
+                        <value>reportContext.getMessage("partially", reportContext.getLocale())</value>
+                        <value>reportContext.getMessage("no", reportContext.getLocale())</value>
+                        <value>""</value>
+                    </simple-property-list>
+                </structure>
+                <structure>
+                    <property name="operator">in</property>
+                    <expression name="expr" type="javascript">row["Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Maßnahme)"]</expression>
+                    <simple-property-list name="value1">
+                        <value>reportContext.getMessage("partially", reportContext.getLocale())</value>
+                        <value>reportContext.getMessage("no", reportContext.getLocale())</value>
+                        <value>""</value>
+                    </simple-property-list>
+                </structure>
+            </list-property>
             <list-property name="parameters"/>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -7057,7 +7171,26 @@ reportContext.setGlobalVariable("formatDateFromString", formatDateFromString)
                     <text-property name="heading">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
                 </structure>
             </list-property>
-            <list-property name="filter"/>
+            <list-property name="filter">
+                <structure>
+                    <property name="operator">in</property>
+                    <expression name="expr" type="javascript">row["Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                    <simple-property-list name="value1">
+                        <value>reportContext.getMessage("partially", reportContext.getLocale())</value>
+                        <value>reportContext.getMessage("no", reportContext.getLocale())</value>
+                        <value>""</value>
+                    </simple-property-list>
+                </structure>
+                <structure>
+                    <property name="operator">in</property>
+                    <expression name="expr" type="javascript">row["Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Maßnahme)"]</expression>
+                    <simple-property-list name="value1">
+                        <value>reportContext.getMessage("partially", reportContext.getLocale())</value>
+                        <value>reportContext.getMessage("no", reportContext.getLocale())</value>
+                        <value>""</value>
+                    </simple-property-list>
+                </structure>
+            </list-property>
             <list-property name="parameters"/>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -7839,7 +7972,26 @@ reportContext.setGlobalVariable("formatDateFromString", formatDateFromString)
                     <text-property name="heading">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
                 </structure>
             </list-property>
-            <list-property name="filter"/>
+            <list-property name="filter">
+                <structure>
+                    <property name="operator">in</property>
+                    <expression name="expr" type="javascript">row["Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                    <simple-property-list name="value1">
+                        <value>reportContext.getMessage("partially", reportContext.getLocale())</value>
+                        <value>reportContext.getMessage("no", reportContext.getLocale())</value>
+                        <value>""</value>
+                    </simple-property-list>
+                </structure>
+                <structure>
+                    <property name="operator">in</property>
+                    <expression name="expr" type="javascript">row["Umsetzung__(Maßnahmenstärke)__-__Umsetzungsstatus__(Maßnahme)"]</expression>
+                    <simple-property-list name="value1">
+                        <value>reportContext.getMessage("partially", reportContext.getLocale())</value>
+                        <value>reportContext.getMessage("no", reportContext.getLocale())</value>
+                        <value>""</value>
+                    </simple-property-list>
+                </structure>
+            </list-property>
             <list-property name="parameters"/>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
