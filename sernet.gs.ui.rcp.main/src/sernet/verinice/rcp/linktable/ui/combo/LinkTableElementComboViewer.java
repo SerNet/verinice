@@ -20,8 +20,13 @@
 package sernet.verinice.rcp.linktable.ui.combo;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ISelection;
@@ -123,7 +128,20 @@ public class LinkTableElementComboViewer extends LinkTableComboViewer {
                 isDefault = true;
             }
         }
-        return sortElementsByLabel(typeIDs);
+        Map<Domain, List<String>> typeIDsByDomain = Arrays.stream(typeIDs)
+                .collect(Collectors.groupingBy(CnATypeMapper::getDomainFromTypeId));
+
+        return Stream.of(Domain.BASE_PROTECTION, Domain.ISM, Domain.BASE_PROTECTION_OLD,
+                Domain.DATA_PROTECTION).flatMap(domain -> {
+                    List<String> typeIDsForDomain = typeIDsByDomain.get(domain);
+                    if (typeIDsForDomain == null) {
+                        return Stream.empty();
+                    }
+                    String[] sortedTypeIDsForDomain = sortElementsByLabel(
+                            typeIDsForDomain.toArray(new String[typeIDsForDomain.size()]));
+                    return Stream.of(sortedTypeIDsForDomain);
+                }).toArray(String[]::new);
+
     }
 
     /*
