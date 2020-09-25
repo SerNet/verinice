@@ -8,6 +8,10 @@
             <property name="name">queryText</property>
             <property name="id">6713</property>
         </structure>
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">8105</property>
+        </structure>
     </list-property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
@@ -6849,52 +6853,48 @@ row["Titel__(Kommunikationsverbindung)"];
 }]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="verinice.oda.linktable.driver.dataSet.id" name="Bausteine" id="8105">
+            <property name="nullsOrdering">nulls lowest</property>
             <list-property name="computedColumns">
-                <structure>
-                    <property name="name">Identifier_Bausteine_concat</property>
-                    <expression name="expression">row["Identifier__(Baustein(e))"] +  row["Identifier__(Baustein(e))_1"] +  row["Identifier__(Baustein(e))_2"] +  row["Identifier__(Baustein(e))_3"] +  row["Identifier__(Baustein(e))_4"] +  row["Identifier__(Baustein(e))_5"] +  row["Identifier__(Baustein(e))_6"] +  row["Identifier__(Baustein(e))_7"] +  row["Identifier__(Baustein(e))_8"] +  row["Identifier__(Baustein(e))_9"] +  row["Identifier__(Baustein(e))_10"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">Titel_Bausteine_concat</property>
-                    <expression name="expression">row["Titel__(Baustein(e))"]+row["Titel__(Baustein(e))_1"]+row["Titel__(Baustein(e))_2"]+row["Titel__(Baustein(e))_3"]+row["Titel__(Baustein(e))_4"]+row["Titel__(Baustein(e))_5"]+row["Titel__(Baustein(e))_6"]+row["Titel__(Baustein(e))_7"]+row["Titel__(Baustein(e))_8"]+row["Titel__(Baustein(e))_9"]+row["Titel__(Baustein(e))_10"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
                 <structure>
                     <property name="name">sortkey</property>
                     <expression name="expression">//Sort order from Kompendium&#13;
-if (BirtStr.search("ISMS.",row["Identifier_Bausteine_concat"], 0) > -1)&#13;
+if (BirtStr.search("ISMS.",row["Identifier__(Baustein(e))"], 0) > -1)&#13;
 	1&#13;
-else if (BirtStr.search("ORP.",row["Identifier_Bausteine_concat"], 0) > -1)&#13;
+else if (BirtStr.search("ORP.",row["Identifier__(Baustein(e))"], 0) > -1)&#13;
 	2&#13;
-else if (BirtStr.search("CON.",row["Identifier_Bausteine_concat"], 0) > -1)&#13;
+else if (BirtStr.search("CON.",row["Identifier__(Baustein(e))"], 0) > -1)&#13;
 	3&#13;
-else if (BirtStr.search("OPS.",row["Identifier_Bausteine_concat"], 0) > -1)&#13;
+else if (BirtStr.search("OPS.",row["Identifier__(Baustein(e))"], 0) > -1)&#13;
 	4&#13;
-else if (BirtStr.search("DER.",row["Identifier_Bausteine_concat"], 0) > -1)&#13;
+else if (BirtStr.search("DER.",row["Identifier__(Baustein(e))"], 0) > -1)&#13;
 	5&#13;
-else if (BirtStr.search("APP.",row["Identifier_Bausteine_concat"], 0) > -1)&#13;
+else if (BirtStr.search("APP.",row["Identifier__(Baustein(e))"], 0) > -1)&#13;
 	6&#13;
-else if (BirtStr.search("SYS.",row["Identifier_Bausteine_concat"], 0) > -1)&#13;
+else if (BirtStr.search("SYS.",row["Identifier__(Baustein(e))"], 0) > -1)&#13;
 	7	&#13;
-else if (BirtStr.search("IND.",row["Identifier_Bausteine_concat"], 0) > -1)&#13;
+else if (BirtStr.search("IND.",row["Identifier__(Baustein(e))"], 0) > -1)&#13;
 	8	&#13;
-else if (BirtStr.search("NET.",row["Identifier_Bausteine_concat"], 0) > -1)&#13;
+else if (BirtStr.search("NET.",row["Identifier__(Baustein(e))"], 0) > -1)&#13;
 	9	&#13;
-else if (BirtStr.search("INF.",row["Identifier_Bausteine_concat"], 0) > -1)&#13;
+else if (BirtStr.search("INF.",row["Identifier__(Baustein(e))"], 0) > -1)&#13;
 	10	&#13;
 else &#13;
 	0</expression>
                     <property name="dataType">integer</property>
                 </structure>
+                <structure>
+                    <property name="name">ModuleIdTargetObjectId</property>
+                    <expression name="expression">row["Identifier__(Baustein(e))"]+":"+row["Datenbank-Id__(AnderesIoT-System)"]+row["Datenbank-Id__(Anwendung)"]+row["Datenbank-Id__(Geschäftsprozess)"]+row["Datenbank-Id__(ICS-System)"]+row["Datenbank-Id__(IT-System)"]+row["Datenbank-Id__(Informationsverbund)"]+row["Datenbank-Id__(Raum)"]</expression>
+                    <property name="dataType">string</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value">BirtStr.concat(row["Datenbank-Id__(AnderesIoT-System)"], row["Datenbank-Id__(Anwendung)"], row["Datenbank-Id__(Geschäftsprozess)"], row["Datenbank-Id__(ICS-System)"], row["Datenbank-Id__(IT-System)"], row["Datenbank-Id__(Informationsverbund)"], row["Datenbank-Id__(Raum)"])</expression>
+                        </structure>
+                    </list-property>
+                </structure>
             </list-property>
             <list-property name="columnHints">
-                <structure>
-                    <property name="columnName">Titel__(Informationsverbund)</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">Titel__(Informationsverbund)</text-property>
-                    <text-property name="heading">Titel__(Informationsverbund)</text-property>
-                </structure>
                 <structure>
                     <property name="columnName">Titel__(Baustein(e))</property>
                     <property name="analysis">dimension</property>
@@ -6908,308 +6908,106 @@ else &#13;
                     <text-property name="heading">Identifier__(Baustein(e))</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Titel__(Geschäftsprozesse)</property>
+                    <property name="columnName">Datenbank-Id__(Informationsverbund)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Titel__(Geschäftsprozesse)</text-property>
-                    <text-property name="heading">Titel__(Geschäftsprozesse)</text-property>
+                    <text-property name="displayName">Datenbank-Id__(Informationsverbund)</text-property>
+                    <text-property name="heading">Datenbank-Id__(Informationsverbund)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Titel__(Baustein(e))_1</property>
+                    <property name="columnName">Datenbank-Id__(Geschäftsprozess)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Titel__(Baustein(e))</text-property>
-                    <text-property name="heading">Titel__(Baustein(e))</text-property>
+                    <text-property name="displayName">Datenbank-Id__(Geschäftsprozess)</text-property>
+                    <text-property name="heading">Datenbank-Id__(Geschäftsprozess)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Identifier__(Baustein(e))_1</property>
+                    <property name="columnName">Datenbank-Id__(Anwendung)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Identifier__(Baustein(e))</text-property>
-                    <text-property name="heading">Identifier__(Baustein(e))</text-property>
+                    <text-property name="displayName">Datenbank-Id__(Anwendung)</text-property>
+                    <text-property name="heading">Datenbank-Id__(Anwendung)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Titel__(Baustein(e))_2</property>
+                    <property name="columnName">Datenbank-Id__(IT-System)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Titel__(Baustein(e))</text-property>
-                    <text-property name="heading">Titel__(Baustein(e))</text-property>
+                    <text-property name="displayName">Datenbank-Id__(IT-System)</text-property>
+                    <text-property name="heading">Datenbank-Id__(IT-System)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Identifier__(Baustein(e))_2</property>
+                    <property name="columnName">Datenbank-Id__(ICS-System)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Identifier__(Baustein(e))</text-property>
-                    <text-property name="heading">Identifier__(Baustein(e))</text-property>
+                    <text-property name="displayName">Datenbank-Id__(ICS-System)</text-property>
+                    <text-property name="heading">Datenbank-Id__(ICS-System)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Titel__(Baustein(e))_3</property>
+                    <property name="columnName">Datenbank-Id__(AnderesIoT-System)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Titel__(Baustein(e))</text-property>
-                    <text-property name="heading">Titel__(Baustein(e))</text-property>
+                    <text-property name="displayName">Datenbank-Id__(AnderesIoT-System)</text-property>
+                    <text-property name="heading">Datenbank-Id__(AnderesIoT-System)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Identifier__(Baustein(e))_3</property>
+                    <property name="columnName">Datenbank-Id__(Raum)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">Identifier__(Baustein(e))</text-property>
-                    <text-property name="heading">Identifier__(Baustein(e))</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Titel__(IT-System)</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">Titel__(IT-System)</text-property>
-                    <text-property name="heading">Titel__(IT-System)</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Kürzel__(IT-System)</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">Kürzel__(IT-System)</text-property>
-                    <text-property name="heading">Kürzel__(IT-System)</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Titel__(IT-Systeme)</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">Titel__(IT-Systeme)</text-property>
-                    <text-property name="heading">Titel__(IT-Systeme)</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Titel__(Baustein(e))_4</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">Titel__(Baustein(e))</text-property>
-                    <text-property name="heading">Titel__(Baustein(e))</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Identifier__(Baustein(e))_4</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">Identifier__(Baustein(e))</text-property>
-                    <text-property name="heading">Identifier__(Baustein(e))</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Titel__(Baustein(e))_5</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">Titel__(Baustein(e))</text-property>
-                    <text-property name="heading">Titel__(Baustein(e))</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Identifier__(Baustein(e))_5</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">Identifier__(Baustein(e))</text-property>
-                    <text-property name="heading">Identifier__(Baustein(e))</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Titel__(Baustein(e))_6</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">Titel__(Baustein(e))</text-property>
-                    <text-property name="heading">Titel__(Baustein(e))</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Identifier__(Baustein(e))_6</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">Identifier__(Baustein(e))</text-property>
-                    <text-property name="heading">Identifier__(Baustein(e))</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Titel__(Baustein(e))_7</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">Titel__(Baustein(e))</text-property>
-                    <text-property name="heading">Titel__(Baustein(e))</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Identifier__(Baustein(e))_7</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">Identifier__(Baustein(e))</text-property>
-                    <text-property name="heading">Identifier__(Baustein(e))</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Titel__(Baustein(e))_8</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">Titel__(Baustein(e))</text-property>
-                    <text-property name="heading">Titel__(Baustein(e))</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Identifier__(Baustein(e))_8</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">Identifier__(Baustein(e))</text-property>
-                    <text-property name="heading">Identifier__(Baustein(e))</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Titel__(Baustein(e))_9</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">Titel__(Baustein(e))</text-property>
-                    <text-property name="heading">Titel__(Baustein(e))</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Identifier__(Baustein(e))_9</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">Identifier__(Baustein(e))</text-property>
-                    <text-property name="heading">Identifier__(Baustein(e))</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Titel__(Baustein(e))_10</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">Titel__(Baustein(e))</text-property>
-                    <text-property name="heading">Titel__(Baustein(e))</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Identifier__(Baustein(e))_10</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">Identifier__(Baustein(e))</text-property>
-                    <text-property name="heading">Identifier__(Baustein(e))</text-property>
+                    <text-property name="displayName">Datenbank-Id__(Raum)</text-property>
+                    <text-property name="heading">Datenbank-Id__(Raum)</text-property>
                 </structure>
             </list-property>
-            <list-property name="filter">
-                <structure>
-                    <property name="operator">is-true</property>
-                    <expression name="expr" type="javascript">BirtStr.charLength(row["Identifier_Bausteine_concat"]) > 1</expression>
-                </structure>
-            </list-property>
+            <list-property name="filter"/>
             <list-property name="parameters"/>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">Titel__(Informationsverbund)</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">2</property>
                         <property name="name">Titel__(Baustein(e))</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">3</property>
+                        <property name="position">2</property>
                         <property name="name">Identifier__(Baustein(e))</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
+                        <property name="position">3</property>
+                        <property name="name">Datenbank-Id__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
                         <property name="position">4</property>
-                        <property name="name">Titel__(Geschäftsprozesse)</property>
+                        <property name="name">Datenbank-Id__(Geschäftsprozess)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">Titel__(Baustein(e))_1</property>
+                        <property name="name">Datenbank-Id__(Anwendung)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">Identifier__(Baustein(e))_1</property>
+                        <property name="name">Datenbank-Id__(IT-System)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">Titel__(Baustein(e))_2</property>
+                        <property name="name">Datenbank-Id__(ICS-System)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">Identifier__(Baustein(e))_2</property>
+                        <property name="name">Datenbank-Id__(AnderesIoT-System)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">Titel__(Baustein(e))_3</property>
+                        <property name="name">Datenbank-Id__(Raum)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">10</property>
-                        <property name="name">Identifier__(Baustein(e))_3</property>
-                        <property name="dataType">string</property>
+                        <property name="name">sortkey</property>
+                        <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">11</property>
-                        <property name="name">Titel__(IT-System)</property>
+                        <property name="name">ModuleIdTargetObjectId</property>
                         <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">12</property>
-                        <property name="name">Kürzel__(IT-System)</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">13</property>
-                        <property name="name">Titel__(IT-Systeme)</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">14</property>
-                        <property name="name">Titel__(Baustein(e))_4</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">15</property>
-                        <property name="name">Identifier__(Baustein(e))_4</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">16</property>
-                        <property name="name">Titel__(Baustein(e))_5</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">17</property>
-                        <property name="name">Identifier__(Baustein(e))_5</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">18</property>
-                        <property name="name">Titel__(Baustein(e))_6</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">19</property>
-                        <property name="name">Identifier__(Baustein(e))_6</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">20</property>
-                        <property name="name">Titel__(Baustein(e))_7</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">21</property>
-                        <property name="name">Identifier__(Baustein(e))_7</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">22</property>
-                        <property name="name">Titel__(Baustein(e))_8</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">23</property>
-                        <property name="name">Identifier__(Baustein(e))_8</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">24</property>
-                        <property name="name">Titel__(Baustein(e))_9</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">25</property>
-                        <property name="name">Identifier__(Baustein(e))_9</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">26</property>
-                        <property name="name">Titel__(Baustein(e))_10</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">27</property>
-                        <property name="name">Identifier__(Baustein(e))_10</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">28</property>
-                        <property name="name">Identifier_Bausteine_concat</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">29</property>
-                        <property name="name">Titel_Bausteine_concat</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">30</property>
-                        <property name="name">sortkey</property>
-                        <property name="dataType">integer</property>
                     </structure>
                 </list-property>
             </structure>
@@ -7217,190 +7015,64 @@ else &#13;
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">Titel__(Informationsverbund)</property>
-                    <property name="nativeName">Titel__(Informationsverbund)</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">2</property>
                     <property name="name">Titel__(Baustein(e))</property>
                     <property name="nativeName">Titel__(Baustein(e))</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">3</property>
+                    <property name="position">2</property>
                     <property name="name">Identifier__(Baustein(e))</property>
                     <property name="nativeName">Identifier__(Baustein(e))</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
+                    <property name="position">3</property>
+                    <property name="name">Datenbank-Id__(Informationsverbund)</property>
+                    <property name="nativeName">Datenbank-Id__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
                     <property name="position">4</property>
-                    <property name="name">Titel__(Geschäftsprozesse)</property>
-                    <property name="nativeName">Titel__(Geschäftsprozesse)</property>
+                    <property name="name">Datenbank-Id__(Geschäftsprozess)</property>
+                    <property name="nativeName">Datenbank-Id__(Geschäftsprozess)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">5</property>
-                    <property name="name">Titel__(Baustein(e))_1</property>
-                    <property name="nativeName">Titel__(Baustein(e))</property>
+                    <property name="name">Datenbank-Id__(Anwendung)</property>
+                    <property name="nativeName">Datenbank-Id__(Anwendung)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">6</property>
-                    <property name="name">Identifier__(Baustein(e))_1</property>
-                    <property name="nativeName">Identifier__(Baustein(e))</property>
+                    <property name="name">Datenbank-Id__(IT-System)</property>
+                    <property name="nativeName">Datenbank-Id__(IT-System)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">7</property>
-                    <property name="name">Titel__(Baustein(e))_2</property>
-                    <property name="nativeName">Titel__(Baustein(e))</property>
+                    <property name="name">Datenbank-Id__(ICS-System)</property>
+                    <property name="nativeName">Datenbank-Id__(ICS-System)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">8</property>
-                    <property name="name">Identifier__(Baustein(e))_2</property>
-                    <property name="nativeName">Identifier__(Baustein(e))</property>
+                    <property name="name">Datenbank-Id__(AnderesIoT-System)</property>
+                    <property name="nativeName">Datenbank-Id__(AnderesIoT-System)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">9</property>
-                    <property name="name">Titel__(Baustein(e))_3</property>
-                    <property name="nativeName">Titel__(Baustein(e))</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">10</property>
-                    <property name="name">Identifier__(Baustein(e))_3</property>
-                    <property name="nativeName">Identifier__(Baustein(e))</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">11</property>
-                    <property name="name">Titel__(IT-System)</property>
-                    <property name="nativeName">Titel__(IT-System)</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">12</property>
-                    <property name="name">Kürzel__(IT-System)</property>
-                    <property name="nativeName">Kürzel__(IT-System)</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">13</property>
-                    <property name="name">Titel__(IT-Systeme)</property>
-                    <property name="nativeName">Titel__(IT-Systeme)</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">14</property>
-                    <property name="name">Titel__(Baustein(e))_4</property>
-                    <property name="nativeName">Titel__(Baustein(e))</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">15</property>
-                    <property name="name">Identifier__(Baustein(e))_4</property>
-                    <property name="nativeName">Identifier__(Baustein(e))</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">16</property>
-                    <property name="name">Titel__(Baustein(e))_5</property>
-                    <property name="nativeName">Titel__(Baustein(e))</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">17</property>
-                    <property name="name">Identifier__(Baustein(e))_5</property>
-                    <property name="nativeName">Identifier__(Baustein(e))</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">18</property>
-                    <property name="name">Titel__(Baustein(e))_6</property>
-                    <property name="nativeName">Titel__(Baustein(e))</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">19</property>
-                    <property name="name">Identifier__(Baustein(e))_6</property>
-                    <property name="nativeName">Identifier__(Baustein(e))</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">20</property>
-                    <property name="name">Titel__(Baustein(e))_7</property>
-                    <property name="nativeName">Titel__(Baustein(e))</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">21</property>
-                    <property name="name">Identifier__(Baustein(e))_7</property>
-                    <property name="nativeName">Identifier__(Baustein(e))</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">22</property>
-                    <property name="name">Titel__(Baustein(e))_8</property>
-                    <property name="nativeName">Titel__(Baustein(e))</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">23</property>
-                    <property name="name">Identifier__(Baustein(e))_8</property>
-                    <property name="nativeName">Identifier__(Baustein(e))</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">24</property>
-                    <property name="name">Titel__(Baustein(e))_9</property>
-                    <property name="nativeName">Titel__(Baustein(e))</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">25</property>
-                    <property name="name">Identifier__(Baustein(e))_9</property>
-                    <property name="nativeName">Identifier__(Baustein(e))</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">26</property>
-                    <property name="name">Titel__(Baustein(e))_10</property>
-                    <property name="nativeName">Titel__(Baustein(e))</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">27</property>
-                    <property name="name">Identifier__(Baustein(e))_10</property>
-                    <property name="nativeName">Identifier__(Baustein(e))</property>
+                    <property name="name">Datenbank-Id__(Raum)</property>
+                    <property name="nativeName">Datenbank-Id__(Raum)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -7410,35 +7082,16 @@ else &#13;
   "useAllScopes": false,
   "scopeIds": [],
   "columnPaths": [
-    "bp_itnetwork.bp_itnetwork_name AS Titel__(Informationsverbund)",
-    "bp_itnetwork>bp_requirement_group.bp_requirement_group_name AS Titel__(Baustein(e))",
-    "bp_itnetwork>bp_requirement_group.bp_requirement_group_id AS Identifier__(Baustein(e))",
-    "bp_itnetwork>bp_businessprocess_group.bp_businessprocess_group_name AS Titel__(Geschäftsprozesse)",
-    "bp_itnetwork>bp_businessprocess_group>bp_businessprocess>bp_requirement_group.bp_requirement_group_name AS Titel__(Baustein(e))",
-    "bp_itnetwork>bp_businessprocess_group>bp_businessprocess>bp_requirement_group.bp_requirement_group_id AS Identifier__(Baustein(e))",
-    "bp_itnetwork>bp_application_group>bp_application>bp_requirement_group.bp_requirement_group_name AS Titel__(Baustein(e))",
-    "bp_itnetwork>bp_application_group>bp_application>bp_requirement_group.bp_requirement_group_id AS Identifier__(Baustein(e))",
-    "bp_itnetwork>bp_application_group>bp_application>bp_requirement_group.bp_requirement_group_id AS Identifier__(Baustein(e))",
-    "bp_itnetwork>bp_itsystem_group>bp_itsystem_group>bp_itsystem>bp_requirement_group.bp_requirement_group_name AS Titel__(Baustein(e))",
-    "bp_itnetwork>bp_itsystem_group>bp_itsystem_group>bp_itsystem>bp_requirement_group.bp_requirement_group_id AS Identifier__(Baustein(e))",
-    "bp_itnetwork>bp_itsystem_group>bp_itsystem_group>bp_itsystem.bp_itsystem_name AS Titel__(IT-System)",
-    "bp_itnetwork>bp_itsystem_group>bp_itsystem_group>bp_itsystem.bp_itsystem_abbr AS Kürzel__(IT-System)",
-    "bp_itnetwork>bp_itsystem_group>bp_itsystem_group>bp_itsystem_group.bp_itsystem_group_name AS Titel__(IT-Systeme)",
-    "bp_itnetwork>bp_itsystem_group>bp_itsystem_group>bp_itsystem_group>bp_itsystem>bp_requirement_group.bp_requirement_group_name AS Titel__(Baustein(e))",
-    "bp_itnetwork>bp_itsystem_group>bp_itsystem_group>bp_itsystem_group>bp_itsystem>bp_requirement_group.bp_requirement_group_id AS Identifier__(Baustein(e))",
-    "bp_itnetwork>bp_icssystem_group>bp_icssystem>bp_requirement_group.bp_requirement_group_name AS Titel__(Baustein(e))",
-    "bp_itnetwork>bp_icssystem_group>bp_icssystem>bp_requirement_group.bp_requirement_group_id AS Identifier__(Baustein(e))",
-    "bp_itnetwork>bp_device_group>bp_device>bp_requirement_group.bp_requirement_group_name AS Titel__(Baustein(e))",
-    "bp_itnetwork>bp_device_group>bp_device>bp_requirement_group.bp_requirement_group_id AS Identifier__(Baustein(e))",
-    "bp_itnetwork>bp_network_group>bp_network>bp_requirement_group.bp_requirement_group_name AS Titel__(Baustein(e))",
-    "bp_itnetwork>bp_network_group>bp_network>bp_requirement_group.bp_requirement_group_id AS Identifier__(Baustein(e))",
-    "bp_itnetwork>bp_network_group>bp_network>bp_requirement_group.bp_requirement_group_id AS Identifier__(Baustein(e))",
-    "bp_itnetwork>bp_network_group>bp_network_group>bp_network>bp_requirement_group.bp_requirement_group_name AS Titel__(Baustein(e))",
-    "bp_itnetwork>bp_network_group>bp_network_group>bp_network>bp_requirement_group.bp_requirement_group_id AS Identifier__(Baustein(e))",
-    "bp_itnetwork>bp_room_group>bp_room>bp_requirement_group.bp_requirement_group_name AS Titel__(Baustein(e))",
-    "bp_itnetwork>bp_room_group>bp_room>bp_requirement_group.bp_requirement_group_id AS Identifier__(Baustein(e))",
-    "bp_itnetwork>bp_room_group>bp_room_group>bp_room>bp_requirement_group.bp_requirement_group_name AS Titel__(Baustein(e))",
-    "bp_itnetwork>bp_room_group>bp_room_group>bp_room>bp_requirement_group.bp_requirement_group_id AS Identifier__(Baustein(e))"
+    "bp_requirement<bp_requirement_group.bp_requirement_group_name AS Titel__(Baustein(e))",
+    "bp_requirement<bp_requirement_group.bp_requirement_group_id AS Identifier__(Baustein(e))",
+    "bp_requirement/bp_itnetwork.dbid AS Datenbank-Id__(Informationsverbund)",
+    "bp_requirement/bp_businessprocess.dbid AS Datenbank-Id__(Geschäftsprozess)",
+    "bp_requirement/bp_application.dbid AS Datenbank-Id__(Anwendung)",
+    "bp_requirement/bp_itsystem.dbid AS Datenbank-Id__(IT-System)",
+    "bp_requirement/bp_icssystem.dbid AS Datenbank-Id__(ICS-System)",
+    "bp_requirement/bp_device.dbid AS Datenbank-Id__(AnderesIoT-System)",
+    "bp_requirement/bp_itnetwork.dbid AS Datenbank-Id__(Informationsverbund)",
+    "bp_requirement/bp_room.dbid AS Datenbank-Id__(Raum)"
   ],
   "relationIds": []
 }]]></xml-property>
@@ -8199,36 +7852,18 @@ else &#13;
             <property name="dataSet">Bausteine</property>
             <list-property name="boundDataColumns">
                 <structure>
-                    <property name="name">Titel__(Informationsverbund)</property>
-                    <text-property name="displayName">Titel__(Informationsverbund)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Titel__(Informationsverbund)"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
                     <property name="name">Titel__(Baustein(e))</property>
                     <text-property name="displayName">Titel__(Baustein(e))</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Titel_Bausteine_concat"]</expression>
+                    <expression name="expression" type="javascript">dataSetRow["Titel__(Baustein(e))"]</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">Identifier__(Baustein(e))</property>
                     <text-property name="displayName">Identifier__(Baustein(e))</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Identifier_Bausteine_concat"]</expression>
+                    <expression name="expression" type="javascript">dataSetRow["Identifier__(Baustein(e))"]</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Identifier_Bausteine_concat</property>
-                    <text-property name="displayName">Identifier_Bausteine_concat</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Identifier_Bausteine_concat"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">Titel_Bausteine_concat</property>
-                    <text-property name="displayName">Titel_Bausteine_concat</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Titel_Bausteine_concat"]</expression>
-                    <property name="dataType">string</property>
                 </structure>
                 <structure>
                     <property name="name">sortkey</property>
@@ -8242,13 +7877,19 @@ else &#13;
                     <simple-property-list name="aggregateOn">
                         <value>BausteinGroup</value>
                     </simple-property-list>
-                    <property name="aggregateFunction">COUNT</property>
+                    <property name="aggregateFunction">COUNTDISTINCT</property>
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["Identifier_Bausteine_concat"]</expression>
+                            <expression name="value" type="javascript">row["TargetObjectId"]</expression>
                         </structure>
                     </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">TargetObjectId</property>
+                    <expression name="expression" type="javascript">dataSetRow["ModuleIdTargetObjectId"]</expression>
+                    <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
             </list-property>
@@ -8326,9 +7967,9 @@ else &#13;
             </header>
             <group id="8114">
                 <property name="groupName">BausteinGroup</property>
-                <expression name="keyExpr" type="javascript">row["Identifier_Bausteine_concat"]</expression>
+                <expression name="keyExpr" type="javascript">row["Identifier__(Baustein(e))"]</expression>
                 <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Identifier_Bausteine_concat"]</expression>
+                    <expression name="expressionValue" type="javascript">row["Identifier__(Baustein(e))"]</expression>
                 </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
