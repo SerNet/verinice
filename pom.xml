@@ -44,6 +44,7 @@
 		<module>sernet.gs.pax_web.fragment</module>
 		<module>sernet.gs.reveng</module>
 		<module>sernet.gs.server</module>
+		<module>sernet.gs.server.tests</module>
 		<module>sernet.gs.service</module>
 		<module>sernet.gs.springweb.fragment</module>
 		<module>sernet.gs.ui.rcp.main</module>
@@ -136,6 +137,14 @@
 				<configuration>
 					<showDeprecation>true</showDeprecation>
 					<showWarnings>true</showWarnings>
+				</configuration>
+			</plugin>
+          	<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+					<testRuntime>default</testRuntime>
 				</configuration>
 			</plugin>
 		</plugins>
