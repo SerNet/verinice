@@ -8,7 +8,7 @@
     </simple-property-list>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[function formatDateFromString(str) {
-	if(str != null &amp;&amp; str != ""){
+	if(str != null &amp;&amp; str != "" &amp;&amp; str != "null"){
 		a = Packages.java.time.LocalDate.parse(str)
 		return a.format(Packages.java.time.format.DateTimeFormatter.ofPattern(reportContext.getMessage("date.format.string")))
 	}
