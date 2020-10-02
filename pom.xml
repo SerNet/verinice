@@ -66,6 +66,7 @@
 
 		<!-- tests -->
 		<module>sernet.gs.server.tests</module>
+		<module>sernet.gs.service.tests</module>
 		<module>sernet.gs.ui.rcp.main.tests</module>
 	</modules>
 
