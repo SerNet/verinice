@@ -77,6 +77,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.verinice.bp.rcp.consolidator.ConsolidatorAction;
 import sernet.verinice.bp.rcp.filter.BaseProtectionFilterAction;
 import sernet.verinice.bp.rcp.filter.BaseProtectionFilterBuilder;
 import sernet.verinice.bp.rcp.filter.BaseProtectionFilterParameters;
@@ -137,6 +138,7 @@ public class BaseProtectionView extends RightsEnabledView
     private ExpandAction expandAction;
     private Action expandAllAction;
     private CollapseAction collapseAction;
+    private ConsolidatorAction consolidatorAction;
     private Action collapseAllAction;
     private BaseProtectionFilterAction filterAction;
     private ShowAccessControlEditAction accessControlEditAction;
@@ -321,6 +323,9 @@ public class BaseProtectionView extends RightsEnabledView
         manager.add(new Separator());
         manager.add(expandAction);
         manager.add(collapseAction);
+        manager.add(new Separator());
+        manager.add(consolidatorAction);
+        manager.add(new Separator());
         drillDownAdapter.addNavigationActions(manager);
     }
 
@@ -357,6 +362,7 @@ public class BaseProtectionView extends RightsEnabledView
                 getViewSite().getWorkbenchWindow(), Messages.BaseProtectionView_AccessControl);
 
         makeFilterAction();
+        consolidatorAction = new ConsolidatorAction(getViewSite().getWorkbenchWindow());
     }
 
     private void makeFilterAction() {

@@ -66,6 +66,12 @@ public class Safeguard extends CnATreeElement implements IBpElement, IIdentifiab
     public static final String PROP_CHANGE_TYPE_REMOVED = "bp_safeguard_change_type_removed"; //$NON-NLS-1$
     public static final String PROP_CHANGE_DETAILS = "bp_safeguard_change_details"; //$NON-NLS-1$
 
+    public static final String PROP_GRP_IMPLEMENTATION = "bp_safeguard_implementation"; //$NON-NLS-1$
+    public static final String PROP_GRP_GROUP_KOSTEN = "bp_safeguard_group_kosten"; //$NON-NLS-1$
+    public static final String PROP_GRP_DATA_PROTECTION_OBJECTIVES_EUGDPR = "bp_safeguard_data_protection_objectives_eugdpr"; //$NON-NLS-1$
+    public static final String PROP_GRP_KIX = "bp_safeguard_kix"; //$NON-NLS-1$
+    public static final String PROP_GRP_REVISION = "bp_safeguard_revision"; //$NON-NLS-1$
+
     protected Safeguard() {
     }
 

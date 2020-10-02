@@ -60,6 +60,7 @@
             <action id="changeicon" />
             <action id="changeownpassword" />
             <action id="cnavalidation" />
+            <action id="consolidator_modbp" />
             <action id="creategreenbonetasks" />
             <action id="createindividualtasks" />
             <action id="createisatasks" />
@@ -152,6 +153,7 @@
             <action id="changeownpassword" />
             <action id="cnavalidation" />
             <action id="cnavalidation" />
+            <action id="consolidator_modbp" />
             <action id="creategreenbonetasks" />
             <action id="creategreenbonetasks" />
             <action id="createindividualtasks" />
@@ -274,6 +276,7 @@
             <action id="catalogview" />
             <action id="changeicon" />
             <action id="cnavalidation" />
+            <action id="consolidator_modbp" />
             <action id="convertitnetwork" />
             <action id="creategreenbonetasks" />
             <action id="createindividualtasks" />
@@ -356,6 +359,7 @@
             <action id="catalogview" />
             <action id="changeicon" />
             <action id="cnavalidation" />
+            <action id="consolidator_modbp" />
             <action id="convertitnetwork" />
             <action id="creategreenbonetasks" />
             <action id="createindividualtasks" />
@@ -435,6 +439,7 @@
             <action id="catalogview" />
             <action id="changeicon" />
             <action id="cnavalidation" />
+            <action id="consolidator_modbp" />
             <action id="convertitnetwork" />
             <action id="creategreenbonetasks" />
             <action id="createindividualtasks" />

@@ -79,6 +79,10 @@ public class BpThreat extends CnATreeElement
     public static final String REL_BP_THREAT_BP_NETWORK = "rel_bp_threat_bp_network"; //$NON-NLS-1$
     public static final String REL_BP_THREAT_BP_ROOM = "rel_bp_threat_bp_room"; //$NON-NLS-1$
 
+    public static final String PROP_GRP_RISK_TREATMENT_OPTION_GROUP = "bp_threat_risk_treatment_option_group"; //$NON-NLS-1$
+    public static final String PROP_GRP_RISK_WITH_ADDITIONAL_SAFEGUARDS = "bp_threat_risk_with_additional_safeguards"; //$NON-NLS-1$
+    public static final String PROP_GRP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS = "bp_threat_risk_without_additional_safeguards"; //$NON-NLS-1$
+    public static final String PROP_GRP_RISK_WITHOUT_SAFEGUARDS = "bp_threat_risk_without_safeguards"; //$NON-NLS-1$
     private static final Map<String, String> RELATION_TYPES_BY_TARGET_OBJECT_TYPE = new HashMap<>();
     static {
         RELATION_TYPES_BY_TARGET_OBJECT_TYPE.put(Application.TYPE_ID,
