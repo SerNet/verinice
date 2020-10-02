@@ -79,7 +79,10 @@ pipeline {
                 // triggerRCPTTBuild 'rcptt-client-test', 'bp*.test'
                 
                 // server test
-                // triggerRCPTTBuild 'verinice-server-rcptt-test'
+                // triggerRCPTTBuild 'rcptt-server-test'
+
+                // custom server test
+                // triggerRCPTTBuild 'rcptt-server-test', 'test-vn-2414-information-networks-with-account-cant-be-deleted.test'
 
                 // report verinice en and de
                 // triggerRCPTTBuild 'rcptt-all-report-tests'
