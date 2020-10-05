@@ -73,16 +73,14 @@ pipeline {
         stage('Trigger RCPTT') {
             steps {
                 // normal client rcptt
-                triggerRCPTTBuild 'rcptt-client-test'
-                
-                // custom client rcptt
-                // triggerRCPTTBuild 'rcptt-client-test', 'bp*.test'
+                // the last parameter can be adjusted to control which tests are to be run
+                // e.g. 'bp*.test'
+                triggerRCPTTBuild 'rcptt-client-test', '*.test'
                 
                 // server test
-                // triggerRCPTTBuild 'rcptt-server-test'
-
-                // custom server test
-                // triggerRCPTTBuild 'rcptt-server-test', 'test-vn-2414-information-networks-with-account-cant-be-deleted.test'
+                // the last parameter can be adjusted to control which tests are to be run
+                // e.g. 'bp*.test'
+                // triggerRCPTTBuild 'rcptt-server-test', '*.test'
 
                 // report verinice en and de
                 // triggerRCPTTBuild 'rcptt-all-report-tests'
