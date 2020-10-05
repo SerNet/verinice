@@ -2,7 +2,7 @@ pipeline {
     agent any
     options {
         buildDiscarder logRotator(numToKeepStr: '10')
-        throttle(['rcptt-jenkins'])
+        throttleJobProperty categories: ['rcptt-jenkins'], limitOneJobWithMatchingParams: false, maxConcurrentPerNode: 3, maxConcurrentTotal: 3, paramsToUseForLimit: '', throttleEnabled: true, throttleOption: 'category'
     }
     parameters {
         gitParameter branch: '', branchFilter: '.*', defaultValue: 'develop' , quickFilterEnabled: true, selectedValue: 'NONE', sortMode: 'NONE', tagFilter: '*', type: 'PT_BRANCH_TAG', 
