@@ -18,7 +18,6 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
@@ -229,15 +228,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         gdLabelReportType.widthHint = 190;
         labelReportType.setLayoutData(gdLabelReportType);
 
-        comboReportType = new ComboViewer(reportGroup, SWT.READ_ONLY) {
-            @Override
-            protected void handleInvalidSelection(ISelection invalidSelection,
-                    ISelection newSelection) {
-                Object firstElement = getElementAt(0);
-                super.handleInvalidSelection(invalidSelection,
-                        new StructuredSelection(firstElement));
-            }
-        };
+        comboReportType = new ComboViewer(reportGroup, SWT.READ_ONLY);
         comboReportType.getCombo()
                 .setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
         comboReportType.setContentProvider(ArrayContentProvider.getInstance());
@@ -249,22 +240,18 @@ public class GenerateReportDialog extends TitleAreaDialog {
         });
         comboReportType.setInput(reportTemplates);
         comboReportType.addSelectionChangedListener(e -> {
-
             if (reportTemplates.length > 0) {
                 chosenReportMetaData = (ReportTemplateMetaData) e.getStructuredSelection()
                         .getFirstElement();
                 chosenReportType = reportTypes[0];
             }
             setupComboOutputFormatContent();
-            if (!isContextMenuCall()) {
+            if (!isContextMenuCall() && !e.getSelection().isEmpty()) {
                 setupComboScopes(
                         ((ReportTemplateMetaData) e.getStructuredSelection().getFirstElement())
                                 .getContext());
             }
         });
-
-        Label seperator = new Label(reportGroup, SWT.SEPARATOR | SWT.HORIZONTAL);
-        seperator.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 
         Label labelScope = new Label(reportGroup, SWT.NULL);
         GridData gdLabelScope = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -281,36 +268,14 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 selectScope();
             }
         });
-        if (!isContextMenuCall()) {
-            Button reset = new Button(reportGroup, SWT.RIGHT);
-            reset.setText(Messages.GenerateReportDialog_40);
-            reset.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected(SelectionEvent event) {
-                    setupComboScopes(ReportContext.UNSPECIFIED);
-                    comboReportType.resetFilters();
-                    comboReportType
-                            .setSelection(new StructuredSelection(comboReportType.getElementAt(0)));
-                }
-            });
-        }
-        Label reportGroupLabel = new Label(reportGroup, SWT.SEPARATOR | SWT.HORIZONTAL);
-        reportGroupLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
+
         Label labelOutputFormat = new Label(reportGroup, SWT.NONE);
         GridData gdLabelOutputFormat = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
         gdLabelOutputFormat.widthHint = 190;
         labelOutputFormat.setLayoutData(gdLabelOutputFormat);
         labelOutputFormat.setText(Messages.GenerateReportDialog_9);
 
-        comboOutputFormat = new ComboViewer(reportGroup, SWT.READ_ONLY) {
-            @Override
-            protected void handleInvalidSelection(ISelection invalidSelection,
-                    ISelection newSelection) {
-                Object firstElement = getElementAt(0);
-                super.handleInvalidSelection(invalidSelection,
-                        new StructuredSelection(firstElement));
-            }
-        };
+        comboOutputFormat = new ComboViewer(reportGroup, SWT.READ_ONLY);
         comboOutputFormat.setContentProvider(ArrayContentProvider.getInstance());
         comboOutputFormat.setLabelProvider(new LabelProvider() {
             @Override
@@ -325,6 +290,25 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 chosenOutputFormat = (IOutputFormat) e.getStructuredSelection().getFirstElement();
             }
         });
+
+        if (!isContextMenuCall()) {
+            Button reset = new Button(reportGroup, SWT.RIGHT);
+            reset.setText(Messages.GenerateReportDialog_40);
+            reset.addSelectionListener(new SelectionAdapter() {
+                @Override
+                public void widgetSelected(SelectionEvent event) {
+                    rootElement = null;
+                    rootElements = null;
+                    setupComboScopes(ReportContext.UNSPECIFIED);
+                    comboReportType.resetFilters();
+                    comboReportType.setSelection(StructuredSelection.EMPTY);
+                    comboOutputFormat.setSelection(StructuredSelection.EMPTY);
+                }
+            });
+        }
+
+        Label reportGroupLabel = new Label(reportGroup, SWT.SEPARATOR | SWT.HORIZONTAL);
+        reportGroupLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
 
         Label useDateLabel = new Label(reportGroup, SWT.NONE);
         useDateLabel.setText(Messages.GenerateReportDialog_33);
@@ -351,10 +335,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
         createCacheResetButton(groupCache);
 
-        comboReportType.setSelection(new StructuredSelection(comboReportType.getElementAt(0)));
-        if (reportTemplates.length > 0) {
-            chosenReportType = reportTypes[0];
-        } else {
+        if (reportTemplates.length == 0) {
             showNoReportsExistant();
         }
         setupComboOutputFormatContent();
@@ -444,23 +425,45 @@ public class GenerateReportDialog extends TitleAreaDialog {
                         Messages.GenerateReportDialog_16 + elmt.getDbId() + ": " + elmt.getTitle()); // $NON-NLS-2$ //$NON-NLS-1$
             }
         }
-        if (chosenReportMetaData != null && chosenReportMetaData.isMultipleRootObjects()) {
+        boolean reportSupportsMultipleRootObjects = chosenReportMetaData != null
+                && chosenReportMetaData.isMultipleRootObjects();
+        if (reportSupportsMultipleRootObjects) {
             scopeTitles.add(0, Messages.GenerateReportDialog_37);
         }
 
         String[] titles = scopeTitles.toArray(new String[scopeTitles.size()]);
         scopeCombo.setItems(titles);
-        scopeCombo.select(0);
-
+        if (rootElement != null) {
+            boolean elementFound = false;
+            for (int i = 0; i < scopes.size(); i++) {
+                if (scopes.get(i).getDbId().equals(rootElement)) {
+                    scopeCombo.select(reportSupportsMultipleRootObjects ? i + 1 : i);
+                    elementFound = true;
+                    break;
+                }
+            }
+            if (!elementFound) {
+                scopeCombo.clearSelection();
+            }
+        } else if (rootElements != null) {
+            if (reportSupportsMultipleRootObjects) {
+                scopeCombo.select(0);
+            } else {
+                scopeCombo.clearSelection();
+            }
+        }
     }
 
     private void setupComboOutputFormatContent() {
         if (reportTemplates.length > 0) {
-            List<IOutputFormat> supportedOutputFormats = Stream
-                    .of(chosenReportMetaData.getOutputFormats())
-                    .map(getDepositService()::getOutputFormat).collect(Collectors.toList());
-            comboOutputFormat.setInput(supportedOutputFormats);
-            comboOutputFormat.setSelection(new StructuredSelection(supportedOutputFormats.get(0)));
+            if (chosenReportMetaData != null) {
+                List<IOutputFormat> supportedOutputFormats = Stream
+                        .of(chosenReportMetaData.getOutputFormats())
+                        .map(getDepositService()::getOutputFormat).collect(Collectors.toList());
+                comboOutputFormat.setInput(supportedOutputFormats);
+                comboOutputFormat
+                        .setSelection(new StructuredSelection(supportedOutputFormats.get(0)));
+            }
         } else {
             showNoReportsExistant();
         }
