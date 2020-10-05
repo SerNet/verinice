@@ -54,7 +54,7 @@ pipeline {
 	                                skipTags << 'performance'
 	                            }
 	                            if (!params.runReportingTests){
-	                                skipTags << 'reporting'
+	                                skipTags << 'report'
 	                            }
 	                            sh """
 	                            ant -buildfile gui-test-runner/start-gui-test.xml test-verinice-client-test-custom \
