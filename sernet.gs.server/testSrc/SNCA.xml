@@ -5600,8 +5600,17 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             name="Phone"
             id="person-iso_telefon" />
         <huiproperty
+            name="Mobile"
+            id="person-iso_mobile" />
+        <huiproperty
+            name="Fax"
+            id="person-iso_fax" />
+        <huiproperty
             name="Email"
             id="person-iso_email" />
+        <huiproperty
+            name="Emergency communication systems"
+            id="person-iso_emergency" />
         <huiproperty
             name="Org.-Unit"
             id="person-iso_orgeinheit" />
@@ -6847,6 +6856,8 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             name="was responded by" reversename="response to" tooltip="" />
         <huirelation to="control" id="rel_incident_control"
             name="in future prevented by" reversename="reaction to" tooltip="" />
+        <huirelation to="process" id="rel_incident_process"
+            name="affected" reversename="was affected by" tooltip="" /> 
 
           <huirelation to="samt_topic" id="rel_incident_samt_topic_prevented"
             name="in future prevented by"   reversename="reaction to" tooltip="" />
@@ -11781,7 +11792,10 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_person_first_name" name="First name" />
         <huiproperty id="bp_person_last_name" name="Last name" required="true" />
         <huiproperty id="bp_person_phone" name="Phone" />
+        <huiproperty id="bp_person_mobile" name="Mobile" />
+        <huiproperty id="bp_person_fax" name="Fax" />
         <huiproperty id="bp_person_email" name="Email" />
+        <huiproperty id="bp_person_emergency" name="Emergency communication systems" />
         <huiproperty id="bp_person_org_unit" name="=Org. unit" />
         <huiproperty id="bp_person_explanation" name="Explanation" />
         <huiproperty id="bp_person_tag" name="Tags" />       
@@ -12940,6 +12954,8 @@ Wurden bereits weitere Stellen informiert?
         <huirelation to="bp_device" id="rel_bp_incident_device"
             name="affected" reversename="was affected by" tooltip="" />
         <huirelation to="bp_room" id="rel_bp_incident_room"
+            name="affected" reversename="was affected by" tooltip="" />
+        <huirelation to="bp_businessprocess" id="rel_bp_incident_businessprocess"
             name="affected" reversename="was affected by" tooltip="" />
 
         <huirelation to="bp_threat" id="rel_bp_incident_threat"
