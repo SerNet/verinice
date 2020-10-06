@@ -26,7 +26,7 @@ pipeline {
             }
             steps {
                 sh 'env'
-                buildDescription "${env.GIT_BRANCH}:${env.job_to_copy_from}:${env.TEST_LIST}"
+                buildDescription "branch: ${env.GIT_BRANCH}:<br>aut job: ${params.job_to_copy_from}<br>tests: ${params.TEST_LIST}"
                 //remove old stuff
                 sh '''
                     rm -f *.zip

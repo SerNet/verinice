@@ -25,7 +25,7 @@ pipeline {
         stage('Run RCPTT tests') {
             steps {
                 sh 'env'
-                buildDescription "${env.GIT_BRANCH} ${env.GIT_COMMIT[0..8]} ${env.TEST_LIST}"
+                buildDescription "branch: ${env.GIT_BRANCH} (${env.GIT_COMMIT[0..8]})<br>tests: ${env.TEST_LIST}"
                 //remove old stuff
                 sh '''
                     rm -f *.zip

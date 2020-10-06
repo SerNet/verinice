@@ -32,7 +32,7 @@ pipeline {
             }
             steps {
                 sh 'env'
-                buildDescription "${env.GIT_BRANCH} ${env.GIT_COMMIT[0..8]} ${env.NODE_NAME} ${env.TEST_LIST}"
+                buildDescription "branch: ${env.GIT_BRANCH} (${env.GIT_COMMIT[0..8]})<br>node: ${env.NODE_NAME}<br>tests: ${params.TEST_LIST}"
                 //remove old stuff
                 sh '''
                     rm -f *.zip

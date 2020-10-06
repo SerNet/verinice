@@ -36,7 +36,7 @@ pipeline {
             }
             steps {
                 sh 'env'
-                buildDescription "${env.GIT_BRANCH} ${env.GIT_COMMIT[0..8]} ${env.TEST_LIST}"
+                buildDescription "branch: ${env.GIT_BRANCH} (${env.GIT_COMMIT[0..8]})<br>node: ${env.NODE_NAME}<br>tests: ${params.TEST_LIST}"
 
                 sh """
                     rm -f -r apache-tomcat-${params.TOMCAT_VERSION}
