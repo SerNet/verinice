@@ -11811,6 +11811,7 @@ Wurden bereits weitere Stellen informiert?
             reversename="audited" />
         <huirelation to="bp_person" id="rel_bp_requirement_bp_person_interviewee"
             name="interviewee" reversename="interviewed about" />
+        <huirelation to="bp_requirement" id="rel_bp_requirement_bp_requirement" name="implements"  reversename="implemented by" />
 
         <huiproperty id="bp_requirement_id" name="Identifier" />
         <huiproperty id="bp_requirement_name" name="Title" required="true" />
