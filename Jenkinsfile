@@ -25,6 +25,8 @@ pipeline {
     }
     parameters {
         string(name: 'jreversion', defaultValue: 'jdk8u265-b01', description: 'Download and pack a JRE with this version. See https://adoptopenjdk.net/archive.html for a list of possible versions.', trim: true)
+        booleanParam(name: 'runIntegrationTests', defaultValue: true, description: 'Run integration tests')
+        booleanParam(name: 'runRCPTTTests', defaultValue: true, description: 'Run RCPTT tests')
         booleanParam(name: 'dists', defaultValue: false, description: 'Run distribution steps, i.e. build RPMs files etc.')
         // We need an extra flag. Unfortunately it is not possible to find out, if a password is left empty.
         booleanParam(name: 'distSign', defaultValue: false, description: 'Sign RPM packages')
@@ -64,13 +66,19 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh "./verinice-distribution/build.sh verify"
-                archiveArtifacts artifacts: 'sernet.verinice.releng.client.product/target/products/*.zip,sernet.verinice.releng.server.product/target/*.war,sernet.verinice.releng.client.product/target/repository/**', fingerprint: true
-                junit allowEmptyResults: true, testResults: '**/build/reports/**/*.xml,**/target/surefire-reports/*.xml'
-                perfReport filterRegex: '', sourceDataFiles: '**/build/reports/TEST*.xml,**/target/surefire-reports/*.xml'
+                script {
+                    def buildTask = params.runIntegrationTests ? 'verify' : 'products'
+	                sh "./verinice-distribution/build.sh ${buildTask}"
+	                archiveArtifacts artifacts: 'sernet.verinice.releng.client.product/target/products/*.zip,sernet.verinice.releng.server.product/target/*.war,sernet.verinice.releng.client.product/target/repository/**', fingerprint: true
+	                if (params.runIntegrationTests){
+		                junit allowEmptyResults: true, testResults: '**/build/reports/**/*.xml,**/target/surefire-reports/*.xml'
+		                perfReport filterRegex: '', sourceDataFiles: '**/build/reports/TEST*.xml,**/target/surefire-reports/*.xml'
+	                }
+                }
             }
         }
         stage('Trigger RCPTT') {
+            when { expression { params.runRCPTTTests } }
             steps {
                 // normal client rcptt
                 // the last parameter can be adjusted to control which tests are to be run
