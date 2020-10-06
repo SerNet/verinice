@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent none
     options {
         buildDiscarder logRotator(numToKeepStr: '10')
         throttleJobProperty categories: ['rcptt-jenkins'], limitOneJobWithMatchingParams: false, maxConcurrentPerNode: 3, maxConcurrentTotal: 3, paramsToUseForLimit: '', throttleEnabled: true, throttleOption: 'category'
@@ -90,10 +90,8 @@ pipeline {
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'gui-test-runner/result/**/*.*', excludes: 'build/result/auth/**'
                 publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'gui-test-runner/result', reportFiles: 'results.html', reportName: 'Gui Test Report', reportTitles: "${env.job_to_copy_from}"])
         }
-      }
-    }
-    post {
-          always {
+        post {
+            always {
                 notifyBitbucket stashServerBaseUrl: 'https://git.verinice.org/bb', 
                   credentialsId: 'bitbucket', 
                   commitSha1: '', 
@@ -108,6 +106,8 @@ pipeline {
 
                 cleanWs patterns: [[pattern: '*.zip', type: 'INCLUDE']],
                   notFailBuild: true
-          }
+                }
+            }
+        }
     }
 }
