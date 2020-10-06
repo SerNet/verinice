@@ -1,0 +1,119 @@
+pipeline {
+    agent {
+        label 'linux-gui-performance-tester'
+    }
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '30'))
+        disableConcurrentBuilds()
+    }
+    parameters {
+        gitParameter branch: '', branchFilter: '.*', defaultValue: 'develop' , quickFilterEnabled: true, selectedValue: 'NONE', sortMode: 'NONE', tagFilter: '*', type: 'PT_BRANCH_TAG',
+          description: 'The branch or that that the tests are taken from', name: 'BRANCH_OR_TAG'
+        string name: 'job_to_copy_from', defaultValue: 'verinice/develop',
+          description: '''The job that the AUT is copied from<br/>
+        Please note that slashes in the branch-name must be escaped as %2F, e.g. <code>verinice/feature%2Fvn-0000-make-everything-great</code>.'''
+        buildSelector name: 'build_to_copy_from',
+          description: 'The build number of the job that the AUT is copied from'
+        string(name: 'TEST_LIST', defaultValue: '*-performance.test',
+          description: 'Semicolon separated list of tests, or wildcard expressions. Use *.test for all tests.')
+        string(name: 'SERVER_TIMEOUT', defaultValue: '580',
+          description: 'The startup timeout of the verinice server.')
+        string(name: 'TEST_OPTIONS', defaultValue: 'testExecTimeout=45000;execTimeout=410000;reportingIncludeIgnoredWaitDetails=true;passedTestDetails=true;runtimeEnableActivityLogs=true;q7ImageCapture=true;jobHangTimeout=900000;contextRunnableTimeout=900000',
+          description: 'The options of the rcptt testing program.')
+    }
+    stages {
+        stage('Run RCPTT tests') {
+            steps {
+                sh 'env'
+                buildDescription "${env.GIT_BRANCH} ${env.GIT_COMMIT[0..8]} ${env.TEST_LIST}"
+                //remove old stuff
+                sh '''
+                    rm -f *.zip
+                '''
+
+                copyArtifacts filter: "**/verinice-*${VERINICE_CLIENT_SELECTOR_OS_COMPONENT}.zip",
+                  fingerprintArtifacts: true, flatten: true,
+                  projectName: params.job_to_copy_from,
+                  selector: buildParameter(params.build_to_copy_from)
+
+                wrap([$class: 'Xvfb', additionalOptions: '', assignedLabels: '',
+                  autoDisplayName: true, displayNameOffset: 0, installationName: 'default-Xvfb',
+                  screen: '1200x960x24']) {
+                    withAnt(installation: 'Ant 1.9.0') {
+                        withEnv(["rcptt_runner_HOME=${tool name: 'rcptt_runner', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'}"]) {
+                            script {
+                                sh """
+                                ant -buildfile gui-test-runner/start-gui-test.xml test-verinice-client-test-custom \
+                                 -Drunner-path=${rcptt_runner_HOME} \
+                                 -Dtest-list="${params.TEST_LIST}" \
+                                 -Dverinice.timeout="${params.SERVER_TIMEOUT}" \
+                                 -Dskip-tags="skipExecution;serverOnlyTest" \
+                                 -Dtest-options="${params.TEST_OPTIONS}" \
+                                 -Dverinice.lang=de"""
+                            }
+                        }
+                    }
+                }
+                dir(tool(name: 'logparser', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool')){
+                    sh "./logParser -i log4j  -d $WORKSPACE/gui-test-runner/result/log -f verinice-client.* -o jenkins -n $WORKSPACE/gui-test-runner/result/log/clientlogparsed.txt"
+                }
+                junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: 'gui-test-runner/result/results.junit.xml'
+                perfReport filterRegex: '', sourceDataFiles: 'gui-test-runner/result/results.junit.xml'
+                recordIssues(tools: [groovyScript(parserId: 'aut-eclipse-log', pattern: 'gui-test-runner/result/log/verinice-aut/.log*')])
+                recordIssues(tools: [groovyScript(id: 'verince-client-log', name: 'verince-client-log', parserId: 'verinice-log-parser', pattern: 'gui-test-runner/result/log/clientlogparsed.txt')])
+                archiveArtifacts allowEmptyArchive: true, artifacts: 'gui-test-runner/result/**/*.*', excludes: 'build/result/auth/**'
+                publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'gui-test-runner/result', reportFiles: 'results.html', reportName: 'Gui Test Report', reportTitles: "${job_to_copy_from}"])
+            }
+        }
+        stage('Plot data') {
+            steps {
+                script{
+                    def fileName = 'gui-test-runner/result/metric.csv'
+                    def records = readCSV file: fileName
+                    def data = records[1]
+                    def measurementLabels = data.collate(5).collect{it.first().trim()}.findAll{!it.empty}
+                    measurementLabels.each { label->
+                    	callPlot fileName, label
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            notifyBitbucket stashServerBaseUrl: 'https://git.verinice.org/bb',
+                  credentialsId: 'bitbucket',
+                  commitSha1: '',
+                  considerUnstableAsSuccess: false,
+                  disableInprogressNotification: false,
+                  ignoreUnverifiedSSLPeer: false,
+                  includeBuildNumberInKey: false,
+                  prependParentProjectKey: false,
+                  buildStatus: currentBuild.result,
+                  buildName: currentBuild.fullDisplayName,
+                  projectKey: ''
+
+            cleanWs patterns: [[pattern: '*.zip', type: 'INCLUDE']],
+                    notFailBuild: true
+        }
+    }
+}
+
+def callPlot(String fileName, String plotName) {
+    echo "Creating plot ${plotName}"
+    def plotgroup = 'performance'
+    def g = plotName.split(':')
+    if (g.length > 1){
+        plotgroup = g[g.length-2]
+    }
+
+    plot csvFileName: 'plot-'+plotName+'.csv',
+         csvSeries: [[displayTableFlag: false,
+                      exclusionValues: plotName+'-avg,'+plotName+'-min,'+plotName+'-max',
+                      file: fileName,
+                      inclusionFlag: 'INCLUDE_BY_STRING',
+                      url: '']],
+         group: plotgroup,
+         style: 'line',
+         title: plotName
+}

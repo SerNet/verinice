@@ -96,8 +96,10 @@ pipeline {
                 // product tests
                 // triggerRCPTTBuild 'rcptt-product-report-test'
                 
-                // performance tests rcptt
-                // triggerRCPTTBuild 'verinice-rcptt-performance'
+                // performance tests
+                // the last parameter can be adjusted to control which tests are to be run
+                // e.g. 'bp_delete-import-performance.test'
+                // triggerRCPTTBuild 'rcptt-client-performance-test', '*-performance.test'
                 // triggerRCPTTBuild 'verinice-rcptt-server-performance'
                 
                 // legacy jobs
