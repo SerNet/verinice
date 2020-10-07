@@ -1,7 +1,7 @@
 pipeline {
     agent any
     options {
-        buildDiscarder(logRotator(numToKeepStr: '10'))
+        buildDiscarder(logRotator(numToKeepStr: '100'))
         throttleJobProperty categories: ['rcptt-jenkins'], limitOneJobWithMatchingParams: false, maxConcurrentPerNode: 3, maxConcurrentTotal: 3, paramsToUseForLimit: '', throttleEnabled: true, throttleOption: 'category'
     }
     parameters {
