@@ -1,16 +1,3 @@
-def triggerRCPTTBuild(String jobName, String testList = null){
-	def parameters = [
-        gitParameter(name: 'BRANCH_OR_TAG', value: "${env.GIT_BRANCH}"),
-        string(name: 'job_to_copy_from', value: "${currentBuild.fullProjectName}"),
-        string(name: 'build_to_copy_from', value: "<SpecificBuildSelector plugin=\"copyartifact@1.42.1\"><buildNumber>${env.BUILD_NUMBER}</buildNumber></SpecificBuildSelector>"),
-    ]
-    if (testList != null){
-        parameters << string(name: 'test-list', value: testList)// support the old jobs
-        parameters << string(name: 'TEST_LIST', value: testList)
-    }
-    build job: jobName, wait: false, parameters: parameters
-}
-
 pipeline {
     agent {
         dockerfile {
@@ -83,12 +70,12 @@ pipeline {
                 // normal client rcptt
                 // the last parameter can be adjusted to control which tests are to be run
                 // e.g. 'bp*.test'
-                triggerRCPTTBuild 'rcptt-client-test', '*.test'
+                runStandaloneUITests tests: '*.test'
                 
-                // server test
+                // 3-tier test
                 // the last parameter can be adjusted to control which tests are to be run
                 // e.g. 'bp*.test'
-                // triggerRCPTTBuild 'rcptt-server-test', '*.test'
+                // run3TiertUITests tests: '*.test'
 
                 // report verinice en and de
                 // triggerRCPTTBuild 'rcptt-all-report-tests'
@@ -147,4 +134,26 @@ pipeline {
             sh './verinice-distribution/build.sh clean'
         }
     }
+}
+
+def run3TiertUITests(Map opts = [:]){
+    triggerRCPTTBuild('rcptt-server-test', opts)
+}
+
+def runStandaloneUITests(Map opts = [:]){
+    triggerRCPTTBuild('rcptt-client-test', opts)
+}
+
+def triggerRCPTTBuild(String jobName, Map opts = [:]){
+	def parameters = [
+        gitParameter(name: 'BRANCH_OR_TAG', value: "${env.GIT_BRANCH}"),
+        string(name: 'job_to_copy_from', value: "${currentBuild.fullProjectName}"),
+        string(name: 'build_to_copy_from', value: "<SpecificBuildSelector plugin=\"copyartifact@1.42.1\"><buildNumber>${env.BUILD_NUMBER}</buildNumber></SpecificBuildSelector>"),
+    ]
+    String testList = opts.tests
+    if (testList != null){
+        parameters << string(name: 'test-list', value: testList)// support the old jobs
+        parameters << string(name: 'TEST_LIST', value: testList)
+    }
+    build job: jobName, wait: false, parameters: parameters
 }

@@ -56,16 +56,7 @@ pipeline {
 	                            if (!params.runReportingTests){
 	                                skipTags << 'report'
 	                            }
-	                            sh """
-	                            ant -buildfile gui-test-runner/start-gui-test.xml test-verinice-client-test-custom \
-	                             -Drunner-path=${rcptt_runner_HOME} \
-	                             -Dverinice.server.port=883${EXECUTOR_NUMBER} \
-	                             -Dtest-list="${params.TEST_LIST}" \
-	                             -Dverinice.timeout="${params.SERVER_TIMEOUT}" \
-	                             -Dskip-tags="${skipTags.join(';')}" \
-	                             -Dtest-options="${params.TEST_OPTIONS}" \
-	                             -Dverinice.lang=${params.LANGUAGE}
-	                             """
+                                runRCPTT(rcptt_runner_HOME, "883${env.EXECUTOR_NUMBER}", params.TEST_LIST, params.SERVER_TIMEOUT, skipTags, params.TEST_OPTIONS, params.LANGUAGE)
                              }
                         }
                     }
@@ -100,4 +91,16 @@ pipeline {
             }
         }
     }
+}
+
+def runRCPTT(runnerPath, veriniceServerPort, testList, veriniceTimeout, skipTags, testOptions, language){
+  sh """
+  ant -buildfile gui-test-runner/start-gui-test.xml test-verinice-client-test-custom \
+	  -Drunner-path=${runnerPath} \
+	  -Dverinice.server.port=${veriniceServerPort} \
+	  -Dtest-list="${testList}" \
+	  -Dverinice.timeout="${veriniceTimeout}" \
+	  -Dskip-tags="${skipTags.join(';')}" \
+	  -Dtest-options="${testOptions}" \
+	  -Dverinice.lang=${language}"""
 }
