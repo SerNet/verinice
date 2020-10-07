@@ -14,6 +14,8 @@ pipeline {
           description: 'The build number of the job that the AUT is copied from'
         choice(name: 'LANGUAGE', choices: ['de', 'en'],
           description: 'The language the application will use. The tests need to support this also.')
+        choice(name: 'OPERATING_SYSTEM', choices: ['Linux', 'Mac OSX', 'Windows 10', 'any'],
+          description: 'The operating that the tests should run on.')
         booleanParam defaultValue: false, description: 'Run performance tests', name: 'runPerformanceTests'
         booleanParam defaultValue: false, description: 'Run reporting tests', name: 'runReportingTests'
         string(name: 'TEST_LIST', defaultValue: '*.test',
@@ -27,7 +29,10 @@ pipeline {
         stage('Run RCPTT tests') {
             agent {
                 node {
-                    label 'linux-gui-tester'
+                    label(['Linux' : 'linux-gui-tester',
+                           'Mac OSX' : 'mac-gui-tester',
+                           'Windows 10' : 'windows-gui-tester',
+                           'any' : 'gui-tester'][params.OPERATING_SYSTEM])
                 }
             }
             steps {
@@ -43,26 +48,31 @@ pipeline {
                   projectName: params.job_to_copy_from,
                   selector: buildParameter(params.build_to_copy_from)
 
-                wrap([$class: 'Xvfb', additionalOptions: '', assignedLabels: '',
-                  autoDisplayName: true, displayNameOffset: 0, installationName: 'default-Xvfb',
-                  screen: '1200x960x24']) {
-                    withAnt(installation: 'Ant 1.9.0') {
-                        withEnv(["rcptt_runner_HOME=${tool name: 'rcptt_runner', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'}"]) {
-                            script {
-	                            def skipTags = ['skipExecution', 'serverOnlyTest']
-	                            if (!params.runPerformanceTests){
-	                                skipTags << 'performance'
-	                            }
-	                            if (!params.runReportingTests){
-	                                skipTags << 'report'
-	                            }
+                withAnt(installation: 'Ant 1.9.0') {
+                    withEnv(["rcptt_runner_HOME=${tool name: 'rcptt_runner', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'}"]) {
+                        script {
+                            def skipTags = ['skipExecution', 'serverOnlyTest']
+                            if (!params.runPerformanceTests){
+                                skipTags << 'performance'
+                            }
+                            if (!params.runReportingTests){
+                                skipTags << 'report'
+                            }
+                            // work around https://issues.jenkins-ci.org/browse/JENKINS-63850
+                            if (env.NODE_LABELS.split(' ').contains('linux-gui-tester')){
+                                wrap([$class: 'Xvfb', additionalOptions: '', assignedLabels: '',
+                                  autoDisplayName: true, displayNameOffset: 0, installationName: 'default-Xvfb',
+                                  screen: '1200x960x24']) {
+                                    runRCPTT(rcptt_runner_HOME, "883${env.EXECUTOR_NUMBER}", params.TEST_LIST, params.SERVER_TIMEOUT, skipTags, params.TEST_OPTIONS, params.LANGUAGE)
+                                }
+                            } else {
                                 runRCPTT(rcptt_runner_HOME, "883${env.EXECUTOR_NUMBER}", params.TEST_LIST, params.SERVER_TIMEOUT, skipTags, params.TEST_OPTIONS, params.LANGUAGE)
-                             }
+                            }
                         }
                     }
                 }
                 dir(tool(name: 'logparser', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool')){
-                    sh "./logParser -i log4j  -d $WORKSPACE/gui-test-runner/result/log -f verinice-client.* -o jenkins -n $WORKSPACE/gui-test-runner/result/log/clientlogparsed.txt"
+                    sh "./logParser -i log4j  -d ${WORKSPACE.replace('\\', '/')}/gui-test-runner/result/log -f verinice-client.* -o jenkins -n ${WORKSPACE.replace('\\', '/')}/gui-test-runner/result/log/clientlogparsed.txt"
                 }
                 junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: 'gui-test-runner/result/results.junit.xml'
                 perfReport filterRegex: '', sourceDataFiles: 'gui-test-runner/result/results.junit.xml'
@@ -96,7 +106,7 @@ pipeline {
 def runRCPTT(runnerPath, veriniceServerPort, testList, veriniceTimeout, skipTags, testOptions, language){
   sh """
   ant -buildfile gui-test-runner/start-gui-test.xml test-verinice-client-test-custom \
-	  -Drunner-path=${runnerPath} \
+	  -Drunner-path=${runnerPath.replace('\\', '/')} \
 	  -Dverinice.server.port=${veriniceServerPort} \
 	  -Dtest-list="${testList}" \
 	  -Dverinice.timeout="${veriniceTimeout}" \

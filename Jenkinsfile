@@ -89,10 +89,10 @@ pipeline {
                 // triggerRCPTTBuild 'rcptt-client-performance-test', '*-performance.test'
                 // triggerRCPTTBuild 'verinice-rcptt-server-performance'
                 
-                // legacy jobs
-                // triggerRCPTTBuild 'verinice-client-rcptt'
-                // triggerRCPTTBuild 'verinice-client-rcptt-mac'
-                // triggerRCPTTBuild 'verinice-client-rcptt-windows'
+                // test specific operating systems
+                // runStandaloneUITests os: 'Linux', tests: '*.test'
+                // runStandaloneUITests os: 'Mac OSX', tests: '*.test'
+                // runStandaloneUITests os: 'Windows 10', tests: '*.test'
             }
         }
         stage('Documentation') {
@@ -149,6 +149,7 @@ def triggerRCPTTBuild(String jobName, Map opts = [:]){
         gitParameter(name: 'BRANCH_OR_TAG', value: "${env.GIT_BRANCH}"),
         string(name: 'job_to_copy_from', value: "${currentBuild.fullProjectName}"),
         string(name: 'build_to_copy_from', value: "<SpecificBuildSelector plugin=\"copyartifact@1.42.1\"><buildNumber>${env.BUILD_NUMBER}</buildNumber></SpecificBuildSelector>"),
+        string(name: 'OPERATING_SYSTEM', value: opts.os ?: 'any')
     ]
     String testList = opts.tests
     if (testList != null){
