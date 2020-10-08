@@ -5,8 +5,8 @@ Element-Name: common
 Element-Type: context
 Element-Version: 2.0
 Id: _lGnj8Ix1Eei2UKUDmonytQ
-Runtime-Version: 2.5.1.M3
-Save-Time: 9/21/20, 2:27 PM
+Runtime-Version: 2.5.0.202001211718
+Save-Time: 10/8/20 12:39 PM
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
 Content-Type: text/ecl
@@ -143,5 +143,19 @@ proc "delete-compendium" {
 proc "get-object-browser-text" {
 	get-view Objektbrowser | get-control Browser | get-property text
 }
+
+proc "file-in-dir" [val dirname] [val filename] {
+    concat $dirname [get-java-property "file.separator"] $filename
+}
+
+proc "read-file-in-data-dir" [val filename] {
+    // work around https://bugs.eclipse.org/bugs/show_bug.cgi?id=510874
+    read-file [uri-from-path [file-in-dir $datadir $filename]]
+      | invoke replace "Ã¤" "ä"
+      | invoke replace "Ã¼" "ü"
+      | invoke replace "Ã¼" "ü"
+      | invoke replace "\r" ""
+}
+
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998--
