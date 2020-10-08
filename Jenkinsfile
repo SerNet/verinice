@@ -18,6 +18,7 @@ pipeline {
         // We need an extra flag. Unfortunately it is not possible to find out, if a password is left empty.
         booleanParam(name: 'distSign', defaultValue: false, description: 'Sign RPM packages')
         password(name: 'GNUPGPASSPHRASE', description: 'The passphrase of the key stored in KEYDIR/verinice.public.')
+        booleanParam(name: 'archiveUpdateSite', defaultValue: false, description: 'archive the update site')
     }
     options {
         buildDiscarder(logRotator(numToKeepStr: '3'))
@@ -56,7 +57,10 @@ pipeline {
                 script {
                     def buildTask = params.runIntegrationTests ? 'verify' : 'products'
 	                sh "./verinice-distribution/build.sh ${buildTask}"
-	                archiveArtifacts artifacts: 'sernet.verinice.releng.client.product/target/products/*.zip,sernet.verinice.releng.server.product/target/*.war,sernet.verinice.releng.client.product/target/repository/**', fingerprint: true
+	                archiveArtifacts artifacts: 'sernet.verinice.releng.client.product/target/products/*.zip,sernet.verinice.releng.server.product/target/*.war', fingerprint: true
+	                if (params.archiveUpdateSite || params.dists){
+	                    archiveArtifacts artifacts: 'sernet.verinice.releng.client.product/target/repository/**', fingerprint: true
+	                }
 	                if (params.runIntegrationTests){
 		                junit allowEmptyResults: true, testResults: '**/build/reports/**/*.xml,**/target/surefire-reports/*.xml'
 		                perfReport filterRegex: '', sourceDataFiles: '**/build/reports/TEST*.xml,**/target/surefire-reports/*.xml'
