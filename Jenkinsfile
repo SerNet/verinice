@@ -87,7 +87,7 @@ pipeline {
                 // the last parameter can be adjusted to control which tests are to be run
                 // e.g. 'bp_delete-import-performance.test'
                 // triggerRCPTTBuild 'rcptt-client-performance-test', '*-performance.test'
-                // triggerRCPTTBuild 'verinice-rcptt-server-performance'
+                // triggerRCPTTBuild 'rcptt-server-performance-test', '*-performance.test'
                 
                 // test specific operating systems
                 // runStandaloneUITests os: 'Linux', tests: '*.test'
