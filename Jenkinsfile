@@ -144,6 +144,10 @@ def runStandaloneUITests(Map opts = [:]){
     triggerRCPTTBuild('rcptt-client-test', opts)
 }
 
+def triggerRCPTTBuild(String jobName, String testList){
+    triggerRCPTTBuild(jobName, [tests: testList])
+}
+
 def triggerRCPTTBuild(String jobName, Map opts = [:]){
 	def parameters = [
         gitParameter(name: 'BRANCH_OR_TAG', value: "${env.GIT_BRANCH}"),
