@@ -122,7 +122,6 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     private transient Set<String> exportedTypes;
     private transient Set<Integer> exportedElementIds;
     private transient CacheManager manager = null;
-    private transient String cacheId = null;
     private transient Cache cache = null;
     private transient IBaseDao<CnATreeElement, Serializable> dao;
     private transient ExecutorService taskExecutor;
@@ -197,7 +196,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             log.error("Exception while exporting", e);
             throw new RuntimeCommandException("Exception while exporting", e);
         } finally {
-            getCache().removeAll();
+            cache.removeAll();
             manager.shutdown();
         }
 
@@ -218,7 +217,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             log.info("Max number of threads is: " + getMaxNumberOfThreads());
         }
 
-        getCache().removeAll();
+        cache = createCache();
 
         final SyncVnaSchemaVersion formatVersion = createVersionData();
 
@@ -242,7 +241,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         exportLinks(syncData);
 
         if (log.isDebugEnabled()) {
-            final Statistics s = getCache().getStatistics();
+            final Statistics s = cache.getStatistics();
             log.debug("Cache size: " + s.getObjectCount() + ", hits: " + s.getCacheHits());
         }
 
@@ -540,7 +539,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
 
     private void configureThread(final ExportThread thread) {
         thread.setCommandService(getCommandService());
-        thread.setCache(getCache());
+        thread.setCache(cache);
         thread.setDao(getDao());
         thread.setAttachmentDao(getDaoFactory().getDAO(Attachment.class));
         thread.setHuiTypeFactory(getHuiTypeFactory());
@@ -637,25 +636,15 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         this.filePath = filePath;
     }
 
-    private synchronized Cache getCache() {
-        if (manager == null || Status.STATUS_SHUTDOWN.equals(manager.getStatus()) || cache == null
-                || !Status.STATUS_ALIVE.equals(cache.getStatus())) {
-            cache = createCache();
-        } else {
-            cache = getManager().getCache(cacheId);
-        }
-        return cache;
-    }
-
     private Cache createCache() {
         final int maxElementsInMemory = 20000;
         final int timeToLiveSeconds = 1800;
         final int timeToIdleSeconds = timeToLiveSeconds;
-        cacheId = UUID.randomUUID().toString();
-        cache = new Cache(cacheId, maxElementsInMemory, false, false, timeToLiveSeconds,
+        String cacheId = UUID.randomUUID().toString();
+        Cache c = new Cache(cacheId, maxElementsInMemory, false, false, timeToLiveSeconds,
                 timeToIdleSeconds);
-        getManager().addCache(cache);
-        return cache;
+        getManager().addCache(c);
+        return c;
     }
 
     public synchronized CacheManager getManager() {
