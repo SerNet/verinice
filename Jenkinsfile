@@ -12,7 +12,7 @@ pipeline {
     }
     parameters {
         string(name: 'jreversion', defaultValue: 'jdk8u265-b01', description: 'Download and pack a JRE with this version. See https://adoptopenjdk.net/archive.html for a list of possible versions.', trim: true)
-        booleanParam(name: 'runIntegrationTests', defaultValue: true, description: 'Run integration tests')
+        booleanParam(name: 'runIntegrationTests', defaultValue: false, description: 'Run integration tests')
         booleanParam(name: 'runRCPTTTests', defaultValue: true, description: 'Run RCPTT tests')
         booleanParam(name: 'dists', defaultValue: false, description: 'Run distribution steps, i.e. build RPMs files etc.')
         // We need an extra flag. Unfortunately it is not possible to find out, if a password is left empty.
@@ -74,7 +74,7 @@ pipeline {
                 // normal client rcptt
                 // the last parameter can be adjusted to control which tests are to be run
                 // e.g. 'bp*.test'
-                runStandaloneUITests tests: '*.test'
+                // runStandaloneUITests tests: '*.test'
                 
                 // 3-tier test
                 // the last parameter can be adjusted to control which tests are to be run
@@ -94,9 +94,9 @@ pipeline {
                 // triggerRCPTTBuild 'rcptt-server-performance-test', '*-performance.test'
                 
                 // test specific operating systems
-                // runStandaloneUITests os: 'Linux', tests: '*.test'
-                // runStandaloneUITests os: 'Mac OSX', tests: '*.test'
-                // runStandaloneUITests os: 'Windows 10', tests: '*.test'
+                runStandaloneUITests os: 'Linux', tests: 'test-date-selection-control.test'
+                runStandaloneUITests os: 'Mac OSX', tests: 'test-date-selection-control.test'
+                runStandaloneUITests os: 'Windows 10', tests: 'test-date-selection-control.test'
             }
         }
         stage('Documentation') {
