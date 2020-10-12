@@ -74,7 +74,7 @@ pipeline {
                 // normal client rcptt
                 // the last parameter can be adjusted to control which tests are to be run
                 // e.g. 'bp*.test'
-                // runStandaloneUITests tests: '*.test'
+                runStandaloneUITests tests: '*.test'
                 
                 // 3-tier test
                 // the last parameter can be adjusted to control which tests are to be run
@@ -94,9 +94,9 @@ pipeline {
                 // triggerRCPTTBuild 'rcptt-server-performance-test', '*-performance.test'
                 
                 // test specific operating systems
-                runStandaloneUITests os: 'Linux', tests: 'test-date-selection-control.test'
-                runStandaloneUITests os: 'Mac OSX', tests: 'test-date-selection-control.test'
-                runStandaloneUITests os: 'Windows 10', tests: 'test-date-selection-control.test'
+                // runStandaloneUITests os: 'Linux', tests: 'test-date-selection-control.test'
+                // runStandaloneUITests os: 'Mac OSX', tests: 'test-date-selection-control.test'
+                // runStandaloneUITests os: 'Windows 10', tests: 'test-date-selection-control.test'
             }
         }
         stage('Documentation') {
