@@ -1,0 +1,56 @@
+pipeline {
+    agent {
+        node {
+            label 'master'
+        }
+    }
+    parameters {
+        string name: 'job_to_copy_from', defaultValue: 'verinice/develop',
+          description: '''The job that the SNCA is copied from<br/>
+        Please note that slashes in the branch-name must be escaped as %2F, e.g. <code>verinice/feature%2Fvn-0000-make-everything-great</code>.'''
+        buildSelector name: 'build_to_copy_from',
+          description: 'The build number of the job that the SNCA is copied from'
+    }
+    stages {
+        stage('validate snca') {
+        steps {
+              copyArtifacts filter: "**/WEB-INF/SNCA.xml,**/WEB-INF/snca-messages*.properties",
+                  fingerprintArtifacts: true, flatten: true,
+                  projectName: params.job_to_copy_from,
+                  selector: buildParameter(params.build_to_copy_from)
+        
+              sh '''
+                    mkdir  -p $WORKSPACE/snca
+              '''
+              withEnv(["SNCAEDITOR=${tool name: 'snca-editor1', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'}"]) {
+                sh '''
+                     $SNCAEDITOR/snca-editor  -nosplash -data $WORKSPACE/snca \
+                        -application de.sernet.eclipse.hui.commandline.commandlinerunner \
+                        -i $WORKSPACE/SNCA.xml \
+                        -generateJava -generateMarkdown -generateWiki -validate INFO > $WORKSPACE/snca/snca-output.txt
+                        
+                     cd $WORKSPACE/snca/importProject/src-gen/
+                     dot -T png -O image/*.dot
+                '''
+                }
+                archiveArtifacts artifacts : 'snca/snca-output.txt,snca/importProject/src-gen/**/*.*'
+                
+                recordIssues(
+                    qualityGates: [[threshold: 1, type: 'DELTA_ERROR', unstable: true]],
+                    tools: [groovyScript(id: 'snca-validation', 
+                    name: 'snca-validation', 
+                    parserId: 'snca-validation', 
+                    pattern: 'snca/snca-output.txt')])
+                
+                
+                publishHTML([allowMissing: true, 
+                    alwaysLinkToLastBuild: true, keepAll: false, 
+                    reportDir: 'snca/importProject/src-gen/', 
+                    reportFiles: 'iso-doc-de.html,mogs-doc-de.html,old-mogs-doc-de.html,configuration-doc-de.html,iso-doc-en.html,mogs-doc-en.html,old-mogs-doc-en.html,configuration-doc-en.html', 
+                    reportName: 'SNCA Report', reportTitles: ''])
+            }
+           
+        }
+     }
+}
+
