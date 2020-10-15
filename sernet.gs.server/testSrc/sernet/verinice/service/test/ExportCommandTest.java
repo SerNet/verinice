@@ -26,24 +26,18 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.bind.JAXB;
 
 import org.apache.log4j.Logger;
-import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.Test;
 
 import de.sernet.sync.data.SyncObject;
 import de.sernet.sync.sync.SyncRequest;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.ExportCommand;
-import sernet.verinice.service.commands.LoadCnAElementByExternalID;
-import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.SyncParameterException;
 import sernet.verinice.service.sync.VeriniceArchive;
 import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
@@ -68,44 +62,10 @@ public class ExportCommandTest extends CommandServiceProvider {
     private static final String SOURCE_ID_modplast = "SerNet-DM";
     private static final String EXT_ID_BP_ITNETWORK_modplast = "ENTITY_159007";
 
-    private static ICommandService commandServiceStaticRef;
-
-    @Before
-    public void importVNAs() throws IOException, CommandException, SyncParameterException {
-        if (commandServiceStaticRef == null) {
-            VNAImportHelper.importFile(VNA_FILENAME_Export_test, true, true, true, false);
-            VNAImportHelper.importFile(VNA_FILENAME_testVnaImport, true, true, true, false);
-            VNAImportHelper.importFile(VNA_FILENAME_modplast, true, true, true, false);
-            commandServiceStaticRef = commandService;
-        }
-    }
-
-    @AfterClass
-    public static void removeImportedData() throws CommandException {
-        List<CnATreeElement> elementsToRemove = new LinkedList<>();
-
-        LoadCnAElementByExternalID command = new LoadCnAElementByExternalID(SOURCE_ID_Export_test,
-                EXT_ID_BP_ITNETWORK_Export_test, false, false);
-        commandServiceStaticRef.executeCommand(command);
-        elementsToRemove.addAll(command.getElements());
-
-        command = new LoadCnAElementByExternalID(SOURCE_ID_testVnaImport,
-                EXT_ID_ORGANIZATION_testVnaImport, false, false);
-        commandServiceStaticRef.executeCommand(command);
-        elementsToRemove.addAll(command.getElements());
-
-        command = new LoadCnAElementByExternalID(SOURCE_ID_modplast, EXT_ID_BP_ITNETWORK_modplast,
-                false, false);
-        commandServiceStaticRef.executeCommand(command);
-        elementsToRemove.addAll(command.getElements());
-
-        RemoveElement<CnATreeElement> removeElement = new RemoveElement<>(elementsToRemove);
-        commandServiceStaticRef.executeCommand(removeElement);
-    }
-
     @Test
-    public void exportScope() throws CommandException {
+    public void exportScope() throws CommandException, SyncParameterException, IOException {
         // Given:
+        VNAImportHelper.importFile(VNA_FILENAME_Export_test);
         CnATreeElement org = loadElement(SOURCE_ID_Export_test, EXT_ID_BP_ITNETWORK_Export_test,
                 false, false, false);
 
@@ -128,7 +88,7 @@ public class ExportCommandTest extends CommandServiceProvider {
         assertEquals(351, allSyncObjects.size());
         assertEquals(0, allSyncObjects.stream().flatMap(o -> o.getFile().stream()).count());
         assertEquals(983, syncRequest.getSyncData().getSyncLink().size());
-
+        removeElement(org);
     }
 
     @Test
@@ -136,6 +96,7 @@ public class ExportCommandTest extends CommandServiceProvider {
             throws CommandException, IOException, SyncParameterException {
 
         // Given:
+        VNAImportHelper.importFile(VNA_FILENAME_testVnaImport);
         CnATreeElement org = loadElement(SOURCE_ID_testVnaImport, EXT_ID_ORGANIZATION_testVnaImport,
                 false, false, false);
 
@@ -158,11 +119,14 @@ public class ExportCommandTest extends CommandServiceProvider {
         assertEquals(29, allSyncObjects.size());
         assertEquals(2, allSyncObjects.stream().flatMap(o -> o.getFile().stream()).count());
         assertEquals(20, syncRequest.getSyncData().getSyncLink().size());
+        removeElement(org);
     }
 
     @Test
-    public void exportModplast() throws CommandException {
+    public void exportModplast() throws CommandException, SyncParameterException, IOException {
         // Given:
+        VNAImportHelper.importFile(VNA_FILENAME_modplast);
+
         CnATreeElement org = loadElement(SOURCE_ID_modplast, EXT_ID_BP_ITNETWORK_modplast, false,
                 false, false);
 
@@ -185,7 +149,7 @@ public class ExportCommandTest extends CommandServiceProvider {
         assertEquals(5366, allSyncObjects.size());
         assertEquals(0, allSyncObjects.stream().flatMap(o -> o.getFile().stream()).count());
         assertEquals(18322, syncRequest.getSyncData().getSyncLink().size());
-
+        removeElement(org);
     }
 
     private List<SyncObject> getAllSyncObjects(SyncRequest syncRequest) {

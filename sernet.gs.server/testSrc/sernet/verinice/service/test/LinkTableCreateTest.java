@@ -25,15 +25,15 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import junit.framework.Assert;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
 
 /**
@@ -41,6 +41,8 @@ import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
+@Transactional
+@TransactionConfiguration(transactionManager = "txManager")
 public class LinkTableCreateTest extends CommandServiceProvider {
 
     @Autowired
@@ -50,8 +52,6 @@ public class LinkTableCreateTest extends CommandServiceProvider {
     HUITypeFactory huiTypeFactory;
 
     private final Logger log = Logger.getLogger(LinkTableCreateTest.class);
-
-    private SyncCommand syncCommand;
 
     @Test
     public void testChildRelation() throws Exception {
@@ -256,7 +256,7 @@ public class LinkTableCreateTest extends CommandServiceProvider {
 
     public List<List<String>> loadTestData(String vltFile, String vnaFile, String sourceId,
             List<String> orgExtIds) throws Exception {
-        syncCommand = VNAImportHelper.importFile(vnaFile, true, true, true, false);
+        VNAImportHelper.importFile(vnaFile);
         LoadData loadData = (LoadData) loadDataFactory.getObject();
         loadData.setVltFile(vltFile);
         loadData.setSourceId(sourceId);
@@ -268,11 +268,6 @@ public class LinkTableCreateTest extends CommandServiceProvider {
                 throw new RuntimeException(e);
             }
         });
-    }
-
-    @After
-    public void deleteTestData() throws CommandException {
-        VNAImportHelper.tearDown(syncCommand, elementDao);
     }
 
     private void prettyPrint(String msg, List<List<String>> list) {

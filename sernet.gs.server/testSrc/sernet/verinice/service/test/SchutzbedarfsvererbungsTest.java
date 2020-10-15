@@ -21,10 +21,14 @@ package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.Anwendung;
@@ -37,9 +41,8 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CreateLink;
 import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.RemoveLink;
-import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
-import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
+import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
 
 /**
  * Test of Schutzbedarfsvererbung. See
@@ -48,7 +51,9 @@ import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class SchutzbedarfsvererbungsTest extends BeforeEachVNAImportHelper {
+@Transactional
+@TransactionConfiguration(transactionManager = "txManager")
+public class SchutzbedarfsvererbungsTest extends CommandServiceProvider {
 
     private static final Logger LOG = Logger.getLogger(SchutzbedarfsvererbungsTest.class);
 
@@ -66,6 +71,11 @@ public class SchutzbedarfsvererbungsTest extends BeforeEachVNAImportHelper {
     private static final String EXT_ID_ANWENDUNG_1 = "ENTITY_1136066";
     private static final String EXT_ID_ANWENDUNG_3 = "ENTITY_1136175";
     private static final String EXT_ID_SERVER_1 = "ENTITY_1135940";
+
+    @Before
+    public void importData() throws IOException, CommandException, SyncParameterException {
+        VNAImportHelper.importFile(VNA_FILENAME);
+    }
 
     @Test
     public void testRemoveElement() throws Exception {
@@ -106,8 +116,6 @@ public class SchutzbedarfsvererbungsTest extends BeforeEachVNAImportHelper {
         raum = (Raum) loadElement(SOURCE_ID, EXT_ID_RAUM_1);
         checkSchutzbedarf(raum, SEHR_HOCH, SEHR_HOCH, SEHR_HOCH);
 
-        // remove link again to reset database state
-        removeLinksToServer(raum);
     }
 
     @Test
@@ -197,16 +205,5 @@ public class SchutzbedarfsvererbungsTest extends BeforeEachVNAImportHelper {
                 element.getEntity().getSimpleValue(Raum.PROP_VERFUEGBARKEIT));
         assertEquals("Vertraulichkeit of element is not " + vertraulichkeit, vertraulichkeit,
                 element.getEntity().getSimpleValue(Raum.PROP_VERTRAULICHKEIT));
-    }
-
-    @Override
-    protected String getFilePath() {
-        return this.getClass().getResource(VNA_FILENAME).getPath();
-    }
-
-    @Override
-    protected SyncParameter getSyncParameter() throws SyncParameterException {
-        return new SyncParameter(true, true, true, false,
-                SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
     }
 }

@@ -19,27 +19,30 @@ package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.Set;
 
 import javax.annotation.Resource;
 
 import org.junit.Test;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.service.commands.SyncParameter;
-import sernet.verinice.service.commands.SyncParameterException;
 import sernet.verinice.service.risk.RiskAnalysisConfiguration;
 import sernet.verinice.service.risk.RiskAnalysisService;
-import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
+import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
 
 /**
  * This class tests the risk analysis according to ISO 27005
  */
-public class RiskAnalysisServiceTest extends BeforeEachVNAImportHelper {
+@Transactional
+@TransactionConfiguration(transactionManager = "txManager")
+public class RiskAnalysisServiceTest extends CommandServiceProvider {
 
     private static final String VNA_FILENAME = "RiskAnalysisServiceTest.vna";
 
@@ -51,7 +54,8 @@ public class RiskAnalysisServiceTest extends BeforeEachVNAImportHelper {
     RiskAnalysisService riskAnalysisService;
 
     @Test
-    public void testRiskAnalysis() throws CommandException {
+    public void testRiskAnalysis() throws CommandException, IOException {
+        VNAImportHelper.importFile(VNA_FILENAME);
         Organization org = (Organization) loadElement(SOURCE_ID, EXT_ID_ORGANIZATION);
         RiskAnalysisConfiguration configuration = new RiskAnalysisConfiguration(org.getDbId());
         riskAnalysisService.runRiskAnalysis(configuration);
@@ -102,17 +106,6 @@ public class RiskAnalysisServiceTest extends BeforeEachVNAImportHelper {
         assertEquals(Integer.valueOf(5), link.getRiskIntegrityWithControls());
         assertEquals(Integer.valueOf(7), link.getRiskAvailability());
         assertEquals(Integer.valueOf(6), link.getRiskAvailabilityWithControls());
-    }
-
-    @Override
-    protected String getFilePath() {
-        return this.getClass().getResource(VNA_FILENAME).getPath();
-    }
-
-    @Override
-    protected SyncParameter getSyncParameter() throws SyncParameterException {
-        return new SyncParameter(true, true, true, false,
-                SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
     }
 
 }

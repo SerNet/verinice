@@ -21,10 +21,14 @@ package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnALink;
@@ -34,9 +38,8 @@ import sernet.verinice.model.iso27k.Process;
 import sernet.verinice.service.commands.CreateLink;
 import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.RemoveLink;
-import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
-import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
+import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
 
 /**
  * ISO27000 Business Impact Inheritence test. See
@@ -45,7 +48,9 @@ import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class BusinessImpactInheritenceTest extends BeforeEachVNAImportHelper {
+@Transactional
+@TransactionConfiguration(transactionManager = "txManager")
+public class BusinessImpactInheritenceTest extends CommandServiceProvider {
 
     private static final Logger LOG = Logger.getLogger(BusinessImpactInheritenceTest.class);
 
@@ -58,6 +63,11 @@ public class BusinessImpactInheritenceTest extends BeforeEachVNAImportHelper {
     private static final String EXT_ID_NETWORK_SWITCH = "ENTITY_10559";
     private static final String EXT_ID_VMWARE_GUEST_1 = "ENTITY_10314";
     private static final String EXT_ID_VMWARE_GUEST_2 = "ENTITY_10376";
+
+    @Before
+    public void importData() throws IOException, CommandException, SyncParameterException {
+        VNAImportHelper.importFile(VNA_FILENAME);
+    }
 
     @Test
     public void testRemoveElement() throws Exception {
@@ -165,16 +175,5 @@ public class BusinessImpactInheritenceTest extends BeforeEachVNAImportHelper {
                 element.getNumericProperty(Asset.ASSET_VALUE_CONFIDENTIALITY));
         assertEquals("Integrity of element is not " + i, i,
                 element.getNumericProperty(Asset.ASSET_VALUE_INTEGRITY));
-    }
-
-    @Override
-    protected String getFilePath() {
-        return this.getClass().getResource(VNA_FILENAME).getPath();
-    }
-
-    @Override
-    protected SyncParameter getSyncParameter() throws SyncParameterException {
-        return new SyncParameter(true, true, true, false,
-                SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
     }
 }

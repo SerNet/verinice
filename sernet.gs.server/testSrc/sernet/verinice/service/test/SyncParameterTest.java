@@ -29,6 +29,8 @@ import javax.annotation.Resource;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
@@ -41,6 +43,8 @@ import sernet.verinice.service.test.helper.util.BooleanCombinator;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  * 
  */
+@Transactional
+@TransactionConfiguration(transactionManager = "txManager")
 public class SyncParameterTest extends ContextConfiguration {
 
     private static final String IT_NETWORK_VNA = "IT_Network.vna";

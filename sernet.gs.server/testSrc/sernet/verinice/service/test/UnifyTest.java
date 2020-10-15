@@ -22,31 +22,36 @@ package sernet.verinice.service.test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import sernet.gs.service.MapUtil;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.samt.SamtTopic;
-import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
 import sernet.verinice.service.commands.unify.LoadUnifyMapping;
 import sernet.verinice.service.commands.unify.Unify;
 import sernet.verinice.service.commands.unify.UnifyMapping;
-import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
+import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class UnifyTest extends BeforeEachVNAImportHelper {
+@Transactional
+@TransactionConfiguration(transactionManager = "txManager")
+public class UnifyTest extends CommandServiceProvider {
 
     private static final Logger LOG = Logger.getLogger(UnifyTest.class);
 
@@ -62,6 +67,11 @@ public class UnifyTest extends BeforeEachVNAImportHelper {
     public static final List<String> PROPERTY_TYPE_BLACKLIST = Arrays.asList(SamtTopic.PROP_DESC,
             SamtTopic.PROP_NAME, SamtTopic.PROP_VERSION, SamtTopic.PROP_WEIGHT,
             SamtTopic.PROP_OWNWEIGHT, SamtTopic.PROP_MIN1, SamtTopic.PROP_MIN2);
+
+    @Before
+    public void importData() throws IOException, CommandException, SyncParameterException {
+        VNAImportHelper.importFile(VNA_FILENAME);
+    }
 
     @Test
     public void testBlacklist() throws Exception {
@@ -100,30 +110,4 @@ public class UnifyTest extends BeforeEachVNAImportHelper {
         List<UnifyMapping> mappingList = command.getMappings();
         return mappingList;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.verinice.service.test.helper.vnaimport.AbstractVNAImportHelper#
-     * getFilePath()
-     */
-    @Override
-    protected String getFilePath() {
-        return this.getClass().getResource(VNA_FILENAME).getPath();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.verinice.service.test.helper.vnaimport.AbstractVNAImportHelper#
-     * getSyncParameter()
-     */
-    @Override
-    protected SyncParameter getSyncParameter() throws SyncParameterException {
-        return new SyncParameter(true, true, true, false,
-                SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
-    }
-
 }

@@ -19,27 +19,32 @@ package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
 import sernet.verinice.service.risk.RiskAnalysisConfiguration;
 import sernet.verinice.service.risk.RiskAnalysisService;
-import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
+import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
 
 /**
  * This class tests the risk analysis according to ISO 27005
  */
-public class RiskAnalysisServiceOverflowTest extends BeforeEachVNAImportHelper {
+@Transactional
+@TransactionConfiguration(transactionManager = "txManager")
+public class RiskAnalysisServiceOverflowTest extends CommandServiceProvider {
 
     private static final String VNA_FILENAME = "RiskAnalysisServiceOverflowTest.vna";
 
@@ -49,6 +54,11 @@ public class RiskAnalysisServiceOverflowTest extends BeforeEachVNAImportHelper {
 
     @Resource(name = "riskAnalysisService")
     RiskAnalysisService riskAnalysisService;
+
+    @Before
+    public void importData() throws IOException, CommandException, SyncParameterException {
+        VNAImportHelper.importFile(VNA_FILENAME);
+    }
 
     @Test
     public void testRiskAnalysis() throws CommandException {
@@ -102,17 +112,6 @@ public class RiskAnalysisServiceOverflowTest extends BeforeEachVNAImportHelper {
         assertEquals(Integer.valueOf(5), link.getRiskIntegrityWithControls());
         assertEquals(Integer.valueOf(7), link.getRiskAvailability());
         assertEquals(Integer.valueOf(6), link.getRiskAvailabilityWithControls());
-    }
-
-    @Override
-    protected String getFilePath() {
-        return this.getClass().getResource(VNA_FILENAME).getPath();
-    }
-
-    @Override
-    protected SyncParameter getSyncParameter() throws SyncParameterException {
-        return new SyncParameter(true, true, true, false,
-                SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
     }
 
 }

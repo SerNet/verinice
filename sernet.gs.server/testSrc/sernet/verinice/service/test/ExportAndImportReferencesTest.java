@@ -40,10 +40,8 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.ExportCommand;
-import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
-import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
 import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
 
 /**
@@ -86,7 +84,7 @@ import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
  * @author Benjamin Weißenfels <bw@sernet.de>
  *
  */
-public class ExportAndImportReferencesTest extends BeforeEachVNAImportHelper {
+public class ExportAndImportReferencesTest extends CommandServiceProvider {
 
     private static final String SOURCE_ELEMENT_EXTERNAL_ID = "ENTITY_262147";
     private static final String IT_VERBUND_1_EXTERNAL_ID = "ENTITY_262144";
@@ -106,6 +104,7 @@ public class ExportAndImportReferencesTest extends BeforeEachVNAImportHelper {
     @Test
     public void testExportAndImportOfHuiReferences()
             throws CommandException, IOException, SyncParameterException {
+        VNAImportHelper.importFile(VNA_FILENAME_WITH_COMPLETE_REFERENCES, true, true, true, false);
 
         /** Set references */
         CnATreeElement itVerbund1 = loadElement(SOURCE_ID, IT_VERBUND_1_EXTERNAL_ID);
@@ -143,10 +142,11 @@ public class ExportAndImportReferencesTest extends BeforeEachVNAImportHelper {
         commandService.executeCommand(exportCommand);
 
         LOG.info(EXPORT_REFERENCES_PREFIX + " remove itverbund " + itVerbund1.getTitle());
-        removeITVerbund(itVerbund1);
+        removeElement(itVerbund1);
 
         LOG.info(IMPORT_REFERENCES_PREFIX + " from file " + filePath);
-        VNAImportHelper.importFile(filePath, getSyncParameter());
+        VNAImportHelper.importFile(filePath, new SyncParameter(true, true, true, false,
+                SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV));
 
         LOG.info(IMPORT_REFERENCES_PREFIX + " delete file " + filePath);
         File vnaArchive = new File(filePath);
@@ -186,12 +186,7 @@ public class ExportAndImportReferencesTest extends BeforeEachVNAImportHelper {
 
         LOG.info(IMPORT_REFERENCES_PREFIX + "delete the imported it-verbund"
                 + itverbundImported.getTitle());
-        removeITVerbund(itverbundImported);
-    }
-
-    private void removeITVerbund(CnATreeElement itverbund) throws CommandException {
-        RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(itverbund);
-        commandService.executeCommand(removeCommand);
+        removeElement(itverbundImported);
     }
 
     private boolean validateReferences(int targetPerson1ImportedEntityId,
@@ -200,29 +195,4 @@ public class ExportAndImportReferencesTest extends BeforeEachVNAImportHelper {
                 || numericPropertyValue == targetPerson2ImportedEntityId;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.verinice.service.test.helper.vnaimport.AbstractVNAImportHelper
-     * #getFilePath()
-     */
-    @Override
-    protected String getFilePath() {
-        return this.getClass().getResource(VNA_FILENAME_WITH_COMPLETE_REFERENCES).getPath();
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.verinice.service.test.helper.vnaimport.AbstractVNAImportHelper
-     * #getSyncParameter()
-     */
-    @Override
-    protected SyncParameter getSyncParameter() throws SyncParameterException {
-        return new SyncParameter(true, true, true, false,
-                SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
-    }
 }

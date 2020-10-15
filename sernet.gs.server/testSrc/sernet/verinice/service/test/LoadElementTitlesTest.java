@@ -21,6 +21,7 @@ package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,7 +29,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -38,9 +42,8 @@ import sernet.verinice.model.bsi.PersonenKategorie;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.LoadElementTitles;
-import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
-import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
+import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
 
 /**
  * 
@@ -53,7 +56,9 @@ import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
  * 
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
-public class LoadElementTitlesTest extends BeforeEachVNAImportHelper {
+@Transactional
+@TransactionConfiguration(transactionManager = "txManager")
+public class LoadElementTitlesTest extends CommandServiceProvider {
 
     private static final Logger LOG = Logger.getLogger(LoadElementTitlesTest.class);
     private static final String VNA_FILENAME = "export_import_references_test.vna";
@@ -64,6 +69,11 @@ public class LoadElementTitlesTest extends BeforeEachVNAImportHelper {
     private static final int HIGHER_INTERVAL = 10;
     private static final int LIMIT_TO_USE_SMALL_INTERVAL = 200;
     private int interval = 1;
+
+    @Before
+    public void importData() throws IOException, CommandException, SyncParameterException {
+        VNAImportHelper.importFile(VNA_FILENAME);
+    }
 
     @Test
     public void testExecute() throws CommandException {
@@ -151,16 +161,6 @@ public class LoadElementTitlesTest extends BeforeEachVNAImportHelper {
                         + nameInDB + "'", nameInDB.equals(map.get(dbIDs.get(i))));
             }
         }
-    }
-
-    @Override
-    protected String getFilePath() {
-        return this.getClass().getResource(VNA_FILENAME).getPath();
-    }
-
-    @Override
-    protected SyncParameter getSyncParameter() throws SyncParameterException {
-        return new SyncParameter(true, true, true, false);
     }
 
 }

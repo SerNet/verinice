@@ -35,6 +35,8 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Test;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
@@ -51,6 +53,8 @@ import sernet.verinice.service.commands.LoadAncestors;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  * 
  */
+@Transactional
+@TransactionConfiguration(transactionManager = "txManager")
 public class LoadAncestorsTest extends CommandServiceProvider {
 
     private static final int MAX_TEST_TREE_DEPTH = 100;

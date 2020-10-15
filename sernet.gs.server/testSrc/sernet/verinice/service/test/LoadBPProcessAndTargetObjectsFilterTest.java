@@ -25,28 +25,33 @@ import static sernet.verinice.oda.driver.impl.filters.Filters.and;
 import static sernet.verinice.oda.driver.impl.filters.Filters.is;
 import static sernet.verinice.oda.driver.impl.filters.Filters.noneOf;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.graph.IGraphService;
 import sernet.verinice.model.bp.elements.BusinessProcess;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
 import sernet.verinice.service.commands.crud.LoadBpProcessAndTargetObjects;
-import sernet.verinice.service.test.helper.vnaimport.BeforeAllVNAImportHelper;
+import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
 
 /**
  * Tests the command to load BP process and all linked target objects,
  * recursively to the leaf target objects with filters applied.
  * 
  */
-public class LoadBPProcessAndTargetObjectsFilterTest extends BeforeAllVNAImportHelper {
+@Transactional
+@TransactionConfiguration(transactionManager = "txManager")
+public class LoadBPProcessAndTargetObjectsFilterTest extends CommandServiceProvider {
 
     private static final Logger LOG = Logger
             .getLogger(LoadBPProcessAndTargetObjectsFilterTest.class);
@@ -71,6 +76,11 @@ public class LoadBPProcessAndTargetObjectsFilterTest extends BeforeAllVNAImportH
 
     @Resource(name = "graphService")
     IGraphService graphService;
+
+    @Before
+    public void importData() throws IOException, CommandException, SyncParameterException {
+        VNAImportHelper.importFile(VNA_FILENAME);
+    }
 
     /**
      * Tests the command by loading only processes that are relevant for data
@@ -117,17 +127,6 @@ public class LoadBPProcessAndTargetObjectsFilterTest extends BeforeAllVNAImportH
                 "An unwanted target object was present in the result (EXT_ID "
                         + UNWANTED_TARGETOBJECT_TITLE_1 + ")",
                 isTargetObjectPresent(resultCommand.getElements(), UNWANTED_TARGETOBJECT_EXTID_1));
-    }
-
-    @Override
-    protected String getFilePath() {
-        return this.getClass().getResource(VNA_FILENAME).getPath();
-    }
-
-    @Override
-    protected SyncParameter getSyncParameter() throws SyncParameterException {
-        return new SyncParameter(true, true, true, false,
-                SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
     }
 
     private boolean isProcessPresent(List<List<String>> elements, String wantedElementExtId)
