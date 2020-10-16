@@ -44,7 +44,6 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.ExportCommand;
 import sernet.verinice.service.commands.LoadCnAElementByExternalID;
 import sernet.verinice.service.commands.RemoveElement;
-import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
 import sernet.verinice.service.sync.VeriniceArchive;
 import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
@@ -74,17 +73,9 @@ public class ExportCommandTest extends CommandServiceProvider {
     @Before
     public void importVNAs() throws IOException, CommandException, SyncParameterException {
         if (commandServiceStaticRef == null) {
-            SyncParameter syncParameter = new SyncParameter(true, true, true, false,
-                    SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
-            VNAImportHelper.importFile(
-                    ExportCommandTest.class.getResource(VNA_FILENAME_Export_test).getPath(),
-                    syncParameter);
-            VNAImportHelper.importFile(
-                    ExportCommandTest.class.getResource(VNA_FILENAME_testVnaImport).getPath(),
-                    syncParameter);
-            VNAImportHelper.importFile(
-                    ExportCommandTest.class.getResource(VNA_FILENAME_modplast).getPath(),
-                    syncParameter);
+            VNAImportHelper.importFile(VNA_FILENAME_Export_test, true, true, true, false);
+            VNAImportHelper.importFile(VNA_FILENAME_testVnaImport, true, true, true, false);
+            VNAImportHelper.importFile(VNA_FILENAME_modplast, true, true, true, false);
             commandServiceStaticRef = commandService;
         }
     }

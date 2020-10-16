@@ -34,7 +34,6 @@ import junit.framework.Assert;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.service.commands.SyncCommand;
-import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
 
 /**
@@ -257,10 +256,7 @@ public class LinkTableCreateTest extends CommandServiceProvider {
 
     public List<List<String>> loadTestData(String vltFile, String vnaFile, String sourceId,
             List<String> orgExtIds) throws Exception {
-        String filePath = this.getClass().getResource(vnaFile).getPath();
-        SyncParameter syncParameter = new SyncParameter(true, true, true, false,
-                SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
-        syncCommand = VNAImportHelper.importFile(filePath, syncParameter);
+        syncCommand = VNAImportHelper.importFile(vnaFile, true, true, true, false);
         LoadData loadData = (LoadData) loadDataFactory.getObject();
         loadData.setVltFile(vltFile);
         loadData.setSourceId(sourceId);

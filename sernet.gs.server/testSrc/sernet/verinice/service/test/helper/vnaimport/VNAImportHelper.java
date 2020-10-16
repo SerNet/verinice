@@ -34,6 +34,7 @@ import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.service.commands.LoadElementByTypeId;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
+import sernet.verinice.service.commands.SyncParameterException;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -48,6 +49,21 @@ public final class VNAImportHelper {
 
         SyncCommand syncCommand = new SyncCommand(syncParameter, path);
         return getCommandService().executeCommand(syncCommand);
+    }
+
+    public static SyncCommand importFile(String filename, boolean insert, boolean update,
+            boolean delete, boolean integrate) throws IOException, CommandException {
+        try {
+            SyncParameter syncParameter = new SyncParameter(insert, update, delete, integrate);
+            return importFile(VNAImportHelper.class.getResource("../../" + filename).getPath(),
+                    syncParameter);
+        } catch (SyncParameterException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static SyncCommand importFile(String filename) throws IOException, CommandException {
+        return importFile(filename, true, false, false, false);
     }
 
     private static void removeAllElementsByType(String type,
