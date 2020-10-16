@@ -19,10 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.service.test.helper.vnaimport;
 
-import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import sernet.hui.common.VeriniceContext;
@@ -48,8 +46,7 @@ public final class VNAImportHelper {
     public static SyncCommand importFile(String path, SyncParameter syncParameter)
             throws IOException, CommandException {
 
-        byte[] vnaData = FileUtils.readFileToByteArray(new File(path));
-        SyncCommand syncCommand = new SyncCommand(syncParameter, vnaData);
+        SyncCommand syncCommand = new SyncCommand(syncParameter, path);
         return getCommandService().executeCommand(syncCommand);
     }
 
