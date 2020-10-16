@@ -43,7 +43,7 @@ public class RiskAnalysisServiceTest extends BeforeEachVNAImportHelper {
 
     private static final String VNA_FILENAME = "RiskAnalysisServiceTest.vna";
 
-    private static final String SOURCE_ID = "483e9b";
+    private static final String SOURCE_ID = "483e9c";
     private static final String EXT_ID_ORGANIZATION = "3107a3aa-efdc-49d7-bddd-7fc7e581bbbb";
     private static final String EXT_ID_ASSET = "fce4e1c2-039c-4b0d-8709-1a7347765a57";
 

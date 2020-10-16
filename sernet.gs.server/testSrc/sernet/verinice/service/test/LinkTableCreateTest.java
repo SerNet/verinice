@@ -115,7 +115,7 @@ public class LinkTableCreateTest extends CommandServiceProvider {
 
         List<String> extIds = Arrays.asList(new String[] { "ENTITY_1109509" });
         List<List<String>> table = loadTestData("parent-relation.vlt", "parent-relation.vna",
-                "42b6e1", extIds);
+                "42b6e2", extIds);
         Assert.assertEquals(expectedList, table);
     }
 
