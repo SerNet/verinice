@@ -40,9 +40,12 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.apache.log4j.Logger;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 import org.threeten.bp.LocalDate;
 
 import sernet.gs.service.VeriniceCharset;
@@ -66,24 +69,20 @@ import sernet.verinice.model.licensemanagement.propertyconverter.PropertyConvert
 import sernet.verinice.service.account.AccountSearchParameter;
 import sernet.verinice.service.commands.CreateConfiguration;
 import sernet.verinice.service.commands.ExportFactory;
-import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.SaveConfiguration;
-import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
 import sernet.verinice.service.commands.UpdateElementEntity;
-import sernet.verinice.service.commands.crud.PrepareObjectWithAccountDataForDeletion;
 import sernet.verinice.service.crypto.PasswordBasedEncryption;
-import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper {
+@Transactional
+@TransactionConfiguration(transactionManager = "txManager")
+public class LicenseManagementTier3Test extends CommandServiceProvider {
 
     private static final Logger LOG = Logger.getLogger(LicenseManagementTier3Test.class);
-
-    private static final String VNA_FILENAME = "LicenseMgmt.vna";
 
     @Resource(name = "licenseManagementService")
     ILicenseManagementService licenseManagementService;
@@ -106,31 +105,14 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper {
     private final static String TEMP_FILE_NAME_EXT = ".vnl";
     private final static String VNL_DIR = "./vnl/";
 
-    private Organization accountOrg = null;
-
-    private boolean removeAccountOrg() throws CommandException {
-        if (accountOrg != null) {
-            PrepareObjectWithAccountDataForDeletion removeAccount = new PrepareObjectWithAccountDataForDeletion(
-                    accountOrg);
-            commandService.executeCommand(removeAccount);
-            RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(
-                    accountOrg);
-            commandService.executeCommand(removeCommand);
-            return true;
-        }
-        return false;
-    }
-
     @Before
     public void enableAdminMode() {
         authService.setRoles(new String[] { ApplicationRoles.ROLE_ADMIN });
     }
 
-    @Override
+    @After
     public void tearDown() throws CommandException {
-        super.tearDown();
         Assert.assertTrue(emptyVNLRepo());
-        Assert.assertTrue(removeAccountOrg());
     }
 
     private boolean emptyVNLRepo() {
@@ -141,12 +123,6 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper {
             deleteSuccessful &= vnlFile.delete();
         }
         return deleteSuccessful;
-    }
-
-    @Before
-    public void setUp() throws IOException, CommandException, SyncParameterException {
-        super.setUp();
-        createTestOrganization();
     }
 
     private LicenseManagementEntry getSingleCryptedEntry() {
@@ -439,7 +415,10 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper {
     }
 
     @Test
-    public void testRemovingUsersFromLicenseId() throws IOException {
+    public void testRemovingUsersFromLicenseId()
+            throws IOException, CommandException, SyncParameterException {
+        // importData();
+        createTestOrganization();
         LicenseManagementEntry firstEntry = getSingleCryptedEntry();
         LicenseManagementEntry secondEntry = new LicenseManagementEntry();
 
@@ -658,17 +637,6 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper {
         Assert.assertTrue(stringObject instanceof String);
     }
 
-    @Override
-    protected String getFilePath() {
-        return this.getClass().getResource(VNA_FILENAME).getPath();
-    }
-
-    @Override
-    protected SyncParameter getSyncParameter() throws SyncParameterException {
-        return new SyncParameter(true, true, true, false,
-                SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
-    }
-
     private void saveAccount(Configuration configuration) throws CommandException {
         try {
             SaveConfiguration<Configuration> command = new SaveConfiguration<Configuration>(
@@ -712,7 +680,7 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper {
     }
 
     private Organization createTestOrganization() throws CommandException {
-        accountOrg = createOrganization();
+        Organization accountOrg = createOrganization();
 
         Group<CnATreeElement> personGroup = getGroupForClass(accountOrg, PersonIso.class);
 
