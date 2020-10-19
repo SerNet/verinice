@@ -19,6 +19,7 @@ pipeline {
         booleanParam(name: 'distSign', defaultValue: false, description: 'Sign RPM packages')
         password(name: 'GNUPGPASSPHRASE', description: 'The passphrase of the key stored in KEYDIR/verinice.public.')
         booleanParam(name: 'archiveUpdateSite', defaultValue: false, description: 'archive the update site')
+        booleanParam(name: 'archiveIntegrationTestResults', defaultValue: false, description: 'archive the integration test results')
     }
     options {
         buildDiscarder(logRotator(numToKeepStr: '3'))
@@ -64,6 +65,10 @@ pipeline {
 	                if (params.runIntegrationTests){
 		                junit allowEmptyResults: true, testResults: '**/build/reports/**/*.xml,**/target/surefire-reports/*.xml'
 		                perfReport filterRegex: '', sourceDataFiles: '**/build/reports/TEST*.xml,**/target/surefire-reports/*.xml'
+		                if (params.archiveIntegrationTestResults){
+		                    archiveArtifacts artifacts: '**/build/reports/**/*.xml,**/target/surefire-reports/*.xml'
+		                }
+
 	                }
                 }
             }
