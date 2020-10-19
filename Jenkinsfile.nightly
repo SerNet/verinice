@@ -1,0 +1,174 @@
+def productsBuild = null
+
+pipeline {
+    agent { label 'master' }
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '500'))
+    }
+    triggers {
+        pollSCM 'H 1 * * 1-5'
+    }
+    stages {
+        stage('Build products') {
+            steps {
+                script {
+                    productsBuild = build(
+                      job: 'verinice/develop',
+                      propagate: false,
+                      parameters: [
+                        booleanParam(name: 'runRCPTTTests', value: false),
+                        booleanParam(name: 'archiveIntegrationTestResults', value: true)
+                      ]
+                    )
+                    copyArtifacts(
+                      filter: '**/build/reports/**/*.xml,**/target/surefire-reports/*.xml',
+                      projectName: 'verinice/develop',
+                      selector: specific(productsBuild.getNumber().toString()),
+                      target: "test-result/integration"
+                    )
+                }
+            }
+        }
+        stage('Analyze source code') {
+            steps {
+                script {
+                    withSonarQubeEnv('sonar') {
+						sh "env"
+                        def scannerHome = tool 'sonar-runner-2.4'
+                        def commonProperties = "-Dsonar.host.url=${env.SONAR_HOST_URL} -Dsonar.projectVersion=1.11 -Dsonar.java.source=8 -Dsonar.language=java"
+                        def scannerBaseCommand = "${scannerHome}/bin/sonar-runner ${commonProperties}"
+                        def runScanner = {projectKey, projectName, sourceDir, additionalOpts = null ->
+                            sh "${scannerBaseCommand} '-Dsonar.projectKey=${projectKey}' '-Dsonar.projectName=${projectName}' '-Dsonar.sources=${sourceDir}' ${additionalOpts ?: ''}"
+                        }
+                        runScanner 'com.sernet:verinice.gs.reveng', 'verinice GSTOOL Import', 'sernet.gs.reveng/src'
+                        runScanner 'com.sernet:verinice.gs.server', 'verinice Server', 'sernet.gs.server/src', '-Dsonar.tests=sernet.gs.server/testSrc'
+                        runScanner 'com.sernet:verinice.gs.service', 'verinice Service', 'sernet.gs.service/src'
+                        runScanner 'com.sernet:verinice.gs.ui.rcp.main', 'verinice RCP Main', 'sernet.gs.ui.rcp.main/src'
+                        runScanner 'com.sernet:verinice.hui.common', 'verinice HUI Common', 'sernet.hui.common/src'
+                        runScanner 'com.sernet:verinice.hui.server', 'verinice HUI Server', 'sernet.hui.server/src'
+                        runScanner 'com.sernet:verinice.hui.swtclient', 'verinice HUI SWT Client', 'sernet.hui.swtclient/src'
+                        runScanner 'com.sernet:verinice.springclient', 'verinice Spring Client', 'sernet.springclient/src'
+                        runScanner 'com.sernet:verinice.fei.rcp', 'verinice File Element Import RCP', 'sernet.verinice.fei.rcp/src'
+                        runScanner 'com.sernet:verinice.fei.rcp', 'verinice File Element Import Service', 'sernet.verinice.fei.service/src'
+                        runScanner 'com.sernet:verinice.kerberos', 'verinice Kerberos Client', 'sernet.verinice.kerberos/src'
+                        runScanner 'com.sernet:verinice.oda.driver', 'verinice ODA Driver', 'sernet.verinice.kerberos/src'
+                        runScanner 'com.sernet:verinice.report.service', 'verinice Report Service', 'sernet.verinice.report.service/src'
+                        runScanner 'com.sernet:verinice.samt.rcp', 'verinice ISA RCP', 'sernet.verinice.samt.rcp/src'
+                        runScanner 'com.sernet:verinice.samt.service', 'verinice ISA Service', 'sernet.verinice.samt.service/src'
+                    }
+                }
+            }
+        }
+        stage('Run UI tests') {
+            parallel {
+                stage('Run UI tests on Linux') {
+                    steps {
+                        script {
+                            runRCPTT 'rcptt-client-test', productsBuild.number, 'Linux', 'gui-test-linux', 'GUI Test Report (Linux)'
+                        }
+                    }
+                }
+                stage('Run UI tests on Mac') {
+                    steps {
+                        script {
+                            runRCPTT 'rcptt-client-test', productsBuild.number, 'Mac OSX', 'gui-test-mac', 'GUI Test Report (Mac OSX)'
+                        }
+                    }
+                }
+                stage('Run UI tests on Windows') {
+                    steps {
+                        script {
+                            runRCPTT 'rcptt-client-test', productsBuild.number, 'Windows 10', 'gui-test-windows', 'GUI Test Report (Windows 10)'
+                        }
+                    }
+                }
+                stage('Run standalone performance tests') {
+                    steps {
+                        script {
+                            runRCPTT 'rcptt-client-performance-test', productsBuild.number, null, 'performance-test-standalone', 'GUI Test Report (Performance Standalone)'
+                            createPerformancePlot('test-result/performance-test-standalone/gui-test-runner/result/metric.csv', 'Standalone')
+                        }
+                    }
+                }
+                stage('Run 3-tier performance tests') {
+                    steps {
+                        script {
+                            runRCPTT 'rcptt-server-performance-test', productsBuild.number, null, 'performance-test-3-tier', 'GUI Test Report (Performance 3-tier)'
+                            createPerformancePlot('test-result/performance-test-3-tier/gui-test-runner/result/metric.csv', '3-tier')
+                        }
+                    }
+                }
+            }
+        }
+        stage('Record results') {
+            steps {
+                // archiveArtifacts artifacts: 'test-result/**/*.xml'
+                junit(
+                  allowEmptyResults: true,
+                  testDataPublishers: [[$class: 'StabilityTestDataPublisher']],
+                  testResults: 'test-result/**/*.xml'
+                )
+                perfReport(
+                  filterRegex: '',
+                  modePerformancePerTestCase: true,
+                  sourceDataFiles: 'test-result/**/*.xml'
+                )
+            }
+        }
+    }
+}
+
+def runRCPTT(jobName, buildNumberDevelop, operatingSystem, resultsSubDirectory, reportName){
+    def rcpttBuild = build(
+      job: jobName,
+      propagate: false,
+      parameters: [
+        gitParameter(name: 'BRANCH_OR_TAG', value: 'develop'),
+        string(name: 'job_to_copy_from', value: 'verinice/develop'),
+        string(name: 'build_to_copy_from', value: """<SpecificBuildSelector plugin="copyartifact@1.45.1">  <buildNumber>${buildNumberDevelop}</buildNumber></SpecificBuildSelector>"""),
+        string(name: 'OPERATING_SYSTEM', value: operatingSystem)
+      ]
+    )
+    def resultDir = "test-result/${resultsSubDirectory}"
+    copyArtifacts(
+      filter: 'gui-test-runner/result/**/*',
+      fingerprintArtifacts: true,
+      optional: true,
+      projectName: jobName,
+      selector: specific(rcpttBuild.getNumber().toString()),
+      target: resultDir
+    )
+    publishHTML([
+      allowMissing: false,
+      alwaysLinkToLastBuild: false,
+      keepAll: true,
+      reportDir: "${resultDir}/gui-test-runner/result",
+      reportFiles: 'results.html',
+      reportName: reportName,
+      reportTitles: "develop"
+    ])
+}
+
+
+def createPerformancePlot(fileName, group){
+    def records = readCSV file: fileName
+    def data = records[1]
+    def measurementLabels = data.collate(5).collect{it.first().trim()}.findAll{!it.empty}
+    measurementLabels.each { label->
+      callPlot fileName, label, group
+    }
+}
+
+def callPlot(String fileName, String plotName, String group) {
+    echo "Creating plot ${plotName}"
+
+    plot csvFileName: 'plot-'+plotName+'.csv',
+         csvSeries: [[displayTableFlag: false,
+                      exclusionValues: plotName+'-avg,'+plotName+'-min,'+plotName+'-max',
+                      file: fileName,
+                      inclusionFlag: 'INCLUDE_BY_STRING',
+                      url: '']],
+         group: group,
+         style: 'line',
+         title: plotName
+}
