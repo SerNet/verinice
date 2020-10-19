@@ -54,35 +54,35 @@ public class LoadBPProcessAndTargetObjectsFilterTest extends BeforeAllVNAImportH
     private static final String VNA_FILENAME = "LoadBpProcessAndTargObjTest.vna";
     private static final String SOURCE_ID = "ak-2019-09-09";
     private static final String EXT_ID_BP_ITNETWORK = "ENTITY_159007";
-    
-    private static final String WANTED_PROCESS_EXT_ID_1 = "ENTITY_4065966"; 
+
+    private static final String WANTED_PROCESS_EXT_ID_1 = "ENTITY_4065966";
     private static final String WANTED_PROCESS_EXT_ID_2 = "ENTITY_4066052";
-    private static final String UNWANTED_PROCESS_EXT_ID = "ENTITY_4065967"; 
-    
+    private static final String UNWANTED_PROCESS_EXT_ID = "ENTITY_4065967";
+
     private static final String WANTED_PROCESS_TITLE_1 = "Customer-Relationship-Management";
     private static final String WANTED_PROCESS_TITLE_2 = "Personaldatenverarbeitung";
-    private static final String UNWANTED_PROCESS_TITLE_1 = "Softwareentwicklung"; 
+    private static final String UNWANTED_PROCESS_TITLE_1 = "Softwareentwicklung";
 
-    private static final String WANTED_TARGETOBJECT_TITLE_1 = "Datenbankserver Finanzbuchhaltung"; 
-    private static final String UNWANTED_TARGETOBJECT_TITLE_1 = "Serverraum Berlin"; 
+    private static final String WANTED_TARGETOBJECT_TITLE_1 = "Datenbankserver Finanzbuchhaltung";
+    private static final String UNWANTED_TARGETOBJECT_TITLE_1 = "Serverraum Berlin";
 
-    private static final String WANTED_TARGETOBJECT_EXTID_ID_1 = "ENTITY_4064118"; 
-    private static final String UNWANTED_TARGETOBJECT_EXTID_1 = "ENTITY_328200"; 
-    
+    private static final String WANTED_TARGETOBJECT_EXTID_ID_1 = "ENTITY_4064118";
+    private static final String UNWANTED_TARGETOBJECT_EXTID_1 = "ENTITY_328200";
 
     @Resource(name = "graphService")
     IGraphService graphService;
 
     /**
      * Tests the command by loading only processes that are relevant for data
-     * privacy and additionally filtering out all target objects of the type "room" from
-     * the result.
-     * @throws CommandException 
+     * privacy and additionally filtering out all target objects of the type
+     * "room" from the result.
+     * 
+     * @throws CommandException
      * 
      * @throws Exception
      */
     @Test
-    public void loadsProcessesAndTargetObjectsWithFilter() throws CommandException  {
+    public void loadsProcessesAndTargetObjectsWithFilter() throws CommandException {
         // Given:
         CnATreeElement org = loadElement(SOURCE_ID, EXT_ID_BP_ITNETWORK);
         Integer rootId = org.getDbId();
@@ -90,51 +90,58 @@ public class LoadBPProcessAndTargetObjectsFilterTest extends BeforeAllVNAImportH
         // When:
         LoadBpProcessAndTargetObjects loadCommand = new LoadBpProcessAndTargetObjects(rootId);
         loadCommand.setFilterCriteria(
-                and(
-                        is(BusinessProcess.TYPE_ID, "bp_businessprocess_privacy_yesno", "1"), 
-                        noneOf(is("bp_room_method_integrity", ".+")) // check if this property is present - if it is, this is a room. get rid of it.
-                ));
+                and(is(BusinessProcess.TYPE_ID, "bp_businessprocess_privacy_yesno", "1"),
+                        // check if this property is present - if it is, this is
+                        // a room. get rid of it.
+                        noneOf(is("bp_room_method_integrity", ".+"))));
         LoadBpProcessAndTargetObjects resultCommand = commandService.executeCommand(loadCommand);
 
         // Then:
-        assertTrue("A required process was missing in the result (EXT_ID " + WANTED_PROCESS_TITLE_1 + ")",
+        assertTrue(
+                "A required process was missing in the result (EXT_ID " + WANTED_PROCESS_TITLE_1
+                        + ")",
                 isProcessPresent(resultCommand.getElements(), WANTED_PROCESS_EXT_ID_1));
-        assertTrue("A required process was missing in the result (EXT_ID " + WANTED_PROCESS_TITLE_2 + ")",
+        assertTrue(
+                "A required process was missing in the result (EXT_ID " + WANTED_PROCESS_TITLE_2
+                        + ")",
                 isProcessPresent(resultCommand.getElements(), WANTED_PROCESS_EXT_ID_2));
-        assertTrue("A required target object was missing in the result (EXT_ID " + WANTED_TARGETOBJECT_TITLE_1 + ")",
+        assertTrue(
+                "A required target object was missing in the result (EXT_ID "
+                        + WANTED_TARGETOBJECT_TITLE_1 + ")",
                 isTargetObjectPresent(resultCommand.getElements(), WANTED_TARGETOBJECT_EXTID_ID_1));
-        assertFalse("An unwanted process was present in the result (EXT_ID " + UNWANTED_PROCESS_TITLE_1 + ")",
+        assertFalse(
+                "An unwanted process was present in the result (EXT_ID " + UNWANTED_PROCESS_TITLE_1
+                        + ")",
                 isProcessPresent(resultCommand.getElements(), UNWANTED_PROCESS_EXT_ID));
-        assertFalse("An unwanted target object was present in the result (EXT_ID " + UNWANTED_TARGETOBJECT_TITLE_1 + ")",
+        assertFalse(
+                "An unwanted target object was present in the result (EXT_ID "
+                        + UNWANTED_TARGETOBJECT_TITLE_1 + ")",
                 isTargetObjectPresent(resultCommand.getElements(), UNWANTED_TARGETOBJECT_EXTID_1));
     }
-    
+
     @Override
     protected String getFilePath() {
         return this.getClass().getResource(VNA_FILENAME).getPath();
     }
-    
+
     @Override
     protected SyncParameter getSyncParameter() throws SyncParameterException {
         return new SyncParameter(true, true, true, false,
                 SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
     }
-    
+
     private boolean isProcessPresent(List<List<String>> elements, String wantedElementExtId)
             throws CommandException {
         String wantedElementDbId = loadElement(SOURCE_ID, wantedElementExtId).getDbId().toString();
         return elements.stream()
                 .anyMatch(resultTable -> resultTable.get(0).equals(wantedElementDbId));
     }
-    
+
     private boolean isTargetObjectPresent(List<List<String>> tableRows, String wantedElementExtId)
             throws CommandException {
         String wantedElementDbId = loadElement(SOURCE_ID, wantedElementExtId).getDbId().toString();
-        return tableRows.stream()
-                .flatMap(row -> row.stream())
-                .anyMatch(cell -> cell.equals(wantedElementDbId)); 
+        return tableRows.stream().flatMap(row -> row.stream())
+                .anyMatch(cell -> cell.equals(wantedElementDbId));
     }
-    
-    
 
 }

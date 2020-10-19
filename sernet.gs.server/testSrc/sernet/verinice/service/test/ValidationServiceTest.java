@@ -62,20 +62,20 @@ import sernet.verinice.service.commands.crud.LoadElementForEditor;
 @TransactionConfiguration(transactionManager = "txManager")
 @Transactional
 public class ValidationServiceTest extends AbstractModernizedBaseProtection {
-    
+
     private static final Logger LOG = Logger.getLogger(ValidationServiceTest.class);
 
-    @Resource(name="validationService")
+    @Resource(name = "validationService")
     private IValidationService validationService;
-    
-    @Resource(name="cnaTreeElementDao")
+
+    @Resource(name = "cnaTreeElementDao")
     private IBaseDao<CnATreeElement, Integer> elementDao;
-    
-    @Resource(name="huiTypeFactory")
+
+    @Resource(name = "huiTypeFactory")
     private HUITypeFactory huiTypeFactory;
-    
+
     @Test
-    public void createAndDeleteSubTreeValidations() throws CommandException{
+    public void createAndDeleteSubTreeValidations() throws CommandException {
         Organization root = createOrganization();
         assertNotNull(root);
         checkElement(root);
@@ -84,15 +84,16 @@ public class ValidationServiceTest extends AbstractModernizedBaseProtection {
         List<CnAValidation> validations = validationService.getValidations(root.getDbId());
         assertNotSame(0, validations.size());
         deleteElement(root);
-        assertEquals(Integer.valueOf(0), Integer.valueOf(validationService.getValidations(root.getDbId()).size()));
+        assertEquals(Integer.valueOf(0),
+                Integer.valueOf(validationService.getValidations(root.getDbId()).size()));
     }
-    
+
     @Test
-    public void createSamtTopicValidation() throws Exception{
+    public void createSamtTopicValidation() throws Exception {
         Organization org = createOrganization();
         assertNotNull(org);
         checkElement(org);
-        List<String> uuIdList =  new LinkedList<String>();
+        List<String> uuIdList = new LinkedList<String>();
         uuIdList.addAll(createInOrganisation(org, SamtTopic.class, 1));
         assertEquals(uuIdList.size(), 1);
         LoadElementByUuid<CnATreeElement> command;
@@ -104,22 +105,20 @@ public class ValidationServiceTest extends AbstractModernizedBaseProtection {
         assertEquals(3, validations.size());
         deleteElement(org);
     }
-    
-    
-    
+
     /**
      * assumes that huientity "samt_topic" has defined 3 validationrules:
-     * samt_topic_maturity :        RegExRule for value between 0 and 5
-     * samt_topic_audit_findings:   NotEmptyRule
-     * samt_topic_audit_ra:         NotEmptyRule
+     * samt_topic_maturity : RegExRule for value between 0 and 5
+     * samt_topic_audit_findings: NotEmptyRule samt_topic_audit_ra: NotEmptyRule
+     * 
      * @throws Exception
      */
     @Test
-    public void resolveSamtTopicValidations() throws Exception{
+    public void resolveSamtTopicValidations() throws Exception {
         Organization org = createOrganization();
         assertNotNull(org);
         checkElement(org);
-        List<String> uuIdList =  new LinkedList<String>();
+        List<String> uuIdList = new LinkedList<String>();
         uuIdList.addAll(createInOrganisation(org, SamtTopic.class, 1));
         assertEquals(uuIdList.size(), 1);
         LoadElementByUuid<CnATreeElement> command;
@@ -129,17 +128,18 @@ public class ValidationServiceTest extends AbstractModernizedBaseProtection {
         validationService.createValidationForSingleElement(topic);
         List<CnAValidation> validations = getSingleElementValidations(topic);
         assertEquals(Integer.valueOf(3), Integer.valueOf(validations.size()));
-        for(CnAValidation validation : validations){
-            if(validation.getPropertyId().equals(SamtTopic.PROP_MATURITY)){
+        for (CnAValidation validation : validations) {
+            if (validation.getPropertyId().equals(SamtTopic.PROP_MATURITY)) {
                 changeProperty(topic, SamtTopic.PROP_MATURITY, "4");
-            } else if(validation.getPropertyId().equals("samt_topic_audit_findings")){
+            } else if (validation.getPropertyId().equals("samt_topic_audit_findings")) {
                 changeProperty(topic, "samt_topic_audit_findings", "TestValue");
-            } else if(validation.getPropertyId().equals("samt_user_classification")){
+            } else if (validation.getPropertyId().equals("samt_user_classification")) {
                 changeProperty(topic, "samt_user_classification", "TestValue");
             }
         }
-        
-        UpdateElementEntity<CnATreeElement> updater = new UpdateElementEntity<CnATreeElement>(topic, ChangeLogEntry.STATION_ID);
+
+        UpdateElementEntity<CnATreeElement> updater = new UpdateElementEntity<CnATreeElement>(topic,
+                ChangeLogEntry.STATION_ID);
         try {
             commandService.executeCommand(updater);
         } catch (CommandException e) {
@@ -147,19 +147,20 @@ public class ValidationServiceTest extends AbstractModernizedBaseProtection {
         }
         topic = updater.getMergedElement();
         checkElement(topic);
-        //reload Element
+        // reload Element
         topic = loadElementByUuid(topic.getUuid(), RetrieveInfo.getPropertyInstance());
         checkElement(topic);
-        assertEquals(topic.getEntity().getProperties("samt_user_classification").getProperties().get(0).getPropertyValue(), "samt_classification_good");
-        
-        topic = (SamtTopic)loadElement(topic.getUuid());
+        assertEquals(topic.getEntity().getProperties("samt_user_classification").getProperties()
+                .get(0).getPropertyValue(), "samt_classification_good");
+
+        topic = (SamtTopic) loadElement(topic.getUuid());
         checkElement(topic);
         validationService.createValidationForSingleElement(topic);
         validations = getSingleElementValidations(topic);
         assertEquals(Integer.valueOf(0), Integer.valueOf(validations.size()));
         deleteElement(topic);
         deleteElement(org);
-        
+
     }
 
     @Test
@@ -198,10 +199,10 @@ public class ValidationServiceTest extends AbstractModernizedBaseProtection {
     private CnATreeElement loadElementByUuid(String uuId) throws CommandException {
         return loadElementByUuid(uuId, null);
     }
-    
+
     private CnATreeElement loadElementByUuid(String uuId, RetrieveInfo ri) throws CommandException {
         LoadElementByUuid<CnATreeElement> command;
-        if(ri != null){
+        if (ri != null) {
             command = new LoadElementByUuid<CnATreeElement>(uuId, ri);
         } else {
             command = new LoadElementByUuid<CnATreeElement>(uuId);
@@ -210,12 +211,11 @@ public class ValidationServiceTest extends AbstractModernizedBaseProtection {
         CnATreeElement topic = command.getElement();
         return topic;
     }
-    
-    private List<CnAValidation> getSingleElementValidations(CnATreeElement elmt){
+
+    private List<CnAValidation> getSingleElementValidations(CnATreeElement elmt) {
         return validationService.getValidations(elmt.getScopeId(), elmt.getDbId());
     }
-    
-    
+
     /**
      * deletes given element from db and referencing validation elements
      * 
@@ -235,7 +235,8 @@ public class ValidationServiceTest extends AbstractModernizedBaseProtection {
         RemoveElement<CnATreeElement> deleteElement = new RemoveElement<>(element);
         try {
             commandService.executeCommand(deleteElement);
-            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(element.getUuid());
+            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(
+                    element.getUuid());
             command = commandService.executeCommand(command);
             CnATreeElement e2 = command.getElement();
             assertNull("Organization was not deleted.", e2);
@@ -245,56 +246,59 @@ public class ValidationServiceTest extends AbstractModernizedBaseProtection {
     }
 
     private void deleteValidations(CnATreeElement element) throws CommandException {
-        if(element.isScope()){
+        if (element.isScope()) {
             validationService.deleteValidationsOfSubtree(element);
             LOG.debug("Validations for Subtree of " + element.getTitle() + " deleted");
         } else {
-            try{
+            try {
                 validationService.deleteValidations(element.getScopeId(), element.getDbId());
-            } catch (Exception e){
+            } catch (Exception e) {
                 LOG.error("Error while deleting validation", e);
             }
             LOG.debug("Validations for " + element.getTitle() + " deleted");
         }
     }
-    
+
     private void changeProperty(CnATreeElement element, String propertyName, String propertyValue) {
         Entity entity = element.getEntity();
         EntityType type = huiTypeFactory.getEntityType(element.getTypeId());
         assertNotNull("Entity type not found, id: " + element.getTypeId(), type);
         List<PropertyType> propertyList = type.getAllPropertyTypes();
         for (PropertyType propertyType : propertyList) {
-            if(propertyType.getId().equals(propertyName)){
-                if(propertyType.isLine() || propertyType.isText()) {
-                    entity.setSimpleValue(propertyType,propertyValue);
+            if (propertyType.getId().equals(propertyName)) {
+                if (propertyType.isLine() || propertyType.isText()) {
+                    entity.setSimpleValue(propertyType, propertyValue);
                     break;
-                } else if(propertyType.isNumericSelect()){
+                } else if (propertyType.isNumericSelect()) {
                     entity.setNumericValue(propertyType, Integer.valueOf(propertyValue));
-                } else if(propertyType.isSingleSelect()){
-                    entity.setSimpleValue(propertyType, propertyType.getOption("samt_classification_good").getId());
+                } else if (propertyType.isSingleSelect()) {
+                    entity.setSimpleValue(propertyType,
+                            propertyType.getOption("samt_classification_good").getId());
                 } else {
                     LOG.debug("UnseenProperty:\t" + propertyType.getName());
                 }
             }
         }
     }
-    
+
     /**
      * Loads an element similar to the BsiElementEditor
      */
-    protected CnATreeElement loadElement(String uuid) throws CommandException {  
-        LoadElementByUuid<CnATreeElement> loadByUuid = new LoadElementByUuid<CnATreeElement>(uuid, RetrieveInfo.getPropertyInstance());
+    protected CnATreeElement loadElement(String uuid) throws CommandException {
+        LoadElementByUuid<CnATreeElement> loadByUuid = new LoadElementByUuid<CnATreeElement>(uuid,
+                RetrieveInfo.getPropertyInstance());
         loadByUuid = commandService.executeCommand(loadByUuid);
         CnATreeElement element = loadByUuid.getElement();
         assertNotNull("Element is null, uuid: " + uuid, element);
-        
-        
-        RetrieveCnATreeElement retrieveCommand = new RetrieveCnATreeElement(element.getTypeId(), element.getDbId(),RetrieveInfo.getChildrenInstance());
-        retrieveCommand = commandService.executeCommand(retrieveCommand);           
-        CnATreeElement elementWithChildren = retrieveCommand.getElement(); 
+
+        RetrieveCnATreeElement retrieveCommand = new RetrieveCnATreeElement(element.getTypeId(),
+                element.getDbId(), RetrieveInfo.getChildrenInstance());
+        retrieveCommand = commandService.executeCommand(retrieveCommand);
+        CnATreeElement elementWithChildren = retrieveCommand.getElement();
         assertNotNull("Element with children is null, uuid: " + uuid, elementWithChildren);
-        assertNotNull("Children of element are null, uuid: " + uuid, elementWithChildren.getChildren());
-        
+        assertNotNull("Children of element are null, uuid: " + uuid,
+                elementWithChildren.getChildren());
+
         LoadElementForEditor loadForEditor = new LoadElementForEditor(element);
         loadForEditor = commandService.executeCommand(loadForEditor);
         element = loadForEditor.getElement();
@@ -302,5 +306,5 @@ public class ValidationServiceTest extends AbstractModernizedBaseProtection {
         element.setChildren(elementWithChildren.getChildren());
         return element;
     }
-    
+
 }

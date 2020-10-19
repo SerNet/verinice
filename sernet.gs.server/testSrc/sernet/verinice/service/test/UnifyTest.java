@@ -47,28 +47,22 @@ import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
  *
  */
 public class UnifyTest extends BeforeEachVNAImportHelper {
-   
+
     private static final Logger LOG = Logger.getLogger(UnifyTest.class);
-    
+
     private static final String VNA_FILENAME = "UnifyTest.vna";
-    
+
     private static final String SOURCE_ID = "VN-872";
     private static final String CONTROL_GROUP_1_X = "ENTITY_46008";
-    private static final String CONTROL_GROUP_2_X = "ENTITY_117615"; 
-    
-    
+    private static final String CONTROL_GROUP_2_X = "ENTITY_117615";
+
     // Ext-id of ISA-topics of ISA 2.x in test VNA with name VNA_FILENAME
     private static final String ISA_TOPIC_2_X_C_14_1 = "ENTITY_117723";
-    
-    public static final List<String> PROPERTY_TYPE_BLACKLIST = Arrays.asList(
-            SamtTopic.PROP_DESC,
-            SamtTopic.PROP_NAME,
-            SamtTopic.PROP_VERSION,
-            SamtTopic.PROP_WEIGHT,
-            SamtTopic.PROP_OWNWEIGHT,
-            SamtTopic.PROP_MIN1,
-            SamtTopic.PROP_MIN2);
-    
+
+    public static final List<String> PROPERTY_TYPE_BLACKLIST = Arrays.asList(SamtTopic.PROP_DESC,
+            SamtTopic.PROP_NAME, SamtTopic.PROP_VERSION, SamtTopic.PROP_WEIGHT,
+            SamtTopic.PROP_OWNWEIGHT, SamtTopic.PROP_MIN1, SamtTopic.PROP_MIN2);
+
     @Test
     public void testBlacklist() throws Exception {
         CnATreeElement element = loadElement(SOURCE_ID, ISA_TOPIC_2_X_C_14_1);
@@ -76,7 +70,8 @@ public class UnifyTest extends BeforeEachVNAImportHelper {
         doUnify();
         element = loadElement(SOURCE_ID, ISA_TOPIC_2_X_C_14_1);
         Map<String, String> valuesAfterUnify = loadValuesOfBlacklistProperties(element);
-        assertTrue("Values of blacklist properties after unify are not the same as before.", MapUtil.compare(valuesBeforeUnify, valuesAfterUnify));
+        assertTrue("Values of blacklist properties after unify are not the same as before.",
+                MapUtil.compare(valuesBeforeUnify, valuesAfterUnify));
     }
 
     private void doUnify() throws CommandException {
@@ -84,11 +79,12 @@ public class UnifyTest extends BeforeEachVNAImportHelper {
         Unify unifyCommand = new Unify.Builder(mappingList).build();
         unifyCommand = commandService.executeCommand(unifyCommand);
     }
-    
+
     private Map<String, String> loadValuesOfBlacklistProperties(CnATreeElement element) {
-        Map<String, String> valuesOfBlacklistProperties = new HashMap<String, String>();      
+        Map<String, String> valuesOfBlacklistProperties = new HashMap<String, String>();
         for (String propertyTypeId : PROPERTY_TYPE_BLACKLIST) {
-            valuesOfBlacklistProperties.put(propertyTypeId, element.getEntity().getSimpleValue(propertyTypeId));
+            valuesOfBlacklistProperties.put(propertyTypeId,
+                    element.getEntity().getSimpleValue(propertyTypeId));
         }
         return valuesOfBlacklistProperties;
     }
@@ -98,26 +94,36 @@ public class UnifyTest extends BeforeEachVNAImportHelper {
         assertNotNull("Control group of ISA 1.x not found.", controlGroupV1);
         ControlGroup controlGroupV2 = (ControlGroup) loadElement(SOURCE_ID, CONTROL_GROUP_2_X);
         assertNotNull("Control group of ISA 2.0 not found.", controlGroupV2);
-        LoadUnifyMapping command = new LoadUnifyMapping(controlGroupV1.getUuid(),controlGroupV2.getUuid());
+        LoadUnifyMapping command = new LoadUnifyMapping(controlGroupV1.getUuid(),
+                controlGroupV2.getUuid());
         command = commandService.executeCommand(command);
         List<UnifyMapping> mappingList = command.getMappings();
         return mappingList;
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.test.helper.vnaimport.AbstractVNAImportHelper#getFilePath()
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.service.test.helper.vnaimport.AbstractVNAImportHelper#
+     * getFilePath()
      */
     @Override
     protected String getFilePath() {
         return this.getClass().getResource(VNA_FILENAME).getPath();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.test.helper.vnaimport.AbstractVNAImportHelper#getSyncParameter()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.service.test.helper.vnaimport.AbstractVNAImportHelper#
+     * getSyncParameter()
      */
     @Override
     protected SyncParameter getSyncParameter() throws SyncParameterException {
-       return new SyncParameter(true, true, true, false, SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
+        return new SyncParameter(true, true, true, false,
+                SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
     }
 
 }

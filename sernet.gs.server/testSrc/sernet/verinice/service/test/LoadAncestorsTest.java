@@ -70,7 +70,8 @@ public class LoadAncestorsTest extends CommandServiceProvider {
 
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             Calendar cal = Calendar.getInstance();
-            organization = createOrganization(getClass().getSimpleName() + "_" + dateFormat.format(cal.getTime()));
+            organization = createOrganization(
+                    getClass().getSimpleName() + "_" + dateFormat.format(cal.getTime()));
             PathAndLeafHolder pathAndLeafHolder = new PathAndLeafHolder();
             pathAndLeafHolder.appendElementToPath(organization.getTitle());
             int depth = new Random().nextInt(MAX_TEST_TREE_DEPTH);
@@ -80,13 +81,15 @@ public class LoadAncestorsTest extends CommandServiceProvider {
 
             // fetch the child from the database
             RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
-            LoadAncestors command = new LoadAncestors(pathAndLeafHolder.leaf.getTypeId(), pathAndLeafHolder.leaf.getUuid(), ri);
+            LoadAncestors command = new LoadAncestors(pathAndLeafHolder.leaf.getTypeId(),
+                    pathAndLeafHolder.leaf.getUuid(), ri);
             command = commandService.executeCommand(command);
             CnATreeElement databaseChild = command.getElement();
 
             // compare the local path and the one fetched from database
             while (databaseChild.getParent() != null) {
-                assertTrue("check path part " + databaseChild.getTitle() + "failed", databaseChild.getTitle().equals(pathAndLeafHolder.popLastElementFromPath()));
+                assertTrue("check path part " + databaseChild.getTitle() + "failed", databaseChild
+                        .getTitle().equals(pathAndLeafHolder.popLastElementFromPath()));
                 databaseChild = databaseChild.getParent();
             }
 
@@ -107,13 +110,15 @@ public class LoadAncestorsTest extends CommandServiceProvider {
      * @throws CommandException
      */
     @SuppressWarnings("unchecked")
-    public PathAndLeafHolder makeDeepHierachy(Organization org, int depth, PathAndLeafHolder pathAndLeafHolder) throws CommandException {
+    public PathAndLeafHolder makeDeepHierachy(Organization org, int depth,
+            PathAndLeafHolder pathAndLeafHolder) throws CommandException {
 
         assertNotNull("organization may not be null", org);
         assertFalse("organization may not be empty", org.getChildren().isEmpty());
 
         // get more or less random asset group
-        Group<CnATreeElement> assetGroupRoot = (Group<CnATreeElement>) org.getChildren().iterator().next();
+        Group<CnATreeElement> assetGroupRoot = (Group<CnATreeElement>) org.getChildren().iterator()
+                .next();
         pathAndLeafHolder.appendElementToPath(assetGroupRoot.getTitle());
 
         return makeDeepHierarchy(depth, assetGroupRoot, pathAndLeafHolder);
@@ -127,7 +132,8 @@ public class LoadAncestorsTest extends CommandServiceProvider {
      * @param depth
      * @throws CommandException
      */
-    private PathAndLeafHolder makeDeepHierarchy(int depth, Group<CnATreeElement> parent, PathAndLeafHolder pathAndLeafHolder) throws CommandException {
+    private PathAndLeafHolder makeDeepHierarchy(int depth, Group<CnATreeElement> parent,
+            PathAndLeafHolder pathAndLeafHolder) throws CommandException {
 
         if (depth <= 0) {
             CnATreeElement c = createNewElement(parent, depth);
@@ -138,7 +144,8 @@ public class LoadAncestorsTest extends CommandServiceProvider {
         }
 
         @SuppressWarnings("unchecked")
-        Group<CnATreeElement> child = (Group<CnATreeElement>) createNewNamedGroup(parent, parent.getTitle().split("-")[0] + "-" + depth);
+        Group<CnATreeElement> child = (Group<CnATreeElement>) createNewNamedGroup(parent,
+                parent.getTitle().split("-")[0] + "-" + depth);
         parent.addChild(child);
         pathAndLeafHolder.appendElementToPath(child.getTitle());
         return makeDeepHierarchy(depth - 1, child, pathAndLeafHolder);

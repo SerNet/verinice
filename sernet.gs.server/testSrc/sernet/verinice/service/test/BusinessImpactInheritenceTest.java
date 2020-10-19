@@ -39,18 +39,18 @@ import sernet.verinice.service.commands.SyncParameterException;
 import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
 
 /**
- * ISO27000 Business Impact Inheritence test.
- * See https://wiki.sernet.private/wiki/Verinice/Business_Impact_Inheritence/de
- * for a description of the test cases. 
+ * ISO27000 Business Impact Inheritence test. See
+ * https://wiki.sernet.private/wiki/Verinice/Business_Impact_Inheritence/de for
+ * a description of the test cases.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class BusinessImpactInheritenceTest extends BeforeEachVNAImportHelper {
 
     private static final Logger LOG = Logger.getLogger(BusinessImpactInheritenceTest.class);
-    
+
     private static final String VNA_FILENAME = "BusinessImpactInheritenceTest.vna";
-    
+
     private static final String SOURCE_ID = "Unit-Test";
     private static final String EXT_ID_EXTERNE_KOMMUNIKATION = "ENTITY_10473";
     private static final String EXT_ID_INTERNE_KOMMUNIKATION = "ENTITY_10441";
@@ -58,83 +58,84 @@ public class BusinessImpactInheritenceTest extends BeforeEachVNAImportHelper {
     private static final String EXT_ID_NETWORK_SWITCH = "ENTITY_10559";
     private static final String EXT_ID_VMWARE_GUEST_1 = "ENTITY_10314";
     private static final String EXT_ID_VMWARE_GUEST_2 = "ENTITY_10376";
-    
+
     @Test
     public void testRemoveElement() throws Exception {
-        
+
         Asset asset = (Asset) loadElement(SOURCE_ID, EXT_ID_VMWARE_GUEST_1);
         checkCIA(asset, 2, 2, 4);
-        
-        Process process = (Process) loadElement(SOURCE_ID, EXT_ID_DOKUMENTENMANAGEMENT);    
+
+        Process process = (Process) loadElement(SOURCE_ID, EXT_ID_DOKUMENTENMANAGEMENT);
         RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(process);
         commandService.executeCommand(removeCommand);
-        
+
         asset = (Asset) loadElement(SOURCE_ID, EXT_ID_VMWARE_GUEST_1);
         checkCIA(asset, 2, 2, 2);
     }
-    
+
     @Test
     public void testAddAndRemoveLink() throws Exception {
-        
+
         Asset asset = (Asset) loadElement(SOURCE_ID, EXT_ID_VMWARE_GUEST_2);
         setInheritence(asset, true);
         checkCIA(asset, 2, 2, 4);
-        
+
         // remove link
         removeLinksToProcess(asset);
         asset = (Asset) loadElement(SOURCE_ID, EXT_ID_VMWARE_GUEST_2);
         checkCIA(asset, 0, 0, 0);
-        
+
         // add link
         Process process = (Process) loadElement(SOURCE_ID, EXT_ID_INTERNE_KOMMUNIKATION);
-        CreateLink<Process,Asset> command = new CreateLink<Process,Asset>(process, asset, Process.REL_PROCESS_ASSET, "BusinessImpactInheritenceTest");
+        CreateLink<Process, Asset> command = new CreateLink<Process, Asset>(process, asset,
+                Process.REL_PROCESS_ASSET, "BusinessImpactInheritenceTest");
         command = commandService.executeCommand(command);
         asset = (Asset) loadElement(SOURCE_ID, EXT_ID_VMWARE_GUEST_2);
         checkCIA(asset, 2, 2, 2);
-        
+
         // remove link again to reset database state
         removeLinksToProcess(asset);
         asset = (Asset) loadElement(SOURCE_ID, EXT_ID_VMWARE_GUEST_2);
         checkCIA(asset, 0, 0, 0);
     }
-    
+
     @Test
     public void testChangeBiNumber() throws Exception {
-        
+
         Asset asset = (Asset) loadElement(SOURCE_ID, EXT_ID_NETWORK_SWITCH);
         checkCIA(asset, 2, 2, 4);
-        
+
         Process process = (Process) loadElement(SOURCE_ID, EXT_ID_EXTERNE_KOMMUNIKATION);
         setCIA(process, 3, 2, 4);
-        
+
         asset = (Asset) loadElement(SOURCE_ID, EXT_ID_NETWORK_SWITCH);
         checkCIA(asset, 3, 2, 4);
     }
-    
+
     @Test
     public void testChangeInheritence() throws Exception {
-        
+
         Asset asset = (Asset) loadElement(SOURCE_ID, EXT_ID_VMWARE_GUEST_2);
         checkCIA(asset, 1, 1, 1);
-        
+
         setInheritence(asset, true);
         checkCIA(asset, 2, 2, 4);
-        
+
         setInheritence(asset, false);
         setCIA(asset, 1, 1, 1);
         checkCIA(asset, 1, 1, 1);
     }
-    
+
     private void removeLinksToProcess(Asset asset) throws CommandException {
         Set<CnALink> links = asset.getLinksUp();
         for (CnALink link : links) {
-            if(Process.REL_PROCESS_ASSET.equals(link.getRelationId())) {
+            if (Process.REL_PROCESS_ASSET.equals(link.getRelationId())) {
                 RemoveLink removeLink = new RemoveLink(link);
                 removeLink = commandService.executeCommand(removeLink);
             }
         }
     }
-    
+
     private void setInheritence(Asset asset, boolean inheritence) throws CommandException {
         int value = (inheritence) ? 1 : 0;
         asset.setNumericProperty(Asset.ASSET_VALUE_METHOD_AVAILABILITY, value);
@@ -158,11 +159,14 @@ public class BusinessImpactInheritenceTest extends BeforeEachVNAImportHelper {
     }
 
     private void checkCIA(Asset element, int c, int i, int a) {
-        assertEquals("Availability of element is not " + a, a, element.getNumericProperty(Asset.ASSET_VALUE_AVAILABILITY));
-        assertEquals("Confidentiality of element is not " + c, c, element.getNumericProperty(Asset.ASSET_VALUE_CONFIDENTIALITY));
-        assertEquals("Integrity of element is not " + i, i, element.getNumericProperty(Asset.ASSET_VALUE_INTEGRITY));
+        assertEquals("Availability of element is not " + a, a,
+                element.getNumericProperty(Asset.ASSET_VALUE_AVAILABILITY));
+        assertEquals("Confidentiality of element is not " + c, c,
+                element.getNumericProperty(Asset.ASSET_VALUE_CONFIDENTIALITY));
+        assertEquals("Integrity of element is not " + i, i,
+                element.getNumericProperty(Asset.ASSET_VALUE_INTEGRITY));
     }
-    
+
     @Override
     protected String getFilePath() {
         return this.getClass().getResource(VNA_FILENAME).getPath();
@@ -170,6 +174,7 @@ public class BusinessImpactInheritenceTest extends BeforeEachVNAImportHelper {
 
     @Override
     protected SyncParameter getSyncParameter() throws SyncParameterException {
-       return new SyncParameter(true, true, true, false, SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
+        return new SyncParameter(true, true, true, false,
+                SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
     }
 }

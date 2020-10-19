@@ -70,8 +70,8 @@ public class LoadElementTitlesTest extends BeforeEachVNAImportHelper {
 
         runTest(0);
         runTest(1);
-        for (int i = 2; i < getAllTypeIds()
-                .size(); i += getRandomInInterval(1, INTERVAL_ARRAYSIZE)) {
+        for (int i = 2; i < getAllTypeIds().size(); i += getRandomInInterval(1,
+                INTERVAL_ARRAYSIZE)) {
 
             runTest(i);
         }
@@ -147,10 +147,8 @@ public class LoadElementTitlesTest extends BeforeEachVNAImportHelper {
                 getElementsCommand = commandService.executeCommand(getElementsCommand);
                 String nameInDB = getElementsCommand.getElement().getTitle();
 
-                assertTrue(
-                        "Wrong title, expected '" + map.get(dbIDs.get(i)) + "', but was '"
-                                + nameInDB + "'",
-                        nameInDB.equals(map.get(dbIDs.get(i))));
+                assertTrue("Wrong title, expected '" + map.get(dbIDs.get(i)) + "', but was '"
+                        + nameInDB + "'", nameInDB.equals(map.get(dbIDs.get(i))));
             }
         }
     }
@@ -164,6 +162,5 @@ public class LoadElementTitlesTest extends BeforeEachVNAImportHelper {
     protected SyncParameter getSyncParameter() throws SyncParameterException {
         return new SyncParameter(true, true, true, false);
     }
-
 
 }
