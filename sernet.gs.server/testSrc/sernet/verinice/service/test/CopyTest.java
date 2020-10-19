@@ -21,7 +21,6 @@ package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -31,6 +30,8 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
@@ -39,77 +40,57 @@ import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.CopyCommand;
-import sernet.verinice.service.commands.LoadElementByUuid;
-import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.model.LoadModel;
 
 /**
- * Test {@link CopyCommand} by copying all elements of all types to a sub-folder.
+ * Test {@link CopyCommand} by copying all elements of all types to a
+ * sub-folder.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@Transactional
+@TransactionConfiguration(transactionManager = "txManager")
 public class CopyTest extends CommandServiceProvider {
 
     private static final Logger LOG = Logger.getLogger(CopyTest.class);
 
-    private static final int NUMBER_OF_ELEMENTS = 10; 
-    private static final int NUMBER_OF_GROUPS = 1; 
-    
+    private static final int NUMBER_OF_ELEMENTS = 10;
+    private static final int NUMBER_OF_GROUPS = 1;
+
     private List<String> uuidList;
-    
+
     @Test
     public void testCopy() throws Exception {
         // create
         uuidList = new LinkedList<String>();
         final Organization organization = createOrganization();
         uuidList.add(organization.getUuid());
-        uuidList.addAll(createElementsInGroups(organization, NUMBER_OF_ELEMENTS));       
-        uuidList.addAll(createGroupsInGroups(organization, NUMBER_OF_GROUPS));      
+        uuidList.addAll(createElementsInGroups(organization, NUMBER_OF_ELEMENTS));
+        uuidList.addAll(createGroupsInGroups(organization, NUMBER_OF_GROUPS));
         LOG.debug("Total number of created elements: " + uuidList.size());
-        
+
         // move (cut and paste) elements
-        copyAllElements(organization); 
+        copyAllElements(organization);
         checkCopiedElements(organization);
-        
-        // remove
-        final RemoveElement removeCommand = new RemoveElement(organization);
-        commandService.executeCommand(removeCommand);
-        for (final String uuid: uuidList) {
-            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuid);
-            command = commandService.executeCommand(command);
-            final CnATreeElement element = command.getElement();
-            assertNull("Organization was not deleted.", element);
-        } 
     }
-    
+
     @Test
     public void testCopyOrganization() throws Exception {
         // create
         uuidList = new LinkedList<String>();
         final Organization organization = createOrganization();
         uuidList.add(organization.getUuid());
-        uuidList.addAll(createElementsInGroups(organization, NUMBER_OF_ELEMENTS));       
-        uuidList.addAll(createGroupsInGroups(organization, NUMBER_OF_GROUPS));      
+        uuidList.addAll(createElementsInGroups(organization, NUMBER_OF_ELEMENTS));
+        uuidList.addAll(createGroupsInGroups(organization, NUMBER_OF_GROUPS));
         LOG.debug("Total number of created elements: " + uuidList.size());
-        
+
         // copy org
         copyAllElements(organization);
-        final String uuid = copyOrganization(organization);    
+        final String uuid = copyOrganization(organization);
         uuidList.add(uuid);
-        final Organization organizationCopy = (Organization) elementDao.findByUuid(uuid, RetrieveInfo.getChildrenInstance());
+        final Organization organizationCopy = (Organization) elementDao.findByUuid(uuid,
+                RetrieveInfo.getChildrenInstance());
         checkCopiedElements(organizationCopy);
-        
-        // remove
-        RemoveElement removeCommand = new RemoveElement(organization);
-        commandService.executeCommand(removeCommand);
-        removeCommand = new RemoveElement(organizationCopy);
-        commandService.executeCommand(removeCommand);
-        for (final String uuidDeleted: uuidList) {
-            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuidDeleted);
-            command = commandService.executeCommand(command);
-            final CnATreeElement element = command.getElement();
-            assertNull("Organization was not deleted.", element);
-        } 
     }
 
     private String copyOrganization(final Organization organization) throws CommandException {
@@ -119,13 +100,14 @@ public class CopyTest extends CommandServiceProvider {
         CopyCommand copyCommand = new CopyCommand(model.getUuid(), uuidList);
         copyCommand = commandService.executeCommand(copyCommand);
         final List<String> newUuidList = copyCommand.getNewElements();
-        assertTrue("Not only one element in result list", newUuidList!=null && newUuidList.size()==1);
+        assertTrue("Not only one element in result list",
+                newUuidList != null && newUuidList.size() == 1);
         return newUuidList.get(0);
     }
 
     /**
      * @param organization
-     * @throws CommandException 
+     * @throws CommandException
      */
     private void copyAllElements(final Organization organization) throws CommandException {
         final Set<CnATreeElement> children = organization.getChildren();
@@ -136,20 +118,22 @@ public class CopyTest extends CommandServiceProvider {
             Group<CnATreeElement> subGroup = null;
             final List<String> copyUuidList = new LinkedList<String>();
             for (final CnATreeElement subChild : childrenOfGroup) {
-                if(subChild instanceof Group) {
+                if (subChild instanceof Group) {
                     subGroup = (Group<CnATreeElement>) subChild;
                 } else {
                     copyUuidList.add(subChild.getUuid());
                 }
             }
-            assertFalse("Number of elements in group is not " + (NUMBER_OF_ELEMENTS+1) + ", type: " + child.getTypeId(), copyUuidList.size()==(NUMBER_OF_ELEMENTS+1));
+            assertFalse("Number of elements in group is not " + (NUMBER_OF_ELEMENTS + 1)
+                    + ", type: " + child.getTypeId(),
+                    copyUuidList.size() == (NUMBER_OF_ELEMENTS + 1));
             assertNotNull("No sub-group found in group: " + child.getTypeId(), subGroup);
-            
+
             CopyCommand copyCommand = new CopyCommand(subGroup.getUuid(), copyUuidList);
             copyCommand = commandService.executeCommand(copyCommand);
         }
     }
-    
+
     /**
      * @param organization
      */
@@ -161,20 +145,24 @@ public class CopyTest extends CommandServiceProvider {
             child = elementDao.findByUuid(child.getUuid(), ri);
             assertTrue("Child of organization is not a group", child instanceof Group);
             final Group<CnATreeElement> group = (Group) child;
-            
-            final Set<CnATreeElement> childrenOfGroup =  group.getChildren();
-            assertTrue("Number of elements in group is not:" + (NUMBER_OF_ELEMENTS+1) + "): " + child.getTypeId(), childrenOfGroup.size()==(NUMBER_OF_ELEMENTS+1));
-            
+
+            final Set<CnATreeElement> childrenOfGroup = group.getChildren();
+            assertTrue(
+                    "Number of elements in group is not:" + (NUMBER_OF_ELEMENTS + 1) + "): "
+                            + child.getTypeId(),
+                    childrenOfGroup.size() == (NUMBER_OF_ELEMENTS + 1));
+
             for (final CnATreeElement subChild : childrenOfGroup) {
-                if(subChild instanceof Group) {
+                if (subChild instanceof Group) {
                     final Group<CnATreeElement> subGroup = (Group<CnATreeElement>) subChild;
-                    assertTrue("Number of elements in group is not: " + NUMBER_OF_ELEMENTS, subGroup.getChildren().size()==NUMBER_OF_ELEMENTS);
-                } 
+                    assertTrue("Number of elements in group is not: " + NUMBER_OF_ELEMENTS,
+                            subGroup.getChildren().size() == NUMBER_OF_ELEMENTS);
+                }
             }
-       
+
         }
     }
-    
+
     private ISO27KModel loadIsoModel() throws CommandException {
         LoadModel<ISO27KModel> loadModel = new LoadModel<>(ISO27KModel.class);
         loadModel = commandService.executeCommand(loadModel);

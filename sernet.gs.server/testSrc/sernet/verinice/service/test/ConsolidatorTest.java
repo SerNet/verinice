@@ -30,6 +30,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -49,6 +50,7 @@ import sernet.verinice.service.commands.bp.ConsoliData;
 import sernet.verinice.service.commands.bp.ConsolidatorCommand;
 
 @TransactionConfiguration(transactionManager = "txManager")
+@Transactional
 public class ConsolidatorTest extends AbstractModernizedBaseProtection {
 
     private static final Logger LOG = Logger.getLogger(ConsolidatorTest.class);

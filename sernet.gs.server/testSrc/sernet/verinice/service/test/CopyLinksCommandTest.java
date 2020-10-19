@@ -22,10 +22,10 @@ import static org.junit.Assert.assertEquals;
 import java.util.Collections;
 
 import org.apache.log4j.Logger;
-import org.junit.After;
 import org.junit.Test;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.elements.Room;
@@ -33,22 +33,16 @@ import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.RoomGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
-import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CopyLinksCommand;
 import sernet.verinice.service.commands.CopyLinksCommand.CopyLinksMode;
-import sernet.verinice.service.commands.RemoveElement;
 
+@Transactional
+@TransactionConfiguration(transactionManager = "txManager")
 public class CopyLinksCommandTest extends AbstractModernizedBaseProtection {
 
     private static final Logger logger = Logger.getLogger(CopyLinksCommandTest.class);
 
     private ItNetwork network;
-
-    @After
-    public void tearDown() throws CommandException {
-        RemoveElement removeElementCmd = new RemoveElement(network);
-        commandService.executeCommand(removeElementCmd);
-    }
 
     @Test
     public void copyLinksFromSafeguard() throws Exception {
