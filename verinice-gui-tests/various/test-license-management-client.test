@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _8rWy4P1wEeqYO5h9EZ3cUQ
-Runtime-Version: 2.5.0.202001211718
-Save-Time: 9/28/20 4:05 PM
+Runtime-Version: 2.5.1.M3
+Save-Time: 10/20/20, 4:55 PM
 Tags: ISO, clientOnlyTest
 Testcase-Type: ecl
 
@@ -40,8 +40,7 @@ ism-import-vna  MY_LIC.vna
 get-button Objektbrowser | click 
 get-view ISM | get-tree | select "importierte Objekte/MyLic [64522f]/Controls [64522f]/Control [64522f]"
 screen-shot-window "lic-content-encrypted.png"
-get-view Objektbrowser | get-control Browser | get-property text | matches ".*<div id=\"content\"><h1>Control</h1><p><p><b><font color=\"red\">Für diesen Benutzer ist keine Lizenz zugewiesen\.<br/>Bitte kontaktieren Sie Ihren Administrator, wenn Sie diesen Inhalt nutzen möchten\.</font></b></p></p></div>.*"
-    | verify-true
+get-view Objektbrowser | get-control Browser | get-property text | contains "keine Lizenz zugewiesen" | verify-true
 
 get-view Objektbrowser | close
 
@@ -52,7 +51,7 @@ write-lines -uri [license-file]   -append false
 get-button Objektbrowser | click 
 get-view ISM | get-tree | select "importierte Objekte/MyLic [64522f]/Controls [64522f]/Control [64522f]"
 screen-shot-window "lic-content-decrypted.png"
-get-view Objektbrowser | get-control Browser | get-property text | matches ".*<div id=\"content\"><h1>Control</h1><p><p><b><font color=\"red\">Für diesen Benutzer ist keine Lizenz zugewiesen\.<br/>Bitte kontaktieren Sie Ihren Administrator, wenn Sie diesen Inhalt nutzen möchten\.</font></b></p></p></div>.*"
+get-view Objektbrowser | get-control Browser | get-property text | contains "keine Lizenz zugewiesen"
     | verify-false
 
 get-view Objektbrowser | close
@@ -62,7 +61,7 @@ delete-file [license-file]
 get-button Objektbrowser | click 
 get-view ISM | get-tree | select "importierte Objekte/MyLic [64522f]/Controls [64522f]/Control [64522f]"
 screen-shot-window "lic-content-encrypted-again.png"
-get-view Objektbrowser | get-control Browser | get-property text | matches ".*<div id=\"content\"><h1>Control</h1><p><p><b><font color=\"red\">Für diesen Benutzer ist keine Lizenz zugewiesen\.<br/>Bitte kontaktieren Sie Ihren Administrator, wenn Sie diesen Inhalt nutzen möchten\.</font></b></p></p></div>.*"
+get-view Objektbrowser | get-control Browser | get-property text | contains "keine Lizenz zugewiesen"
     | verify-true
 
 
