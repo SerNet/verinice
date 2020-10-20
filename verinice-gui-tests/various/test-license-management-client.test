@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _8rWy4P1wEeqYO5h9EZ3cUQ
 Runtime-Version: 2.5.1.M3
-Save-Time: 10/20/20, 4:55 PM
+Save-Time: 10/20/20, 8:57 PM
 Tags: ISO, clientOnlyTest
 Testcase-Type: ecl
 
@@ -25,11 +25,11 @@ Entry-Name: .content
 global [val licenseDate "2021-01-01"]
 
 proc "license-file" {
-concat $basedir [get-java-property "file.separator"] 
+	uri-from-path [concat $basedir [get-java-property "file.separator"]
                            "wrks" [get-java-property "file.separator"]
                            "verinice-workspace" [get-java-property "file.separator"] 
                            "vnl" [get-java-property "file.separator"] 
-                           "MY_LIC.vnl"
+                           "MY_LIC.vnl"]
 }
 
 log "test-license-management"
@@ -45,7 +45,7 @@ get-view Objektbrowser | get-control Browser | get-property text | contains "kei
 get-view Objektbrowser | close
 
 log [concat "write license file:" [license-file]]
-read-lines -uri [concat $datadir [get-java-property "file.separator"] "MY_LIC.vnl"]|
+read-file-in-data-dir "MY_LIC.vnl"|
 write-lines -uri [license-file]   -append false
 
 get-button Objektbrowser | click 
