@@ -624,6 +624,7 @@ ${verinice.jre}/jre/${java-library-location}
 		<attribute name="target" />
 		<sequential>
 			<echo>running server tests with target: @{target}</echo>
+			<property name="mode" value="Server"/>
 	        <antcall target="configure.verinice" />
 	        <antcall target="configure-aut" />
 	        <echo file="${verinice-sever-workspace}/.metadata/.plugins/org.eclipse.core.runtime/.settings/sernet.gs.ui.rcp.main.prefs" >
@@ -649,6 +650,7 @@ ${verinice.jre}/jre/${java-library-location}
 		<attribute name="target" />
 		<sequential>
 			<echo>running client tests with target: @{target}</echo>
+            <property name="mode" value="Client"/>
 			<property name="verince.program" location="${verinice-aut-path}/${verinice-executable}" />
 
 			<antcall target="configure-aut" />
@@ -755,7 +757,7 @@ ${verinice.jre}/jre/${java-library-location}
     <target name="fix-junit-result-xml">
     	<replaceregexp file="${test-results}/results.junit.xml" flags="g"
     		match='testcase[ \n\r\t]name="([^"]*)"'
-    		replace='testcase classname="${os.name}TEST" name="\1"' 	/>
+    		replace='testcase classname="${os.name}${mode}TEST" name="\1"' 	/>
     </target>
 
     <target name="fix-metric-csv">
