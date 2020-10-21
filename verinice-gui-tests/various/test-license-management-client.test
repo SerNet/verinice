@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _8rWy4P1wEeqYO5h9EZ3cUQ
 Runtime-Version: 2.5.1.M3
-Save-Time: 10/20/20, 8:57 PM
+Save-Time: 10/21/20, 12:58 PM
 Tags: ISO, clientOnlyTest
 Testcase-Type: ecl
 
@@ -23,6 +23,7 @@ Content-Type: text/ecl
 Entry-Name: .content
 
 global [val licenseDate "2021-01-01"]
+global [val isOSX [get-java-property "org.osgi.framework.os.name" | eq "MacOSX"]]
 
 proc "license-file" {
 	uri-from-path [concat $basedir [get-java-property "file.separator"]
@@ -48,6 +49,13 @@ log [concat "write license file:" [license-file]]
 read-file-in-data-dir "MY_LIC.vnl"|
 write-lines -uri [license-file]   -append false
 
+// on Mac OSX, the file watcher only polls every 10 seconds, so give it time to pick up the new file
+// see https://bugs.openjdk.java.net/browse/JDK-7133447
+// https://stackoverflow.com/questions/9588737/is-java-7-watchservice-slow-for-anyone-else
+if $isOSX {
+	wait 10000
+}
+
 get-button Objektbrowser | click 
 get-view ISM | get-tree | select "importierte Objekte/MyLic [64522f]/Controls [64522f]/Control [64522f]"
 screen-shot-window "lic-content-decrypted.png"
@@ -57,6 +65,11 @@ get-view Objektbrowser | get-control Browser | get-property text | contains "kei
 get-view Objektbrowser | close
 log [concat "delete license file:" [license-file]]
 delete-file [license-file]
+
+//see above
+if $isOSX {
+	wait 10000
+}
 
 get-button Objektbrowser | click 
 get-view ISM | get-tree | select "importierte Objekte/MyLic [64522f]/Controls [64522f]/Control [64522f]"
