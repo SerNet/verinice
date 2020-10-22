@@ -91,7 +91,7 @@ pipeline {
     }
 }
 
-def runRCPTT(jobName, buildNumberDevelop, operatingSystem, resultDir, reportName){
+def runRCPTT(jobName, buildNumberDevelop, operatingSystem, resultDir, htmlReportName){
     def rcpttBuild = build(
       job: jobName,
       propagate: false,
@@ -110,15 +110,17 @@ def runRCPTT(jobName, buildNumberDevelop, operatingSystem, resultDir, reportName
       selector: specific(rcpttBuild.getNumber().toString()),
       target: resultDir
     )
-    publishHTML([
-      allowMissing: false,
-      alwaysLinkToLastBuild: false,
-      keepAll: true,
-      reportDir: "${resultDir}/gui-test-runner/result",
-      reportFiles: 'results.html',
-      reportName: reportName,
-      reportTitles: "develop"
-    ])
+    if (htmlReportName != null){
+        publishHTML([
+          allowMissing: false,
+          alwaysLinkToLastBuild: false,
+          keepAll: true,
+          reportDir: "${resultDir}/gui-test-runner/result",
+          reportFiles: 'results.html',
+          reportName: htmlReportName,
+          reportTitles: "develop"
+        ])
+    }
 }
 
 
