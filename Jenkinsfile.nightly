@@ -1,5 +1,6 @@
 def productsBuild = null
 def outputDir = 'test-result'
+def artifactFilterRcptt = 'gui-test-runner/result/**/*'
 
 pipeline {
     agent any
@@ -35,21 +36,21 @@ pipeline {
                 stage('Run UI tests on Linux') {
                     steps {
                         script {
-                            runRCPTT 'rcptt-client-test', productsBuild.number, 'Linux', "${outputDir}/gui-test-linux", 'GUI Test Report (Linux)'
+                            runRCPTT 'rcptt-client-test', productsBuild.number, 'Linux', artifactFilterRcptt, "${outputDir}/gui-test-linux", 'GUI Test Report (Linux)'
                         }
                     }
                 }
                 stage('Run UI tests on Mac') {
                     steps {
                         script {
-                            runRCPTT 'rcptt-client-test', productsBuild.number, 'Mac OSX', "${outputDir}/gui-test-mac", 'GUI Test Report (Mac OSX)'
+                            runRCPTT 'rcptt-client-test', productsBuild.number, 'Mac OSX', artifactFilterRcptt, "${outputDir}/gui-test-mac", 'GUI Test Report (Mac OSX)'
                         }
                     }
                 }
                 stage('Run UI tests on Windows') {
                     steps {
                         script {
-                            runRCPTT 'rcptt-client-test', productsBuild.number, 'Windows 10', "${outputDir}/gui-test-windows", 'GUI Test Report (Windows 10)'
+                            runRCPTT 'rcptt-client-test', productsBuild.number, 'Windows 10', artifactFilterRcptt, "${outputDir}/gui-test-windows", 'GUI Test Report (Windows 10)'
                         }
                     }
                 }
@@ -57,7 +58,7 @@ pipeline {
                     steps {
                         script {
                             def target = "${outputDir}/performance-test-standalone"
-                            runRCPTT 'rcptt-client-performance-test', productsBuild.number, null, target, 'GUI Test Report (Performance Standalone)'
+                            runRCPTT 'rcptt-client-performance-test', productsBuild.number, null, artifactFilterRcptt, target, 'GUI Test Report (Performance Standalone)'
                             createPerformancePlot("${target}/gui-test-runner/result/metric.csv", 'Standalone')
                         }
                     }
@@ -66,7 +67,7 @@ pipeline {
                     steps {
                         script {
                             def target = "${outputDir}/performance-test-3-tier"
-                            runRCPTT 'rcptt-server-performance-test', productsBuild.number, null, target, 'GUI Test Report (Performance 3-tier)'
+                            runRCPTT 'rcptt-server-performance-test', productsBuild.number, null, artifactFilterRcptt, target, 'GUI Test Report (Performance 3-tier)'
                             createPerformancePlot("${target}/gui-test-runner/result/metric.csv", '3-tier')
                         }
                     }
@@ -91,7 +92,7 @@ pipeline {
     }
 }
 
-def runRCPTT(jobName, buildNumberDevelop, operatingSystem, resultDir, htmlReportName){
+def runRCPTT(jobName, buildNumberDevelop, operatingSystem, copyArtifactsFilter, resultDir, htmlReportName){
     def rcpttBuild = build(
       job: jobName,
       propagate: false,
@@ -103,7 +104,7 @@ def runRCPTT(jobName, buildNumberDevelop, operatingSystem, resultDir, htmlReport
       ]
     )
     copyArtifacts(
-      filter: 'gui-test-runner/result/**/*',
+      filter: copyArtifactsFilter,
       fingerprintArtifacts: true,
       optional: true,
       projectName: jobName,
