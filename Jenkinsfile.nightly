@@ -1,7 +1,7 @@
 def productsBuild = null
 
 pipeline {
-    agent { label 'master' }
+    agent any
     options {
         buildDiscarder(logRotator(numToKeepStr: '500'))
     }
@@ -26,36 +26,6 @@ pipeline {
                       selector: specific(productsBuild.getNumber().toString()),
                       target: "test-result/integration"
                     )
-                }
-            }
-        }
-        stage('Analyze source code') {
-            steps {
-                script {
-                    withSonarQubeEnv('sonar') {
-						sh "env"
-                        def scannerHome = tool 'sonar-runner-2.4'
-                        def commonProperties = "-Dsonar.host.url=${env.SONAR_HOST_URL} -Dsonar.projectVersion=1.11 -Dsonar.java.source=8 -Dsonar.language=java"
-                        def scannerBaseCommand = "${scannerHome}/bin/sonar-runner ${commonProperties}"
-                        def runScanner = {projectKey, projectName, sourceDir, additionalOpts = null ->
-                            sh "${scannerBaseCommand} '-Dsonar.projectKey=${projectKey}' '-Dsonar.projectName=${projectName}' '-Dsonar.sources=${sourceDir}' ${additionalOpts ?: ''}"
-                        }
-                        runScanner 'com.sernet:verinice.gs.reveng', 'verinice GSTOOL Import', 'sernet.gs.reveng/src'
-                        runScanner 'com.sernet:verinice.gs.server', 'verinice Server', 'sernet.gs.server/src', '-Dsonar.tests=sernet.gs.server/testSrc'
-                        runScanner 'com.sernet:verinice.gs.service', 'verinice Service', 'sernet.gs.service/src'
-                        runScanner 'com.sernet:verinice.gs.ui.rcp.main', 'verinice RCP Main', 'sernet.gs.ui.rcp.main/src'
-                        runScanner 'com.sernet:verinice.hui.common', 'verinice HUI Common', 'sernet.hui.common/src'
-                        runScanner 'com.sernet:verinice.hui.server', 'verinice HUI Server', 'sernet.hui.server/src'
-                        runScanner 'com.sernet:verinice.hui.swtclient', 'verinice HUI SWT Client', 'sernet.hui.swtclient/src'
-                        runScanner 'com.sernet:verinice.springclient', 'verinice Spring Client', 'sernet.springclient/src'
-                        runScanner 'com.sernet:verinice.fei.rcp', 'verinice File Element Import RCP', 'sernet.verinice.fei.rcp/src'
-                        runScanner 'com.sernet:verinice.fei.rcp', 'verinice File Element Import Service', 'sernet.verinice.fei.service/src'
-                        runScanner 'com.sernet:verinice.kerberos', 'verinice Kerberos Client', 'sernet.verinice.kerberos/src'
-                        runScanner 'com.sernet:verinice.oda.driver', 'verinice ODA Driver', 'sernet.verinice.kerberos/src'
-                        runScanner 'com.sernet:verinice.report.service', 'verinice Report Service', 'sernet.verinice.report.service/src'
-                        runScanner 'com.sernet:verinice.samt.rcp', 'verinice ISA RCP', 'sernet.verinice.samt.rcp/src'
-                        runScanner 'com.sernet:verinice.samt.service', 'verinice ISA Service', 'sernet.verinice.samt.service/src'
-                    }
                 }
             }
         }
