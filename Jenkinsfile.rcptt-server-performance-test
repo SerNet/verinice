@@ -24,6 +24,8 @@ pipeline {
           description: 'The postgres database version to use.')
         string(name: 'TEST_OPTIONS', defaultValue: 'testExecTimeout=45000;execTimeout=410000;reportingIncludeIgnoredWaitDetails=true;passedTestDetails=true;runtimeEnableActivityLogs=true;q7ImageCapture=true;jobHangTimeout=900000;contextRunnableTimeout=900000',
           description: 'The options of the rcptt testing program.')
+        booleanParam(name: 'monitor_server', defaultValue: true, 
+          description: 'Install Melody as server monitor.')
     }
     stages {
         stage('Run RCPTT tests') {
@@ -56,6 +58,9 @@ pipeline {
                 script {
                     def portDatabase = "559${env.EXECUTOR_NUMBER}"
                     def portTomcat = "803${env.EXECUTOR_NUMBER}"
+                    if (params.monitor_server){
+                        env.MELODY_TOOL_PATH = 'gui-test-runner/etc/melody'
+                    }
 
                     docker.image("postgres:${params.POSTGRESQL_VERSION}").withRun("--name postgresql-verinice-server-rcptt-test-executor-${env.BUILD_NUMBER} -e POSTGRES_USER=verinice -e POSTGRES_PASSWORD=verinice -e POSTGRES_DB=verinicedb -p ${portDatabase}:5432") { db ->
                         // TODO check for DB startup

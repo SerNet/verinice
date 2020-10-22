@@ -16,7 +16,7 @@
 	</condition>
 	
 	<property name="gui-test-properties" value="${runner-project-path}${local-suffix}/gui-test.properties" />
-
+	<property environment="env"/>
 	<loadproperties srcfile="${gui-test-properties}" />
 	<!-- Set properties below -->
 
@@ -55,6 +55,9 @@
 	</condition>
 	<condition property="no-war-copy">
 		<isset property="no-server-deployment"/>
+	</condition>
+	<condition property="no-melody">
+		<not><isset property="env.MELODY_TOOL_PATH"/></not>
 	</condition>
 
 	<!-- set up OS-specific paths -->
@@ -107,7 +110,45 @@
 					value="${log}" />
         </replace>
     </target>
-    <!-- - - - - - - - - - - - - - - - - - 
+    <target name="patch-server-melody" unless="no-melody">
+        <replace file="${server-work-dir}/verinice/WEB-INF/web.xml" summary="true">
+            <replacetoken><![CDATA[<!-- classpath:sernet/gs/server/spring/veriniceserver-security-plain-ldap.xml -->]]></replacetoken>
+            <replacevalue>
+                <![CDATA[
+                <filter>
+                    <filter-name>javamelody</filter-name>
+                    <filter-class>net.bull.javamelody.MonitoringFilter</filter-class>
+                    <async-supported>true</async-supported>
+                </filter>
+                <filter-mapping>
+                    <filter-name>javamelody</filter-name>
+                    <url-pattern>/*</url-pattern>
+                    <dispatcher>REQUEST</dispatcher>
+                    <dispatcher>ASYNC</dispatcher>
+                </filter-mapping>
+                <listener>
+                    <listener-class>net.bull.javamelody.SessionListener</listener-class>
+                </listener>
+                <!-- Spring context loader -->]]></replacevalue>
+    </replace>
+    	
+        <replace file="${server-work-dir}/verinice/WEB-INF/web.xml" summary="true">
+            <replacetoken><![CDATA[classpath:sernet/gs/server/spring/veriniceserver-security.xml]]></replacetoken>
+            <replacevalue>
+                <![CDATA[classpath:net/bull/javamelody/monitoring-spring-datasource.xml
+                classpath:sernet/gs/server/spring/veriniceserver-security.xml
+
+            	]]></replacevalue>
+    	
+
+    </replace>
+
+    
+    <copy todir="${server-work-dir}/verinice/WEB-INF/lib/">
+        <fileset dir="${env.MELODY_TOOL_PATH}"/>	
+    </copy>
+    </target>
+     <!-- - - - - - - - - - - - - - - - - - 
           target: patch-server-web-xml                      
          - - - - - - - - - - - - - - - - - -->
     <target name="patch-server-web-xml">
@@ -180,7 +221,9 @@
         <Connector connectionTimeout="20000" port="${server-port}" protocol="HTTP/1.1" redirectPort="8443"/>
         <Engine defaultHost="localhost" name="Catalina">
             <Host appBase="webapps" autoDeploy="true" name="localhost" unpackWARs="true" xmlNamespaceAware="false" xmlValidation="false">
-                <Context docBase="${server-work-dir}/verinice" path="/verinice" reloadable="true"/>
+                <Context docBase="${server-work-dir}/verinice" path="/verinice" reloadable="true">
+                	<Parameter name='javamelody.storage-directory' value='${server-work-dir}/javamelody' override='false'/>	
+                </Context>
             </Host>
         </Engine>
     </Service>
@@ -189,6 +232,7 @@
     <antcall target="patch-properties" />
     <antcall target="patch-server-web-xml" />
     <antcall target="patch-auth-default"/>
+	<antcall target="patch-server-melody"/>
 </target>
 
 
@@ -220,13 +264,27 @@ catalina.base : ${server-work-dir}
 	<copy file="${test-data}/MY_LIC.vnl" tofile="${server-work-dir}/verinice/WEB-INF/vnl/test-lic.vnl"/>
 </target>
 
-<target name="stop-tomcat-server" unless="no-server-deployment">
+<target name="stop-tomcat-server" unless="no-server-deployment" depends="get-melody-report">
 	<java classname="org.apache.catalina.startup.Bootstrap" fork="true">
 		<classpath path="${tomcat-classpath}" />
 		<jvmarg value="-Dcatalina.home=${tomcat-dir}" />
 		<arg line="stop" />
 	</java>
 </target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: get-melody-report                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="get-melody-report" unless="no-melody">
+        <get ignoreerrors="true" src="${server.test.url}/monitoring?format=pdf" dest="${test-results}/server-monitor.pdf"/>
+        <get ignoreerrors="true" src="${server.test.url}/monitoring?part=mbeans&amp;format=pdf" dest="${test-results}/server-monitor-mbeans.pdf"/>
+        <get ignoreerrors="true" src="${server.test.url}/monitoring?part=database&amp;request=1&amp;format=pdf" dest="${test-results}/server-monitor-db-locks.pdf"/>
+        <get ignoreerrors="true" src="${server.test.url}/monitoring?part=database&amp;request=5&amp;format=pdf" dest="${test-results}/server-monitor-db-tables.pdf"/>
+        <get ignoreerrors="true" src="${server.test.url}/monitoring?part=database&amp;request=6&amp;format=pdf" dest="${test-results}/server-monitor-db-index.pdf"/>
+        <get ignoreerrors="true" src="${server.test.url}/monitoring?part=database&amp;request=7&amp;format=pdf" dest="${test-results}/server-monitor-db-table-io.pdf"/>
+        <get ignoreerrors="true" src="${server.test.url}/monitoring?part=database&amp;request=10&amp;format=pdf" dest="${test-results}/server-monitor-db-config.pdf"/>
+    </target>
+
 
 	<target name="init" depends="clean, configure.rcptt.runner, setupPaths">
 		<mkdir dir="${test-results}" />
