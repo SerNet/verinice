@@ -1,4 +1,5 @@
 def productsBuild = null
+def outputDir = 'test-result'
 
 pipeline {
     agent any
@@ -24,7 +25,7 @@ pipeline {
                       filter: '**/build/reports/**/*.xml,**/target/surefire-reports/*.xml',
                       projectName: 'verinice/develop',
                       selector: specific(productsBuild.getNumber().toString()),
-                      target: "test-result/integration"
+                      target: "${outputDir}/integration"
                     )
                 }
             }
@@ -34,37 +35,39 @@ pipeline {
                 stage('Run UI tests on Linux') {
                     steps {
                         script {
-                            runRCPTT 'rcptt-client-test', productsBuild.number, 'Linux', 'gui-test-linux', 'GUI Test Report (Linux)'
+                            runRCPTT 'rcptt-client-test', productsBuild.number, 'Linux', "${outputDir}/gui-test-linux", 'GUI Test Report (Linux)'
                         }
                     }
                 }
                 stage('Run UI tests on Mac') {
                     steps {
                         script {
-                            runRCPTT 'rcptt-client-test', productsBuild.number, 'Mac OSX', 'gui-test-mac', 'GUI Test Report (Mac OSX)'
+                            runRCPTT 'rcptt-client-test', productsBuild.number, 'Mac OSX', "${outputDir}/gui-test-mac", 'GUI Test Report (Mac OSX)'
                         }
                     }
                 }
                 stage('Run UI tests on Windows') {
                     steps {
                         script {
-                            runRCPTT 'rcptt-client-test', productsBuild.number, 'Windows 10', 'gui-test-windows', 'GUI Test Report (Windows 10)'
+                            runRCPTT 'rcptt-client-test', productsBuild.number, 'Windows 10', "${outputDir}/gui-test-windows", 'GUI Test Report (Windows 10)'
                         }
                     }
                 }
                 stage('Run standalone performance tests') {
                     steps {
                         script {
-                            runRCPTT 'rcptt-client-performance-test', productsBuild.number, null, 'performance-test-standalone', 'GUI Test Report (Performance Standalone)'
-                            createPerformancePlot('test-result/performance-test-standalone/gui-test-runner/result/metric.csv', 'Standalone')
+                            def target = "${outputDir}/performance-test-standalone"
+                            runRCPTT 'rcptt-client-performance-test', productsBuild.number, null, target, 'GUI Test Report (Performance Standalone)'
+                            createPerformancePlot("${target}/gui-test-runner/result/metric.csv", 'Standalone')
                         }
                     }
                 }
                 stage('Run 3-tier performance tests') {
                     steps {
                         script {
-                            runRCPTT 'rcptt-server-performance-test', productsBuild.number, null, 'performance-test-3-tier', 'GUI Test Report (Performance 3-tier)'
-                            createPerformancePlot('test-result/performance-test-3-tier/gui-test-runner/result/metric.csv', '3-tier')
+                            def target = "${outputDir}/performance-test-3-tier"
+                            runRCPTT 'rcptt-server-performance-test', productsBuild.number, null, target, 'GUI Test Report (Performance 3-tier)'
+                            createPerformancePlot("${target}/gui-test-runner/result/metric.csv", '3-tier')
                         }
                     }
                 }
@@ -72,23 +75,23 @@ pipeline {
         }
         stage('Record results') {
             steps {
-                // archiveArtifacts artifacts: 'test-result/**/*.xml'
+                // archiveArtifacts artifacts: "${outputDir}/**/*.xml"
                 junit(
                   allowEmptyResults: true,
                   testDataPublishers: [[$class: 'StabilityTestDataPublisher']],
-                  testResults: 'test-result/**/*.xml'
+                  testResults: "${outputDir}/**/*.xml"
                 )
                 perfReport(
                   filterRegex: '',
                   modePerformancePerTestCase: true,
-                  sourceDataFiles: 'test-result/**/*.xml'
+                  sourceDataFiles: "${outputDir}/**/*.xml"
                 )
             }
         }
     }
 }
 
-def runRCPTT(jobName, buildNumberDevelop, operatingSystem, resultsSubDirectory, reportName){
+def runRCPTT(jobName, buildNumberDevelop, operatingSystem, resultDir, reportName){
     def rcpttBuild = build(
       job: jobName,
       propagate: false,
@@ -99,7 +102,6 @@ def runRCPTT(jobName, buildNumberDevelop, operatingSystem, resultsSubDirectory, 
         string(name: 'OPERATING_SYSTEM', value: operatingSystem)
       ]
     )
-    def resultDir = "test-result/${resultsSubDirectory}"
     copyArtifacts(
       filter: 'gui-test-runner/result/**/*',
       fingerprintArtifacts: true,
