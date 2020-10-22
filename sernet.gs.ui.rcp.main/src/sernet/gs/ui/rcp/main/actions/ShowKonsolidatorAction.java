@@ -1,22 +1,21 @@
 /*******************************************************************************
  * Copyright (c) 2009 Alexander Koderman <ak[at]sernet[dot]de>.
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU Lesser General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- *     This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ *     This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
- *     You should have received a copy of the GNU Lesser General Public 
- * License along with this program. 
+ *     You should have received a copy of the GNU Lesser General Public
+ * License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.actions;
-
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -61,16 +60,18 @@ public class ShowKonsolidatorAction extends RightsEnabledAction implements ISele
         window.getSelectionService().addSelectionListener(this);
         setToolTipText(Messages.ShowKonsolidatorAction_1);
     }
-    
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
      */
     @Override
     public void doRun() {
         Activator.inheritVeriniceContextState();
 
-        IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection(BsiModelView.ID);
+        IStructuredSelection selection = (IStructuredSelection) window.getSelectionService()
+                .getSelection(BsiModelView.ID);
         if (selection == null) {
             return;
         }
@@ -84,7 +85,8 @@ public class ShowKonsolidatorAction extends RightsEnabledAction implements ISele
             }
         }
 
-        final KonsolidatorDialog dialog = new KonsolidatorDialog(window.getShell(), selectedElements);
+        final KonsolidatorDialog dialog = new KonsolidatorDialog(window.getShell(),
+                selectedElements);
         if (dialog.open() != Window.OK || dialog.getSource() == null) {
             return;
         }
@@ -95,54 +97,62 @@ public class ShowKonsolidatorAction extends RightsEnabledAction implements ISele
 
         try {
             // close editors first:
-            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true);
+            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                    .closeAllEditors(true);
 
-            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-                @Override
-                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    Activator.inheritVeriniceContextState();
-                    monitor.setTaskName(Messages.ShowKonsolidatorAction_2);
-                    monitor.beginTask(Messages.ShowKonsolidatorAction_3, selectedElements.size() + 1);
+            PlatformUI.getWorkbench().getProgressService()
+                    .busyCursorWhile(new IRunnableWithProgress() {
+                        @Override
+                        public void run(IProgressMonitor monitor)
+                                throws InvocationTargetException, InterruptedException {
+                            Activator.inheritVeriniceContextState();
+                            monitor.setTaskName(Messages.ShowKonsolidatorAction_2);
+                            monitor.beginTask(Messages.ShowKonsolidatorAction_3,
+                                    selectedElements.size() + 1);
 
-                    BausteinUmsetzung source = dialog.getSource();
+                            BausteinUmsetzung source = dialog.getSource();
 
-                    try {
-                        // change targets on server:
-                        KonsolidatorCommand command = new KonsolidatorCommand(selectedElements, source);
-                        command = ServiceFactory.lookupCommandService().executeCommand(command);
+                            try {
+                                // change targets on server:
+                                KonsolidatorCommand command = new KonsolidatorCommand(
+                                        selectedElements, source);
+                                command = ServiceFactory.lookupCommandService()
+                                        .executeCommand(command);
 
-                        // reload state from server:
-                        for (CnATreeElement element : command.getChangedElements()) {
-                            CnAElementFactory.getLoadedModel().databaseChildChanged(element);                        
+                                // reload state from server:
+                                for (CnATreeElement element : command.getChangedElements()) {
+                                    CnAElementFactory.getLoadedModel()
+                                            .databaseChildChanged(element);
+                                }
+
+                            } catch (CommandException e) {
+                                ExceptionUtil.log(e, Messages.ShowKonsolidatorAction_4);
+                            }
+
+                            monitor.done();
                         }
-
-                    } catch (CommandException e) {
-                        ExceptionUtil.log(e, Messages.ShowKonsolidatorAction_4);
-                    }
-
-                    monitor.done();
-                }
-            });
+                    });
         } catch (InterruptedException e) {
             ExceptionUtil.log(e, Messages.ShowKonsolidatorAction_5);
         } catch (Exception e) {
             ExceptionUtil.log(e, Messages.ShowKonsolidatorAction_6);
-        } 
+        }
     }
 
     /**
      * @param baustein
      */
     private void initParent(/* not final */BausteinUmsetzung baustein) {
-       CnATreeElement withParent = Retriever.checkRetrieveParent(baustein);
-       CnATreeElement parent =  Retriever.checkRetrieveElement(withParent.getParent());
-       baustein.setParent(parent);
+        CnATreeElement withParent = Retriever.checkRetrieveParent(baustein);
+        CnATreeElement parent = Retriever.checkRetrieveElement(withParent.getParent());
+        baustein.setParent(parent);
     }
 
     /**
      * Action is enabled when only items of the same type are selected.
-     * 
-     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
+     *
+     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
+     *      org.eclipse.jface.viewers.ISelection)
      */
     @Override
     public void selectionChanged(IWorkbenchPart part, ISelection input) {
@@ -172,7 +182,7 @@ public class ShowKonsolidatorAction extends RightsEnabledAction implements ISele
                     return;
                 }
             }
-            if(checkRights()){
+            if (checkRights()) {
                 setEnabled(true);
             }
             return;

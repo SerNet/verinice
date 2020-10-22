@@ -1,22 +1,21 @@
 /*******************************************************************************
  * Copyright (c) 2009 Robert Schuster <r.schuster@tarent.de>.
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU Lesser General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- *     This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ *     This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
- *     You should have received a copy of the GNU Lesser General Public 
- * License along with this program. 
+ *     You should have received a copy of the GNU Lesser General Public
+ * License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.actions;
-
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -53,19 +52,19 @@ import sernet.verinice.service.commands.UpdatePermissions;
 /**
  * {@link Action} that creates a dialog to modify the access rights of a
  * {@link CnATreeElement}.
- * 
+ *
  * @author Robert Schuster <r.schuster@tarent.de>
- * 
+ *
  */
 public class ShowAccessControlEditAction extends RightsEnabledAction implements ISelectionListener {
 
     private static final String ERROR_MESSAGE = "Error while setting access rights.";
 
     private static final Logger LOG = Logger.getLogger(ShowAccessControlEditAction.class);
-    
+
     public static final String ID = "sernet.gs.ui.rcp.main.actions.showaccesscontroleditaction"; //$NON-NLS-1$
     private final IWorkbenchWindow window;
-    
+
     private List<CnATreeElement> elements = new ArrayList<CnATreeElement>();
     private Set<Permission> permissionSetAdd;
     private Set<Permission> permissionSetRemove;
@@ -82,19 +81,22 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
         window.getSelectionService().addSelectionListener(this);
     }
 
-   
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
      */
     @Override
     public void doRun() {
         Activator.inheritVeriniceContextState();
-        IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection();
+        IStructuredSelection selection = (IStructuredSelection) window.getSelectionService()
+                .getSelection();
         if (selection == null || selection.size() < 1) {
             return;
         }
-        
-        final AccessControlEditDialog dialog = new AccessControlEditDialog(window.getShell(), selection);
+
+        final AccessControlEditDialog dialog = new AccessControlEditDialog(window.getShell(),
+                selection);
         if (dialog.open() != Window.OK) {
             return;
         }
@@ -103,35 +105,39 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
         permissionSetRemove = dialog.getPermissionSetRemove();
         isOverride = dialog.isOverride();
         isUpdateChildren = dialog.isUpdateChildren();
-        
+
         try {
-            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-                @Override
-                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    try {
-                        monitor.beginTask(Messages.ShowAccessControlEditAction_0, IProgressMonitor.UNKNOWN);
-                        Activator.inheritVeriniceContextState();
-                        updatePermissions();
-                    } catch (CommandException e) {
-                        LOG.error(ERROR_MESSAGE, e); //$NON-NLS-1$
-                        throw new RuntimeException(ERROR_MESSAGE, e); //$NON-NLS-1$
-                    } finally {
-                        if(monitor!=null) {
-                            monitor.done();
+            PlatformUI.getWorkbench().getProgressService()
+                    .busyCursorWhile(new IRunnableWithProgress() {
+                        @Override
+                        public void run(IProgressMonitor monitor)
+                                throws InvocationTargetException, InterruptedException {
+                            try {
+                                monitor.beginTask(Messages.ShowAccessControlEditAction_0,
+                                        IProgressMonitor.UNKNOWN);
+                                Activator.inheritVeriniceContextState();
+                                updatePermissions();
+                            } catch (CommandException e) {
+                                LOG.error(ERROR_MESSAGE, e); // $NON-NLS-1$
+                                throw new RuntimeException(ERROR_MESSAGE, e); // $NON-NLS-1$
+                            } finally {
+                                if (monitor != null) {
+                                    monitor.done();
+                                }
+                            }
                         }
-                    }
-                }
-            }); 
+                    });
         } catch (Exception e) {
-            LOG.error(ERROR_MESSAGE, e); //$NON-NLS-1$
-            ExceptionUtil.log(e, ERROR_MESSAGE); //$NON-NLS-1$
-        }       
+            LOG.error(ERROR_MESSAGE, e); // $NON-NLS-1$
+            ExceptionUtil.log(e, ERROR_MESSAGE); // $NON-NLS-1$
+        }
     }
-    
+
     private void updatePermissions() throws CommandException {
         for (CnATreeElement element : elements) {
-            UpdatePermissions up = new UpdatePermissions(element, permissionSetAdd, permissionSetRemove,  isUpdateChildren, isOverride);
-            ServiceFactory.lookupCommandService().executeCommand(up);       
+            UpdatePermissions up = new UpdatePermissions(element, permissionSetAdd,
+                    permissionSetRemove, isUpdateChildren, isOverride);
+            ServiceFactory.lookupCommandService().executeCommand(up);
         }
     }
 
@@ -139,8 +145,11 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
         window.getSelectionService().removeSelectionListener(this);
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.
+     * IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
     @Override
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
@@ -152,8 +161,9 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
         // method will be called before the server connection is enabled.)
         // - permission handling is needed by IAuthService implementation
         // - user has administrator privileges
-        boolean statisfiedConditions = ((IStructuredSelection) selection).getFirstElement() instanceof CnATreeElement
-        && CnAElementHome.getInstance().isOpen();
+        boolean statisfiedConditions = ((IStructuredSelection) selection)
+                .getFirstElement() instanceof CnATreeElement
+                && CnAElementHome.getInstance().isOpen();
 
         if (!statisfiedConditions) {
             setEnabled(false);
@@ -164,7 +174,8 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
             return;
         }
 
-        boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        boolean isLocalAdmin = getAuthService()
+                .currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
         if (isLocalAdmin) {
             boolean isWriteAllowed = isWriteAllowed(selection);
             setEnabled(isLocalAdmin && isWriteAllowed);
@@ -172,7 +183,6 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
             setEnabled(true);
         }
     }
-
 
     private boolean isWriteAllowed(ISelection selection) {
         boolean isWriteAllowed = false;
