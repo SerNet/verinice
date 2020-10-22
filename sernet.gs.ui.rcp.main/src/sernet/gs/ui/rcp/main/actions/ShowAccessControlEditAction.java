@@ -30,8 +30,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
@@ -56,29 +55,35 @@ import sernet.verinice.service.commands.UpdatePermissions;
  * @author Robert Schuster <r.schuster@tarent.de>
  *
  */
-public class ShowAccessControlEditAction extends RightsEnabledAction implements ISelectionListener {
+public class ShowAccessControlEditAction extends ViewAndWindowAction {
 
     private static final String ERROR_MESSAGE = "Error while setting access rights.";
 
     private static final Logger LOG = Logger.getLogger(ShowAccessControlEditAction.class);
 
     public static final String ID = "sernet.gs.ui.rcp.main.actions.showaccesscontroleditaction"; //$NON-NLS-1$
-    private final IWorkbenchWindow window;
-
     private List<CnATreeElement> elements = new ArrayList<CnATreeElement>();
     private Set<Permission> permissionSetAdd;
     private Set<Permission> permissionSetRemove;
     private boolean isOverride;
     private boolean isUpdateChildren;
 
-    public ShowAccessControlEditAction(IWorkbenchWindow window, String label) {
+    private ShowAccessControlEditAction(String label) {
         super(ActionRightIDs.ACCESSCONTROL, label);
-        this.window = window;
         setId(ID);
         setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SECURITY));
         setToolTipText(Messages.ShowAccessControlEditAction_1);
-        window.getSelectionService().addSelectionListener(this);
+    }
+
+    public ShowAccessControlEditAction(IWorkbenchWindow window, String label) {
+        this(label);
+        setWindow(window);
+    }
+
+    public ShowAccessControlEditAction(IViewSite site, String label) {
+        this(label);
+        setSite(site);
     }
 
     /*
@@ -87,16 +92,13 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
      * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
      */
     @Override
-    public void doRun() {
+    protected void doRun(IStructuredSelection structuredSelection) {
         Activator.inheritVeriniceContextState();
-        IStructuredSelection selection = (IStructuredSelection) window.getSelectionService()
-                .getSelection();
-        if (selection == null || selection.size() < 1) {
+        if (structuredSelection == null || structuredSelection.isEmpty()) {
             return;
         }
 
-        final AccessControlEditDialog dialog = new AccessControlEditDialog(window.getShell(),
-                selection);
+        final AccessControlEditDialog dialog = new AccessControlEditDialog(getShell(), structuredSelection);
         if (dialog.open() != Window.OK) {
             return;
         }
@@ -141,27 +143,9 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
         }
     }
 
-    public void dispose() {
-        window.getSelectionService().removeSelectionListener(this);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.
-     * IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
-     */
     @Override
-    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-        // Conditions for availability of this action:
-        // - Database connection must be open (Implicitly assumes that login
-        // credentials have
-        // been transferred and that the server can be queried. This is
-        // neccessary since this
-        // method will be called before the server connection is enabled.)
-        // - permission handling is needed by IAuthService implementation
-        // - user has administrator privileges
-        boolean statisfiedConditions = ((IStructuredSelection) selection)
+    protected void selectionChanged(IStructuredSelection selection) {
+        boolean statisfiedConditions = selection
                 .getFirstElement() instanceof CnATreeElement
                 && CnAElementHome.getInstance().isOpen();
 

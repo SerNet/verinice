@@ -19,13 +19,10 @@ package sernet.verinice.bp.rcp.consolidator;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IViewSite;
 
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
+import sernet.gs.ui.rcp.main.actions.ViewAndWindowAction;
 import sernet.verinice.bp.rcp.Messages;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
@@ -37,35 +34,32 @@ import sernet.verinice.rcp.NonModalWizardDialog;
  * This action is only enabled when started from a single module, as that will
  * be used as source for the consolidator.
  */
-public class ConsolidatorAction extends RightsEnabledAction implements ISelectionListener {
+public class ConsolidatorAction extends ViewAndWindowAction {
 
     private static final Logger logger = Logger.getLogger(ConsolidatorAction.class);
 
     BpRequirementGroup selectedModule;
-    Shell shell;
 
-    public ConsolidatorAction(IWorkbenchWindow window) {
+    public ConsolidatorAction(IViewSite viewSite) {
         super(ActionRightIDs.CONSOLIDATOR_MODBP, Messages.BaseProtectionView_Consolidator);
-        shell = window.getShell();
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.KONSOLIDATOR));
-        window.getSelectionService().addSelectionListener(this);
+        setSite(viewSite);
     }
 
     @Override
-    public void doRun() {
-        if (shell == null || selectedModule == null) {
+    protected void doRun(IStructuredSelection structuredSelection) {
+        if (getShell() == null || selectedModule == null) {
             logger.error("The shell or the selected module was null.");
             return;
         }
-        new NonModalWizardDialog(shell, new ConsolidatorWizard(selectedModule)).open();
+        new NonModalWizardDialog(getShell(), new ConsolidatorWizard(selectedModule)).open();
     }
 
     @Override
-    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-        IStructuredSelection sel = (IStructuredSelection) selection;
-        setEnabled(sel.size() == 1 && sel.getFirstElement() instanceof BpRequirementGroup);
+    protected void selectionChanged(IStructuredSelection selection) {
+        setEnabled(selection.size() == 1 && selection.getFirstElement() instanceof BpRequirementGroup);
         if (isEnabled()) {
-            selectedModule = (BpRequirementGroup) sel.getFirstElement();
+            selectedModule = (BpRequirementGroup) selection.getFirstElement();
             if (logger.isDebugEnabled()) {
                 logger.debug("Selected module: " + selectedModule);
             }

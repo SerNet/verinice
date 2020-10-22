@@ -25,9 +25,13 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -46,19 +50,25 @@ import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.task.KonsolidatorCommand;
 
-public class ShowKonsolidatorAction extends RightsEnabledAction implements ISelectionListener {
+public class ShowKonsolidatorAction extends ViewAndWindowAction  {
 
     public static final String ID = "sernet.gs.ui.rcp.main.actions.showkonsolidatoraction"; //$NON-NLS-1$
 
-    private final IWorkbenchWindow window;
-
-    public ShowKonsolidatorAction(IWorkbenchWindow window, String label) {
+    private ShowKonsolidatorAction(String label) {
         super(ActionRightIDs.KONSOLIDATOR, label);
-        this.window = window;
         setId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.KONSOLIDATOR));
-        window.getSelectionService().addSelectionListener(this);
         setToolTipText(Messages.ShowKonsolidatorAction_1);
+    }
+
+    public ShowKonsolidatorAction(IWorkbenchWindow window, String label) {
+        this(label);
+        setWindow(window);
+    }
+
+    public ShowKonsolidatorAction(IViewSite site, String label) {
+        this(label);
+        setSite(site);
     }
 
     /*
@@ -67,14 +77,9 @@ public class ShowKonsolidatorAction extends RightsEnabledAction implements ISele
      * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
      */
     @Override
-    public void doRun() {
+    protected void doRun(IStructuredSelection selection) {
         Activator.inheritVeriniceContextState();
 
-        IStructuredSelection selection = (IStructuredSelection) window.getSelectionService()
-                .getSelection(BsiModelView.ID);
-        if (selection == null) {
-            return;
-        }
         final List<BausteinUmsetzung> selectedElements = new ArrayList<BausteinUmsetzung>();
         for (Iterator iter = selection.iterator(); iter.hasNext();) {
             Object o = iter.next();
@@ -85,13 +90,12 @@ public class ShowKonsolidatorAction extends RightsEnabledAction implements ISele
             }
         }
 
-        final KonsolidatorDialog dialog = new KonsolidatorDialog(window.getShell(),
-                selectedElements);
+        final KonsolidatorDialog dialog = new KonsolidatorDialog(getShell(), selectedElements);
         if (dialog.open() != Window.OK || dialog.getSource() == null) {
             return;
         }
 
-        if (!KonsolidatorDialog.askConsolidate(window.getShell())) {
+        if (!KonsolidatorDialog.askConsolidate(getShell())) {
             return;
         }
 
@@ -148,46 +152,33 @@ public class ShowKonsolidatorAction extends RightsEnabledAction implements ISele
         baustein.setParent(parent);
     }
 
-    /**
-     * Action is enabled when only items of the same type are selected.
-     *
-     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
-     *      org.eclipse.jface.viewers.ISelection)
-     */
-    @Override
-    public void selectionChanged(IWorkbenchPart part, ISelection input) {
-        if (input instanceof IStructuredSelection) {
-            IStructuredSelection selection = (IStructuredSelection) input;
+     @Override
+    protected void selectionChanged(IStructuredSelection selection) {
+        if (selection.size() < 2) {
+            setEnabled(false);
+            return;
+        }
 
-            if (selection.size() < 2) {
+        String kapitel = null;
+        for (Iterator iter = selection.iterator(); iter.hasNext();) {
+            Object o = iter.next();
+            if (o instanceof BausteinUmsetzung) {
+                BausteinUmsetzung bst = (BausteinUmsetzung) o;
+                if (kapitel == null) {
+                    kapitel = bst.getKapitel();
+                } else {
+                    if (!bst.getKapitel().equals(kapitel)) {
+                        setEnabled(false);
+                        return;
+                    }
+                }
+            } else {
                 setEnabled(false);
                 return;
             }
-
-            String kapitel = null;
-            for (Iterator iter = selection.iterator(); iter.hasNext();) {
-                Object o = iter.next();
-                if (o instanceof BausteinUmsetzung) {
-                    BausteinUmsetzung bst = (BausteinUmsetzung) o;
-                    if (kapitel == null) {
-                        kapitel = bst.getKapitel();
-                    } else {
-                        if (!bst.getKapitel().equals(kapitel)) {
-                            setEnabled(false);
-                            return;
-                        }
-                    }
-                } else {
-                    setEnabled(false);
-                    return;
-                }
-            }
-            if (checkRights()) {
-                setEnabled(true);
-            }
-            return;
         }
-        // no structured selection:
-        setEnabled(false);
+        if (checkRights()) {
+            setEnabled(true);
+        }
     }
 }

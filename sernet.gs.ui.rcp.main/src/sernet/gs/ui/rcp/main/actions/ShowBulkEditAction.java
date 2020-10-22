@@ -28,12 +28,10 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
@@ -74,7 +72,7 @@ import sernet.verinice.service.commands.UpdateMultipleElementEntities;
  *          2007) $ $LastChangedBy: koderman $
  *
  */
-public class ShowBulkEditAction extends RightsEnabledAction implements ISelectionListener {
+public class ShowBulkEditAction extends ViewAndWindowAction {
 
     private static final Logger logger = Logger.getLogger(ShowBulkEditAction.class);
 
@@ -83,16 +81,23 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
     private EntityType entType = null;
 
     public static final String ID = "sernet.gs.ui.rcp.main.actions.showbulkeditaction"; //$NON-NLS-1$
-    private final IWorkbenchWindow window;
 
-    public ShowBulkEditAction(IWorkbenchWindow window, String label) {
+    private ShowBulkEditAction(String label) {
         super(ActionRightIDs.BULKEDIT, label);
-        this.window = window;
         setId(ID);
         setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.CASCADE));
-        window.getSelectionService().addSelectionListener(this);
         setToolTipText(Messages.ShowBulkEditAction_1);
+    }
+
+    public ShowBulkEditAction(IWorkbenchWindow window, String label) {
+        this(label);
+        setWindow(window);
+    }
+
+    public ShowBulkEditAction(IViewSite site, String label) {
+        this(label);
+        setSite(site);
     }
 
     /*
@@ -101,13 +106,9 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
      * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
      */
     @Override
-    public void doRun() {
+    protected void doRun(IStructuredSelection selection) {
         Activator.inheritVeriniceContextState();
-        IStructuredSelection selection = (IStructuredSelection) window.getSelectionService()
-                .getSelection();
-        if (selection == null) {
-            return;
-        }
+
         if (!isAllowed(selection)) {
             return;
         }
@@ -118,7 +119,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
         readSelection(selection);
         Map<String, IHuiControlFactory> overrides = RiskUiUtils
                 .createHuiControlFactories(selectedElements.get(0));
-        BulkEditDialog dialog = new BulkEditDialog(window.getShell(), entType, overrides);
+        BulkEditDialog dialog = new BulkEditDialog(getShell(), entType, overrides);
 
         if (dialog.open() != Window.OK) {
             return;
@@ -225,79 +226,14 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
                 boolean writeallowed = CnAElementHome.getInstance()
                         .isWriteAllowed((CnATreeElement) next);
                 if (!writeallowed) {
-                    MessageDialog.openWarning(window.getShell(), Messages.ShowBulkEditAction_2,
-                            NLS.bind(Messages.ShowBulkEditAction_3,
-                                    ((CnATreeElement) next).getTitle()));
+                    MessageDialog.openWarning(getShell(), Messages.ShowBulkEditAction_2, NLS.bind(
+                            Messages.ShowBulkEditAction_3, ((CnATreeElement) next).getTitle()));
                     setEnabled(false);
                     return false;
                 }
             }
         }
         return true;
-    }
-
-    /**
-     * Action is enabled when only items of the same type are selected.
-     */
-    @Override
-    public void selectionChanged(IWorkbenchPart part, ISelection input) {
-        if (input instanceof IStructuredSelection) {
-            IStructuredSelection selection = (IStructuredSelection) input;
-            boolean selectionEmpty = selection.isEmpty();
-
-            // check for listitems:
-            if (!selectionEmpty && selection.getFirstElement() instanceof TodoViewItem) {
-                for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
-                    if (!(iter.next() instanceof TodoViewItem)) {
-                        setEnabled(false);
-                        return;
-                    }
-                }
-                if (checkRights()) {
-                    setEnabled(true);
-                }
-                return;
-            }
-
-            // check for document references:
-            CnATreeElement elmt = null;
-            if (!selectionEmpty && selection.getFirstElement() instanceof DocumentReference) {
-                elmt = ((DocumentReference) selection.getFirstElement()).getCnaTreeElement();
-            }
-
-            // check for other objects:
-            else if (!selectionEmpty && selection.getFirstElement() instanceof CnATreeElement
-                    && ((CnATreeElement) selection.getFirstElement()).getEntity() != null) {
-                elmt = (CnATreeElement) selection.getFirstElement();
-            }
-
-            if (elmt != null) {
-                String type = elmt.getEntity().getEntityType();
-
-                for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
-                    Object o = iter.next();
-                    if (o instanceof CnATreeElement) {
-                        elmt = (CnATreeElement) o;
-
-                    } else if (o instanceof DocumentReference) {
-                        DocumentReference ref = (DocumentReference) o;
-                        elmt = ref.getCnaTreeElement();
-                    }
-                }
-
-                if (elmt == null || elmt.getEntity() == null
-                        || !elmt.getEntity().getEntityType().equals(type)) {
-                    setEnabled(false);
-                    return;
-                }
-
-                if (checkRights()) {
-                    setEnabled(true);
-                }
-                return;
-            }
-        }
-        setEnabled(false);
     }
 
     private void editElements(List<CnATreeElement> selectedElements, Entity dialogEntity,
@@ -361,6 +297,63 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
                     // enabled, so better refresh them (VN-2067)
                     CnAElementFactory.getModel(requirement).childChanged(requirement);
                 }
+            }
+        }
+    }
+
+    @Override
+    protected void selectionChanged(IStructuredSelection structuredSelection) {
+        IStructuredSelection selection = structuredSelection;
+        boolean selectionEmpty = selection.isEmpty();
+
+        // check for listitems:
+        if (!selectionEmpty && selection.getFirstElement() instanceof TodoViewItem) {
+            for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
+                if (!(iter.next() instanceof TodoViewItem)) {
+                    setEnabled(false);
+                    return;
+                }
+            }
+            if (checkRights()) {
+                setEnabled(true);
+            }
+            return;
+        }
+
+        // check for document references:
+        CnATreeElement elmt = null;
+        if (!selectionEmpty && selection.getFirstElement() instanceof DocumentReference) {
+            elmt = ((DocumentReference) selection.getFirstElement()).getCnaTreeElement();
+        }
+
+        // check for other objects:
+        else if (!selectionEmpty && selection.getFirstElement() instanceof CnATreeElement
+                && ((CnATreeElement) selection.getFirstElement()).getEntity() != null) {
+            elmt = (CnATreeElement) selection.getFirstElement();
+        }
+
+        if (elmt != null) {
+            String type = elmt.getEntity().getEntityType();
+
+            for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
+                Object o = iter.next();
+                if (o instanceof CnATreeElement) {
+                    elmt = (CnATreeElement) o;
+
+                } else if (o instanceof DocumentReference) {
+                    DocumentReference ref = (DocumentReference) o;
+                    elmt = ref.getCnaTreeElement();
+                }
+            }
+
+            if (elmt == null || elmt.getEntity() == null
+                    || !elmt.getEntity().getEntityType().equals(type)) {
+                setEnabled(false);
+                return;
+            }
+
+            if (checkRights()) {
+                setEnabled(true);
             }
         }
     }

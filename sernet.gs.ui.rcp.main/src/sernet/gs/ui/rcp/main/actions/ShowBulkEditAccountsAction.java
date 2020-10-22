@@ -33,10 +33,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -62,42 +66,45 @@ import sernet.verinice.service.commands.task.ConfigurationBulkEditUpdate;
 /**
  * Edit multiple accounts at once
  */
-public class ShowBulkEditAccountsAction extends RightsEnabledAction implements ISelectionListener {
+public class ShowBulkEditAccountsAction extends ViewAndWindowAction {
 
     private static final Logger logger = Logger.getLogger(ShowBulkEditAccountsAction.class);
 
     private List<Integer> dbIDs;
 
     public static final String ID = "sernet.gs.ui.rcp.main.actions.showbulkeditaccountsaction"; //$NON-NLS-1$
-    private final IWorkbenchWindow window;
 
     private static final Set<String> SUPPORTED_ELEMENT_TYPES = Stream
             .of(Person.TYPE_ID, PersonIso.TYPE_ID, BpPerson.TYPE_ID).collect(Collectors.toSet());
 
-    public ShowBulkEditAccountsAction(IWorkbenchWindow window, String label) {
+    private ShowBulkEditAccountsAction(String label) {
         super(ActionRightIDs.ACCOUNTSETTINGS, label);
-        this.window = window;
         setId(ID);
         setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ACCOUNTS_BULK));
-        window.getSelectionService().addSelectionListener(this);
         setToolTipText(Messages.EditMultipleAccountsTogether);
+    }
+
+    public ShowBulkEditAccountsAction(IWorkbenchWindow window, String label) {
+        this(label);
+        setWindow(window);
+    }
+
+    public ShowBulkEditAccountsAction(IViewSite site, String label) {
+        this(label);
+        setSite(site);
     }
 
     /*
      * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
      */
     @Override
-    public void doRun() {
+    protected void doRun(IStructuredSelection selection) {
         Activator.inheritVeriniceContextState();
-        IStructuredSelection selection = (IStructuredSelection) window.getSelectionService()
-                .getSelection();
-        if (selection == null) {
-            return;
-        }
+
         Optional<CnATreeElement> nonWritableElement = findNonWritableElement(selection);
         if (nonWritableElement.isPresent()) {
-            MessageDialog.openWarning(window.getShell(), Messages.ShowBulkEditAction_2,
+            MessageDialog.openWarning(getShell(), Messages.ShowBulkEditAction_2,
                     NLS.bind(Messages.ShowBulkEditAction_3, (nonWritableElement.get()).getTitle()));
             setEnabled(false);
             return;
@@ -105,7 +112,7 @@ public class ShowBulkEditAccountsAction extends RightsEnabledAction implements I
 
         dbIDs = new ArrayList<>(selection.size());
         readSelection(selection);
-        PersonBulkEditDialog dialog = new PersonBulkEditDialog(window.getShell(),
+        PersonBulkEditDialog dialog = new PersonBulkEditDialog(getShell(),
                 Messages.ShowBulkEditAction_14);
 
         if (dialog.open() != Window.OK) {
@@ -215,17 +222,8 @@ public class ShowBulkEditAccountsAction extends RightsEnabledAction implements I
 
     }
 
-    /**
-     * Action is enabled if only items of the same type are selected and the
-     * type is a supported person type
-     */
     @Override
-    public void selectionChanged(IWorkbenchPart part, ISelection input) {
-        if (!(input instanceof IStructuredSelection)) {
-            setEnabled(false);
-            return;
-        }
-        IStructuredSelection selection = (IStructuredSelection) input;
+    protected void selectionChanged(IStructuredSelection selection) {
         boolean selectionEmpty = selection.isEmpty();
         if (selectionEmpty || !(selection.getFirstElement() instanceof CnATreeElement)) {
             setEnabled(false);

@@ -333,9 +333,9 @@ public class BaseProtectionView extends RightsEnabledView
 
         makeExpandAndCollapseActions();
 
-        bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(),
+        bulkEditAction = new ShowBulkEditAction(getViewSite(),
                 Messages.BaseProtectionView_BulkEdit);
-        bulkEditAccountsAction = new ShowBulkEditAccountsAction(getViewSite().getWorkbenchWindow(),
+        bulkEditAccountsAction = new ShowBulkEditAccountsAction(getViewSite(),
                 sernet.gs.ui.rcp.main.Messages.ContextMenuAccountBulkEditor);
 
         BSIModelViewDropListener bsiDropAdapter;
@@ -360,10 +360,10 @@ public class BaseProtectionView extends RightsEnabledView
                 .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
         naturalizeAction = new NaturalizeAction(getViewSite());
         accessControlEditAction = new ShowAccessControlEditAction(
-                getViewSite().getWorkbenchWindow(), Messages.BaseProtectionView_AccessControl);
+                getViewSite(), Messages.BaseProtectionView_AccessControl);
 
         makeFilterAction();
-        consolidatorAction = new ConsolidatorAction(getViewSite().getWorkbenchWindow());
+        consolidatorAction = new ConsolidatorAction(getViewSite());
     }
 
     private void makeFilterAction() {

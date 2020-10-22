@@ -340,9 +340,9 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
     private void makeActions() {
         BSIModelViewDropListener bsiDropAdapter;
 
-        bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(),
+        bulkEditAction = new ShowBulkEditAction(getViewSite(),
                 Messages.ISMView_6);
-        bulkEditAccountsAction = new ShowBulkEditAccountsAction(getViewSite().getWorkbenchWindow(),
+        bulkEditAccountsAction = new ShowBulkEditAccountsAction(getViewSite(),
                 sernet.gs.ui.rcp.main.Messages.ContextMenuAccountBulkEditor);
 
         expandAction = new ExpandAction(viewer, contentProvider);
@@ -396,7 +396,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
         metaDropAdapter.addAdapter(fileDropPerformer);
 
         accessControlEditAction = new ShowAccessControlEditAction(
-                getViewSite().getWorkbenchWindow(), Messages.ISMView_11);
+                getViewSite(), Messages.ISMView_11);
 
         naturalizeAction = new NaturalizeAction(getViewSite());
 

@@ -442,18 +442,18 @@ public class BsiModelView extends RightsEnabledView
         };
         selectEqualsAction.setText(Messages.BsiModelView_11);
 
-        bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(),
+        bulkEditAction = new ShowBulkEditAction(getViewSite(),
                 Messages.BsiModelView_13);
 
-        bulkEditAccountsAction = new ShowBulkEditAccountsAction(getViewSite().getWorkbenchWindow(),
+        bulkEditAccountsAction = new ShowBulkEditAccountsAction(getViewSite(),
                 sernet.gs.ui.rcp.main.Messages.ContextMenuAccountBulkEditor);
 
         accessControlEditAction = new ShowAccessControlEditAction(
-                getViewSite().getWorkbenchWindow(), Messages.BsiModelView_14);
+                getViewSite(), Messages.BsiModelView_14);
 
         naturalizeAction = new NaturalizeAction(getViewSite());
 
-        konsolidatorAction = new ShowKonsolidatorAction(getViewSite().getWorkbenchWindow(),
+        konsolidatorAction = new ShowKonsolidatorAction(getViewSite(),
                 Messages.BsiModelView_15);
 
         gsmbasicsecuritycheckAction = new GSMBasicSecurityCheckAction(

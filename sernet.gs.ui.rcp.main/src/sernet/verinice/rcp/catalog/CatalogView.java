@@ -333,7 +333,7 @@ public class CatalogView extends RightsEnabledView implements ILinkedWithEditorV
         });
 
         accessControlEditAction = new ShowAccessControlEditAction(
-                getViewSite().getWorkbenchWindow(), Messages.CatalogView_AccessControl);
+                getViewSite(), Messages.CatalogView_AccessControl);
     }
 
     private void makeExpandAndCollapseActions() {
