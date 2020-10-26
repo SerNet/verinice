@@ -108,7 +108,7 @@
 <unit id="w3c.source.feature.group" version="0.6.0"/>
 <unit id="com.mchange.c3p0.feature.group" version="0.9.5.4"/>
 <unit id="com.mchange.c3p0.source.feature.group" version="0.9.5.4"/>
-<repository location="http://bob.sernet.private/updatesites/verinice-deps-20190621165028/"/>
+<repository location="http://updates.verinice.org/pub/verinice/updatesites/verinice-deps-20190621165028/"/>
 </location>
 
 
