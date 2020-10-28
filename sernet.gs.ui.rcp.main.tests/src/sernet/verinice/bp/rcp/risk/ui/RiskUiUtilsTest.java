@@ -20,27 +20,15 @@ package sernet.verinice.bp.rcp.risk.ui;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import sernet.hui.common.VeriniceContext;
-import sernet.hui.common.connect.HUITypeFactory;
-import sernet.snutils.DBException;
-import sernet.verinice.bp.rcp.BaseProtectionTreeComparatorTest;
+import sernet.gs.ui.rcp.main.AbstractRequiresHUITypeFactoryTest;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItSystem;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.common.CnALink;
 
-public class RiskUiUtilsTest {
-
-    @BeforeClass
-    public static void setupTypeFactory() throws DBException {
-        HUITypeFactory huiTypeFactory = HUITypeFactory
-                .createInstance(BaseProtectionTreeComparatorTest.class
-                        .getResource("/" + HUITypeFactory.HUI_CONFIGURATION_FILE));
-        VeriniceContext.put(VeriniceContext.HUI_TYPE_FACTORY, huiTypeFactory);
-    }
+public class RiskUiUtilsTest extends AbstractRequiresHUITypeFactoryTest {
 
     // tests for threat decorators
     @Test

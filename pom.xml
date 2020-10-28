@@ -44,7 +44,6 @@
 		<module>sernet.gs.pax_web.fragment</module>
 		<module>sernet.gs.reveng</module>
 		<module>sernet.gs.server</module>
-		<module>sernet.gs.server.tests</module>
 		<module>sernet.gs.service</module>
 		<module>sernet.gs.springweb.fragment</module>
 		<module>sernet.gs.ui.rcp.main</module>
@@ -64,6 +63,10 @@
 		<module>sernet.verinice.extraresources.jre_linux_64</module>
 		<module>sernet.verinice.extraresources.jre_macos_64</module>
 		<module>sernet.verinice.extraresources.jre_win_64</module>
+
+		<!-- tests -->
+		<module>sernet.gs.server.tests</module>
+		<module>sernet.gs.ui.rcp.main.tests</module>
 	</modules>
 
 	<build>

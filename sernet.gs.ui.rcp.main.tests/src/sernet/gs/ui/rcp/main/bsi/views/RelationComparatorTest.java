@@ -20,13 +20,10 @@ package sernet.gs.ui.rcp.main.bsi.views;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
-import org.junit.BeforeClass;
+import org.junit.Assert;
 import org.junit.Test;
 
-import junit.framework.Assert;
-import sernet.hui.common.VeriniceContext;
-import sernet.hui.common.connect.HUITypeFactory;
-import sernet.snutils.DBException;
+import sernet.gs.ui.rcp.main.AbstractRequiresHUITypeFactoryTest;
 import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bp.elements.Application;
 import sernet.verinice.model.bp.elements.BpPerson;
@@ -42,14 +39,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.PersonIso;
 
-public class RelationComparatorTest {
-
-    @BeforeClass
-    public static void setupTypeFactory() throws DBException {
-        HUITypeFactory huiTypeFactory = HUITypeFactory.createInstance(RelationComparatorTest.class
-                .getResource("/" + HUITypeFactory.HUI_CONFIGURATION_FILE));
-        VeriniceContext.put(VeriniceContext.HUI_TYPE_FACTORY, huiTypeFactory);
-    }
+public class RelationComparatorTest extends AbstractRequiresHUITypeFactoryTest {
 
     @Test
     public void testCompareDifferentTypeIds() {

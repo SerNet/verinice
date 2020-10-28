@@ -32,13 +32,9 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Widget;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.hui.common.VeriniceContext;
-import sernet.hui.common.connect.HUITypeFactory;
-import sernet.snutils.DBException;
+import sernet.gs.ui.rcp.main.AbstractRequiresHUITypeFactoryTest;
 import sernet.verinice.bp.rcp.filter.BaseProtectionFilterParameters.Builder;
 import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.SecurityLevel;
@@ -49,16 +45,7 @@ import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnATreeElement;
 
-public class BaseProtectionFilterBuilderTest {
-
-    @BeforeClass
-    public static void setupTypeFactory() throws DBException {
-        HUITypeFactory huiTypeFactory = HUITypeFactory
-                .createInstance(BaseProtectionFilterBuilderTest.class
-                        .getResource("/" + HUITypeFactory.HUI_CONFIGURATION_FILE));
-        VeriniceContext.put(VeriniceContext.HUI_TYPE_FACTORY, huiTypeFactory);
-        new Activator();
-    }
+public class BaseProtectionFilterBuilderTest extends AbstractRequiresHUITypeFactoryTest {
 
     @Test
     public void matchingElementIsShownWhenFilteringByImplementationState() {

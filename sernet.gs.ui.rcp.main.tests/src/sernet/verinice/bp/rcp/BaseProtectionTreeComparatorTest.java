@@ -18,28 +18,17 @@
 package sernet.verinice.bp.rcp;
 
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import sernet.hui.common.VeriniceContext;
-import sernet.hui.common.connect.HUITypeFactory;
-import sernet.snutils.DBException;
+import sernet.gs.ui.rcp.main.AbstractRequiresHUITypeFactoryTest;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 
-public class BaseProtectionTreeComparatorTest {
+public class BaseProtectionTreeComparatorTest extends AbstractRequiresHUITypeFactoryTest {
 
     private final int LT = -1;
     private final int EQ = 0;
 
     private BaseProtectionTreeComparator underTest = new BaseProtectionTreeComparator();
-
-    @BeforeClass
-    public static void setupTypeFactory() throws DBException {
-        HUITypeFactory huiTypeFactory = HUITypeFactory
-                .createInstance(BaseProtectionTreeComparatorTest.class
-                        .getResource("/" + HUITypeFactory.HUI_CONFIGURATION_FILE));
-        VeriniceContext.put(VeriniceContext.HUI_TYPE_FACTORY, huiTypeFactory);
-    }
 
     @Test
     public void compareSafeguardGroupsIsReflexive() {

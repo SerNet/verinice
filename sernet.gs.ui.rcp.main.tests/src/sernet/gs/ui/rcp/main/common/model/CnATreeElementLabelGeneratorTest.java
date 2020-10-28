@@ -17,25 +17,14 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.common.model;
 
-import org.junit.BeforeClass;
+import org.junit.Assert;
 import org.junit.Test;
 
-import junit.framework.Assert;
-import sernet.gs.ui.rcp.main.bsi.views.RelationComparatorTest;
-import sernet.hui.common.VeriniceContext;
-import sernet.hui.common.connect.HUITypeFactory;
-import sernet.snutils.DBException;
+import sernet.gs.ui.rcp.main.AbstractRequiresHUITypeFactoryTest;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.ItSystem;
 
-public class CnATreeElementLabelGeneratorTest {
-
-    @BeforeClass
-    public static void setupTypeFactory() throws DBException {
-        HUITypeFactory huiTypeFactory = HUITypeFactory.createInstance(RelationComparatorTest.class
-                .getResource("/" + HUITypeFactory.HUI_CONFIGURATION_FILE));
-        VeriniceContext.put(VeriniceContext.HUI_TYPE_FACTORY, huiTypeFactory);
-    }
+public class CnATreeElementLabelGeneratorTest extends AbstractRequiresHUITypeFactoryTest {
 
     @Test
     public void titleIsReturnedIfIdentifierIsEmpty() {
