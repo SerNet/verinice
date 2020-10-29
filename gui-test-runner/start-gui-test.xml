@@ -206,7 +206,7 @@ catalina.base : ${server-work-dir}
     </java>
 
     <echo>wait for Tomcat server ${server.test.url}</echo>
-    <waitfor maxwait="40" maxwaitunit="second" timeoutproperty="timeout">
+    <waitfor maxwait="${verinice.timeout}" maxwaitunit="second" timeoutproperty="timeout">
         <http url="${server.test.url}" />
     </waitfor>
 	<fail message="Failed to start verinice.PRO server">
