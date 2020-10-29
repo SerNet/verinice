@@ -35,23 +35,17 @@ pipeline {
             parallel {
                 stage('Run UI tests on Linux') {
                     steps {
-                        script {
-                            runRCPTT 'rcptt-client-test', productsBuild.number, 'Linux', artifactFilterRcptt, "${outputDir}/gui-test-linux", 'GUI Test Report (Linux)'
-                        }
+                        runRCPTT 'rcptt-client-test', productsBuild.number, 'Linux', artifactFilterRcptt, "${outputDir}/gui-test-linux", 'GUI Test Report (Linux)'
                     }
                 }
                 stage('Run UI tests on Mac') {
                     steps {
-                        script {
-                            runRCPTT 'rcptt-client-test', productsBuild.number, 'Mac OSX', artifactFilterRcptt, "${outputDir}/gui-test-mac", 'GUI Test Report (Mac OSX)'
-                        }
+                        runRCPTT 'rcptt-client-test', productsBuild.number, 'Mac OSX', artifactFilterRcptt, "${outputDir}/gui-test-mac", 'GUI Test Report (Mac OSX)'
                     }
                 }
                 stage('Run UI tests on Windows') {
                     steps {
-                        script {
-                            runRCPTT 'rcptt-client-test', productsBuild.number, 'Windows 10', artifactFilterRcptt, "${outputDir}/gui-test-windows", 'GUI Test Report (Windows 10)'
-                        }
+                        runRCPTT 'rcptt-client-test', productsBuild.number, 'Windows 10', artifactFilterRcptt, "${outputDir}/gui-test-windows", 'GUI Test Report (Windows 10)'
                     }
                 }
                 stage('Run reporting tests') {
