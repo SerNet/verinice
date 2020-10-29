@@ -183,5 +183,11 @@
 			<version>1.10.19</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>net._01001111</groupId>
+			<artifactId>jlorem</artifactId>
+			<version>1.3</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>
