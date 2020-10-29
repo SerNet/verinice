@@ -13,6 +13,5 @@ Require-Bundle: com.springsource.org.hibernate;bundle-version="3.2.6",
  org.springframework.orm;bundle-version="2.5.6",
  com.springsource.org.apache.log4j;bundle-version="1.2.15",
  org.springframework.beans;bundle-version="2.5.6",
- com.springsource.org.junit;resolution:=optional,
  org.apache.commons.logging;bundle-version="1.1.1"
 Import-Package: org.apache.commons.io
