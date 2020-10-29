@@ -48,6 +48,11 @@ pipeline {
                         runRCPTT 'rcptt-client-test', productsBuild.number, 'Windows 10', artifactFilterRcptt, "${outputDir}/gui-test-windows", 'GUI Test Report (Windows 10)'
                     }
                 }
+                stage('Run 3-tier UI tests') {
+                    steps {
+                        runRCPTT 'rcptt-server-test', productsBuild.number, null, artifactFilterRcptt, "${outputDir}/gui-test-3-tier", 'GUI Test Report (3-tier)'
+                    }
+                }
                 stage('Run reporting tests') {
                     steps {
                         script {
