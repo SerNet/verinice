@@ -49,7 +49,6 @@
 		<module>sernet.gs.springweb.fragment</module>
 		<module>sernet.gs.ui.rcp.main</module>
 		<module>sernet.hui.common</module>
-		<module>sernet.hui.server</module>
 		<module>sernet.hui.swtclient</module>
 		<module>sernet.springclient</module>
 		<module>sernet.verinice.bp.importer</module>

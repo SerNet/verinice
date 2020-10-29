@@ -258,12 +258,6 @@ Library.
          unpack="false"/>
 
    <plugin
-         id="sernet.hui.server"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="sernet.hui.swtclient"
          download-size="0"
          install-size="0"
