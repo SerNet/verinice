@@ -667,7 +667,7 @@
          	<action
                class="sernet.gs.ui.rcp.main.bsi.actions.AddGefaehrdungActionDelegate"
                enablesFor="1"
-               icon="icons/OMC.png"
+               icon="icons/dialog-warning.png"
                id="sernet.gs.ui.rcp.main.addGefaehrdung"
                label="%action.label.37"
                menubarPath="content"
