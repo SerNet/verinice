@@ -16,7 +16,7 @@ pipeline {
           description: 'The language the application will use. The tests need to support this also.')
         booleanParam defaultValue: false, description: 'Run performance tests', name: 'runPerformanceTests'
         booleanParam defaultValue: false, description: 'Run reporting tests', name: 'runReportingTests'
-        string(name: 'TEST_LIST', defaultValue: 'test-vn-1887*',
+        string(name: 'TEST_LIST', defaultValue: '*.test',
           description: 'Semicolon separated list of tests, or wildcard expression. Use *.test for all tests.')
         choice name: 'TOMCAT_VERSION', choices: ['7.0.94', '8.5.43', '6.0.53'],
           description: 'The tomcat to deploy the jar to.'
