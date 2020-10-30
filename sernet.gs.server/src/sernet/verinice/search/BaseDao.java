@@ -21,6 +21,7 @@ package sernet.verinice.search;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,17 +31,16 @@ import org.apache.log4j.Logger;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.ActionRequestValidationException;
 import org.elasticsearch.action.ActionResponse;
+import org.elasticsearch.action.bulk.BulkItemResponse;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequestBuilder;
 import org.elasticsearch.action.delete.DeleteResponse;
-import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.MultiSearchRequestBuilder;
 import org.elasticsearch.action.search.MultiSearchResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
-import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.engine.DocumentMissingException;
@@ -87,41 +87,41 @@ public abstract class BaseDao implements ISearchDao {
                     ISearchService.ES_FIELD_SOURCE_ID, ISearchService.ES_FIELD_SCOPE_ID,
                     ISearchService.ES_FIELD_PARENT_ID });
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.search.ISearchDao#updateOrIndex(java.lang.String,
-     * java.lang.String)
-     */
     @Override
-    public ActionResponse updateOrIndex(String id, String json) {
+    public ActionResponse updateOrIndex(Map<String, String> idToJson) {
         try {
-            return update(id, json);
+            return update(idToJson);
         } catch (ElasticsearchException e) {
-            LOG.error("Error while updating the element :" + id + " reason: " + e.getMessage());
+            LOG.error("Error while updating elements, reason: " + e.getMessage());
             LOG.error(e.getDetailedMessage());
             return null;
         }
+
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.search.ISearchDao#index(java.lang.String)
-     */
-    @Override
-    public ActionResponse update(String id, String json) {
+    public ActionResponse update(Map<String, String> idToJson) {
         try {
-            UpdateResponse response = getClient().prepareUpdate(getIndex(), getType(), id)
-                    .setRefresh(true).setDoc(json).setTimeout(TimeValue.timeValueSeconds(10))
-                    .execute().actionGet();
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Index updated, uuid: " + response.getId() + ", version: "
-                        + response.getVersion());
+            BulkRequestBuilder request = getClient().prepareBulk().setRefresh(true)
+                    .setTimeout(TimeValue.timeValueSeconds(10));
+            idToJson.forEach((id, json) -> request
+                    .add(getClient().prepareUpdate(getIndex(), getType(), id).setDoc(json)));
+            BulkResponse response = request.execute().actionGet();
+            if (response.hasFailures()) {
+                Map<String, String> idToJsonIndex = new HashMap<>(idToJson.size());
+                for (BulkItemResponse item : response.getItems()) {
+                    if (item.isFailed()) {
+                        if (item.getFailure().getMessage().contains("DocumentMissingException")) {
+                            idToJsonIndex.put(item.getId(), idToJson.get(item.getId()));
+                        } else {
+                            throw new RuntimeException(item.getFailureMessage());
+                        }
+                    }
+                    index(idToJsonIndex);
+                }
             }
             return response;
         } catch (DocumentMissingException e) {
-            return index(id, json);
+            return index(idToJson);
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
@@ -136,13 +136,12 @@ public abstract class BaseDao implements ISearchDao {
      * @see sernet.verinice.search.ISearchDao#index(java.lang.String)
      */
     @Override
-    public IndexResponse index(String id, String json) {
-        IndexResponse response = getClient().prepareIndex(getIndex(), getType(), id).setSource(json)
-                .execute().actionGet();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Index created, uuid: " + response.getId());
-        }
-        return response;
+    public BulkResponse index(Map<String, String> idToJson) {
+        BulkRequestBuilder request = getClient().prepareBulk().setRefresh(true)
+                .setTimeout(TimeValue.timeValueSeconds(10));
+        idToJson.forEach((id, json) -> request
+                .add(getClient().prepareIndex(getIndex(), getType(), id).setSource(json)));
+        return request.execute().actionGet();
     }
 
     /*

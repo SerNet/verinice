@@ -25,7 +25,6 @@ import java.util.Map;
 import org.elasticsearch.action.ActionResponse;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
-import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.MultiSearchRequestBuilder;
 import org.elasticsearch.action.search.MultiSearchResponse;
 import org.elasticsearch.action.search.SearchResponse;
@@ -58,36 +57,18 @@ public class ElementDaoDummy implements IElementSearchDao {
         return ElementDao.TYPE_NAME;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.search.ISearchDao#updateOrIndex(java.lang.String,
-     * java.lang.String)
-     */
     @Override
-    public ActionResponse updateOrIndex(String id, String json) {
+    public ActionResponse updateOrIndex(Map<String, String> idToJson) {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.search.ISearchDao#update(java.lang.String,
-     * java.lang.String)
-     */
     @Override
-    public ActionResponse update(String id, String json) {
+    public ActionResponse update(Map<String, String> idToJson) {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.search.ISearchDao#index(java.lang.String,
-     * java.lang.String)
-     */
     @Override
-    public IndexResponse index(String id, String json) {
+    public ActionResponse index(Map<String, String> idToJson) {
         return null;
     }
 

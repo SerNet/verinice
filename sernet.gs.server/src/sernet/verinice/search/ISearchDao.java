@@ -20,13 +20,13 @@
  ******************************************************************************/
 package sernet.verinice.search;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import org.elasticsearch.action.ActionResponse;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
-import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.MultiSearchRequestBuilder;
 import org.elasticsearch.action.search.MultiSearchResponse;
 import org.elasticsearch.action.search.SearchResponse;
@@ -49,11 +49,23 @@ public interface ISearchDao {
 
     public String getType();
 
-    public ActionResponse updateOrIndex(String id, String json);
+    public default ActionResponse updateOrIndex(String id, String json) {
+        return updateOrIndex(Collections.singletonMap(id, json));
+    }
 
-    public ActionResponse update(String id, String json);
+    public ActionResponse updateOrIndex(Map<String, String> idToJson);
 
-    public IndexResponse index(String id, String json);
+    public default ActionResponse update(String id, String json) {
+        return update(Collections.singletonMap(id, json));
+    }
+
+    public ActionResponse update(Map<String, String> idToJson);
+
+    public default ActionResponse index(String id, String json) {
+        return index(Collections.singletonMap(id, json));
+    }
+
+    public ActionResponse index(Map<String, String> idToJson);
 
     public DeleteResponse delete(String id);
 
@@ -89,4 +101,5 @@ public interface ISearchDao {
      * @return
      */
     MultiSearchResponse find(String typeId, VeriniceQuery query);
+
 }

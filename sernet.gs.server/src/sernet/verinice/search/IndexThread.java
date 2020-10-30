@@ -20,7 +20,9 @@
 package sernet.verinice.search;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
@@ -57,18 +59,19 @@ public class IndexThread extends DummyAuthenticatorCallable<List<IndexedElementD
         List<IndexedElementDetails> result = logIndexedElementDetails
                 ? new ArrayList<>(elements.size())
                 : null;
+        Map<String, String> updateDetails = new HashMap<>(elements.size());
         for (CnATreeElement cnATreeElement : elements) {
             json = getJsonBuilder().getJson(cnATreeElement);
 
             if (json != null) {
-                getSearchDao().updateOrIndex(cnATreeElement.getUuid(), json);
+                updateDetails.put(cnATreeElement.getUuid(), json);
                 if (logIndexedElementDetails) {
                     result.add(new IndexedElementDetails(cnATreeElement.getUuid(),
                             cnATreeElement.getTitle()));
                 }
             }
         }
-
+        getSearchDao().updateOrIndex(updateDetails);
         return result;
     }
 
