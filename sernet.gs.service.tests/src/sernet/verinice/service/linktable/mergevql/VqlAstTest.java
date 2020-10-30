@@ -22,6 +22,7 @@ package sernet.verinice.service.linktable.mergevql;
 import static org.junit.Assert.assertTrue;
 import static sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO.readLinkTableConfiguration;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -91,6 +92,7 @@ public class VqlAstTest {
     }
 
     private String getFilePath(String fileName) {
-        return this.getClass().getResource(fileName).getPath();
+        return new File("src/sernet/verinice/service/linktable/mergevql/" + fileName)
+                .getAbsolutePath();
     }
 }
