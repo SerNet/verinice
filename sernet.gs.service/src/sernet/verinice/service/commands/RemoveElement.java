@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,7 +45,6 @@ import sernet.verinice.interfaces.INoAccessControl;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.elements.BpPerson;
 import sernet.verinice.model.bp.elements.BpRequirement;
-import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
@@ -126,7 +126,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
             for (Integer dbId : dbIdsOfSubtree) {
                 dao.checkRights(dbId, element.getScopeId());
             }
-            removeElement(element);
+            removeElement(element, dbIdsOfSubtree);
         } catch (SecurityException e) {
             LOG.error("SecurityException while deleting element: " + element, e);
             throw e;
@@ -139,7 +139,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         }
     }
 
-    private void removeElement(T element) throws CommandException {
+    private void removeElement(T element, Set<Integer> dbIdsOfSubtree) throws CommandException {
         if (element instanceof IBpElement
                 && !CatalogModel.TYPE_ID.equals(element.getParent().getTypeId())) {
 
@@ -180,21 +180,29 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
                         .add(Restrictions.ne("dependant.scopeId", element.getDbId())));
                 linksToDelete.forEach(CnALink::remove);
             } else {
-                LoadSubtreeIds getDescendantSafeguardIDs = new LoadSubtreeIds(element,
-                        Safeguard.TYPE_ID);
-                getDescendantSafeguardIDs = getCommandService()
-                        .executeCommand(getDescendantSafeguardIDs);
-                Set<Integer> safeguardIDs = getDescendantSafeguardIDs.getDbIdsOfSubtree();
-                if (!safeguardIDs.isEmpty()) {
-                    IBaseDao<@NonNull Safeguard, Serializable> safeguardDao = getDaoFactory()
-                            .getDAO(Safeguard.class);
-                    final List<Safeguard> safeguards = safeguardDao.findByCriteria(DetachedCriteria
-                            .forClass(Safeguard.class).add(Restrictions.in("id", safeguardIDs)));
-                    for (Safeguard safeguard : safeguards) {
-                        safeguard.remove();
-                    }
-                    safeguardDao.delete(safeguards);
-                }
+                // remove links from safeguards within the tree to requirements
+                // outside of the treeremoveRelevantLinksToElementsOutsideTree
+                element.getLinksUp().stream()
+                        .filter(link -> link.getId().getTypeId()
+                                .equals(BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD))
+                        .forEach(CnALink::remove);
+
+                Set<Integer> descendantIds = new HashSet<>(dbIdsOfSubtree);
+                descendantIds.remove(element.getDbId());
+
+                IBaseDao<CnALink, Serializable> linkDao = getDaoFactory().getDAO(CnALink.class);
+
+                List<CnALink> linksWithSafeguardsInElementScope = linkDao
+                        .findByCriteria(DetachedCriteria.forClass(CnALink.class)
+                                .createAlias("dependency", "dependency")
+                                .add(Restrictions.eq("id.typeId",
+                                        BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD))
+                                .add(Restrictions.eq("dependency.scopeId", element.getScopeId())));
+
+                linksWithSafeguardsInElementScope.stream()
+                        .filter(link -> descendantIds.contains(link.getId().getDependencyId())
+                                && !descendantIds.contains(link.getId().getDependantId()))
+                        .forEach(CnALink::remove);
             }
         } else if (element.isPerson()) {
             removeConfiguration(element);
