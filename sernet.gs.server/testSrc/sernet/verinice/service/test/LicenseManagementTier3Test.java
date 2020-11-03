@@ -153,7 +153,7 @@ public class LicenseManagementTier3Test extends CommandServiceProvider {
                 vnlFileCount++;
             }
             Set<LicenseManagementEntry> entries = licenseManagementService.getExistingLicenses();
-            Assert.assertTrue(entries.size() == vnlFileCount);
+            Assert.assertEquals(vnlFileCount, entries.size());
         } catch (LicenseManagementException e) {
             LOG.error("Something went wrong", e);
         }
@@ -199,7 +199,7 @@ public class LicenseManagementTier3Test extends CommandServiceProvider {
 
             Set<LicenseManagementEntry> entriesForUser = licenseManagementService
                     .getLicenseEntriesForUserByContentId(TEST_USERNAME, encryptedContentId);
-            Assert.assertTrue(entriesForUser.size() == count);
+            Assert.assertEquals(count, entriesForUser.size());
         } catch (LicenseManagementException e) {
             LOG.error("Something went wrong getting licenseEntries for user:\t" + TEST_USERNAME
                     + "and contentId:\t" + CONTENT_ID);
@@ -217,7 +217,7 @@ public class LicenseManagementTier3Test extends CommandServiceProvider {
             repoFile = addLicenseToRepository(entry);
             LicenseManagementEntry entryFromRepo = licenseManagementService
                     .getLicenseEntryForLicenseId(entry.getLicenseID(), false);
-            Assert.assertTrue(entry.equals(entryFromRepo));
+            Assert.assertEquals(entry, entryFromRepo);
         } finally {
             FileUtils.forceDelete(repoFile);
         }
@@ -239,8 +239,8 @@ public class LicenseManagementTier3Test extends CommandServiceProvider {
             Set<LicenseMessageInfos> allInfos = licenseManagementService
                     .getAllLicenseMessageInfos();
 
-            Assert.assertTrue(
-                    allInfos.size() == licenseManagementService.getExistingLicenses().size());
+            Assert.assertEquals(allInfos.size(),
+                    licenseManagementService.getExistingLicenses().size());
             LicenseManagementEntry expiredEntry = createAndAddExpiredEntryToRepository();
             LicenseManagementEntry validEntry = getSingleCryptedEntry();
 
@@ -279,8 +279,8 @@ public class LicenseManagementTier3Test extends CommandServiceProvider {
                     .getLicenseMessageInfos(TEST_USERNAME, encryptedContentIdValid, "", null);
             Assert.assertTrue(infosExpired.isNoLicenseAvailable());
             Assert.assertTrue(infosValid.isInvalidSoon());
-            Assert.assertTrue(infosValid.getAssignedUsers() == 1);
-            Assert.assertTrue(plainContentIdValid.equals(infosValid.getContentId()));
+            Assert.assertEquals(1, infosValid.getAssignedUsers());
+            Assert.assertEquals(infosValid.getContentId(), plainContentIdValid);
             Assert.assertTrue(licenseManagementService.isLicenseInvalidSoon(TEST_USERNAME,
                     encryptedContentIdValid));
 
@@ -381,8 +381,8 @@ public class LicenseManagementTier3Test extends CommandServiceProvider {
 
                 licenseManagementService.removeAllContentIdAssignments(encryptedContentId);
 
-                Assert.assertTrue(licenseManagementService
-                        .getContentIdAllocationCount(encryptedContentId) == 0);
+                Assert.assertEquals(0,
+                        licenseManagementService.getContentIdAllocationCount(encryptedContentId));
             }
         } catch (LicenseManagementException e) {
 
