@@ -165,45 +165,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
             // we need to delete them by hand. This is not an optimal solution
             // and should be replaced by Hibernate event listeners someday.
             // (see VN-2084)
-            if (element.isScope()) {
-                // remove links from safeguards to requirements outside this
-                // scope
-                @NonNull
-                IBaseDao<CnALink, Serializable> linkDao = getDaoFactory().getDAO(CnALink.class);
-                @SuppressWarnings("unchecked")
-                List<CnALink> linksToDelete = linkDao.findByCriteria(DetachedCriteria
-                        .forClass(CnALink.class).createAlias("dependant", "dependant")
-                        .createAlias("dependency", "dependency")
-                        .add(Restrictions.eq("id.typeId",
-                                BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD))
-                        .add(Restrictions.eq("dependency.scopeId", element.getDbId()))
-                        .add(Restrictions.ne("dependant.scopeId", element.getDbId())));
-                linksToDelete.forEach(CnALink::remove);
-            } else {
-                // remove links from safeguards within the tree to requirements
-                // outside of the treeremoveRelevantLinksToElementsOutsideTree
-                element.getLinksUp().stream()
-                        .filter(link -> link.getId().getTypeId()
-                                .equals(BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD))
-                        .forEach(CnALink::remove);
-
-                Set<Integer> descendantIds = new HashSet<>(dbIdsOfSubtree);
-                descendantIds.remove(element.getDbId());
-
-                IBaseDao<CnALink, Serializable> linkDao = getDaoFactory().getDAO(CnALink.class);
-
-                List<CnALink> linksWithSafeguardsInElementScope = linkDao
-                        .findByCriteria(DetachedCriteria.forClass(CnALink.class)
-                                .createAlias("dependency", "dependency")
-                                .add(Restrictions.eq("id.typeId",
-                                        BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD))
-                                .add(Restrictions.eq("dependency.scopeId", element.getScopeId())));
-
-                linksWithSafeguardsInElementScope.stream()
-                        .filter(link -> descendantIds.contains(link.getId().getDependencyId())
-                                && !descendantIds.contains(link.getId().getDependantId()))
-                        .forEach(CnALink::remove);
-            }
+            removeRelevantLinksToElementsOutsideTree(element, dbIdsOfSubtree);
         } else if (element.isPerson()) {
             removeConfiguration(element);
         }
@@ -264,6 +226,47 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         IBaseDao<T, Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
 
         dao.delete(element);
+    }
+
+    private void removeRelevantLinksToElementsOutsideTree(T element, Set<Integer> dbIdsOfSubtree) {
+        if (element.isScope()) {
+            // remove links from safeguards to requirements outside this
+            // scope
+            @NonNull
+            IBaseDao<CnALink, Serializable> linkDao = getDaoFactory().getDAO(CnALink.class);
+            @SuppressWarnings("unchecked")
+            List<CnALink> linksToDelete = linkDao.findByCriteria(
+                    DetachedCriteria.forClass(CnALink.class).createAlias("dependant", "dependant")
+                            .createAlias("dependency", "dependency")
+                            .add(Restrictions.eq("id.typeId",
+                                    BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD))
+                            .add(Restrictions.eq("dependency.scopeId", element.getDbId()))
+                            .add(Restrictions.ne("dependant.scopeId", element.getDbId())));
+            linksToDelete.forEach(CnALink::remove);
+        } else {
+            // remove links from safeguards within the tree to requirements
+            // outside of the treeremoveRelevantLinksToElementsOutsideTree
+            element.getLinksUp().stream()
+                    .filter(link -> link.getId().getTypeId()
+                            .equals(BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD))
+                    .forEach(CnALink::remove);
+
+            Set<Integer> descendantIds = new HashSet<>(dbIdsOfSubtree);
+            descendantIds.remove(element.getDbId());
+
+            IBaseDao<CnALink, Serializable> linkDao = getDaoFactory().getDAO(CnALink.class);
+
+            List<CnALink> linksWithSafeguardsInElementScope = linkDao.findByCriteria(
+                    DetachedCriteria.forClass(CnALink.class).createAlias("dependency", "dependency")
+                            .add(Restrictions.eq("id.typeId",
+                                    BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD))
+                            .add(Restrictions.eq("dependency.scopeId", element.getScopeId())));
+
+            linksWithSafeguardsInElementScope.stream()
+                    .filter(link -> descendantIds.contains(link.getId().getDependencyId())
+                            && !descendantIds.contains(link.getId().getDependantId()))
+                    .forEach(CnALink::remove);
+        }
     }
 
     /**
