@@ -108,7 +108,8 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
 
     private void removeElement(Integer dbid, String typeId) {
         try {
-            this.element = (T) getDaoFactory().getDAO(typeId).findById(dbid);
+            IBaseDao<T, Serializable> dao = getDaoFactory().getDAO(typeId);
+            this.element = dao.findById(dbid);
             if (this.element == null) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug(
@@ -116,11 +117,15 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
                 }
                 return;
             }
-            IBaseDao<T, Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
             // first we check if the operation is allowed for the element and
             // the children
             dao.checkRights(element);
-            checkRightsOfSubtree(element);
+            LoadSubtreeIds loadSubtreeIdsCommand = new LoadSubtreeIds(element);
+            loadSubtreeIdsCommand = getCommandService().executeCommand(loadSubtreeIdsCommand);
+            Set<Integer> dbIdsOfSubtree = loadSubtreeIdsCommand.getDbIdsOfSubtree();
+            for (Integer dbId : dbIdsOfSubtree) {
+                dao.checkRights(dbId, element.getScopeId());
+            }
             removeElement(element);
         } catch (SecurityException e) {
             LOG.error("SecurityException while deleting element: " + element, e);
@@ -251,18 +256,6 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         IBaseDao<T, Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
 
         dao.delete(element);
-    }
-
-    private void checkRightsOfSubtree(CnATreeElement element) throws CommandException {
-        LoadSubtreeIds loadSubtreeIdsCommand = new LoadSubtreeIds(element);
-        loadSubtreeIdsCommand = getCommandService().executeCommand(loadSubtreeIdsCommand);
-        Set<Integer> dbIdsOfSubtree = loadSubtreeIdsCommand.getDbIdsOfSubtree();
-        @SuppressWarnings("unchecked")
-        IBaseDao<? super CnATreeElement, Serializable> dao = getDaoFactory()
-                .getDAOforTypedElement(element);
-        for (Integer dbId : dbIdsOfSubtree) {
-            dao.checkRights(dbId, element.getScopeId());
-        }
     }
 
     /**
