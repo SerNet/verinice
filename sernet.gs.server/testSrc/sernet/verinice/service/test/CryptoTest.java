@@ -71,7 +71,7 @@ import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.junit.Test;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import sernet.gs.service.FileUtil;
 import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.CommandException;

@@ -28,7 +28,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.Retriever;
 import sernet.hui.common.connect.Entity;

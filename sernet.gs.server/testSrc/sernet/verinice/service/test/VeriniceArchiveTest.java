@@ -12,7 +12,7 @@ import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.matchers.JUnitMatchers;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import sernet.verinice.service.sync.VeriniceArchive;
 
 public class VeriniceArchiveTest {

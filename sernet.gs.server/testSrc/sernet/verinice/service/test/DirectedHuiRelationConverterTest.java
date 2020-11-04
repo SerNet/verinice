@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import sernet.hui.common.connect.DirectedHuiRelation;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HuiRelation;

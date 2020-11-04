@@ -20,7 +20,7 @@ package sernet.verinice.model.iso27k;
 
 import org.junit.Test;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import sernet.verinice.model.bp.groups.ItSystemGroup;
 import sernet.verinice.service.test.ContextConfiguration;
 

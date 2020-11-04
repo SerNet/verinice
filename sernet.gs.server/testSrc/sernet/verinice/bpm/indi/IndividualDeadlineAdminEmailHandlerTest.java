@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.VeriniceContext;

@@ -29,7 +29,7 @@ import java.util.Arrays;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import sernet.verinice.service.sync.VeriniceArchive;
 import sernet.verinice.service.sync.VnaSchemaChecker;
 import sernet.verinice.service.sync.VnaSchemaVersion;

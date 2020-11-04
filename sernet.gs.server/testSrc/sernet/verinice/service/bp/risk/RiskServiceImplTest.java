@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
