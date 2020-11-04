@@ -15,7 +15,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  ******************************************************************************/
-package sernet.verinice.service.test;
+package sernet.verinice.bp.rcp.filter;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -27,7 +27,6 @@ import java.util.stream.Stream;
 
 import org.junit.Test;
 
-import sernet.verinice.bp.rcp.filter.DynamicEnumPropertyFilter;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
