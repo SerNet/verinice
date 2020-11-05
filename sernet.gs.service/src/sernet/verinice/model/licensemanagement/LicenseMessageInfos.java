@@ -20,14 +20,13 @@
 package sernet.verinice.model.licensemanagement;
 
 import java.io.Serializable;
-import org.threeten.bp.LocalDate;
 
+import org.threeten.bp.LocalDate;
 
 /**
  * This class wraps the information needed for showing information
- * (additionally) in the objectbrowser if the license to use
- * is invalid soon, or if the user has no license assigend
- * to decrypt the restricted content
+ * (additionally) in the objectbrowser if the license to use is invalid soon, or
+ * if the user has no license assigend to decrypt the restricted content
  * 
  * Attention: data is stored decrypted here
  * 
@@ -37,7 +36,7 @@ import org.threeten.bp.LocalDate;
 public class LicenseMessageInfos implements Serializable {
 
     private static final long serialVersionUID = 201702281015L;
-    
+
     private LocalDate validUntil;
     private String licenseId;
     private String contentId;
@@ -47,7 +46,7 @@ public class LicenseMessageInfos implements Serializable {
     private boolean isNoLicenseAvailable;
     private int validUsers;
     private int assignedUsers;
-    
+
     /**
      * @param validUntil
      * @param licenseId
@@ -55,12 +54,8 @@ public class LicenseMessageInfos implements Serializable {
      * @param isInvalidSoon
      * @param isNoLicenseAvailable
      */
-    public LicenseMessageInfos(LocalDate validUntil, 
-            String licenseId, 
-            String contentId, 
-            boolean isInvalidSoon, 
-            boolean isNoLicenseAvailable,
-            int validUsers,
+    public LicenseMessageInfos(LocalDate validUntil, String licenseId, String contentId,
+            boolean isInvalidSoon, boolean isNoLicenseAvailable, int validUsers,
             int assigendUsers) {
         super();
         this.validUntil = validUntil;
@@ -71,67 +66,81 @@ public class LicenseMessageInfos implements Serializable {
         this.validUsers = validUsers;
         this.assignedUsers = assigendUsers;
     }
-    
-    public LicenseMessageInfos(){
+
+    public LicenseMessageInfos() {
         // default constructor
     }
-    
+
     /**
      * @return the validUntil
      */
     public LocalDate getValidUntil() {
         return validUntil;
     }
+
     /**
-     * @param validUntil the validUntil to set
+     * @param validUntil
+     *            the validUntil to set
      */
     public void setValidUntil(LocalDate validUntil) {
         this.validUntil = validUntil;
     }
+
     /**
      * @return the licenseId
      */
     public String getLicenseId() {
         return licenseId;
     }
+
     /**
-     * @param licenseId the licenseId to set
+     * @param licenseId
+     *            the licenseId to set
      */
     public void setLicenseId(String licenseId) {
         this.licenseId = licenseId;
     }
+
     /**
      * @return the contentId
      */
     public String getContentId() {
         return contentId;
     }
+
     /**
-     * @param contentId the contentId to set
+     * @param contentId
+     *            the contentId to set
      */
     public void setContentId(String contentId) {
         this.contentId = contentId;
     }
+
     /**
      * @return the isInvalidSoon
      */
     public boolean isInvalidSoon() {
         return isInvalidSoon;
     }
+
     /**
-     * @param isInvalidSoon the isInvalidSoon to set
+     * @param isInvalidSoon
+     *            the isInvalidSoon to set
      */
     public void setInvalidSoon(boolean isInvalidSoon) {
         this.isInvalidSoon = isInvalidSoon;
     }
+
     /**
      * @return the isNoLicenseAvailable
      */
     public boolean isNoLicenseAvailable() {
         return isNoLicenseAvailable;
     }
+
     /**
-     * @param isNoLicenseAvailable the isNoLicenseAvailable to set
+     * @param isNoLicenseAvailable
+     *            the isNoLicenseAvailable to set
      */
     public void setNoLicenseAvailable(boolean isNoLicenseAvailable) {
         this.isNoLicenseAvailable = isNoLicenseAvailable;
@@ -145,7 +154,8 @@ public class LicenseMessageInfos implements Serializable {
     }
 
     /**
-     * @param validUsers the validUsers to set
+     * @param validUsers
+     *            the validUsers to set
      */
     public void setValidUsers(int validUsers) {
         this.validUsers = validUsers;
@@ -159,7 +169,8 @@ public class LicenseMessageInfos implements Serializable {
     }
 
     /**
-     * @param assignedUsers the assignedUsers to set
+     * @param assignedUsers
+     *            the assignedUsers to set
      */
     public void setAssignedUsers(int assignedUsers) {
         this.assignedUsers = assignedUsers;
@@ -173,7 +184,8 @@ public class LicenseMessageInfos implements Serializable {
     }
 
     /**
-     * @param accountViewColumnHeader the accountViewColumnHeader to set
+     * @param accountViewColumnHeader
+     *            the accountViewColumnHeader to set
      */
     public void setAccountViewColumnHeader(String accountViewColumnHeader) {
         this.accountViewColumnHeader = accountViewColumnHeader;
@@ -187,25 +199,26 @@ public class LicenseMessageInfos implements Serializable {
     }
 
     /**
-     * @param accountWizardLabel the accountWizardLabel to set
+     * @param accountWizardLabel
+     *            the accountWizardLabel to set
      */
     public void setAccountWizardLabel(String accountWizardLabel) {
         this.accountWizardLabel = accountWizardLabel;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return "LicenseMessageInfos [validUntil=" + validUntil + ", licenseId="
-                + licenseId + ", contentId=" + contentId + ", "
-                + "accountViewColumnHeader=" + accountViewColumnHeader + ","
-                + " accountWizardLabel=" + accountWizardLabel + ","
+        return "LicenseMessageInfos [validUntil=" + validUntil + ", licenseId=" + licenseId
+                + ", contentId=" + contentId + ", " + "accountViewColumnHeader="
+                + accountViewColumnHeader + "," + " accountWizardLabel=" + accountWizardLabel + ","
                 + " isInvalidSoon=" + isInvalidSoon + ", isNoLicenseAvailable="
-                + isNoLicenseAvailable + ", validUsers=" + validUsers 
-                + ", assignedUsers=" + assignedUsers + "]";
+                + isNoLicenseAvailable + ", validUsers=" + validUsers + ", assignedUsers="
+                + assignedUsers + "]";
     }
-    
-    
+
 }

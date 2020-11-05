@@ -93,7 +93,6 @@ public class LicenseMgmtPage extends BaseWizardPage {
         this.account = account;
     }
 
-
     @Override
     protected void initGui(Composite composite) {
         GridData containerGridData = new GridData();
@@ -175,7 +174,6 @@ public class LicenseMgmtPage extends BaseWizardPage {
         // no further setup
     }
 
-
     @Override
     public boolean isPageComplete() {
         return true;
@@ -225,7 +223,6 @@ public class LicenseMgmtPage extends BaseWizardPage {
         this.account = account;
     }
 
-
     private void createCheckbox(Composite composite, final LicenseEntry licenseEntry) {
         final Button checkbox = new Button(composite, SWT.CHECK);
         checkboxes.add(checkbox);
@@ -261,7 +258,7 @@ public class LicenseMgmtPage extends BaseWizardPage {
         dh.contentId = licenseService.decrypt(entry, LicenseManagementEntry.COLUMN_CONTENTID);
         dh.validUntil = licenseService.decrypt(entry, LicenseManagementEntry.COLUMN_VALIDUNTIL);
         dh.validUser = licenseService.decrypt(entry, LicenseManagementEntry.COLUMN_VALIDUSERS);
-    
+
         dh.currentUser = licenseService.getLicenseIdAllocationCount(dh.plainLicenseId);
         dh.validMsg = dh.validUntil.isBefore(LocalDate.now())
                 ? Messages.LicenseMgmtPage_License_Expired

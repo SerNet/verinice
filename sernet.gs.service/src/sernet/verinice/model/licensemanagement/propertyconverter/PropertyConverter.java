@@ -25,14 +25,12 @@ import org.threeten.bp.LocalDate;
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.format.DateTimeFormatter;
 
-
 /**
- * This class tries to convert Objects to an expected type
- * use-case for this is the cast of properties that are 
- * protected by licensemanagement and stored in the database
- * encrypted as strings (base64). Decryption process is not
- * aware of stored datatype, so the developer needs a tool to
- * cast to the right datatype. This is implemented here.
+ * This class tries to convert Objects to an expected type use-case for this is
+ * the cast of properties that are protected by licensemanagement and stored in
+ * the database encrypted as strings (base64). Decryption process is not aware
+ * of stored datatype, so the developer needs a tool to cast to the right
+ * datatype. This is implemented here.
  * 
  * this class makes usage of the converters defined in:
  * org.apache.commons.beanutils
@@ -43,23 +41,20 @@ import org.threeten.bp.format.DateTimeFormatter;
 public class PropertyConverter {
 
     public String convertToString(Object property) {
-        return (String)ConvertUtils.convert(property, String.class);
+        return (String) ConvertUtils.convert(property, String.class);
     }
 
-    public Integer convertToInteger(Object property){
+    public Integer convertToInteger(Object property) {
         return (Integer) ConvertUtils.lookup(Integer.class).convert(Integer.class, property);
     }
 
-    public LocalDate convertToDate(Object property){
+    public LocalDate convertToDate(Object property) {
         // ensure property is of type long
-        if(property instanceof Long){
-            return Instant.ofEpochMilli((
-                    Long)property).
-                    atZone(ZoneId.systemDefault()).
-                    toLocalDate();
-        } else if(property instanceof String){
-            return LocalDate.parse((String)property, 
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        if (property instanceof Long) {
+            return Instant.ofEpochMilli((Long) property).atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+        } else if (property instanceof String) {
+            return LocalDate.parse((String) property, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         }
         return null;
     }
