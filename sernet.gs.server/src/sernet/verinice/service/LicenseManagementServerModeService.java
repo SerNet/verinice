@@ -32,6 +32,7 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchEvent.Kind;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -44,7 +45,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.LazyInitializationException;
-import org.threeten.bp.LocalDate;
 
 import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.CommandException;

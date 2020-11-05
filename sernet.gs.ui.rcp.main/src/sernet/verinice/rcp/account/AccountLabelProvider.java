@@ -1,5 +1,6 @@
 package sernet.verinice.rcp.account;
 
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.Set;
 
@@ -9,7 +10,6 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.threeten.bp.LocalDate;
 
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.hui.swt.SWTResourceManager;

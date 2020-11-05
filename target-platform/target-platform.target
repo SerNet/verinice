@@ -102,8 +102,6 @@
 <unit id="pax.source.feature.group" version="0.6.0"/>
 <unit id="spring.feature.group" version="0.6.0.update1"/>
 <unit id="spring.source.feature.group" version="0.6.0.update1"/>
-<unit id="threetenbp.feature.group" version="1.3.6"/>
-<unit id="threetenbp.source.feature.group" version="1.3.6"/>
 <unit id="w3c.feature.group" version="0.6.0"/>
 <unit id="w3c.source.feature.group" version="0.6.0"/>
 <unit id="com.mchange.c3p0.feature.group" version="0.9.5.4"/>

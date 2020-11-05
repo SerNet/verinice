@@ -19,11 +19,12 @@
  ******************************************************************************/
 package sernet.verinice.model.licensemanagement.propertyconverter;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+
 import org.apache.commons.beanutils.ConvertUtils;
-import org.threeten.bp.Instant;
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.ZoneId;
-import org.threeten.bp.format.DateTimeFormatter;
 
 /**
  * This class tries to convert Objects to an expected type use-case for this is

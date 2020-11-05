@@ -252,11 +252,6 @@ Library.
          optional="true"/>
 
    <includes
-         id="threetenbp"
-         version="0.0.0"
-         optional="true"/>
-
-   <includes
          id="sernet.rcp.ui.feature"
          version="0.0.0"
          optional="true"/>

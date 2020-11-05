@@ -20,8 +20,7 @@
 package sernet.verinice.model.licensemanagement;
 
 import java.io.Serializable;
-
-import org.threeten.bp.LocalDate;
+import java.time.LocalDate;
 
 /**
  * This class wraps the information needed for showing information

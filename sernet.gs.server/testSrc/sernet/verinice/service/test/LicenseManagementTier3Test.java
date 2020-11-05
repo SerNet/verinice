@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -46,7 +47,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.threeten.bp.LocalDate;
 
 import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.ApplicationRoles;

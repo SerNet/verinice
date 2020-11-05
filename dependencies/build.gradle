@@ -102,10 +102,6 @@ platform {
 		}
 	}
 
-	feature(id: 'threetenbp', name: 'threetenbp', version: '1.3.6') {
-		plugin('org.threeten:threetenbp:1.3.6')
-	}
-
 	feature(id: 'pax', name: 'pax', version: '0.6.0') {
 		plugin fileTree("${project.projectDir}/pax/") {
    			include '**/*.jar'

@@ -23,14 +23,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.osgi.util.NLS;
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.temporal.ChronoUnit;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
@@ -475,7 +475,7 @@ public abstract class HtmlWriter {
         String cssFile = "screen.css";
 
         String cssDir = CnAWorkspace.getInstance().getWorkdir() + File.separator + "html" //$NON-NLS-1$
-                + File.separator + cssFile; //$NON-NLS-2$
+                + File.separator + cssFile; // $NON-NLS-2$
         buf.append("<html><head>"); //$NON-NLS-1$
         buf.append("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=")
                 .append(encoding).append("\"/>\n"); //$NON-NLS-1$
