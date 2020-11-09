@@ -1,3 +1,5 @@
+def branchName = null
+def jobName = null
 def productsBuild = null
 def outputDir = 'test-result'
 def artifactFilterRcptt = 'gui-test-runner/result/**/*'
@@ -14,8 +16,10 @@ pipeline {
         stage('Build products') {
             steps {
                 script {
+                    branchName = env.GIT_BRANCH.replace('origin/', '')
+                    jobName = "verinice/${branchName.replace('/', '%2F')}"
                     productsBuild = build(
-                      job: 'verinice/develop',
+                      job: jobName,
                       propagate: false,
                       parameters: [
                         booleanParam(name: 'runRCPTTTests', value: false),
@@ -24,7 +28,7 @@ pipeline {
                     )
                     copyArtifacts(
                       filter: '**/build/reports/**/*.xml,**/target/surefire-reports/*.xml',
-                      projectName: 'verinice/develop',
+                      projectName: jobName,
                       selector: specific(productsBuild.getNumber().toString()),
                       target: "${outputDir}/integration"
                     )
@@ -108,8 +112,8 @@ def runRCPTT(jobName, buildNumberDevelop, operatingSystem, copyArtifactsFilter, 
       job: jobName,
       propagate: false,
       parameters: [
-        gitParameter(name: 'BRANCH_OR_TAG', value: 'develop'),
-        string(name: 'job_to_copy_from', value: 'verinice/develop'),
+        gitParameter(name: 'BRANCH_OR_TAG', value: branchName),
+        string(name: 'job_to_copy_from', value: jobName),
         string(name: 'build_to_copy_from', value: """<SpecificBuildSelector plugin="copyartifact@1.45.1">  <buildNumber>${buildNumberDevelop}</buildNumber></SpecificBuildSelector>"""),
         string(name: 'OPERATING_SYSTEM', value: operatingSystem)
       ]
@@ -130,7 +134,7 @@ def runRCPTT(jobName, buildNumberDevelop, operatingSystem, copyArtifactsFilter, 
           reportDir: "${resultDir}/gui-test-runner/result",
           reportFiles: 'results.html',
           reportName: htmlReportName,
-          reportTitles: "develop"
+          reportTitles: branchName
         ])
     }
 }
