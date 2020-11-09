@@ -64,6 +64,8 @@ import sernet.verinice.model.report.ReportTemplateMetaData.ReportContext;
  */
 public class AddReportToDepositDialog extends TitleAreaDialog {
 
+    private static final String ERROR_MESSAGE_PREFIX = "\n • ";//$NON-NLS-1$
+
     private static final Logger LOG = Logger.getLogger(AddReportToDepositDialog.class);
 
     private Text reportName;
@@ -86,8 +88,6 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     static final int DEFAULT_COL_NR = 3;
 
     private ReportTemplateMetaData editTemplate;
-
-    private SelectionListener checkBoxSelectionListener;
 
     private Button allowMultipleRootObjects;
 
@@ -129,7 +129,6 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         setMessage(isEditMode() ? Messages.ReportDepositView_18 : Messages.ReportDepositView_7);
 
         final Composite composite = (Composite) super.createDialogArea(parent);
-
         composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
         Composite dialogContent = new Composite(composite, SWT.NONE);
@@ -152,6 +151,14 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         reportNameTextGd.grabExcessHorizontalSpace = true;
         reportNameTextGd.horizontalSpan = 2;
         reportName.setLayoutData(reportNameTextGd);
+        reportName.addListener(SWT.CHANGED, event -> updateDialog());
+
+        SelectionListener updateDialogListener = new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                updateDialog();
+            }
+        };
 
         Label reportContextLabel = new Label(dialogContent, SWT.NONE);
         reportContextLabel.setText(Messages.ReportMetaDataContext);
@@ -164,25 +171,16 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         reportContextLabel.setLayoutData(reportNameLabelGd);
 
         reportContextCombo = new Combo(dialogContent, SWT.DROP_DOWN | SWT.READ_ONLY);
-        reportContextCombo.setItems(Arrays.stream(ReportContext.values()).map(ReportContext::prettyString)
-                .collect(Collectors.toList()).toArray(new String[ReportContext.values().length]));
+        reportContextCombo.setItems(Arrays.stream(ReportContext.values())
+                .map(ReportContext::prettyString).collect(Collectors.toList())
+                .toArray(new String[ReportContext.values().length]));
         GridData reportContextGd = new GridData();
         reportContextGd.horizontalAlignment = SWT.FILL;
         reportContextGd.verticalAlignment = SWT.TOP;
         reportContextGd.grabExcessHorizontalSpace = true;
         reportContextGd.horizontalSpan = 2;
         reportContextCombo.setLayoutData(reportContextGd);
-        reportContextCombo.addSelectionListener(new SelectionListener() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                getButton(IDialogConstants.OK_ID).setEnabled(true);
-            }
-
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
-                widgetSelected(e);
-            }
-        });
+        reportContextCombo.addSelectionListener(updateDialogListener);
 
         allowMultipleRootObjects = new Button(dialogContent, SWT.CHECK);
         allowMultipleRootObjects.setText(Messages.ReportDepositView_25);
@@ -191,6 +189,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         allowMultipleRootObjectsGd.grabExcessHorizontalSpace = false;
         allowMultipleRootObjectsGd.horizontalSpan = 3;
         allowMultipleRootObjects.setLayoutData(allowMultipleRootObjectsGd);
+        allowMultipleRootObjects.addSelectionListener(updateDialogListener);
 
         Composite checkboxComposite = new Composite(dialogContent, SWT.NONE);
         GridLayout formatLayout = new GridLayout(3, false);
@@ -220,27 +219,35 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
 
         outputTypePDFCheckbox = new Button(outputFormatGroup, SWT.CHECK);
         outputTypePDFCheckbox.setText(OutputFormat.PDF.toString());
+        outputTypePDFCheckbox.addSelectionListener(updateDialogListener);
 
         outputTypeHTMLCheckbox = new Button(outputFormatGroup, SWT.CHECK);
         outputTypeHTMLCheckbox.setText(OutputFormat.HTML.toString());
+        outputTypeHTMLCheckbox.addSelectionListener(updateDialogListener);
 
         outputTypeWordCheckbox = new Button(outputFormatGroup, SWT.CHECK);
         outputTypeWordCheckbox.setText(OutputFormat.DOC.toString());
+        outputTypeWordCheckbox.addSelectionListener(updateDialogListener);
 
         outputTypeODTCheckbox = new Button(outputFormatGroup, SWT.CHECK);
         outputTypeODTCheckbox.setText(OutputFormat.ODT.toString());
+        outputTypeODTCheckbox.addSelectionListener(updateDialogListener);
 
         outputTypeODSCheckbox = new Button(outputFormatGroup, SWT.CHECK);
         outputTypeODSCheckbox.setText(OutputFormat.ODS.toString());
+        outputTypeODSCheckbox.addSelectionListener(updateDialogListener);
 
         outputTypeExcelCheckbox = new Button(outputFormatGroup, SWT.CHECK);
         outputTypeExcelCheckbox.setText(OutputFormat.XLS.toString());
+        outputTypeExcelCheckbox.addSelectionListener(updateDialogListener);
 
         Label templateLabel = new Label(dialogContent, SWT.NONE);
         templateLabel.setText(Messages.ReportDepositView_3);
         templateLabel.setLayoutData(reportNameLabelGd);
 
         reportTemplateText = new Text(dialogContent, SWT.BORDER);
+        reportTemplateText.setEditable(false);// otherwise we would need to
+                                              // check if the file exist
         GridData reportTemplateTextGd = new GridData();
         reportTemplateTextGd.horizontalAlignment = SWT.FILL;
         reportTemplateTextGd.verticalAlignment = SWT.CENTER;
@@ -260,6 +267,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
             @Override
             public void widgetSelected(SelectionEvent event) {
                 selectTemplateFile();
+                updateDialog();
             }
         });
 
@@ -272,8 +280,6 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
 
     private void prepareEditMode() {
         reportName.setText(editTemplate.getOutputname());
-        reportName.addListener(SWT.CHANGED,
-                event -> getButton(IDialogConstants.OK_ID).setEnabled(true));
         outputTypePDFCheckbox = checkboxEditMode(outputTypePDFCheckbox, OutputFormat.PDF);
         outputTypeHTMLCheckbox = checkboxEditMode(outputTypeHTMLCheckbox, OutputFormat.HTML);
         outputTypeWordCheckbox = checkboxEditMode(outputTypeWordCheckbox, OutputFormat.DOC);
@@ -281,37 +287,18 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         outputTypeODSCheckbox = checkboxEditMode(outputTypeODSCheckbox, OutputFormat.ODS);
         outputTypeExcelCheckbox = checkboxEditMode(outputTypeExcelCheckbox, OutputFormat.XLS);
         reportTemplateText.setText(editTemplate.getFilename());
-        reportTemplateText.setEnabled(false);
         reportTemplateSelectButton.setEnabled(false);
         allowMultipleRootObjects.setSelection(editTemplate.isMultipleRootObjects());
-        allowMultipleRootObjects.addSelectionListener(new SelectionListener() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                getButton(IDialogConstants.OK_ID).setEnabled(true);
-            }
-
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
-                widgetSelected(e);
-            }
-        });
         reportContextCombo.setText(editTemplate.getContext().prettyString());
     }
 
     private Button checkboxEditMode(Button checkbox, OutputFormat format) {
         checkbox.setSelection(isOutputFormatPreSelected(format));
-        checkbox.addSelectionListener(getCheckBoxSelectionListener());
         return checkbox;
     }
 
     @Override
     protected void okPressed() {
-        if (!isAnyFormatSelected() || getReportOutputName() == null
-                || getSelectedDesginFile() == null
-                || reportContextCombo.getSelectionIndex() == -1) {
-            ExceptionUtil.log(new RuntimeException(), Messages.ReportDepositView_12);
-            return;
-        }
         if (isEditMode()) {
             updateTemplate();
         } else {
@@ -420,24 +407,51 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         return Arrays.asList(editTemplate.getOutputFormats()).contains(format);
     }
 
-    private SelectionListener getCheckBoxSelectionListener() {
-        if (checkBoxSelectionListener == null) {
-            checkBoxSelectionListener = new SelectionListener() {
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-                    getButton(IDialogConstants.OK_ID).setEnabled(true);
-                }
-
-                @Override
-                public void widgetDefaultSelected(SelectionEvent e) {
-                    widgetSelected(e);
-                }
-            };
-        }
-        return checkBoxSelectionListener;
-    }
-
     private IReportDepositService getReportService() {
         return ServiceFactory.lookupReportDepositService();
+    }
+
+    /**
+     * Update the dialog state after data change.
+     */
+    private void updateDialog() {
+        getButton(IDialogConstants.OK_ID).setEnabled(isDialogComplete());
+        if (isDialogComplete()) {
+            setErrorMessage(null);
+        } else {
+            setErrorMessage(buildErrorMessage());
+        }
+    }
+
+    private String buildErrorMessage() {
+        StringBuilder message = new StringBuilder(Messages.ReportDepositView_12);
+        if (!isAnyFormatSelected()) {
+            message.append(ERROR_MESSAGE_PREFIX);
+            message.append(Messages.AddReportToDepositDialog_4);
+        }
+        if (StringUtils.isEmpty(getSelectedDesginFile())) {
+            message.append(ERROR_MESSAGE_PREFIX);
+            message.append(Messages.AddReportToDepositDialog_5);
+        }
+        if (StringUtils.isEmpty(getReportOutputName())) {
+            message.append(ERROR_MESSAGE_PREFIX);
+            message.append(Messages.AddReportToDepositDialog_6);
+        }
+        if (reportContextCombo.getSelectionIndex() == -1) {
+            message.append(ERROR_MESSAGE_PREFIX);
+            message.append(Messages.AddReportToDepositDialog_7);
+        }
+        return message.toString();
+    }
+
+    /**
+     * Return true when a format, a design file, the context and an output is
+     * set. Therefore the template can be added and the dialog is ready to get
+     * finished.
+     */
+    private boolean isDialogComplete() {
+        return isAnyFormatSelected() && StringUtils.isNotEmpty(getSelectedDesginFile())
+                && StringUtils.isNotEmpty(getReportOutputName())
+                && reportContextCombo.getSelectionIndex() != -1;
     }
 }
