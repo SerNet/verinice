@@ -39,29 +39,29 @@ pipeline {
             parallel {
                 stage('Run UI tests on Linux') {
                     steps {
-                        runRCPTT 'rcptt-client-test', productsBuild.number, 'Linux', artifactFilterRcptt, "${outputDir}/gui-test-linux", 'GUI Test Report (Linux)'
+                        runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'Linux', artifactFilterRcptt, "${outputDir}/gui-test-linux", 'GUI Test Report (Linux)'
                     }
                 }
                 stage('Run UI tests on Mac') {
                     steps {
-                        runRCPTT 'rcptt-client-test', productsBuild.number, 'Mac OSX', artifactFilterRcptt, "${outputDir}/gui-test-mac", 'GUI Test Report (Mac OSX)'
+                        runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'Mac OSX', artifactFilterRcptt, "${outputDir}/gui-test-mac", 'GUI Test Report (Mac OSX)'
                     }
                 }
                 stage('Run UI tests on Windows') {
                     steps {
-                        runRCPTT 'rcptt-client-test', productsBuild.number, 'Windows 10', artifactFilterRcptt, "${outputDir}/gui-test-windows", 'GUI Test Report (Windows 10)'
+                        runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'Windows 10', artifactFilterRcptt, "${outputDir}/gui-test-windows", 'GUI Test Report (Windows 10)'
                     }
                 }
                 stage('Run 3-tier UI tests') {
                     steps {
-                        runRCPTT 'rcptt-server-test', productsBuild.number, null, artifactFilterRcptt, "${outputDir}/gui-test-3-tier", 'GUI Test Report (3-tier)'
+                        runRCPTT 'rcptt-server-test', branchName, jobName,  productsBuild.number, null, artifactFilterRcptt, "${outputDir}/gui-test-3-tier", 'GUI Test Report (3-tier)'
                     }
                 }
                 stage('Run reporting tests') {
                     steps {
                         script {
                             def target = "${outputDir}/reporting-all"
-                            runRCPTT 'rcptt-all-report-tests', productsBuild.number, null, 'test-result/**/*', target, null
+                            runRCPTT 'rcptt-all-report-tests', branchName, jobName, productsBuild.number, null, 'test-result/**/*', target, null
                             archiveArtifacts artifacts: "${target}/**/*"
                             createPerformancePlot("${target}/test-result/products_de/metric.csv", 'Product Reports')
                             createPerformancePlot("${target}/test-result/vn_de/metric.csv", 'Verinice Reports (DE)')
@@ -73,7 +73,7 @@ pipeline {
                     steps {
                         script {
                             def target = "${outputDir}/performance-test-standalone"
-                            runRCPTT 'rcptt-client-performance-test', productsBuild.number, null, artifactFilterRcptt, target, 'GUI Test Report (Performance Standalone)'
+                            runRCPTT 'rcptt-client-performance-test', branchName, jobName, productsBuild.number, null, artifactFilterRcptt, target, 'GUI Test Report (Performance Standalone)'
                             createPerformancePlot("${target}/gui-test-runner/result/metric.csv", 'Standalone')
                         }
                     }
@@ -82,7 +82,7 @@ pipeline {
                     steps {
                         script {
                             def target = "${outputDir}/performance-test-3-tier"
-                            runRCPTT 'rcptt-server-performance-test', productsBuild.number, null, artifactFilterRcptt, target, 'GUI Test Report (Performance 3-tier)'
+                            runRCPTT 'rcptt-server-performance-test', branchName, jobName, productsBuild.number, null, artifactFilterRcptt, target, 'GUI Test Report (Performance 3-tier)'
                             createPerformancePlot("${target}/gui-test-runner/result/metric.csv", '3-tier')
                         }
                     }
@@ -107,14 +107,14 @@ pipeline {
     }
 }
 
-def runRCPTT(jobName, buildNumberDevelop, operatingSystem, copyArtifactsFilter, resultDir, htmlReportName){
+def runRCPTT(jobName, branchName, jobNameArtifacts, buildNumberArtifacts, operatingSystem, copyArtifactsFilter, resultDir, htmlReportName){
     def rcpttBuild = build(
       job: jobName,
       propagate: false,
       parameters: [
         gitParameter(name: 'BRANCH_OR_TAG', value: branchName),
-        string(name: 'job_to_copy_from', value: jobName),
-        string(name: 'build_to_copy_from', value: """<SpecificBuildSelector plugin="copyartifact@1.45.1">  <buildNumber>${buildNumberDevelop}</buildNumber></SpecificBuildSelector>"""),
+        string(name: 'job_to_copy_from', value: jobNameArtifacts),
+        string(name: 'build_to_copy_from', value: """<SpecificBuildSelector plugin="copyartifact@1.45.1">  <buildNumber>${buildNumberArtifacts}</buildNumber></SpecificBuildSelector>"""),
         string(name: 'OPERATING_SYSTEM', value: operatingSystem)
       ]
     )
