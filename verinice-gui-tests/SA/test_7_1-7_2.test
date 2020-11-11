@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _gvil8MiBEeipUK6ek91lPA
-Runtime-Version: 2.4.1.201903190000
-Save-Time: 5/22/19 12:13 PM
+Runtime-Version: 2.5.1.M3
+Save-Time: 11/23/20, 10:04 AM
 Testcase-Type: ecl
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
@@ -18,10 +18,10 @@ log "test_7.1-7.2"
 with [get-view "Security Assessment"] {
     get-button "Erzeugt ein neues Security Assessment" | click
     get-tree 
-        | select "\\[Mein Unternehmen\\]/Audits/Security Assessment/Controls/15 Supplier Relationships/15.2 Überprüfung der von Lieferanten erbrachten Leistungen" 
+        | select "\\[Mein Unternehmen\\]/Audits/Security Assessment/Controls/6 Supplier Relationships/6.1 Supplier Relationships/6.1.1 Inwieweit wird die Informationssicherheit bei Auftragnehmern und Kooperat…" 
         | double-click
 }
-with [get-editor "15.2 Überprüfung de…" | get-section ""] {
+with [get-editor "6.1.1 Inwieweit wir…" | get-section ""] {
     get-editbox -after [get-label "Öffentlicher Kommentar"] | set-text Testing
     get-editbox -after [get-label "Privater Kommentar"] | set-text Tested
     with [get-editbox -after [get-label "Maßnahmen"]] {
@@ -32,7 +32,7 @@ with [get-editor "15.2 Überprüfung de…" | get-section ""] {
 
 
 with [get-view "Security Assessment" | get-tree] {
-    select "[Mein Unternehmen]/Audits/Security Assessment/Controls/12 Operations Security" "[Mein Unternehmen]/Audits/Security Assessment/Controls/9 Access Control"
+    select "[Mein Unternehmen]/Audits/Security Assessment/Controls/5 IT Security \\/ Cyber Security" "[Mein Unternehmen]/Audits/Security Assessment/Controls/4 Identity and Access Management"
     get-menu -path "Konsolidieren..." | click
 }
 with [get-window Konsolidierung] {
