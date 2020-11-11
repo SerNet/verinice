@@ -67,6 +67,7 @@ pipeline {
                 script {
                     def portDatabase = "549${env.EXECUTOR_NUMBER}"
                     def portTomcat = "809${env.EXECUTOR_NUMBER}"
+                    def portTomcatShutdown = "819${env.EXECUTOR_NUMBER}"
                     def skipTags = ['skipExecution', 'clientOnlyTest']
                     if (!params.runPerformanceTests){
 	                    skipTags << 'performance'
@@ -97,7 +98,8 @@ pipeline {
                                      -Dserver-database-url=jdbc:postgresql://127.0.0.1:${portDatabase}/verinicedb \
                                      -Dtomcat-dir=${WORKSPACE}/apache-tomcat-${params.TOMCAT_VERSION} \
                                      -Dwar-file=veriniceserver.war \
-                                     -Dserver-port=${portTomcat}
+                                     -Dserver-port=${portTomcat} \
+                                     -Dserver-shutdown-port=${portTomcatShutdown}
                                      """
                                 }
                             }

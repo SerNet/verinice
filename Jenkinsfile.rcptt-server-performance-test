@@ -58,6 +58,7 @@ pipeline {
                 script {
                     def portDatabase = "559${env.EXECUTOR_NUMBER}"
                     def portTomcat = "803${env.EXECUTOR_NUMBER}"
+                    def portTomcatShutdown = "813${env.EXECUTOR_NUMBER}"
                     if (params.monitor_server){
                         env.MELODY_TOOL_PATH = 'gui-test-runner/etc/melody'
                     }
@@ -81,7 +82,8 @@ pipeline {
                                      -Dserver-database-url=jdbc:postgresql://127.0.0.1:${portDatabase}/verinicedb \
                                      -Dtomcat-dir=${WORKSPACE}/apache-tomcat-${params.TOMCAT_VERSION} \
                                      -Dwar-file=veriniceserver.war \
-                                     -Dserver-port=${portTomcat}
+                                     -Dserver-port=${portTomcat} \
+                                     -Dserver-shutdown-port=${portTomcatShutdown}
                                      """
                                 }
                             }
