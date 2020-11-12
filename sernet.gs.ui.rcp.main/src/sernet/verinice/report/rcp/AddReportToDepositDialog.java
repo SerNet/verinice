@@ -21,7 +21,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Locale;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -48,6 +51,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -55,6 +59,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
 import sernet.verinice.interfaces.ReportDepositException;
+import sernet.verinice.interfaces.ReportTemplateServiceException;
 import sernet.verinice.model.report.FileMetaData;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.model.report.ReportTemplateMetaData.ReportContext;
@@ -79,7 +84,6 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     private Button outputTypeExcelCheckbox;
 
     private Text reportTemplateText;
-    private Button reportTemplateSelectButton;
 
     private static final int SIZE_X = 150;
     private static final int SIZE_Y = 500;
@@ -90,6 +94,10 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     private ReportTemplateMetaData editTemplate;
 
     private Button allowMultipleRootObjects;
+
+    private boolean reportTemplateFilenameChanged = false;
+
+    private Map<String, ReportTemplateMetaData> templateNames = Collections.emptyMap();
 
     /**
      * @param parentShell
@@ -125,6 +133,13 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
+        try {
+            templateNames = getReportService().getReportTemplates(Locale.getDefault()).stream()
+                    .collect(Collectors.toMap(ReportTemplateMetaData::getFilename, Function.identity()));
+        } catch (ReportTemplateServiceException e) {
+            throw new RuntimeCommandException("report service not avalable");//$NON-NLS-1$
+        }
+
         setTitle(isEditMode() ? Messages.ReportDepositView_17 : Messages.ReportDepositView_5);
         setMessage(isEditMode() ? Messages.ReportDepositView_18 : Messages.ReportDepositView_7);
 
@@ -255,7 +270,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         reportTemplateTextGd.horizontalSpan = 1;
         reportTemplateText.setLayoutData(reportTemplateTextGd);
 
-        reportTemplateSelectButton = new Button(dialogContent, SWT.PUSH);
+        Button reportTemplateSelectButton = new Button(dialogContent, SWT.PUSH);
         GridData selectButtonGd = new GridData();
         gdRadio.horizontalAlignment = SWT.RIGHT;
         gdRadio.verticalAlignment = SWT.TOP;
@@ -267,6 +282,8 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
             @Override
             public void widgetSelected(SelectionEvent event) {
                 selectTemplateFile();
+                reportTemplateFilenameChanged = editTemplate == null
+                        || !editTemplate.getFilename().equals(getSelectedDesignFileName());
                 updateDialog();
             }
         });
@@ -287,7 +304,6 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         outputTypeODSCheckbox = checkboxEditMode(outputTypeODSCheckbox, OutputFormat.ODS);
         outputTypeExcelCheckbox = checkboxEditMode(outputTypeExcelCheckbox, OutputFormat.XLS);
         reportTemplateText.setText(editTemplate.getFilename());
-        reportTemplateSelectButton.setEnabled(false);
         allowMultipleRootObjects.setSelection(editTemplate.isMultipleRootObjects());
         reportContextCombo.setText(editTemplate.getContext().prettyString());
     }
@@ -309,31 +325,41 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
 
     private void updateTemplate() {
         try {
-            FileMetaData fileMetaDAta = new FileMetaData(
-                    FilenameUtils.getName(getSelectedDesginFile()), null);
-
-            ReportTemplateMetaData metaData = new ReportTemplateMetaData(fileMetaDAta,
+            FileMetaData fileMetaData = new FileMetaData(getSelectedDesignFileName(), null);
+            ReportTemplateMetaData newMetaData = new ReportTemplateMetaData(fileMetaData,
                     getReportOutputName(), getReportOutputFormats(), true,
                     allowMultipleRootObjects.getSelection(), getContext());
-            getReportService().update(metaData, Locale.getDefault());
+            if (reportTemplateFilenameChanged) {
+                byte[] rptDesignFile = FileUtils
+                        .readFileToByteArray(new File(getSelectedDesginFile()));
+                getReportService().update(editTemplate, rptDesignFile, newMetaData,
+                        Locale.getDefault());
+            } else {
+                getReportService().update(newMetaData, Locale.getDefault());
+            }
         } catch (ReportDepositException e) {
             LOG.error("Error while updating report template file", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.ReportDepositView_23);
+        } catch (IOException e) {
+            LOG.error("Error while accessing the template file", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.AddReportToDepositDialog_0);
         }
     }
 
     private void addTemplate() {
         try {
             byte[] rptDesignFile = FileUtils.readFileToByteArray(new File(getSelectedDesginFile()));
-            FileMetaData fileMetaData = new FileMetaData(
-                    FilenameUtils.getName(getSelectedDesginFile()), null);
+            FileMetaData fileMetaData = new FileMetaData(getSelectedDesignFileName(), null);
             ReportTemplateMetaData metaData = new ReportTemplateMetaData(fileMetaData,
                     getReportOutputName(), getReportOutputFormats(), true,
                     allowMultipleRootObjects.getSelection(), getContext());
             getReportService().add(metaData, rptDesignFile, Locale.getDefault());
-        } catch (IOException | ReportDepositException e) {
+        } catch (ReportDepositException e) {
             LOG.error("Error while adding new report template file", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.AddReportToDepositDialog_3);
+        } catch (IOException e) {
+            LOG.error("Error while accessing the template file", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.AddReportToDepositDialog_0);
         }
     }
 
@@ -354,12 +380,15 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
             if (reportName.getText() == null || reportName.getText().isEmpty()) {
                 reportName.setText(StringUtils.capitalize(FilenameUtils.getBaseName(fn)));
             }
-            getButton(IDialogConstants.OK_ID).setEnabled(true);
         }
     }
 
     private String getSelectedDesginFile() {
         return reportTemplateText.getText();
+    }
+
+    private String getSelectedDesignFileName() {
+        return FilenameUtils.getName(getSelectedDesginFile());
     }
 
     private String getReportOutputName() {
@@ -415,20 +444,20 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
      * Update the dialog state after data change.
      */
     private void updateDialog() {
-        getButton(IDialogConstants.OK_ID).setEnabled(isDialogComplete());
-        if (isDialogComplete()) {
-            setErrorMessage(null);
-        } else {
-            setErrorMessage(buildErrorMessage());
-        }
+        String errorMessage = buildErrorMessage();
+        setErrorMessage(errorMessage);
+        getButton(IDialogConstants.OK_ID).setEnabled(errorMessage == null);
     }
-
+    /**
+     * Build the error message, return null when the dialog contains no errors.
+     */
     private String buildErrorMessage() {
-        StringBuilder message = new StringBuilder(Messages.ReportDepositView_12);
-        if (!isAnyFormatSelected()) {
-            message.append(ERROR_MESSAGE_PREFIX);
-            message.append(Messages.AddReportToDepositDialog_4);
+        if (!templateExistRemote()) {
+            ReportTemplateMetaData reportTemplateMetaData = templateNames.get(getSelectedDesignFileName());
+            return String.format(Messages.AddReportToDepositDialog_1,
+                    reportTemplateMetaData.getFilename());
         }
+        StringBuilder message = new StringBuilder();
         if (StringUtils.isEmpty(getSelectedDesginFile())) {
             message.append(ERROR_MESSAGE_PREFIX);
             message.append(Messages.AddReportToDepositDialog_5);
@@ -441,17 +470,23 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
             message.append(ERROR_MESSAGE_PREFIX);
             message.append(Messages.AddReportToDepositDialog_7);
         }
-        return message.toString();
+        if (!isAnyFormatSelected()) {
+            message.append(ERROR_MESSAGE_PREFIX);
+            message.append(Messages.AddReportToDepositDialog_4);
+        }
+        if(message.length()==0) {
+            return null;
+        }
+        return Messages.ReportDepositView_12 + message.toString();
     }
 
-    /**
-     * Return true when a format, a design file, the context and an output is
-     * set. Therefore the template can be added and the dialog is ready to get
-     * finished.
-     */
-    private boolean isDialogComplete() {
-        return isAnyFormatSelected() && StringUtils.isNotEmpty(getSelectedDesginFile())
-                && StringUtils.isNotEmpty(getReportOutputName())
-                && reportContextCombo.getSelectionIndex() != -1;
+    private boolean templateExistRemote() {
+        String selectedDesginFile = getSelectedDesignFileName();
+        if (isEditMode()) {
+            return !templateNames.keySet().contains(selectedDesginFile)
+                    || !reportTemplateFilenameChanged;
+        } else {
+            return !templateNames.keySet().contains(selectedDesginFile);
+        }
     }
 }

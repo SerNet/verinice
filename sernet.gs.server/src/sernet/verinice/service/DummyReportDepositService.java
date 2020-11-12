@@ -49,6 +49,11 @@ public class DummyReportDepositService extends AbstractReportTemplateService
     }
 
     @Override
+    public void update(ReportTemplateMetaData oldMetadata, byte[] file,
+            ReportTemplateMetaData newMetadata, Locale locale) {
+    }
+
+    @Override
     protected boolean isHandeledByReportDeposit() {
         return true;
     }

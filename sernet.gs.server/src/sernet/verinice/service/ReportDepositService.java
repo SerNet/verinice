@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -42,7 +44,6 @@ public class ReportDepositService extends AbstractReportTemplateService
     private static final Logger LOG = Logger.getLogger(ReportDepositService.class);
 
     private Resource reportDeposit;
-
     private ReportDepositService() {
     }
 
@@ -50,6 +51,7 @@ public class ReportDepositService extends AbstractReportTemplateService
     public void add(ReportTemplateMetaData metadata, byte[] file, Locale locale)
             throws ReportDepositException {
         try {
+            lock.writeLock().lock();
             File reportFileToStore = new File(reportDeposit.getFile(),
                     FilenameUtils.getName(metadata.getFilename()));
             FileUtils.writeByteArrayToFile(reportFileToStore, file);
@@ -58,6 +60,8 @@ public class ReportDepositService extends AbstractReportTemplateService
         } catch (IOException ex) {
             LOG.error("problems while adding report", ex);
             throw new ReportDepositException(ex);
+        } finally {
+            lock.writeLock().unlock();
         }
     }
 
@@ -65,7 +69,9 @@ public class ReportDepositService extends AbstractReportTemplateService
     public void remove(ReportTemplateMetaData metadata, Locale locale)
             throws ReportDepositException {
         try {
-            File propertiesFilename = PropertiesFileUtil.getPropertiesFile(new File(metadata.getFilename()), locale);
+            lock.writeLock().lock();
+            File propertiesFilename = PropertiesFileUtil
+                    .getPropertiesFile(new File(metadata.getFilename()), locale);
             File depositDir = reportDeposit.getFile();
 
             File propFile = new File(depositDir, propertiesFilename.getPath());
@@ -76,12 +82,19 @@ public class ReportDepositService extends AbstractReportTemplateService
 
         } catch (IOException ex) {
             throw new ReportDepositException(ex);
+        } finally {
+            lock.writeLock().unlock();
         }
     }
 
     private void deleteFile(File rptFile) throws IOException {
-        if (rptFile.exists()) {
-            Files.delete(rptFile.toPath());
+        try {
+            lock.writeLock().lock();
+            if (rptFile.exists()) {
+                Files.delete(rptFile.toPath());
+            }
+        } finally {
+            lock.writeLock().unlock();
         }
     }
 
@@ -94,19 +107,34 @@ public class ReportDepositService extends AbstractReportTemplateService
     }
 
     @Override
+    public void update(ReportTemplateMetaData oldMetadata, byte[] file,
+            ReportTemplateMetaData newMetadata, Locale locale) throws ReportDepositException {
+        try {
+            lock.writeLock().lock();
+            remove(oldMetadata, locale);
+            add(newMetadata, file, locale);
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
+    @Override
     public void update(ReportTemplateMetaData metadata, Locale locale)
             throws ReportDepositException {
         try {
+            lock.writeLock().lock();
             updateSafe(metadata, locale);
         } catch (IOException ex) {
             throw new ReportDepositException(ex);
+        } finally {
+            lock.writeLock().unlock();
         }
     }
 
     private void updateSafe(ReportTemplateMetaData metadata, Locale locale)
-            throws IOException, ReportDepositException {
-        File propertiesFile = PropertiesFileUtil.getPropertiesFile(new File(getTemplateDirectory(), metadata.getFilename()),
-                locale);
+            throws IOException {
+        File propertiesFile = PropertiesFileUtil.getPropertiesFile(
+                new File(getTemplateDirectory(), metadata.getFilename()), locale);
         if (propertiesFile.exists()) {
 
             Properties props = parseAndExtendMetaData(propertiesFile, locale);
@@ -132,9 +160,9 @@ public class ReportDepositService extends AbstractReportTemplateService
             LOG.debug("writing properties for " + properties.getProperty(PROPERTIES_FILENAME)
                     + " to " + path);
         }
-        FileOutputStream fos = new FileOutputStream(path);
-        properties.store(fos, comment);
-        fos.close();
+        try (FileOutputStream fos = new FileOutputStream(path)) {
+            properties.store(fos, comment);
+        }
     }
 
     private Properties convertToProperties(ReportTemplateMetaData metaData) {

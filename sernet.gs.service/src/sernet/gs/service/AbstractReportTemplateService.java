@@ -35,6 +35,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -87,6 +88,7 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
     private static final Logger logger = Logger.getLogger(AbstractReportTemplateService.class);
     private static final Pattern PROPERTIES_FILENAME_LOCALE_PATTERN = Pattern
             .compile("_([a-z]{2})\\.properties$");
+    protected final ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
 
     protected abstract boolean isHandeledByReportDeposit();
 
@@ -100,9 +102,9 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
     protected Properties parseAndExtendMetaData(File rptDesign, Locale locale) throws IOException {
         File propFile = PropertiesFileUtil.getPropertiesFile(rptDesign, locale);
         Properties props = new Properties();
-        FileInputStream fis = new FileInputStream(propFile.getAbsoluteFile());
-        props.load(fis);
-        fis.close();
+        try (FileInputStream fis = new FileInputStream(propFile.getAbsoluteFile())) {
+            props.load(fis);
+        }
 
         String fileName = FilenameUtils.getName(rptDesign.getPath());
         boolean changed = false;
@@ -121,36 +123,30 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
         }
 
         if (changed) {
-            OutputStream out = new FileOutputStream(propFile.getAbsoluteFile());
-            props.store(out, String.format("Metadata for the report deposit %s",
-                    FilenameUtils.getName(rptDesign.getPath())));
+            try (OutputStream out = new FileOutputStream(propFile.getAbsoluteFile())) {
+                props.store(out, String.format("Metadata for the report deposit %s",
+                        FilenameUtils.getName(rptDesign.getPath())));
+            }
         }
 
         return props;
     }
 
-    public void parseAndExtendMetaData(String[] rptDesignFiles, Locale locale) throws IOException {
-        for (String rptDesignFile : rptDesignFiles) {
-            parseAndExtendMetaData(new File(rptDesignFile), locale);
-        }
-    }
-
-    private Properties createDefaultProperties(File path, String name, Locale locale)
-            throws IOException, PropertyFileExistsException {
-        File propFile = PropertiesFileUtil.getPropertiesFile(path, locale);
-        if (propFile.exists()) {
-            throw new PropertyFileExistsException();
-        } else {
-            Properties props = getDefaultProperties(name);
-            FileOutputStream fos = new FileOutputStream(propFile);
-
+private Properties createDefaultProperties(File path, String name, Locale locale)
+        throws IOException, PropertyFileExistsException {
+    File propFile = PropertiesFileUtil.getPropertiesFile(path, locale);
+    if (propFile.exists()) {
+        throw new PropertyFileExistsException();
+    } else {
+        Properties props = getDefaultProperties(name);
+        try (FileOutputStream fos = new FileOutputStream(propFile)) {
             props.store(fos, "Default Properties for verinice-" + "Report " + name
                     + "\nauto-generated content");
-            fos.close();
-            return props;
         }
-
+        return props;
     }
+
+}
 
     private Properties getDefaultProperties(String name) {
         Properties props = new Properties();
@@ -162,7 +158,7 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
 
     private ReportTemplateMetaData createReportMetaData(Properties props) throws IOException {
         String outputformatsString = props
-                .getProperty(IReportDepositService.PROPERTIES_OUTPUTFORMATS);
+                .getProperty(PROPERTIES_OUTPUTFORMATS);
         StringTokenizer tokenizer = new StringTokenizer(outputformatsString, ",");
         ArrayList<OutputFormat> formats = new ArrayList<>(tokenizer.countTokens());
         while (tokenizer.hasMoreTokens()) {
@@ -170,14 +166,14 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
             formats.add(OutputFormat.valueOf(token.toUpperCase()));
         }
 
-        String fileName = props.getProperty(IReportDepositService.PROPERTIES_FILENAME);
+        String fileName = props.getProperty(PROPERTIES_FILENAME);
         String md5CheckSum = getCheckSum(fileName);
         FileMetaData fileMetaData = new FileMetaData(fileName, md5CheckSum);
-        String outputName = props.getProperty(IReportDepositService.PROPERTIES_OUTPUTNAME);
-        String context = props.getProperty(IReportDepositService.PROPERTIES_CONTEXT);
+        String outputName = props.getProperty(PROPERTIES_OUTPUTNAME);
+        String context = props.getProperty(PROPERTIES_CONTEXT);
         OutputFormat[] outputFormats = formats.toArray(new OutputFormat[formats.size()]);
         boolean multipleRootObjects = Boolean.parseBoolean(
-                props.getProperty(IReportDepositService.PROPERTIES_MULTIPLE_ROOT_OBJECTS, "false"));
+                props.getProperty(PROPERTIES_MULTIPLE_ROOT_OBJECTS, "false"));
 
         return new ReportTemplateMetaData(fileMetaData, outputName, outputFormats,
                 isHandeledByReportDeposit(), multipleRootObjects,
@@ -216,16 +212,21 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
     @Override
     public Set<ReportTemplateMetaData> getReportTemplates(Locale locale)
             throws ReportTemplateServiceException {
-        Set<ReportTemplateMetaData> set = new HashSet<>();
+        try {
+            lock.readLock().lock();
+            Set<ReportTemplateMetaData> set = new HashSet<>();
 
-        for (String designFilePath : getReportTemplateFileNames()) {
-            set.add(toMeta(new File(designFilePath), locale));
+            for (String designFilePath : getReportTemplateFileNames()) {
+                set.add(toMeta(new File(designFilePath), locale));
+            }
+            return set;
+        } finally {
+            lock.readLock().unlock();
         }
-        return set;
     }
 
     @SuppressWarnings({ "unchecked" })
-    public String[] getReportTemplateFileNames() {
+    private String[] getReportTemplateFileNames() {
         List<String> list = new ArrayList<>();
         IOFileFilter filter = new SuffixFileFilter("rptdesign", IOCase.INSENSITIVE);
         Iterator<File> iter = FileUtils.iterateFiles(new File(getTemplateDirectory()), filter,
@@ -273,10 +274,13 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
     @Override
     public byte[] readResource(String filename) throws ReportTemplateServiceException {
         try {
+            lock.readLock().lock();
             String filePath = getTemplateDirectory() + File.separatorChar + filename;
             return FileUtils.readFileToByteArray(new File(filePath));
         } catch (IOException ex) {
             handleException("error while fetching file", ex);
+        } finally {
+            lock.readLock().unlock();
         }
 
         return null;
@@ -284,18 +288,28 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
 
     @Override
     public Set<FileMetaData> getAllResources() {
-        return toMeta(getAllResourceFilenames());
+        try {
+            lock.readLock().lock();
+            return toMeta(getAllResourceFilenames());
+        } finally {
+            lock.readLock().unlock();
+        }
     }
 
     @Override
     public Set<FileMetaData> getAllResources(Locale locale) {
-        return toMeta(getAllResourceFilenames().filter(filename -> {
-            Matcher matcher = PROPERTIES_FILENAME_LOCALE_PATTERN.matcher(filename);
-            if (matcher.find()) {
-                return matcher.group(1).equals(locale.getLanguage());
-            }
-            return true;
-        }));
+        try {
+            lock.readLock().lock();
+            return toMeta(getAllResourceFilenames().filter(filename -> {
+                Matcher matcher = PROPERTIES_FILENAME_LOCALE_PATTERN.matcher(filename);
+                if (matcher.find()) {
+                    return matcher.group(1).equals(locale.getLanguage());
+                }
+                return true;
+            }));
+        } finally {
+            lock.readLock().unlock();
+        }
     }
 
     private ReportTemplateMetaData toMeta(File rptDesign, Locale locale)

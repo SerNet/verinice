@@ -37,4 +37,7 @@ public interface IReportDepositService extends IReportTemplateService {
 
     void update(ReportTemplateMetaData metadata, Locale locale) throws ReportDepositException;
 
+    void update(ReportTemplateMetaData oldMetadata, byte[] file, ReportTemplateMetaData newMetadata,
+            Locale locale) throws ReportDepositException;
+
 }
