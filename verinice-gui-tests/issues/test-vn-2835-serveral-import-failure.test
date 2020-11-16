@@ -1,0 +1,59 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _lGnj8Ix1Eei2UKUDmonytQ,_4GRncI0bEei2UKUDmonytQ,_kD9CUIxPEei2UKUDmonytQ
+Element-Name: test-vn-2835-serveral-import-failure
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: https://jira.sernet.private/browse/VN-2835
+Id: _YMoT8CJ7EeuxFrvd53zLWQ
+Runtime-Version: 2.5.1.M3
+Save-Time: 11/17/20, 11:46 AM
+Tags: issue
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Import vna and get failures.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+
+proc "file-from-data-dir" [val filename] {
+     concat $datadir [get-java-property "file.separator"] $filename
+}
+
+// import VN-2835.vna then VN-2835-changed.vna and VN-2835-changed.vna again
+bp-import-vna "VN-2835.vna"
+wait-for-import  "Modernisierter IT-Grundschutz" "importierte Objekte/read-only user-default-group [transfer]"
+    
+bp-import-vna "VN-2835-changed.vna"
+wait-for-import  "Modernisierter IT-Grundschutz" "importierte Objekte/LAZY read-only user-default-group [transfer]"
+
+bp-import-vna "VN-2835-changed.vna"
+wait-for-import  "Modernisierter IT-Grundschutz" "importierte Objekte/LAZY read-only user-default-group [transfer]"
+
+delete-bpelement "importierte Objekte/LAZY read-only user-default-group [transfer]"
+
+// import VN-2835-changed.vna then VN-2835.vna
+bp-import-vna "VN-2835-changed.vna"
+wait-for-import  "Modernisierter IT-Grundschutz" "importierte Objekte/LAZY read-only user-default-group [transfer]"
+bp-import-vna "VN-2835.vna"
+wait-for-import  "Modernisierter IT-Grundschutz" "importierte Objekte/read-only user-default-group [transfer]"
+
+delete-bpelement "importierte Objekte/read-only user-default-group [transfer]" 
+
+log "now importing simply two times"
+// import two time the same vna
+bp-import-vna "VN-2835-changed.vna"
+wait-for-import  "Modernisierter IT-Grundschutz" "importierte Objekte/LAZY read-only user-default-group [transfer]"
+bp-import-vna "VN-2835-changed.vna"
+wait-for-import  "Modernisierter IT-Grundschutz" "importierte Objekte/LAZY read-only user-default-group [transfer]"
+
+delete-bpelement "importierte Objekte/LAZY read-only user-default-group [transfer]"
+
+log  "test end"
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
