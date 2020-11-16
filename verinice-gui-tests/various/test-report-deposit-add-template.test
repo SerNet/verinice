@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: https://jira.sernet.private/browse/VN-2829
 Id: _ytjJsCKCEeuxFrvd53zLWQ
 Runtime-Version: 2.5.1.M3
-Save-Time: 11/11/20, 12:05 PM
+Save-Time: 11/16/20, 12:52 PM
 Tags: ISO, serverOnlyTest
 Testcase-Type: ecl
 Verifications: _wm5P0CtBEeuMltfUUtdvug
@@ -23,6 +23,8 @@ This test adds a new report template to the report deposit.
 Content-Type: text/ecl
 Entry-Name: .content
 
+global [val newFilename "my-test-report.rptdesign"]
+
 proc "verify-and-delete" {
 	get-view "Report-Ablage" | get-table | select "my test report"
 	with [get-view "Report-Ablage" | get-table] {
@@ -30,7 +32,7 @@ proc "verify-and-delete" {
 	    get-item -path "my test report" | get-property "columns[0]" | equals "my test report" | verify-true
 	    get-item -path "my test report" | get-property "columns[1]" | equals "ISM-DS" | verify-true
 	    get-item -path "my test report" | get-property "columns[2]" | equals PDF | verify-true
-	    get-item -path "my test report" | get-property "columns[3]" | equals "Abhaengigkeiten.rptdesign" | verify-true
+	    get-item -path "my test report" | get-property "columns[3]" | equals $newFilename | verify-true
 	}
 	
 	with [get-view "Report-Ablage"] {
@@ -67,7 +69,7 @@ get-window "Neuen Report hinzufügen ..." | get-group Ausgabeformate | get-butto
 get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals false | verify-true
 screen-shot "Neuen Report hinzufügen ..." "add_report_4.png"
 //template file
-set-dialog-result File [file-in-dir $datadir  "Abhaengigkeiten.rptdesign" ]
+set-dialog-result File [file-in-dir $datadir  $newFilename ]
 get-window "Neuen Report hinzufügen ..." | get-button "Auswählen" | click 
 get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals true | verify-true
 screen-shot "Neuen Report hinzufügen ..." "add_report_5.png"
@@ -84,7 +86,7 @@ get-window "Neuen Report hinzufügen ..." | get-combo -after [get-label Kontext]
 get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals false | verify-true
 screen-shot "Neuen Report hinzufügen ..." "add_report_kontext-file-name-out-2.png"
 //template file
-set-dialog-result File [file-in-dir $datadir  "Abhaengigkeiten.rptdesign" ]
+set-dialog-result File [file-in-dir $datadir  $newFilename ]
 get-window "Neuen Report hinzufügen ..." | get-button "Auswählen" | click 
 get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals false | verify-true
 screen-shot "Neuen Report hinzufügen ..." "add_report_kontext-file-name-out-3.png"
@@ -108,7 +110,7 @@ verify-and-delete
 start-add-template-dialog "file-name-out-kontext"
 // provide all infos, expect speicher aktive at the end -> file,name,out,kontext
 //template file
-set-dialog-result File [file-in-dir $datadir  "Abhaengigkeiten.rptdesign" ]
+set-dialog-result File [file-in-dir $datadir  $newFilename ]
 get-window "Neuen Report hinzufügen ..." | get-button "Auswählen" | click 
 get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals false | verify-true
 screen-shot "Neuen Report hinzufügen ..." "add_report_file-name-out-kontext-2.png"
@@ -136,7 +138,7 @@ verify-and-delete
 start-add-template-dialog "file-name-kontext-out"
 // provide all infos, expect speicher aktive at the end -> file,name,kontext,out
 //template file
-set-dialog-result File [file-in-dir $datadir  "Abhaengigkeiten.rptdesign" ]
+set-dialog-result File [file-in-dir $datadir  $newFilename ]
 get-window "Neuen Report hinzufügen ..." | get-button "Auswählen" | click 
 get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals false | verify-true
 screen-shot "Neuen Report hinzufügen ..." "add_report_file-name-kontext-out-2.png"

@@ -1,36 +1,47 @@
 --- RCPTT testcase ---
 Format-Version: 1.0
 Contexts: _HQDeEI9NEeic2YXgdvyDUQ,_lGnj8Ix1Eei2UKUDmonytQ,_mCQwkI9ZEeic2YXgdvyDUQ
-Element-Name: test-report-deposit
+Element-Name: test-report-deposit-update-template
 Element-Type: testcase
 Element-Version: 3.0
 External-Reference: https://bob.sernet.private:8443/job/verinice/job/develop/504/artifact/doc/manual/en/verinice-user_manual_EN.pdf#section.14.4
-Id: _uxb4QCJoEeuxFrvd53zLWA
+Id: _uxb4QCJoEeuxFrvd53zLWC
 Runtime-Version: 2.5.1.M3
-Save-Time: 8/12/21, 12:58 PM
+Save-Time: 8/12/21, 12:51 PM
 Tags: ISO, serverOnlyTest
 Testcase-Type: ecl
-Verifications: _wm5P0CtBEeuMltfUUtdvug
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
 Content-Type: text/plain
 Entry-Name: .description
 
-Test the basic functionality of the report deposit, like viewing the list of templates and modifying their properties.
+Test the update functionality of the report deposit.
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
 Content-Type: text/ecl
 Entry-Name: .content
 
-global [val reportName "ITGS: A.2 Schutzbedarfsfeststellung"]
+global [val reportName "ITGS: A.1 Strukturanalyse"]
        [val propertiesFileUrl
            [ uri-from-path [concat $basedir [get-java-property "file.separator"]
                            "wrks" [get-java-property "file.separator"]
                            "aut-server-workspace-" [get-java-property "file.separator"]
                            "report_templates_remote" [get-java-property "file.separator"]
-                           "bp-A2-schutzbedarfszuordnung_de.properties" ]
+                           "bp-A1-structural-analysis_de.properties" ]
            ]
        ]
+       [val reportFileUrl
+           [ uri-from-path [concat $basedir [get-java-property "file.separator"]
+                           "wrks" [get-java-property "file.separator"]
+                           "aut-server-workspace-" [get-java-property "file.separator"]
+                           "report_templates_remote" [get-java-property "file.separator"]
+                           "bp-A1-structural-analysis.rptdesign" ]
+           ]
+       ]
+       [val newReportFileUrl
+           [ uri-from-data-dir "Abhaengigkeiten.rptdesign"]
+       ]
+       
 
 proc "verify-out-format-true" [val formatName]{
     with [get-window "Report editieren"] {
@@ -44,7 +55,7 @@ proc "verify-out-format-true" [val formatName]{
     }
 }
 
-log "report deposit start"
+log "report-deposit-update-templatet"
 
 get-button "Report-Ablage" | click
 get-view "Report-Ablage" | get-table | select $reportName | double-click
@@ -59,7 +70,7 @@ with [get-window "Report editieren"] {
     with [get-editbox -after [get-label "Template-Datei"]] {
         get-property readOnly | equals true | verify-true
         get-property enablement | equals true | verify-true
-        get-property text | equals "bp-A2-schutzbedarfszuordnung.rptdesign" | verify-true
+        get-property text | equals "bp-A1-structural-analysis.rptdesign" | verify-true
     }
     with [get-editbox -after [get-label "Report-Name"]] {
         get-property enablement | equals true | verify-true
@@ -80,6 +91,8 @@ with [get-window "Report editieren"] {
     close
 }
 
+log $propertiesFileUrl
+read-lines -uri $propertiesFileUrl | log
 read-properties $propertiesFileUrl | each [val v] [val k] {
     log [concat $k " = " $v ]
 }
@@ -90,8 +103,9 @@ with [get-window "Report editieren"] {
     with [get-group Ausgabeformate] {
         get-button XLS | uncheck
         get-button DOC | uncheck
+        get-button ODS | check
     }
-    get-button Speichern | click -metaKeys ""
+    get-button Speichern | click 
 }
 
 log "output format changed"
@@ -135,5 +149,44 @@ get-view "Report-Ablage" | get-button Aktualisieren | click
 //check the property
 read-properties $propertiesFileUrl | get "context" | eq "UNSPECIFIED" | assert-true
 
-log "report deposit end"
+//change the report to an existing report
+get-button "Report-Ablage" | click
+get-view "Report-Ablage" | get-table | select $reportName | double-click
+
+set-dialog-result File $newReportFileUrl
+get-window "Report editieren" | get-button "Auswählen" | click 
+with [get-window "Report editieren"] {
+    get-button Speichern | get-property enablement | equals false | verify-true
+    get-editbox -after [get-label "Report editieren"] | get-property text 
+        | equals "Report-Template existiert als 'Abhaengigkeiten.rptdesign' auf dem Server, bitte wählen Sie eine andere Datei." | verify-true
+}
+screen-shot "Report editieren" "add_report_file-error-exist.png"
+// and now back to the old name, and change the values back
+set-dialog-result File $reportFileUrl
+with [get-window "Report editieren"] {
+    get-button "Auswählen" | click 
+    get-button Speichern | get-property enablement | equals true | verify-true
+    with [get-group Ausgabeformate] {
+        get-button DOC | check
+        get-button ODS | uncheck
+    }
+    get-combo -after [get-label Kontext] | select ITGS
+    get-button Speichern | click 
+}
+//now check the view
+with [get-view "Report-Ablage" | get-table] {
+    get-item -path "ITGS: A.1 Strukturanalyse" | get-property "columns[0]" | equals "ITGS: A.1 Strukturanalyse" 
+        | verify-true
+    get-item -path "ITGS: A.1 Strukturanalyse" | get-property "columns[1]" | equals ITGS | verify-true
+    get-item -path "ITGS: A.1 Strukturanalyse" | get-property "columns[2]" | equals "HTML, DOC, PDF, ODT" | verify-true
+    get-item -path "ITGS: A.1 Strukturanalyse" | get-property "columns[3]" 
+        | equals "bp-A1-structural-analysis.rptdesign" | verify-true
+}
+//and the property file
+read-properties $propertiesFileUrl | each [val v] [val k] {
+    log [concat $k " = " $v ]
+}
+read-properties $propertiesFileUrl | get "outputformats" | eq "HTML,DOC,PDF,ODT" | verify-true
+
+log "report-deposit-update-template"
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
