@@ -203,7 +203,11 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                             .add(Restrictions.eq("sourceId", sourceId))
                             .add(Restrictions.isNotNull("extId"))
                             .setFetchMode("linksDown", FetchMode.JOIN)
-                            .setFetchMode("linksUp", FetchMode.JOIN);
+                            .setFetchMode("linksUp", FetchMode.JOIN)
+                            .setFetchMode("entity", FetchMode.JOIN)
+                            .setFetchMode("entity.typedPropertyLists", FetchMode.JOIN)
+                            .setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
+
                     @SuppressWarnings("unchecked")
                     List<CnATreeElement> resultExistingElements = getDao(CnATreeElement.class)
                             .findByCriteria(criteriaExistingElements);
