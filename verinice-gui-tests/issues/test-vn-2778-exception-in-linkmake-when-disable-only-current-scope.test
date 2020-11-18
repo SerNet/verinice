@@ -6,10 +6,11 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _nYrdgOHnEeq1p7Kf1PziRA
-Runtime-Version: 2.5.0.202001211718
-Save-Time: 8/19/20 9:10 AM
+Runtime-Version: 2.5.1.M3
+Save-Time: 11/20/20, 3:44 PM
 Tags: bp, issue
 Testcase-Type: ecl
+Verifications: _wm5P0CtBEeuMltfUUtdvug
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
 Content-Type: text/plain
@@ -61,5 +62,8 @@ linksafeguard-disable-scope-only "testname-vn-2778/Anwendungen/testapp/modulegro
 
 delete-bpelement "testname-vn-2778"
 delete-bpelement "testname-vn-2778-1"
+
+verify-error {get-window Fehler }
+
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

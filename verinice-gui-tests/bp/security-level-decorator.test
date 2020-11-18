@@ -7,9 +7,10 @@ Element-Version: 3.0
 External-Reference: 
 Id: _wJljQF0xEeqngKyiFJFSQA
 Runtime-Version: 2.5.1.M3
-Save-Time: 9/2/20, 4:00 PM
+Save-Time: 11/20/20, 3:54 PM
 Tags: bp
 Testcase-Type: ecl
+Verifications: _wm5P0CtBEeuMltfUUtdvug
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
 Content-Type: text/ecl
@@ -101,5 +102,7 @@ assert-security-level "testname/Anwendungen/testapp/safeguardgroup-1" $security_
 assert-security-level "testname/Anwendungen/testapp/module-1" $security_level_standard
 
 delete-bpelement "testname"
+
+verify-error {get-window Fehler }
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

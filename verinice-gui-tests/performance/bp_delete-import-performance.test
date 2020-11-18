@@ -6,10 +6,11 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _aQ-IUOGhEeioAPI0X-6m9A
-Runtime-Version: 2.3.0.201806262310
-Save-Time: 1/8/19 8:27 AM
+Runtime-Version: 2.5.1.M3
+Save-Time: 11/18/20, 4:01 PM
 Tags: bp, performance
 Testcase-Type: ecl
+Verifications: _wm5P0CtBEeuMltfUUtdvug
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
 Content-Type: text/plain
@@ -34,6 +35,8 @@ list a1 a2 a3 a4| each [val name] {
 	wait-for-import "Modernisierter IT-Grundschutz" "importierte Objekte/MODPLAST \\[SerNet-DM\\]"
 	measure-delete "delete-modplast" "importierte Objekte/MODPLAST \\[SerNet-DM\\]"
 }
+
+verify-error {get-window Fehler }
 
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

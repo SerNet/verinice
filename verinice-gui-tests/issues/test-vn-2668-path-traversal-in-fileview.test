@@ -7,9 +7,10 @@ Element-Version: 3.0
 External-Reference: 
 Id: _GTk14P1nEeqC7ck4hOcthg
 Runtime-Version: 2.5.1.M3
-Save-Time: 9/23/20, 9:33 AM
+Save-Time: 11/20/20, 4:03 PM
 Tags: bp, issue
 Testcase-Type: ecl
+Verifications: _wm5P0CtBEeuMltfUUtdvug
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
 Content-Type: text/ecl
@@ -30,4 +31,10 @@ with [get-view Dateien] {
 	get-file [uri-from-path [concat $tmpdir $file_separator "hello-world.txt"]] | get exists | verify-true
 	get-file [uri-from-path [concat $tmpdir $file_separator ".." $file_separator "hello-world.txt"]] | get exists | verify-false
 }
+delete-bpelement "importierte Objekte/Informationsverbund VN-2668 [4e82cb]" 
+
+screen-shot-window "file-view-after-delete.png"
+
+verify-error {get-window Fehler }
+
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

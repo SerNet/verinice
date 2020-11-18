@@ -7,9 +7,10 @@ Element-Version: 3.0
 External-Reference: 
 Id: _h8PlQPk3EeiLXcsCitNBjg
 Runtime-Version: 2.5.1.M3
-Save-Time: 8/19/20, 10:45 AM
+Save-Time: 11/18/20, 4:03 PM
 Tags: bp, performance
 Testcase-Type: ecl
+Verifications: _wm5P0CtBEeuMltfUUtdvug
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
 Content-Type: text/plain
@@ -73,6 +74,6 @@ list a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 | each [val name] {
 measure-delete "delete-itverbund" testname
 measure-delete-catalog "delete-compendium" "IT-Grundschutz-Kompendium 4.0"
 
-
+verify-error {get-window Fehler }
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

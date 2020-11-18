@@ -7,9 +7,10 @@ Element-Version: 3.0
 External-Reference: 
 Id: _7vbP4PvgEeqS3Lg4VI-WIw
 Runtime-Version: 2.5.1.M3
-Save-Time: 9/22/20, 10:09 AM
+Save-Time: 11/18/20, 4:02 PM
 Tags: bp, performance
 Testcase-Type: ecl
+Verifications: _wm5P0CtBEeuMltfUUtdvug
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
 Content-Type: text/ecl
@@ -25,5 +26,7 @@ bp-import-vna "modplast-1.1.vna"
 wait-for-import "Modernisierter IT-Grundschutz" $path_in_tree_modplast
 stop-time-measure "import-update-vna-modplast" | write-lines [concat "file:" $basedir "/import-measure.csv"] true
 delete-bpelement $path_in_tree_modplast
+
+verify-error {get-window Fehler }
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
