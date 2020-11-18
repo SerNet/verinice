@@ -24,32 +24,32 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 
 public interface IBaseDao<T, ID extends Serializable> extends IDao<T, ID> {
 
-	T merge(T entity, boolean fireUpdates);
+    T merge(T entity, boolean fireUpdates);
 
-	T findByUuid(String uuid, IRetrieveInfo ri);
+    T findByUuid(String uuid, IRetrieveInfo ri);
 
-	T retrieve(ID id, IRetrieveInfo ri);
+    T retrieve(ID id, IRetrieveInfo ri);
 
-	/**
-	 * @param ri
-	 * @return
-	 */
-	List findAll(IRetrieveInfo ri);
+    /**
+     * @param ri
+     * @return
+     */
+    List findAll(IRetrieveInfo ri);
 
-	List findByCallback(HibernateCallback hcb);
+    List findByCallback(HibernateCallback hcb);
 
-	Object executeCallback(HibernateCallback hcb);
+    Object executeCallback(HibernateCallback hcb);
 
-	int updateByQuery(String hqlQuery, Object[] values);
+    int updateByQuery(String hqlQuery, Object[] values);
 
-	void reload(T element, Serializable id);
+    void reload(T element, Serializable id);
 
-	void initialize(Object collection);
+    void initialize(Object collection);
 
-	void flush();
+    void flush();
 
-	Class<T> getType();
-	
+    Class<T> getType();
+
     /**
      * Checks if the user calling the function has write permissions for the
      * element with the given ID and scopeId.
@@ -67,8 +67,8 @@ public interface IBaseDao<T, ID extends Serializable> extends IDao<T, ID> {
      * Throws a sernet.gs.service.SecurityException if no write permissions are
      * granted.
      */
-	void checkRights(T entity) /*throws SecurityException*/ ;
-	
+    void checkRights(T entity) /* throws SecurityException */ ;
+
     /**
      * Checks if the user with the given user name has write permissions for the
      * given entity.
@@ -76,10 +76,10 @@ public interface IBaseDao<T, ID extends Serializable> extends IDao<T, ID> {
      * Throws a sernet.gs.service.SecurityException if no write permissions are
      * granted.
      */
-	void checkRights(T entity, String username) /*throws SecurityException*/ ;
-	
-	void clear();
-	
-	boolean contains(T entity);
+    void checkRights(T entity, String username) /* throws SecurityException */ ;
+
+    void clear();
+
+    boolean contains(T entity);
 
 }
