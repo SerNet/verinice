@@ -396,7 +396,9 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 Optional.ofNullable(elementInDB.getEntity())
                         .ifPresent(entity -> entity.trackChange(authService.getUsername()));
             }
-            elementInDB = dao.merge(elementInDB);
+            // do not update the index for existing but unchanged elements
+            boolean updateIndex = !(updatingExistingElement && !propertyValueChanged);
+            elementInDB = dao.merge(elementInDB, false, updateIndex);
             parent.addChild(elementInDB);
             elementInDB.setParentAndScope(parent);
 

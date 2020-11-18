@@ -24,7 +24,11 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 
 public interface IBaseDao<T, ID extends Serializable> extends IDao<T, ID> {
 
-    T merge(T entity, boolean fireUpdates);
+    default T merge(T entity, boolean fireUpdates) {
+        return merge(entity, fireUpdates, true);
+    }
+
+    T merge(T entity, boolean fireUpdates, boolean updateIndex);
 
     T findByUuid(String uuid, IRetrieveInfo ri);
 
