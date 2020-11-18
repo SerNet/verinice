@@ -33,6 +33,7 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.service.SecurityException;
 import sernet.gs.service.TimeFormatter;
@@ -109,7 +110,8 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     private void removeElement(Integer dbid, String typeId) {
         try {
             IBaseDao<T, Serializable> dao = getDaoFactory().getDAO(typeId);
-            this.element = dao.findById(dbid);
+            this.element = dao.retrieve(dbid, (new RetrieveInfo()).setParent(true).setSiblings(true)
+                    .setLinksUp(true).setLinksDown(true));
             if (this.element == null) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug(
