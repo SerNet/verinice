@@ -79,12 +79,12 @@ pipeline {
                 // normal client rcptt
                 // the last parameter can be adjusted to control which tests are to be run
                 // e.g. 'bp*.test'
-                //runStandaloneUITests tests: '*.test'
+                runStandaloneUITests tests: '*.test'
                 
                 // 3-tier test
                 // the last parameter can be adjusted to control which tests are to be run
                 // e.g. 'bp*.test'
-                run3TiertUITests tests: 'bp_editing.test'
+                // run3TiertUITests tests: '*.test'
 
                 // report verinice en and de
                 // triggerRCPTTBuild 'rcptt-all-report-tests'
