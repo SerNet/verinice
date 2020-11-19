@@ -84,7 +84,7 @@ pipeline {
                 // 3-tier test
                 // the last parameter can be adjusted to control which tests are to be run
                 // e.g. 'bp*.test'
-                // run3TiertUITests tests: '*.test'
+                // run3TierUITests tests: '*.test'
 
                 // report verinice en and de
                 // triggerRCPTTBuild 'rcptt-all-report-tests'
@@ -145,7 +145,7 @@ pipeline {
     }
 }
 
-def run3TiertUITests(Map opts = [:]){
+def run3TierUITests(Map opts = [:]){
     triggerRCPTTBuild('rcptt-server-test', opts)
 }
 
