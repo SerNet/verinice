@@ -15,6 +15,7 @@ pipeline {
     stages {
         stage('Build products') {
             steps {
+                sh "rm -r -f ${WORKSPACE}/${outputDir}"
                 script {
                     branchName = env.GIT_BRANCH.replace('origin/', '')
                     jobName = "verinice/${branchName.replace('/', '%2F')}"
@@ -39,39 +40,40 @@ pipeline {
             parallel {
                 stage('Run UI tests on Linux') {
                     steps {
-                        runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'Linux', artifactFilterRcptt, "${outputDir}/gui-test-linux", 'GUI Test Report (Linux)'
+                        runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'Linux', artifactFilterRcptt, "${outputDir}/gui-test-linux", 'GUI Test Report (Linux)', 'linux-verince-client-log'
                     }
                 }
                 stage('Run UI tests on macOS Current') {
                     steps {
-                        runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'macOS current', artifactFilterRcptt, "${outputDir}/gui-test-mac-current", 'GUI Test Report (macOS)'
+                        runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'macOS current', artifactFilterRcptt, "${outputDir}/gui-test-mac-current", 'GUI Test Report (macOS)', 'macc-verince-client-log'
                     }
                 }
                 stage('Run UI tests on macOS Predecessor') {
                     steps {
-                        runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'macOS predecessor', artifactFilterRcptt, "${outputDir}/gui-test-mac-predecessor", 'GUI Test Report (macOS)'
+                        runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'macOS predecessor', artifactFilterRcptt, "${outputDir}/gui-test-mac-predecessor", 'GUI Test Report (macOS)','macp-verince-client-log'
                     }
                 }
                 stage('Run UI tests on macOS Beta') {
                     steps {
-                        runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'macOS beta', artifactFilterRcptt, "${outputDir}/gui-test-mac-beta", 'GUI Test Report (macOS)'
+                        runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'macOS beta', artifactFilterRcptt, "${outputDir}/gui-test-mac-beta", 'GUI Test Report (macOS)', 'macb-verince-client-log'
                     }
                 }
                 stage('Run UI tests on Windows') {
                     steps {
-                        runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'Windows 10', artifactFilterRcptt, "${outputDir}/gui-test-windows", 'GUI Test Report (Windows 10)'
+                        runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'Windows 10', artifactFilterRcptt, "${outputDir}/gui-test-windows", 'GUI Test Report (Windows 10)', 'win-verince-client-log'
                     }
                 }
                 stage('Run 3-tier UI tests') {
                     steps {
-                        runRCPTT 'rcptt-server-test', branchName, jobName,  productsBuild.number, null, artifactFilterRcptt, "${outputDir}/gui-test-3-tier", 'GUI Test Report (3-tier)'
+                        runRCPTT 'rcptt-server-test', branchName, jobName,  productsBuild.number, null, artifactFilterRcptt, "${outputDir}/gui-test-3-tier", 'GUI Test Report (3-tier)', '3-tier-verince-client-log'
+                        recordLogMessages '3-tier-verince-server-log', "${outputDir}/gui-test-3-tier", 'verinice-server.*', 'serverlogparsed-nighly.txt', 'log4j'
                     }
                 }
                 stage('Run reporting tests') {
                     steps {
                         script {
                             def target = "${outputDir}/reporting-all"
-                            runRCPTT 'rcptt-all-report-tests', branchName, jobName, productsBuild.number, null, 'test-result/**/*', target, null
+                            runRCPTT 'rcptt-all-report-tests', branchName, jobName, productsBuild.number, null, 'test-result/**/*', target, null, null
                             archiveArtifacts artifacts: "${target}/**/*"
                             createPerformancePlot("${target}/test-result/products_de/metric.csv", 'Product Reports')
                             createPerformancePlot("${target}/test-result/vn_de/metric.csv", 'Verinice Reports (DE)')
@@ -83,7 +85,7 @@ pipeline {
                     steps {
                         script {
                             def target = "${outputDir}/performance-test-standalone"
-                            runRCPTT 'rcptt-client-performance-test', branchName, jobName, productsBuild.number, null, artifactFilterRcptt, target, 'GUI Test Report (Performance Standalone)'
+                            runRCPTT 'rcptt-client-performance-test', branchName, jobName, productsBuild.number, null, artifactFilterRcptt, target, 'GUI Test Report (Performance Standalone)', 'performance-verince-client-log'
                             createPerformancePlot("${target}/gui-test-runner/result/metric.csv", 'Standalone')
                         }
                     }
@@ -92,7 +94,8 @@ pipeline {
                     steps {
                         script {
                             def target = "${outputDir}/performance-test-3-tier"
-                            runRCPTT 'rcptt-server-performance-test', branchName, jobName, productsBuild.number, null, artifactFilterRcptt, target, 'GUI Test Report (Performance 3-tier)'
+                            runRCPTT 'rcptt-server-performance-test', branchName, jobName, productsBuild.number, null, artifactFilterRcptt, target, 'GUI Test Report (Performance 3-tier)','3-tier-performance-verince-client-log'
+                            recordLogMessages '3-tier-performance-verince-server-log', "${outputDir}/performance-test-3-tier", 'verinice-server.*', 'serverlogparsed-nighly.txt', 'log4j'
                             createPerformancePlot("${target}/gui-test-runner/result/metric.csv", '3-tier')
                         }
                     }
@@ -117,7 +120,7 @@ pipeline {
     }
 }
 
-def runRCPTT(jobName, branchName, jobNameArtifacts, buildNumberArtifacts, operatingSystem, copyArtifactsFilter, resultDir, htmlReportName){
+def runRCPTT(jobName, branchName, jobNameArtifacts, buildNumberArtifacts, operatingSystem, copyArtifactsFilter, resultDir, htmlReportName, logMessageTrendName){
     def rcpttBuild = build(
       job: jobName,
       propagate: false,
@@ -147,8 +150,35 @@ def runRCPTT(jobName, branchName, jobNameArtifacts, buildNumberArtifacts, operat
           reportTitles: branchName
         ])
     }
+    if (logMessageTrendName != null){
+        archiveArtifacts artifacts: "${resultDir}/gui-test-runner/result/log/**/*"
+        recordLogMessages logMessageTrendName, resultDir, 'verinice-client.*', 'clientlogparsed-nighly.txt' , 'log4j'
+        recordLogMessages 'aut-'+logMessageTrendName, resultDir, '.log*', 'autlogparsed-nighly.txt' , 'eclipse'
+    }
 }
 
+def recordLogMessages(logMessageTrendName, resultDir, logFilePattern, targetFilename, logType){
+    def logPath = "${WORKSPACE}/${resultDir}/gui-test-runner/result/log"
+    def logFile = "${logPath}/${targetFilename}"
+    dir(tool(name: 'logparser', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool')){
+        sh "./logParser -i ${logType}  -d ${logPath} -f ${logFilePattern} -o jenkins -n ${logFile}"
+    }
+    
+    recordIssues(
+        blameDisabled: true, 
+        forensicsDisabled: true, 
+        ignoreFailedBuilds: false, 
+        skipPublishingChecks: true, 
+        qualityGates: [[threshold: 1, type: 'DELTA_ERROR', unstable: true]],
+        tools: [groovyScript(
+            id: logMessageTrendName.replaceAll(' ', '_'), 
+            name: logMessageTrendName, 
+            parserId: 'verinice-log-parser', 
+            pattern: "${resultDir}/gui-test-runner/result/log/${targetFilename}"
+            )
+        ]
+    )
+}
 
 def createPerformancePlot(fileName, group){
     def records = readCSV file: fileName
