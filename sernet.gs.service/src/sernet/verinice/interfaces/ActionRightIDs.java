@@ -107,6 +107,7 @@ public final class ActionRightIDs {
     public static final String XMLIMPORT = "xmlimport";
     public static final String MIGRATE_DATA_PROTECTION = "migrate_data_protection";
     public static final String CONVERT_IT_NETWORK = "convertitnetwork";
+    public static final String CONSOLIDATOR_MODBP = "consolidator_modbp";
 
     private static final String[] ALL_RIGHT_IDS;
 

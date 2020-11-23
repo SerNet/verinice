@@ -1,0 +1,165 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _HQDeEI9NEeic2YXgdvyDUQ,_lGnj8Ix1Eei2UKUDmonytQ,_mCQwkI9ZEeic2YXgdvyDUQ
+Element-Name: test-report-deposit-add-template
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: https://jira.sernet.private/browse/VN-2829
+Id: _ytjJsCKCEeuxFrvd53zLWQ
+Runtime-Version: 2.5.1.M3
+Save-Time: 11/11/20, 12:05 PM
+Tags: ISO, serverOnlyTest
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Test the basic functionality of the report deposit.
+This test adds a new report template to the report deposit.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+proc "verify-and-delete" {
+	get-view "Report-Ablage" | get-table | select "my test report"
+	with [get-view "Report-Ablage" | get-table] {
+	    get-item -path "my test report" | get-property caption | equals "my test report" | verify-true
+	    get-item -path "my test report" | get-property "columns[0]" | equals "my test report" | verify-true
+	    get-item -path "my test report" | get-property "columns[1]" | equals "ISM-DS" | verify-true
+	    get-item -path "my test report" | get-property "columns[2]" | equals PDF | verify-true
+	    get-item -path "my test report" | get-property "columns[3]" | equals "Abhaengigkeiten.rptdesign" | verify-true
+	}
+	
+	with [get-view "Report-Ablage"] {
+	    get-table | select "my test report"
+	    get-button "Entfernen Sie einen Report aus der Ablage (final)" | click 
+	}
+	get-window "Wirklich löschen?" | get-button OK | click 
+}
+
+proc "start-add-template-dialog" [val qualifier]{
+	get-button "Report-Ablage" | click 
+	get-view "Report-Ablage" | get-button "Fügen Sie einen neuen Report zur Ablage hinzu" | click 
+	get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals false | verify-true
+	screen-shot "Neuen Report hinzufügen ..." [concat "add_report_"$qualifier"-1.png"]
+}
+
+log "test-report-deposit-add-template start"
+
+
+start-add-template-dialog "name-kontext-out-file"
+
+// provide all infos, expect speicher aktive at the end -> name,kontext,out,file
+with [get-window "Neuen Report hinzufügen ..."] {
+    get-editbox -after [get-label "Report-Name"] | set-text "my test report"
+}
+get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals false | verify-true
+screen-shot "Neuen Report hinzufügen ..." "add_report_2.png"
+//kontext
+get-window "Neuen Report hinzufügen ..." | get-combo -after [get-label Kontext] | select "ISM-DS"
+get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals false | verify-true
+screen-shot "Neuen Report hinzufügen ..." "add_report_3.png"
+//outformat
+get-window "Neuen Report hinzufügen ..." | get-group Ausgabeformate | get-button PDF | check
+get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals false | verify-true
+screen-shot "Neuen Report hinzufügen ..." "add_report_4.png"
+//template file
+set-dialog-result File [file-in-dir $datadir  "Abhaengigkeiten.rptdesign" ]
+get-window "Neuen Report hinzufügen ..." | get-button "Auswählen" | click 
+get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals true | verify-true
+screen-shot "Neuen Report hinzufügen ..." "add_report_5.png"
+//now save
+get-window "Neuen Report hinzufügen ..." | get-button Speichern | click 
+//and verify
+verify-and-delete
+
+// now the same with another order of steps
+start-add-template-dialog "kontext-file-name-out"
+// provide all infos, expect speicher aktive at the end -> kontext,file,name,out
+//kontext
+get-window "Neuen Report hinzufügen ..." | get-combo -after [get-label Kontext] | select "ISM-DS"
+get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals false | verify-true
+screen-shot "Neuen Report hinzufügen ..." "add_report_kontext-file-name-out-2.png"
+//template file
+set-dialog-result File [file-in-dir $datadir  "Abhaengigkeiten.rptdesign" ]
+get-window "Neuen Report hinzufügen ..." | get-button "Auswählen" | click 
+get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals false | verify-true
+screen-shot "Neuen Report hinzufügen ..." "add_report_kontext-file-name-out-3.png"
+//name
+with [get-window "Neuen Report hinzufügen ..."] {
+    get-editbox -after [get-label "Report-Name"] | set-text "my test report"
+}
+get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals false | verify-true
+screen-shot "Neuen Report hinzufügen ..." "add_report_kontext-file-name-out-4.png"
+//outformat
+get-window "Neuen Report hinzufügen ..." | get-group Ausgabeformate | get-button PDF | check
+get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals true | verify-true
+screen-shot "Neuen Report hinzufügen ..." "add_report_kontext-file-name-out-5.png"
+
+//now save
+get-window "Neuen Report hinzufügen ..." | get-button Speichern | click 
+//and verify
+verify-and-delete
+
+// now the same with another order of steps
+start-add-template-dialog "file-name-out-kontext"
+// provide all infos, expect speicher aktive at the end -> file,name,out,kontext
+//template file
+set-dialog-result File [file-in-dir $datadir  "Abhaengigkeiten.rptdesign" ]
+get-window "Neuen Report hinzufügen ..." | get-button "Auswählen" | click 
+get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals false | verify-true
+screen-shot "Neuen Report hinzufügen ..." "add_report_file-name-out-kontext-2.png"
+//name
+with [get-window "Neuen Report hinzufügen ..."] {
+    get-editbox -after [get-label "Report-Name"] | set-text "my test report"
+}
+get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals false | verify-true
+screen-shot "Neuen Report hinzufügen ..." "add_report_file-name-out-kontext-3.png"
+//outformat
+get-window "Neuen Report hinzufügen ..." | get-group Ausgabeformate | get-button PDF | check
+get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals false | verify-true
+screen-shot "Neuen Report hinzufügen ..." "add_report_file-name-out-kontext-4.png"
+//kontext
+get-window "Neuen Report hinzufügen ..." | get-combo -after [get-label Kontext] | select "ISM-DS"
+get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals true | verify-true
+screen-shot "Neuen Report hinzufügen ..." "add_report_file-name-out-kontext-5.png"
+
+//now save
+get-window "Neuen Report hinzufügen ..." | get-button Speichern | click 
+//and verify
+verify-and-delete
+
+// now the same with another order of steps
+start-add-template-dialog "file-name-kontext-out"
+// provide all infos, expect speicher aktive at the end -> file,name,kontext,out
+//template file
+set-dialog-result File [file-in-dir $datadir  "Abhaengigkeiten.rptdesign" ]
+get-window "Neuen Report hinzufügen ..." | get-button "Auswählen" | click 
+get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals false | verify-true
+screen-shot "Neuen Report hinzufügen ..." "add_report_file-name-kontext-out-2.png"
+//name
+with [get-window "Neuen Report hinzufügen ..."] {
+    get-editbox -after [get-label "Report-Name"] | set-text "my test report"
+}
+get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals false | verify-true
+screen-shot "Neuen Report hinzufügen ..." "add_report_file-file-name-kontext-out-3.png"
+//kontext
+get-window "Neuen Report hinzufügen ..." | get-combo -after [get-label Kontext] | select "ISM-DS"
+get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals false | verify-true
+screen-shot "Neuen Report hinzufügen ..." "add_report_file-file-name-kontext-out-4.png"
+//outformat
+get-window "Neuen Report hinzufügen ..." | get-group Ausgabeformate | get-button PDF | check
+get-window "Neuen Report hinzufügen ..." | get-button Speichern | get-property enablement | equals true | verify-true
+screen-shot "Neuen Report hinzufügen ..." "add_report_filefile-name-kontext-out-5.png"
+
+//now save
+get-window "Neuen Report hinzufügen ..." | get-button Speichern | click 
+//and verify
+verify-and-delete
+
+
+log "test-report-deposit-add-template finished"
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

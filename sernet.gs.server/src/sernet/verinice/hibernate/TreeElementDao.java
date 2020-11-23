@@ -172,7 +172,7 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         return mergedElement;
     }
 
-    public T merge(T entity, boolean fireChange) {
+    public T merge(T entity, boolean fireChange, boolean updateIndex) {
         if (LOG_INHERIT.isDebug()) {
             LOG_INHERIT.debug("merge...");
         }
@@ -181,7 +181,9 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
 
         if (mergedElement instanceof CnATreeElement) {
             CnATreeElement element = (CnATreeElement) mergedElement;
-            index(element);
+            if (updateIndex) {
+                index(element);
+            }
             if (fireChange) {
                 notifyChangedElement(element);
             }

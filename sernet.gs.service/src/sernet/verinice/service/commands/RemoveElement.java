@@ -23,7 +23,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -43,8 +42,6 @@ import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.interfaces.IFinishedRiskAnalysisListsDao;
 import sernet.verinice.interfaces.INoAccessControl;
 import sernet.verinice.model.bp.IBpElement;
-import sernet.verinice.model.bp.elements.BpPerson;
-import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
@@ -53,9 +50,7 @@ import sernet.verinice.model.bsi.PersonenKategorie;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
-import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.ChangeLogEntry;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 
@@ -108,8 +103,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
 
     private void removeElement(Integer dbid, String typeId) {
         try {
-            IBaseDao<T, Serializable> dao = getDaoFactory().getDAO(typeId);
-            this.element = dao.findById(dbid);
+            this.element = (T) getDaoFactory().getDAO(typeId).findById(dbid);
             if (this.element == null) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug(
@@ -117,16 +111,12 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
                 }
                 return;
             }
+            IBaseDao<T, Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
             // first we check if the operation is allowed for the element and
             // the children
             dao.checkRights(element);
-            LoadSubtreeIds loadSubtreeIdsCommand = new LoadSubtreeIds(element);
-            loadSubtreeIdsCommand = getCommandService().executeCommand(loadSubtreeIdsCommand);
-            Set<Integer> dbIdsOfSubtree = loadSubtreeIdsCommand.getDbIdsOfSubtree();
-            for (Integer dbId : dbIdsOfSubtree) {
-                dao.checkRights(dbId, element.getScopeId());
-            }
-            removeElement(element, dbIdsOfSubtree);
+            checkRightsOfSubtree(element);
+            removeElement(element);
         } catch (SecurityException e) {
             LOG.error("SecurityException while deleting element: " + element, e);
             throw e;
@@ -139,34 +129,20 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         }
     }
 
-    private void removeElement(T element, Set<Integer> dbIdsOfSubtree) throws CommandException {
-        if (element instanceof IBpElement
-                && !CatalogModel.TYPE_ID.equals(element.getParent().getTypeId())) {
-
-            LoadSubtreeIds getDescendantPersonIDs = new LoadSubtreeIds(element, BpPerson.TYPE_ID);
-            getDescendantPersonIDs = getCommandService().executeCommand(getDescendantPersonIDs);
-            Set<Integer> personIDs = getDescendantPersonIDs.getDbIdsOfSubtree();
-            if (!personIDs.isEmpty()) {
-                IBaseDao<@NonNull Configuration, Serializable> configurationDao = getDaoFactory()
-                        .getDAO(Configuration.class);
-                List<Configuration> configurations = configurationDao
-                        .findByCriteria(DetachedCriteria.forClass(Configuration.class)
-                                .add(Restrictions.in("person.id", personIDs)));
-                configurationDao.delete(configurations);
-                // When a Configuration instance got deleted the server needs to
-                // update
-                // its cached role map. This is done here.
-                getCommandService().discardUserData();
-            }
-
+    private void removeElement(T element) throws CommandException {
+        if (element instanceof IBpElement) {
             // We could be removing an element that has a safeguard as one
             // of its children. Since we want our manual event listeners to be
             // fired for those and their links as well (via element.remove()),
             // we need to delete them by hand. This is not an optimal solution
             // and should be replaced by Hibernate event listeners someday.
             // (see VN-2084)
-            removeRelevantLinksToElementsOutsideTree(element, dbIdsOfSubtree);
-        } else if (element.isPerson()) {
+            for (CnATreeElement child : element.getChildrenAsArray()) {
+                removeElement((T) child);
+            }
+        }
+
+        if (element.isPerson()) {
             removeConfiguration(element);
         }
 
@@ -208,13 +184,11 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
          * Using the children as an array ensure that there won't be a
          * ConcurrentModificationException while deleting the elements.
          */
-        if (element instanceof IBSIStrukturElement) {
-            CnATreeElement[] children = element.getChildrenAsArray();
+        CnATreeElement[] children = element.getChildrenAsArray();
 
-            for (int i = 0; i < children.length; i++) {
-                if (children[i] instanceof FinishedRiskAnalysis) {
-                    removeRiskAnalysis((FinishedRiskAnalysis) children[i]);
-                }
+        for (int i = 0; i < children.length; i++) {
+            if (children[i] instanceof FinishedRiskAnalysis) {
+                removeRiskAnalysis((FinishedRiskAnalysis) children[i]);
             }
         }
 
@@ -228,44 +202,15 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         dao.delete(element);
     }
 
-    private void removeRelevantLinksToElementsOutsideTree(T element, Set<Integer> dbIdsOfSubtree) {
-        if (element.isScope()) {
-            // remove links from safeguards to requirements outside this
-            // scope
-            @NonNull
-            IBaseDao<CnALink, Serializable> linkDao = getDaoFactory().getDAO(CnALink.class);
-            @SuppressWarnings("unchecked")
-            List<CnALink> linksToDelete = linkDao.findByCriteria(
-                    DetachedCriteria.forClass(CnALink.class).createAlias("dependant", "dependant")
-                            .createAlias("dependency", "dependency")
-                            .add(Restrictions.eq("id.typeId",
-                                    BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD))
-                            .add(Restrictions.eq("dependency.scopeId", element.getDbId()))
-                            .add(Restrictions.ne("dependant.scopeId", element.getDbId())));
-            linksToDelete.forEach(CnALink::remove);
-        } else {
-            // remove links from safeguards within the tree to requirements
-            // outside of the treeremoveRelevantLinksToElementsOutsideTree
-            element.getLinksUp().stream()
-                    .filter(link -> link.getId().getTypeId()
-                            .equals(BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD))
-                    .forEach(CnALink::remove);
-
-            Set<Integer> descendantIds = new HashSet<>(dbIdsOfSubtree);
-            descendantIds.remove(element.getDbId());
-
-            IBaseDao<CnALink, Serializable> linkDao = getDaoFactory().getDAO(CnALink.class);
-
-            List<CnALink> linksWithSafeguardsInElementScope = linkDao.findByCriteria(
-                    DetachedCriteria.forClass(CnALink.class).createAlias("dependency", "dependency")
-                            .add(Restrictions.eq("id.typeId",
-                                    BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD))
-                            .add(Restrictions.eq("dependency.scopeId", element.getScopeId())));
-
-            linksWithSafeguardsInElementScope.stream()
-                    .filter(link -> descendantIds.contains(link.getId().getDependencyId())
-                            && !descendantIds.contains(link.getId().getDependantId()))
-                    .forEach(CnALink::remove);
+    private void checkRightsOfSubtree(CnATreeElement element) throws CommandException {
+        LoadSubtreeIds loadSubtreeIdsCommand = new LoadSubtreeIds(element);
+        loadSubtreeIdsCommand = getCommandService().executeCommand(loadSubtreeIdsCommand);
+        Set<Integer> dbIdsOfSubtree = loadSubtreeIdsCommand.getDbIdsOfSubtree();
+        @SuppressWarnings("unchecked")
+        IBaseDao<? super CnATreeElement, Serializable> dao = getDaoFactory()
+                .getDAOforTypedElement(element);
+        for (Integer dbId : dbIdsOfSubtree) {
+            dao.checkRights(dbId, element.getScopeId());
         }
     }
 
@@ -391,7 +336,9 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
                 .forClass(Configuration.class).add(Restrictions.eq("person", person)));
         if (!configurations.isEmpty()) {
             Configuration conf = configurations.get(0);
-            configurationDao.delete(conf);
+            IBaseDao<Configuration, Serializable> confDAO = getDaoFactory()
+                    .getDAO(Configuration.class);
+            confDAO.delete(conf);
             // When a Configuration instance got deleted the server needs to
             // update
             // its cached role map. This is done here.

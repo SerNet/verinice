@@ -134,7 +134,7 @@ public class ReportTemplateSyncer extends WorkspaceJob implements IModelLoadList
 
         // delete files only in server mode
         if (Preferences.isServerMode()) {
-            cleanupLocalFiles(localFiles, remoteFiles);
+            cleanupLocalFiles(localReportDeposit.getAllResources(), remoteFiles);
         }
     }
 

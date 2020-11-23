@@ -11,7 +11,7 @@ pipeline {
         JAVA_HOME='/usr/lib/jvm/java-1.8.0-openjdk'
     }
     parameters {
-        string(name: 'jreversion', defaultValue: 'jdk8u272-b10', description: 'Download and pack a JRE with this version. See https://adoptopenjdk.net/archive.html for a list of possible versions.', trim: true)
+        string(name: 'jreversion', defaultValue: 'jdk8u275-b01', description: 'Download and pack a JRE with this version. See https://adoptopenjdk.net/archive.html for a list of possible versions.', trim: true)
         booleanParam(name: 'runIntegrationTests', defaultValue: true, description: 'Run integration tests')
         booleanParam(name: 'runRCPTTTests', defaultValue: true, description: 'Run RCPTT tests')
         booleanParam(name: 'dists', defaultValue: false, description: 'Run distribution steps, i.e. build RPMs files etc.')
@@ -84,7 +84,7 @@ pipeline {
                 // 3-tier test
                 // the last parameter can be adjusted to control which tests are to be run
                 // e.g. 'bp*.test'
-                // run3TiertUITests tests: '*.test'
+                // run3TierUITests tests: '*.test'
 
                 // report verinice en and de
                 // triggerRCPTTBuild 'rcptt-all-report-tests'
@@ -145,7 +145,7 @@ pipeline {
     }
 }
 
-def run3TiertUITests(Map opts = [:]){
+def run3TierUITests(Map opts = [:]){
     triggerRCPTTBuild('rcptt-server-test', opts)
 }
 

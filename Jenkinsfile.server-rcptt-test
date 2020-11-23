@@ -67,6 +67,7 @@ pipeline {
                 script {
                     def portDatabase = "549${env.EXECUTOR_NUMBER}"
                     def portTomcat = "809${env.EXECUTOR_NUMBER}"
+                    def portTomcatShutdown = "819${env.EXECUTOR_NUMBER}"
                     def skipTags = ['skipExecution', 'clientOnlyTest']
                     if (!params.runPerformanceTests){
 	                    skipTags << 'performance'
@@ -97,7 +98,8 @@ pipeline {
                                      -Dserver-database-url=jdbc:postgresql://127.0.0.1:${portDatabase}/verinicedb \
                                      -Dtomcat-dir=${WORKSPACE}/apache-tomcat-${params.TOMCAT_VERSION} \
                                      -Dwar-file=veriniceserver.war \
-                                     -Dserver-port=${portTomcat}
+                                     -Dserver-port=${portTomcat} \
+                                     -Dserver-shutdown-port=${portTomcatShutdown}
                                      """
                                 }
                             }
@@ -108,10 +110,14 @@ pipeline {
                 dir(tool(name: 'logparser', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool')){
                     sh "./logParser -i log4j  -d $WORKSPACE/gui-test-runner/result/log -f verinice-client.* -o jenkins -n $WORKSPACE/gui-test-runner/result/log/clientlogparsed.txt"
                 }
+                dir(tool(name: 'logparser', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool')){
+                    sh "./logParser -i log4j  -d $WORKSPACE/gui-test-runner/result/log -f verinice-server.* -o jenkins -n $WORKSPACE/gui-test-runner/result/log/serverlogparsed.txt"
+                }
                 junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: 'gui-test-runner/result/results.junit.xml'
                 perfReport filterRegex: '', sourceDataFiles: 'gui-test-runner/result/results.junit.xml'
                 recordIssues(tools: [groovyScript(parserId: 'aut-eclipse-log', pattern: 'gui-test-runner/result/log/verinice-aut/.log*')])
                 recordIssues(tools: [groovyScript(id: 'verince-client-log', name: 'verince-client-log', parserId: 'verinice-log-parser', pattern: 'gui-test-runner/result/log/clientlogparsed.txt')])
+                recordIssues(tools: [groovyScript(id: 'verince-server-log', name: 'verince-server-log', parserId: 'verinice-log-parser', pattern: 'gui-test-runner/result/log/serverlogparsed.txt')])
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'gui-test-runner/result/**/*.*', excludes: 'build/result/auth/**'
                 publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'gui-test-runner/result', reportFiles: 'results.html', reportName: 'Gui Test Report', reportTitles: "${job_to_copy_from}"])
             }

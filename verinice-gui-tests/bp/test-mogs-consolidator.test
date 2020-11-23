@@ -1,0 +1,116 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _74j9YLaIEeiiZL0aNB5Nyg,_kD9CUIxPEei2UKUDmonytQ,_lGnj8Ix1Eei2UKUDmonytQ,_4GRncI0bEei2UKUDmonytQ
+Element-Name: test-mogs-consolidator
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: https://jira.sernet.private/browse/VN-2217
+Id: _HjnfoPjAEeqJqb14c_EUjw
+Runtime-Version: 2.5.1.M3
+Save-Time: 11/10/20, 12:35 PM
+Tags: bp
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Test the mogs Consolidator.
+Test basic transfer of selected properties.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+log "test-mogs-consolidator start"
+
+// create the model
+create-bpmodel MogsKonsolidator
+
+create-bpprocess "MogsKonsolidator/Geschäftsprozesse" process1
+create-bpprocess "MogsKonsolidator/Geschäftsprozesse" process2
+
+create-bprequirementgroup "MogsKonsolidator/Geschäftsprozesse/process1" source
+create-bprequirement "MogsKonsolidator/Geschäftsprozesse/process1/source" rsource1
+with [get-editor "[] rsource1" | get-section "" ] {
+    get-editbox -after [get-label Identifier] | set-text r1
+    get-editbox -after [get-label Beschreibung] | set-text "Test r1"
+    get-combo -after [get-label Vorgehensweise] | select BASIS
+}
+with [get-editor "[] rsource1" | get-section "" | get-section "Grundschutz Audit"] {
+    get-editbox -after [get-label "Prüffragen"] | set-text F1
+    get-editbox -after [get-label Auditbeobachtung] | set-text A1
+}
+get-button "Speichern (M1+S)" | click 
+
+create-bprequirement "MogsKonsolidator/Geschäftsprozesse/process1/source" rsource2
+with [get-editor "[] rsource2" | get-section "" ] {
+    get-editbox -after [get-label Identifier] | set-text r2
+    get-editbox -after [get-label Beschreibung] | set-text "Test r2"
+}
+get-button "Speichern (M1+S)" | click 
+
+create-bprequirementgroup "MogsKonsolidator/Geschäftsprozesse/process2" target
+create-bprequirementgroup "MogsKonsolidator/Geschäftsprozesse/process2" target1
+create-bprequirement "MogsKonsolidator/Geschäftsprozesse/process2/target" rtarget
+with [get-editor "[] rtarget" | get-section "" ] {
+    get-editbox -after [get-label Identifier] | set-text r1
+}
+get-button "Speichern (M1+S)" | click 
+
+create-bprequirement "MogsKonsolidator/Geschäftsprozesse/process2/target1" rtarget1
+with [get-editor "[] rtarget1" | get-section "" ] {
+    get-editbox -after [get-label Identifier] | set-text r1
+}
+get-button "Speichern (M1+S)" | click 
+
+get-editor "r1 [] rtarget1" | close
+
+get-view "Modernisierter IT-Grundschutz" | get-tree | select "MogsKonsolidator/Geschäftsprozesse/process1/source"
+set-dialog-result MessageBox 128
+get-view "Modernisierter IT-Grundschutz" | get-tree | get-menu -path "Konsolidator..." | click 
+with [get-window Konsolidator] {
+    screen-shot-ui-control "konsolidator1.png"
+    with [get-tree] {
+        select target
+        get-item -path target | check
+        select target
+    }
+    screen-shot-ui-control "konsolidat2.png"
+    get-button "Weiter >" | click 
+}
+
+//test some preselection
+with [get-window Konsolidator] {
+    with [get-group Baustein | get-button "Allgemeiner Teil"] {
+        get-property enablement | equals true | verify-true
+    }
+    with [get-group Anforderungen] {
+        get-button "Allgemeiner Teil" | get-property selected | equals true | verify-true
+        get-button Umsetzung | get-property selected | equals true | verify-true
+        get-button Kosten | get-property selected | equals false | verify-true
+        get-button KIX | get-property selected | equals false | verify-true
+    }
+    with [get-group "Gefährdung"] {
+        get-button "Allgemeiner Teil" | get-property selected | equals true | verify-true
+        get-button "Risiko ohne Maßnahmen" | get-property selected | equals false | verify-true
+    }
+    screen-shot-ui-control "konsolidator3.png"
+}
+get-window Konsolidator | get-button "Weiter >" | get-property enablement | equals false | verify-true
+set-dialog-result MessageBox 64
+get-window Konsolidator | get-button Fertigstellen | click -metaKeys ""
+
+//test the konsolidation result
+
+get-view "Modernisierter IT-Grundschutz" | get-tree 
+    | select "MogsKonsolidator/Geschäftsprozesse/process2/source/r1 \\[BASIS\\] rsource1" | double-click
+    
+with [get-editor "r1 [BASIS] rsource1" | get-section "" ] {
+ get-editbox -after [get-label Beschreibung] | get-property text | equals "Test r1" | verify-true
+}
+    
+delete-bpelement "MogsKonsolidator"
+log "test-mogs-consolidator stop"
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

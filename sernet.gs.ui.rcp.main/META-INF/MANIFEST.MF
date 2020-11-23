@@ -93,7 +93,11 @@ Require-Bundle: com.springsource.org.apache.log4j;bundle-version="1.2.15",
  org.apache.batik.css;bundle-version="[1.7.0,1.8.0)",
  org.apache.batik.util;bundle-version="[1.7.0,1.8.0)",
  org.apache.batik.util.gui;bundle-version="[1.7.0,1.8.0)",
- org.eclipse.nebula.widgets.gallery
+ org.eclipse.nebula.widgets.gallery,
+ org.eclipse.core.databinding;bundle-version="1.7.400",
+ org.eclipse.core.databinding.property;bundle-version="1.7.0",
+ org.eclipse.jface.databinding;bundle-version="1.9.0",
+ org.eclipse.core.databinding.beans
 Import-Package: javax.xml.rpc.encoding,
  org.apache.axis.encoding.ser,
  org.eclipse.core.runtime,

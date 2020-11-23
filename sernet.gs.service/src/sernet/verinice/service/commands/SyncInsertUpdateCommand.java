@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.hibernate.FetchMode;
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
@@ -197,18 +198,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                             .computeIfAbsent(link.getDependency().getDbId(), id -> new HashSet<>())
                             .add(link.getRelationId()));
 
-                    log.info("Loading existing elements for scope " + sourceId);
-                    DetachedCriteria criteriaExistingElements = DetachedCriteria
-                            .forClass(CnATreeElement.class)
-                            .add(Restrictions.eq("sourceId", sourceId))
-                            .add(Restrictions.isNotNull("extId"))
-                            .setFetchMode("linksDown", FetchMode.JOIN)
-                            .setFetchMode("linksUp", FetchMode.JOIN);
-                    @SuppressWarnings("unchecked")
-                    List<CnATreeElement> resultExistingElements = getDao(CnATreeElement.class)
-                            .findByCriteria(criteriaExistingElements);
-                    existingElementsForScope = resultExistingElements.stream()
-                            .collect(Collectors.groupingBy(CnATreeElement::getExtId));
+                    existingElementsForScope = loadExistingElements(sourceId);
                 }
             }
             List<SyncObject> soList = syncData.getSyncObject();
@@ -237,6 +227,27 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             log.error("Exception while importing", e);
             throw new RuntimeCommandException(e);
         }
+    }
+
+    protected Map<String, List<CnATreeElement>> loadExistingElements(String sourceId) {
+        log.info("Loading existing elements for scope " + sourceId);
+        DetachedCriteria criteriaExistingElements = DetachedCriteria.forClass(CnATreeElement.class)
+                .add(Restrictions.eq("sourceId", sourceId)).add(Restrictions.isNotNull("extId"))
+                .setFetchMode("linksDown", FetchMode.JOIN).setFetchMode("linksUp", FetchMode.JOIN);
+
+        @SuppressWarnings("unchecked")
+        List<CnATreeElement> resultExistingElements = getDao(CnATreeElement.class)
+                .findByCriteria(criteriaExistingElements);
+        return resultExistingElements.stream().map(element -> {
+            Optional.ofNullable(element.getEntity()).ifPresent(entity -> {
+                Hibernate.initialize(entity);
+                Hibernate.initialize(entity.getTypedPropertyLists());
+                entity.getTypedPropertyLists().forEach((key, value) -> {
+                    value.getProperties().forEach(Hibernate::initialize);
+                });
+            });
+            return element;
+        }).collect(Collectors.groupingBy(CnATreeElement::getExtId));
     }
 
     private boolean isSourceIdInDatabase(String id) throws CommandException {
@@ -392,7 +403,9 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 Optional.ofNullable(elementInDB.getEntity())
                         .ifPresent(entity -> entity.trackChange(authService.getUsername()));
             }
-            elementInDB = dao.merge(elementInDB);
+            // do not update the index for existing but unchanged elements
+            boolean updateIndex = !(updatingExistingElement && !propertyValueChanged);
+            elementInDB = dao.merge(elementInDB, false, updateIndex);
             parent.addChild(elementInDB);
             elementInDB.setParentAndScope(parent);
 

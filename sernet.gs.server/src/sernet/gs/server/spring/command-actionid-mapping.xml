@@ -17,6 +17,11 @@
 				<value>deleteitem</value>
 			</util:set>
 		</entry>
+		<entry key="sernet.verinice.service.commands.bp.ConsolidatorCommand">
+			<util:set>
+				<value>consolidator_modbp</value>
+			</util:set>
+		</entry>
 	</util:map>
 
 </beans>

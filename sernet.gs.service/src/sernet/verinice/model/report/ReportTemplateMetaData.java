@@ -26,7 +26,6 @@ import org.eclipse.jdt.annotation.NonNull;
 import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.report.ReportTemplateMetaData.ReportContext;
 
 public class ReportTemplateMetaData implements Serializable, Comparable<ReportTemplateMetaData> {
 
@@ -115,6 +114,9 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
             return false;
         }
         if (multipleRootObjects != other.multipleRootObjects) {
+            return false;
+        }
+        if (context != other.context) {
             return false;
         }
 

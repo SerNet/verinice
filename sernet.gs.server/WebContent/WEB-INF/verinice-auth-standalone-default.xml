@@ -63,6 +63,7 @@
             <action id="catalogview" />
             <action id="changeicon" />
             <action id="cnavalidation" />
+            <action id="consolidator_modbp" />
             <action id="convertitnetwork" />
             <action id="deletefile" />
             <action id="deleteitem" />

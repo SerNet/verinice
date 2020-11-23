@@ -72,7 +72,12 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
     public static final String PROP_CHANGE_TYPE = "bp_requirement_change_type"; //$NON-NLS-1$
     public static final String PROP_CHANGE_TYPE_REMOVED = "bp_requirement_change_type_removed"; //$NON-NLS-1$
     public static final String PROP_CHANGE_DETAILS = "bp_requirement_change_details"; //$NON-NLS-1$
-
+    public static final String PROP_GRP_REVISION = "bp_requirement_revision"; //$NON-NLS-1$
+    public static final String PROP_GRP_AUDIT = "bp_requirement_audit"; //$NON-NLS-1$
+    public static final String PROP_GRP_KIX = "bp_requirement_kix"; //$NON-NLS-1$
+    public static final String PROP_GRP_DATA_PROTECTION_OBJECTIVES_EUGDPR = "bp_requirement_data_protection_objectives_eugdpr"; //$NON-NLS-1$
+    public static final String PROP_GRP_KOSTEN = "bp_requirement_group_kosten"; //$NON-NLS-1$
+    public static final String PROP_GRP_IMPLEMENTATION = "bp_requirement_implementation"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_THREAT = "rel_bp_requirement_bp_threat"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_SAFEGUARD = "rel_bp_requirement_bp_safeguard"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_ITNETWORK = "rel_bp_requirement_bp_itnetwork"; //$NON-NLS-1$

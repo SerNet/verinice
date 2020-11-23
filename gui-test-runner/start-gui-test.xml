@@ -210,7 +210,7 @@
         </fileset>
     </copy>
     <echoxml file="${server-work-dir}/conf/server.xml">
-<Server port="8005" shutdown="SHUTDOWN">
+<Server port="${server-shutdown-port}" shutdown="SHUTDOWN">
 
     <!--APR library loader. Documentation at /docs/apr.html -->
     <Listener SSLEngine="on" className="org.apache.catalina.core.AprLifecycleListener"/>
