@@ -26,15 +26,16 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
-import sernet.verinice.interfaces.ChangeLoggingCommand;
+import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Update the icon of a set of elements
  */
-public class UpdateIcon extends ChangeLoggingCommand {
+public class UpdateIcon extends GenericCommand implements IChangeLoggingCommand {
 
     private Set<String> elementUUIDs;
     private String iconPath;

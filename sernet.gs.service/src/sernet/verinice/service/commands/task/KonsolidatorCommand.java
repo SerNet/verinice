@@ -21,7 +21,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-import sernet.verinice.interfaces.ChangeLoggingCommand;
+import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -29,7 +29,7 @@ import sernet.verinice.model.bsi.Konsolidator;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 
-public class KonsolidatorCommand extends ChangeLoggingCommand implements IChangeLoggingCommand {
+public class KonsolidatorCommand extends GenericCommand implements IChangeLoggingCommand {
 
     private List<BausteinUmsetzung> selectedElements;
     private BausteinUmsetzung source;

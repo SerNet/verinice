@@ -26,8 +26,8 @@ import org.apache.log4j.Logger;
 import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
-import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
@@ -44,7 +44,7 @@ import sernet.verinice.service.commands.crud.LoadChildrenForExpansion;
  * one used for bulkediting of account data
  */
 @SuppressWarnings({ "serial", "restriction" })
-public class ConfigurationBulkEditUpdate extends ChangeLoggingCommand
+public class ConfigurationBulkEditUpdate extends GenericCommand
         implements IChangeLoggingCommand, IAuthAwareCommand {
 
     private static final Logger log = Logger.getLogger(ConfigurationBulkEditUpdate.class);

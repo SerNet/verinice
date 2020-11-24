@@ -15,8 +15,8 @@ import org.hibernate.criterion.Restrictions;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.connect.IPerson;
 import sernet.hui.common.connect.Property;
-import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
@@ -39,7 +39,7 @@ import sernet.verinice.service.commands.UsernameExistsRuntimeException;
 import sernet.verinice.service.iso27k.LoadImportObjectsHolder;
 import sernet.verinice.service.model.LoadModel;
 
-public class SaveLdapUser extends ChangeLoggingCommand
+public class SaveLdapUser extends GenericCommand
         implements IChangeLoggingCommand, IAuthAwareCommand {
 
     private static final Logger log = Logger.getLogger(SaveLdapUser.class);

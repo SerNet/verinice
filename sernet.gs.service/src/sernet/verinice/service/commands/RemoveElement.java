@@ -35,8 +35,8 @@ import org.hibernate.criterion.Restrictions;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.service.SecurityException;
 import sernet.gs.service.TimeFormatter;
-import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.interfaces.IFinishedRiskAnalysisListsDao;
@@ -68,7 +68,7 @@ import sernet.verinice.model.common.configuration.Configuration;
  * @param <T>
  */
 @SuppressWarnings("serial")
-public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingCommand
+public class RemoveElement<T extends CnATreeElement> extends GenericCommand
         implements IChangeLoggingCommand, INoAccessControl {
 
     private static final Logger LOG = Logger.getLogger(RemoveElement.class);

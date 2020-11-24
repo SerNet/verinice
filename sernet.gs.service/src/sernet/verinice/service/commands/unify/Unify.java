@@ -27,8 +27,8 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
-import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -58,7 +58,7 @@ import sernet.verinice.service.commands.RemoveLink;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand {
+public class Unify extends GenericCommand implements IChangeLoggingCommand {
 
     private static final Logger log = Logger.getLogger(Unify.class);
 

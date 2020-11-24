@@ -33,10 +33,11 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.PermissionException;
 import sernet.gs.service.RetrieveInfo;
-import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ElementChange;
+import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
@@ -45,7 +46,7 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class CutCommand extends ChangeLoggingCommand {
+public class CutCommand extends GenericCommand implements IChangeLoggingCommand {
 
     private static final Logger log = Logger.getLogger(CutCommand.class);
 

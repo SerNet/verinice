@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sernet.hui.common.connect.ITypedElement;
-import sernet.verinice.interfaces.ChangeLoggingCommand;
+import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -37,7 +37,7 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  * @param <T>
  */
-public class SaveElement<T extends ITypedElement> extends ChangeLoggingCommand
+public class SaveElement<T extends ITypedElement> extends GenericCommand
         implements IChangeLoggingCommand {
 
     protected T element;

@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.verinice.interfaces;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import sernet.verinice.model.common.CnATreeElement;
@@ -25,29 +27,42 @@ import sernet.verinice.model.common.CnATreeElement;
  * Command that wants to notify other clients of changes.
  * 
  * @author koderman[at]sernet[dot]de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
 public interface IChangeLoggingCommand {
 
-	/**
-	 * The session id of the client making the changes.
-	 * @return
-	 */
-	public String getStationId();
-	
-	/**
-	 * Returns the elements this command changed.
-	 * 
-	 * @return Changed elements
-	 */
-	public List<CnATreeElement> getChangedElements();
-	
-	public List<ElementChange> getChanges();
-	
-	/**
-	 * @return
-	 */
-	public int getChangeType();
+    /**
+     * The session id of the client making the changes.
+     * 
+     * @return
+     */
+    public String getStationId();
+
+    /**
+     * Returns the elements this command changed.
+     * 
+     * @return Changed elements
+     */
+    default public List<CnATreeElement> getChangedElements() {
+        return Collections.emptyList();
+    }
+
+    default public List<ElementChange> getChanges() {
+        List<ElementChange> result = Collections.emptyList();
+        List<CnATreeElement> elements = getChangedElements();
+        if (elements == null || elements.isEmpty()) {
+            return result;
+        }
+        result = new ArrayList<>(elements.size());
+        for (CnATreeElement element : elements) {
+            result.add(new ElementChange(element, getChangeType()));
+        }
+        return result;
+    }
+
+    /**
+     * @return
+     */
+    public int getChangeType();
 }

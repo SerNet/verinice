@@ -61,8 +61,8 @@ import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
-import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.bsi.Attachment;
@@ -83,7 +83,7 @@ import sernet.verinice.service.sync.VnaSchemaVersion;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggingCommand {
+public class ExportCommand extends GenericCommand implements IChangeLoggingCommand {
     private static final Logger log = Logger.getLogger(ExportCommand.class);
 
     // Configuration fields set by client

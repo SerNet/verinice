@@ -44,8 +44,8 @@ import de.sernet.sync.sync.SyncRequest;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.service.TimeFormatter;
 import sernet.gs.service.VeriniceCharset;
-import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
@@ -57,7 +57,7 @@ import sernet.verinice.service.sync.VeriniceArchive;
 import sernet.verinice.service.sync.VnaSchemaVersion;
 
 @SuppressWarnings("serial")
-public class SyncCommand extends ChangeLoggingCommand
+public class SyncCommand extends GenericCommand
         implements IChangeLoggingCommand, IAuthAwareCommand {
     private static final Logger log = Logger.getLogger(SyncCommand.class);
 

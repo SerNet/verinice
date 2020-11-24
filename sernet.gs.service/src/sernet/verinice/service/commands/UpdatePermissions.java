@@ -26,7 +26,7 @@ import java.util.Set;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.VeriniceContext;
-import sernet.verinice.interfaces.ChangeLoggingCommand;
+import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.interfaces.IConfigurationService;
@@ -45,7 +45,7 @@ import sernet.verinice.model.common.Permission;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings({ "serial" })
-public class UpdatePermissions extends ChangeLoggingCommand implements IChangeLoggingCommand {
+public class UpdatePermissions extends GenericCommand implements IChangeLoggingCommand {
 
     private Serializable dbId;
     private String uuid;

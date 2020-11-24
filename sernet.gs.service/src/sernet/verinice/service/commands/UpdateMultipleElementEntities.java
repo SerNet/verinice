@@ -23,14 +23,15 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 
 @SuppressWarnings("serial")
-public class UpdateMultipleElementEntities extends ChangeLoggingCommand {
+public class UpdateMultipleElementEntities extends GenericCommand implements IChangeLoggingCommand {
 
     private static final Logger logger = Logger.getLogger(UpdateMultipleElementEntities.class);
 

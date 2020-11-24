@@ -29,8 +29,9 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.RetrieveInfo;
-import sernet.verinice.interfaces.ChangeLoggingCommand;
+import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
@@ -75,7 +76,7 @@ import sernet.verinice.service.bp.exceptions.BpModelingException;
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class ModelCommand extends ChangeLoggingCommand {
+public class ModelCommand extends GenericCommand implements IChangeLoggingCommand {
 
     private static final long serialVersionUID = -7021777504561600179L;
 

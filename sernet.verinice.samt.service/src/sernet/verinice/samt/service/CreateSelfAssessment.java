@@ -35,8 +35,8 @@ import org.apache.log4j.Logger;
 import sernet.gs.service.CsvFile;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.connect.HitroUtil;
-import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
@@ -66,7 +66,7 @@ import sernet.verinice.service.iso27k.ItemControlTransformer;
  * 
  * @author Daniel Murygin <dm@sernet.de>
  */
-public class CreateSelfAssessment extends ChangeLoggingCommand
+public class CreateSelfAssessment extends GenericCommand
         implements IChangeLoggingCommand, IAuthAwareCommand {
 
     private static final Logger log = Logger.getLogger(CreateSelfAssessment.class);

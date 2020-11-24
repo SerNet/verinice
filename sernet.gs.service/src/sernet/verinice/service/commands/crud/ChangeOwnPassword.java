@@ -22,8 +22,8 @@ import java.util.List;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.connect.Property;
-import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
@@ -38,7 +38,7 @@ import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
  *
  */
 @SuppressWarnings("serial")
-public class ChangeOwnPassword extends ChangeLoggingCommand
+public class ChangeOwnPassword extends GenericCommand
         implements IAuthAwareCommand, IChangeLoggingCommand {
 
     private String pass;

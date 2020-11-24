@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Massnahme;
 import sernet.gs.service.RuntimeCommandException;
-import sernet.verinice.interfaces.ChangeLoggingCommand;
+import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
@@ -47,7 +47,7 @@ import sernet.verinice.service.gstoolimport.MassnahmenFactory;
  * @param <T>
  */
 @SuppressWarnings("serial")
-public class CreateBaustein extends ChangeLoggingCommand
+public class CreateBaustein extends GenericCommand
         implements IChangeLoggingCommand, IAuthAwareCommand {
 
     private static final Logger log = Logger.getLogger(CreateBaustein.class);

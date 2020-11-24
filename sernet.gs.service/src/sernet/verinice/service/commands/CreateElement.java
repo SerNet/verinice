@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.Retriever;
 import sernet.gs.service.RuntimeCommandException;
-import sernet.verinice.interfaces.ChangeLoggingCommand;
+import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
@@ -52,7 +52,7 @@ import sernet.verinice.model.iso27k.Organization;
  * @param <T>
  *            The class from which instances are created with the command
  */
-public class CreateElement<T extends CnATreeElement> extends ChangeLoggingCommand
+public class CreateElement<T extends CnATreeElement> extends GenericCommand
         implements IChangeLoggingCommand, IAuthAwareCommand {
 
     private static final long serialVersionUID = 7612712230183045070L;

@@ -30,7 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import sernet.gs.service.RetrieveInfo;
-import sernet.verinice.interfaces.ChangeLoggingCommand;
+import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -38,7 +38,7 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 
-public class GSMKonsolidatorCommand extends ChangeLoggingCommand implements IChangeLoggingCommand {
+public class GSMKonsolidatorCommand extends GenericCommand implements IChangeLoggingCommand {
 
     public static final List<String> PROPERTY_TYPE_BLACKLIST = Arrays
             .asList(BausteinUmsetzung.P_NAME, MassnahmenUmsetzung.P_SIEGEL);
