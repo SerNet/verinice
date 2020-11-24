@@ -40,8 +40,8 @@ import sernet.verinice.model.common.CnATreeElement;
 
 public class GSMKonsolidatorCommand extends ChangeLoggingCommand implements IChangeLoggingCommand {
 
-    
-    public static final List<String> PROPERTY_TYPE_BLACKLIST = Arrays.asList(BausteinUmsetzung.P_NAME, MassnahmenUmsetzung.P_SIEGEL);
+    public static final List<String> PROPERTY_TYPE_BLACKLIST = Arrays
+            .asList(BausteinUmsetzung.P_NAME, MassnahmenUmsetzung.P_SIEGEL);
     private List<String> propertyTypeBlacklist;
     private static transient IBaseDao<CnATreeElement, Serializable> dao;
     private List<BausteinUmsetzung> selectedElements;
@@ -49,7 +49,8 @@ public class GSMKonsolidatorCommand extends ChangeLoggingCommand implements ICha
     private String stationId;
     private List<CnATreeElement> changedElements;
 
-    public GSMKonsolidatorCommand(List<BausteinUmsetzung> selectedElements, BausteinUmsetzung source) {
+    public GSMKonsolidatorCommand(List<BausteinUmsetzung> selectedElements,
+            BausteinUmsetzung source) {
         this.selectedElements = selectedElements;
         this.source = source;
         this.stationId = ChangeLogEntry.STATION_ID;
@@ -57,36 +58,38 @@ public class GSMKonsolidatorCommand extends ChangeLoggingCommand implements ICha
     }
 
     public void execute() {
-        IBaseDao<BausteinUmsetzung, Serializable> internalDao = getDaoFactory().getDAO(BausteinUmsetzung.class);
+        IBaseDao<BausteinUmsetzung, Serializable> internalDao = getDaoFactory()
+                .getDAO(BausteinUmsetzung.class);
         internalDao.reload(source, source.getDbId());
 
         changedElements = new LinkedList<CnATreeElement>();
         // for every target:
         for (BausteinUmsetzung target : selectedElements) {
             // do not copy source onto itself:
-            if (source.equals(target)){
+            if (source.equals(target)) {
                 continue;
             }
-            internalDao.reload(target, target.getDbId()); //anschauen was noch geladen ist!
+            internalDao.reload(target, target.getDbId()); // anschauen was noch
+                                                          // geladen ist!
             // set values:
-            target = (BausteinUmsetzung) getDao().findByUuid(target.getUuid(), RetrieveInfo.getPropertyChildrenInstance());
-            source = (BausteinUmsetzung) getDao().findByUuid(source.getUuid(), RetrieveInfo.getPropertyChildrenInstance());
-            for (MassnahmenUmsetzung mn: target.getMassnahmenUmsetzungen()) {
+            target = (BausteinUmsetzung) getDao().findByUuid(target.getUuid(),
+                    RetrieveInfo.getPropertyChildrenInstance());
+            source = (BausteinUmsetzung) getDao().findByUuid(source.getUuid(),
+                    RetrieveInfo.getPropertyChildrenInstance());
+            for (MassnahmenUmsetzung mn : target.getMassnahmenUmsetzungen()) {
                 MassnahmenUmsetzung sourceMn = source.getMassnahmenUmsetzung(mn.getUrl());
                 if (sourceMn != null) {
                     mn.getEntity().copyEntity(sourceMn.getEntity(), propertyTypeBlacklist);
                     getDao().merge(target);
                     changedElements.add(target);
                 }
-            }         
+            }
         }
         // remove elements to make object smaller for transport back to client
         selectedElements = null;
         source = null;
     }
-    
-    
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -117,15 +120,17 @@ public class GSMKonsolidatorCommand extends ChangeLoggingCommand implements ICha
     public int getChangeType() {
         return ChangeLogEntry.TYPE_UPDATE;
     }
+
     /**
-     * @param propertyTypeBlacklist the propertyTypeBlacklist to set
+     * @param propertyTypeBlacklist
+     *            the propertyTypeBlacklist to set
      */
     protected void setPropertyTypeBlacklist(List<String> propertyTypeBlacklist) {
         this.propertyTypeBlacklist = propertyTypeBlacklist;
     }
 
     protected IBaseDao<CnATreeElement, Serializable> getDao() {
-        if(dao==null) {
+        if (dao == null) {
             dao = getDaoFactory().getDAO(CnATreeElement.class);
         }
         return dao;

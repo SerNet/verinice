@@ -23,64 +23,69 @@ import java.util.List;
 
 import sernet.hui.common.connect.ITypedElement;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
-import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 
-public class UpdateElement<T extends ITypedElement> extends ChangeLoggingCommand implements IChangeLoggingCommand {
+public class UpdateElement<T extends ITypedElement> extends ChangeLoggingCommand
+        implements IChangeLoggingCommand {
 
-	private T element;
-	private boolean fireupdates;
-	private boolean logChanges = true;
-	private String stationId;
+    private T element;
+    private boolean fireupdates;
+    private boolean logChanges = true;
+    private String stationId;
 
-	public UpdateElement(T element, boolean fireUpdates, String stationId) {
-		this.element = element;
-		this.fireupdates = fireUpdates;
-		this.stationId = stationId;
-	}
+    public UpdateElement(T element, boolean fireUpdates, String stationId) {
+        this.element = element;
+        this.fireupdates = fireUpdates;
+        this.stationId = stationId;
+    }
 
-	public void execute() {
-		IBaseDao dao =  getDaoFactory().getDAOforTypedElement(element);
-		element = (T) dao.merge(element, fireupdates);
-	}
+    public void execute() {
+        IBaseDao dao = getDaoFactory().getDAOforTypedElement(element);
+        element = (T) dao.merge(element, fireupdates);
+    }
 
-	public T getElement() {
-		return element;
-	}
+    public T getElement() {
+        return element;
+    }
 
-	public void setLogChanges(boolean logChanges) {
+    public void setLogChanges(boolean logChanges) {
         this.logChanges = logChanges;
     }
 
     public String getStationId() {
-		return stationId;
-	}
+        return stationId;
+    }
 
-	public void setStationId(String stationId) {
-		this.stationId = stationId;
-	}
+    public void setStationId(String stationId) {
+        this.stationId = stationId;
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#getChangeType()
-	 */
-	public int getChangeType() {
-		return ChangeLogEntry.TYPE_UPDATE;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#
+     * getChangeType()
+     */
+    public int getChangeType() {
+        return ChangeLogEntry.TYPE_UPDATE;
+    }
 
-
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#getChangedElements()
-	 */
-	public List<CnATreeElement> getChangedElements() {
-		if (element instanceof CnATreeElement && logChanges) {
-			ArrayList<CnATreeElement> list = new ArrayList<CnATreeElement>(1);
-			list.add((CnATreeElement) element);
-			return list;
-		}
-		return Collections.emptyList();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#
+     * getChangedElements()
+     */
+    public List<CnATreeElement> getChangedElements() {
+        if (element instanceof CnATreeElement && logChanges) {
+            ArrayList<CnATreeElement> list = new ArrayList<CnATreeElement>(1);
+            list.add((CnATreeElement) element);
+            return list;
+        }
+        return Collections.emptyList();
+    }
 
 }

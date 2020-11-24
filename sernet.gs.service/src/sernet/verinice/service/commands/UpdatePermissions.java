@@ -61,33 +61,40 @@ public class UpdatePermissions extends ChangeLoggingCommand implements IChangeLo
     private transient IBaseDao<Permission, Serializable> permissionDao;
     private String stationId;
 
-    public UpdatePermissions(CnATreeElement cte, Set<Permission> permissionAdd, boolean updateChildren) {
+    public UpdatePermissions(CnATreeElement cte, Set<Permission> permissionAdd,
+            boolean updateChildren) {
         this(cte, permissionAdd, null, updateChildren, true);
     }
 
-    public UpdatePermissions(CnATreeElement cte, Set<Permission> permissionAdd, boolean updateChildren, boolean overridePermission) {
+    public UpdatePermissions(CnATreeElement cte, Set<Permission> permissionAdd,
+            boolean updateChildren, boolean overridePermission) {
         this(cte, permissionAdd, null, updateChildren, true);
     }
 
-    public UpdatePermissions(Long dbId, Set<Permission> permissionAdd, boolean updateChildren, boolean overridePermission) {
+    public UpdatePermissions(Long dbId, Set<Permission> permissionAdd, boolean updateChildren,
+            boolean overridePermission) {
         this(dbId, permissionAdd, null, updateChildren, overridePermission);
     }
 
-    public UpdatePermissions(CnATreeElement cte, Set<Permission> permissionAdd, Set<Permission> permissionRemove, boolean updateChildren, boolean overridePermission) {
+    public UpdatePermissions(CnATreeElement cte, Set<Permission> permissionAdd,
+            Set<Permission> permissionRemove, boolean updateChildren, boolean overridePermission) {
         this(cte.getDbId(), permissionAdd, permissionRemove, updateChildren, overridePermission);
     }
 
-    public UpdatePermissions(Serializable dbId, Set<Permission> permissionAdd, Set<Permission> permissionRemove, boolean updateChildren, boolean overridePermission) {
+    public UpdatePermissions(Serializable dbId, Set<Permission> permissionAdd,
+            Set<Permission> permissionRemove, boolean updateChildren, boolean overridePermission) {
         this.dbId = dbId;
         addParameter(permissionAdd, permissionRemove, updateChildren, overridePermission);
     }
 
-    public UpdatePermissions(String uuid, Set<Permission> permissionAdd, boolean updateChildren, boolean overridePermission) {
+    public UpdatePermissions(String uuid, Set<Permission> permissionAdd, boolean updateChildren,
+            boolean overridePermission) {
         this.uuid = uuid;
         addParameter(permissionAdd, null, updateChildren, overridePermission);
     }
 
-    private void addParameter(Set<Permission> permissionAdd, Set<Permission> permissionRemove, boolean updateChildren, boolean overridePermission) {
+    private void addParameter(Set<Permission> permissionAdd, Set<Permission> permissionRemove,
+            boolean updateChildren, boolean overridePermission) {
         this.permissionSetAdd = permissionAdd;
         if (permissionRemove == null) {
             this.permissionSetRemove = Collections.emptySet();
@@ -218,9 +225,8 @@ public class UpdatePermissions extends ChangeLoggingCommand implements IChangeLo
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#getChangeType
-     * ()
+     * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#
+     * getChangeType ()
      */
     @Override
     public int getChangeType() {

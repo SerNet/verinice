@@ -43,13 +43,13 @@ public class NaturalizeCommand extends ChangeLoggingCommand implements IChangeLo
     private static final Logger log = Logger.getLogger(NaturalizeCommand.class);
 
     private Set<String> uuidSet;
-    
+
     private List<CnATreeElement> changedElements = Collections.emptyList();
-    
+
     private transient IBaseDao<CnATreeElement, Serializable> cnaTreeElementDao;
 
     private String stationId;
-    
+
     /**
      * @param uuidSet
      */
@@ -58,32 +58,36 @@ public class NaturalizeCommand extends ChangeLoggingCommand implements IChangeLo
         this.stationId = ChangeLogEntry.STATION_ID;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
-            if(uuidSet!=null && !uuidSet.isEmpty()) {
-                changedElements = new ArrayList<CnATreeElement>(uuidSet.size());
-                for (String uuid : uuidSet) {
-                    CnATreeElement element = getCnaTreeElementDao().findByUuid(uuid, null);
-                    element.setSourceId(null);
-                    element.setExtId(null);
-                    SaveElement<CnATreeElement> command = new SaveElement<CnATreeElement>(element);
-                    try {
-                        command = getCommandService().executeCommand(command);
-                    } catch (CommandException e) {
-                        log.error("Error while saving element", e);
-                        throw new RuntimeException("Error while saving element", e);
-                    }
-                    changedElements.add(command.getElement());
+        if (uuidSet != null && !uuidSet.isEmpty()) {
+            changedElements = new ArrayList<CnATreeElement>(uuidSet.size());
+            for (String uuid : uuidSet) {
+                CnATreeElement element = getCnaTreeElementDao().findByUuid(uuid, null);
+                element.setSourceId(null);
+                element.setExtId(null);
+                SaveElement<CnATreeElement> command = new SaveElement<CnATreeElement>(element);
+                try {
+                    command = getCommandService().executeCommand(command);
+                } catch (CommandException e) {
+                    log.error("Error while saving element", e);
+                    throw new RuntimeException("Error while saving element", e);
                 }
-                
+                changedElements.add(command.getElement());
             }
-       
+
+        }
+
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangeType()
      */
     @Override
@@ -91,24 +95,29 @@ public class NaturalizeCommand extends ChangeLoggingCommand implements IChangeLo
         return ChangeLogEntry.TYPE_UPDATE;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangedElements()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.IChangeLoggingCommand#getChangedElements()
      */
     @Override
     public List<CnATreeElement> getChangedElements() {
         return changedElements;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.IChangeLoggingCommand#getStationId()
      */
     @Override
     public String getStationId() {
         return stationId;
     }
-    
+
     protected IBaseDao<CnATreeElement, Serializable> getCnaTreeElementDao() {
-        if(cnaTreeElementDao==null) {
+        if (cnaTreeElementDao == null) {
             cnaTreeElementDao = getDaoFactory().getDAO(CnATreeElement.class);
         }
         return cnaTreeElementDao;

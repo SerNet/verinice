@@ -24,7 +24,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.ChangeLoggingCommand;
-import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -34,13 +33,13 @@ import sernet.verinice.model.common.CnATreeElement;
 @SuppressWarnings("serial")
 public class RemoveLink extends ChangeLoggingCommand implements IChangeLoggingCommand {
 
-private static final Logger log = Logger.getLogger(RemoveLink.class);
-    
+    private static final Logger log = Logger.getLogger(RemoveLink.class);
+
     private String stationId;
     private CnALink element;
     private Integer dependantId;
     private Integer dependencyId;
-    private String typeId; 
+    private String typeId;
 
     public RemoveLink(CnALink link) {
         this.stationId = ChangeLogEntry.STATION_ID;
@@ -58,9 +57,9 @@ private static final Logger log = Logger.getLogger(RemoveLink.class);
         if (log.isDebugEnabled()) {
             log.debug("Looking for link to remove.");
         }
-        
+
         IBaseDao<CnALink, Serializable> dao = getDaoFactory().getDAO(CnALink.class);
-        if(element!=null) {
+        if (element != null) {
             element = dao.findById(element.getId());
         } else {
             element = dao.findById(new CnALink.Id(dependantId, dependencyId, typeId));
@@ -90,9 +89,8 @@ private static final Logger log = Logger.getLogger(RemoveLink.class);
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangeType
-     * ()
+     * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#
+     * getChangeType ()
      */
     public int getChangeType() {
         return ChangeLogEntry.TYPE_UPDATE;

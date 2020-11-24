@@ -57,17 +57,17 @@ import sernet.verinice.service.iso27k.ImportCatalog;
 import sernet.verinice.service.iso27k.ItemControlTransformer;
 
 /**
- * Creates a new self-assessment (SAMT).
- * A SAMT is an ISO-27000 organization with controls  
- * divided into several groups.
+ * Creates a new self-assessment (SAMT). A SAMT is an ISO-27000 organization
+ * with controls divided into several groups.
  * 
- * Controls are imported from a CSV-file while creating the SAMT.
- * See wiki for more information about the CSV file:
+ * Controls are imported from a CSV-file while creating the SAMT. See wiki for
+ * more information about the CSV file:
  * https://wiki.sernet.private/wiki/Verinice/Control_Import
  * 
  * @author Daniel Murygin <dm@sernet.de>
  */
-public class CreateSelfAssessment extends ChangeLoggingCommand implements IChangeLoggingCommand, IAuthAwareCommand {
+public class CreateSelfAssessment extends ChangeLoggingCommand
+        implements IChangeLoggingCommand, IAuthAwareCommand {
 
     private static final Logger log = Logger.getLogger(CreateSelfAssessment.class);
 
@@ -113,15 +113,15 @@ public class CreateSelfAssessment extends ChangeLoggingCommand implements IChang
     public void execute() {
         try {
             changedElements = new ArrayList<CnATreeElement>();
-            if(auditGroup==null) { 
-                organization = saveNewOrganisation(model, titleOrganization);                           
+            if (auditGroup == null) {
+                organization = saveNewOrganisation(model, titleOrganization);
                 changedElements.add(organization);
-                
+
                 // Create the audit add it to organization
                 auditGroup = getAuditGroup(organization);
                 changedElements.add(auditGroup);
             }
-            
+
             isaAudit = new Audit(auditGroup, true);
             if (title != null) {
                 isaAudit.setTitel(title);
@@ -130,20 +130,22 @@ public class CreateSelfAssessment extends ChangeLoggingCommand implements IChang
             auditGroup.addChild(isaAudit);
             IBaseDao<Audit, Serializable> auditDao = getDaoFactory().getDAO(Audit.class);
             auditDao.saveOrUpdate(isaAudit);
-            
+
             changedElements.add(isaAudit);
             changedElements.addAll(isaAudit.getChildren());
-            
+
             // read the control items from the csv file
             Collection<IItem> itemCollection = getItemCollection();
             ControlGroup controlGroup = getControlGroup(isaAudit);
             addPermissions(controlGroup);
-            
-            // convert catalog items to self assessment topics (class: SamtTopic)
+
+            // convert catalog items to self assessment topics (class:
+            // SamtTopic)
             importCatalogItems(controlGroup, itemCollection);
-            IBaseDao<Organization, Serializable> orgDao = getDaoFactory().getDAO(Organization.class);
-            
-            if(organization!=null) {
+            IBaseDao<Organization, Serializable> orgDao = getDaoFactory()
+                    .getDAO(Organization.class);
+
+            if (organization != null) {
                 orgDao.saveOrUpdate(organization);
             } else {
                 IBaseDao<Audit, Serializable> dao = getDaoFactory().getDAO(Audit.class);
@@ -151,39 +153,43 @@ public class CreateSelfAssessment extends ChangeLoggingCommand implements IChang
                 organization = findOrganization(isaAudit);
                 organization = orgDao.findById(organization.getDbId());
             }
-            
+
             // Link all controls of audit to audit
             IBaseDao<CnALink, Serializable> daoLink = getDaoFactory().getDAO(CnALink.class);
-            
+
             auditDao.flush();
-            
-            CnALink link = new CnALink(organization,isaAudit,"rel_org_audit",null);
+
+            CnALink link = new CnALink(organization, isaAudit, "rel_org_audit", null);
             organization.addLinkDown(link);
             isaAudit.addLinkUp(link);
             daoLink.saveOrUpdate(link);
-            
+
             Set<CnATreeElement> isaCategories = controlGroup.getChildren();
             for (CnATreeElement categorie : isaCategories) {
-                link = new CnALink(isaAudit,categorie,"rel_audit_control",null);
+                link = new CnALink(isaAudit, categorie, "rel_audit_control", null);
                 isaAudit.addLinkDown(link);
                 categorie.addLinkUp(link);
                 daoLink.saveOrUpdate(link);
             }
         } catch (CommandException e) {
             log.error("Error while creating self assesment", e); //$NON-NLS-1$
-            throw new RuntimeCommandException("Error while creating self assesment: " + e.getMessage()); //$NON-NLS-1$
-        } catch (IOException e){
+            throw new RuntimeCommandException(
+                    "Error while creating self assesment: " + e.getMessage()); //$NON-NLS-1$
+        } catch (IOException e) {
             log.error("I-/O-Error while creating self assesment", e); //$NON-NLS-1$
-            throw new RuntimeCommandException("I-/O-Error while creating self assesment: " + e.getMessage()); //$NON-NLS-1$
+            throw new RuntimeCommandException(
+                    "I-/O-Error while creating self assesment: " + e.getMessage()); //$NON-NLS-1$
         }
     }
-    
-    public Organization saveNewOrganisation(CnATreeElement container, String title) throws CommandException {
+
+    public Organization saveNewOrganisation(CnATreeElement container, String title)
+            throws CommandException {
         String title0 = (title != null) ? title : null;
-        if(title0==null) {
-            title0 = HitroUtil.getInstance().getTypeFactory().getMessage(Organization.TYPE_ID);   
+        if (title0 == null) {
+            title0 = HitroUtil.getInstance().getTypeFactory().getMessage(Organization.TYPE_ID);
         }
-        CreateElement<Organization> saveCommand = new CreateElement<Organization>(container, Organization.class, title0, false, true);
+        CreateElement<Organization> saveCommand = new CreateElement<Organization>(container,
+                Organization.class, title0, false, true);
         saveCommand = getCommandService().executeCommand(saveCommand);
         Organization child = saveCommand.getNewElement();
         container.addChild(child);
@@ -197,10 +203,10 @@ public class CreateSelfAssessment extends ChangeLoggingCommand implements IChang
      */
     private Organization findOrganization(CnATreeElement element) {
         CnATreeElement parent = element.getParent();
-        if(parent instanceof Organization) {
+        if (parent instanceof Organization) {
             return (Organization) parent;
-        } else if(parent!=null) {
-            return findOrganization(parent);          
+        } else if (parent != null) {
+            return findOrganization(parent);
         } else {
             return null;
         }
@@ -229,7 +235,7 @@ public class CreateSelfAssessment extends ChangeLoggingCommand implements IChang
                 element = ItemControlTransformer.transformGeneric(item, new SamtTopic());
                 element.setParentAndScope(group);
             }
-            addPermissions(element);             
+            addPermissions(element);
             group.addChild(element);
             changedElements.add(element);
         }
@@ -253,7 +259,8 @@ public class CreateSelfAssessment extends ChangeLoggingCommand implements IChang
             String relativePath = "resources/add/real/path/to/samt-catalog.csv"; //$NON-NLS-1$
             InputStream is = this.getClass().getClassLoader().getResourceAsStream(relativePath);
             if (is == null) {
-                throw new FileNotFoundException("Relative path: " + relativePath + " not found by ..getClassLoader().getResource(..)"); //$NON-NLS-1$ //$NON-NLS-2$
+                throw new FileNotFoundException("Relative path: " + relativePath //$NON-NLS-1$
+                        + " not found by ..getClassLoader().getResource(..)"); //$NON-NLS-1$
             }
             csvFile = new CsvFile(is);
         }
@@ -278,7 +285,7 @@ public class CreateSelfAssessment extends ChangeLoggingCommand implements IChang
         }
         return auditGroup0;
     }
-    
+
     /**
      * @param selfAssessment2
      * @return
@@ -303,11 +310,11 @@ public class CreateSelfAssessment extends ChangeLoggingCommand implements IChang
     public Organization getOrganization() {
         return organization;
     }
-    
+
     public AuditGroup getAuditGroup() {
         return auditGroup;
     }
-    
+
     public Audit getIsaAudit() {
         return isaAudit;
     }
@@ -319,9 +326,8 @@ public class CreateSelfAssessment extends ChangeLoggingCommand implements IChang
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangeType
-     * ()
+     * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#
+     * getChangeType ()
      */
     @Override
     public int getChangeType() {

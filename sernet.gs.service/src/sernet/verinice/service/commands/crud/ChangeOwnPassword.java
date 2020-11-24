@@ -34,18 +34,17 @@ import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
 
 /**
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
 @SuppressWarnings("serial")
-public class ChangeOwnPassword extends ChangeLoggingCommand implements IAuthAwareCommand, IChangeLoggingCommand {
+public class ChangeOwnPassword extends ChangeLoggingCommand
+        implements IAuthAwareCommand, IChangeLoggingCommand {
 
     private String pass;
     private transient IAuthService authService;
     private String stationId;
-    
-    
+
     /**
      * @param element
      * @param updatePassword
@@ -54,7 +53,7 @@ public class ChangeOwnPassword extends ChangeLoggingCommand implements IAuthAwar
         this.stationId = ChangeLogEntry.STATION_ID;
         this.pass = password;
     }
-    
+
     public IAuthService getAuthService() {
         return this.authService;
     }
@@ -62,10 +61,12 @@ public class ChangeOwnPassword extends ChangeLoggingCommand implements IAuthAwar
     public void setAuthService(IAuthService service) {
         this.authService = service;
     }
-    
-    
-    /* (non-Javadoc)
-     * @see sernet.gs.ui.rcp.main.service.crudcommands.SaveConfiguration#execute()
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.service.crudcommands.SaveConfiguration#execute()
      */
     @Override
     public void execute() {
@@ -73,47 +74,57 @@ public class ChangeOwnPassword extends ChangeLoggingCommand implements IAuthAwar
             LoadCurrentUserConfiguration command = new LoadCurrentUserConfiguration();
             command = getCommandService().executeCommand(command);
             Configuration configuration = command.getConfiguration();
-            
+
             String hash = hashPassword(getAuthService().getUsername());
-            Property passProperty = configuration.getEntity().getProperties(Configuration.PROP_PASSWORD).getProperty(0);
+            Property passProperty = configuration.getEntity()
+                    .getProperties(Configuration.PROP_PASSWORD).getProperty(0);
             passProperty.setPropertyValue(hash, false);
-            
+
             getDaoFactory().getDAO(Configuration.class).merge(configuration);
-            
+
         } catch (CommandException e) {
             throw new RuntimeCommandException("Could not change password.", e);
         }
-        
+
     }
-    
-     /* (non-Javadoc)
-     * @see sernet.gs.ui.rcp.main.service.crudcommands.SaveConfiguration#hashPassword()
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.service.crudcommands.SaveConfiguration#hashPassword
+     * ()
      */
     private String hashPassword(String user) {
         // auth service checks additionally for login status:
         return getAuthService().hashOwnPassword(user, pass);
-        
-      
-        
+
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangeType()
      */
     @Override
     public int getChangeType() {
-       return ChangeLogEntry.TYPE_SYSTEM;
+        return ChangeLogEntry.TYPE_SYSTEM;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangedElements()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.IChangeLoggingCommand#getChangedElements()
      */
     @Override
     public List<CnATreeElement> getChangedElements() {
         return new ArrayList<CnATreeElement>(0);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.IChangeLoggingCommand#getStationId()
      */
     @Override
@@ -122,5 +133,3 @@ public class ChangeOwnPassword extends ChangeLoggingCommand implements IAuthAwar
     }
 
 }
-
-

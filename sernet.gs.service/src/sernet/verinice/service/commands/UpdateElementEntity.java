@@ -64,7 +64,8 @@ public class UpdateElementEntity<T extends CnATreeElement> extends ChangeLogging
     }
 
     private void updateElement() {
-        IBaseDao<T, Serializable> elementDao = getDaoFactory().getDAO(this.elementToUpdate.getTypeId());
+        IBaseDao<T, Serializable> elementDao = getDaoFactory()
+                .getDAO(this.elementToUpdate.getTypeId());
         try {
             elementDao.checkRights(this.elementToUpdate);
         } catch (SecurityException e) {

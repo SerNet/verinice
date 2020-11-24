@@ -29,62 +29,70 @@ import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 
 @SuppressWarnings("serial")
-public class UpdateMultipleElements<T extends ITypedElement> extends ChangeLoggingCommand implements IChangeLoggingCommand {
+public class UpdateMultipleElements<T extends ITypedElement> extends ChangeLoggingCommand
+        implements IChangeLoggingCommand {
 
-	private List<T> elements;
-	private String stationId;
-	private int changeType;
+    private List<T> elements;
+    private String stationId;
+    private int changeType;
 
-	public UpdateMultipleElements(List<T> elements, String stationId) {
-		this(elements, stationId, ChangeLogEntry.TYPE_UPDATE);
-	}
+    public UpdateMultipleElements(List<T> elements, String stationId) {
+        this(elements, stationId, ChangeLogEntry.TYPE_UPDATE);
+    }
 
-	public UpdateMultipleElements(List<T> elements, String stationId, int changeType) {
-		this.elements = (elements != null) ? elements : new ArrayList<T>(0);
-		this.stationId = stationId;
-		this.changeType = changeType;
-	}
-	
-	public void execute() {
-		ArrayList<T> mergedElements = new ArrayList<T>(elements.size());
-		if (elements.size()>0) {
-			IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory()
-				.getDAO(elements.get(0).getTypeId());
-			for (T element : elements) {
-				T mergedElement = dao.merge(element, true);
-				mergedElements.add(mergedElement);
-			}
-		}
-	}
+    public UpdateMultipleElements(List<T> elements, String stationId, int changeType) {
+        this.elements = (elements != null) ? elements : new ArrayList<T>(0);
+        this.stationId = stationId;
+        this.changeType = changeType;
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#getChangeType()
-	 */
-	public int getChangeType() {
-		return this.changeType;
-	}
+    public void execute() {
+        ArrayList<T> mergedElements = new ArrayList<T>(elements.size());
+        if (elements.size() > 0) {
+            IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory()
+                    .getDAO(elements.get(0).getTypeId());
+            for (T element : elements) {
+                T mergedElement = dao.merge(element, true);
+                mergedElements.add(mergedElement);
+            }
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#getStationId()
-	 */
-	public String getStationId() {
-		return stationId;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#
+     * getChangeType()
+     */
+    public int getChangeType() {
+        return this.changeType;
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#getChangedElements()
-	 */
-	public List<CnATreeElement> getChangedElements() {
-		ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>(elements.size());
-		for (Object object : elements) {
-			if (object instanceof CnATreeElement) {
-				CnATreeElement cnaElement = (CnATreeElement) object;
-				result.add(cnaElement);
-			}
-		}
-		return result;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#
+     * getStationId()
+     */
+    public String getStationId() {
+        return stationId;
+    }
 
-	
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#
+     * getChangedElements()
+     */
+    public List<CnATreeElement> getChangedElements() {
+        ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>(elements.size());
+        for (Object object : elements) {
+            if (object instanceof CnATreeElement) {
+                CnATreeElement cnaElement = (CnATreeElement) object;
+                result.add(cnaElement);
+            }
+        }
+        return result;
+    }
 
 }

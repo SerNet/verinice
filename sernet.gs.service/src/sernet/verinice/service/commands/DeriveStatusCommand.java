@@ -25,13 +25,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.log4j.Logger;
+
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.Status;
-
-import org.apache.log4j.Logger;
-
 import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -46,58 +45,62 @@ import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.samt.SamtTopic;
 
-
 /**
- *  Command determines all generic and specific measures (controls) that are
- *  linked to an ISA question (SamtTopic) and transfers the maturity of the question
- *  to the measures, if maturity not unset or NA.
- *  
- *  For existing specific measures, that are set NA (by the user), always the linked generic measure
- *  is set to implemented_yes. Otherwise, the specific measure will be marked implemented_yes
- *  and the generic one will be marked implemented_na.
- *   
- *  For maturity of 4 or 5, all measures up to level 3 will be set
- *  
- *  For maturity of 0, all measures will stay implemented_not_set, but the generic ones which are link
- *  to a specific measure, which will be marked implemented_na.
+ * Command determines all generic and specific measures (controls) that are
+ * linked to an ISA question (SamtTopic) and transfers the maturity of the
+ * question to the measures, if maturity not unset or NA.
+ * 
+ * For existing specific measures, that are set NA (by the user), always the
+ * linked generic measure is set to implemented_yes. Otherwise, the specific
+ * measure will be marked implemented_yes and the generic one will be marked
+ * implemented_na.
+ * 
+ * For maturity of 4 or 5, all measures up to level 3 will be set
+ * 
+ * For maturity of 0, all measures will stay implemented_not_set, but the
+ * generic ones which are link to a specific measure, which will be marked
+ * implemented_na.
  */
 @SuppressWarnings("serial")
 public class DeriveStatusCommand extends ChangeLoggingCommand implements IChangeLoggingCommand {
-    
+
     private static final Logger log = Logger.getLogger(DeriveStatusCommand.class);
-    
+
     private transient CacheManager manager = null;
     private String cacheId = null;
     private transient Cache cache = null;
     private List<CnATreeElement> changedElements;
     private String stationId;
-    
+
     private int samtTopicCount = 0;
     private int measureCount = 0;
     private CnATreeElement selectedControlgroup = null;
-    
+
     private transient Set<Control> mgSetNA;
     private transient IBaseDao<CnATreeElement, Serializable> dao;
-    
-    public DeriveStatusCommand(CnATreeElement controlgroup){
+
+    public DeriveStatusCommand(CnATreeElement controlgroup) {
         this.selectedControlgroup = controlgroup;
         changedElements = new LinkedList<CnATreeElement>();
         this.stationId = ChangeLogEntry.STATION_ID;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
         try {
             mgSetNA = new HashSet<Control>();
-            if(!selectedControlgroup.isChildrenLoaded()){
-                selectedControlgroup = hydrate(selectedControlgroup, RetrieveInfo.getPropertyChildrenInstance());
+            if (!selectedControlgroup.isChildrenLoaded()) {
+                selectedControlgroup = hydrate(selectedControlgroup,
+                        RetrieveInfo.getPropertyChildrenInstance());
             }
-            List<SamtTopic> allTopics = getAllTopics((ControlGroup)selectedControlgroup);
-            if(allTopics.size() > 0){
-                for(SamtTopic t : allTopics){
+            List<SamtTopic> allTopics = getAllTopics((ControlGroup) selectedControlgroup);
+            if (allTopics.size() > 0) {
+                for (SamtTopic t : allTopics) {
                     processSamtTopic(t);
                     samtTopicCount++;
                 }
@@ -109,94 +112,110 @@ public class DeriveStatusCommand extends ChangeLoggingCommand implements IChange
 
     private void processSamtTopic(SamtTopic topic) {
         RetrieveInfo ri = new RetrieveInfo().setLinksUp(true);
-        topic = (SamtTopic)hydrate(topic, ri);
+        topic = (SamtTopic) hydrate(topic, ri);
         int maturity = topic.getMaturity();
-        if(maturity == 0){ // special case maturity equals 0
+        if (maturity == 0) { // special case maturity equals 0
             setAllLinkedMeasuresToNo(topic);
-        } else if( maturity != SamtTopic.IMPLEMENTED_NA_NUMERIC) {
+        } else if (maturity != SamtTopic.IMPLEMENTED_NA_NUMERIC) {
             Integer topicMaturity = maturity;
-            if(topicMaturity > 0 && topicMaturity <= 5){ // standard case,maturity between 1 and 5
+            if (topicMaturity > 0 && topicMaturity <= 5) { // standard
+                                                           // case,maturity
+                                                           // between 1 and 5
                 processMeasure(getAllMeasuresToSet(topic, maturity), topicMaturity);
             }
         } else { // special case, maturity equals NA
             setAllLinkedMeasuresToNA(topic);
         }
     }
-    
+
     /**
      * Set all measures with maturity <= topicMaturity to implemented_yes.
      * 
-     * The rest is set to implemented_no if old value was not implemented_not_set (or non existent).
+     * The rest is set to implemented_no if old value was not
+     * implemented_not_set (or non existent).
      * 
-     * @param measures A set of measures
-     * @param topicMaturity Maturity of samt topic
+     * @param measures
+     *            A set of measures
+     * @param topicMaturity
+     *            Maturity of samt topic
      */
-    private void processMeasure(Set<Control> measures, int topicMaturity){
-        for(Control measure : measures){
+    private void processMeasure(Set<Control> measures, int topicMaturity) {
+        for (Control measure : measures) {
             Integer controlMaturity = measure.getMaturityValueByTag();
-            if(controlMaturity <= topicMaturity){ // default case, set implemented to yes
+            if (controlMaturity <= topicMaturity) { // default case, set
+                                                    // implemented to yes
                 measure.getEntity().setSimpleValue(getImplPropertyType(), Control.IMPLEMENTED_YES);
                 measureCount++;
                 changedElements.add(measure);
-            } else if(measure.isImplementationNotEdited()){ 
+            } else if (measure.isImplementationNotEdited()) {
                 measure.getEntity().setSimpleValue(getImplPropertyType(), Control.IMPLEMENTED_NO);
                 measureCount++;
                 changedElements.add(measure);
             }
         }
     }
-    
+
     /**
-     * Sets all measures linked to a ISA topic to IMPLEMENTED_NO, 
-     * but the generic ones which are link to a specific measure, which will be marked IMPLEMENTED_NA
-     * Used for case: maturity equals 0.
+     * Sets all measures linked to a ISA topic to IMPLEMENTED_NO, but the
+     * generic ones which are link to a specific measure, which will be marked
+     * IMPLEMENTED_NA Used for case: maturity equals 0.
      * 
-     * @param topic An ISA topic
+     * @param topic
+     *            An ISA topic
      */
-    private void setAllLinkedMeasuresToNo(SamtTopic topic){
-        for(CnALink link : topic.getLinksUp()){
+    private void setAllLinkedMeasuresToNo(SamtTopic topic) {
+        for (CnALink link : topic.getLinksUp()) {
             CnATreeElement genericMeasure = link.getRelationObject(topic, link);
-            RetrieveInfo ri = new RetrieveInfo().setLinksDown(true).setLinksUp(true).setProperties(true);
+            RetrieveInfo ri = new RetrieveInfo().setLinksDown(true).setLinksUp(true)
+                    .setProperties(true);
             genericMeasure = hydrate(genericMeasure, ri);
             Set<CnALink> links = genericMeasure.getLinksUp();
             links.addAll(genericMeasure.getLinksDown());
-            genericMeasure.getEntity().setSimpleValue(getImplPropertyType(), Control.IMPLEMENTED_NO);
+            genericMeasure.getEntity().setSimpleValue(getImplPropertyType(),
+                    Control.IMPLEMENTED_NO);
             measureCount++;
             changedElements.add(genericMeasure);
-            for(CnALink link2 : links){
+            for (CnALink link2 : links) {
                 CnATreeElement specificMeasure = link2.getRelationObject(genericMeasure, link2);
                 ri = RetrieveInfo.getPropertyInstance();
                 specificMeasure = hydrate(specificMeasure, ri);
-                if(specificMeasure instanceof Control){
-                    genericMeasure.getEntity().setSimpleValue(getImplPropertyType(), Control.IMPLEMENTED_NA);
-                    specificMeasure.getEntity().setSimpleValue(getImplPropertyType(), Control.IMPLEMENTED_NO);
+                if (specificMeasure instanceof Control) {
+                    genericMeasure.getEntity().setSimpleValue(getImplPropertyType(),
+                            Control.IMPLEMENTED_NA);
+                    specificMeasure.getEntity().setSimpleValue(getImplPropertyType(),
+                            Control.IMPLEMENTED_NO);
                     measureCount++;
                     changedElements.add(specificMeasure);
                 }
             }
         }
     }
-    
+
     /**
-     * Sets all generic/specific measures linked with a SamtTopic to IMPLEMENTED_NA.
-     * Used for case: maturity equals NA.
+     * Sets all generic/specific measures linked with a SamtTopic to
+     * IMPLEMENTED_NA. Used for case: maturity equals NA.
      * 
-     * @param topic An ISA topic
+     * @param topic
+     *            An ISA topic
      */
-    private void setAllLinkedMeasuresToNA(SamtTopic topic){
-        for(CnALink link : topic.getLinksUp()){
+    private void setAllLinkedMeasuresToNA(SamtTopic topic) {
+        for (CnALink link : topic.getLinksUp()) {
             CnATreeElement genericMeasure = link.getRelationObject(topic, link);
-            if(genericMeasure instanceof Control){
-                RetrieveInfo ri = new RetrieveInfo().setProperties(true).setLinksUp(true).setLinksDown(true);
+            if (genericMeasure instanceof Control) {
+                RetrieveInfo ri = new RetrieveInfo().setProperties(true).setLinksUp(true)
+                        .setLinksDown(true);
                 genericMeasure = hydrate(genericMeasure, ri);
-                genericMeasure.getEntity().setSimpleValue(getImplPropertyType(), Control.IMPLEMENTED_NA); // set generic measure to na
+                genericMeasure.getEntity().setSimpleValue(getImplPropertyType(),
+                        Control.IMPLEMENTED_NA); // set generic measure to na
                 changedElements.add(genericMeasure);
                 measureCount++;
-                for(CnATreeElement specificMeasure : getAllMeasures(genericMeasure, getAllLinks(genericMeasure), true)){
-                    if(specificMeasure instanceof Control){
+                for (CnATreeElement specificMeasure : getAllMeasures(genericMeasure,
+                        getAllLinks(genericMeasure), true)) {
+                    if (specificMeasure instanceof Control) {
                         ri = RetrieveInfo.getPropertyChildrenInstance().setParent(true);
                         specificMeasure = hydrate(specificMeasure, ri);
-                        specificMeasure.getEntity().setSimpleValue(getImplPropertyType(), Control.IMPLEMENTED_NA);
+                        specificMeasure.getEntity().setSimpleValue(getImplPropertyType(),
+                                Control.IMPLEMENTED_NA);
                         changedElements.add(specificMeasure);
                         measureCount++;
                     }
@@ -204,83 +223,101 @@ public class DeriveStatusCommand extends ChangeLoggingCommand implements IChange
             }
         }
     }
-    
-    private Set<CnALink> getAllLinks(CnATreeElement elmt){
+
+    private Set<CnALink> getAllLinks(CnATreeElement elmt) {
         Set<CnALink> set = new HashSet<CnALink>();
         set.addAll(elmt.getLinksUp());
         set.addAll(elmt.getLinksDown());
         return set;
     }
-    
+
     /**
-     * Returns all measures to one given parent, set specific to true if you want to get
-     * specific but general measures.
+     * Returns all measures to one given parent, set specific to true if you
+     * want to get specific but general measures.
      * 
      * @param parent
      * @param links
      * @param specific
      * @return
      */
-    private Set<CnATreeElement> getAllMeasures(CnATreeElement parent, Set<CnALink> links, boolean specific){
+    private Set<CnATreeElement> getAllMeasures(CnATreeElement parent, Set<CnALink> links,
+            boolean specific) {
         Set<CnATreeElement> set = new HashSet<CnATreeElement>();
-        for(CnALink link : links){
+        for (CnALink link : links) {
             CnATreeElement elmt = link.getRelationObject(parent, link);
-            if(!specific && parent instanceof SamtTopic && elmt instanceof Control) { // generic measures
-                set.add(hydrate(elmt, RetrieveInfo.getPropertyInstance())); // deprecated, never ever reached
-            } else if (specific && parent instanceof Control && elmt instanceof Control) { // specific measures
+            if (!specific && parent instanceof SamtTopic && elmt instanceof Control) { // generic
+                                                                                       // measures
+                set.add(hydrate(elmt, RetrieveInfo.getPropertyInstance())); // deprecated,
+                                                                            // never
+                                                                            // ever
+                                                                            // reached
+            } else if (specific && parent instanceof Control && elmt instanceof Control) { // specific
+                                                                                           // measures
                 set.add(hydrate(elmt, RetrieveInfo.getPropertyInstance()));
             }
         }
         return set;
     }
-    
+
     /**
-     * Returns all (generic and specific) measures linked from a given ISA question and 
-     * a maturity that needs to be derived.
+     * Returns all (generic and specific) measures linked from a given ISA
+     * question and a maturity that needs to be derived.
      * 
-     * @param topic A SAMT topic /  ISA question
-     * @param maturity Maturity level
+     * @param topic
+     *            A SAMT topic / ISA question
+     * @param maturity
+     *            Maturity level
      * @return Measures linked to the question
      */
-    private Set<Control> getAllMeasuresToSet(SamtTopic topic, int maturity){
-        Set<Control> set = new HashSet<Control>();        
-        for(CnALink link : getAllLinks(topic)){
+    private Set<Control> getAllMeasuresToSet(SamtTopic topic, int maturity) {
+        Set<Control> set = new HashSet<Control>();
+        for (CnALink link : getAllLinks(topic)) {
             CnATreeElement element = link.getRelationObject(topic, link);
             set.addAll(getMeasures(element));
         }
-        setControlsTo(mgSetNA, Control.IMPLEMENTED_NA); // set all MG linked to MS to NA
+        setControlsTo(mgSetNA, Control.IMPLEMENTED_NA); // set all MG linked to
+                                                        // MS to NA
         return set;
     }
 
     public Set<Control> getMeasures(CnATreeElement element) {
-        Set<Control> set = Collections.emptySet(); 
-        RetrieveInfo ri = new RetrieveInfo().setLinksDown(true).setLinksUp(true).setProperties(true);
+        Set<Control> set = Collections.emptySet();
+        RetrieveInfo ri = new RetrieveInfo().setLinksDown(true).setLinksUp(true)
+                .setProperties(true);
         element = hydrate(element, ri);
-        if(element instanceof Control){ // check/add for specific measures
+        if (element instanceof Control) { // check/add for specific measures
             Control genericMeasure = (Control) element;
-            set = getMeasuresFromTopic( genericMeasure);
+            set = getMeasuresFromTopic(genericMeasure);
         }
         return set;
     }
 
     public Set<Control> getMeasuresFromTopic(Control genericMeasure) {
-        Set<Control> set = new HashSet<Control>(); 
-        Set<CnATreeElement> specificMeasures = getAllMeasures(genericMeasure, getAllLinks(genericMeasure), true);      
-        for(CnATreeElement specificMeasure : specificMeasures){
+        Set<Control> set = new HashSet<Control>();
+        Set<CnATreeElement> specificMeasures = getAllMeasures(genericMeasure,
+                getAllLinks(genericMeasure), true);
+        for (CnATreeElement specificMeasure : specificMeasures) {
             String optVal = getImplOption(specificMeasure);
             // adds specific measure if fits to maturity condition
-            if(specificMeasure instanceof Control 
-               && (optVal == null || !optVal.equals(Control.IMPLEMENTED_NA))){
-                set.add((Control)specificMeasure);
+            if (specificMeasure instanceof Control
+                    && (optVal == null || !optVal.equals(Control.IMPLEMENTED_NA))) {
+                set.add((Control) specificMeasure);
                 mgSetNA.add(genericMeasure);
-            } else if(optVal != null && optVal.equals(Control.IMPLEMENTED_NA)){ // specific measure is na, so take generic measure
+            } else if (optVal != null && optVal.equals(Control.IMPLEMENTED_NA)) { // specific
+                                                                                  // measure
+                                                                                  // is
+                                                                                  // na,
+                                                                                  // so
+                                                                                  // take
+                                                                                  // generic
+                                                                                  // measure
                 set.add(genericMeasure);
             }
         }
-        if(specificMeasures.isEmpty()){ //check for/add generic measures
+        if (specificMeasures.isEmpty()) { // check for/add generic measures
             String optVal = getImplOption(genericMeasure);
             // adds generic measure if fits to maturity condition
-            if(optVal == null){
+            if (optVal == null) {
                 set.add(genericMeasure);
             }
         }
@@ -294,56 +331,60 @@ public class DeriveStatusCommand extends ChangeLoggingCommand implements IChange
 
     public String getOption(CnATreeElement measure, String propName) {
         String value = measure.getEntity().getOptionValue(propName);
-        if(value!=null && value.isEmpty()) {
-            value=null;
+        if (value != null && value.isEmpty()) {
+            value = null;
         }
         return value;
     }
-    
-    public void setControlsTo(Set<Control> controls, String levelToSet){
-        for(Control c : controls){
+
+    public void setControlsTo(Set<Control> controls, String levelToSet) {
+        for (Control c : controls) {
             String current = getOption(c, getImplPropertyType().getId());
-            if(current==null || !current.equals(levelToSet)) {
+            if (current == null || !current.equals(levelToSet)) {
                 c.getEntity().setSimpleValue(getImplPropertyType(), levelToSet);
                 measureCount++;
                 changedElements.add(c);
             }
         }
     }
-    
+
     /**
      * Returns (recursive) all ISA topics contained in a control group.
-     *  
-     * @param group A control group
+     * 
+     * @param group
+     *            A control group
      * @return All ISA topic
      */
-    private List<SamtTopic> getAllTopics(ControlGroup group){
+    private List<SamtTopic> getAllTopics(ControlGroup group) {
         LinkedList<SamtTopic> list = new LinkedList<SamtTopic>();
-        group = (ControlGroup)hydrate(group, RetrieveInfo.getChildrenInstance());
-        for(CnATreeElement child : group.getChildren()){
-            if(child instanceof SamtTopic){
-                list.add((SamtTopic)child);
-            } else if (child instanceof ControlGroup){
-                list.addAll(getAllTopics((ControlGroup)child));
+        group = (ControlGroup) hydrate(group, RetrieveInfo.getChildrenInstance());
+        for (CnATreeElement child : group.getChildren()) {
+            if (child instanceof SamtTopic) {
+                list.add((SamtTopic) child);
+            } else if (child instanceof ControlGroup) {
+                list.addAll(getAllTopics((ControlGroup) child));
             }
         }
         return list;
     }
-    
-    private PropertyType getImplPropertyType(){
-        HUITypeFactory factory = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+
+    private PropertyType getImplPropertyType() {
+        HUITypeFactory factory = (HUITypeFactory) VeriniceContext
+                .get(VeriniceContext.HUI_TYPE_FACTORY);
         return factory.getPropertyType(Control.TYPE_ID, Control.PROP_IMPL);
     }
-    
+
     public int getSamtTopicCount() {
         return samtTopicCount;
     }
-    
+
     public int getMeasureCount() {
         return measureCount;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.IChangeLoggingCommand#getStationId()
      */
     @Override
@@ -351,35 +392,39 @@ public class DeriveStatusCommand extends ChangeLoggingCommand implements IChange
         return stationId;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangedElements()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.IChangeLoggingCommand#getChangedElements()
      */
     @Override
     public List<CnATreeElement> getChangedElements() {
         return changedElements;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangeType()
      */
     @Override
     public int getChangeType() {
         return 0;
     }
-    
+
     /*************************************************
-     * Hydrate {@code element}, including all of its
-     * successor elements and properties.
+     * Hydrate {@code element}, including all of its successor elements and
+     * properties.
      * 
      * @param element
      *************************************************/
-    private CnATreeElement hydrate(CnATreeElement element, RetrieveInfo ri)
-    { 
+    private CnATreeElement hydrate(CnATreeElement element, RetrieveInfo ri) {
         RetrieveInfo ri_;
-        if (element == null){
+        if (element == null) {
             return element;
         }
-        if(ri != null){
+        if (ri != null) {
             ri_ = ri;
         } else { // no ri set, take default values (which is expensive)
             ri_ = RetrieveInfo.getPropertyChildrenInstance();
@@ -389,40 +434,41 @@ public class DeriveStatusCommand extends ChangeLoggingCommand implements IChange
             ri_.setLinksUpProperties(true);
             ri_.setParent(true);
         }
-        
+
         CnATreeElement elementFromCache = getElementFromCache(element.getUuid());
-        if(elementFromCache!=null) {
+        if (elementFromCache != null) {
             if (log.isDebugEnabled()) {
                 log.debug("Element from cache: " + elementFromCache.getTitle());
             }
             return elementFromCache;
         }
-        
+
         element = getDao().retrieve(element.getDbId(), ri_);
-        
+
         getCache().put(new Element(element.getUuid(), element));
-           
+
         return element;
     }
-    
-    private Cache getCache() {  
-        if(manager==null || Status.STATUS_SHUTDOWN.equals(manager.getStatus()) || cache==null || !Status.STATUS_ALIVE.equals(cache.getStatus())) {
+
+    private Cache getCache() {
+        if (manager == null || Status.STATUS_SHUTDOWN.equals(manager.getStatus()) || cache == null
+                || !Status.STATUS_ALIVE.equals(cache.getStatus())) {
             cache = createCache();
         } else {
             cache = manager.getCache(cacheId);
         }
         return cache;
     }
-    
-    private CnATreeElement getElementFromCache(String uuid){
+
+    private CnATreeElement getElementFromCache(String uuid) {
         Element cachedElement = getCache().get(uuid);
-        if(cachedElement != null){
-            return (CnATreeElement)cachedElement.getValue();
+        if (cachedElement != null) {
+            return (CnATreeElement) cachedElement.getValue();
         } else {
             return null;
         }
     }
-    
+
     private Cache createCache() {
         cacheId = UUID.randomUUID().toString();
         manager = CacheManager.create();
@@ -430,21 +476,21 @@ public class DeriveStatusCommand extends ChangeLoggingCommand implements IChange
         manager.addCache(cache);
         return cache;
     }
-    
+
     private void shutdownCache() {
         manager.shutdown();
-        manager=null;
+        manager = null;
     }
-    
+
     private IBaseDao<CnATreeElement, Serializable> getDao() {
-        if(dao==null) {
+        if (dao == null) {
             dao = createDao();
         }
         return dao;
     }
-    
+
     private IBaseDao<CnATreeElement, Serializable> createDao() {
         return getDaoFactory().getDAO(CnATreeElement.class);
     }
-    
+
 }

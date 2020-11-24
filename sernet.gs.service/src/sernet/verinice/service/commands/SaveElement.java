@@ -29,40 +29,40 @@ import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Save element of type T to the database using its class to lookup
- * the DAO from the factory.
+ * Save element of type T to the database using its class to lookup the DAO from
+ * the factory.
  * 
  * @author koderman[at]sernet[dot]de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  * @param <T>
  */
-public class SaveElement<T extends ITypedElement> extends ChangeLoggingCommand implements IChangeLoggingCommand {
+public class SaveElement<T extends ITypedElement> extends ChangeLoggingCommand
+        implements IChangeLoggingCommand {
 
-	protected T element;
-	protected String stationId;
-	private boolean logChanges = true;
-	
-	public SaveElement() { 
-	}
-	
-	public SaveElement(T element) {
-		this.element = element;
-		this.stationId = ChangeLogEntry.STATION_ID;
-	}
-	
-	@Override
+    protected T element;
+    protected String stationId;
+    private boolean logChanges = true;
+
+    public SaveElement() {
+    }
+
+    public SaveElement(T element) {
+        this.element = element;
+        this.stationId = ChangeLogEntry.STATION_ID;
+    }
+
+    @Override
     public void execute() {
-		IBaseDao<T, Serializable> dao = getDaoFactory().getDAO(element.getTypeId());
-		element = dao.merge(element);
-	}
+        IBaseDao<T, Serializable> dao = getDaoFactory().getDAO(element.getTypeId());
+        element = dao.merge(element);
+    }
 
-	public T getElement() {
-		return element;
-	}
-	
-	public void setElement(T element) {
+    public T getElement() {
+        return element;
+    }
+
+    public void setElement(T element) {
         this.element = element;
     }
 
@@ -70,38 +70,48 @@ public class SaveElement<T extends ITypedElement> extends ChangeLoggingCommand i
         this.logChanges = logChanges;
     }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangeType()
-	 */
-	@Override
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#
+     * getChangeType()
+     */
+    @Override
     public int getChangeType() {
-		return ChangeLogEntry.TYPE_INSERT;
-	}
+        return ChangeLogEntry.TYPE_INSERT;
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangedElements()
-	 */
-	@Override
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#
+     * getChangedElements()
+     */
+    @Override
     public List<CnATreeElement> getChangedElements() {
-		ArrayList<CnATreeElement> list = new ArrayList<CnATreeElement>(1);
-		if (element instanceof CnATreeElement && logChanges) {
-			list.add((CnATreeElement) element);
-		}
-		return list;
-	}
+        ArrayList<CnATreeElement> list = new ArrayList<CnATreeElement>(1);
+        if (element instanceof CnATreeElement && logChanges) {
+            list.add((CnATreeElement) element);
+        }
+        return list;
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId()
-	 */
-	
-	@Override
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId
+     * ()
+     */
+
+    @Override
     public String getStationId() {
-		return stationId;
-	}
-	
-	@Override
+        return stationId;
+    }
+
+    @Override
     public void clear() {
-		
-	}
+
+    }
 
 }

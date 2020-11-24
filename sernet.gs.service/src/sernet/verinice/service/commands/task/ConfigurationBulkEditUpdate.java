@@ -40,12 +40,13 @@ import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.service.commands.crud.LoadChildrenForExpansion;
 
 /**
- *  finds configuration for a given person and updates its entity with a given one
- *  used for bulkediting of account data
+ * finds configuration for a given person and updates its entity with a given
+ * one used for bulkediting of account data
  */
-@SuppressWarnings({"serial", "restriction"})
-public class ConfigurationBulkEditUpdate extends ChangeLoggingCommand  implements IChangeLoggingCommand, IAuthAwareCommand {
-    
+@SuppressWarnings({ "serial", "restriction" })
+public class ConfigurationBulkEditUpdate extends ChangeLoggingCommand
+        implements IChangeLoggingCommand, IAuthAwareCommand {
+
     private static final Logger log = Logger.getLogger(ConfigurationBulkEditUpdate.class);
     private List<Integer> dbIDs;
     private Entity dialogEntity;
@@ -60,7 +61,8 @@ public class ConfigurationBulkEditUpdate extends ChangeLoggingCommand  implement
      * @param dbIDs
      * @param dialogEntity
      */
-    public ConfigurationBulkEditUpdate(List<Integer> dbIDs, Entity dialogEntity, boolean updatePW, String newPassword) {
+    public ConfigurationBulkEditUpdate(List<Integer> dbIDs, Entity dialogEntity, boolean updatePW,
+            String newPassword) {
         this.dbIDs = dbIDs;
         this.dialogEntity = dialogEntity;
         this.updatePassword = updatePW;
@@ -68,16 +70,16 @@ public class ConfigurationBulkEditUpdate extends ChangeLoggingCommand  implement
         this.newPassword = newPassword;
         failedUpdates = new ArrayList<String>(0);
     }
-    
-    
+
     @Override
     public void execute() {
         IBaseDao<Configuration, Serializable> dao = getDaoFactory().getDAO(Configuration.class);
         CnATreeElement pElmt = null;
         for (Integer id : dbIDs) {
             RetrieveInfo ri = new RetrieveInfo();
-            ri.setParent(true).setProperties(true).setChildren(true).setChildrenProperties(true).setGrandchildren(true);
-            Configuration found = dao.retrieve(id,ri); 
+            ri.setParent(true).setProperties(true).setChildren(true).setChildrenProperties(true)
+                    .setGrandchildren(true);
+            Configuration found = dao.retrieve(id, ri);
             pElmt = found.getPerson();
             LoadChildrenForExpansion command2 = new LoadChildrenForExpansion(pElmt);
             try {
@@ -86,101 +88,111 @@ public class ConfigurationBulkEditUpdate extends ChangeLoggingCommand  implement
             } catch (CommandException e) {
                 log.error("Error while retrieving children", e);
             }
-            // username must be set, to be able to edit password, empty username isn't allowed also
-            if(found.getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0) == null ||
-                    found.getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0).getPropertyValue().equals("")){
+            // username must be set, to be able to edit password, empty username
+            // isn't allowed also
+            if (found.getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0) == null
+                    || found.getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0)
+                            .getPropertyValue().equals("")) {
                 log.warn("Property username not set, adding user to failed elements list");
                 String personInfoString = null;
-                if(pElmt instanceof Person){
-                    personInfoString = getPersonInfoString((Person)pElmt);
-                } else if(pElmt instanceof PersonIso){
-                    personInfoString = getPersonIsoInfoString((PersonIso)pElmt);
+                if (pElmt instanceof Person) {
+                    personInfoString = getPersonInfoString((Person) pElmt);
+                } else if (pElmt instanceof PersonIso) {
+                    personInfoString = getPersonIsoInfoString((PersonIso) pElmt);
                 }
                 failedUpdates.add(personInfoString);
                 continue;
             }
             found.getEntity().copyEntity(dialogEntity);
-            // password will not be copied with entity method, special handling needed, see below
-            if(updatePassword && newPassword != null){
+            // password will not be copied with entity method, special handling
+            // needed, see below
+            if (updatePassword && newPassword != null) {
                 // as done in ChangeOwnPassword also
-                Property passProperty = found.getEntity().getProperties(Configuration.PROP_PASSWORD).getProperty(0);
-                // password is hashed with a method that generates exact the same as the browser with
-                // the http request would do, a1Format should be described in the rfc to md5
+                Property passProperty = found.getEntity().getProperties(Configuration.PROP_PASSWORD)
+                        .getProperty(0);
+                // password is hashed with a method that generates exact the
+                // same as the browser with
+                // the http request would do, a1Format should be described in
+                // the rfc to md5
                 String hash = getAuthService().hashPassword(found.getUser(), newPassword);
                 passProperty.setPropertyValue(hash, false);
                 getDaoFactory().getDAO(Configuration.class).merge(found);
             }
         }
     }
-    
-    private String getPersonInfoString(Person element){
+
+    private String getPersonInfoString(Person element) {
         StringBuilder sb = new StringBuilder();
         IBaseDao<Person, Serializable> dao = null;
         RetrieveInfo ri = new RetrieveInfo();
-        ri.setParent(true).setProperties(true).setChildren(true).setChildrenProperties(true).setGrandchildren(true);
+        ri.setParent(true).setProperties(true).setChildren(true).setChildrenProperties(true)
+                .setGrandchildren(true);
 
         dao = getDaoFactory().getDAO(Person.class);
-        if(!element.isChildrenLoaded() && !element.isChildrenLoaded()){
+        if (!element.isChildrenLoaded() && !element.isChildrenLoaded()) {
             element = dao.retrieve(element.getDbId(), ri);
         }
-        if(checkStringEmpty(element.getKuerzel())){
+        if (checkStringEmpty(element.getKuerzel())) {
             sb.append(element.getKuerzel());
             sb.append(" ");
         }
-        if(checkStringEmpty(element.getFullName())){
+        if (checkStringEmpty(element.getFullName())) {
             sb.append(element.getFullName());
         }
-        if(sb.length() > 0){
+        if (sb.length() > 0) {
             return sb.toString();
         } else {
             return Messages.ConfigurationBulkEdit_0;
         }
     }
-    
-    private String getPersonIsoInfoString(PersonIso person){
+
+    private String getPersonIsoInfoString(PersonIso person) {
         StringBuilder sb = new StringBuilder();
         IBaseDao<PersonIso, Serializable> dao = null;
         RetrieveInfo ri = new RetrieveInfo();
-        ri.setParent(true).setProperties(true).setChildren(true).setChildrenProperties(true).setGrandchildren(true);
+        ri.setParent(true).setProperties(true).setChildren(true).setChildrenProperties(true)
+                .setGrandchildren(true);
 
         dao = getDaoFactory().getDAO(PersonIso.class);
-        if(!person.isChildrenLoaded() && !person.isChildrenLoaded()){
+        if (!person.isChildrenLoaded() && !person.isChildrenLoaded()) {
             person = dao.retrieve(person.getDbId(), ri);
         }
-        if(checkStringEmpty(person.getEntity().getSimpleValue(PersonIso.PROP_ABBR))){
+        if (checkStringEmpty(person.getEntity().getSimpleValue(PersonIso.PROP_ABBR))) {
             sb.append(person.getEntity().getSimpleValue(PersonIso.PROP_ABBR));
             sb.append(" ");
         }
-        if(checkStringEmpty(person.getEntity().getSimpleValue(PersonIso.PROP_NAME))){
+        if (checkStringEmpty(person.getEntity().getSimpleValue(PersonIso.PROP_NAME))) {
             sb.append(person.getEntity().getSimpleValue(PersonIso.PROP_NAME));
             sb.append(" ");
         }
-        if(checkStringEmpty(person.getEntity().getSimpleValue(PersonIso.PROP_SURNAME))){
+        if (checkStringEmpty(person.getEntity().getSimpleValue(PersonIso.PROP_SURNAME))) {
             sb.append(person.getEntity().getSimpleValue(PersonIso.PROP_SURNAME));
         }
-        
-        if(sb.length() > 0){
+
+        if (sb.length() > 0) {
             return sb.toString();
         } else {
             return Messages.ConfigurationBulkEdit_0;
         }
     }
-    
-    private boolean checkStringEmpty(String s){
-        if(s != null && !s.equals("")){
+
+    private boolean checkStringEmpty(String s) {
+        if (s != null && !s.equals("")) {
             return true;
         }
         return false;
     }
-    
+
     @Override
     public List<CnATreeElement> getChangedElements() {
-        // to prevent exceptions, instead of returning 'null', an empty list is returned
+        // to prevent exceptions, instead of returning 'null', an empty list is
+        // returned
         return new ArrayList<CnATreeElement>(0);
     }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.IChangeLoggingCommand#getStationId()
      */
     @Override
@@ -188,35 +200,39 @@ public class ConfigurationBulkEditUpdate extends ChangeLoggingCommand  implement
         return stationId;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangeType()
      */
     @Override
     public int getChangeType() {
         return ChangeLogEntry.TYPE_UPDATE;
     }
-    
+
     public List<String> getFailedUpdates() {
         return failedUpdates;
     }
-    
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IAuthAwareCommand#setAuthService(sernet.verinice.interfaces.IAuthService)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.IAuthAwareCommand#setAuthService(sernet.
+     * verinice.interfaces.IAuthService)
      */
     @Override
     public void setAuthService(IAuthService service) {
         authService = service;
     }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.IAuthAwareCommand#getAuthService()
      */
     @Override
     public IAuthService getAuthService() {
         return authService;
     }
-    
 
 }
