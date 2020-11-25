@@ -14,7 +14,7 @@ pipeline {
           description: 'The build number of the job that the AUT is copied from'
         choice(name: 'LANGUAGE', choices: ['de', 'en'],
           description: 'The language the application will use. The tests need to support this also.')
-        choice(name: 'OPERATING_SYSTEM', choices: ['Linux', 'Mac OSX', 'Windows 10', 'any'],
+        choice(name: 'OPERATING_SYSTEM', choices: ['Linux', 'macOS current', 'macOS beta', 'macOS predecessor', 'Windows 10', 'any'],
           description: 'The operating that the tests should run on.')
         booleanParam defaultValue: false, description: 'Run performance tests', name: 'runPerformanceTests'
         booleanParam defaultValue: false, description: 'Run reporting tests', name: 'runReportingTests'
@@ -30,7 +30,9 @@ pipeline {
             agent {
                 node {
                     label(['Linux' : 'linux-gui-tester',
-                           'Mac OSX' : 'mac-gui-tester',
+                           'macOS current' : 'mac-current-gui-tester',
+                           'macOS beta' : 'mac-beta-gui-tester',
+                           'macOS predecessor' : 'mac-predecessor-gui-tester',
                            'Windows 10' : 'windows-gui-tester',
                            'any' : 'gui-tester'][params.OPERATING_SYSTEM])
                 }

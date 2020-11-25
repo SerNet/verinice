@@ -100,7 +100,9 @@ pipeline {
                 
                 // test specific operating systems
                 // runStandaloneUITests os: 'Linux', tests: '*.test'
-                // runStandaloneUITests os: 'Mac OSX', tests: '*.test'
+                // runStandaloneUITests os: 'macOS current', tests: '*.test'
+                // runStandaloneUITests os: 'macOS predecessor', tests: '*.test'
+                // runStandaloneUITests os: 'macOS beta', tests: '*.test'
                 // runStandaloneUITests os: 'Windows 10', tests: '*.test'
             }
         }
