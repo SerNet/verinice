@@ -19,14 +19,17 @@
  ******************************************************************************/
 package sernet.verinice.service.test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.junit.Before;
@@ -40,8 +43,8 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.PersonenKategorie;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.LoadElementTitles;
+import sernet.verinice.service.commands.LoadElementsByUuid;
 import sernet.verinice.service.commands.SyncParameterException;
 import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
 
@@ -68,7 +71,6 @@ public class LoadElementTitlesTest extends CommandServiceProvider {
 
     private static final int HIGHER_INTERVAL = 10;
     private static final int LIMIT_TO_USE_SMALL_INTERVAL = 200;
-    private int interval = 1;
 
     @Before
     public void importData() throws IOException, CommandException, SyncParameterException {
@@ -147,18 +149,29 @@ public class LoadElementTitlesTest extends CommandServiceProvider {
     private void reviewCommandResult(HashMap<String, String> map) throws CommandException {
         if (map != null && !map.isEmpty()) {
 
-            if (map.size() > LIMIT_TO_USE_SMALL_INTERVAL) {
-                interval = HIGHER_INTERVAL;
-            }
-            ArrayList<String> dbIDs = new ArrayList<>(map.keySet());
-            for (int i = 0; i < dbIDs.size(); i += interval) {
-                LoadElementByUuid<CnATreeElement> getElementsCommand = new LoadElementByUuid<>(
-                        dbIDs.get(i), RetrieveInfo.getPropertyInstance());
-                getElementsCommand = commandService.executeCommand(getElementsCommand);
-                String nameInDB = getElementsCommand.getElement().getTitle();
+            ArrayList<String> uuids = new ArrayList<>(map.keySet());
+            ArrayList<String> uuidsToCheck;
 
-                assertTrue("Wrong title, expected '" + map.get(dbIDs.get(i)) + "', but was '"
-                        + nameInDB + "'", nameInDB.equals(map.get(dbIDs.get(i))));
+            if (map.size() > LIMIT_TO_USE_SMALL_INTERVAL) {
+                uuidsToCheck = new ArrayList<>();
+                for (int i = 0; i < uuids.size(); i += HIGHER_INTERVAL) {
+                    uuidsToCheck.add(uuids.get(i));
+                }
+            } else {
+                uuidsToCheck = uuids;
+            }
+
+            LoadElementsByUuid<CnATreeElement> loadElementsByUuid = new LoadElementsByUuid<>(
+                    uuidsToCheck, RetrieveInfo.getPropertyInstance());
+            loadElementsByUuid = commandService.executeCommand(loadElementsByUuid);
+            Map<String, CnATreeElement> elementsFromDb = loadElementsByUuid.getElements().stream()
+                    .collect(Collectors.toMap(CnATreeElement::getUuid, Function.identity()));
+
+            for (String uuid : uuidsToCheck) {
+                String title = map.get(uuid);
+                String titleFromDB = elementsFromDb.get(uuid).getTitle();
+
+                assertEquals(titleFromDB, title);
             }
         }
     }
