@@ -69,7 +69,8 @@ public class ScopeOnlyUserCompendiumAccessTest extends AbstractModernizedBasePro
         elementDao.saveOrUpdate(catalog1);
         catalog1.setScopeId(catalog1.getDbId());
         elementDao.saveOrUpdate(catalog1);
-
+        elementDao.flush();
+        elementDao.clear();
         authService.setPermissionHandlingNeeded(true);
         authService.setUsername(userName);
 
@@ -85,6 +86,8 @@ public class ScopeOnlyUserCompendiumAccessTest extends AbstractModernizedBasePro
         authService.setPermissionHandlingNeeded(false);
         catalog1.addPermission(Permission.createPermission(catalog1, userName, true, false));
         elementDao.saveOrUpdate(catalog1);
+        elementDao.flush();
+        elementDao.clear();
         authService.setPermissionHandlingNeeded(true);
         Assert.assertThat(elementDao.findAll(), JUnitMatchers.hasItems(catalog1));
     }
