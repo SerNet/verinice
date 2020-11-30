@@ -290,7 +290,7 @@ public class TreeBean implements IElementListener {
         String componentId = "elementTable";
 
         try {
-            RemoveElement<CnATreeElement> command = new RemoveElement<>(getElement());
+            RemoveElement command = new RemoveElement(getElement());
             command = getCommandService().executeCommand(command);
             manager.elementRemoved(getElement());
             getChildren().remove(getElementInformation());

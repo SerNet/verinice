@@ -82,16 +82,16 @@ public class Cleaner {
         Set<CnATreeElement> controlSet = graph.getLinkTargets(scenario,
                 Control.REL_CONTROL_INCSCEN);
         for (CnATreeElement control : controlSet) {
-            RemoveElement<CnATreeElement> command = new RemoveElement<>(control);
+            RemoveElement command = new RemoveElement(control);
             getCommandService().executeCommand(command);
         }
         Set<CnATreeElement> vulnerabilitySet = graph.getLinkTargets(scenario,
                 IncidentScenario.REL_INCSCEN_VULNERABILITY);
         for (CnATreeElement vulnerability : vulnerabilitySet) {
-            RemoveElement<CnATreeElement> command = new RemoveElement<>(vulnerability);
+            RemoveElement command = new RemoveElement(vulnerability);
             getCommandService().executeCommand(command);
         }
-        RemoveElement<CnATreeElement> command = new RemoveElement<>(scenario);
+        RemoveElement command = new RemoveElement(scenario);
         getCommandService().executeCommand(command);
     }
 

@@ -58,7 +58,7 @@ public class ValidateLinksInSubtreesTest extends AbstractModernizedBaseProtectio
         assertEquals(1, invalidLinks.size());
         CnALink invalidLink = invalidLinks.iterator().next();
         assertEquals("invalid_link_type", invalidLink.getRelationId());
-        commandService.executeCommand(new RemoveElement<>(network));
+        commandService.executeCommand(new RemoveElement(network));
     }
 
 }

@@ -94,7 +94,7 @@ public class IndividualWorkflowTest extends CommandServiceProvider {
         // remove
         PrepareObjectWithAccountDataForDeletion removeAccount = new PrepareObjectWithAccountDataForDeletion(organization);
         commandService.executeCommand(removeAccount);
-        RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(organization);
+        RemoveElement removeCommand = new RemoveElement(organization);
         commandService.executeCommand(removeCommand);
         for (String uuid: uuidList) {
             LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuid);

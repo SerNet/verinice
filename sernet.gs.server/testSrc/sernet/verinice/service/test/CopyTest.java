@@ -72,7 +72,7 @@ public class CopyTest extends CommandServiceProvider {
         checkCopiedElements(organization);
         
         // remove
-        final RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(organization);
+        final RemoveElement removeCommand = new RemoveElement(organization);
         commandService.executeCommand(removeCommand);
         for (final String uuid: uuidList) {
             LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuid);
@@ -100,9 +100,9 @@ public class CopyTest extends CommandServiceProvider {
         checkCopiedElements(organizationCopy);
         
         // remove
-        RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(organization);
+        RemoveElement removeCommand = new RemoveElement(organization);
         commandService.executeCommand(removeCommand);
-        removeCommand = new RemoveElement<CnATreeElement>(organizationCopy);
+        removeCommand = new RemoveElement(organizationCopy);
         commandService.executeCommand(removeCommand);
         for (final String uuidDeleted: uuidList) {
             LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuidDeleted);

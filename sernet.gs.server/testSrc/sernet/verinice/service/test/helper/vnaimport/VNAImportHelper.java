@@ -80,13 +80,13 @@ public final class VNAImportHelper {
                 for (CnATreeElement child : element.getChildrenAsArray()) {
                     if (syncCommand.getImportedElementUUIDs().contains(child.getUuid())) {
                         log.info("Deleting imported element " + child);
-                        RemoveElement<CnATreeElement> removeElement = new RemoveElement<>(child);
+                        RemoveElement removeElement = new RemoveElement(child);
                         getCommandService().executeCommand(removeElement);
                     }
                 }
                 if (element.getChildren().isEmpty()) {
                     log.info("Deleting empty import group " + element);
-                    RemoveElement<CnATreeElement> removeElement = new RemoveElement<>(element);
+                    RemoveElement removeElement = new RemoveElement(element);
                     getCommandService().executeCommand(removeElement);
                 }
             }

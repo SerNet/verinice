@@ -76,7 +76,7 @@ public class BusinessImpactInheritenceTest extends CommandServiceProvider {
         checkCIA(asset, 2, 2, 4);
 
         Process process = (Process) loadElement(SOURCE_ID, EXT_ID_DOKUMENTENMANAGEMENT);
-        RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(process);
+        RemoveElement removeCommand = new RemoveElement(process);
         commandService.executeCommand(removeCommand);
 
         asset = (Asset) loadElement(SOURCE_ID, EXT_ID_VMWARE_GUEST_1);

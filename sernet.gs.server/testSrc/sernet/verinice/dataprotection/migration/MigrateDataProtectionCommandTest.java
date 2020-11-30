@@ -46,7 +46,7 @@ public class MigrateDataProtectionCommandTest extends CommandServiceProvider {
 
     @After
     public void tearDown() throws CommandException {
-        RemoveElement<CnATreeElement> removeElementCmd = new RemoveElement<>(createdElements);
+        RemoveElement removeElementCmd = new RemoveElement(createdElements);
         commandService.executeCommand(removeElementCmd);
         createdElements.clear();
     }

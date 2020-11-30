@@ -86,7 +86,7 @@ public class DisassociateGefaehrdungsUmsetzung extends GenericCommand {
         for (GefaehrdungsUmsetzung removeMe : found) {
 			finishedRiskAnalysis.removeChild(removeMe);
             try {
-                RemoveElement<GefaehrdungsUmsetzung> command = new RemoveElement<>(removeMe);
+                RemoveElement command = new RemoveElement(removeMe);
                 getCommandService().executeCommand(command);
             } catch (CommandException e) {
                 log.error("could not remove GefaehrdunsUmsetzung " + removeMe.getUuid(), e);

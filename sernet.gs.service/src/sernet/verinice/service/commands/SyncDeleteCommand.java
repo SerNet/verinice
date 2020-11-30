@@ -105,7 +105,7 @@ public class SyncDeleteCommand extends GenericCommand {
             log.debug("Element with source-id: " + sourceId + " not found in VNA / XML, will be deleted now, type: " + e.getTypeId() + ", uuid: " + e.getUuid() + ", ext-id: " + e.getExtId() + "...");
         }
         // delete this object from the database:
-        RemoveElement<?> cmdRemove = new RemoveElement<CnATreeElement>(e);
+        RemoveElement cmdRemove = new RemoveElement(e);
         try {
             cmdRemove = getCommandService().executeCommand(cmdRemove);
             deleted++;

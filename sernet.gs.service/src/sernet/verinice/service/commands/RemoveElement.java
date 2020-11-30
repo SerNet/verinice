@@ -20,12 +20,13 @@
 package sernet.verinice.service.commands;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.annotation.NonNull;
@@ -34,7 +35,6 @@ import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.service.SecurityException;
-import sernet.gs.service.TimeFormatter;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
@@ -65,28 +65,25 @@ import sernet.verinice.model.common.configuration.Configuration;
  * @author Alexander Koderman <ak[at]sernet[dot]de>.
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
- * @param <T>
  */
 @SuppressWarnings("serial")
-public class RemoveElement<T extends CnATreeElement> extends GenericCommand
+public class RemoveElement extends GenericCommand
         implements IChangeLoggingCommand, INoAccessControl {
 
     private static final Logger LOG = Logger.getLogger(RemoveElement.class);
 
     private transient IFinishedRiskAnalysisListsDao raListDao;
 
-    private T element;
-    private HashMap<Integer, String> dbIdTypeIdPairs;
+    private CnATreeElement element;
+    private ArrayList<Integer> dbIdTypeIds;
     private String stationId;
 
-    private long start;
+    private transient IBaseDao<CnATreeElement, Serializable> dao;
 
     public RemoveElement(CnATreeElement... elements) {
         // only transfer id of element to keep footprint small:
-        dbIdTypeIdPairs = new HashMap<>(elements.length);
-        for (CnATreeElement e : elements) {
-            dbIdTypeIdPairs.put(e.getDbId(), e.getTypeId());
-        }
+        dbIdTypeIds = Stream.of(elements).map(CnATreeElement::getDbId)
+                .collect(Collectors.toCollection(ArrayList::new));
         this.stationId = ChangeLogEntry.STATION_ID;
     }
 
@@ -96,22 +93,19 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
 
     @Override
     public void execute() {
-        for (Map.Entry<Integer, String> pair : dbIdTypeIdPairs.entrySet()) {
-            removeElement(pair.getKey(), pair.getValue());
-        }
+        dao = getDaoFactory().getDAO(CnATreeElement.class);
+        dbIdTypeIds.forEach(this::removeElement);
     }
 
-    private void removeElement(Integer dbid, String typeId) {
+    private void removeElement(Integer dbid) {
         try {
-            this.element = (T) getDaoFactory().getDAO(typeId).findById(dbid);
+            this.element = dao.findById(dbid);
             if (this.element == null) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug(
-                            "Element was not found in db. Type-Id: " + typeId + ", Db-Id: " + dbid);
+                    LOG.debug("Element was not found in db. Db-Id: " + dbid);
                 }
                 return;
             }
-            IBaseDao<T, Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
             // first we check if the operation is allowed for the element and
             // the children
             dao.checkRights(element);
@@ -129,7 +123,7 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
         }
     }
 
-    private void removeElement(T element) throws CommandException {
+    private void removeElement(CnATreeElement element) throws CommandException {
         if (element instanceof IBpElement) {
             // We could be removing an element that has a safeguard as one
             // of its children. Since we want our manual event listeners to be
@@ -138,7 +132,7 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
             // and should be replaced by Hibernate event listeners someday.
             // (see VN-2084)
             for (CnATreeElement child : element.getChildrenAsArray()) {
-                removeElement((T) child);
+                removeElement(child);
             }
         }
 
@@ -197,7 +191,6 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
         }
 
         element.remove();
-        IBaseDao<T, Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
 
         dao.delete(element);
     }
@@ -206,9 +199,6 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
         LoadSubtreeIds loadSubtreeIdsCommand = new LoadSubtreeIds(element);
         loadSubtreeIdsCommand = getCommandService().executeCommand(loadSubtreeIdsCommand);
         Set<Integer> dbIdsOfSubtree = loadSubtreeIdsCommand.getDbIdsOfSubtree();
-        @SuppressWarnings("unchecked")
-        IBaseDao<? super CnATreeElement, Serializable> dao = getDaoFactory()
-                .getDAOforTypedElement(element);
         for (Integer dbId : dbIdsOfSubtree) {
             dao.checkRights(dbId, element.getScopeId());
         }
@@ -255,8 +245,8 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
 
         // since the values of the list will be ints, we can't parameterize the
         // list
-        List<CnATreeElement> deleteList = getDaoFactory().getDAO(CnATreeElement.class).findByQuery(
-                hql, new String[] { "scopeId", "parentId" },
+        @SuppressWarnings("rawtypes")
+        List deleteList = dao.findByQuery(hql, new String[] { "scopeId", "parentId" },
                 new Object[] { element.getScopeId(), element.getDbId() });
         for (Object o : deleteList) {
             if (o instanceof Integer) {
@@ -274,9 +264,9 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
         String hql = "from CnATreeElement itv where itv.objectType = 'it-verbund' and itv.parentId = ("
                 + " select importbsigroup.dbId from CnATreeElement importbsigroup where "
                 + "importbsigroup.objectType = 'import-bsi' and importbsigroup.dbId = :dbId)";
-        List<CnATreeElement> deleteList = getDaoFactory().getDAO(CnATreeElement.class)
-                .findByQuery(hql, new String[] { "dbId" }, new Object[] { groupDbId });
-        for (Object o : deleteList) {
+        List<CnATreeElement> deleteList = dao.findByQuery(hql, new String[] { "dbId" },
+                new Object[] { groupDbId });
+        for (CnATreeElement o : deleteList) {
             if (o instanceof ITVerbund) {
                 removeRiskAnalysisForScope(((ITVerbund) o).getScopeId());
             }
@@ -314,9 +304,6 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
 
     /**
      * Remove from all referenced lists.
-     *
-     * @param element2
-     * @throws CommandException
      */
     private void removeFromLists(int analysisId, GefaehrdungsUmsetzung gef)
             throws CommandException {
@@ -328,7 +315,7 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
         }
     }
 
-    private void removeConfiguration(CnATreeElement person) throws CommandException {
+    private void removeConfiguration(CnATreeElement person) {
         IBaseDao<@NonNull Configuration, Serializable> configurationDao = getDaoFactory()
                 .getDAO(Configuration.class);
         @SuppressWarnings("unchecked")
@@ -364,12 +351,6 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
     @Override
     public String getStationId() {
         return stationId;
-    }
-
-    private void logRuntime(String message) {
-        long runtimeCheckRights = System.currentTimeMillis() - start;
-        LOG.debug(String.format("%s %s", message,
-                TimeFormatter.getHumanRedableTime(runtimeCheckRights)));
     }
 
     public IFinishedRiskAnalysisListsDao getRaListDao() {

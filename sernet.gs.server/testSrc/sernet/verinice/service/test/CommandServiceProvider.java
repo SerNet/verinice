@@ -308,7 +308,7 @@ public abstract class CommandServiceProvider extends UuidLoader {
     }
 
     protected void removeElement(CnATreeElement element) throws CommandException {
-        RemoveElement<CnATreeElement> removeCommand = new RemoveElement<>(element);
+        RemoveElement removeCommand = new RemoveElement(element);
         commandService.executeCommand(removeCommand);
 
         LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<>(element.getUuid());

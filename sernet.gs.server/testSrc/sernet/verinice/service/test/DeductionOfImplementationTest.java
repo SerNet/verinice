@@ -343,7 +343,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         elementDao.flush();
         elementDao.clear();
 
-        RemoveElement<Safeguard> removeSafeguard = new RemoveElement<>(safeguard1);
+        RemoveElement removeSafeguard = new RemoveElement(safeguard1);
 
         removeSafeguard = commandService.executeCommand(removeSafeguard);
 
@@ -371,7 +371,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         elementDao.flush();
         elementDao.clear();
 
-        RemoveElement<Safeguard> removeSafeguard = new RemoveElement<>(safeguard1);
+        RemoveElement removeSafeguard = new RemoveElement(safeguard1);
 
         removeSafeguard = commandService.executeCommand(removeSafeguard);
 
@@ -401,7 +401,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         elementDao.flush();
         elementDao.clear();
 
-        RemoveElement<Safeguard> removeSafeguard = new RemoveElement<>(safeguard1);
+        RemoveElement removeSafeguard = new RemoveElement(safeguard1);
 
         removeSafeguard = commandService.executeCommand(removeSafeguard);
 
@@ -454,7 +454,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         assertEquals("Must be option 'partially'.", ImplementationStatus.PARTIALLY,
                 getImplementationStatus(requirement));
 
-        RemoveElement<Safeguard> removeSafeguardgroup = new RemoveElement<>(safeguardGroup2);
+        RemoveElement removeSafeguardgroup = new RemoveElement(safeguardGroup2);
         elementDao.flush();
         elementDao.clear();
         removeSafeguardgroup = commandService.executeCommand(removeSafeguardgroup);
@@ -484,7 +484,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         assertEquals("Must be option 'yes'.", ImplementationStatus.YES,
                 getImplementationStatus(requirement));
 
-        RemoveElement<ItNetwork> removeItNetwork = new RemoveElement<>(itNetwork1);
+        RemoveElement removeItNetwork = new RemoveElement(itNetwork1);
         elementDao.flush();
         elementDao.clear();
         removeItNetwork = commandService.executeCommand(removeItNetwork);

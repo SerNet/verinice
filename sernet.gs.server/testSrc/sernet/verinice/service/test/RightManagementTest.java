@@ -135,7 +135,7 @@ public class RightManagementTest extends CommandServiceProvider {
         assertEquals("Not the right profile active, setUpWrong.", RIGHTMANAGEMENT_TEST_PROFILE,
                 profileRef.getName());
 
-        RemoveElement<Organization> removeElement = new RemoveElement<>(organization);
+        RemoveElement removeElement = new RemoveElement(organization);
         commandService.executeCommand(removeElement);
     }
 
@@ -170,7 +170,7 @@ public class RightManagementTest extends CommandServiceProvider {
         assertEquals("Not the right profile active, setUpWrong.", RIGHTMANAGEMENT_TEST_PROFILE,
                 profileRef.getName());
 
-        RemoveElement<Organization> removeElement = new RemoveElement<>(organization);
+        RemoveElement removeElement = new RemoveElement(organization);
         commandService.executeCommand(removeElement);
 
         satisfyRemoveOperation(removeElement, organization);
@@ -206,7 +206,7 @@ public class RightManagementTest extends CommandServiceProvider {
         assertEquals("Not the right profile active, setUpWrong.", "user-default-profile",
                 profileRef.getName());
 
-        RemoveElement<Organization> removeElement = new RemoveElement<>(organization);
+        RemoveElement removeElement = new RemoveElement(organization);
         commandService.executeCommand(removeElement);
 
         satisfyRemoveOperation(removeElement, organization);
@@ -225,7 +225,7 @@ public class RightManagementTest extends CommandServiceProvider {
         assertEquals("The configured user need to be the adminuser, setUpWrong.",
                 TestAuthenticationService.INTERNAL_ADMIN, authService.getUsername());
 
-        RemoveElement<Organization> removeElement = new RemoveElement<>(organization);
+        RemoveElement removeElement = new RemoveElement(organization);
         commandService.executeCommand(removeElement);
 
         satisfyRemoveOperation(removeElement, organization);
@@ -325,7 +325,7 @@ public class RightManagementTest extends CommandServiceProvider {
      * 
      * @param removeElement
      */
-    private void satisfyRemoveOperation(RemoveElement<Organization> removeElement,
+    private void satisfyRemoveOperation(RemoveElement removeElement,
             CnATreeElement element) {
         String uuid = element.getUuid();
         // assertNull("Entity need to be null, as it was deleted.",

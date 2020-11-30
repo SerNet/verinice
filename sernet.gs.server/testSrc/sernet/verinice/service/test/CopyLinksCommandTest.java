@@ -46,7 +46,7 @@ public class CopyLinksCommandTest extends AbstractModernizedBaseProtection {
 
     @After
     public void tearDown() throws CommandException {
-        RemoveElement<CnATreeElement> removeElementCmd = new RemoveElement<>(network);
+        RemoveElement removeElementCmd = new RemoveElement(network);
         commandService.executeCommand(removeElementCmd);
     }
 

@@ -84,7 +84,7 @@ public class SchutzbedarfsvererbungsTest extends CommandServiceProvider {
         checkSchutzbedarf(gebaeude, SEHR_HOCH, SEHR_HOCH, SEHR_HOCH);
 
         Anwendung anwendung = (Anwendung) loadElement(SOURCE_ID, EXT_ID_ANWENDUNG_3);
-        RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(anwendung);
+        RemoveElement removeCommand = new RemoveElement(anwendung);
         commandService.executeCommand(removeCommand);
 
         gebaeude = (Gebaeude) loadElement(SOURCE_ID, EXT_ID_GEBAEUDE_1);

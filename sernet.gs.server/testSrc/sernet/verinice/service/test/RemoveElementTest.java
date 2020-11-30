@@ -144,7 +144,7 @@ public class RemoveElementTest extends CommandServiceProvider {
             for (int i = documents; i > 0; i--) {
                 createElement(Document.class, element);
             }
-            RemoveElement<CnATreeElement> removeCommand = executeRemoveCommand(element);
+            RemoveElement removeCommand = executeRemoveCommand(element);
 
             for (Document doc : documentList) {
                 assertElementIsDeleted(doc);
@@ -200,7 +200,7 @@ public class RemoveElementTest extends CommandServiceProvider {
 
     @Test
     public void removeElements() throws CommandException {
-        RemoveElement<CnATreeElement> removeCommand = new RemoveElement<>(itVerbund, organization);
+        RemoveElement removeCommand = new RemoveElement(itVerbund, organization);
         commandService.executeCommand(removeCommand);
 
         assertElementIsDeleted(itVerbund);
@@ -270,9 +270,9 @@ public class RemoveElementTest extends CommandServiceProvider {
         return createElementCommand.getNewElement();
     }
 
-    private <T extends CnATreeElement> RemoveElement<T> executeRemoveCommand(T element)
+    private <T extends CnATreeElement> RemoveElement executeRemoveCommand(T element)
             throws CommandException {
-        RemoveElement<T> removeCommand = new RemoveElement<T>(element);
+        RemoveElement removeCommand = new RemoveElement(element);
         return commandService.executeCommand(removeCommand);
     }
 

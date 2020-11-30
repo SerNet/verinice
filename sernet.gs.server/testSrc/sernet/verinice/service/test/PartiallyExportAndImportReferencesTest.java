@@ -207,7 +207,7 @@ public class PartiallyExportAndImportReferencesTest extends BeforeEachVNAImportH
     }
 
     private void removeITVerbund(CnATreeElement itverbund) throws CommandException {
-        RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(itverbund);
+        RemoveElement removeCommand = new RemoveElement(itverbund);
         commandService.executeCommand(removeCommand);
     }
 

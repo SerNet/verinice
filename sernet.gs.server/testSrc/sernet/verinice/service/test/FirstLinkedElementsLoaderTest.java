@@ -233,7 +233,7 @@ public class FirstLinkedElementsLoaderTest extends AbstractModernizedBaseProtect
 
     private List<CnATreeElement> removeElements(Set<CnATreeElement> elementsToClear2)
             throws CommandException {
-        RemoveElement<CnATreeElement> removeElement = new RemoveElement<CnATreeElement>(
+        RemoveElement removeElement = new RemoveElement(
                 elementsToClear2);
         removeElement = commandService.executeCommand(removeElement);
         return removeElement.getChangedElements();
