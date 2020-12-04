@@ -46,14 +46,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -72,8 +70,6 @@ public class IconSelectDialog extends Dialog {
 
     private static final DirectoryStream.Filter<Path> ICON_FILE_FILTER = new IconFileFilter();
 
-    private static final int SIZE_Y = 370;
-    private static final int SIZE_X = 485;
     private static final int ICON_SPACING = 6;
     private static final int THUMBNAIL_SIZE = 25;
 
@@ -142,8 +138,6 @@ public class IconSelectDialog extends Dialog {
     @Override
     protected Control createDialogArea(Composite parent) {
 
-        final int gridDataSizeSubtrahend = 20;
-
         Composite comp = (Composite) super.createDialogArea(parent);
 
         Label dirLabel = new Label(comp, SWT.NONE);
@@ -159,18 +153,16 @@ public class IconSelectDialog extends Dialog {
         GridLayout groupOrganizationLayout = new GridLayout(1, true);
         group.setLayout(groupOrganizationLayout);
         gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gd.minimumWidth = SIZE_Y - gridDataSizeSubtrahend;
-        gd.heightHint = SIZE_X - gridDataSizeSubtrahend;
         group.setLayoutData(gd);
         Gallery gallery = new Gallery(group, SWT.V_SCROLL);
         GridData gd2 = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gd2.heightHint = SIZE_X - 100;
+        gd2.widthHint = 10 * THUMBNAIL_SIZE + 11 * ICON_SPACING;
+        gd2.heightHint = 285;
         gallery.setLayoutData(gd2);
 
         NoGroupRenderer gr = new NoGroupRenderer();
         gr.setItemSize(THUMBNAIL_SIZE, THUMBNAIL_SIZE);
         gr.setMinMargin(ICON_SPACING);
-        gr.setAutoMargin(true);
         gallery.setGroupRenderer(gr);
         DefaultGalleryItemRenderer ir = new DefaultGalleryItemRenderer();
         ir.setShowRoundedSelectionCorners(false);
@@ -270,13 +262,6 @@ public class IconSelectDialog extends Dialog {
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
         newShell.setText(Messages.IconSelectDialog_11);
-        newShell.setSize(SIZE_Y, SIZE_X);
-
-        // open the window right under the mouse pointer:
-        Point cursorLocation = Display.getCurrent().getCursorLocation();
-        newShell.setLocation(
-                new Point(cursorLocation.x - SIZE_X / 2, cursorLocation.y - SIZE_Y / 2));
-
     }
 }
 
