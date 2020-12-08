@@ -447,36 +447,37 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
      */
     private byte[] createVeriniceArchive(SyncRequest syncRequest, Risk risk)
             throws CommandException {
-        try (final ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-                final ZipOutputStream zipOut = new ZipOutputStream(byteOut)) {
+        try (final ByteArrayOutputStream byteOut = new ByteArrayOutputStream()) {
+            try (final ZipOutputStream zipOut = new ZipOutputStream(byteOut)) {
 
-            ExportFactory.createZipEntry(zipOut, VeriniceArchive.VERINICE_XML, syncRequest);
-            if (isRiskAnalysis()) {
-                ExportFactory.createZipEntry(zipOut, VeriniceArchive.RISK_XML, risk);
-            }
-            ExportFactory.createZipEntry(zipOut, VeriniceArchive.DATA_XSD,
-                    StreamFactory.getDataXsdAsStream());
-            ExportFactory.createZipEntry(zipOut, VeriniceArchive.MAPPING_XSD,
-                    StreamFactory.getMappingXsdAsStream());
-            ExportFactory.createZipEntry(zipOut, VeriniceArchive.SYNC_XSD,
-                    StreamFactory.getSyncXsdAsStream());
-            ExportFactory.createZipEntry(zipOut, VeriniceArchive.RISK_XSD,
-                    StreamFactory.getRiskXsdAsStream());
-            ExportFactory.createZipEntry(zipOut, VeriniceArchive.README_TXT,
-                    StreamFactory.getReadmeAsStream());
-
-            for (final Attachment attachment : getAttachmentSet()) {
-                LoadAttachmentFile command = new LoadAttachmentFile(attachment.getDbId(), true);
-                command = getCommandService().executeCommand(command);
-                if (command.getAttachmentFile() != null
-                        && command.getAttachmentFile().getFileData() != null) {
-                    ExportFactory.createZipEntry(zipOut,
-                            ExportFactory.createZipFileName(attachment),
-                            command.getAttachmentFile().getFileData());
+                ExportFactory.createZipEntry(zipOut, VeriniceArchive.VERINICE_XML, syncRequest);
+                if (isRiskAnalysis()) {
+                    ExportFactory.createZipEntry(zipOut, VeriniceArchive.RISK_XML, risk);
                 }
-                command.setAttachmentFile(null);
+                ExportFactory.createZipEntry(zipOut, VeriniceArchive.DATA_XSD,
+                        StreamFactory.getDataXsdAsStream());
+                ExportFactory.createZipEntry(zipOut, VeriniceArchive.MAPPING_XSD,
+                        StreamFactory.getMappingXsdAsStream());
+                ExportFactory.createZipEntry(zipOut, VeriniceArchive.SYNC_XSD,
+                        StreamFactory.getSyncXsdAsStream());
+                ExportFactory.createZipEntry(zipOut, VeriniceArchive.RISK_XSD,
+                        StreamFactory.getRiskXsdAsStream());
+                ExportFactory.createZipEntry(zipOut, VeriniceArchive.README_TXT,
+                        StreamFactory.getReadmeAsStream());
+
+                for (final Attachment attachment : getAttachmentSet()) {
+                    LoadAttachmentFile command = new LoadAttachmentFile(attachment.getDbId(), true);
+                    command = getCommandService().executeCommand(command);
+                    if (command.getAttachmentFile() != null
+                            && command.getAttachmentFile().getFileData() != null) {
+                        ExportFactory.createZipEntry(zipOut,
+                                ExportFactory.createZipFileName(attachment),
+                                command.getAttachmentFile().getFileData());
+                    }
+                    command.setAttachmentFile(null);
+                }
+                zipOut.closeEntry();
             }
-            zipOut.closeEntry();
             return byteOut.toByteArray();
         } catch (final IOException e) {
             log.error("Error while creating zip output stream", e);
