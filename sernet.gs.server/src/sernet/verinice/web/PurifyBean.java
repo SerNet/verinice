@@ -43,7 +43,7 @@ public class PurifyBean {
         String id = UUID.randomUUID().toString();//This is to prevent collisions, not sure if this is necessary.
         return String.format("<div id='%s'></div>"
                 + "<script>var toPurify = document.getElementById('%<s').parentNode;"
-                + "var purified = (DOMPurify.sanitize(toPurify.innerText) + '');"
+                + "var purified = DOMPurify.sanitize(toPurify.innerText, {USE_PROFILES:{html:true}});"
                 + "toPurify.innerHTML = purified;</script>", id);
     }
 }
