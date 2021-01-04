@@ -20,8 +20,8 @@
 package sernet.gs.ui.rcp.main.bsi.actions;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,11 +31,9 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.Activator;
@@ -54,7 +52,7 @@ import sernet.verinice.service.commands.NaturalizeCommand;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  * 
  */
-public class NaturalizeAction extends RightsEnabledAction implements ISelectionListener {
+public class NaturalizeAction extends RightsEnabledAction implements ISelectionChangedListener {
 
     private static final Logger LOG = Logger.getLogger(NaturalizeAction.class);
 
@@ -62,21 +60,19 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionL
 
     public static final String TYPE_ID = "naturalizeAction";
 
-    private List<CnATreeElement> selectedElementList = new LinkedList<CnATreeElement>();
+    private List<CnATreeElement> selectedElementList = new LinkedList<>();
 
     private ICommandService commandService;
 
-    public NaturalizeAction(IWorkbenchWindow window) {
+    public NaturalizeAction(IViewSite site) {
         super(ActionRightIDs.NATURALIZE, Messages.NaturalizeAction_0);
         setId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOALIENS));
         setToolTipText(Messages.NaturalizeAction_1);
-        window.getSelectionService().addSelectionListener(this);
+        site.getSelectionProvider().addSelectionChangedListener(this);
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
      */
     @Override
@@ -91,9 +87,8 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionL
                             try {
                                 Activator.inheritVeriniceContextState();
                                 if (selectedElementList != null && !selectedElementList.isEmpty()) {
-                                    Set<String> uuidSet = new HashSet<String>(
-                                            selectedElementList.size());
-                                    Map<String, CnATreeElement> uuidElementMap = new Hashtable<String, CnATreeElement>(
+                                    Set<String> uuidSet = new HashSet<>(selectedElementList.size());
+                                    Map<String, CnATreeElement> uuidElementMap = new HashMap<>(
                                             selectedElementList.size());
 
                                     for (CnATreeElement element : selectedElementList) {
@@ -137,17 +132,11 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionL
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @seeorg.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.
-     * IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
-     */
     @Override
-    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+    public void selectionChanged(SelectionChangedEvent event) {
         boolean enabled = false;
         selectedElementList.clear();
-        for (Iterator iterator = ((IStructuredSelection) selection).iterator(); iterator
+        for (Iterator<?> iterator = event.getStructuredSelection().iterator(); iterator
                 .hasNext();) {
             Object o = iterator.next();
             if (o instanceof CnATreeElement) {

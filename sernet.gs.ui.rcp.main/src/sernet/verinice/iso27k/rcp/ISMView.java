@@ -395,7 +395,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
         accessControlEditAction = new ShowAccessControlEditAction(
                 getViewSite().getWorkbenchWindow(), Messages.ISMView_11);
 
-        naturalizeAction = new NaturalizeAction(getViewSite().getWorkbenchWindow());
+        naturalizeAction = new NaturalizeAction(getViewSite());
 
         linkWithEditorAction = new Action(Messages.ISMView_5, IAction.AS_CHECK_BOX) {
             @Override

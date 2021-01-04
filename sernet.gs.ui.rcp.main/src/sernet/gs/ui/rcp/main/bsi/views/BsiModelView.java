@@ -449,7 +449,7 @@ public class BsiModelView extends RightsEnabledView
         accessControlEditAction = new ShowAccessControlEditAction(
                 getViewSite().getWorkbenchWindow(), Messages.BsiModelView_14);
 
-        naturalizeAction = new NaturalizeAction(getViewSite().getWorkbenchWindow());
+        naturalizeAction = new NaturalizeAction(getViewSite());
 
         konsolidatorAction = new ShowKonsolidatorAction(getViewSite().getWorkbenchWindow(),
                 Messages.BsiModelView_15);

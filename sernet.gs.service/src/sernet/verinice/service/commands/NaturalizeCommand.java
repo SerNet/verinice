@@ -24,8 +24,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.annotation.NonNull;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
@@ -46,32 +48,29 @@ public class NaturalizeCommand extends GenericCommand implements IChangeLoggingC
 
     private List<CnATreeElement> changedElements = Collections.emptyList();
 
-    private transient IBaseDao<CnATreeElement, Serializable> cnaTreeElementDao;
-
     private String stationId;
 
-    /**
-     * @param uuidSet
-     */
     public NaturalizeCommand(Set<String> uuidSet) {
         this.uuidSet = uuidSet;
         this.stationId = ChangeLogEntry.STATION_ID;
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
         if (uuidSet != null && !uuidSet.isEmpty()) {
-            changedElements = new ArrayList<CnATreeElement>(uuidSet.size());
-            for (String uuid : uuidSet) {
-                CnATreeElement element = getCnaTreeElementDao().findByUuid(uuid, null);
+            IBaseDao<@NonNull CnATreeElement, Serializable> cnaTreeElementDao = getDaoFactory()
+                    .getDAO(CnATreeElement.class);
+            changedElements = new ArrayList<>(uuidSet.size());
+            Set<@NonNull CnATreeElement> elements = uuidSet.stream()
+                    .map(uuid -> cnaTreeElementDao.findByUuid(uuid, null))
+                    .collect(Collectors.toSet());
+            for (CnATreeElement element : elements) {
                 element.setSourceId(null);
                 element.setExtId(null);
-                SaveElement<CnATreeElement> command = new SaveElement<CnATreeElement>(element);
+                SaveElement<CnATreeElement> command = new SaveElement<>(element);
                 try {
                     command = getCommandService().executeCommand(command);
                 } catch (CommandException e) {
@@ -86,8 +85,6 @@ public class NaturalizeCommand extends GenericCommand implements IChangeLoggingC
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangeType()
      */
     @Override
@@ -96,8 +93,6 @@ public class NaturalizeCommand extends GenericCommand implements IChangeLoggingC
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.IChangeLoggingCommand#getChangedElements()
      */
@@ -107,20 +102,11 @@ public class NaturalizeCommand extends GenericCommand implements IChangeLoggingC
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.IChangeLoggingCommand#getStationId()
      */
     @Override
     public String getStationId() {
         return stationId;
-    }
-
-    protected IBaseDao<CnATreeElement, Serializable> getCnaTreeElementDao() {
-        if (cnaTreeElementDao == null) {
-            cnaTreeElementDao = getDaoFactory().getDAO(CnATreeElement.class);
-        }
-        return cnaTreeElementDao;
     }
 
 }

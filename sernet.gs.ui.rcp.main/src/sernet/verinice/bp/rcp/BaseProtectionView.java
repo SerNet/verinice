@@ -357,7 +357,7 @@ public class BaseProtectionView extends RightsEnabledView
         linkWithEditorAction.setChecked(isLinkingActive());
         linkWithEditorAction
                 .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
-        naturalizeAction = new NaturalizeAction(getViewSite().getWorkbenchWindow());
+        naturalizeAction = new NaturalizeAction(getViewSite());
         accessControlEditAction = new ShowAccessControlEditAction(
                 getViewSite().getWorkbenchWindow(), Messages.BaseProtectionView_AccessControl);
 
