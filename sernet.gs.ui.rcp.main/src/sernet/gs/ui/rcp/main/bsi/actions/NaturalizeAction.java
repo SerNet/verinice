@@ -41,6 +41,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
@@ -139,7 +140,8 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionC
         for (Iterator<?> iterator = event.getStructuredSelection().iterator(); iterator
                 .hasNext();) {
             Object o = iterator.next();
-            if (o instanceof CnATreeElement) {
+            if (o instanceof CnATreeElement
+                    && CnAElementHome.getInstance().isWriteAllowed((CnATreeElement) o)) {
                 selectedElementList.add((CnATreeElement) o);
                 enabled = true;
             } else {
