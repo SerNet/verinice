@@ -1828,9 +1828,7 @@
               contentFile="$nl$/cheatsheets/ISO_27005_Risk_Assessment.xml"
               id="sernet.verinice.iso27k.cheatsheet_27005"
               name="%cheatsheets.17">
-           <description>
-              This tutorial will show you how to accomplish a risk assessment based on the international standards ISO 27005 with verinice. Let's get started.
-           </description>
+           <description>%cheatsheets.description.20</description>
         </cheatsheet>
         <category
               id="sernet.verinice.greenbone.cheatsheets"
