@@ -14016,7 +14016,7 @@ Wurden bereits weitere Stellen informiert?
                 </huiproperty>
                 
                 <huiproperty id="bp_incident_bsig_failure_no_detail" inputtype="text" name="Safeguards" tooltip="What circumstances or safeguards are in place to ensure that the functionality of the Critical Infrastructure is not compromised?">
-                     <depends option="bp_incident_bsig_failure" value="incident_bsig_failure_no"/>
+                     <depends option="bp_incident_bsig_failure" value="bp_incident_bsig_failure_no"/>
                  </huiproperty>
             
                 <huiproperty id="bp_incident_bsig_functionality" inputtype="text" name="To what extent is the functionality impaired" tooltip="To what extent is the functioning of the Critical Infrastructure (i.e. the availability of critical services) impaired or could it be impaired? Among others, which systems and components are affected or could be affected?"/>
@@ -14059,7 +14059,7 @@ Wurden bereits weitere Stellen informiert?
             
             
                 <huiproperty id="bp_incident_bsig_affected_states" inputtype="text" name="Affected states">
-                	<depends option="bp_incident_bsig_cross-border" value="incident_bsig_cross-border_yes"/>
+                	<depends option="bp_incident_bsig_cross-border" value="bp_incident_bsig_cross-border_yes"/>
                  </huiproperty>
                  
                  <huiproperty id="bp_incident_bsig_duration_failure"
