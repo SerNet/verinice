@@ -842,6 +842,11 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     }
 
     private CnATreeElement getExistingElement(String externalId) {
+        // existingElementsForScope is null if the source ID of the imported
+        // scope was not present in the DB previously.
+        if (existingElementsForScope == null) {
+            return null;
+        }
         List<CnATreeElement> foundElements = existingElementsForScope.get(externalId);
         if (foundElements != null) {
             if (foundElements.size() == 1) {
