@@ -57,9 +57,9 @@ import sernet.verinice.service.commands.NaturalizeCommand;
 public class NaturalizeAction extends RightsEnabledAction implements ISelectionListener {
 
     private static final Logger LOG = Logger.getLogger(NaturalizeAction.class);
-    
+
     public static final String ID = "sernet.gs.ui.rcp.main.actions.NaturalizeAction"; //$NON-NLS-1$
-    
+
     public static final String TYPE_ID = "naturalizeAction";
 
     private List<CnATreeElement> selectedElementList = new LinkedList<CnATreeElement>();
@@ -73,54 +73,64 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionL
         setToolTipText(Messages.NaturalizeAction_1);
         window.getSelectionService().addSelectionListener(this);
     }
-    
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
      */
     @Override
     public void doRun() {
         final int maxChangedElements = 10;
         try {
-            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-                @Override
-                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    try {
-                        Activator.inheritVeriniceContextState();
-                        if(selectedElementList!=null && !selectedElementList.isEmpty()) {
-                            Set<String> uuidSet = new HashSet<String>(selectedElementList.size());
-                            Map<String, CnATreeElement> uuidElementMap = new Hashtable<String, CnATreeElement>(selectedElementList.size());
-                            
-                            for (CnATreeElement element : selectedElementList) {
-                                if(element!=null && element.getSourceId()!=null) {
-                                    uuidSet.add(element.getUuid()); 
-                                    uuidElementMap.put(element.getUuid(), element);
-                                }
-                            }
-                            NaturalizeCommand command = new NaturalizeCommand(uuidSet);
-                            command = getCommandService().executeCommand(command);
-                            List<CnATreeElement> changedElements = command.getChangedElements();
-                                               
-                            if(changedElements!=null) {
-                                if(changedElements.size()<maxChangedElements) {
-                                    for (CnATreeElement elementFromServer : changedElements) {
-                                        CnATreeElement element = uuidElementMap.get(elementFromServer.getUuid());
-                                        element.setSourceId(elementFromServer.getSourceId());
-                                        element.setExtId(elementFromServer.getExtId());
-                                        CnAElementFactory.getModel(element).childChanged(element);
+            PlatformUI.getWorkbench().getProgressService()
+                    .busyCursorWhile(new IRunnableWithProgress() {
+                        @Override
+                        public void run(IProgressMonitor monitor)
+                                throws InvocationTargetException, InterruptedException {
+                            try {
+                                Activator.inheritVeriniceContextState();
+                                if (selectedElementList != null && !selectedElementList.isEmpty()) {
+                                    Set<String> uuidSet = new HashSet<String>(
+                                            selectedElementList.size());
+                                    Map<String, CnATreeElement> uuidElementMap = new Hashtable<String, CnATreeElement>(
+                                            selectedElementList.size());
+
+                                    for (CnATreeElement element : selectedElementList) {
+                                        if (element != null && element.getSourceId() != null) {
+                                            uuidSet.add(element.getUuid());
+                                            uuidElementMap.put(element.getUuid(), element);
+                                        }
                                     }
-                                } else {
-                                    CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
+                                    NaturalizeCommand command = new NaturalizeCommand(uuidSet);
+                                    command = getCommandService().executeCommand(command);
+                                    List<CnATreeElement> changedElements = command
+                                            .getChangedElements();
+
+                                    if (changedElements != null) {
+                                        if (changedElements.size() < maxChangedElements) {
+                                            for (CnATreeElement elementFromServer : changedElements) {
+                                                CnATreeElement element = uuidElementMap
+                                                        .get(elementFromServer.getUuid());
+                                                element.setSourceId(
+                                                        elementFromServer.getSourceId());
+                                                element.setExtId(elementFromServer.getExtId());
+                                                CnAElementFactory.getModel(element)
+                                                        .childChanged(element);
+                                            }
+                                        } else {
+                                            CnAElementFactory.getInstance()
+                                                    .reloadAllModelsFromDatabase();
+                                        }
+                                    }
+
                                 }
+                            } catch (CommandException e) {
+                                LOG.error("Error while naturalizing element", e);
+                                throw new RuntimeException("Error while naturalizing element", e);
                             }
-                            
                         }
-                    } catch (CommandException e) {
-                        LOG.error("Error while naturalizing element", e);
-                        throw new RuntimeException("Error while naturalizing element", e);
-                    }
-                }
-            });
+                    });
         } catch (Exception e) {
             LOG.error("Error while naturalizing element", e);
             ExceptionUtil.log(e, Messages.NaturalizeAction_2);
@@ -137,7 +147,8 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionL
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         boolean enabled = false;
         selectedElementList.clear();
-        for (Iterator iterator = ((IStructuredSelection) selection).iterator(); iterator.hasNext();) {
+        for (Iterator iterator = ((IStructuredSelection) selection).iterator(); iterator
+                .hasNext();) {
             Object o = iterator.next();
             if (o instanceof CnATreeElement) {
                 selectedElementList.add((CnATreeElement) o);
@@ -148,7 +159,7 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionL
                 break;
             }
         }
-        if(enabled && checkRights()){
+        if (enabled && checkRights()) {
             this.setEnabled(enabled);
         }
     }
