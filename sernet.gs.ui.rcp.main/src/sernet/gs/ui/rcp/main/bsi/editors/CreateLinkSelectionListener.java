@@ -59,7 +59,8 @@ final class CreateLinkSelectionListener implements SelectionListener {
         String selectedElementType = ((Entry<String, String>) elementTypeNamesAndIds[selectionIndex])
                 .getValue();
         boolean showContainingObject = CnATypeMapper
-                .getDomainFromTypeId(selectedElementType) != Domain.BASE_PROTECTION_OLD;
+                .getDomainFromTypeId(selectedElementType) != Domain.BASE_PROTECTION_OLD
+                && !CnATypeMapper.isScopeType(selectedElementType);
 
         CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(shell,
                 selectedElementType, linkMaker.inputElmt, false, showContainingObject);
