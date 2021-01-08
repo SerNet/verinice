@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tests for the verinice rcp main bundle
 Bundle-SymbolicName: sernet.gs.ui.rcp.main.tests
-Bundle-Version: 1.21.0.qualifier
+Bundle-Version: 1.21.1.qualifier
 Fragment-Host: sernet.gs.ui.rcp.main
 Automatic-Module-Name: sernet.gs.ui.rcp.main.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

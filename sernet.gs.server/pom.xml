@@ -5,12 +5,12 @@
 	<packaging>eclipse-plugin</packaging>
 
 	<artifactId>sernet.gs.server</artifactId>
-	<version>1.21.0-SNAPSHOT</version>
+	<version>1.21.1-SNAPSHOT</version>
 
 	<parent>
 		<groupId>sernet.verinice</groupId>
 		<artifactId>sernet.verinice.tycho.root</artifactId>
-		<version>1.21.0-SNAPSHOT</version>
+		<version>1.21.1-SNAPSHOT</version>
 	</parent>
 
 	<build>
