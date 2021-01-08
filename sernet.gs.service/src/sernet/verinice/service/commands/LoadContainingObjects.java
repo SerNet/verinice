@@ -66,9 +66,11 @@ public class LoadContainingObjects extends GenericCommand {
                     }
                 }
                 if (containingObject != null) {
-                    containingObject.getEntity().getTypedPropertyLists().values()
-                            .forEach(propertyList -> propertyList.getProperties()
-                                    .forEach(Hibernate::initialize));
+                    if (containingObject.getEntity() != null) {
+                        containingObject.getEntity().getTypedPropertyLists().values()
+                                .forEach(propertyList -> propertyList.getProperties()
+                                        .forEach(Hibernate::initialize));
+                    }
                     result.put(element.getDbId(), containingObject);
                 }
             });
