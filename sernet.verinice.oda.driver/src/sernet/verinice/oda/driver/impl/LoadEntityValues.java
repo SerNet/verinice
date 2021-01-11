@@ -29,9 +29,13 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Generic command to retrieve arbitrary cna tree elements and their property values.
+ * Generic command to retrieve arbitrary cna tree elements and their property
+ * values.
  * 
- * <p>The command is to be used by reports who wish to access elements and their property values.</p>
+ * <p>
+ * The command is to be used by reports who wish to access elements and their
+ * property values.
+ * </p>
  * 
  * @author Robert Schuster
  *
@@ -40,96 +44,100 @@ import sernet.verinice.model.common.CnATreeElement;
 @SuppressWarnings("serial")
 public class LoadEntityValues extends GenericCommand {
 
-	private List<List<Object>> result;
-	
-	private String typeId;
-	private String[] propertyTypes;
-	private Class<?>[] classes;
-	
-	public LoadEntityValues(String typeId, String[] propertyTypes) {
-		this (typeId, propertyTypes, new Class[0]);
-	}
-	
-	public LoadEntityValues(String typeId, String[] propertyTypes, Class<?>[] classes) {
-		this.typeId = typeId;
-		this.propertyTypes = (propertyTypes != null) ? propertyTypes.clone() : null;
-		this.classes = (classes != null) ? classes.clone() : null;
-	}
-	
-	
+    private List<List<Object>> result;
+
+    private String typeId;
+    private String[] propertyTypes;
+    private Class<?>[] classes;
+
+    public LoadEntityValues(String typeId, String[] propertyTypes) {
+        this(typeId, propertyTypes, new Class[0]);
+    }
+
+    public LoadEntityValues(String typeId, String[] propertyTypes, Class<?>[] classes) {
+        this.typeId = typeId;
+        this.propertyTypes = (propertyTypes != null) ? propertyTypes.clone() : null;
+        this.classes = (classes != null) ? classes.clone() : null;
+    }
+
     @Override
     @SuppressWarnings("unchecked")
-	public void execute() {
-		IBaseDao<CnATreeElement, Serializable> dao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory().getDAO(typeId);
-		List<CnATreeElement> elements = dao.findAll();
-		
-		result = new ArrayList<List<Object>>(elements.size());
-		for (CnATreeElement element : elements)
-		{
-			Entity e = element.getEntity();
-			result.add(retrievePropertyValues(e, propertyTypes, classes, false));
-		}
-	}
-	
-	/**
-	 * Retrieves the values of the properties of the given entity and returns them as a list of strings.
-	 * 
-	 * <p>Note: The method is purposely written in a way that it can be reused from other parts of the application.</p>
-	 */
-	public static List<Object> retrievePropertyValues(Entity e, String[] propertyTypes, Class<?>[] classes)
-	{
-		return retrievePropertyValues(e, propertyTypes, classes, false);
-	}
-	
-	public static List<Object> convertValuesToList(Entity entity, String[] propertyTypes) {
-	    ArrayList<Object> values = new ArrayList<Object>(propertyTypes.length);       
-	    for (String propertyTypeId : propertyTypes) {
-	        PropertyType pType = HUITypeFactory.getInstance().getPropertyType(entity.getEntityType(), propertyTypeId);
-	        if(pType.getInputName().equals("numericoption"))
-            {
+    public void execute() {
+        IBaseDao<CnATreeElement, Serializable> dao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory()
+                .getDAO(typeId);
+        List<CnATreeElement> elements = dao.findAll();
+
+        result = new ArrayList<List<Object>>(elements.size());
+        for (CnATreeElement element : elements) {
+            Entity e = element.getEntity();
+            result.add(retrievePropertyValues(e, propertyTypes, classes, false));
+        }
+    }
+
+    /**
+     * Retrieves the values of the properties of the given entity and returns
+     * them as a list of strings.
+     * 
+     * <p>
+     * Note: The method is purposely written in a way that it can be reused from
+     * other parts of the application.
+     * </p>
+     */
+    public static List<Object> retrievePropertyValues(Entity e, String[] propertyTypes,
+            Class<?>[] classes) {
+        return retrievePropertyValues(e, propertyTypes, classes, false);
+    }
+
+    public static List<Object> convertValuesToList(Entity entity, String[] propertyTypes) {
+        ArrayList<Object> values = new ArrayList<Object>(propertyTypes.length);
+        for (String propertyTypeId : propertyTypes) {
+            PropertyType pType = HUITypeFactory.getInstance()
+                    .getPropertyType(entity.getEntityType(), propertyTypeId);
+            if (pType.getInputName().equals("numericoption")) {
                 values.add(entity.getNumericValue(propertyTypeId));
             } else {
                 values.add(entity.getSimpleValue(propertyTypeId));
             }
-	    }       
-	    return values;
-	}
-	
-	public static List<Object> retrievePropertyValues(Entity entity, String[] propertyTypes, Class<?>[] classes, boolean mapNumericalOptionValues){
+        }
+        return values;
+    }
+
+    public static List<Object> retrievePropertyValues(Entity entity, String[] propertyTypes,
+            Class<?>[] classes, boolean mapNumericalOptionValues) {
         ArrayList<Object> values = new ArrayList<Object>(propertyTypes.length);
-        
+
         int i = 0;
-        for (String name : propertyTypes)
-        {
-            PropertyType pType = HUITypeFactory.getInstance().getPropertyType(entity.getEntityType(), name);
-            if(pType==null) {
+        for (String name : propertyTypes) {
+            PropertyType pType = HUITypeFactory.getInstance()
+                    .getPropertyType(entity.getEntityType(), name);
+            if (pType == null) {
                 continue;
             }
-            
+
             Class<?> c = (i >= classes.length ? null : classes[i]);
-            if ((c == null || c == String.class) && (!mapNumericalOptionValues || !pType.getInputName().equals("numericoption"))){
-                if(pType.getInputName().equals("numericoption"))
-                {
+            if ((c == null || c == String.class) && (!mapNumericalOptionValues
+                    || !pType.getInputName().equals("numericoption"))) {
+                if (pType.getInputName().equals("numericoption")) {
                     values.add(entity.getNumericValue(name));
                 } else {
                     values.add(entity.getSimpleValue(name));
                 }
-            } else if(pType.getInputName().equals("numericoption") && mapNumericalOptionValues){
+            } else if (pType.getInputName().equals("numericoption") && mapNumericalOptionValues) {
                 values.add(pType.getNameForValue(Integer.parseInt(entity.getValue(name))));
-            } else if (c == Integer.class){
+            } else if (c == Integer.class) {
                 values.add(String.valueOf(entity.getInt(name)));
             } else {
-                throw new IllegalArgumentException("Invalid class for propertyType '" + name + "'.");
+                throw new IllegalArgumentException(
+                        "Invalid class for propertyType '" + name + "'.");
             }
             i++;
         }
-        
-        return values;	    
-	}
-	
-	public List<List<Object>> getResult()
-	{
-		return result;
-	}
+
+        return values;
+    }
+
+    public List<List<Object>> getResult() {
+        return result;
+    }
 
 }
