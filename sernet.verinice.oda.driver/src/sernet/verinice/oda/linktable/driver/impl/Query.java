@@ -23,6 +23,8 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -126,6 +128,15 @@ public class Query implements IQuery {
         List<List<String>> table = linkTableService.createTable(createLinkTableConfiguration());
         // Remove the heading line of the table
         table.remove(0);
+        // VN-2495: NFC-normalize values
+        table.forEach(row -> {
+            for (int i = 0; i < row.size(); i++) {
+                String value = row.get(i);
+                if (value != null && !value.isEmpty()) {
+                    row.set(i, Normalizer.normalize(value, Form.NFC));
+                }
+            }
+        });
         return table;
     }
 

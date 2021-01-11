@@ -18,6 +18,8 @@
 package sernet.verinice.oda.driver.impl;
 
 import java.io.Serializable;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,7 +98,7 @@ public class LoadEntityValues extends GenericCommand {
             if (pType.getInputName().equals("numericoption")) {
                 values.add(entity.getNumericValue(propertyTypeId));
             } else {
-                values.add(entity.getSimpleValue(propertyTypeId));
+                values.add(nfcNormalize(entity.getSimpleValue(propertyTypeId)));
             }
         }
         return values;
@@ -120,7 +122,7 @@ public class LoadEntityValues extends GenericCommand {
                 if (pType.getInputName().equals("numericoption")) {
                     values.add(entity.getNumericValue(name));
                 } else {
-                    values.add(entity.getSimpleValue(name));
+                    values.add(nfcNormalize(entity.getSimpleValue(name)));
                 }
             } else if (pType.getInputName().equals("numericoption") && mapNumericalOptionValues) {
                 values.add(pType.getNameForValue(Integer.parseInt(entity.getValue(name))));
@@ -134,6 +136,13 @@ public class LoadEntityValues extends GenericCommand {
         }
 
         return values;
+    }
+
+    private static String nfcNormalize(String value) {
+        if (value != null && !value.isEmpty()) {
+            return Normalizer.normalize(value, Form.NFC);
+        }
+        return value;
     }
 
     public List<List<Object>> getResult() {
