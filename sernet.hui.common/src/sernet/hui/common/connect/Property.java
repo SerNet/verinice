@@ -45,9 +45,6 @@ public class Property implements Serializable, ITypedElement {
         // default constructor for hibernate
     }
 
-    /**
-     * @return Returns the propertyValue.
-     */
     public String getPropertyValue() {
         return propertyValue;
     }
@@ -58,8 +55,6 @@ public class Property implements Serializable, ITypedElement {
 
     /**
      * Returns the value as an integer.
-     * 
-     * @return
      */
     public int getNumericPropertyValue() {
         try {
@@ -70,8 +65,6 @@ public class Property implements Serializable, ITypedElement {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.hui.common.connect.ITypedElement#getTypeId()
      */
     public String getTypeId() {
@@ -93,10 +86,6 @@ public class Property implements Serializable, ITypedElement {
         setPropertyValue(convertCalendarToString(calendar), fireChange, source);
     }
 
-    /**
-     * @param propertyValue
-     *            The propertyValue to set.
-     */
     public void setPropertyValue(String propertyValue) {
         setPropertyValue(propertyValue, true, null);
     }
@@ -121,32 +110,18 @@ public class Property implements Serializable, ITypedElement {
         return propertyType;
     }
 
-    /**
-     * @return the licensedContentId
-     */
     public String getLicenseContentId() {
         return licenseContentId;
     }
 
-    /**
-     * @param licenseContentId
-     *            the contentId to set
-     */
     public void setLicenseContentId(String licenseContentId) {
         this.licenseContentId = licenseContentId;
     }
 
-    /**
-     * @return the limitedLicense
-     */
     public Boolean isLimitedLicense() {
         return limitedLicense;
     }
 
-    /**
-     * @param limitedLicense
-     *            the limitedLicense to set
-     */
     public void setLimitedLicense(Boolean limitedLicense) {
         this.limitedLicense = limitedLicense;
     }
@@ -173,8 +148,6 @@ public class Property implements Serializable, ITypedElement {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -188,8 +161,6 @@ public class Property implements Serializable, ITypedElement {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override

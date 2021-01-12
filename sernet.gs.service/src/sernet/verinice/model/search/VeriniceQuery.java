@@ -21,6 +21,8 @@ package sernet.verinice.model.search;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Wraps a verinice query. A query is restricted to 200 elements by default. An
  * empty query causes a search over all elements without any restrictions.
@@ -32,50 +34,44 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class VeriniceQuery implements Serializable {
 
-    public final static int DEFAULT_LIMIT = 200;
-    public final static int MAX_LIMIT = 200000;
+    public static final int DEFAULT_LIMIT = 200;
+    public static final int MAX_LIMIT = 200000;
 
-    public final static String EMPTY_QUERY = "";
+    public static final String EMPTY_QUERY = StringUtils.EMPTY;
 
     private int limit = 0;
 
     private String query = EMPTY_QUERY;
 
-    private int scopeId = -1;
+    private int scopeId;
 
     /*
-     * false by default, as implemented in all implementations of {@link
-     * sernet.verinice.interfaces.IAuthService.isScopeOnly()}
+     * false by default, as implemented in all implementations of
+     * sernet.verinice.interfaces.IAuthService.isScopeOnly()
      */
     private boolean isScopeOnly = false;
 
     /**
-     * Inits a verinice query object.
+     * Initializes a verinice query object.
      *
      * @param query
      *            If query is null the query string is set to "" and if the
-     *            query containes slashes they will be removed.
+     *            query contains slashes they will be removed.
      * @param limit
      *            If limit <= 0 the limit is set to {@link #DEFAULT_LIMIT}.
      */
     public VeriniceQuery(String query, int limit) {
-        this.query = query == null ? EMPTY_QUERY : escapeQuery(query);
-        if (limit == 0) {
-            this.limit = MAX_LIMIT;
-        } else {
-            this.limit = (limit >= 0) ? limit : DEFAULT_LIMIT;
-        }
+        this(query, limit, -1);
     }
 
     public VeriniceQuery(String query, int limit, int scopeId) {
-        this(query, limit);
+        this.query = query == null ? EMPTY_QUERY : sanitizeQuery(query);
+        this.limit = limit > 0 ? limit : MAX_LIMIT;
         this.scopeId = scopeId;
     }
 
     /**
      * Limits the results. Default value is 200
-     * 
-     * @return
      */
     public int getLimit() {
         return limit;
@@ -86,32 +82,24 @@ public class VeriniceQuery implements Serializable {
     }
 
     public String getQuery() {
-        return escapeQuery(query);
+        return query;
     }
 
-    private String escapeQuery(String query) {
-        String escapedQuery = query.replaceAll("/", "");
-        return escapedQuery;
+    private static String sanitizeQuery(String query) {
+        return query.replace("/", "");
     }
 
     /**
      * Tests if a query was set. Empty query means "".
      */
     public boolean isQueryEmpty() {
-        return query == null || EMPTY_QUERY.equals(query);
+        return EMPTY_QUERY.equals(query);
     }
 
-    /**
-     * @return the scopeId
-     */
     public int getScopeId() {
         return scopeId;
     }
 
-    /**
-     * @param scopeId
-     *            the scopeId to set
-     */
     public void setScopeId(int scopeId) {
         this.scopeId = scopeId;
     }
