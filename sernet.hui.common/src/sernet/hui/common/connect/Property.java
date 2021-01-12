@@ -18,6 +18,8 @@
 package sernet.hui.common.connect;
 
 import java.io.Serializable;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.util.Calendar;
 
 /**
@@ -46,7 +48,7 @@ public class Property implements Serializable, ITypedElement {
     }
 
     public String getPropertyValue() {
-        return propertyValue;
+        return nfcNormalize(propertyValue);
     }
 
     public boolean isEmpty() {
@@ -72,7 +74,7 @@ public class Property implements Serializable, ITypedElement {
     }
 
     public void setPropertyValue(String propertyValue, boolean fireChange, Object source) {
-        this.propertyValue = propertyValue;
+        this.propertyValue = nfcNormalize(propertyValue);
         if (fireChange && parent != null) {
             parent.firePropertyChanged(this, source);
         }
@@ -203,5 +205,12 @@ public class Property implements Serializable, ITypedElement {
     public String toString() {
         return "Property [dbId=" + dbId + ", propertyType=" + propertyType + ", propertyValue="
                 + propertyValue + "]";
+    }
+
+    private static String nfcNormalize(String value) {
+        if (value != null && !value.isEmpty()) {
+            return Normalizer.normalize(value, Form.NFC);
+        }
+        return value;
     }
 }
