@@ -44,7 +44,7 @@ public class Messages extends NLS {
     public static String AssignAllIsaTopics_2;
     public static String AssignAllIsaTopics_3;
     public static String SamtPreferencePage_0;
-	public static String SamtPreferencePage_1;
+    public static String SamtPreferencePage_1;
     public static String SamtPreferencePage_2;
     public static String SamtPreferencePage_3;
     public static String SamtPreferencePage_4;
@@ -53,6 +53,7 @@ public class Messages extends NLS {
     public static String SamtView_2;
     public static String SamtView_4;
     public static String SamtWorkspace_0;
+    public static String SamtCatalogPreviousFileName;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

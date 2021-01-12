@@ -58,6 +58,8 @@ public final class SamtWorkspace extends CnAWorkspace {
      * bundle so that the right file is used for each locale
      */
     public static final String SAMT_CATALOG_FILE_NAME = Messages.SamtWorkspace_0;
+    // VN-2875
+    public static final String SAMT_CATALOG_PREVIOUS_FILE_NAME = Messages.SamtCatalogPreviousFileName;
 
     private SamtWorkspace() {
         // use getInstance
@@ -80,9 +82,9 @@ public final class SamtWorkspace extends CnAWorkspace {
      * @throws NullPointerException
      * @throws IOException
      */
-    public synchronized void createSelfAssessmemtCatalog() throws IOException {
-        final String inputPath = RESOURCES_PATH + File.separatorChar + SAMT_CATALOG_FILE_NAME;
-        final String ouputPath = CONF_PATH + File.separatorChar + SAMT_CATALOG_FILE_NAME;
+    public synchronized void createSelfAssessmemtCatalog(String fileName) throws IOException {
+        final String inputPath = RESOURCES_PATH + File.separatorChar + fileName;
+        final String ouputPath = CONF_PATH + File.separatorChar + fileName;
 
         try {
             createTextFile(inputPath, VeriniceCharset.CHARSET_UTF_8, getWorkdir(), ouputPath, null);

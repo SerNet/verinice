@@ -46,7 +46,8 @@ public class Activator extends AbstractUIPlugin {
         // set workdir preference:
         SamtWorkspace.getInstance().prepareWorkDir();
         SamtWorkspace.getInstance().createConfDir();
-        SamtWorkspace.getInstance().createSelfAssessmemtCatalog();
+        SamtWorkspace.getInstance().createSelfAssessmemtCatalog(SamtWorkspace.SAMT_CATALOG_FILE_NAME);
+        SamtWorkspace.getInstance().createSelfAssessmemtCatalog(SamtWorkspace.SAMT_CATALOG_PREVIOUS_FILE_NAME);
         
         // Sets the default preferences values of the self assessment
         SamtPreferencePage.setDefaults();
