@@ -395,6 +395,10 @@ public final class CnATypeMapper {
         return Group.class.isAssignableFrom(CnATypeMapper.getClassFromTypeId(typeId));
     }
 
+    public static boolean isScopeType(String typeId) {
+        return Organization.TYPE_ID.equals(typeId) || ITVerbund.TYPE_ID.equals(typeId) || ItNetwork.TYPE_ID.equals(typeId);
+    }
+
     private CnATypeMapper() {
 
     }
