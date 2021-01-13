@@ -26,11 +26,14 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
+
+import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
@@ -43,6 +46,7 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.Retriever;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
 import sernet.verinice.model.bsi.Client;
@@ -68,6 +72,9 @@ import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
 @Transactional
 @TransactionConfiguration(transactionManager = "txManager")
 public class SyncInsertUpdateTest extends CommandServiceProvider {
+
+    @Resource(name = "cnaLinkDao")
+    private IBaseDao<CnALink, Serializable> cnaLinkDao;
 
     private static final Logger log = Logger.getLogger(SyncInsertUpdateTest.class);
 
@@ -311,6 +318,14 @@ public class SyncInsertUpdateTest extends CommandServiceProvider {
                     loadElementByUuid.getElement() == null);
         }
 
+    }
+
+    @Test
+    // VN-2873
+    public void importWithLinksToElementsNotIncludedInImport()
+            throws CommandException, SyncParameterException, IOException {
+        SyncCommand syncCommand = VNAImportHelper.importFile("Informationsverbund_VN-2873.vna");
+        Assert.assertEquals(3, syncCommand.getInserted());
     }
 
     private void setSourceId(CnATreeElement organization) {
