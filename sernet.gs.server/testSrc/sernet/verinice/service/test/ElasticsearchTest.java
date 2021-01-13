@@ -40,6 +40,7 @@ import sernet.verinice.interfaces.search.IJsonBuilder;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.model.search.VeriniceQuery;
 import sernet.verinice.model.search.VeriniceSearchResult;
@@ -176,6 +177,31 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
                 "Phrase \"" + phrase + "\" is not in the right column " + propertyId);
         assertThat("Phrase \"" + phrase + "\" is not in the right column " + propertyId,
                 element.getValueFromResultString(propertyId), JUnitMatchers.containsString(phrase));
+    }
+
+    @Test
+    // VN-2495
+    public void findWithDecomposedUmlauts() throws CommandException {
+        // the ä is in NFD (decomposed) form
+        String organizationNameNFD = "Orgänization VN-2495";
+        // the ä is in NFC (composed) form
+        String organizationNameNFC = "Orgänization VN-2495";
+        Organization org = createOrganization(organizationNameNFD);
+
+        searchIndexer.blockingIndexing();
+
+        VeriniceSearchResult result1 = searchService
+                .query(new VeriniceQuery(organizationNameNFD, VeriniceQuery.MAX_LIMIT));
+        VeriniceSearchResultTable entity1 = result1.getVeriniceSearchObject(Organization.TYPE_ID);
+        assertNotNull(entity1);
+
+        VeriniceSearchResult result2 = searchService
+                .query(new VeriniceQuery(organizationNameNFC, VeriniceQuery.MAX_LIMIT));
+        VeriniceSearchResultTable entity2 = result2.getVeriniceSearchObject(Organization.TYPE_ID);
+        assertNotNull(entity2);
+
+        removeElement(org);
+
     }
 
     @After

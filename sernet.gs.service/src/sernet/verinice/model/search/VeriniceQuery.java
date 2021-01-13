@@ -20,6 +20,8 @@
 package sernet.verinice.model.search;
 
 import java.io.Serializable;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -86,7 +88,7 @@ public class VeriniceQuery implements Serializable {
     }
 
     private static String sanitizeQuery(String query) {
-        return query.replace("/", "");
+        return Normalizer.normalize(query.replace("/", ""), Form.NFC);
     }
 
     /**
