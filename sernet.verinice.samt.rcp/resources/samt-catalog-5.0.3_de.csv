@@ -57,9 +57,9 @@ Viel Erfolg wünschen die ENX WG ISA und der Arbeitskreis Informationssicherheit
 ,,,"Herausgeber: VERBAND DER AUTOMOBILINDUSTRIE e. V. (VDA); Behrenstr. 35; 10117 Berlin; www.vda.de
 © 2020 Verband der Automobilindustrie e.V., Berlin",,,,,,
 ,,,,,,,,,
-1,1 IS Policies and Organization,,,,,,,,5.0.2
-1.1,1.1 Information Security Policies,,,,,,,,5.0.2
-1.1.1,1.1.1 Inwieweit sind Richtlinien zur Informationssicherheit vorhanden?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+1,1 IS Policies and Organization,,,,,,,,5.0.3
+1.1,1.1 Information Security Policies,,,,,,,,5.0.3
+1.1.1,1.1.1 Inwieweit sind Richtlinien zur Informationssicherheit vorhanden?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,05.1,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -87,8 +87,8 @@ Viel Erfolg wünschen die ENX WG ISA und der Arbeitskreis Informationssicherheit
 ,,,<b>Referenz zu anderen Standards</b>,,,,,,
 ,,,Referenz zu ISO 27001: A5.1.1 und A5.1.2,,,,,,
 ,,,,,,,,,
-1.2,1.2 Organization of Information Security,,,,,,,,5.0.2
-1.2.1,1.2.1 Inwieweit wird in der Organisation Informationssicherheit gemanagt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+1.2,1.2 Organization of Information Security,,,,,,,,5.0.3
+1.2.1,1.2.1 Inwieweit wird in der Organisation Informationssicherheit gemanagt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,01.1,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -108,7 +108,7 @@ Viel Erfolg wünschen die ENX WG ISA und der Arbeitskreis Informationssicherheit
 ,,,<b>Referenz zu anderen Standards</b>,,,,,,
 ,,,"Referenz zu ISO 27001: 4, A5.1, A8.1, A9.1, A10.1 und A10.2",,,,,,
 ,,,,,,,,,
-1.2.2,1.2.2 Inwieweit sind die Verantwortlichkeiten für Informationssicherheit organisiert?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+1.2.2,1.2.2 Inwieweit sind die Verantwortlichkeiten für Informationssicherheit organisiert?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,06.1,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -132,7 +132,7 @@ Viel Erfolg wünschen die ENX WG ISA und der Arbeitskreis Informationssicherheit
 ,,,<b>Referenz zu anderen Standards</b>,,,,,,
 ,,,Referenz zu ISO 27001: A6.1.1,,,,,,
 ,,,,,,,,,
-1.2.3,1.2.3 Inwieweit werden Informationssicherheitsanforderungen in Projekten berücksichtigt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+1.2.3,1.2.3 Inwieweit werden Informationssicherheitsanforderungen in Projekten berücksichtigt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,06.2,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -160,7 +160,7 @@ Viel Erfolg wünschen die ENX WG ISA und der Arbeitskreis Informationssicherheit
 - VIVA (Vertraulichkeit, Integrität, Verfügbarkeit, Authentizität) 
 - CIA (Confidentiality, Integrity, Availiability)",,,,,,
 ,,,,,,,,,
-1.2.4,1.2.4 Inwieweit sind die Verantwortlichkeiten zwischen Organisations-fremden IT-Service-Anbietern und der eigenen Organisation definiert?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+1.2.4,1.2.4 Inwieweit sind die Verantwortlichkeiten zwischen Organisations-fremden IT-Service-Anbietern und der eigenen Organisation definiert?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,06.4,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -205,8 +205,8 @@ Internet Service Provider (ISP): Wenn der Internet-Zugang des Unternehmens nicht
 
 Beispiele für Schulungsinhalte für das verantwortliche Personal: sicherer Betrieb und Konfiguration, sicherer Umgang mit Daten anhand ihrer Klassifikation, Bewusstsein über Gefahren, Umgang mit Incidents",,,,,,
 ,,,,,,,,,
-1.3,1.3 Asset Management,,,,,,,,5.0.2
-1.3.1,1.3.1 Inwieweit werden Informationswerte (Assets) identifiziert und erfasst? ,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+1.3,1.3 Asset Management,,,,,,,,5.0.3
+1.3.1,1.3.1 Inwieweit werden Informationswerte (Assets) identifiziert und erfasst? ,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,08.1,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -232,7 +232,7 @@ Beispiele für Schulungsinhalte für das verantwortliche Personal: sicherer Betr
 ,,,<b>Weitere Informationen</b>,,,,,,
 ,,,"Die wesentlichen Informationswerte sind unter anderem Geschäftsgeheimnisse, Produktionsprozesse, … Es müssen nicht alle Informationen aufgelistet werden, sondern es können ebenso Kategorien gebildet werden (z. B. Stammdaten der Mitarbeiter - verantwortliche Stelle: Personalabteilung) Eine Übersicht der IT-Systeme, welche die Informationswerte verarbeiten sowie der verantwortlichen Mitarbeiter ist ...",,,,,,
 ,,,,,,,,,
-1.3.2,1.3.2 Inwieweit werden Informationswerte hinsichtlich ihres Schutzbedarfs klassifiziert und gemanagt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+1.3.2,1.3.2 Inwieweit werden Informationswerte hinsichtlich ihres Schutzbedarfs klassifiziert und gemanagt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,08.2,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -252,7 +252,7 @@ Beispiele für Schulungsinhalte für das verantwortliche Personal: sicherer Betr
 ,,,<b>Referenz zu anderen Standards</b>,,,,,,
 ,,,"Referenz zu ISO 27001: A8.2.1, A8.2.2 und A8.2.3",,,,,,
 ,,,,,,,,,
-1.3.3,"1.3.3 Inwieweit wird sichergestellt, dass nur evaluierte und freigegebene organisationsfremde IT-Dienste zum Verarbeiten von Informationswerten der Organisation eingesetzt werden?",,<b>ISA Classic</b>,1,1,,,3,5.0.2
+1.3.3,"1.3.3 Inwieweit wird sichergestellt, dass nur evaluierte und freigegebene organisationsfremde IT-Dienste zum Verarbeiten von Informationswerten der Organisation eingesetzt werden?",,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,14.4,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -280,8 +280,8 @@ Beispiele für Schulungsinhalte für das verantwortliche Personal: sicherer Betr
 ,,,"Mögliche Maßnahmen:  
 - Einsatz von Sicherheitstechnologien wie z. B. Firewall-Systemen, Intrusion Detection und Prevention Systemen (IDS/IPS), Netzwerkverwaltungswerkzeugen, Sicherheitssoftware für Netzwerke zur Unterbindung von ungewollten Datenaustausch.",,,,,,
 ,,,,,,,,,
-1.4,1.4 IS Risk Management,,,,,,,,5.0.2
-1.4.1,1.4.1 Inwieweit werden Informationssicherheitsrisiken gemanagt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+1.4,1.4 IS Risk Management,,,,,,,,5.0.3
+1.4.1,1.4.1 Inwieweit werden Informationssicherheitsrisiken gemanagt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,01.2,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -306,8 +306,8 @@ Beispiele für Schulungsinhalte für das verantwortliche Personal: sicherer Betr
 ,,,<b>Referenz zu anderen Standards</b>,,,,,,
 ,,,Referenz zu ISO 27001: A8.2 und A6.1.2,,,,,,
 ,,,,,,,,,
-1.5,1.5 Assessments,,,,,,,,5.0.2
-1.5.1,1.5.1 Inwieweit wird die Einhaltung der Informationssicherheit in Verfahren und Prozessen sichergestellt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+1.5,1.5 Assessments,,,,,,,,5.0.3
+1.5.1,1.5.1 Inwieweit wird die Einhaltung der Informationssicherheit in Verfahren und Prozessen sichergestellt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,18.4,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -329,7 +329,7 @@ Beispiele für Schulungsinhalte für das verantwortliche Personal: sicherer Betr
 ,,,<b>Referenz zu anderen Standards</b>,,,,,,
 ,,,"Referenz zu ISO 27001: A18.2.2, A18.2.3",,,,,,
 ,,,,,,,,,
-1.5.2,1.5.2 Inwieweit wird das ISMS von einer unabhängigen Instanz überprüft?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+1.5.2,1.5.2 Inwieweit wird das ISMS von einer unabhängigen Instanz überprüft?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,18.3,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -348,8 +348,8 @@ Beispiele für Schulungsinhalte für das verantwortliche Personal: sicherer Betr
 ,,,<b>Referenz zu anderen Standards</b>,,,,,,
 ,,,Referenz zu ISO 27001: A18.2.1,,,,,,
 ,,,,,,,,,
-1.6,1.6 Incident Management,,,,,,,,5.0.2
-1.6.1,1.6.1 Inwieweit werden Informationssicherheitsereignisse verarbeitet?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+1.6,1.6 Incident Management,,,,,,,,5.0.3
+1.6.1,1.6.1 Inwieweit werden Informationssicherheitsereignisse verarbeitet?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,16.1,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -383,9 +383,9 @@ Beispiele für Schulungsinhalte für das verantwortliche Personal: sicherer Betr
 ,,,<b>Referenz zu anderen Standards</b>,,,,,,
 ,,,Referenz zu ISO 27001: A16.1.1 – A16.1.7,,,,,,
 ,,,,,,,,,
-2,2 Human Ressources,,,,,,,,5.0.2
-2.1,2.1 Human Ressources,,,,,,,,5.0.2
-2.1.1,2.1.1 Inwieweit wird die Eignung von Mitarbeitern für sensible Tätigkeitsbereiche sichergestellt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+2,2 Human Ressources,,,,,,,,5.0.3
+2.1,2.1 Human Ressources,,,,,,,,5.0.3
+2.1.1,2.1.1 Inwieweit wird die Eignung von Mitarbeitern für sensible Tätigkeitsbereiche sichergestellt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,07.1.a (new),,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -409,7 +409,7 @@ Beispiele für Schulungsinhalte für das verantwortliche Personal: sicherer Betr
 ,,,<b>Referenz zu anderen Standards</b>,,,,,,
 ,,,Referenz zu ISO 27001: A7.1.1,,,,,,
 ,,,,,,,,,
-2.1.2,2.1.2 Inwieweit werden alle Mitarbeiter zur Einhaltung der Informationssicherheit verpflichtet?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+2.1.2,2.1.2 Inwieweit werden alle Mitarbeiter zur Einhaltung der Informationssicherheit verpflichtet?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,07.1 ,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -433,7 +433,7 @@ Beispiele für Schulungsinhalte für das verantwortliche Personal: sicherer Betr
 ,,,<b>Referenz zu anderen Standards</b>,,,,,,
 ,,,Referenz zu ISO 27001: A7.1.2 und A7.3.1,,,,,,
 ,,,,,,,,,
-2.1.3,2.1.3 Inwieweit werden Mitarbeiter über die Risiken beim Umgang mit Informationen geschult und sensibilisiert?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+2.1.3,2.1.3 Inwieweit werden Mitarbeiter über die Risiken beim Umgang mit Informationen geschult und sensibilisiert?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,07.2,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -466,7 +466,7 @@ Beispiele für Schulungsinhalte für das verantwortliche Personal: sicherer Betr
 ,,,<b>Referenz zu anderen Standards</b>,,,,,,
 ,,,Referenz zu ISO 27002: 7.2.1 und 7.2.2,,,,,,
 ,,,,,,,,,
-2.1.4,2.1.4 Inwieweit ist mobiles Arbeiten geregelt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+2.1.4,2.1.4 Inwieweit ist mobiles Arbeiten geregelt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,06.3.a (new),,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -498,9 +498,9 @@ Beispiele für Schulungsinhalte für das verantwortliche Personal: sicherer Betr
 ,,,<b>Weitere Informationen</b>,,,,,,
 ,,,Unter vertragliche Anforderungen fallen z. B. Kundenanforderungen,,,,,,
 ,,,,,,,,,
-3,3 Physical Security and Business Continuity,,,,,,,,5.0.2
-3.1 ,3.1 Physical Security and Business Continuity,,,,,,,,5.0.2
-3.1.1,3.1.1 Inwieweit werden Sicherheitszonen für den Schutz von Informationswerten gemanagt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+3,3 Physical Security and Business Continuity,,,,,,,,5.0.3
+3.1 ,3.1 Physical Security and Business Continuity,,,,,,,,5.0.3
+3.1.1,3.1.1 Inwieweit werden Sicherheitszonen für den Schutz von Informationswerten gemanagt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,11.1,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -594,7 +594,7 @@ Organisationsmitarbeiter: Nur versiegeltes Mitführen erlaubt Partnerfirmenmitar
 Nutzung (z. B. Fotografieren):  
 Organisationsmitarbeiter: Nutzung nur mit Erlaubnis Partnerfirmenmitarbeitern/Besuchern: Nutzung grundsätzlich verboten",,,,,,
 ,,,,,,,,,
-3.1.2,3.1.2 Inwieweit ist in Ausnahmesituationen die Informationssicherheit sichergestellt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+3.1.2,3.1.2 Inwieweit ist in Ausnahmesituationen die Informationssicherheit sichergestellt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,17.1,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -623,7 +623,7 @@ Organisationsmitarbeiter: Nutzung nur mit Erlaubnis Partnerfirmenmitarbeitern/Be
 ,,,<b>Referenz zu anderen Standards</b>,,,,,,
 ,,,"Referenz zu ISO 27001: A12.3.1, A17.1.1 - A17.1.3 und A17.2.1",,,,,,
 ,,,,,,,,,
-3.1.3,3.1.3 Inwieweit ist der Umgang mit Informationsträgern gemanagt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+3.1.3,3.1.3 Inwieweit ist der Umgang mit Informationsträgern gemanagt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,11.4,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -648,7 +648,7 @@ Organisationsmitarbeiter: Nutzung nur mit Erlaubnis Partnerfirmenmitarbeitern/Be
 ,,,"Referenz zu ISO 27001: A11.2.5, A11.2.6 und A11.2.7",,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-3.1.4,3.1.4 Inwieweit ist der Umgang mit mobilen IT-Geräten und mobilen Datenträgern gemanagt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+3.1.4,3.1.4 Inwieweit ist der Umgang mit mobilen IT-Geräten und mobilen Datenträgern gemanagt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,0.6.3,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -678,9 +678,9 @@ Organisationsmitarbeiter: Nutzung nur mit Erlaubnis Partnerfirmenmitarbeitern/Be
 ,,,"Referenz zu ISO 27001: A6.2.1, A6.2.2, A8.3.1, A8.3.2, A8.3.3, A12.3.1",,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-4,4 Identity and Access Management,,,,,,,,5.0.2
-4.1,4.1 Identity Management,,,,,,,,5.0.2
-4.1.1,4.1.1 Inwieweit ist der Umgang mit Identifikationsmitteln gemanagt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+4,4 Identity and Access Management,,,,,,,,5.0.3
+4.1,4.1 Identity Management,,,,,,,,5.0.3
+4.1.1,4.1.1 Inwieweit ist der Umgang mit Identifikationsmitteln gemanagt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,09.2.a(new),,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -707,7 +707,7 @@ Organisationsmitarbeiter: Nutzung nur mit Erlaubnis Partnerfirmenmitarbeitern/Be
 ,,,<b>Referenz zu anderen Standards</b>,,,,,,
 ,,,"Referenz zu ISO 27001: A9.2.1, A9.2.2, A9.2.4, A9.2.5, A9.3.1 und A9.4.3",,,,,,
 ,,,,,,,,,
-4.1.2,"4.1.2 Inwieweit wird der Zugang von Benutzern zu Netzwerkdiensten, IT-Systemen und IT-Anwendungen gesichert?",,<b>ISA Classic</b>,1,1,,,3,5.0.2
+4.1.2,"4.1.2 Inwieweit wird der Zugang von Benutzern zu Netzwerkdiensten, IT-Systemen und IT-Anwendungen gesichert?",,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,09.1,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -734,7 +734,7 @@ Organisationsmitarbeiter: Nutzung nur mit Erlaubnis Partnerfirmenmitarbeitern/Be
 ,,,<b>Referenz zu anderen Standards</b>,,,,,,
 ,,,Referenz zu ISO 27001: A9.1.2,,,,,,
 ,,,,,,,,,
-4.1.3 ,4.1.3 Inwieweit werden Benutzerkonten und Anmeldeinformationen sicher verwaltet und angewandt? ,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+4.1.3 ,4.1.3 Inwieweit werden Benutzerkonten und Anmeldeinformationen sicher verwaltet und angewandt? ,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,09.2,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -776,8 +776,8 @@ Organisationsmitarbeiter: Nutzung nur mit Erlaubnis Partnerfirmenmitarbeitern/Be
 ,,,<b>Referenz zu anderen Standards</b>,,,,,,
 ,,,"Referenz zu ISO 27001: A9.2.1, A9.2.2, A9.2.4, A9.2.5, A9.3.1 und A9.4.3",,,,,,
 ,,,,,,,,,
-4.2,4.2 Access Management,,,,,,,,5.0.2
-4.2.1,4.2.1 Inwieweit werden Zugriffsberechtigungen vergeben und gemanagt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+4.2,4.2 Access Management,,,,,,,,5.0.3
+4.2.1,4.2.1 Inwieweit werden Zugriffsberechtigungen vergeben und gemanagt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,09.5,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -812,9 +812,9 @@ Organisationsmitarbeiter: Nutzung nur mit Erlaubnis Partnerfirmenmitarbeitern/Be
 ,,,<b>Referenz zu anderen Standards</b>,,,,,,
 ,,,"Referenz zu ISO 27001: A9.2.3, A9.4.1",,,,,,
 ,,,,,,,,,
-5,5 IT Security / Cyber Security,,,,,,,,5.0.2
-5.1,5.1 Cryptography,,,,,,,,5.0.2
-5.1.1,5.1.1 Inwieweit wird die Nutzung kryptografischer Verfahren gemanagt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+5,5 IT Security / Cyber Security,,,,,,,,5.0.3
+5.1,5.1 Cryptography,,,,,,,,5.0.3
+5.1.1,5.1.1 Inwieweit wird die Nutzung kryptografischer Verfahren gemanagt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,10.1,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -841,7 +841,7 @@ Organisationsmitarbeiter: Nutzung nur mit Erlaubnis Partnerfirmenmitarbeitern/Be
 ,,,<b>Referenz zu anderen Standards</b>,,,,,,
 ,,,Referenz zu ISO 27001: A10.1.1,,,,,,
 ,,,,,,,,,
-5.1.2,5.1.2 Inwieweit werden Informationen während der Übertragung geschützt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+5.1.2,5.1.2 Inwieweit werden Informationen während der Übertragung geschützt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,13.4,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -879,8 +879,8 @@ Organisationsmitarbeiter: Nutzung nur mit Erlaubnis Partnerfirmenmitarbeitern/Be
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-5.2,5.2 Operations Security,,,,,,,,5.0.2
-5.2.1 ,5.2.1 Inwieweit werden Änderungen gesteuert? ,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+5.2,5.2 Operations Security,,,,,,,,5.0.3
+5.2.1 ,5.2.1 Inwieweit werden Änderungen gesteuert? ,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,12.1,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -909,7 +909,7 @@ Organisationsmitarbeiter: Nutzung nur mit Erlaubnis Partnerfirmenmitarbeitern/Be
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-5.2.2,5.2.2 Inwieweit sind die Entwicklungs- und Testumgebungen von den Produktivumgebungen getrennt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+5.2.2,5.2.2 Inwieweit sind die Entwicklungs- und Testumgebungen von den Produktivumgebungen getrennt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,12.2,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -936,7 +936,7 @@ Organisationsmitarbeiter: Nutzung nur mit Erlaubnis Partnerfirmenmitarbeitern/Be
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-5.2.3,5.2.3 Inwieweit werden IT-Systeme vor Schadsoftware geschützt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+5.2.3,5.2.3 Inwieweit werden IT-Systeme vor Schadsoftware geschützt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,12.3,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -972,7 +972,7 @@ Organisationsmitarbeiter: Nutzung nur mit Erlaubnis Partnerfirmenmitarbeitern/Be
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-5.2.4,5.2.4 Inwieweit werden Ereignisprotokolle aufgezeichnet und analysiert?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+5.2.4,5.2.4 Inwieweit werden Ereignisprotokolle aufgezeichnet und analysiert?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,12.5,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1009,7 +1009,7 @@ Organisationsmitarbeiter: Nutzung nur mit Erlaubnis Partnerfirmenmitarbeitern/Be
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-5.2.5,5.2.5 Inwieweit werden Schwachstellen erkannt und behandelt? ,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+5.2.5,5.2.5 Inwieweit werden Schwachstellen erkannt und behandelt? ,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,12.7,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1035,7 +1035,7 @@ Organisationsmitarbeiter: Nutzung nur mit Erlaubnis Partnerfirmenmitarbeitern/Be
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-5.2.6,5.2.6 Inwieweit werden IT-Systeme technisch überprüft (Systemaudit)?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+5.2.6,5.2.6 Inwieweit werden IT-Systeme technisch überprüft (Systemaudit)?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,12.8,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1065,7 +1065,7 @@ Organisationsmitarbeiter: Nutzung nur mit Erlaubnis Partnerfirmenmitarbeitern/Be
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-5.2.7,5.2.7 Inwieweit wird das Netzwerk der Organisation gemanagt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+5.2.7,5.2.7 Inwieweit wird das Netzwerk der Organisation gemanagt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,13.1,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1104,8 +1104,8 @@ Organisationsmitarbeiter: Nutzung nur mit Erlaubnis Partnerfirmenmitarbeitern/Be
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-5.3,"5.3 System acquisitions, requirement management and development",,,,,,,,5.0.2
-5.3.1,5.3.1 Inwieweit wird Informationssicherheit bei neuen oder weiterentwickelten IT-Systemen berücksichtigt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+5.3,"5.3 System acquisitions, requirement management and development",,,,,,,,5.0.3
+5.3.1,5.3.1 Inwieweit wird Informationssicherheit bei neuen oder weiterentwickelten IT-Systemen berücksichtigt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,14.1,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1137,7 +1137,7 @@ Organisationsmitarbeiter: Nutzung nur mit Erlaubnis Partnerfirmenmitarbeitern/Be
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-5.3.2,5.3.2 Inwieweit sind Anforderungen an Netzwerkdienste definiert?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+5.3.2,5.3.2 Inwieweit sind Anforderungen an Netzwerkdienste definiert?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,13.2,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1165,7 +1165,7 @@ Organisationsmitarbeiter: Nutzung nur mit Erlaubnis Partnerfirmenmitarbeitern/Be
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-5.3.3,5.3.3 Inwieweit ist die Rückgabe und das sichere Entfernen von Informationswerten aus Organisationsfremden IT-Diensten geregelt? ,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+5.3.3,5.3.3 Inwieweit ist die Rückgabe und das sichere Entfernen von Informationswerten aus Organisationsfremden IT-Diensten geregelt? ,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,08.4,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1190,7 +1190,7 @@ Organisationsmitarbeiter: Nutzung nur mit Erlaubnis Partnerfirmenmitarbeitern/Be
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-5.3.4,5.3.4 Inwieweit sind Informationen in gemeinsam genutzten organisationsfremden IT-Diensten geschützt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+5.3.4,5.3.4 Inwieweit sind Informationen in gemeinsam genutzten organisationsfremden IT-Diensten geschützt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,09.6,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1213,9 +1213,9 @@ Organisationsmitarbeiter: Nutzung nur mit Erlaubnis Partnerfirmenmitarbeitern/Be
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-6,6 Supplier Relationships,,,,,,,,5.0.2
-6.1 ,6.1 Supplier Relationships,,,,,,,,5.0.2
-6.1.1,6.1.1 Inwieweit wird die Informationssicherheit bei Auftragnehmern und Kooperationspartnern sichergestellt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+6,6 Supplier Relationships,,,,,,,,5.0.3
+6.1 ,6.1 Supplier Relationships,,,,,,,,5.0.3
+6.1.1,6.1.1 Inwieweit wird die Informationssicherheit bei Auftragnehmern und Kooperationspartnern sichergestellt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,15.1,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1339,7 +1339,7 @@ Um die Sicherstellung der Anforderungen geeignet sicherzustellen, sollten einfac
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-6.1.2,6.1.2 Inwieweit ist Geheimhaltung beim Austausch von Informationen vertraglich vereinbart?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+6.1.2,6.1.2 Inwieweit ist Geheimhaltung beim Austausch von Informationen vertraglich vereinbart?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,13.5,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1371,9 +1371,9 @@ Um die Sicherstellung der Anforderungen geeignet sicherzustellen, sollten einfac
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-7,7 Compliance,,,,,,,,5.0.2
-7.1 ,7.1 Compliance,,,,,,,,5.0.2
-7.1.1,7.1.1 Inwieweit wird die Einhaltung regulatorischer und vertraglicher Bestimmungen sichergestellt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+7,7 Compliance,,,,,,,,5.0.3
+7.1 ,7.1 Compliance,,,,,,,,5.0.3
+7.1.1,7.1.1 Inwieweit wird die Einhaltung regulatorischer und vertraglicher Bestimmungen sichergestellt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,18.1,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1407,7 +1407,7 @@ Um die Sicherstellung der Anforderungen geeignet sicherzustellen, sollten einfac
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-7.1.2,7.1.2 Inwieweit wird der Schutz von personenbezogenen Daten bei der Umsetzung der Informationssicherheit berücksichtigt? ,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+7.1.2,7.1.2 Inwieweit wird der Schutz von personenbezogenen Daten bei der Umsetzung der Informationssicherheit berücksichtigt? ,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,18.2,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1427,9 +1427,9 @@ Um die Sicherstellung der Anforderungen geeignet sicherzustellen, sollten einfac
 ,,,"Der Prototypenschutz umfasst als schutzbedürftig klassifizierte Fahrzeuge, Komponenten und Bauteile, welche noch nicht seitens des OEMs der Öffentlichkeit vorgestellt und/oder in geeigneter Form veröffentlicht wurden. 
 Der auftraggebende Fachbereich des OEMs ist für die Klassifizierung der Schutzbedürftigkeit von Fahrzeugen, Komponenten und Bauteilen verantwortlich. Die Mindestanforderungen zum Prototypenschutz sind für die Schutzklassen hoch und sehr hoch nach VDA ISA anzuwenden.",,,,,,
 ,,,"Die in diesem Abschnitt beschriebenen Anforderungen gelten für alle Unternehmen, die als schutzbedürftig klassifizierte Fahrzeuge, Komponenten oder Bauteile in eigenen Liegenschaften herstellen, lagern oder zur Nutzung überlassen bekommen.",,,,,,
-8,8 Prototypenschutz,,,,,,,,5.0.2
-8.1,8.1 Physische und umgebungsbezogene Sicherheit,,,,,,,,5.0.2
-8.1.1,"8.1.1 Inwieweit ist ein Sicherheitskonzept vorhanden, das Mindestanforderungen zur physischen und umgebungsbezogenen Sicherheit für den Prototypenschutz beschreibt?",,<b>ISA Classic</b>,1,1,,,3,5.0.2
+8,8 Prototypenschutz,,,,,,,,5.0.3
+8.1,8.1 Physische und umgebungsbezogene Sicherheit,,,,,,,,5.0.3
+8.1.1,"8.1.1 Inwieweit ist ein Sicherheitskonzept vorhanden, das Mindestanforderungen zur physischen und umgebungsbezogenen Sicherheit für den Prototypenschutz beschreibt?",,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,25.1.1,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1446,7 +1446,7 @@ Der auftraggebende Fachbereich des OEMs ist für die Klassifizierung der Schutzb
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-8.1.2,"8.1.2 Inwieweit ist eine Perimetersicherung vorhanden, die einen unberechtigten Zutritt zu den zu schützenden Objekten der Liegenschaften verhindert?",,<b>ISA Classic</b>,1,1,,,3,5.0.2
+8.1.2,"8.1.2 Inwieweit ist eine Perimetersicherung vorhanden, die einen unberechtigten Zutritt zu den zu schützenden Objekten der Liegenschaften verhindert?",,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,25.1.2,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1466,7 +1466,7 @@ Der auftraggebende Fachbereich des OEMs ist für die Klassifizierung der Schutzb
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-8.1.3,"8.1.3 Inwieweit ist die Außenhaut der zu schützenden Gebäude in einer Form ausgeführt, die ein Entfernen oder Öffnen von Außenhautkomponenten mit handelsüblichen Werkzeugen nicht ermöglichen?",,<b>ISA Classic</b>,1,1,,,3,5.0.2
+8.1.3,"8.1.3 Inwieweit ist die Außenhaut der zu schützenden Gebäude in einer Form ausgeführt, die ein Entfernen oder Öffnen von Außenhautkomponenten mit handelsüblichen Werkzeugen nicht ermöglichen?",,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,25.1.3,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1487,7 +1487,7 @@ Der auftraggebende Fachbereich des OEMs ist für die Klassifizierung der Schutzb
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-8.1.4,8.1.4 Inwieweit ist ein Sicht- und Einblickschutz in definierte Sicherheitsbereiche gewährleistet?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+8.1.4,8.1.4 Inwieweit ist ein Sicht- und Einblickschutz in definierte Sicherheitsbereiche gewährleistet?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,25.1.4,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1511,7 +1511,7 @@ Der auftraggebende Fachbereich des OEMs ist für die Klassifizierung der Schutzb
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-8.1.5,8.1.5 Inwieweit ist der Schutz vor unbefugtem Betreten in Form einer Zugangskontrolle geregelt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+8.1.5,8.1.5 Inwieweit ist der Schutz vor unbefugtem Betreten in Form einer Zugangskontrolle geregelt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,25.1.5,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1534,7 +1534,7 @@ Der auftraggebende Fachbereich des OEMs ist für die Klassifizierung der Schutzb
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-8.1.6,8.1.6 Inwieweit werden die zu sichernden Räumlichkeiten auf Einbruch überwacht?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+8.1.6,8.1.6 Inwieweit werden die zu sichernden Räumlichkeiten auf Einbruch überwacht?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,25.1.6,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1555,7 +1555,7 @@ Der auftraggebende Fachbereich des OEMs ist für die Klassifizierung der Schutzb
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-8.1.7 ,8.1.7 Inwieweit ist ein dokumentiertes Besuchermanagement vorhanden?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+8.1.7 ,8.1.7 Inwieweit ist ein dokumentiertes Besuchermanagement vorhanden?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,25.1.7,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1575,7 +1575,7 @@ Der auftraggebende Fachbereich des OEMs ist für die Klassifizierung der Schutzb
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-8.1.8,8.1.8 Inwieweit ist eine Mandantentrennung vor Ort gegeben?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+8.1.8,8.1.8 Inwieweit ist eine Mandantentrennung vor Ort gegeben?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,25.1.8,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1602,7 +1602,7 @@ Der auftraggebende Fachbereich des OEMs ist für die Klassifizierung der Schutzb
 ,,,"Die in diesem Abschnitt beschriebenen Anforderungen gelten für alle Unternehmen, die als schutzbedürftig klassifizierte Fahrzeuge, Komponenten oder Bauteile herstellen oder überlassen bekommen.",,,,,,
 ,,,,,,,,,
 8.2,8.2 Organisatorische Anforderungen,,,,,,,,5.0.9
-8.2.1,8.2.1 Inwieweit liegen vertragsrechtlich gültige Geheimhaltungsvereinbarungen/ -verpflichtungen vor?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+8.2.1,8.2.1 Inwieweit liegen vertragsrechtlich gültige Geheimhaltungsvereinbarungen/ -verpflichtungen vor?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,25.2.1,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1619,7 +1619,7 @@ Der auftraggebende Fachbereich des OEMs ist für die Klassifizierung der Schutzb
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-8.2.2,8.2.2 Inwieweit sind Vorgaben für die Beauftragung von Unterauftragnehmer bekannt und erfüllt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+8.2.2,8.2.2 Inwieweit sind Vorgaben für die Beauftragung von Unterauftragnehmer bekannt und erfüllt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,25.2.2,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1641,7 +1641,7 @@ Der auftraggebende Fachbereich des OEMs ist für die Klassifizierung der Schutzb
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-8.2.3,8.2.3 Inwieweit werden Mitarbeiter und Projektbeteiligte über den Umgang mit Prototypen nachweislich geschult und sensibilisiert?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+8.2.3,8.2.3 Inwieweit werden Mitarbeiter und Projektbeteiligte über den Umgang mit Prototypen nachweislich geschult und sensibilisiert?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,25.2.3,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1661,7 +1661,7 @@ Der auftraggebende Fachbereich des OEMs ist für die Klassifizierung der Schutzb
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-8.2.4,8.2.4 Inwieweit sind die Sicherheitseinstufungen des Projekts und die daraus resultierenden Maßnahmen zur Absicherung bekannt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+8.2.4,8.2.4 Inwieweit sind die Sicherheitseinstufungen des Projekts und die daraus resultierenden Maßnahmen zur Absicherung bekannt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,25.2.4,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1680,7 +1680,7 @@ Der auftraggebende Fachbereich des OEMs ist für die Klassifizierung der Schutzb
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-8.2.5,8.2.5 Inwieweit ist ein Prozess zur Zutrittsvergabe in Sicherheitsbereiche definiert?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+8.2.5,8.2.5 Inwieweit ist ein Prozess zur Zutrittsvergabe in Sicherheitsbereiche definiert?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,25.12.5,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1696,7 +1696,7 @@ Der auftraggebende Fachbereich des OEMs ist für die Klassifizierung der Schutzb
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-8.2.6,8.2.6 Inwieweit sind Regelungen zur Bildaufzeichnung und Umgang mit erstelltem Bildmaterial vorhanden?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+8.2.6,8.2.6 Inwieweit sind Regelungen zur Bildaufzeichnung und Umgang mit erstelltem Bildmaterial vorhanden?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,25.2.6,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1717,7 +1717,7 @@ Der auftraggebende Fachbereich des OEMs ist für die Klassifizierung der Schutzb
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-8.2.7,8.2.7 Inwieweit existiert ein Prozess zur Einbringung und Nutzung von mobilen film- und fotofähigen Endgeräten in definierte Sicherheitsbereiche?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+8.2.7,8.2.7 Inwieweit existiert ein Prozess zur Einbringung und Nutzung von mobilen film- und fotofähigen Endgeräten in definierte Sicherheitsbereiche?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,25.2.7,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1732,8 +1732,8 @@ Der auftraggebende Fachbereich des OEMs ist für die Klassifizierung der Schutzb
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-8.3,"8.3 Umgang mit Fahrzeugen, Komponenten und Bauteilen",,,,,,,,5.0.2
-8.3.1,"8.3.1 Inwieweit werden Transporte von als schutzbedürftig klassifizierten Fahrzeugen, Komponenten oder Bauteilen nach den Vorgaben des Auftraggebers abgewickelt?",,<b>ISA Classic</b>,1,1,,,3,5.0.2
+8.3,"8.3 Umgang mit Fahrzeugen, Komponenten und Bauteilen",,,,,,,,5.0.3
+8.3.1,"8.3.1 Inwieweit werden Transporte von als schutzbedürftig klassifizierten Fahrzeugen, Komponenten oder Bauteilen nach den Vorgaben des Auftraggebers abgewickelt?",,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,25.3.1,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1753,7 +1753,7 @@ Der auftraggebende Fachbereich des OEMs ist für die Klassifizierung der Schutzb
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-8.3.2,"8.3.2 Inwieweit ist sichergestellt, dass als schutzbedürftig klassifizierte Fahrzeuge, Komponenten und Bauteile, den Vorgaben des Auftraggebers entsprechend abgestellt/gelagert werden?",,<b>ISA Classic</b>,1,1,,,3,5.0.2
+8.3.2,"8.3.2 Inwieweit ist sichergestellt, dass als schutzbedürftig klassifizierte Fahrzeuge, Komponenten und Bauteile, den Vorgaben des Auftraggebers entsprechend abgestellt/gelagert werden?",,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,25.3.2,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1768,8 +1768,8 @@ Der auftraggebende Fachbereich des OEMs ist für die Klassifizierung der Schutzb
 ,,,"Es ist ein Prozess zur Einholung von auftraggeberspezifischen Anforderungen zum Umgang mit als schutzbedürftig klassifizierten Erprobungsfahrzeugen beschrieben und implementiert. Die in diesem Kapitel beschriebenen Anforderungen sind für Komponenten und Bauteile nicht relevant.  
 Bei der Nutzung von eigenen Liegenschaften sind die Controls in den Abschnitten 8.1, 8.2 und 8.3 mitzuprüfen. Sofern keine eigenen Liegenschaften genutzt werden, sind lediglich die Anforderungen aus den Abschnitten 8.2 und 8.3 zu erfüllen.",,,,,,
 ,,,,,,,,,
-8.4,8.4 Anforderungen für Erprobungsfahrzeuge,,,,,,,,5.0.2
-8.4.1,8.4.1 Inwieweit werden die vorgegebenen Regelungen zur Tarnung von den Projektbeteiligten umgesetzt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+8.4,8.4 Anforderungen für Erprobungsfahrzeuge,,,,,,,,5.0.3
+8.4.1,8.4.1 Inwieweit werden die vorgegebenen Regelungen zur Tarnung von den Projektbeteiligten umgesetzt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,25.4.1,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1788,7 +1788,7 @@ Bei der Nutzung von eigenen Liegenschaften sind die Controls in den Abschnitten 
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-8.4.2,8.4.2 Inwieweit werden Schutzmaßnahmen freigegebener Test- und Erprobungsgelände eingehalten/umgesetzt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+8.4.2,8.4.2 Inwieweit werden Schutzmaßnahmen freigegebener Test- und Erprobungsgelände eingehalten/umgesetzt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,25.4.2,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1806,7 +1806,7 @@ Bei der Nutzung von eigenen Liegenschaften sind die Controls in den Abschnitten 
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-8.4.3,8.4.3 Inwieweit werden die Schutzmaßnahmen für freigegebene Test- und Erprobungsfahrten in der Öffentlichkeit eingehalten/umgesetzt?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+8.4.3,8.4.3 Inwieweit werden die Schutzmaßnahmen für freigegebene Test- und Erprobungsfahrten in der Öffentlichkeit eingehalten/umgesetzt?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,25.4.3,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1826,8 +1826,8 @@ Bei der Nutzung von eigenen Liegenschaften sind die Controls in den Abschnitten 
 ,,,"Auftraggeberspezifische Sicherheitsvorgaben für Veranstaltungen oder Shootings mit als schutzbedürftig klassifizierten Fahrzeugen, Komponenten oder Bauteilen sind allen Projektbeteiligten bekannt. Dies ist von allen Unternehmen nachzuweisen, die mit der Planung, Vorbereitung oder Durchführung von Veranstaltungen oder Shootings beauftragt sind.
 Bei der Nutzung von eigenen Liegenschaften sind die Controls in den Abschnitten 8.1, 8.2 und 8.3 mitzuprüfen. Sofern keine eigenen Liegenschaften genutzt werden, sind lediglich die Anforderungen aus den Abschnitten 8.2 und 8.3 zu erfüllen.",,,,,,
 ,,,,,,,,,
-8.5,8.5 Anforderungen für Veranstaltungen und Shootings,,,,,,,,5.0.10
-8.5.1,"8.5.1 Inwieweit sind die Sicherheitsvorgaben für Ausstellungen und Veranstaltungen mit als schutzbedürftig klassifizierten Fahrzeugen, Komponenten oder Bauteilen bekannt?",,<b>ISA Classic</b>,1,1,,,3,5.0.2
+8.5,8.5 Anforderungen für Veranstaltungen und Shootings,,,,,,,,5.0.3
+8.5.1,"8.5.1 Inwieweit sind die Sicherheitsvorgaben für Ausstellungen und Veranstaltungen mit als schutzbedürftig klassifizierten Fahrzeugen, Komponenten oder Bauteilen bekannt?",,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,25.5.2,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1846,7 +1846,7 @@ Bei der Nutzung von eigenen Liegenschaften sind die Controls in den Abschnitten 
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-8.5.2,"8.5.2 Inwieweit sind die Schutzmaßnahmen für Film- und Fotoshootings mit als schutzbedürftig klassifizierten Fahrzeugen, Komponenten oder Bauteilen bekannt?",,<b>ISA Classic</b>,1,1,,,3,5.0.2
+8.5.2,"8.5.2 Inwieweit sind die Schutzmaßnahmen für Film- und Fotoshootings mit als schutzbedürftig klassifizierten Fahrzeugen, Komponenten oder Bauteilen bekannt?",,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,25.5.2,,,,,,
 ,,,,,,,,,
 ,,,<b>Ziel</b>,,,,,,
@@ -1870,8 +1870,8 @@ Bei der Nutzung von eigenen Liegenschaften sind die Controls in den Abschnitten 
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-9,9 Datenschutz,,,,,,,,5.0.12
-9.1,9.1 Inwieweit ist die Umsetzung des Datenschutzes organisiert?,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+9,9 Datenschutz,,,,,,,,5.0.3
+9.1,9.1 Inwieweit ist die Umsetzung des Datenschutzes organisiert?,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,24.1,,,,,,
 ,,,,,,,,,
 ,,,<b>Anforderungen (muss)</b>,,,,,,
@@ -1891,7 +1891,7 @@ Bei der Nutzung von eigenen Liegenschaften sind die Controls in den Abschnitten 
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-9.2,"9.2 Inwieweit werden organisatorische Maßnahmen getroffen, damit die Verarbeitung personenbezogener Daten gesetzeskonform erfolgt?",,<b>ISA Classic</b>,1,1,,,3,5.0.2
+9.2,"9.2 Inwieweit werden organisatorische Maßnahmen getroffen, damit die Verarbeitung personenbezogener Daten gesetzeskonform erfolgt?",,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,24.2,,,,,,
 ,,,,,,,,,
 ,,,<b>Anforderungen (sollte)</b>,,,,,,
@@ -1915,7 +1915,7 @@ Bei der Nutzung von eigenen Liegenschaften sind die Controls in den Abschnitten 
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-9.3,"9.3 Inwieweit wird sichergestellt, dass die internen Prozesse bzw. Arbeitsabläufe gemäß den jeweils aktuell gültigen Datenschutzbestimmungen ablaufen und dies regelmäßig einer Qualitätsprüfung unterzogen wird?",,<b>ISA Classic</b>,1,1,,,3,5.0.2
+9.3,"9.3 Inwieweit wird sichergestellt, dass die internen Prozesse bzw. Arbeitsabläufe gemäß den jeweils aktuell gültigen Datenschutzbestimmungen ablaufen und dies regelmäßig einer Qualitätsprüfung unterzogen wird?",,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,24.3,,,,,,
 ,,,,,,,,,
 ,,,<b>Anforderungen (muss)</b>,,,,,,
@@ -1930,7 +1930,7 @@ Bei der Nutzung von eigenen Liegenschaften sind die Controls in den Abschnitten 
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-9.4,9.4 Inwieweit sind die einschlägigen Verarbeitungen hinsichtlich datenschutzrechtlicher Zulässigkeit dokumentiert? ,,<b>ISA Classic</b>,1,1,,,3,5.0.2
+9.4,9.4 Inwieweit sind die einschlägigen Verarbeitungen hinsichtlich datenschutzrechtlicher Zulässigkeit dokumentiert? ,,<b>ISA Classic</b>,1,1,,,3,5.0.3
 ,,,24.4,,,,,,
 ,,,,,,,,,
 ,,,<b>Anforderungen (muss)</b>,,,,,,
@@ -1943,8 +1943,8 @@ Bei der Nutzung von eigenen Liegenschaften sind die Controls in den Abschnitten 
 ,,,,,,,,,
 ,,,,,,,,,
 ,,,"Die Antwort auf die Kontrollfragen ist ein Reifegrad in einem generischen Reifegrad-Modells, mit dem die Reife der dahinterstehenden Prozesse quantifiziert wird. Um die Reife zu bestimmen muss während der Bewertung objektiv nachweisbar sein, dass die Anforderungen auf der entsprechenden Stufe erfüllt werden. Dieses erfolgt zum Beispiel anhand von Arbeitsprodukten, welche als Ergebnisse aus den Prozessen der Controls hervorgehen, oder durch Aussagen der Prozessausführenden in Interviews.",,,,,,
-100,100 Anhang,,,,,,,,5.0.2
-100.1,100.1 Reifegradmodell,,<b>Reifegrad 0: Unvollständig</b>,,,,,,5.0.2
+100,100 Anhang,,,,,,,,5.0.3
+100.1,100.1 Reifegradmodell,,<b>Reifegrad 0: Unvollständig</b>,,,,,,5.0.3
 ,,,"Es gibt keinen Prozess, es wird keinem Prozess gefolgt oder der Prozess ist nicht geeignet das Ziel zu erreichen.",,,,,,
 ,,,"Ein Prozess ist nicht implementiert oder der Prozesszweck wird nicht erreicht. Es gibt nur geringe oder keine Anzeichen dafür, dass der Prozesszweck systematisch erreicht wird.",,,,,,
 ,,,,,,,,,
@@ -2042,7 +2042,7 @@ kontinuierliche Optimierung (PA 5.2):
 ,,,,,,,,,
 ,,,"Schutzklasse ""normal"", normaler Schutzbedarf = Der potenzielle Schaden für die Organisation ist begrenzt und überschaubar.",,,,,,
 ,,,"Bsp: Vertraulichkeitsklassifizierung ""intern""",,,,,,
-100.2,100.2 Schlüsselbegriffe,,,,,,,,5.0.2
+100.2,100.2 Schlüsselbegriffe,,,,,,,,5.0.3
 ,,,"Schutzklasse ""hoch"", hoher Schutzbedarf = Der potenzielle Schaden für die Organisation kann beträchtlich sein.",,,,,,
 ,,,"Bsp: Vertraulichkeitsklassifizierung ""Vertraulich""",,,,,,
 ,,,,,,,,,
@@ -2063,7 +2063,7 @@ kontinuierliche Optimierung (PA 5.2):
 Bsp: Geschäftsgeheimnisse, kritische Geschäftsprozesse, Know-how, Patente",,,,,,
 ,,,,,,,,,
 100.3,100.3 Glossar,,"Informationsträger (Supporting Asset) = Informationsträger (elektronische und physisch) werden zur Speicherung, Verarbeitung und zum Transport von Informationswerten eingesetzt.
-Bsp: Mobile Datenträger, IT-Systeme, IT-Services/IT-Dienste, Papierunterlagen",,,,,,5.0.2
+Bsp: Mobile Datenträger, IT-Systeme, IT-Services/IT-Dienste, Papierunterlagen",,,,,,5.0.3
 ,,,,,,,,,
 ,,,"Klassifizierung von Informationen = Es wird der Wert der Information für die Organisation auf Basis der relevanten Schutzziele der Informationssicherheit (Vertraulichkeit, Integrität und Verfügbarkeit) ermittelt. Dies ermöglicht der Organisation die Anwendung von angemessenen Schutzmaßnahmen.",,,,,,
 ,,,,,,,,,
@@ -2101,8 +2101,8 @@ Bsp: Lagerräume, Garagen, Werkstätten, Teststrecken, Rechenzentren, Entwicklun
 ,,,"PA = Process Attributes = Eine messbare Charakteristik zu einer Prozessfähigkeit, die auf jeden Prozess anwendbar ist.",,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4,100.4 KPIs,,,,,,,,5.0.2
-100.4.1,100.4.1 Abdeckungsgrad Awareness Maßnahmen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4,100.4 KPIs,,,,,,,,5.0.3
+100.4.1,100.4.1 Abdeckungsgrad Awareness Maßnahmen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,2.1.3 Inwieweit werden Mitarbeiter über die Risiken beim Umgang mit Informationen geschult und sensibilisiert?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -2143,7 +2143,7 @@ Quotient: Anzahl Teilnehmer / Gesamtzahl der Mitarbeiter",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.2,100.4.2 Effektivität von Awarenessmaßnahmen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.2,100.4.2 Effektivität von Awarenessmaßnahmen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,2.1.3 Inwieweit werden Mitarbeiter über die Risiken beim Umgang mit Informationen geschult und sensibilisiert?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -2184,7 +2184,7 @@ mögliche Ausprägung zur Vergleichbarkeit von Unternehmenseinheiten: Bezug auf 
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.3,"100.4.3 Abdeckungsgrad Review ""Benutzer-Accounts""",,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.3,"100.4.3 Abdeckungsgrad Review ""Benutzer-Accounts""",,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,"4.1.3 Inwieweit werden Benutzerkonten und Anmeldeinformationen 
 sicher verwaltet und angewandt? ",,,,,,
 ,,,,,,,,,
@@ -2225,7 +2225,7 @@ sicher verwaltet und angewandt? ",,,,,,
 ,,,10 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.4,"100.4.4 Abdeckungsgrad Review ""Berechtigungen""",,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.4,"100.4.4 Abdeckungsgrad Review ""Berechtigungen""",,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,"4.1.3 Inwieweit werden Benutzerkonten und Anmeldeinformationen 
 sicher verwaltet und angewandt? ",,,,,,
 ,,,,,,,,,
@@ -2266,7 +2266,7 @@ sicher verwaltet und angewandt? ",,,,,,
 ,,,10 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.5,100.4.5 Sammelaccounts (Sammel-Konten),,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.5,100.4.5 Sammelaccounts (Sammel-Konten),,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,"4.1.3 Inwieweit werden Benutzerkonten und Anmeldeinformationen 
 sicher verwaltet und angewandt? ",,,,,,
 ,,,,,,,,,
@@ -2307,7 +2307,7 @@ sicher verwaltet und angewandt? ",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.6,100.4.6 Abdeckungsgrad Change Management,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.6,100.4.6 Abdeckungsgrad Change Management,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,5.2.1 Inwieweit werden Änderungen gesteuert? ,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -2347,7 +2347,7 @@ sicher verwaltet und angewandt? ",,,,,,
 ,,,10 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.7,100.4.7 Change-Fehlerquote,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.7,100.4.7 Change-Fehlerquote,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,5.2.1 Inwieweit werden Änderungen gesteuert? ,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -2387,7 +2387,7 @@ sicher verwaltet und angewandt? ",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.8,100.4.8 Abdeckungsgrad Endpoint Security,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.8,100.4.8 Abdeckungsgrad Endpoint Security,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,5.2.3 Inwieweit werden IT-Systeme vor Schadsoftware geschützt?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -2427,7 +2427,7 @@ sicher verwaltet und angewandt? ",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.9,100.4.9 Effektivität bei der Aktualisierung der Endpoint Security,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.9,100.4.9 Effektivität bei der Aktualisierung der Endpoint Security,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,5.2.3 Inwieweit werden IT-Systeme vor Schadsoftware geschützt?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -2468,7 +2468,7 @@ Grün: > 90%, Gelb: 70-90%, Rot: <70%)",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.10,100.4.10 Abdeckungsgrad Datensicherung,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.10,100.4.10 Abdeckungsgrad Datensicherung,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,3.1.2 Inwieweit ist in Ausnahmesituationen die Informationssicherheit sichergestellt?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -2509,7 +2509,7 @@ Der KPI misst den Abdeckungsgrad  der Datensicherung.",,,,,,
 ,,,10 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.11,100.4.11 Abdeckungsgrad der Funktionalitätstests von Datensicherungen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.11,100.4.11 Abdeckungsgrad der Funktionalitätstests von Datensicherungen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,3.1.2 Inwieweit ist in Ausnahmesituationen die Informationssicherheit sichergestellt?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -2550,7 +2550,7 @@ Der KPI misst den Abdeckungsgrad  der Datenrücksicherungstests.",,,,,,
 ,,,10 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.12,100.4.12 Effektivität bei der Datensicherung,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.12,100.4.12 Effektivität bei der Datensicherung,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,3.1.2 Inwieweit ist in Ausnahmesituationen die Informationssicherheit sichergestellt?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -2591,7 +2591,7 @@ Der KPI misst die Anzahl fehlerhafter Datenrücksicherungen",,,,,,
 ,,,10 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.13,100.4.13 Abdeckungsgrad Patch Management,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.13,100.4.13 Abdeckungsgrad Patch Management,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,5.2.5 Inwieweit werden Schwachstellen erkannt und behandelt? ,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -2631,7 +2631,7 @@ Der KPI misst die Anzahl fehlerhafter Datenrücksicherungen",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.14,100.4.14 Effektivität bei der Installation von Patchen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.14,100.4.14 Effektivität bei der Installation von Patchen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,5.2.5 Inwieweit werden Schwachstellen erkannt und behandelt? ,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -2671,7 +2671,7 @@ Der KPI misst die Anzahl fehlerhafter Datenrücksicherungen",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.15,100.4.15 Erfassungsgrad von Informationssicherheits-Vorfällen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.15,100.4.15 Erfassungsgrad von Informationssicherheits-Vorfällen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,1.6.1 Inwieweit werden Informationssicherheitsereignisse verarbeitet?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -2711,7 +2711,7 @@ Der KPI misst die Anzahl fehlerhafter Datenrücksicherungen",,,,,,
 ,,,10 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.16,100.4.16 Zeitnahe Berarbeitung von Informationssicherheits-Vorfällen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.16,100.4.16 Zeitnahe Berarbeitung von Informationssicherheits-Vorfällen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,1.6.1 Inwieweit werden Informationssicherheitsereignisse verarbeitet?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -2756,7 +2756,7 @@ Alle in def. Zeitraum ungelösten Incidents / alle Incidents",,,,,,
 ,,,10 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.17,100.4.17 Erstellungsgrad der benötigten Richtlinien/Dokumentationen ,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.17,100.4.17 Erstellungsgrad der benötigten Richtlinien/Dokumentationen ,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,1.1.1 Inwieweit sind Richtlinien zur Informationssicherheit vorhanden?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -2796,7 +2796,7 @@ Alle in def. Zeitraum ungelösten Incidents / alle Incidents",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.18,100.4.18 Aktualität der benötigten Richtlinien/Dokumentationen ,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.18,100.4.18 Aktualität der benötigten Richtlinien/Dokumentationen ,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,1.1.1 Inwieweit sind Richtlinien zur Informationssicherheit vorhanden?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -2836,7 +2836,7 @@ Alle in def. Zeitraum ungelösten Incidents / alle Incidents",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.19,100.4.19 Abdeckungsgrad der Informationssicherheit in Projekten,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.19,100.4.19 Abdeckungsgrad der Informationssicherheit in Projekten,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,1.2.3 Inwieweit werden Informationssicherheitsanforderungen in Projekten berücksichtigt?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -2876,7 +2876,7 @@ Alle in def. Zeitraum ungelösten Incidents / alle Incidents",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.20,100.4.20 Schutzmaßnahmen- umsetzung in Projekten,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.20,100.4.20 Schutzmaßnahmen- umsetzung in Projekten,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,1.2.3 Inwieweit werden Informationssicherheitsanforderungen in Projekten berücksichtigt?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -2916,7 +2916,7 @@ Alle in def. Zeitraum ungelösten Incidents / alle Incidents",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.21,100.4.21 Abdeckungsgrad-Sicherheit bei mobilen Endgeräten,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.21,100.4.21 Abdeckungsgrad-Sicherheit bei mobilen Endgeräten,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,3.1.4 Inwieweit ist der Umgang mit mobilen IT-Geräten und mobilen Datenträgern gemanagt?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -2956,7 +2956,7 @@ Alle in def. Zeitraum ungelösten Incidents / alle Incidents",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.22,100.4.22 Effektivität bei der Umsetzung von Sicherheitsmaßnahmen bei mobilen Endgeräten,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.22,100.4.22 Effektivität bei der Umsetzung von Sicherheitsmaßnahmen bei mobilen Endgeräten,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,3.1.4 Inwieweit ist der Umgang mit mobilen IT-Geräten und mobilen Datenträgern gemanagt?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -2996,7 +2996,7 @@ Alle in def. Zeitraum ungelösten Incidents / alle Incidents",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.23,100.4.23 Implementierungsgrad des Zonenkonzepts,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.23,100.4.23 Implementierungsgrad des Zonenkonzepts,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,3.1.1 Inwieweit werden Sicherheitszonen für den Schutz von Informationswerten gemanagt?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -3036,7 +3036,7 @@ Alle in def. Zeitraum ungelösten Incidents / alle Incidents",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.24,100.4.24 Schutzmaßnahmen-Umsetzung im Zonenkonzept,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.24,100.4.24 Schutzmaßnahmen-Umsetzung im Zonenkonzept,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,3.1.1 Inwieweit werden Sicherheitszonen für den Schutz von Informationswerten gemanagt?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -3076,7 +3076,7 @@ Alle in def. Zeitraum ungelösten Incidents / alle Incidents",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.25,"100.4.25 Abdeckungsgrad Review ""Zutrittsberechtigungen""",,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.25,"100.4.25 Abdeckungsgrad Review ""Zutrittsberechtigungen""",,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,3.1.1 Inwieweit werden Sicherheitszonen für den Schutz von Informationswerten gemanagt?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -3116,7 +3116,7 @@ Alle in def. Zeitraum ungelösten Incidents / alle Incidents",,,,,,
 ,,,10 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.26,100.4.26 Abdeckungsgrad von Event-Logs auf sicherheitskritischen Systemen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.26,100.4.26 Abdeckungsgrad von Event-Logs auf sicherheitskritischen Systemen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,5.2.4 Inwieweit werden Ereignisprotokolle aufgezeichnet und analysiert?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -3156,7 +3156,7 @@ Alle in def. Zeitraum ungelösten Incidents / alle Incidents",,,,,,
 ,,,individuell zu definieren (rechnungslegungsrelevant: 10 Jahre),,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.27,100.4.27 Funktionierende Log-Aktivität,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.27,100.4.27 Funktionierende Log-Aktivität,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,5.2.4 Inwieweit werden Ereignisprotokolle aufgezeichnet und analysiert?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -3197,7 +3197,7 @@ Rot: > 0, Grün = 0",,,,,,
 ,,,individuell zu definieren (rechnungslegungsrelevant: 10 Jahre),,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.28,100.4.28 Abdeckungsgrad von Admin-Logs auf sicherheitskritischen Systemen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.28,100.4.28 Abdeckungsgrad von Admin-Logs auf sicherheitskritischen Systemen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,5.2.4 Inwieweit werden Ereignisprotokolle aufgezeichnet und analysiert?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -3237,7 +3237,7 @@ Rot: > 0, Grün = 0",,,,,,
 ,,,individuell zu definieren (rechnungslegungsrelevant: 10 Jahre),,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.29,100.4.29 Funktionierende Log-Aktivität,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.29,100.4.29 Funktionierende Log-Aktivität,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,5.2.4 Inwieweit werden Ereignisprotokolle aufgezeichnet und analysiert?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -3278,7 +3278,7 @@ Rot: > 0, Grün = 0",,,,,,
 ,,,individuell zu definieren (rechnungslegungsrelevant: 10 Jahre),,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.30,100.4.30 Abdeckungsgrad System Audits ,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.30,100.4.30 Abdeckungsgrad System Audits ,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,5.2.6 Inwieweit werden IT-Systeme technisch überprüft (Systemaudit)?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -3318,7 +3318,7 @@ Rot: > 0, Grün = 0",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.31,100.4.31 Effektivität bei der Durchführung von System-Audits,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.31,100.4.31 Effektivität bei der Durchführung von System-Audits,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,5.2.6 Inwieweit werden IT-Systeme technisch überprüft (Systemaudit)?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -3358,7 +3358,7 @@ Rot: > 0, Grün = 0",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.32,100.4.32 Abdeckungsgrad Review Service Level Agreements (SLA) ,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.32,100.4.32 Abdeckungsgrad Review Service Level Agreements (SLA) ,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,5.3.2 Inwieweit sind Anforderungen an Netzwerkdienste definiert?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -3398,7 +3398,7 @@ Rot: > 0, Grün = 0",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.33,100.4.33 Effektivität bei der Einhaltung von SLAs,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.33,100.4.33 Effektivität bei der Einhaltung von SLAs,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,5.3.2 Inwieweit sind Anforderungen an Netzwerkdienste definiert?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -3438,7 +3438,7 @@ Rot: > 0, Grün = 0",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.34,100.4.34 Abdeckungsgrad Geheimhaltungsvereinbarungen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.34,100.4.34 Abdeckungsgrad Geheimhaltungsvereinbarungen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,6.1.2 Inwieweit ist Geheimhaltung beim Austausch von Informationen vertraglich vereinbart?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -3478,7 +3478,7 @@ Rot: > 0, Grün = 0",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.35,100.4.35 Effektivität der Risikobehandlung in Beschaffungsvorgängen von Informationssystemen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.35,100.4.35 Effektivität der Risikobehandlung in Beschaffungsvorgängen von Informationssystemen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,"5.3.1 Inwieweit wird Informationssicherheit bei 
 neuen oder weiterentwickelten IT-Systemen berücksichtigt?",,,,,,
 ,,,,,,,,,
@@ -3519,7 +3519,7 @@ neuen oder weiterentwickelten IT-Systemen berücksichtigt?",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.36,100.4.36 Abdeckungsgrad der Risikobewertung im Software-Entwicklungsprozess,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.36,100.4.36 Abdeckungsgrad der Risikobewertung im Software-Entwicklungsprozess,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,"5.3.1 Inwieweit wird Informationssicherheit bei 
 neuen oder weiterentwickelten IT-Systemen berücksichtigt?",,,,,,
 ,,,,,,,,,
@@ -3560,7 +3560,7 @@ neuen oder weiterentwickelten IT-Systemen berücksichtigt?",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.37,100.4.37 Effektivität der Risikobehandlung im Entwicklungsprozess,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.37,100.4.37 Effektivität der Risikobehandlung im Entwicklungsprozess,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,"5.3.1 Inwieweit wird Informationssicherheit bei 
 neuen oder weiterentwickelten IT-Systemen berücksichtigt?",,,,,,
 ,,,,,,,,,
@@ -3601,7 +3601,7 @@ neuen oder weiterentwickelten IT-Systemen berücksichtigt?",,,,,,
 ,,,5 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.38,100.4.38 Abdeckungsgrad der Aktivitäten zur Behebung von in Audits festgestellten Schwachstellen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.38,100.4.38 Abdeckungsgrad der Aktivitäten zur Behebung von in Audits festgestellten Schwachstellen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,1.5.1 Inwieweit wird die Einhaltung der Informationssicherheit in Verfahren und Prozessen sichergestellt?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -3641,7 +3641,7 @@ neuen oder weiterentwickelten IT-Systemen berücksichtigt?",,,,,,
 ,,,10 Jahre,,,,,,
 ,,,,,,,,,
 ,,,,,,,,,
-100.4.39,100.4.39 Zeitlich angemessene Behebung von in Audits identifizierten Schwachstellen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.2
+100.4.39,100.4.39 Zeitlich angemessene Behebung von in Audits identifizierten Schwachstellen,,<b>Control VDA ISA 5.0:</b>,,,,,,5.0.3
 ,,,1.5.1 Inwieweit wird die Einhaltung der Informationssicherheit in Verfahren und Prozessen sichergestellt?,,,,,,
 ,,,,,,,,,
 ,,,<b>Control VDA ISA 4.1:</b>,,,,,,
@@ -3680,7 +3680,7 @@ neuen oder weiterentwickelten IT-Systemen berücksichtigt?",,,,,,
 ,,,<b>Datenarchivierung:</b>,,,,,,
 ,,,10 Jahre,,,,,,
 ,,,,,,,,,
-100.5,100.5 Änderungshistorie,,<b> 1.0 </b>,,,,,,5.0.2
+100.5,100.5 Änderungshistorie,,<b> 1.0 </b>,,,,,,5.0.3
 ,,,Erstes Release (Initialerstellung),,,,,,
 ,,,,,,,,,
 ,,,<b> 1.1 </b>,,,,,,
@@ -3793,12 +3793,17 @@ neuen oder weiterentwickelten IT-Systemen berücksichtigt?",,,,,,
 ,,,,,,,,,
 ,,,<b> 5.0.2 </b>,,,,,,
 ,,,Korrektur Berechnung Gesamtreifegrad ,,,,,,
-,0 Information Security Assessment,,"Eingabeprüfung Spalte ""Reifegrad""",,,,,,
+,,,"Eingabeprüfung Spalte ""Reifegrad""",,,,,,
 ,,,Korrektur Änderungshistorie,,,,,,
+,,,"Änderung der Nummerierung im Modul ""Datenschutz""",,,,,,
 ,,,,,,,,,
-,,,"Dieses Werk ist unter der Creative Commons Namensnennung - Keine Bearbeitungen 4.0 International Public License lizenziert. Zusätzlich wird Ihnen das Recht eingeräumt, Verarbeitungen unter bestimmten Bedingungen zu verbreiten. Der vollständige und gültige Lizenztext findet sich in Zeile 17ff. ",,,,,,
+,,,<b> 5.0.3 </b>,,,,,,
+,,,"Korrektur Diagrammbezeichnungen im Modul ""Ergebnisse""",,,,,,
+,,,Ergänzung von Druckbereichen,,,,,,
 ,,,,,,,,,
-100.6,100.6 Lizenz,,<b> Sie dürfen: </b>,,,,,,5.0.2
+100.6,100.6 Lizenz,,"Dieses Werk ist unter der Creative Commons Namensnennung - Keine Bearbeitungen 4.0 International Public License lizenziert. Zusätzlich wird Ihnen das Recht eingeräumt, Verarbeitungen unter bestimmten Bedingungen zu verbreiten. Der vollständige und gültige Lizenztext findet sich in Zeile 17ff. ",,,,,,
+,,,,,,,,,
+,,,<b> Sie dürfen: </b>,,,,,,5.0.3
 ,,,·         Teilen — das Material in jedwedem Format oder Medium vervielfältigen und weiterverbreiten ,,,,,,
 ,,,"·         und zwar für beliebige Zwecke, auch kommerziell. ",,,,,,
 ,,,·         Der Lizenzgeber kann diese Freiheiten nicht widerrufen solange Sie sich an die Lizenzbedingungen halten.,,,,,,
