@@ -53,8 +53,8 @@ pipeline {
                 // verinice reports
                 triggerRCPTTBuild 'rcptt-client-test', '*reports.test', 'de'
                 triggerRCPTTBuild 'rcptt-client-test', '*reports-en.test', 'en'
-                //product tests
-                triggerRCPTTBuild 'rcptt-product-report-test'
+                //product tests FIXME enable again when VN-2882 is done
+                //triggerRCPTTBuild 'rcptt-product-report-test'
 
                 junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], 
                   testResults: 'test-result/**/results.junit.xml'
