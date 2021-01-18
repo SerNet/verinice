@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _4p4koHx6Eem8dP2aL_a6MA
 Runtime-Version: 2.5.1.M3
-Save-Time: 1/13/21, 3:29 PM
+Save-Time: 1/18/21, 10:13 AM
 Tags: report
 Testcase-Type: ecl
 
@@ -46,8 +46,8 @@ enable-reporting-log
 // VN-2875
 ism-import-vna "VDA-ISA-Vorlage_20210112.vna"
 
-gen-rep "(S) ISM-ISA: Information Security Assessment 4.1.1 Report" $path_org_4.1.1_DE
-gen-rep "(S) ISM-ISA: Information Security Assessment 4.1.1 Report (mit Diagramm)"  $path_org_4.1.1_DE
+gen-rep "(S) ISM-ISA: Information Security Assessment 4 Report" $path_org_4.1.1_DE
+gen-rep "(S) ISM-ISA: Information Security Assessment 4 Report (mit Diagramm)"  $path_org_4.1.1_DE
 
 delete-iso-model $path_org_4.1.1_DE
 delete-iso-model $path_org_4.1.1_EN
