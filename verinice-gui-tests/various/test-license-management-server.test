@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _ehgZkPyjEeqYO5h9EZ3cUQ
 Runtime-Version: 2.5.1.M3
-Save-Time: 11/18/20, 4:04 PM
+Save-Time: 1/18/21, 11:17 AM
 Tags: ISO, serverOnlyTest
 Testcase-Type: ecl
 Verifications: _wm5P0CtBEeuMltfUUtdvug
@@ -23,7 +23,7 @@ Implement some "Lizenz-Management" testcases from the test protocol.
 Content-Type: text/ecl
 Entry-Name: .content
 
-global [val licenseDate "2021-01-01"]
+global [val licenseDate "2031-01-01"]
 
 proc "create-new-account" [val personname] [val count] {
 	with [get-window Account] {
@@ -168,7 +168,7 @@ with [get-view Accounts | get-table] {
 }
 
 delete-iso-model "importierte Objekte/MyLic [64522f]"
-log "test-license-management"
+log "end-license-management"
 
 verify-error {get-window Fehler }
 

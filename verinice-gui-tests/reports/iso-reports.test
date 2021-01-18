@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _7ObUQNt0EeiRF6bz1CFgwg
-Runtime-Version: 2.5.0.202001211718
-Save-Time: 9/1/20 5:32 PM
+Runtime-Version: 2.5.1.M3
+Save-Time: 1/14/21, 9:36 AM
 Tags: report
 Testcase-Type: ecl
 Verifications: _wm5P0CtBEeuMltfUUtdvug
@@ -22,10 +22,13 @@ Create all the old bp reports. Uses "reportTestData1.vna".
 Content-Type: text/ecl
 Entry-Name: .content
 
-proc "gen-rep" [val report] [val qualifier "ISM-ISO"] [val suffix ".pdf"]{
+global [val path_org_reportTestData1 "importierte Objekte/[Mein Unternehmen1] [5a79b4]"]
+       [val path_org_melde_test "importierte Objekte/melde test [melde-testdaten]"]
+
+proc "gen-rep" [val report] [val path_to_organization] [val qualifier "ISM-ISO"] [val suffix ".pdf"]{
 	try {
 	    start-time-measure $report
-		gen-rep-com $report "ISM" "importierte Objekte/[Mein Unternehmen1] [5a79b4]" $qualifier $suffix
+		gen-rep-com $report "ISM" $path_to_organization $qualifier $suffix
 		stop-time-measure $report | write-lines [concat "file:" $basedir "/report-measure.csv"] true
 	} -catch {
 		log [concat "ERROR creating report " $report]
@@ -40,12 +43,16 @@ log "Start report testing ISM-ISO"
 enable-reporting-log
 
 ism-import-vna "reportTestData1.vna"
+ism-import-vna "melde_test.vna"
 
-gen-rep "(S) ISM-ISO: Erklärung zur Anwendbarkeit"
-gen-rep "(S) ISM-ISO: Export: Aufgaben (de)" "ISM-ISO" ".xls"
-gen-rep "(S) ISM-ISO: Export: Aufgaben (en)" "ISM-ISO" ".xls"
+gen-rep "(S) ISM-ISO: Erklärung zur Anwendbarkeit" $path_org_reportTestData1
+gen-rep "(S) ISM-ISO: Export: Aufgaben (de)" $path_org_reportTestData1 "ISM-ISO" ".xls"
+gen-rep "(S) ISM-ISO: Export: Aufgaben (en)" $path_org_reportTestData1 "ISM-ISO" ".xls"
+gen-rep "(S) ISM-ISO: Export: Aufgaben (en)" $path_org_reportTestData1 "ISM-ISO" ".xls"
+gen-rep "(S) ISM-ISO: Meldeformular BSIG8b IS" $path_org_melde_test "ISM-ISO"
 
-delete-iso-model "importierte Objekte/[Mein Unternehmen1] [5a79b4]"
+delete-iso-model $path_org_reportTestData1
+delete-iso-model $path_org_melde_test
 test-for-report-errors "iso-reports"
 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

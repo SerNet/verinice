@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _VDN98PNSEeqwCKWASISJvg
 Runtime-Version: 2.5.1.M3
-Save-Time: 11/20/20, 3:40 PM
+Save-Time: 1/19/21, 9:15 AM
 Tags: ISO, issue, serverOnlyTest
 Testcase-Type: ecl
 Verifications: _wm5P0CtBEeuMltfUUtdvug
@@ -21,6 +21,8 @@ Test if an account can be created when a license file is present. Also when the 
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
 Content-Type: text/ecl
 Entry-Name: .content
+
+global [val licenseDate "2031-01-01"]
 
 log "test-vn-1887-constrain-violation-when-setting-licenses-for-new-account"
 
@@ -60,7 +62,7 @@ with [get-window Account] {
     screen-shot Account  "create-account-4.png"
     get-button "Weiter >" | click
     screen-shot Account  "create-account-5.png"
-    get-button "1. MY_LIC - 2021-01-01 - (0/5)" | check
+    get-button [concat "1. MY_LIC - " $licenseDate " - (0/5)"] | check
     screen-shot Account  "create-account-5-checked.png"
     get-button "Weiter >" | click
     screen-shot Account "create-account-6.png"
@@ -87,7 +89,7 @@ with [get-window Account] {
         click 
     }
     screen-shot Account "create-account-with-lic-5.png"
-    get-button "1. MY_LIC - 2021-01-01 - (1/5)" | check
+    get-button [concat "1. MY_LIC - " $licenseDate " - (1/5)"] | check
     with [get-button "Weiter >"] {
         click 
         click 
@@ -127,8 +129,8 @@ with [get-window Account] {
         get-button "Weiter >"| click 
         get-button "Weiter >"| click 
         get-button "Weiter >"| click 
-        get-button "1. MY_LIC - 2021-01-01 - (2/5)" | uncheck
-        get-button "1. MY_LIC - 2021-01-01 - (1/5)" | check
+        get-button [concat "1. MY_LIC - " $licenseDate " - (2/5)"] | uncheck
+        get-button [concat "1. MY_LIC - " $licenseDate " - (1/5)"] | check
         get-button Abbrechen | click 
 }
 
@@ -144,7 +146,7 @@ with [get-view Accounts | get-table] {
 }
 
 delete-iso-model "importierte Objekte/MyLic [64522f]"
-log "test-vn-1887-constrain-violation-when-setting-licenses-for-new-account"
+log "end-vn-1887-constrain-violation-when-setting-licenses-for-new-account"
 
 verify-error {get-window Fehler }
 
