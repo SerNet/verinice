@@ -32,7 +32,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.zip.ZipOutputStream;
 
@@ -50,11 +49,6 @@ import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
 import de.sernet.sync.risk.Risk;
 import de.sernet.sync.sync.SyncRequest;
 import de.sernet.sync.sync.SyncRequest.SyncVnaSchemaVersion;
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
-import net.sf.ehcache.Statistics;
-import net.sf.ehcache.Status;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.VeriniceContext;
@@ -108,11 +102,9 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
     private transient Set<EntityType> exportedEntityTypes;
     private transient Set<String> exportedTypes;
     private transient Set<Integer> exportedElementIds;
-    private transient CacheManager manager = null;
-    private transient Cache elementCache = null;
-    private transient Cache attachmentsCache = null;
+    private transient Map<Integer, List<Attachment>> attachmentsByElementId = null;
     private transient IBaseDao<CnATreeElement, Serializable> dao;
-    private transient Map<Integer, Collection<Integer>> elementIdsByParentId;
+    private transient Map<Integer, Collection<CnATreeElement>> elementsByParentId;
 
     public ExportCommand(final List<CnATreeElement> elements, final String sourceId,
             final boolean reImport) {
@@ -147,7 +139,7 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
         this.riskAnalysisIdSet = new HashSet<>();
         this.exportedTypes = new HashSet<>();
         this.exportedEntityTypes = new HashSet<>();
-        this.elementIdsByParentId = new HashMap<>();
+        this.elementsByParentId = new HashMap<>();
     }
 
     /*
@@ -172,9 +164,10 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
             if (isVeriniceArchive()) {
                 result = createVeriniceArchive(syncRequest, risk);
             } else {
-                final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                ExportFactory.marshal(syncRequest, bos);
-                result = bos.toByteArray();
+                try (final ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+                    ExportFactory.marshal(syncRequest, bos);
+                    result = bos.toByteArray();
+                }
 
             }
             if (filePath != null) {
@@ -188,9 +181,8 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
             log.error("Exception while exporting", e);
             throw new RuntimeCommandException("Exception while exporting", e);
         } finally {
-            elementCache.removeAll();
-            attachmentsCache.removeAll();
-            manager.shutdown();
+            elementsByParentId = null;
+            attachmentsByElementId = null;
         }
 
     }
@@ -207,9 +199,6 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
      */
     private SyncRequest export() throws CommandException {
 
-        elementCache = createElementCache();
-        attachmentsCache = createAttachmentsCache();
-
         final SyncVnaSchemaVersion formatVersion = createVersionData();
 
         final SyncData syncData = new SyncData();
@@ -219,28 +208,20 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
         }
 
         for (final CnATreeElement element : elements) {
-            try {
-                seedCaches(element.getScopeId());
-            } catch (InterruptedException e) {
-                throw new RuntimeException("Interrupted while seeding caches", e);
-            }
-            SyncObject exported = exportElement(element);
+            loadData(element.getScopeId());
+            CnATreeElement elementWithProperties = elementsByParentId.get(element.getParentId())
+                    .stream().filter(e -> e.getDbId().equals(element.getDbId())).findFirst()
+                    .orElseThrow(() -> new RuntimeException(
+                            "Requested object with db ID " + element.getDbId() + " not found."));
+            SyncObject exported = exportElement(elementWithProperties);
             syncData.getSyncObject().add(exported);
         }
 
         if (log.isInfoEnabled()) {
             log.info("Exporting links...");
         }
-
+        elementsByParentId.clear();
         exportLinks(syncData);
-
-        if (log.isDebugEnabled()) {
-            Statistics s = elementCache.getStatistics();
-            log.debug("Element cache size: " + s.getObjectCount() + ", hits: " + s.getCacheHits());
-            s = attachmentsCache.getStatistics();
-            log.debug("Attachments cache size: " + s.getObjectCount() + ", hits: "
-                    + s.getCacheHits());
-        }
 
         final SyncMapping syncMapping = new SyncMapping();
         createMapping(syncMapping.getMapObjectType());
@@ -254,12 +235,12 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
         return syncRequest;
     }
 
-    private void seedCaches(Integer scopeId) throws InterruptedException {
-        addToElementsCache(scopeId);
-        addToAttachmentsCache(scopeId);
+    private void loadData(Integer scopeId) {
+        loadElements(scopeId);
+        attachmentsByElementId = loadAttachments(scopeId);
     }
 
-    private void addToElementsCache(Integer scopeId) throws InterruptedException {
+    private void loadElements(Integer scopeId) {
         Thread loadElementsThread = new Thread(() -> {
             DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class)
                     .add(Restrictions.eq("scopeId", scopeId));
@@ -267,31 +248,30 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
             retrieveInfo.configureCriteria(criteria);
             @SuppressWarnings("unchecked")
             List<CnATreeElement> elementsToCache = getDao().findByCriteria(criteria);
-            elementsToCache.forEach(element -> {
-                elementIdsByParentId
-                        .computeIfAbsent(element.getParentId(), parentId -> new LinkedList<>())
-                        .add(element.getDbId());
-                elementCache.put(new Element(element.getDbId(), element));
-            });
+            elementsToCache.forEach(element -> elementsByParentId
+                    .computeIfAbsent(element.getParentId(), parentId -> new LinkedList<>())
+                    .add(element));
         }, "export-" + scopeId + "-load-elements");
         loadElementsThread.start();
 
         loadLinks(scopeId);
-        loadElementsThread.join();
+        try {
+            loadElementsThread.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Interrupted while seeding caches for scopeId " + scopeId,
+                    e);
+        }
     }
 
-    private void addToAttachmentsCache(Integer scopeId) {
+    private Map<Integer, List<Attachment>> loadAttachments(Integer scopeId) {
         @NonNull
         IBaseDao<Attachment, Serializable> attachmentDao = getDaoFactory().getDAO(Attachment.class);
         @SuppressWarnings("unchecked")
         List<Attachment> attachments = attachmentDao.findByCriteria(
                 DetachedCriteria.forClass(Attachment.class).createAlias("cnATreeElement", "element")
                         .add(Restrictions.eq("element.scopeId", scopeId)));
-        Map<Integer, List<Attachment>> attachmentsByElementId = attachments.stream().collect(
+        return attachments.stream().collect(
                 Collectors.groupingBy(attachment -> attachment.getCnATreeElement().getDbId()));
-        attachmentsByElementId.forEach((dbId, attachmentsForElement) -> {
-            attachmentsCache.put(new Element(dbId, attachmentsForElement));
-        });
     }
 
     private void loadLinks(Integer scopeId) {
@@ -374,51 +354,39 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
             log.debug("Call exportChildren in ExportCommand hashcode " + this.hashCode()
                     + "for object " + element.getTitle());
         }
-        final Set<CnATreeElement> children = getElementChildren(element);
+        final Collection<CnATreeElement> children = getElementChildren(element);
         if (FinishedRiskAnalysis.TYPE_ID.equals(element.getTypeId())) {
             children.addAll(getRiskAnalysisOrphanElements(element));
         }
 
-        final List<SyncObject> exportedChildren = new ArrayList<>();
-
-        if (!children.isEmpty()) {
-            for (final CnATreeElement child : children) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Create export job for child " + child.getDbId());
-                }
-                final ExportTask task = new ExportTask(child);
-                configureTask(task);
-
-                SyncObject exportedChild = task.export();
-                if (exportedChild != null) {
-                    exportedChildren.add(exportedChild);
-                    if (checkElement(child)) {
-                        exportedChild.getChildren().addAll(exportChildren(task.getElement()));
-                    }
-                }
-                getValuesFromTask(task);
-
-            }
+        if (children.isEmpty()) {
+            return Collections.emptySet();
         }
+        final List<SyncObject> exportedChildren = new ArrayList<>(children.size());
+
+        for (final CnATreeElement child : children) {
+            if (log.isDebugEnabled()) {
+                log.debug("Create export job for child " + child.getDbId());
+            }
+            final ExportTask task = new ExportTask(child);
+            configureTask(task);
+
+            SyncObject exportedChild = task.export();
+            if (exportedChild != null) {
+                exportedChildren.add(exportedChild);
+                if (checkElement(child)) {
+                    exportedChild.getChildren().addAll(exportChildren(task.getElement()));
+                }
+            }
+            getValuesFromTask(task);
+        }
+
         return exportedChildren;
     }
 
-    protected Set<CnATreeElement> getElementChildren(final CnATreeElement element) {
-        Collection<Integer> childIDs = elementIdsByParentId.get(element.getDbId());
-        if (childIDs == null) {
-            return Collections.emptySet();
-        }
-        HashSet<CnATreeElement> childrenFromCache = new HashSet<>(childIDs.size());
-        for (Integer childId : childIDs) {
-            Element entry = elementCache.get(childId);
-            if (entry == null || entry.getValue() == null) {
-                log.info("Failed to look up children for " + element + " from cache");
-                return element.getChildren();
-            }
-            CnATreeElement elementFromCache = (CnATreeElement) entry.getValue();
-            childrenFromCache.add(elementFromCache);
-        }
-        return childrenFromCache;
+    protected Collection<CnATreeElement> getElementChildren(final CnATreeElement element) {
+        return elementsByParentId.getOrDefault(element.getDbId(), Collections.emptySet());
+
     }
 
     private boolean checkElement(final CnATreeElement element) {
@@ -555,9 +523,7 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
 
     private void configureTask(final ExportTask task) {
         task.setCommandService(getCommandService());
-        task.setElementCache(elementCache);
-        task.setAttachmentsCache(attachmentsCache);
-        task.setDao(getDao());
+        task.setAttachments(attachmentsByElementId.get(task.getElement().getDbId()));
         task.setAttachmentDao(getDaoFactory().getDAO(Attachment.class));
         task.setHuiTypeFactory(getHuiTypeFactory());
         task.setSourceId(sourceId);
@@ -647,35 +613,6 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
 
     public void setFilePath(final String filePath) {
         this.filePath = filePath;
-    }
-
-    private Cache createElementCache() {
-        final int maxElementsInMemory = 20000;
-        final int timeToLiveSeconds = 1800;
-        final int timeToIdleSeconds = timeToLiveSeconds;
-        String elementCacheId = UUID.randomUUID().toString();
-        elementCache = new Cache(elementCacheId, maxElementsInMemory, false, false,
-                timeToLiveSeconds, timeToIdleSeconds);
-        getManager().addCache(elementCache);
-        return elementCache;
-    }
-
-    private Cache createAttachmentsCache() {
-        final int maxElementsInMemory = 20000;
-        final int timeToLiveSeconds = 1800;
-        final int timeToIdleSeconds = timeToLiveSeconds;
-        String attachmentsCacheId = UUID.randomUUID().toString();
-        attachmentsCache = new Cache(attachmentsCacheId, maxElementsInMemory, true, false,
-                timeToLiveSeconds, timeToIdleSeconds);
-        getManager().addCache(attachmentsCache);
-        return attachmentsCache;
-    }
-
-    private CacheManager getManager() {
-        if (manager == null || Status.STATUS_SHUTDOWN.equals(manager.getStatus())) {
-            manager = CacheManager.create();
-        }
-        return manager;
     }
 
     protected HUITypeFactory getHuiTypeFactory() {

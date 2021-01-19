@@ -90,6 +90,7 @@ pipeline {
                 // triggerRCPTTBuild 'rcptt-all-report-tests'
                 
                 // product tests
+                //product tests partially is broken see VN-2882
                 // triggerRCPTTBuild 'rcptt-product-report-test'
                 
                 // performance tests
