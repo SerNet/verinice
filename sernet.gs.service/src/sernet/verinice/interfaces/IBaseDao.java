@@ -18,7 +18,10 @@
 package sernet.verinice.interfaces;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.orm.hibernate3.HibernateCallback;
 
@@ -62,6 +65,17 @@ public interface IBaseDao<T, ID extends Serializable> extends IDao<T, ID> {
      * granted.
      */
     default void checkRights(ID id, ID scopeId) {
+        checkRights(Collections.singletonMap(id, scopeId));
+    }
+    
+    /**
+     * Checks if the user calling the function has write permissions for the
+     * elements with the given IDs and scopeIds.
+     * 
+     * Throws a sernet.gs.service.SecurityException if no write permissions are
+     * granted.
+     */ 
+    default void checkRights(Map<ID, ID> idToScopeId) {
     }
 
     /**
@@ -71,7 +85,18 @@ public interface IBaseDao<T, ID extends Serializable> extends IDao<T, ID> {
      * Throws a sernet.gs.service.SecurityException if no write permissions are
      * granted.
      */
-    void checkRights(T entity) /* throws SecurityException */ ;
+    default void checkRights(T entity)/* throws SecurityException */ {
+        checkRights(Collections.singleton(entity));
+    }
+
+    /**
+     * Checks if the user calling the function has write permissions for the
+     * given entities.
+     * 
+     * Throws a sernet.gs.service.SecurityException if no write permissions are
+     * granted.
+     */
+    void checkRights(Collection<T> elements);
 
     /**
      * Checks if the user with the given user name has write permissions for the
@@ -80,7 +105,22 @@ public interface IBaseDao<T, ID extends Serializable> extends IDao<T, ID> {
      * Throws a sernet.gs.service.SecurityException if no write permissions are
      * granted.
      */
-    void checkRights(T entity, String username) /* throws SecurityException */ ;
+
+    default void checkRights(T entity,
+            String username)/* throws SecurityException */ {
+        checkRights(Collections.singleton(entity), username);
+    }
+
+    /**
+     * Checks if the user with the given user name has write permissions for the
+     * given entities.
+     * 
+     * Throws a sernet.gs.service.SecurityException if no write permissions are
+     * granted.
+     */
+
+    void checkRights(Collection<T> entities,
+            String username) /* throws SecurityException */ ;
 
     void clear();
 

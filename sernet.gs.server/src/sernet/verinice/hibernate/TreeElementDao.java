@@ -18,6 +18,7 @@
 package sernet.verinice.hibernate;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -267,12 +268,13 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
      * @see sernet.verinice.interfaces.IBaseDao#checkRights(java.lang.Object)
      */
     @Override
-    public void checkRights(T entity) /* throws SecurityException */ {
+    public void checkRights(
+            Collection<T> entities) /* throws SecurityException */ {
         // empty
     }
 
     @Override
-    public void checkRights(T entity, String username) {
+    public void checkRights(Collection<T> entities, String username) {
         // empty
     }
 

@@ -67,7 +67,7 @@ public class NaturalizeCommand extends GenericCommand implements IChangeLoggingC
             Set<@NonNull CnATreeElement> elements = uuidSet.stream()
                     .map(uuid -> cnaTreeElementDao.findByUuid(uuid, null))
                     .collect(Collectors.toSet());
-            elements.forEach(cnaTreeElementDao::checkRights);
+            cnaTreeElementDao.checkRights(elements);
             for (CnATreeElement element : elements) {
                 element.setSourceId(null);
                 element.setExtId(null);

@@ -18,7 +18,11 @@
 package sernet.verinice.hibernate;
 
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
@@ -116,9 +120,7 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 
     @Override
     public void delete(List<CnATreeElement> entities) {
-        for (CnATreeElement cnATreeElement : entities) {
-            checkRights(cnATreeElement);
-        }
+        checkRights(entities);
         super.delete(entities);
         indexDelete(entities);
 
@@ -148,18 +150,19 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
      */
     @Override
     public void checkRights(
-            CnATreeElement entity) /* throws SecurityException */ {
-        checkRights(entity, getAuthService().getUsername());
+            Collection<CnATreeElement> entities) /* throws SecurityException */ {
+        if (isPermissionHandlingNeeded()) {
+            Map<Integer, Integer> dbIdsToScopeIds = new HashMap<>(entities.size());
+            entities.forEach(entity -> dbIdsToScopeIds.put(entity.getDbId(), entity.getScopeId()));
+            doCheckRights(dbIdsToScopeIds, getAuthService().getUsername());
+        }
     }
 
-    /*
-     * @see
-     * sernet.verinice.interfaces.IBaseDao#checkRights(java.io.Serializable,
-     * java.io.Serializable)
-     */
     @Override
-    public void checkRights(Integer id, Integer scopeId) {
-        checkRights(id, scopeId, getAuthService().getUsername());
+    public void checkRights(Map<Integer, Integer> idToScopeId) {
+        if (isPermissionHandlingNeeded()) {
+            doCheckRights(idToScopeId, getAuthService().getUsername());
+        }
     }
 
     /*
@@ -170,33 +173,39 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
      * java.lang.String)
      */
     @Override
-    public void checkRights(CnATreeElement element, String username) {
+    public void checkRights(Collection<CnATreeElement> entities, String username) {
         if (log.isDebugEnabled()) {
-            log.debug("Checking rights for entity: " + element + " and username: " + username);
+            entities.forEach(element -> log.debug(
+                    "Checking rights for entity: " + element + " and username: " + username));
         }
-        checkRights(element.getDbId(), element.getScopeId(), username);
-    }
-
-    private void checkRights(Integer dbId, Integer scopeId, String username) {
         if (isPermissionHandlingNeeded()) {
-            doCheckRights(dbId, scopeId, username);
+            Map<Integer, Integer> dbIdsToScopeIds = new HashMap<>(entities.size());
+            entities.forEach(entity -> dbIdsToScopeIds.put(entity.getDbId(), entity.getScopeId()));
+            doCheckRights(dbIdsToScopeIds, username);
         }
     }
 
-    private void doCheckRights(Integer dbId, Integer scopeId, String username) {
+    private void doCheckRights(Map<Integer, Integer> idToScopeId, String username) {
         String[] roleArray = getDynamicRoles(username);
         if (roleArray == null) {
             log.error("Role array is null for user: " + username);
         }
+
         if (!hasAdminRole(roleArray)) {
-            checkRightsForNonAdmin(dbId, username, roleArray);
+            idToScopeId
+                    .forEach((dbId, scopeId) -> checkRightsForNonAdmin(dbId, username, roleArray));
         }
-        if (isScopeOnly() && scopeId != null
-                && !scopeId.equals(getConfigurationService().getScopeId(username))) {
-            final String message = "User: " + username
-                    + " has no right to write CnATreeElement with id: " + dbId;
-            log.warn(message);
-            throw new SecurityException(message);
+        if (isScopeOnly()) {
+            Integer userScopeId = getConfigurationService().getScopeId(username);
+            for (Entry<Integer, Integer> e : idToScopeId.entrySet()) {
+                Integer scopeId = e.getValue();
+                if (!scopeId.equals(userScopeId)) {
+                    final String message = "User: " + username
+                            + " has no right to write CnATreeElement with id: " + e.getKey();
+                    log.warn(message);
+                    throw new SecurityException(message);
+                }
+            }
         }
     }
 
@@ -280,12 +289,14 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
             });
         } else {
             getHibernateTemplate().execute(new HibernateCallback() {
+
                 @Override
                 public Object doInHibernate(Session session)
                         throws HibernateException, SQLException {
                     session.disableFilter("scopeFilter");
                     return null;
                 }
+
             });
         }
     }

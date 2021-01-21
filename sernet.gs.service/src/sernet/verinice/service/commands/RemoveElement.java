@@ -23,7 +23,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -199,9 +201,9 @@ public class RemoveElement extends GenericCommand
         LoadSubtreeIds loadSubtreeIdsCommand = new LoadSubtreeIds(element);
         loadSubtreeIdsCommand = getCommandService().executeCommand(loadSubtreeIdsCommand);
         Set<Integer> dbIdsOfSubtree = loadSubtreeIdsCommand.getDbIdsOfSubtree();
-        for (Integer dbId : dbIdsOfSubtree) {
-            dao.checkRights(dbId, element.getScopeId());
-        }
+        Map<Serializable, Serializable> dbIdsToScopeIds = new HashMap<>(dbIdsOfSubtree.size());
+        dbIdsOfSubtree.forEach(id -> dbIdsToScopeIds.put(id, element.getScopeId()));
+        dao.checkRights(dbIdsToScopeIds);
     }
 
     /**
