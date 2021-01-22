@@ -202,14 +202,16 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 
     @SuppressWarnings("unchecked")
     protected void checkRightsForNonAdmin(Integer dbId, String username, String[] roleArray) {
-        String hql = createHql(roleArray);
 
-        Object[] params = new Object[] { dbId, Boolean.TRUE };
+        DetachedCriteria criteria = DetachedCriteria.forClass(Permission.class)
+                .add(Restrictions.eq("cnaTreeElement.dbId", dbId))
+                .add(Restrictions.eq("writeAllowed", true)).add(Restrictions.in("role", roleArray))
+                .setProjection(Projections.property("dbId"));
         if (log.isDebugEnabled()) {
-            log.debug("checkRights, hql: " + hql);
             log.debug("checkRights, entity db-id: " + dbId);
         }
-        List<Integer> idList = getPermissionDao().findByQuery(hql, params);
+
+        List<Integer> idList = getPermissionDao().findByCriteria(criteria);
         if (log.isDebugEnabled()) {
             log.debug("checkRights, permission ids: ");
             for (Integer integer : idList) {
@@ -222,30 +224,6 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
             log.warn(message);
             throw new SecurityException(message);
         }
-    }
-
-    protected String createHql(String[] roleArray) {
-        String roleParam = createRoleParam(roleArray);
-        StringBuilder sb = new StringBuilder();
-        sb.append(
-                "select p.dbId from Permission p where p.cnaTreeElement.dbId = ? and p.role in (");
-        // workaraound, because adding roles as ? param does not work
-        sb.append(roleParam);
-        sb.append(") and p.writeAllowed = ?");
-        return sb.toString();
-    }
-
-    protected String createRoleParam(String[] roleArray) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < roleArray.length; i++) {
-            String name = roleArray[i];
-            String escaped = name.replace("\\", "\\\\");
-            sb.append("'").append(escaped).append("'");
-            if (i < roleArray.length - 1) {
-                sb.append(",");
-            }
-        }
-        return sb.toString();
     }
 
     private void beforeExecution() {
