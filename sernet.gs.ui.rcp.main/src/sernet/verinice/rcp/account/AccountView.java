@@ -62,6 +62,7 @@ import org.eclipse.ui.ISelectionListener;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.RedrawingTableViewer;
 import sernet.gs.ui.rcp.main.actions.ConfigurationAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
@@ -382,7 +383,7 @@ public class AccountView extends RightsEnabledView {
     }
 
     private void createTable(Composite tableComposite) {
-        viewer = new TableViewer(tableComposite,
+        viewer = new RedrawingTableViewer(tableComposite,
                 SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         viewer.getControl().setLayoutData(gd);

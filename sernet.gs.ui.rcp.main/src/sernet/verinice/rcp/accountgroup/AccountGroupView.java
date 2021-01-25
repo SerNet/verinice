@@ -69,6 +69,7 @@ import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.RedrawingTableViewer;
 import sernet.gs.ui.rcp.main.actions.helper.UpdateConfigurationHelper;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -200,7 +201,7 @@ public class AccountGroupView extends RightsEnabledView {
             }
         });
 
-        tableAccountGroups = new TableViewer(accountGroupsColumn, SWT.SINGLE | SWT.BORDER);
+        tableAccountGroups = new RedrawingTableViewer(accountGroupsColumn, SWT.SINGLE | SWT.BORDER);
         tableAccountGroups.setUseHashlookup(true);
         tableAccountGroups.setContentProvider(new AccountContentProvider(tableAccountGroups));
         tableAccountGroups.setLabelProvider(new AccountLabelProvider());
@@ -220,7 +221,7 @@ public class AccountGroupView extends RightsEnabledView {
         Group accountsInGroupColumn = new Group(container, SWT.NONE);
         accountsInGroupColumn.setText(Messages.GroupView_3);
 
-        tableAccountsInGroup = new TableViewer(accountsInGroupColumn);
+        tableAccountsInGroup = new RedrawingTableViewer(accountsInGroupColumn);
         tableAccountsInGroup.setContentProvider(new AccountContentProvider(tableAccountsInGroup));
         groupLabelProvider = new AccountLabelProvider();
         tableAccountsInGroup.setLabelProvider(groupLabelProvider);
@@ -273,7 +274,7 @@ public class AccountGroupView extends RightsEnabledView {
         Group accountsColumn = new Group(container, SWT.NONE);
         accountsColumn.setText(Messages.GroupView_4);
 
-        tableAccounts = new TableViewer(accountsColumn);
+        tableAccounts = new RedrawingTableViewer(accountsColumn);
         tableAccounts.setUseHashlookup(true);
         tableAccounts.setContentProvider(new AccountContentProvider(tableAccounts));
         accountLabelProvider = new AccountLabelProvider();

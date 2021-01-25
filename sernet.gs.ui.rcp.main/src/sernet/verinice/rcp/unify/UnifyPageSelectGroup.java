@@ -34,6 +34,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import sernet.gs.ui.rcp.main.RedrawingTableViewer;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementComparator;
 import sernet.verinice.rcp.WizardPageEnteringAware;
@@ -122,7 +123,7 @@ public class UnifyPageSelectGroup extends WizardPageEnteringAware {
 
         int style = SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL;
 
-        TableViewer tableViewer = new TableViewer(parent, style | SWT.MULTI);
+        TableViewer tableViewer = new RedrawingTableViewer(parent, style | SWT.MULTI);
 
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         tableViewer.getControl().setLayoutData(gd);

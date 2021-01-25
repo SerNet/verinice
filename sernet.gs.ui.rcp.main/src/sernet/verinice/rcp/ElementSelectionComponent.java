@@ -61,6 +61,7 @@ import org.eclipse.swt.widgets.Text;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.RedrawingTableViewer;
 import sernet.gs.ui.rcp.main.bsi.dialogs.CnaTreeElementTitleFilter;
 import sernet.gs.ui.rcp.main.bsi.dialogs.Messages;
 import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
@@ -188,7 +189,7 @@ public class ElementSelectionComponent {
             checkbox.pack();
         }
 
-        viewer = new TableViewer(container, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+        viewer = new RedrawingTableViewer(container, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
         FormData formData3 = new FormData();
         if (isShowScopeCheckbox()) {
             formData3.top = new FormAttachment(checkbox, formAttachmentDefaultOffset);

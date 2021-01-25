@@ -309,6 +309,7 @@ public class NoteView extends RightsEnabledView implements ILinkedWithEditorView
                     item0.setControl(composite);
                     item0.setExpanded(true);
                 } // end for
+                expandBar.redraw();
             }
         } catch (Exception e) {
             LOG.error("Error while loading notes", e); //$NON-NLS-1$

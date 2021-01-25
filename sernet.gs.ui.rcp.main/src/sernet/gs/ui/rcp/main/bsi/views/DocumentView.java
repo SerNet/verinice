@@ -102,6 +102,7 @@ public class DocumentView extends RightsEnabledView {
             FindURLs command = new FindURLs(allIDs);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             viewer.setInput(command.getUrls());
+            viewer.getTree().redraw();
         } catch (Exception e) {
             // there's nothing we can do here
         }

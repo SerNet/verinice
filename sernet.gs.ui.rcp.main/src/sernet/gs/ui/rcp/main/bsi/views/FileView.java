@@ -73,6 +73,7 @@ import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.RedrawingTableViewer;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
@@ -247,7 +248,7 @@ public class FileView extends RightsEnabledView
         final int versionColumnWidth = 60;
         final int sizeColumnWidth = 50;
 
-        viewer = new TableViewer(parent,
+        viewer = new RedrawingTableViewer(parent,
                 SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
         viewer.setContentProvider(contentProvider);
         viewer.setLabelProvider(new AttachmentLabelProvider());

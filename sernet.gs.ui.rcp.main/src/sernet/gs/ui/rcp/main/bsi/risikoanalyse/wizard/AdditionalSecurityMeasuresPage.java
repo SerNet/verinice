@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.RedrawingTableViewer;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
@@ -306,7 +307,7 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
 
     @Override
     protected TableViewer initializeViewer(Composite parent) {
-        return new TableViewer(parent, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION);
+        return new RedrawingTableViewer(parent, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION);
     }
 
     @Override

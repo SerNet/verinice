@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.RedrawingTableViewer;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
@@ -197,7 +198,7 @@ public class GstoolImportMappingView extends RightsEnabledView
         final int gstoolTypeColumnWidth = 150;
         final int veriniceTypeColumnWidth = 80;
 
-        this.viewer = new TableViewer(parent,
+        this.viewer = new RedrawingTableViewer(parent,
                 SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
         Table table = this.viewer.getTable();
 

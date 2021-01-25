@@ -20,7 +20,6 @@
 package sernet.verinice.rcp.search.tables;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
@@ -31,6 +30,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 
+import sernet.gs.ui.rcp.main.RedrawingTableViewer;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.model.search.VeriniceSearchResultTable;
@@ -44,7 +44,8 @@ import sernet.verinice.rcp.search.column.IconColumn;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class SearchResultsTableViewer extends TableViewer implements IStructuredContentProvider {
+public class SearchResultsTableViewer extends RedrawingTableViewer
+        implements IStructuredContentProvider {
 
     private final class ListenerImplementation implements Listener {
 

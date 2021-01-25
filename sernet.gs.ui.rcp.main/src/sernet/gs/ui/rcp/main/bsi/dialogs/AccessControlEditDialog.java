@@ -61,6 +61,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.RedrawingTableViewer;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.swt.SWTResourceManager;
 import sernet.verinice.interfaces.ApplicationRoles;
@@ -301,7 +302,7 @@ public class AccessControlEditDialog extends TitleAreaDialog {
         final int gridDataHorizontalSpan = 5;
         int style = SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL;
         style = style | SWT.FULL_SELECTION | SWT.BORDER;
-        viewer = new TableViewer(parent, style);
+        viewer = new RedrawingTableViewer(parent, style);
 
         createColumns();
         final Table table = viewer.getTable();

@@ -53,6 +53,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.RedrawingTableViewer;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.ApplicationRoles;
@@ -392,7 +393,7 @@ public class ProfileDialog extends TitleAreaDialog {
         label.setText(title);
         label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
-        TableViewer table0 = new TableViewer(parent,
+        TableViewer table0 = new RedrawingTableViewer(parent,
                 SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
 
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);

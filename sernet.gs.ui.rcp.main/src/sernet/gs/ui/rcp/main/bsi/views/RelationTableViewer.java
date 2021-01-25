@@ -27,7 +27,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.window.ToolTip;
@@ -39,6 +38,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.ui.rcp.main.RedrawingTableViewer;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElementLabelGenerator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
@@ -53,7 +53,7 @@ import sernet.verinice.service.commands.LoadAncestors;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
-public class RelationTableViewer extends TableViewer {
+public class RelationTableViewer extends RedrawingTableViewer {
 
     private static final Logger LOG = Logger.getLogger(RelationTableViewer.class);
 

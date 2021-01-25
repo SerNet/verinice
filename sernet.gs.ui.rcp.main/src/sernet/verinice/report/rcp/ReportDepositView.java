@@ -55,6 +55,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.RedrawingTableViewer;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -125,7 +126,7 @@ public class ReportDepositView extends RightsEnabledView {
         final int outputFormatWidth = 200;
         final int templateWidth = 100;
 
-        viewer = new TableViewer(parent,
+        viewer = new RedrawingTableViewer(parent,
                 SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
         viewer.setContentProvider(contentprovider);
         viewer.setLabelProvider(new ReportDepositLabelProvider());

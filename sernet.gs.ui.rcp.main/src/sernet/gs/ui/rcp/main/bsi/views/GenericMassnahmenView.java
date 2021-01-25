@@ -54,6 +54,7 @@ import org.eclipse.ui.IActionBars;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.RedrawingTableViewer;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
@@ -531,7 +532,7 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
         //
         // A is put into memory now, since it is regarded as being
         // more recent.
-        viewer = new TableViewer(parent,
+        viewer = new RedrawingTableViewer(parent,
                 SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION) {
             @Override
             @SuppressWarnings("unchecked")

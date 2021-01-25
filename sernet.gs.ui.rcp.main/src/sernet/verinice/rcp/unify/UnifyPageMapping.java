@@ -43,6 +43,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
+import sernet.gs.ui.rcp.main.RedrawingTableViewer;
 import sernet.hui.swt.SWTResourceManager;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementComparator;
@@ -235,7 +236,7 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
         TableColumnLayout tableColumnLayout = new TableColumnLayout();
         tableComposite.setLayout(tableColumnLayout);
 
-        TableViewer tableViewer = new TableViewer(tableComposite,
+        TableViewer tableViewer = new RedrawingTableViewer(tableComposite,
                 SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
 
         Table internalTable = tableViewer.getTable();

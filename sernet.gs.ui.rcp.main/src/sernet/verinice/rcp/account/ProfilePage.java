@@ -31,6 +31,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import sernet.gs.ui.rcp.main.RedrawingTableViewer;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IRightsServiceClient;
 import sernet.verinice.model.auth.ProfileRef;
@@ -79,7 +80,7 @@ public class ProfilePage extends BaseWizardPage {
         label.setText(title);
         label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
-        TableViewer table0 = new TableViewer(parent,
+        TableViewer table0 = new RedrawingTableViewer(parent,
                 SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
 
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);

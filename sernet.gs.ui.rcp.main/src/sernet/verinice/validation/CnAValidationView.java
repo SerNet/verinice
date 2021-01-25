@@ -58,6 +58,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.RedrawingTableViewer;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -221,7 +222,7 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
         final int propertyColumnWidth = 100;
         final int hintColumnWidth = 200;
 
-        viewer = new TableViewer(parent,
+        viewer = new RedrawingTableViewer(parent,
                 SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
         viewer.setContentProvider(contentProvider);
         viewer.setLabelProvider(new ValidationLabelProvider());

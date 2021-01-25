@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.gs.ui.rcp.main.RedrawingTableViewer;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 
 /**
@@ -181,7 +182,7 @@ public class RiskHandlingPage extends RiskAnalysisWizardPage<TableViewer> {
 
     @Override
     protected TableViewer initializeViewer(Composite parent) {
-        return new TableViewer(parent, SWT.BORDER | SWT.FULL_SELECTION);
+        return new RedrawingTableViewer(parent, SWT.BORDER | SWT.FULL_SELECTION);
     }
 
     @Override

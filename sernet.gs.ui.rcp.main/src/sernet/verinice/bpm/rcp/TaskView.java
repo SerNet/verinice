@@ -81,6 +81,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ComboModelNumericStringComparator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.RedrawingTableViewer;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.editors.TaskEditorContext;
@@ -317,7 +318,7 @@ public class TaskView extends RightsEnabledView {
     }
 
     private void createTableComposite(Composite parent) {
-        this.tableViewer = new TableViewer(parent,
+        this.tableViewer = new RedrawingTableViewer(parent,
                 SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
         final GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         this.tableViewer.getControl().setLayoutData(gridData);

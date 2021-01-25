@@ -220,6 +220,7 @@ public class ChartView extends ViewPart {
                                     }
                                     frame.setChart(chart);
                                     frame.forceRedraw();
+                                    parent.redraw();
                                 } catch (Exception e) {
                                     // chart disposed:
                                     LOG.error(e);
