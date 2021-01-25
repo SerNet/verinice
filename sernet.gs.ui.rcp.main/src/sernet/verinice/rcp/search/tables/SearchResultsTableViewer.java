@@ -51,7 +51,6 @@ public class SearchResultsTableViewer extends TableViewer implements IStructured
         private final TableViewerColumn columnViewer;
         private final IColumn col;
 
-
         private ListenerImplementation(TableViewerColumn columnViewer, IColumn col) {
             this.columnViewer = columnViewer;
             this.col = col;
@@ -59,7 +58,7 @@ public class SearchResultsTableViewer extends TableViewer implements IStructured
 
         @Override
         public void handleEvent(Event event) {
-             col.setWidth(columnViewer.getColumn().getWidth());
+            col.setWidth(columnViewer.getColumn().getWidth());
         }
     }
 
@@ -69,7 +68,8 @@ public class SearchResultsTableViewer extends TableViewer implements IStructured
 
     private Table table;
 
-    public SearchResultsTableViewer(Composite parent, IColumnStore columnStore, VeriniceSearchResultTable veriniceSearchResultTable) {
+    public SearchResultsTableViewer(Composite parent, IColumnStore columnStore,
+            VeriniceSearchResultTable veriniceSearchResultTable) {
 
         super(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 
@@ -104,7 +104,8 @@ public class SearchResultsTableViewer extends TableViewer implements IStructured
                 @Override
                 public void widgetSelected(SelectionEvent e) {
                     SearchResultsTableViewer.this.searchTableComparator.setColumn(col);
-                    SearchResultsTableViewer.this.getTable().setSortColumn(columnViewer.getColumn());
+                    SearchResultsTableViewer.this.getTable()
+                            .setSortColumn(columnViewer.getColumn());
                     SearchResultsTableViewer.this.refresh();
                 }
             });
@@ -114,7 +115,8 @@ public class SearchResultsTableViewer extends TableViewer implements IStructured
             }
 
             columnViewer.setLabelProvider(new SearchTableColumnLabelProvider(col));
-            columnViewer.getColumn().addListener(SWT.Resize, new ListenerImplementation(columnViewer, col));
+            columnViewer.getColumn().addListener(SWT.Resize,
+                    new ListenerImplementation(columnViewer, col));
         }
     }
 
@@ -141,7 +143,8 @@ public class SearchResultsTableViewer extends TableViewer implements IStructured
     public Object[] getElements(Object inputElement) {
         if (inputElement instanceof VeriniceSearchResultTable) {
             VeriniceSearchResultTable object = (VeriniceSearchResultTable) inputElement;
-            VeriniceSearchResultRow[] elements = new VeriniceSearchResultRow[object.getRows().size()];
+            VeriniceSearchResultRow[] elements = new VeriniceSearchResultRow[object.getRows()
+                    .size()];
             return object.getRows().toArray(elements);
         }
 

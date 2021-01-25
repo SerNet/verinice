@@ -72,26 +72,25 @@ import sernet.verinice.model.auth.Userprofile;
 public class ProfileDialog extends TitleAreaDialog {
 
     private static final Logger LOG = Logger.getLogger(ProfileDialog.class);
-    
-    private Text  textName;
+
+    private Text textName;
     private Label translated;
-    
+
     private TableViewer tableSelected;
     private TableViewer table;
     private ActionLabelProvider labelProvider = new ActionLabelProvider();
-    
+
     private Button addAllButton;
     private Button removeAllButton;
-    
+
     private Auth auth;
     private String profileName;
     private String profileNameOld;
-    private Profile profile;  
-    private List<Action> selectedActions = new ArrayList<Action>(); 
-    private List<Action> selectedActionsOld = new ArrayList<Action>();   
+    private Profile profile;
+    private List<Action> selectedActions = new ArrayList<Action>();
+    private List<Action> selectedActionsOld = new ArrayList<Action>();
     private List<Action> unselectedActions;
     private List<String> allActions;
-    
 
     private IRightsServiceClient rightsService;
     private IAuthService authService;
@@ -101,9 +100,8 @@ public class ProfileDialog extends TitleAreaDialog {
         setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
         auth = getRightService().getConfiguration();
         loadAllActions();
-        unselectedActions = new ArrayList<Action>(allActions.size());    
+        unselectedActions = new ArrayList<Action>(allActions.size());
     }
-
 
     /**
      * @param shell
@@ -120,7 +118,8 @@ public class ProfileDialog extends TitleAreaDialog {
     }
 
     private void loadAllActions() {
-        boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        boolean isLocalAdmin = getAuthService()
+                .currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
         if (isLocalAdmin) {
             loadAllLocalAdminActions();
         } else {
@@ -151,11 +150,11 @@ public class ProfileDialog extends TitleAreaDialog {
         final int minWidthGridLayout = 200;
         final int gridDataHeightCharacterAmount = 20;
         final int gridDataWidthCharacterAmount = 40;
-        
+
         setTitle(Messages.ProfileDialog_1);
         setMessage(Messages.ProfileDialog_2);
         setTitleImage(ImageCache.getInstance().getImage(ImageCache.PROFILE_64));
-        
+
         initializeDialogUnits(parent);
 
         Composite composite = new Composite(parent, SWT.FILL);
@@ -164,26 +163,26 @@ public class ProfileDialog extends TitleAreaDialog {
 
         Composite comboComposite = new Composite(composite, SWT.NONE);
         GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
-        gridData.horizontalAlignment=GridData.HORIZONTAL_ALIGN_FILL;
+        gridData.horizontalAlignment = GridData.HORIZONTAL_ALIGN_FILL;
         comboComposite.setLayoutData(gridData);
         GridLayout gridLayout = new GridLayout(numColumnsCombo, false);
         gridLayout.marginHeight = 0;
         gridLayout.marginWidth = 0;
         comboComposite.setLayout(gridLayout);
-        
-        Label label = new Label(comboComposite, SWT.WRAP);
-        label.setText(Messages.ProfileDialog_3);       
 
-        textName = new Text(comboComposite,SWT.BORDER);
+        Label label = new Label(comboComposite, SWT.WRAP);
+        label.setText(Messages.ProfileDialog_3);
+
+        textName = new Text(comboComposite, SWT.BORDER);
         gridData = new GridData(GridData.GRAB_HORIZONTAL);
         gridData.minimumWidth = minWidthGridLayout;
         textName.setLayoutData(gridData);
-        
+
         Label labelTranslated = new Label(comboComposite, SWT.WRAP);
         labelTranslated.setText(Messages.ProfileDialog_4);
-        
+
         translated = new Label(comboComposite, SWT.WRAP);
-        
+
         Composite fourColumnComposite = new Composite(composite, SWT.NONE);
         gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         gridData.heightHint = convertHeightInCharsToPixels(gridDataHeightCharacterAmount);
@@ -217,47 +216,47 @@ public class ProfileDialog extends TitleAreaDialog {
         gridLayout.marginHeight = 0;
         gridLayout.marginWidth = 0;
         rightComposite.setLayout(gridLayout);
-        
-        tableSelected = createTable(leftComposite,Messages.ProfileDialog_5);
+
+        tableSelected = createTable(leftComposite, Messages.ProfileDialog_5);
         tableSelected.setLabelProvider(labelProvider);
         tableSelected.setComparator(new ActionTableComparator());
-        tableSelected.setContentProvider(new ArrayContentProvider());     
+        tableSelected.setContentProvider(new ArrayContentProvider());
         tableSelected.refresh(true);
-       
-        table = createTable(rightComposite,Messages.ProfileDialog_6);
+
+        table = createTable(rightComposite, Messages.ProfileDialog_6);
         table.setLabelProvider(labelProvider);
         table.setComparator(new ActionTableComparator());
-        table.setContentProvider(new ArrayContentProvider());       
+        table.setContentProvider(new ArrayContentProvider());
         table.refresh(true);
-            
+
         createButtons(centerComposite);
-        
+
         initializeContent();
 
         Dialog.applyDialogFont(composite);
-        
+
         return composite;
     }
 
     /**
      * 
-     */ 
+     */
     private void initializeContent() {
         loadProfiles(profileName);
-        tableSelected.setInput(selectedActions);   
+        tableSelected.setInput(selectedActions);
         setUnselected();
-        table.setInput(unselectedActions);      
+        table.setInput(unselectedActions);
     }
- 
+
     /**
      * @param username
      */
     private void loadProfiles(String profileName) {
         table.remove(unselectedActions);
         tableSelected.remove(selectedActions);
-        if(profileName!=null) {
-            for (Profile prf :  auth.getProfiles().getProfile()) {
-                if(profileName.equals(prf.getName())) {
+        if (profileName != null) {
+            for (Profile prf : auth.getProfiles().getProfile()) {
+                if (profileName.equals(prf.getName())) {
                     this.profile = prf;
                     selectedActions = prf.getAction();
                     selectedActionsOld = new ArrayList<Action>(selectedActions);
@@ -278,10 +277,9 @@ public class ProfileDialog extends TitleAreaDialog {
         tableSelected.refresh(true);
         removeAllButton.setEnabled(!selectedActions.isEmpty());
         addAllButton.setEnabled(!unselectedActions.isEmpty());
-        
-        
+
     }
-    
+
     private void setUnselected() {
         Map<String, String> mapSelected = new HashMap<String, String>(allActions.size());
         for (Action action : selectedActions) {
@@ -289,15 +287,17 @@ public class ProfileDialog extends TitleAreaDialog {
         }
         unselectedActions.clear();
         for (String name : allActions) {
-            if(!mapSelected.containsKey(name)) {
+            if (!mapSelected.containsKey(name)) {
                 Action action = new Action();
                 action.setId(name);
                 unselectedActions.add(action);
             }
         }
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.dialogs.Dialog#okPressed()
      */
     @Override
@@ -308,7 +308,6 @@ public class ProfileDialog extends TitleAreaDialog {
             showValidationWarning();
         }
     }
-
 
     private void saveProfile() {
         try {
@@ -338,13 +337,15 @@ public class ProfileDialog extends TitleAreaDialog {
     }
 
     private void showValidationWarning() {
-        MessageDialog.openWarning(this.getShell(), Messages.ProfileDialog_12, Messages.ProfileDialog_13);
+        MessageDialog.openWarning(this.getShell(), Messages.ProfileDialog_12,
+                Messages.ProfileDialog_13);
         this.textName.selectAll();
         this.textName.setFocus();
     }
 
     /**
      * prevent empty profile names, also names that contains whitespaces only
+     * 
      * @return is profileName valid
      */
     private boolean validateInput() {
@@ -355,8 +356,10 @@ public class ProfileDialog extends TitleAreaDialog {
         }
         return StringUtils.isNotEmpty(trimmedInput);
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.dialogs.Dialog#cancelPressed()
      */
     @Override
@@ -374,23 +377,23 @@ public class ProfileDialog extends TitleAreaDialog {
     /**
      * 
      */
-    private void updateProfileRefs() {      
-        for (Userprofile userprofile : auth.getUserprofiles().getUserprofile()) {          
+    private void updateProfileRefs() {
+        for (Userprofile userprofile : auth.getUserprofiles().getUserprofile()) {
             for (ProfileRef profileRef : userprofile.getProfileRef()) {
-                if(profileRef.getName().equals(this.profileName)) {
+                if (profileRef.getName().equals(this.profileName)) {
                     profileRef.setName(this.profile.getName());
                 }
             }
         }
     }
 
-
     private TableViewer createTable(Composite parent, String title) {
         Label label = new Label(parent, SWT.WRAP);
         label.setText(title);
         label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
-        TableViewer table0 = new TableViewer(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
+        TableViewer table0 = new TableViewer(parent,
+                SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
 
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         table0.getControl().setLayoutData(gd);
@@ -399,37 +402,37 @@ public class ProfileDialog extends TitleAreaDialog {
 
         return table0;
     }
-    
+
     private void createButtons(Composite parent) {
         Label spacer = new Label(parent, SWT.NONE);
-        spacer.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,false));
+        spacer.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
         final Button addButton = new Button(parent, SWT.PUSH);
-        addButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,false));
+        addButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
         addButton.setText(Messages.ProfileDialog_7);
         addButton.setEnabled(!table.getSelection().isEmpty());
-        
+
         addAllButton = new Button(parent, SWT.PUSH);
-        addAllButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP,true, false));
+        addAllButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
         addAllButton.setText(Messages.ProfileDialog_8);
         addAllButton.setEnabled(!unselectedActions.isEmpty());
 
         final Button removeButton = new Button(parent, SWT.PUSH);
-        removeButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP,true, false));
+        removeButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
         removeButton.setText(Messages.ProfileDialog_9);
         removeButton.setEnabled(!table.getSelection().isEmpty());
-      
+
         removeAllButton = new Button(parent, SWT.PUSH);
         removeAllButton.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, false, false));
         removeAllButton.setText(Messages.ProfileDialog_10);
         removeAllButton.setEnabled(!selectedActions.isEmpty());
 
-        table.addSelectionChangedListener(new ISelectionChangedListener() {          
+        table.addSelectionChangedListener(new ISelectionChangedListener() {
             @Override
             public void selectionChanged(SelectionChangedEvent event) {
-                        addButton.setEnabled(!event.getSelection().isEmpty());
-                    }
-                });
+                addButton.setEnabled(!event.getSelection().isEmpty());
+            }
+        });
 
         addButton.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -440,7 +443,7 @@ public class ProfileDialog extends TitleAreaDialog {
             }
         });
 
-        table.addDoubleClickListener(new IDoubleClickListener() {           
+        table.addDoubleClickListener(new IDoubleClickListener() {
             @Override
             public void doubleClick(DoubleClickEvent event) {
                 addSelection();
@@ -450,11 +453,11 @@ public class ProfileDialog extends TitleAreaDialog {
         });
 
         tableSelected.addSelectionChangedListener(new ISelectionChangedListener() {
-                    @Override
-                    public void selectionChanged(SelectionChangedEvent event) {
-                        removeButton.setEnabled(!event.getSelection().isEmpty());
-                    }
-                });
+            @Override
+            public void selectionChanged(SelectionChangedEvent event) {
+                removeButton.setEnabled(!event.getSelection().isEmpty());
+            }
+        });
 
         removeButton.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -475,12 +478,15 @@ public class ProfileDialog extends TitleAreaDialog {
         });
 
         addAllButton.addSelectionListener(new SelectionAdapter() {
-            /* (non-Javadoc)
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.
+             * eclipse.swt.events.SelectionEvent)
              */
             @Override
             @SuppressWarnings({ "unchecked", "rawtypes" })
-            public void widgetSelected(SelectionEvent e) { 
+            public void widgetSelected(SelectionEvent e) {
                 selectedActions.addAll(unselectedActions);
                 unselectedActions.clear();
                 table.refresh();
@@ -492,8 +498,11 @@ public class ProfileDialog extends TitleAreaDialog {
         });
 
         removeAllButton.addSelectionListener(new SelectionAdapter() {
-            /* (non-Javadoc)
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.
+             * eclipse.swt.events.SelectionEvent)
              */
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -508,7 +517,6 @@ public class ProfileDialog extends TitleAreaDialog {
         });
 
     }
-   
 
     /**
      * Moves selected elements in the tree into the table
@@ -525,7 +533,7 @@ public class ProfileDialog extends TitleAreaDialog {
         table.getControl().setFocus();
         profile.setOrigin(null);
     }
-    
+
     /**
      * Moves the selected elements in the table into the tree
      */
@@ -536,7 +544,7 @@ public class ProfileDialog extends TitleAreaDialog {
         unselectedActions.addAll(selectionList);
         Object[] selectedElements = selection.toArray();
         table.add(selectedElements);
-        tableSelected.remove(selectedElements); 
+        tableSelected.remove(selectedElements);
         table.setSelection(selection);
         tableSelected.getControl().setFocus();
         profile.setOrigin(null);
@@ -551,7 +559,8 @@ public class ProfileDialog extends TitleAreaDialog {
 
     IRightsServiceClient getRightService() {
         if (rightsService == null) {
-            rightsService = (IRightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+            rightsService = (IRightsServiceClient) VeriniceContext
+                    .get(VeriniceContext.RIGHTS_SERVICE);
         }
         return rightsService;
     }
@@ -596,8 +605,9 @@ public class ProfileDialog extends TitleAreaDialog {
             Action p2 = (Action) e2;
             int rc = 0;
             switch (propertyIndex) {
-            case 0:            
-                rc = collator.compare(getRightService().getMessage(p1.getId()), getRightService().getMessage(p2.getId()));
+            case 0:
+                rc = collator.compare(getRightService().getMessage(p1.getId()),
+                        getRightService().getMessage(p2.getId()));
                 break;
             default:
                 rc = 0;

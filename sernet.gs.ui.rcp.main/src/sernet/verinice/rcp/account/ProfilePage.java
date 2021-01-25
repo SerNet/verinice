@@ -45,16 +45,16 @@ import sernet.verinice.rcp.ProfileTableComparator;
  */
 public class ProfilePage extends BaseWizardPage {
 
-    private static final Logger LOG = Logger.getLogger(ProfilePage.class);    
+    private static final Logger LOG = Logger.getLogger(ProfilePage.class);
     public static final String PAGE_NAME = "account-wizard-profile-page"; //$NON-NLS-1$
-    
+
     private String login;
     Set<ProfileRef> profileSet;
-    
+
     private TableViewer table;
-    
+
     private IRightsServiceClient rightsService;
-    
+
     protected ProfilePage() {
         super(PAGE_NAME);
     }
@@ -63,23 +63,24 @@ public class ProfilePage extends BaseWizardPage {
     protected void initGui(Composite composite) {
         setTitle(Messages.ProfilePage_1);
         setMessage(Messages.ProfilePage_2);
-        
+
         Label label = new Label(composite, SWT.NONE);
         label.setText(Messages.ProfilePage_3);
-        table = createTable(composite,Messages.ProfilePage_4);
+        table = createTable(composite, Messages.ProfilePage_4);
         table.setLabelProvider(new ProfileLabelProvider());
         table.setComparator(new ProfileTableComparator());
         table.setContentProvider(new ArrayContentProvider());
         table.refresh(true);
 
     }
-    
+
     private TableViewer createTable(Composite parent, String title) {
         Label label = new Label(parent, SWT.WRAP);
         label.setText(title);
         label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
-        TableViewer table0 = new TableViewer(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
+        TableViewer table0 = new TableViewer(parent,
+                SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
 
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         table0.getControl().setLayoutData(gd);
@@ -93,14 +94,15 @@ public class ProfilePage extends BaseWizardPage {
     protected void initData() throws Exception {
         profileSet = new HashSet<ProfileRef>();
         List<Userprofile> userProfileList = getRightService().getUserprofile(login);
-        for (Userprofile userprofile : userProfileList) {  
-            profileSet.addAll(userprofile.getProfileRef());           
+        for (Userprofile userprofile : userProfileList) {
+            profileSet.addAll(userprofile.getProfileRef());
         }
         table.setInput(profileSet);
     }
 
-    
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
      */
     @Override
@@ -111,14 +113,15 @@ public class ProfilePage extends BaseWizardPage {
         }
         return complete;
     }
-    
+
     public void setLogin(String login) {
         this.login = login;
     }
 
     private IRightsServiceClient getRightService() {
         if (rightsService == null) {
-            rightsService = (IRightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+            rightsService = (IRightsServiceClient) VeriniceContext
+                    .get(VeriniceContext.RIGHTS_SERVICE);
         }
         return rightsService;
     }
