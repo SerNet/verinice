@@ -52,11 +52,6 @@ pipeline {
                         runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'macOS predecessor', artifactFilterRcptt, "${outputDir}/gui-test-mac-predecessor", 'GUI Test Report (macOS)'
                     }
                 }
-                stage('Run UI tests on macOS Beta') {
-                    steps {
-                        runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'macOS beta', artifactFilterRcptt, "${outputDir}/gui-test-mac-beta", 'GUI Test Report (macOS)'
-                    }
-                }
                 stage('Run UI tests on Windows') {
                     steps {
                         runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'Windows 10', artifactFilterRcptt, "${outputDir}/gui-test-windows", 'GUI Test Report (Windows 10)'
