@@ -23,22 +23,6 @@ platform {
 	
 	determineImportVersions = true
     importVersionStrategy = MINIMUM
-	
-	// seems to be unused 
-	feature(id: 'inetlib', name: 'inetlib', version: '1.1.1') {
-		plugin('com.axway.ats.gnu.classpath.ext:inetlib:1.1.1') {
-			bnd {
-				instruction 'Eclipse-RegisterBuddy', 'com.springsource.javax.activation'
-				optionalImport 'gnu.inet.http'
-				optionalImport 'gnu.inet.http.event'
-				optionalImport 'gnu.inet.util'
-				optionalImport 'javax.naming.ldap'
-				optionalImport 'javax.net.ssl'
-				optionalImport 'javax.security.auth.callback'
-				optionalImport 'javax.security.sasl'
-			}
-		}
-	}
 		
 	feature(id: 'antlr', name: 'antlr', version: '2.7.7') {
 		plugin('antlr:antlr:2.7.7')
@@ -109,11 +93,21 @@ platform {
 		}
 	}
 
-	feature(id: 'apache', name: 'apache', version: '0.6.0') {
+	feature(id: 'apache', name: 'apache', version: '0.6.2') {
 		plugin fileTree("${project.projectDir}/apache/") {
    			include '**/*.jar'
    			exclude '**/*sources.jar'
-		}
+   			exclude 'org.apache.servicemix.bundles.elasticsearch-with-sernet-patch-1.4.1_1'
+		}//we have patchd the org.elasticsearch.monitor.jvm.JvmInfo class to be compatible with java 11
+		plugin fileTree ("${project.projectDir}/apache/org.apache.servicemix.bundles.elasticsearch-with-sernet-patch-1.4.1_1.jar"), {
+            bnd {
+                bundleName = 'elasticsearch java 11 patches for verinice'
+                version =  '1.4.1.' + new Date().format('yyyyMMddHHmmss')
+            
+                instruction 'Change', 'custom_sernet_build'
+                instruction 'Build-Date', new Date().format('yyyyMMddHHmmss')
+            }
+        }
 	}
 
 	feature(id: 'w3c', name: 'w3c', version: '0.6.0') {
@@ -123,26 +117,55 @@ platform {
 		}
 	}
 
-	feature(id: 'spring', name: 'spring', version: '0.6.0') {
+	feature(id: 'spring', name: 'spring', version: '0.7.5.1') {
 		plugin fileTree("${project.projectDir}/spring/") {
    			include '**/*.jar'
    			exclude '**/*sources.jar'
-		}
+            exclude 'spring-web-2.5.6.SEC03'
+            exclude 'spring-webmvc-2.5.6.SEC03'
+            exclude 'spring-core-verinice-patch.jar'
+		}//we have patched these two jars, we changed the dependency from javax.servlet [2.4,3.0.0) to [2.4,4.0.0) to enable javax.servlet 3.1.0
+        plugin fileTree ("${project.projectDir}/spring/spring-web-2.5.6.SEC03.jar"), {
+            bnd {
+                version =  '2.5.6.SEC03-' + new Date().format('yyyyMMddHHmmss')
+            }
+        }
+        plugin fileTree ("${project.projectDir}/spring/spring-webmvc-2.5.6.SEC03.jar"), {
+            bnd {
+                version =  '2.5.6.SEC03-' + new Date().format('yyyyMMddHHmmss')
+            }
+        }//we have patched this jar with the content of /sernet.springclient/src/org/springframework/core/JdkVersion.java
+        plugin fileTree ("${project.projectDir}/spring/spring-core-verinice-patch.jar"), {
+            bnd {
+                version =  '2.5.6.SEC03-' + new Date().format('yyyyMMddHHmmss')
+            }
+        }
+		
 	}
+	
+    // this is part of the javav 11 patch, here we fake the existence of some packages to please the old gods of osgi
+    feature(id: 'verinicepatches', name: 'verinicepatches', version: '1.0.0') {
+       plugin fileTree ("${project.projectDir}/patches/verinice-rmi.jar"), {
+            bnd {
+                symbolicName = 'org.verinicepatches'
+                bundleName = 'java 11 patches for verinice'
+                version =  '1.0.0'
+            
+                instruction 'Export-Package', "javax.rmi, org.omg.CORBA, org.omg.CosNaming"
+                instruction 'Change', 'custom_sernet_build'
+                instruction 'Build-Date', new Date().format('yyyyMMddHHmmss')
+            }
+        }
+    }
+
+    feature(id: 'jaxb', name: 'jaxb', version: '2.3.3') {
+        plugin('jakarta.xml.bind:jakarta.xml.bind-api:2.3.3')
+        plugin('com.sun.xml.bind:jaxb-osgi:2.3.3')
+    }
 
 	feature(id: 'com.mchange.c3p0', name: 'c3p0', version: '0.9.5.4') {
 		plugin('com.mchange:c3p0:0.9.5.4')		
 		plugin('com.mchange:mchange-commons-java:0.2.15')
 		plugin('com.typesafe:config:1.3.0')
 	}
-/*
-	feature(id: 'gemini-blueprint', name: 'gemini-blueprint', version: '1.0.0') {
-		plugin('org.eclipse.gemini.blueprint:gemini-blueprint-extender:2.1.0.RELEASE')
-		plugin('org.eclipse.gemini.blueprint:gemini-blueprint-io:2.1.0.RELEASE')
-		plugin('org.eclipse.gemini.blueprint:gemini-blueprint-extensions:2.1.0.RELEASE')
-		plugin('org.apache.servicemix.bundles:org.apache.servicemix.bundles.aopalliance:1.0_6')
-		plugin('org.apache.servicemix.bundles:org.apache.servicemix.bundles.spring-aop:4.3.7.RELEASE_1')
-		plugin('org.apache.servicemix.bundles:org.apache.servicemix.bundles.spring-orm:4.3.7.RELEASE_1')
-	}
-*/
 }
