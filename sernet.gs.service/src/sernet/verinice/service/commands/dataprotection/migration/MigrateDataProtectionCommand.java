@@ -22,6 +22,7 @@ package sernet.verinice.service.commands.dataprotection.migration;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,7 +33,6 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.elasticsearch.common.collect.Lists;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -67,7 +67,7 @@ public class MigrateDataProtectionCommand extends GraphCommand {
     private static final long serialVersionUID = 1L;
     private static final String[] TYPE_IDS = new String[] { Process.TYPE_ID, Control.TYPE_ID };
     public static final String REL_PROCESS_CONTROL_OBJECTIVES = "rel_process_control_objectives";
-    public static final List<String> RELATIONS = Lists.newArrayList(
+    public static final List<String> RELATIONS = Arrays.asList(
             "rel_process_control_Zutrittskontrolle", "rel_process_control_Zugangskontrolle",
             "rel_process_control_Zugriffskontrolle", "rel_process_control_Weitergabekontrolle",
             "rel_process_control_Eingabekontrolle", "rel_process_control_Auftragskontrolle",

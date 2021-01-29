@@ -7,9 +7,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
-import org.elasticsearch.common.collect.Sets;
 import org.junit.After;
 import org.junit.Test;
 
@@ -32,7 +33,7 @@ import sernet.verinice.service.test.CommandServiceProvider;
 public class MigrateDataProtectionCommandTest extends CommandServiceProvider {
 
     private static final Logger LOG = Logger.getLogger(MigrateDataProtectionCommandTest.class);
-    private static final Set<String> DP_PROPERTIES = Sets.newHashSet(
+    private static final Set<String> DP_PROPERTIES = Stream.of(
             "control_data_protection_objectives_eugdpr_pseudonymization",
             "control_data_protection_objectives_eugdpr_encryption",
             "control_data_protection_objectives_eugdpr_confidentiality",
@@ -40,7 +41,7 @@ public class MigrateDataProtectionCommandTest extends CommandServiceProvider {
             "control_data_protection_objectives_eugdpr_availability",
             "control_data_protection_objectives_eugdpr_resilience",
             "control_data_protection_objectives_eugdpr_recoverability",
-            "control_data_protection_objectives_eugdpr_effectiveness");
+            "control_data_protection_objectives_eugdpr_effectiveness").collect(Collectors.toSet());
 
     private static Set<CnATreeElement> createdElements = new HashSet<>();
 

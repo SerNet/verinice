@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -40,7 +42,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
-import org.elasticsearch.common.collect.Sets;
 
 import sernet.verinice.rcp.linktable.ui.multiselectiondialog.LinkTableMultiSelectionControl;
 import sernet.verinice.service.linktable.ColumnPathParser;
@@ -382,7 +383,7 @@ public class LinkTableComposite extends Composite {
     }
 
     public void updateAndValidateVeriniceContent(UpdateLinkTable... updateVeriniceLinkTable) {
-        Set<UpdateLinkTable> set = Sets.newHashSet(updateVeriniceLinkTable);
+        Set<UpdateLinkTable> set = Stream.of(updateVeriniceLinkTable).collect(Collectors.toSet());
         if (veriniceLinkTable == null) {
             veriniceLinkTable = new VeriniceLinkTable.Builder().build();
         }

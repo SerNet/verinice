@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.annotation.NonNull;
-import org.elasticsearch.common.cli.commons.MissingArgumentException;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -57,7 +56,7 @@ public class QueryDynamicPropertyValuesCommand extends GenericCommand {
     public void execute() {
         try {
             if (dynamicPropertyType == null) {
-                throw new MissingArgumentException("Property type not set.");
+                throw new IllegalStateException("Property type not set.");
             }
             values = getDaoFactory().getDAO(Property.class).findByCriteria(getCriteria());
         } catch (Exception ex) {
