@@ -8,7 +8,6 @@ Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: sernet.gs.ui.rcp.main,
  sernet.gs.service,
  sernet.verinice.fei.service,
- org.eclipse.equinox.ds;bundle-version="1.1.1",
  sernet.springclient,
  org.eclipse.ui;bundle-version="3.5.2",
  org.eclipse.core.resources;bundle-version="3.5.2",

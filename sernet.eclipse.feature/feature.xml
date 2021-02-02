@@ -23,6 +23,13 @@
    <includes
          id="org.eclipse.equinox.server.p2"
          version="0.0.0"/>
+         
+   <plugin
+         id="org.apache.felix.scr"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.eclipse.compare.core"
@@ -210,13 +217,6 @@
 
    <plugin
          id="org.eclipse.equinox.common"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.ds"
          download-size="0"
          install-size="0"
          version="0.0.0"

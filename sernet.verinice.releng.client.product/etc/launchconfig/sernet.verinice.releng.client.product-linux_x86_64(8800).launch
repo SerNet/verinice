@@ -33,7 +33,6 @@
         <setEntry value="ch.qos.logback.slf4j@default:false"/>
         <setEntry value="com.google.gson@default:default"/>
         <setEntry value="com.ibm.icu*58.2.0.v20170418-1837@default:default"/>
-        <setEntry value="com.ibm.icu*64.2.0.v20190507-1337@default:default"/>
         <setEntry value="com.lowagie.text@default:default"/>
         <setEntry value="com.mchange.c3p0@default:default"/>
         <setEntry value="com.mchange.commons-java@default:default"/>
@@ -67,6 +66,8 @@
         <setEntry value="com.springsource.org.objectweb.asm.attrs@default:default"/>
         <setEntry value="com.springsource.org.objectweb.asm@default:default"/>
         <setEntry value="com.springsource.org.quartz@default:default"/>
+        <setEntry value="com.sun.jna.platform@default:default"/>
+        <setEntry value="com.sun.jna@default:default"/>
         <setEntry value="com.sun.xml.bind.jaxb-osgi@default:default"/>
         <setEntry value="jakarta.activation-api@default:default"/>
         <setEntry value="jakarta.xml.bind-api@default:default"/>
@@ -84,7 +85,7 @@
         <setEntry value="org.apache.ant@default:default"/>
         <setEntry value="org.apache.batik.bridge@default:default"/>
         <setEntry value="org.apache.batik.constants@default:default"/>
-        <setEntry value="org.apache.batik.css*1.11.0.v20190515-0436@default:default"/>
+        <setEntry value="org.apache.batik.css*1.14.0.v20210324-0332@default:default"/>
         <setEntry value="org.apache.batik.css*1.7.0.v201011041433@default:default"/>
         <setEntry value="org.apache.batik.dom.svg@default:default"/>
         <setEntry value="org.apache.batik.dom@default:default"/>
@@ -94,7 +95,7 @@
         <setEntry value="org.apache.batik.parser@default:default"/>
         <setEntry value="org.apache.batik.svggen@default:default"/>
         <setEntry value="org.apache.batik.transcoder@default:default"/>
-        <setEntry value="org.apache.batik.util*1.11.0.v20190515-0436@default:default"/>
+        <setEntry value="org.apache.batik.util*1.14.0.v20210324-0332@default:default"/>
         <setEntry value="org.apache.batik.util*1.7.0.v201011041433@default:default"/>
         <setEntry value="org.apache.batik.util.gui*1.7.0.v200903091627@default:default"/>
         <setEntry value="org.apache.batik.xml@default:default"/>
@@ -106,13 +107,15 @@
         <setEntry value="org.apache.commons.lang3@default:default"/>
         <setEntry value="org.apache.commons.logging@default:default"/>
         <setEntry value="org.apache.commons.text@default:default"/>
-        <setEntry value="org.apache.felix.scr@1:true"/>
+        <setEntry value="org.apache.felix.scr@2:true"/>
         <setEntry value="org.apache.lucene.analyzers-common@default:default"/>
         <setEntry value="org.apache.lucene.analyzers-smartcn@default:default"/>
         <setEntry value="org.apache.lucene.core*8.4.1.v20200122-1459@default:default"/>
         <setEntry value="org.apache.servicemix.bundles.commons-beanutils@default:default"/>
         <setEntry value="org.apache.servicemix.bundles.elasticsearch@default:default"/>
         <setEntry value="org.apache.xmlgraphics@default:default"/>
+        <setEntry value="org.bouncycastle.bcpg@default:default"/>
+        <setEntry value="org.bouncycastle.bcprov@default:default"/>
         <setEntry value="org.eclipse.ant.core.nl_de@default:false"/>
         <setEntry value="org.eclipse.ant.core.nl_it@default:false"/>
         <setEntry value="org.eclipse.ant.core@default:default"/>
@@ -265,7 +268,6 @@
         <setEntry value="org.eclipse.equinox.app@default:default"/>
         <setEntry value="org.eclipse.equinox.bidi@default:default"/>
         <setEntry value="org.eclipse.equinox.common@2:true"/>
-        <setEntry value="org.eclipse.equinox.ds@1:true"/>
         <setEntry value="org.eclipse.equinox.event@default:default"/>
         <setEntry value="org.eclipse.equinox.p2.artifact.repository.nl_de@default:false"/>
         <setEntry value="org.eclipse.equinox.p2.artifact.repository.nl_it@default:false"/>
@@ -330,6 +332,8 @@
         <setEntry value="org.eclipse.jface.databinding@default:default"/>
         <setEntry value="org.eclipse.jface.nl_de@default:false"/>
         <setEntry value="org.eclipse.jface.nl_it@default:false"/>
+        <setEntry value="org.eclipse.jface.notifications.nl_de@default:false"/>
+        <setEntry value="org.eclipse.jface.notifications@default:default"/>
         <setEntry value="org.eclipse.jface.text.nl_de@default:false"/>
         <setEntry value="org.eclipse.jface.text.nl_it@default:false"/>
         <setEntry value="org.eclipse.jface.text@default:default"/>
