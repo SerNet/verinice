@@ -23,6 +23,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -57,8 +58,8 @@ public class DateChecker {
     }
 
     Date checkIfDateIsPast(Date date, String daysDeltaString, Clock clock) {
-        Instant now = Instant.now(clock);
-        Instant dateAsInstant = date.toInstant();
+        Instant now = Instant.now(clock).truncatedTo(ChronoUnit.MILLIS);
+        Instant dateAsInstant = date.toInstant().truncatedTo(ChronoUnit.MILLIS);
         if (!dateAsInstant.isBefore(now)) {
             return date;
         }
