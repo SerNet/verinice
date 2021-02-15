@@ -2,7 +2,7 @@
 <feature
       id="sernet.thirdparty.feature"
       label="Thirdparty Feature"
-      version="1.21.1.qualifier">
+      version="1.22.0.qualifier">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
