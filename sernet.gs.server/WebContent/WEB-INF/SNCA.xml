@@ -11860,6 +11860,14 @@ Wurden bereits weitere Stellen informiert?
 			<option id="bp_person_role_23" name="Netzplaner" />
 			<option id="bp_person_role_31" name="Unternehmensleitung" />
 			<option id="bp_person_role_41" name="Vertretung" />
+			<option id="bp_person_role_53" name="Beschaffungsstelle" />
+			<option id="bp_person_role_54" name="Informationssicherheitsbeauftragter (ISB)" />
+			<option id="bp_person_role_55" name="Institution" />
+			<option id="bp_person_role_56" name="Institutionsleitung" />
+			<option id="bp_person_role_57" name="OT-Leiter" />
+			<option id="bp_person_role_58" name="OT-Betrieb" />
+			<option id="bp_person_role_59" name="IT-Betrieb" />
+			<option id="bp_person_role_60" name="Zentrale Verwaltung" />
 		</huiproperty>
         
         <huiproperty id="bp_person_document" isURL="true" name="Document" />
