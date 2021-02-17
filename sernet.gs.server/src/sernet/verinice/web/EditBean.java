@@ -367,8 +367,14 @@ public class EditBean {
     private void loadChangedElementPropertiesFromTask() {
         Map<String, String> changedProperties = getTaskService()
                 .loadChangedElementProperties(task.getId());
+        Entity entity = element.getEntity();
         for (Entry<String, String> entry : changedProperties.entrySet()) {
-            element.setPropertyValue(entry.getKey(), entry.getValue());
+            String propertyKey = entry.getKey();
+            // VN-2897: ensure that the element has the property
+            if (!entity.getTypedPropertyLists().containsKey(propertyKey)) {
+                entity.createNewProperty(propertyKey, null);
+            }
+            entity.setPropertyValue(propertyKey, entry.getValue());
         }
 
         setTitle(element.getTitle() + Util.getMessage(BUNDLE_NAME, "change.request"));
