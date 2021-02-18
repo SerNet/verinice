@@ -982,7 +982,7 @@ public class EditBean {
      * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
      *
      */
-    private final class DependencyChangeListener implements HuiProperty.ValueChangeListener {
+    private static final class DependencyChangeListener implements HuiProperty.ValueChangeListener {
 
         private static final long serialVersionUID = 1L;
 
@@ -1014,31 +1014,32 @@ public class EditBean {
         private void evalDependencies(Set<DependsType> dependencies) {
             boolean result = true;
             for (DependsType dependsType : dependencies) {
-                result &= evaluateDependsType(dependsType);
+                HuiProperty dependsOn = key2HuiProperty.get(dependsType.getPropertyId());
+                String dependsOnValue = dependsOn.getValue();
+                result &= evaluateDependsType(dependsType, dependsOnValue, dependsOn.getType());
             }
 
             targetHuiProperty.setEnabled(result);
         }
 
-        private boolean evaluateDependsType(DependsType dependsType) {
-            HuiProperty dependsOn = key2HuiProperty.get(dependsType.getPropertyId());
-            String dependsOnValue = dependsOn.getValue();
+        private static boolean evaluateDependsType(DependsType dependsType, String entityValue,
+                PropertyType conditionPropertyType) {
 
             // if no value for the comparison is set, the depends value has be
             // false.
-            if (dependsOnValue == null) {
+            if (entityValue == null) {
                 return false;
             }
-            if (dependsOn.getIsMultiselect()) {
+            if (conditionPropertyType.isMultiselect()) {
                 if (dependsType.isInverse()) {
-                    return !dependsOnValue.contains(dependsType.getPropertyValue());
+                    return !entityValue.contains(dependsType.getPropertyValue());
                 } else {
-                    return dependsOnValue.contains(dependsType.getPropertyValue());
+                    return entityValue.contains(dependsType.getPropertyValue());
                 }
             } else if (dependsType.isInverse()) {
-                return !dependsOnValue.equals(dependsType.getPropertyValue());
+                return !entityValue.equals(dependsType.getPropertyValue());
             } else {
-                return dependsOnValue.equals(dependsType.getPropertyValue());
+                return entityValue.equals(dependsType.getPropertyValue());
             }
         }
     }
