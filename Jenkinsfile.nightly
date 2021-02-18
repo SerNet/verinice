@@ -68,7 +68,8 @@ pipeline {
                             def target = "${outputDir}/reporting-all"
                             runRCPTT 'rcptt-all-report-tests', branchName, jobName, productsBuild.number, null, 'test-result/**/*', target, null
                             archiveArtifacts artifacts: "${target}/**/*"
-                            createPerformancePlot("${target}/test-result/products_de/metric.csv", 'Product Reports')
+                            // FIXME enable again when VN-2882 is done
+                            // createPerformancePlot("${target}/test-result/products_de/metric.csv", 'Product Reports')
                             createPerformancePlot("${target}/test-result/vn_de/metric.csv", 'Verinice Reports (DE)')
                             createPerformancePlot("${target}/test-result/vn_en/metric.csv", 'Verinice Reports (EN)')
                         }
