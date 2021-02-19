@@ -139,7 +139,7 @@ public class LoadReportISANetworks extends GenericCommand implements ICachedComm
             if (e.getTypeId().equals(SamtTopic.TYPE_ID)) {
                 SamtTopic t = (SamtTopic) e;
                 retVal[1].append(t.getTitle());
-                retVal[0].append(t.getEntity().getSimpleValue(SAMTTOPICS_FINDINGS));
+                retVal[0].append(t.getEntity().getPropertyValue(SAMTTOPICS_FINDINGS));
                 if (iterator.hasNext()) {
                     retVal[0].append("\n\n");
                     retVal[1].append("\n");

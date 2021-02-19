@@ -57,7 +57,7 @@ public class ThreatGroup extends Group<Threat> implements IISO27kGroup {
 
     @Override
     public String getTitle() {
-        return getEntity().getSimpleValue(PROP_NAME);
+        return getEntity().getPropertyValue(PROP_NAME);
     }
 
     public void setTitel(String name) {

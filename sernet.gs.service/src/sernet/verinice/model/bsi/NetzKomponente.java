@@ -48,7 +48,7 @@ public class NetzKomponente extends CnATreeElement implements IBSIStrukturElemen
     public static final String PROP_ESA_ENTSCHEIDUNG_BIS = "nkkomponente_ergaenzendeanalyse_entscheidung_bis"; //$NON-NLS-1$
 
     public String getKuerzel() {
-        return getEntity().getSimpleValue(PROP_KUERZEL);
+        return getEntity().getPropertyValue(PROP_KUERZEL);
     }
 
     /**
@@ -69,7 +69,7 @@ public class NetzKomponente extends CnATreeElement implements IBSIStrukturElemen
     }
 
     public Collection<? extends String> getTags() {
-        return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
     protected NetzKomponente() {

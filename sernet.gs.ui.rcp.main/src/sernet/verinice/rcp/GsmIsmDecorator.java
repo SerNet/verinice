@@ -70,9 +70,9 @@ public class GsmIsmDecorator extends LabelProvider implements ILightweightLabelD
 
     private String getGsmIsmLevel(CnATreeElement treeElement) {
         if (IncidentScenario.TYPE_ID.equals(treeElement.getTypeId())) {
-            return treeElement.getEntity().getSimpleValue("gsm_ism_scenario_level").toLowerCase();
+            return treeElement.getEntity().getPropertyValue("gsm_ism_scenario_level").toLowerCase();
         } else if (Vulnerability.TYPE_ID.equals(treeElement.getTypeId())) {
-            return treeElement.getEntity().getSimpleValue("gsm_ism_vulnerability_level")
+            return treeElement.getEntity().getPropertyValue("gsm_ism_vulnerability_level")
                     .toLowerCase();
         }
         return "";

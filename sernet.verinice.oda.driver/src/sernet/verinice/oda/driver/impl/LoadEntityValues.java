@@ -98,7 +98,7 @@ public class LoadEntityValues extends GenericCommand {
             if (pType.getInputName().equals("numericoption")) {
                 values.add(entity.getNumericValue(propertyTypeId));
             } else {
-                values.add(nfcNormalize(entity.getSimpleValue(propertyTypeId)));
+                values.add(nfcNormalize(entity.getPropertyValue(propertyTypeId)));
             }
         }
         return values;
@@ -122,7 +122,7 @@ public class LoadEntityValues extends GenericCommand {
                 if (pType.getInputName().equals("numericoption")) {
                     values.add(entity.getNumericValue(name));
                 } else {
-                    values.add(nfcNormalize(entity.getSimpleValue(name)));
+                    values.add(nfcNormalize(entity.getPropertyValue(name)));
                 }
             } else if (pType.getInputName().equals("numericoption") && mapNumericalOptionValues) {
                 values.add(pType.getNameForValue(Integer.parseInt(entity.getValue(name))));

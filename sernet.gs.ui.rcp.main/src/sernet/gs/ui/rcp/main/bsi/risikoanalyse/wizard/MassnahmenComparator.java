@@ -52,9 +52,9 @@ public class MassnahmenComparator extends ViewerComparator {
             // to 2045, 2221, 3024
             return numComp.compare(
                     ((MassnahmenUmsetzung) e1).getEntity()
-                            .getSimpleValue(MassnahmenUmsetzung.P_KAPITEL),
+                            .getPropertyValue(MassnahmenUmsetzung.P_KAPITEL),
                     ((MassnahmenUmsetzung) e2).getEntity()
-                            .getSimpleValue(MassnahmenUmsetzung.P_KAPITEL));
+                            .getPropertyValue(MassnahmenUmsetzung.P_KAPITEL));
         }
 
         // else, consider elements as equal:

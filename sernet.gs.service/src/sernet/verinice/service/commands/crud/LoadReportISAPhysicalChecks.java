@@ -117,8 +117,8 @@ public class LoadReportISAPhysicalChecks extends GenericCommand implements ICach
                             }
                             if (c.getTypeId().equals(SamtTopic.TYPE_ID)) {
                                 SamtTopic t = (SamtTopic) c;
-                                int severity = Integer
-                                        .parseInt(t.getEntity().getSimpleValue(SEVERITY_PROPERTY));
+                                int severity = Integer.parseInt(
+                                        t.getEntity().getPropertyValue(SEVERITY_PROPERTY));
                                 switch (severity) {
                                 case -1:
                                     severity_none++;

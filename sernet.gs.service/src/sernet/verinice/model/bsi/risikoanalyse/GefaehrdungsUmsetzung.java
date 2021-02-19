@@ -100,7 +100,7 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
     }
 
     public String getAlternative() {
-        return getEntity().getSimpleValue(PROP_ALTERNATIVE);
+        return getEntity().getPropertyValue(PROP_ALTERNATIVE);
     }
 
     /**
@@ -168,7 +168,7 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
         StringBuilder sb = new StringBuilder();
         sb.append(getId()).append(" ");
         sb.append("[").append(getAlternative()).append("] "); //$NON-NLS-1$ //$NON-NLS-2$
-        sb.append(getEntity().getSimpleValue(PROP_TITEL));
+        sb.append(getEntity().getPropertyValue(PROP_TITEL));
         String alternative = getAlternativeText();
         if (alternative != null && !alternative.isEmpty()) {
             sb.append(" (").append(getAlternativeText()).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -183,12 +183,12 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 
     @Override
     public String getText() {
-        return getEntity().getSimpleValue(PROP_TITEL);
+        return getEntity().getPropertyValue(PROP_TITEL);
     }
 
     @Override
     public String getId() {
-        return getEntity().getSimpleValue(PROP_ID);
+        return getEntity().getPropertyValue(PROP_ID);
     }
 
     public void setId(String id) {
@@ -196,7 +196,7 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
     }
 
     public String getKategorie() {
-        return getEntity().getSimpleValue(PROP_KATEGORIE);
+        return getEntity().getPropertyValue(PROP_KATEGORIE);
     }
 
     public void setKategorie(String kategorie) {
@@ -227,7 +227,7 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
     }
 
     public String getUrl() {
-        return getEntity().getSimpleValue(PROP_URL);
+        return getEntity().getPropertyValue(PROP_URL);
     }
 
     public void setUrl(String url) {
@@ -235,7 +235,7 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
     }
 
     public String getStand() {
-        return getEntity().getSimpleValue(PROP_STAND);
+        return getEntity().getPropertyValue(PROP_STAND);
     }
 
     public void setStand(String stand) {
@@ -248,7 +248,7 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 
     @Override
     public String getDescription() {
-        return getEntity().getSimpleValue(PROP_DESCRIPTION);
+        return getEntity().getPropertyValue(PROP_DESCRIPTION);
     }
 
     public static String[] getAlternativenText() {

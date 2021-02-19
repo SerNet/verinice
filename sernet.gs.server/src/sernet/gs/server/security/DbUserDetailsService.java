@@ -74,7 +74,7 @@ public class DbUserDetailsService extends UserLoader implements UserDetailsServi
                 if (log.isDebugEnabled()) {
                     log.debug("User found: " + username);
                 }
-                if ("1".equals(entity.getSimpleValue(Configuration.PROP_DEACTIVATED))) {
+                if ("1".equals(entity.getPropertyValue(Configuration.PROP_DEACTIVATED))) {
                     if (log.isDebugEnabled()) {
                         log.debug("User " + username + " is deactivated");
                     }
@@ -106,8 +106,8 @@ public class DbUserDetailsService extends UserLoader implements UserDetailsServi
         }
 
         VeriniceUserDetails userDetails = new VeriniceUserDetails(
-                entity.getSimpleValue(Configuration.PROP_USERNAME),
-                entity.getSimpleValue(Configuration.PROP_PASSWORD), scopeOnly);
+                entity.getPropertyValue(Configuration.PROP_USERNAME),
+                entity.getPropertyValue(Configuration.PROP_PASSWORD), scopeOnly);
 
         // All users without explicitly set
         // Configuration.PROP_RCP==Configuration.PROP_RCP_NO
@@ -136,7 +136,7 @@ public class DbUserDetailsService extends UserLoader implements UserDetailsServi
     }
 
     public static boolean isUser(String username, Entity entity) {
-        return entity.getSimpleValue(Configuration.PROP_USERNAME).equals(username);
+        return entity.getPropertyValue(Configuration.PROP_USERNAME).equals(username);
     }
 
     public void setAdminuser(String adminuser) {

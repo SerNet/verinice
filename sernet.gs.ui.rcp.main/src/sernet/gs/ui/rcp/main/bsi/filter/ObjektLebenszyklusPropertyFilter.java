@@ -49,7 +49,7 @@ public class ObjektLebenszyklusPropertyFilter extends StringPropertyFilter {
 
         Entity entity = ((CnATreeElement) element).getEntity();
         String propertyTypeId = ((CnATreeElement) element).getTypeId() + "_status";
-        String value = entity.getSimpleValue(propertyTypeId);
+        String value = entity.getPropertyValue(propertyTypeId);
         Matcher matcher = regex.matcher(value);
         if (matcher.find()) {
             return true;

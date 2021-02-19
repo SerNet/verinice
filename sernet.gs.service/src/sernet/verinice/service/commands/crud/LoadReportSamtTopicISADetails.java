@@ -79,8 +79,8 @@ public class LoadReportSamtTopicISADetails extends GenericCommand implements ICa
 
                         list.add(st.getTitle()); // add title
 
-                        list.add(st.getEntity().getSimpleValue(SAMT_TOPIC_ISA_FINDINGS)); // add
-                                                                                          // findings
+                        list.add(st.getEntity().getPropertyValue(SAMT_TOPIC_ISA_FINDINGS)); // add
+                                                                                            // findings
 
                         list.add(String.valueOf(Integer
                                 .parseInt(st.getEntity().getValue(SamtTopic.PROP_MATURITY)))); // add

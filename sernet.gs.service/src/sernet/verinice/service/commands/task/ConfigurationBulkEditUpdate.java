@@ -157,16 +157,16 @@ public class ConfigurationBulkEditUpdate extends GenericCommand
         if (!person.isChildrenLoaded() && !person.isChildrenLoaded()) {
             person = dao.retrieve(person.getDbId(), ri);
         }
-        if (checkStringEmpty(person.getEntity().getSimpleValue(PersonIso.PROP_ABBR))) {
-            sb.append(person.getEntity().getSimpleValue(PersonIso.PROP_ABBR));
+        if (checkStringEmpty(person.getEntity().getPropertyValue(PersonIso.PROP_ABBR))) {
+            sb.append(person.getEntity().getPropertyValue(PersonIso.PROP_ABBR));
             sb.append(" ");
         }
-        if (checkStringEmpty(person.getEntity().getSimpleValue(PersonIso.PROP_NAME))) {
-            sb.append(person.getEntity().getSimpleValue(PersonIso.PROP_NAME));
+        if (checkStringEmpty(person.getEntity().getPropertyValue(PersonIso.PROP_NAME))) {
+            sb.append(person.getEntity().getPropertyValue(PersonIso.PROP_NAME));
             sb.append(" ");
         }
-        if (checkStringEmpty(person.getEntity().getSimpleValue(PersonIso.PROP_SURNAME))) {
-            sb.append(person.getEntity().getSimpleValue(PersonIso.PROP_SURNAME));
+        if (checkStringEmpty(person.getEntity().getPropertyValue(PersonIso.PROP_SURNAME))) {
+            sb.append(person.getEntity().getPropertyValue(PersonIso.PROP_SURNAME));
         }
 
         if (sb.length() > 0) {

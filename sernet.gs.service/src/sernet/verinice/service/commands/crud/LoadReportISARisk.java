@@ -91,7 +91,7 @@ public class LoadReportISARisk extends GenericCommand implements ICachedCommand 
             for (CnATreeElement elmt : command.getElements()) {
                 if (elmt instanceof ControlGroup) {
                     ControlGroup g = (ControlGroup) elmt;
-                    if (!Boolean.parseBoolean(g.getEntity().getSimpleValue(PROP_CG_ISISAELMNT))) {
+                    if (!Boolean.parseBoolean(g.getEntity().getPropertyValue(PROP_CG_ISISAELMNT))) {
                         groups.add(g);
                     }
                 }
@@ -111,7 +111,7 @@ public class LoadReportISARisk extends GenericCommand implements ICachedCommand 
                                 SamtTopic t = (SamtTopic) c;
                                 if (!alreadySeenST.contains(t.getUuid())) {
                                     int riskValue = Integer.parseInt(
-                                            t.getEntity().getSimpleValue(PROP_ISATOPIC_RISK));
+                                            t.getEntity().getPropertyValue(PROP_ISATOPIC_RISK));
                                     switch (riskValue) {
                                     case -1:
                                         risk0++;

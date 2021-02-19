@@ -181,9 +181,9 @@ public class SyncInsertUpdateTest extends CommandServiceProvider {
 
         Anwendung anwendungBeforeImport = (Anwendung) loadElement(SOURCE_ID, ANWENDUNG_1_EXT_ID);
         String anwendungsPersonenBezogenBefore = anwendungBeforeImport.getEntity()
-                .getSimpleValue("anwendung_persbez");
+                .getPropertyValue("anwendung_persbez");
         String anwendungsStatusBefore = anwendungBeforeImport.getEntity()
-                .getSimpleValue("anwendung_status");
+                .getPropertyValue("anwendung_status");
         String anwendungsKuerzelBefore = anwendungBeforeImport.getKuerzel();
         AnwendungenKategorie anwendungenKategorieBeforeImport = (AnwendungenKategorie) loadElement(
                 SOURCE_ID, ANWENDUNGEN_KATEGORIE_EXT_ID);
@@ -192,11 +192,11 @@ public class SyncInsertUpdateTest extends CommandServiceProvider {
         Anwendung anwendungAfterImport = (Anwendung) loadElement(SOURCE_ID, ANWENDUNG_1_EXT_ID);
 
         String anwendungsStatusAfter = anwendungAfterImport.getEntity()
-                .getSimpleValue("anwendungs_status");
+                .getPropertyValue("anwendungs_status");
         assertFalse(anwendungsStatusBefore.equals(anwendungsStatusAfter));
 
         String anwendungsPersonenBezogenAfter = anwendungAfterImport.getEntity()
-                .getSimpleValue("anwendung_persbez");
+                .getPropertyValue("anwendung_persbez");
         assertFalse(anwendungsPersonenBezogenBefore.equals(anwendungsPersonenBezogenAfter));
 
         assertEquals(anwendungsKuerzelBefore, anwendungAfterImport.getKuerzel());
@@ -227,8 +227,8 @@ public class SyncInsertUpdateTest extends CommandServiceProvider {
                 anwendung1.getParent().getDbId(), anwendung2.getParent().getDbId());
 
         String anwendungsStatusBefore = anwendungBeforeImport.getEntity()
-                .getSimpleValue("anwendung_status");
-        String anwendungsStatusAfter = anwendung2.getEntity().getSimpleValue("anwendungs_status");
+                .getPropertyValue("anwendung_status");
+        String anwendungsStatusAfter = anwendung2.getEntity().getPropertyValue("anwendungs_status");
         assertFalse(anwendungsStatusBefore.equals(anwendungsStatusAfter));
 
         assertEquals("internalAdmin", anwendung1.getEntity().getCreatedBy());

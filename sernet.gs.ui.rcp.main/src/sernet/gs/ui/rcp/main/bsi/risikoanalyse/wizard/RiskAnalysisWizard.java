@@ -300,8 +300,8 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
                 LOG.warn("Gefaehrdungsumsetzung with Title:\t" + gums.getTitle()
                         + "\talready exists in list, not adding this one");
                 return true;
-            } else if (existantGef.getEntity().getSimpleValue(GefaehrdungsUmsetzung.PROP_TITEL)
-                    .equals(gums.getEntity().getSimpleValue(GefaehrdungsUmsetzung.PROP_TITEL))) {
+            } else if (existantGef.getEntity().getPropertyValue(GefaehrdungsUmsetzung.PROP_TITEL)
+                    .equals(gums.getEntity().getPropertyValue(GefaehrdungsUmsetzung.PROP_TITEL))) {
                 LOG.warn("Gefaehrdungsumsetzung with propertyvalue:\t " + gums.getTitle()
                         + "\t for property " + GefaehrdungsUmsetzung.PROP_TITEL
                         + " already exists in list, not adding this one");

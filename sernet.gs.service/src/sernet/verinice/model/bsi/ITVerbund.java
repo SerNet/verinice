@@ -52,7 +52,7 @@ public class ITVerbund extends CnATreeElement implements IBSIStrukturElement {
     }
 
     public Collection<? extends String> getTags() {
-        return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
     protected ITVerbund() {
@@ -82,7 +82,7 @@ public class ITVerbund extends CnATreeElement implements IBSIStrukturElement {
 
     @Override
     public String getTitle() {
-        return getEntity().getSimpleValue(PROP_NAME);
+        return getEntity().getPropertyValue(PROP_NAME);
     }
 
     @Override

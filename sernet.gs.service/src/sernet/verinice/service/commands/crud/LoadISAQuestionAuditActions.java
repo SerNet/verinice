@@ -90,7 +90,7 @@ public class LoadISAQuestionAuditActions extends GenericCommand implements ICach
                         DateFormat destinationFormat = new SimpleDateFormat("yyyy-MM-dd", locale);
                         formatter.setLenient(true);
                         Date fDate = formatter
-                                .parse(keyElmt.getEntity().getSimpleValue(INTERVIEW_DATE));
+                                .parse(keyElmt.getEntity().getPropertyValue(INTERVIEW_DATE));
                         result.add(destinationFormat.format(fDate));
 
                         StringBuilder persons = new StringBuilder();

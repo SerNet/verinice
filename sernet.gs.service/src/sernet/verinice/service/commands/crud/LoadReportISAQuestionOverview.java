@@ -88,7 +88,7 @@ public class LoadReportISAQuestionOverview extends GenericCommand implements ICa
                                     Integer.parseInt(t.getEntity().getValue(PROP_SAMT_RISK)));
                             String persons = getResponsiblePersons(t).toString();
                             String dueDate = t.getEntity()
-                                    .getSimpleValue(SamtTopic.PROP_COMPLETE_UNTIL);
+                                    .getPropertyValue(SamtTopic.PROP_COMPLETE_UNTIL);
                             if (dueDate == null) {
                                 dueDate = DUMMY_VALUE;
                             }
@@ -182,7 +182,7 @@ public class LoadReportISAQuestionOverview extends GenericCommand implements ICa
                     if (!alreadySeen.contains(c)) {
                         alreadySeen.add(c);
                         if (e.getParent() instanceof ControlGroup
-                                && c.getEntity().getSimpleValue(OVERVIEW_PROPERTY)
+                                && c.getEntity().getPropertyValue(OVERVIEW_PROPERTY)
                                         .equals(String.valueOf(OVERVIEW_PROPERTY_TARGET))
                                 && containsSamtTopicsOnly(c)) { // avoids
                                                                 // rootControlGroup

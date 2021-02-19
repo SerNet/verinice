@@ -100,7 +100,7 @@ public class LoadISAReportChapterList extends GenericCommand implements ICachedC
                     if (!alreadySeen.contains(c)) {
                         alreadySeen.add(c);
                         if (e.getParent() instanceof ControlGroup
-                                && c.getEntity().getSimpleValue(OVERVIEW_PROPERTY)
+                                && c.getEntity().getPropertyValue(OVERVIEW_PROPERTY)
                                         .equals(String.valueOf(OVERVIEW_PROPERTY_TARGET))
                                 && containsSamtTopicsOnly(c)) { // avoids
                                                                 // rootControlGroup

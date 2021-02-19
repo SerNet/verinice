@@ -96,7 +96,7 @@ public class Anwendung extends CnATreeElement implements IBSIStrukturElement {
 
     @Override
     public String getKuerzel() {
-        return getEntity().getSimpleValue(PROP_KUERZEL);
+        return getEntity().getPropertyValue(PROP_KUERZEL);
     }
 
     /**
@@ -164,7 +164,7 @@ public class Anwendung extends CnATreeElement implements IBSIStrukturElement {
 
     @Override
     public Collection<? extends String> getTags() {
-        return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
     public void setAnzahl(int anzahl) {

@@ -72,7 +72,8 @@ public class LoadReportISANonOverviewGroups extends GenericCommand {
             for (CnATreeElement e : c2.getElements()) {
                 if (e instanceof ControlGroup) {
                     ControlGroup group = (ControlGroup) e;
-                    if (Boolean.parseBoolean(group.getEntity().getSimpleValue(OVERVIEW_PROPERTY))) {
+                    if (Boolean
+                            .parseBoolean(group.getEntity().getPropertyValue(OVERVIEW_PROPERTY))) {
                         // TBD;
                     }
                 }

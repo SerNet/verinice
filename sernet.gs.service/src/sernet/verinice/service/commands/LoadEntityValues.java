@@ -88,7 +88,7 @@ public class LoadEntityValues extends GenericCommand {
         for (String name : propertyTypes) {
             Class<?> c = (i >= classes.length ? null : classes[i]);
             if (c == null || c == String.class) {
-                values.add(e.getSimpleValue(name));
+                values.add(e.getPropertyValue(name));
             } else if (c == Integer.class) {
                 values.add(String.valueOf(e.getInt(name)));
             } else {

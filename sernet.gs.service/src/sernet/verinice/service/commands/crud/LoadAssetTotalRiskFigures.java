@@ -95,9 +95,9 @@ public class LoadAssetTotalRiskFigures extends GenericCommand implements ICached
     private List<String> makeRow(CnATreeElement asset) {
         ArrayList<String> row = new ArrayList<String>();
 
-        String riskC = asset.getEntity().getSimpleValue("asset_riskvalue_c");
-        String riskI = asset.getEntity().getSimpleValue("asset_riskvalue_i");
-        String riskA = asset.getEntity().getSimpleValue("asset_riskvalue_a");
+        String riskC = asset.getEntity().getPropertyValue("asset_riskvalue_c");
+        String riskI = asset.getEntity().getPropertyValue("asset_riskvalue_i");
+        String riskA = asset.getEntity().getPropertyValue("asset_riskvalue_a");
 
         row.add(riskC);
         row.add(riskI);

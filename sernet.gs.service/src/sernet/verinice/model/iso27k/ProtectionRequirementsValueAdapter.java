@@ -296,7 +296,7 @@ public class ProtectionRequirementsValueAdapter extends AbstractReevaluator
      */
     private String getDescription() {
         return cnaTreeElement.getEntity()
-                .getSimpleValue(cnaTreeElement.getTypeId() + AssetValueService.EXPLANATION);
+                .getPropertyValue(cnaTreeElement.getTypeId() + AssetValueService.EXPLANATION);
     }
 
     private void setDescription(String text) {

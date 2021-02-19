@@ -73,7 +73,7 @@ public class ControlGroup extends Group<Control> implements IISO27kGroup {
      */
     @Override
     public String getTitle() {
-        return getEntity().getSimpleValue(PROP_NAME);
+        return getEntity().getPropertyValue(PROP_NAME);
     }
 
     /*

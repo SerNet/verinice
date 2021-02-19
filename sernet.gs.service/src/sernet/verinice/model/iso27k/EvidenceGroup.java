@@ -61,7 +61,7 @@ public class EvidenceGroup extends Group<Evidence> implements IISO27kGroup {
 
     @Override
     public String getTitle() {
-        return getEntity().getSimpleValue(PROP_NAME);
+        return getEntity().getPropertyValue(PROP_NAME);
     }
 
     @Override

@@ -37,7 +37,6 @@ import sernet.verinice.model.bsi.Raum;
 import sernet.verinice.model.bsi.Schutzbedarf;
 import sernet.verinice.model.bsi.Server;
 import sernet.verinice.model.common.CnALink;
-import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CreateLink;
 import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.RemoveLink;
@@ -180,30 +179,30 @@ public class SchutzbedarfsvererbungsTest extends CommandServiceProvider {
     private void checkSchutzbedarf(Anwendung element, String verfuegbarkeit, String vertraulichkeit,
             String integritaet) {
         assertEquals("Integritaet of element is not " + integritaet, integritaet,
-                element.getEntity().getSimpleValue(Anwendung.PROP_INTEGRITAET));
+                element.getEntity().getPropertyValue(Anwendung.PROP_INTEGRITAET));
         assertEquals("Verfuegbarkeit of element is not " + verfuegbarkeit, verfuegbarkeit,
-                element.getEntity().getSimpleValue(Anwendung.PROP_VERFUEGBARKEIT));
+                element.getEntity().getPropertyValue(Anwendung.PROP_VERFUEGBARKEIT));
         assertEquals("Vertraulichkeit of element is not " + vertraulichkeit, vertraulichkeit,
-                element.getEntity().getSimpleValue(Anwendung.PROP_VERTRAULICHKEIT));
+                element.getEntity().getPropertyValue(Anwendung.PROP_VERTRAULICHKEIT));
     }
 
     private void checkSchutzbedarf(Gebaeude element, String verfuegbarkeit, String vertraulichkeit,
             String integritaet) {
         assertEquals("Integritaet of element is not " + integritaet, integritaet,
-                element.getEntity().getSimpleValue(Gebaeude.PROP_INTEGRITAET));
+                element.getEntity().getPropertyValue(Gebaeude.PROP_INTEGRITAET));
         assertEquals("Verfuegbarkeit of element is not " + verfuegbarkeit, verfuegbarkeit,
-                element.getEntity().getSimpleValue(Gebaeude.PROP_VERFUEGBARKEIT));
+                element.getEntity().getPropertyValue(Gebaeude.PROP_VERFUEGBARKEIT));
         assertEquals("Vertraulichkeit of element is not " + vertraulichkeit, vertraulichkeit,
-                element.getEntity().getSimpleValue(Gebaeude.PROP_VERTRAULICHKEIT));
+                element.getEntity().getPropertyValue(Gebaeude.PROP_VERTRAULICHKEIT));
     }
 
     private void checkSchutzbedarf(Raum element, String verfuegbarkeit, String vertraulichkeit,
             String integritaet) {
         assertEquals("Integritaet of element is not " + integritaet, integritaet,
-                element.getEntity().getSimpleValue(Raum.PROP_INTEGRITAET));
+                element.getEntity().getPropertyValue(Raum.PROP_INTEGRITAET));
         assertEquals("Verfuegbarkeit of element is not " + verfuegbarkeit, verfuegbarkeit,
-                element.getEntity().getSimpleValue(Raum.PROP_VERFUEGBARKEIT));
+                element.getEntity().getPropertyValue(Raum.PROP_VERFUEGBARKEIT));
         assertEquals("Vertraulichkeit of element is not " + vertraulichkeit, vertraulichkeit,
-                element.getEntity().getSimpleValue(Raum.PROP_VERTRAULICHKEIT));
+                element.getEntity().getPropertyValue(Raum.PROP_VERTRAULICHKEIT));
     }
 }

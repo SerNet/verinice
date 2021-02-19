@@ -115,19 +115,19 @@ public class ProtectionRequirementsAdapter implements IReevaluator, Serializable
 
     @Override
     public String getIntegrityDescription() {
-        return cnaTreeElement.getEntity()
-                .getSimpleValue(cnaTreeElement.getTypeId() + Schutzbedarf.INTEGRITAET_BEGRUENDUNG);
+        return cnaTreeElement.getEntity().getPropertyValue(
+                cnaTreeElement.getTypeId() + Schutzbedarf.INTEGRITAET_BEGRUENDUNG);
     }
 
     @Override
     public String getAvailabilityDescription() {
-        return cnaTreeElement.getEntity().getSimpleValue(
+        return cnaTreeElement.getEntity().getPropertyValue(
                 cnaTreeElement.getTypeId() + Schutzbedarf.VERFUEGBARKEIT_BEGRUENDUNG);
     }
 
     @Override
     public String getConfidentialityDescription() {
-        return cnaTreeElement.getEntity().getSimpleValue(
+        return cnaTreeElement.getEntity().getPropertyValue(
                 cnaTreeElement.getTypeId() + Schutzbedarf.VERTRAULICHKEIT_BEGRUENDUNG);
     }
 

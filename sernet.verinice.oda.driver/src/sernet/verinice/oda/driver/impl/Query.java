@@ -164,7 +164,7 @@ public class Query implements IQuery {
 
         /**
          * A variant of 'retrieveEntityValues' which does not specify the type
-         * of the properties. (Defaults to 'getSimpleValue'.)
+         * of the properties. (Defaults to 'getPropertyValue'.)
          * 
          * @param typeId
          * @param propertyNames
@@ -183,7 +183,7 @@ public class Query implements IQuery {
          * 
          * By specifying the class of the result the retrieval code will use
          * {@link Entity#getInt(String)} (for <code>Integer.class</code>) or
-         * {@link Entity#getSimpleValue(String)} (for
+         * {@link Entity#getPropertyValue(String)} (for
          * <code>String.class</code>).
          * 
          * @param typeId

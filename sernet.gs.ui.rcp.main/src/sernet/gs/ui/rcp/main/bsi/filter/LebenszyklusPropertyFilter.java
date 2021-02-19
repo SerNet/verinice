@@ -43,7 +43,7 @@ public class LebenszyklusPropertyFilter extends StringPropertyFilter {
             return true;
         }
         Entity entity = ((CnATreeElement) element).getEntity();
-        String value = entity.getSimpleValue(this.propertyType);
+        String value = entity.getPropertyValue(this.propertyType);
         Matcher matcher = regex.matcher(value);
         if (matcher.find()) {
             return true;

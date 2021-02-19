@@ -78,11 +78,11 @@ public class LoadReportISARoomsDetails extends GenericCommand implements ICached
                     result.add(getControlID(topic.getTitle()));
                     result.add(getControlTitleWithoutID(topic.getTitle()));
                     result.add(String.valueOf(topic.getMaturity()));
-                    result.add(
-                            String.valueOf(topic.getEntity().getSimpleValue(SAMT_DEVIATION_PROP)));
-                    result.add(String.valueOf(topic.getEntity().getSimpleValue(SAMT_RISK_PROP)));
-                    result.add(
-                            String.valueOf(topic.getEntity().getSimpleValue(SAMT_IMPLEMENTATION)));
+                    result.add(String
+                            .valueOf(topic.getEntity().getPropertyValue(SAMT_DEVIATION_PROP)));
+                    result.add(String.valueOf(topic.getEntity().getPropertyValue(SAMT_RISK_PROP)));
+                    result.add(String
+                            .valueOf(topic.getEntity().getPropertyValue(SAMT_IMPLEMENTATION)));
                     results.add(result);
                 }
             } catch (CommandException e) {

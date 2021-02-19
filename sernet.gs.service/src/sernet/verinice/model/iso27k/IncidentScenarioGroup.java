@@ -56,7 +56,7 @@ public class IncidentScenarioGroup extends Group<IncidentScenario> implements II
 
     @Override
     public String getTitle() {
-        return getEntity().getSimpleValue(PROP_NAME);
+        return getEntity().getPropertyValue(PROP_NAME);
     }
 
     public void setTitel(String name) {

@@ -81,7 +81,7 @@ public class LoadISAReportCategorizedISAQuestions extends GenericCommand impleme
                             .findById((Integer) (id));
                     ArrayList<String> result = new ArrayList<String>(0);
                     result.add(topic.getTitle());
-                    result.add(topic.getEntity().getSimpleValue(SAMTTOPIC_FINDING_PROPERTY));
+                    result.add(topic.getEntity().getPropertyValue(SAMTTOPIC_FINDING_PROPERTY));
 
                     results.add(result);
                 }

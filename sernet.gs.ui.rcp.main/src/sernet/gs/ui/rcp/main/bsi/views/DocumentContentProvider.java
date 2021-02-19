@@ -278,7 +278,7 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
     }
 
     private DocumentLink getDocumentLink(CnATreeElement elmt) {
-        String rawURL = elmt.getEntity().getSimpleValue(getDocumentPropertyId(elmt));
+        String rawURL = elmt.getEntity().getPropertyValue(getDocumentPropertyId(elmt));
 
         String name = URLUtil.getName(rawURL);
         String url = URLUtil.getHref(rawURL);

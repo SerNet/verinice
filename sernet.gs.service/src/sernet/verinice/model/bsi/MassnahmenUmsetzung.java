@@ -159,8 +159,8 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 
     @Override
     public char getStufe() {
-        return getEntity().getSimpleValue(P_SIEGEL).length() > 0
-                ? getEntity().getSimpleValue(P_SIEGEL).charAt(0)
+        return getEntity().getPropertyValue(P_SIEGEL).length() > 0
+                ? getEntity().getPropertyValue(P_SIEGEL).charAt(0)
                 : ' ';
     }
 
@@ -169,7 +169,7 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
      * 
      */
     private String getVerantwortliche(String field) {
-        String assignedPerson = getEntity().getSimpleValue(field);
+        String assignedPerson = getEntity().getPropertyValue(field);
         if (assignedPerson != null && assignedPerson.length() > 0) {
             return assignedPerson;
         }
@@ -224,19 +224,19 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 
     @Override
     public String getTitle() {
-        return getEntity().getSimpleValue(P_KAPITEL) // $NON-NLS-1$
-                + " [" + getEntity().getSimpleValue(P_SIEGEL) //$NON-NLS-1$
+        return getEntity().getPropertyValue(P_KAPITEL) // $NON-NLS-1$
+                + " [" + getEntity().getPropertyValue(P_SIEGEL) //$NON-NLS-1$
                 + "] " //$NON-NLS-1$
-                + getEntity().getSimpleValue(P_NAME);
+                + getEntity().getPropertyValue(P_NAME);
     }
 
     public String getKapitel() {
-        return getEntity().getSimpleValue(P_KAPITEL);
+        return getEntity().getPropertyValue(P_KAPITEL);
     }
 
     public int[] getKapitelValue() {
         int[] kapitel = new int[2];
-        Matcher m = kapitelPattern.matcher(getEntity().getSimpleValue(P_KAPITEL));
+        Matcher m = kapitelPattern.matcher(getEntity().getPropertyValue(P_KAPITEL));
         if (m.find()) {
             try {
                 kapitel[0] = Integer.parseInt(m.group(1));
@@ -336,7 +336,7 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 
     @Override
     public String getRevisionDurch() {
-        return getEntity().getSimpleValue(P_NAECHSTEREVISIONDURCH_LINK);
+        return getEntity().getPropertyValue(P_NAECHSTEREVISIONDURCH_LINK);
     }
 
     public Date getLetzteRevisionAm() {
@@ -345,7 +345,7 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 
     @Override
     public String getUrl() {
-        return getEntity().getSimpleValue(P_URL);
+        return getEntity().getPropertyValue(P_URL);
     }
 
     public void setUrl(String url2) {
@@ -354,7 +354,7 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 
     @Override
     public String getStand() {
-        return getEntity().getSimpleValue(P_STAND);
+        return getEntity().getPropertyValue(P_STAND);
     }
 
     public void setStand(String stand) {
@@ -372,11 +372,11 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
      * @return the name of the MassnahnenUmsetzung
      */
     public String getName() {
-        return getEntity().getSimpleValue(P_NAME);
+        return getEntity().getPropertyValue(P_NAME);
     }
 
     public String getLebenszyklus() {
-        return getEntity().getSimpleValue(P_LEBENSZYKLUS);
+        return getEntity().getPropertyValue(P_LEBENSZYKLUS);
     }
 
     public boolean isCompleted() {
@@ -407,7 +407,7 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
     }
 
     public String getDescription() {
-        return getEntity().getSimpleValue(P_BESCHREIBUNG);
+        return getEntity().getPropertyValue(P_BESCHREIBUNG);
     }
 
     public void setDescription(String description) {
@@ -415,6 +415,6 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
     }
 
     public String getEncoding() {
-        return getEntity().getSimpleValue(P_ENCODING);
+        return getEntity().getPropertyValue(P_ENCODING);
     }
 }

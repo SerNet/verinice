@@ -94,7 +94,7 @@ public class UnifyTest extends CommandServiceProvider {
         Map<String, String> valuesOfBlacklistProperties = new HashMap<String, String>();
         for (String propertyTypeId : PROPERTY_TYPE_BLACKLIST) {
             valuesOfBlacklistProperties.put(propertyTypeId,
-                    element.getEntity().getSimpleValue(propertyTypeId));
+                    element.getEntity().getPropertyValue(propertyTypeId));
         }
         return valuesOfBlacklistProperties;
     }

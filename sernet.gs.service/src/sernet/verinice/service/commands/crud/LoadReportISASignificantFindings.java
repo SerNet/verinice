@@ -70,10 +70,10 @@ public class LoadReportISASignificantFindings extends GenericCommand implements 
                     if (c instanceof Finding) {
                         Finding f = (Finding) c;
                         if (Integer.parseInt(
-                                f.getEntity().getSimpleValue(SHOW_FINDING_IN_REPORT)) == 1) {
+                                f.getEntity().getPropertyValue(SHOW_FINDING_IN_REPORT)) == 1) {
                             ArrayList<String> row = new ArrayList<String>(0);
                             row.add(f.getTitle());
-                            row.add(f.getEntity().getSimpleValue(FINDING_DESCRIPTION));
+                            row.add(f.getEntity().getPropertyValue(FINDING_DESCRIPTION));
                             result.add(row);
                         }
                     }

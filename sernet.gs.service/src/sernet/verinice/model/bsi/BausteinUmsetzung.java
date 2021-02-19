@@ -87,15 +87,15 @@ public class BausteinUmsetzung extends CnATreeElement {
 
     @Override
     public String getTitle() {
-        return getEntity().getSimpleValue(P_NR) + " " + getEntity().getSimpleValue(P_NAME); //$NON-NLS-1$
+        return getEntity().getPropertyValue(P_NR) + " " + getEntity().getPropertyValue(P_NAME); //$NON-NLS-1$
     }
 
     public String getName() {
-        return getEntity().getSimpleValue(P_NAME);
+        return getEntity().getPropertyValue(P_NAME);
     }
 
     public String getKapitel() {
-        return getEntity().getSimpleValue(P_NR);
+        return getEntity().getPropertyValue(P_NR);
     }
 
     public int[] getKapitelValue() {
@@ -209,11 +209,11 @@ public class BausteinUmsetzung extends CnATreeElement {
     }
 
     public String getUrl() {
-        return getEntity().getSimpleValue(P_URL);
+        return getEntity().getPropertyValue(P_URL);
     }
 
     public String getEncoding() {
-        return getEntity().getSimpleValue(P_ENCODING);
+        return getEntity().getPropertyValue(P_ENCODING);
     }
 
     public void setUrl(String url2) {
@@ -259,7 +259,7 @@ public class BausteinUmsetzung extends CnATreeElement {
     }
 
     public String getStand() {
-        return getEntity().getSimpleValue(P_STAND);
+        return getEntity().getPropertyValue(P_STAND);
     }
 
     public void addBefragtePersonDurch(Person personToLink) {
@@ -273,7 +273,7 @@ public class BausteinUmsetzung extends CnATreeElement {
     }
 
     public String getDescription() {
-        return getEntity().getSimpleValue(P_BAUSTEIN_BESCHREIBUNG);
+        return getEntity().getPropertyValue(P_BAUSTEIN_BESCHREIBUNG);
     }
 
     public boolean isOwnModule() {

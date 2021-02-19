@@ -163,7 +163,7 @@ public class LoadReportISARiskChapter extends GenericCommand implements ICachedC
                         log.error("Error while executing command", e);
                     }
                 }
-                if (parent.getEntity().getSimpleValue(PROP_CG_ISISAELMNT).equals("0")) {
+                if (parent.getEntity().getPropertyValue(PROP_CG_ISISAELMNT).equals("0")) {
                     groupCache.add(parent.getUuid());
                     return true;
                 }

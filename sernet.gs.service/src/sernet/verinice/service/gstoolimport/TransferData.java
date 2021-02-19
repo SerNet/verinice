@@ -523,7 +523,8 @@ public class TransferData {
             sb.append("Begründung der Risikobehandlung:\n" + begruendungRisikobehandlung);
         }
 
-        sb.append("\n\n" + gefUms.getEntity().getSimpleValue("gefaehrdungsumsetzung_erlaeuterung"));
+        sb.append(
+                "\n\n" + gefUms.getEntity().getPropertyValue("gefaehrdungsumsetzung_erlaeuterung"));
 
         gefUms.setSimpleProperty("gefaehrdungsumsetzung_erlaeuterung", sb.toString());
 

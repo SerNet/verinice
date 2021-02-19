@@ -41,7 +41,7 @@ class TaskTableComparator extends ViewerComparator {
     private int propertyIndex;
     private static final int DEFAULT_SORT_COLUMN = 0;
     private static final int DESCENDING = 1;
-    private static final int ASCENDING = 0; 
+    private static final int ASCENDING = 0;
     private int direction = ASCENDING;
 
     private static final NumericStringComparator NSC = new NumericStringComparator();

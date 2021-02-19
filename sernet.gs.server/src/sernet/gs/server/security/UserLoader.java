@@ -43,7 +43,7 @@ public abstract class UserLoader {
         // only searched user if present, otherwise return all:
         if (username != null && username.length() > 0) {
             allResults: for (Entity entity : entities) {
-                if (username.equals(entity.getSimpleValue(Configuration.PROP_USERNAME))) {
+                if (username.equals(entity.getPropertyValue(Configuration.PROP_USERNAME))) {
                     // hydrate call removed
                     // lazy="false" added to PropertyList.hbm.xml and
                     // PropertyListOracle.hbm.xml added

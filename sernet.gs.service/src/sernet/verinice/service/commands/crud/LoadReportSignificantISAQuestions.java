@@ -89,7 +89,7 @@ public class LoadReportSignificantISAQuestions extends GenericCommand {
                     if (!alreadySeen.contains(c)) {
                         alreadySeen.add(c);
                         if (e.getParent() instanceof ControlGroup
-                                && c.getEntity().getSimpleValue(PROP_CG_ISISAELMNT).equals("0")
+                                && c.getEntity().getPropertyValue(PROP_CG_ISISAELMNT).equals("0")
                                 && containsSamtTopicsOnly(c)) {// avoids
                                                                // rootControlGroup
 

@@ -89,7 +89,7 @@ public class SamtTopic extends CnATreeElement
      */
     @Override
     public String getTitle() {
-        return getEntity().getSimpleValue(PROP_NAME);
+        return getEntity().getPropertyValue(PROP_NAME);
     }
 
     /*
@@ -105,7 +105,7 @@ public class SamtTopic extends CnATreeElement
 
     @Override
     public String getAbbreviation() {
-        return getEntity().getSimpleValue(PROP_ABBR);
+        return getEntity().getPropertyValue(PROP_ABBR);
     }
 
     public void setAbbreviation(String abbreviation) {
@@ -114,11 +114,11 @@ public class SamtTopic extends CnATreeElement
 
     @Override
     public Collection<String> getTags() {
-        return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
     public String getDescription() {
-        return getEntity().getSimpleValue(SamtTopic.PROP_DESC);
+        return getEntity().getPropertyValue(SamtTopic.PROP_DESC);
     }
 
     public void setDescription(String description) {
@@ -211,15 +211,15 @@ public class SamtTopic extends CnATreeElement
     }
 
     public String getAuditFindings() {
-        return getEntity().getSimpleValue(SamtTopic.PROP_AUDIT_FINDINGS);
+        return getEntity().getPropertyValue(SamtTopic.PROP_AUDIT_FINDINGS);
     }
 
     public String getExternalNode() {
-        return getEntity().getSimpleValue(SamtTopic.PROP_EXTERNALNOTE);
+        return getEntity().getPropertyValue(SamtTopic.PROP_EXTERNALNOTE);
     }
 
     public String getInternalNote() {
-        return getEntity().getSimpleValue(SamtTopic.PROP_INTERNALNOTE);
+        return getEntity().getPropertyValue(SamtTopic.PROP_INTERNALNOTE);
     }
 
     /**
@@ -307,7 +307,7 @@ public class SamtTopic extends CnATreeElement
      * set version is 1.x
      */
     public String getVersion() {
-        return getEntity().getSimpleValue(SamtTopic.PROP_VERSION);
+        return getEntity().getPropertyValue(SamtTopic.PROP_VERSION);
     }
 
     /**

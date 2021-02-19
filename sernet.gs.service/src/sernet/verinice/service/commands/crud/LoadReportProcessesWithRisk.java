@@ -135,8 +135,8 @@ public class LoadReportProcessesWithRisk extends GenericCommand implements ICach
                 ProtectionRequirementsValueAdapter process = new ProtectionRequirementsValueAdapter(
                         cnATreeElement);
                 row.add(Integer.toString(cnATreeElement.getDbId()));
-                row.add(cnATreeElement.getEntity().getSimpleValue(Process.PROP_ABBR));
-                row.add(cnATreeElement.getEntity().getSimpleValue(Process.PROP_NAME));
+                row.add(cnATreeElement.getEntity().getPropertyValue(Process.PROP_ABBR));
+                row.add(cnATreeElement.getEntity().getPropertyValue(Process.PROP_NAME));
                 row.add(Integer.toString(process.getConfidentiality()));
                 row.add(Integer.toString(process.getIntegrity()));
                 row.add(Integer.toString(process.getAvailability()));

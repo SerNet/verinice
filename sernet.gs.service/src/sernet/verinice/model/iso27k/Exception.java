@@ -74,7 +74,7 @@ public class Exception extends CnATreeElement
      */
     @Override
     public String getTitle() {
-        return getEntity().getSimpleValue(PROP_NAME);
+        return getEntity().getPropertyValue(PROP_NAME);
     }
 
     public void setTitel(String name) {
@@ -83,7 +83,7 @@ public class Exception extends CnATreeElement
 
     @Override
     public String getAbbreviation() {
-        return getEntity().getSimpleValue(PROP_ABBR);
+        return getEntity().getPropertyValue(PROP_ABBR);
     }
 
     public void setAbbreviation(String abbreviation) {
@@ -92,7 +92,7 @@ public class Exception extends CnATreeElement
 
     @Override
     public Collection<String> getTags() {
-        return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
 }

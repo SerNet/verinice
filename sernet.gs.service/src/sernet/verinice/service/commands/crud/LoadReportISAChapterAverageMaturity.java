@@ -73,8 +73,8 @@ public class LoadReportISAChapterAverageMaturity extends GenericCommand implemen
                     if (e instanceof SamtTopic) {
                         SamtTopic topic = (SamtTopic) e;
                         topicCount++;
-                        maturityCount += Integer
-                                .parseInt(topic.getEntity().getSimpleValue(PROP_ISATOPIC_MATURITY));
+                        maturityCount += Integer.parseInt(
+                                topic.getEntity().getPropertyValue(PROP_ISATOPIC_MATURITY));
                     }
                 }
 

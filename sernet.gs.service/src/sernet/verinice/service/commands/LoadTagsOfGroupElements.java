@@ -79,7 +79,7 @@ public class LoadTagsOfGroupElements extends GenericCommand {
     }
 
     public static Collection<String> getTagList(CnATreeElement child) {
-        return TagHelper.getTags(child.getEntity().getSimpleValue(
+        return TagHelper.getTags(child.getEntity().getPropertyValue(
                 LoadTagsOfGroupElements.generateTagPropertyName(child.getTypeId())));
     }
 
@@ -88,7 +88,7 @@ public class LoadTagsOfGroupElements extends GenericCommand {
     }
 
     public static Collection<String> getGsmTagList(CnATreeElement child) {
-        return TagHelper.getTags(child.getEntity().getSimpleValue(
+        return TagHelper.getTags(child.getEntity().getPropertyValue(
                 LoadTagsOfGroupElements.generateGsmTagPropertyName(child.getTypeId())));
     }
 
@@ -97,7 +97,7 @@ public class LoadTagsOfGroupElements extends GenericCommand {
     }
 
     public static Collection<String> getGsmIsmTagList(CnATreeElement child) {
-        return TagHelper.getTags(child.getEntity().getSimpleValue(
+        return TagHelper.getTags(child.getEntity().getPropertyValue(
                 LoadTagsOfGroupElements.generateGsmTagIsmPropertyName(child.getTypeId())));
     }
 

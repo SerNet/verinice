@@ -102,7 +102,7 @@ public class LoadReportISAInterviews extends GenericCommand implements ICachedCo
                             // add time
                             result.add(timeFormat.format(iDate));
                             // store title for later use
-                            title = i.getEntity().getSimpleValue(INTERVIEW_TITLE);
+                            title = i.getEntity().getPropertyValue(INTERVIEW_TITLE);
                             // add role
                             i = (Interview) Retriever.checkRetrieveLinks(i, true);
                             StringBuilder sb = new StringBuilder();

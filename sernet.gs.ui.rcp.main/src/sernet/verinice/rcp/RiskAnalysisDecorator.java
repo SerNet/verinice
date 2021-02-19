@@ -121,11 +121,11 @@ public class RiskAnalysisDecorator extends LabelProvider implements ILightweight
         Entity treeElementEntity = element.getEntity();
         try {
             int riskValueConfidentiality = Integer
-                    .parseInt(treeElementEntity.getSimpleValue("asset_riskvalue_c"));
+                    .parseInt(treeElementEntity.getPropertyValue("asset_riskvalue_c"));
             int riskValueIntegrity = Integer
-                    .parseInt(treeElementEntity.getSimpleValue("asset_riskvalue_i"));
+                    .parseInt(treeElementEntity.getPropertyValue("asset_riskvalue_i"));
             int riskValueAvailability = Integer
-                    .parseInt(treeElementEntity.getSimpleValue("asset_riskvalue_a"));
+                    .parseInt(treeElementEntity.getPropertyValue("asset_riskvalue_a"));
             // Possible range is 0..8
             int riskValueMax = NumberUtils.max(riskValueConfidentiality, riskValueIntegrity,
                     riskValueAvailability);
@@ -139,7 +139,7 @@ public class RiskAnalysisDecorator extends LabelProvider implements ILightweight
             throws NumberFormatException {
         try {
             int riskValueIncidentScenario = Integer
-                    .parseInt(element.getEntity().getSimpleValue("incscen_likelihood"));
+                    .parseInt(element.getEntity().getPropertyValue("incscen_likelihood"));
             return getRiskLevelForAssetOrIncidentScenario(riskValueIncidentScenario);
         } catch (NumberFormatException e) {
             throw e;
@@ -159,9 +159,9 @@ public class RiskAnalysisDecorator extends LabelProvider implements ILightweight
     private int getRiskLevelForThreat(CnATreeElement element) throws NumberFormatException {
         try {
             int riskValueThreatLikelihood = Integer
-                    .parseInt(element.getEntity().getSimpleValue("threat_likelihood"));
+                    .parseInt(element.getEntity().getPropertyValue("threat_likelihood"));
             int riskValueThreatImpact = Integer
-                    .parseInt(element.getEntity().getSimpleValue("threat_impact"));
+                    .parseInt(element.getEntity().getPropertyValue("threat_impact"));
             int riskValue = Math.max(riskValueThreatLikelihood, riskValueThreatImpact);
             if (riskValue > RISK_THRESHOLD_HIGH_THREAT) {
                 return COMBINED_RISK_VALUE_HIGH;
@@ -178,7 +178,7 @@ public class RiskAnalysisDecorator extends LabelProvider implements ILightweight
     private int getRiskLevelForVulnerability(CnATreeElement element) throws NumberFormatException {
         try {
             int riskValue = Integer
-                    .parseInt(element.getEntity().getSimpleValue("vulnerability_level"));
+                    .parseInt(element.getEntity().getPropertyValue("vulnerability_level"));
             if (riskValue > RISK_THRESHOLD_HIGH_VULNERABILITY) {
                 return COMBINED_RISK_VALUE_HIGH;
             } else if (riskValue > RISK_THRESHOLD_MEDIUM_VULNERABILITY) {

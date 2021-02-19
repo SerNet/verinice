@@ -165,7 +165,7 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
             if (entities != null && entities.size() > 0) {
                 for (Entity entity : entities) {
                     if (DbUserDetailsService.isUser(username, entity)) {
-                        if ("1".equals(entity.getSimpleValue(Configuration.PROP_DEACTIVATED))) {
+                        if ("1".equals(entity.getPropertyValue(Configuration.PROP_DEACTIVATED))) {
                             if (LOG.isDebugEnabled()) {
                                 LOG.debug("User " + username + " is deactivated");
                             }

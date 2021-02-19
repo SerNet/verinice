@@ -127,7 +127,7 @@ public class Audit extends CnATreeElement implements IISO27kElement, IISO27kGrou
      */
     @Override
     public String getTitle() {
-        return getEntity().getSimpleValue(PROP_NAME);
+        return getEntity().getPropertyValue(PROP_NAME);
     }
 
     @Override
@@ -137,7 +137,7 @@ public class Audit extends CnATreeElement implements IISO27kElement, IISO27kGrou
 
     @Override
     public String getAbbreviation() {
-        return getEntity().getSimpleValue(PROP_ABBR);
+        return getEntity().getPropertyValue(PROP_ABBR);
     }
 
     public void setAbbreviation(String abbreviation) {
@@ -146,19 +146,19 @@ public class Audit extends CnATreeElement implements IISO27kElement, IISO27kGrou
 
     @Override
     public Collection<String> getTags() {
-        return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
     public String getCreator() {
-        return getEntity().getSimpleValue(PROP_CREAT);
+        return getEntity().getPropertyValue(PROP_CREAT);
     }
 
     public String getCreatorPhone() {
-        return getEntity().getSimpleValue(PROP_CREATPHONE);
+        return getEntity().getPropertyValue(PROP_CREATPHONE);
     }
 
     public String getCreatorEmail() {
-        return getEntity().getSimpleValue(PROP_CREATMAIL);
+        return getEntity().getPropertyValue(PROP_CREATMAIL);
     }
 
     public Date getStartDate() {

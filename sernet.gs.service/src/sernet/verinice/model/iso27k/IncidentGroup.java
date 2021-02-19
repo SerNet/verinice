@@ -58,7 +58,7 @@ public class IncidentGroup extends Group<Incident> implements IISO27kGroup {
 
     @Override
     public String getTitle() {
-        return getEntity().getSimpleValue(PROP_NAME);
+        return getEntity().getPropertyValue(PROP_NAME);
     }
 
     public void setTitel(String name) {

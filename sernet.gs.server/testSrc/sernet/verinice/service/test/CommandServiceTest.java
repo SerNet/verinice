@@ -275,7 +275,7 @@ public class CommandServiceTest extends CommandServiceProvider {
         for (PropertyType propertyType : propertyList) {
             if (propertyType.isLine() || propertyType.isText()) {
                 String id = propertyType.getId();
-                String value = entity.getSimpleValue(id);
+                String value = entity.getPropertyValue(id);
                 if (value.contains(VALUE_PREFIX)) {
                     value = value.substring(value.indexOf(VALUE_PREFIX));
                 }
@@ -294,7 +294,7 @@ public class CommandServiceTest extends CommandServiceProvider {
         for (PropertyType propertyType : propertyList) {
             if (propertyType.isLine() || propertyType.isText()) {
                 String id = propertyType.getId();
-                String value = entity.getSimpleValue(id);
+                String value = entity.getPropertyValue(id);
                 assertTrue("Property not changed, type: " + typeId + ", uuid: " + element.getUuid()
                         + ", prop: " + id, value.contains(VALUE_PREFIX));
             }
