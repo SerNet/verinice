@@ -42,7 +42,6 @@ import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
  */
 public class RiskHandlingPage extends RiskAnalysisWizardPage<TableViewer> {
 
-    
     private TableColumn imgColumn;
     private TableColumn numberColumn;
     private TableColumn nameColumn;
@@ -62,9 +61,9 @@ public class RiskHandlingPage extends RiskAnalysisWizardPage<TableViewer> {
      * Constructor sets title an description of WizardPage.
      */
     protected RiskHandlingPage() {
-        super(Messages.RiskHandlingPage_4, Messages.RiskHandlingPage_5, Messages.RiskHandlingPage_6);
+        super(Messages.RiskHandlingPage_4, Messages.RiskHandlingPage_5,
+                Messages.RiskHandlingPage_6);
     }
-
 
     /**
      * Fills the TableViewer with all previously selected Gefaehrdungen in order
@@ -73,22 +72,19 @@ public class RiskHandlingPage extends RiskAnalysisWizardPage<TableViewer> {
      */
     @Override
     protected void doInitContents() {
-        List<GefaehrdungsUmsetzung> arrListAllGefaehrdungsUmsetzungen = ((RiskAnalysisWizard) getWizard()).getAllGefaehrdungsUmsetzungen();
+        List<GefaehrdungsUmsetzung> arrListAllGefaehrdungsUmsetzungen = ((RiskAnalysisWizard) getWizard())
+                .getAllGefaehrdungsUmsetzungen();
 
         final ComboBoxCellEditor choiceEditor = new ComboBoxCellEditor(viewer.getTable(),
-                GefaehrdungsUmsetzung.getAlternativenText(),
-                SWT.READ_ONLY);
+                GefaehrdungsUmsetzung.getAlternativenText(), SWT.READ_ONLY);
         choiceEditor.setActivationStyle(ComboBoxCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
         viewer.setCellEditors(new CellEditor[] { null, null, null, choiceEditor });
-        viewer.setCellModifier(new PropertiesComboBoxCellModifier(viewer, (RiskAnalysisWizard) getWizard(), this));
+        viewer.setCellModifier(
+                new PropertiesComboBoxCellModifier(viewer, (RiskAnalysisWizard) getWizard(), this));
 
         /* needed for PropertiesComboBoxCellModifier */
-        viewer.setColumnProperties(new String[] {
-                IMG_COLUMN_ID,
-                NUMBER_COLUMN_ID,
-                NAME_COLUMN_ID,
-                CHOICE_COLUMN_ID
-        });
+        viewer.setColumnProperties(
+                new String[] { IMG_COLUMN_ID, NUMBER_COLUMN_ID, NAME_COLUMN_ID, CHOICE_COLUMN_ID });
         /* map a domain model object into multiple images and text labels */
         viewer.setLabelProvider(new TableViewerLabelProvider());
         /* map domain model into array */
@@ -120,7 +116,8 @@ public class RiskHandlingPage extends RiskAnalysisWizardPage<TableViewer> {
      * "A" .
      */
     private void checkPageComplete() {
-        List<GefaehrdungsUmsetzung> arrListAllGefaehrdungsUmsetzungen = ((RiskAnalysisWizard) getWizard()).getAllGefaehrdungsUmsetzungen();
+        List<GefaehrdungsUmsetzung> arrListAllGefaehrdungsUmsetzungen = ((RiskAnalysisWizard) getWizard())
+                .getAllGefaehrdungsUmsetzungen();
         Boolean complete = false;
 
         /*
@@ -140,8 +137,6 @@ public class RiskHandlingPage extends RiskAnalysisWizardPage<TableViewer> {
             setPageComplete(false);
         }
     }
-
-
 
     @Override
     protected void setColumns() {
@@ -173,18 +168,16 @@ public class RiskHandlingPage extends RiskAnalysisWizardPage<TableViewer> {
     }
 
     @Override
-    protected void doAfterUpdateFilter(){
+    protected void doAfterUpdateFilter() {
         /* nothing to do */
 
     }
-
 
     @Override
     protected void doAfterRemoveSearchFilter() {
         /* nothing to do */
 
     }
-
 
     @Override
     protected TableViewer initializeViewer(Composite parent) {
@@ -201,9 +194,9 @@ public class RiskHandlingPage extends RiskAnalysisWizardPage<TableViewer> {
         Composite search = new Composite(parent, SWT.NULL);
         new Label(search, SWT.NULL).setText(Messages.ChooseGefaehrdungPage_10);
         textSearch = new Text(search, SWT.SINGLE | SWT.BORDER);
-        GridLayoutFactory.fillDefaults().numColumns(2).margins(DEFAULT_MARGINS).generateLayout(search);
+        GridLayoutFactory.fillDefaults().numColumns(2).margins(DEFAULT_MARGINS)
+                .generateLayout(search);
         GridDataFactory.fillDefaults().hint(125, SWT.DEFAULT).applyTo(textSearch);
     }
-
 
 }

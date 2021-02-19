@@ -33,28 +33,28 @@ import sernet.verinice.model.iso27k.Group;
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
 public class ItSystemGroup extends Group<ItSystem> implements IBpGroup, ITaggableElement {
-    
+
     private static final long serialVersionUID = -8454160472717996491L;
-    
+
     public static final String TYPE_ID = "bp_itsystem_group"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_itsystem_group_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_itsystem_group_tag"; //$NON-NLS-1$
 
-    
-    public static final String[] CHILD_TYPES = new String[] {ItSystem.TYPE_ID};
-    
-    protected ItSystemGroup() {}
-    
+    public static final String[] CHILD_TYPES = new String[] { ItSystem.TYPE_ID };
+
+    protected ItSystemGroup() {
+    }
+
     public ItSystemGroup(CnATreeElement parent) {
         super(parent);
         init();
     }
-    
+
     @Override
     public String getTitle() {
         return getEntity().getPropertyValue(PROP_NAME);
     }
-    
+
     @Override
     public void setTitel(String name) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
@@ -64,7 +64,7 @@ public class ItSystemGroup extends Group<ItSystem> implements IBpGroup, ITaggabl
     public String getTypeId() {
         return TYPE_ID;
     }
-    
+
     @Override
     public String[] getChildTypes() {
         return CHILD_TYPES;

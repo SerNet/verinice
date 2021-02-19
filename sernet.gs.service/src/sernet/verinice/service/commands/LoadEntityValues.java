@@ -27,9 +27,13 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Generic command to retrieve arbitrary cna tree elements and their property values.
+ * Generic command to retrieve arbitrary cna tree elements and their property
+ * values.
  * 
- * <p>The command is to be used by reports who wish to access elements and their property values.</p>
+ * <p>
+ * The command is to be used by reports who wish to access elements and their
+ * property values.
+ * </p>
  * 
  * @author Robert Schuster
  *
@@ -38,65 +42,67 @@ import sernet.verinice.model.common.CnATreeElement;
 @SuppressWarnings("serial")
 public class LoadEntityValues extends GenericCommand {
 
-	private List<List<String>> result;
-	
-	private String typeId;
-	private String[] propertyTypes;
-	private Class<?>[] classes;
-	
-	public LoadEntityValues(String typeId, String[] propertyTypes) {
-		this (typeId, propertyTypes, new Class[0]);
-	}
-	
-	public LoadEntityValues(String typeId, String[] propertyTypes, Class<?>[] classes) {
-		this.typeId = typeId;
-		this.propertyTypes = (propertyTypes != null) ? propertyTypes.clone() : null;
-		this.classes = (classes != null) ? classes.clone() : null;
-	}
-	
-	
+    private List<List<String>> result;
+
+    private String typeId;
+    private String[] propertyTypes;
+    private Class<?>[] classes;
+
+    public LoadEntityValues(String typeId, String[] propertyTypes) {
+        this(typeId, propertyTypes, new Class[0]);
+    }
+
+    public LoadEntityValues(String typeId, String[] propertyTypes, Class<?>[] classes) {
+        this.typeId = typeId;
+        this.propertyTypes = (propertyTypes != null) ? propertyTypes.clone() : null;
+        this.classes = (classes != null) ? classes.clone() : null;
+    }
+
     @SuppressWarnings("unchecked")
-	public void execute() {
-		IBaseDao<CnATreeElement, Serializable> dao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory().getDAO(typeId);
-		List<CnATreeElement> elements = dao.findAll();
-		
-		result = new ArrayList<List<String>>(elements.size());
-		for (CnATreeElement element : elements)
-		{
-			Entity e = element.getEntity();
-			result.add(retrievePropertyValues(e, propertyTypes, classes));
-		}
-	}
-	
-	/**
-	 * Retrieves the values of the properties of the given entity and returns them as a list of strings.
-	 * 
-	 * <p>Note: The method is purposely written in a way that it can be reused from other parts of the application.</p>
-	 */
-	public static List<String> retrievePropertyValues(Entity e, String[] propertyTypes, Class<?>[] classes)
-	{
-		ArrayList<String> values = new ArrayList<String>(propertyTypes.length);
-		
-		int i = 0;
-		for (String name : propertyTypes)
-		{
-			Class<?> c = (i >= classes.length ? null : classes[i]);
-			if (c == null || c == String.class){
-				values.add(e.getSimpleValue(name));
-			} else if (c == Integer.class) {
-				values.add(String.valueOf(e.getInt(name)));
-			} else {
-				throw new IllegalArgumentException("Invalid class for propertyType '" + name + "'.");
-			}
-			i++;
-		}
-		
-		return values;
-	}
-	
-	public List<List<String>> getResult()
-	{
-		return result;
-	}
+    public void execute() {
+        IBaseDao<CnATreeElement, Serializable> dao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory()
+                .getDAO(typeId);
+        List<CnATreeElement> elements = dao.findAll();
+
+        result = new ArrayList<List<String>>(elements.size());
+        for (CnATreeElement element : elements) {
+            Entity e = element.getEntity();
+            result.add(retrievePropertyValues(e, propertyTypes, classes));
+        }
+    }
+
+    /**
+     * Retrieves the values of the properties of the given entity and returns
+     * them as a list of strings.
+     * 
+     * <p>
+     * Note: The method is purposely written in a way that it can be reused from
+     * other parts of the application.
+     * </p>
+     */
+    public static List<String> retrievePropertyValues(Entity e, String[] propertyTypes,
+            Class<?>[] classes) {
+        ArrayList<String> values = new ArrayList<String>(propertyTypes.length);
+
+        int i = 0;
+        for (String name : propertyTypes) {
+            Class<?> c = (i >= classes.length ? null : classes[i]);
+            if (c == null || c == String.class) {
+                values.add(e.getSimpleValue(name));
+            } else if (c == Integer.class) {
+                values.add(String.valueOf(e.getInt(name)));
+            } else {
+                throw new IllegalArgumentException(
+                        "Invalid class for propertyType '" + name + "'.");
+            }
+            i++;
+        }
+
+        return values;
+    }
+
+    public List<List<String>> getResult() {
+        return result;
+    }
 
 }

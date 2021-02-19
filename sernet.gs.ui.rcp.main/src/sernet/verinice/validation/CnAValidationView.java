@@ -84,42 +84,45 @@ import sernet.verinice.service.commands.crud.LoadPolymorphicCnAElementById;
 /**
  *
  */
-public class CnAValidationView extends RightsEnabledView implements ILinkedWithEditorView  {
-    
+public class CnAValidationView extends RightsEnabledView implements ILinkedWithEditorView {
+
     static final Logger LOG = Logger.getLogger(CnAValidationView.class);
-    
+
     public static final String ID = "sernet.verinice.validation.CnAValidationView";
     private static final String STD_LOAD_ERRMSG = "Error while loading data";
-    
+
     private TableViewer viewer;
 
     private TableSorter tableSorter = new TableSorter();
     private ICommandService commandService;
-    
+
     private Action doubleClickAction;
-    
+
     private Action refreshAction;
-    
+
     private CnAValidationContentProvider contentProvider = new CnAValidationContentProvider(this);
-    
+
     private IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
-    
+
     private boolean isLinkingActive = true;
-    
+
     private CnATreeElement currentCnaElement;
-    
+
     private IModelLoadListener modelLoadListener;
-    
+
     private ISelectionListener selectionListener;
-    
+
     private RightsServiceClient rightsService;
-    
-    public CnAValidationView(){
+
+    public CnAValidationView() {
         super();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
+     * widgets.Composite)
      */
     @Override
     public void createPartControl(Composite parent) {
@@ -132,40 +135,47 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
         addBSIModelListeners();
         addISO27KModelListeners();
         hookModelLoadListener();
-        
+
         makeActions();
         hookActions();
-        
-        
+
         fillLocalToolBar();
         getSite().getPage().addPartListener(linkWithEditorPartListener);
     }
-    
+
     private void makeActions() {
 
-        refreshAction = new Action(Messages.ValidationView_8, SWT.NONE){
+        refreshAction = new Action(Messages.ValidationView_8, SWT.NONE) {
             @Override
-            public void run(){
+            public void run() {
                 loadValidations();
             }
         };
-        
-        refreshAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
 
-        doubleClickAction = new Action(){
+        refreshAction
+                .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
+
+        doubleClickAction = new Action() {
             @Override
             public void run() {
-                if (viewer.getSelection() instanceof IStructuredSelection && ((IStructuredSelection) viewer.getSelection()).getFirstElement() instanceof CnAValidation) {
+                if (viewer.getSelection() instanceof IStructuredSelection
+                        && ((IStructuredSelection) viewer.getSelection())
+                                .getFirstElement() instanceof CnAValidation) {
                     try {
-                        CnAValidation validation = (CnAValidation)((IStructuredSelection)viewer.getSelection()).getFirstElement();
-                        LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[]{validation.getElmtDbId()});
+                        CnAValidation validation = (CnAValidation) ((IStructuredSelection) viewer
+                                .getSelection()).getFirstElement();
+                        LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(
+                                new Integer[] { validation.getElmtDbId() });
                         command = ServiceFactory.lookupCommandService().executeCommand(command);
-                        if(command.getElements() != null && !command.getElements().isEmpty() && command.getElements().get(0) != null){
-                            EditorFactory.getInstance().updateAndOpenObject(command.getElements().get(0));
+                        if (command.getElements() != null && !command.getElements().isEmpty()
+                                && command.getElements().get(0) != null) {
+                            EditorFactory.getInstance()
+                                    .updateAndOpenObject(command.getElements().get(0));
                         } else {
-                            MessageDialog.openError(getSite().getShell(), "Error", "Object not found.");
+                            MessageDialog.openError(getSite().getShell(), "Error",
+                                    "Object not found.");
                         }
-                    } catch (Exception t){
+                    } catch (Exception t) {
                         LOG.error("Error while opening element.", t); //$NON-NLS-1$
                     }
                 }
@@ -196,36 +206,39 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
         Object element = ((IStructuredSelection) selection).getFirstElement();
         elementSelected(element);
         if (element instanceof CnATreeElement) {
-           currentCnaElement = (CnATreeElement)element;
+            currentCnaElement = (CnATreeElement) element;
         }
     }
-    
+
     private void createTable(Composite parent) {
         TableColumn elementTypeColumn;
         TableColumn elementNameColumn;
         TableColumn propertyColumn;
         TableColumn hintColumn;
-        
+
         final int typeColumnWidth = 80;
         final int nameColumnWidth = 150;
         final int propertyColumnWidth = 100;
         final int hintColumnWidth = 200;
-        
-        viewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
+
+        viewer = new TableViewer(parent,
+                SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
         viewer.setContentProvider(contentProvider);
         viewer.setLabelProvider(new ValidationLabelProvider());
         Table table = viewer.getTable();
-        
+
         elementTypeColumn = new TableColumn(table, SWT.LEFT);
         elementTypeColumn.setWidth(typeColumnWidth);
         elementTypeColumn.setText(Messages.ValidationView_5);
-        elementTypeColumn.addSelectionListener(new SortSelectionAdapter(this, elementTypeColumn, 0));
-             
+        elementTypeColumn
+                .addSelectionListener(new SortSelectionAdapter(this, elementTypeColumn, 0));
+
         elementNameColumn = new TableColumn(table, SWT.LEFT);
         elementNameColumn.setWidth(nameColumnWidth);
         elementNameColumn.setText(Messages.ValidationView_4);
-        elementNameColumn.addSelectionListener(new SortSelectionAdapter(this, elementNameColumn, 1));
-        
+        elementNameColumn
+                .addSelectionListener(new SortSelectionAdapter(this, elementNameColumn, 1));
+
         propertyColumn = new TableColumn(table, SWT.LEFT);
         propertyColumn.setWidth(propertyColumnWidth);
         propertyColumn.setText(Messages.ValidationView_6);
@@ -242,14 +255,16 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
      */
     @Override
     public void setFocus() {
         // emtpy
     }
-    
+
     protected void startInitDataJob() {
         WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
             @Override
@@ -260,7 +275,7 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
                     Activator.inheritVeriniceContextState();
                     loadValidations();
                 } catch (Exception e) {
-                    LOG.error(STD_LOAD_ERRMSG, e); //$NON-NLS-1$
+                    LOG.error(STD_LOAD_ERRMSG, e); // $NON-NLS-1$
                     status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", STD_LOAD_ERRMSG, e); //$NON-NLS-1$ //$NON-NLS-2$
                 } finally {
                     monitor.done();
@@ -271,12 +286,12 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
         JobScheduler.scheduleInitJob(initDataJob);
     }
 
-    private void loadValidations(){
+    private void loadValidations() {
         List<CnAValidation> validations = Collections.emptyList();
-        if(currentCnaElement != null){
+        if (currentCnaElement != null) {
             final LoadValidationJob job = new LoadValidationJob(currentCnaElement.getScopeId());
 
-            BusyIndicator.showWhile(null, new Runnable() {          
+            BusyIndicator.showWhile(null, new Runnable() {
                 @Override
                 public void run() {
                     job.loadValidations();
@@ -288,16 +303,16 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
             refresh.refresh();
         }
     }
-    
+
     public static Display getDisplay() {
         Display display = Display.getCurrent();
-        //may be null if outside the UI thread
-        if (display == null){
-           display = Display.getDefault();
+        // may be null if outside the UI thread
+        if (display == null) {
+            display = Display.getDefault();
         }
-        return display;       
-     }
-    
+        return display;
+    }
+
     @Override
     public void dispose() {
         super.dispose();
@@ -306,7 +321,7 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
         CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
         removeModelListeners();
     }
-    
+
     /**
      * 
      */
@@ -315,7 +330,7 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
         CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(contentProvider);
         CnAElementFactory.getInstance().getBpModel().removeBpModelListener(contentProvider);
     }
-    
+
     protected void addISO27KModelListeners() {
         WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
             @Override
@@ -324,20 +339,22 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
                 try {
                     monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
                     if (CnAElementFactory.isIsoModelLoaded()) {
-                        CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(contentProvider);
+                        CnAElementFactory.getInstance().getISO27kModel()
+                                .addISO27KModelListener(contentProvider);
                     }
                 } catch (Exception e) {
-                    LOG.error(STD_LOAD_ERRMSG, e); //$NON-NLS-1$
-                    status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.ValidationView_3,e); //$NON-NLS-1$
+                    LOG.error(STD_LOAD_ERRMSG, e); // $NON-NLS-1$
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
+                            Messages.ValidationView_3, e);
                 } finally {
                     monitor.done();
                 }
                 return status;
             }
         };
-        JobScheduler.scheduleInitJob(initDataJob);          
+        JobScheduler.scheduleInitJob(initDataJob);
     }
-    
+
     protected void addBSIModelListeners() {
         WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
             @Override
@@ -346,20 +363,22 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
                 try {
                     monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
                     if (CnAElementFactory.isModelLoaded()) {
-                        CnAElementFactory.getInstance().getLoadedModel().addBSIModelListener(contentProvider);
+                        CnAElementFactory.getInstance().getLoadedModel()
+                                .addBSIModelListener(contentProvider);
                     }
                 } catch (Exception e) {
-                    LOG.error(STD_LOAD_ERRMSG, e); //$NON-NLS-1$
-                    status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.ValidationView_3,e); //$NON-NLS-1$
+                    LOG.error(STD_LOAD_ERRMSG, e); // $NON-NLS-1$
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
+                            Messages.ValidationView_3, e);
                 } finally {
                     monitor.done();
                 }
                 return status;
             }
         };
-        JobScheduler.scheduleInitJob(initDataJob);      
+        JobScheduler.scheduleInitJob(initDataJob);
     }
-    
+
     protected void addBpModelListener() {
         WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
             @Override
@@ -368,21 +387,22 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
                 try {
                     monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
                     if (CnAElementFactory.isModelLoaded()) {
-                        CnAElementFactory.getInstance().getBpModel().
-                            addModITBOModelListener(contentProvider);
+                        CnAElementFactory.getInstance().getBpModel()
+                                .addModITBOModelListener(contentProvider);
                     }
                 } catch (Exception e) {
-                    LOG.error(STD_LOAD_ERRMSG, e); //$NON-NLS-1$
-                    status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.ValidationView_3,e); //$NON-NLS-1$
+                    LOG.error(STD_LOAD_ERRMSG, e); // $NON-NLS-1$
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
+                            Messages.ValidationView_3, e);
                 } finally {
                     monitor.done();
                 }
                 return status;
-            }            
+            }
         };
         JobScheduler.scheduleInitJob(initDataJob);
     }
-    
+
     private void hookModelLoadListener() {
         this.modelLoadListener = new IModelLoadListener() {
 
@@ -409,7 +429,7 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
             public void loaded(ISO27KModel model) {
                 synchronized (modelLoadListener) {
                     startInitDataJob();
-                    addISO27KModelListeners();   
+                    addISO27KModelListeners();
                 }
             }
 
@@ -417,22 +437,23 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
             public void loaded(BpModel model) {
                 synchronized (modelLoadListener) {
                     startInitDataJob();
-                    
+
                 }
-                
+
             }
 
             @Override
             public void loaded(CatalogModel model) {
                 // nothing to do
             }
-            
+
         };
         CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
     }
-      
-    private static class ValidationLabelProvider extends LabelProvider implements ITableLabelProvider {      
-        
+
+    private static class ValidationLabelProvider extends LabelProvider
+            implements ITableLabelProvider {
+
         @Override
         public Image getColumnImage(Object element, int columnIndex) {
             if (element instanceof PlaceHolder) {
@@ -454,13 +475,13 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
                 CnAValidation validation = (CnAValidation) element;
                 switch (columnIndex) {
                 case 0:
-                    return HUITypeFactory.getInstance().getMessage(validation.getElementType()); //$NON-NLS-1$
+                    return HUITypeFactory.getInstance().getMessage(validation.getElementType()); // $NON-NLS-1$
                 case 1:
-                    return validation.getElmtTitle(); //$NON-NLS-1$
+                    return validation.getElmtTitle(); // $NON-NLS-1$
                 case 2:
-                    return HUITypeFactory.getInstance().getMessage(validation.getPropertyId()); //$NON-NLS-1$
+                    return HUITypeFactory.getInstance().getMessage(validation.getPropertyId()); // $NON-NLS-1$
                 case 3:
-                    return validation.getHintId(); //$NON-NLS-1$
+                    return validation.getHintId(); // $NON-NLS-1$
                 default:
                     return null;
                 }
@@ -469,16 +490,15 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
                 throw new RuntimeException(e);
             }
         }
- 
 
     }
-    
+
     private void fillLocalToolBar() {
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
         manager.add(this.refreshAction);
     }
-    
+
     public ICommandService getCommandService() {
         if (commandService == null) {
             commandService = createCommandServive();
@@ -489,7 +509,7 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
     private ICommandService createCommandServive() {
         return ServiceFactory.lookupCommandService();
     }
-    
+
     private static class TableSorter extends ViewerSorter {
         private int propertyIndex;
         private static final int DEFAULT_SORT_COLUMN = 0;
@@ -556,35 +576,35 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
                     throw new IllegalArgumentException("propertyIndex not possible in this table");
                 }
 
-                if(!compareReturnsEquals(rc)){
+                if (!compareReturnsEquals(rc)) {
                     // If descending order, flip the direction
                     if (direction == DESCENDING) {
                         rc = -rc;
                     }
                     return rc;
-                }else{
+                } else {
                     // second, third (...) level comparison
                     rc = compareByType(a1, a2);
-                    if(!compareReturnsEquals(rc)){
+                    if (!compareReturnsEquals(rc)) {
                         return rc;
                     }
                     rc = compareByName(a1, a2);
-                    if(!compareReturnsEquals(rc)){
+                    if (!compareReturnsEquals(rc)) {
                         return rc;
                     }
                     rc = compareByAttribute(a1, a2);
-                    if(!compareReturnsEquals(rc)){
+                    if (!compareReturnsEquals(rc)) {
                         return rc;
                     }
                     rc = compareByHint(a1, a2);
-                    
+
                 }
             }
 
             return rc;
         }
-        
-        private boolean compareReturnsEquals(int rc){
+
+        private boolean compareReturnsEquals(int rc) {
             return rc == 0;
         }
 
@@ -619,7 +639,8 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
         private TableColumn column;
         private int index;
 
-        public SortSelectionAdapter(CnAValidationView validationView, TableColumn column, int index) {
+        public SortSelectionAdapter(CnAValidationView validationView, TableColumn column,
+                int index) {
             super();
             this.validationView = validationView;
             this.column = column;
@@ -643,8 +664,12 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
 
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.eclipse.ui.IEditorPart)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.
+     * eclipse.ui.IEditorPart)
      */
     @Override
     public void editorActivated(IEditorPart editor) {
@@ -661,43 +686,44 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
         }
         elementSelected(element);
     }
-    
+
     protected void elementSelected(Object element) {
         try {
             if (element instanceof CnATreeElement) {
                 setCurrentCnaElement((CnATreeElement) element);
                 loadValidations();
 
-            } 
+            }
         } catch (Exception e) {
             LOG.error("Error while loading validations", e); //$NON-NLS-1$
         }
     }
-    
+
     /**
      * @return
      */
     private boolean isLinkingActive() {
         return isLinkingActive;
     }
-    
+
     public void setCurrentCnaElement(CnATreeElement currentCnaElement) {
-        if(currentCnaElement != null){
+        if (currentCnaElement != null) {
             this.currentCnaElement = currentCnaElement;
-            if(isLinkingActive()){
-                StructuredSelection selection = (StructuredSelection)viewer.getSelection();
+            if (isLinkingActive()) {
+                StructuredSelection selection = (StructuredSelection) viewer.getSelection();
                 CnAValidation selectedValidation = null;
-                if(selection != null){
-                    selectedValidation = (CnAValidation)selection.getFirstElement();
+                if (selection != null) {
+                    selectedValidation = (CnAValidation) selection.getFirstElement();
                 }
                 Object input = viewer.getInput();
                 CnAValidation validationToSelect = determineValidationToSelect(input);
                 boolean changeSelectedElement = false;
-                
-                if((selectedValidation != null && !selectedValidation.getElmtDbId().equals(this.currentCnaElement.getDbId())) || selectedValidation == null){
+
+                if ((selectedValidation != null && !selectedValidation.getElmtDbId()
+                        .equals(this.currentCnaElement.getDbId())) || selectedValidation == null) {
                     changeSelectedElement = true;
-                } 
-                if(validationToSelect != null && changeSelectedElement){
+                }
+                if (validationToSelect != null && changeSelectedElement) {
                     viewer.setSelection(new StructuredSelection(validationToSelect), true);
                 }
             }
@@ -705,12 +731,12 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
     }
 
     private CnAValidation determineValidationToSelect(Object input) {
-        if(input instanceof ArrayList){
-            ArrayList inputList = (ArrayList)input;
-            for(Object o : inputList){
-                if(o instanceof CnAValidation){
-                    CnAValidation validation = (CnAValidation)o;
-                    if(validation.getElmtDbId().equals(this.currentCnaElement.getDbId())){
+        if (input instanceof ArrayList) {
+            ArrayList inputList = (ArrayList) input;
+            for (Object o : inputList) {
+                if (o instanceof CnAValidation) {
+                    CnAValidation validation = (CnAValidation) o;
+                    if (validation.getElmtDbId().equals(this.currentCnaElement.getDbId())) {
                         return validation;
                     }
                 }
@@ -718,27 +744,30 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
         }
         return null;
     }
-    
-    public void reloadAll(){
+
+    public void reloadAll() {
         loadValidations();
     }
-    
+
     /**
      * @return the rightsService
      */
     public RightsServiceClient getRightsService() {
-        if(rightsService==null) {
-            rightsService = (RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        if (rightsService == null) {
+            rightsService = (RightsServiceClient) VeriniceContext
+                    .get(VeriniceContext.RIGHTS_SERVICE);
         }
         return rightsService;
     }
-    
+
     @Override
     public String getRightID() {
         return ActionRightIDs.CNAVALIDATION;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
     @Override

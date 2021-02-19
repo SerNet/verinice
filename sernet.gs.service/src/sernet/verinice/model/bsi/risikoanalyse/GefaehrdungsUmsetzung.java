@@ -27,7 +27,8 @@ import sernet.hui.common.connect.ITypedElement;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 
-public class GefaehrdungsUmsetzung extends CnATreeElement implements IGefaehrdungsBaumElement, ITypedElement {
+public class GefaehrdungsUmsetzung extends CnATreeElement
+        implements IGefaehrdungsBaumElement, ITypedElement {
 
     private static final long serialVersionUID = 20160216153414L;
 
@@ -43,12 +44,15 @@ public class GefaehrdungsUmsetzung extends CnATreeElement implements IGefaehrdun
     public static final String GEFAEHRDUNG_ALTERNATIVE_TEXT_C = Messages.GefaehrdungsUmsetzung_6;
     public static final String GEFAEHRDUNG_ALTERNATIVE_TEXT_D = Messages.GefaehrdungsUmsetzung_7;
 
-    private static final String[] ALTERNATIVEN = { GEFAEHRDUNG_ALTERNATIVE_A, GEFAEHRDUNG_ALTERNATIVE_B, GEFAEHRDUNG_ALTERNATIVE_C, GEFAEHRDUNG_ALTERNATIVE_D, };
+    private static final String[] ALTERNATIVEN = { GEFAEHRDUNG_ALTERNATIVE_A,
+            GEFAEHRDUNG_ALTERNATIVE_B, GEFAEHRDUNG_ALTERNATIVE_C, GEFAEHRDUNG_ALTERNATIVE_D, };
 
-    private static final String[] ALTERNATIVEN_TEXT = { GEFAEHRDUNG_ALTERNATIVE_TEXT_A, GEFAEHRDUNG_ALTERNATIVE_TEXT_B, GEFAEHRDUNG_ALTERNATIVE_TEXT_C, GEFAEHRDUNG_ALTERNATIVE_TEXT_D, };
+    private static final String[] ALTERNATIVEN_TEXT = { GEFAEHRDUNG_ALTERNATIVE_TEXT_A,
+            GEFAEHRDUNG_ALTERNATIVE_TEXT_B, GEFAEHRDUNG_ALTERNATIVE_TEXT_C,
+            GEFAEHRDUNG_ALTERNATIVE_TEXT_D, };
 
     public static final String TYPE_ID = "gefaehrdungsumsetzung"; //$NON-NLS-1$
-    
+
     public static final String HIBERNATE_TYPE_ID = "gefaehrdungs-umsetzung"; //$NON-NLS-1$
 
     public static final String PROP_ID = "gefaehrdungsumsetzung_id"; //$NON-NLS-1$
@@ -91,7 +95,8 @@ public class GefaehrdungsUmsetzung extends CnATreeElement implements IGefaehrdun
     }
 
     public void setAlternative(String newAlternative) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ALTERNATIVE), newAlternative);
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ALTERNATIVE),
+                newAlternative);
     }
 
     public String getAlternative() {
@@ -122,7 +127,8 @@ public class GefaehrdungsUmsetzung extends CnATreeElement implements IGefaehrdun
      */
     @Override
     public List<IGefaehrdungsBaumElement> getGefaehrdungsBaumChildren() {
-        List<IGefaehrdungsBaumElement> children = new ArrayList<IGefaehrdungsBaumElement>(getChildren().size());
+        List<IGefaehrdungsBaumElement> children = new ArrayList<IGefaehrdungsBaumElement>(
+                getChildren().size());
         for (Object object : getChildren()) {
             if (object instanceof IGefaehrdungsBaumElement) {
                 children.add((IGefaehrdungsBaumElement) object);
@@ -164,12 +170,11 @@ public class GefaehrdungsUmsetzung extends CnATreeElement implements IGefaehrdun
         sb.append("[").append(getAlternative()).append("] "); //$NON-NLS-1$ //$NON-NLS-2$
         sb.append(getEntity().getSimpleValue(PROP_TITEL));
         String alternative = getAlternativeText();
-        if(alternative!=null && !alternative.isEmpty()) {
+        if (alternative != null && !alternative.isEmpty()) {
             sb.append(" (").append(getAlternativeText()).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         return sb.toString();
     }
-
 
     @Override
     public String getTypeId() {

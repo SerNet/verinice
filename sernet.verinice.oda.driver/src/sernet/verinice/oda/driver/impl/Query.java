@@ -55,235 +55,236 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.oda.driver.Activator;
 import sernet.verinice.security.report.ReportClassLoader;
 
+public class Query implements IQuery {
+    public static final String ODA_DATA_SOURCE_ID = "verinice.oda.driver.dataSource.id"; //$NON-NLS-1$
+    public static final String ODA_DATA_SET_ID = "verinice.oda.driver.dataSet.id"; //$NON-NLS-1$
 
+    private static final Logger log = Logger.getLogger(Query.class);
 
-public class Query implements IQuery
-{
-    public static final String ODA_DATA_SOURCE_ID = "verinice.oda.driver.dataSource.id";  //$NON-NLS-1$
-    public static final String ODA_DATA_SET_ID = "verinice.oda.driver.dataSet.id";  //$NON-NLS-1$
-    
-	private static final Logger log = Logger.getLogger(Query.class);
-	
-	private int maxRows;
+    private int maxRows;
     private String queryText;
-    
-    
+
     private Integer vnRootElement;
-    
+
     private Integer[] vnRootElements;
-    
+
     private Interpreter setupInterpreter, interpreter;
-    
+
     private Map<String, String> properties = new HashMap<String, String>();
-    
+
     private Map<String, Object> inParameterValues = new HashMap<String, Object>();
-    
+
     private Object result;
-    
+
     private String[] columns, inParameters;
-    
+
     public static final String PROP_SETUP_QUERY_TEXT = "setupQueryText";
-    
-    Query(Integer[] rootElementIds){
-        if(rootElementIds!=null && rootElementIds.length == 1 ) {
-            vnRootElement = rootElementIds[0]; 
+
+    Query(Integer[] rootElementIds) {
+        if (rootElementIds != null && rootElementIds.length == 1) {
+            vnRootElement = rootElementIds[0];
             vnRootElements = null;
         } else {
-        	vnRootElement = -1;
-        	vnRootElements = (rootElementIds != null) ? rootElementIds.clone() : null;
+            vnRootElement = -1;
+            vnRootElements = (rootElementIds != null) ? rootElementIds.clone() : null;
         }
-    	init();
+        init();
     }
-    
+
     Query(Integer rootElementId) {
-        vnRootElement = rootElementId; 
+        vnRootElement = rootElementId;
         vnRootElements = null;
         init();
     }
 
     private void init() {
-    	IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
-    	ReportClassLoader securedClassLoader = new ReportClassLoader(Query.class.getClassLoader());	
+        IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
+        ReportClassLoader securedClassLoader = new ReportClassLoader(Query.class.getClassLoader());
 
-    	try {
-    	    // "Setup" BSH environment:
-    		setupInterpreter = new Interpreter();
-    		setupInterpreter.setClassLoader(securedClassLoader);
-    		
-    		setupInterpreter.set("__columns", null);
-    		setupInterpreter.eval("columns(c) { __columns = c; }");
-			
-    		setupInterpreter.set("__inParameters", null);
-    		setupInterpreter.eval("inParameters(ip) { __inParameters = ip; }");
-    		setupInterpreter.set("helper", new Helper());
+        try {
+            // "Setup" BSH environment:
+            setupInterpreter = new Interpreter();
+            setupInterpreter.setClassLoader(securedClassLoader);
 
-    		// BSH environment:
-    		interpreter = new Interpreter();
-    		interpreter.setClassLoader(securedClassLoader);
-    		
-    		
-			interpreter.set("_inpv", inParameterValues);
-			interpreter.eval(
-					"inpv(s) {" +
-					" v = _inpv.get(s);" +
-					" return (v == null) ? \"input parameter value \" + s + \" does not exist.\" : v;" +
-					"}");
+            setupInterpreter.set("__columns", null);
+            setupInterpreter.eval("columns(c) { __columns = c; }");
 
-			interpreter.set("_vars", odaDriver.getScriptVariables());
-			interpreter.eval(
-					"vars(s) {" +
-					" v = _vars.get(s);" +
-					" return (v == null) ? s + \" does not exist.\" : v;" +
-					"}");
-			
-    		interpreter.set("helper", new Helper());
-    		interpreter.eval("gpt(entityType) { return helper.getAllPropertyTypes(entityType); }");
-    		interpreter.set("properties", properties);
-    		
+            setupInterpreter.set("__inParameters", null);
+            setupInterpreter.eval("inParameters(ip) { __inParameters = ip; }");
+            setupInterpreter.set("helper", new Helper());
 
-    		
-    		
-		} catch (EvalError e) {
-		    log.error("Error while evaluating a BeanShell script for an ODA query.", e);
-			throw new RuntimeException("Error while evaluating a BeanShell script for an ODA query.", e);
-		} catch (RuntimeException e) {
+            // BSH environment:
+            interpreter = new Interpreter();
+            interpreter.setClassLoader(securedClassLoader);
+
+            interpreter.set("_inpv", inParameterValues);
+            interpreter.eval("inpv(s) {" + " v = _inpv.get(s);"
+                    + " return (v == null) ? \"input parameter value \" + s + \" does not exist.\" : v;"
+                    + "}");
+
+            interpreter.set("_vars", odaDriver.getScriptVariables());
+            interpreter.eval("vars(s) {" + " v = _vars.get(s);"
+                    + " return (v == null) ? s + \" does not exist.\" : v;" + "}");
+
+            interpreter.set("helper", new Helper());
+            interpreter.eval("gpt(entityType) { return helper.getAllPropertyTypes(entityType); }");
+            interpreter.set("properties", properties);
+
+        } catch (EvalError e) {
+            log.error("Error while evaluating a BeanShell script for an ODA query.", e);
+            throw new RuntimeException(
+                    "Error while evaluating a BeanShell script for an ODA query.", e);
+        } catch (RuntimeException e) {
             log.error("RuntimeException while creating an ODA query.", e);
             throw e;
         } catch (Exception e) {
-		    log.error("Exception while creating an ODA query.", e);
-            throw new RuntimeException("Error while evaluating a BeanShell script for an ODA query.", e);
+            log.error("Exception while creating an ODA query.", e);
+            throw new RuntimeException(
+                    "Error while evaluating a BeanShell script for an ODA query.", e);
         }
     }
-    
+
     /**
-     * A class with utility methods which are supposed to be used by report scripts.
+     * A class with utility methods which are supposed to be used by report
+     * scripts.
      * 
      * @author Robert Schuster <r.schuster@tarent.de>
      *
      */
     public class Helper {
-        
-    	public ICommand execute(ICommand c)
-    	{
-    		try
-    		{
-    			return Activator.getDefault().getCommandService().executeCommand(c);
-    		} catch (CommandException e)
-    		{
-    		    log.error("Query Helper: running a command failed.", e);
-    			throw new IllegalStateException("Running the command failed.", e);
-    		}
-    	}
-    	
+
+        public ICommand execute(ICommand c) {
+            try {
+                return Activator.getDefault().getCommandService().executeCommand(c);
+            } catch (CommandException e) {
+                log.error("Query Helper: running a command failed.", e);
+                throw new IllegalStateException("Running the command failed.", e);
+            }
+        }
+
         /**
-         * A variant of 'retrieveEntityValues' which does not specify the type of the properties. (Defaults
-         * to 'getSimpleValue'.)
+         * A variant of 'retrieveEntityValues' which does not specify the type
+         * of the properties. (Defaults to 'getSimpleValue'.)
          * 
          * @param typeId
          * @param propertyNames
          * @return
          */
-        public List<List<Object>> retrieveEntityValues(String typeId, String[] propertyNames)
-        {
-        	return retrieveEntityValues(typeId, propertyNames, new Class[0]);
+        public List<List<Object>> retrieveEntityValues(String typeId, String[] propertyNames) {
+            return retrieveEntityValues(typeId, propertyNames, new Class[0]);
         }
-        
+
         /**
-         * Retrieves a list containing the values of the propertytypes of the specified entitytype.
+         * Retrieves a list containing the values of the propertytypes of the
+         * specified entitytype.
          * 
-         * The data is returned in a way that it can directly be used for BIRT tables (list of property value lists) 
+         * The data is returned in a way that it can directly be used for BIRT
+         * tables (list of property value lists)
          * 
-         * By specifying the class of the result the retrieval code will use {@link Entity#getInt(String)} (for
-         * <code>Integer.class</code>) or {@link Entity#getSimpleValue(String)} (for <code>String.class</code>).
+         * By specifying the class of the result the retrieval code will use
+         * {@link Entity#getInt(String)} (for <code>Integer.class</code>) or
+         * {@link Entity#getSimpleValue(String)} (for
+         * <code>String.class</code>).
          * 
          * @param typeId
          * @param propertyNames
          * @param classes
          * @return
          */
-        public List<List<Object>> retrieveEntityValues(String typeId, String[] propertyNames, Class<?>[] classes)
-        {
-    		LoadEntityValues command = new LoadEntityValues(typeId, propertyNames, classes );
+        public List<List<Object>> retrieveEntityValues(String typeId, String[] propertyNames,
+                Class<?>[] classes) {
+            LoadEntityValues command = new LoadEntityValues(typeId, propertyNames, classes);
 
-    			try {
-    				command = Activator.getDefault().getCommandService().executeCommand(command);
-    			} catch (CommandException e) {
-    				return Collections.emptyList();
-    			}
-    		
-    		return command.getResult();
+            try {
+                command = Activator.getDefault().getCommandService().executeCommand(command);
+            } catch (CommandException e) {
+                return Collections.emptyList();
+            }
+
+            return command.getResult();
         }
 
         public String[] getAllPropertyTypes(String entityTypeId) {
             return getAllPropertyTypes(entityTypeId, false);
         }
-        
+
         public String[] getAllPropertyTypes(String entityTypeId, boolean withId) {
-            HUITypeFactory htf = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+            HUITypeFactory htf = (HUITypeFactory) VeriniceContext
+                    .get(VeriniceContext.HUI_TYPE_FACTORY);
             String[] props = htf.getEntityType(entityTypeId).getAllPropertyTypeIds();
             if (withId) {
-                String[] arr = new String[props.length+1];
+                String[] arr = new String[props.length + 1];
                 System.arraycopy(props, 0, arr, 0, props.length);
-                arr[props.length]  = "dbid";
+                arr[props.length] = "dbid";
                 props = arr;
             }
             return props;
         }
-      
-        public List<List<Object>> map(List<CnATreeElement> input, String[] props)
-        {
-        	return map(input, props, new Class<?>[0]);
+
+        public List<List<Object>> map(List<CnATreeElement> input, String[] props) {
+            return map(input, props, new Class<?>[0]);
         }
-        
+
         /**
-         * Takes an existing list of {@link CnATreeElement} instances and converts them into a list
-         * of string values (this can be used as the input for BIRT tables).
+         * Takes an existing list of {@link CnATreeElement} instances and
+         * converts them into a list of string values (this can be used as the
+         * input for BIRT tables).
          * 
          * @param input
          * @param props
          * @param classes
-         * @param addDbId optionally add database ID of the element at the end of each result
+         * @param addDbId
+         *            optionally add database ID of the element at the end of
+         *            each result
          * @return
          */
-        public List<List<Object>> map(List<CnATreeElement> input, String[] props, Class<?>[] classes, boolean addDbId)
-        {
-            if (input == null || input.size()==0){
-                return new ArrayList<List<Object>>();
-            }
-       
-           	MapEntityValues cmd = new MapEntityValues(input.get(0).getEntityType().getId(), reduceToIDs(input), props, classes, addDbId);
-        	cmd = (MapEntityValues) execute(cmd);
-        	return cmd.getResult();
-        }
-        
-        public List<List<Object>> map(List<CnATreeElement> input, String[] props, Class<?>[] classes, boolean addDbId, boolean mapNumericalOptionValues){
-            if (input == null || input.size()==0){
+        public List<List<Object>> map(List<CnATreeElement> input, String[] props,
+                Class<?>[] classes, boolean addDbId) {
+            if (input == null || input.size() == 0) {
                 return new ArrayList<List<Object>>();
             }
 
-            MapEntityValues cmd = new MapEntityValues(input.get(0).getEntityType().getId(), reduceToIDs(input), props, classes, addDbId, mapNumericalOptionValues);
+            MapEntityValues cmd = new MapEntityValues(input.get(0).getEntityType().getId(),
+                    reduceToIDs(input), props, classes, addDbId);
             cmd = (MapEntityValues) execute(cmd);
             return cmd.getResult();
-            
         }
-        
+
+        public List<List<Object>> map(List<CnATreeElement> input, String[] props,
+                Class<?>[] classes, boolean addDbId, boolean mapNumericalOptionValues) {
+            if (input == null || input.size() == 0) {
+                return new ArrayList<List<Object>>();
+            }
+
+            MapEntityValues cmd = new MapEntityValues(input.get(0).getEntityType().getId(),
+                    reduceToIDs(input), props, classes, addDbId, mapNumericalOptionValues);
+            cmd = (MapEntityValues) execute(cmd);
+            return cmd.getResult();
+
+        }
+
         /**
-         * Takes an existing list of {@link CnATreeElement} instances and converts them into a list
-         * of string values (this can be used as the input for BIRT tables).
+         * Takes an existing list of {@link CnATreeElement} instances and
+         * converts them into a list of string values (this can be used as the
+         * input for BIRT tables).
          * 
          * @param elementList
          * @param propertyIdArray
          * @param classes
-         * @param addDbId optionally add database ID of the element at the end of each result
+         * @param addDbId
+         *            optionally add database ID of the element at the end of
+         *            each result
          * @return
          */
-        public List<List<Object>> mapfast(List<CnATreeElement> elementList, String[] propertyIdArray) {
-            if (elementList == null || elementList.size()==0) {
+        public List<List<Object>> mapfast(List<CnATreeElement> elementList,
+                String[] propertyIdArray) {
+            if (elementList == null || elementList.size() == 0) {
                 return new ArrayList<List<Object>>();
             }
-            List<List<Object>> result = new ArrayList<List<Object>>(elementList.size());           
-            for (CnATreeElement element : elementList) {              
-                List<Object> row = LoadEntityValues.convertValuesToList(element.getEntity(), propertyIdArray);
+            List<List<Object>> result = new ArrayList<List<Object>>(elementList.size());
+            for (CnATreeElement element : elementList) {
+                List<Object> row = LoadEntityValues.convertValuesToList(element.getEntity(),
+                        propertyIdArray);
                 if (log.isDebugEnabled()) {
                     log.debug("Adding dbid: " + element.getDbId() + " to " + element.getTitle());
                 }
@@ -293,7 +294,7 @@ public class Query implements IQuery
             }
             return result;
         }
-        
+
         /**
          * @param input
          * @return
@@ -306,72 +307,75 @@ public class Query implements IQuery
             return result_0;
         }
 
-        public List<List<Object>> map(List<CnATreeElement> input, String[] props, boolean withDbId){
+        public List<List<Object>> map(List<CnATreeElement> input, String[] props,
+                boolean withDbId) {
             return map(input, props, new Class<?>[0], withDbId);
         }
 
-        public List<List<Object>> map(List<CnATreeElement> input, String[] props, Class<?>[] classes){
+        public List<List<Object>> map(List<CnATreeElement> input, String[] props,
+                Class<?>[] classes) {
             return map(input, props, classes, false);
         }
-        
-        public List<List<Object>> map(List<CnATreeElement> input, String[] props, boolean withDbId, boolean mapNumericalValues){
+
+        public List<List<Object>> map(List<CnATreeElement> input, String[] props, boolean withDbId,
+                boolean mapNumericalValues) {
             return map(input, props, new Class<?>[0], withDbId, mapNumericalValues);
         }
-        
+
         public Integer getRoot() {
-       		return vnRootElement;
+            return vnRootElement;
         }
-        
-        public Integer[] getRootElements(){
+
+        public Integer[] getRootElements() {
             if (vnRootElements == null || vnRootElements.length <= 0) {
                 return new Integer[] { getRoot() };
             }
-        	return vnRootElements;
+            return vnRootElements;
         }
 
         /**
-         * Takes a {@link BufferedImage} instance and turns it into a byte array which can be used
-         * by BIRT's dynamic images.
+         * Takes a {@link BufferedImage} instance and turns it into a byte array
+         * which can be used by BIRT's dynamic images.
          * 
-         * <p>Note: If a dataset should contain only a single image it *MUST* be wrapped
-         * using {@link #wrapeSingleImageResult}.</p>
+         * <p>
+         * Note: If a dataset should contain only a single image it *MUST* be
+         * wrapped using {@link #wrapeSingleImageResult}.
+         * </p>
          * 
          * @param im
          * @return
          * @throws IOException
          */
-        public byte[] createImageResult(BufferedImage im) throws IOException
-        {
-        	ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        	ImageIO.write(im, "png", bos);
-        	return bos.toByteArray();
+        public byte[] createImageResult(BufferedImage im) throws IOException {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ImageIO.write(im, "png", bos);
+            return bos.toByteArray();
         }
-        
-        public Object arraycopy(Object sourceArray, int sourcePosition, Object destinationArray, int destinationPosition, int length){
-            System.arraycopy(sourceArray, sourcePosition, destinationArray, destinationPosition, length);
+
+        public Object arraycopy(Object sourceArray, int sourcePosition, Object destinationArray,
+                int destinationPosition, int length) {
+            System.arraycopy(sourceArray, sourcePosition, destinationArray, destinationPosition,
+                    length);
             return destinationArray;
         }
-        
-    }
-	
-	@Override
-    public void prepare( String queryText ) throws OdaException
-	{
-        this.queryText = queryText;
-	}
-	
-	@Override
-    public void setAppContext( Object context ) throws OdaException
-	{
-	    // do nothing; assumes no support for pass-through context
-	}
 
-	@Override
-    public void close() throws OdaException
-	{
+    }
+
+    @Override
+    public void prepare(String queryText) throws OdaException {
+        this.queryText = queryText;
+    }
+
+    @Override
+    public void setAppContext(Object context) throws OdaException {
+        // do nothing; assumes no support for pass-through context
+    }
+
+    @Override
+    public void close() throws OdaException {
         queryText = null;
         result = null;
-	}
+    }
 
     /*
      * @see org.eclipse.datatools.connectivity.oda.IQuery#getMetaData()
@@ -382,15 +386,15 @@ public class Query implements IQuery
         runQuery();
         return new ResultSetMetaData(result, columns);
     }
-	
-	private void runSetupQuery() throws OdaException{
-	    try {
-	        doRunSetupQuery();
-	    } catch(EvalError evalError){
-	        throw setTargetErrorAsCause(evalError);
-	    }
-	}
-	
+
+    private void runSetupQuery() throws OdaException {
+        try {
+            doRunSetupQuery();
+        } catch (EvalError evalError) {
+            throw setTargetErrorAsCause(evalError);
+        }
+    }
+
     private void doRunSetupQuery() throws EvalError {
         String setupQueryText = properties.get(PROP_SETUP_QUERY_TEXT);
         if (setupQueryText == null) {
@@ -415,11 +419,9 @@ public class Query implements IQuery
         try {
             return doRunQuery();
         } catch (EvalError evalError) {
-           throw setTargetErrorAsCause(evalError);
+            throw setTargetErrorAsCause(evalError);
         }
     }
-
-
 
     private Object doRunQuery() throws EvalError {
         result = interpreter.eval(queryText);
@@ -427,7 +429,7 @@ public class Query implements IQuery
     }
 
     private OdaException setTargetErrorAsCause(EvalError evalError) {
-        if(evalError instanceof TargetError){
+        if (evalError instanceof TargetError) {
             Throwable target = ((TargetError) evalError).getTarget();
             return new OdaException(target);
         } else {
@@ -447,192 +449,161 @@ public class Query implements IQuery
 
     }
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setProperty(java.lang.String, java.lang.String)
-	 */
-	@Override
-    public void setProperty( String name, String value ) throws OdaException
-	{
-		properties.put(name, value);
-	}
+    /*
+     * @see org.eclipse.datatools.connectivity.oda.IQuery#setProperty(java.lang.
+     * String, java.lang.String)
+     */
+    @Override
+    public void setProperty(String name, String value) throws OdaException {
+        properties.put(name, value);
+    }
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setMaxRows(int)
-	 */
-	@Override
-    public void setMaxRows( int max ) throws OdaException
-	{
-	    maxRows = max;
-	}
+    /*
+     * @see org.eclipse.datatools.connectivity.oda.IQuery#setMaxRows(int)
+     */
+    @Override
+    public void setMaxRows(int max) throws OdaException {
+        maxRows = max;
+    }
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#getMaxRows()
-	 */
-	@Override
-    public int getMaxRows() throws OdaException
-	{
-		return maxRows;
-	}
-	
-	private void setValue(int parameterId, Object value) throws OdaException
-	{
-	try {
+    /*
+     * @see org.eclipse.datatools.connectivity.oda.IQuery#getMaxRows()
+     */
+    @Override
+    public int getMaxRows() throws OdaException {
+        return maxRows;
+    }
+
+    private void setValue(int parameterId, Object value) throws OdaException {
+        try {
             doRunSetupQuery();
         } catch (EvalError evalError) {
             throw new OdaException(evalError);
-          }
+        }
 
-    	if (inParameters != null
-    			&& inParameters.length >= parameterId)
-    	{
-    		inParameterValues.put(inParameters[parameterId-1], value);
-    	}
-	}
+        if (inParameters != null && inParameters.length >= parameterId) {
+            inParameterValues.put(inParameters[parameterId - 1], value);
+        }
+    }
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#clearInParameters()
-	 */
-	@Override
-    public void clearInParameters() throws OdaException
-	{
-		inParameterValues.clear();
-	}
-
-	@Override
-    public void setInt( String parameterName, int value ) throws OdaException
-	{
-		inParameterValues.put(parameterName, value);
-	}
-
-	@Override
-    public void setInt( int parameterId, int value ) throws OdaException
-	{
-		setValue(parameterId, value);
-	}
-
-	@Override
-    public void setDouble( String parameterName, double value ) throws OdaException
-	{
-		inParameterValues.put(parameterName, value);
-	}
-
-	@Override
-    public void setDouble( int parameterId, double value ) throws OdaException
-	{
-		setValue(parameterId, value);
-	}
-
-	@Override
-    public void setBigDecimal( String parameterName, BigDecimal value ) throws OdaException
-	{
-		inParameterValues.put(parameterName, value);
-	}
-
-	@Override
-    public void setBigDecimal( int parameterId, BigDecimal value ) throws OdaException
-	{
-		setValue(parameterId, value);
-	}
-
-	@Override
-    public void setString( String parameterName, String value ) throws OdaException
-	{
-		inParameterValues.put(parameterName, value);
-	}
-
-	@Override
-    public void setString( int parameterId, String value ) throws OdaException
-	{
-		setValue(parameterId, value);
-	}
-
-	@Override
-    public void setDate( String parameterName, Date value ) throws OdaException
-	{
-		inParameterValues.put(parameterName, value);
-	}
-
-	@Override
-    public void setDate( int parameterId, Date value ) throws OdaException
-	{
-		setValue(parameterId, value);
-	}
-
-	@Override
-    public void setTime( String parameterName, Time value ) throws OdaException
-	{
-		inParameterValues.put(parameterName, value);
-	}
-
-	@Override
-    public void setTime( int parameterId, Time value ) throws OdaException
-	{
-		setValue(parameterId, value);
-	}
-
-	@Override
-    public void setTimestamp( String parameterName, Timestamp value ) throws OdaException
-	{
-		inParameterValues.put(parameterName, value);
-	}
-
-	@Override
-    public void setTimestamp( int parameterId, Timestamp value ) throws OdaException
-	{
-		setValue(parameterId, value);
-	}
-
+    /*
+     * @see org.eclipse.datatools.connectivity.oda.IQuery#clearInParameters()
+     */
     @Override
-    public void setBoolean( String parameterName, boolean value )
-            throws OdaException
-    {
-		inParameterValues.put(parameterName, value);
+    public void clearInParameters() throws OdaException {
+        inParameterValues.clear();
     }
 
     @Override
-    public void setBoolean( int parameterId, boolean value )
-            throws OdaException
-    {
-		setValue(parameterId, value);
+    public void setInt(String parameterName, int value) throws OdaException {
+        inParameterValues.put(parameterName, value);
     }
 
     @Override
-    public void setObject( String parameterName, Object value )
-            throws OdaException
-    {
-		inParameterValues.put(parameterName, value);
-    }
-    
-    @Override
-    public void setObject( int parameterId, Object value ) throws OdaException
-    {
-		setValue(parameterId, value);
-    }
-    
-    @Override
-    public void setNull( String parameterName ) throws OdaException
-    {
-		inParameterValues.put(parameterName, null);
+    public void setInt(int parameterId, int value) throws OdaException {
+        setValue(parameterId, value);
     }
 
     @Override
-    public void setNull( int parameterId ) throws OdaException
-    {
-		setValue(parameterId, null);
+    public void setDouble(String parameterName, double value) throws OdaException {
+        inParameterValues.put(parameterName, value);
     }
 
-	@Override
-    public int findInParameter( String parameterName ) throws OdaException
-	{
-		for (int i = 0; i < inParameters.length; i++)
-		{
-			if (inParameters[i].equals(parameterName)){
-				return i;
-			}
-		}
-		
-		return -1;
-	}
+    @Override
+    public void setDouble(int parameterId, double value) throws OdaException {
+        setValue(parameterId, value);
+    }
+
+    @Override
+    public void setBigDecimal(String parameterName, BigDecimal value) throws OdaException {
+        inParameterValues.put(parameterName, value);
+    }
+
+    @Override
+    public void setBigDecimal(int parameterId, BigDecimal value) throws OdaException {
+        setValue(parameterId, value);
+    }
+
+    @Override
+    public void setString(String parameterName, String value) throws OdaException {
+        inParameterValues.put(parameterName, value);
+    }
+
+    @Override
+    public void setString(int parameterId, String value) throws OdaException {
+        setValue(parameterId, value);
+    }
+
+    @Override
+    public void setDate(String parameterName, Date value) throws OdaException {
+        inParameterValues.put(parameterName, value);
+    }
+
+    @Override
+    public void setDate(int parameterId, Date value) throws OdaException {
+        setValue(parameterId, value);
+    }
+
+    @Override
+    public void setTime(String parameterName, Time value) throws OdaException {
+        inParameterValues.put(parameterName, value);
+    }
+
+    @Override
+    public void setTime(int parameterId, Time value) throws OdaException {
+        setValue(parameterId, value);
+    }
+
+    @Override
+    public void setTimestamp(String parameterName, Timestamp value) throws OdaException {
+        inParameterValues.put(parameterName, value);
+    }
+
+    @Override
+    public void setTimestamp(int parameterId, Timestamp value) throws OdaException {
+        setValue(parameterId, value);
+    }
+
+    @Override
+    public void setBoolean(String parameterName, boolean value) throws OdaException {
+        inParameterValues.put(parameterName, value);
+    }
+
+    @Override
+    public void setBoolean(int parameterId, boolean value) throws OdaException {
+        setValue(parameterId, value);
+    }
+
+    @Override
+    public void setObject(String parameterName, Object value) throws OdaException {
+        inParameterValues.put(parameterName, value);
+    }
+
+    @Override
+    public void setObject(int parameterId, Object value) throws OdaException {
+        setValue(parameterId, value);
+    }
+
+    @Override
+    public void setNull(String parameterName) throws OdaException {
+        inParameterValues.put(parameterName, null);
+    }
+
+    @Override
+    public void setNull(int parameterId) throws OdaException {
+        setValue(parameterId, null);
+    }
+
+    @Override
+    public int findInParameter(String parameterName) throws OdaException {
+        for (int i = 0; i < inParameters.length; i++) {
+            if (inParameters[i].equals(parameterName)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
 
     @Override
     public IParameterMetaData getParameterMetaData() throws OdaException {
@@ -640,65 +611,70 @@ public class Query implements IQuery
         return new ParameterMetaData(inParameters);
     }
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setSortSpec(org.eclipse.datatools.connectivity.oda.SortSpec)
-	 */
-	@Override
-    public void setSortSpec( SortSpec sortBy ) throws OdaException
-	{
-		// only applies to sorting, assumes not supported
+    /*
+     * @see
+     * org.eclipse.datatools.connectivity.oda.IQuery#setSortSpec(org.eclipse.
+     * datatools.connectivity.oda.SortSpec)
+     */
+    @Override
+    public void setSortSpec(SortSpec sortBy) throws OdaException {
+        // only applies to sorting, assumes not supported
         throw new UnsupportedOperationException();
-	}
+    }
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#getSortSpec()
-	 */
-	@Override
-    public SortSpec getSortSpec() throws OdaException
-	{
-		// only applies to sorting
-		return null;
-	}
+    /*
+     * @see org.eclipse.datatools.connectivity.oda.IQuery#getSortSpec()
+     */
+    @Override
+    public SortSpec getSortSpec() throws OdaException {
+        // only applies to sorting
+        return null;
+    }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setSpecification(org.eclipse.datatools.connectivity.oda.spec.QuerySpecification)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.datatools.connectivity.oda.IQuery#setSpecification(org.
+     * eclipse.datatools.connectivity.oda.spec.QuerySpecification)
      */
     @Override
     @SuppressWarnings("restriction")
-    public void setSpecification( QuerySpecification querySpec )
-            throws OdaException
-    {
+    public void setSpecification(QuerySpecification querySpec) throws OdaException {
         // assumes no support
         throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.datatools.connectivity.oda.IQuery#getSpecification()
      */
     @Override
     @SuppressWarnings("restriction")
-    public QuerySpecification getSpecification()
-    {
+    public QuerySpecification getSpecification() {
         // assumes no support
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#getEffectiveQueryText()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.datatools.connectivity.oda.IQuery#getEffectiveQueryText()
      */
     @Override
-    public String getEffectiveQueryText()
-    {
+    public String getEffectiveQueryText() {
         return queryText;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.datatools.connectivity.oda.IQuery#cancel()
      */
     @Override
-    public void cancel() throws OdaException
-    {
-    	result = null;
+    public void cancel() throws OdaException {
+        result = null;
     }
-    
+
 }

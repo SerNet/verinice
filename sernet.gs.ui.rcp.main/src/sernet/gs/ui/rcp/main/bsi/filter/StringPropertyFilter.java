@@ -27,7 +27,6 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.common.CnATreeElement;
 
-
 /**
  * Reusable filter to select items based on property values.
  * 
@@ -36,59 +35,58 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class StringPropertyFilter extends ViewerFilter {
 
-	private StructuredViewer viewer;
-	private String pattern=null;
-	protected String propertyType;
-	protected Pattern regex;
+    private StructuredViewer viewer;
+    private String pattern = null;
+    protected String propertyType;
+    protected Pattern regex;
 
-	/**
-	 * 
-	 * @param viewer
-	 * @param type
-	 */
-	public StringPropertyFilter(StructuredViewer viewer, String type) {
-		this.viewer = viewer;
-		this.propertyType = type;
-	}
+    /**
+     * 
+     * @param viewer
+     * @param type
+     */
+    public StringPropertyFilter(StructuredViewer viewer, String type) {
+        this.viewer = viewer;
+        this.propertyType = type;
+    }
 
-	public String getPattern() {
-		return pattern;
-	}
-	
-	public void setPattern(String newPattern) {
-		boolean active = pattern != null;
-		if (newPattern != null && newPattern.length() > 0) {
-			pattern = newPattern;
-			regex = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
-			if (active){
-				viewer.refresh();
-			} else {
-				viewer.addFilter(this);
-				active = true;
-			}
-			return;
-		}
-		
-		// else deactivate:
-		pattern = null;
-		regex=null;
-		if (active){
-			viewer.removeFilter(this);
-		}
-	}
-	
-	
-	@Override
-	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if (!(element instanceof CnATreeElement)){
-			return true;
-		}
-		Entity entity = ((CnATreeElement)element).getEntity();
-		String value = entity.getSimpleValue(this.propertyType);
-		Matcher matcher = regex.matcher(value);
-		if (matcher.find()){
-			return true;
-		}
-		return false;
-	}
+    public String getPattern() {
+        return pattern;
+    }
+
+    public void setPattern(String newPattern) {
+        boolean active = pattern != null;
+        if (newPattern != null && newPattern.length() > 0) {
+            pattern = newPattern;
+            regex = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
+            if (active) {
+                viewer.refresh();
+            } else {
+                viewer.addFilter(this);
+                active = true;
+            }
+            return;
+        }
+
+        // else deactivate:
+        pattern = null;
+        regex = null;
+        if (active) {
+            viewer.removeFilter(this);
+        }
+    }
+
+    @Override
+    public boolean select(Viewer viewer, Object parentElement, Object element) {
+        if (!(element instanceof CnATreeElement)) {
+            return true;
+        }
+        Entity entity = ((CnATreeElement) element).getEntity();
+        String value = entity.getSimpleValue(this.propertyType);
+        Matcher matcher = regex.matcher(value);
+        if (matcher.find()) {
+            return true;
+        }
+        return false;
+    }
 }

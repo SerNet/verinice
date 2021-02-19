@@ -15,73 +15,64 @@ import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
 import sernet.verinice.model.iso27k.Process;
+import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
 
 /**
  * Load Process name, CIA, calculated total risk.
  * 
  * 
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
-public class LoadReportProcessesWithRisk extends GenericCommand implements ICachedCommand{
+public class LoadReportProcessesWithRisk extends GenericCommand implements ICachedCommand {
 
     private static final Logger log = Logger.getLogger(LoadReportProcessesWithRisk.class);
-    
-   private List<List<String>> result = new ArrayList<List<String>>();
-   
-   public static final String[] COLUMNS = {
-     "dbid",
-     "abbrev",
-     "name",
-     "C",  
-     "I",  
-     "A",  
-     "risk",  
-   };
-    
-	private String typeId = Process.TYPE_ID;
+
+    private List<List<String>> result = new ArrayList<List<String>>();
+
+    public static final String[] COLUMNS = { "dbid", "abbrev", "name", "C", "I", "A", "risk", };
+
+    private String typeId = Process.TYPE_ID;
     private Integer rootElement;
     private List<CnATreeElement> elements;
 
     private boolean resultInjectedFromCache = false;
 
-    public LoadReportProcessesWithRisk( Integer rootElement) {
-	    this.rootElement = rootElement;
-	}
-
-
+    public LoadReportProcessesWithRisk(Integer rootElement) {
+        this.rootElement = rootElement;
+    }
 
     public void execute() {
-        if(!resultInjectedFromCache){
+        if (!resultInjectedFromCache) {
             log.debug("LoadReportElements for root_object " + rootElement);
 
-            LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElement});
+            LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(
+                    new Integer[] { rootElement });
             try {
                 command = getCommandService().executeCommand(command);
             } catch (CommandException e) {
                 throw new RuntimeCommandException(e);
             }
-            if (command.getElements() == null || command.getElements().size()==0) {
+            if (command.getElements() == null || command.getElements().size() == 0) {
                 this.elements = new ArrayList<CnATreeElement>(0);
                 return;
             }
             CnATreeElement root = command.getElements().get(0);
 
-            //if typeId is that of the root object, just return it itself. else look for children:
+            // if typeId is that of the root object, just return it itself. else
+            // look for children:
             ArrayList<CnATreeElement> items = new ArrayList<CnATreeElement>();
             if (this.typeId.equals(root.getTypeId())) {
                 this.elements = items;
                 this.elements.add(root);
-            }
-            else {
+            } else {
                 try {
-                    LoadReportElements elementLoader = new LoadReportElements(typeId, root.getDbId(), true);
+                    LoadReportElements elementLoader = new LoadReportElements(typeId,
+                            root.getDbId(), true);
                     elementLoader = getCommandService().executeCommand(elementLoader);
-                    if(elements == null){
+                    if (elements == null) {
                         elements = new ArrayList<CnATreeElement>(0);
                     }
                     this.elements.addAll(elementLoader.getElements());
@@ -106,44 +97,43 @@ public class LoadReportProcessesWithRisk extends GenericCommand implements ICach
         }
     }
 
-	
-
-   
-
     /**
      * @param elements2
-     * @throws CommandException 
+     * @throws CommandException
      */
     private void calculateRisk() throws CommandException {
         for (CnATreeElement cnATreeElement : elements) {
             if (cnATreeElement.getTypeId().equals(Process.TYPE_ID)) {
-                LoadReportLinkedElements loadAssets = new LoadReportLinkedElements(Asset.TYPE_ID, cnATreeElement.getDbId(), true, false);
+                LoadReportLinkedElements loadAssets = new LoadReportLinkedElements(Asset.TYPE_ID,
+                        cnATreeElement.getDbId(), true, false);
                 loadAssets = getCommandService().executeCommand(loadAssets);
                 List<CnATreeElement> assets = loadAssets.getElements();
-                
-                int totalRisk=0;
+
+                int totalRisk = 0;
                 for (CnATreeElement asset : assets) {
-                    LoadReportElementWithLinks command2 = new LoadReportElementWithLinks("incident_scenario", asset.getDbId());
+                    LoadReportElementWithLinks command2 = new LoadReportElementWithLinks(
+                            "incident_scenario", asset.getDbId());
                     command2 = getCommandService().executeCommand(command2);
                     List<CnALink> links = command2.getLinkList();
-                    
+
                     for (CnALink link : links) {
-                    	if(link.getRiskConfidentiality() != null){
-                    		totalRisk += link.getRiskConfidentiality();
-                    	}
-                    	if(link.getRiskIntegrity() != null){
-                    		totalRisk += link.getRiskIntegrity();
-                    	}
-                    	if(link.getRiskAvailability() != null){
-                    		totalRisk += link.getRiskAvailability();
-                    	}
+                        if (link.getRiskConfidentiality() != null) {
+                            totalRisk += link.getRiskConfidentiality();
+                        }
+                        if (link.getRiskIntegrity() != null) {
+                            totalRisk += link.getRiskIntegrity();
+                        }
+                        if (link.getRiskAvailability() != null) {
+                            totalRisk += link.getRiskAvailability();
+                        }
                     }
                 }
-                
+
                 log.debug("Total risk for process " + cnATreeElement.getDbId() + ": " + totalRisk);
-                
+
                 ArrayList<String> row = new ArrayList<String>();
-                ProtectionRequirementsValueAdapter process = new ProtectionRequirementsValueAdapter(cnATreeElement);
+                ProtectionRequirementsValueAdapter process = new ProtectionRequirementsValueAdapter(
+                        cnATreeElement);
                 row.add(Integer.toString(cnATreeElement.getDbId()));
                 row.add(cnATreeElement.getEntity().getSimpleValue(Process.PROP_ABBR));
                 row.add(cnATreeElement.getEntity().getSimpleValue(Process.PROP_NAME));
@@ -156,9 +146,6 @@ public class LoadReportProcessesWithRisk extends GenericCommand implements ICach
         }
     }
 
-    
-  
-
     /**
      * @return the result
      */
@@ -166,11 +153,9 @@ public class LoadReportProcessesWithRisk extends GenericCommand implements ICach
         return result;
     }
 
-
-
     public void getElements(String typeFilter, List<CnATreeElement> items, CnATreeElement parent) {
         for (CnATreeElement child : parent.getChildren()) {
-            if (typeFilter != null && typeFilter.length()>0) {
+            if (typeFilter != null && typeFilter.length() > 0) {
                 if (child.getTypeId().equals(typeFilter)) {
                     items.add(child);
                     child.getParent().getTitle();
@@ -181,12 +166,12 @@ public class LoadReportProcessesWithRisk extends GenericCommand implements ICach
             }
             getElements(typeFilter, items, child);
         }
-        
+
     }
 
-
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
      */
     @Override
@@ -197,23 +182,25 @@ public class LoadReportProcessesWithRisk extends GenericCommand implements ICach
         return cacheID.toString();
     }
 
-
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.
+     * Object)
      */
     @Override
     public void injectCacheResult(Object result) {
-        this.result = (ArrayList<List<String>>)result;
+        this.result = (ArrayList<List<String>>) result;
         resultInjectedFromCache = true;
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 
-
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
      */
     @Override

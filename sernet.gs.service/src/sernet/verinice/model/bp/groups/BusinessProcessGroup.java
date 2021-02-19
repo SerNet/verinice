@@ -34,27 +34,28 @@ import sernet.verinice.model.iso27k.Group;
  */
 public class BusinessProcessGroup extends Group<BusinessProcess>
         implements IBpGroup, ITaggableElement {
-    
+
     private static final long serialVersionUID = -9081751520389572621L;
 
     public static final String TYPE_ID = "bp_businessprocess_group"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_businessprocess_group_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_businessprocess_group_tag"; //$NON-NLS-1$
 
-    public static final String[] CHILD_TYPES = new String[] {BusinessProcess.TYPE_ID};
-    
-    protected BusinessProcessGroup() {}
-    
+    public static final String[] CHILD_TYPES = new String[] { BusinessProcess.TYPE_ID };
+
+    protected BusinessProcessGroup() {
+    }
+
     public BusinessProcessGroup(CnATreeElement parent) {
         super(parent);
         init();
     }
-    
+
     @Override
     public String getTitle() {
         return getEntity().getPropertyValue(PROP_NAME);
     }
-    
+
     @Override
     public void setTitel(String name) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
@@ -64,7 +65,7 @@ public class BusinessProcessGroup extends Group<BusinessProcess>
     public String getTypeId() {
         return TYPE_ID;
     }
-    
+
     @Override
     public String[] getChildTypes() {
         return CHILD_TYPES;

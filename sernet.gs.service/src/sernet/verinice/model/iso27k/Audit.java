@@ -38,48 +38,42 @@ import sernet.verinice.model.common.CnATreeElement;
 public class Audit extends CnATreeElement implements IISO27kElement, IISO27kGroup, IISO27Scope,
         IAbbreviatedElement, ITaggableElement {
 
-	public static final String TYPE_ID = "audit"; //$NON-NLS-1$
-	public static final String PROP_ABBR = "audit_abbr"; //$NON-NLS-1$
-	public static final String PROP_NAME = "audit_name"; //$NON-NLS-1$
-	public static final String PROP_TAG = "audit_tag"; //$NON-NLS-1$
-	
-	public static final String PROP_CREAT = "audit_isa_creat";
-	public static final String PROP_CREATPHONE = "audit_isa_creatphone";
+    public static final String TYPE_ID = "audit"; //$NON-NLS-1$
+    public static final String PROP_ABBR = "audit_abbr"; //$NON-NLS-1$
+    public static final String PROP_NAME = "audit_name"; //$NON-NLS-1$
+    public static final String PROP_TAG = "audit_tag"; //$NON-NLS-1$
+
+    public static final String PROP_CREAT = "audit_isa_creat";
+    public static final String PROP_CREATPHONE = "audit_isa_creatphone";
     public static final String PROP_CREATMAIL = "audit_isa_creatmail";
     public static final String PROP_STARTDATE = "audit_startdate";
     public static final String PROP_ENDDATE = "audit_enddate";
-    
+
     public static final String REL_AUDIT_CONTROLGROUP = "rel_audit_controlgroup";
     public static final String REL_AUDIT_CONTROL = "rel_audit_control";
-	
-	
-	public static final String[] CHILD_TYPES = new String[] {
-        AssetGroup.TYPE_ID,
-        PersonGroup.TYPE_ID,
-        ControlGroup.TYPE_ID,
-        FindingGroup.TYPE_ID,
-        EvidenceGroup.TYPE_ID,
-        InterviewGroup.TYPE_ID
-    };
-	
-	/**
-	 * Creates an empty audit
-	 */
-	public Audit() {
-		super();
-	}
-	
-	public Audit(CnATreeElement parent) {
-	    this(parent,false);
-	}
-	
-	public Audit(CnATreeElement parent, boolean createChildren) {
-		super(parent);
-		setEntity(new Entity(TYPE_ID));
+
+    public static final String[] CHILD_TYPES = new String[] { AssetGroup.TYPE_ID,
+            PersonGroup.TYPE_ID, ControlGroup.TYPE_ID, FindingGroup.TYPE_ID, EvidenceGroup.TYPE_ID,
+            InterviewGroup.TYPE_ID };
+
+    /**
+     * Creates an empty audit
+     */
+    public Audit() {
+        super();
+    }
+
+    public Audit(CnATreeElement parent) {
+        this(parent, false);
+    }
+
+    public Audit(CnATreeElement parent, boolean createChildren) {
+        super(parent);
+        setEntity(new Entity(TYPE_ID));
         getEntity().initDefaultValues(getTypeFactory());
         // sets the localized title via HUITypeFactory from message bundle
         setTitel(getTypeFactory().getMessage(TYPE_ID));
-        if(createChildren) {
+        if (createChildren) {
             addChild(new AssetGroup(this, null));
             addChild(new ControlGroup(this, null));
             addChild(new PersonGroup(this, null));
@@ -88,89 +82,98 @@ public class Audit extends CnATreeElement implements IISO27kElement, IISO27kGrou
             addChild(new InterviewGroup(this, null));
         }
     }
-	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
-	 */
-	@Override
-	public String getTypeId() {
-		return TYPE_ID;
-	}
-	
-	/* (non-Javadoc)
-	 * @see sernet.verinice.model.common.CnATreeElement#canContain(java.lang.Object)
-	 */
-	@Override
-	public boolean canContain(Object obj) {
-	    boolean canContain = false;
-        if(obj instanceof CnATreeElement) {
-            CnATreeElement element = (CnATreeElement)obj;
-            canContain = Arrays.asList(getChildTypes()).contains(element.getTypeId()) 
-                         || this.getTypeId().equals(element.getTypeId());
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
+     */
+    @Override
+    public String getTypeId() {
+        return TYPE_ID;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.model.common.CnATreeElement#canContain(java.lang.Object)
+     */
+    @Override
+    public boolean canContain(Object obj) {
+        boolean canContain = false;
+        if (obj instanceof CnATreeElement) {
+            CnATreeElement element = (CnATreeElement) obj;
+            canContain = Arrays.asList(getChildTypes()).contains(element.getTypeId())
+                    || this.getTypeId().equals(element.getTypeId());
         }
         return canContain;
-	}
-	
-	/* (non-Javadoc)
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.iso27k.model.Group#getChildTypes()
      */
     @Override
     public String[] getChildTypes() {
         return CHILD_TYPES;
     }
-	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitel()
-	 */
-	@Override
-	public String getTitle() {
-		return getEntity().getSimpleValue(PROP_NAME);
-	}
-	
-	@Override
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitel()
+     */
+    @Override
+    public String getTitle() {
+        return getEntity().getSimpleValue(PROP_NAME);
+    }
+
+    @Override
     public void setTitel(String name) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
-	}
-	
-	@Override
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
+    }
+
+    @Override
     public String getAbbreviation() {
-		return getEntity().getSimpleValue(PROP_ABBR);
-	}
-	
-	public void setAbbreviation(String abbreviation) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
-	}
-	
-	@Override
+        return getEntity().getSimpleValue(PROP_ABBR);
+    }
+
+    public void setAbbreviation(String abbreviation) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
+    }
+
+    @Override
     public Collection<String> getTags() {
-		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
-	}
-	
-	public String getCreator(){
-		return getEntity().getSimpleValue(PROP_CREAT);
-	}
-	
-	public String getCreatorPhone(){
-		return getEntity().getSimpleValue(PROP_CREATPHONE);
-	}
-	
-	public String getCreatorEmail(){
-		return getEntity().getSimpleValue(PROP_CREATMAIL);
-	}
-	
-	public Date getStartDate(){
+        return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+    }
+
+    public String getCreator() {
+        return getEntity().getSimpleValue(PROP_CREAT);
+    }
+
+    public String getCreatorPhone() {
+        return getEntity().getSimpleValue(PROP_CREATPHONE);
+    }
+
+    public String getCreatorEmail() {
+        return getEntity().getSimpleValue(PROP_CREATMAIL);
+    }
+
+    public Date getStartDate() {
         return getEntity().getDate(PROP_STARTDATE);
     }
-    
-    public Date getEndDate(){
+
+    public Date getEndDate() {
         return getEntity().getDate(PROP_ENDDATE);
     }
-	
-	public ArrayList<CnATreeElement> toList(){
-		ArrayList<CnATreeElement> list = new ArrayList<CnATreeElement>();
-		list.add(this);
-		return list;
-	}
+
+    public ArrayList<CnATreeElement> toList() {
+        ArrayList<CnATreeElement> list = new ArrayList<CnATreeElement>();
+        list.add(this);
+        return list;
+    }
 
     /**
      * @return
@@ -178,7 +181,7 @@ public class Audit extends CnATreeElement implements IISO27kElement, IISO27kGrou
     public ControlGroup getControlGroup() {
         ControlGroup controlGroup = null;
         for (CnATreeElement child : getChildren()) {
-            if(ControlGroup.TYPE_ID.equals(child.getTypeId())) {
+            if (ControlGroup.TYPE_ID.equals(child.getTypeId())) {
                 controlGroup = (ControlGroup) child;
                 break;
             }

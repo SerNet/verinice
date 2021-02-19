@@ -35,28 +35,26 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class ObjektLebenszyklusPropertyFilter extends StringPropertyFilter {
 
-	public ObjektLebenszyklusPropertyFilter(StructuredViewer viewer) {
-		super(viewer, "");
-	}
-	
-	@Override
-	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if (!(element instanceof CnATreeElement)
-				|| element instanceof ITVerbund
-				|| !(element instanceof IBSIStrukturElement)
-				|| element instanceof IBSIStrukturKategorie){
-			return true;
-		}
-		
-		
-		Entity entity = ((CnATreeElement)element).getEntity();
-		String propertyTypeId = ((CnATreeElement)element).getTypeId() + "_status";
-		String value = entity.getSimpleValue(propertyTypeId);
-		Matcher matcher = regex.matcher(value);
-		if (matcher.find()){
-			return true;
-		}
-		return false;
-	}
+    public ObjektLebenszyklusPropertyFilter(StructuredViewer viewer) {
+        super(viewer, "");
+    }
+
+    @Override
+    public boolean select(Viewer viewer, Object parentElement, Object element) {
+        if (!(element instanceof CnATreeElement) || element instanceof ITVerbund
+                || !(element instanceof IBSIStrukturElement)
+                || element instanceof IBSIStrukturKategorie) {
+            return true;
+        }
+
+        Entity entity = ((CnATreeElement) element).getEntity();
+        String propertyTypeId = ((CnATreeElement) element).getTypeId() + "_status";
+        String value = entity.getSimpleValue(propertyTypeId);
+        Matcher matcher = regex.matcher(value);
+        if (matcher.find()) {
+            return true;
+        }
+        return false;
+    }
 
 }

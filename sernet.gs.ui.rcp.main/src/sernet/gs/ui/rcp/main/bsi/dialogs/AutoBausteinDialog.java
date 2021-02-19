@@ -90,7 +90,8 @@ public class AutoBausteinDialog extends Dialog {
         comp.setContent(viewer.getControl());
         comp.setMinSize(scrolledCompWidth, scrolledCompHeight);
 
-        LoadGenericElementByType<BausteinVorschlag> command = new LoadGenericElementByType<BausteinVorschlag>(BausteinVorschlag.class);
+        LoadGenericElementByType<BausteinVorschlag> command = new LoadGenericElementByType<BausteinVorschlag>(
+                BausteinVorschlag.class);
         try {
             command = ServiceFactory.lookupCommandService().executeCommand(command);
         } catch (CommandException e) {
@@ -174,7 +175,8 @@ public class AutoBausteinDialog extends Dialog {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                BausteinVorschlag neuerVorschlag = new BausteinVorschlag(Messages.AutoBausteinDialog_4, "");
+                BausteinVorschlag neuerVorschlag = new BausteinVorschlag(
+                        Messages.AutoBausteinDialog_4, "");
                 neuerVorschlag = showEditDialog(neuerVorschlag);
                 if (neuerVorschlag != null) {
                     elements.add(neuerVorschlag);
@@ -191,7 +193,8 @@ public class AutoBausteinDialog extends Dialog {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 if (!viewer.getSelection().isEmpty()) {
-                    Object selection = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+                    Object selection = ((IStructuredSelection) viewer.getSelection())
+                            .getFirstElement();
                     BausteinVorschlag vorschlag = (BausteinVorschlag) selection;
                     vorschlag = showEditDialog(vorschlag);
                     if (vorschlag != null) {
@@ -208,11 +211,13 @@ public class AutoBausteinDialog extends Dialog {
         buttonDel.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                if (MessageDialog.openConfirm(getParentShell(), Messages.AutoBausteinDialog_8, Messages.AutoBausteinDialog_9)) {
+                if (MessageDialog.openConfirm(getParentShell(), Messages.AutoBausteinDialog_8,
+                        Messages.AutoBausteinDialog_9)) {
                     IStructuredSelection sel = ((IStructuredSelection) viewer.getSelection());
                     if (sel.size() == 1) {
                         BausteinVorschlag selection = (BausteinVorschlag) sel.getFirstElement();
-                        RemoveGenericElement<BausteinVorschlag> command = new RemoveGenericElement<BausteinVorschlag>(selection);
+                        RemoveGenericElement<BausteinVorschlag> command = new RemoveGenericElement<BausteinVorschlag>(
+                                selection);
                         try {
                             ServiceFactory.lookupCommandService().executeCommand(command);
                             selectedSubtype = null;

@@ -33,38 +33,38 @@ import sernet.verinice.model.iso27k.Group;
  *
  */
 public class NetworkGroup extends Group<Network> implements IBpGroup, ITaggableElement {
-    
+
     private static final long serialVersionUID = 6166611011332324049L;
-    
+
     public static final String TYPE_ID = "bp_network_group"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_network_group_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_network_group_tag"; //$NON-NLS-1$
 
-    
-    public static final String[] CHILD_TYPES = new String[] {Network.TYPE_ID};
-    
-    protected NetworkGroup() {}
-    
+    public static final String[] CHILD_TYPES = new String[] { Network.TYPE_ID };
+
+    protected NetworkGroup() {
+    }
+
     public NetworkGroup(CnATreeElement parent) {
         super(parent);
         init();
     }
-    
+
     @Override
     public String getTitle() {
         return getEntity().getPropertyValue(PROP_NAME);
     }
-    
+
     @Override
     public void setTitel(String name) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
-    
+
     @Override
     public String getTypeId() {
         return TYPE_ID;
     }
-        
+
     @Override
     public String[] getChildTypes() {
         return CHILD_TYPES;

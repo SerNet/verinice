@@ -40,29 +40,29 @@ import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.model.common.configuration.Configuration;
 
 public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticator {
-    
+
     private static final Logger LOG = Logger.getLogger(LdapAuthenticatorImpl.class);
-    
+
     // injected by spring
     private DefaultSpringSecurityContextSource contextFactory;
-    
+
     // injected by spring
     private LdapContextSource contextSourceLdapSearch;
 
     // injected by spring
     private String principalPrefix = "";
-    
+
     // injected by spring
     private String principalSuffix = "";
-    
+
     // injected by spring
     private String guestUser = "";
-    
+
     // injected by spring
     private String adminuser = "";
-    
+
     // injected by spring
-    private String passwordRealm ="";
+    private String passwordRealm = "";
 
     // injected by spring
     private String groupFilter;
@@ -70,23 +70,25 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
     // injected by spring
     private String userFilter;
 
-
     /**
-     * @param passwordRealm the passwordRealm to set
+     * @param passwordRealm
+     *            the passwordRealm to set
      */
     public void setPasswordRealm(String passwordRealm) {
         this.passwordRealm = passwordRealm;
     }
 
     /**
-     * @param adminuser the adminuser to set
+     * @param adminuser
+     *            the adminuser to set
      */
     public void setAdminuser(String adminuser) {
         this.adminuser = adminuser;
     }
 
     /**
-     * @param adminpass the adminpass to set
+     * @param adminpass
+     *            the adminpass to set
      */
     public void setAdminpass(String adminpass) {
         this.adminpass = adminpass;
@@ -97,38 +99,40 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
 
     private LdapUserSearch ldapUserSearch;
 
-    /* (non-Javadoc)
-     * @see org.springframework.security.providers.ldap.LdapAuthenticator#authenticate(org.springframework.security.Authentication)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.security.providers.ldap.LdapAuthenticator#
+     * authenticate(org.springframework.security.Authentication)
      */
     @Override
     public DirContextOperations authenticate(Authentication authentication) {
 
-
         // Grab the username and password out of the authentication object.
         String username = authentication.getName();
-        
+
         if (LOG.isDebugEnabled()) {
             LOG.debug("Authentication start, username: \"" + username + "\"");
         }
-        
+
         String principal = principalPrefix + username + principalSuffix;
         String password = "";
         if (authentication.getCredentials() != null) {
             password = authentication.getCredentials().toString();
         }
-        
+
         // If we have a valid username and password, try to authenticate.
         if (!("".equals(principal.trim())) && !("".equals(password.trim()))) {
-            
+
             // compare against the admin definied in the config file:
             if (!adminuser.isEmpty() && !adminpass.isEmpty() && username.equals(adminuser)) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Administrative username entered");
                 }
                 checkAdminPassword(username, password);
-                return defaultAdministrator(); 
+                return defaultAdministrator();
             }
-            
+
             try {
 
                 if (LOG.isDebugEnabled()) {
@@ -144,7 +148,7 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("AD or LDAP authentication was successful");
                 }
-            } catch(RuntimeException e) {
+            } catch (RuntimeException e) {
                 // log auth failure and re-throw exception
                 if (LOG.isInfoEnabled()) {
                     LOG.info("AD or LDAP authentication failed.");
@@ -154,18 +158,19 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
                 }
                 throw e;
             }
-            
+
             ServerInitializer.inheritVeriniceContextState();
             List<Entity> entities = loadUserEntites(username);
-            
-            if (entities != null && entities.size()>0) {
+
+            if (entities != null && entities.size() > 0) {
                 for (Entity entity : entities) {
                     if (DbUserDetailsService.isUser(username, entity)) {
-                        if("1".equals(entity.getSimpleValue(Configuration.PROP_DEACTIVATED))){
-                            if(LOG.isDebugEnabled()){
+                        if ("1".equals(entity.getSimpleValue(Configuration.PROP_DEACTIVATED))) {
+                            if (LOG.isDebugEnabled()) {
                                 LOG.debug("User " + username + " is deactivated");
                             }
-                            throw new UsernameNotFoundException(Messages.getString("DbUserDetailsService.5"));
+                            throw new UsernameNotFoundException(
+                                    Messages.getString("DbUserDetailsService.5"));
                         }
                         return ldapUser(entity);
                     }
@@ -173,31 +178,34 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
             } else if (LOG.isDebugEnabled()) {
                 LOG.debug("Username not found in verinice DB: " + username);
             }
-            
-            // no user found, we could have a guest account defined, in this case associate the authenticated ldap user 
+
+            // no user found, we could have a guest account defined, in this
+            // case associate the authenticated ldap user
             // with the guest account:
             if (guestUser != null && guestUser.length() > 0) {
-                
+
                 entities = loadUserEntites(guestUser);
-                
-                if (entities != null && entities.size()>0) {
+
+                if (entities != null && entities.size() > 0) {
                     for (Entity entity : entities) {
                         if (DbUserDetailsService.isUser(guestUser, entity)) {
                             // replace username in entity
-                            return ldapUser(entity, new String[] {ApplicationRoles.ROLE_GUEST});
+                            return ldapUser(entity, new String[] { ApplicationRoles.ROLE_GUEST });
                         }
                     }
-                    
+
                 }
             }
-            
+
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Authentication fails: Username and guest account not found in verinice DB." );
+                LOG.debug(
+                        "Authentication fails: Username and guest account not found in verinice DB.");
             }
-            
-            throw new UsernameNotFoundException("No matching account or guest account found for authenticated directory user " 
-                    + username 
-                    + " in the verinice database. Create an account for the user in verinice first, matching the directory's account name.");
+
+            throw new UsernameNotFoundException(
+                    "No matching account or guest account found for authenticated directory user "
+                            + username
+                            + " in the verinice database. Create an account for the user in verinice first, matching the directory's account name.");
         } else {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Blank username and/or password entered.");
@@ -207,7 +215,8 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
     }
 
     private void authenticateByLdapSearch(String username, String password) {
-        ldapUserSearch = new FilterBasedLdapUserSearch(groupFilter, userFilter, getContextSourceLdapSearch());
+        ldapUserSearch = new FilterBasedLdapUserSearch(groupFilter, userFilter,
+                getContextSourceLdapSearch());
         DirContextOperations dnUser = ldapUserSearch.searchForUser(username);
         String userPrincipalName = dnUser.getDn().toString();
         contextFactory.getReadWriteContext(userPrincipalName, password);
@@ -229,25 +238,26 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
     private DirContextOperations ldapUser(Entity entity, String[] specialRoles) {
         DirContextOperations authAdapter = new DirContextAdapter();
         List<String> roles = new ArrayList<String>();
-           
-        // All users without explicitly set Configuration.PROP_RCP==Configuration.PROP_RCP_NO
-        // get ROLE_USER, user with ROLE_USER can access the RCP client 
+
+        // All users without explicitly set
+        // Configuration.PROP_RCP==Configuration.PROP_RCP_NO
+        // get ROLE_USER, user with ROLE_USER can access the RCP client
         if (!entity.isSelected(Configuration.PROP_RCP, Configuration.PROP_RCP_NO)) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("User Desktop: yes");
             }
             roles.add(ApplicationRoles.ROLE_USER);
         }
-        
+
         // All users without explicitly set PROP_WEB==Configuration.PROP_RCP_NO
-        // get ROLE_WEB, user with ROLE_WEB can access the web client 
+        // get ROLE_WEB, user with ROLE_WEB can access the web client
         if (!entity.isSelected(Configuration.PROP_WEB, Configuration.PROP_WEB_NO)) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Web Desktop: yes");
             }
             roles.add(ApplicationRoles.ROLE_WEB);
         }
-        
+
         // if set in the entity, the user may also have the admin role:
         if (entity.isSelected(Configuration.PROP_ISADMIN, Configuration.PROP_ISADMIN_YES)) {
             if (LOG.isDebugEnabled()) {
@@ -256,26 +266,27 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
             roles.add(ApplicationRoles.ROLE_ADMIN);
         }
         // if set in the entity, the user may also have the local admin role:
-        if (entity.isSelected(Configuration.PROP_ISLOCALADMIN, Configuration.PROP_ISLOCALADMIN_YES)) {
+        if (entity.isSelected(Configuration.PROP_ISLOCALADMIN,
+                Configuration.PROP_ISLOCALADMIN_YES)) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Local Administrator: yes");
             }
             roles.add(ApplicationRoles.ROLE_LOCAL_ADMIN);
         }
         // add special roles:
-        if (specialRoles != null && specialRoles.length>0) {
-            for (String role: specialRoles) {
+        if (specialRoles != null && specialRoles.length > 0) {
+            for (String role : specialRoles) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Additional role: " + role);
                 }
                 roles.add(role);
             }
         }
-        
-        String[] rolesArray= roles.toArray(new String[roles.size()]);
+
+        String[] rolesArray = roles.toArray(new String[roles.size()]);
         authAdapter.setAttributeValues(LdapAuthenticationProvider.ROLES_ATTRIBUTE, rolesArray);
         return authAdapter;
-        
+
     }
 
     /**
@@ -284,12 +295,12 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
     private DirContextOperations defaultAdministrator() {
         DirContextOperations authAdapter = new DirContextAdapter();
         List<String> roles = new ArrayList<String>();
-        
+
         roles.add(ApplicationRoles.ROLE_USER);
         roles.add(ApplicationRoles.ROLE_ADMIN);
         roles.add(ApplicationRoles.ROLE_WEB);
-        
-        String[] rolesArray= roles.toArray(new String[roles.size()]);
+
+        String[] rolesArray = roles.toArray(new String[roles.size()]);
         authAdapter.setAttributeValues(LdapAuthenticationProvider.ROLES_ATTRIBUTE, rolesArray);
         return authAdapter;
     }
@@ -299,9 +310,9 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
      * @param password
      */
     private void checkAdminPassword(String username, String password) {
-        String hash = DigestProcessingFilter.encodePasswordInA1Format(username,
-                passwordRealm, password);
-        if (hash.equals(adminpass)){
+        String hash = DigestProcessingFilter.encodePasswordInA1Format(username, passwordRealm,
+                password);
+        if (hash.equals(adminpass)) {
             return;
         }
         if (LOG.isDebugEnabled()) {
@@ -311,7 +322,8 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
     }
 
     /**
-     * @param guestUser the guestUser to set
+     * @param guestUser
+     *            the guestUser to set
      */
     public void setGuestUser(String guestUser) {
         this.guestUser = guestUser;

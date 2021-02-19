@@ -32,116 +32,119 @@ import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
- * Provides access to user details in the verinice database.
- * These can be created by any admin-user in the verinice frontend itself.
+ * Provides access to user details in the verinice database. These can be
+ * created by any admin-user in the verinice frontend itself.
  * 
- * Additionally, one initial user can be configured in applicationContext.xml itself,
- * as a backup administrative account and for initial setting up of the database.
+ * Additionally, one initial user can be configured in applicationContext.xml
+ * itself, as a backup administrative account and for initial setting up of the
+ * database.
  * 
  * @author koderman[at]sernet[dot]de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
 public class DbUserDetailsService extends UserLoader implements UserDetailsService {
-	
+
     private final Logger log = Logger.getLogger(DbUserDetailsService.class);
-	
-	// injected by spring
-	private String adminuser = "";
 
-	// injected by spring
-	private String adminpass = "";
-	
-	
+    // injected by spring
+    private String adminuser = "";
 
-	/* (non-Javadoc)
-	 * @see org.springframework.security.userdetails.UserDetailsService#loadUserByUsername(java.lang.String)
-	 */
-	@Override
+    // injected by spring
+    private String adminpass = "";
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.security.userdetails.UserDetailsService#
+     * loadUserByUsername(java.lang.String)
+     */
+    @Override
     public UserDetails loadUserByUsername(String username)
-			throws UsernameNotFoundException, DataAccessException {
-		if (adminuser.length() > 0 && adminpass.length() > 0 && username.equals(adminuser)) {
-			return defaultUser();
-		}
-		
-		ServerInitializer.inheritVeriniceContextState();
-		List<Entity> entities = loadUserEntites(username);
+            throws UsernameNotFoundException, DataAccessException {
+        if (adminuser.length() > 0 && adminpass.length() > 0 && username.equals(adminuser)) {
+            return defaultUser();
+        }
 
-		for (Entity entity : entities) {
-			if (isUser(username, entity)) {
-			    if (log.isDebugEnabled()) {
+        ServerInitializer.inheritVeriniceContextState();
+        List<Entity> entities = loadUserEntites(username);
+
+        for (Entity entity : entities) {
+            if (isUser(username, entity)) {
+                if (log.isDebugEnabled()) {
                     log.debug("User found: " + username);
                 }
-			    if("1".equals(entity.getSimpleValue(Configuration.PROP_DEACTIVATED))){
-			        if(log.isDebugEnabled()){
-			            log.debug("User " + username + " is deactivated");
-			        }
-			        throw new UsernameNotFoundException(Messages.getString("DbUserDetailsService.5"));
-			    }
-				return databaseUser(entity);
-			}
-		}
-		if (log.isDebugEnabled()) {
+                if ("1".equals(entity.getSimpleValue(Configuration.PROP_DEACTIVATED))) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("User " + username + " is deactivated");
+                    }
+                    throw new UsernameNotFoundException(
+                            Messages.getString("DbUserDetailsService.5"));
+                }
+                return databaseUser(entity);
+            }
+        }
+        if (log.isDebugEnabled()) {
             log.debug("User *NOT* found: " + username);
         }
-		throw new UsernameNotFoundException(Messages.getString("DbUserDetailsService.4")); //$NON-NLS-1$
-	}
+        throw new UsernameNotFoundException(Messages.getString("DbUserDetailsService.4")); //$NON-NLS-1$
+    }
 
-	private UserDetails defaultUser() {
-		VeriniceUserDetails user = new VeriniceUserDetails(adminuser, adminpass);
-		user.addRole(ApplicationRoles.ROLE_ADMIN);
-		user.addRole(ApplicationRoles.ROLE_USER);
+    private UserDetails defaultUser() {
+        VeriniceUserDetails user = new VeriniceUserDetails(adminuser, adminpass);
+        user.addRole(ApplicationRoles.ROLE_ADMIN);
+        user.addRole(ApplicationRoles.ROLE_USER);
         user.addRole(ApplicationRoles.ROLE_WEB);
-		return user;
-	}
+        return user;
+    }
 
-	protected UserDetails databaseUser(Entity entity) {
-	    boolean scopeOnly = false;
-	    Property p = entity.getProperties(Configuration.PROP_SCOPE).getProperty(0);
+    protected UserDetails databaseUser(Entity entity) {
+        boolean scopeOnly = false;
+        Property p = entity.getProperties(Configuration.PROP_SCOPE).getProperty(0);
         if (p != null) {
             scopeOnly = Configuration.PROP_SCOPE_YES.equals(p.getPropertyValue());
         }
 
-		VeriniceUserDetails userDetails = new VeriniceUserDetails(
-		        entity.getSimpleValue(Configuration.PROP_USERNAME), 
-		        entity.getSimpleValue(Configuration.PROP_PASSWORD),
-		        scopeOnly);
-		
-		// All users without explicitly set Configuration.PROP_RCP==Configuration.PROP_RCP_NO
-		// get ROLE_USER, user with ROLE_USER can access the RCP client 
-		if (!entity.isSelected(Configuration.PROP_RCP, Configuration.PROP_RCP_NO)) {
-		    userDetails.addRole(ApplicationRoles.ROLE_USER);
-		}
-		
-		// if set in the entity, the user may also have the admin role:
-		if (entity.isSelected(Configuration.PROP_ISADMIN, Configuration.PROP_ISADMIN_YES)) {
-			userDetails.addRole(ApplicationRoles.ROLE_ADMIN);
-		}
+        VeriniceUserDetails userDetails = new VeriniceUserDetails(
+                entity.getSimpleValue(Configuration.PROP_USERNAME),
+                entity.getSimpleValue(Configuration.PROP_PASSWORD), scopeOnly);
+
+        // All users without explicitly set
+        // Configuration.PROP_RCP==Configuration.PROP_RCP_NO
+        // get ROLE_USER, user with ROLE_USER can access the RCP client
+        if (!entity.isSelected(Configuration.PROP_RCP, Configuration.PROP_RCP_NO)) {
+            userDetails.addRole(ApplicationRoles.ROLE_USER);
+        }
+
+        // if set in the entity, the user may also have the admin role:
+        if (entity.isSelected(Configuration.PROP_ISADMIN, Configuration.PROP_ISADMIN_YES)) {
+            userDetails.addRole(ApplicationRoles.ROLE_ADMIN);
+        }
 
         // if set in the entity, the user may also have the local admin role:
-        if (entity.isSelected(Configuration.PROP_ISLOCALADMIN, Configuration.PROP_ISLOCALADMIN_YES)) {
+        if (entity.isSelected(Configuration.PROP_ISLOCALADMIN,
+                Configuration.PROP_ISLOCALADMIN_YES)) {
             userDetails.addRole(ApplicationRoles.ROLE_LOCAL_ADMIN);
         }
-			
+
         // if set in the entity, the user may also have the web role:
         if (!entity.isSelected(Configuration.PROP_WEB, Configuration.PROP_WEB_NO)) {
             userDetails.addRole(ApplicationRoles.ROLE_WEB);
         }
-		
-		return userDetails;
-	}
 
-	public static boolean isUser(String username, Entity entity) {
-	    return entity.getSimpleValue(Configuration.PROP_USERNAME).equals(username);
-	}
+        return userDetails;
+    }
 
-	public void setAdminuser(String adminuser) {
-		this.adminuser = adminuser;
-	}
+    public static boolean isUser(String username, Entity entity) {
+        return entity.getSimpleValue(Configuration.PROP_USERNAME).equals(username);
+    }
 
-	public void setAdminpass(String adminpass) {
-		this.adminpass = adminpass;
-	}
+    public void setAdminuser(String adminuser) {
+        this.adminuser = adminuser;
+    }
+
+    public void setAdminpass(String adminpass) {
+        this.adminpass = adminpass;
+    }
 
 }

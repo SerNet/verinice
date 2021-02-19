@@ -28,8 +28,8 @@ import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * An incident scenario from the ISO/IEC 27000 standard.
- * See https://en.wikipedia.org/wiki/ISO/IEC_27000-series for details
+ * An incident scenario from the ISO/IEC 27000 standard. See
+ * https://en.wikipedia.org/wiki/ISO/IEC_27000-series for details
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -38,14 +38,14 @@ public class IncidentScenario extends CnATreeElement
         implements IISO27kElement, IAbbreviatedElement, ITaggableElement {
 
     private static final Logger LOG = Logger.getLogger(IncidentScenario.class);
-    
-	public static final String TYPE_ID = "incident_scenario";  //$NON-NLS-1$
-	public static final String UNSECURE_TYPE_ID = "unsecureIncidentScenarioDAO"; //$NON-NLS-1$
-	public static final String PROP_ABBR = "incident_scenario_abbr"; //$NON-NLS-1$
-	public static final String PROP_NAME = "incident_scenario_name"; //$NON-NLS-1$
-	public static final String PROP_TAG = "incident_scenario_tag"; //$NON-NLS-1$
-	public static final String PROP_PROBABILITY = "incscen_likelihood"; //$NON-NLS-1$
-	public static final String PROP_GSM_ISM_SCENARIO_CVSS = "gsm_ism_scenario_cvss"; //$NON-NLS-1$
+
+    public static final String TYPE_ID = "incident_scenario"; //$NON-NLS-1$
+    public static final String UNSECURE_TYPE_ID = "unsecureIncidentScenarioDAO"; //$NON-NLS-1$
+    public static final String PROP_ABBR = "incident_scenario_abbr"; //$NON-NLS-1$
+    public static final String PROP_NAME = "incident_scenario_name"; //$NON-NLS-1$
+    public static final String PROP_TAG = "incident_scenario_tag"; //$NON-NLS-1$
+    public static final String PROP_PROBABILITY = "incscen_likelihood"; //$NON-NLS-1$
+    public static final String PROP_GSM_ISM_SCENARIO_CVSS = "gsm_ism_scenario_cvss"; //$NON-NLS-1$
     public static final String PROP_SCENARIO_METHOD = "incscen_likelihoodmethod";
     public static final String PROP_SCENARIO_THREAT_PROBABILITY = "incscen_threat_likelihood";
     public static final String PROP_SCENARIO_VULN_PROBABILITY = "incscen_vuln_level";
@@ -61,58 +61,62 @@ public class IncidentScenario extends CnATreeElement
     public static final String REL_INCSCEN_VULNERABILITY = "rel_incscen_vulnerability"; //$NON-NLS-1$
     public static final String REL_INCSCEN_THREAT = "rel_incscen_threat"; //$NON-NLS-1$
 
-	/**
-	 * Creates an empty scenario
-	 */
-	public IncidentScenario() {
-		super();
-		setEntity(new Entity(TYPE_ID));
+    /**
+     * Creates an empty scenario
+     */
+    public IncidentScenario() {
+        super();
+        setEntity(new Entity(TYPE_ID));
         getEntity().initDefaultValues(getTypeFactory());
-	}
-	
-	public IncidentScenario(CnATreeElement parent) {
-		super(parent);
-		setEntity(new Entity(TYPE_ID));
-		getEntity().initDefaultValues(getTypeFactory());
+    }
+
+    public IncidentScenario(CnATreeElement parent) {
+        super(parent);
+        setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
         // sets the localized title via HUITypeFactory from message bundle
         setTitel(getTypeFactory().getMessage(TYPE_ID));
     }
-	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
-	 */
-	@Override
-	public String getTypeId() {
-		return TYPE_ID;
-	}
-	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitel()
-	 */
-	@Override
-	public String getTitle() {
-		return getEntity().getPropertyValue(PROP_NAME);
-	}
-	
-	@Override
-    public void setTitel(String name) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
-	}
-	
-	@Override
-    public String getAbbreviation() {
-		return getEntity().getPropertyValue(PROP_ABBR);
-	}
 
-	public String getProbability() {
-	    return getEntity().getPropertyValue(PROP_PROBABILITY);
-	}
-	
-	public Double getGsmCvss() {  
-	    String value = getEntity().getPropertyValue(PROP_GSM_ISM_SCENARIO_CVSS);
-	    if(value==null || value.isEmpty()) {
-	        return null;
-	    }	    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
+     */
+    @Override
+    public String getTypeId() {
+        return TYPE_ID;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitel()
+     */
+    @Override
+    public String getTitle() {
+        return getEntity().getPropertyValue(PROP_NAME);
+    }
+
+    @Override
+    public void setTitel(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
+    }
+
+    @Override
+    public String getAbbreviation() {
+        return getEntity().getPropertyValue(PROP_ABBR);
+    }
+
+    public String getProbability() {
+        return getEntity().getPropertyValue(PROP_PROBABILITY);
+    }
+
+    public Double getGsmCvss() {
+        String value = getEntity().getPropertyValue(PROP_GSM_ISM_SCENARIO_CVSS);
+        if (value == null || value.isEmpty()) {
+            return null;
+        }
         try {
             return convertToDouble(value);
         } catch (java.lang.NumberFormatException e) {
@@ -120,9 +124,9 @@ public class IncidentScenario extends CnATreeElement
             return null;
         }
     }
-	
+
     private Double convertToDouble(String value) {
-        if(value==null || value.isEmpty()) {
+        if (value == null || value.isEmpty()) {
             return null;
         }
         // replace "," with "."
@@ -131,12 +135,12 @@ public class IncidentScenario extends CnATreeElement
     }
 
     public void setAbbreviation(String abbreviation) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
-	}
-	
-	@Override
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
+    }
+
+    @Override
     public Collection<String> getTags() {
-		return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
-	}
-	
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
+    }
+
 }

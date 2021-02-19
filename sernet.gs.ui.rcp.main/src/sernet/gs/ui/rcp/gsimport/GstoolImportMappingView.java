@@ -65,7 +65,8 @@ import sernet.verinice.rcp.RightsEnabledView;
  * @author shagedorn
  * 
  */
-public class GstoolImportMappingView extends RightsEnabledView implements IGstoolImportMappingChangeListener {
+public class GstoolImportMappingView extends RightsEnabledView
+        implements IGstoolImportMappingChangeListener {
 
     private static final Logger LOG = Logger.getLogger(GstoolImportMappingView.class);
     public static final String ID = "sernet.gs.ui.rcp.gsimport.gstoolimportmappingview"; //$NON-NLS-1$
@@ -89,7 +90,8 @@ public class GstoolImportMappingView extends RightsEnabledView implements IGstoo
                     init();
                 } catch (Exception e) {
                     LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.", e); //$NON-NLS-1$ //$NON-NLS-2$
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
+                            "Error while loading data.", e); //$NON-NLS-1$
                 } finally {
                     monitor.done();
                 }
@@ -164,7 +166,7 @@ public class GstoolImportMappingView extends RightsEnabledView implements IGstoo
     @Override
     public void createPartControl(Composite parent) {
         super.createPartControl(parent);
-            alternateCreatePartControl(parent);
+        alternateCreatePartControl(parent);
 
     }
 
@@ -195,20 +197,25 @@ public class GstoolImportMappingView extends RightsEnabledView implements IGstoo
         final int gstoolTypeColumnWidth = 150;
         final int veriniceTypeColumnWidth = 80;
 
-        this.viewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
+        this.viewer = new TableViewer(parent,
+                SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
         Table table = this.viewer.getTable();
 
         gstoolTypeColumn = new TableViewerColumn(this.viewer, SWT.LEFT);
         gstoolTypeColumn.getColumn().setWidth(gstoolTypeColumnWidth);
         gstoolTypeColumn.getColumn().setText(Messages.GSImportMappingView_1);
-        gstoolTypeColumn.getColumn().addSelectionListener(new SortSelectionAdapter(this, gstoolTypeColumn.getColumn(), 0));
-        gstoolTypeColumn.setEditingSupport(new GsImportMappingStringEditingSupport(this.viewer, this));
+        gstoolTypeColumn.getColumn().addSelectionListener(
+                new SortSelectionAdapter(this, gstoolTypeColumn.getColumn(), 0));
+        gstoolTypeColumn
+                .setEditingSupport(new GsImportMappingStringEditingSupport(this.viewer, this));
 
         veriniceTypeColumn = new TableViewerColumn(this.viewer, SWT.LEFT);
         veriniceTypeColumn.getColumn().setWidth(veriniceTypeColumnWidth);
         veriniceTypeColumn.getColumn().setText(Messages.GSImportMappingView_2);
-        veriniceTypeColumn.getColumn().addSelectionListener(new SortSelectionAdapter(this, veriniceTypeColumn.getColumn(), 1));
-        veriniceTypeColumn.setEditingSupport(new GsImportMappingComboBoxEditingSupport(this.viewer, this));
+        veriniceTypeColumn.getColumn().addSelectionListener(
+                new SortSelectionAdapter(this, veriniceTypeColumn.getColumn(), 1));
+        veriniceTypeColumn
+                .setEditingSupport(new GsImportMappingComboBoxEditingSupport(this.viewer, this));
 
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
@@ -223,7 +230,8 @@ public class GstoolImportMappingView extends RightsEnabledView implements IGstoo
             @Override
             public void selectionChanged(SelectionChangedEvent event) {
                 if (event.getSelection() instanceof IStructuredSelection) {
-                    if (((IStructuredSelection) event.getSelection()).getFirstElement() instanceof GstoolImportMappingElement) {
+                    if (((IStructuredSelection) event.getSelection())
+                            .getFirstElement() instanceof GstoolImportMappingElement) {
                         deleteMappingEntryAction.setEnabled(true);
                     } else {
                         deleteMappingEntryAction.setEnabled(false);
@@ -250,7 +258,8 @@ public class GstoolImportMappingView extends RightsEnabledView implements IGstoo
                 addMappingEntry();
             }
         };
-        this.addMappingEntryAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.PLUS));
+        this.addMappingEntryAction
+                .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.PLUS));
         this.addMappingEntryAction.setEnabled(true);
         this.deleteMappingEntryAction = new Action() {
             @Override
@@ -258,13 +267,15 @@ public class GstoolImportMappingView extends RightsEnabledView implements IGstoo
                 deleteMappingEntry();
             }
         };
-        this.deleteMappingEntryAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.MINUS));
+        this.deleteMappingEntryAction
+                .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.MINUS));
         this.deleteMappingEntryAction.setEnabled(false);
 
     }
 
     private void addMappingEntry() {
-        GstoolImportMappingElement mappingElement = new GstoolImportMappingElement("< " + Messages.GSImportMappingView_newEntry + " >", SonstIT.TYPE_ID); //$NON-NLS-1$ //$NON-NLS-2$
+        GstoolImportMappingElement mappingElement = new GstoolImportMappingElement(
+                "< " + Messages.GSImportMappingView_newEntry + " >", SonstIT.TYPE_ID); //$NON-NLS-1$ //$NON-NLS-2$
         GstoolTypeMapper.addGstoolSubtypeToPropertyFile(mappingElement);
         refresh();
         viewer.setSelection(new StructuredSelection(mappingElement), true);
@@ -290,7 +301,8 @@ public class GstoolImportMappingView extends RightsEnabledView implements IGstoo
         private TableColumn column;
         private int index;
 
-        public SortSelectionAdapter(GstoolImportMappingView gsiView, TableColumn column, int index) {
+        public SortSelectionAdapter(GstoolImportMappingView gsiView, TableColumn column,
+                int index) {
             super();
             this.gsiView = gsiView;
             this.column = column;
@@ -346,11 +358,12 @@ public class GstoolImportMappingView extends RightsEnabledView implements IGstoo
         public int compare(Viewer viewer, Object e1, Object e2) {
 
             int rc = 0;
-            if ((e1 instanceof GstoolImportMappingElement && e2 instanceof GstoolImportMappingElement)) {
+            if ((e1 instanceof GstoolImportMappingElement
+                    && e2 instanceof GstoolImportMappingElement)) {
                 GstoolImportMappingElement g1 = (GstoolImportMappingElement) e1;
                 GstoolImportMappingElement g2 = (GstoolImportMappingElement) e2;
                 if (this.currentColumnIndex == 0) {
-                rc = g1.compareTo(g2);
+                    rc = g1.compareTo(g2);
                 } else if (this.currentColumnIndex == 1) {
                     rc = (g1.getValue()).compareToIgnoreCase(g2.getValue());
                 } else {
@@ -386,8 +399,12 @@ public class GstoolImportMappingView extends RightsEnabledView implements IGstoo
         return ID;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.gs.ui.rcp.gsimport.IGstoolImportMappingChangeListener#mappingAdded(sernet.gs.ui.rcp.gsimport.GstoolImportMappingElement)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.gsimport.IGstoolImportMappingChangeListener#mappingAdded
+     * (sernet.gs.ui.rcp.gsimport.GstoolImportMappingElement)
      */
     @Override
     public void mappingAdded(GstoolImportMappingElement mappingElement) {
@@ -395,8 +412,11 @@ public class GstoolImportMappingView extends RightsEnabledView implements IGstoo
         viewer.setSelection(new StructuredSelection(mappingElement), true);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.gs.ui.rcp.gsimport.IGstoolImportMappingChangeListener#mappingChanged(sernet.gs.ui.rcp.gsimport.GstoolImportMappingElement)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.gsimport.IGstoolImportMappingChangeListener#
+     * mappingChanged(sernet.gs.ui.rcp.gsimport.GstoolImportMappingElement)
      */
     @Override
     public void mappingChanged(GstoolImportMappingElement mappingElement) {
@@ -404,15 +424,20 @@ public class GstoolImportMappingView extends RightsEnabledView implements IGstoo
         viewer.setSelection(new StructuredSelection(mappingElement), true);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.gs.ui.rcp.gsimport.IGstoolImportMappingChangeListener#mappingRemoved(sernet.gs.ui.rcp.gsimport.GstoolImportMappingElement)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.gsimport.IGstoolImportMappingChangeListener#
+     * mappingRemoved(sernet.gs.ui.rcp.gsimport.GstoolImportMappingElement)
      */
     @Override
     public void mappingRemoved(GstoolImportMappingElement mappingElement) {
         refresh();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.ui.part.WorkbenchPart#dispose()
      */
     @Override

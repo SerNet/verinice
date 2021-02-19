@@ -29,64 +29,73 @@ import sernet.verinice.model.samt.SamtTopic;
  */
 @SuppressWarnings("serial")
 public class ControlGroup extends Group<Control> implements IISO27kGroup {
-    
-	public static final String TYPE_ID = "controlgroup"; //$NON-NLS-1$
-	public static final String PROP_NAME = "controlgroup_name"; //$NON-NLS-1$
-	
-	public static final String PROP_IS_CATALOG = "samt_topic_is_catalog";
 
-	public static final String[] CHILD_TYPES = new String[] {Control.TYPE_ID,SamtTopic.TYPE_ID};
-	
-	public ControlGroup() {
-		super();
-		setEntity(new Entity(TYPE_ID));
-		getEntity().initDefaultValues(getTypeFactory());
-	}
-	
-	public ControlGroup(CnATreeElement parent) {
-		super(parent);
-		setEntity(new Entity(TYPE_ID));
-		getEntity().initDefaultValues(getTypeFactory());
+    public static final String TYPE_ID = "controlgroup"; //$NON-NLS-1$
+    public static final String PROP_NAME = "controlgroup_name"; //$NON-NLS-1$
+
+    public static final String PROP_IS_CATALOG = "samt_topic_is_catalog";
+
+    public static final String[] CHILD_TYPES = new String[] { Control.TYPE_ID, SamtTopic.TYPE_ID };
+
+    public ControlGroup() {
+        super();
+        setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
+    }
+
+    public ControlGroup(CnATreeElement parent) {
+        super(parent);
+        setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
         // sets the localized title via HUITypeFactory from message bundle
         setTitel(getTypeFactory().getMessage(TYPE_ID));
     }
-	
-	public ControlGroup(CnATreeElement parent, String iconPath) {
+
+    public ControlGroup(CnATreeElement parent, String iconPath) {
         this(parent);
         this.setIconPath(iconPath);
     }
 
-    /* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
-	 */
-	@Override
-	public String getTypeId() {
-		return TYPE_ID;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
+     */
+    @Override
+    public String getTypeId() {
+        return TYPE_ID;
+    }
 
-
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitle()
-	 */
-	@Override
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitle()
+     */
+    @Override
     public String getTitle() {
-		return getEntity().getSimpleValue(PROP_NAME);
-	}
-	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#setTitel(java.lang.String)
-	 */
-	@Override
+        return getEntity().getSimpleValue(PROP_NAME);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.common.model.CnATreeElement#setTitel(java.lang.
+     * String)
+     */
+    @Override
     public void setTitel(String name) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
-	}
-	
-	/* (non-Javadoc)
-	 * @see sernet.verinice.iso27k.model.Group#getChildTypes()
-	 */
-	@Override
-	public String[] getChildTypes() {
-		return CHILD_TYPES;
-	}
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.iso27k.model.Group#getChildTypes()
+     */
+    @Override
+    public String[] getChildTypes() {
+        return CHILD_TYPES;
+    }
 
 }

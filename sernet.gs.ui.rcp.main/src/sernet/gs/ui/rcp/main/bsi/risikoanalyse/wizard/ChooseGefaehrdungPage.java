@@ -93,8 +93,6 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
         categoryColumn = new TableViewerColumn(viewer, SWT.LEFT);
         categoryColumn.getColumn().setText(Messages.ChooseGefaehrdungPage_7);
     }
-    
-
 
     @Override
     protected void addSpecificListenersForPage() {
@@ -142,8 +140,7 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
                 itemsToCheckForUniqueNumber = new RiskAnalysisDialogItems<>(
                         getRiskAnalysisWizard().getAllGefaehrdungen(), Gefaehrdung.class);
                 final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(
-                        rootContainer.getShell(),
-                        ownGefSelected, itemsToCheckForUniqueNumber);
+                        rootContainer.getShell(), ownGefSelected, itemsToCheckForUniqueNumber);
                 dialog.open();
                 refresh();
             } else {
@@ -155,7 +152,8 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
 
     private boolean isUnusedOwnGefaehrdung(OwnGefaehrdung ownGefaehrdung) {
         boolean isUnused = false;
-        CheckOwnGefaehrdungInUseCommand command = new CheckOwnGefaehrdungInUseCommand(ownGefaehrdung);
+        CheckOwnGefaehrdungInUseCommand command = new CheckOwnGefaehrdungInUseCommand(
+                ownGefaehrdung);
         try {
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             isUnused = !command.isInUse();
@@ -181,7 +179,7 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
                 if (button.getSelection()) {
                     viewer.addFilter(gefaehrdungFilter);
 
-                        refresh();
+                    refresh();
                     checkAllSelectedGefaehrdungen();
                     packAllColumns();
                 } else {
@@ -267,7 +265,8 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
                     } else {
                         String message = NLS.bind(Messages.ChooseGefaehrdungPage_Error_2,
                                 selectedGefaehrdung.getId());
-                        MessageDialog.openError(getShell(), Messages.ChooseGefaehrdungPage_Error_1, message);
+                        MessageDialog.openError(getShell(), Messages.ChooseGefaehrdungPage_Error_1,
+                                message);
                     }
                 }
             }
@@ -303,7 +302,6 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
 
     }
 
-
     protected void associateGefaehrdung(Gefaehrdung currentGefaehrdung, boolean select) {
 
         if (select) {
@@ -327,7 +325,8 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
     @Override
     protected void doInitContents() {
 
-        ArrayList<Gefaehrdung> arrListAllGefaehrdungen = (ArrayList<Gefaehrdung>) getRiskAnalysisWizard().getAllGefaehrdungen();
+        ArrayList<Gefaehrdung> arrListAllGefaehrdungen = (ArrayList<Gefaehrdung>) getRiskAnalysisWizard()
+                .getAllGefaehrdungen();
 
         /* map a domain model object into multiple images and text labels */
         viewer.setLabelProvider(new CheckboxTableViewerLabelProvider());
@@ -348,10 +347,12 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
 
     private void checkAllSelectedGefaehrdungen() {
         List<Gefaehrdung> toCheck = new ArrayList<>();
-        for (GefaehrdungsUmsetzung associatedGefaehrdung : getRiskAnalysisWizard().getAssociatedGefaehrdungen()) {
+        for (GefaehrdungsUmsetzung associatedGefaehrdung : getRiskAnalysisWizard()
+                .getAssociatedGefaehrdungen()) {
             if (associatedGefaehrdung != null) {
                 for (Gefaehrdung gefaehrdung : getRiskAnalysisWizard().getAllGefaehrdungen()) {
-                    if (gefaehrdung != null && gefaehrdung.getId() != null && gefaehrdung.getId().equals(associatedGefaehrdung.getId())) {
+                    if (gefaehrdung != null && gefaehrdung.getId() != null
+                            && gefaehrdung.getId().equals(associatedGefaehrdung.getId())) {
                         toCheck.add(gefaehrdung);
                     }
                 }
@@ -368,20 +369,23 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
      */
     private void assignBausteinGefaehrdungen() {
         try {
-            LoadAssociatedGefaehrdungen command = new LoadAssociatedGefaehrdungen(getRiskAnalysisWizard().getCnaElement());
+            LoadAssociatedGefaehrdungen command = new LoadAssociatedGefaehrdungen(
+                    getRiskAnalysisWizard().getCnaElement());
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             List<GefaehrdungsUmsetzung> list = command.getAssociatedGefaehrdungen();
 
             for (GefaehrdungsUmsetzung selectedGefaehrdung : list) {
                 if (selectedGefaehrdung != null) {
                     for (Gefaehrdung gefaehrdung : getRiskAnalysisWizard().getAllGefaehrdungen()) {
-                        if (gefaehrdung != null && gefaehrdung.getId() != null && gefaehrdung.getId().equals(selectedGefaehrdung.getId())) {
+                        if (gefaehrdung != null && gefaehrdung.getId() != null
+                                && gefaehrdung.getId().equals(selectedGefaehrdung.getId())) {
                             associateGefaehrdung(gefaehrdung, true);
                         }
                     }
                 }
             }
-            UpdateRiskAnalysis updateCommand = new UpdateRiskAnalysis(getRiskAnalysisWizard().getFinishedRiskAnalysisLists());
+            UpdateRiskAnalysis updateCommand = new UpdateRiskAnalysis(
+                    getRiskAnalysisWizard().getFinishedRiskAnalysisLists());
             updateCommand = ServiceFactory.lookupCommandService().executeCommand(updateCommand);
         } catch (CommandException e) {
             ExceptionUtil.log(e, ""); //$NON-NLS-1$
@@ -396,7 +400,8 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
         imageColumn.getColumn().pack();
         numberColumn.getColumn().pack();
         nameColumn.getColumn().pack();
-        nameColumn.getColumn().setWidth(Math.min(nameColumn.getColumn().getWidth(), WIDTH_COL_NAME));
+        nameColumn.getColumn()
+                .setWidth(Math.min(nameColumn.getColumn().getWidth(), WIDTH_COL_NAME));
         categoryColumn.getColumn().pack();
     }
 
@@ -412,7 +417,6 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
         }
     }
 
-
     /**
      * Deletes a OwnGefaehrdung.
      * 
@@ -420,9 +424,12 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
      *            the (Own)Gefaehrdung to delete
      */
     private void deleteOwnGefaehrdung(Gefaehrdung delGefaehrdung) {
-        ArrayList<Gefaehrdung> arrListAllGefaehrdungen = (ArrayList<Gefaehrdung>) getRiskAnalysisWizard().getAllGefaehrdungen();
-        List<GefaehrdungsUmsetzung> arrListAssociatedGefaehrdungen = getRiskAnalysisWizard().getAssociatedGefaehrdungen();
-        List<OwnGefaehrdung> arrListOwnGefaehrdungen = getRiskAnalysisWizard().getAllOwnGefaehrdungen();
+        ArrayList<Gefaehrdung> arrListAllGefaehrdungen = (ArrayList<Gefaehrdung>) getRiskAnalysisWizard()
+                .getAllGefaehrdungen();
+        List<GefaehrdungsUmsetzung> arrListAssociatedGefaehrdungen = getRiskAnalysisWizard()
+                .getAssociatedGefaehrdungen();
+        List<OwnGefaehrdung> arrListOwnGefaehrdungen = getRiskAnalysisWizard()
+                .getAllOwnGefaehrdungen();
 
         try {
             if (arrListOwnGefaehrdungen.contains(delGefaehrdung)) {
@@ -445,11 +452,9 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
         }
     }
 
-
     @Override
     protected CheckboxTableViewer initializeViewer(Composite parent) {
         return CheckboxTableViewer.newCheckList(parent, SWT.BORDER | SWT.FULL_SELECTION);
     }
-
 
 }

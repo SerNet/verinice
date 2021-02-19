@@ -34,21 +34,23 @@ import sernet.verinice.model.common.ILinkChangeListener;
 public class Process extends CnATreeElement
         implements IISO27kElement, IAbbreviatedElement, ITaggableElement {
 
-	public static final String TYPE_ID = "process"; //$NON-NLS-1$
-	public static final String PROP_ABBR = "process_abbr"; //$NON-NLS-1$
-	public static final String PROP_NAME = "process_name"; //$NON-NLS-1$
-	public static final String PROP_TAG = "process_tag"; //$NON-NLS-1$
+    public static final String TYPE_ID = "process"; //$NON-NLS-1$
+    public static final String PROP_ABBR = "process_abbr"; //$NON-NLS-1$
+    public static final String PROP_NAME = "process_name"; //$NON-NLS-1$
+    public static final String PROP_TAG = "process_tag"; //$NON-NLS-1$
     public static final String PROP_USER = "process_user"; //$NON-NLS-1$
     public static final String PROP_VALUE_USER_1 = "process_user_1"; //$NON-NLS-1$
     public static final String PROP_VALUE_USER_2 = "process_user_2"; //$NON-NLS-1$
     public static final String PROP_VALUE_USER_3 = "process_user_3"; //$NON-NLS-1$
-	public static final String PROCESS_VALUE_CONFIDENTIALITY = "process_value_confidentiality"; //$NON-NLS-1$
-	public static final String PROCESS_VALUE_INTEGRITY = "process_value_integrity"; //$NON-NLS-1$
-	public static final String PROCESS_VALUE_AVAILABILITY = "process_value_availability"; //$NON-NLS-1$
-	public static final String REL_PROCESS_ASSET = "rel_process_asset"; //$NON-NLS-1$
-	
-    private final IReevaluator protectionRequirementsProvider = new ProtectionRequirementsValueAdapter(this);
-    private final ILinkChangeListener linkChangeListener = new MaximumProtectionRequirementsValueListener(this);
+    public static final String PROCESS_VALUE_CONFIDENTIALITY = "process_value_confidentiality"; //$NON-NLS-1$
+    public static final String PROCESS_VALUE_INTEGRITY = "process_value_integrity"; //$NON-NLS-1$
+    public static final String PROCESS_VALUE_AVAILABILITY = "process_value_availability"; //$NON-NLS-1$
+    public static final String REL_PROCESS_ASSET = "rel_process_asset"; //$NON-NLS-1$
+
+    private final IReevaluator protectionRequirementsProvider = new ProtectionRequirementsValueAdapter(
+            this);
+    private final ILinkChangeListener linkChangeListener = new MaximumProtectionRequirementsValueListener(
+            this);
 
     @Override
     public ILinkChangeListener getLinkChangeListener() {
@@ -60,56 +62,60 @@ public class Process extends CnATreeElement
         return protectionRequirementsProvider;
     }
 
-	/**
-	 * Creates an empty asset
-	 */
-	public Process() {
-		super();
-		setEntity(new Entity(TYPE_ID));
+    /**
+     * Creates an empty asset
+     */
+    public Process() {
+        super();
+        setEntity(new Entity(TYPE_ID));
         getEntity().initDefaultValues(getTypeFactory());
-	}
-	
-	public Process(CnATreeElement parent) {
-		super(parent);
-		setEntity(new Entity(TYPE_ID));
-		getEntity().initDefaultValues(getTypeFactory());
+    }
+
+    public Process(CnATreeElement parent) {
+        super(parent);
+        setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
         // sets the localized title via HUITypeFactory from message bundle
         setTitel(getTypeFactory().getMessage(TYPE_ID));
     }
-	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
-	 */
-	@Override
-	public String getTypeId() {
-		return TYPE_ID;
-	}
-	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitel()
-	 */
-	@Override
-	public String getTitle() {
-		return getEntity().getSimpleValue(PROP_NAME);
-	}
-	
-	@Override
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
+     */
+    @Override
+    public String getTypeId() {
+        return TYPE_ID;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitel()
+     */
+    @Override
+    public String getTitle() {
+        return getEntity().getSimpleValue(PROP_NAME);
+    }
+
+    @Override
     public void setTitel(String name) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
-	}
-	
-	@Override
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
+    }
+
+    @Override
     public String getAbbreviation() {
-		return getEntity().getSimpleValue(PROP_ABBR);
-	}
-	
-	public void setAbbreviation(String abbreviation) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
-	}
-	
-	@Override
+        return getEntity().getSimpleValue(PROP_ABBR);
+    }
+
+    public void setAbbreviation(String abbreviation) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
+    }
+
+    @Override
     public Collection<String> getTags() {
-		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
-	}
+        return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+    }
 
 }

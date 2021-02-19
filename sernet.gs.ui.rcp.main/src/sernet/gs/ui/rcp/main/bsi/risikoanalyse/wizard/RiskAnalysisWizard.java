@@ -70,9 +70,8 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
     private static final int WIZARD_HEIGHT = 600;
     protected static final int WIZARD_BROWSER_WIDTH = 700;
     protected static final int WIZARD_NUM_COLS_ROOT = 2;
-    
-    private static final Logger LOG = Logger.getLogger(RiskAnalysisWizard.class);
 
+    private static final Logger LOG = Logger.getLogger(RiskAnalysisWizard.class);
 
     /**
      * Element to save all relevant data in DB on completion of wizard. Also
@@ -148,7 +147,8 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
      *            the current workbench
      * @param selection
      *            the current object selection
-     * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
+     * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
+     *      org.eclipse.jface.viewers.IStructuredSelection)
      */
     @Override
     public void init(IWorkbench workbench, IStructuredSelection selection) {
@@ -159,7 +159,8 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
                 finishedRiskAnalysis = command.getFinishedRiskAnalysis();
                 finishedRiskLists = command.getFinishedRiskLists();
             } else {
-                finishedRiskLists = FinishedRiskAnalysisListsHome.getInstance().loadById(finishedRiskAnalysis.getDbId());
+                finishedRiskLists = FinishedRiskAnalysisListsHome.getInstance()
+                        .loadById(finishedRiskAnalysis.getDbId());
             }
         } catch (CommandException e) {
             ExceptionUtil.log(e, Messages.RiskAnalysisWizard_1);
@@ -181,7 +182,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
             return RisikoMassnahmeHome.getInstance().loadAll();
         } catch (Exception e) {
             ExceptionUtil.log(e, Messages.RiskAnalysisWizard_2);
-            return Collections.<RisikoMassnahme>emptyList();
+            return Collections.<RisikoMassnahme> emptyList();
         }
     }
 
@@ -258,7 +259,8 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
                 if (!duplicate) {
                     MassnahmenUmsetzung massnahmeUmsetzung;
                     try {
-                        massnahmeUmsetzung = massnahmenFactory.createMassnahmenUmsetzung(massnahme, BSIKatalogInvisibleRoot.getInstance().getLanguage());
+                        massnahmeUmsetzung = massnahmenFactory.createMassnahmenUmsetzung(massnahme,
+                                BSIKatalogInvisibleRoot.getInstance().getLanguage());
                         allMassnahmenUmsetzungen.add(massnahmeUmsetzung);
                     } catch (Exception e) {
                         Logger.getLogger(this.getClass()).error(Messages.RiskAnalysisWizard_4, e);
@@ -278,10 +280,11 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
         try {
             LoadAssociatedGefaehrdungen command = new LoadAssociatedGefaehrdungen(cnaElement);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
-            List<GefaehrdungsUmsetzung> associatedGefaehrdungen = command.getAssociatedGefaehrdungen();
-            
+            List<GefaehrdungsUmsetzung> associatedGefaehrdungen = command
+                    .getAssociatedGefaehrdungen();
+
             for (GefaehrdungsUmsetzung gefaehrdung : associatedGefaehrdungen) {
-                if(!associatedGefExistant(gefaehrdung)){
+                if (!associatedGefExistant(gefaehrdung)) {
                     this.finishedRiskLists.addAssociatedGefahr(gefaehrdung);
                 }
             }
@@ -289,18 +292,23 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
             ExceptionUtil.log(e, Messages.RiskAnalysisWizard_5);
         }
     }
-    
-    private boolean associatedGefExistant(GefaehrdungsUmsetzung gums){
-        for(GefaehrdungsUmsetzung existantGef : this.finishedRiskLists.getAssociatedGefaehrdungen()){
-            if(existantGef.getTitle().equals(gums.getTitle())){
-                LOG.warn("Gefaehrdungsumsetzung with Title:\t" + gums.getTitle() + "\talready exists in list, not adding this one");
+
+    private boolean associatedGefExistant(GefaehrdungsUmsetzung gums) {
+        for (GefaehrdungsUmsetzung existantGef : this.finishedRiskLists
+                .getAssociatedGefaehrdungen()) {
+            if (existantGef.getTitle().equals(gums.getTitle())) {
+                LOG.warn("Gefaehrdungsumsetzung with Title:\t" + gums.getTitle()
+                        + "\talready exists in list, not adding this one");
                 return true;
-            } else if(existantGef.getEntity().getSimpleValue(GefaehrdungsUmsetzung.PROP_TITEL).equals(gums.getEntity().getSimpleValue(GefaehrdungsUmsetzung.PROP_TITEL))){
-                LOG.warn("Gefaehrdungsumsetzung with propertyvalue:\t " +  gums.getTitle() + "\t for property " + GefaehrdungsUmsetzung.PROP_TITEL + " already exists in list, not adding this one");
+            } else if (existantGef.getEntity().getSimpleValue(GefaehrdungsUmsetzung.PROP_TITEL)
+                    .equals(gums.getEntity().getSimpleValue(GefaehrdungsUmsetzung.PROP_TITEL))) {
+                LOG.warn("Gefaehrdungsumsetzung with propertyvalue:\t " + gums.getTitle()
+                        + "\t for property " + GefaehrdungsUmsetzung.PROP_TITEL
+                        + " already exists in list, not adding this one");
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -412,14 +420,16 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 
     public void addRisikoMassnahmeUmsetzung(RisikoMassnahme massnahme) {
         try {
-            RisikoMassnahmenUmsetzung massnahmeUmsetzung = RisikoMassnahmenUmsetzungFactory.buildFromRisikomassnahme(massnahme, null, null);
+            RisikoMassnahmenUmsetzung massnahmeUmsetzung = RisikoMassnahmenUmsetzungFactory
+                    .buildFromRisikomassnahme(massnahme, null, null);
 
             /* add to list of all MassnahmenUmsetzungen */
             if (!(allMassnahmenUmsetzungen.contains(massnahmeUmsetzung))) {
                 allMassnahmenUmsetzungen.add(massnahmeUmsetzung);
             }
         } catch (Exception e) {
-            Logger.getLogger(this.getClass()).error("Fehler beim Erstellen der Massnahmenumsetzung: ", e); //$NON-NLS-1$
+            Logger.getLogger(this.getClass())
+                    .error("Fehler beim Erstellen der Massnahmenumsetzung: ", e); //$NON-NLS-1$
         }
     }
 
@@ -490,9 +500,13 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
     public void addAssociatedGefaehrdung(Gefaehrdung currentGefaehrdung) {
 
         try {
-            if (!GefaehrdungsUtil.listContainsById(finishedRiskLists.getAssociatedGefaehrdungen(), currentGefaehrdung)) {
+            if (!GefaehrdungsUtil.listContainsById(finishedRiskLists.getAssociatedGefaehrdungen(),
+                    currentGefaehrdung)) {
                 /* Add to List of Associated Gefaehrdungen */
-                AssociateGefaehrdungsUmsetzung command = new AssociateGefaehrdungsUmsetzung(finishedRiskLists.getDbId(), currentGefaehrdung, this.finishedRiskAnalysis.getDbId(), BSIKatalogInvisibleRoot.getInstance().getLanguage());
+                AssociateGefaehrdungsUmsetzung command = new AssociateGefaehrdungsUmsetzung(
+                        finishedRiskLists.getDbId(), currentGefaehrdung,
+                        this.finishedRiskAnalysis.getDbId(),
+                        BSIKatalogInvisibleRoot.getInstance().getLanguage());
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
 
                 finishedRiskLists = command.getFinishedRiskLists();
@@ -504,7 +518,8 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 
     public void removeAssociatedGefaehrdung(Gefaehrdung currentGefaehrdung) throws Exception {
         /* remove from List of Associated Gefaehrdungen */
-        DisassociateGefaehrdungsUmsetzung command = new DisassociateGefaehrdungsUmsetzung(finishedRiskAnalysis, finishedRiskLists.getDbId(), currentGefaehrdung);
+        DisassociateGefaehrdungsUmsetzung command = new DisassociateGefaehrdungsUmsetzung(
+                finishedRiskAnalysis, finishedRiskLists.getDbId(), currentGefaehrdung);
         command = ServiceFactory.lookupCommandService().executeCommand(command);
         finishedRiskLists = command.getFinishedRiskLists();
         finishedRiskAnalysis = command.getFinishedRiskAnalysis();

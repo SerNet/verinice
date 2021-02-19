@@ -39,20 +39,23 @@ public class MassnahmenSorter extends ViewerSorter {
         if (e1 instanceof Massnahme && e2 instanceof Massnahme) {
             // sort chapters correctly by converting 2.45, 2.221, 3.42
             // to 2045, 2221, 3024
-            
-//            return (Integer.valueOf(((Massnahme) e1).getKapitelValue()).compareTo(((Massnahme) e2).getKapitelValue()));
-            return numComp.compare(((Massnahme)e1).getId(), ((Massnahme)e2).getId());
+
+            // return (Integer.valueOf(((Massnahme)
+            // e1).getKapitelValue()).compareTo(((Massnahme)
+            // e2).getKapitelValue()));
+            return numComp.compare(((Massnahme) e1).getId(), ((Massnahme) e2).getId());
 
         }
 
         if (e1 instanceof MassnahmenUmsetzung && e2 instanceof MassnahmenUmsetzung) {
             // sort chapters correctly by converting 2.45, 2.221, 3.42
             // to 2045, 2221, 3024
-            return numComp.compare(((MassnahmenUmsetzung)e1).getEntity().getSimpleValue(MassnahmenUmsetzung.P_KAPITEL), ((MassnahmenUmsetzung)e2).getEntity().getSimpleValue(MassnahmenUmsetzung.P_KAPITEL));
+            return numComp.compare(
+                    ((MassnahmenUmsetzung) e1).getEntity()
+                            .getSimpleValue(MassnahmenUmsetzung.P_KAPITEL),
+                    ((MassnahmenUmsetzung) e2).getEntity()
+                            .getSimpleValue(MassnahmenUmsetzung.P_KAPITEL));
         }
-        
-        
-        
 
         // else, consider elements as equal:
         return 0;

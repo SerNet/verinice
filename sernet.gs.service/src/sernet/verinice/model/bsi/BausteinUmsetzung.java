@@ -55,7 +55,10 @@ public class BausteinUmsetzung extends CnATreeElement {
     private static final String[] SCHICHTEN = new String[] { "0", "1", "2", "3", "4", "5" // $NON-NLS-0$ //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
     };
 
-    private static final String[] SCHICHTEN_BEZEICHNUNG = new String[] { Messages.BausteinUmsetzung_5, Messages.BausteinUmsetzung_0, Messages.BausteinUmsetzung_1, Messages.BausteinUmsetzung_2, Messages.BausteinUmsetzung_3, Messages.BausteinUmsetzung_4 };
+    private static final String[] SCHICHTEN_BEZEICHNUNG = new String[] {
+            Messages.BausteinUmsetzung_5, Messages.BausteinUmsetzung_0,
+            Messages.BausteinUmsetzung_1, Messages.BausteinUmsetzung_2,
+            Messages.BausteinUmsetzung_3, Messages.BausteinUmsetzung_4 };
 
     public BausteinUmsetzung(CnATreeElement parent) {
         super(parent);
@@ -145,15 +148,17 @@ public class BausteinUmsetzung extends CnATreeElement {
                 // should never happen:
                 Logger.getLogger(this.getClass()).error(obj.getClass());
                 return '0';
-            } 
-            
+            }
+
             if (obj instanceof GefaehrdungsUmsetzung) {
                 Logger.getLogger(this.getClass()).error(obj.getClass());
                 return '0';
             }
             MassnahmenUmsetzung mn = (MassnahmenUmsetzung) obj;
             // prüfe nicht umgesetzte Massnahmen:
-            if (mn.getUmsetzung().equals(MassnahmenUmsetzung.P_UMSETZUNG_NEIN) || mn.getUmsetzung().equals(MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE) || mn.getUmsetzung().equals(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET)) {
+            if (mn.getUmsetzung().equals(MassnahmenUmsetzung.P_UMSETZUNG_NEIN)
+                    || mn.getUmsetzung().equals(MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE)
+                    || mn.getUmsetzung().equals(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET)) {
                 switch (mn.getStufe()) {
                 case 'A':
                     // reduzieren auf 0 und return:
@@ -228,7 +233,7 @@ public class BausteinUmsetzung extends CnATreeElement {
         }
         return null;
     }
-    
+
     public boolean containsControl(String chapter) {
         for (CnATreeElement child : getChildren()) {
             if (child instanceof MassnahmenUmsetzung) {
@@ -240,7 +245,7 @@ public class BausteinUmsetzung extends CnATreeElement {
         }
         return false;
     }
-    
+
     public boolean containsScenario(String id) {
         for (CnATreeElement child : getChildren()) {
             if (child instanceof GefaehrdungsUmsetzung) {

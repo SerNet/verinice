@@ -184,8 +184,7 @@ public class CommandServiceTest extends CommandServiceProvider {
 
         LOG.info("Total number of created elements: " + uuidList.size());
 
-        RemoveElement removeCommand = new RemoveElement(
-                organization);
+        RemoveElement removeCommand = new RemoveElement(organization);
         commandService.executeCommand(removeCommand);
 
         for (String uuid : uuidList) {

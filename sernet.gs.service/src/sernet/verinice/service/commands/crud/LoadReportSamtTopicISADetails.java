@@ -33,58 +33,62 @@ import sernet.verinice.service.commands.RetrieveCnATreeElement;
 /**
  *
  */
-public class LoadReportSamtTopicISADetails extends GenericCommand implements ICachedCommand{
-    
+public class LoadReportSamtTopicISADetails extends GenericCommand implements ICachedCommand {
+
     private static final Logger log = Logger.getLogger(LoadReportSamtTopicISADetails.class);
-    private static final String PROP_SAMT_RISK = "samt_topic_audit_ra";	
+    private static final String PROP_SAMT_RISK = "samt_topic_audit_ra";
     private static final String SAMT_TOPIC_ISA_FINDINGS = "samt_topic_audit_findings";
-    
+
     private boolean resultInjectedFromCache = false;
 
-    public static final String[] COLUMNS = new String[] { 
-        "TITLE",
-        "FINDINGS",
-        "MATURITY",
-        "RISK",
-        "DBID"
-        };
+    public static final String[] COLUMNS = new String[] { "TITLE", "FINDINGS", "MATURITY", "RISK",
+            "DBID" };
     private Integer rootElmt;
-    
+
     private List<List<String>> result;
-    
-    public LoadReportSamtTopicISADetails(Integer root){
+
+    public LoadReportSamtTopicISADetails(Integer root) {
         this.rootElmt = root;
     }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     public void execute() {
-        if(!resultInjectedFromCache){
+        if (!resultInjectedFromCache) {
             try {
                 result = new ArrayList<List<String>>(0);
-                ControlGroup cg = (ControlGroup)getDaoFactory().getDAO(ControlGroup.TYPE_ID).findById(rootElmt);
+                ControlGroup cg = (ControlGroup) getDaoFactory().getDAO(ControlGroup.TYPE_ID)
+                        .findById(rootElmt);
                 CnATreeElement elmt = cg;
-                if(cg == null){
-                    RetrieveCnATreeElement command = new RetrieveCnATreeElement("cnatreeelement", rootElmt);
+                if (cg == null) {
+                    RetrieveCnATreeElement command = new RetrieveCnATreeElement("cnatreeelement",
+                            rootElmt);
                     command = getCommandService().executeCommand(command);
                     elmt = command.getElement();
                 }
-                LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, elmt.getDbId(), true);
+                LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID,
+                        elmt.getDbId(), true);
                 command = getCommandService().executeCommand(command);
-                for(CnATreeElement c : command.getElements()){
+                for (CnATreeElement c : command.getElements()) {
                     ArrayList<String> list = new ArrayList<String>(0);
-                    if(SamtTopic.class.isInstance(c)){
-                        SamtTopic st = (SamtTopic)c;
+                    if (SamtTopic.class.isInstance(c)) {
+                        SamtTopic st = (SamtTopic) c;
 
                         list.add(st.getTitle()); // add title
 
-                        list.add(st.getEntity().getSimpleValue(SAMT_TOPIC_ISA_FINDINGS)); // add findings
+                        list.add(st.getEntity().getSimpleValue(SAMT_TOPIC_ISA_FINDINGS)); // add
+                                                                                          // findings
 
-                        list.add(String.valueOf(Integer.parseInt(st.getEntity().getValue(SamtTopic.PROP_MATURITY)))); // add maturity
+                        list.add(String.valueOf(Integer
+                                .parseInt(st.getEntity().getValue(SamtTopic.PROP_MATURITY)))); // add
+                                                                                               // maturity
 
-                        list.add(String.valueOf(Integer.parseInt(st.getEntity().getValue(PROP_SAMT_RISK)))); // add risk    
+                        list.add(String.valueOf(
+                                Integer.parseInt(st.getEntity().getValue(PROP_SAMT_RISK)))); // add
+                                                                                             // risk
 
                         list.add(String.valueOf(st.getDbId())); // add dbid
                     }
@@ -98,14 +102,14 @@ public class LoadReportSamtTopicISADetails extends GenericCommand implements ICa
             }
         }
     }
-    
-    
-    public List<List<String>> getResult(){
+
+    public List<List<String>> getResult() {
         return result;
     }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
      */
     @Override
@@ -116,26 +120,30 @@ public class LoadReportSamtTopicISADetails extends GenericCommand implements ICa
         return cacheID.toString();
     }
 
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.
+     * Object)
      */
     @Override
     public void injectCacheResult(Object result) {
-        this.result = (ArrayList<List<String>>)result;
+        this.result = (ArrayList<List<String>>) result;
         resultInjectedFromCache = true;
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
      */
     @Override
     public Object getCacheableResult() {
         return this.result;
     }
-    
+
 }

@@ -40,63 +40,69 @@ import sernet.verinice.model.samt.SamtTopic;
  *
  */
 public class LoadISAQuestionAuditActions extends GenericCommand implements ICachedCommand {
-    
+
     private int rootElmt;
-    
+
     private static final Logger LOG = Logger.getLogger(LoadISAQuestionAuditActions.class);
-    
-    public static final String[] COLUMNS = new String[]{
-                                            "DATEOFINTERVIEW",
-                                            "CONTACTPERSON"
-    };
-    
+
+    public static final String[] COLUMNS = new String[] { "DATEOFINTERVIEW", "CONTACTPERSON" };
+
     private String INTERVIEW_DATE = "interview_date";
-    
+
     private String INTERVIEW_RESPONSIBLE_PERSON = "rel_person_interview_intvwer";
-    
+
     private boolean resultInjectedFromCache = false;
-    
+
     private List<List<String>> results;
-    
-    public LoadISAQuestionAuditActions(int root){
+
+    public LoadISAQuestionAuditActions(int root) {
         this.rootElmt = root;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
-        if(!resultInjectedFromCache){
-            try{
+        if (!resultInjectedFromCache) {
+            try {
                 results = new ArrayList<List<String>>(0);
-                SamtTopic elmt = (SamtTopic)getDaoFactory().getDAO(SamtTopic.TYPE_ID).findById(rootElmt);
-                Iterator<Entry<CnATreeElement, CnALink>> iter2 = CnALink.getLinkedElements(elmt, Interview.TYPE_ID).entrySet().iterator();
-                while(iter2.hasNext()){
+                SamtTopic elmt = (SamtTopic) getDaoFactory().getDAO(SamtTopic.TYPE_ID)
+                        .findById(rootElmt);
+                Iterator<Entry<CnATreeElement, CnALink>> iter2 = CnALink
+                        .getLinkedElements(elmt, Interview.TYPE_ID).entrySet().iterator();
+                while (iter2.hasNext()) {
                     Entry<CnATreeElement, CnALink> entry = iter2.next();
                     CnATreeElement keyElmt = entry.getKey();
-                    if(keyElmt.getTypeId().equals(Interview.TYPE_ID)){
+                    if (keyElmt.getTypeId().equals(Interview.TYPE_ID)) {
                         ArrayList<String> result = new ArrayList<String>(0);
-                        // initialize elmt if not done (keyElmt needs to be instance of Interview (see getLinkedElements()))
-                        if(!(keyElmt instanceof Interview)){
-                            keyElmt = (Interview)getDaoFactory().getDAO(Interview.TYPE_ID).initializeAndUnproxy(keyElmt);
+                        // initialize elmt if not done (keyElmt needs to be
+                        // instance of Interview (see getLinkedElements()))
+                        if (!(keyElmt instanceof Interview)) {
+                            keyElmt = (Interview) getDaoFactory().getDAO(Interview.TYPE_ID)
+                                    .initializeAndUnproxy(keyElmt);
                         }
-                        
+
                         Locale locale = Locale.getDefault();
                         DateFormat formatter = new SimpleDateFormat("EE, dd.MM.yyyy", locale);
                         DateFormat destinationFormat = new SimpleDateFormat("yyyy-MM-dd", locale);
                         formatter.setLenient(true);
-                        Date fDate = formatter.parse(keyElmt.getEntity().getSimpleValue(INTERVIEW_DATE));
+                        Date fDate = formatter
+                                .parse(keyElmt.getEntity().getSimpleValue(INTERVIEW_DATE));
                         result.add(destinationFormat.format(fDate));
-                        
-                        
+
                         StringBuilder persons = new StringBuilder();
-                        Iterator<Entry<CnATreeElement, CnALink>> iter = CnALink.getLinkedElements(keyElmt, PersonIso.TYPE_ID).entrySet().iterator();
-                        while(iter.hasNext()){
+                        Iterator<Entry<CnATreeElement, CnALink>> iter = CnALink
+                                .getLinkedElements(keyElmt, PersonIso.TYPE_ID).entrySet()
+                                .iterator();
+                        while (iter.hasNext()) {
                             Entry<CnATreeElement, CnALink> entry2 = iter.next();
-                            if(entry2.getValue().getRelationId().equals(INTERVIEW_RESPONSIBLE_PERSON)){
+                            if (entry2.getValue().getRelationId()
+                                    .equals(INTERVIEW_RESPONSIBLE_PERSON)) {
                                 persons.append(entry2.getKey().getTitle());
-                                if(iter.hasNext()){
+                                if (iter.hasNext()) {
                                     persons.append("\n");
                                 }
                             }
@@ -105,13 +111,15 @@ public class LoadISAQuestionAuditActions extends GenericCommand implements ICach
                         results.add(result);
                     }
                 }
-            } catch (Exception e){
+            } catch (Exception e) {
                 LOG.error("Error while executing command", e);
             }
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
      */
     @Override
@@ -122,21 +130,28 @@ public class LoadISAQuestionAuditActions extends GenericCommand implements ICach
         return cacheID.toString();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.
+     * Object)
      */
     @Override
     public void injectCacheResult(Object result) {
-        if(result instanceof ArrayList<?>){
-            this.results = (ArrayList<List<String>>)result;
+        if (result instanceof ArrayList<?>) {
+            this.results = (ArrayList<List<String>>) result;
             resultInjectedFromCache = true;
-            if(LOG.isDebugEnabled()){
-                LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(
+                        "Result in " + this.getClass().getCanonicalName() + " injected from cache");
             }
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
      */
     @Override

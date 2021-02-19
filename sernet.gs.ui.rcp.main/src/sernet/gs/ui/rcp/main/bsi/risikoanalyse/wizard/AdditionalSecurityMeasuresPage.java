@@ -90,9 +90,9 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
      * Constructor sets title an description of WizardPage.
      */
     protected AdditionalSecurityMeasuresPage() {
-        super(Messages.AdditionalSecurityMeasuresPage_0, Messages.AdditionalSecurityMeasuresPage_1, Messages.AdditionalSecurityMeasuresPage_2);
+        super(Messages.AdditionalSecurityMeasuresPage_0, Messages.AdditionalSecurityMeasuresPage_1,
+                Messages.AdditionalSecurityMeasuresPage_2);
     }
-
 
     /**
      * fills the CheckboxTableViewer with all Gefaehrdungen available
@@ -105,8 +105,9 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
     @Override
     protected void doInitContents() {
 
-        List<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen = getRiskAnalysisWizard().getNotOKGefaehrdungsUmsetzungen();
-        
+        List<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen = getRiskAnalysisWizard()
+                .getNotOKGefaehrdungsUmsetzungen();
+
         /* root of TreeViewer */
         IGefaehrdungsBaumElement baum = new GefaehrdungsBaumRoot(arrListGefaehrdungsUmsetzungen);
 
@@ -115,7 +116,8 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
         viewerScenario.setInput(baum);
         viewerScenario.expandAll();
 
-        ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzungen = (ArrayList<MassnahmenUmsetzung>) getRiskAnalysisWizard().getAllMassnahmenUmsetzungen();
+        ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzungen = (ArrayList<MassnahmenUmsetzung>) getRiskAnalysisWizard()
+                .getAllMassnahmenUmsetzungen();
 
         /* map a domain model object into multiple images and text labels */
         viewer.setLabelProvider(new MassnahmeTableViewerLabelProvider());
@@ -149,9 +151,11 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
         try {
             GefaehrdungsUmsetzung parent = (GefaehrdungsUmsetzung) massnahme.getParent();
 
-            if (massnahme instanceof RisikoMassnahmenUmsetzung && parent instanceof GefaehrdungsUmsetzung) {
+            if (massnahme instanceof RisikoMassnahmenUmsetzung
+                    && parent instanceof GefaehrdungsUmsetzung) {
 
-                RemoveMassnahmeFromGefaherdung command = new RemoveMassnahmeFromGefaherdung(parent, massnahme);
+                RemoveMassnahmeFromGefaherdung command = new RemoveMassnahmeFromGefaherdung(parent,
+                        massnahme);
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
                 parent = command.getParent();
 
@@ -174,14 +178,17 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
      */
     private void deleteOwnControl(RisikoMassnahmenUmsetzung risikoMassnahmenUmsetzung) {
 
-        ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzungen = (ArrayList<MassnahmenUmsetzung>) getRiskAnalysisWizard().getAllMassnahmenUmsetzungen();
+        ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzungen = (ArrayList<MassnahmenUmsetzung>) getRiskAnalysisWizard()
+                .getAllMassnahmenUmsetzungen();
 
         try {
             /* delete from List of MassnahmenUmsetzungen */
             if (arrListMassnahmenUmsetzungen.contains(risikoMassnahmenUmsetzung)) {
                 arrListMassnahmenUmsetzungen.remove(risikoMassnahmenUmsetzung);
-                RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(risikoMassnahmenUmsetzung);
-                RisikoMassnahmeHome.getInstance().remove(risikoMassnahmenUmsetzung.getRisikoMassnahme());
+                RisikoMassnahmeHome.getInstance()
+                        .initRisikoMassnahmeUmsetzung(risikoMassnahmenUmsetzung);
+                RisikoMassnahmeHome.getInstance()
+                        .remove(risikoMassnahmenUmsetzung.getRisikoMassnahme());
             }
 
             // TODO an dieser Stelle müssten eigentlich auch die
@@ -196,7 +203,8 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
 
     protected void editOwnControl() {
         IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-        MassnahmenUmsetzung selectedMassnahmenUmsetzung = (MassnahmenUmsetzung) selection.getFirstElement();
+        MassnahmenUmsetzung selectedMassnahmenUmsetzung = (MassnahmenUmsetzung) selection
+                .getFirstElement();
         if (selectedMassnahmenUmsetzung instanceof RisikoMassnahmenUmsetzung) {
             RisikoMassnahmenUmsetzung selectedRisikoMassnahmenUmsetzung = (RisikoMassnahmenUmsetzung) selectedMassnahmenUmsetzung;
             itemsToCheckForUniqueNumber = new RiskAnalysisDialogItems<>(
@@ -207,7 +215,8 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
                     itemsToCheckForUniqueNumber);
             int result = dialog.open();
             if (result == Window.OK) {
-                getRiskAnalysisWizard().replaceMassnahmenUmsetzung(dialog.getRisikoMassnahmenUmsetzung());
+                getRiskAnalysisWizard()
+                        .replaceMassnahmenUmsetzung(dialog.getRisikoMassnahmenUmsetzung());
                 refresh();
                 packAllMassnahmeColumns();
             }
@@ -264,7 +273,6 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
         }
     }
 
-
     @Override
     protected void setLeftColumn(Composite parent) {
 
@@ -273,8 +281,8 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
         Composite tree = new Composite(leftColumn, SWT.NONE);
 
         viewerScenario = new TreeViewer(tree, SWT.MULTI);
-        viewerScenario.getTree().setLayoutData(new GridData(GridData.FILL_BOTH
-                | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL));
+        viewerScenario.getTree().setLayoutData(new GridData(
+                GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL));
 
         GridLayoutFactory.fillDefaults().generateLayout(tree);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(tree);
@@ -291,7 +299,8 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
         GridLayoutFactory.fillDefaults().generateLayout(tableComp);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(tableComp);
 
-        GridLayoutFactory.fillDefaults().equalWidth(true).numColumns(2).margins(DEFAULT_MARGINS).generateLayout(leftColumn);
+        GridLayoutFactory.fillDefaults().equalWidth(true).numColumns(2).margins(DEFAULT_MARGINS)
+                .generateLayout(leftColumn);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(leftColumn);
     }
 
@@ -325,7 +334,8 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
         addButtonListeners();
         addFilterListeners();
 
-        RiskAnalysisWizardBrowserUpdateListener browserListener = new RiskAnalysisWizardBrowserUpdateListener(browserLoadingListener, viewerScenario);
+        RiskAnalysisWizardBrowserUpdateListener browserListener = new RiskAnalysisWizardBrowserUpdateListener(
+                browserLoadingListener, viewerScenario);
         viewerScenario.addSelectionChangedListener(browserListener);
 
         /* listener opens edit Dialog for selected Massnahme */
@@ -337,19 +347,20 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
             }
         });
 
-
-
         /* Listener opens MessageDialog and deletes selected Massnahme */
         buttonRemoveControlFromScenario.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent event) {
-                IStructuredSelection selection = (IStructuredSelection) viewerScenario.getSelection();
-                RisikoMassnahmenUmsetzung selectedRisikoMassnahmenUmsetzung = (RisikoMassnahmenUmsetzung) selection.getFirstElement();
+                IStructuredSelection selection = (IStructuredSelection) viewerScenario
+                        .getSelection();
+                RisikoMassnahmenUmsetzung selectedRisikoMassnahmenUmsetzung = (RisikoMassnahmenUmsetzung) selection
+                        .getFirstElement();
 
                 /* ask user to confirm */
                 boolean confirmed = MessageDialog.openQuestion(rootContainer.getShell(),
                         Messages.AdditionalSecurityMeasuresPage_9,
-                        NLS.bind(Messages.AdditionalSecurityMeasuresPage_10, selectedRisikoMassnahmenUmsetzung.getTitle()));
+                        NLS.bind(Messages.AdditionalSecurityMeasuresPage_10,
+                                selectedRisikoMassnahmenUmsetzung.getTitle()));
                 if (confirmed) {
                     deleteControlFromTreeViewer(selectedRisikoMassnahmenUmsetzung);
                     viewerScenario.refresh();
@@ -363,7 +374,8 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
             @Override
             public void selectionChanged(SelectionChangedEvent event) {
                 if (event.getSelection() instanceof IStructuredSelection) {
-                    if (((IStructuredSelection) event.getSelection()).getFirstElement() instanceof RisikoMassnahmenUmsetzung) {
+                    if (((IStructuredSelection) event.getSelection())
+                            .getFirstElement() instanceof RisikoMassnahmenUmsetzung) {
                         buttonRemoveControlFromScenario.setEnabled(true);
                     } else {
                         buttonRemoveControlFromScenario.setEnabled(false);
@@ -371,12 +383,6 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
                 }
             }
         });
-
-
-
-
-
-
 
         /* add drag and drop support */
         CnATreeElement cnaElement = getRiskAnalysisWizard().getFinishedRiskAnalysis();
@@ -391,9 +397,11 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
         Transfer[] types = new Transfer[] { RisikoMassnahmenUmsetzungTransfer.getInstance() };
         int operations = DND.DROP_COPY | DND.DROP_MOVE;
 
-        viewerScenario.addDropSupport(operations, types, new RisikoMassnahmenUmsetzungDropListener(viewerScenario));
+        viewerScenario.addDropSupport(operations, types,
+                new RisikoMassnahmenUmsetzungDropListener(viewerScenario));
 
-        viewer.addDragSupport(operations, types, new RisikoMassnahmenUmsetzungDragListener(viewer, cnaElement));
+        viewer.addDragSupport(operations, types,
+                new RisikoMassnahmenUmsetzungDragListener(viewer, cnaElement));
 
     }
 
@@ -447,12 +455,11 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
             }
         });
 
-        
     }
 
     @Override
     protected void doAfterUpdateFilter() {
-        /*nothing to do*/
+        /* nothing to do */
     }
 
     @Override
@@ -460,7 +467,6 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
         /* nothing to do */
 
     }
-
 
     private void addButtonListeners() {
 
@@ -471,25 +477,24 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
             @Override
             public void widgetSelected(SelectionEvent event) {
 
-
                 /* create new RisikoMassnahmenUmsetzung */
                 itemsToCheckForUniqueNumber = new RiskAnalysisDialogItems<>(
                         getRiskAnalysisWizard().getAllMassnahmenUmsetzungen(),
                         MassnahmenUmsetzung.class);
                 final NewRisikoMassnahmeDialog dialog = new NewRisikoMassnahmeDialog(
-                        rootContainer.getShell(),
-                        itemsToCheckForUniqueNumber);
+                        rootContainer.getShell(), itemsToCheckForUniqueNumber);
                 int result = dialog.open();
 
                 if (result == Window.OK) {
                     /* add new RisikoMassnahmenUmsetzung to List and viewer */
-                    getRiskAnalysisWizard().addRisikoMassnahmeUmsetzung(dialog.getNewRisikoMassnahme());
+                    getRiskAnalysisWizard()
+                            .addRisikoMassnahmeUmsetzung(dialog.getNewRisikoMassnahme());
                     refresh();
                     packAllMassnahmeColumns();
                 }
             }
         });
-        
+
         /* Listener opens Dialog for editing the selected Gefaehrdung */
         buttonEdit.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -503,7 +508,8 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
             @Override
             public void widgetSelected(SelectionEvent event) {
                 IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-                MassnahmenUmsetzung selectedMassnahmenUmsetzung = (MassnahmenUmsetzung) selection.getFirstElement();
+                MassnahmenUmsetzung selectedMassnahmenUmsetzung = (MassnahmenUmsetzung) selection
+                        .getFirstElement();
 
                 /* only RisikoMassnahmenUmsetzungen can be deleted */
                 if (selectedMassnahmenUmsetzung instanceof RisikoMassnahmenUmsetzung) {
@@ -512,7 +518,8 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
                     /* ask user to confirm */
                     boolean confirmed = MessageDialog.openQuestion(rootContainer.getShell(),
                             Messages.AdditionalSecurityMeasuresPage_15,
-                            NLS.bind(Messages.AdditionalSecurityMeasuresPage_10, selectedMassnahmenUmsetzung.getTitle()));
+                            NLS.bind(Messages.AdditionalSecurityMeasuresPage_10,
+                                    selectedMassnahmenUmsetzung.getTitle()));
                     /* delete */
                     if (confirmed) {
                         deleteOwnControl(rsUmsetzung);
@@ -523,7 +530,6 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
         });
 
     }
-
 
     @Override
     protected void addControls(Composite parent) {
@@ -552,7 +558,8 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
         /* delete button */
         buttonRemoveControlFromScenario = new Button(groupButtons, SWT.PUSH);
         buttonRemoveControlFromScenario.setText(Messages.AdditionalSecurityMeasuresPage_8);
-        GridDataFactory.fillDefaults().hint(ADD_EDIT_REMOVE_BUTTON_SIZE).applyTo(buttonRemoveControlFromScenario);
+        GridDataFactory.fillDefaults().hint(ADD_EDIT_REMOVE_BUTTON_SIZE)
+                .applyTo(buttonRemoveControlFromScenario);
 
         GridLayoutFactory.fillDefaults().margins(DEFAULT_MARGINS).generateLayout(groupButtons);
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).applyTo(groupButtons);
@@ -574,14 +581,12 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
         Composite search = new Composite(compositeFilter, SWT.NONE);
         new Label(search, SWT.NONE).setText(Messages.ChooseGefaehrdungPage_10);
         textSearch = new Text(search, SWT.SINGLE | SWT.BORDER);
-        GridLayoutFactory.fillDefaults().numColumns(2).margins(DEFAULT_MARGINS).generateLayout(search);
+        GridLayoutFactory.fillDefaults().numColumns(2).margins(DEFAULT_MARGINS)
+                .generateLayout(search);
         GridLayoutFactory.fillDefaults().generateLayout(compositeFilter);
         GridDataFactory.fillDefaults().applyTo(search);
         GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.TOP).applyTo(compositeFilter);
 
     }
-
-
-
 
 }

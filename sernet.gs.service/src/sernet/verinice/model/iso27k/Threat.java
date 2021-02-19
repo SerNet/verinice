@@ -26,8 +26,8 @@ import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * A threat from the ISO/IEC 27000 standard.
- * See https://en.wikipedia.org/wiki/ISO/IEC_27000-series for details
+ * A threat from the ISO/IEC 27000 standard. See
+ * https://en.wikipedia.org/wiki/ISO/IEC_27000-series for details
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -35,65 +35,69 @@ import sernet.verinice.model.common.CnATreeElement;
 public class Threat extends CnATreeElement
         implements IISO27kElement, IAbbreviatedElement, ITaggableElement {
 
-	public static final String TYPE_ID = "threat"; //$NON-NLS-1$
-	public static final String PROP_ABBR = "threat_abbr"; //$NON-NLS-1$
-	public static final String PROP_NAME = "threat_name"; //$NON-NLS-1$
-	public static final String PROP_TAG = "threat_tag"; //$NON-NLS-1$
-	public static final String PROP_DESCRIPTION = "threat_description"; //$NON-NLS-1$
+    public static final String TYPE_ID = "threat"; //$NON-NLS-1$
+    public static final String PROP_ABBR = "threat_abbr"; //$NON-NLS-1$
+    public static final String PROP_NAME = "threat_name"; //$NON-NLS-1$
+    public static final String PROP_TAG = "threat_tag"; //$NON-NLS-1$
+    public static final String PROP_DESCRIPTION = "threat_description"; //$NON-NLS-1$
     public static final String PROP_THREAT_LIKELIHOOD = "threat_likelihood"; //$NON-NLS-1$
     public static final String PROP_THREAT_IMPACT = "threat_impact"; //$NON-NLS-1$
 
-	public Threat() {
-		super();
-		setEntity(new Entity(TYPE_ID));
-		getEntity().initDefaultValues(getTypeFactory());
-	}
-	
-	public Threat(CnATreeElement parent) {
-		super(parent);
-		setEntity(new Entity(TYPE_ID));
-		getEntity().initDefaultValues(getTypeFactory());
+    public Threat() {
+        super();
+        setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
+    }
+
+    public Threat(CnATreeElement parent) {
+        super(parent);
+        setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
         // sets the localized title via HUITypeFactory from message bundle
         setTitel(getTypeFactory().getMessage(TYPE_ID));
     }
-	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
-	 */
-	@Override
-	public String getTypeId() {
-		return TYPE_ID;
-	}
-	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitel()
-	 */
-	@Override
-	public String getTitle() {
-		return getEntity().getPropertyValue(PROP_NAME);
-	}
 
-	public void setTitel(String name) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
+     */
+    @Override
+    public String getTypeId() {
+        return TYPE_ID;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitel()
+     */
+    @Override
+    public String getTitle() {
+        return getEntity().getPropertyValue(PROP_NAME);
+    }
+
+    public void setTitel(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
+    }
 
     @Override
-	public String getAbbreviation() {
-		return getEntity().getPropertyValue(PROP_ABBR);
-	}
-	
-	public void setAbbreviation(String abbreviation) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
-	}
+    public String getAbbreviation() {
+        return getEntity().getPropertyValue(PROP_ABBR);
+    }
 
-	public void setDescription(String desc) {
-	    getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DESCRIPTION), desc);
-	}
+    public void setAbbreviation(String abbreviation) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
+    }
+
+    public void setDescription(String desc) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DESCRIPTION), desc);
+    }
 
     @Override
-	public Collection<String> getTags() {
-		return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
-	}
+    public Collection<String> getTags() {
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
+    }
 
     public String getDescription() {
         return getEntity().getPropertyValue(PROP_DESCRIPTION);

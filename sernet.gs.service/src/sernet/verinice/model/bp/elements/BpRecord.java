@@ -86,5 +86,4 @@ public class BpRecord extends CnATreeElement
         return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
-
 }

@@ -39,17 +39,13 @@ import sernet.verinice.model.samt.SamtTopic;
 /**
  *
  */
-public class LoadReportISARiskChapter extends GenericCommand implements ICachedCommand{
-    
+public class LoadReportISARiskChapter extends GenericCommand implements ICachedCommand {
+
     private static final Logger log = Logger.getLogger(LoadReportISARiskChapter.class);
-    
-    public static final String[] COLUMNS = new String[]{"RISK_NO",
-                                                         "RISK_LOW",
-                                                         "RISK_MEDIUM",
-                                                         "RISK_HIGH",
-                                                         "RISK_VERYHIGH",
-                                                         "CHAPTERNAME"};
-    
+
+    public static final String[] COLUMNS = new String[] { "RISK_NO", "RISK_LOW", "RISK_MEDIUM",
+            "RISK_HIGH", "RISK_VERYHIGH", "CHAPTERNAME" };
+
     private static final int RISK_NO = -1;
     private static final int RISK_LOW = 0;
     private static final int RISK_MEDIUM = 1;
@@ -58,7 +54,6 @@ public class LoadReportISARiskChapter extends GenericCommand implements ICachedC
     private static final String RISK_PROPERTY = "samt_topic_audit_ra";
     private static final String PROP_CG_ISISAELMNT = "controlgroup_is_NoIso_group";
 
-
     private Integer rootElmt;
     private Integer rootSgGroup;
     private Map<String, Integer[]> results;
@@ -66,99 +61,109 @@ public class LoadReportISARiskChapter extends GenericCommand implements ICachedC
     private Set<String> groupCache;
     // caches if samtTopic was already iterated
     private Set<String> samtCache;
-    
+
     private List<SamtTopic> resultTopics;
-    
+
     private boolean resultInjectedFromCache = false;
-    
-    public LoadReportISARiskChapter(Integer root){
+
+    public LoadReportISARiskChapter(Integer root) {
         this.rootElmt = root;
         this.results = new HashMap<String, Integer[]>(0);
         this.groupCache = new HashSet<String>(0);
         this.samtCache = new HashSet<String>(0);
         this.resultTopics = new ArrayList<SamtTopic>(0);
-        
+
     }
-    
-    public LoadReportISARiskChapter(Integer root, Integer rootSG){
+
+    public LoadReportISARiskChapter(Integer root, Integer rootSG) {
         this(root);
         this.rootSgGroup = rootSG;
     }
-    
-    public LoadReportISARiskChapter(Integer root, String rootSG){
+
+    public LoadReportISARiskChapter(Integer root, String rootSG) {
         this(root);
         this.rootSgGroup = Integer.valueOf(rootSG);
     }
-    
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
-        if(!resultInjectedFromCache){
-            try{
+        if (!resultInjectedFromCache) {
+            try {
                 ControlGroup samtRootGroup = null;
-                if(rootSgGroup != null){
-                    samtRootGroup = (ControlGroup)getDaoFactory().getDAO(ControlGroup.TYPE_ID).findById(rootSgGroup);
+                if (rootSgGroup != null) {
+                    samtRootGroup = (ControlGroup) getDaoFactory().getDAO(ControlGroup.TYPE_ID)
+                            .findById(rootSgGroup);
                 } else {
                     FindSGCommand c1 = new FindSGCommand(true, rootElmt);
                     c1 = getCommandService().executeCommand(c1);
                     samtRootGroup = c1.getSelfAssessmentGroup();
                 }
-                LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, samtRootGroup.getDbId(), true);
+                LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID,
+                        samtRootGroup.getDbId(), true);
                 command = getCommandService().executeCommand(command);
-                for(CnATreeElement e : command.getElements()){
-                    if(e instanceof SamtTopic && isRelevantChild((SamtTopic)e) && !samtCache.contains(e.getUuid())){
+                for (CnATreeElement e : command.getElements()) {
+                    if (e instanceof SamtTopic && isRelevantChild((SamtTopic) e)
+                            && !samtCache.contains(e.getUuid())) {
                         String parentTitle = e.getParent().getTitle();
                         Integer[] values = null;
-                        if(!results.containsKey(parentTitle)){
-                            results.put(parentTitle, new Integer[]{0,0,0,0,0});
+                        if (!results.containsKey(parentTitle)) {
+                            results.put(parentTitle, new Integer[] { 0, 0, 0, 0, 0 });
                         }
                         values = results.get(parentTitle);
-                        switch(e.getNumericProperty(RISK_PROPERTY)){
+                        switch (e.getNumericProperty(RISK_PROPERTY)) {
                         case RISK_NO:
-                            values[0]++; break;
+                            values[0]++;
+                            break;
                         case RISK_LOW:
-                            values[1]++; break;
+                            values[1]++;
+                            break;
                         case RISK_MEDIUM:
-                            values[2]++; break;
+                            values[2]++;
+                            break;
                         case RISK_HIGH:
-                            values[3]++; break;
+                            values[3]++;
+                            break;
                         case RISK_VERYHIGH:
-                            values[4]++; break;
+                            values[4]++;
+                            break;
                         default:
                             break;
                         }
                         results.put(parentTitle, values);
                         samtCache.add(e.getUuid());
-                        resultTopics.add((SamtTopic)e);
+                        resultTopics.add((SamtTopic) e);
                     }
                 }
 
-            } catch (CommandException e){
+            } catch (CommandException e) {
                 log.error("Error while executing command", e);
             }
         }
     }
-    
-    private boolean isRelevantChild(SamtTopic topic){
-        if(topic.getParent() instanceof ControlGroup){
-            ControlGroup parent = (ControlGroup)topic.getParent();
-            if(groupCache.contains(parent.getUuid())){
-               return true; 
+
+    private boolean isRelevantChild(SamtTopic topic) {
+        if (topic.getParent() instanceof ControlGroup) {
+            ControlGroup parent = (ControlGroup) topic.getParent();
+            if (groupCache.contains(parent.getUuid())) {
+                return true;
             } else {
-                if(!parent.isChildrenLoaded()){
-                    LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[]{parent.getDbId()});
+                if (!parent.isChildrenLoaded()) {
+                    LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(
+                            new Integer[] { parent.getDbId() });
                     try {
                         command = getCommandService().executeCommand(command);
-                        parent = (ControlGroup)command.getElements().get(0);
+                        parent = (ControlGroup) command.getElements().get(0);
                         parent.setChildrenLoaded(true);
                     } catch (CommandException e) {
                         log.error("Error while executing command", e);
                     }
                 }
-                if(parent.getEntity().getSimpleValue(PROP_CG_ISISAELMNT).equals("0")){
+                if (parent.getEntity().getSimpleValue(PROP_CG_ISISAELMNT).equals("0")) {
                     groupCache.add(parent.getUuid());
                     return true;
                 }
@@ -166,14 +171,14 @@ public class LoadReportISARiskChapter extends GenericCommand implements ICachedC
         }
         return false;
     }
-    
-    public List<List<String>> getResult(){
+
+    public List<List<String>> getResult() {
         ArrayList<String> unsortedKeyList = new ArrayList<String>(results.size());
         unsortedKeyList.addAll(results.keySet());
         ArrayList<List<String>> result = new ArrayList<List<String>>(0);
-        for(int i = 0; i < unsortedKeyList.size(); i++){
+        for (int i = 0; i < unsortedKeyList.size(); i++) {
             String key = unsortedKeyList.get(i);
-            List<String> tmpList = transformArrayToList(results.get(key)); 
+            List<String> tmpList = transformArrayToList(results.get(key));
             // key is chaptername, shorten that
             tmpList.add(shortenChapterNameLabelString(key));
             result.add(tmpList);
@@ -189,38 +194,38 @@ public class LoadReportISARiskChapter extends GenericCommand implements ICachedC
         });
         return result;
     }
-    
-    private List<String> transformArrayToList(Object[] array){
+
+    private List<String> transformArrayToList(Object[] array) {
         List<String> list = new ArrayList<String>(0);
-        for(int i = 0; i < array.length; i++){
+        for (int i = 0; i < array.length; i++) {
             Object o = array[i];
             String result = null;
-            if(o instanceof Integer){
-                result = ((Integer)o).toString();
-                
-            } else if(o instanceof String){
-                result = (String)o;
+            if (o instanceof Integer) {
+                result = ((Integer) o).toString();
+
+            } else if (o instanceof String) {
+                result = (String) o;
             }
-            if(result == null){
+            if (result == null) {
                 result = "";
             }
-            
+
             list.add(result);
         }
         return list;
     }
-    
-    public String shortenChapterNameLabelString(String chapterName){
-        
+
+    public String shortenChapterNameLabelString(String chapterName) {
+
         StringBuilder sb = new StringBuilder();
-        if(chapterName.contains(" ")){
+        if (chapterName.contains(" ")) {
             String number = chapterName.substring(0, chapterName.indexOf(" "));
-            try{
+            try {
                 Integer.parseInt(number);
                 sb.append(number);
             } catch (NumberFormatException e) {
                 log.warn("Chaptername does not contain a number");
-                if(chapterName.length() > 5){
+                if (chapterName.length() > 5) {
                     sb.append(chapterName.substring(0, 5));
                     sb.append("...");
                 } else {
@@ -228,8 +233,8 @@ public class LoadReportISARiskChapter extends GenericCommand implements ICachedC
                 }
             }
         } else {
-            if(sb.length() == 0){
-                if(chapterName.length() > 5){
+            if (sb.length() == 0) {
+                if (chapterName.length() > 5) {
                     sb.append(chapterName.substring(0, 5));
                     sb.append("...");
                 } else {
@@ -239,12 +244,14 @@ public class LoadReportISARiskChapter extends GenericCommand implements ICachedC
         }
         return sb.toString();
     }
-    
-    public List<SamtTopic> getSamtTopics(){
+
+    public List<SamtTopic> getSamtTopics() {
         return resultTopics;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
      */
     @Override
@@ -252,7 +259,7 @@ public class LoadReportISARiskChapter extends GenericCommand implements ICachedC
         StringBuilder cacheID = new StringBuilder();
         cacheID.append(this.getClass().getSimpleName());
         cacheID.append(String.valueOf(rootElmt));
-        if(rootSgGroup != null){
+        if (rootSgGroup != null) {
             cacheID.append(String.valueOf(rootSgGroup));
         } else {
             cacheID.append("null");
@@ -260,23 +267,30 @@ public class LoadReportISARiskChapter extends GenericCommand implements ICachedC
         return cacheID.toString();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.
+     * Object)
      */
     @Override
     public void injectCacheResult(Object result) {
-        if(result instanceof Object[]){
-            Object[] array = (Object[])result;
-            this.results = (HashMap<String, Integer[]>)array[0];
-            this.resultTopics = (ArrayList<SamtTopic>)array[1];
+        if (result instanceof Object[]) {
+            Object[] array = (Object[]) result;
+            this.results = (HashMap<String, Integer[]>) array[0];
+            this.resultTopics = (ArrayList<SamtTopic>) array[1];
             resultInjectedFromCache = true;
-            if(log.isDebugEnabled()){
-                log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+            if (log.isDebugEnabled()) {
+                log.debug(
+                        "Result in " + this.getClass().getCanonicalName() + " injected from cache");
             }
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
      */
     @Override

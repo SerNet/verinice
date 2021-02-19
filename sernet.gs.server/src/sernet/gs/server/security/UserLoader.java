@@ -33,41 +33,40 @@ import sernet.verinice.model.common.configuration.Configuration;
  *
  */
 public abstract class UserLoader {
-    
+
     // injected by spring
     private IBaseDao<Entity, Serializable> entityDao;
-    
-    
-    protected List<Entity> loadUserEntites(String username) {       
+
+    protected List<Entity> loadUserEntites(String username) {
         String query = "from Entity entity join fetch entity.typedPropertyLists where entity.entityType = ?"; //$NON-NLS-1$
-        List<Entity> entities = getEntityDao().findByQuery(query, new String[] {"configuration"});
+        List<Entity> entities = getEntityDao().findByQuery(query, new String[] { "configuration" });
         // only searched user if present, otherwise return all:
-        if (username != null && username.length()>0) {
+        if (username != null && username.length() > 0) {
             allResults: for (Entity entity : entities) {
                 if (username.equals(entity.getSimpleValue(Configuration.PROP_USERNAME))) {
                     // hydrate call removed
-                    // lazy="false" added to PropertyList.hbm.xml and PropertyListOracle.hbm.xml added
+                    // lazy="false" added to PropertyList.hbm.xml and
+                    // PropertyListOracle.hbm.xml added
                     // See Bug 297
                     // HydratorUtil.hydrateEntity(dao, entity);
                     entities = new ArrayList<Entity>();
                     entities.add(entity);
                     break allResults;
                 }
-            }      
-        }
-        else {
+            }
+        } else {
             for (Entity entity : entities) {
                 HydratorUtil.hydrateEntity(getEntityDao(), entity);
             }
         }
         return entities;
     }
-    
+
     public IBaseDao<Entity, Serializable> getEntityDao() {
         return entityDao;
     }
-    
-    public void setEntityDao(IBaseDao<Entity, Serializable> entityDao ) {
+
+    public void setEntityDao(IBaseDao<Entity, Serializable> entityDao) {
         this.entityDao = entityDao;
     }
 }

@@ -49,7 +49,7 @@ import sernet.verinice.service.commands.risk.PositiveEstimateGefaehrdung;
 public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableViewer> {
 
     private static final Logger LOG = Logger.getLogger(EstimateGefaehrdungPage.class);
-    
+
     private TableViewerColumn checkboxColumn;
     private TableViewerColumn imageColumn;
     private TableViewerColumn numberColumn;
@@ -60,14 +60,16 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
      * Constructor sets title and description of WizardPage.
      */
     protected EstimateGefaehrdungPage() {
-        super(Messages.EstimateGefaehrdungPage_0, Messages.EstimateGefaehrdungPage_1, Messages.EstimateGefaehrdungPage_2);
+        super(Messages.EstimateGefaehrdungPage_0, Messages.EstimateGefaehrdungPage_1,
+                Messages.EstimateGefaehrdungPage_2);
     }
 
     /**
      * Marks all checkboxes of Gefaehrdungen that are selected as not okay.
      */
     private void selectAssignedGefaehrdungen() {
-        List<GefaehrdungsUmsetzung> associatedGefaehrdungen = ((RiskAnalysisWizard) getWizard()).getAssociatedGefaehrdungen();
+        List<GefaehrdungsUmsetzung> associatedGefaehrdungen = ((RiskAnalysisWizard) getWizard())
+                .getAssociatedGefaehrdungen();
 
         for (GefaehrdungsUmsetzung gefaehrdung : associatedGefaehrdungen) {
             if (!gefaehrdung.getOkay()) {
@@ -82,7 +84,8 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
      */
     @Override
     protected void doInitContents() {
-        List<GefaehrdungsUmsetzung> arrListAssociatedGefaehrdungen = getRiskAnalysisWizard().getAssociatedGefaehrdungen();
+        List<GefaehrdungsUmsetzung> arrListAssociatedGefaehrdungen = getRiskAnalysisWizard()
+                .getAssociatedGefaehrdungen();
 
         /* map a domain model object into multiple images and text labels */
         viewer.setLabelProvider(new CheckboxTableViewerLabelProvider());
@@ -105,7 +108,8 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
         imageColumn.getColumn().pack();
         numberColumn.getColumn().pack();
         nameColumn.getColumn().pack();
-        nameColumn.getColumn().setWidth(Math.min(nameColumn.getColumn().getWidth(), WIDTH_COL_NAME));
+        nameColumn.getColumn()
+                .setWidth(Math.min(nameColumn.getColumn().getWidth(), WIDTH_COL_NAME));
         descriptionColumn.getColumn().pack();
     }
 
@@ -120,7 +124,6 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
             setPageComplete(true);
         }
     }
-
 
     @Override
     protected void setColumns() {
@@ -151,7 +154,6 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
 
     }
 
-
     @Override
     protected void addSpecificListenersForPage() {
 
@@ -167,14 +169,18 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
              */
             @Override
             public void checkStateChanged(CheckStateChangedEvent event) {
-                GefaehrdungsUmsetzung gefaehrdungsUmsetzung = (GefaehrdungsUmsetzung) event.getElement();
+                GefaehrdungsUmsetzung gefaehrdungsUmsetzung = (GefaehrdungsUmsetzung) event
+                        .getElement();
 
-                Integer raListDbId = getRiskAnalysisWizard().getFinishedRiskAnalysisLists().getDbId();
+                Integer raListDbId = getRiskAnalysisWizard().getFinishedRiskAnalysisLists()
+                        .getDbId();
                 if (event.getChecked()) {
                     /* checkbox set */
 
                     try {
-                        NegativeEstimateGefaehrdung command = new NegativeEstimateGefaehrdung(raListDbId, gefaehrdungsUmsetzung, getRiskAnalysisWizard().getFinishedRiskAnalysis());
+                        NegativeEstimateGefaehrdung command = new NegativeEstimateGefaehrdung(
+                                raListDbId, gefaehrdungsUmsetzung,
+                                getRiskAnalysisWizard().getFinishedRiskAnalysis());
                         command = ServiceFactory.lookupCommandService().executeCommand(command);
                         getRiskAnalysisWizard().setFinishedRiskLists(command.getRaList());
                     } catch (Exception e) {
@@ -185,7 +191,9 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
                 } else {
                     try {
                         /* checkbox unset */
-                        PositiveEstimateGefaehrdung command = new PositiveEstimateGefaehrdung(raListDbId, gefaehrdungsUmsetzung, getRiskAnalysisWizard().getFinishedRiskAnalysis());
+                        PositiveEstimateGefaehrdung command = new PositiveEstimateGefaehrdung(
+                                raListDbId, gefaehrdungsUmsetzung,
+                                getRiskAnalysisWizard().getFinishedRiskAnalysis());
                         command = ServiceFactory.lookupCommandService().executeCommand(command);
                         if (command.getLists() != null) {
                             getRiskAnalysisWizard().setFinishedRiskLists(command.getLists());
@@ -204,7 +212,6 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
 
     private void addFilterListeners() {
 
-
         /* Listener adds/removes Filter gefaehrdungFilter */
         buttonGefaehrdungen.addSelectionListener(new SelectionAdapter() {
 
@@ -219,7 +226,7 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
                 Button button = (Button) event.widget;
                 if (button.getSelection()) {
                     viewer.addFilter(gefaehrdungFilter);
-                    refresh();  
+                    refresh();
                     packAllColumns();
                 } else {
                     viewer.removeFilter(gefaehrdungFilter);
@@ -268,7 +275,6 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
 
     }
 
-
     @Override
     protected void addButtons(Composite parent, String groupName) {
         /* there are no buttons needed in this Page */
@@ -278,6 +284,5 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
     protected CheckboxTableViewer initializeViewer(Composite parent) {
         return CheckboxTableViewer.newCheckList(parent, SWT.BORDER | SWT.FULL_SELECTION);
     }
-
 
 }

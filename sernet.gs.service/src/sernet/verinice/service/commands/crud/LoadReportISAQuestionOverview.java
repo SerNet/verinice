@@ -44,59 +44,58 @@ import sernet.verinice.model.samt.SamtTopic;
  *
  */
 public class LoadReportISAQuestionOverview extends GenericCommand implements ICachedCommand {
-    
+
     private static final Logger LOG = Logger.getLogger(LoadReportISAQuestionOverview.class);
     private static final String DUMMY_VALUE = "value indeterminable";
     private static final String PROP_SAMT_RISK = "samt_topic_audit_ra";
     private static final String OVERVIEW_PROPERTY = "controlgroup_is_NoIso_group";
     private static final int OVERVIEW_PROPERTY_TARGET = 0;
-    
+
     private boolean resultInjectedFromCache = false;
 
-    
-    public static final String[] COLUMNS = new String[] { 
-        "TITLE",
-        "DESCRIPTION",
-        "MATURITY",
-        "RISK",
-        "RESPONSIBLE_PERSON",
-        "DUEDATE"
-        };
+    public static final String[] COLUMNS = new String[] { "TITLE", "DESCRIPTION", "MATURITY",
+            "RISK", "RESPONSIBLE_PERSON", "DUEDATE" };
     private Integer rootElmt;
-    
+
     private List<List<String>> result;
-    
-    public LoadReportISAQuestionOverview(Integer root){
+
+    public LoadReportISAQuestionOverview(Integer root) {
         this.rootElmt = root;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
-        if(!resultInjectedFromCache){
+        if (!resultInjectedFromCache) {
             result = new ArrayList<List<String>>(0);
             try {
-                for(ControlGroup cg : getControlGroups(rootElmt)){
-                    LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, cg.getDbId(), true);
+                for (ControlGroup cg : getControlGroups(rootElmt)) {
+                    LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID,
+                            cg.getDbId(), true);
                     command = getCommandService().executeCommand(command);
-                    for(CnATreeElement c : command.getElements()){
-                        if(c instanceof SamtTopic){
+                    for (CnATreeElement c : command.getElements()) {
+                        if (c instanceof SamtTopic) {
                             ArrayList<String> list = new ArrayList<String>(0);
-                            SamtTopic t = (SamtTopic)c;
+                            SamtTopic t = (SamtTopic) c;
                             String[] splittedTitle = splitTopicTitle(t.getTitle());
-                            String maturity = String.valueOf(Integer.parseInt(t.getEntity().getValue(SamtTopic.PROP_MATURITY)));
-                            String riskValue = String.valueOf(Integer.parseInt(t.getEntity().getValue(PROP_SAMT_RISK)));
+                            String maturity = String.valueOf(Integer
+                                    .parseInt(t.getEntity().getValue(SamtTopic.PROP_MATURITY)));
+                            String riskValue = String.valueOf(
+                                    Integer.parseInt(t.getEntity().getValue(PROP_SAMT_RISK)));
                             String persons = getResponsiblePersons(t).toString();
-                            String dueDate = t.getEntity().getSimpleValue(SamtTopic.PROP_COMPLETE_UNTIL);
-                            if(dueDate == null){
+                            String dueDate = t.getEntity()
+                                    .getSimpleValue(SamtTopic.PROP_COMPLETE_UNTIL);
+                            if (dueDate == null) {
                                 dueDate = DUMMY_VALUE;
                             }
-                            if(riskValue == null){
+                            if (riskValue == null) {
                                 riskValue = DUMMY_VALUE;
                             }
-                            if(maturity == null){
+                            if (maturity == null) {
                                 maturity = DUMMY_VALUE;
                             }
                             list.add(splittedTitle[0]);
@@ -115,38 +114,43 @@ public class LoadReportISAQuestionOverview extends GenericCommand implements ICa
                 LOG.error("Error while computing details for SamtTopic", e);
             }
         }
-        
+
     }
 
     private StringBuilder getResponsiblePersons(SamtTopic t) {
         StringBuilder sb = new StringBuilder();
-        for(Entry<CnATreeElement, CnALink> controlLinkEntry : CnALink.getLinkedElements(t, Control.TYPE_ID).entrySet()){
-            if(CnALink.isDownwardLink(t, controlLinkEntry.getValue())){
-                Control c = (Control)getDaoFactory().getDAO(Control.TYPE_ID).initializeAndUnproxy(controlLinkEntry.getKey());
-                if(c.getParent().getParent().getTypeId().equals(ControlGroup.TYPE_ID)){
-                    ControlGroup containingGroup = (ControlGroup)c.getParent().getParent();
-                    for(Entry<CnATreeElement, CnALink> entry : CnALink.getLinkedElements(containingGroup, PersonIso.TYPE_ID).entrySet()){
-                        if(CnALink.isDownwardLink(containingGroup, entry.getValue())){
-                            PersonIso e = (PersonIso)getDaoFactory().getDAO(PersonIso.TYPE_ID).initializeAndUnproxy(entry.getKey());
+        for (Entry<CnATreeElement, CnALink> controlLinkEntry : CnALink
+                .getLinkedElements(t, Control.TYPE_ID).entrySet()) {
+            if (CnALink.isDownwardLink(t, controlLinkEntry.getValue())) {
+                Control c = (Control) getDaoFactory().getDAO(Control.TYPE_ID)
+                        .initializeAndUnproxy(controlLinkEntry.getKey());
+                if (c.getParent().getParent().getTypeId().equals(ControlGroup.TYPE_ID)) {
+                    ControlGroup containingGroup = (ControlGroup) c.getParent().getParent();
+                    for (Entry<CnATreeElement, CnALink> entry : CnALink
+                            .getLinkedElements(containingGroup, PersonIso.TYPE_ID).entrySet()) {
+                        if (CnALink.isDownwardLink(containingGroup, entry.getValue())) {
+                            PersonIso e = (PersonIso) getDaoFactory().getDAO(PersonIso.TYPE_ID)
+                                    .initializeAndUnproxy(entry.getKey());
                             sb.append(e.getSurname());
                             sb.append(", ");
                             sb.append(e.getName());
-                            sb.append("\n"); // newline, to enlist more than one person
+                            sb.append("\n"); // newline, to enlist more than one
+                                             // person
                         }
                     }
-                    
+
                 }
             }
         }
         return sb;
     }
-    
-    private String[] splitTopicTitle(String title){
+
+    private String[] splitTopicTitle(String title) {
         String patternString = ".*(\\d+)\\.?(\\d+)?";
         Pattern pattern = Pattern.compile(patternString);
         Matcher matcher = pattern.matcher(title);
         String[] result = new String[2];
-        if(matcher.find()){
+        if (matcher.find()) {
             result[0] = matcher.group();
             result[1] = title.substring(title.indexOf(result[0]) + result[0].length()).trim();
         } else {
@@ -155,32 +159,33 @@ public class LoadReportISAQuestionOverview extends GenericCommand implements ICa
         }
         return result;
     }
-    
-    public List<List<String>> getResult(){
+
+    public List<List<String>> getResult() {
         return result;
     }
-    
-    private List<ControlGroup> getControlGroups(Integer root){
+
+    private List<ControlGroup> getControlGroups(Integer root) {
         ArrayList<ControlGroup> retList = new ArrayList<ControlGroup>(0);
         Set<ControlGroup> alreadySeen = new HashSet<ControlGroup>(0);
         try {
             LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, root, true);
             command = getCommandService().executeCommand(command);
             List<CnATreeElement> groups = command.getElements();
-            if(groups.size() == 1 && groups.get(0).getDbId().equals(root)){
-                ControlGroup rootGroup = (ControlGroup)groups.get(0);
+            if (groups.size() == 1 && groups.get(0).getDbId().equals(root)) {
+                ControlGroup rootGroup = (ControlGroup) groups.get(0);
                 groups.clear();
                 groups.addAll(command.getElements(ControlGroup.TYPE_ID, rootGroup));
             }
-            for(CnATreeElement e : groups){
-                if(e instanceof ControlGroup){
-                    ControlGroup c = (ControlGroup)e;
-                    if(!alreadySeen.contains(c)){
+            for (CnATreeElement e : groups) {
+                if (e instanceof ControlGroup) {
+                    ControlGroup c = (ControlGroup) e;
+                    if (!alreadySeen.contains(c)) {
                         alreadySeen.add(c);
-                        if(e.getParent() instanceof ControlGroup &&
-                                c.getEntity().getSimpleValue(OVERVIEW_PROPERTY)
-                                .equals(String.valueOf(OVERVIEW_PROPERTY_TARGET))
-                                && containsSamtTopicsOnly(c)){ // avoids rootControlGroup
+                        if (e.getParent() instanceof ControlGroup
+                                && c.getEntity().getSimpleValue(OVERVIEW_PROPERTY)
+                                        .equals(String.valueOf(OVERVIEW_PROPERTY_TARGET))
+                                && containsSamtTopicsOnly(c)) { // avoids
+                                                                // rootControlGroup
                             retList.add(c);
                         }
                     }
@@ -200,22 +205,25 @@ public class LoadReportISAQuestionOverview extends GenericCommand implements ICa
         });
         return retList;
     }
-    
+
     /**
      * if group has a child that is not a samttopic, return false (recursivly)
+     * 
      * @param group
      * @return
      */
-    private boolean containsSamtTopicsOnly(ControlGroup group){
-        for(CnATreeElement child : group.getChildren()){
-            if(!(child instanceof SamtTopic)){
+    private boolean containsSamtTopicsOnly(ControlGroup group) {
+        for (CnATreeElement child : group.getChildren()) {
+            if (!(child instanceof SamtTopic)) {
                 return false;
-            } 
+            }
         }
         return true;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
      */
     @Override
@@ -226,19 +234,25 @@ public class LoadReportISAQuestionOverview extends GenericCommand implements ICa
         return cacheID.toString();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.
+     * Object)
      */
     @Override
     public void injectCacheResult(Object result) {
-        this.result = (ArrayList<List<String>>)result;
+        this.result = (ArrayList<List<String>>) result;
         resultInjectedFromCache = true;
-        if(LOG.isDebugEnabled()){
+        if (LOG.isDebugEnabled()) {
             LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
      */
     @Override

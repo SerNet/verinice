@@ -22,19 +22,18 @@ import java.util.Collection;
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.common.CnATreeElement;
 
-public class NetzKomponente extends CnATreeElement 
-	implements IBSIStrukturElement {
-	
+public class NetzKomponente extends CnATreeElement implements IBSIStrukturElement {
+
     private static final long serialVersionUID = 20160127143045L;
 
     // ID must correspond to entity definition in XML description
-	public static final String TYPE_ID = "netzkomponente"; //$NON-NLS-1$
+    public static final String TYPE_ID = "netzkomponente"; //$NON-NLS-1$
     public static final String TYPE_ID_HIBERNATE = "netz-komponente"; //$NON-NLS-1$
-    
-	public static final String PROP_NAME = "netzkomponente_name"; //$NON-NLS-1$
-	public static final String PROP_KUERZEL = "netzkomponente_kuerzel"; //$NON-NLS-1$
-	public static final String PROP_TAG			= "netzkomponente_tag"; //$NON-NLS-1$
-	public static final String PROP_ERLAEUTERUNG = "netzkomponente_erlaeuterung"; //$NON-NLS-1$
+
+    public static final String PROP_NAME = "netzkomponente_name"; //$NON-NLS-1$
+    public static final String PROP_KUERZEL = "netzkomponente_kuerzel"; //$NON-NLS-1$
+    public static final String PROP_TAG = "netzkomponente_tag"; //$NON-NLS-1$
+    public static final String PROP_ERLAEUTERUNG = "netzkomponente_erlaeuterung"; //$NON-NLS-1$
     public static final String PROP_KRITIKALITAET = "netzkomponente_kritikalitaet"; //$NON-NLS-1$
     public static final String PROP_KRITIKALITAET_OPTION_0 = "netzkomponente_kritikalitaet_0"; //$NON-NLS-1$
     public static final String PROP_KRITIKALITAET_OPTION_1 = "netzkomponente_kritikalitaet_1"; //$NON-NLS-1$
@@ -46,70 +45,66 @@ public class NetzKomponente extends CnATreeElement
     public static final String PROP_ESA_ENTSCHEIDUNG_DURCH = "nkkomponente_ergaenzendeanalyse_entscheidung_durch"; //$NON-NLS-1$
     public static final String PROP_ESA_ENTSCHEIDUNG_AM = "nkkomponente_ergaenzendeanalyse_entscheidung_am"; //$NON-NLS-1$
     public static final String PROP_ESA_ENTSCHEIDUNG_BIS = "nkkomponente_ergaenzendeanalyse_entscheidung_bis"; //$NON-NLS-1$
-	
-	
-	public String getKuerzel() {
-		return getEntity().getSimpleValue(PROP_KUERZEL);
-	}
 
-	/**
-	 * Create new BSIElement.
-	 * @param parent
-	 */
-	public NetzKomponente(CnATreeElement parent) {
-		super(parent);
-		setEntity(new Entity(TYPE_ID));
-		getEntity().initDefaultValues(getTypeFactory());
+    public String getKuerzel() {
+        return getEntity().getSimpleValue(PROP_KUERZEL);
+    }
+
+    /**
+     * Create new BSIElement.
+     * 
+     * @param parent
+     */
+    public NetzKomponente(CnATreeElement parent) {
+        super(parent);
+        setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
         // sets the localized title via HUITypeFactory from message bundle
         setTitel(getTypeFactory().getMessage(TYPE_ID));
     }
-	
-	public int getSchicht() {
-		return 4;
-	}
-	
-	public Collection<? extends String> getTags() {
-		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
-	}
-	
-	
-	
-	protected NetzKomponente() {
-		
-	}
-	
-	@Override
-	public String getTitle() {
-		return getEntity().getProperties(PROP_NAME).getProperty(0).getPropertyValue();
-	}
 
-	@Override
-	public String getTypeId() {
-		return TYPE_ID;
-	}
-	
-	@Override
-	public boolean canContain(Object obj) {
-		return CnaStructureHelper.canContain(obj);
-	}
-	
-	@Override
-	public void setTitel(String name) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
-	}
+    public int getSchicht() {
+        return 4;
+    }
 
-	public void setErlaeuterung(String name) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ERLAEUTERUNG), name);
-	}
-	
-	public void setKuerzel(String name) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_KUERZEL), name);
-	}
+    public Collection<? extends String> getTags() {
+        return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+    }
 
-	public void setAnzahl(int anzahl) {
-		// do nothing
-	}
+    protected NetzKomponente() {
 
+    }
 
+    @Override
+    public String getTitle() {
+        return getEntity().getProperties(PROP_NAME).getProperty(0).getPropertyValue();
+    }
+
+    @Override
+    public String getTypeId() {
+        return TYPE_ID;
+    }
+
+    @Override
+    public boolean canContain(Object obj) {
+        return CnaStructureHelper.canContain(obj);
+    }
+
+    @Override
+    public void setTitel(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
+    }
+
+    public void setErlaeuterung(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ERLAEUTERUNG), name);
+    }
+
+    public void setKuerzel(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_KUERZEL), name);
+    }
+
+    public void setAnzahl(int anzahl) {
+        // do nothing
+    }
 
 }

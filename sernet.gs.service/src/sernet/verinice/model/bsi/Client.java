@@ -26,109 +26,107 @@ import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 
-public class Client extends CnATreeElement 
-	implements IBSIStrukturElement {
-    
+public class Client extends CnATreeElement implements IBSIStrukturElement {
+
     private static final Logger log = Logger.getLogger(Client.class);
-    
-	// ID must correspond to entity definition in XML description
-	public static final String TYPE_ID = "client"; //$NON-NLS-1$
-	public static final String PROP_NAME = "client_name"; //$NON-NLS-1$
-	public static final String PROP_KUERZEL = "client_kuerzel"; //$NON-NLS-1$
-	@Deprecated
-	public static final String P_ADMIN_OLD = "client_admin"; //$NON-NLS-1$
-	@Deprecated
-	public static final String P_ANWENDER_OLD = "client_anwender"; //$NON-NLS-1$
-	public static final String PROP_TAG			= "client_tag"; //$NON-NLS-1$
-	public static final String PROP_ERLAEUTERUNG = "client_erlaeuterung"; //$NON-NLS-1$
-	private static final String PROP_ANZAHL = "client_anzahl"; //$NON-NLS-1$
-	
+
+    // ID must correspond to entity definition in XML description
+    public static final String TYPE_ID = "client"; //$NON-NLS-1$
+    public static final String PROP_NAME = "client_name"; //$NON-NLS-1$
+    public static final String PROP_KUERZEL = "client_kuerzel"; //$NON-NLS-1$
+    @Deprecated
+    public static final String P_ADMIN_OLD = "client_admin"; //$NON-NLS-1$
+    @Deprecated
+    public static final String P_ANWENDER_OLD = "client_anwender"; //$NON-NLS-1$
+    public static final String PROP_TAG = "client_tag"; //$NON-NLS-1$
+    public static final String PROP_ERLAEUTERUNG = "client_erlaeuterung"; //$NON-NLS-1$
+    private static final String PROP_ANZAHL = "client_anzahl"; //$NON-NLS-1$
+
     public static final String PROP_ESA_ENTSCHEIDUNG_DURCH = "client_ergaenzendeanalyse_entscheidung_durch"; //$NON-NLS-1$
     public static final String PROP_ESA_ENTSCHEIDUNG_AM = "client_ergaenzendeanalyse_entscheidung_am"; //$NON-NLS-1$
     public static final String PROP_ESA_ENTSCHEIDUNG_BIS = "client_ergaenzendeanalyse_entscheidung_bis"; //$NON-NLS-1$
-	
 
-	private final IReevaluator schutzbedarfProvider 
-	= new ProtectionRequirementsAdapter(this);
+    private final IReevaluator schutzbedarfProvider = new ProtectionRequirementsAdapter(this);
 
+    private final ILinkChangeListener linkChangeListener = new MaximumProtectionRequirementsListener(
+            this);
 
-	private final ILinkChangeListener linkChangeListener
-	= new MaximumProtectionRequirementsListener(this);
-	
-	
-	/**
-	 * Create new BSIElement.
-	 * @param parent
-	 */
-	public Client(CnATreeElement parent) {
-		super(parent);
-		setEntity(new Entity(TYPE_ID));
-		getEntity().initDefaultValues(getTypeFactory());
+    /**
+     * Create new BSIElement.
+     * 
+     * @param parent
+     */
+    public Client(CnATreeElement parent) {
+        super(parent);
+        setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
         if (log.isDebugEnabled()) {
             log.debug("Client Kuerzel: " + getKuerzel());
         }
         // sets the localized title via HUITypeFactory from message bundle
         setTitel(getTypeFactory().getMessage(TYPE_ID));
     }
-	@Override
+
+    @Override
     public Collection<? extends String> getTags() {
-		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
-	}
-	
-	@Override
+        return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+    }
+
+    @Override
     public String getKuerzel() {
-		return getEntity().getSimpleValue(PROP_KUERZEL);
-	}
-	
-	@Override
+        return getEntity().getSimpleValue(PROP_KUERZEL);
+    }
+
+    @Override
     public int getSchicht() {
-		return 3;
-	}
-	
-	protected Client() {
-		
-	}
-	
-	@Override
-	public String getTitle() {
-		return getEntity().getProperties(PROP_NAME).getProperty(0).getPropertyValue();
-	}
-	
-	@Override
+        return 3;
+    }
+
+    protected Client() {
+
+    }
+
+    @Override
+    public String getTitle() {
+        return getEntity().getProperties(PROP_NAME).getProperty(0).getPropertyValue();
+    }
+
+    @Override
     public void setTitel(String name) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
-	}
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
+    }
 
-	@Override
-	public String getTypeId() {
-		return TYPE_ID;
-	}
-	
-	@Override
-	public boolean canContain(Object obj) {
-		return CnaStructureHelper.canContain(obj);
-	}
-	
-	
-	@Override
-	public ILinkChangeListener getLinkChangeListener() {
-		return linkChangeListener;
-	}
+    @Override
+    public String getTypeId() {
+        return TYPE_ID;
+    }
 
-	@Override
-	public IReevaluator getProtectionRequirementsProvider() {
-		return schutzbedarfProvider;
-	}
-	public void setErlaeuterung(String name) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ERLAEUTERUNG), name);
-	}
-	
-	public void setKuerzel(String name) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_KUERZEL), name);
-	}
-	
-	public void setAnzahl(int anzahl) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ANZAHL), Integer.toString(anzahl));
-	}
+    @Override
+    public boolean canContain(Object obj) {
+        return CnaStructureHelper.canContain(obj);
+    }
+
+    @Override
+    public ILinkChangeListener getLinkChangeListener() {
+        return linkChangeListener;
+    }
+
+    @Override
+    public IReevaluator getProtectionRequirementsProvider() {
+        return schutzbedarfProvider;
+    }
+
+    public void setErlaeuterung(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ERLAEUTERUNG), name);
+    }
+
+    public void setKuerzel(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_KUERZEL), name);
+    }
+
+    public void setAnzahl(int anzahl) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ANZAHL),
+                Integer.toString(anzahl));
+    }
 
 }

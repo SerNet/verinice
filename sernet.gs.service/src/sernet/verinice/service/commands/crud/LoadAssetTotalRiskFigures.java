@@ -33,35 +33,32 @@ import sernet.verinice.model.iso27k.Process;
 /**
  * 
  */
-public class LoadAssetTotalRiskFigures extends GenericCommand implements ICachedCommand{
-    
-    public static final String[] COLUMNS = new String[] { 
-        "RISK_C",
-        "RISK_I",
-        "RISK_A",
-        "Asset"
-        };
-    
+public class LoadAssetTotalRiskFigures extends GenericCommand implements ICachedCommand {
+
+    public static final String[] COLUMNS = new String[] { "RISK_C", "RISK_I", "RISK_A", "Asset" };
+
     private Integer rootElmt;
-   
+
     private List<List<String>> result;
-    
+
     private transient Set<Integer> seenAssets;
-    
+
     private boolean resultInjectedFromCache = false;
-    
-    public LoadAssetTotalRiskFigures(Integer rootElement){
+
+    public LoadAssetTotalRiskFigures(Integer rootElement) {
         this.rootElmt = rootElement;
         result = new ArrayList<List<String>>(0);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
-        if(!resultInjectedFromCache){
-            try{
+        if (!resultInjectedFromCache) {
+            try {
                 seenAssets = new HashSet<Integer>();
 
                 LoadReportElements command = new LoadReportElements(Process.TYPE_ID, rootElmt);
@@ -73,39 +70,42 @@ public class LoadAssetTotalRiskFigures extends GenericCommand implements ICached
                 List<CnATreeElement> elements = command.getElements();
 
                 for (CnATreeElement process : elements) {
-                    // use of hashmap that prohibit double asset use allows to use true for doUpLinksAlso parameter
-                    // otherwise this would produce wrong results in some reports
-                    LoadReportLinkedElements cmnd2 = new LoadReportLinkedElements(Asset.TYPE_ID, process.getDbId(), true, true);
+                    // use of hashmap that prohibit double asset use allows to
+                    // use true for doUpLinksAlso parameter
+                    // otherwise this would produce wrong results in some
+                    // reports
+                    LoadReportLinkedElements cmnd2 = new LoadReportLinkedElements(Asset.TYPE_ID,
+                            process.getDbId(), true, true);
                     cmnd2 = getCommandService().executeCommand(cmnd2);
                     List<CnATreeElement> assets = cmnd2.getElements();
                     for (CnATreeElement asset : assets) {
-                        if (  ! (seenAssets.contains(asset.getDbId())) )  {
+                        if (!(seenAssets.contains(asset.getDbId()))) {
                             result.add(makeRow(asset));
                             seenAssets.add(asset.getDbId());
                         }
                     }
                 }
 
-            } catch (CommandException e){
+            } catch (CommandException e) {
                 throw new RuntimeCommandException(e);
             }
         }
     }
-    
-    private List<String> makeRow(CnATreeElement asset){
+
+    private List<String> makeRow(CnATreeElement asset) {
         ArrayList<String> row = new ArrayList<String>();
 
         String riskC = asset.getEntity().getSimpleValue("asset_riskvalue_c");
         String riskI = asset.getEntity().getSimpleValue("asset_riskvalue_i");
         String riskA = asset.getEntity().getSimpleValue("asset_riskvalue_a");
-        
+
         row.add(riskC);
         row.add(riskI);
         row.add(riskA);
         row.add(asset.getTitle());
-        
+
         return row;
-        
+
     }
 
     public Integer getRootElmt() {
@@ -116,7 +116,9 @@ public class LoadAssetTotalRiskFigures extends GenericCommand implements ICached
         return result;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
      */
     @Override
@@ -127,22 +129,27 @@ public class LoadAssetTotalRiskFigures extends GenericCommand implements ICached
         return cacheID.toString();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.
+     * Object)
      */
     @Override
     public void injectCacheResult(Object result) {
-        this.result = (ArrayList<List<String>>)result;
+        this.result = (ArrayList<List<String>>) result;
         this.resultInjectedFromCache = true;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
      */
     @Override
     public Object getCacheableResult() {
         return this.result;
     }
-    
 
 }

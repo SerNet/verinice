@@ -31,8 +31,8 @@ import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * A control from the ISO/IEC 27000 standard.
- * See https://en.wikipedia.org/wiki/ISO/IEC_27000-series for details
+ * A control from the ISO/IEC 27000 standard. See
+ * https://en.wikipedia.org/wiki/ISO/IEC_27000-series for details
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -40,35 +40,35 @@ import sernet.verinice.model.common.CnATreeElement;
 public class Control extends CnATreeElement
         implements IISO27kElement, IControl, IISRControl, IAbbreviatedElement, ITaggableElement {
 
-	public static final String TYPE_ID = "control"; //$NON-NLS-1$
-	public static final String PROP_ABBR = "control_abbr"; //$NON-NLS-1$
-	public static final String PROP_NAME = "control_name"; //$NON-NLS-1$
-	public static final String PROP_TAG = "control_tag"; //$NON-NLS-1$
-	public static final String PROP_DESC = "control_desc"; //$NON-NLS-1$
+    public static final String TYPE_ID = "control"; //$NON-NLS-1$
+    public static final String PROP_ABBR = "control_abbr"; //$NON-NLS-1$
+    public static final String PROP_NAME = "control_name"; //$NON-NLS-1$
+    public static final String PROP_TAG = "control_tag"; //$NON-NLS-1$
+    public static final String PROP_DESC = "control_desc"; //$NON-NLS-1$
 
-	// control implementation state:
-	// see IControl.java
+    // control implementation state:
+    // see IControl.java
 
-	// this is another way to measure control implementation:
-	public static final String PROP_MATURITY = "control_maturity"; //$NON-NLS-1$
-	public static final String PROP_WEIGHT1 = "control_weight"; //$NON-NLS-1$
-	public static final String PROP_WEIGHT2 = "control_ownweight"; //$NON-NLS-1$
-	public static final String PROP_THRESHOLD1 = "control_min1"; //$NON-NLS-1$
-	public static final String PROP_THRESHOLD2 = "control_min2"; //$NON-NLS-1$
-	public static final String PROP_MATURITY_DUEDATE = "control_maturity_duedate"; //$NON-NLS-1$
-	public static final String PROP_MATURITY_COMMENT = "control_maturity_comment"; //$NON-NLS-1$
-	public static final String PROP_CONTROL_IMPL_DATE = "control_implby"; //$NON-NLS-1$
-	public static final String PROP_IMPL_EXPLANATION = "control_implemented_explanation"; //$NON-NLS-1$
+    // this is another way to measure control implementation:
+    public static final String PROP_MATURITY = "control_maturity"; //$NON-NLS-1$
+    public static final String PROP_WEIGHT1 = "control_weight"; //$NON-NLS-1$
+    public static final String PROP_WEIGHT2 = "control_ownweight"; //$NON-NLS-1$
+    public static final String PROP_THRESHOLD1 = "control_min1"; //$NON-NLS-1$
+    public static final String PROP_THRESHOLD2 = "control_min2"; //$NON-NLS-1$
+    public static final String PROP_MATURITY_DUEDATE = "control_maturity_duedate"; //$NON-NLS-1$
+    public static final String PROP_MATURITY_COMMENT = "control_maturity_comment"; //$NON-NLS-1$
+    public static final String PROP_CONTROL_IMPL_DATE = "control_implby"; //$NON-NLS-1$
+    public static final String PROP_IMPL_EXPLANATION = "control_implemented_explanation"; //$NON-NLS-1$
     public static final String PROP_FEEDBACK_NOTE = "control_feedback_note"; //$NON-NLS-1$
 
-	// ISR properties:
-	public static final String PROP_ISR_MATURITY = "control_isr_maturity"; //$NON-NLS-1$
-	public static final String PROP_ISR_MATURITY_QUANTITY = "control_isr_quantity_of_maturity"; //$NON-NLS-1$
+    // ISR properties:
+    public static final String PROP_ISR_MATURITY = "control_isr_maturity"; //$NON-NLS-1$
+    public static final String PROP_ISR_MATURITY_QUANTITY = "control_isr_quantity_of_maturity"; //$NON-NLS-1$
 
-	public static final String PROP_EFFECTIVENESS_CONFIDENTIALITY ="control_effectiveness_confidentiality";
-    public static final String PROP_EFFECTIVENESS_INTEGRITY="control_effectiveness_integrity" ;
-    public static final String PROP_EFFECTIVENESS_AVAILABILITY="control_effectiveness_availability";
-    public static final String PROP_EFFECTIVENESS_PROBABILITY="control_eff_probability";
+    public static final String PROP_EFFECTIVENESS_CONFIDENTIALITY = "control_effectiveness_confidentiality";
+    public static final String PROP_EFFECTIVENESS_INTEGRITY = "control_effectiveness_integrity";
+    public static final String PROP_EFFECTIVENESS_AVAILABILITY = "control_effectiveness_availability";
+    public static final String PROP_EFFECTIVENESS_PROBABILITY = "control_eff_probability";
     public static final String PROP_GSM_ISM_CONTROL_DESCRIPTION = "gsm_ism_control_description";
     public static final String PROP_CONTROL_EFFECT_P = "control_eff_probability";
     public static final String PROP_EUGDPR_PSEUDONYMIZATION = "control_data_protection_objectives_eugdpr_pseudonymization";
@@ -83,159 +83,163 @@ public class Control extends CnATreeElement
     public static final String REL_CONTROL_PERSON_ISO = "rel_control_person-iso";
     public static final String REL_CONTROL_INCSCEN = "rel_control_incscen";
 
-	public Control() {
-		super();
-		setEntity(new Entity(TYPE_ID));
-		getEntity().initDefaultValues(getTypeFactory());
-	}
+    public Control() {
+        super();
+        setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
+    }
 
-	public Control(CnATreeElement parent) {
-		super(parent);
-		setEntity(new Entity(TYPE_ID));
-		getEntity().initDefaultValues(getTypeFactory());
+    public Control(CnATreeElement parent) {
+        super(parent);
+        setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
         // sets the localized title via HUITypeFactory from message bundle
         setTitel(getTypeFactory().getMessage(TYPE_ID));
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
-	 */
-	@Override
-	public String getTypeId() {
-		return TYPE_ID;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
+     */
+    @Override
+    public String getTypeId() {
+        return TYPE_ID;
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitel()
-	 */
-	@Override
-	public String getTitle() {
-		return getEntity().getPropertyValue(PROP_NAME);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitel()
+     */
+    @Override
+    public String getTitle() {
+        return getEntity().getPropertyValue(PROP_NAME);
+    }
 
-	@Override
+    @Override
     public void setTitel(String name) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
-	}
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
+    }
 
-	@Override
+    @Override
     public String getAbbreviation() {
-		return getEntity().getPropertyValue(PROP_ABBR);
-	}
+        return getEntity().getPropertyValue(PROP_ABBR);
+    }
 
-	public void setAbbreviation(String abbreviation) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
-	}
+    public void setAbbreviation(String abbreviation) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
+    }
 
-	@Override
+    @Override
     public Collection<String> getTags() {
-		return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
-	}
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
+    }
 
-	@Override
+    @Override
     public String getDescription() {
-		return getEntity().getPropertyValue(PROP_DESC);
-	}
+        return getEntity().getPropertyValue(PROP_DESC);
+    }
 
-	@Override
+    @Override
     public void setDescription(String description) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DESC), description);
-	}
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DESC), description);
+    }
 
-
-	@Override
+    @Override
     public void setMaturity(String value) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_MATURITY), value);
-	}
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_MATURITY), value);
+    }
 
-	@Override
+    @Override
     public int getMaturity() {
-	    return getEntity().getInt(PROP_MATURITY);
-	}
+        return getEntity().getInt(PROP_MATURITY);
+    }
 
-	public Date getDueDate() {
+    public Date getDueDate() {
         return getEntity().getDate(PROP_CONTROL_IMPL_DATE);
     }
 
-	public String getMaturityComment() {
+    public String getMaturityComment() {
         return getEntity().getPropertyValue(PROP_MATURITY_COMMENT);
     }
 
-	public String getImplementationExplanation() {
+    public String getImplementationExplanation() {
         return getEntity().getPropertyValue(PROP_IMPL_EXPLANATION);
     }
 
-	public int getMaturityValueByTag(){
+    public int getMaturityValueByTag() {
         int maturity = -1;
-        for(String tag : this.getTags()){
-            if(tag.equals(IControl.TAG_MATURITY_LVL_1)){
+        for (String tag : this.getTags()) {
+            if (tag.equals(IControl.TAG_MATURITY_LVL_1)) {
                 maturity = 1;
-            } else if (tag.equals(IControl.TAG_MATURITY_LVL_2)){
+            } else if (tag.equals(IControl.TAG_MATURITY_LVL_2)) {
                 maturity = 2;
-            } else if (tag.equals(IControl.TAG_MATURITY_LVL_3)){
+            } else if (tag.equals(IControl.TAG_MATURITY_LVL_3)) {
                 maturity = 3;
             }
         }
         return maturity;
     }
 
-	public static String getImplementation(Entity entity) {
-	    PropertyList properties = entity.getProperties(PROP_IMPL);
-	    if (properties == null || properties.getProperties() == null
-	            || properties.getProperties().size() < 1){
-	        return IMPLEMENTED_NOTEDITED;
-	    }
-	    Property property = properties.getProperty(0);
-	    if (property != null && property.getPropertyValue()!=null && !property.getPropertyValue().equals("")){ //$NON-NLS-1$
-	        return property.getPropertyValue();
-	    }
-	    return IMPLEMENTED_NOTEDITED;
-	}
-
-	public String getImplementation() {
-	    return getImplementation(getEntity());
+    public static String getImplementation(Entity entity) {
+        PropertyList properties = entity.getProperties(PROP_IMPL);
+        if (properties == null || properties.getProperties() == null
+                || properties.getProperties().size() < 1) {
+            return IMPLEMENTED_NOTEDITED;
+        }
+        Property property = properties.getProperty(0);
+        if (property != null && property.getPropertyValue() != null
+                && !property.getPropertyValue().equals("")) { //$NON-NLS-1$
+            return property.getPropertyValue();
+        }
+        return IMPLEMENTED_NOTEDITED;
     }
 
-	public void setImplementation(String state) {
-	    getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_IMPL), state);
+    public String getImplementation() {
+        return getImplementation(getEntity());
     }
 
+    public void setImplementation(String state) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_IMPL), state);
+    }
 
-	public static boolean isImplemented(Entity entity) {
-	    return getImplementation(entity).equals(IMPLEMENTED_YES);
-	}
+    public static boolean isImplemented(Entity entity) {
+        return getImplementation(entity).equals(IMPLEMENTED_YES);
+    }
 
-	@Override
+    @Override
     public boolean isImplemented() {
-	    return getImplementation().equals(IMPLEMENTED_YES);
-	}
-
-	 public boolean isImplementationNotEdited() {
-	        return getImplementation().equals(IMPLEMENTED_NOTEDITED);
-	    }
-
-	/**
-	 * Returns the used weight.
-	 * @return
-	 */
-	@Override
-    public int getWeight2() {
-	    return getEntity().getInt(PROP_WEIGHT2);
-	}
-
-	@Override
-    public int getThreshold1() {
-	    return getEntity().getInt(PROP_THRESHOLD1);
+        return getImplementation().equals(IMPLEMENTED_YES);
     }
 
-	@Override
-    public int getThreshold2() {
-	    return getEntity().getInt(PROP_THRESHOLD2);
-	}
-
+    public boolean isImplementationNotEdited() {
+        return getImplementation().equals(IMPLEMENTED_NOTEDITED);
+    }
 
     /**
      * Returns the used weight.
+     * 
+     * @return
+     */
+    @Override
+    public int getWeight2() {
+        return getEntity().getInt(PROP_WEIGHT2);
+    }
+
+    @Override
+    public int getThreshold1() {
+        return getEntity().getInt(PROP_THRESHOLD1);
+    }
+
+    @Override
+    public int getThreshold2() {
+        return getEntity().getInt(PROP_THRESHOLD2);
+    }
+
+    /**
+     * Returns the used weight.
+     * 
      * @return
      */
     @Override
@@ -243,47 +247,51 @@ public class Control extends CnATreeElement
         return getEntity().getInt(PROP_WEIGHT1);
     }
 
-	/**
-	 * Sets the suggested weight for maturity calculation.
-	 * @param value
-	 */
-	@Override
+    /**
+     * Sets the suggested weight for maturity calculation.
+     * 
+     * @param value
+     */
+    @Override
     public void setWeight1(String value) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_WEIGHT1), value);
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_WEIGHT1), value);
 
-	}
+    }
 
-	/**
-	 * Sets the actually used weight for maturity calculation.
-	 * @param value
-	 */
-	@Override
+    /**
+     * Sets the actually used weight for maturity calculation.
+     * 
+     * @param value
+     */
+    @Override
     public void setWeight2(String value) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_WEIGHT2), value);
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_WEIGHT2), value);
 
-	}
+    }
 
-	@Override
+    @Override
     public void setThreshold1(String value) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_THRESHOLD1), value);
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_THRESHOLD1), value);
 
-	}
+    }
 
-	@Override
+    @Override
     public void setThreshold2(String value) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_THRESHOLD2), value);
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_THRESHOLD2), value);
 
-	}
+    }
 
-	public String getFeedbackNote() {
-	    return getEntity().getPropertyValue(PROP_FEEDBACK_NOTE);
+    public String getFeedbackNote() {
+        return getEntity().getPropertyValue(PROP_FEEDBACK_NOTE);
     }
 
     public String getGsmDescription() {
         return getEntity().getPropertyValue(PROP_GSM_ISM_CONTROL_DESCRIPTION);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.iso27k.model.IControl#getMaturityPropertyId()
      */
     @Override
@@ -291,7 +299,9 @@ public class Control extends CnATreeElement
         return PROP_MATURITY;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.model.iso27k.IISRControl#getISRMaturity()
      */
     @Override
@@ -299,7 +309,9 @@ public class Control extends CnATreeElement
         return getEntity().getInt(PROP_ISR_MATURITY);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.model.iso27k.IISRControl#getISRMaturityQuantity()
      */
     @Override
@@ -307,7 +319,9 @@ public class Control extends CnATreeElement
         return getEntity().getPropertyValue(PROP_ISR_MATURITY_QUANTITY);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.model.iso27k.IISRControl#getISRPropertyId()
      */
     @Override
@@ -315,7 +329,9 @@ public class Control extends CnATreeElement
         return PROP_ISR_MATURITY;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.model.iso27k.IControl#setVersion(java.lang.String)
      */
     @Override
@@ -324,12 +340,15 @@ public class Control extends CnATreeElement
         // see VN-1007 for details
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.model.iso27k.IControl#getVersion()
      */
     @Override
     public String getVersion() {
-        // at the moment there it is not necessary to save the version in Controls
+        // at the moment there it is not necessary to save the version in
+        // Controls
         // see VN-1007 for details
         return null;
     }
@@ -339,7 +358,7 @@ public class Control extends CnATreeElement
      * {@link IControl#IMPLEMENTED_NA}.
      */
     public static boolean isPlanned(Entity entity) {
-       return !getImplementation(entity).equals(IMPLEMENTED_NA);
+        return !getImplementation(entity).equals(IMPLEMENTED_NA);
     }
 
 }

@@ -36,66 +36,63 @@ import sernet.verinice.model.iso27k.Interview;
 import sernet.verinice.model.iso27k.PersonIso;
 
 /**
- *  returns [DATE, TIME, ROLE, SUBJECT] of all audit actions to one given root id
+ * returns [DATE, TIME, ROLE, SUBJECT] of all audit actions to one given root id
  */
 public class LoadReportISAInterviews extends GenericCommand implements ICachedCommand {
-    
+
     private static final Logger log = Logger.getLogger(LoadReportISAInterviews.class);
-    
-    private SimpleDateFormat dateFormat =  new SimpleDateFormat("dd.MM.yy");
-    
-    private SimpleDateFormat timeFormat =  new SimpleDateFormat("HH:mm:ss");
-    
+
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yy");
+
+    private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+
     private int rootElement;
 
     private List<List<String>> results;
 
     private boolean resultInjectedFromCache = false;
-    
+
     public static final String INTERVIEW_DATE = "interview_date";
     public static final String INTERVIEW_TITLE = "interview_name";
     public static final String PERSON_INTERVIEWER_RELATION = "rel_person_interview_intvwer";
     private static final String INTERVIEW_AUDIT_ACTION_PROPERTY = "interview_audit_action";
-    private static final String[] ALLOWED_AUDIT_ACTION_TYPES = new String[]{
-        "interview_audit_action_type_interview",
-        "interview_audit_action_type_inspection"
-    };
-    
-    public static final String[] COLUMNS = new String[]{
-        "DATE",
-        "TIME",
-        "ROLE",
-        "SUBJECT"
-    };
-    
-    public LoadReportISAInterviews(int root){
+    private static final String[] ALLOWED_AUDIT_ACTION_TYPES = new String[] {
+            "interview_audit_action_type_interview", "interview_audit_action_type_inspection" };
+
+    public static final String[] COLUMNS = new String[] { "DATE", "TIME", "ROLE", "SUBJECT" };
+
+    public LoadReportISAInterviews(int root) {
         this.rootElement = root;
     }
-    
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
-        if(!resultInjectedFromCache){
+        if (!resultInjectedFromCache) {
             Date iDate = null;
             ArrayList<String> result = null;
             Interview i = null;
             PersonIso person = null;
             String title = null;
             results = new ArrayList<List<String>>(0);
-            try{
-                LoadReportElements interviewLoader = new LoadReportElements(Interview.TYPE_ID, rootElement);
+            try {
+                LoadReportElements interviewLoader = new LoadReportElements(Interview.TYPE_ID,
+                        rootElement);
                 interviewLoader = getCommandService().executeCommand(interviewLoader);
-                for(CnATreeElement c : interviewLoader.getElements()){
-                    if(c.getTypeId().equals(Interview.TYPE_ID)){
-                        i = (Interview)Retriever.checkRetrieveElement(c);
+                for (CnATreeElement c : interviewLoader.getElements()) {
+                    if (c.getTypeId().equals(Interview.TYPE_ID)) {
+                        i = (Interview) Retriever.checkRetrieveElement(c);
                         // is audit action of allowed type?
-                        if(log.isDebugEnabled()){
-                            log.debug("AuditActionType of " + i.getTitle() + ":\t" + getAuditActionType(i));
+                        if (log.isDebugEnabled()) {
+                            log.debug("AuditActionType of " + i.getTitle() + ":\t"
+                                    + getAuditActionType(i));
                         }
-                        if(Arrays.asList(ALLOWED_AUDIT_ACTION_TYPES).contains(getAuditActionType(i))){
+                        if (Arrays.asList(ALLOWED_AUDIT_ACTION_TYPES)
+                                .contains(getAuditActionType(i))) {
                             // create local result
                             result = new ArrayList<String>(0);
                             // add date
@@ -107,22 +104,26 @@ public class LoadReportISAInterviews extends GenericCommand implements ICachedCo
                             // store title for later use
                             title = i.getEntity().getSimpleValue(INTERVIEW_TITLE);
                             // add role
-                            i = (Interview)Retriever.checkRetrieveLinks(i, true);
+                            i = (Interview) Retriever.checkRetrieveLinks(i, true);
                             StringBuilder sb = new StringBuilder();
-                            for(Entry<CnATreeElement, CnALink> entry : CnALink.getLinkedElements(i, PersonIso.TYPE_ID).entrySet()){
-                                if(entry.getValue().getRelationId().equals(PERSON_INTERVIEWER_RELATION)){
-                                    person = ((PersonIso)(Retriever.checkRetrieveElement(entry.getKey())));
-                                    sb.append(person.getName()).append(" ,").append(person.getSurname()).append("\n");
+                            for (Entry<CnATreeElement, CnALink> entry : CnALink
+                                    .getLinkedElements(i, PersonIso.TYPE_ID).entrySet()) {
+                                if (entry.getValue().getRelationId()
+                                        .equals(PERSON_INTERVIEWER_RELATION)) {
+                                    person = ((PersonIso) (Retriever
+                                            .checkRetrieveElement(entry.getKey())));
+                                    sb.append(person.getName()).append(" ,")
+                                            .append(person.getSurname()).append("\n");
                                 }
                             }
-                            if(sb.length() > 0){
-                                if(sb.toString().endsWith("\n")){
+                            if (sb.length() > 0) {
+                                if (sb.toString().endsWith("\n")) {
                                     sb.replace(sb.lastIndexOf("\n"), sb.length() - 1, "");
                                 }
                                 result.add(sb.toString());
                             }
                             // add empty string if no role is defined
-                            if(result.size() == 2){
+                            if (result.size() == 2) {
                                 result.add("");
                             }
                             // add subject
@@ -133,17 +134,19 @@ public class LoadReportISAInterviews extends GenericCommand implements ICachedCo
                         }
                     }
                 }
-            } catch (CommandException e ){
+            } catch (CommandException e) {
                 log.error("Error while executing command", e);
             }
         }
     }
-    
-    private String getAuditActionType(Interview i){
+
+    private String getAuditActionType(Interview i) {
         return i.getEntity().getOptionValue(INTERVIEW_AUDIT_ACTION_PROPERTY);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
      */
     @Override
@@ -154,16 +157,22 @@ public class LoadReportISAInterviews extends GenericCommand implements ICachedCo
         return cacheID.toString();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.
+     * Object)
      */
     @Override
     public void injectCacheResult(Object result) {
-        this.results = (ArrayList<List<String>>)result;
+        this.results = (ArrayList<List<String>>) result;
         resultInjectedFromCache = true;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
      */
     @Override
@@ -174,5 +183,5 @@ public class LoadReportISAInterviews extends GenericCommand implements ICachedCo
     public List<List<String>> getResults() {
         return results;
     }
-    
+
 }

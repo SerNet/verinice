@@ -33,19 +33,24 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.TransactionAbortedException;
 
 /**
- * Let the contained {@link CnATreeElement} reeavluate the values for the protection requirements.
- * By convention property identifiers for the protection requirements are build by the following rules:
+ * Let the contained {@link CnATreeElement} reeavluate the values for the
+ * protection requirements. By convention property identifiers for the
+ * protection requirements are build by the following rules:
+ * 
  * <pre>
  * CnATreeElement.getTypeId()+ '_value_confidentiality'
  * CnATreeElement.getTypeId()+ '_value_integrity'
  * CnATreeElement.getTypeId()+ '_value_availability'
  * </pre>
+ * 
  * for the value and
+ * 
  * <pre>
  * CnATreeElement.getTypeId()+ '_value_method_confidentiality'
  * CnATreeElement.getTypeId()+ '_value_method_integrity'
  * CnATreeElement.getTypeId()+ '_value_method_availability'
  * </pre>
+ * 
  * for the flag, indication the deduction.<br/>
  *
  * @author koderman@sernet.de
@@ -53,7 +58,8 @@ import sernet.verinice.model.common.TransactionAbortedException;
  *
  */
 @SuppressWarnings("serial")
-public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator implements Serializable {
+public class ProtectionRequirementsValueAdapter extends AbstractReevaluator
+        implements Serializable {
 
     private static final Logger LOG = Logger.getLogger(ProtectionRequirementsValueAdapter.class);
 
@@ -68,7 +74,8 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
         if (LOG.isDebugEnabled()) {
             LOG.debug("get Integrity for " + cnaTreeElement); //$NON-NLS-1$
         }
-        PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.INTEGRITY);
+        PropertyList properties = cnaTreeElement.getEntity()
+                .getProperties(cnaTreeElement.getTypeId() + AssetValueService.INTEGRITY);
         if (properties != null && properties.getProperties() != null
                 && !properties.getProperties().isEmpty()) {
             return properties.getProperty(0).getNumericPropertyValue();
@@ -82,7 +89,8 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
         if (LOG.isDebugEnabled()) {
             LOG.debug("get avail. for " + cnaTreeElement); //$NON-NLS-1$
         }
-        PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.AVAILABILITY);
+        PropertyList properties = cnaTreeElement.getEntity()
+                .getProperties(cnaTreeElement.getTypeId() + AssetValueService.AVAILABILITY);
         if (properties != null && properties.getProperties() != null
                 && !properties.getProperties().isEmpty()) {
             return properties.getProperty(0).getNumericPropertyValue();
@@ -96,7 +104,8 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
         if (LOG.isDebugEnabled()) {
             LOG.debug("get confid. for " + cnaTreeElement); //$NON-NLS-1$
         }
-        PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.CONFIDENTIALITY);
+        PropertyList properties = cnaTreeElement.getEntity()
+                .getProperties(cnaTreeElement.getTypeId() + AssetValueService.CONFIDENTIALITY);
         if (properties != null && properties.getProperties() != null
                 && !properties.getProperties().isEmpty()) {
             return properties.getProperty(0).getNumericPropertyValue();
@@ -155,8 +164,11 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
         this.cnaTreeElement = parent;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.IProtectionRequirementsProvider#updateIntegritaet(sernet.verinice.model.common.CascadingTransaction)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.model.bsi.IProtectionRequirementsProvider#
+     * updateIntegritaet(sernet.verinice.model.common.CascadingTransaction)
      */
     @Override
     public void updateIntegrity(CascadingTransaction ta) {
@@ -188,8 +200,11 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
         }
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.IProtectionRequirementsProvider#updateVerfuegbarkeit(sernet.verinice.model.common.CascadingTransaction)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.model.bsi.IProtectionRequirementsProvider#
+     * updateVerfuegbarkeit(sernet.verinice.model.common.CascadingTransaction)
      */
     @Override
     public void updateAvailability(CascadingTransaction ta) {
@@ -220,8 +235,11 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
         }
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.IProtectionRequirementsProvider#updateVertraulichkeit(sernet.verinice.model.common.CascadingTransaction)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.model.bsi.IProtectionRequirementsProvider#
+     * updateVertraulichkeit(sernet.verinice.model.common.CascadingTransaction)
      */
     @Override
     public void updateConfidentiality(CascadingTransaction ta) {
@@ -277,12 +295,15 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
      * @return
      */
     private String getDescription() {
-        return cnaTreeElement.getEntity().getSimpleValue(cnaTreeElement.getTypeId() + AssetValueService.EXPLANATION);
+        return cnaTreeElement.getEntity()
+                .getSimpleValue(cnaTreeElement.getTypeId() + AssetValueService.EXPLANATION);
     }
 
     private void setDescription(String text) {
-        EntityType entityType = HUITypeFactory.getInstance().getEntityType(cnaTreeElement.getEntity().getEntityType());
-        cnaTreeElement.getEntity().setSimpleValue(entityType.getPropertyType(cnaTreeElement.getTypeId() + AssetValueService.EXPLANATION), text);
+        EntityType entityType = HUITypeFactory.getInstance()
+                .getEntityType(cnaTreeElement.getEntity().getEntityType());
+        cnaTreeElement.getEntity().setSimpleValue(entityType
+                .getPropertyType(cnaTreeElement.getTypeId() + AssetValueService.EXPLANATION), text);
     }
 
     /*
@@ -337,10 +358,12 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
      */
     @Override
     public boolean isCalculatedAvailability() {
-        PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.METHOD_AVAILABILITY);
+        PropertyList properties = cnaTreeElement.getEntity()
+                .getProperties(cnaTreeElement.getTypeId() + AssetValueService.METHOD_AVAILABILITY);
         if (properties != null && properties.getProperties() != null
                 && !properties.getProperties().isEmpty()) {
-            return properties.getProperty(0).getNumericPropertyValue() == AssetValueService.METHOD_AUTO;
+            return properties.getProperty(0)
+                    .getNumericPropertyValue() == AssetValueService.METHOD_AUTO;
         } else {
             return false;
         }
@@ -354,10 +377,12 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
      */
     @Override
     public boolean isCalculatedConfidentiality() {
-        PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.METHOD_CONFIDENTIALITY);
+        PropertyList properties = cnaTreeElement.getEntity().getProperties(
+                cnaTreeElement.getTypeId() + AssetValueService.METHOD_CONFIDENTIALITY);
         if (properties != null && properties.getProperties() != null
                 && !properties.getProperties().isEmpty()) {
-            return properties.getProperty(0).getNumericPropertyValue() == AssetValueService.METHOD_AUTO;
+            return properties.getProperty(0)
+                    .getNumericPropertyValue() == AssetValueService.METHOD_AUTO;
         } else {
             return false;
         }
@@ -366,16 +391,17 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
     /*
      * (non-Javadoc)
      *
-     * @see
-     * sernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#isCalculatedIntegrity
-     * ()
+     * @see sernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
+     * isCalculatedIntegrity ()
      */
     @Override
     public boolean isCalculatedIntegrity() {
-        PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.METHOD_INTEGRITY);
+        PropertyList properties = cnaTreeElement.getEntity()
+                .getProperties(cnaTreeElement.getTypeId() + AssetValueService.METHOD_INTEGRITY);
         if (properties != null && properties.getProperties() != null
                 && !properties.getProperties().isEmpty()) {
-            return properties.getProperty(0).getNumericPropertyValue() == AssetValueService.METHOD_AUTO;
+            return properties.getProperty(0)
+                    .getNumericPropertyValue() == AssetValueService.METHOD_AUTO;
         } else {
             return false;
         }

@@ -35,56 +35,54 @@ import sernet.verinice.model.samt.SamtTopic;
 /**
  *
  */
-public class LoadReportISARoomsDetails extends GenericCommand implements ICachedCommand{
+public class LoadReportISARoomsDetails extends GenericCommand implements ICachedCommand {
 
     private static final Logger LOG = Logger.getLogger(LoadReportISARoomsDetails.class);
-    
+
     private static final String CHAPTER_PREFIX_PATTERN = ".*(\\d+)\\.?(\\d+)?";
-    
+
     private List<List<String>> results;
-    
+
     private Integer roomID;
-    
+
     private static final String SAMT_DEVIATION_PROP = "samt_topic_audit_devi";
     private static final String SAMT_RISK_PROP = "samt_topic_audit_ra";
     private static final String SAMT_IMPLEMENTATION = "samt_topicimplemented";
-    
-    public static final String[] ROOMCOLUMNS = new String[] { 
-                                            "CONTROLID",
-                                            "TITLE",
-                                            "RESULT",
-                                            "DEVIATION",
-                                            "RISK",
-                                            "IMPLEMENTATION"
-    };
-    
+
+    public static final String[] ROOMCOLUMNS = new String[] { "CONTROLID", "TITLE", "RESULT",
+            "DEVIATION", "RISK", "IMPLEMENTATION" };
+
     private boolean resultInjectedFromCache = false;
-    
-    public LoadReportISARoomsDetails(Integer roomID){
+
+    public LoadReportISARoomsDetails(Integer roomID) {
         this.roomID = roomID;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
-        if(!resultInjectedFromCache){
+        if (!resultInjectedFromCache) {
             results = new ArrayList<List<String>>();
             LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, roomID, true);
             try {
                 command = getCommandService().executeCommand(command);
                 List<CnATreeElement> stList = command.getElements();
                 Collections.sort(stList, new NumericStringComparator());
-                for(CnATreeElement e : stList){
+                for (CnATreeElement e : stList) {
                     List<String> result = new ArrayList<String>();
-                    SamtTopic topic = (SamtTopic)e;
+                    SamtTopic topic = (SamtTopic) e;
                     result.add(getControlID(topic.getTitle()));
                     result.add(getControlTitleWithoutID(topic.getTitle()));
                     result.add(String.valueOf(topic.getMaturity()));
-                    result.add(String.valueOf(topic.getEntity().getSimpleValue(SAMT_DEVIATION_PROP)));
+                    result.add(
+                            String.valueOf(topic.getEntity().getSimpleValue(SAMT_DEVIATION_PROP)));
                     result.add(String.valueOf(topic.getEntity().getSimpleValue(SAMT_RISK_PROP)));
-                    result.add(String.valueOf(topic.getEntity().getSimpleValue(SAMT_IMPLEMENTATION)));
+                    result.add(
+                            String.valueOf(topic.getEntity().getSimpleValue(SAMT_IMPLEMENTATION)));
                     results.add(result);
                 }
             } catch (CommandException e) {
@@ -92,31 +90,33 @@ public class LoadReportISARoomsDetails extends GenericCommand implements ICached
             }
         }
     }
-    
-    private String getControlID(String title){
+
+    private String getControlID(String title) {
         Pattern pattern = Pattern.compile(CHAPTER_PREFIX_PATTERN);
         Matcher matcher = pattern.matcher(title);
-        if(matcher.find()){
+        if (matcher.find()) {
             return matcher.group();
         }
         return "";
     }
-    
-    private String getControlTitleWithoutID(String title){
+
+    private String getControlTitleWithoutID(String title) {
         Pattern pattern = Pattern.compile(CHAPTER_PREFIX_PATTERN);
         Matcher matcher = pattern.matcher(title);
-        if(matcher.find()){
+        if (matcher.find()) {
             String group = matcher.group();
             return title.substring(title.indexOf(group) + group.length()).trim();
         }
         return title;
     }
-    
-    public List<List<String>> getResults(){
+
+    public List<List<String>> getResults() {
         return results;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
      */
     @Override
@@ -127,19 +127,25 @@ public class LoadReportISARoomsDetails extends GenericCommand implements ICached
         return cacheID.toString();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.
+     * Object)
      */
     @Override
     public void injectCacheResult(Object result) {
-        results = (ArrayList<List<String>>)result;
+        results = (ArrayList<List<String>>) result;
         resultInjectedFromCache = true;
-        if(LOG.isDebugEnabled()){
+        if (LOG.isDebugEnabled()) {
             LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
      */
     @Override

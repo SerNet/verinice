@@ -36,32 +36,22 @@ import sernet.verinice.model.samt.SamtTopic;
 /**
  *
  */
-public class LoadReportISARisk extends GenericCommand implements ICachedCommand{
-    
+public class LoadReportISARisk extends GenericCommand implements ICachedCommand {
+
     private static final Logger LOG = Logger.getLogger(LoadReportISARisk.class);
 
     private static final String PROP_CG_ISISAELMNT = "controlgroup_is_NoIso_group";
-    
+
     private static final String PROP_ISATOPIC_RISK = "samt_topic_audit_ra";
-    
+
     private boolean resultInjectedFromCache = false;
-    
-    public static final String[] COLUMNS = new String[] { 
-        "COUNT_RISK_NO",
-        "COUNT_RISK_LOW",
-        "COUNT_RISK_MEDIUM",
-        "COUNT_RISK_HIGH",
-        "COUNT_RISK_VERYHIGH",
-        "RISK_SUM",
-        "PERCENTAGE_NO",
-        "PERCENTAGE_LOW",
-        "PERCENTAGE_MEDIUM",
-        "PERCENTAGE_HIGH",
-        "PERCENTAGE_VERYHIGH",
-        "PERCENTAGE_SUM"
-        };
+
+    public static final String[] COLUMNS = new String[] { "COUNT_RISK_NO", "COUNT_RISK_LOW",
+            "COUNT_RISK_MEDIUM", "COUNT_RISK_HIGH", "COUNT_RISK_VERYHIGH", "RISK_SUM",
+            "PERCENTAGE_NO", "PERCENTAGE_LOW", "PERCENTAGE_MEDIUM", "PERCENTAGE_HIGH",
+            "PERCENTAGE_VERYHIGH", "PERCENTAGE_SUM" };
     private Integer rootElmt;
-    
+
     private int risk0 = 0;
     private int risk1 = 0;
     private int risk2 = 0;
@@ -74,20 +64,23 @@ public class LoadReportISARisk extends GenericCommand implements ICachedCommand{
     private double p3 = 0.0;
     private double p4 = 0.0;
     private double pSum = 0.0;
-    
+
     private List<List<String>> result;
-    
-    public LoadReportISARisk(Integer root){
+
+    public LoadReportISARisk(Integer root) {
         this.rootElmt = root;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
-        if(!resultInjectedFromCache){
-            LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, rootElmt, true);
+        if (!resultInjectedFromCache) {
+            LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, rootElmt,
+                    true);
             try {
                 command = getCommandService().executeCommand(command);
             } catch (CommandException e) {
@@ -95,43 +88,55 @@ public class LoadReportISARisk extends GenericCommand implements ICachedCommand{
             }
 
             Set<ControlGroup> groups = new HashSet<ControlGroup>();
-            for(CnATreeElement elmt : command.getElements()){
-                if(elmt instanceof ControlGroup){
-                    ControlGroup g = (ControlGroup)elmt;
-                    if(!Boolean.parseBoolean(g.getEntity().getSimpleValue(PROP_CG_ISISAELMNT))){
+            for (CnATreeElement elmt : command.getElements()) {
+                if (elmt instanceof ControlGroup) {
+                    ControlGroup g = (ControlGroup) elmt;
+                    if (!Boolean.parseBoolean(g.getEntity().getSimpleValue(PROP_CG_ISISAELMNT))) {
                         groups.add(g);
                     }
                 }
             }
             // ensuring that every samtTopic is counted only one
-            // because of (sub-)root-Controlgroups are enlisted here also, SamtTopics could be iterated more than once here
+            // because of (sub-)root-Controlgroups are enlisted here also,
+            // SamtTopics could be iterated more than once here
             HashSet<String> alreadySeenCG = new HashSet<String>();
             HashSet<String> alreadySeenST = new HashSet<String>();
-            for(ControlGroup g : groups){
-                if(!alreadySeenCG.contains(g.getUuid())){
+            for (ControlGroup g : groups) {
+                if (!alreadySeenCG.contains(g.getUuid())) {
                     command = new LoadReportElements(SamtTopic.TYPE_ID, g.getDbId(), true);
                     try {
                         command = getCommandService().executeCommand(command);
-                        for(CnATreeElement c : command.getElements()){
-                            if(c instanceof SamtTopic){
-                                SamtTopic t  = (SamtTopic)c;
-                                if(!alreadySeenST.contains(t.getUuid())){
-                                    int riskValue = Integer.parseInt(t.getEntity().getSimpleValue(PROP_ISATOPIC_RISK));
-                                    switch(riskValue){
-                                    case -1: risk0++; riskSum++;
-                                    break;
+                        for (CnATreeElement c : command.getElements()) {
+                            if (c instanceof SamtTopic) {
+                                SamtTopic t = (SamtTopic) c;
+                                if (!alreadySeenST.contains(t.getUuid())) {
+                                    int riskValue = Integer.parseInt(
+                                            t.getEntity().getSimpleValue(PROP_ISATOPIC_RISK));
+                                    switch (riskValue) {
+                                    case -1:
+                                        risk0++;
+                                        riskSum++;
+                                        break;
 
-                                    case 0: risk1++; riskSum++;
-                                    break;
+                                    case 0:
+                                        risk1++;
+                                        riskSum++;
+                                        break;
 
-                                    case 1: risk2++; riskSum++;
-                                    break;
+                                    case 1:
+                                        risk2++;
+                                        riskSum++;
+                                        break;
 
-                                    case 2: risk3++; riskSum++;
-                                    break;
+                                    case 2:
+                                        risk3++;
+                                        riskSum++;
+                                        break;
 
-                                    case 3: risk4++; riskSum++;
-                                    break;
+                                    case 3:
+                                        risk4++;
+                                        riskSum++;
+                                        break;
 
                                     default:
                                         break;
@@ -146,7 +151,7 @@ public class LoadReportISARisk extends GenericCommand implements ICachedCommand{
                 }
                 alreadySeenCG.add(g.getUuid());
             }
-            if(riskSum > 0){
+            if (riskSum > 0) {
                 p0 = computePercentage(risk0);
                 p1 = computePercentage(risk1);
                 p2 = computePercentage(risk2);
@@ -154,17 +159,11 @@ public class LoadReportISARisk extends GenericCommand implements ICachedCommand{
                 p4 = computePercentage(risk4);
                 pSum = p0 + p1 + p2 + p3 + p4;
             }
-            List<String> asList = Arrays.asList(Integer.toString(risk0), 
-                    Integer.toString(risk1), 
-                    Integer.toString(risk2),
-                    Integer.toString(risk3),
-                    Integer.toString(risk4),
-                    Integer.toString(riskSum),
-                    adjustPercentageString(p0),
-                    adjustPercentageString(p1),
-                    adjustPercentageString(p2),
-                    adjustPercentageString(p3),
-                    adjustPercentageString(p4),
+            List<String> asList = Arrays.asList(Integer.toString(risk0), Integer.toString(risk1),
+                    Integer.toString(risk2), Integer.toString(risk3), Integer.toString(risk4),
+                    Integer.toString(riskSum), adjustPercentageString(p0),
+                    adjustPercentageString(p1), adjustPercentageString(p2),
+                    adjustPercentageString(p3), adjustPercentageString(p4),
                     adjustPercentageString(pSum));
             ArrayList<String> aList = new ArrayList<String>();
             aList.addAll(asList);
@@ -172,24 +171,26 @@ public class LoadReportISARisk extends GenericCommand implements ICachedCommand{
             result.add(aList);
         }
     }
-    
-    private double computePercentage(Integer riskValue){
+
+    private double computePercentage(Integer riskValue) {
         final double maxPercent = 100.00;
-        double d = (double)riskValue.intValue() / (double)riskSum;
+        double d = (double) riskValue.intValue() / (double) riskSum;
         return d * maxPercent;
     }
-    
-    private String adjustPercentageString(Double value){
+
+    private String adjustPercentageString(Double value) {
         DecimalFormat df = new DecimalFormat("0.00");
         return df.format(value.doubleValue()) + "%";
     }
-    
-    public List<List<String>> getResult(){
+
+    public List<List<String>> getResult() {
         result.remove(null);
         return result;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
      */
     @Override
@@ -200,19 +201,25 @@ public class LoadReportISARisk extends GenericCommand implements ICachedCommand{
         return cacheID.toString();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.
+     * Object)
      */
     @Override
     public void injectCacheResult(Object result) {
-        this.result = (ArrayList<List<String>>)result;
+        this.result = (ArrayList<List<String>>) result;
         resultInjectedFromCache = true;
-        if(LOG.isDebugEnabled()){
+        if (LOG.isDebugEnabled()) {
             LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
      */
     @Override

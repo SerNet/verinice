@@ -32,59 +32,62 @@ import sernet.verinice.model.common.CnATreeElement;
 public class Document extends CnATreeElement
         implements IISO27kElement, IAbbreviatedElement, ITaggableElement {
 
-	public static final String TYPE_ID = "document"; //$NON-NLS-1$
-	public static final String PROP_ABBR = "document_abbr"; //$NON-NLS-1$
-	public static final String PROP_NAME = "document_name"; //$NON-NLS-1$
-	public static final String PROP_TAG = "document_tag"; //$NON-NLS-1$
-	
-	/**
-	 * Creates an empty asset
-	 */
-	public Document() {
-		super();
-	}
-	
-	public Document(CnATreeElement parent) {
-		super(parent);
-		setEntity(new Entity(TYPE_ID));
-		getEntity().initDefaultValues(getTypeFactory());
+    public static final String TYPE_ID = "document"; //$NON-NLS-1$
+    public static final String PROP_ABBR = "document_abbr"; //$NON-NLS-1$
+    public static final String PROP_NAME = "document_name"; //$NON-NLS-1$
+    public static final String PROP_TAG = "document_tag"; //$NON-NLS-1$
+
+    /**
+     * Creates an empty asset
+     */
+    public Document() {
+        super();
+    }
+
+    public Document(CnATreeElement parent) {
+        super(parent);
+        setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
         // sets the localized title via HUITypeFactory from message bundle
         setTitel(getTypeFactory().getMessage(TYPE_ID));
     }
-	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
-	 */
-	@Override
-	public String getTypeId() {
-		return TYPE_ID;
-	}
-	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitel()
-	 */
-	@Override
-	public String getTitle() {
-		return getEntity().getSimpleValue(PROP_NAME);
-	}
-	
-	public void setTitel(String name) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
-	}
-	
-    @Override
-	public String getAbbreviation() {
-		return getEntity().getSimpleValue(PROP_ABBR);
-	}
-	
-	public void setAbbreviation(String abbreviation) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
-	}
-	
-    @Override
-	public Collection<String> getTags() {
-		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
-	}
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
+     */
+    @Override
+    public String getTypeId() {
+        return TYPE_ID;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitel()
+     */
+    @Override
+    public String getTitle() {
+        return getEntity().getSimpleValue(PROP_NAME);
+    }
+
+    public void setTitel(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
+    }
+
+    @Override
+    public String getAbbreviation() {
+        return getEntity().getSimpleValue(PROP_ABBR);
+    }
+
+    public void setAbbreviation(String abbreviation) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
+    }
+
+    @Override
+    public Collection<String> getTags() {
+        return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+    }
 
 }

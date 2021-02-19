@@ -33,27 +33,28 @@ import sernet.verinice.model.iso27k.Group;
  *
  */
 public class DeviceGroup extends Group<Device> implements IBpGroup, ITaggableElement {
-    
+
     private static final long serialVersionUID = 2378844509548812806L;
-    
+
     public static final String TYPE_ID = "bp_device_group"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_device_group_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_device_group_tag"; //$NON-NLS-1$
 
-    public static final String[] CHILD_TYPES = new String[] {Device.TYPE_ID};
-    
-    protected DeviceGroup() {}
-    
+    public static final String[] CHILD_TYPES = new String[] { Device.TYPE_ID };
+
+    protected DeviceGroup() {
+    }
+
     public DeviceGroup(CnATreeElement parent) {
         super(parent);
         init();
     }
-    
+
     @Override
     public String getTitle() {
         return getEntity().getPropertyValue(PROP_NAME);
     }
-    
+
     @Override
     public void setTitel(String name) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
@@ -63,12 +64,12 @@ public class DeviceGroup extends Group<Device> implements IBpGroup, ITaggableEle
     public String getTypeId() {
         return TYPE_ID;
     }
-    
+
     @Override
     public String[] getChildTypes() {
         return CHILD_TYPES;
     }
-    
+
     @Override
     public Collection<String> getTags() {
         return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));

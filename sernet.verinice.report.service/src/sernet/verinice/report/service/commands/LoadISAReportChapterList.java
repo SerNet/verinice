@@ -45,63 +45,65 @@ import sernet.verinice.service.commands.crud.LoadReportElements;
 /**
  *
  */
-public class LoadISAReportChapterList extends GenericCommand implements ICachedCommand{
+public class LoadISAReportChapterList extends GenericCommand implements ICachedCommand {
 
     private static final Logger log = LoggerFactory.getLogger(LoadISAReportChapterList.class);
-    
-    public static final String[] COLUMNS = new String[]{"dbid", "title"};
-    
+
+    public static final String[] COLUMNS = new String[] { "dbid", "title" };
+
     private static final String OVERVIEW_PROPERTY = "controlgroup_is_NoIso_group";
     private static final int OVERVIEW_PROPERTY_TARGET = 0;
-    
+
     private transient CacheManager manager = null;
     private String cacheId = null;
     private transient Cache cache = null;
-    
+
     private Integer rootElmt;
-    
+
     private List<List<String>> result;
-    
+
     private boolean resultInjectedFromCache = false;
 
-    public LoadISAReportChapterList(Integer root){
+    public LoadISAReportChapterList(Integer root) {
         result = new ArrayList<List<String>>(0);
         this.rootElmt = root;
     }
 
-    
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
-        if(!resultInjectedFromCache){
-            for(ControlGroup g : getControlGroups(rootElmt)){
+        if (!resultInjectedFromCache) {
+            for (ControlGroup g : getControlGroups(rootElmt)) {
                 result.add(createValueEntry(g));
             }
         }
     }
-    
-    private List<ControlGroup> getControlGroups(Integer root){
+
+    private List<ControlGroup> getControlGroups(Integer root) {
         ArrayList<ControlGroup> retList = new ArrayList<ControlGroup>(0);
         Set<ControlGroup> alreadySeen = new HashSet<ControlGroup>(0);
         try {
             LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, root, true);
             command = getCommandService().executeCommand(command);
             List<CnATreeElement> groups = command.getElements();
-            if(groups.size() == 1 && groups.get(0).getDbId().equals(root)){
+            if (groups.size() == 1 && groups.get(0).getDbId().equals(root)) {
                 groups.clear();
                 groups.addAll(command.getElements(ControlGroup.TYPE_ID, groups.get(0)));
             }
-            for(CnATreeElement e : groups){
-                if(e instanceof ControlGroup){
-                    ControlGroup c = (ControlGroup)e;
-                    if(!alreadySeen.contains(c)){
+            for (CnATreeElement e : groups) {
+                if (e instanceof ControlGroup) {
+                    ControlGroup c = (ControlGroup) e;
+                    if (!alreadySeen.contains(c)) {
                         alreadySeen.add(c);
-                        if(e.getParent() instanceof ControlGroup &&
-                                c.getEntity().getSimpleValue(OVERVIEW_PROPERTY)
-                                .equals(String.valueOf(OVERVIEW_PROPERTY_TARGET))
-                                && containsSamtTopicsOnly(c)){ // avoids rootControlGroup
+                        if (e.getParent() instanceof ControlGroup
+                                && c.getEntity().getSimpleValue(OVERVIEW_PROPERTY)
+                                        .equals(String.valueOf(OVERVIEW_PROPERTY_TARGET))
+                                && containsSamtTopicsOnly(c)) { // avoids
+                                                                // rootControlGroup
                             retList.add(c);
                         }
                     }
@@ -121,24 +123,25 @@ public class LoadISAReportChapterList extends GenericCommand implements ICachedC
         });
         return retList;
     }
-    
+
     /**
      * if group has a child that is not a samttopic, return false (recursivly)
+     * 
      * @param group
      * @return
      */
-    private boolean containsSamtTopicsOnly(ControlGroup group){
-        if(group.getChildren().size() == 0){
+    private boolean containsSamtTopicsOnly(ControlGroup group) {
+        if (group.getChildren().size() == 0) {
             return false;
         }
-        for(CnATreeElement child : group.getChildren()){
-            if(!(child instanceof SamtTopic)){
+        for (CnATreeElement child : group.getChildren()) {
+            if (!(child instanceof SamtTopic)) {
                 return false;
-            } 
+            }
         }
         return true;
     }
-    
+
     private List<String> createValueEntry(CnATreeElement elmt) {
         if (!elmt.isChildrenLoaded() && elmt.getDbId() > 0) {
             elmt = loadChildren(elmt);
@@ -168,9 +171,10 @@ public class LoadISAReportChapterList extends GenericCommand implements ICachedC
         }
         return null;
     }
-    
+
     private Cache getCache() {
-        if (manager == null || Status.STATUS_SHUTDOWN.equals(manager.getStatus()) || cache == null || !Status.STATUS_ALIVE.equals(cache.getStatus())) {
+        if (manager == null || Status.STATUS_SHUTDOWN.equals(manager.getStatus()) || cache == null
+                || !Status.STATUS_ALIVE.equals(cache.getStatus())) {
             cache = createCache();
         } else {
             cache = manager.getCache(cacheId);
@@ -184,17 +188,19 @@ public class LoadISAReportChapterList extends GenericCommand implements ICachedC
         final int timeToIdleSeconds = 500;
         cacheId = UUID.randomUUID().toString();
         manager = CacheManager.create();
-        cache = new Cache(cacheId, maxElementsInMemory, false, false, timeToLiveSeconds, timeToIdleSeconds);
+        cache = new Cache(cacheId, maxElementsInMemory, false, false, timeToLiveSeconds,
+                timeToIdleSeconds);
         manager.addCache(cache);
         return cache;
     }
-    
-    public List<List<String>> getResult(){
+
+    public List<List<String>> getResult() {
         return result;
     }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
      */
     @Override
@@ -205,26 +211,30 @@ public class LoadISAReportChapterList extends GenericCommand implements ICachedC
         return cacheID.toString();
     }
 
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.
+     * Object)
      */
     @Override
     public void injectCacheResult(Object result) {
-        this.result = (ArrayList<List<String>>)result;
+        this.result = (ArrayList<List<String>>) result;
         resultInjectedFromCache = true;
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
      */
     @Override
     public Object getCacheableResult() {
         return result;
     }
-    
+
 }

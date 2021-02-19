@@ -33,28 +33,28 @@ import sernet.verinice.model.iso27k.Group;
  *
  */
 public class BpPersonGroup extends Group<BpPerson> implements IBpGroup, ITaggableElement {
-    
+
     private static final long serialVersionUID = 7752776589962581996L;
-    
+
     public static final String TYPE_ID = "bp_person_group"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_person_group_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_person_group_tag"; //$NON-NLS-1$
 
-    
-    public static final String[] CHILD_TYPES = new String[] {BpPerson.TYPE_ID};
-    
-    protected BpPersonGroup() {}
-    
+    public static final String[] CHILD_TYPES = new String[] { BpPerson.TYPE_ID };
+
+    protected BpPersonGroup() {
+    }
+
     public BpPersonGroup(CnATreeElement parent) {
         super(parent);
         init();
-    }    
-    
+    }
+
     @Override
     public String getTitle() {
         return getEntity().getPropertyValue(PROP_NAME);
     }
-    
+
     @Override
     public void setTitel(String name) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
@@ -64,7 +64,7 @@ public class BpPersonGroup extends Group<BpPerson> implements IBpGroup, ITaggabl
     public String getTypeId() {
         return TYPE_ID;
     }
-    
+
     @Override
     public String[] getChildTypes() {
         return CHILD_TYPES;

@@ -32,37 +32,36 @@ public class LoadReportISANonOverviewGroups extends GenericCommand {
 
     private Integer rootElmt;
     private Integer sgdbid;
-    
+
     private static final Logger LOG = Logger.getLogger(LoadReportISANonOverviewGroups.class);
     private static final String OVERVIEW_PROPERTY = "controlgroup_is_NoIso_group";
-    
-    public static final String[] COLUMNS = new String[] { 
-                                            "TITLE",
-                                            "BEGEHUNGSDATUM",
-                                            "BEGLEITPERSONEN",
-                                            "INSPEKTEUR",
-                                            "EINSTUFUNG",
-                                            
+
+    public static final String[] COLUMNS = new String[] { "TITLE", "BEGEHUNGSDATUM",
+            "BEGLEITPERSONEN", "INSPEKTEUR", "EINSTUFUNG",
+
     };
-    
-    public LoadReportISANonOverviewGroups(Integer root){
+
+    public LoadReportISANonOverviewGroups(Integer root) {
         this.rootElmt = root;
     }
-    
-    public LoadReportISANonOverviewGroups(Integer root, Integer sgdbid){
+
+    public LoadReportISANonOverviewGroups(Integer root, Integer sgdbid) {
         this(root);
         this.sgdbid = sgdbid;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
-        try{
+        try {
             ControlGroup samtGroup = null;
-            if(sgdbid != null){
-                samtGroup = (ControlGroup)getDaoFactory().getDAO(ControlGroup.TYPE_ID).findById(sgdbid);
+            if (sgdbid != null) {
+                samtGroup = (ControlGroup) getDaoFactory().getDAO(ControlGroup.TYPE_ID)
+                        .findById(sgdbid);
             } else {
                 FindSGCommand c1 = new FindSGCommand(true, rootElmt);
                 c1 = getCommandService().executeCommand(c1);
@@ -70,15 +69,15 @@ public class LoadReportISANonOverviewGroups extends GenericCommand {
             }
             LoadReportElements c2 = new LoadReportElements(ControlGroup.TYPE_ID, rootElmt);
             c2 = getCommandService().executeCommand(c2);
-            for(CnATreeElement e : c2.getElements()){
-                if(e instanceof ControlGroup){
-                    ControlGroup group = (ControlGroup)e;
-                    if(Boolean.parseBoolean(group.getEntity().getSimpleValue(OVERVIEW_PROPERTY))){
+            for (CnATreeElement e : c2.getElements()) {
+                if (e instanceof ControlGroup) {
+                    ControlGroup group = (ControlGroup) e;
+                    if (Boolean.parseBoolean(group.getEntity().getSimpleValue(OVERVIEW_PROPERTY))) {
                         // TBD;
                     }
                 }
             }
-        } catch (CommandException e){
+        } catch (CommandException e) {
             LOG.error("Error while determing nonOverviewGroups for report");
         }
     }

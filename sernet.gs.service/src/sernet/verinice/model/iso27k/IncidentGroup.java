@@ -28,48 +28,51 @@ import sernet.verinice.model.common.CnATreeElement;
 @SuppressWarnings("serial")
 public class IncidentGroup extends Group<Incident> implements IISO27kGroup {
 
-	public static final String TYPE_ID = "incident_group"; //$NON-NLS-1$
+    public static final String TYPE_ID = "incident_group"; //$NON-NLS-1$
     public static final String TYPE_ID_HIBERNATE = "incidentgroup"; //$NON-NLS-1$
-    
-	public static final String PROP_NAME = "incident_group_name"; //$NON-NLS-1$
-	
-	public static final String[] CHILD_TYPES = new String[] {Incident.TYPE_ID};
-	
-	
-	public IncidentGroup() {
-		super();
-	}
-	
-	public IncidentGroup(CnATreeElement parent) {
-		super(parent);
-		setEntity(new Entity(TYPE_ID));
+
+    public static final String PROP_NAME = "incident_group_name"; //$NON-NLS-1$
+
+    public static final String[] CHILD_TYPES = new String[] { Incident.TYPE_ID };
+
+    public IncidentGroup() {
+        super();
+    }
+
+    public IncidentGroup(CnATreeElement parent) {
+        super(parent);
+        setEntity(new Entity(TYPE_ID));
         // sets the localized title via HUITypeFactory from message bundle
         setTitel(getTypeFactory().getMessage(TYPE_ID));
     }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
-	 */
-	@Override
-	public String getTypeId() {
-		return TYPE_ID;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
+     */
+    @Override
+    public String getTypeId() {
+        return TYPE_ID;
+    }
 
-	@Override
-	public String getTitle() {
-		return getEntity().getSimpleValue(PROP_NAME);
-	}
-	
-	public void setTitel(String name) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
-	}
+    @Override
+    public String getTitle() {
+        return getEntity().getSimpleValue(PROP_NAME);
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.verinice.iso27k.model.Group#getChildTypes()
-	 */
-	@Override
-	public String[] getChildTypes() {
-		return CHILD_TYPES;
-	}
+    public void setTitel(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.iso27k.model.Group#getChildTypes()
+     */
+    @Override
+    public String[] getChildTypes() {
+        return CHILD_TYPES;
+    }
 
 }

@@ -41,37 +41,36 @@ public class LoadReportSignificantISAQuestions extends GenericCommand {
     private static final Logger LOG = Logger.getLogger(LoadReportSignificantISAQuestions.class);
 
     private static final String PROP_CG_ISISAELMNT = "controlgroup_is_NoIso_group";
-    
+
     private static final String PROP_ISATOPIC_RISK = "samt_topic_audit_ra";
-    
+
     private static final int PROP_ISATOPIC_RISK_THRESHOLD = 2;
-    
-    public static final String[] COLUMNS = new String[] { 
-        "TITLE",
-        "RISK_DESCRIPTION",
-        "CONTROL_DESCRIPTION"
-        };
-    
+
+    public static final String[] COLUMNS = new String[] { "TITLE", "RISK_DESCRIPTION",
+            "CONTROL_DESCRIPTION" };
+
     private Integer rootElmt;
 
-    public LoadReportSignificantISAQuestions(Integer root){
+    public LoadReportSignificantISAQuestions(Integer root) {
         this.rootElmt = root;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
-        for(SamtTopic topic : getSamtTopics(rootElmt)){
+        for (SamtTopic topic : getSamtTopics(rootElmt)) {
             ArrayList<String> result = new ArrayList<String>(0);
             result.add(topic.getTitle());
             // add risk
             // add control
         }
     }
-    
-    private List<SamtTopic> getSamtTopics(Integer root){
+
+    private List<SamtTopic> getSamtTopics(Integer root) {
         ArrayList<ControlGroup> cgList = new ArrayList<ControlGroup>(0);
         ArrayList<SamtTopic> samtTopicList = new ArrayList<SamtTopic>(0);
         Set<ControlGroup> alreadySeen = new HashSet<ControlGroup>(0);
@@ -79,33 +78,34 @@ public class LoadReportSignificantISAQuestions extends GenericCommand {
             LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, root);
             command = getCommandService().executeCommand(command);
             List<CnATreeElement> groups = command.getElements();
-            if(groups.size() == 1 && groups.get(0).getDbId().equals(root)){
+            if (groups.size() == 1 && groups.get(0).getDbId().equals(root)) {
                 groups.clear();
                 groups.addAll(command.getElements(ControlGroup.TYPE_ID, groups.get(0)));
             }
-            //get all relevant controlgroups
-            for(CnATreeElement e : groups){
-                if(e instanceof ControlGroup){
-                    ControlGroup c = (ControlGroup)e;
-                    if(!alreadySeen.contains(c)){
+            // get all relevant controlgroups
+            for (CnATreeElement e : groups) {
+                if (e instanceof ControlGroup) {
+                    ControlGroup c = (ControlGroup) e;
+                    if (!alreadySeen.contains(c)) {
                         alreadySeen.add(c);
-                        if(e.getParent() instanceof ControlGroup &&
-                                c.getEntity().getSimpleValue(PROP_CG_ISISAELMNT)
-                                .equals("0")
-                                && containsSamtTopicsOnly(c)){// avoids rootControlGroup
-                                
+                        if (e.getParent() instanceof ControlGroup
+                                && c.getEntity().getSimpleValue(PROP_CG_ISISAELMNT).equals("0")
+                                && containsSamtTopicsOnly(c)) {// avoids
+                                                               // rootControlGroup
+
                             cgList.add(c);
                         }
                     }
                 }
             }
-            //get all relevant topics
-            for(ControlGroup cg : cgList){
-                LoadReportElements stLoader = new LoadReportElements(SamtTopic.TYPE_ID, cg.getDbId());
+            // get all relevant topics
+            for (ControlGroup cg : cgList) {
+                LoadReportElements stLoader = new LoadReportElements(SamtTopic.TYPE_ID,
+                        cg.getDbId());
                 stLoader = getCommandService().executeCommand(stLoader);
-                for(CnATreeElement c : stLoader.getElements()){
-                    SamtTopic st = (SamtTopic)c;
-                    if(st.getNumericProperty(PROP_ISATOPIC_RISK) >= PROP_ISATOPIC_RISK_THRESHOLD){
+                for (CnATreeElement c : stLoader.getElements()) {
+                    SamtTopic st = (SamtTopic) c;
+                    if (st.getNumericProperty(PROP_ISATOPIC_RISK) >= PROP_ISATOPIC_RISK_THRESHOLD) {
                         samtTopicList.add(st);
                     }
                 }
@@ -124,20 +124,20 @@ public class LoadReportSignificantISAQuestions extends GenericCommand {
         });
         return samtTopicList;
     }
-    
+
     /**
      * if group has a child that is not a samttopic, return false (recursivly)
+     * 
      * @param group
      * @return
      */
-    private boolean containsSamtTopicsOnly(ControlGroup group){
-        for(CnATreeElement child : group.getChildren()){
-            if(!(child instanceof SamtTopic)){
+    private boolean containsSamtTopicsOnly(ControlGroup group) {
+        for (CnATreeElement child : group.getChildren()) {
+            if (!(child instanceof SamtTopic)) {
                 return false;
-            } 
+            }
         }
         return true;
     }
-    
 
 }

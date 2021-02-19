@@ -33,27 +33,28 @@ import sernet.verinice.model.iso27k.Group;
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
 public class IcsSystemGroup extends Group<IcsSystem> implements IBpGroup, ITaggableElement {
-    
+
     private static final long serialVersionUID = -5366579759422543906L;
-    
+
     public static final String TYPE_ID = "bp_icssystem_group"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_icssystem_group_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_icssystem_group_tag"; //$NON-NLS-1$
 
-    public static final String[] CHILD_TYPES = new String[] {IcsSystem.TYPE_ID};
-    
-    protected IcsSystemGroup() {}
-    
+    public static final String[] CHILD_TYPES = new String[] { IcsSystem.TYPE_ID };
+
+    protected IcsSystemGroup() {
+    }
+
     public IcsSystemGroup(CnATreeElement parent) {
         super(parent);
         init();
     }
-    
+
     @Override
     public String getTitle() {
         return getEntity().getPropertyValue(PROP_NAME);
     }
-    
+
     @Override
     public void setTitel(String name) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
@@ -63,7 +64,7 @@ public class IcsSystemGroup extends Group<IcsSystem> implements IBpGroup, ITagga
     public String getTypeId() {
         return TYPE_ID;
     }
-    
+
     @Override
     public String[] getChildTypes() {
         return CHILD_TYPES;
