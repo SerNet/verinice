@@ -21,7 +21,7 @@
 				<ui:repeat value="#{edit.actionHandler}" var="actionHandler">
 					<div class="ui-g-4">
 						<p:commandButton action="#{actionHandler.execute}"
-							value="#{actionHandler.label}" update=":editForm :tableForm" />
+							value="#{actionHandler.label}" update=":editForm :tableForm :elementDescription" />
 					</div>
 				</ui:repeat>
 			</p:outputPanel>
