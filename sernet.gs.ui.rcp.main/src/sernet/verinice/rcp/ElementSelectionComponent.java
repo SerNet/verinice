@@ -241,7 +241,7 @@ public class ElementSelectionComponent {
         viewer.setColumnProperties(new String[] { COLUMN_IMG, COLUMN_SCOPE_ID, COLUMN_LABEL });
         viewer.setContentProvider(new ArrayContentProvider());
         filter = new CnaTreeElementTitleFilter(viewer);
-        viewer.setComparator(new ElementTableViewerSorter());
+        viewer.setComparator(new ElementTableViewerComparator());
 
         viewer.addSelectionChangedListener(
                 event -> selectedElements = ((IStructuredSelection) viewer.getSelection())
@@ -424,7 +424,7 @@ public class ElementSelectionComponent {
         this.height = height;
     }
 
-    private static final class ElementTableViewerSorter extends ViewerComparator {
+    private static final class ElementTableViewerComparator extends ViewerComparator {
         @Override
         public int compare(Viewer viewer, Object e1, Object e2) {
 
