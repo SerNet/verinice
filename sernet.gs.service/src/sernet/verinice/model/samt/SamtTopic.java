@@ -25,7 +25,7 @@ import java.util.Date;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.hui.common.connect.ITaggableElement;
-import sernet.verinice.model.bsi.TagHelper;
+import sernet.snutils.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.iso27k.IISO27kElement;

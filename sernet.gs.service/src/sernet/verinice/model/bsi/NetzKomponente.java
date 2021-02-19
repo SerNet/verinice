@@ -20,6 +20,7 @@ package sernet.verinice.model.bsi;
 import java.util.Collection;
 
 import sernet.hui.common.connect.Entity;
+import sernet.snutils.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
 public class NetzKomponente extends CnATreeElement implements IBSIStrukturElement {

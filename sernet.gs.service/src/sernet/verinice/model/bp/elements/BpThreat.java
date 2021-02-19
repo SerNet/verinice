@@ -29,7 +29,7 @@ import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpElement;
-import sernet.verinice.model.bsi.TagHelper;
+import sernet.snutils.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.bp.risk.RiskService;
 

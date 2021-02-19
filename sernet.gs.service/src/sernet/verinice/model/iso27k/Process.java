@@ -23,7 +23,7 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IReevaluator;
-import sernet.verinice.model.bsi.TagHelper;
+import sernet.snutils.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 

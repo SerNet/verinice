@@ -1,7 +1,4 @@
-package sernet.verinice.model.bsi;
-
-import java.util.HashSet;
-import java.util.Set;
+package sernet.snutils;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -68,17 +65,4 @@ public class TagHelperTest {
                 TagHelper.getTags("foo, bar,").toArray());
     }
 
-    @Test
-    public void addTagsToSet() {
-        Set<String> set = new HashSet<>();
-        TagHelper.putInTags(set, "foo");
-        Assert.assertArrayEquals(new String[] { "foo" }, set.toArray());
-    }
-    
-    @Test
-    public void addTagsToSetWithDuplicateValues() {
-        Set<String> set = new HashSet<>();
-        TagHelper.putInTags(set, "foo, foo");
-        Assert.assertArrayEquals(new String[] { "foo" }, set.toArray());
-    }
 }

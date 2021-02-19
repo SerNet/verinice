@@ -27,7 +27,7 @@ import java.util.TreeSet;
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.TagHelper;
+import sernet.snutils.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**

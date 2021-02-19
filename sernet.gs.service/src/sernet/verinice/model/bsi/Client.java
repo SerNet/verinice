@@ -22,6 +22,7 @@ import java.util.Collection;
 import org.apache.log4j.Logger;
 
 import sernet.hui.common.connect.Entity;
+import sernet.snutils.TagHelper;
 import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;

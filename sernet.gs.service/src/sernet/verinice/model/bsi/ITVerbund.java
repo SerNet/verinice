@@ -21,6 +21,7 @@ import java.util.Collection;
 
 import sernet.gs.model.Baustein;
 import sernet.hui.common.connect.Entity;
+import sernet.snutils.TagHelper;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.common.CnATreeElement;
 

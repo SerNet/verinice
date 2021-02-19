@@ -44,7 +44,7 @@ import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.bp.risk.configuration.ConfigurationSerializer;
 import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
-import sernet.verinice.model.bsi.TagHelper;
+import sernet.snutils.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**

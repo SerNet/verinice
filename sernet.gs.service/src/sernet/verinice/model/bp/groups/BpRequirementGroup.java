@@ -31,7 +31,7 @@ import sernet.verinice.model.bp.ISecurityLevelProvider;
 import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bp.SecurityLevelUtil;
 import sernet.verinice.model.bp.elements.BpRequirement;
-import sernet.verinice.model.bsi.TagHelper;
+import sernet.snutils.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 
