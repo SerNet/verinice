@@ -19,7 +19,7 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -27,7 +27,7 @@ import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 
-class CnAElementByTitelSorter extends ViewerSorter {
+class CnAElementByTitelComparator extends ViewerComparator {
     private NumericStringComparator numComp = new NumericStringComparator();
 
     @Override

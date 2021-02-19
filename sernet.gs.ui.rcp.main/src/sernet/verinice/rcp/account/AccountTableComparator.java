@@ -1,14 +1,14 @@
 package sernet.verinice.rcp.account;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.rcp.ElementTitleCache;
 
-class AccountTableSorter extends ViewerSorter {
+class AccountTableComparator extends ViewerComparator {
     private int propertyIndex;
     private static final int DEFAULT_SORT_COLUMN = 0;
     private static final int DESCENDING = 1;
@@ -17,7 +17,7 @@ class AccountTableSorter extends ViewerSorter {
 
     private static final NumericStringComparator nsc = new NumericStringComparator();
 
-    public AccountTableSorter() {
+    public AccountTableComparator() {
         super();
         this.propertyIndex = DEFAULT_SORT_COLUMN;
         this.direction = ASCENDING;

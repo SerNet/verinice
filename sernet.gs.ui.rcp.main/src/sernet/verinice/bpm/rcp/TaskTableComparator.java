@@ -23,11 +23,10 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.bpm.ITask;
-
 
 /**
  * Table sorter for table in task view
@@ -35,19 +34,19 @@ import sernet.verinice.interfaces.bpm.ITask;
  * @see sernet.verinice.bpm.rcp.TaskView
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-class TaskTableSorter extends ViewerSorter {
-    
-    private static final Logger LOG = Logger.getLogger(TaskTableSorter.class);
-    
+class TaskTableComparator extends ViewerComparator {
+
+    private static final Logger LOG = Logger.getLogger(TaskTableComparator.class);
+
     private int propertyIndex;
     private static final int DEFAULT_SORT_COLUMN = 0;
     private static final int DESCENDING = 1;
     private static final int ASCENDING = 0; 
     private int direction = ASCENDING;
-    
+
     private static final NumericStringComparator NSC = new NumericStringComparator();
 
-    public TaskTableSorter() {
+    public TaskTableComparator() {
         super();
         this.propertyIndex = DEFAULT_SORT_COLUMN;
         this.direction = ASCENDING;
@@ -64,11 +63,15 @@ class TaskTableSorter extends ViewerSorter {
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.
+     * viewers.Viewer, java.lang.Object, java.lang.Object)
      */
     @Override
-    public int compare(Viewer viewer, Object e1, Object e2) {    
+    public int compare(Viewer viewer, Object e1, Object e2) {
         int rc = 0;
         if (e1 == null && e2 != null) {
             rc = 1;
@@ -90,34 +93,34 @@ class TaskTableSorter extends ViewerSorter {
     private int compareNullSafe(ITask a1, ITask a2) {
         int rc = 0;
         switch (propertyIndex) {
-        case 0:  
-            // prio           
+        case 0:
+            // prio
             rc = NSC.compare(a1.getPriority(), a2.getPriority());
             break;
-        case 1:  
-            // Group           
+        case 1:
+            // Group
             rc = NSC.compare(a1.getGroupTitle(), a2.getGroupTitle());
             break;
         case 2:
             // Object
             rc = NSC.compare(a1.getElementTitle(), a2.getElementTitle());
             break;
-        case 3:  
+        case 3:
             // Process
             rc = compareStringNullSave(a1.getProcessName(), a2.getProcessName());
             break;
-        case 4:    
+        case 4:
             // Task type
             rc = compareStringNullSave(a1.getName(), a2.getName());
             break;
-        case 5:   
+        case 5:
             // Assignee
             rc = compareStringNullSave(a1.getAssignee(), a2.getAssignee());
             break;
         case 6:
             // due date
             rc = compareDateNullSave(a1.getDueDate(), a2.getDueDate());
-            break; 
+            break;
         default:
             rc = 0;
         }
@@ -125,8 +128,8 @@ class TaskTableSorter extends ViewerSorter {
     }
 
     private int compareStringNullSave(String s1, String s2) {
-        if(s1==null) {
-            if(s2==null) {
+        if (s1 == null) {
+            if (s2 == null) {
                 return 0;
             } else {
                 return 1;
@@ -138,10 +141,10 @@ class TaskTableSorter extends ViewerSorter {
         }
         return result;
     }
-    
+
     private int compareDateNullSave(Date d1, Date d2) {
-        if(d1==null) {
-            if(d2==null) {
+        if (d1 == null) {
+            if (d2 == null) {
                 return 0;
             } else {
                 return 1;
@@ -150,6 +153,4 @@ class TaskTableSorter extends ViewerSorter {
         return d1.compareTo(d2);
     }
 
-    
-    
 }

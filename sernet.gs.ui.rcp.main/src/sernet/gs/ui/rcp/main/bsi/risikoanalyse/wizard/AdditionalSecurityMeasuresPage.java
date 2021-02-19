@@ -125,7 +125,7 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
         viewer.setContentProvider(new ArrayContentProvider());
         /* associate domain model with viewer */
         viewer.setInput(arrListMassnahmenUmsetzungen);
-        viewer.setSorter(new MassnahmenSorter());
+        viewer.setComparator(new MassnahmenComparator());
         packAllMassnahmeColumns();
 
         getRiskAnalysisWizard().setCanFinish(true);

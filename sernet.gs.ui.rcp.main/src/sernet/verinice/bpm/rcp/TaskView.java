@@ -145,7 +145,7 @@ public class TaskView extends RightsEnabledView {
     KeyMessage selectedTaskType;
 
     private TableViewer tableViewer;
-    private TaskTableSorter tableSorter = new TaskTableSorter();
+    private TaskTableComparator tableSorter = new TaskTableComparator();
     private TaskContentProvider contentProvider;
     private Listener collapseAndExpandListener = new TableCollapseAndExpandListener();
     private Browser textPanel;
@@ -877,7 +877,7 @@ public class TaskView extends RightsEnabledView {
         return tableViewer;
     }
 
-    protected TaskTableSorter getTableSorter() {
+    protected TaskTableComparator getTableSorter() {
         return tableSorter;
     }
 

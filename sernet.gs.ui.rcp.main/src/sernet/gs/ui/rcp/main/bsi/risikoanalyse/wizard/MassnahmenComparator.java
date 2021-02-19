@@ -18,7 +18,7 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 
 import sernet.gs.model.Massnahme;
 import sernet.gs.service.NumericStringComparator;
@@ -31,7 +31,7 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
-public class MassnahmenSorter extends ViewerSorter {
+public class MassnahmenComparator extends ViewerComparator {
 
     @Override
     public int compare(Viewer viewer, Object e1, Object e2) {

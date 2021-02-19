@@ -92,7 +92,7 @@ public class RiskHandlingPage extends RiskAnalysisWizardPage<TableViewer> {
         /* associate domain model with viewer */
         viewer.setInput(arrListAllGefaehrdungsUmsetzungen);
         /* sort elements */
-        viewer.setSorter(new GefaehrdungenSorter());
+        viewer.setComparator(new GefaehrdungenComparator());
         packAllColumns();
 
         /* Wizard may be finished at this page */

@@ -335,7 +335,7 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
         viewer.setContentProvider(new ArrayContentProvider());
         /* associate domain model with viewer */
         viewer.setInput(arrListAllGefaehrdungen);
-        viewer.setSorter(new GefaehrdungenSorter());
+        viewer.setComparator(new GefaehrdungenComparator());
 
         assignBausteinGefaehrdungen();
         checkAllSelectedGefaehrdungen();

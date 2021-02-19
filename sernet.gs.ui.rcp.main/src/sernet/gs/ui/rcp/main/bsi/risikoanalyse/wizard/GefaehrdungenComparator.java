@@ -18,7 +18,7 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.service.NumericStringComparator;
@@ -29,7 +29,7 @@ import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
  * 
  * @author ahanekop[at]sernet[dot]de
  */
-public class GefaehrdungenSorter extends ViewerSorter {
+public class GefaehrdungenComparator extends ViewerComparator {
 
     /**
      * Compares two Gefaehrdungen and returns them sorted. Numbers are taken

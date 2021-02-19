@@ -34,7 +34,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -72,7 +72,7 @@ public class GstoolImportMappingView extends RightsEnabledView
     public static final String ID = "sernet.gs.ui.rcp.gsimport.gstoolimportmappingview"; //$NON-NLS-1$
 
     private TableViewer viewer;
-    private TableSorter tableSorter = new TableSorter();
+    private TableComparator tableSorter = new TableComparator();
     private GsImportMappingLabelProvider labelProvider;
     private GsImportMappingContentProvider contentProvider;
     private WorkspaceJob initDataJob;
@@ -219,7 +219,7 @@ public class GstoolImportMappingView extends RightsEnabledView
 
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
-        this.viewer.setSorter(this.tableSorter);
+        this.viewer.setComparator(this.tableSorter);
         this.viewer.setContentProvider(this.contentProvider);
         this.viewer.setLabelProvider(this.labelProvider);
 
@@ -324,13 +324,13 @@ public class GstoolImportMappingView extends RightsEnabledView
         }
     }
 
-    private static class TableSorter extends ViewerSorter {
+    private static class TableComparator extends ViewerComparator {
 
         private int currentColumnIndex;
         private static final int DEFAULT_SORT_COLUMN = 0;
         private boolean isAscending = true;
 
-        public TableSorter() {
+        public TableComparator() {
             super();
             this.currentColumnIndex = DEFAULT_SORT_COLUMN;
             this.isAscending = true;

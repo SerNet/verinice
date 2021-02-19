@@ -31,7 +31,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -107,7 +107,7 @@ public class AutoBausteinDialog extends Dialog {
             }
         });
 
-        viewer.setSorter(new ViewerSorter() {
+        viewer.setComparator(new ViewerComparator() {
             @Override
             public int compare(Viewer viewer, Object e1, Object e2) {
                 BausteinVorschlag bst1 = (BausteinVorschlag) e1;

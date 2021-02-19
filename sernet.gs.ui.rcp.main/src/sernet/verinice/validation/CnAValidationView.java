@@ -38,7 +38,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -93,7 +93,7 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
 
     private TableViewer viewer;
 
-    private TableSorter tableSorter = new TableSorter();
+    private TableComparator tableSorter = new TableComparator();
     private ICommandService commandService;
 
     private Action doubleClickAction;
@@ -251,7 +251,7 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
 
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
-        viewer.setSorter(tableSorter);
+        viewer.setComparator(tableSorter);
 
     }
 
@@ -510,7 +510,7 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
         return ServiceFactory.lookupCommandService();
     }
 
-    private static class TableSorter extends ViewerSorter {
+    private static class TableComparator extends ViewerComparator {
         private int propertyIndex;
         private static final int DEFAULT_SORT_COLUMN = 0;
         private static final int DESCENDING = 1;
@@ -518,7 +518,7 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
         private int direction = ASCENDING;
         private NumericStringComparator comparator = new NumericStringComparator();
 
-        public TableSorter() {
+        public TableComparator() {
             super();
             this.propertyIndex = DEFAULT_SORT_COLUMN;
             this.direction = ASCENDING;

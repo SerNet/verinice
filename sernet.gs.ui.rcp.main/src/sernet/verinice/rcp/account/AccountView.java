@@ -137,7 +137,7 @@ public class AccountView extends RightsEnabledView {
     private Combo comboScopeOnly;
 
     private TableViewer viewer;
-    private AccountTableSorter tableSorter = new AccountTableSorter();
+    private AccountTableComparator tableSorter = new AccountTableComparator();
     private AccountContentProvider contentProvider = new AccountContentProvider();
     private ISelectionListener selectionListener;
 
@@ -420,7 +420,7 @@ public class AccountView extends RightsEnabledView {
         table.setLinesVisible(true);
         viewer.setComparator(tableSorter);
         // ensure initial table sorting (by filename)
-        ((AccountTableSorter) viewer.getSorter()).setColumn(2);
+        ((AccountTableComparator) viewer.getComparator()).setColumn(2);
     }
 
     /**
@@ -776,11 +776,11 @@ public class AccountView extends RightsEnabledView {
         return this.viewer;
     }
 
-    public AccountTableSorter getTableSorter() {
+    public AccountTableComparator getTableSorter() {
         return tableSorter;
     }
 
-    public void setTableSorter(AccountTableSorter tableSorter) {
+    public void setTableSorter(AccountTableComparator tableSorter) {
         this.tableSorter = tableSorter;
     }
 

@@ -93,7 +93,7 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
         viewer.setContentProvider(new ArrayContentProvider());
         /* associate domain model with viewer */
         viewer.setInput(arrListAssociatedGefaehrdungen);
-        viewer.setSorter(new GefaehrdungenSorter());
+        viewer.setComparator(new GefaehrdungenComparator());
         selectAssignedGefaehrdungen();
         packAllColumns();
 

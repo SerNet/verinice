@@ -251,7 +251,7 @@ public class BsiModelView extends RightsEnabledView
 
         viewer.setLabelProvider(new DecoratingLabelProvider(new BSIModelViewLabelProvider(),
                 workbench.getDecoratorManager()));
-        viewer.setComparator(new CnAElementByTitelSorter());
+        viewer.setComparator(new CnAElementByTitelComparator());
         toggleLinking(Activator.getDefault().getPreferenceStore()
                 .getBoolean(PreferenceConstants.LINK_TO_EDITOR));
 
