@@ -245,10 +245,25 @@ public class EditBean {
     private void initDependencyBehaviour(Map<String, HuiProperty> key2HuiProperty) {
         for (HuiProperty huiProperty : key2HuiProperty.values()) {
             for (DependsType dependsType : huiProperty.getType().getDependencies()) {
-                HuiProperty dependsOn = key2HuiProperty.get(dependsType.getPropertyId());
-                dependsOn.addValueChangeListener(
-                        new DependencyChangeListener(huiProperty, key2HuiProperty));
-                dependsOn.fireChangeListeners();
+                String conditionPropertyId = dependsType.getPropertyId();
+                HuiProperty dependsOn = key2HuiProperty.get(conditionPropertyId);
+                if (dependsOn != null) {
+                    dependsOn.addValueChangeListener(
+                            new DependencyChangeListener(huiProperty, key2HuiProperty));
+                    dependsOn.fireChangeListeners();
+                } else {
+                    // VN-2899: condition property cannot be edited
+                    String entityValue = getElement().getEntity()
+                            .getRawPropertyValue(conditionPropertyId);
+                    PropertyType conditionPropertyType = entityType
+                            .getPropertyType(conditionPropertyId);
+                    boolean satisfied = evaluateDependsType(dependsType, entityValue,
+                            conditionPropertyType);
+                    if (!satisfied) {
+                        huiProperty.setEnabled(false);
+                        break;
+                    }
+                }
             }
         }
     }
@@ -973,6 +988,26 @@ public class EditBean {
         this.generalPropertyList = moveURLPropertyToEndOfList(generalPropertyList);
     }
 
+    private static boolean evaluateDependsType(DependsType dependsType, String entityValue,
+            PropertyType conditionPropertyType) {
+        // if no value for the comparison is set, the depends value has be
+        // false.
+        if (entityValue == null) {
+            return false;
+        }
+        if (conditionPropertyType.isMultiselect()) {
+            if (dependsType.isInverse()) {
+                return !entityValue.contains(dependsType.getPropertyValue());
+            } else {
+                return entityValue.contains(dependsType.getPropertyValue());
+            }
+        } else if (dependsType.isInverse()) {
+            return !entityValue.equals(dependsType.getPropertyValue());
+        } else {
+            return entityValue.equals(dependsType.getPropertyValue());
+        }
+    }
+
     /**
      * Holds reference to a {@link HuiProperty} which depends on a specific
      * other {@link HuiProperty} and maybe more than one and updates the
@@ -982,7 +1017,7 @@ public class EditBean {
      * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
      *
      */
-    private final class DependencyChangeListener implements HuiProperty.ValueChangeListener {
+    private static final class DependencyChangeListener implements HuiProperty.ValueChangeListener {
 
         private static final long serialVersionUID = 1L;
 
@@ -1014,32 +1049,12 @@ public class EditBean {
         private void evalDependencies(Set<DependsType> dependencies) {
             boolean result = true;
             for (DependsType dependsType : dependencies) {
-                result &= evaluateDependsType(dependsType);
+                HuiProperty dependsOn = key2HuiProperty.get(dependsType.getPropertyId());
+                String dependsOnValue = dependsOn.getValue();
+                result &= evaluateDependsType(dependsType, dependsOnValue, dependsOn.getType());
             }
 
             targetHuiProperty.setEnabled(result);
-        }
-
-        private boolean evaluateDependsType(DependsType dependsType) {
-            HuiProperty dependsOn = key2HuiProperty.get(dependsType.getPropertyId());
-            String dependsOnValue = dependsOn.getValue();
-
-            // if no value for the comparison is set, the depends value has be
-            // false.
-            if (dependsOnValue == null) {
-                return false;
-            }
-            if (dependsOn.getIsMultiselect()) {
-                if (dependsType.isInverse()) {
-                    return !dependsOnValue.contains(dependsType.getPropertyValue());
-                } else {
-                    return dependsOnValue.contains(dependsType.getPropertyValue());
-                }
-            } else if (dependsType.isInverse()) {
-                return !dependsOnValue.equals(dependsType.getPropertyValue());
-            } else {
-                return dependsOnValue.equals(dependsType.getPropertyValue());
-            }
         }
     }
 
