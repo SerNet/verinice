@@ -113,10 +113,11 @@ pipeline {
                 )
             }
         }
-        post {
-            failure {
-                emailext  to: 'jk@sernet.de, uz@sernet.de',
-                  body: '''The build is broken.
+    }
+    post {
+        failure {
+            emailext  to: 'jk@sernet.de, uz@sernet.de',
+            body: '''The build is broken.
 Take a look.
 
 ${BUILD_LOG_REGEX}
@@ -124,19 +125,18 @@ ${FAILED_TESTS}
 
 ${CHANGES_SINCE_LAST_SUCCESS}
 ${JELLY_SCRIPT,template="text"}''', 
-                  subject: '$DEFAULT_SUBJECT'
-            }
-            unstable {
-                emailext  to: 'jk@sernet.de, uz@sernet.de',
-                  body: '''The build is unstable.
+            subject: '$DEFAULT_SUBJECT'
+        }
+        unstable {
+            emailext  to: 'jk@sernet.de, uz@sernet.de',
+            body: '''The build is unstable.
 Take a look.
 
 ${FAILED_TESTS}
 
 ${CHANGES_SINCE_LAST_SUCCESS}
 ${JELLY_SCRIPT,template="text"}''', 
-                  subject: '$DEFAULT_SUBJECT'
-            }
+            subject: '$DEFAULT_SUBJECT'
         }
     }
 }
