@@ -39,7 +39,7 @@
    möglich, z. B. wenn während der Release-Phase in `develop` gearbeitet wurde.
 
        git fetch
-       git switch -c merge-$version-to-develop origin/develop
+       git switch -c merge-release-$version-to-develop origin/develop
        git merge $version
        git push -u origin merge-release-$version-to-develop
 
