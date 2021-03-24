@@ -310,7 +310,7 @@ public abstract class ModelCopyTask implements Runnable {
                     existingElementPropertyList.add(newProperty);
                 }
             } else if (existingElementPropertyList != null) {
-                compendiumElementPropertyLists.remove(propertyId);
+                existingElementPropertyLists.remove(propertyId);
             }
         }
     }
