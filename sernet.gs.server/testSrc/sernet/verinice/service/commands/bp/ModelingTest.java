@@ -20,6 +20,7 @@ package sernet.verinice.service.commands.bp;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -30,12 +31,12 @@ import java.util.stream.Stream;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.matchers.JUnitMatchers;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.junit.Assert;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.SecurityLevel;
@@ -1001,6 +1002,57 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
         assertEquals("bp_requirement_change_type_removed",
                 firstRequirement.getEntity().getRawPropertyValue(BpRequirement.PROP_CHANGE_TYPE));
 
+    }
+
+    @Transactional
+    @Test
+    // VN-2908
+    public void updateExistingRequirementWithNoChangesSinceLast() throws CommandException {
+        CatalogModel catalogModel = loadCatalogModel();
+        BpRequirementGroup requirementGroup = createRequirementGroup(catalogModel, "R1",
+                "Requirements 1");
+        BpRequirement requirement1 = createBpRequirement(requirementGroup, "R1.1", "Requirement 1");
+        requirement1.setSimpleProperty(BpRequirement.PROP_RELEASE, "2021-0");
+        ItNetwork itNetwork = createNewBPOrganization();
+        BpRequirementGroup requirementGroupItNetwork = createRequirementGroup(itNetwork, "R1",
+                "Requirements 1");
+        BpRequirement requirement1ItNetwork = createBpRequirement(requirementGroupItNetwork, "R1.1",
+                "Requirement 1");
+        requirement1ItNetwork.setSimpleProperty(BpRequirement.PROP_RELEASE, "2020-0");
+        requirement1ItNetwork.setSimpleProperty(BpRequirement.PROP_CHANGE_TYPE,
+                "bp_requirement_change_type_changed");
+        requirement1ItNetwork.setSimpleProperty(BpRequirement.PROP_CHANGE_DETAILS,
+                "those were the previous change details");
+
+        createLink(requirement1ItNetwork, itNetwork, BpRequirement.REL_BP_REQUIREMENT_BP_ITNETWORK);
+
+        elementDao.flush();
+        elementDao.clear();
+
+        ModelCommand modelCommand = new ModelCommand(
+                Collections.singleton(requirementGroup.getUuid()),
+                Collections.singletonList(itNetwork.getUuid()));
+        modelCommand.setHandleSafeguards(true);
+        modelCommand.setHandleDummySafeguards(false);
+        commandService.executeCommand(modelCommand);
+        elementDao.flush();
+
+        itNetwork = reloadElement(itNetwork);
+        assertEquals(0, itNetwork.getLinksDown().size());
+        Set<CnATreeElement> requirementsGroupsInNetwork = getChildrenWithTypeId(itNetwork,
+                BpRequirementGroup.TYPE_ID);
+        assertEquals(1, requirementsGroupsInNetwork.size());
+        CnATreeElement firstRequirementsGroupInNetwork = requirementsGroupsInNetwork.iterator()
+                .next();
+        assertEquals(requirementGroupItNetwork, firstRequirementsGroupInNetwork);
+        assertEquals(1, firstRequirementsGroupInNetwork.getChildren().size());
+        BpRequirement updateRequirement = (BpRequirement) firstRequirementsGroupInNetwork
+                .getChildren().iterator().next();
+        assertEquals("Requirement 1", updateRequirement.getTitle());
+        assertNull(
+                updateRequirement.getEntity().getRawPropertyValue(BpRequirement.PROP_CHANGE_TYPE));
+        assertNull(updateRequirement.getEntity()
+                .getRawPropertyValue(BpRequirement.PROP_CHANGE_DETAILS));
     }
 
     @Transactional
