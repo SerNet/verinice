@@ -60,7 +60,7 @@
        git fetch
        git checkout origin/eval
        git tag -s eval-$version
-       git push eval-$version
+       git push origin eval-$version
 
 # Publish auf GitHub
 
