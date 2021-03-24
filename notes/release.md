@@ -33,7 +33,7 @@
 
        git fetch
        git tag -s $version origin/master
-       git push $version
+       git push origin $version
 
 2. Tag `$version` nach `develop` mergen, wahrscheinlich ist hier kein `--ff-only`
    möglich, z. B. wenn während der Release-Phase in `develop` gearbeitet wurde.
