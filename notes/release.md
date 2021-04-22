@@ -66,7 +66,8 @@
 
     git fetch
     git remote add github git@github.com:SerNet/verinice.git
-    git push github origin/master $version
+    git push github origin/master
+    git push github $version
 
 # Hotfixes
 Hier ist beschrieben wie ein Hotfix releaset wird. Also ein Bugfix
