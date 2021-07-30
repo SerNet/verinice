@@ -17,10 +17,22 @@
  ******************************************************************************/
 package sernet.gs.service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
+
 import org.apache.log4j.Logger;
 
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IHibernateCommandService;
+import sun.misc.ObjectInputFilter;
+import sun.misc.ObjectInputFilter.Config;
 
 /**
  * Initialize environemnt on Verinice server on startup.
@@ -32,6 +44,8 @@ import sernet.verinice.interfaces.IHibernateCommandService;
 public class ServerInitializer {
 
     private static final Logger log = Logger.getLogger(ServerInitializer.class);
+
+    private static final AtomicBoolean filterEnabled = new AtomicBoolean();
 
     private static VeriniceContext.State state;
 
@@ -71,6 +85,16 @@ public class ServerInitializer {
             hibernateCommandService.setWorkObjects(state);
         }
 
+        // Our tests create multiple contexts, each of which initializes a
+        // server context. We need to make sure that we enable the filter only
+        // once.
+        if (filterEnabled.compareAndSet(false, true)) {
+            enableSerializationFilter();
+        }
+    }
+
+    private void enableSerializationFilter() {
+        Config.setSerialFilter(new VeriniceSerializationFilter());
     }
 
     public void setWorkObjects(VeriniceContext.State workObjects) {
@@ -87,6 +111,60 @@ public class ServerInitializer {
 
     public IHibernateCommandService getHibernateCommandService() {
         return hibernateCommandService;
+    }
+
+    private static final class VeriniceSerializationFilter implements ObjectInputFilter {
+
+        static {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(
+                    VeriniceSerializationFilter.class
+                            .getResourceAsStream("/serialization-filter-class-whitelist.txt"),
+                    StandardCharsets.UTF_8))) {
+                allowedClasses = br.lines().collect(Collectors.toSet());
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to initialize serialization filter");
+            }
+
+        }
+        private static final Set<String> allowedClasses;
+        private final List<String> allowedClassNamePrefixes = Arrays.asList("sernet.",
+                "org.jgrapht.util.SupplierUtil$$");
+
+        @Override
+        public Status checkInput(FilterInfo arg0) {
+            Class<?> serialClass = arg0.serialClass();
+            if (log.isInfoEnabled()) {
+                log.info("Checking deserialization for class " + serialClass + ", at depth "
+                        + arg0.depth());
+            }
+            if (serialClass == null) {
+                log.debug(" -> Allowing reference to existing object");
+                return Status.ALLOWED;
+            }
+            if (serialClass.isArray()) {
+                do {
+                    serialClass = serialClass.getComponentType();
+                } while (serialClass.isArray());
+                if (log.isDebugEnabled()) {
+                    log.debug("Unwrapped array base type: " + serialClass);
+                }
+                if (serialClass.isPrimitive()) {
+                    log.debug("-> Allowing array of primitive type");
+                    return Status.ALLOWED;
+                }
+            }
+            if (allowedClasses.contains(serialClass.getName())) {
+                log.debug("-> Allowing deserialization because of class name whitelist");
+                return Status.ALLOWED;
+            }
+            String className = serialClass.getName();
+            if (allowedClassNamePrefixes.stream().anyMatch(className::startsWith)) {
+                log.debug("-> Allowing deserialization because of package name whitelist");
+                return Status.ALLOWED;
+            }
+            log.warn("Rejecting deserialization of data with class " + serialClass);
+            return Status.REJECTED;
+        }
     }
 
 }
