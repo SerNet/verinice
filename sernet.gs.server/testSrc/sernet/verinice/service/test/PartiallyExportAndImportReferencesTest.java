@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -151,11 +152,11 @@ public class PartiallyExportAndImportReferencesTest extends BeforeEachVNAImportH
         ExportCommand exportCommand = new ExportCommand(toExport, SOURCE_ID, true);
         String filePath = FilenameUtils
                 .concat(System.getProperty(IVeriniceConstants.JAVA_IO_TMPDIR), "export-test.vna");
-        exportCommand.setFilePath(filePath);
 
         LOG.info(EXPORT_REFERENCES_PREFIX + " export vna file " + filePath);
         commandService.executeCommand(exportCommand);
-
+        FileUtils.writeByteArrayToFile(new File(filePath), exportCommand.getResult());
+        
         LOG.info(EXPORT_REFERENCES_PREFIX + " remove itverbund " + itVerbund1.getTitle());
         removeITVerbund(itVerbund1);
 

@@ -91,7 +91,6 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
 
     // Result fields
     private byte[] result;
-    private String filePath;
     private List<CnATreeElement> changedElements;
     private final String stationId;
 
@@ -108,16 +107,11 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
 
     public ExportCommand(final List<CnATreeElement> elements, final String sourceId,
             final boolean reImport) {
-        this(elements, sourceId, reImport, SyncParameter.EXPORT_FORMAT_DEFAULT, null);
+        this(elements, sourceId, reImport, SyncParameter.EXPORT_FORMAT_DEFAULT);
     }
 
     public ExportCommand(final List<CnATreeElement> elements, final String sourceId,
             final boolean reImport, final Integer exportFormat) {
-        this(elements, sourceId, reImport, exportFormat, null);
-    }
-
-    public ExportCommand(final List<CnATreeElement> elements, final String sourceId,
-            final boolean reImport, final Integer exportFormat, final String filePath) {
         this.elements = elements;
         this.sourceId = sourceId;
         this.reImport = reImport;
@@ -126,7 +120,6 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
         } else {
             this.exportFormat = SyncParameter.EXPORT_FORMAT_DEFAULT;
         }
-        this.filePath = filePath;
         this.attachmentSet = new HashSet<>();
         this.stationId = ChangeLogEntry.STATION_ID;
     }
@@ -168,11 +161,6 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
                     ExportFactory.marshal(syncRequest, bos);
                     result = bos.toByteArray();
                 }
-
-            }
-            if (filePath != null) {
-                FileUtils.writeByteArrayToFile(new File(filePath), result);
-                result = null;
             }
         } catch (final RuntimeException re) {
             log.error("Runtime exception while exporting", re);
@@ -605,14 +593,6 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
 
     public byte[] getResult() {
         return result;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(final String filePath) {
-        this.filePath = filePath;
     }
 
     protected HUITypeFactory getHuiTypeFactory() {

@@ -177,7 +177,7 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
             ExportCommand exportCommand;
             if (Activator.getDefault().isStandalone() && !isEncryption()) {
                 exportCommand = new ExportCommand(new LinkedList<CnATreeElement>(getElementSet()),
-                        internalSourceId, isReImport(), getFileFormat(), filePath);
+                        internalSourceId, isReImport(), getFileFormat());
             } else {
                 exportCommand = new ExportCommand(new LinkedList<CnATreeElement>(getElementSet()),
                         internalSourceId, isReImport(), getFileFormat());
@@ -188,12 +188,18 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
                 exportCommand.setExportRiskAnalysis(exportRiskAnalysis);
                 exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
                 if (exportCommand.getResult() != null) {
-                    String salt = RandomStringUtils
-                            .random(IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH, true, true);
-                    byte[] saltBytes = salt.getBytes(IEncryptionService.CRYPTO_DEFAULT_ENCODING);
-                    byte[] cypherTextBytes = encrypt(exportCommand.getResult(), saltBytes);
+                    if (isEncryption()) {
+                        String salt = RandomStringUtils
+                                .random(IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH, true, true);
+                        byte[] saltBytes = salt
+                                .getBytes(IEncryptionService.CRYPTO_DEFAULT_ENCODING);
+                        byte[] cypherTextBytes = encrypt(exportCommand.getResult(), saltBytes);
 
-                    FileUtils.writeByteArrayToFile(new File(filePath), cypherTextBytes);
+                        FileUtils.writeByteArrayToFile(new File(filePath), cypherTextBytes);
+                    } else {
+                        FileUtils.writeByteArrayToFile(new File(filePath),
+                                exportCommand.getResult());
+                    }
                 }
                 updateModel(exportCommand.getChangedElements());
             } catch (Exception e) {
