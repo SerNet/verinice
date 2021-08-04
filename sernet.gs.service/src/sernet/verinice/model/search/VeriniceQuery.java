@@ -30,7 +30,7 @@ import java.io.Serializable;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class VeriniceQuery implements Serializable{
+public class VeriniceQuery implements Serializable {
 
     public final static int DEFAULT_LIMIT = 200;
     public final static int MAX_LIMIT = 200000;
@@ -40,7 +40,7 @@ public class VeriniceQuery implements Serializable{
     private int limit = 0;
 
     private String query = EMPTY_QUERY;
-    
+
     private int scopeId = -1;
 
     /*
@@ -60,14 +60,14 @@ public class VeriniceQuery implements Serializable{
      */
     public VeriniceQuery(String query, int limit) {
         this.query = query == null ? EMPTY_QUERY : escapeQuery(query);
-        if(limit==0) {
+        if (limit == 0) {
             this.limit = MAX_LIMIT;
         } else {
             this.limit = (limit >= 0) ? limit : DEFAULT_LIMIT;
         }
     }
-    
-    public VeriniceQuery(String query, int limit, int scopeId){
+
+    public VeriniceQuery(String query, int limit, int scopeId) {
         this(query, limit);
         this.scopeId = scopeId;
     }
@@ -109,7 +109,8 @@ public class VeriniceQuery implements Serializable{
     }
 
     /**
-     * @param scopeId the scopeId to set
+     * @param scopeId
+     *            the scopeId to set
      */
     public void setScopeId(int scopeId) {
         this.scopeId = scopeId;

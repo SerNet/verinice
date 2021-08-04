@@ -20,106 +20,108 @@ package sernet.hui.common.connect;
 import java.io.Serializable;
 import java.util.Calendar;
 
-
-
 /**
  * @author prack
  * @version $Id: Property.java,v 1.4 2006/06/15 15:47:07 aprack Exp $
  */
 public class Property implements Serializable, ITypedElement {
 
-	private Integer dbId;
-	private String propertyType;
-	private String propertyValue;
-	private Entity parent;
-	
-	private String licenseContentId;
-	private Boolean limitedLicense = false;
-	
+    private Integer dbId;
+    private String propertyType;
+    private String propertyValue;
+    private Entity parent;
+
+    private String licenseContentId;
+    private Boolean limitedLicense = false;
+
     public static final String TYPE_ID = "huiproperty";
     public static final int UNDEF = 0;
 
-	public Property(Entity ent) {
-		parent = ent;
-	}
-	
-	Property() {
-		// default constructor for hibernate
-	}
-	
-	/**
-	 * @return Returns the propertyValue.
-	 */
-	public String getPropertyValue() {
-		return propertyValue;
-	}
-	
-	public boolean isEmpty() {
-	    return getPropertyValue()==null || getPropertyValue().isEmpty();
-	}
-	
-	/**
-	 * Returns the value as an integer.
-	 * @return
-	 */
-	public int getNumericPropertyValue() {
-	    try {
-	        return Integer.parseInt(propertyValue);
+    public Property(Entity ent) {
+        parent = ent;
+    }
+
+    Property() {
+        // default constructor for hibernate
+    }
+
+    /**
+     * @return Returns the propertyValue.
+     */
+    public String getPropertyValue() {
+        return propertyValue;
+    }
+
+    public boolean isEmpty() {
+        return getPropertyValue() == null || getPropertyValue().isEmpty();
+    }
+
+    /**
+     * Returns the value as an integer.
+     * 
+     * @return
+     */
+    public int getNumericPropertyValue() {
+        try {
+            return Integer.parseInt(propertyValue);
         } catch (NumberFormatException e) {
             return UNDEF;
         }
-	}
-	
-	 /* (non-Javadoc)
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.hui.common.connect.ITypedElement#getTypeId()
      */
     public String getTypeId() {
         return TYPE_ID;
     }
-	
-	public void setPropertyValue(String propertyValue, boolean fireChange, Object source) {
-		this.propertyValue = propertyValue;
-		if (fireChange && parent != null){
-			parent.firePropertyChanged(this, source);
-		}
-	}
+
+    public void setPropertyValue(String propertyValue, boolean fireChange, Object source) {
+        this.propertyValue = propertyValue;
+        if (fireChange && parent != null) {
+            parent.firePropertyChanged(this, source);
+        }
+    }
 
     public void setPropertyValue(String propertyValue, boolean fireChange) {
-		setPropertyValue(propertyValue, fireChange, null);
-	}
-    
+        setPropertyValue(propertyValue, fireChange, null);
+    }
+
     public void setPropertyValue(Calendar calendar, boolean fireChange, Object source) {
         setPropertyValue(convertCalendarToString(calendar), fireChange, source);
     }
-	
-	/**
-	 * @param propertyValue The propertyValue to set.
-	 */
-	public void setPropertyValue(String propertyValue) {
-		setPropertyValue(propertyValue, true, null);
-	}
-	
-    public String getPropertyTypeID(){
+
+    /**
+     * @param propertyValue
+     *            The propertyValue to set.
+     */
+    public void setPropertyValue(String propertyValue) {
+        setPropertyValue(propertyValue, true, null);
+    }
+
+    public String getPropertyTypeID() {
         return propertyType;
     }
-    
+
     public void setPropertyType(String propertyType) {
         this.propertyType = propertyType;
     }
 
-	public Entity getParent() {
-		return parent;
-	}
+    public Entity getParent() {
+        return parent;
+    }
 
-	public void setParent(Entity parent) {
-		this.parent = parent;
-	}
+    public void setParent(Entity parent) {
+        this.parent = parent;
+    }
 
-	public String getPropertyType() {
-		return propertyType;
-	}
+    public String getPropertyType() {
+        return propertyType;
+    }
 
-	/**
+    /**
      * @return the licensedContentId
      */
     public String getLicenseContentId() {
@@ -127,7 +129,8 @@ public class Property implements Serializable, ITypedElement {
     }
 
     /**
-     * @param licenseContentId the contentId to set
+     * @param licenseContentId
+     *            the contentId to set
      */
     public void setLicenseContentId(String licenseContentId) {
         this.licenseContentId = licenseContentId;
@@ -141,34 +144,37 @@ public class Property implements Serializable, ITypedElement {
     }
 
     /**
-     * @param limitedLicense the limitedLicense to set
+     * @param limitedLicense
+     *            the limitedLicense to set
      */
     public void setLimitedLicense(Boolean limitedLicense) {
         this.limitedLicense = limitedLicense;
     }
 
     public Integer getDbId() {
-		return dbId;
-	}
+        return dbId;
+    }
 
-	public void setDbId(Integer dbId) {
-		this.dbId = dbId;
-	}
-	
-	public Property copy(Entity parent) {
-	    Property property = new Property(parent);
+    public void setDbId(Integer dbId) {
+        this.dbId = dbId;
+    }
+
+    public Property copy(Entity parent) {
+        Property property = new Property(parent);
         property.setPropertyType(getPropertyType());
         property.setPropertyValue(getPropertyValue(), false);
         property.setLimitedLicense(isLimitedLicense());
         property.setLicenseContentId(getLicenseContentId());
         return property;
-	}
-	
-	public static final String convertCalendarToString(Calendar calendar) {
+    }
+
+    public static final String convertCalendarToString(Calendar calendar) {
         return Long.toString(calendar.getTimeInMillis());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -181,40 +187,42 @@ public class Property implements Serializable, ITypedElement {
         return result;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj){
+        if (this == obj) {
             return true;
         }
-        if (obj == null){
+        if (obj == null) {
             return false;
         }
-        if (getClass() != obj.getClass()){
+        if (getClass() != obj.getClass()) {
             return false;
         }
         Property other = (Property) obj;
         if (dbId == null) {
-            if (other.dbId != null){
+            if (other.dbId != null) {
                 return false;
             }
-        } else if (!dbId.equals(other.dbId)){
+        } else if (!dbId.equals(other.dbId)) {
             return false;
         }
         if (propertyType == null) {
-            if (other.propertyType != null){
+            if (other.propertyType != null) {
                 return false;
             }
-        } else if (!propertyType.equals(other.propertyType)){
+        } else if (!propertyType.equals(other.propertyType)) {
             return false;
         }
         if (propertyValue == null) {
-            if (other.propertyValue != null){
+            if (other.propertyValue != null) {
                 return false;
             }
-        } else if (!propertyValue.equals(other.propertyValue)){
+        } else if (!propertyValue.equals(other.propertyValue)) {
             return false;
         }
         return true;
@@ -222,6 +230,7 @@ public class Property implements Serializable, ITypedElement {
 
     @Override
     public String toString() {
-        return "Property [dbId=" + dbId + ", propertyType=" + propertyType + ", propertyValue=" + propertyValue + "]";
+        return "Property [dbId=" + dbId + ", propertyType=" + propertyType + ", propertyValue="
+                + propertyValue + "]";
     }
 }
