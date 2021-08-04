@@ -21,70 +21,72 @@ import org.apache.log4j.Logger;
 
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IHibernateCommandService;
+
 /**
  * Initialize environemnt on Verinice server on startup.
  * 
  * @author koderman[at]sernet[dot]de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
 public class ServerInitializer {
-	
-	private static VeriniceContext.State state;
-	
-	private IHibernateCommandService hibernateCommandService;
-	
-	
-	
-	/**
-	 * Initializes the current thread with the VeriniceContext.State
-	 * of the client application.
-	 * 
-	 * <p>Calling this method is needed when the Activator was run on a
-	 * different thread then the Application class.</p>
-	 *
-	 * <p>This method is called by a ServletRequestListener so make sure that you
+
+    private static final Logger log = Logger.getLogger(ServerInitializer.class);
+
+    private static VeriniceContext.State state;
+
+    private IHibernateCommandService hibernateCommandService;
+
+    /**
+     * Initializes the current thread with the VeriniceContext.State of the
+     * client application.
+     * 
+     * <p>
+     * Calling this method is needed when the Activator was run on a different
+     * thread then the Application class.
+     * </p>
+     *
+     * <p>
+     * This method is called by a ServletRequestListener so make sure that you
      * really need to call this method. If you are in something like a JSF bean
      * the call goes always through the servlet stack and the context is already
      * set.
      * </p>
-	 */
-	public static void inheritVeriniceContextState()
-	{
-		VeriniceContext.setState(state);
-	}
+     */
+    public static void inheritVeriniceContextState() {
+        VeriniceContext.setState(state);
+    }
 
-	public void initialize() {
-		Logger.getLogger(this.getClass()).debug("Initializing server context...");
-		// After this we can use the getInstance() methods from HitroUtil and
-		// GSScraperUtil
-		VeriniceContext.setState(state);
-		
-		// The work objects in the HibernateCommandService can only be set
-		// at this point because otherwise we would have a circular dependency
-		// in the Spring configuration (= commandService needs workObjects
-		// and vice versa)
-		if(hibernateCommandService!=null) {
-		    hibernateCommandService.setWorkObjects(state);
-		}
-		
-	}
+    public void initialize() {
+        log.debug("Initializing server context...");
+        // After this we can use the getInstance() methods from HitroUtil and
+        // GSScraperUtil
+        VeriniceContext.setState(state);
 
-	public void setWorkObjects(VeriniceContext.State workObjects) {
-		ServerInitializer.state = workObjects;
-	}
+        // The work objects in the HibernateCommandService can only be set
+        // at this point because otherwise we would have a circular dependency
+        // in the Spring configuration (= commandService needs workObjects
+        // and vice versa)
+        if (hibernateCommandService != null) {
+            hibernateCommandService.setWorkObjects(state);
+        }
 
-	public VeriniceContext.State getWorkObjects() {
-		return state;
-	}
+    }
 
-	public void setHibernateCommandService(IHibernateCommandService hibernateCommandService) {
-		this.hibernateCommandService = hibernateCommandService;
-	}
+    public void setWorkObjects(VeriniceContext.State workObjects) {
+        ServerInitializer.state = workObjects;
+    }
 
-	public IHibernateCommandService getHibernateCommandService() {
-		return hibernateCommandService;
-	}
+    public VeriniceContext.State getWorkObjects() {
+        return state;
+    }
+
+    public void setHibernateCommandService(IHibernateCommandService hibernateCommandService) {
+        this.hibernateCommandService = hibernateCommandService;
+    }
+
+    public IHibernateCommandService getHibernateCommandService() {
+        return hibernateCommandService;
+    }
 
 }
