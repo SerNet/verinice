@@ -90,6 +90,8 @@ public class SyncInsertUpdateTest extends CommandServiceProvider {
 
     private static final String VNA_FILE_RELATION = "SyncInsertUpdateTestRelation.vna";
 
+    private static final String VNA_FILE_RELATION_DUPLICATE_LINK = "SyncInsertUpdateTestRelationDuplicateLink.vna";
+
     private static final String VNA_FILE_INSERT_CLIENT = "SyncInsertUpdateTestInsertClient.vna";
 
     private static final String SOURCE_ID = "JUNIT SyncInsertUpdate";
@@ -245,6 +247,26 @@ public class SyncInsertUpdateTest extends CommandServiceProvider {
     public void relationImported() throws SyncParameterException, IOException, CommandException {
 
         VNAImportHelper.importFile(VNA_FILE_RELATION, true, true, false, false);
+
+        Anwendung anwendungWithLink = (Anwendung) loadElement(SOURCE_ID, ANWENDUNG_1_EXT_ID);
+        validateImportExtId(anwendungWithLink);
+
+        Client clientWithLink = (Client) loadElement(SOURCE_ID, CLIENT_EXT_ID);
+        validateImportExtId(clientWithLink);
+
+        anwendungWithLink = (Anwendung) Retriever.retrieveElement(anwendungWithLink,
+                new RetrieveInfo().setLinksDown(true));
+        Set<CnALink> links = anwendungWithLink.getLinksDown();
+        Client client = (Client) links.iterator().next().getDependency();
+
+        assertEquals(client.getDbId(), clientWithLink.getDbId());
+    }
+
+    @Test
+    public void import_file_with_duplicate_link()
+            throws SyncParameterException, IOException, CommandException {
+
+        VNAImportHelper.importFile(VNA_FILE_RELATION_DUPLICATE_LINK, true, true, false, false);
 
         Anwendung anwendungWithLink = (Anwendung) loadElement(SOURCE_ID, ANWENDUNG_1_EXT_ID);
         validateImportExtId(anwendungWithLink);

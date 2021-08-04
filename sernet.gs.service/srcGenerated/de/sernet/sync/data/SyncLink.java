@@ -149,4 +149,47 @@ public class SyncLink {
         this.comment = value;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((dependant == null) ? 0 : dependant.hashCode());
+        result = prime * result + ((dependency == null) ? 0 : dependency.hashCode());
+        result = prime * result + ((relationId == null) ? 0 : relationId.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        SyncLink other = (SyncLink) obj;
+        if (dependant == null) {
+            if (other.dependant != null)
+                return false;
+        } else if (!dependant.equals(other.dependant))
+            return false;
+        if (dependency == null) {
+            if (other.dependency != null)
+                return false;
+        } else if (!dependency.equals(other.dependency))
+            return false;
+        if (relationId == null) {
+            if (other.relationId != null)
+                return false;
+        } else if (!relationId.equals(other.relationId))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "SyncLink [dependant=" + dependant + ", dependency=" + dependency + ", relationId="
+                + relationId + ", comment=" + comment + "]";
+    }
+
 }

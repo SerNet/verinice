@@ -213,8 +213,14 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 logrt.debug("Elements: " + merged);
             }
 
+            Set<SyncLink> importedLinks = new HashSet<>(syncData.getSyncLink().size());
             for (SyncLink syncLink : syncData.getSyncLink()) {
+                if (importedLinks.contains(syncLink)) {
+                    log.warn("Ignoring duplicate link " + syncLink);
+                    continue;
+                }
                 importLink(syncLink);
+                importedLinks.add(syncLink);
             }
 
             importRiskAnalysis();
