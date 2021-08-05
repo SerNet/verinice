@@ -30,6 +30,14 @@
 		<property name="password" value="${veriniceserver.notification.smtp.password}"/>
 		<property name="host" value="${veriniceserver.notification.smtp.host}"/>
 		<property name="port" value="${veriniceserver.notification.smtp.port}"/>
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.transport.protocol">${veriniceserver.notification.transport.protocol}</prop>
+				<prop key="mail.smtp.auth">${veriniceserver.notification.smtp.auth}</prop>
+				<prop key="mail.smtp.starttls.enable">${veriniceserver.notification.starttls.enable}</prop>
+				<prop key="mail.debug">${veriniceserver.notification.mail.debug}</prop>
+			</props>
+		</property>
 </bean>
 
 <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
