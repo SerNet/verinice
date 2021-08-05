@@ -78,10 +78,16 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.model.bp.IBpModelListener;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.NullListener;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.model.iso27k.IISO27KModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.licensemanagement.LicenseManagementException;
@@ -122,6 +128,7 @@ public class AccountView extends RightsEnabledView {
     private Action createAction;
 
     private IModelLoadListener modelLoadListener;
+    private IModelLoadListener modelLoadListener2;
     private IAccountService accountService;
     private ICommandService commandService;
 
@@ -143,6 +150,8 @@ public class AccountView extends RightsEnabledView {
 
     private Map<String, Integer> columnIndexesByLicenseId;
 
+    private ModelChangeListener modelChangeListener;
+
     private void init() throws CommandException {
         findAccounts();
         loadScopes();
@@ -158,10 +167,34 @@ public class AccountView extends RightsEnabledView {
         try {
             initView(parent);
             hookPageSelection();
+            registerModelLoadListener();
         } catch (Exception e) {
             LOG.error("Error while creating control", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.AccountView_2);
         }
+    }
+
+    private void registerModelLoadListener() {
+        modelChangeListener = new ModelChangeListener();
+
+        modelLoadListener2 = new DefaultModelLoadListener() {
+
+            @Override
+            public void loaded(ISO27KModel model) {
+                model.addISO27KModelListener(modelChangeListener);
+            }
+
+            @Override
+            public void loaded(BpModel model) {
+                model.addModITBOModelListener(modelChangeListener);
+            }
+
+            @Override
+            public void loaded(BSIModel model) {
+                model.addBSIModelListener(modelChangeListener);
+            }
+        };
+        CnAElementFactory.getInstance().addLoadListener(modelLoadListener2);
     }
 
     private void initView(Composite parent) {
@@ -813,7 +846,18 @@ public class AccountView extends RightsEnabledView {
     @Override
     public void dispose() {
         CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
+        CnAElementFactory.getInstance().removeLoadListener(modelLoadListener2);
         getSite().getPage().removePostSelectionListener(selectionListener);
+        if (CnAElementFactory.isModelLoaded()) {
+            CnAElementFactory.getLoadedModel().removeBSIModelListener(modelChangeListener);
+        }
+        if (CnAElementFactory.isIsoModelLoaded()) {
+            CnAElementFactory.getInstance().getISO27kModel()
+                    .removeISO27KModelListener(modelChangeListener);
+        }
+        if (CnAElementFactory.isBpModelLoaded()) {
+            CnAElementFactory.getInstance().getBpModel().removeBpModelListener(modelChangeListener);
+        }
         super.dispose();
     }
 
@@ -853,6 +897,35 @@ public class AccountView extends RightsEnabledView {
             }
             return input;
         }
+    }
+
+    private final class ModelChangeListener extends NullListener
+            implements IBSIModelListener, IISO27KModelListener, IBpModelListener {
+
+        @Override
+        public void childChanged(CnATreeElement child) {
+            refreshViewer();
+        }
+
+        @Override
+        public void modelReload(BSIModel newModel) {
+            refreshViewer();
+        }
+
+        @Override
+        public void modelReload(BpModel newModel) {
+            refreshViewer();
+        }
+
+        @Override
+        public void modelReload(ISO27KModel newModel) {
+            refreshViewer();
+        }
+
+        private void refreshViewer() {
+            startInitDataJob();
+        }
+
     }
 
     private ILicenseManagementService getLMService() {
