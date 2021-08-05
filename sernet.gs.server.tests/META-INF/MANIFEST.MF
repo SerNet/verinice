@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tests for the verinice server bundle
 Bundle-SymbolicName: sernet.gs.server.tests
-Bundle-Version: 1.22.1.qualifier
+Bundle-Version: 1.22.2.qualifier
 Fragment-Host: sernet.gs.server
 Automatic-Module-Name: sernet.gs.server.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

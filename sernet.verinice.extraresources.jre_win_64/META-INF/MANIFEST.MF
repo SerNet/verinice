@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JRE for Win_64
 Bundle-SymbolicName: sernet.verinice.extraresources.jre_win_64;singleton:=true
-Bundle-Version: 1.22.1.qualifier
+Bundle-Version: 1.22.2.qualifier
 Bundle-Vendor: SerNet
 Automatic-Module-Name: sernet.verinice.extraresources.jre_win_64
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
