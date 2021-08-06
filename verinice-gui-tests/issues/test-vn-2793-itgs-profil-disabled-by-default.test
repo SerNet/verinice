@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _zz8_MP4yEeqD_7JIiNfKGA
 Runtime-Version: 2.5.1.M3
-Save-Time: 11/20/20, 4:08 PM
+Save-Time: 8/6/21, 11:31 AM
 Tags: bp, issue
 Testcase-Type: ecl
 Verifications: _wm5P0CtBEeuMltfUUtdvug
@@ -28,7 +28,7 @@ with [get-editor testname] {
 
 get-menu -path "Bearbeiten/Einstellungen..." | click
 with [get-window Benutzervorgaben] {
-	get-tree | select "Editor Einstellungen"
+	get-tree | select "Editoreinstellungen"
 	with [ get-table | get-item "ITGS-Profil" -column "Zeige nur Eigenschaften mit Tag" ]{
 		get-property checked | equals false | verify-true   
 		check

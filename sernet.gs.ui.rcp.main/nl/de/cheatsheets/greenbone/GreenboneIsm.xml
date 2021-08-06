@@ -78,7 +78,7 @@
       <br />
       Durch Doppelklick auf ein importiertes Asset werden im Abschnitt <b>Greenbone GSM</b> des Editorfensters Details
       des Schwachstellenscans dargestellt. Bitte beachten Sie, dass zur Anzeige die Checkbox für den Abschnitt
-      <b>Greenbone_GSM</b> über das Menü <b>Bearbeiten > Einstellungen > Editor Einstellungen</b> ausgewählt sein muss.
+      <b>Greenbone_GSM</b> über das Menü <b>Bearbeiten > Einstellungen > Editoreinstellungen</b> ausgewählt sein muss.
     </description>
   </item>
 
