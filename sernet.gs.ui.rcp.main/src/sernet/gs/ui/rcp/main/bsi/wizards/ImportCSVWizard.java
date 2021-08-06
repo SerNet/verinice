@@ -204,4 +204,8 @@ public class ImportCSVWizard extends Wizard {
         this.sourceId = sourceId;
     }
 
+    public String getEntityType() {
+        return entityPage.getEntityNameId();
+    }
+
 }

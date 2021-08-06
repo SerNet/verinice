@@ -23,6 +23,8 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Domain;
+import sernet.verinice.service.commands.CnATypeMapper;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
@@ -38,6 +40,8 @@ public class ImportCSVAction extends RightsEnabledAction {
     private boolean insert;
     private boolean update;
     private boolean delete;
+
+    private String entityType;
 
     public ImportCSVAction(String label) {
         super(ActionRightIDs.IMPORTCSV, label);
@@ -61,7 +65,7 @@ public class ImportCSVAction extends RightsEnabledAction {
         insert = wizard.getInsertState();
         update = wizard.getUpdateState();
         delete = wizard.getDeleteState();
-
+        entityType = wizard.getEntityType();
         try {
             PlatformUI.getWorkbench().getProgressService()
                     .busyCursorWhile(new IRunnableWithProgress() {
@@ -106,8 +110,25 @@ public class ImportCSVAction extends RightsEnabledAction {
         Set<CnATreeElement> changedElements = CnAElementHome.getInstance().loadElementsByUUID(
                 importedElementUUIDs,
                 new RetrieveInfo().setProperties(true).setParent(true).setChildren(true));
-
-        updateModels(importRootObjectSet, changedElements);
+        if (command.getDeleted() != 0) {
+            Domain domain = CnATypeMapper.getDomainFromTypeId(entityType);
+            switch (domain) {
+            case BASE_PROTECTION_OLD:
+                CnAElementFactory.getInstance().reloadBsiModelFromDatabase();
+                break;
+            case BASE_PROTECTION:
+                CnAElementFactory.getInstance().reloadBpModelFromDatabase();
+                break;
+            case ISM:
+                CnAElementFactory.getInstance().reloadIsoModelFromDatabase();
+                break;
+            default:
+                LOG.error("Unsupported domain " + domain + ", reloading all models");
+                CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
+            }
+        } else {
+            updateModels(importRootObjectSet, changedElements);
+        }
         if (Activator.getDefault().getPreferenceStore()
                 .getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)) {
             createValidations(changedElements);
