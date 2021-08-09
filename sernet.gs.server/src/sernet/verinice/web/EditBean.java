@@ -57,7 +57,9 @@ import sernet.hui.common.connect.DependsType;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyGroup;
+import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
@@ -304,6 +306,14 @@ public class EditBean {
         if (isVisible(huiType)) {
             String id = huiType.getId();
             String value = entity.getRawPropertyValue(id);
+            PropertyList propertyList = entity.getTypedPropertyLists().get(id);
+            if (propertyList != null && !propertyList.isEmpty()) {
+                Property firstProperty = propertyList.getProperty(0);
+                if (firstProperty.isLimitedLicense()) {
+                    value = LicencedContentDecryptionUtils
+                            .decryptedContentOrErrorMessage(firstProperty);
+                }
+            }
             HuiProperty prop = new HuiProperty(adaptTypeIfRiskProperty(huiType), id, value);
             huiProperties.add(prop);
             if (getNoLabelTypeList().contains(id)) {
