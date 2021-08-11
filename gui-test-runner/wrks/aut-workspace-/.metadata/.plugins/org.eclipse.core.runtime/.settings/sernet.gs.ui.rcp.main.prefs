@@ -3,3 +3,4 @@ default_folder_import=/home/urszeidler/rcpttWorkspace/build/test-data/
 default_folder_report=/home/urszeidler/rcpttWorkspace/build/result/reports/
 eclipse.preferences.version=1
 last_selected_relation_forbp_requirementbp_safeguard=rel_bp_requirement_bp_safeguard
+show_update_news_dialog=true
