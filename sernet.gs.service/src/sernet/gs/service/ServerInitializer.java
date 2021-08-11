@@ -162,7 +162,7 @@ public class ServerInitializer {
                 log.debug("-> Allowing deserialization because of package name whitelist");
                 return Status.ALLOWED;
             }
-            log.warn("Rejecting deserialization of data with class " + serialClass);
+            log.error("Rejecting deserialization of data with class " + serialClass);
             return Status.REJECTED;
         }
     }
