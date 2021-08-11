@@ -26,8 +26,10 @@ java.util.Hashtable
 java.util.LinkedHashMap
 java.util.LinkedList
 java.util.Locale
+java.util.Map
 java.util.Map$Entry
 java.util.Properties
+java.util.Set
 java.util.TreeSet
 java.util.Stack
 java.util.Vector
