@@ -18,7 +18,8 @@
 		
 		<property name="role"
 				  type="string"
-				  not-null="true">
+				  not-null="true"
+                  unique-key="cte_id_role">
 		</property>
 		
 		<property name="readAllowed"
@@ -34,7 +35,8 @@
 		<many-to-one name="cnaTreeElement"
 			column="cte_id"
 			class="CnATreeElement"
-			not-null="true"/>
+			not-null="true"
+            unique-key="cte_id_role"/>
 		
 	</class>
 </hibernate-mapping>
