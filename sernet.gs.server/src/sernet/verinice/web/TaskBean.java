@@ -41,12 +41,10 @@ import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
-import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.Safeguard;
@@ -54,8 +52,6 @@ import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.licensemanagement.LicenseManagementException;
-import sernet.verinice.model.licensemanagement.NoLicenseAssignedException;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.LoadElementByUuid;
 
@@ -71,8 +67,6 @@ public class TaskBean {
     private static final Logger LOG = Logger.getLogger(TaskBean.class);
 
     public static final String BOUNDLE_NAME = "sernet.verinice.web.TaskMessages"; //$NON-NLS-1$
-
-    public static final String WEB_MESSAGES_BUNDLE_NAME = "sernet.verinice.web.WebMessages"; //$NON-NLS-1$
 
     public static final int MAX_TITLE_LENGTH = 100;
 
@@ -214,24 +208,8 @@ public class TaskBean {
             if (!propertyList.isEmpty()) {
                 Property firstProperty = propertyList.getProperty(0);
                 if (firstProperty.isLimitedLicense()) {
-                    String encryptedContentId = firstProperty.getLicenseContentId();
-                    String cypherText = firstProperty.getPropertyValue();
-                    String currentUser = getAuthService().getUsername();
-                    try {
-                        elementDescription = getLicenseMgmtService().decryptRestrictedProperty(
-                                encryptedContentId, cypherText, currentUser);
-                    } catch (NoLicenseAssignedException e) {
-                        String msg = "User has no license assigned for this content";
-                        LOG.error(msg, e);
-                        elementDescription = Util.getMessage(WEB_MESSAGES_BUNDLE_NAME,
-                                "noLicenseAssigned");
-
-                    } catch (LicenseManagementException e) {
-                        String msg = "Something went wrong decrypting license restricted information";
-                        LOG.error(msg, e);
-                        elementDescription = Util.getMessage(WEB_MESSAGES_BUNDLE_NAME,
-                                "decryptionError");
-                    }
+                    elementDescription = LicencedContentDecryptionUtils
+                            .decryptedContentOrErrorMessage(firstProperty);
 
                 } else {
                     elementDescription = StringUtil
@@ -449,14 +427,6 @@ public class TaskBean {
 
     private ICommandService getCommandService() {
         return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
-    }
-
-    private ILicenseManagementService getLicenseMgmtService() {
-        return (ILicenseManagementService) VeriniceContext.get(VeriniceContext.LICENSE_SERVICE);
-    }
-
-    private IAuthService getAuthService() {
-        return (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
     }
 
     public void english() {
