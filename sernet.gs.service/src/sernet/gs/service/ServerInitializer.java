@@ -141,6 +141,10 @@ public class ServerInitializer {
                 log.debug(" -> Allowing reference to existing object");
                 return Status.ALLOWED;
             }
+            if (serialClass.isPrimitive()) {
+                log.debug("-> Allowing deserialization of primitive type");
+                return Status.ALLOWED;
+            }
             if (serialClass.isArray()) {
                 do {
                     serialClass = serialClass.getComponentType();
