@@ -40,7 +40,7 @@ pipeline {
                   autoDisplayName: true, displayNameOffset: 0, installationName: 'default-Xvfb',
                   screen: '1200x960x24']) {
                     withAnt(installation: 'Ant 1.9.0') {
-                        withEnv(["rcptt_runner_HOME=${tool name: 'rcptt_runner', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'}"]) {
+                        withEnv(["rcptt_runner_HOME=${tool name: 'rcptt_runner-nightly', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'}"]) {
                             script {
                                 sh """
                                 ant -buildfile gui-test-runner/start-gui-test.xml test-verinice-client-test-custom \
