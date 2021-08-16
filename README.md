@@ -143,8 +143,7 @@ To update the version of the project
 	will write *1.19.0-SNAPSHOT* into update pom.xml files and *1.19.0.qualifier*
 	into into updated feature.xml files. The final product version gets a
 	timestamp, e.g.*1.19.0.201908011226*. See
-	(https://www.eclipse.org/tycho/sitedocs/tycho-packaging-plugin/plugin-info.html)[Plugin
-	Documentation] for details.
+	[Plugin Documentation](https://www.eclipse.org/tycho/sitedocs/tycho-packaging-plugin/plugin-info.html) for details.
 
 2.	update version and codename in the about text in **Branding > About Dialog** of
 	*sernet.verinice.releng.client.product/sernet.verinice.releng.client.product* and
