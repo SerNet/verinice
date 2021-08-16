@@ -61,7 +61,7 @@ public class PreferenceConstants {
     public static final String SHOW_UPDATE_NEWS_DIALOG = "show_update_news_dialog"; //$NON-NLS-1$
 
     public static final String DB_DRIVER = "cna_driver"; //$NON-NLS-1$
-    public static final String DB_DRIVER_DERBY = "org.apache.derby.jdbc.EmbeddedDriver"; //$NON-NLS-1$
+    public static final String DB_DRIVER_DERBY = "org.apache.derby.iapi.jdbc.AutoloadedDriver"; //$NON-NLS-1$
     public static final String DB_DRIVER_POSTGRES = "org.postgresql.Driver"; //$NON-NLS-1$
     public static final String DB_DRIVER_ORACLE = "oracle.jdbc.OracleDriver"; //$NON-NLS-1$
 
