@@ -6,7 +6,7 @@ Element-Type: context
 Element-Version: 2.0
 Id: _lGnj8Ix1Eei2UKUDmonytQ
 Runtime-Version: 2.5.1.M3
-Save-Time: 11/19/20, 5:37 PM
+Save-Time: 8/18/21, 4:13 PM
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
 Content-Type: text/ecl
@@ -159,6 +159,43 @@ proc "read-file-in-data-dir" [val filename] {
       | invoke replace "Ã¼" "ü"
       | invoke replace "Ã¼" "ü"
       | invoke replace "\r" ""
+}
+
+/* means: verify that windows 'Fehler' can not be found */
+proc "expect-no-error-dialog" {
+    verify-error {get-window Fehler }
+}
+
+/* refreshes the model on the client side */
+proc "refresh-model" {
+    get-menu -path "Ansicht/View neu laden" | click
+}
+
+/* open the Accounts view and create an account for the given person */
+proc "create-account" [val personName] [val accountName] {
+    get-button Accounts | click
+    get-view Accounts | get-button "New Account..." | click
+    with [get-window Account] {
+        get-table | select $personName -column Element
+        get-button "Weiter >" | click
+        with [get-editbox -after [get-label "Login Name"]] {
+            set-text $accountName
+        }
+        try {
+            with [get-editbox -after [get-label Kennwort]] {
+                set-text [decrypt "0sf0Ku9NJzUSf4qa+L0SaA=="]
+            }
+            with [get-editbox -after [get-label "Kennwort wiederholen"]] {
+                set-text [decrypt "0sf0Ku9NJzUSf4qa+L0SaA=="]
+            }
+        } -catch {
+            // when we disable the authentification in the webapp these textfields don't exist so we skip them silently
+        }
+        with [get-editbox -after [get-label "E-Mail"]] {
+            set-text aaaaa
+        }
+        get-button Fertigstellen | click
+    }
 }
 
 
