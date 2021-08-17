@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _c5yb4LsZEeiYFqx4KkjVdQ
-Runtime-Version: 2.3.0.201806262310
-Save-Time: 10/9/18 5:06 PM
+Runtime-Version: 2.5.1.M3
+Save-Time: 8/17/21, 8:57 AM
 Tags: bp_old
 Testcase-Type: ecl
 Verifications: _wm5P0CtBEeuMltfUUtdvug
@@ -30,33 +30,19 @@ get-editor Anwendung | close
 get-window "Ressource speichern" | get-button Speichern | click
 
 get-view Grundschutzmodell | get-tree | select "  IT-Verbund-1/IT-Systeme: Server" | get-menu -path "Neuer Server" | click
-with [get-editor Server | get-section "" | get-section Schutzbedarf] {
-    with [get-editbox -after [get-label "Begründung Vertraulichkeit"]] {
-        click-text
-        set-focus
-        key-type Down
-        key-type Enter
-        set-text Maximumprinzip
-        key-type Enter
+with [get-editor Server] {
+    with [get-section "" | get-section Schutzbedarf] {
+        with [get-editbox -after [get-label "Begründung Vertraulichkeit"]] {
+            set-text Maximumprinzip
+        }
+        with [get-editbox -after [get-label "Begründung Verfügbarkeit"]] {
+            set-text Maximumprinzip
+        }
+        with [get-editbox -after [get-label "Begründung Integrität"]] {
+            set-text Maximumprinzip
+        }
     }
-    with [get-editbox -after [get-label "Begründung Verfügbarkeit"]] {
-        click-text
-        set-focus
-        key-type Down
-        key-type Enter
-        set-text Maximumprinzip
-        key-type Enter
-    }
-    with [get-editbox -after [get-label "Begründung Integrität"]] {
-        click-text
-        set-focus
-        key-type Down
-        key-type Enter
-        set-text Maximumprinzip
-        key-type Enter
-        key-type "M1+s"
-        set-focus
-    }
+    key-type "M1+s"
 }
 get-view Grundschutzmodell | click
 get-editor Server | close
