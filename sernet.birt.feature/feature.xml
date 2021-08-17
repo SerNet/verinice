@@ -2,7 +2,7 @@
 <feature
       id="sernet.birt.feature"
       label="Birt Feature"
-      version="1.21.0.qualifier">
+      version="1.23.0.qualifier">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
