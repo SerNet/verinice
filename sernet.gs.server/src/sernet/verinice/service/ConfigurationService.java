@@ -76,43 +76,29 @@ public class ConfigurationService implements IConfigurationService {
                 String[] roleArray = getRoles(c);
                 String user = c.getUser();
                 // Put result into map and save asking the DB next time.
-                roleMap.put(user, roleArray);           
+                roleMap.put(user, roleArray);
                 scopeMap.put(user, c.isScopeOnly()); 
                 CnATreeElement person = c.getPerson();
                 if(person!=null) {
-                    scopeIdMap.put(user, person.getScopeId());                  
+                    scopeIdMap.put(user, person.getScopeId());
                 }
             }
             String[] adminRoleArray = new String[]{ApplicationRoles.ROLE_ADMIN,ApplicationRoles.ROLE_WEB,ApplicationRoles.ROLE_USER};
             roleMap.put(getAuthService().getAdminUsername(), adminRoleArray);
             scopeMap.put(getAuthService().getAdminUsername(), false);
-        } finally {
-            writeLock.unlock();
-        }    
-        getConfigurationDao().clear();
-    }
-
-    private void loadUserNames() {
-        List<Configuration> configurations = getConfigurationDao().findAll(RetrieveInfo.getPropertyInstance());
-        // Block all other threads before filling the maps
-        writeLock.lock();
-        try {
             for (Configuration c : configurations) {
                 String user = c.getUser();
                 CnATreeElement person = c.getPerson();
-                if(person!=null) {
-                    person = getCnaTreeElementDao().findByUuid(person.getUuid(), RetrieveInfo.getPropertyInstance());
-                    if(person!=null) {
-                        StringBuilder sb = new StringBuilder(PersonAdapter.getFullName(person));
-                        sb.append(" [").append(c.getUser()).append("]");
-                        nameMap.put(user, sb.toString());  
-                    }
+                person = getCnaTreeElementDao().findByUuid(person.getUuid(), RetrieveInfo.getPropertyInstance());
+                if (person != null) {
+                    StringBuilder sb = new StringBuilder(PersonAdapter.getFullName(person));
+                    sb.append(" [").append(c.getUser()).append("]");
+                    nameMap.put(user, sb.toString());
                 }
             }
         } finally {
             writeLock.unlock();
-        }    
-        getConfigurationDao().clear();
+        }
     }
 
     /* (non-Javadoc)
@@ -274,7 +260,7 @@ public class ConfigurationService implements IConfigurationService {
             readLock.unlock(); 
         }
         if (result == null) {
-            loadUserNames();
+            loadUserData();
             readLock.lock();
             try {
                 result = nameMap.get(user);
