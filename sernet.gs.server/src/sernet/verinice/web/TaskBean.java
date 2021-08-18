@@ -72,6 +72,8 @@ public class TaskBean {
 
     public static final String BOUNDLE_NAME = "sernet.verinice.web.TaskMessages"; //$NON-NLS-1$
 
+    public static final String WEB_MESSAGES_BUNDLE_NAME = "sernet.verinice.web.WebMessages"; //$NON-NLS-1$
+
     public static final int MAX_TITLE_LENGTH = 100;
 
     @ManagedProperty("#{edit}")
@@ -221,13 +223,13 @@ public class TaskBean {
                     } catch (NoLicenseAssignedException e) {
                         String msg = "User has no license assigned for this content";
                         LOG.error(msg, e);
-                        elementDescription = Util.getMessage(TaskBean.BOUNDLE_NAME,
+                        elementDescription = Util.getMessage(WEB_MESSAGES_BUNDLE_NAME,
                                 "noLicenseAssigned");
 
                     } catch (LicenseManagementException e) {
                         String msg = "Something went wrong decrypting license restricted information";
                         LOG.error(msg, e);
-                        elementDescription = Util.getMessage(TaskBean.BOUNDLE_NAME,
+                        elementDescription = Util.getMessage(WEB_MESSAGES_BUNDLE_NAME,
                                 "decryptionError");
                     }
 
