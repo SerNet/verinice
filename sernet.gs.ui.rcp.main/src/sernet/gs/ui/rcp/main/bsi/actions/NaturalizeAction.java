@@ -150,9 +150,7 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionC
                 break;
             }
         }
-        if (enabled && checkRights()) {
-            this.setEnabled(enabled);
-        }
+        this.setEnabled(enabled && checkRights());
     }
 
     public ICommandService getCommandService() {
