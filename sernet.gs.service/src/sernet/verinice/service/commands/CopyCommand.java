@@ -32,17 +32,20 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
+import sernet.gs.service.CollectionUtil;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
@@ -85,6 +88,8 @@ public class CopyCommand extends GenericCommand {
     private List<String> newElements;
 
     private boolean copyAttachments = false;
+
+    private Map<Integer, List<CnATreeElement>> elementsByParentId;
 
     /**
      * @param uuidGroup
@@ -135,6 +140,30 @@ public class CopyCommand extends GenericCommand {
             } else {
                 rootElementsToCopy = filterRoots(allElements);
             }
+            elementsByParentId = new HashMap<>();
+
+            for (CnATreeElement cnATreeElement : rootElementsToCopy) {
+                LoadSubtreeIds loadSubtreeIds = new LoadSubtreeIds(cnATreeElement);
+                Set<Integer> subTreeIds = getCommandService().executeCommand(loadSubtreeIds)
+                        .getDbIdsOfSubtree();
+                CollectionUtil.partition(new ArrayList<>(subTreeIds), IDao.QUERY_MAX_ITEMS_IN_LIST)
+                        .stream().forEach(partition -> {
+                            DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class)
+                                    .add(Restrictions.in("dbId", partition));
+                            RetrieveInfo.getPropertyInstance().configureCriteria(crit);
+                            List<CnATreeElement> allElementsInPartition = dao.findByCriteria(crit);
+                            Map<Integer, List<CnATreeElement>> allElementsInPartitionByParentId = allElementsInPartition
+                                    .stream()
+                                    .collect(Collectors.groupingBy(CnATreeElement::getParentId));
+                            allElementsInPartitionByParentId.forEach(
+                                    (parentId, childrenInCurrentPartition) -> elementsByParentId
+                                            .merge(parentId, childrenInCurrentPartition,
+                                                    (l1, l2) -> Stream
+                                                            .concat(l1.stream(), l2.stream())
+                                                            .collect(Collectors.toList())));
+                        });
+            }
+
             newElements = new ArrayList<>(rootElementsToCopy.size());
             groupToPasteTo = getDao().findByUuid(uuidGroup,
                     RetrieveInfo.getChildrenInstance().setParent(true).setProperties(true));
@@ -274,8 +303,9 @@ public class CopyCommand extends GenericCommand {
     private void copyChildrenIfExistant(CnATreeElement element,
             Optional<Map<String, String>> sourceDestMap, CnATreeElement elementCopy)
             throws CommandException, IOException {
-        if (element.getChildren() != null) {
-            for (CnATreeElement child : element.getChildren()) {
+        List<CnATreeElement> children = elementsByParentId.get(element.getDbId());
+        if (children != null) {
+            for (CnATreeElement child : children) {
                 if (copyDescendant(child, elementCopy)) {
                     copy(elementCopy, child, sourceDestMap);
                 }
