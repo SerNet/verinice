@@ -12928,285 +12928,268 @@ else&#xD;
                     </cell>
                 </row>
             </header>
-            <detail>
-                <row id="3752">
-                    <property name="borderBottomColor">#000000</property>
-                    <property name="borderBottomStyle">solid</property>
-                    <property name="borderBottomWidth">thin</property>
-                    <property name="borderLeftColor">#000000</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">thin</property>
-                    <property name="borderRightColor">#000000</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                    <property name="borderTopColor">#000000</property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">thin</property>
-                    <cell id="3753">
-                        <property name="colSpan">1</property>
-                        <property name="rowSpan">1</property>
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="3782">
-                            <property name="fontWeight">bold</property>
-                            <property name="color">blue</property>
-                            <property name="textUnderline">underline</property>
-                            <property name="resultSetColumn">nr</property>
-                        </data>
-                    </cell>
-                    <cell id="3755">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <property name="textAlign">center</property>
-                        <property name="verticalAlign">middle</property>
-                        <data id="3781">
-                            <property name="textAlign">left</property>
-                            <property name="resultSetColumn">thema</property>
-                        </data>
-                        <grid name="Feststellungen" id="4435">
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
-                            <property name="borderRightStyle">none</property>
+            <group id="7522">
+                <property name="groupName">nr</property>
+                <expression name="keyExpr" type="javascript">row["nr"]</expression>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="7523">
+                        <cell id="7524">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <property name="textAlign">left</property>
-                            <list-property name="visibility">
-                                <structure>
-                                    <property name="format">all</property>
-                                    <expression name="valueExpr" type="javascript">row["Öffentlicher__Kommentar__(ISA__Control)"] == null || row["Öffentlicher__Kommentar__(ISA__Control)"] == ""</expression>
-                                </structure>
-                            </list-property>
-                            <column id="4436"/>
-                            <row id="4437">
+                            <data id="3782">
+                                <property name="fontWeight">bold</property>
+                                <property name="color">blue</property>
+                                <property name="textUnderline">underline</property>
+                                <property name="resultSetColumn">nr</property>
+                            </data>
+                        </cell>
+                        <cell id="7525">
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftColor">#000000</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightColor">#000000</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopColor">#000000</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <data id="3781">
+                                <property name="textAlign">left</property>
+                                <property name="resultSetColumn">thema</property>
+                            </data>
+                            <grid name="Feststellungen" id="4435">
                                 <property name="borderBottomStyle">none</property>
                                 <property name="borderLeftStyle">none</property>
                                 <property name="borderRightStyle">none</property>
-                                <property name="borderTopStyle">none</property>
-                                <cell id="4438">
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <property name="textAlign">left</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">row["Öffentlicher__Kommentar__(ISA__Control)"] == null || row["Öffentlicher__Kommentar__(ISA__Control)"] == ""</expression>
+                                    </structure>
+                                </list-property>
+                                <column id="4436"/>
+                                <row id="4437">
                                     <property name="borderBottomStyle">none</property>
                                     <property name="borderLeftStyle">none</property>
                                     <property name="borderRightStyle">none</property>
                                     <property name="borderTopStyle">none</property>
-                                    <label id="4363">
-                                        <property name="fontWeight">bold</property>
-                                        <property name="marginLeft">0pt</property>
-                                        <property name="textAlign">left</property>
-                                        <property name="display">inline</property>
-                                        <text-property name="text" key="PublicComment">Feststellungen: </text-property>
-                                    </label>
-                                    <data id="7521">
-                                        <property name="display">inline</property>
-                                        <property name="resultSetColumn">Öffentlicher__Kommentar__(ISA__Control)</property>
-                                    </data>
-                                </cell>
-                            </row>
-                        </grid>
-                        <grid name="Massnahmen" id="4439">
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
-                            <property name="borderRightStyle">none</property>
-                            <property name="borderTopStyle">solid</property>
-                            <property name="borderTopWidth">thin</property>
-                            <property name="textAlign">left</property>
-                            <list-property name="visibility">
-                                <structure>
-                                    <property name="format">all</property>
-                                    <expression name="valueExpr" type="javascript">row["Ma"] == null || row["Ma"] == ""</expression>
-                                </structure>
-                            </list-property>
-                            <column id="4440"/>
-                            <row id="4441">
+                                    <cell id="4438">
+                                        <property name="borderBottomStyle">none</property>
+                                        <property name="borderLeftStyle">none</property>
+                                        <property name="borderRightStyle">none</property>
+                                        <property name="borderTopStyle">none</property>
+                                        <label id="4363">
+                                            <property name="fontWeight">bold</property>
+                                            <property name="marginLeft">0pt</property>
+                                            <property name="textAlign">left</property>
+                                            <property name="display">inline</property>
+                                            <text-property name="text" key="PublicComment">Feststellungen: </text-property>
+                                        </label>
+                                        <data id="7521">
+                                            <property name="display">inline</property>
+                                            <property name="resultSetColumn">Öffentlicher__Kommentar__(ISA__Control)</property>
+                                        </data>
+                                    </cell>
+                                </row>
+                            </grid>
+                            <grid name="Massnahmen" id="4439">
                                 <property name="borderBottomStyle">none</property>
                                 <property name="borderLeftStyle">none</property>
                                 <property name="borderRightStyle">none</property>
-                                <property name="borderTopStyle">none</property>
-                                <cell id="4442">
-                                    <label id="4364">
-                                        <property name="fontWeight">bold</property>
-                                        <property name="marginLeft">0pt</property>
-                                        <property name="display">inline</property>
-                                        <text-property name="text" key="Measures">Maßnahmen: </text-property>
-                                    </label>
-                                    <data id="4421">
-                                        <property name="display">inline</property>
-                                        <property name="resultSetColumn">Ma</property>
-                                    </data>
-                                </cell>
-                            </row>
-                        </grid>
-                        <table name="Dokumente" id="4389">
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
-                            <property name="borderRightStyle">none</property>
-                            <property name="borderTopStyle">solid</property>
-                            <property name="borderTopWidth">thin</property>
-                            <property name="textAlign">left</property>
-                            <property name="display">inline</property>
-                            <property name="canShrink">false</property>
-                            <property name="dataSet">Files1</property>
-                            <list-property name="visibility">
-                                <structure>
-                                    <property name="format">all</property>
-                                    <expression name="valueExpr" type="javascript">if (row["rowCount"] == "" || row["rowCount"] &lt; 1) {&#13;
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <property name="textAlign">left</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">row["Ma"] == null || row["Ma"] == ""</expression>
+                                    </structure>
+                                </list-property>
+                                <column id="4440"/>
+                                <row id="4441">
+                                    <property name="borderBottomStyle">none</property>
+                                    <property name="borderLeftStyle">none</property>
+                                    <property name="borderRightStyle">none</property>
+                                    <property name="borderTopStyle">none</property>
+                                    <cell id="4442">
+                                        <label id="4364">
+                                            <property name="fontWeight">bold</property>
+                                            <property name="marginLeft">0pt</property>
+                                            <property name="display">inline</property>
+                                            <text-property name="text" key="Measures">Maßnahmen: </text-property>
+                                        </label>
+                                        <data id="4421">
+                                            <property name="display">inline</property>
+                                            <property name="resultSetColumn">Ma</property>
+                                        </data>
+                                    </cell>
+                                </row>
+                            </grid>
+                            <table name="Dokumente" id="4389">
+                                <property name="borderBottomStyle">none</property>
+                                <property name="borderLeftStyle">none</property>
+                                <property name="borderRightStyle">none</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <property name="textAlign">left</property>
+                                <property name="display">inline</property>
+                                <property name="canShrink">false</property>
+                                <property name="dataSet">Files1</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["rowCount"] == "" || row["rowCount"] &lt; 1) {&#13;
 true;&#13;
 }&#13;
 else {&#13;
 false;&#13;
 }</expression>
-                                </structure>
-                            </list-property>
-                            <list-property name="paramBindings">
-                                <structure>
-                                    <property name="paramName">processId</property>
-                                    <simple-property-list name="expression">
-                                        <value type="javascript">row["Datenbank-Id__(ISA__Control)"]</value>
-                                    </simple-property-list>
-                                </structure>
-                            </list-property>
-                            <list-property name="boundDataColumns">
-                                <structure>
-                                    <property name="name">filename</property>
-                                    <text-property name="displayName">filename</text-property>
-                                    <expression name="expression" type="javascript">dataSetRow["filename"]</expression>
-                                    <property name="dataType">javaObject</property>
-                                </structure>
-                                <structure>
-                                    <property name="name">rowCount</property>
-                                    <text-property name="displayName">rowCount</text-property>
-                                    <expression name="expression" type="javascript">dataSetRow["rowCount"]</expression>
-                                    <property name="dataType">integer</property>
-                                </structure>
-                            </list-property>
-                            <column id="4403"/>
-                            <header>
-                                <row id="4423">
-                                    <property name="backgroundColor">#FFFFFF</property>
-                                    <property name="borderBottomStyle">none</property>
-                                    <property name="borderLeftStyle">none</property>
-                                    <property name="borderRightStyle">none</property>
-                                    <property name="borderTopStyle">none</property>
-                                    <list-property name="visibility">
-                                        <structure>
-                                            <property name="format">all</property>
-                                            <expression name="valueExpr" type="javascript">row["rowCount"] == null</expression>
-                                        </structure>
-                                    </list-property>
-                                    <cell id="4424">
+                                    </structure>
+                                </list-property>
+                                <list-property name="paramBindings">
+                                    <structure>
+                                        <property name="paramName">processId</property>
+                                        <simple-property-list name="expression">
+                                            <value type="javascript">row["Datenbank-Id__(ISA__Control)"]</value>
+                                        </simple-property-list>
+                                    </structure>
+                                </list-property>
+                                <list-property name="boundDataColumns">
+                                    <structure>
+                                        <property name="name">filename</property>
+                                        <text-property name="displayName">filename</text-property>
+                                        <expression name="expression" type="javascript">dataSetRow["filename"]</expression>
+                                        <property name="dataType">javaObject</property>
+                                    </structure>
+                                    <structure>
+                                        <property name="name">rowCount</property>
+                                        <text-property name="displayName">rowCount</text-property>
+                                        <expression name="expression" type="javascript">dataSetRow["rowCount"]</expression>
+                                        <property name="dataType">integer</property>
+                                    </structure>
+                                </list-property>
+                                <column id="4403"/>
+                                <header>
+                                    <row id="4423">
+                                        <property name="backgroundColor">#FFFFFF</property>
                                         <property name="borderBottomStyle">none</property>
                                         <property name="borderLeftStyle">none</property>
                                         <property name="borderRightStyle">none</property>
                                         <property name="borderTopStyle">none</property>
-                                        <label id="4365">
-                                            <property name="fontWeight">bold</property>
-                                            <property name="marginLeft">0pt</property>
-                                            <property name="display">inline</property>
-                                            <text-property name="text" key="Documents">Dokumente: </text-property>
-                                        </label>
-                                    </cell>
-                                </row>
-                            </header>
-                            <detail>
-                                <row id="4395">
-                                    <property name="borderBottomStyle">none</property>
-                                    <property name="borderLeftStyle">none</property>
-                                    <property name="borderRightStyle">none</property>
-                                    <property name="borderTopStyle">none</property>
-                                    <cell id="4396">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr" type="javascript">row["rowCount"] == null</expression>
+                                            </structure>
+                                        </list-property>
+                                        <cell id="4424">
+                                            <property name="borderBottomStyle">none</property>
+                                            <property name="borderLeftStyle">none</property>
+                                            <property name="borderRightStyle">none</property>
+                                            <property name="borderTopStyle">none</property>
+                                            <label id="4365">
+                                                <property name="fontWeight">bold</property>
+                                                <property name="marginLeft">0pt</property>
+                                                <property name="display">inline</property>
+                                                <text-property name="text" key="Documents">Dokumente: </text-property>
+                                            </label>
+                                        </cell>
+                                    </row>
+                                </header>
+                                <detail>
+                                    <row id="4395">
                                         <property name="borderBottomStyle">none</property>
                                         <property name="borderLeftStyle">none</property>
                                         <property name="borderRightStyle">none</property>
                                         <property name="borderTopStyle">none</property>
-                                        <data id="4397">
-                                            <property name="resultSetColumn">filename</property>
-                                        </data>
-                                    </cell>
-                                </row>
-                            </detail>
-                        </table>
-                    </cell>
-                    <cell id="3757">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <property name="verticalAlign">middle</property>
-                        <data id="3758">
-                            <property name="textAlign">center</property>
-                            <property name="resultSetColumn">targetMaturity</property>
-                        </data>
-                    </cell>
-                    <cell id="3759">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <property name="verticalAlign">middle</property>
-                        <data id="3783">
-                            <property name="fontWeight">bold</property>
-                            <property name="textAlign">center</property>
-                            <list-property name="highlightRules">
-                                <structure>
-                                    <property name="operator">is-true</property>
-                                    <property name="color">#008000</property>
-                                    <expression name="testExpr" type="javascript">row["Reifegrad__(ISA__Control)"] >= row["Schwellwert__2__(ISA__Control)"]</expression>
-                                </structure>
-                                <structure>
-                                    <property name="operator">is-true</property>
-                                    <property name="color">#FFA500</property>
-                                    <expression name="testExpr" type="javascript">(row["Schwellwert__2__(ISA__Control)"] == 5 &amp;&amp; row["Reifegrad__(ISA__Control)"] == 4) ||&#13;
+                                        <cell id="4396">
+                                            <property name="borderBottomStyle">none</property>
+                                            <property name="borderLeftStyle">none</property>
+                                            <property name="borderRightStyle">none</property>
+                                            <property name="borderTopStyle">none</property>
+                                            <data id="4397">
+                                                <property name="resultSetColumn">filename</property>
+                                            </data>
+                                        </cell>
+                                    </row>
+                                </detail>
+                            </table>
+                        </cell>
+                        <cell id="7526">
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftColor">#000000</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightColor">#000000</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopColor">#000000</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <data id="3758">
+                                <property name="textAlign">center</property>
+                                <property name="resultSetColumn">targetMaturity</property>
+                            </data>
+                        </cell>
+                        <cell id="7527">
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftColor">#000000</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightColor">#000000</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopColor">#000000</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <data id="3783">
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">center</property>
+                                <list-property name="highlightRules">
+                                    <structure>
+                                        <property name="operator">is-true</property>
+                                        <property name="color">#008000</property>
+                                        <expression name="testExpr" type="javascript">row["Reifegrad__(ISA__Control)"] >= row["Schwellwert__2__(ISA__Control)"]</expression>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">is-true</property>
+                                        <property name="color">#FFA500</property>
+                                        <expression name="testExpr" type="javascript">(row["Schwellwert__2__(ISA__Control)"] == 5 &amp;&amp; row["Reifegrad__(ISA__Control)"] == 4) ||&#13;
 (row["Schwellwert__2__(ISA__Control)"] == 4 &amp;&amp; row["Reifegrad__(ISA__Control)"] == 3) ||&#13;
 (row["Schwellwert__2__(ISA__Control)"] == 3 &amp;&amp; row["Reifegrad__(ISA__Control)"] == 2) ||&#13;
 (row["Schwellwert__2__(ISA__Control)"] == 2 &amp;&amp; row["Reifegrad__(ISA__Control)"] == 1)</expression>
-                                </structure>
-                                <structure>
-                                    <property name="operator">is-true</property>
-                                    <property name="color">#FF0000</property>
-                                    <expression name="testExpr" type="javascript">(row["Schwellwert__2__(ISA__Control)"] == 5 &amp;&amp; row["Reifegrad__(ISA__Control)"] &lt; 3) ||&#13;
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">is-true</property>
+                                        <property name="color">#FF0000</property>
+                                        <expression name="testExpr" type="javascript">(row["Schwellwert__2__(ISA__Control)"] == 5 &amp;&amp; row["Reifegrad__(ISA__Control)"] &lt; 3) ||&#13;
 (row["Schwellwert__2__(ISA__Control)"] == 4 &amp;&amp; row["Reifegrad__(ISA__Control)"] &lt; 2) ||&#13;
 (row["Schwellwert__2__(ISA__Control)"] == 3 &amp;&amp; row["Reifegrad__(ISA__Control)"] &lt;= 1)</expression>
-                                </structure>
-                            </list-property>
-                            <property name="resultSetColumn">maturityText</property>
-                        </data>
-                    </cell>
-                </row>
-            </detail>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">maturityText</property>
+                            </data>
+                        </cell>
+                    </row>
+                </header>
+            </group>
             <footer>
                 <row id="3761">
                     <cell id="3762">

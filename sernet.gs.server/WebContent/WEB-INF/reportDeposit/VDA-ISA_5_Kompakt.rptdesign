@@ -12689,125 +12689,80 @@ else&#xD;
                     </cell>
                 </row>
             </header>
-            <detail>
-                <row id="3752">
-                    <property name="borderBottomColor">#000000</property>
-                    <property name="borderBottomStyle">solid</property>
-                    <property name="borderBottomWidth">thin</property>
-                    <property name="borderLeftColor">#000000</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">thin</property>
-                    <property name="borderRightColor">#000000</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                    <property name="borderTopColor">#000000</property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">thin</property>
-                    <cell id="3753">
-                        <property name="colSpan">1</property>
-                        <property name="rowSpan">1</property>
-                        <property name="borderBottomColor">#000000</property>
+            <group id="7520">
+                <property name="groupName">nr</property>
+                <expression name="keyExpr" type="javascript">row["nr"]</expression>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="7521">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
                         <property name="borderLeftStyle">solid</property>
                         <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="3782">
-                            <property name="fontWeight">bold</property>
-                            <property name="color">blue</property>
-                            <property name="textUnderline">underline</property>
-                            <property name="resultSetColumn">nr</property>
-                        </data>
-                    </cell>
-                    <cell id="3755">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <property name="textAlign">center</property>
-                        <property name="verticalAlign">middle</property>
-                        <data id="3781">
-                            <property name="textAlign">left</property>
-                            <property name="resultSetColumn">thema</property>
-                        </data>
-                    </cell>
-                    <cell id="3757">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <property name="verticalAlign">middle</property>
-                        <data id="3758">
-                            <property name="textAlign">center</property>
-                            <property name="resultSetColumn">targetMaturity</property>
-                        </data>
-                    </cell>
-                    <cell id="3759">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <property name="verticalAlign">middle</property>
-                        <data id="3783">
-                            <property name="fontWeight">bold</property>
-                            <property name="textAlign">center</property>
-                            <list-property name="highlightRules">
-                                <structure>
-                                    <property name="operator">is-true</property>
-                                    <property name="color">#008000</property>
-                                    <expression name="testExpr" type="javascript">row["Reifegrad__(ISA__Control)"] >= row["Schwellwert__2__(ISA__Control)"]</expression>
-                                </structure>
-                                <structure>
-                                    <property name="operator">is-true</property>
-                                    <property name="color">#FFA500</property>
-                                    <expression name="testExpr" type="javascript">(row["Schwellwert__2__(ISA__Control)"] == 5 &amp;&amp; row["Reifegrad__(ISA__Control)"] == 4) ||&#13;
+                        <cell id="7522">
+                            <data id="3782">
+                                <property name="fontWeight">bold</property>
+                                <property name="color">blue</property>
+                                <property name="textUnderline">underline</property>
+                                <property name="resultSetColumn">nr</property>
+                            </data>
+                        </cell>
+                        <cell id="7523">
+                            <data id="3781">
+                                <property name="textAlign">left</property>
+                                <property name="resultSetColumn">thema</property>
+                            </data>
+                        </cell>
+                        <cell id="7524">
+                            <data id="3758">
+                                <property name="textAlign">center</property>
+                                <property name="resultSetColumn">targetMaturity</property>
+                            </data>
+                        </cell>
+                        <cell id="7525">
+                            <data id="3783">
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">center</property>
+                                <list-property name="highlightRules">
+                                    <structure>
+                                        <property name="operator">is-true</property>
+                                        <property name="color">#008000</property>
+                                        <expression name="testExpr" type="javascript">row["Reifegrad__(ISA__Control)"] >= row["Schwellwert__2__(ISA__Control)"]</expression>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">is-true</property>
+                                        <property name="color">#FFA500</property>
+                                        <expression name="testExpr" type="javascript">(row["Schwellwert__2__(ISA__Control)"] == 5 &amp;&amp; row["Reifegrad__(ISA__Control)"] == 4) ||&#13;
 (row["Schwellwert__2__(ISA__Control)"] == 4 &amp;&amp; row["Reifegrad__(ISA__Control)"] == 3) ||&#13;
 (row["Schwellwert__2__(ISA__Control)"] == 3 &amp;&amp; row["Reifegrad__(ISA__Control)"] == 2) ||&#13;
 (row["Schwellwert__2__(ISA__Control)"] == 2 &amp;&amp; row["Reifegrad__(ISA__Control)"] == 1)</expression>
-                                </structure>
-                                <structure>
-                                    <property name="operator">is-true</property>
-                                    <property name="color">#FF0000</property>
-                                    <expression name="testExpr" type="javascript">(row["Schwellwert__2__(ISA__Control)"] == 5 &amp;&amp; row["Reifegrad__(ISA__Control)"] &lt; 3) ||&#13;
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">is-true</property>
+                                        <property name="color">#FF0000</property>
+                                        <expression name="testExpr" type="javascript">(row["Schwellwert__2__(ISA__Control)"] == 5 &amp;&amp; row["Reifegrad__(ISA__Control)"] &lt; 3) ||&#13;
 (row["Schwellwert__2__(ISA__Control)"] == 4 &amp;&amp; row["Reifegrad__(ISA__Control)"] &lt; 2) ||&#13;
 (row["Schwellwert__2__(ISA__Control)"] == 3 &amp;&amp; row["Reifegrad__(ISA__Control)"] &lt;= 1)</expression>
-                                </structure>
-                            </list-property>
-                            <property name="resultSetColumn">maturityText</property>
-                        </data>
-                    </cell>
-                </row>
-            </detail>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">maturityText</property>
+                            </data>
+                        </cell>
+                    </row>
+                </header>
+                <footer>
+                    <row id="7526">
+                        <cell id="7527"/>
+                        <cell id="7528"/>
+                        <cell id="7529"/>
+                        <cell id="7530"/>
+                    </row>
+                </footer>
+            </group>
             <footer>
                 <row id="3761">
                     <cell id="3762">
