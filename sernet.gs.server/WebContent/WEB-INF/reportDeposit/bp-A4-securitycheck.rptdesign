@@ -9365,7 +9365,8 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"
+|| row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Beschreibung</property>
@@ -9427,7 +9428,17 @@ else {&#13;
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
                                             </label>
                                         </cell>
-                                        <cell id="13259"/>
+                                        <cell id="13259">
+                                            <data id="14650">
+                                                <list-property name="visibility">
+                                                    <structure>
+                                                        <property name="format">all</property>
+                                                        <expression name="valueExpr" type="javascript">row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
+                                                    </structure>
+                                                </list-property>
+                                                <property name="resultSetColumn">Beschreibung</property>
+                                            </data>
+                                        </cell>
                                     </row>
                                 </footer>
                             </table>
@@ -9785,7 +9796,11 @@ else {&#13;
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
                                             </label>
                                         </cell>
-                                        <cell id="13326"/>
+                                        <cell id="13326">
+                                            <data id="14651">
+                                                <property name="resultSetColumn">Beschreibung</property>
+                                            </data>
+                                        </cell>
                                     </row>
                                 </footer>
                             </table>
@@ -10720,7 +10735,8 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"
+|| row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
@@ -10782,7 +10798,17 @@ else {&#13;
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
                                             </label>
                                         </cell>
-                                        <cell id="13145"/>
+                                        <cell id="13145">
+                                            <data id="14652">
+                                                <list-property name="visibility">
+                                                    <structure>
+                                                        <property name="format">all</property>
+                                                        <expression name="valueExpr" type="javascript">row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
+                                                    </structure>
+                                                </list-property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
+                                            </data>
+                                        </cell>
                                     </row>
                                 </footer>
                             </table>
@@ -11140,7 +11166,17 @@ else {&#13;
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
                                             </label>
                                         </cell>
-                                        <cell id="13098"/>
+                                        <cell id="13098">
+                                            <data id="14653">
+                                                <list-property name="visibility">
+                                                    <structure>
+                                                        <property name="format">all</property>
+                                                        <expression name="valueExpr" type="javascript">row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
+                                                    </structure>
+                                                </list-property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
+                                            </data>
+                                        </cell>
                                     </row>
                                 </footer>
                             </table>
@@ -12075,7 +12111,8 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"
+|| row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
@@ -12137,7 +12174,17 @@ else {&#13;
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
                                             </label>
                                         </cell>
-                                        <cell id="13473"/>
+                                        <cell id="13473">
+                                            <data id="14654">
+                                                <list-property name="visibility">
+                                                    <structure>
+                                                        <property name="format">all</property>
+                                                        <expression name="valueExpr" type="javascript">row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
+                                                    </structure>
+                                                </list-property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
+                                            </data>
+                                        </cell>
                                     </row>
                                 </footer>
                             </table>
@@ -12501,7 +12548,11 @@ else {&#13;
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
                                             </label>
                                         </cell>
-                                        <cell id="13540"/>
+                                        <cell id="13540">
+                                            <data id="14655">
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
+                                            </data>
+                                        </cell>
                                     </row>
                                 </footer>
                             </table>
@@ -13436,7 +13487,8 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"
+|| row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
@@ -13498,7 +13550,17 @@ else {&#13;
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
                                             </label>
                                         </cell>
-                                        <cell id="13687"/>
+                                        <cell id="13687">
+                                            <data id="14656">
+                                                <list-property name="visibility">
+                                                    <structure>
+                                                        <property name="format">all</property>
+                                                        <expression name="valueExpr" type="javascript">row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
+                                                    </structure>
+                                                </list-property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
+                                            </data>
+                                        </cell>
                                     </row>
                                 </footer>
                             </table>
@@ -13862,7 +13924,17 @@ else {&#13;
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
                                             </label>
                                         </cell>
-                                        <cell id="13754"/>
+                                        <cell id="13754">
+                                            <data id="14657">
+                                                <list-property name="visibility">
+                                                    <structure>
+                                                        <property name="format">all</property>
+                                                        <expression name="valueExpr" type="javascript">row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
+                                                    </structure>
+                                                </list-property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
+                                            </data>
+                                        </cell>
                                     </row>
                                 </footer>
                             </table>
@@ -14797,7 +14869,8 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"
+|| row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
@@ -14859,7 +14932,17 @@ else {&#13;
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
                                             </label>
                                         </cell>
-                                        <cell id="13901"/>
+                                        <cell id="13901">
+                                            <data id="14658">
+                                                <list-property name="visibility">
+                                                    <structure>
+                                                        <property name="format">all</property>
+                                                        <expression name="valueExpr" type="javascript">row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
+                                                    </structure>
+                                                </list-property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
+                                            </data>
+                                        </cell>
                                     </row>
                                 </footer>
                             </table>
@@ -15223,7 +15306,11 @@ else {&#13;
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
                                             </label>
                                         </cell>
-                                        <cell id="13968"/>
+                                        <cell id="13968">
+                                            <data id="14666">
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
+                                            </data>
+                                        </cell>
                                     </row>
                                 </footer>
                             </table>
@@ -16158,7 +16245,8 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"
+|| row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
@@ -16220,7 +16308,17 @@ else {&#13;
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
                                             </label>
                                         </cell>
-                                        <cell id="14115"/>
+                                        <cell id="14115">
+                                            <data id="14660">
+                                                <list-property name="visibility">
+                                                    <structure>
+                                                        <property name="format">all</property>
+                                                        <expression name="valueExpr" type="javascript">row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
+                                                    </structure>
+                                                </list-property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
+                                            </data>
+                                        </cell>
                                     </row>
                                 </footer>
                             </table>
@@ -16584,7 +16682,11 @@ else {&#13;
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
                                             </label>
                                         </cell>
-                                        <cell id="14182"/>
+                                        <cell id="14182">
+                                            <data id="14661">
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
+                                            </data>
+                                        </cell>
                                     </row>
                                 </footer>
                             </table>
@@ -17519,7 +17621,8 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"
+|| row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
@@ -17581,7 +17684,17 @@ else {&#13;
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
                                             </label>
                                         </cell>
-                                        <cell id="14329"/>
+                                        <cell id="14329">
+                                            <data id="14662">
+                                                <list-property name="visibility">
+                                                    <structure>
+                                                        <property name="format">all</property>
+                                                        <expression name="valueExpr" type="javascript">row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
+                                                    </structure>
+                                                </list-property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
+                                            </data>
+                                        </cell>
                                     </row>
                                 </footer>
                             </table>
@@ -17945,7 +18058,11 @@ else {&#13;
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
                                             </label>
                                         </cell>
-                                        <cell id="14396"/>
+                                        <cell id="14396">
+                                            <data id="14663">
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
+                                            </data>
+                                        </cell>
                                     </row>
                                 </footer>
                             </table>
@@ -18886,7 +19003,8 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"
+|| row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
@@ -18948,7 +19066,17 @@ else {&#13;
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
                                             </label>
                                         </cell>
-                                        <cell id="14543"/>
+                                        <cell id="14543">
+                                            <data id="14664">
+                                                <list-property name="visibility">
+                                                    <structure>
+                                                        <property name="format">all</property>
+                                                        <expression name="valueExpr" type="javascript">row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
+                                                    </structure>
+                                                </list-property>
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
+                                            </data>
+                                        </cell>
                                     </row>
                                 </footer>
                             </table>
@@ -19312,7 +19440,11 @@ else {&#13;
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
                                             </label>
                                         </cell>
-                                        <cell id="14610"/>
+                                        <cell id="14610">
+                                            <data id="14665">
+                                                <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
+                                            </data>
+                                        </cell>
                                     </row>
                                 </footer>
                             </table>
