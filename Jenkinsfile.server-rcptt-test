@@ -80,8 +80,6 @@ pipeline {
 	                }
 
                     docker.image("postgres:${params.POSTGRESQL_VERSION}").withRun("--name postgresql-verinice-server-rcptt-test-executor-${env.BUILD_NUMBER} -e POSTGRES_USER=verinice -e POSTGRES_PASSWORD=verinice -e POSTGRES_DB=verinicedb -p ${portDatabase}:5432") { db ->
-                        // TODO check for DB startup
-                        sleep 5
                         wrap([$class: 'Xvfb', additionalOptions: '', assignedLabels: '',
                           autoDisplayName: true, displayNameOffset: 0, installationName: 'default-Xvfb',
                           screen: '1200x960x24']) {
