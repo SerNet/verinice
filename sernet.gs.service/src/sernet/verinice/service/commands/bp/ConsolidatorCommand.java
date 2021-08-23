@@ -20,9 +20,13 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.annotation.NonNull;
 import org.hibernate.criterion.DetachedCriteria;
@@ -30,6 +34,7 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.proxy.HibernateProxy;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HitroUtil;
@@ -57,6 +62,8 @@ public class ConsolidatorCommand extends GenericCommand {
 
     private static final long serialVersionUID = -5191684349649490022L;
     private ConsoliData data;
+
+    private static String error;
 
     public ConsolidatorCommand(@NonNull ConsoliData data) {
         this.data = data;
@@ -149,21 +156,36 @@ public class ConsolidatorCommand extends GenericCommand {
                                 target)));
     }
 
-    private static Map<String, @NonNull CnATreeElement> getLinkedIdElementMap(
+    private Map<String, @NonNull CnATreeElement> getLinkedIdElementMap(
             @NonNull BpRequirement source, @NonNull String typeId) {
-        return source.getLinksDown().stream().map(CnALink::getDependency)
-                .filter(x -> x.getTypeId().equals(typeId))
+        Supplier<Stream<IIdentifiableElement>> supplier = () -> source.getLinksDown().stream()
+                .map(CnALink::getDependency).filter(x -> x.getTypeId().equals(typeId))
                 .map(x -> x instanceof HibernateProxy
                         ? ((HibernateProxy) x).getHibernateLazyInitializer().getImplementation()
                         : x)
                 .filter(x -> x instanceof IIdentifiableElement)
-                .map(IIdentifiableElement.class::cast)
-                .collect(Collectors.toMap(IIdentifiableElement::getIdentifier,
-                        x -> (CnATreeElement) NonNullUtils.toNonNull(x)));
+                .map(IIdentifiableElement.class::cast);
+
+        // Detect & collect identifiers used multiple times
+        Map<String, List<IIdentifiableElement>> collect = supplier.get()
+                .collect(Collectors.groupingBy(IIdentifiableElement::getIdentifier));
+        String doubles = collect.entrySet().stream().filter(x -> x.getValue().size() > 1)
+                .map(Entry::getKey).collect(Collectors.joining(", "));
+        if (!StringUtils.isEmpty(doubles)) {
+            error = String.format(Messages.getString("duplicateIdentifierError"), doubles, typeId);
+            throw new RuntimeCommandException(error);
+        }
+
+        return supplier.get().collect(Collectors.toMap(IIdentifiableElement::getIdentifier,
+                x -> (CnATreeElement) NonNullUtils.toNonNull(x)));
     }
 
     private static void consolidateProperty(@NonNull String property,
             @NonNull CnATreeElement source, @NonNull CnATreeElement target) {
         target.setSimpleProperty(property, source.getEntity().getRawPropertyValue(property));
+    }
+
+    public String getError() {
+        return error;
     }
 }

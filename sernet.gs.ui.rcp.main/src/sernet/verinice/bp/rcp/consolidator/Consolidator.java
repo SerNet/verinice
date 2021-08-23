@@ -41,8 +41,9 @@ public class Consolidator {
             ServiceFactory.lookupCommandService().executeCommand(command);
             CnAElementFactory.getInstance().reloadBpModelFromDatabase();
         } catch (CommandException e) {
-            logger.error(e.getMessage());
-            return e.getLocalizedMessage();
+            String error = e.getLocalizedMessage() + "\r\n\r\n" + command.getError();
+            logger.error(error);
+            return error;
         }
         return null;
     }
