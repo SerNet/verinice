@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _5qhxsLp8EeiXpMYvKv_wWQ
-Runtime-Version: 2.3.0.201806262310
-Save-Time: 11/21/18 1:04 PM
+Runtime-Version: 2.5.1.M3
+Save-Time: 8/24/21, 11:09 AM
 Tags: bp_old
 Testcase-Type: ecl
 Verifications: _wm5P0CtBEeuMltfUUtdvug
@@ -44,7 +44,7 @@ try{
 log "no status information windows"
 }
 
-delete-bp-old-element "  IT-Verbund-1/Anwendungen/A- Anwendung-1 (Kopie 1) "
+delete-bp-old-element "  IT-Verbund-1/Anwendungen/A- Anwendung-1 (Kopie 1)"
 delete-bp-old-element "  IT-Verbund-1"
 
 with [get-view Grundschutzmodell] {
