@@ -212,8 +212,6 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.ICommandService#configureFilter(sernet.
      * verinice.interfaces.IBaseDao)
      */
@@ -232,8 +230,6 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.ICommandService#disableFilter(sernet.verinice.
      * interfaces.IBaseDao)
@@ -248,27 +244,17 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
         List<ElementChange> elementChanges = notifyCommand.getChanges();
         for (ElementChange changedElement : elementChanges) {
 
-            // save reference to element, if it has not been deleted:
-            CnATreeElement referencedElement = null;
-            if (changedElement.getChangeType() != ChangeLogEntry.TYPE_DELETE) {
-                referencedElement = changedElement.getElement();
-            }
-
             ChangeLogEntry logEntry = new ChangeLogEntry(changedElement.getElement(),
                     changedElement.getChangeType(), getAuthService().getUsername(),
                     notifyCommand.getStationId(), changedElement.getTime());
-            log(logEntry, referencedElement);
-        }
-    }
 
-    /**
-     * @param logEntry
-     */
-    private void log(ChangeLogEntry logEntry, CnATreeElement referencedElement) {
-        log.debug(
-                "Logging change type '" + logEntry.getChangeDescription() + "' for element of type "
-                        + logEntry.getElementClass() + " with ID " + logEntry.getElementId());
-        daoFactory.getDAO(ChangeLogEntry.class).saveOrUpdate(logEntry);
+            if (log.isDebugEnabled()) {
+                log.debug("Logging change type '" + logEntry.getChangeDescription()
+                        + "' for element of type " + logEntry.getElementClass() + " with ID "
+                        + logEntry.getElementId());
+            }
+            daoFactory.getDAO(ChangeLogEntry.class).saveOrUpdate(logEntry);
+        }
     }
 
     /**
