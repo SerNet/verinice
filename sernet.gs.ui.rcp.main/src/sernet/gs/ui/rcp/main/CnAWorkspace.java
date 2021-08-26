@@ -429,8 +429,7 @@ public class CnAWorkspace {
         Activator.getDefault().getInternalServer().configureDatabase(
                 prefs.getString(PreferenceConstants.DB_URL),
                 prefs.getString(PreferenceConstants.DB_USER),
-                prefs.getString(PreferenceConstants.DB_PASS),
-                prefs.getString(PreferenceConstants.DB_DRIVER),
+                prefs.getString(PreferenceConstants.DB_PASS), PreferenceConstants.DB_DRIVER_DERBY,
                 prefs.getString(PreferenceConstants.DB_DIALECT));
 
         Activator.getDefault().getInternalServer().configureSearch(

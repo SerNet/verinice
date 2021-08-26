@@ -318,7 +318,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
         internalServer.configureDatabase(getPreferences().getString(PreferenceConstants.DB_URL),
                 getPreferences().getString(PreferenceConstants.DB_USER),
                 getPreferences().getString(PreferenceConstants.DB_PASS),
-                getPreferences().getString(PreferenceConstants.DB_DRIVER),
+                PreferenceConstants.DB_DRIVER_DERBY,
                 getPreferences().getString(PreferenceConstants.DB_DIALECT));
         internalServer.configureSearch(
                 getPreferences().getBoolean(PreferenceConstants.SEARCH_DISABLE),
