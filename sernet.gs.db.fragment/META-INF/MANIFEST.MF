@@ -6,11 +6,7 @@ Bundle-Version: 1.2.0
 Fragment-Host: com.mchange.c3p0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: .,
- lib/derby/derby.jar,
- lib/derby/derbyclient.jar,
- lib/derby/derbynet.jar,
- lib/derby/derbyrun.jar,
- lib/derby/derbytools.jar
+ lib/derby/derby.jar
 Export-Package: 
  org.apache.derby.jdbc
 Bundle-Vendor: SerNet GmbH
