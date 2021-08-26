@@ -12,6 +12,7 @@
 <unit id="org.eclipse.equinox.executable" version="0.0.0"/>
 <unit id="org.apache.batik.css" version="0.0.0"/>
 <unit id="org.apache.batik.util" version="0.0.0"/>
+<unit id="org.apache.xmlgraphics" version="0.0.0"/>
 <repository location="https://download.eclipse.org/eclipse/updates/4.21/"/>
 </location>
 
@@ -22,14 +23,48 @@
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.birt.chart.device.pdf" version="0.0.0"/>
+<unit id="org.eclipse.birt.chart.device.swt" version="0.0.0"/>
+<unit id="org.eclipse.birt.chart.engine" version="0.0.0"/>
+<unit id="org.eclipse.birt.chart.engine.extension" version="0.0.0"/>
+<unit id="org.eclipse.birt.chart.reportitem" version="0.0.0"/>
+<unit id="org.eclipse.birt.chart.reportitem.ui" version="0.0.0"/>
+<unit id="org.eclipse.birt.core" version="0.0.0"/>
+<unit id="org.eclipse.birt.core.script.function" version="0.0.0"/>
+<unit id="org.eclipse.birt.chart.examples.core" version="0.0.0"/>
+<unit id="org.eclipse.birt.report.engine" version="0.0.0"/>
+<unit id="org.eclipse.birt.report.engine.dataextraction" version="0.0.0"/>
+<unit id="org.eclipse.birt.report.engine.dataextraction.csv" version="0.0.0"/>
+<unit id="org.eclipse.birt.report.engine.emitter.html" version="0.0.0"/>
+<unit id="org.eclipse.birt.report.engine.emitter.config.html" version="0.0.0"/>
+<unit id="org.eclipse.birt.report.engine.emitter.config.html.nl1" version="0.0.0"/>
+<unit id="org.eclipse.birt.report.engine.emitter.pdf" version="0.0.0"/>
+<unit id="org.eclipse.birt.report.engine.emitter.config.pdf" version="0.0.0"/>
+<unit id="org.eclipse.birt.report.engine.emitter.wpml" version="0.0.0"/>
+<unit id="org.eclipse.birt.report.engine.emitter.config.wpml" version="0.0.0"/>
+<unit id="org.eclipse.birt.report.engine.emitter.odt" version="0.0.0"/>
+<unit id="org.eclipse.birt.report.engine.emitter.config.odt" version="0.0.0"/>
+<unit id="org.eclipse.birt.report.engine.emitter.odp" version="0.0.0"/>
+<unit id="org.eclipse.birt.report.engine.emitter.config.odp" version="0.0.0"/>
+<unit id="org.eclipse.birt.report.engine.emitter.ods" version="0.0.0"/>
+<unit id="org.eclipse.birt.report.engine.emitter.config.ods" version="0.0.0"/>
+<unit id="org.eclipse.birt.report.engine.emitter.config.excel" version="0.0.0"/>
+<unit id="org.eclipse.birt.report.engine.emitter.config.excel.nl1" version="0.0.0"/>
 <unit id="org.eclipse.birt.report.engine.emitter.prototype.excel" version="0.0.0"/>
-<repository location="http://download.eclipse.org/birt/update-site/oxygen-interim/"/>
-</location>
-
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.birt.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.birt.osgi.runtime.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/releases/2019-06/"/>
+<unit id="org.eclipse.birt.report.engine.emitter.docx" version="0.0.0"/>
+<unit id="org.eclipse.birt.report.engine.emitter.config.docx" version="0.0.0"/>
+<unit id="org.eclipse.birt.report.engine.emitter.config.docx.nl1" version="0.0.0"/>
+<unit id="uk.co.spudsoft.birt.emitters.excel" version="0.0.0"/>
+<unit id="com.github.librepdf.openpdf" version="0.0.0"/>
+<unit id="org.apache.xalan" version="0.0.0"/>
+<unit id="org.eclipse.birt.report.engine.script.javascript" version="0.0.0"/>
+<unit id="org.eclipse.datatools.connectivity.db.generic" version="0.0.0"/>
+<unit id="org.apache.batik.ext" version="0.0.0"/>
+<unit id="org.mozilla.javascript" version="0.0.0"/>
+<unit id="org.mozilla.javascript.source" version="0.0.0"/>
+<unit id="javax.xml.soap" version="0.0.0"/>
+<unit id="com.google.gson" version="0.0.0"/>
+<repository location="https://download.eclipse.org/birt/update-site/4.9.0/"/>
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -38,38 +73,7 @@
     <unit id="ch.qos.logback.core" version="1.1.2.v20160208-0839"/>
     <unit id="ch.qos.logback.core.source" version="1.1.2.v20160208-0839"/>
     <unit id="ch.qos.logback.slf4j" version="1.1.2.v20160301-0943"/>
-    <unit id="ch.qos.logback.slf4j.source" version="1.1.2.v20160301-0943"/>
-    <unit id="com.google.gson" version="2.7.0.v20170129-0911"/>
-    <unit id="com.google.gson.source" version="2.7.0.v20170129-0911"/>
-    <unit id="com.thoughtworks.xstream" version="1.3.1.v201111240924"/>
-    <unit id="com.thoughtworks.xstream.source" version="1.3.1.v201111240924"/>
-    <unit id="javax.xml.soap" version="1.3.0.v201105210645"/>
-    <unit id="javax.xml.stream" version="1.0.1.v201004272200"/>
     <unit id="javax.xml.ws" version="2.1.0.v200902101523"/>
-    <unit id="org.apache.batik.bridge" version="1.7.0.v201011041433"/>
-    <unit id="org.apache.batik.bridge.source" version="1.7.0.v201011041433"/>
-    <unit id="org.apache.batik.css" version="1.7.0.v201011041433"/>
-    <unit id="org.apache.batik.css.source" version="1.7.0.v201011041433"/>
-    <unit id="org.apache.batik.dom" version="1.7.1.v201505191845"/>
-    <unit id="org.apache.batik.dom.source" version="1.7.1.v201505191845"/>
-    <unit id="org.apache.batik.dom.svg" version="1.7.0.v201011041433"/>
-    <unit id="org.apache.batik.dom.svg.source" version="1.7.0.v201011041433"/>
-    <unit id="org.apache.batik.ext.awt" version="1.7.0.v201011041433"/>
-    <unit id="org.apache.batik.ext.awt.source" version="1.7.0.v201011041433"/>
-    <unit id="org.apache.batik.parser" version="1.7.0.v201011041433"/>
-    <unit id="org.apache.batik.parser.source" version="1.7.0.v201011041433"/>
-    <unit id="org.apache.batik.svggen" version="1.7.0.v201011041433"/>
-    <unit id="org.apache.batik.svggen.source" version="1.7.0.v201011041433"/>
-    <unit id="org.apache.batik.transcoder" version="1.7.0.v201011041433"/>
-    <unit id="org.apache.batik.transcoder.source" version="1.7.0.v201011041433"/>
-    <unit id="org.apache.batik.util" version="1.7.0.v201011041433"/>
-    <unit id="org.apache.batik.util.source" version="1.7.0.v201011041433"/>
-    <unit id="org.apache.batik.xml" version="1.7.0.v201011041433"/>
-    <unit id="org.apache.batik.xml.source" version="1.7.0.v201011041433"/>
-    <unit id="org.junit" version="4.12.0.v201504281640"/>
-    <unit id="org.junit.source" version="4.12.0.v201504281640"/>
-    <unit id="org.mozilla.javascript" version="1.7.5.v201504281450"/>
-    <unit id="org.mozilla.javascript.source" version="1.7.5.v201504281450"/>
     <unit id="org.slf4j.api" version="1.7.10.v20170428-1633"/>
     <unit id="org.slf4j.api.source" version="1.7.10.v20170428-1633"/>
     <unit id="javax.servlet" version="3.1.0.v201410161800"/>
