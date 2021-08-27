@@ -71,8 +71,8 @@ public class PureXml implements IVeriniceArchive {
      * @see sernet.verinice.service.sync.IPureXml#getVeriniceXml()
      */
     @Override
-    public byte[] getVeriniceXml() {
-        return veriniceXml;
+    public InputStream getVeriniceXml() {
+        return new ByteArrayInputStream(veriniceXml);
     }
 
     public void setVeriniceXml(byte[] veriniceXml) {
@@ -119,7 +119,7 @@ public class PureXml implements IVeriniceArchive {
     }
 
     private void unmarshal() {
-        syncRequest = JAXB.unmarshal(new ByteArrayInputStream(getVeriniceXml()), SyncRequest.class);
+        syncRequest = JAXB.unmarshal(getVeriniceXml(), SyncRequest.class);
         sourceId = syncRequest.getSourceId();
         syncData = syncRequest.getSyncData();
         syncMapping = syncRequest.getSyncMapping();
@@ -130,7 +130,7 @@ public class PureXml implements IVeriniceArchive {
      * String )
      */
     @Override
-    public byte[] getFileData(String fileName) {
+    public InputStream getFileData(String fileName) {
         return null;
     }
 
@@ -162,7 +162,7 @@ public class PureXml implements IVeriniceArchive {
      * @see sernet.verinice.service.sync.IVeriniceArchive#getRiskAnalysisXml()
      */
     @Override
-    public byte[] getRiskAnalysisXml() {
+    public InputStream getRiskAnalysisXml() {
         // always return null because risk analysis data is stored in a seperate
         // file in a VNA
         return null;

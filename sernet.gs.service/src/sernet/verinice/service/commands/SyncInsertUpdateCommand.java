@@ -638,10 +638,13 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             Attachment attachment = entry.getValue();
             AttachmentFile attachmentFile = dao.findById(attachment.getDbId());
             try {
-                attachmentFile.setFileData(veriniceArchive.getFileData(fileName));
+                attachmentFile.setFileData(veriniceArchive.getFileData(fileName).readAllBytes());
             } catch (IllegalArgumentException e) {
                 throw new VeriniceArchiveNotValidException(
                         "Unable to retrieve file data for " + fileName + ", VNA file is corrupt",
+                        e);
+            } catch (IOException e) {
+                throw new RuntimeCommandException("Unable to retrieve file data for " + fileName,
                         e);
             }
             if (attachmentFile.getFileData() != null) {

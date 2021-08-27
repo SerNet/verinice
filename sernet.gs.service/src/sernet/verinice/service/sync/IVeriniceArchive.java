@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.service.sync;
 
+import java.io.InputStream;
+
 import de.sernet.sync.data.SyncData;
 import de.sernet.sync.mapping.SyncMapping;
 import de.sernet.sync.risk.Risk;
@@ -30,29 +32,28 @@ import de.sernet.sync.risk.Risk;
  */
 public interface IVeriniceArchive extends VnaSchemaChecker {
 
-    byte[] getVeriniceXml();
-    
-    byte[] getRiskAnalysisXml();
+    InputStream getVeriniceXml();
+
+    InputStream getRiskAnalysisXml();
 
     SyncMapping getSyncMapping();
 
     SyncData getSyncData();
-    
+
     Risk getSyncRiskAnalysis();
 
     String getSourceId();
 
-
     void setSourceId(String sourceId);
-    
+
     void setSyncMapping(SyncMapping syncMapping);
 
     void setSyncData(SyncData syncData);
-    
+
     String getTempDirName();
 
-    byte[] getFileData(String fileName);
-    
+    InputStream getFileData(String fileName);
+
     void clear();
 
     Exception getErrorCause();

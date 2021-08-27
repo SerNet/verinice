@@ -104,10 +104,10 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
     }
 
     @Override
-    public byte[] getFileData(String fileName) {
+    public InputStream getFileData(String fileName) {
         Path fullPath = getFullPath(fileName);
         try {
-            return Files.readAllBytes(fullPath);
+            return Files.newInputStream(fullPath);
         } catch (IOException e) {
             throw new RuntimeException("Error while loading file data: " + fullPath, e);
         }
@@ -166,7 +166,7 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
     @Override
     public Risk getSyncRiskAnalysis() {
         if (isRiskAnalysis() && riskData == null) {
-            riskData = JAXB.unmarshal(new ByteArrayInputStream(getRiskAnalysisXml()), Risk.class);
+            riskData = JAXB.unmarshal(getRiskAnalysisXml(), Risk.class);
         }
         return riskData;
     }
@@ -182,7 +182,7 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
      * @return verinice.xml from the archive
      */
     @Override
-    public byte[] getVeriniceXml() {
+    public InputStream getVeriniceXml() {
         return getFileData(VERINICE_XML);
     }
 
@@ -190,7 +190,7 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
      * @see sernet.verinice.service.sync.IVeriniceArchive#getRiskAnalysisXml()
      */
     @Override
-    public byte[] getRiskAnalysisXml() {
+    public InputStream getRiskAnalysisXml() {
         return (isRiskAnalysis()) ? getFileData(RISK_XML) : null;
     }
 

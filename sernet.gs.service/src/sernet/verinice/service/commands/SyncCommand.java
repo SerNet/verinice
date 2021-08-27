@@ -22,7 +22,6 @@
 package sernet.verinice.service.commands;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -35,10 +34,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.xml.bind.JAXB;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
 
@@ -332,11 +327,17 @@ public class SyncCommand extends GenericCommand
 
     private void logXml() {
         if (log.isDebugEnabled() && veriniceArchive.getVeriniceXml() != null) {
-            String xml = new String(veriniceArchive.getVeriniceXml(),
-                    VeriniceCharset.CHARSET_UTF_8);
-            log.debug("### Importing data begin ###");
-            log.debug(xml);
-            log.debug("### Importing data end ####");
+            String xml;
+            try {
+                xml = new String(veriniceArchive.getVeriniceXml().readAllBytes(),
+                        VeriniceCharset.CHARSET_UTF_8);
+                log.debug("### Importing data begin ###");
+                log.debug(xml);
+                log.debug("### Importing data end ####");
+            } catch (IOException e) {
+                log.error("Error reading XML", e);
+            }
+
         }
     }
 

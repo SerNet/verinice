@@ -22,7 +22,6 @@ package sernet.verinice.service.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,8 +79,7 @@ public class ExportCommandTest extends CommandServiceProvider {
                 cmd.getResult() != null && cmd.getResult().length > 0);
         VeriniceArchive vna = new VeriniceArchive(cmd.getResult());
 
-        SyncRequest syncRequest = JAXB.unmarshal(new ByteArrayInputStream(vna.getVeriniceXml()),
-                SyncRequest.class);
+        SyncRequest syncRequest = JAXB.unmarshal(vna.getVeriniceXml(), SyncRequest.class);
         assertEquals(1, syncRequest.getSyncData().getSyncObject().size());
         assertEquals(11, syncRequest.getSyncData().getSyncObject().get(0).getChildren().size());
         List<SyncObject> allSyncObjects = getAllSyncObjects(syncRequest);
@@ -111,8 +109,7 @@ public class ExportCommandTest extends CommandServiceProvider {
                 cmd.getResult() != null && cmd.getResult().length > 0);
         VeriniceArchive vna = new VeriniceArchive(cmd.getResult());
 
-        SyncRequest syncRequest = JAXB.unmarshal(new ByteArrayInputStream(vna.getVeriniceXml()),
-                SyncRequest.class);
+        SyncRequest syncRequest = JAXB.unmarshal(vna.getVeriniceXml(), SyncRequest.class);
         assertEquals(1, syncRequest.getSyncData().getSyncObject().size());
         assertEquals(4, syncRequest.getSyncData().getSyncObject().get(0).getChildren().size());
         List<SyncObject> allSyncObjects = getAllSyncObjects(syncRequest);
@@ -141,8 +138,7 @@ public class ExportCommandTest extends CommandServiceProvider {
                 cmd.getResult() != null && cmd.getResult().length > 0);
         VeriniceArchive vna = new VeriniceArchive(cmd.getResult());
 
-        SyncRequest syncRequest = JAXB.unmarshal(new ByteArrayInputStream(vna.getVeriniceXml()),
-                SyncRequest.class);
+        SyncRequest syncRequest = JAXB.unmarshal(vna.getVeriniceXml(), SyncRequest.class);
         assertEquals(1, syncRequest.getSyncData().getSyncObject().size());
         assertEquals(18, syncRequest.getSyncData().getSyncObject().get(0).getChildren().size());
         List<SyncObject> allSyncObjects = getAllSyncObjects(syncRequest);
