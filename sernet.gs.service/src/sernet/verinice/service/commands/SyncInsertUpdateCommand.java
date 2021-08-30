@@ -33,6 +33,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 import org.hibernate.FetchMode;
@@ -200,9 +201,12 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 }
             }
             List<SyncObject> soList = syncData.getSyncObject();
+            Set<String> idsOfObjectsWithLinks = syncData.getSyncLink().stream()
+                    .flatMap(l -> Stream.of(l.getDependant(), l.getDependency()))
+                    .collect(Collectors.toUnmodifiableSet());
 
             for (SyncObject so : soList) {
-                importObject(null, so);
+                importObject(null, so, idsOfObjectsWithLinks);
             } // for <syncObject>
 
             importReferenceTypes.replaceExternalIdsWithDbIds();
@@ -264,7 +268,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         return isSourceIdInDatabase;
     }
 
-    private void importObject(CnATreeElement parent, SyncObject so) throws CommandException {
+    private void importObject(CnATreeElement parent, SyncObject so,
+            Set<String> idsOfObjectsWithLinks) throws CommandException {
         String extId = so.getExtId();
         String extObjectType = so.getExtObjectType();
         long start = 0;
@@ -425,7 +430,10 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             importFileList(elementInDB, so.getFile());
         }
 
-        if (elementInDB != null) {
+        if (elementInDB != null && idsOfObjectsWithLinks.contains(extId)
+                || elementInDB instanceof IBSIStrukturElement) {
+            // we only need to look up elements with links and elements that
+            // have an old ITBP risk analysis
             idElementMap.put(extId, elementInDB);
         }
 
@@ -441,7 +449,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 log.debug("Child found, type: " + child.getExtObjectType() + ", extId: "
                         + child.getExtId());
             }
-            importObject(elementInDB, child);
+            importObject(elementInDB, child, idsOfObjectsWithLinks);
         }
     }
 
