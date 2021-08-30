@@ -14,6 +14,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -46,7 +47,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class SyncAttribute {
 
-    @XmlElement(required = true)
+    @XmlTransient
     protected String name;
     protected List<String> value;
     protected List<Boolean> limitedLicense;
@@ -72,8 +73,9 @@ public class SyncAttribute {
      *     {@link String }
      *     
      */
+    @XmlElement(name = "name", required = true)
     public void setName(String value) {
-        this.name = value;
+        this.name = value.intern();
     }
 
     /**

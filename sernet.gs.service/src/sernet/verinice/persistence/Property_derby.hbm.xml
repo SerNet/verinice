@@ -13,7 +13,7 @@
 			unsaved-value="null">
 			<generator class="native" />
 		</id>
-		<property name="propertyType"/>
+		<property name="propertyType" access="property"/>
 
 		<property name="propertyValue" type="java.lang.String" length="400000">
 			<column name="propertyValue" sql-type="CLOB"/>

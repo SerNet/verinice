@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import sernet.hui.common.VeriniceContext;
@@ -497,7 +498,7 @@ public class CnALink implements Serializable, ITypedElement {
             if (relationId == null || relationId.isEmpty()) {
                 typeId = NO_TYPE;
             } else {
-                typeId = relationId;
+                typeId = relationId.intern();
             }
         }
 
@@ -511,6 +512,10 @@ public class CnALink implements Serializable, ITypedElement {
 
         public String getTypeId() {
             return typeId;
+        }
+
+        void setTypeId(String typeId) {
+            this.typeId = Optional.ofNullable(typeId).map(String::intern).orElse(null);
         }
 
         @Override

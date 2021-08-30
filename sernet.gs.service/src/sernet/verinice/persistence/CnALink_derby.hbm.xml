@@ -17,7 +17,7 @@
 			<key-property name="dependencyId"
 				access="field"
 				column="DEPENDENCY_ID"/>
-			<key-property name="typeId" access="field" >
+			<key-property name="typeId" access="property" >
 				<column name="TYPE_ID" default="''"/>
 			</key-property>
 				

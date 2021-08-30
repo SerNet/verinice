@@ -11,6 +11,7 @@ package de.sernet.sync.data;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -49,7 +50,7 @@ public class SyncLink {
     protected String dependant;
     @XmlElement(required = true)
     protected String dependency;
-    @XmlElement(required = true)
+    @XmlTransient
     protected String relationId;
     protected String comment;
 
@@ -121,8 +122,9 @@ public class SyncLink {
      *     {@link String }
      *     
      */
+    @XmlElement(name = "relationId", required = true)
     public void setRelationId(String value) {
-        this.relationId = value;
+        this.relationId = value.intern();
     }
 
     /**

@@ -97,7 +97,7 @@ public class Property implements Serializable, ITypedElement {
     }
 
     public void setPropertyType(String propertyType) {
-        this.propertyType = propertyType;
+        this.propertyType = propertyType.intern();
     }
 
     public Entity getParent() {
