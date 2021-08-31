@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cheatsheet title="Konsolidator">
+  <intro>
+    <description>
+      Mit dem Konsolidator kann man bestimmte Werte von einem Baustein und seiner verknüpften Gefährdungen und Maßnahmen auf mehrere andere Bausteine übertragen.
+    </description>
+  </intro>
+  <item
+        title="Auswahl des Quellbausteins">
+     <description>
+        Zuerst drückt man <b>Rechtsklick auf einen Baustein &gt; Konsolidator ...</b><br/>
+Dieser Baustein dient als Quelle, von diesem werden die Daten auf andere Bausteine übertragen.
+     </description>
+  </item>
+  <item
+        title="Bausteine auswählen">
+     <description>
+        Der Konsolidator sucht als nächstes nach anderen Bausteinen mit dem gleichen Identifier, Sie können vorher noch auswählen ob Sie nur im gleichen oder in allen Informationsverbünden suchen möchten.<br/>
+<b>Ja / Nein</b>
+<br/><br/>
+Jetzt sollte eine Liste der gefundenen Bausteine angezeigt werden.<br/>
+Hier wählen Sie aus welche Bausteine bearbeitet werden sollen.<br/>
+Mit einem Klick auf <b>Weiter</b> kommen Sie zur Auswahl der Eigenschaften, die Sie übernehmen können.
+     </description>
+  </item>
+  <item
+        title="Daten auswählen &amp; Fertigstellen">
+     <description>
+        Hier wählen Sie aus welche Eigenschaften von welchen Objekttypen überschrieben werden sollen.<br/>
+Wenn Sie jetzt <b>Fertigstellen</b> drücken und ein wenig warten, dann werden Sie sehen, dass die Daten auf die ausgewählten Bausteine konsolidiert wurden.
+      </description>
+  </item>
+  <item
+        title="Genauere Infos">
+     <description>
+        Der Konsolidator findet anhand des Identifiers passende Bausteine und identifiziert damit auch die richtigen Gefährdungen und Maßnahmen in den ausgewählten Bausteinen. <br/>
+Welche Daten von welchen Bausteinen  überschrieben werden sollen, kann genau definiert werden.<br/>
+Der Konsolidator löscht keine Gefährungen oder Maßnahmen in den Zielbausteinen wenn sie in dem Quellbaustein nicht existieren, er überschreibt nur vorhandene Werte.
+     </description>
+  </item>
+</cheatsheet>

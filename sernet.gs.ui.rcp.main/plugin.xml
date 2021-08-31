@@ -1947,6 +1947,14 @@
             name="%cheatsheets.mogs.convert.name">
             <description></description>
         </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.consolidator"
+            composite="false"
+            contentFile="$nl$/cheatsheets/mogs/consolidator.xml"
+            name="%cheatsheets.mogs.consolidator.name">
+            <description></description>
+        </cheatsheet>
    </extension>
    <extension
          point="org.eclipse.ui.actionSets">
