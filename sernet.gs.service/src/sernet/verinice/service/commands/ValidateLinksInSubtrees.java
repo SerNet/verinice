@@ -17,19 +17,25 @@
  ******************************************************************************/
 package sernet.verinice.service.commands;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
+import sernet.gs.service.CollectionUtil;
 import sernet.gs.service.LinkValidator;
+import sernet.gs.service.RuntimeCommandException;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -49,31 +55,45 @@ public class ValidateLinksInSubtrees extends GenericCommand {
 
     @Override
     public void execute() {
-        List<CnATreeElement> elements = getDaoFactory().getDAO(CnATreeElement.class)
-                .findByCriteria(DetachedCriteria.forClass(CnATreeElement.class)
-                        .add(Restrictions.in(CnATreeElement.UUID, rootElementUUIDs)));
+        @NonNull
+        IBaseDao<CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
 
-        Set<CnALink> invalidLinks = new HashSet<>();
-        for (CnATreeElement element : elements) {
-            addInvalidLinksToSet(element, invalidLinks);
+        DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class)
+                .add(Restrictions.in(CnATreeElement.UUID, rootElementUUIDs));
+        List<CnATreeElement> elements = dao.findByCriteria(criteria);
+
+        try {
+            for (CnATreeElement element : elements) {
+                LoadSubtreeIds loadSubtreeIds = new LoadSubtreeIds(element);
+                Set<Integer> subTreeIds = getCommandService().executeCommand(loadSubtreeIds)
+                        .getDbIdsOfSubtree();
+
+                // Process data in partitions due to Oracle limitations
+                this.invalidLinks = CollectionUtil.partition(new ArrayList<>(subTreeIds), 500)
+                        .stream().flatMap(partition -> {
+                            DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class)
+                                    .add(Restrictions.in("dbId", partition));
+                            List<CnATreeElement> subtreeElements = dao.findByCriteria(crit);
+                            return subtreeElements.stream().flatMap(this::getInvalidLinks);
+                        }).collect(Collectors.toUnmodifiableSet());
+
+            }
+        } catch (CommandException e) {
+            throw new RuntimeCommandException(e);
         }
-
-        this.invalidLinks = Collections.unmodifiableSet(invalidLinks);
     }
 
-    private void addInvalidLinksToSet(CnATreeElement element, Set<CnALink> invalidLinks) {
-        invalidLinks.addAll(
-                Stream.concat(element.getLinksUp().stream(), element.getLinksDown().stream())
-                        .filter(link -> !LinkValidator.isRelationValid(link.getDependant(),
-                                link.getDependency(), link.getRelationId()))
-                        .map(link -> {
-                            // initialize dependant and dependency title so we
-                            // can use them in a potential error message
-                            link.getDependant().getTitle();
-                            link.getDependency().getTitle();
-                            return link;
-                        }).collect(Collectors.toSet()));
-        element.getChildren().forEach(child -> addInvalidLinksToSet(child, invalidLinks));
+    private Stream<CnALink> getInvalidLinks(CnATreeElement element) {
+        return Stream.concat(element.getLinksUp().stream(), element.getLinksDown().stream())
+                .filter(link -> !LinkValidator.isRelationValid(link.getDependant(),
+                        link.getDependency(), link.getRelationId()))
+                .map(link -> {
+                    // initialize dependant and dependency title so we
+                    // can use them in a potential error message
+                    link.getDependant().getTitle();
+                    link.getDependency().getTitle();
+                    return link;
+                });
     }
 
     public Set<CnALink> getInvalidLinks() {
