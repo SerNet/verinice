@@ -324,7 +324,7 @@ public abstract class ModelCopyTask implements Runnable {
 
         private ModelingCopyCommand(CnATreeElement targetElement, String uuidGroup,
                 List<String> uuidList, ModelingData modelingData) {
-            super(uuidGroup, uuidList, Collections.emptyList(), -1);
+            super(uuidGroup, uuidList, Collections.emptyList());
             this.targetElement = targetElement;
             this.modelingData = modelingData;
         }

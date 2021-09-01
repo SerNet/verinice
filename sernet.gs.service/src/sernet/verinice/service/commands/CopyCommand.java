@@ -69,8 +69,6 @@ public class CopyCommand extends GenericCommand {
 
     private static final Logger logger = Logger.getLogger(CopyCommand.class);
 
-    private static final int DEFAULT_FLUSH_LEVEL = 50;
-
     private String uuidGroup;
 
     private transient CnATreeElement groupToPasteTo;
@@ -80,8 +78,6 @@ public class CopyCommand extends GenericCommand {
     private List<IPostProcessor> postProcessorList;
 
     private int number = 0;
-
-    private int flushLevel;
 
     private transient IBaseDao<CnATreeElement, Serializable> dao;
 
@@ -101,23 +97,12 @@ public class CopyCommand extends GenericCommand {
         this(uuidGroup, uuidList, Collections.emptyList());
     }
 
-    /**
-     * @param uuid
-     * @param uuidList2
-     * @param postProcessorList2
-     */
     public CopyCommand(final String uuidGroup, final List<String> uuidList,
             final List<IPostProcessor> postProcessorList) {
-        this(uuidGroup, uuidList, postProcessorList, DEFAULT_FLUSH_LEVEL);
-    }
-
-    public CopyCommand(final String uuidGroup, final List<String> uuidList,
-            final List<IPostProcessor> postProcessorList, int flushLevel) {
         super();
         this.uuidGroup = uuidGroup;
         this.uuidList = uuidList;
         this.postProcessorList = postProcessorList;
-        this.flushLevel = flushLevel;
     }
 
     /**
@@ -291,9 +276,6 @@ public class CopyCommand extends GenericCommand {
             Optional<Map<String, String>> sourceDestMap) {
         afterCopy(original, copy);
         sourceDestMap.ifPresent(map -> map.put(original.getUuid(), copy.getUuid()));
-        if (flushLevel > 0 && number > 0 && number % flushLevel == 0) {
-            getDao().flush();
-        }
     }
 
     protected void afterCopy(CnATreeElement original, CnATreeElement copy) {
