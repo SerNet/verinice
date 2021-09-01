@@ -1,4 +1,5 @@
 **/bin
+sernet.gs.server/testBin/
 **/target
 */**/build/*
 !*/**/build/build/run-junit.xml
