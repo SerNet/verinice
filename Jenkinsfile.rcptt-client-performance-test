@@ -61,7 +61,6 @@ pipeline {
                 perfReport filterRegex: '', sourceDataFiles: 'gui-test-runner/result/results.junit.xml'
                 recordIssues(tools: [groovyScript(parserId: 'aut-eclipse-log', pattern: 'gui-test-runner/result/log/verinice-aut/.log*')])
                 recordIssues(tools: [groovyScript(id: 'verince-client-log', name: 'verince-client-log', parserId: 'verinice-log-parser', pattern: 'gui-test-runner/result/log/clientlogparsed.txt')])
-                archiveArtifacts allowEmptyArchive: true, artifacts: 'gui-test-runner/result/**/*.*', excludes: 'build/result/auth/**'
                 publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'gui-test-runner/result', reportFiles: 'results.html', reportName: 'Gui Test Report', reportTitles: "${job_to_copy_from}"])
             }
         }
@@ -81,6 +80,7 @@ pipeline {
     }
     post {
         always {
+            archiveArtifacts allowEmptyArchive: true, artifacts: 'gui-test-runner/result/**/*.*', excludes: 'build/result/auth/**'
             notifyBitbucket stashServerBaseUrl: 'https://git.verinice.org/bb',
                   credentialsId: 'bitbucket',
                   commitSha1: '',
