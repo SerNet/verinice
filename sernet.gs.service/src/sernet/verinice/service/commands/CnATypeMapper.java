@@ -54,6 +54,7 @@ import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.groups.BusinessProcessGroup;
 import sernet.verinice.model.bp.groups.DeviceGroup;
 import sernet.verinice.model.bp.groups.IcsSystemGroup;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bp.groups.ItSystemGroup;
 import sernet.verinice.model.bp.groups.NetworkGroup;
 import sernet.verinice.model.bp.groups.RoomGroup;
@@ -70,6 +71,7 @@ import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.bsi.MassnahmeKategorie;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.NKKategorie;
@@ -112,6 +114,7 @@ import sernet.verinice.model.iso27k.Finding;
 import sernet.verinice.model.iso27k.FindingGroup;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kElement;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Incident;
 import sernet.verinice.model.iso27k.IncidentGroup;
 import sernet.verinice.model.iso27k.IncidentScenario;
@@ -180,6 +183,7 @@ public final class CnATypeMapper {
         typeIdClass.put(StellungnahmeDSB.TYPE_ID, StellungnahmeDSB.class);
         typeIdClass.put(Datenverarbeitung.TYPE_ID, Datenverarbeitung.class);
         typeIdClass.put(Zweckbestimmung.TYPE_ID, Zweckbestimmung.class);
+        typeIdClass.put(ImportBsiGroup.TYPE_ID, ImportBsiGroup.class);
 
         typeIdClass.put(ResponseGroup.TYPE_ID, ResponseGroup.class);
         typeIdClass.put(ExceptionGroup.TYPE_ID, ExceptionGroup.class);
@@ -219,6 +223,7 @@ public final class CnATypeMapper {
         typeIdClass.put(Evidence.TYPE_ID, Evidence.class);
         typeIdClass.put(Interview.TYPE_ID, Interview.class);
         typeIdClass.put(Finding.TYPE_ID, Finding.class);
+        typeIdClass.put(ImportIsoGroup.TYPE_ID, ImportIsoGroup.class);
 
         typeIdClass.put(SamtTopic.TYPE_ID, SamtTopic.class);
 
@@ -256,6 +261,7 @@ public final class CnATypeMapper {
         typeIdClass.put(BpDocument.TYPE_ID, BpDocument.class);
         typeIdClass.put(BpIncident.TYPE_ID, BpIncident.class);
         typeIdClass.put(BpRecord.TYPE_ID, BpRecord.class);
+        typeIdClass.put(ImportBpGroup.TYPE_ID, ImportBpGroup.class);
 
         // map for description properties:
         descriptionPropertyMap.put(Client.TYPE_ID, Client.PROP_ERLAEUTERUNG);
