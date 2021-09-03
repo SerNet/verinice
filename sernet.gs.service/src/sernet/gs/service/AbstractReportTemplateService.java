@@ -49,7 +49,6 @@ import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.jfree.util.Log;
 
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IReportTemplateService;
@@ -346,7 +345,7 @@ private Properties createDefaultProperties(File path, String name, Locale locale
             try {
                 metas.add(new FileMetaData(filename, getCheckSum(filename)));
             } catch (IOException ex) {
-                Log.error("Failed creating meta data for file " + filename, ex);
+                logger.error("Failed creating meta data for file " + filename, ex);
             }
         });
         return metas;
