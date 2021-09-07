@@ -12,7 +12,7 @@
 <unit id="org.eclipse.equinox.executable" version="0.0.0"/>
 <unit id="org.apache.batik.css" version="0.0.0"/>
 <unit id="org.apache.batik.util" version="0.0.0"/>
-<repository location="http://download.eclipse.org/eclipse/updates/4.20/"/>
+<repository location="https://download.eclipse.org/eclipse/updates/4.21/"/>
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -117,7 +117,7 @@
 <unit id="org.eclipse.babel.nls_eclipse_cs.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.babel.nls_eclipse_de.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.babel.nls_eclipse_it.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/technology/babel/update-site/R0.19.0/2021-06/"/>
+<repository location="http://download.eclipse.org/technology/babel/update-site/R0.19.2/2021-09/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.babel.nls_datatools_cs.feature.group" version="0.0.0"/>

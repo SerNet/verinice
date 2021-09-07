@@ -99,7 +99,8 @@ Require-Bundle: com.springsource.org.apache.log4j;bundle-version="1.2.15",
  jakarta.xml.bind-api;bundle-version="2.3.3",
  jfree.jcommon,
  jfree.jfreechart,
- jfree.jfreechart-swt
+ jfree.jfreechart-swt,
+ org.bouncycastle.bcpg
 Import-Package: javax.xml.rpc.encoding,
  org.apache.axis.encoding.ser,
  org.eclipse.core.runtime,

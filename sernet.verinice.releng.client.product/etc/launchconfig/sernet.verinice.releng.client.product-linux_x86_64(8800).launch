@@ -39,7 +39,6 @@
         <setEntry value="com.opencsv@default:default"/>
         <setEntry value="com.springsource.com.sun.xml.messaging.saaj@default:default"/>
         <setEntry value="com.springsource.javassist@default:default"/>
-        <setEntry value="com.springsource.javax.activation@default:default"/>
         <setEntry value="com.springsource.javax.el@default:default"/>
         <setEntry value="com.springsource.javax.jms@default:default"/>
         <setEntry value="com.springsource.javax.mail@default:default"/>
@@ -327,6 +326,8 @@
         <setEntry value="org.eclipse.help.ui.nl_it@default:false"/>
         <setEntry value="org.eclipse.help.ui@default:default"/>
         <setEntry value="org.eclipse.help@default:default"/>
+        <setEntry value="org.eclipse.jdt.annotation*2.2.600.v20200408-1511@default:default"/>
+        <setEntry value="org.eclipse.jdt.annotation.nl_de@default:default"/>
         <setEntry value="org.eclipse.jface.databinding.nl_de@default:false"/>
         <setEntry value="org.eclipse.jface.databinding.nl_it@default:false"/>
         <setEntry value="org.eclipse.jface.databinding@default:default"/>
