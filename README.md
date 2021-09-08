@@ -89,9 +89,9 @@ To see where the Verinice client, client update site and server
 build artifacts can then be found
 read the following sections.
 
-If you want to skip the junit tests you need to add the `-Dmaven.antrun.skip=true` parameter.
+If you want to skip the junit tests you need to add the `-DskipTests` parameter.
 
-	./mvnw -Dtycho.disableP2Mirrors=true -Dmaven.antrun.skip=true  clean verify
+	./mvnw -Dtycho.disableP2Mirrors=true -DskipTests clean verify
 
 ## Verinice client
 
