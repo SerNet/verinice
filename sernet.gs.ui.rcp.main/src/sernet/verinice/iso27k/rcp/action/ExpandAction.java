@@ -64,8 +64,9 @@ public class ExpandAction extends Action implements ISelectionChangedListener {
         // add all ancestor elements
         CnATreeElement element = selectedElement;
         expandedElements.add(element);
-        while (element.getParent() != null) {
-            element = element.getParent();
+        CnATreeElement parent;
+        while ((parent = (CnATreeElement) contentProvider.getParent(element)) != null) {
+            element = parent;
             expandedElements.add(element);
         }
 
