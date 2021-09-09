@@ -32,10 +32,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 
-import sernet.verinice.model.bp.groups.ImportBpGroup;
-import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.ImportIsoGroup;
 
 /**
  * This action expands all elements in a tree below the selectedElement.
@@ -64,15 +61,12 @@ public class ExpandAction extends Action implements ISelectionChangedListener {
     public void run() {
         List<Object> expandedElements = new ArrayList<>();
 
-        // add all elements form selection to organization
+        // add all ancestor elements
         CnATreeElement element = selectedElement;
         expandedElements.add(element);
-        if (!isScope(element)) {
-            while (element.getParent() != null && !(parentIsScope(element))) {
-                element = element.getParent();
-                expandedElements.add(element);
-            }
-            expandedElements.add(element.getParent());
+        while (element.getParent() != null) {
+            element = element.getParent();
+            expandedElements.add(element);
         }
 
         // add all children
@@ -112,24 +106,6 @@ public class ExpandAction extends Action implements ISelectionChangedListener {
                 }
             }
         }
-    }
-
-    private boolean parentIsScope(CnATreeElement element) {
-        if (element == null || element.getParent() == null) {
-            return false;
-        }
-        CnATreeElement parent = element.getParent();
-        return isScope(parent);
-    }
-
-    /**
-     * Checks if the given element is a scope. Aka root node.
-     */
-    private boolean isScope(CnATreeElement element) {
-        return element.isScope() 
-                || element instanceof ImportBsiGroup 
-                || element instanceof ImportIsoGroup 
-                || element instanceof ImportBpGroup;
     }
 
 }
