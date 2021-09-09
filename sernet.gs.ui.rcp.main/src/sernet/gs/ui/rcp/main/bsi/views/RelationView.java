@@ -134,7 +134,8 @@ public class RelationView extends RightsEnabledView
                         Display.getDefault().syncExec(() -> viewer.setInput(linkElmt));
                     }
                 } catch (Exception e) {
-                    viewer.setInput(new PlaceHolder(Messages.RelationView_3));
+                    Display.getDefault().syncExec(
+                            () -> viewer.setInput(new PlaceHolder(Messages.RelationView_3)));
                     ExceptionUtil.log(e, Messages.RelationView_4);
                 }
 
