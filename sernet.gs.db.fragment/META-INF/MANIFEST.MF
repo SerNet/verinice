@@ -10,6 +10,7 @@ Bundle-ClassPath: .,
  lib/derby/derbyshared.jar,
  lib/derby/derbytools.jar
 Export-Package: 
- org.apache.derby.iapi.jdbc
+ org.apache.derby.iapi.jdbc,
+ org.apache.derby.shared.common.error
 Bundle-Vendor: SerNet GmbH
 Automatic-Module-Name: sernet.gs.db.fragment
