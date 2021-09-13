@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: jBPM
 Bundle-SymbolicName: jbpm
-Bundle-Version: 4.4.0
+Bundle-Version: 4.4.1
 Bundle-ClassPath: jbpm-4.4-SN.jar,
  juel-engine.jar,
  juel-impl.jar,

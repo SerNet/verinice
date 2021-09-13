@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bouncycastle
 Bundle-SymbolicName: bouncycastle
-Bundle-Version: 1.46.0
+Bundle-Version: 1.46.1
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: lib/bcmail-jdk16-146.jar,
  lib/bcprov-jdk16-146.jar,
