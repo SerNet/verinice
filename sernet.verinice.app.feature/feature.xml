@@ -276,11 +276,4 @@ Library.
          version="0.0.0"
          optional="true"/>
 
-   <requires>
-      <import feature="sernet.gs.server.feature" version="1.1.1.qualifier"/>
-      <import feature="sernet.rcp.ui.feature" version="1.0.0.qualifier"/>
-      <import feature="sernet.verinice.lang.feature" version="1.19.0.qualifier"/>
-      <import feature="sernet.verinice.extraresources.feature" version="1.0.0.qualifier"/>
-   </requires>
-
 </feature>
