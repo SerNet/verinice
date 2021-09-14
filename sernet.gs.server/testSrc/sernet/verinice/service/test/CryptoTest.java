@@ -29,6 +29,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -72,7 +74,6 @@ import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.junit.Assert;
 import org.junit.Test;
 
-import sernet.gs.service.FileUtil;
 import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
@@ -174,14 +175,14 @@ public class CryptoTest extends ContextConfiguration {
         assertNotNull(certPEM);
         File certFile = File.createTempFile("veriniceCert", "PEM");
         assertNotNull(certFile);
-        FileUtil.writeStringToFile(certPEM, certFile.getAbsolutePath());
+        Files.write(certFile.toPath(), certPEM.getBytes());
         certFile.deleteOnExit();
         byte[] encryptedData = getEncryptionService().encrypt(SECRET.getBytes(), certFile);
         byte[] privateKey = keyPair.getPrivate().getEncoded();
         String privateKeyString = convertToPem(privateKey, true, false);
         File keyFile = File.createTempFile("veriniceKey", "PEM");
         assertNotNull(keyFile);
-        FileUtil.writeStringToFile(privateKeyString, keyFile.getAbsolutePath());
+        Files.write(keyFile.toPath(), privateKeyString.getBytes());
         certFile.deleteOnExit();
         byte[] decryptedData = getEncryptionService().decrypt(encryptedData, certFile, keyFile);
         assertEquals(SECRET, new String(decryptedData));
@@ -189,7 +190,7 @@ public class CryptoTest extends ContextConfiguration {
 
     @Test
     public void VNAPBCryptoTest() throws SyncParameterException, IOException, CommandException {
-        byte[] plainContent = FileUtil.getFileData(new File(getAbsoluteFilePath(VNA_FILE)));
+        byte[] plainContent = Files.readAllBytes(Paths.get(getAbsoluteFilePath(VNA_FILE)));
         char[] password = getPassword(10);
         byte[] encryptedContent = getEncryptionService().encrypt(plainContent, password);
         byte[] decryptedContent = getEncryptionService().decrypt(encryptedContent, password);

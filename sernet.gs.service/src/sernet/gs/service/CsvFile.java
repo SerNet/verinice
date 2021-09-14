@@ -44,7 +44,7 @@ public class CsvFile implements Serializable {
     public CsvFile(InputStream is, Charset charset) throws IOException {
         super();
         this.filePath = "unknown";
-        byte[] content = FileUtil.getBytesFromInputstream(is);
+        byte[] content = is.readAllBytes();
         if (!VeriniceCharset.CHARSET_UTF_8.equals(charset)) {
             content = FileUtil.changeEncoding(content, charset, VeriniceCharset.CHARSET_UTF_8);
         }

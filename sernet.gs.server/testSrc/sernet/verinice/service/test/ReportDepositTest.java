@@ -32,6 +32,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,8 +49,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import sernet.gs.service.AbstractReportTemplateService;
-import sernet.gs.service.FileUtil;
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IReportTemplateService;
 import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
@@ -114,8 +113,8 @@ public class ReportDepositTest extends CommandServiceProvider {
     }
 
     @After
-    public void tearDown() throws CommandException {
-        FileUtil.deleteDirectory(deposit);
+    public void tearDown() throws IOException {
+        FileUtils.deleteDirectory(deposit);
     }
 
     @Test
@@ -229,7 +228,8 @@ public class ReportDepositTest extends CommandServiceProvider {
     }
 
     private List<ReportTemplateMetaData> addAllFilesToDeposit()
-            throws ReportTemplateServiceException, URISyntaxException, ReportDepositException {
+            throws ReportTemplateServiceException, URISyntaxException, ReportDepositException,
+            IOException {
         URL reportDirectory = ReportDepositTest.class.getResource(REPORT_DIR);
         assertNotNull("Report directory not found: " + REPORT_DIR, reportDirectory);
         File dir = new File(reportDirectory.toURI());
@@ -247,7 +247,7 @@ public class ReportDepositTest extends CommandServiceProvider {
     }
 
     private ReportTemplateMetaData addFileToDeposit(final File dir, String fileName)
-            throws ReportTemplateServiceException, ReportDepositException {
+            throws ReportTemplateServiceException, ReportDepositException, IOException {
 
         IReportTemplateService templateUtil = new AbstractReportTemplateService() {
             @Override
@@ -262,7 +262,7 @@ public class ReportDepositTest extends CommandServiceProvider {
         };
 
         File rptFile = new File(dir, fileName);
-        byte[] fileData = FileUtil.getFileData(rptFile);
+        byte[] fileData = Files.readAllBytes(rptFile.toPath());
         ReportTemplateMetaData metadata = getReportMetaDataFromDeposit(fileName, templateUtil);
         depositService.add(metadata, fileData, Locale.ENGLISH);
         return metadata;
