@@ -69,9 +69,9 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
+import org.junit.Assert;
 import org.junit.Test;
 
-import org.junit.Assert;
 import sernet.gs.service.FileUtil;
 import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.CommandException;
@@ -82,89 +82,89 @@ import sernet.verinice.service.commands.SyncParameterException;
  *
  */
 public class CryptoTest extends ContextConfiguration {
-    
+
     private static final Logger LOG = Logger.getLogger(CryptoTest.class);
-    
+
     private static final int MAX_PASSWORD_LENGTH = 100;
-    
+
     private static final String BC_PROVIDER_NAME = BouncyCastleProvider.PROVIDER_NAME;
     private static final int CRYPTO_SALT_DEFAULT_LENGTH = 8;
     private static final String CRYPTO_DEFAULT_ENCODING = "UTF-8";
     private static final int CRYPTO_KEY_ITERATION_COUNTS = 1200;
     private static final String ENCRYPTION_ALGORITHM = "PBEWITHSHA256AND256BITAES-CBC-BC";
-    
-    @Resource (name="encryptionService")
+
+    @Resource(name = "encryptionService")
     private IEncryptionService encryptionService;
-    
+
     private static final String VNA_FILE = "CryptoTest.vna";
-    
-    private static final String SECRET = "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
-            " Donec at ligula et nibh pretium vulputate vitae quis tortor. " +
-            "Integer ultrices facilisis ligula a pulvinar. Etiam commodo blandit eleifend. " +
-            "Suspendisse malesuada ligula ut lectus fermentum, sit amet sodales elit malesuada. " +
-            "Etiam nec vestibulum erat. Sed eget varius risus, vel ornare nisl. Duis sem augue, " +
-            "volutpat at nisl ac, condimentum tincidunt erat. " +
-            "Integer dapibus hendrerit lacus, quis semper augue feugiat sed. ";
-    
+
+    private static final String SECRET = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            + " Donec at ligula et nibh pretium vulputate vitae quis tortor. "
+            + "Integer ultrices facilisis ligula a pulvinar. Etiam commodo blandit eleifend. "
+            + "Suspendisse malesuada ligula ut lectus fermentum, sit amet sodales elit malesuada. "
+            + "Etiam nec vestibulum erat. Sed eget varius risus, vel ornare nisl. Duis sem augue, "
+            + "volutpat at nisl ac, condimentum tincidunt erat. "
+            + "Integer dapibus hendrerit lacus, quis semper augue feugiat sed. ";
+
     @Test
-    public void passwordStreamBasedCryptoTest(){
-        try{
+    public void passwordStreamBasedCryptoTest() {
+        try {
             File f = File.createTempFile("veriniceCryptoTest", "pcr");
             f.deleteOnExit();
-            char[] password = getPassword(20); 
+            char[] password = getPassword(20);
             FileOutputStream fileOutputStream = new FileOutputStream(f);
-            OutputStream encryptedOutputStream = getEncryptionService().encrypt(fileOutputStream, 
+            OutputStream encryptedOutputStream = getEncryptionService().encrypt(fileOutputStream,
                     password);
             encryptedOutputStream.write(SECRET.getBytes());
             encryptedOutputStream.flush();
             encryptedOutputStream.close();
 
             FileInputStream fileInputStream = new FileInputStream(f.getAbsolutePath());
-            InputStream decryptedInputStream = getEncryptionService().decrypt(fileInputStream, password);
-            StringBuilder sb = new StringBuilder();            
+            InputStream decryptedInputStream = getEncryptionService().decrypt(fileInputStream,
+                    password);
+            StringBuilder sb = new StringBuilder();
             byte data = -1;
             while ((data = (byte) decryptedInputStream.read()) != -1) {
-                sb.append((char)data);
+                sb.append((char) data);
             }
             assertEquals(SECRET, sb.toString());
 
-
-
-        } catch (IOException e){
+        } catch (IOException e) {
             LOG.error("IO-Error", e);
         }
-        
+
     }
 
     @Test
-    public void passwordByteBasedCryptoTest(){
+    public void passwordByteBasedCryptoTest() {
 
-        for(int i = 1; i <= MAX_PASSWORD_LENGTH; i++ ){
+        for (int i = 1; i <= MAX_PASSWORD_LENGTH; i++) {
             char[] password = getPassword(i);
-            byte[] encryptedMessage = 
-                    getEncryptionService().encrypt(SECRET.getBytes(), password);
+            byte[] encryptedMessage = getEncryptionService().encrypt(SECRET.getBytes(), password);
 
+            byte[] decryptedMessage = getEncryptionService().decrypt(encryptedMessage, password);
 
-            byte[] decryptedMessage = 
-                    getEncryptionService().decrypt(encryptedMessage, password);
+            assertEquals(
+                    "test fails on password(" + password.length + "):\n" + String.valueOf(password),
+                    new String(decryptedMessage), SECRET);
 
-            assertEquals("test fails on password(" + password.length + "):\n" + String.valueOf(password), new String(decryptedMessage), SECRET);
-            
         }
     }
-    
+
     @Test
-    public void cryptVNLContentId(){
+    public void cryptVNLContentId() {
         String password = "111";
         String salt = "111";
         String plainContentId = "ISO27K1";
-        String encryptedContentId = getEncryptionService().encrypt(plainContentId, password.toCharArray(), salt);
-        String decryptedContentId = getEncryptionService().decrypt(encryptedContentId, password.toCharArray(), salt);
+        String encryptedContentId = getEncryptionService().encrypt(plainContentId,
+                password.toCharArray(), salt);
+        String decryptedContentId = getEncryptionService().decrypt(encryptedContentId,
+                password.toCharArray(), salt);
         Assert.assertTrue(plainContentId.equals(decryptedContentId));
     }
-    
+
     @Test
-    public void certificateByteBasedCryptoTest() throws GeneralSecurityException, IOException{
+    public void certificateByteBasedCryptoTest() throws GeneralSecurityException, IOException {
         KeyPair keyPair = generateKeyPair();
         assertNotNull("Keypair is null", keyPair);
         String distinguishedName = "CN=Test, L=Berlin, C=DE";
@@ -186,9 +186,9 @@ public class CryptoTest extends ContextConfiguration {
         byte[] decryptedData = getEncryptionService().decrypt(encryptedData, certFile, keyFile);
         assertEquals(SECRET, new String(decryptedData));
     }
-    
+
     @Test
-    public void VNAPBCryptoTest() throws SyncParameterException, IOException, CommandException{
+    public void VNAPBCryptoTest() throws SyncParameterException, IOException, CommandException {
         byte[] plainContent = FileUtil.getFileData(new File(getAbsoluteFilePath(VNA_FILE)));
         char[] password = getPassword(10);
         byte[] encryptedContent = getEncryptionService().encrypt(plainContent, password);
@@ -196,45 +196,45 @@ public class CryptoTest extends ContextConfiguration {
         assertTrue(Arrays.areEqual(plainContent, decryptedContent));
     }
 
-    private char[] getPassword(int length){
+    private char[] getPassword(int length) {
         return RandomStringUtils.randomAscii(length).toCharArray();
     }
 
     public IEncryptionService getEncryptionService() {
         return encryptionService;
     }
-    
-    public void setEncryptionService(IEncryptionService service){
+
+    public void setEncryptionService(IEncryptionService service) {
         this.encryptionService = service;
     }
-    
+
     X509Certificate generateCertificate(String dn, KeyPair pair, int days)
-            throws GeneralSecurityException, IOException
-            {
+            throws GeneralSecurityException, IOException {
         PublicKey publicKey = pair.getPublic();
         PrivateKey privateKey = pair.getPrivate();
-        if(publicKey instanceof RSAPublicKey){
-            RSAPublicKey rsaPk = (RSAPublicKey)publicKey;
-            RSAPublicKeySpec rsaPkSpec = new RSAPublicKeySpec(rsaPk.getModulus(), rsaPk.getPublicExponent());
-            try{
+        if (publicKey instanceof RSAPublicKey) {
+            RSAPublicKey rsaPk = (RSAPublicKey) publicKey;
+            RSAPublicKeySpec rsaPkSpec = new RSAPublicKeySpec(rsaPk.getModulus(),
+                    rsaPk.getPublicExponent());
+            try {
                 publicKey = KeyFactory.getInstance("RSA").generatePublic(rsaPkSpec);
-            } catch (InvalidKeySpecException e){
+            } catch (InvalidKeySpecException e) {
                 publicKey = pair.getPublic();
             }
         }
-        if(privateKey instanceof RSAPrivateKey){
-            RSAPrivateKey rsaPk = (RSAPrivateKey)privateKey;
-            RSAPrivateKeySpec rsaPkSpec = new RSAPrivateKeySpec(rsaPk.getModulus(), rsaPk.getPrivateExponent());
-            try{
+        if (privateKey instanceof RSAPrivateKey) {
+            RSAPrivateKey rsaPk = (RSAPrivateKey) privateKey;
+            RSAPrivateKeySpec rsaPkSpec = new RSAPrivateKeySpec(rsaPk.getModulus(),
+                    rsaPk.getPrivateExponent());
+            try {
                 privateKey = KeyFactory.getInstance("RSA").generatePrivate(rsaPkSpec);
-            } catch ( InvalidKeySpecException e){
+            } catch (InvalidKeySpecException e) {
                 privateKey = pair.getPrivate();
             }
         }
 
         X509V3CertificateGenerator certGen = new X509V3CertificateGenerator();
-        String commonName = "CN=" + dn
-                + ", OU=None, O=None L=None, C=None";
+        String commonName = "CN=" + dn + ", OU=None, O=None L=None, C=None";
         X500Principal dnName = new X500Principal(commonName);
         certGen.setSerialNumber(BigInteger.valueOf(System.currentTimeMillis()));
         certGen.setIssuerDN(dnName);
@@ -247,85 +247,76 @@ public class CryptoTest extends ContextConfiguration {
         certGen.setPublicKey(publicKey);
         certGen.setSignatureAlgorithm("MD5WithRSA");
         return certGen.generate(privateKey, BouncyCastleProvider.PROVIDER_NAME);
-            }  
-    
-    KeyPair generateKeyPair() throws NoSuchAlgorithmException, NoSuchProviderException{
+    }
+
+    KeyPair generateKeyPair() throws NoSuchAlgorithmException, NoSuchProviderException {
         KeyPairGenerator keyGen;
-        keyGen = org.bouncycastle.jce.provider.asymmetric.ec.KeyPairGenerator.getInstance("RSA", BouncyCastleProvider.PROVIDER_NAME);
+        keyGen = org.bouncycastle.jce.provider.asymmetric.ec.KeyPairGenerator.getInstance("RSA",
+                BouncyCastleProvider.PROVIDER_NAME);
         keyGen.initialize(1024, new SecureRandom());
         return keyGen.generateKeyPair();
     }
-    
-    
+
     private String convertToPem(byte[] data, boolean isKey, boolean isCert) {
         String prefix = "";
         String suffix = "";
-        if(isCert && !isKey){
+        if (isCert && !isKey) {
             prefix = "-----BEGIN CERTIFICATE-----\n";
             suffix = "\n-----END CERTIFICATE-----";
-        } 
-        if(!isCert && isKey){
+        }
+        if (!isCert && isKey) {
             prefix = "-----BEGIN PRIVATE KEY-----\n";
-            suffix = "\n-----END PRIVATE KEY-----"    ;      
+            suffix = "\n-----END PRIVATE KEY-----";
         }
         try {
             return prefix + DatatypeConverter.printBase64Binary(data) + suffix;
         } catch (Exception e) {
-            LOG.error("Error converting cert",e);
+            LOG.error("Error converting cert", e);
         }
         return null;
     }
-    
-    
+
     private String getAbsoluteFilePath(String path) {
         return getClass().getResource(path).getPath();
     }
-    
+
     @Test
-    public void testBouncyCastle(){
-        
+    public void testBouncyCastle() {
+
         final String PLAINTEXT = "ISO27K1";
         final String PASSWORD = "111";
-        
-        try{
+
+        try {
             byte[] saltBytes = getSalt();
             String saltString = new String(saltBytes, VeriniceCharset.CHARSET_UTF_8);
             String cyphertext = encryptCLIWay(PLAINTEXT, PASSWORD, saltString);
             String decryptedText = decryptCLIWay(cyphertext, PASSWORD);
             Assert.assertEquals(PLAINTEXT, decryptedText);
-            
-        } catch (Exception e){
+
+        } catch (Exception e) {
             LOG.error("Something went wrong", e);
         }
     }
-    
+
     private byte[] getSalt()
-            throws NoSuchAlgorithmException,
-            NoSuchProviderException, UnsupportedEncodingException {
+            throws NoSuchAlgorithmException, NoSuchProviderException, UnsupportedEncodingException {
         byte[] salt = new byte[CRYPTO_SALT_DEFAULT_LENGTH];
         SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
-        byte[] randomAlphanumericBytes = 
-                new BigInteger(130, secureRandom).toString(32).getBytes(CRYPTO_DEFAULT_ENCODING);
+        byte[] randomAlphanumericBytes = new BigInteger(130, secureRandom).toString(32)
+                .getBytes(CRYPTO_DEFAULT_ENCODING);
         salt = java.util.Arrays.copyOfRange(randomAlphanumericBytes, 0, CRYPTO_SALT_DEFAULT_LENGTH);
         return salt;
     }
-    
-    private String decryptCLIWay(String cypherText, String password) throws 
-        NoSuchAlgorithmException, 
-        NoSuchProviderException, 
-        UnsupportedEncodingException, 
-        InvalidKeySpecException, 
-        NoSuchPaddingException, 
-        InvalidKeyException, 
-        InvalidAlgorithmParameterException, 
-        IllegalBlockSizeException, 
-        BadPaddingException{
+
+    private String decryptCLIWay(String cypherText, String password)
+            throws NoSuchAlgorithmException, NoSuchProviderException, UnsupportedEncodingException,
+            InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException,
+            InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
 
         if (Security.getProvider(BC_PROVIDER_NAME) == null) {
             Security.addProvider(new BouncyCastleProvider());
         }
-        SecretKeyFactory secKeyFac = SecretKeyFactory.getInstance(
-                ENCRYPTION_ALGORITHM,
+        SecretKeyFactory secKeyFac = SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM,
                 BC_PROVIDER_NAME);
 
         char[] keyChar = new char[password.length()];
@@ -335,9 +326,8 @@ public class CryptoTest extends ContextConfiguration {
         final byte[] bytes = Base64
                 .decode(cypherText.getBytes(IEncryptionService.CRYPTO_DEFAULT_ENCODING));
         final byte[] salt = java.util.Arrays.copyOf(bytes, CRYPTO_SALT_DEFAULT_LENGTH);
-        final byte[] cipherText = java.util.Arrays.copyOfRange(bytes,
-                                                     CRYPTO_SALT_DEFAULT_LENGTH,
-                                                     bytes.length);
+        final byte[] cipherText = java.util.Arrays.copyOfRange(bytes, CRYPTO_SALT_DEFAULT_LENGTH,
+                bytes.length);
 
         PBEParameterSpec bEParameterSpec = new PBEParameterSpec(salt, CRYPTO_KEY_ITERATION_COUNTS);
         SecretKey secret = secKeyFac.generateSecret(pbeKeySpec);
@@ -348,32 +338,24 @@ public class CryptoTest extends ContextConfiguration {
 
         return new String(decrypted, IEncryptionService.CRYPTO_DEFAULT_ENCODING);
 
-        
     }
-    
-    private String encryptCLIWay(String plainText, String password, String salt) throws 
-        NoSuchAlgorithmException, 
-        NoSuchProviderException, 
-        InvalidKeySpecException, 
-        NoSuchPaddingException, 
-        InvalidKeyException, 
-        InvalidAlgorithmParameterException, 
-        IllegalBlockSizeException, 
-        BadPaddingException, 
-        UnsupportedEncodingException{
+
+    private String encryptCLIWay(String plainText, String password, String salt)
+            throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException,
+            NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException,
+            IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
         if (Security.getProvider(BC_PROVIDER_NAME) == null) {
             Security.addProvider(new BouncyCastleProvider());
         }
-        
-        SecretKeyFactory secKeyFac = SecretKeyFactory.getInstance(
-                ENCRYPTION_ALGORITHM,
+
+        SecretKeyFactory secKeyFac = SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM,
                 BC_PROVIDER_NAME);
-        
+
         char[] keyChar = new char[password.length()];
         password.getChars(0, password.length(), keyChar, 0);
         PBEKeySpec pbeKeySpec = new PBEKeySpec(keyChar);
-        PBEParameterSpec paramSpec = new PBEParameterSpec(salt.getBytes(VeriniceCharset.CHARSET_UTF_8),
-                CRYPTO_KEY_ITERATION_COUNTS);
+        PBEParameterSpec paramSpec = new PBEParameterSpec(
+                salt.getBytes(VeriniceCharset.CHARSET_UTF_8), CRYPTO_KEY_ITERATION_COUNTS);
         SecretKey secret = secKeyFac.generateSecret(pbeKeySpec);
 
         Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, BC_PROVIDER_NAME);
@@ -389,5 +371,5 @@ public class CryptoTest extends ContextConfiguration {
         final String encodedString = new String(encoded, CRYPTO_DEFAULT_ENCODING);
         return encodedString;
     }
-    
+
 }

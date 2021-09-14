@@ -30,8 +30,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.security.MessageDigest;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Daniel <dm[at]sernet[dot]de>
  * 
@@ -110,16 +108,16 @@ public final class FileUtil {
         }
         return result;
     }
-    
-    public static byte[] getFileData(File f){
+
+    public static byte[] getFileData(File f) {
         try {
             return Files.readAllBytes(f.toPath());
 
         } catch (IOException e) {
-            throw new RuntimeException("Error while reading file data",e);
-        }     
+            throw new RuntimeException("Error while reading file data", e);
+        }
     }
-    
+
     public static boolean deleteDirectory(File path) {
         if (path.exists()) {
             File[] files = path.listFiles();
@@ -133,11 +131,11 @@ public final class FileUtil {
         }
         return (path.delete());
     }
-    
+
     public static String getFolderFromPath(String path) {
         String returnPath = null;
-        if(path!=null && path.indexOf(File.separatorChar)!=-1) {
-            returnPath = path.substring(0, path.lastIndexOf(File.separatorChar)+1);
+        if (path != null && path.indexOf(File.separatorChar) != -1) {
+            returnPath = path.substring(0, path.lastIndexOf(File.separatorChar) + 1);
         }
         return returnPath;
     }

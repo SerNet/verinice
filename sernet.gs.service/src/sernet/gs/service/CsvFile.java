@@ -25,73 +25,71 @@ import java.nio.charset.Charset;
 
 import org.apache.commons.io.FileUtils;
 
-
 /**
  * @author Daniel <dm[at]sernet[dot]de>
  *
  */
-public class CsvFile implements Serializable{
-	
+public class CsvFile implements Serializable {
+
     public static final Charset CHARSET_DEFAULT = VeriniceCharset.CHARSET_UTF_8;
-	
+
     private String filePath;
-	
-	private byte[] fileContent;
-	
-	public CsvFile(InputStream is) throws IOException {
-	    this(is,CHARSET_DEFAULT);
-	}
-	
-	public CsvFile(InputStream is, Charset charset) throws IOException {
+
+    private byte[] fileContent;
+
+    public CsvFile(InputStream is) throws IOException {
+        this(is, CHARSET_DEFAULT);
+    }
+
+    public CsvFile(InputStream is, Charset charset) throws IOException {
         super();
         this.filePath = "unknown";
         byte[] content = FileUtil.getBytesFromInputstream(is);
-        if(!VeriniceCharset.CHARSET_UTF_8.equals(charset)) {
+        if (!VeriniceCharset.CHARSET_UTF_8.equals(charset)) {
             content = FileUtil.changeEncoding(content, charset, VeriniceCharset.CHARSET_UTF_8);
         }
         setFileContent(content);
     }
-	
-	public CsvFile(String filePath) throws IOException {
-        this(filePath,CHARSET_DEFAULT);
+
+    public CsvFile(String filePath) throws IOException {
+        this(filePath, CHARSET_DEFAULT);
     }
-	
-	public CsvFile(String filePath, Charset charset) throws IOException {
-		super();
-		this.filePath = filePath;
-		readFile(charset);
-	}
 
-	
-	public CsvFile(byte[] fileContent) throws IOException {
-		super();
-		setFileContent(fileContent);
-	}
+    public CsvFile(String filePath, Charset charset) throws IOException {
+        super();
+        this.filePath = filePath;
+        readFile(charset);
+    }
 
-	public final void readFile(Charset charset) throws IOException {
-		if( getFilePath()!=null) {
-			File file = new File(getFilePath());
-			byte[] content = FileUtils.readFileToByteArray(file);
-			if(!VeriniceCharset.CHARSET_UTF_8.equals(charset)) {
-			    content = FileUtil.changeEncoding(content, charset, VeriniceCharset.CHARSET_UTF_8);
-			}
-			setFileContent(content);
-		}
-	}
-	
-	public byte[] getFileContent() {
-		return (fileContent != null) ? fileContent.clone() : null;
-	}
+    public CsvFile(byte[] fileContent) throws IOException {
+        super();
+        setFileContent(fileContent);
+    }
 
-	public final void setFileContent(byte[] fileContent) {
-		this.fileContent = (fileContent != null) ? fileContent.clone() : null;
-	}
+    public final void readFile(Charset charset) throws IOException {
+        if (getFilePath() != null) {
+            File file = new File(getFilePath());
+            byte[] content = FileUtils.readFileToByteArray(file);
+            if (!VeriniceCharset.CHARSET_UTF_8.equals(charset)) {
+                content = FileUtil.changeEncoding(content, charset, VeriniceCharset.CHARSET_UTF_8);
+            }
+            setFileContent(content);
+        }
+    }
 
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
-	}
+    public byte[] getFileContent() {
+        return (fileContent != null) ? fileContent.clone() : null;
+    }
 
-	public String getFilePath() {
-		return filePath;
-	}
+    public final void setFileContent(byte[] fileContent) {
+        this.fileContent = (fileContent != null) ? fileContent.clone() : null;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
 }
