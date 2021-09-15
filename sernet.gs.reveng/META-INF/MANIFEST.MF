@@ -2,17 +2,17 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Reveng
 Bundle-SymbolicName: sernet.gs.reveng
-Bundle-Version: 1.1.1.qualifier
+Bundle-Version: 1.2.0.qualifier
 Export-Package: sernet.gs.reveng;uses:="org.hibernate",
  sernet.gs.reveng.importData;uses:="sernet.gs.reveng",
  sernet.gs.reveng.type
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ClassPath: .
 Require-Bundle: com.springsource.org.hibernate;bundle-version="3.2.6",
- org.springframework.core;bundle-version="2.5.6",
- org.springframework.orm;bundle-version="2.5.6",
+ org.springframework.core;bundle-version="2.5.6.SEC03",
+ org.springframework.orm;bundle-version="2.5.6.SEC03",
  com.springsource.org.apache.log4j;bundle-version="1.2.15",
- org.springframework.beans;bundle-version="2.5.6",
+ org.springframework.beans;bundle-version="2.5.6.SEC03",
  org.apache.commons.logging;bundle-version="1.1.1"
 Import-Package: org.apache.commons.io
 Automatic-Module-Name: sernet.gs.reveng
