@@ -20,6 +20,7 @@ java.util.Collections$SingletonList
 java.util.Collections$UnmodifiableCollection
 java.util.Collections$UnmodifiableSet
 java.util.Date
+java.util.EnumMap
 java.util.HashMap
 java.util.HashSet
 java.util.Hashtable
