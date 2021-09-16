@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: sernet.gs.service Test
 Bundle-SymbolicName: sernet.gs.service.tests
 Bundle-Version: 1.12.0.qualifier
-Fragment-Host: sernet.gs.service;bundle-version="1.12.0"
+Fragment-Host: sernet.gs.service
 Automatic-Module-Name: sernet.gs.service.test
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.junit;bundle-version="4.12.0",
