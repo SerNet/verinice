@@ -513,7 +513,8 @@ public class ValidationService implements IValidationService {
             List<Integer> dbIdsOfSubtree = new ArrayList<>(
                     loadSubtreeIdsCommand.getDbIdsOfSubtree());
             // Delete validation in partitions due to Oracle limitations
-            Collection<List<Integer>> partitions = CollectionUtil.partition(dbIdsOfSubtree, 1000);
+            Collection<List<Integer>> partitions = CollectionUtil.partition(dbIdsOfSubtree,
+                    IDao.QUERY_MAX_ITEMS_IN_LIST);
             if (log.isDebugEnabled()) {
                 log.debug("Deleting validations in " + partitions.size() + " partition(s)");
             }
@@ -549,7 +550,7 @@ public class ValidationService implements IValidationService {
         List<CnATreeElement> elements = new ArrayList<>(uuids.size());
         List<CnAValidation> existingValidations = new ArrayList<>(uuids.size());
         Collection<List<String>> partitions = CollectionUtil.partition(new ArrayList<String>(uuids),
-                1000);
+                IDao.QUERY_MAX_ITEMS_IN_LIST);
         for (List<String> partitionUUIDs : partitions) {
             List<CnATreeElement> partitionElements = loadElements(partitionUUIDs);
             elements.addAll(partitionElements);

@@ -30,6 +30,7 @@ import org.hibernate.criterion.Restrictions;
 import sernet.gs.service.CollectionUtil;
 import sernet.hui.common.connect.ITargetObject;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IDao;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.Safeguard;
@@ -49,32 +50,34 @@ public class LoadContainingObjects extends GenericCommand {
     @Override
     public void execute() {
         result = new HashMap<>(elementIDs.size());
-        CollectionUtil.partition(new ArrayList<>(elementIDs), 500).forEach(partition -> {
-            @SuppressWarnings("unchecked")
-            List<CnATreeElement> elements = getDaoFactory().getDAO(CnATreeElement.class)
-                    .findByCriteria(DetachedCriteria.forClass(CnATreeElement.class)
-                            .add(Restrictions.in("dbId", partition)));
-            elements.forEach(element -> {
-                CnATreeElement containingObject = element.getParent();
-                String elementType = element.getTypeId();
-                if (BpRequirement.TYPE_ID.equals(elementType)
-                        || Safeguard.TYPE_ID.equals(elementType)
-                        || BpThreat.TYPE_ID.equals(elementType)) {
-                    while (containingObject != null && !(ITargetObject.class.isAssignableFrom(
-                            CnATypeMapper.getClassFromTypeId(containingObject.getTypeId())))) {
-                        containingObject = containingObject.getParent();
-                    }
-                }
-                if (containingObject != null) {
-                    if (containingObject.getEntity() != null) {
-                        containingObject.getEntity().getTypedPropertyLists().values()
-                                .forEach(propertyList -> propertyList.getProperties()
-                                        .forEach(Hibernate::initialize));
-                    }
-                    result.put(element.getDbId(), containingObject);
-                }
-            });
-        });
+        CollectionUtil.partition(new ArrayList<>(elementIDs), IDao.QUERY_MAX_ITEMS_IN_LIST)
+                .forEach(partition -> {
+                    @SuppressWarnings("unchecked")
+                    List<CnATreeElement> elements = getDaoFactory().getDAO(CnATreeElement.class)
+                            .findByCriteria(DetachedCriteria.forClass(CnATreeElement.class)
+                                    .add(Restrictions.in("dbId", partition)));
+                    elements.forEach(element -> {
+                        CnATreeElement containingObject = element.getParent();
+                        String elementType = element.getTypeId();
+                        if (BpRequirement.TYPE_ID.equals(elementType)
+                                || Safeguard.TYPE_ID.equals(elementType)
+                                || BpThreat.TYPE_ID.equals(elementType)) {
+                            while (containingObject != null
+                                    && !(ITargetObject.class.isAssignableFrom(CnATypeMapper
+                                            .getClassFromTypeId(containingObject.getTypeId())))) {
+                                containingObject = containingObject.getParent();
+                            }
+                        }
+                        if (containingObject != null) {
+                            if (containingObject.getEntity() != null) {
+                                containingObject.getEntity().getTypedPropertyLists().values()
+                                        .forEach(propertyList -> propertyList.getProperties()
+                                                .forEach(Hibernate::initialize));
+                            }
+                            result.put(element.getDbId(), containingObject);
+                        }
+                    });
+                });
     }
 
     public Map<Integer, CnATreeElement> getResult() {

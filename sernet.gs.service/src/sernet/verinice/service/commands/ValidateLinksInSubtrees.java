@@ -36,6 +36,7 @@ import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IDao;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -69,7 +70,8 @@ public class ValidateLinksInSubtrees extends GenericCommand {
                         .getDbIdsOfSubtree();
 
                 // Process data in partitions due to Oracle limitations
-                this.invalidLinks = CollectionUtil.partition(new ArrayList<>(subTreeIds), 500)
+                this.invalidLinks = CollectionUtil
+                        .partition(new ArrayList<>(subTreeIds), IDao.QUERY_MAX_ITEMS_IN_LIST)
                         .stream().flatMap(partition -> {
                             DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class)
                                     .add(Restrictions.in("dbId", partition));

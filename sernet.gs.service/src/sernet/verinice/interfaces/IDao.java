@@ -33,6 +33,10 @@ import org.hibernate.criterion.DetachedCriteria;
  */
 public interface IDao<T, ID extends Serializable> {
 
+    // Oracle DB allows a maximum of 1000 items in an IN(...) expression
+    // (ORA-01795). We use a somewhat safer limit.
+    int QUERY_MAX_ITEMS_IN_LIST = 500;
+
     public abstract void saveOrUpdate(T entity);
 
     public abstract T merge(T entity);
