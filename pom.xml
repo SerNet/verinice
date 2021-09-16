@@ -34,7 +34,6 @@
 		<module>sernet.verinice.app.feature</module>
 
 		<!-- Bundles -->
-		<module>bouncycastle</module>
 		<module>jbpm</module>
 		<module>gnumail</module>
 		<module>sernet.gs.db.fragment</module>
