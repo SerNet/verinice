@@ -23,8 +23,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Base64;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
 /**
@@ -40,13 +40,13 @@ public final class Base64Utils {
         ObjectOutputStream oos = new ObjectOutputStream(baos);
         oos.writeObject(o);
         oos.close();
-        return new String(Base64.encodeBase64(baos.toByteArray()));
+        return Base64.getEncoder().encodeToString(baos.toByteArray());
     }
 
     public static Object decode(String s) {
         Object o = null;
         try {
-            byte[] data = Base64.decodeBase64(s.getBytes());
+            byte[] data = Base64.getDecoder().decode(s);
             ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
             o = ois.readObject();
             ois.close();

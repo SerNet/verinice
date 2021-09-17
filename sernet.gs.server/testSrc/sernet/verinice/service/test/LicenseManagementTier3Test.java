@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -36,7 +37,6 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.xml.bind.JAXB;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
@@ -131,10 +131,10 @@ public class LicenseManagementTier3Test extends CommandServiceProvider {
         LicenseManagementEntry entry = new LicenseManagementEntry();
         entry.setContentIdentifier(encrypt(CONTENT_ID, cryptoPassword.toCharArray(), cryptoSalt));
         entry.setLicenseID(encrypt(LICENSE_ID, cryptoPassword.toCharArray(), cryptoSalt));
-        entry.setSalt(new String(
-                Base64.encodeBase64(cryptoSalt.getBytes(VeriniceCharset.CHARSET_UTF_8))));
-        entry.setUserPassword(new String(
-                Base64.encodeBase64(cryptoPassword.getBytes(VeriniceCharset.CHARSET_UTF_8))));
+        entry.setSalt(Base64.getEncoder()
+                .encodeToString(cryptoSalt.getBytes(VeriniceCharset.CHARSET_UTF_8)));
+        entry.setUserPassword(Base64.getEncoder()
+                .encodeToString(cryptoPassword.getBytes(VeriniceCharset.CHARSET_UTF_8)));
         entry.setValidUntil(encrypt(String.valueOf(VALID_UNTIL.toString()),
                 cryptoPassword.toCharArray(), cryptoSalt));
         entry.setValidUsers(
@@ -305,8 +305,7 @@ public class LicenseManagementTier3Test extends CommandServiceProvider {
         byte[] saltBytes = salt.getBytes();
         byte[] cypherTextBytes = PasswordBasedEncryption.encrypt(plainTextBytes, password,
                 saltBytes, true);
-        String encryptedValue = new String(
-                org.apache.commons.codec.binary.Base64.encodeBase64(cypherTextBytes));
+        String encryptedValue = Base64.getEncoder().encodeToString(cypherTextBytes);
         return encryptedValue;
     }
 
@@ -520,7 +519,7 @@ public class LicenseManagementTier3Test extends CommandServiceProvider {
         ExportFactory.marshal(marshalEntryToXMLObject(entry), stream);
         try {
             file = File.createTempFile(filename, extension);
-            FileUtils.writeByteArrayToFile(file, Base64.encodeBase64(stream.toByteArray()));
+            FileUtils.writeByteArrayToFile(file, Base64.getEncoder().encode(stream.toByteArray()));
             stream.close();
         } catch (Exception e) {
             LOG.error("Error handling file", e);
@@ -533,10 +532,10 @@ public class LicenseManagementTier3Test extends CommandServiceProvider {
         LicenseManagementEntry entry = new LicenseManagementEntry();
         entry.setContentIdentifier(CONTENT_ID);
         entry.setLicenseID("licenseIdBLA");
-        entry.setSalt(
-                new String(Base64.encodeBase64("saltBLA".getBytes(VeriniceCharset.CHARSET_UTF_8))));
-        entry.setUserPassword(new String(
-                Base64.encodeBase64("passwordBLA".getBytes(VeriniceCharset.CHARSET_UTF_8))));
+        entry.setSalt(Base64.getEncoder()
+                .encodeToString("saltBLA".getBytes(VeriniceCharset.CHARSET_UTF_8)));
+        entry.setUserPassword(Base64.getEncoder()
+                .encodeToString("passwordBLA".getBytes(VeriniceCharset.CHARSET_UTF_8)));
         entry.setValidUntil("validUntilBLA");
         entry.setValidUsers("validUsersBLA");
 
@@ -544,7 +543,7 @@ public class LicenseManagementTier3Test extends CommandServiceProvider {
 
         try {
             byte[] bytesFromHD = FileUtils.readFileToByteArray(vnlFile1);
-            byte[] decodedBytes = Base64.decodeBase64(bytesFromHD);
+            byte[] decodedBytes = Base64.getDecoder().decode(bytesFromHD);
             InputStream is = new ByteArrayInputStream(decodedBytes);
             de.sernet.model.licensemanagement.LicenseManagementEntry objectFromHD = JAXB
                     .unmarshal(is, de.sernet.model.licensemanagement.LicenseManagementEntry.class);
@@ -719,7 +718,7 @@ public class LicenseManagementTier3Test extends CommandServiceProvider {
         byte[] saltBytes = salt.getBytes();
         byte[] cypherTextBytes = PasswordBasedEncryption.encrypt(plainTextBytes, password,
                 saltBytes, false);
-        return new String(Base64.encodeBase64(cypherTextBytes));
+        return Base64.getEncoder().encodeToString(cypherTextBytes);
     }
 
 }

@@ -40,7 +40,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOCase;
@@ -204,7 +203,7 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
         } else {
             filePath = fileName;
         }
-        return DigestUtils.md5Hex(FileUtils.readFileToByteArray(new File(filePath)));
+        return MD5.getMD5Checksum(FileUtils.readFileToByteArray(new File(filePath)));
     }
 
     @Override

@@ -26,11 +26,8 @@ import static org.junit.Assert.assertSame;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.security.MessageDigest;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +40,7 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import sernet.gs.service.MD5;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.Addition;
@@ -113,7 +111,7 @@ public class AttachmentTest extends CommandServiceProvider {
         // create and save file to attachment
         attachFileData(f, a);
 
-        String hashSum = getMD5Checksum(f.getAbsolutePath());
+        String hashSum = MD5.getMD5Checksum(Files.readAllBytes(f.toPath()));
         dbIdHashSumMap.put(a.getDbId(), hashSum);
 
         if (LOG.isDebugEnabled()) {
@@ -144,7 +142,7 @@ public class AttachmentTest extends CommandServiceProvider {
         assertNotNull("File data not found in DB, db-id: " + dbId, fileFromDB);
         File tempFile = File.createTempFile("veriniceAttachment_" + dbId, "test");
         fileFromDB.writeFileData(tempFile.getAbsolutePath());
-        String checkSum = getMD5Checksum(tempFile.getAbsolutePath());
+        String checkSum = MD5.getMD5Checksum(Files.readAllBytes(tempFile.toPath()));
         String checkSumExpected = dbIdHashSumMap.get(dbId);
         assertEquals("MD5 checksum is not: " + checkSumExpected + ", db-id: " + dbId,
                 checkSumExpected, checkSum);
@@ -209,36 +207,6 @@ public class AttachmentTest extends CommandServiceProvider {
         assertNotNull(bFile);
         assertNotSame(0, bFile.length);
         return bFile;
-    }
-
-    private static byte[] createChecksum(String filename) throws Exception {
-        MessageDigest complete = MessageDigest.getInstance("MD5");
-        try (InputStream fis = Files.newInputStream(Paths.get(filename))) {
-
-            byte[] buffer = new byte[1024];
-            int numRead;
-
-            do {
-                numRead = fis.read(buffer);
-                if (numRead > 0) {
-                    complete.update(buffer, 0, numRead);
-                }
-            } while (numRead != -1);
-
-        }
-        return complete.digest();
-    }
-
-    // see this How-to for a faster way to convert
-    // a byte array to a HEX string
-    public static String getMD5Checksum(String filename) throws Exception {
-        byte[] b = createChecksum(filename);
-        String result = "";
-
-        for (int i = 0; i < b.length; i++) {
-            result += Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1);
-        }
-        return result;
     }
 
 }

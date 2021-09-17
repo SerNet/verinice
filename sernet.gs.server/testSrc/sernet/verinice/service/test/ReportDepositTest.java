@@ -42,13 +42,13 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import sernet.gs.service.AbstractReportTemplateService;
+import sernet.gs.service.MD5;
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IReportTemplateService;
 import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
@@ -297,6 +297,6 @@ public class ReportDepositTest extends CommandServiceProvider {
             filePath = fileName;
         }
 
-        return DigestUtils.md5Hex(FileUtils.readFileToByteArray(new File(filePath)));
+        return MD5.getMD5Checksum(FileUtils.readFileToByteArray(new File(filePath)));
     }
 }
