@@ -24,9 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.commons.collections.BidiMap;
-import org.apache.commons.collections.bidimap.DualHashBidiMap;
-
 import sernet.hui.common.connect.EntityType;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.elements.Application;
@@ -152,7 +149,7 @@ public final class CnATypeMapper {
 
     private static final Map<String, String> descriptionPropertyMap = new HashMap<>();
 
-    private static final BidiMap elementTypeIdToGroupTypeId = new DualHashBidiMap();
+    private static final Map<String, String> groupTypeIdToElementTypeId = new HashMap<>();
 
     static {
         typeIdClass.put(Anwendung.TYPE_ID, Anwendung.class);
@@ -276,42 +273,41 @@ public final class CnATypeMapper {
         descriptionPropertyMap.put(MassnahmenUmsetzung.TYPE_ID, MassnahmenUmsetzung.P_ERLAEUTERUNG);
 
         // ISM
-        elementTypeIdToGroupTypeId.put(Asset.TYPE_ID, AssetGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(Audit.TYPE_ID, AuditGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(Control.TYPE_ID, ControlGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(Document.TYPE_ID, DocumentGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(Evidence.TYPE_ID, EvidenceGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(sernet.verinice.model.iso27k.Exception.TYPE_ID,
-                ExceptionGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(Finding.TYPE_ID, FindingGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(Incident.TYPE_ID, IncidentGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(IncidentScenario.TYPE_ID, IncidentScenarioGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(Interview.TYPE_ID, InterviewGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(PersonIso.TYPE_ID, PersonGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(sernet.verinice.model.iso27k.Process.TYPE_ID,
-                ProcessGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(Record.TYPE_ID, RecordGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(Requirement.TYPE_ID, RequirementGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(Response.TYPE_ID, ResponseGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(SamtTopic.TYPE_ID, ControlGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(Threat.TYPE_ID, ThreatGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(Vulnerability.TYPE_ID, VulnerabilityGroup.TYPE_ID);
+        groupTypeIdToElementTypeId.put(AssetGroup.TYPE_ID, Asset.TYPE_ID);
+        groupTypeIdToElementTypeId.put(AuditGroup.TYPE_ID, Audit.TYPE_ID);
+        groupTypeIdToElementTypeId.put(ControlGroup.TYPE_ID, Control.TYPE_ID);
+        groupTypeIdToElementTypeId.put(DocumentGroup.TYPE_ID, Document.TYPE_ID);
+        groupTypeIdToElementTypeId.put(EvidenceGroup.TYPE_ID, Evidence.TYPE_ID);
+        groupTypeIdToElementTypeId.put(ExceptionGroup.TYPE_ID,
+                sernet.verinice.model.iso27k.Exception.TYPE_ID);
+        groupTypeIdToElementTypeId.put(FindingGroup.TYPE_ID, Finding.TYPE_ID);
+        groupTypeIdToElementTypeId.put(IncidentGroup.TYPE_ID, Incident.TYPE_ID);
+        groupTypeIdToElementTypeId.put(IncidentScenarioGroup.TYPE_ID, IncidentScenario.TYPE_ID);
+        groupTypeIdToElementTypeId.put(InterviewGroup.TYPE_ID, Interview.TYPE_ID);
+        groupTypeIdToElementTypeId.put(PersonGroup.TYPE_ID, PersonIso.TYPE_ID);
+        groupTypeIdToElementTypeId.put(ProcessGroup.TYPE_ID,
+                sernet.verinice.model.iso27k.Process.TYPE_ID);
+        groupTypeIdToElementTypeId.put(RecordGroup.TYPE_ID, Record.TYPE_ID);
+        groupTypeIdToElementTypeId.put(RequirementGroup.TYPE_ID, Requirement.TYPE_ID);
+        groupTypeIdToElementTypeId.put(ResponseGroup.TYPE_ID, Response.TYPE_ID);
+        groupTypeIdToElementTypeId.put(ThreatGroup.TYPE_ID, Threat.TYPE_ID);
+        groupTypeIdToElementTypeId.put(VulnerabilityGroup.TYPE_ID, Vulnerability.TYPE_ID);
 
         // modernized BP
-        elementTypeIdToGroupTypeId.put(Application.TYPE_ID, ApplicationGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(BpPerson.TYPE_ID, BpPersonGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(BpThreat.TYPE_ID, BpThreatGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(BpRequirement.TYPE_ID, BpRequirementGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(BusinessProcess.TYPE_ID, BusinessProcessGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(Device.TYPE_ID, DeviceGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(IcsSystem.TYPE_ID, IcsSystemGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(ItSystem.TYPE_ID, ItSystemGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(Network.TYPE_ID, NetworkGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(Room.TYPE_ID, RoomGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(Safeguard.TYPE_ID, SafeguardGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(BpDocument.TYPE_ID, BpDocumentGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(BpIncident.TYPE_ID, BpIncidentGroup.TYPE_ID);
-        elementTypeIdToGroupTypeId.put(BpRecord.TYPE_ID, BpRecordGroup.TYPE_ID);
+        groupTypeIdToElementTypeId.put(ApplicationGroup.TYPE_ID, Application.TYPE_ID);
+        groupTypeIdToElementTypeId.put(BpPersonGroup.TYPE_ID, BpPerson.TYPE_ID);
+        groupTypeIdToElementTypeId.put(BpThreatGroup.TYPE_ID, BpThreat.TYPE_ID);
+        groupTypeIdToElementTypeId.put(BpRequirementGroup.TYPE_ID, BpRequirement.TYPE_ID);
+        groupTypeIdToElementTypeId.put(BusinessProcessGroup.TYPE_ID, BusinessProcess.TYPE_ID);
+        groupTypeIdToElementTypeId.put(DeviceGroup.TYPE_ID, Device.TYPE_ID);
+        groupTypeIdToElementTypeId.put(IcsSystemGroup.TYPE_ID, IcsSystem.TYPE_ID);
+        groupTypeIdToElementTypeId.put(ItSystemGroup.TYPE_ID, ItSystem.TYPE_ID);
+        groupTypeIdToElementTypeId.put(NetworkGroup.TYPE_ID, Network.TYPE_ID);
+        groupTypeIdToElementTypeId.put(RoomGroup.TYPE_ID, Room.TYPE_ID);
+        groupTypeIdToElementTypeId.put(SafeguardGroup.TYPE_ID, Safeguard.TYPE_ID);
+        groupTypeIdToElementTypeId.put(BpDocumentGroup.TYPE_ID, BpDocument.TYPE_ID);
+        groupTypeIdToElementTypeId.put(BpIncidentGroup.TYPE_ID, BpIncident.TYPE_ID);
+        groupTypeIdToElementTypeId.put(BpRecordGroup.TYPE_ID, BpRecord.TYPE_ID);
     }
 
     // this is necessary because hibernate returns proxy objects that will not
@@ -380,7 +376,7 @@ public final class CnATypeMapper {
     }
 
     public static String getElementTypeIdFromGroupTypeId(String typeId) {
-        return (String) Optional.ofNullable(elementTypeIdToGroupTypeId.getKey(typeId))
+        return Optional.ofNullable(groupTypeIdToElementTypeId.get(typeId))
                 .orElseThrow(IllegalArgumentException::new);
     }
 
