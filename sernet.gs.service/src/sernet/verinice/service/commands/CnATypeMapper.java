@@ -336,14 +336,6 @@ public final class CnATypeMapper {
         return STRUKTUR_ELEMENT_TYPES.contains(entityType.getId());
     }
 
-    public static boolean isBpElement(CnATreeElement child) {
-        EntityType entityType = child.getEntityType();
-        if (entityType == null) {
-            return false;
-        }
-        return BP_ELEMENT_TYPES.contains(entityType.getId());
-    }
-
     /************************************************************
      * getClassFromTypeId()
      * 
@@ -385,11 +377,6 @@ public final class CnATypeMapper {
 
     public static String getDescriptionPropertyForType(String typeId) {
         return descriptionPropertyMap.get(typeId);
-    }
-
-    public static String getGroupTypeIdFromElementTypeId(String typeId) {
-        return (String) Optional.ofNullable(elementTypeIdToGroupTypeId.get(typeId))
-                .orElseThrow(IllegalArgumentException::new);
     }
 
     public static String getElementTypeIdFromGroupTypeId(String typeId) {
