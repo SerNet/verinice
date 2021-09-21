@@ -131,21 +131,21 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
         return props;
     }
 
-private Properties createDefaultProperties(File path, String name, Locale locale)
-        throws IOException, PropertyFileExistsException {
-    File propFile = PropertiesFileUtil.getPropertiesFile(path, locale);
-    if (propFile.exists()) {
-        throw new PropertyFileExistsException();
-    } else {
-        Properties props = getDefaultProperties(name);
-        try (FileOutputStream fos = new FileOutputStream(propFile)) {
-            props.store(fos, "Default Properties for verinice-" + "Report " + name
-                    + "\nauto-generated content");
+    private Properties createDefaultProperties(File path, String name, Locale locale)
+            throws IOException, PropertyFileExistsException {
+        File propFile = PropertiesFileUtil.getPropertiesFile(path, locale);
+        if (propFile.exists()) {
+            throw new PropertyFileExistsException();
+        } else {
+            Properties props = getDefaultProperties(name);
+            try (FileOutputStream fos = new FileOutputStream(propFile)) {
+                props.store(fos, "Default Properties for verinice-" + "Report " + name
+                        + "\nauto-generated content");
+            }
+            return props;
         }
-        return props;
-    }
 
-}
+    }
 
     private Properties getDefaultProperties(String name) {
         Properties props = new Properties();
@@ -156,8 +156,7 @@ private Properties createDefaultProperties(File path, String name, Locale locale
     }
 
     private ReportTemplateMetaData createReportMetaData(Properties props) throws IOException {
-        String outputformatsString = props
-                .getProperty(PROPERTIES_OUTPUTFORMATS);
+        String outputformatsString = props.getProperty(PROPERTIES_OUTPUTFORMATS);
         StringTokenizer tokenizer = new StringTokenizer(outputformatsString, ",");
         ArrayList<OutputFormat> formats = new ArrayList<>(tokenizer.countTokens());
         while (tokenizer.hasMoreTokens()) {
@@ -171,8 +170,8 @@ private Properties createDefaultProperties(File path, String name, Locale locale
         String outputName = props.getProperty(PROPERTIES_OUTPUTNAME);
         String context = props.getProperty(PROPERTIES_CONTEXT);
         OutputFormat[] outputFormats = formats.toArray(new OutputFormat[formats.size()]);
-        boolean multipleRootObjects = Boolean.parseBoolean(
-                props.getProperty(PROPERTIES_MULTIPLE_ROOT_OBJECTS, "false"));
+        boolean multipleRootObjects = Boolean
+                .parseBoolean(props.getProperty(PROPERTIES_MULTIPLE_ROOT_OBJECTS, "false"));
 
         return new ReportTemplateMetaData(fileMetaData, outputName, outputFormats,
                 isHandeledByReportDeposit(), multipleRootObjects,

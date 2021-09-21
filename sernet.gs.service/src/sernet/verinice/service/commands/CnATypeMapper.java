@@ -402,7 +402,8 @@ public final class CnATypeMapper {
     }
 
     public static boolean isScopeType(String typeId) {
-        return Organization.TYPE_ID.equals(typeId) || ITVerbund.TYPE_ID.equals(typeId) || ItNetwork.TYPE_ID.equals(typeId);
+        return Organization.TYPE_ID.equals(typeId) || ITVerbund.TYPE_ID.equals(typeId)
+                || ItNetwork.TYPE_ID.equals(typeId);
     }
 
     private CnATypeMapper() {

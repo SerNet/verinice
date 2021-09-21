@@ -84,14 +84,15 @@ import sernet.verinice.interfaces.encryption.EncryptionException;
  * 
  */
 public class SMIMEBasedEncryption {
-    
+
     private static final String CRYPT_PROVIDER = "VeriniceSecurityProvider";
     private static final String CRYPT_TYPE = "PKCS11";
     private static final String STD_ERR_MSG = "There was a problem during the en- or decryption process. See the stacktrace for details.";
     private static final String IO_ERR_MSG = "There was an IO problem during the en- or decryption process. See the stacktrace for details.";
     private static final Logger log = Logger.getLogger(SMIMEBasedEncryption.class);
-    
-    private SMIMEBasedEncryption(){}
+
+    private SMIMEBasedEncryption() {
+    }
 
     /**
      * Encrypts the given byte data with the given X.509 certificate file.
@@ -127,50 +128,56 @@ public class SMIMEBasedEncryption {
      * @throws EncryptionException
      *             if a problem occured during the encryption process
      */
-    public static byte[] encrypt(byte[] unencryptedByteData, File x509CertificateFile) throws IOException, CertificateException, EncryptionException {
+    public static byte[] encrypt(byte[] unencryptedByteData, File x509CertificateFile)
+            throws IOException, CertificateException, EncryptionException {
 
         byte[] encryptedMimeData = null;
 
-        X509Certificate x509Certificate = CertificateUtils.loadX509CertificateFromFile(x509CertificateFile);
-            try {
-                CMSEnvelopedDataStreamGenerator edGen = new CMSEnvelopedDataStreamGenerator();
-                edGen.addRecipientInfoGenerator(new JceKeyTransRecipientInfoGenerator(x509Certificate).setProvider(BouncyCastleProvider.PROVIDER_NAME));
-                
-                byte[] unencryptedByteData_0 = Base64.encode(unencryptedByteData);
+        X509Certificate x509Certificate = CertificateUtils
+                .loadX509CertificateFromFile(x509CertificateFile);
+        try {
+            CMSEnvelopedDataStreamGenerator edGen = new CMSEnvelopedDataStreamGenerator();
+            edGen.addRecipientInfoGenerator(new JceKeyTransRecipientInfoGenerator(x509Certificate)
+                    .setProvider(BouncyCastleProvider.PROVIDER_NAME));
 
-                ByteArrayOutputStream bout = new ByteArrayOutputStream();
-                OutputStream out = edGen.open(bout, new JceCMSContentEncryptorBuilder(CMSAlgorithm.AES256_CBC).setProvider(BouncyCastleProvider.PROVIDER_NAME).build());
-                DEROutputStream dos = new DEROutputStream(out);
-                // Finally get the encoded bytes from the MimeMessage and return
-                // them
-                out.write(unencryptedByteData_0);
-                out.close();
-                encryptedMimeData = bout.toByteArray();
+            byte[] unencryptedByteData_0 = Base64.encode(unencryptedByteData);
 
-            } catch (GeneralSecurityException e) {
-                log.error(STD_ERR_MSG, e);
-                                throw new EncryptionException(STD_ERR_MSG, e);
-            } catch (CMSException e) {
-                log.error(IO_ERR_MSG, e);
-                throw new EncryptionException(IO_ERR_MSG, e);
-            } catch (IllegalArgumentException e) {
-                log.error(IO_ERR_MSG, e);
-                throw new EncryptionException(IO_ERR_MSG, e);
-            } catch (OperatorCreationException e) {
-                log.error(IO_ERR_MSG, e);
-                throw new EncryptionException(IO_ERR_MSG, e);
-            } catch (Exception e){
-                log.error(STD_ERR_MSG, e);
-                throw new EncryptionException(STD_ERR_MSG, e);
-            } catch (Throwable t){
-                log.error(STD_ERR_MSG, t);
-                throw new EncryptionException(STD_ERR_MSG, t);
-            }
-            encryptedMimeData = (encryptedMimeData == null) ? new byte[] {} : encryptedMimeData;
+            ByteArrayOutputStream bout = new ByteArrayOutputStream();
+            OutputStream out = edGen.open(bout,
+                    new JceCMSContentEncryptorBuilder(CMSAlgorithm.AES256_CBC)
+                            .setProvider(BouncyCastleProvider.PROVIDER_NAME).build());
+            DEROutputStream dos = new DEROutputStream(out);
+            // Finally get the encoded bytes from the MimeMessage and return
+            // them
+            out.write(unencryptedByteData_0);
+            out.close();
+            encryptedMimeData = bout.toByteArray();
+
+        } catch (GeneralSecurityException e) {
+            log.error(STD_ERR_MSG, e);
+            throw new EncryptionException(STD_ERR_MSG, e);
+        } catch (CMSException e) {
+            log.error(IO_ERR_MSG, e);
+            throw new EncryptionException(IO_ERR_MSG, e);
+        } catch (IllegalArgumentException e) {
+            log.error(IO_ERR_MSG, e);
+            throw new EncryptionException(IO_ERR_MSG, e);
+        } catch (OperatorCreationException e) {
+            log.error(IO_ERR_MSG, e);
+            throw new EncryptionException(IO_ERR_MSG, e);
+        } catch (Exception e) {
+            log.error(STD_ERR_MSG, e);
+            throw new EncryptionException(STD_ERR_MSG, e);
+        } catch (Throwable t) {
+            log.error(STD_ERR_MSG, t);
+            throw new EncryptionException(STD_ERR_MSG, t);
+        }
+        encryptedMimeData = (encryptedMimeData == null) ? new byte[] {} : encryptedMimeData;
         return encryptedMimeData;
     }
 
-    public static byte[] encrypt(byte[] unencryptedByteData, String keyAlias) throws IOException, CertificateException, EncryptionException {
+    public static byte[] encrypt(byte[] unencryptedByteData, String keyAlias)
+            throws IOException, CertificateException, EncryptionException {
 
         byte[] encryptedMimeData;
 
@@ -178,24 +185,24 @@ public class SMIMEBasedEncryption {
             KeyStore ks = KeyStore.getInstance(CRYPT_TYPE, CRYPT_PROVIDER);
             ks.load(null, null);
             X509Certificate cert = (X509Certificate) ks.getCertificate(keyAlias);
-            
+
             SMIMEEnvelopedGenerator generator = new SMIMEEnvelopedGenerator();
             generator.addRecipientInfoGenerator(new JceKeyTransRecipientInfoGenerator(cert));
-            //.setProvider("SunPKCS11-verinice")
+            // .setProvider("SunPKCS11-verinice")
             byte[] unencryptedByteData_0 = Base64.encode(unencryptedByteData);
             MimeBodyPart unencryptedContent = SMIMEUtil.toMimeBodyPart(unencryptedByteData_0);
 
             // Encrypt the byte data and make a MimeBodyPart from it
-            MimeBodyPart encryptedMimeBodyPart = generator.generate(
-            		unencryptedContent,
-            		new JceCMSContentEncryptorBuilder(CMSAlgorithm.AES256_CBC).setProvider(BouncyCastleProvider.PROVIDER_NAME).build());
+            MimeBodyPart encryptedMimeBodyPart = generator.generate(unencryptedContent,
+                    new JceCMSContentEncryptorBuilder(CMSAlgorithm.AES256_CBC)
+                            .setProvider(BouncyCastleProvider.PROVIDER_NAME).build());
 
             // Finally get the encoded bytes from the MimeMessage and return
             // them
             ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
             encryptedMimeBodyPart.writeTo(byteOutStream);
             encryptedMimeData = byteOutStream.toByteArray();
-            
+
         } catch (GeneralSecurityException e) {
             throw new EncryptionException(STD_ERR_MSG, e);
         } catch (SMIMEException smimee) {
@@ -206,18 +213,18 @@ public class SMIMEBasedEncryption {
             throw new EncryptionException(IO_ERR_MSG, ioe);
         } catch (IllegalArgumentException e) {
             throw new EncryptionException(STD_ERR_MSG, e);
-		} catch (CMSException e) {
+        } catch (CMSException e) {
             throw new EncryptionException(STD_ERR_MSG, e);
-		}
+        }
         encryptedMimeData = (encryptedMimeData == null) ? new byte[] {} : encryptedMimeData;
         return encryptedMimeData;
     }
-    
-    public static OutputStream encrypt(OutputStream unencryptedDataStream, String keyAlias) throws IOException, CertificateException, EncryptionException {
+
+    public static OutputStream encrypt(OutputStream unencryptedDataStream, String keyAlias)
+            throws IOException, CertificateException, EncryptionException {
 
         return new SMIMEEncryptedOutputStream(unencryptedDataStream, keyAlias);
     }
-
 
     /**
      * Decrypts the given byte data with the given receiver certificate and the
@@ -252,7 +259,8 @@ public class SMIMEBasedEncryption {
      * @throws EncryptionException
      *             if a problem occured during the encryption process
      */
-    public static byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile, File privateKeyPemFile) throws IOException, CertificateException, EncryptionException {
+    public static byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile,
+            File privateKeyPemFile) throws IOException, CertificateException, EncryptionException {
         return decrypt(encryptedByteData, x509CertificateFile, privateKeyPemFile, null);
     }
 
@@ -291,12 +299,15 @@ public class SMIMEBasedEncryption {
      * @throws EncryptionException
      *             if a problem occured during the encryption process
      */
-    public static byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile, File privateKeyPemFile, final String privateKeyPassword) throws IOException, CertificateException, EncryptionException {
+    public static byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile,
+            File privateKeyPemFile, final String privateKeyPassword)
+            throws IOException, CertificateException, EncryptionException {
 
         byte[] decryptedByteData = new byte[] {};
 
         // Get public key certificate
-        X509Certificate x509Certificate = CertificateUtils.loadX509CertificateFromFile(x509CertificateFile);
+        X509Certificate x509Certificate = CertificateUtils
+                .loadX509CertificateFromFile(x509CertificateFile);
 
         // The recipient's private key
         FileReader fileReader = new FileReader(privateKeyPemFile);
@@ -312,30 +323,29 @@ public class SMIMEBasedEncryption {
         } else {
             pemReader = new PEMReader(fileReader);
         }
-        JCERSAPrivateCrtKey privateCertKey = (JCERSAPrivateCrtKey)pemReader.readObject();
+        JCERSAPrivateCrtKey privateCertKey = (JCERSAPrivateCrtKey) pemReader.readObject();
 
         try {
             CMSEnvelopedDataParser cedParser = new CMSEnvelopedDataParser(encryptedByteData);
-            
 
             // look for our recipient identifier
             RecipientId recipientId = new JceKeyAgreeRecipientId(x509Certificate);
 
             RecipientInformationStore recipients = cedParser.getRecipientInfos();
             RecipientInformation recipientInfo = null;
-            for(Object recipient : recipients.getRecipients()){
-                try{
+            for (Object recipient : recipients.getRecipients()) {
+                try {
                     recipientInfo = (RecipientInformation) recipient;
-                } catch (Exception e){
+                } catch (Exception e) {
                     log.error("Error determing recipient", e);
                 }
             }
 
             if (recipientInfo != null) {
-            	JceKeyTransRecipient rec = new JceKeyTransEnvelopedRecipient(privateCertKey);
-            	rec.setProvider(BouncyCastleProvider.PROVIDER_NAME);
-            	rec.setContentProvider(BouncyCastleProvider.PROVIDER_NAME);
-            	decryptedByteData = recipientInfo.getContent(rec);
+                JceKeyTransRecipient rec = new JceKeyTransEnvelopedRecipient(privateCertKey);
+                rec.setProvider(BouncyCastleProvider.PROVIDER_NAME);
+                rec.setContentProvider(BouncyCastleProvider.PROVIDER_NAME);
+                decryptedByteData = recipientInfo.getContent(rec);
             }
         } catch (CMSException e) {
             throw new EncryptionException(IO_ERR_MSG, e);
@@ -372,7 +382,8 @@ public class SMIMEBasedEncryption {
      * @throws EncryptionException
      *             if a problem occured during the encryption process
      */
-    public static OutputStream encrypt(OutputStream unencryptedDataStream, File x509CertificateFile) throws IOException, CertificateException, EncryptionException {
+    public static OutputStream encrypt(OutputStream unencryptedDataStream, File x509CertificateFile)
+            throws IOException, CertificateException, EncryptionException {
 
         return new SMIMEEncryptedOutputStream(unencryptedDataStream, x509CertificateFile);
     }
@@ -407,12 +418,15 @@ public class SMIMEBasedEncryption {
      * @throws EncryptionException
      *             if a problem occured during the encryption process
      */
-    public static InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile, File privateKeyFile) throws IOException, CertificateException, EncryptionException {
+    public static InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile,
+            File privateKeyFile) throws IOException, CertificateException, EncryptionException {
 
-        return new SMIMEDecryptedInputStream(encryptedDataStream, x509CertificateFile, privateKeyFile);
+        return new SMIMEDecryptedInputStream(encryptedDataStream, x509CertificateFile,
+                privateKeyFile);
     }
-    
-    public static InputStream decrypt(InputStream encryptedDataStream, String keyAlias) throws IOException, CertificateException, EncryptionException {
+
+    public static InputStream decrypt(InputStream encryptedDataStream, String keyAlias)
+            throws IOException, CertificateException, EncryptionException {
 
         return new SMIMEDecryptedInputStream(encryptedDataStream, keyAlias);
     }
@@ -449,24 +463,29 @@ public class SMIMEBasedEncryption {
      * @throws EncryptionException
      *             if a problem occured during the encryption process
      */
-    public static InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile, File privateKeyFile, final String privateKeyPassword) throws IOException, CertificateException, EncryptionException {
+    public static InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile,
+            File privateKeyFile, final String privateKeyPassword)
+            throws IOException, CertificateException, EncryptionException {
 
-        return new SMIMEDecryptedInputStream(encryptedDataStream, x509CertificateFile, privateKeyFile, privateKeyPassword);
+        return new SMIMEDecryptedInputStream(encryptedDataStream, x509CertificateFile,
+                privateKeyFile, privateKeyPassword);
     }
-    
-    public static byte[] decrypt(byte[] encryptedByteData, String keyAlias) throws IOException, CertificateException, EncryptionException {
+
+    public static byte[] decrypt(byte[] encryptedByteData, String keyAlias)
+            throws IOException, CertificateException, EncryptionException {
 
         byte[] decryptedByteData = new byte[] {};
 
         try {
-    		KeyStore ks = KeyStore.getInstance(CRYPT_TYPE, CRYPT_PROVIDER);
-    		ks.load(null, null);
-    		Certificate cert = ks.getCertificate(keyAlias);
-    		X509Certificate x509Certificate = (X509Certificate) cert;
+            KeyStore ks = KeyStore.getInstance(CRYPT_TYPE, CRYPT_PROVIDER);
+            ks.load(null, null);
+            Certificate cert = ks.getCertificate(keyAlias);
+            X509Certificate x509Certificate = (X509Certificate) cert;
 
-    		PrivateKey privateKey = (PrivateKey) ks.getKey(keyAlias, null);
+            PrivateKey privateKey = (PrivateKey) ks.getKey(keyAlias, null);
 
-    		MimeBodyPart encryptedMimeBodyPart = new MimeBodyPart(new ByteArrayInputStream(encryptedByteData));
+            MimeBodyPart encryptedMimeBodyPart = new MimeBodyPart(
+                    new ByteArrayInputStream(encryptedByteData));
             SMIMEEnveloped enveloped = new SMIMEEnveloped(encryptedMimeBodyPart);
 
             // look for our recipient identifier
@@ -476,10 +495,10 @@ public class SMIMEBasedEncryption {
             RecipientInformation recipientInfo = recipients.get(recipientId);
 
             if (recipientInfo != null) {
-            	JceKeyTransRecipient rec = new JceKeyTransEnvelopedRecipient(privateKey);
-            	rec.setProvider(CRYPT_PROVIDER);
-            	rec.setContentProvider(BouncyCastleProvider.PROVIDER_NAME);
-				decryptedByteData = recipientInfo.getContent(rec);
+                JceKeyTransRecipient rec = new JceKeyTransEnvelopedRecipient(privateKey);
+                rec.setProvider(CRYPT_PROVIDER);
+                rec.setContentProvider(BouncyCastleProvider.PROVIDER_NAME);
+                decryptedByteData = recipientInfo.getContent(rec);
             }
         } catch (MessagingException e) {
             throw new EncryptionException(IO_ERR_MSG, e);
@@ -492,5 +511,5 @@ public class SMIMEBasedEncryption {
         decryptedByteData = Base64.decode(decryptedByteData);
         return decryptedByteData;
     }
-    
+
 }
