@@ -35,7 +35,7 @@ public interface IEncryptionService {
 
     public enum EncryptionMethod {
         PASSWORD, EXTERNAL_CERTIFICATE, PKCS11
-    };
+    }
 
     public static final int CRYPTO_SALT_DEFAULT_LENGTH = 8;
     public static final String CRYPTO_DEFAULT_ENCODING = "UTF-8";

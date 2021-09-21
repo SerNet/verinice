@@ -32,9 +32,6 @@ import sernet.verinice.interfaces.encryption.IEncryptionService;
  */
 public class EncryptionService implements IEncryptionService {
 
-    public EncryptionService() {
-    }
-
     @Override
     public byte[] encrypt(byte[] unencryptedByteData, char[] password) throws EncryptionException {
         return PasswordBasedEncryption.encrypt(unencryptedByteData, password);
@@ -82,13 +79,6 @@ public class EncryptionService implements IEncryptionService {
                 privateKeyPemFile);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.verinice.interfaces.encryption.IEncryptionService#decrypt(java.io.
-     * InputStream, java.io.File, java.io.File, java.lang.String)
-     */
     @Override
     public InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile,
             File privateKeyPemFile, String privateKeyPassword)
@@ -142,13 +132,6 @@ public class EncryptionService implements IEncryptionService {
         return SMIMEBasedEncryption.decrypt(encryptedDataStream, keyAlias);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.verinice.interfaces.encryption.IEncryptionService#encrypt(java.
-     * lang.String, char[], java.lang.String)
-     */
     @Override
     public String encrypt(String plainText, char[] password, String salt)
             throws EncryptionException {
@@ -156,23 +139,16 @@ public class EncryptionService implements IEncryptionService {
         byte[] saltBytes = salt.getBytes();
         byte[] cypherTextBytes = PasswordBasedEncryption.encrypt(plainTextBytes, password,
                 saltBytes, false);
-        return new String(org.apache.commons.codec.binary.Base64.encodeBase64(cypherTextBytes));
+        return new String(encodeBase64(cypherTextBytes));
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.verinice.interfaces.encryption.IEncryptionService#decrypt(java.
-     * lang.String, char[], java.lang.String)
-     */
     @Override
     public String decrypt(String cypherText, char[] password, String salt)
             throws EncryptionException {
         byte[] cypherTextBytes = new byte[0];
         try {
-            cypherTextBytes = Base64
-                    .decode(cypherText.getBytes(IEncryptionService.CRYPTO_DEFAULT_ENCODING));
+            cypherTextBytes = decodeBase64(
+                    cypherText.getBytes(IEncryptionService.CRYPTO_DEFAULT_ENCODING));
         } catch (UnsupportedEncodingException e) {
             throw new EncryptionException("Unsupported encoding", e);
         }
