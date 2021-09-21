@@ -54,6 +54,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.UsernameExistsException;
+import sernet.verinice.interfaces.encryption.EncryptionException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -128,18 +129,16 @@ public class LicenseManagementTier3Test extends CommandServiceProvider {
     private LicenseManagementEntry getSingleCryptedEntry() {
 
         LicenseManagementEntry entry = new LicenseManagementEntry();
-        entry.setContentIdentifier(
-                cryptoService.encrypt(CONTENT_ID, cryptoPassword.toCharArray(), cryptoSalt));
-        entry.setLicenseID(
-                cryptoService.encrypt(LICENSE_ID, cryptoPassword.toCharArray(), cryptoSalt));
+        entry.setContentIdentifier(encrypt(CONTENT_ID, cryptoPassword.toCharArray(), cryptoSalt));
+        entry.setLicenseID(encrypt(LICENSE_ID, cryptoPassword.toCharArray(), cryptoSalt));
         entry.setSalt(new String(
                 Base64.encodeBase64(cryptoSalt.getBytes(VeriniceCharset.CHARSET_UTF_8))));
         entry.setUserPassword(new String(
                 Base64.encodeBase64(cryptoPassword.getBytes(VeriniceCharset.CHARSET_UTF_8))));
-        entry.setValidUntil(cryptoService.encrypt(String.valueOf(VALID_UNTIL.toString()),
+        entry.setValidUntil(encrypt(String.valueOf(VALID_UNTIL.toString()),
                 cryptoPassword.toCharArray(), cryptoSalt));
-        entry.setValidUsers(cryptoService.encrypt(String.valueOf(VALID_USERS),
-                cryptoPassword.toCharArray(), cryptoSalt));
+        entry.setValidUsers(
+                encrypt(String.valueOf(VALID_USERS), cryptoPassword.toCharArray(), cryptoSalt));
 
         return entry;
     }
@@ -245,7 +244,7 @@ public class LicenseManagementTier3Test extends CommandServiceProvider {
             LicenseManagementEntry validEntry = getSingleCryptedEntry();
 
             LocalDate validDate = LocalDate.now().plusDays(10);
-            validEntry.setValidUntil(cryptoService.encrypt(String.valueOf(validDate.toString()),
+            validEntry.setValidUntil(encrypt(String.valueOf(validDate.toString()),
                     getUserPassword(validEntry), decodeEntryProperty(validEntry.getSalt())));
 
             String licenseIdExpired = licenseManagementService.decrypt(expiredEntry,
@@ -314,7 +313,7 @@ public class LicenseManagementTier3Test extends CommandServiceProvider {
     private LicenseManagementEntry createAndAddExpiredEntryToRepository() {
         LicenseManagementEntry entry = getSingleCryptedEntry();
         LocalDate expiredDate = LocalDate.now().minusDays(1L);
-        entry.setValidUntil(cryptoService.encrypt(String.valueOf(expiredDate.toString()),
+        entry.setValidUntil(encrypt(String.valueOf(expiredDate.toString()),
                 cryptoPassword.toCharArray(), cryptoSalt));
         File repoFile = writeLMEntryToTempFile(entry, TEMP_FILE_NAME, TEMP_FILE_NAME_EXT);
         repoFile.deleteOnExit();
@@ -326,8 +325,8 @@ public class LicenseManagementTier3Test extends CommandServiceProvider {
     public void testIfUserIsValidForLicenseId() {
         // check why this lasts so long (currently 192s )
         try {
-            String encryptedContentId = cryptoService.encrypt(CONTENT_ID,
-                    cryptoPassword.toCharArray(), cryptoSalt);
+            String encryptedContentId = encrypt(CONTENT_ID, cryptoPassword.toCharArray(),
+                    cryptoSalt);
             Set<LicenseManagementEntry> licenseEntries = licenseManagementService
                     .getLicenseEntriesForContentId(encryptedContentId, false);
 
@@ -397,8 +396,8 @@ public class LicenseManagementTier3Test extends CommandServiceProvider {
         try {
             repoFile = addLicenseToRepository(getSingleCryptedEntry());
 
-            String encryptedContentId = cryptoService.encrypt(CONTENT_ID,
-                    cryptoPassword.toCharArray(), cryptoSalt);
+            String encryptedContentId = encrypt(CONTENT_ID, cryptoPassword.toCharArray(),
+                    cryptoSalt);
             Set<LicenseManagementEntry> entries = licenseManagementService
                     .getLicenseEntriesForContentId(encryptedContentId, false);
             Assert.assertNotNull(entries);
@@ -423,10 +422,9 @@ public class LicenseManagementTier3Test extends CommandServiceProvider {
         LicenseManagementEntry secondEntry = new LicenseManagementEntry();
 
         String plainLicenseId2 = LICENSE_ID + "2";
-        String encryptedLicenseId1 = cryptoService.encrypt(LICENSE_ID, cryptoPassword.toCharArray(),
+        String encryptedLicenseId1 = encrypt(LICENSE_ID, cryptoPassword.toCharArray(), cryptoSalt);
+        String encryptedLicenseId2 = encrypt(plainLicenseId2, cryptoPassword.toCharArray(),
                 cryptoSalt);
-        String encryptedLicenseId2 = cryptoService.encrypt(plainLicenseId2,
-                cryptoPassword.toCharArray(), cryptoSalt);
 
         firstEntry.setLicenseID(encryptedLicenseId1);
 
@@ -612,7 +610,7 @@ public class LicenseManagementTier3Test extends CommandServiceProvider {
         }
         String salt = RandomStringUtils.randomAlphanumeric(passwordAndSaltLength);
         String password = RandomStringUtils.randomAlphanumeric(passwordAndSaltLength);
-        String cypherText = cryptoService.encrypt(plainText, password.toCharArray(), salt);
+        String cypherText = encrypt(plainText, password.toCharArray(), salt);
 
         String decryptedText = cryptoService.decrypt(cypherText, password.toCharArray(), salt);
 
@@ -713,6 +711,15 @@ public class LicenseManagementTier3Test extends CommandServiceProvider {
                 VeriniceCharset.CHARSET_UTF_8);
         return decodedProperty;
 
+    }
+
+    public String encrypt(String plainText, char[] password, String salt)
+            throws EncryptionException {
+        byte[] plainTextBytes = plainText.getBytes(VeriniceCharset.CHARSET_UTF_8);
+        byte[] saltBytes = salt.getBytes();
+        byte[] cypherTextBytes = PasswordBasedEncryption.encrypt(plainTextBytes, password,
+                saltBytes, false);
+        return new String(Base64.encodeBase64(cypherTextBytes));
     }
 
 }

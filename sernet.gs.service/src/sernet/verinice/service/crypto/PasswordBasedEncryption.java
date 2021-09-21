@@ -1,8 +1,5 @@
 package sernet.verinice.service.crypto;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
@@ -14,8 +11,6 @@ import java.util.Arrays;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
-import javax.crypto.CipherOutputStream;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
@@ -248,88 +243,6 @@ public final class PasswordBasedEncryption {
                     e);
         }
         return (decryptedData == null) ? new byte[] {} : decryptedData;
-    }
-
-    /**
-     * Encrypts data received from the given OutputStream using the AES
-     * algorithm.
-     * 
-     * @param unencryptedOutputStream
-     *            the OutputStream providing the unencrypted data to encrypt
-     * @param password
-     *            the password used for encryption
-     * @return an OutputStream providing the encrypted data
-     * @throws EncryptionException
-     *             when a problem occured during the en- or decryption process
-     * @throws IOException
-     *             when there was a problem reading from the InputStream
-     */
-    public static OutputStream encrypt(OutputStream unencryptedOutputStream, char[] password)
-            throws EncryptionException, IOException {
-
-        OutputStream encryptedOutputStream = null;
-
-        PBEKeySpec pbeKeySpec = new PBEKeySpec(password);
-        PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(SALT, ITERATION_COUNT);
-
-        try {
-            SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM,
-                    CRYPTOPROVIDER);
-            SecretKey pbeKey = secretKeyFactory.generateSecret(pbeKeySpec);
-
-            // Generate and initialize a PBE cipher
-            Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);
-            cipher.init(Cipher.ENCRYPT_MODE, pbeKey, pbeParameterSpec);
-
-            encryptedOutputStream = new CipherOutputStream(unencryptedOutputStream, cipher);
-
-        } catch (GeneralSecurityException e) {
-            throw new EncryptionException(
-                    "There was a problem during the encryption process. See the stacktrace for details.",
-                    e);
-        }
-        return encryptedOutputStream;
-    }
-
-    /**
-     * Decrypts data received from the given InputStream using the AES
-     * algorithm.
-     * 
-     * @param encryptedInputStream
-     *            the InputStream providing the encrypted data to decrypt
-     * @param password
-     *            the password used for decryption
-     * @return an InputStream providing the decrypted data
-     * @throws EncryptionException
-     *             when a problem occured during the en- or decryption process
-     * @throws IOException
-     *             when there was a problem reading from the InputStream
-     */
-    public static InputStream decrypt(InputStream encryptedInputStream, char[] password)
-            throws EncryptionException, IOException {
-
-        InputStream decryptedInputStream = null;
-
-        PBEKeySpec pbeKeySpec = new PBEKeySpec(password);
-        PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(SALT, ITERATION_COUNT);
-
-        try {
-            SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM,
-                    CRYPTOPROVIDER);
-            SecretKey pbeKey = secretKeyFactory.generateSecret(pbeKeySpec);
-
-            // Generate and initialize a PBE cipher
-            Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);
-            cipher.init(Cipher.DECRYPT_MODE, pbeKey, pbeParameterSpec);
-
-            decryptedInputStream = new CipherInputStream(encryptedInputStream, cipher);
-
-        } catch (GeneralSecurityException e) {
-            throw new EncryptionException(
-                    "There was a problem during the decryption process. See the stacktrace for details.",
-                    e);
-        }
-        return decryptedInputStream;
     }
 
     public static String decryptLicenserestrictedProperty(String password, String cypherText)

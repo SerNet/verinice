@@ -2,8 +2,6 @@ package sernet.verinice.service.crypto;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.cert.CertificateException;
 
@@ -32,12 +30,6 @@ import sernet.verinice.interfaces.encryption.IEncryptionService;
  */
 public class EncryptionService implements IEncryptionService {
 
-    @Override
-    public byte[] encrypt(byte[] unencryptedByteData, char[] password) throws EncryptionException {
-        return PasswordBasedEncryption.encrypt(unencryptedByteData, password);
-    }
-
-    @Override
     public byte[] encrypt(byte[] unencryptedByteData, char[] password, byte[] salt)
             throws EncryptionException {
         return PasswordBasedEncryption.encrypt(unencryptedByteData, password, salt, true);
@@ -55,36 +47,9 @@ public class EncryptionService implements IEncryptionService {
     }
 
     @Override
-    public OutputStream encrypt(OutputStream unencryptedDataStream, char[] password)
-            throws EncryptionException, IOException {
-        return PasswordBasedEncryption.encrypt(unencryptedDataStream, password);
-    }
-
-    @Override
-    public InputStream decrypt(InputStream encryptedInputStream, char[] password)
-            throws EncryptionException, IOException {
-        return PasswordBasedEncryption.decrypt(encryptedInputStream, password);
-    }
-
-    @Override
     public byte[] encrypt(byte[] unencryptedByteData, File x509CertificateFile)
             throws CertificateException, EncryptionException, IOException {
         return SMIMEBasedEncryption.encrypt(unencryptedByteData, x509CertificateFile);
-    }
-
-    @Override
-    public byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile,
-            File privateKeyPemFile) throws IOException, CertificateException, EncryptionException {
-        return SMIMEBasedEncryption.decrypt(encryptedByteData, x509CertificateFile,
-                privateKeyPemFile);
-    }
-
-    @Override
-    public InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile,
-            File privateKeyPemFile, String privateKeyPassword)
-            throws IOException, CertificateException, EncryptionException {
-        return SMIMEBasedEncryption.decrypt(encryptedDataStream, x509CertificateFile,
-                privateKeyPemFile, privateKeyPassword);
     }
 
     @Override
@@ -96,50 +61,9 @@ public class EncryptionService implements IEncryptionService {
     }
 
     @Override
-    public OutputStream encrypt(OutputStream unencryptedDataStream, File x509CertificateFile)
-            throws IOException, CertificateException, EncryptionException {
-        return SMIMEBasedEncryption.encrypt(unencryptedDataStream, x509CertificateFile);
-    }
-
-    @Override
-    public InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile,
-            File privateKeyFile) throws IOException, CertificateException, EncryptionException {
-        return SMIMEBasedEncryption.decrypt(encryptedDataStream, x509CertificateFile,
-                privateKeyFile);
-    }
-
-    @Override
-    public OutputStream encrypt(OutputStream unencryptedDataStream, String keyAlias)
-            throws EncryptionException, IOException, CertificateException {
-        return SMIMEBasedEncryption.encrypt(unencryptedDataStream, keyAlias);
-    }
-
-    @Override
     public byte[] encrypt(byte[] unencryptedByteData, String keyAlias)
             throws CertificateException, EncryptionException, IOException {
         return SMIMEBasedEncryption.encrypt(unencryptedByteData, keyAlias);
-    }
-
-    @Override
-    public byte[] decrypt(byte[] encryptedByteData, String keyAlias)
-            throws IOException, CertificateException, EncryptionException {
-        return SMIMEBasedEncryption.decrypt(encryptedByteData, keyAlias);
-    }
-
-    @Override
-    public InputStream decrypt(InputStream encryptedDataStream, String keyAlias)
-            throws IOException, CertificateException, EncryptionException {
-        return SMIMEBasedEncryption.decrypt(encryptedDataStream, keyAlias);
-    }
-
-    @Override
-    public String encrypt(String plainText, char[] password, String salt)
-            throws EncryptionException {
-        byte[] plainTextBytes = plainText.getBytes(VeriniceCharset.CHARSET_UTF_8);
-        byte[] saltBytes = salt.getBytes();
-        byte[] cypherTextBytes = PasswordBasedEncryption.encrypt(plainTextBytes, password,
-                saltBytes, false);
-        return new String(encodeBase64(cypherTextBytes));
     }
 
     @Override
@@ -163,11 +87,6 @@ public class EncryptionService implements IEncryptionService {
             throws EncryptionException {
 
         return PasswordBasedEncryption.decryptLicenserestrictedProperty(password, value);
-    }
-
-    @Override
-    public byte[] encodeBase64(byte[] value) {
-        return Base64.encode(value);
     }
 
     @Override

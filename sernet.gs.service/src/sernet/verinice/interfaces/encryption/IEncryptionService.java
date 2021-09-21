@@ -19,8 +19,6 @@ package sernet.verinice.interfaces.encryption;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
@@ -39,22 +37,6 @@ public interface IEncryptionService {
 
     public static final int CRYPTO_SALT_DEFAULT_LENGTH = 8;
     public static final String CRYPTO_DEFAULT_ENCODING = "UTF-8";
-
-    /**
-     * Encrypts the given byte data with the given password using the AES
-     * algorithm.
-     * 
-     * @param unencryptedByteData
-     *            the data to encrypt
-     * @param password
-     *            the password used for encryption
-     * @return the encrypted data as array of bytes
-     * @throws EncryptionException
-     *             if a problem occured during the encryption process
-     */
-    byte[] encrypt(byte[] unencryptedByteData, char[] password) throws EncryptionException;
-
-    String encrypt(String plainText, char[] password, String salt) throws EncryptionException;
 
     String decrypt(String cypherText, char[] password, String salt) throws EncryptionException;
 
@@ -78,45 +60,8 @@ public interface IEncryptionService {
     byte[] decrypt(byte[] encryptedByteData, char[] password, byte[] salt)
             throws EncryptionException;
 
-    /**
-     * Encrypts data received from the given OutputStream using the AES
-     * algorithm.
-     * 
-     * @param dataStream
-     *            the OutputStream providing the unencrypted data to encrypt
-     * @param password
-     *            the password used for encryption
-     * @return an OutputStream providing the encrypted data
-     * @throws EncryptionException
-     *             when a problem occured during the en- or decryption process
-     * @throws IOException
-     *             if there was a problem reading from the InputStream
-     */
-    OutputStream encrypt(OutputStream unencryptedDataStream, char[] password)
-            throws EncryptionException, IOException;
-
-    OutputStream encrypt(OutputStream unencryptedDataStream, String keyAlias)
-            throws EncryptionException, IOException, CertificateException;
-
     byte[] encrypt(byte[] unencryptedByteData, String keyAlias)
             throws CertificateException, EncryptionException, IOException;
-
-    /**
-     * Decrypts data received from the given InputStream using the AES
-     * algorithm.
-     * 
-     * @param encryptedInputStream
-     *            the InputStream providing the encrypted data to decrypt
-     * @param password
-     *            the password used for decryption
-     * @return an InputStream providing the decrypted data
-     * @throws EncryptionException
-     *             when a problem occured during the en- or decryption process
-     * @throws IOException
-     *             if there was a problem reading from the InputStream
-     */
-    InputStream decrypt(InputStream encryptedInputStream, char[] password)
-            throws EncryptionException, IOException;
 
     // ##### S/MIME Encryption #####
 
@@ -170,42 +115,6 @@ public interface IEncryptionService {
      *            .pem file that contains the private key used for decryption.
      *            This key must fit to the public key contained in the public
      *            certificate
-     * @return an array of bytes representing the unencrypted byte data.
-     * @throws IOException
-     *             <ul>
-     *             <li>if any of the given files does not exist</li>
-     *             <li>if any of the given files cannot be read</li>
-     *             </ul>
-     * @throws CertificateNotYetValidException
-     *             if the certificate is not yet valid
-     * @throws CertificateExpiredException
-     *             if the certificate is not valid anymore
-     * @throws CertificateException
-     *             <ul>
-     *             <li>if the given certificate file does not contain a
-     *             certificate</li>
-     *             <li>if the certificate contained in the given file is not a
-     *             X.509 certificate</li>
-     *             </ul>
-     * @throws EncryptionException
-     *             if a problem occured during the encryption process
-     */
-    byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile, File privateKeyPemFile)
-            throws IOException, CertificateException, EncryptionException;
-
-    /**
-     * Decrypts the given byte data with the given receiver certificate and the
-     * private key
-     * 
-     * @param encryptedByteData
-     *            an array of byte data to decrypt
-     * @param x509CertificateFile
-     *            X.509 certificate that was used to encrypt the data. The file
-     *            is expected to be in DER or PEM format
-     * @param privateKeyPemFile
-     *            .pem file that contains the private key used for decryption.
-     *            This key must fit to the public key contained in the public
-     *            certificate
      * @param privateKeyPassword
      *            password to encrypt private key
      * @return an array of bytes representing the unencrypted byte data.
@@ -233,111 +142,6 @@ public interface IEncryptionService {
             throws IOException, CertificateException, EncryptionException;
 
     /**
-     * Encrypts the given OutputStream using the given X.509 certificate file.
-     * 
-     * @param unencryptedDataStream
-     * @param x509CertificateFile
-     *            X.509 certificate file used to encrypt the data. The file is
-     *            expected to be in DER or PEM format
-     * @return the encrypted OutputStream
-     * @throws IOException
-     *             <ul>
-     *             <li>if any of the given files does not exist</li>
-     *             <li>if any of the given files cannot be read</li>
-     *             </ul>
-     * @throws CertificateNotYetValidException
-     *             if the certificate is not yet valid
-     * @throws CertificateExpiredException
-     *             if the certificate is not valid anymore
-     * @throws CertificateException
-     *             <ul>
-     *             <li>if the given certificate file does not contain a
-     *             certificate</li>
-     *             <li>if the certificate contained in the given file is not a
-     *             X.509 certificate</li>
-     *             </ul>
-     * @throws EncryptionException
-     *             if a problem occured during the encryption process
-     */
-    OutputStream encrypt(OutputStream unencryptedDataStream, File x509CertificateFile)
-            throws IOException, CertificateException, EncryptionException;
-
-    /**
-     * Decrypts the given InputStream using the given X.509 certificate file
-     * that was used for encryption and the matching private key file.
-     * 
-     * @param encryptedDataStream
-     *            the InputStream to decrypt
-     * @param x509CertificateFile
-     *            the X.509 public certificate that was used for encryption
-     * @param privateKeyFile
-     *            the matching private key file needed for decryption
-     * @return the decrypted InputStream
-     * @throws IOException
-     *             <ul>
-     *             <li>if any of the given files does not exist</li>
-     *             <li>if any of the given files cannot be read</li>
-     *             </ul>
-     * @throws CertificateNotYetValidException
-     *             if the certificate is not yet valid
-     * @throws CertificateExpiredException
-     *             if the certificate is not valid anymore
-     * @throws CertificateException
-     *             <ul>
-     *             <li>if the given certificate file does not contain a
-     *             certificate</li>
-     *             <li>if the certificate contained in the given file is not a
-     *             X.509 certificate</li>
-     *             </ul>
-     * @throws EncryptionException
-     *             if a problem occured during the encryption process
-     */
-    InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile,
-            File privateKeyFile) throws IOException, CertificateException, EncryptionException;
-
-    /**
-     * Decrypts the given InputStream using the given X.509 certificate file
-     * that was used for encryption and the matching private key file.
-     * 
-     * @param encryptedDataStream
-     *            the InputStream to decrypt
-     * @param x509CertificateFile
-     *            the X.509 public certificate that was used for encryption
-     * @param privateKeyFile
-     *            the matching private key file needed for decryption
-     * @param privateKeyPassword
-     *            password to encrypt private key
-     * @return the decrypted InputStream
-     * @throws IOException
-     *             <ul>
-     *             <li>if any of the given files does not exist</li>
-     *             <li>if any of the given files cannot be read</li>
-     *             </ul>
-     * @throws CertificateNotYetValidException
-     *             if the certificate is not yet valid
-     * @throws CertificateExpiredException
-     *             if the certificate is not valid anymore
-     * @throws CertificateException
-     *             <ul>
-     *             <li>if the given certificate file does not contain a
-     *             certificate</li>
-     *             <li>if the certificate contained in the given file is not a
-     *             X.509 certificate</li>
-     *             </ul>
-     * @throws EncryptionException
-     *             if a problem occured during the encryption process
-     */
-    InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile,
-            File privateKeyFile, final String privateKeyPassword)
-            throws IOException, CertificateException, EncryptionException;
-
-    byte[] decrypt(byte[] encryptedByteData, String keyAlias)
-            throws IOException, CertificateException, EncryptionException;
-
-    InputStream decrypt(InputStream encryptedDataStream, String keyAlias)
-            throws IOException, CertificateException, EncryptionException;
-
-    /**
      * decrypts a property that is stored in the db in a non-readable format,
      * due to license restrictions
      * 
@@ -348,14 +152,6 @@ public interface IEncryptionService {
      */
     String decryptLicenseRestrictedProperty(String password, String value)
             throws EncryptionException;
-
-    /**
-     * encodes a byte[] to Base64-Encoding
-     * 
-     * @param value
-     * @return
-     */
-    byte[] encodeBase64(byte[] value);
 
     /**
      * decodes a Base64-Encoded byte[]

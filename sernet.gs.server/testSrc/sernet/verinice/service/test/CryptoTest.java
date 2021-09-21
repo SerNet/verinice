@@ -18,15 +18,9 @@
 package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.file.Files;
@@ -78,6 +72,7 @@ import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.service.commands.SyncParameterException;
+import sernet.verinice.service.crypto.PasswordBasedEncryption;
 
 /**
  *
@@ -108,40 +103,11 @@ public class CryptoTest extends ContextConfiguration {
             + "Integer dapibus hendrerit lacus, quis semper augue feugiat sed. ";
 
     @Test
-    public void passwordStreamBasedCryptoTest() {
-        try {
-            File f = File.createTempFile("veriniceCryptoTest", "pcr");
-            f.deleteOnExit();
-            char[] password = getPassword(20);
-            FileOutputStream fileOutputStream = new FileOutputStream(f);
-            OutputStream encryptedOutputStream = getEncryptionService().encrypt(fileOutputStream,
-                    password);
-            encryptedOutputStream.write(SECRET.getBytes());
-            encryptedOutputStream.flush();
-            encryptedOutputStream.close();
-
-            FileInputStream fileInputStream = new FileInputStream(f.getAbsolutePath());
-            InputStream decryptedInputStream = getEncryptionService().decrypt(fileInputStream,
-                    password);
-            StringBuilder sb = new StringBuilder();
-            byte data = -1;
-            while ((data = (byte) decryptedInputStream.read()) != -1) {
-                sb.append((char) data);
-            }
-            assertEquals(SECRET, sb.toString());
-
-        } catch (IOException e) {
-            LOG.error("IO-Error", e);
-        }
-
-    }
-
-    @Test
     public void passwordByteBasedCryptoTest() {
 
         for (int i = 1; i <= MAX_PASSWORD_LENGTH; i++) {
             char[] password = getPassword(i);
-            byte[] encryptedMessage = getEncryptionService().encrypt(SECRET.getBytes(), password);
+            byte[] encryptedMessage = PasswordBasedEncryption.encrypt(SECRET.getBytes(), password);
 
             byte[] decryptedMessage = getEncryptionService().decrypt(encryptedMessage, password);
 
@@ -153,46 +119,10 @@ public class CryptoTest extends ContextConfiguration {
     }
 
     @Test
-    public void cryptVNLContentId() {
-        String password = "111";
-        String salt = "111";
-        String plainContentId = "ISO27K1";
-        String encryptedContentId = getEncryptionService().encrypt(plainContentId,
-                password.toCharArray(), salt);
-        String decryptedContentId = getEncryptionService().decrypt(encryptedContentId,
-                password.toCharArray(), salt);
-        Assert.assertTrue(plainContentId.equals(decryptedContentId));
-    }
-
-    @Test
-    public void certificateByteBasedCryptoTest() throws GeneralSecurityException, IOException {
-        KeyPair keyPair = generateKeyPair();
-        assertNotNull("Keypair is null", keyPair);
-        String distinguishedName = "CN=Test, L=Berlin, C=DE";
-        int days = 365;
-        X509Certificate cert = generateCertificate(distinguishedName, keyPair, days);
-        String certPEM = convertToPem(cert.getEncoded(), false, true);
-        assertNotNull(certPEM);
-        File certFile = File.createTempFile("veriniceCert", "PEM");
-        assertNotNull(certFile);
-        Files.write(certFile.toPath(), certPEM.getBytes());
-        certFile.deleteOnExit();
-        byte[] encryptedData = getEncryptionService().encrypt(SECRET.getBytes(), certFile);
-        byte[] privateKey = keyPair.getPrivate().getEncoded();
-        String privateKeyString = convertToPem(privateKey, true, false);
-        File keyFile = File.createTempFile("veriniceKey", "PEM");
-        assertNotNull(keyFile);
-        Files.write(keyFile.toPath(), privateKeyString.getBytes());
-        certFile.deleteOnExit();
-        byte[] decryptedData = getEncryptionService().decrypt(encryptedData, certFile, keyFile);
-        assertEquals(SECRET, new String(decryptedData));
-    }
-
-    @Test
     public void VNAPBCryptoTest() throws SyncParameterException, IOException, CommandException {
         byte[] plainContent = Files.readAllBytes(Paths.get(getAbsoluteFilePath(VNA_FILE)));
         char[] password = getPassword(10);
-        byte[] encryptedContent = getEncryptionService().encrypt(plainContent, password);
+        byte[] encryptedContent = PasswordBasedEncryption.encrypt(plainContent, password);
         byte[] decryptedContent = getEncryptionService().decrypt(encryptedContent, password);
         assertTrue(Arrays.areEqual(plainContent, decryptedContent));
     }

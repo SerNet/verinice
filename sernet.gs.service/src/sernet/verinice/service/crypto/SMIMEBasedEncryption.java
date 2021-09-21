@@ -1,16 +1,12 @@
 package sernet.verinice.service.crypto;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
-import java.security.PrivateKey;
-import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
@@ -32,11 +28,9 @@ import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
 import org.bouncycastle.cms.jcajce.JceKeyAgreeRecipientId;
 import org.bouncycastle.cms.jcajce.JceKeyTransEnvelopedRecipient;
 import org.bouncycastle.cms.jcajce.JceKeyTransRecipient;
-import org.bouncycastle.cms.jcajce.JceKeyTransRecipientId;
 import org.bouncycastle.cms.jcajce.JceKeyTransRecipientInfoGenerator;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.jce.provider.JCERSAPrivateCrtKey;
-import org.bouncycastle.mail.smime.SMIMEEnveloped;
 import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
 import org.bouncycastle.mail.smime.SMIMEException;
 import org.bouncycastle.mail.smime.SMIMEUtil;
@@ -220,50 +214,6 @@ public class SMIMEBasedEncryption {
         return encryptedMimeData;
     }
 
-    public static OutputStream encrypt(OutputStream unencryptedDataStream, String keyAlias)
-            throws IOException, CertificateException, EncryptionException {
-
-        return new SMIMEEncryptedOutputStream(unencryptedDataStream, keyAlias);
-    }
-
-    /**
-     * Decrypts the given byte data with the given receiver certificate and the
-     * private key
-     * 
-     * @param encryptedByteData
-     *            an array of byte data to decrypt
-     * @param x509CertificateFile
-     *            X.509 certificate that was used to encrypt the data. The file
-     *            is expected to be in DER or PEM format
-     * @param privateKeyPemFile
-     *            .pem file that contains the private key used for decryption.
-     *            This key must fit to the public key contained in the public
-     *            certificate
-     * @return an array of bytes representing the unencrypted byte data.
-     * @throws IOException
-     *             <ul>
-     *             <li>if any of the given files does not exist</li>
-     *             <li>if any of the given files cannot be read</li>
-     *             </ul>
-     * @throws CertificateNotYetValidException
-     *             if the certificate is not yet valid
-     * @throws CertificateExpiredException
-     *             if the certificate is not valid anymore
-     * @throws CertificateException
-     *             <ul>
-     *             <li>if the given certificate file does not contain a
-     *             certificate</li>
-     *             <li>if the certificate contained in the given file is not a
-     *             X.509 certificate</li>
-     *             </ul>
-     * @throws EncryptionException
-     *             if a problem occured during the encryption process
-     */
-    public static byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile,
-            File privateKeyPemFile) throws IOException, CertificateException, EncryptionException {
-        return decrypt(encryptedByteData, x509CertificateFile, privateKeyPemFile, null);
-    }
-
     /**
      * Decrypts the given byte data with the given receiver certificate and the
      * private key
@@ -348,163 +298,6 @@ public class SMIMEBasedEncryption {
                 decryptedByteData = recipientInfo.getContent(rec);
             }
         } catch (CMSException e) {
-            throw new EncryptionException(IO_ERR_MSG, e);
-        }
-
-        decryptedByteData = Base64.decode(decryptedByteData);
-        return decryptedByteData;
-    }
-
-    /**
-     * Encrypts the given OutputStream using the given X.509 certificate file.
-     * 
-     * @param unencryptedDataStream
-     * @param x509CertificateFile
-     *            X.509 certificate file used to encrypt the data. The file is
-     *            expected to be in DER or PEM format
-     * @return the encrypted OutputStream
-     * @throws IOException
-     *             <ul>
-     *             <li>if any of the given files does not exist</li>
-     *             <li>if any of the given files cannot be read</li>
-     *             </ul>
-     * @throws CertificateNotYetValidException
-     *             if the certificate is not yet valid
-     * @throws CertificateExpiredException
-     *             if the certificate is not valid anymore
-     * @throws CertificateException
-     *             <ul>
-     *             <li>if the given certificate file does not contain a
-     *             certificate</li>
-     *             <li>if the certificate contained in the given file is not a
-     *             X.509 certificate</li>
-     *             </ul>
-     * @throws EncryptionException
-     *             if a problem occured during the encryption process
-     */
-    public static OutputStream encrypt(OutputStream unencryptedDataStream, File x509CertificateFile)
-            throws IOException, CertificateException, EncryptionException {
-
-        return new SMIMEEncryptedOutputStream(unencryptedDataStream, x509CertificateFile);
-    }
-
-    /**
-     * Decrypts the given InputStream using the given X.509 certificate file
-     * that was used for encryption and the matching private key file.
-     * 
-     * @param encryptedDataStream
-     *            the InputStream to decrypt
-     * @param x509CertificateFile
-     *            the X.509 public certificate that was used for encryption
-     * @param privateKeyFile
-     *            the matching private key file needed for decryption
-     * @return the decrypted InputStream
-     * @throws IOException
-     *             <ul>
-     *             <li>if any of the given files does not exist</li>
-     *             <li>if any of the given files cannot be read</li>
-     *             </ul>
-     * @throws CertificateNotYetValidException
-     *             if the certificate is not yet valid
-     * @throws CertificateExpiredException
-     *             if the certificate is not valid anymore
-     * @throws CertificateException
-     *             <ul>
-     *             <li>if the given certificate file does not contain a
-     *             certificate</li>
-     *             <li>if the certificate contained in the given file is not a
-     *             X.509 certificate</li>
-     *             </ul>
-     * @throws EncryptionException
-     *             if a problem occured during the encryption process
-     */
-    public static InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile,
-            File privateKeyFile) throws IOException, CertificateException, EncryptionException {
-
-        return new SMIMEDecryptedInputStream(encryptedDataStream, x509CertificateFile,
-                privateKeyFile);
-    }
-
-    public static InputStream decrypt(InputStream encryptedDataStream, String keyAlias)
-            throws IOException, CertificateException, EncryptionException {
-
-        return new SMIMEDecryptedInputStream(encryptedDataStream, keyAlias);
-    }
-
-    /**
-     * Decrypts the given InputStream using the given X.509 certificate file
-     * that was used for encryption and the matching private key file.
-     * 
-     * @param encryptedDataStream
-     *            the InputStream to decrypt
-     * @param x509CertificateFile
-     *            the X.509 public certificate that was used for encryption
-     * @param privateKeyFile
-     *            the matching private key file needed for decryption
-     * @param privateKeyPassword
-     *            password to encrypt private key
-     * @return the decrypted InputStream
-     * @throws IOException
-     *             <ul>
-     *             <li>if any of the given files does not exist</li>
-     *             <li>if any of the given files cannot be read</li>
-     *             </ul>
-     * @throws CertificateNotYetValidException
-     *             if the certificate is not yet valid
-     * @throws CertificateExpiredException
-     *             if the certificate is not valid anymore
-     * @throws CertificateException
-     *             <ul>
-     *             <li>if the given certificate file does not contain a
-     *             certificate</li>
-     *             <li>if the certificate contained in the given file is not a
-     *             X.509 certificate</li>
-     *             </ul>
-     * @throws EncryptionException
-     *             if a problem occured during the encryption process
-     */
-    public static InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile,
-            File privateKeyFile, final String privateKeyPassword)
-            throws IOException, CertificateException, EncryptionException {
-
-        return new SMIMEDecryptedInputStream(encryptedDataStream, x509CertificateFile,
-                privateKeyFile, privateKeyPassword);
-    }
-
-    public static byte[] decrypt(byte[] encryptedByteData, String keyAlias)
-            throws IOException, CertificateException, EncryptionException {
-
-        byte[] decryptedByteData = new byte[] {};
-
-        try {
-            KeyStore ks = KeyStore.getInstance(CRYPT_TYPE, CRYPT_PROVIDER);
-            ks.load(null, null);
-            Certificate cert = ks.getCertificate(keyAlias);
-            X509Certificate x509Certificate = (X509Certificate) cert;
-
-            PrivateKey privateKey = (PrivateKey) ks.getKey(keyAlias, null);
-
-            MimeBodyPart encryptedMimeBodyPart = new MimeBodyPart(
-                    new ByteArrayInputStream(encryptedByteData));
-            SMIMEEnveloped enveloped = new SMIMEEnveloped(encryptedMimeBodyPart);
-
-            // look for our recipient identifier
-            RecipientId recipientId = new JceKeyTransRecipientId(x509Certificate);
-
-            RecipientInformationStore recipients = enveloped.getRecipientInfos();
-            RecipientInformation recipientInfo = recipients.get(recipientId);
-
-            if (recipientInfo != null) {
-                JceKeyTransRecipient rec = new JceKeyTransEnvelopedRecipient(privateKey);
-                rec.setProvider(CRYPT_PROVIDER);
-                rec.setContentProvider(BouncyCastleProvider.PROVIDER_NAME);
-                decryptedByteData = recipientInfo.getContent(rec);
-            }
-        } catch (MessagingException e) {
-            throw new EncryptionException(IO_ERR_MSG, e);
-        } catch (CMSException e) {
-            throw new EncryptionException(IO_ERR_MSG, e);
-        } catch (GeneralSecurityException e) {
             throw new EncryptionException(IO_ERR_MSG, e);
         }
 
