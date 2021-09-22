@@ -18,8 +18,10 @@
 package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -116,6 +118,31 @@ public class CryptoTest extends ContextConfiguration {
                     new String(decryptedMessage), SECRET);
 
         }
+    }
+
+    @Test
+    public void certificateByteBasedCryptoTest() throws GeneralSecurityException, IOException {
+        KeyPair keyPair = generateKeyPair();
+        assertNotNull("Keypair is null", keyPair);
+        String distinguishedName = "CN=Test, L=Berlin, C=DE";
+        int days = 365;
+        X509Certificate cert = generateCertificate(distinguishedName, keyPair, days);
+        String certPEM = convertToPem(cert.getEncoded(), false, true);
+        assertNotNull(certPEM);
+        File certFile = File.createTempFile("veriniceCert", "PEM");
+        assertNotNull(certFile);
+        Files.write(certFile.toPath(), certPEM.getBytes());
+        certFile.deleteOnExit();
+        byte[] encryptedData = getEncryptionService().encrypt(SECRET.getBytes(), certFile);
+        byte[] privateKey = keyPair.getPrivate().getEncoded();
+        String privateKeyString = convertToPem(privateKey, true, false);
+        File keyFile = File.createTempFile("veriniceKey", "PEM");
+        assertNotNull(keyFile);
+        Files.write(keyFile.toPath(), privateKeyString.getBytes());
+        certFile.deleteOnExit();
+        byte[] decryptedData = getEncryptionService().decrypt(encryptedData, certFile, keyFile,
+                null);
+        assertEquals(SECRET, new String(decryptedData));
     }
 
     @Test
