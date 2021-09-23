@@ -68,6 +68,7 @@ import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import sernet.gs.service.VeriniceCharset;
@@ -142,6 +143,19 @@ public class CryptoTest extends ContextConfiguration {
         certFile.deleteOnExit();
         byte[] decryptedData = getEncryptionService().decrypt(encryptedData, certFile, keyFile,
                 null);
+        assertEquals(SECRET, new String(decryptedData));
+    }
+
+    @Test
+    @Ignore
+    // FIXME: this test does not work. See VN-1950
+    public void certificateByteBasedCryptoTestWithProtectedKey()
+            throws GeneralSecurityException, IOException {
+        File certFile = new File("testSrc/sernet/verinice/service/test/cert.pem").getAbsoluteFile();
+        byte[] encryptedData = getEncryptionService().encrypt(SECRET.getBytes(), certFile);
+        File keyFile = new File("testSrc/sernet/verinice/service/test/key.pem").getAbsoluteFile();
+        byte[] decryptedData = getEncryptionService().decrypt(encryptedData, certFile, keyFile,
+                "verinice");
         assertEquals(SECRET, new String(decryptedData));
     }
 
