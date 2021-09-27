@@ -35,7 +35,6 @@
 
 		<!-- Bundles -->
 		<module>jbpm</module>
-		<module>gnumail</module>
 		<module>sernet.gs.db.fragment</module>
 		<module>sernet.gs.ehcache.fragment</module>
 		<module>sernet.gs.hibernate.fragment</module>

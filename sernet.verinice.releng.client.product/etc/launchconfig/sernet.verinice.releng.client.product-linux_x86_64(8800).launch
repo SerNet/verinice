@@ -431,7 +431,6 @@
         <setEntry value="org.w3c.sac*1.3.0.v201706222054@default:default"/>
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
-        <setEntry value="gnumail@default:default"/>
         <setEntry value="jbpm@default:default"/>
         <setEntry value="sernet.client.service.handlerrights@default:default"/>
         <setEntry value="sernet.client.service@default:default"/>
