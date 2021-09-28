@@ -16,6 +16,7 @@ java.lang.Throwable
 java.math.BigInteger
 java.sql.Timestamp
 java.time.Ser
+java.time.LocalDate
 java.util.ArrayList
 java.util.Arrays$ArrayList
 java.util.Collection
