@@ -56,8 +56,8 @@ public class ConfigurationService implements IConfigurationService {
     private final Lock readLock = readWriteLock.readLock();
     private final Lock writeLock = readWriteLock.writeLock();
 
-    private Map<String, String[]> roleMap = new HashMap<String, String[]>();   
-    private Map<String, Boolean> scopeMap = new HashMap<String, Boolean>(); 
+    private Map<String, String[]> roleMap = new HashMap<String, String[]>();
+    private Map<String, Boolean> scopeMap = new HashMap<String, Boolean>();
     private Map<String, Integer> scopeIdMap = new HashMap<String, Integer>();
     private Map<String, String> nameMap = new HashMap<String, String>();
 
@@ -68,7 +68,8 @@ public class ConfigurationService implements IConfigurationService {
     private ICommandService commandService;
 
     private void loadUserData() {
-        List<Configuration> configurations = getConfigurationDao().findAll(RetrieveInfo.getPropertyInstance());
+        List<Configuration> configurations = getConfigurationDao()
+                .findAll(RetrieveInfo.getPropertyInstance());
         // Block all other threads before filling the maps
         writeLock.lock();
         try {
@@ -77,19 +78,21 @@ public class ConfigurationService implements IConfigurationService {
                 String user = c.getUser();
                 // Put result into map and save asking the DB next time.
                 roleMap.put(user, roleArray);
-                scopeMap.put(user, c.isScopeOnly()); 
+                scopeMap.put(user, c.isScopeOnly());
                 CnATreeElement person = c.getPerson();
-                if(person!=null) {
+                if (person != null) {
                     scopeIdMap.put(user, person.getScopeId());
                 }
             }
-            String[] adminRoleArray = new String[]{ApplicationRoles.ROLE_ADMIN,ApplicationRoles.ROLE_WEB,ApplicationRoles.ROLE_USER};
+            String[] adminRoleArray = new String[] { ApplicationRoles.ROLE_ADMIN,
+                    ApplicationRoles.ROLE_WEB, ApplicationRoles.ROLE_USER };
             roleMap.put(getAuthService().getAdminUsername(), adminRoleArray);
             scopeMap.put(getAuthService().getAdminUsername(), false);
             for (Configuration c : configurations) {
                 String user = c.getUser();
                 CnATreeElement person = c.getPerson();
-                person = getCnaTreeElementDao().findByUuid(person.getUuid(), RetrieveInfo.getPropertyInstance());
+                person = getCnaTreeElementDao().findByUuid(person.getUuid(),
+                        RetrieveInfo.getPropertyInstance());
                 if (person != null) {
                     StringBuilder sb = new StringBuilder(PersonAdapter.getFullName(person));
                     sb.append(" [").append(c.getUser()).append("]");
@@ -101,29 +104,37 @@ public class ConfigurationService implements IConfigurationService {
         }
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.IConfigurationService#setRoles(java.lang.String, java.lang.String[])
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.service.IConfigurationService#setRoles(java.lang.String,
+     * java.lang.String[])
      */
     @Override
     public void setRoles(String user, String[] roles) {
         // Block all other threads before filling the maps
         writeLock.lock();
         try {
-            roleMap.put(user, roles); 
+            roleMap.put(user, roles);
         } finally {
             writeLock.unlock();
-        }   
+        }
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.IConfigurationService#setScopeOnly(java.lang.String, boolean)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.service.IConfigurationService#setScopeOnly(java.lang.
+     * String, boolean)
      */
     @Override
     public void setScopeOnly(String user, boolean isScopeOnly) {
         // Block all other threads before filling the maps
         writeLock.lock();
         try {
-            scopeMap.put(user, isScopeOnly); 
+            scopeMap.put(user, isScopeOnly);
         } finally {
             writeLock.unlock();
         }
@@ -131,13 +142,13 @@ public class ConfigurationService implements IConfigurationService {
 
     private String[] getRoles(Configuration c) {
         Set<String> roleSet = c.getRoles();
-        if(c.isAdminUser()) {
+        if (c.isAdminUser()) {
             roleSet.add(ApplicationRoles.ROLE_ADMIN);
         }
-        if(c.isWebUser()) {
+        if (c.isWebUser()) {
             roleSet.add(ApplicationRoles.ROLE_WEB);
         }
-        if(c.isRcpUser()) {
+        if (c.isRcpUser()) {
             roleSet.add(ApplicationRoles.ROLE_USER);
         }
         String[] roleArray = new String[roleSet.size()];
@@ -145,7 +156,9 @@ public class ConfigurationService implements IConfigurationService {
         return roleArray;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.service.IConfigurationService#discardUserData()
      */
     @Override
@@ -162,8 +175,11 @@ public class ConfigurationService implements IConfigurationService {
         }
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.IConfigurationService#isScopeOnly(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.service.IConfigurationService#isScopeOnly(java.lang.
+     * String)
      */
     @Override
     public boolean isScopeOnly(String user) {
@@ -173,34 +189,37 @@ public class ConfigurationService implements IConfigurationService {
         try {
             result = scopeMap.get(user);
         } finally {
-            readLock.unlock(); 
-        }    
+            readLock.unlock();
+        }
         if (result == null) {
             loadUserData();
             readLock.lock();
             try {
                 result = scopeMap.get(user);
             } finally {
-                readLock.unlock(); 
+                readLock.unlock();
             }
-            if(result==null) {
+            if (result == null) {
                 // prevent calling loadUserData() again
                 // if user was not found in db
                 result = false;
                 // Block all other threads before filling the maps
                 writeLock.lock();
                 try {
-                    scopeMap.put(user,result);
+                    scopeMap.put(user, result);
                 } finally {
                     writeLock.unlock();
                 }
             }
         }
-        return (result==null) ? false : result;
+        return (result == null) ? false : result;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.IConfigurationService#getScopeId(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.service.IConfigurationService#getScopeId(java.lang.
+     * String)
      */
     @Override
     public Integer getScopeId(String user) {
@@ -209,22 +228,25 @@ public class ConfigurationService implements IConfigurationService {
         try {
             result = scopeIdMap.get(user);
         } finally {
-            readLock.unlock(); 
-        } 
+            readLock.unlock();
+        }
         if (result == null) {
             loadUserData();
             readLock.lock();
             try {
                 result = scopeIdMap.get(user);
             } finally {
-                readLock.unlock(); 
-            }          
+                readLock.unlock();
+            }
         }
         return result;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.IConfigurationService#getRoles(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.service.IConfigurationService#getRoles(java.lang.String)
      */
     @Override
     public String[] getRoles(String user) {
@@ -233,22 +255,25 @@ public class ConfigurationService implements IConfigurationService {
         try {
             result = roleMap.get(user);
         } finally {
-            readLock.unlock(); 
-        }   
+            readLock.unlock();
+        }
         if (result == null) {
             loadUserData();
             readLock.lock();
             try {
                 result = roleMap.get(user);
             } finally {
-                readLock.unlock(); 
-            }           
+                readLock.unlock();
+            }
         }
         return result;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.IConfigurationService#getName(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.service.IConfigurationService#getName(java.lang.String)
      */
     @Override
     public String getName(String user) {
@@ -257,7 +282,7 @@ public class ConfigurationService implements IConfigurationService {
         try {
             result = nameMap.get(user);
         } finally {
-            readLock.unlock(); 
+            readLock.unlock();
         }
         if (result == null) {
             loadUserData();
@@ -265,7 +290,7 @@ public class ConfigurationService implements IConfigurationService {
             try {
                 result = nameMap.get(user);
             } finally {
-                readLock.unlock(); 
+                readLock.unlock();
             }
         }
         return result;
