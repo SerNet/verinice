@@ -29,8 +29,9 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.log4j.Logger;
+import org.hibernate.FetchMode;
+import org.hibernate.criterion.DetachedCriteria;
 
-import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthService;
@@ -68,8 +69,18 @@ public class ConfigurationService implements IConfigurationService {
     private ICommandService commandService;
 
     private void loadUserData() {
-        List<Configuration> configurations = getConfigurationDao()
-                .findAll(RetrieveInfo.getPropertyInstance());
+        DetachedCriteria criteria = DetachedCriteria.forClass(Configuration.class);
+        criteria.setFetchMode("entity", FetchMode.JOIN);
+        criteria.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
+        criteria.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
+        criteria.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
+        criteria.setFetchMode("person", FetchMode.JOIN);
+        criteria.setFetchMode("person.entity", FetchMode.JOIN);
+        criteria.setFetchMode("person.entity.typedPropertyLists", FetchMode.JOIN);
+        criteria.setFetchMode("person.entity.typedPropertyLists.properties", FetchMode.JOIN);
+        criteria.setFetchMode("person.entity.typedPropertyLists.properties", FetchMode.JOIN);
+
+        List<Configuration> configurations = getConfigurationDao().findByCriteria(criteria);
         // Block all other threads before filling the maps
         writeLock.lock();
         try {
@@ -82,23 +93,15 @@ public class ConfigurationService implements IConfigurationService {
                 CnATreeElement person = c.getPerson();
                 if (person != null) {
                     scopeIdMap.put(user, person.getScopeId());
+                    StringBuilder sb = new StringBuilder(PersonAdapter.getFullName(person));
+                    sb.append(" [").append(c.getUser()).append("]");
+                    nameMap.put(user, sb.toString());
                 }
             }
             String[] adminRoleArray = new String[] { ApplicationRoles.ROLE_ADMIN,
                     ApplicationRoles.ROLE_WEB, ApplicationRoles.ROLE_USER };
             roleMap.put(getAuthService().getAdminUsername(), adminRoleArray);
             scopeMap.put(getAuthService().getAdminUsername(), false);
-            for (Configuration c : configurations) {
-                String user = c.getUser();
-                CnATreeElement person = c.getPerson();
-                person = getCnaTreeElementDao().findByUuid(person.getUuid(),
-                        RetrieveInfo.getPropertyInstance());
-                if (person != null) {
-                    StringBuilder sb = new StringBuilder(PersonAdapter.getFullName(person));
-                    sb.append(" [").append(c.getUser()).append("]");
-                    nameMap.put(user, sb.toString());
-                }
-            }
         } finally {
             writeLock.unlock();
         }
