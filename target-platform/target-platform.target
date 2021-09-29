@@ -109,7 +109,7 @@
         <unit id="w3c.source.feature.group" version="0.6.0"/>
         <unit id="jaxb.feature.group" version="2.3.3"/>
         <unit id="jaxb.source.feature.group" version="2.3.3"/>
-        <repository location="http://bob/updatesites/verinice-deps-20210823092054/"/>
+        <repository location="https://update.verinice.org/pub/verinice/updatesites/verinice-deps-20210823092054/"/>
     </location>
 
 

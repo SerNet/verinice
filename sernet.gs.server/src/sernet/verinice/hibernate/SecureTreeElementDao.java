@@ -268,7 +268,7 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
     }
 
     private void setScopeFilterEnabled(boolean enable) {
-        if (getConfigurationService().isScopeOnly(authService.getUsername()) && enable) {
+        if (enable && getConfigurationService().isScopeOnly(authService.getUsername())) {
             final Integer userScopeId = getConfigurationService()
                     .getScopeId(authService.getUsername());
 
