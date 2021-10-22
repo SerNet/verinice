@@ -174,6 +174,12 @@ public class RelationTypeEditingSupport extends EditingSupport {
         String[] possibleLinkTypeNames = getPossibleLinkTypeNames(cnaLink);
         String linkTypeName = possibleLinkTypeNames[index];
         String linkTypeId = getLinkTypeIdForName(cnaLink, linkTypeName);
+        if (linkTypeId.equals(cnaLink.getRelationId())) {
+            if (log.isDebugEnabled()) {
+                log.debug("Link type unchanged, returning");
+            }
+            return;
+        }
         if (log.isDebugEnabled()) {
             log.debug("Setting value " + linkTypeId);
         }
