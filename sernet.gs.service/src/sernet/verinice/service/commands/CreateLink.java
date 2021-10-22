@@ -52,14 +52,6 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
     private String comment;
     private final boolean retrieveLinkedElementProperties;
 
-    public CreateLink(String dependantUuid, String dependencyUuid) {
-        this(dependantUuid, dependencyUuid, "", "");
-    }
-
-    public CreateLink(U dependant, V dependency) {
-        this(dependant, dependency, "", "");
-    }
-
     public CreateLink(U dependant, V dependency, boolean retrieveLinkedElementProperties) {
         this(dependant, dependency, "", "", retrieveLinkedElementProperties);
     }
