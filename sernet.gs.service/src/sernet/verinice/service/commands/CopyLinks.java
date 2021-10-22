@@ -31,8 +31,8 @@ public class CopyLinks implements IPostProcessor, Serializable {
      * java.util.Map)
      */
     @Override
-    public void process(ICommandService commandService, final List<String> copyUuidList,
-            final Map<String, String> sourceDestMap) {
+    public void process(ICommandService commandService, final List<Integer> copyIdList,
+            final Map<Integer, Integer> sourceDestMap) {
         try {
             final CopyLinksCommand copyLinksCommand = new CopyLinksCommand(sourceDestMap,
                     copyLinksMode);

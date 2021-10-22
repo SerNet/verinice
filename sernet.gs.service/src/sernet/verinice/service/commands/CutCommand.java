@@ -122,12 +122,12 @@ public class CutCommand extends GenericCommand implements IChangeLoggingCommand 
         List<CnATreeElement> elementList = createInsertList(uuidList);
         selectedGroup = getDao().findByUuid(uuidGroup,
                 RetrieveInfo.getChildrenInstance().setParent(true).setProperties(true));
-        Map<String, String> sourceDestMap = new Hashtable<>();
+        Map<Integer, Integer> sourceDestMap = new Hashtable<>();
         boolean isPersonMoved = false;
         for (CnATreeElement element : elementList) {
             CnATreeElement movedElement = move(selectedGroup, element);
             // cut: source and dest is the same
-            sourceDestMap.put(movedElement.getUuid(), movedElement.getUuid());
+            sourceDestMap.put(movedElement.getDbId(), movedElement.getDbId());
             for (String s : getPersonContainingTypeIDs()) {
                 if (selectedGroup.getTypeId().equals(s)) {
                     isPersonMoved = true;
@@ -145,14 +145,14 @@ public class CutCommand extends GenericCommand implements IChangeLoggingCommand 
     }
 
     private void excecutePostProcessor(List<CnATreeElement> elementList,
-            Map<String, String> sourceDestMap) {
+            Map<Integer, Integer> sourceDestMap) {
         if (getPostProcessorList() != null && !getPostProcessorList().isEmpty()) {
-            List<String> copyElementUuidList = new ArrayList<>(elementList.size());
+            List<Integer> copyElementIdList = new ArrayList<>(elementList.size());
             for (CnATreeElement element : elementList) {
-                copyElementUuidList.add(element.getUuid());
+                copyElementIdList.add(element.getDbId());
             }
             for (IPostProcessor postProcessor : getPostProcessorList()) {
-                postProcessor.process(getCommandService(), copyElementUuidList, sourceDestMap);
+                postProcessor.process(getCommandService(), copyElementIdList, sourceDestMap);
             }
         }
     }

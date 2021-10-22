@@ -71,7 +71,7 @@ public class UpdatePermissions extends GenericCommand implements IChangeLoggingC
         this(cte, permissionAdd, null, updateChildren, true);
     }
 
-    public UpdatePermissions(Long dbId, Set<Permission> permissionAdd, boolean updateChildren,
+    public UpdatePermissions(Integer dbId, Set<Permission> permissionAdd, boolean updateChildren,
             boolean overridePermission) {
         this(dbId, permissionAdd, null, updateChildren, overridePermission);
     }

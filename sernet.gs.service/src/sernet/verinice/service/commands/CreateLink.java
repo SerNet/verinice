@@ -45,8 +45,8 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
 
     private CnATreeElement dependant;
     private CnATreeElement dependency;
-    private String dependantUuid;
-    private String dependencyUuid;
+    private Integer dependantId;
+    private Integer dependencyId;
     private CnALink link;
     private String relationId;
     private String comment;
@@ -56,8 +56,8 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
         this(dependant, dependency, "", "", retrieveLinkedElementProperties);
     }
 
-    public CreateLink(String dependantUuid, String dependencyUuid, String relationId) {
-        this(dependantUuid, dependencyUuid, relationId, "");
+    public CreateLink(Integer dependantId, Integer dependencyId, String relationId) {
+        this(dependantId, dependencyId, relationId, "");
     }
 
     public CreateLink(U dependant, V dependency, String relationId) {
@@ -73,10 +73,10 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
         this(dependant, dependancy, relationId, comment, true);
     }
 
-    public CreateLink(String dependantUuid, String dependencyUuid, String relationId,
+    public CreateLink(Integer dependantId, Integer dependencyId, String relationId,
             String comment) {
-        this.dependantUuid = dependantUuid;
-        this.dependencyUuid = dependencyUuid;
+        this.dependantId = dependantId;
+        this.dependencyId = dependencyId;
         this.relationId = relationId;
         this.comment = comment;
         this.retrieveLinkedElementProperties = true;
@@ -103,12 +103,12 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
             RetrieveInfo ri = retrieveLinkedElementProperties ? RetrieveInfo.getPropertyInstance()
                     : new RetrieveInfo();
             ri.setLinksUp(true);
-            dependency = dependencyDao.findByUuid(getDependencyUuid(), ri);
+            dependency = dependencyDao.retrieve(getDependencyId(), ri);
 
             ri = retrieveLinkedElementProperties ? RetrieveInfo.getPropertyInstance()
                     : new RetrieveInfo();
             ri.setLinksDown(true);
-            dependant = dependantDao.findByUuid(getDependantUuid(), ri);
+            dependant = dependantDao.retrieve(getDependantId(), ri);
 
             if (logger.isDebugEnabled()) {
                 logger.debug("Creating link from " + dependency.getTypeId() + " to "
@@ -143,19 +143,19 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
         }
     }
 
-    private String getDependantUuid() {
-        if (dependantUuid != null) {
-            return dependantUuid;
+    private Integer getDependantId() {
+        if (dependantId != null) {
+            return dependantId;
         } else {
-            return dependant.getUuid();
+            return dependant.getDbId();
         }
     }
 
-    private String getDependencyUuid() {
-        if (dependencyUuid != null) {
-            return dependencyUuid;
+    private Integer getDependencyId() {
+        if (dependencyId != null) {
+            return dependencyId;
         } else {
-            return dependency.getUuid();
+            return dependency.getDbId();
         }
     }
 

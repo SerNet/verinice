@@ -62,15 +62,15 @@ public class CopyLinksCommand extends GenericCommand {
     private static final int FLUSH_LEVEL = 20;
     private int number = 0;
 
-    private transient Map<String, String> sourceDestMap;
+    private transient Map<Integer, Integer> sourceDestMap;
 
-    private transient Map<String, List<LinkInformation>> existingLinksByCopiedElementUUID;
+    private transient Map<Integer, List<LinkInformation>> existingLinksByCopiedElementId;
 
     private transient IBaseDao<CnATreeElement, Serializable> dao;
 
     private final CopyLinksMode copyLinksMode;
 
-    public CopyLinksCommand(Map<String, String> sourceDestMap, CopyLinksMode copyLinksMode) {
+    public CopyLinksCommand(Map<Integer, Integer> sourceDestMap, CopyLinksMode copyLinksMode) {
         super();
         this.sourceDestMap = sourceDestMap;
         this.copyLinksMode = copyLinksMode;
@@ -90,19 +90,19 @@ public class CopyLinksCommand extends GenericCommand {
 
     public void copyLinks() {
         number = 0;
-        for (Entry<String, String> e : sourceDestMap.entrySet()) {
-            String sourceUuid = e.getKey();
-            String targetUuid = e.getValue();
-            createLinks(targetUuid, existingLinksByCopiedElementUUID.get(sourceUuid));
+        for (Entry<Integer, Integer> e : sourceDestMap.entrySet()) {
+            Integer sourceId = e.getKey();
+            Integer targetId = e.getValue();
+            createLinks(targetId, existingLinksByCopiedElementId.get(sourceId));
         }
     }
 
-    private void createLinks(String copyTargetUUID, List<LinkInformation> linkInformations) {
+    private void createLinks(Integer copyTargetId, List<LinkInformation> linkInformations) {
         if (linkInformations == null) {
             return;
         }
         for (LinkInformation linkInformation : linkInformations) {
-            processLink(linkInformation, copyTargetUUID);
+            processLink(linkInformation, copyTargetId);
             number++;
             if (number % FLUSH_LEVEL == 0) {
                 flushAndClear();
@@ -126,38 +126,36 @@ public class CopyLinksCommand extends GenericCommand {
      *            the uuid of the element that one of the linked entities was
      *            copied to
      */
-    private void processLink(LinkInformation linkInformation, String copyTargetUUID) {
-        String otherElementUUID = linkInformation.otherElementUUID;
-        String copyDestinationUuid = sourceDestMap.get(otherElementUUID);
-        if (copyDestinationUuid == null) {
+    private void processLink(LinkInformation linkInformation, Integer copyTargetId) {
+        Integer otherElementId = linkInformation.otherElementId;
+        Integer copyDestinationId = sourceDestMap.get(otherElementId);
+        if (copyDestinationId == null) {
             // the element on the other side of the link was not copied
             if (copyLinksMode == CopyLinksMode.FROM_COMPENDIUM_TO_MODEL) {
                 // we don't want to copy the link if we copy from the compendium
                 if (logger.isDebugEnabled()) {
-                    logger.debug("Skipping link to " + otherElementUUID
+                    logger.debug("Skipping link to " + otherElementId
                             + " while copying from compendium");
                 }
                 return;
             } else {
                 if (logger.isDebugEnabled()) {
-                    logger.debug("Creating link to original target... " + copyTargetUUID + " -> "
-                            + otherElementUUID);
+                    logger.debug("Creating link to original target... " + copyTargetId + " -> "
+                            + otherElementId);
                 }
             }
         } else {
             if (logger.isDebugEnabled()) {
-                logger.debug("Creating link to copy of target... " + copyTargetUUID + " -> "
-                        + otherElementUUID);
+                logger.debug("Creating link to copy of target... " + copyTargetId + " -> "
+                        + otherElementId);
             }
-            otherElementUUID = copyDestinationUuid;
+            otherElementId = copyDestinationId;
         }
 
         if (linkInformation.direction == Direction.FROM_COPIED_ELEMENT) {
-            createLink(copyTargetUUID, otherElementUUID, linkInformation.type,
-                    linkInformation.comment);
+            createLink(copyTargetId, otherElementId, linkInformation.type, linkInformation.comment);
         } else {
-            createLink(otherElementUUID, copyTargetUUID, linkInformation.type,
-                    linkInformation.comment);
+            createLink(otherElementId, copyTargetId, linkInformation.type, linkInformation.comment);
         }
     }
 
@@ -169,9 +167,9 @@ public class CopyLinksCommand extends GenericCommand {
         getDao().clear();
     }
 
-    private void createLink(String sourceUuid, String destUuid, String type, String comment) {
-        CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<>(sourceUuid,
-                destUuid, type, comment);
+    private void createLink(Integer sourceId, Integer destId, String type, String comment) {
+        CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<>(sourceId, destId,
+                type, comment);
         try {
             getCommandService().executeCommand(createLink);
         } catch (CommandException e) {
@@ -181,35 +179,33 @@ public class CopyLinksCommand extends GenericCommand {
     }
 
     public void loadAndCacheLinks() {
-        final Set<String> copiedElementUUIDs = sourceDestMap.keySet();
+        final Set<Integer> copiedElementUUIDs = sourceDestMap.keySet();
         List<Object[]> allLinkedUuids = getDao()
                 .findByCallback(new FindLinksForElements(copiedElementUUIDs));
 
-        existingLinksByCopiedElementUUID = new HashMap<>(copiedElementUUIDs.size());
+        existingLinksByCopiedElementId = new HashMap<>(copiedElementUUIDs.size());
         for (Object[] entry : allLinkedUuids) {
-            String dependantUUID = (String) entry[0];
-            String dependencyUUID = (String) entry[1];
+            Integer dependantId = (Integer) entry[0];
+            Integer dependencyId = (Integer) entry[1];
             String typeId = (String) entry[2];
             String comment = (String) entry[3];
-            if (copiedElementUUIDs.contains(dependantUUID)) {
-                cacheLink(dependantUUID, dependencyUUID, typeId, Direction.FROM_COPIED_ELEMENT,
+            if (copiedElementUUIDs.contains(dependantId)) {
+                cacheLink(dependantId, dependencyId, typeId, Direction.FROM_COPIED_ELEMENT,
                         comment);
             } else {
-                cacheLink(dependencyUUID, dependantUUID, typeId, Direction.TO_COPIED_ELEMENT,
-                        comment);
+                cacheLink(dependencyId, dependantId, typeId, Direction.TO_COPIED_ELEMENT, comment);
             }
         }
     }
 
-    public void cacheLink(String copiedElementUUID, String destinationUUID, String type,
+    public void cacheLink(Integer copiedElementId, Integer destinationId, String type,
             Direction direction, String comment) {
-        List<LinkInformation> destinations = existingLinksByCopiedElementUUID
-                .get(copiedElementUUID);
+        List<LinkInformation> destinations = existingLinksByCopiedElementId.get(copiedElementId);
         if (destinations == null) {
             destinations = new LinkedList<>();
-            existingLinksByCopiedElementUUID.put(copiedElementUUID, destinations);
+            existingLinksByCopiedElementId.put(copiedElementId, destinations);
         }
-        destinations.add(new LinkInformation(destinationUUID, type, direction, comment));
+        destinations.add(new LinkInformation(destinationId, type, direction, comment));
     }
 
     private IBaseDao<CnATreeElement, Serializable> getDao() {
@@ -220,19 +216,19 @@ public class CopyLinksCommand extends GenericCommand {
     }
 
     private static final class FindLinksForElements implements HibernateCallback {
-        private final Set<String> sourceUUIDs;
+        private final Set<Integer> sourceIds;
 
-        private FindLinksForElements(Set<String> sourceUUIDs) {
-            this.sourceUUIDs = sourceUUIDs;
+        private FindLinksForElements(Set<Integer> sourceIds) {
+            this.sourceIds = sourceIds;
         }
 
         @Override
         public Object doInHibernate(Session session) throws SQLException {
             Query query = session
-                    .createQuery("select l.dependant.uuid,l.dependency.uuid,l.id.typeId,l.comment "
+                    .createQuery("select l.dependant.dbId,l.dependency.dbId,l.id.typeId,l.comment "
                             + "from sernet.verinice.model.common.CnALink l "
-                            + "where l.dependant.uuid in (:sourceUUIDs) or l.dependency.uuid in (:sourceUUIDs)");
-            query.setParameterList("sourceUUIDs", sourceUUIDs);
+                            + "where l.dependant.dbId in (:ids) or l.dependency.dbId in (:ids)");
+            query.setParameterList("ids", sourceIds);
             return query.list();
         }
     }
@@ -242,14 +238,14 @@ public class CopyLinksCommand extends GenericCommand {
      */
     private static final class LinkInformation {
 
-        LinkInformation(String destinationUUID, String type, Direction direction, String comment) {
-            this.otherElementUUID = destinationUUID;
+        LinkInformation(Integer destinationId, String type, Direction direction, String comment) {
+            this.otherElementId = destinationId;
             this.type = type;
             this.direction = direction;
             this.comment = comment;
         }
 
-        private final String otherElementUUID;
+        private final Integer otherElementId;
         private final String type;
         private final Direction direction;
         private final String comment;

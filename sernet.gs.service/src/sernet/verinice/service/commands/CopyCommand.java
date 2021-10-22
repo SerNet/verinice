@@ -154,7 +154,7 @@ public class CopyCommand extends GenericCommand {
                     RetrieveInfo.getChildrenInstance().setParent(true).setProperties(true));
             boolean postProcessorsPresent = postProcessorList != null
                     && !postProcessorList.isEmpty();
-            Optional<Map<String, String>> sourceDestMap = postProcessorsPresent
+            Optional<Map<Integer, Integer>> sourceDestMap = postProcessorsPresent
                     ? Optional.of(new HashMap<>())
                     : Optional.empty();
             for (final CnATreeElement copyElement : rootElementsToCopy) {
@@ -166,10 +166,10 @@ public class CopyCommand extends GenericCommand {
             if (postProcessorsPresent) {
                 getDao().flush();
                 getDao().clear();
-                final List<String> copyElementUuidList = rootElementsToCopy.stream()
-                        .map(CnATreeElement::getUuid).collect(Collectors.toList());
+                final List<Integer> copyElementIdList = rootElementsToCopy.stream()
+                        .map(CnATreeElement::getDbId).collect(Collectors.toList());
                 for (final IPostProcessor postProcessor : postProcessorList) {
-                    postProcessor.process(getCommandService(), copyElementUuidList,
+                    postProcessor.process(getCommandService(), copyElementIdList,
                             sourceDestMap.get());
                 }
             }
@@ -180,7 +180,7 @@ public class CopyCommand extends GenericCommand {
     }
 
     private CnATreeElement copy(final CnATreeElement groupToCopyTo,
-            final CnATreeElement elementToCopy, final Optional<Map<String, String>> sourceDestMap)
+            final CnATreeElement elementToCopy, final Optional<Map<Integer, Integer>> sourceDestMap)
             throws CommandException, IOException {
         CnATreeElement elementCopy = elementToCopy;
         if (elementToCopy != null && elementToCopy.getTypeId() != null
@@ -204,7 +204,7 @@ public class CopyCommand extends GenericCommand {
     }
 
     private CnATreeElement copyRiskAnalysis(CnATreeElement group,
-            CnATreeElement finishedRiskAnalysis, Optional<Map<String, String>> sourceDestMap)
+            CnATreeElement finishedRiskAnalysis, Optional<Map<Integer, Integer>> sourceDestMap)
             throws CommandException, IOException {
 
         CnATreeElement copyOfFinishedRiskAnalysis = saveCopy(group, finishedRiskAnalysis);
@@ -217,7 +217,7 @@ public class CopyCommand extends GenericCommand {
 
     private void copyFinishedRiskAnalysisLists(FinishedRiskAnalysis oldFinishedRiskAnalysis,
             FinishedRiskAnalysis copyOfFinishedRiskAnalysis,
-            Optional<Map<String, String>> sourceDestMap) throws CommandException, IOException {
+            Optional<Map<Integer, Integer>> sourceDestMap) throws CommandException, IOException {
 
         FindRiskAnalysisListsByParentID command = new FindRiskAnalysisListsByParentID(
                 oldFinishedRiskAnalysis.getDbId());
@@ -235,7 +235,7 @@ public class CopyCommand extends GenericCommand {
     }
 
     private void copyAssociatedGefaehrdungen(FinishedRiskAnalysis copyOfFinishedRiskAnalysis,
-            Optional<Map<String, String>> sourceDestMap, FinishedRiskAnalysisLists listsToCopy,
+            Optional<Map<Integer, Integer>> sourceDestMap, FinishedRiskAnalysisLists listsToCopy,
             FinishedRiskAnalysisLists newLists) throws CommandException, IOException {
 
         for (GefaehrdungsUmsetzung gefaehrdung : listsToCopy.getAssociatedGefaehrdungen()) {
@@ -273,9 +273,9 @@ public class CopyCommand extends GenericCommand {
     }
 
     private void afterCopy(CnATreeElement original, CnATreeElement copy,
-            Optional<Map<String, String>> sourceDestMap) {
+            Optional<Map<Integer, Integer>> sourceDestMap) {
         afterCopy(original, copy);
-        sourceDestMap.ifPresent(map -> map.put(original.getUuid(), copy.getUuid()));
+        sourceDestMap.ifPresent(map -> map.put(original.getDbId(), copy.getDbId()));
     }
 
     protected void afterCopy(CnATreeElement original, CnATreeElement copy) {
@@ -283,7 +283,7 @@ public class CopyCommand extends GenericCommand {
     }
 
     private void copyChildrenIfExistant(CnATreeElement element,
-            Optional<Map<String, String>> sourceDestMap, CnATreeElement elementCopy)
+            Optional<Map<Integer, Integer>> sourceDestMap, CnATreeElement elementCopy)
             throws CommandException, IOException {
         List<CnATreeElement> children = elementsByParentId.get(element.getDbId());
         if (children != null) {

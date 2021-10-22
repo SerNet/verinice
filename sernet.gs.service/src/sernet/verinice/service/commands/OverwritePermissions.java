@@ -54,13 +54,13 @@ public abstract class OverwritePermissions implements IPostProcessor, Serializab
      * java.util.Map)
      */
     @Override
-    public void process(ICommandService commandService, List<String> copyUuidList,
-            Map<String, String> sourceDestMap) {
+    public void process(ICommandService commandService, List<Integer> copyIdList,
+            Map<Integer, Integer> sourceDestMap) {
         try {
             loadPermissions(commandService);
-            for (String uuidSource : copyUuidList) {
-                String uuidDest = sourceDestMap.get(uuidSource);
-                overwritePermissions(commandService, uuidDest);
+            for (Integer dbIdSource : copyIdList) {
+                Integer dbIdDest = sourceDestMap.get(dbIdSource);
+                overwritePermissions(commandService, dbIdDest);
             }
         } catch (CommandException e) {
             log.error("Error while overwriting permissions", e);
@@ -76,9 +76,9 @@ public abstract class OverwritePermissions implements IPostProcessor, Serializab
         permissions = loadCommand.getElement().getPermissions();
     }
 
-    private void overwritePermissions(ICommandService commandService, String uuid)
+    private void overwritePermissions(ICommandService commandService, Integer dbId)
             throws CommandException {
-        UpdatePermissions updatePermissions = new UpdatePermissions(uuid, permissions, true, true);
+        UpdatePermissions updatePermissions = new UpdatePermissions(dbId, permissions, true, true);
         commandService.executeCommand(updatePermissions);
     }
 

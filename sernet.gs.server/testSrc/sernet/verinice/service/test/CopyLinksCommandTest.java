@@ -61,7 +61,7 @@ public class CopyLinksCommandTest extends AbstractModernizedBaseProtection {
         assertEquals(0, safeguard2.getLinksUp().size());
 
         CopyLinksCommand copyLinksCommand = new CopyLinksCommand(
-                Collections.singletonMap(safeguard1.getUuid(), safeguard2.getUuid()),
+                Collections.singletonMap(safeguard1.getDbId(), safeguard2.getDbId()),
                 CopyLinksMode.ALL);
         commandService.executeCommand(copyLinksCommand);
         requirement1 = reloadElement(requirement1);
@@ -89,7 +89,7 @@ public class CopyLinksCommandTest extends AbstractModernizedBaseProtection {
         assertEquals(0, requirement2.getLinksDown().size());
 
         CopyLinksCommand copyLinksCommand = new CopyLinksCommand(
-                Collections.singletonMap(requirement1.getUuid(), requirement2.getUuid()),
+                Collections.singletonMap(requirement1.getDbId(), requirement2.getDbId()),
                 CopyLinksMode.ALL);
         commandService.executeCommand(copyLinksCommand);
         requirement1 = reloadElement(requirement1);
@@ -116,7 +116,7 @@ public class CopyLinksCommandTest extends AbstractModernizedBaseProtection {
         assertEquals(0, room2.getLinksUp().size());
 
         CopyLinksCommand copyLinksCommand = new CopyLinksCommand(
-                Collections.singletonMap(room1.getUuid(), room2.getUuid()), CopyLinksMode.ALL);
+                Collections.singletonMap(room1.getDbId(), room2.getDbId()), CopyLinksMode.ALL);
         commandService.executeCommand(copyLinksCommand);
         room1 = reloadElement(room1);
         room2 = reloadElement(room2);
@@ -145,7 +145,7 @@ public class CopyLinksCommandTest extends AbstractModernizedBaseProtection {
         assertEquals(0, safeguard2.getLinksUp().size());
 
         CopyLinksCommand copyLinksCommand = new CopyLinksCommand(
-                Collections.singletonMap(safeguard1.getUuid(), safeguard2.getUuid()),
+                Collections.singletonMap(safeguard1.getDbId(), safeguard2.getDbId()),
                 CopyLinksMode.ALL);
         commandService.executeCommand(copyLinksCommand);
         requirement1 = reloadElement(requirement1);

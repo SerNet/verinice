@@ -58,7 +58,7 @@ public class MigrateDbTo1_03D extends DbMigration {
     private static final long serialVersionUID = 20151120133756L;
 
     private final static String HQL_ALL_LINKTYPES = "select source.objectType, target.objectType,"
-            + " source.uuid, target.uuid, link"
+            + " source.dbId, target.dbId, link"
             + " from CnALink link, CnATreeElement source, CnATreeElement target"
             + " where link.id.dependantId = source.dbId"
             + " and link.id.dependencyId = target.dbId";
@@ -88,8 +88,8 @@ public class MigrateDbTo1_03D extends DbMigration {
         for (Object[] result : hqlResultList) {
             String sourceEntityType = ensureTypeIDisUsed((String) result[0]);
             String targetEntityType = ensureTypeIDisUsed((String) result[1]);
-            String sourceUuid = (String) result[2];
-            String targetUuid = (String) result[3];
+            Integer sourceDbId = (Integer) result[2];
+            Integer targetDbId = (Integer) result[3];
             CnALink link = (CnALink) result[4];
             String relationId = link.getRelationId();
             if (StringUtils.isNotEmpty(relationId)
@@ -103,7 +103,7 @@ public class MigrateDbTo1_03D extends DbMigration {
                 try {
                     // create new, corrected, link
                     // note that target and source are switched here on purpose
-                    CreateLink createLinkCommand = new CreateLink(targetUuid, sourceUuid,
+                    CreateLink createLinkCommand = new CreateLink(targetDbId, sourceDbId,
                             relationId);
                     CnALink repairedLink = getCommandService().executeCommand(createLinkCommand)
                             .getLink();
