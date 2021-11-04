@@ -26,11 +26,13 @@ java.util.Collections$EmptyList
 java.util.Collections$SingletonList
 java.util.Collections$UnmodifiableCollection
 java.util.Collections$UnmodifiableSet
+java.util.CollSer
 java.util.Date
 java.util.EnumMap
 java.util.HashMap
 java.util.HashSet
 java.util.Hashtable
+java.util.ImmutableCollections$SetN
 java.util.LinkedHashMap
 java.util.LinkedList
 java.util.Locale
