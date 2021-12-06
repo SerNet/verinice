@@ -3,6 +3,7 @@ java.lang.Integer
 java.lang.Object
 java.lang.String
 java.lang.Boolean
+java.lang.Byte
 java.lang.Double
 java.lang.Enum
 java.lang.Exception
@@ -11,6 +12,7 @@ java.lang.invoke.SerializedLambda
 java.lang.reflect.InvocationTargetException
 java.lang.ReflectiveOperationException
 java.lang.RuntimeException
+java.lang.Short
 java.lang.StackTraceElement
 java.lang.Throwable
 java.math.BigInteger
