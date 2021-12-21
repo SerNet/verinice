@@ -37,6 +37,7 @@ java.util.Hashtable
 java.util.ImmutableCollections$SetN
 java.util.LinkedHashMap
 java.util.LinkedList
+java.util.List
 java.util.Locale
 java.util.Map
 java.util.Map$Entry
