@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -164,11 +165,13 @@ public class CreateSelfAssessment extends GenericCommand
             isaAudit.addLinkUp(link);
             daoLink.saveOrUpdate(link);
 
-            Set<CnATreeElement> isaCategories = controlGroup.getChildren();
-            for (CnATreeElement categorie : isaCategories) {
-                link = new CnALink(isaAudit, categorie, "rel_audit_control", null);
+            Set<CnATreeElement> isaCategories = controlGroup.getChildren().stream()
+                    .filter(child -> ControlGroup.TYPE_ID.equals(child.getTypeId()))
+                    .collect(Collectors.toSet());
+            for (CnATreeElement category : isaCategories) {
+                link = new CnALink(isaAudit, category, "rel_audit_controlgroup", null);
                 isaAudit.addLinkDown(link);
-                categorie.addLinkUp(link);
+                category.addLinkUp(link);
                 daoLink.saveOrUpdate(link);
             }
         } catch (CommandException e) {

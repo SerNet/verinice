@@ -23,12 +23,18 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.hibernate.Query;
+import org.hibernate.criterion.DetachedCriteria;
 import org.junit.Test;
 
+import sernet.gs.service.CsvFile;
 import sernet.verinice.model.bp.elements.Application;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.groups.ApplicationGroup;
 import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.samt.service.CreateSelfAssessment;
 import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.ValidateLinksInSubtrees;
 
@@ -59,6 +65,30 @@ public class ValidateLinksInSubtreesTest extends AbstractModernizedBaseProtectio
         CnALink invalidLink = invalidLinks.iterator().next();
         assertEquals("invalid_link_type", invalidLink.getRelationId());
         commandService.executeCommand(new RemoveElement(network));
+    }
+
+    @Test
+    public void link_from_audit_to_control_is_valid() throws Exception {
+
+        ISO27KModel model = (ISO27KModel) elementDao
+                .findByCriteria(DetachedCriteria.forClass(ISO27KModel.class)).get(0);
+        CreateSelfAssessment createSelfAssessment = new CreateSelfAssessment(model, "org",
+                "assessment");
+        CsvFile samtCatalog = new CsvFile(
+                this.getClass().getResourceAsStream("/samt-catalog-5.0.3_de.csv"));
+        createSelfAssessment.setCsvFile(samtCatalog);
+        createSelfAssessment = commandService.executeCommand(createSelfAssessment);
+        Organization org = createSelfAssessment.getOrganization();
+        Audit audit = createSelfAssessment.getIsaAudit();
+
+        ValidateLinksInSubtrees validateLinksInSubtrees = new ValidateLinksInSubtrees(
+                Collections.singleton(audit.getUuid()));
+        validateLinksInSubtrees = commandService.executeCommand(validateLinksInSubtrees);
+        Set<CnALink> invalidLinks = validateLinksInSubtrees.getInvalidLinks();
+        System.err.println(invalidLinks);
+        assertEquals(0, invalidLinks.size());
+
+        commandService.executeCommand(new RemoveElement(org));
     }
 
 }
