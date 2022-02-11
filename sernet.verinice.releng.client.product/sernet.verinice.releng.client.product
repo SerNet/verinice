@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="verinice" uid="sernet.verinice.releng.client" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.23.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="verinice" uid="sernet.verinice.releng.client" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.24.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/sernet.gs.ui.rcp.main/verinice_icons/about_img.png"/>
       <text>
-         SerNet verinice 1.23.0 - Codename &apos;Great Barrier Island&apos;
+         SerNet verinice 1.24.0 - Codename &apos;Jeju Island&apos;
 
 (c) SerNet Service Network GmbH and others
-1996–2021
+1996–2022
 
 Contact the authors:
 verinice@sernet.de
@@ -797,13 +797,13 @@ Public License instead of this License.  But first, please read
    </plugins>
 
    <features>
-      <feature id="sernet.verinice.app.feature" version="1.23.0.qualifier"/>
+      <feature id="sernet.verinice.app.feature" version="1.24.0.qualifier"/>
    </features>
 
    <configurations>
+      <plugin id="org.apache.felix.scr" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
-      <plugin id="org.apache.felix.scr" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
       <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="0" />
