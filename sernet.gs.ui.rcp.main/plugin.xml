@@ -1790,14 +1790,6 @@
             name="%cheatsheets.9">
             <description>%cheatsheets.description.9</description>
         </cheatsheet>
-        <cheatsheet
-            category="sernet.gs.ui.rcp.main.cheatSheets"
-            composite="false"
-            contentFile="$nl$/cheatsheets/Datenschutz.xml"
-            id="sernet.gs.ui.rcp.main.datenschutz"
-            name="%cheatsheets.10">
-            <description>%cheatsheets.description.10</description>
-        </cheatsheet>
         <category
               id="sernet.gs.ui.rcp.main.cheatSheets2"
               name="%cheatsheets.11">
