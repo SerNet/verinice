@@ -739,7 +739,7 @@ public class XMLImportDialog extends Dialog {
     private void updateModelAndValidate(SyncCommand command) {
         CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
         if (Activator.getDefault().getPreferenceStore()
-                .getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)) {
+                .getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION) && !importAsCatalog) {
             WorkspaceJob validationCreationJob = new WorkspaceJob(Messages.XMLImportDialog_4) {
                 @Override
                 public IStatus runInWorkspace(final IProgressMonitor monitor) {
