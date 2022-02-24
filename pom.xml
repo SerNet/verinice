@@ -48,7 +48,6 @@
 		<module>sernet.hui.common</module>
 		<module>sernet.hui.swtclient</module>
 		<module>sernet.springclient</module>
-		<module>sernet.verinice.bp.importer</module>
         <module>sernet.verinice.desktop.integration</module>
 		<module>sernet.verinice.fei.rcp</module>
 		<module>sernet.verinice.fei.service</module>
