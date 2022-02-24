@@ -36,17 +36,12 @@ public class ModelingData {
 
     private final Set<CnATreeElement> requirementGroups;
     private final Set<CnATreeElement> targetElements;
-    private final boolean handleSafeguards;
-    private final boolean handleDummySafeguards;
     private final Map<Integer, CnATreeElement> scopeElementsByCompendiumElementId = new HashMap<>();
     private final Set<CnATreeElement> existingElements = new HashSet<>();
 
-    public ModelingData(Set<CnATreeElement> requirementGroups, Set<CnATreeElement> targetElements,
-            boolean handleSafeguards, boolean handleDummySafeguards) {
+    public ModelingData(Set<CnATreeElement> requirementGroups, Set<CnATreeElement> targetElements) {
         this.requirementGroups = Collections.unmodifiableSet(requirementGroups);
         this.targetElements = Collections.unmodifiableSet(targetElements);
-        this.handleSafeguards = handleSafeguards;
-        this.handleDummySafeguards = handleDummySafeguards;
     }
 
     public Set<CnATreeElement> getRequirementGroups() {
@@ -55,14 +50,6 @@ public class ModelingData {
 
     public Set<CnATreeElement> getTargetElements() {
         return targetElements;
-    }
-
-    public boolean isHandleSafeguards() {
-        return handleSafeguards;
-    }
-
-    public boolean isHandleDummySafeguards() {
-        return handleDummySafeguards;
     }
 
     public void addMappingForExistingElement(CnATreeElement compendiumElement,

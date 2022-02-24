@@ -377,6 +377,69 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
 
     @Transactional
     @Test
+    public void modelWithSafeguardsWithoutSafeguardsPresent() throws CommandException {
+        CatalogModel catalogModel = loadCatalogModel();
+        BpRequirementGroup requirementGroup = createRequirementGroup(catalogModel, "Requirements");
+        BpRequirement requirement = createBpRequirement(requirementGroup, "Requirement");
+        BpThreatGroup threatGroup = createBpThreatGroup(catalogModel, "Threats");
+        BpThreat threat = createBpThreat(threatGroup, "Threat");
+        createLink(requirement, threat, BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
+
+        ItNetwork itNetwork = createNewBPOrganization();
+
+        elementDao.flush();
+        elementDao.clear();
+
+        ModelCommand modelCommand = new ModelCommand(
+                Collections.singleton(requirementGroup.getUuid()),
+                Collections.singletonList(itNetwork.getUuid()));
+        modelCommand.setHandleSafeguards(true);
+        modelCommand.setHandleDummySafeguards(false);
+        commandService.executeCommand(modelCommand);
+        elementDao.flush();
+
+        itNetwork = reloadElement(itNetwork);
+        assertEquals(0, itNetwork.getLinksDown().size());
+        assertEquals(2, itNetwork.getLinksUp().size());
+
+        CnATreeElement modeledRequirementGroup = getChildrenWithTypeId(itNetwork,
+                BpRequirementGroup.TYPE_ID).iterator().next();
+        assertEquals(requirementGroup.getTitle(), modeledRequirementGroup.getTitle());
+        assertEquals(1, modeledRequirementGroup.getChildren().size());
+        CnATreeElement modeledRequirement = modeledRequirementGroup.getChildren().iterator().next();
+        assertEquals(requirement.getTitle(), modeledRequirement.getTitle());
+        assertFalse(
+                modeledRequirement.getEntity().isFlagged(BpRequirement.PROP_IMPLEMENTATION_DEDUCE));
+
+        assertEquals(2, modeledRequirement.getLinksDown().size());
+        assertEquals(0, modeledRequirement.getLinksUp().size());
+        Set<CnALink> linksRequirementNetwork = getLinksWithType(modeledRequirement,
+                BpRequirement.REL_BP_REQUIREMENT_BP_ITNETWORK);
+        assertEquals(1, linksRequirementNetwork.size());
+        assertEquals(linksRequirementNetwork.iterator().next().getDependency(), itNetwork);
+
+        Assert.assertEquals(0l, getChildrenWithTypeId(itNetwork, SafeguardGroup.TYPE_ID).size());
+
+        CnATreeElement modeledThreatGroup = getChildrenWithTypeId(itNetwork, BpThreatGroup.TYPE_ID)
+                .iterator().next();
+        assertEquals(threatGroup.getTitle(), modeledThreatGroup.getTitle());
+        assertEquals(1, modeledThreatGroup.getChildren().size());
+        CnATreeElement modeledThreat = modeledThreatGroup.getChildren().iterator().next();
+        assertEquals(threat.getTitle(), modeledThreat.getTitle());
+
+        Set<CnALink> linksThreatRequirement = getLinksWithType(modeledThreat,
+                BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
+        assertEquals(1, linksThreatRequirement.size());
+        assertEquals(linksThreatRequirement.iterator().next().getDependency(), modeledThreat);
+
+        Set<CnALink> linksThreatTargetObject = getLinksWithType(modeledThreat,
+                BpThreat.REL_BP_THREAT_BP_ITNETWORK);
+        assertEquals(1, linksThreatTargetObject.size());
+        assertEquals(linksThreatTargetObject.iterator().next().getDependency(), itNetwork);
+    }
+
+    @Transactional
+    @Test
     public void modelModuleOnItNetworkWithDummySafeguards() throws CommandException {
         CatalogModel catalogModel = loadCatalogModel();
         BpRequirementGroup requirementGroup = createRequirementGroup(catalogModel, "Requirements");

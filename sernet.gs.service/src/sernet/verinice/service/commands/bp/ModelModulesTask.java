@@ -62,11 +62,8 @@ public class ModelModulesTask extends ModelCopyTask {
     @Override
     protected void afterCopyElement(CnATreeElement targetObject, CnATreeElement newElement,
             CnATreeElement compendiumElement) {
-        boolean shouldDeduceImplementation = modelingData.isHandleSafeguards();
-        if (newElement.getEntity().isFlagged(
-                BpRequirement.PROP_IMPLEMENTATION_DEDUCE) != shouldDeduceImplementation) {
-            newElement.getEntity().setFlag(BpRequirement.PROP_IMPLEMENTATION_DEDUCE,
-                    shouldDeduceImplementation);
+        if (newElement.getEntity().isFlagged(BpRequirement.PROP_IMPLEMENTATION_DEDUCE)) {
+            newElement.getEntity().setFlag(BpRequirement.PROP_IMPLEMENTATION_DEDUCE, false);
             daoFactory.getDAO(CnATreeElement.class).merge(newElement);
         }
         afterHandleElement(targetObject, newElement);

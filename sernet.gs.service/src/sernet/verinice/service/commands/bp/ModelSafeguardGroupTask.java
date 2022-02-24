@@ -129,6 +129,13 @@ public class ModelSafeguardGroupTask extends ModelCopyTask {
                     CnALink newLink = new CnALink(newDependant, safeguardFromScope,
                             BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD, "");
                     daoFactory.getDAO(CnALink.class).merge(newLink);
+                    if (!newDependant.getEntity()
+                            .isFlagged(BpRequirement.PROP_IMPLEMENTATION_DEDUCE)) {
+                        newDependant.getEntity().setFlag(BpRequirement.PROP_IMPLEMENTATION_DEDUCE,
+                                true);
+                        daoFactory.getDAO(CnATreeElement.class).merge(newDependant);
+                    }
+
                 }
             }
         }

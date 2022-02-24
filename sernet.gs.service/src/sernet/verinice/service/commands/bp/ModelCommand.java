@@ -113,8 +113,7 @@ public class ModelCommand extends GenericCommand implements IChangeLoggingComman
                 .setFetchMode("children.children", FetchMode.JOIN)
                 .add(Restrictions.in(CnATreeElement.UUID, targetUuids))));
         ItNetwork itNetwork = loadItNetwork(targetElements);
-        ModelingData modelingData = new ModelingData(requirementGroups, targetElements,
-                handleSafeguards, handleDummySafeguards);
+        ModelingData modelingData = new ModelingData(requirementGroups, targetElements);
 
         handleModules(modelingData);
         if (isHandleSafeguards()) {

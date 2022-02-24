@@ -86,6 +86,8 @@ public class ModelDummySafeguards implements Runnable {
             Safeguard safeguard = createDummySafeguardForRequirement((BpRequirement) requirement);
             CnALink link = new CnALink(requirement, safeguard,
                     BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD, "");
+            requirement.getEntity().setFlag(BpRequirement.PROP_IMPLEMENTATION_DEDUCE, true);
+            daoFactory.getDAO(CnATreeElement.class).merge(requirement);
             daoFactory.getDAO(CnALink.class).merge(link);
         } else if (LOG.isDebugEnabled()) {
             LOG.debug("Safeguards found for requirement with UUID: " + requirement.getUuid()); //$NON-NLS-1$
