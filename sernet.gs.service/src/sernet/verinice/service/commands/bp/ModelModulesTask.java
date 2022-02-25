@@ -19,11 +19,14 @@
  ******************************************************************************/
 package sernet.verinice.service.commands.bp;
 
+import java.util.Iterator;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IDAOFactory;
 import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -89,6 +92,26 @@ public class ModelModulesTask extends ModelCopyTask {
             copyProperties(compendiumElement, existingElement, BpRequirement.PROP_NAME,
                     BpRequirement.PROP_CHANGE_TYPE, BpRequirement.PROP_OBJECTBROWSER);
         }
+
+        Set<String> linkedThreatIDsCompendium = compendiumElement.getLinksDown().stream()
+                .filter(link -> BpRequirement.REL_BP_REQUIREMENT_BP_THREAT
+                        .equals(link.getRelationId()))
+                .map(CnALink::getDependency)
+                .map(r -> r.getEntity().getPropertyValue(BpThreat.PROP_ID))
+                .collect(Collectors.toSet());
+        Iterator<CnALink> it = existingElement.getLinksDown().iterator();
+        while (it.hasNext()) {
+            CnALink link = it.next();
+            if (BpRequirement.REL_BP_REQUIREMENT_BP_THREAT.equals(link.getRelationId())) {
+                CnATreeElement dependency = link.getDependency();
+                if (!(linkedThreatIDsCompendium
+                        .contains(dependency.getEntity().getPropertyValue(BpThreat.PROP_ID)))) {
+                    daoFactory.getDAO(CnALink.class).delete(link);
+                    it.remove();
+                }
+            }
+        }
+
         afterHandleElement(targetObject, existingElement);
     }
 
