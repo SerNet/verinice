@@ -98,8 +98,9 @@ public class IndividualProcessWizard extends Wizard {
     }
 
     public void setTemplate(IndividualServiceParameter template) {
-        Date dueDate = template.getDueDate();
-        datePage.setDueDate(dueDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        Integer periodDays = template.getReminderPeriodDays();
+        LocalDate dueDate = LocalDate.now().plusDays(periodDays);
+        datePage.setDueDate(dueDate);
         datePage.setPeriod(template.getReminderPeriodDays());
         if (template.getAssignee() != null || !relationPage.isRelation()) {
             datePage.setAssigneeSelectionMode(DatePage.ASSIGNEE_SELECTION_DIRECT);
