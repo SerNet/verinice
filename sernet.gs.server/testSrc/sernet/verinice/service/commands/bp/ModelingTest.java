@@ -497,6 +497,68 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
 
     @Transactional
     @Test
+    public void modelModuleWithMultipleRequirementsOnItNetworkWithDummySafeguards()
+            throws CommandException {
+        CatalogModel catalogModel = loadCatalogModel();
+        BpRequirementGroup requirementGroup = createRequirementGroup(catalogModel, "Requirements");
+        BpRequirement requirement1 = createBpRequirement(requirementGroup, "Requirement1");
+        BpRequirement requirement2 = createBpRequirement(requirementGroup, "Requirement2");
+        BpRequirement requirement3 = createBpRequirement(requirementGroup, "Requirement3");
+        BpRequirement requirement4 = createBpRequirement(requirementGroup, "Requirement4");
+        requirement1.setSecurityLevel(SecurityLevel.BASIC);
+        requirement1 = update(requirement1);
+        requirement2.setSecurityLevel(SecurityLevel.BASIC);
+        requirement2 = update(requirement1);
+        requirement3.setSecurityLevel(SecurityLevel.BASIC);
+        requirement3 = update(requirement1);
+        requirement4.setSecurityLevel(SecurityLevel.BASIC);
+        requirement4 = update(requirement1);
+
+        ItNetwork itNetwork = createNewBPOrganization();
+
+        elementDao.flush();
+        elementDao.clear();
+
+        ModelCommand modelCommand = new ModelCommand(
+                Collections.singleton(requirementGroup.getUuid()),
+                Collections.singletonList(itNetwork.getUuid()));
+        modelCommand.setHandleSafeguards(true);
+        modelCommand.setHandleDummySafeguards(true);
+        commandService.executeCommand(modelCommand);
+        elementDao.flush();
+        elementDao.clear();
+
+        itNetwork = reloadElement(itNetwork);
+        assertEquals(0, itNetwork.getLinksDown().size());
+        assertEquals(4, itNetwork.getLinksUp().size());
+
+        CnATreeElement modeledRequirementGroup = getChildrenWithTypeId(itNetwork,
+                BpRequirementGroup.TYPE_ID).iterator().next();
+        assertEquals(requirementGroup.getTitle(), modeledRequirementGroup.getTitle());
+        assertEquals(4, modeledRequirementGroup.getChildren().size());
+        for (CnATreeElement modeledRequirement : modeledRequirementGroup.getChildren()) {
+            assertTrue(modeledRequirement.getEntity()
+                    .isFlagged(BpRequirement.PROP_IMPLEMENTATION_DEDUCE));
+
+            assertEquals(2, modeledRequirement.getLinksDown().size());
+            assertEquals(0, modeledRequirement.getLinksUp().size());
+            Set<CnALink> linksRequirementNetwork = getLinksWithType(modeledRequirement,
+                    BpRequirement.REL_BP_REQUIREMENT_BP_ITNETWORK);
+            assertEquals(1, linksRequirementNetwork.size());
+            Set<CnALink> linksSafeguardRequirement = getLinksWithType(modeledRequirement,
+                    BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
+            assertEquals(1, linksSafeguardRequirement.size());
+        }
+
+        CnATreeElement modeledSafeguardGroup = getChildrenWithTypeId(itNetwork,
+                SafeguardGroup.TYPE_ID).iterator().next();
+        assertEquals(requirementGroup.getTitle(), modeledSafeguardGroup.getTitle());
+        assertEquals(4, modeledSafeguardGroup.getChildren().size());
+
+    }
+
+    @Transactional
+    @Test
     public void modelWithDummySafeguardsWhereSafeguardGroupExistsInOtherElement()
             throws CommandException {
         CatalogModel catalogModel = loadCatalogModel();
