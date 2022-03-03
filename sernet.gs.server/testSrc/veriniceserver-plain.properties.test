@@ -96,7 +96,10 @@ veriniceserver.notification.email.linkto=http://verinice.local.example/verinices
 
 
 # LDAP / ActiveDirectory(tm) configuration removed from here
-# location to configure LDAP-Properties: verinice-ldap.properties 
+# location to configure LDAP-Properties: verinice-ldap.properties
+
+# Have the user input the password in the verinice client instead of setting it here
+ldap.import.use-password-from-client=false
 
 # Max. file size for attachments in MB, default value is 100
 veriniceserver.filesize.max=100

@@ -17,14 +17,9 @@ public class LdapService implements ILdapService {
     private IPersonDao personDao;
 
     @Override
-    public List<PersonInfo> getPersonList() {
-        return getPersonList(null);
-    }
-
-    @Override
-    public List<PersonInfo> getPersonList(PersonParameter parameter) {
+    public List<PersonInfo> getPersonList(PersonParameter parameter, String password) {
         try {
-            return getPersonDao().getPersonList(parameter);
+            return getPersonDao().getPersonList(parameter, password);
         } catch (SizeLimitExceededException sizeLimitException) {
             LOG.warn("Too many results when searching for LDAP users.");
             if (LOG.isDebugEnabled()) {
@@ -40,5 +35,10 @@ public class LdapService implements ILdapService {
 
     public void setPersonDao(IPersonDao personDao) {
         this.personDao = personDao;
+    }
+
+    @Override
+    public boolean isUsePasswordFromClient() {
+        return personDao.isUsePasswordFromClient();
     }
 }

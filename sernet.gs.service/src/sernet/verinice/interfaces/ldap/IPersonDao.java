@@ -2,7 +2,6 @@ package sernet.verinice.interfaces.ldap;
 
 import java.util.List;
 
-import sernet.verinice.model.common.Domain;
 import sernet.verinice.service.ldap.PersonInfo;
 
 /**
@@ -11,11 +10,8 @@ import sernet.verinice.service.ldap.PersonInfo;
  */
 public interface IPersonDao {
 
-    List<PersonInfo> getPersonList(PersonParameter parameter);
+    List<PersonInfo> getPersonList(PersonParameter parameter, String password);
 
-    @Deprecated
-    default List<PersonInfo> getPersonList(PersonParameter parameter, Domain importDomain) {
-        return getPersonList(parameter);
-    }
+    boolean isUsePasswordFromClient();
 
 }

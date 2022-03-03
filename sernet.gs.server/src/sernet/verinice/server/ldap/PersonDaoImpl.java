@@ -8,6 +8,7 @@ import javax.naming.directory.Attributes;
 
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.core.support.LdapContextSource;
 
 import sernet.verinice.interfaces.ldap.IPersonDao;
 import sernet.verinice.interfaces.ldap.PersonParameter;
@@ -21,9 +22,15 @@ public class PersonDaoImpl implements IPersonDao {
 
     private LdapTemplate ldapTemplate;
 
+    private boolean usePasswordFromClient;
+
     @SuppressWarnings("unchecked")
     @Override
-    public List<PersonInfo> getPersonList(PersonParameter parameter) {
+    public List<PersonInfo> getPersonList(PersonParameter parameter, String password) {
+        if (usePasswordFromClient) {
+            LdapContextSource contextSource = (LdapContextSource) ldapTemplate.getContextSource();
+            contextSource.setPassword(password);
+        }
         return ldapTemplate.search(getBase(), getUserFilter(parameter), new LdapPersonMapper());
     }
 
@@ -85,6 +92,16 @@ public class PersonDaoImpl implements IPersonDao {
 
     public void setLdapTemplate(LdapTemplate ldapTemplate) {
         this.ldapTemplate = ldapTemplate;
+    }
+
+    @Override
+
+    public boolean isUsePasswordFromClient() {
+        return usePasswordFromClient;
+    }
+
+    public void setUsePasswordFromClient(boolean usePasswordFromClient) {
+        this.usePasswordFromClient = usePasswordFromClient;
     }
 
     private static final class LdapPersonMapper implements AttributesMapper {

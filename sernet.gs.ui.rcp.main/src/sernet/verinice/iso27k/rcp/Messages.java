@@ -80,6 +80,7 @@ public class Messages extends NLS {
     public static String LdapImportDialog_47;
     public static String LdapImportDialog_48;
     public static String LdapImportDialog_49;
+    public static String LdapImportDialog_Password;
     public static String Modernized_IT_Baseline_Protection;
     public static String LdapImportDialog_6;
     public static String LdapImportDialog_7;

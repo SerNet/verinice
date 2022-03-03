@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.service.NumericStringComparator;
+import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -65,6 +66,7 @@ import sernet.verinice.rcp.InfoDialogWithShowToggle;
 import sernet.verinice.service.ldap.LoadLdapUser;
 import sernet.verinice.service.ldap.PersonInfo;
 import sernet.verinice.service.ldap.SaveLdapUser;
+import sernet.verinice.service.ldap.UsePasswordFromClient;
 
 /**
  * Dialog that allows importing users from LDAP or Active Directory
@@ -82,6 +84,8 @@ public class LdapImportDialog extends TitleAreaDialog {
     private Button[] radioButtonTargetPerspective = new Button[3];
 
     private HashMap<PersonParameter, List<PersonInfo>> ldapQueryCache;
+
+    private Text ldapSearchPassword;
 
     public LdapImportDialog(Shell parent) {
         super(parent);
@@ -168,12 +172,42 @@ public class LdapImportDialog extends TitleAreaDialog {
         gridData.horizontalAlignment = GridData.FILL;
         company.setLayoutData(gridData);
 
-        Button buttonLoadAccounts = new Button(container, SWT.PUSH | SWT.BORDER);
+        Composite authAndLoadRow = new Composite(container, SWT.NONE);
+        GridData gdAuthAndLoadRow = new GridData(SWT.FILL, SWT.TOP, true, false);
+        gdAuthAndLoadRow.horizontalSpan = 2;
+        authAndLoadRow.setLayoutData(gdAuthAndLoadRow);
+        authAndLoadRow.setLayout(new GridLayout(3, false));
+
+        boolean usePasswordFromClient = false;
+
+        try {
+            usePasswordFromClient = ServiceFactory.lookupCommandService()
+                    .executeCommand(new UsePasswordFromClient()).isUsePasswordFromClient();
+        } catch (CommandException e1) {
+            throw new RuntimeCommandException(e1);
+        }
+
+        if (usePasswordFromClient) {
+            Label ldapSearchPasswordLabel = new Label(authAndLoadRow, SWT.NONE);
+            ldapSearchPasswordLabel.setText(Messages.LdapImportDialog_Password);
+            gridData = new GridData();
+            gridData.grabExcessHorizontalSpace = true;
+            gridData.horizontalAlignment = SWT.RIGHT;
+            ldapSearchPasswordLabel.setLayoutData(gridData);
+
+            ldapSearchPassword = new Text(authAndLoadRow, SWT.BORDER | SWT.PASSWORD);
+            gridData = new GridData();
+            gridData.widthHint = 120;
+            gridData.grabExcessHorizontalSpace = false;
+            gridData.horizontalAlignment = SWT.RIGHT;
+            ldapSearchPassword.setLayoutData(gridData);
+        }
+
+        Button buttonLoadAccounts = new Button(authAndLoadRow, SWT.PUSH | SWT.BORDER);
         buttonLoadAccounts.setText(Messages.LdapImportDialog_35);
         gridData = new GridData();
-        gridData.grabExcessHorizontalSpace = true;
+        gridData.grabExcessHorizontalSpace = !usePasswordFromClient;
         gridData.horizontalAlignment = SWT.RIGHT;
-        gridData.horizontalSpan = 2;
         buttonLoadAccounts.setLayoutData(gridData);
 
         createViewer(container);
@@ -262,8 +296,11 @@ public class LdapImportDialog extends TitleAreaDialog {
 
     private void loadLdapUser() {
         try {
-
-            LoadLdapUser loadLdapUser = new LoadLdapUser(getParameter());
+            String password = null;
+            if (ldapSearchPassword != null) {
+                password = ldapSearchPassword.getText();
+            }
+            LoadLdapUser loadLdapUser = new LoadLdapUser(getParameter(), password);
             loadLdapUser = ServiceFactory.lookupCommandService().executeCommand(loadLdapUser);
             List<PersonInfo> personList = loadLdapUser.getPersonList();
             if (personList != null) {

@@ -23,6 +23,7 @@
       <property name="ldapTemplate" ref="ldapTemplate" />
       <property name="base" value="${ldap.import.base}" />
       <property name="filter" value="${ldap.import.filter}" />
+      <property name="usePasswordFromClient" value="${ldap.import.use-password-from-client}" />
    </bean>
    
    <bean id="ldapService" class="sernet.verinice.server.ldap.LdapService">
