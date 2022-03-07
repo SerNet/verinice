@@ -95,6 +95,16 @@ public class ModelThreatGroupTask extends ModelCopyTask {
     }
 
     @Override
+    protected boolean shouldUpdate(CnATreeElement scopeElement, CnATreeElement compendiumElement) {
+        return requirementGroups.stream()
+                .anyMatch(group -> group.getChildren().stream()
+                        .anyMatch(req -> req.getLinksDown().stream()
+                                .anyMatch(link -> BpRequirement.REL_BP_REQUIREMENT_BP_THREAT
+                                        .equals(link.getRelationId())
+                                        && compendiumElement.equals(link.getDependency()))));
+    }
+
+    @Override
     protected void updateExistingElement(CnATreeElement targetObject,
             CnATreeElement existingElement, CnATreeElement compendiumElement,
             boolean elementRemoved) {

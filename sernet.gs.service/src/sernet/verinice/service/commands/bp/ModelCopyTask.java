@@ -152,7 +152,9 @@ public abstract class ModelCopyTask implements Runnable {
                         .getRawPropertyValue(elementReleaseProperty);
                 String compendiumElementRelease = compendiumElement.getEntity()
                         .getRawPropertyValue(elementReleaseProperty);
-                if (canUpdateFrom(scopeElementRelease, compendiumElementRelease)) {
+
+                if (shouldUpdate(scopeElement, compendiumElement)
+                        && canUpdateFrom(scopeElementRelease, compendiumElementRelease)) {
                     boolean elementRemoved = isElementRemoved(compendiumElement);
                     updateExistingElement(groupFromScope.getParent(), scopeElement,
                             compendiumElement, elementRemoved);
@@ -169,6 +171,10 @@ public abstract class ModelCopyTask implements Runnable {
                     modelingData);
             commandService.executeCommand(copyCommand);
         }
+    }
+
+    protected boolean shouldUpdate(CnATreeElement scopeElement, CnATreeElement compendiumElement) {
+        return true;
     }
 
     private static boolean isElementRemoved(CnATreeElement compendiumElement) {

@@ -1397,6 +1397,95 @@ public class ModelingTest extends AbstractModernizedBaseProtection {
 
     @Transactional
     @Test
+    public void updateExistingThreatWithNoLongerLinkedVersionWithAdditionalRequirement()
+            throws CommandException {
+        CatalogModel catalogModel = loadCatalogModel();
+        BpRequirementGroup requirementGroup = createRequirementGroup(catalogModel, "R1",
+                "Requirements 1");
+        BpRequirement requirement1 = createBpRequirement(requirementGroup, "R1.1", "Requirement 1");
+        requirement1.setSimpleProperty(BpRequirement.PROP_RELEASE, "2022-0");
+
+        BpRequirement requirement2 = createBpRequirement(requirementGroup, "R1.2", "Requirement 2");
+        requirement2.setSimpleProperty(BpRequirement.PROP_RELEASE, "2022-0");
+
+        BpThreatGroup threatGroup = createBpThreatGroup(catalogModel, "Threats");
+        BpThreat threat1 = createThreat(threatGroup, "T1.1", "Threat 1");
+        threat1.setSimpleProperty(BpThreat.PROP_RELEASE, "2022-0");
+        BpThreat threat2 = createThreat(threatGroup, "T1.2", "Threat 2");
+        threat2.setSimpleProperty(BpThreat.PROP_RELEASE, "2022-0");
+
+        createLink(requirement1, threat1, BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
+        // no link from requirement 2 to threat 2!
+
+        ItNetwork itNetwork = createNewBPOrganization();
+        BpRequirementGroup requirementGroupItNetwork = createRequirementGroup(itNetwork, "R1",
+                "Requirements 1");
+        BpRequirement requirement1ItNetwork = createBpRequirement(requirementGroupItNetwork, "R1.1",
+                "Requirement 1");
+        requirement1ItNetwork.setSimpleProperty(BpRequirement.PROP_RELEASE, "2021-1");
+        createLink(requirement1ItNetwork, itNetwork, BpRequirement.REL_BP_REQUIREMENT_BP_ITNETWORK);
+        BpRequirement requirement2ItNetwork = createBpRequirement(requirementGroupItNetwork, "R1.2",
+                "Requirement 2");
+        requirement2ItNetwork.setSimpleProperty(BpRequirement.PROP_RELEASE, "2021-1");
+        createLink(requirement2ItNetwork, itNetwork, BpRequirement.REL_BP_REQUIREMENT_BP_ITNETWORK);
+
+        BpThreatGroup threatGroupItNetwork = createBpThreatGroup(itNetwork, "Threats");
+        BpThreat threat1ItNetwork = createThreat(threatGroupItNetwork, "T1.1", "Threat 1");
+        threat1ItNetwork.setSimpleProperty(BpThreat.PROP_RELEASE, "2021-1");
+        threat1ItNetwork.setSimpleProperty(BpThreat.PROP_CHANGE_TYPE,
+                "bp_threat_change_type_changed");
+        threat1ItNetwork.setSimpleProperty("bp_threat_change_details",
+                "Something important was changed");
+        threat1ItNetwork.setRiskWithoutAdditionalSafeguards("risk1");
+        createLink(threat1ItNetwork, itNetwork, BpThreat.REL_BP_THREAT_BP_ITNETWORK);
+        createLink(requirement1ItNetwork, threat1ItNetwork,
+                BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
+
+        BpThreat threat2ItNetwork = createThreat(threatGroupItNetwork, "T1.2", "Threat 2");
+        threat2ItNetwork.setSimpleProperty(BpThreat.PROP_RELEASE, "2021-1");
+        threat2ItNetwork.setSimpleProperty(BpThreat.PROP_CHANGE_TYPE,
+                "bp_threat_change_type_changed");
+        threat2ItNetwork.setSimpleProperty("bp_threat_change_details",
+                "Something important was changed");
+        createLink(threat2ItNetwork, itNetwork, BpThreat.REL_BP_THREAT_BP_ITNETWORK);
+        createLink(requirement2ItNetwork, threat2ItNetwork,
+                BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
+
+        elementDao.flush();
+        elementDao.clear();
+
+        ModelCommand modelCommand = new ModelCommand(
+                Collections.singleton(requirementGroup.getUuid()),
+                Collections.singletonList(itNetwork.getUuid()));
+        modelCommand.setHandleSafeguards(true);
+        modelCommand.setHandleDummySafeguards(false);
+        commandService.executeCommand(modelCommand);
+        elementDao.flush();
+
+        itNetwork = reloadElement(itNetwork);
+        requirement2ItNetwork = reloadElement(requirement2ItNetwork);
+        assertEquals("2022-0", requirement2ItNetwork.getPropertyValue(BpRequirement.PROP_RELEASE));
+
+        Set<CnALink> linksThreatTargetObject = getLinksWithType(itNetwork,
+                BpThreat.REL_BP_THREAT_BP_ITNETWORK);
+        Set<CnALink> linksRequirementThreat = getLinksWithType(requirement2ItNetwork,
+                BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
+        assertEquals(2, linksThreatTargetObject.size());
+        assertEquals(0, linksRequirementThreat.size());
+
+        BpThreat linkedThreat1 = (BpThreat) linksThreatTargetObject.stream()
+                .filter(link -> link.getDependant().getTitle().equals("Threat 1")).findFirst()
+                .orElseThrow().getDependant();
+        assertEquals("2022-0", linkedThreat1.getPropertyValue(BpThreat.PROP_RELEASE));
+        BpThreat linkedThreat2 = (BpThreat) linksThreatTargetObject.stream()
+                .filter(link -> link.getDependant().getTitle().equals("Threat 2")).findFirst()
+                .orElseThrow().getDependant();
+        assertEquals("2021-1", linkedThreat2.getPropertyValue(BpThreat.PROP_RELEASE));
+
+    }
+
+    @Transactional
+    @Test
     public void doNotCopyRemovedElementIfNotPresentInExistingModule() throws CommandException {
         CatalogModel catalogModel = loadCatalogModel();
         BpRequirementGroup requirementGroup = createRequirementGroup(catalogModel, "R1",
