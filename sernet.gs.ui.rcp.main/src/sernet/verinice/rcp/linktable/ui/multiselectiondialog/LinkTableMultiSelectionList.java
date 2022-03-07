@@ -105,7 +105,6 @@ public class LinkTableMultiSelectionList {
 
             initializeCheckboxes();
             list.pack();
-            parent.getParent().pack();
             GridDataFactory.swtDefaults().grab(true, true).align(GridData.FILL, GridData.FILL)
                     .applyTo(group);
             group.layout();
