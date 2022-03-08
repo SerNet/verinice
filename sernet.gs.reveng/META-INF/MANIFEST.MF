@@ -12,7 +12,6 @@ Require-Bundle: com.springsource.org.hibernate;bundle-version="3.2.6",
  org.springframework.core;bundle-version="2.5.6.SEC03",
  org.springframework.orm;bundle-version="2.5.6.SEC03",
  com.springsource.org.apache.log4j;bundle-version="1.2.15",
- org.springframework.beans;bundle-version="2.5.6.SEC03",
- org.apache.commons.logging;bundle-version="1.1.1"
+ org.springframework.beans;bundle-version="2.5.6.SEC03"
 Import-Package: org.apache.commons.io
 Automatic-Module-Name: sernet.gs.reveng
