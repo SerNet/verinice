@@ -24,7 +24,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
@@ -47,8 +46,7 @@ import sernet.verinice.model.common.Permission;
 @SuppressWarnings({ "serial" })
 public class UpdatePermissions extends GenericCommand implements IChangeLoggingCommand {
 
-    private Serializable dbId;
-    private String uuid;
+    private Integer dbId;
 
     private Set<Permission> permissionSetAdd;
     private Set<Permission> permissionSetRemove;
@@ -56,21 +54,11 @@ public class UpdatePermissions extends GenericCommand implements IChangeLoggingC
     private boolean updateChildren;
     private boolean overridePermission;
 
-    private List<CnATreeElement> changedElements = new ArrayList<CnATreeElement>();
+    private List<CnATreeElement> changedElements = new ArrayList<>();
     private transient IBaseDao<CnATreeElement, Serializable> dao;
     private transient IBaseDao<Permission, Serializable> permissionDao;
     private String stationId;
     private transient Set<CnATreeElement> elementsToSave;
-
-    public UpdatePermissions(CnATreeElement cte, Set<Permission> permissionAdd,
-            boolean updateChildren) {
-        this(cte, permissionAdd, null, updateChildren, true);
-    }
-
-    public UpdatePermissions(CnATreeElement cte, Set<Permission> permissionAdd,
-            boolean updateChildren, boolean overridePermission) {
-        this(cte, permissionAdd, null, updateChildren, true);
-    }
 
     public UpdatePermissions(Integer dbId, Set<Permission> permissionAdd, boolean updateChildren,
             boolean overridePermission) {
@@ -82,20 +70,9 @@ public class UpdatePermissions extends GenericCommand implements IChangeLoggingC
         this(cte.getDbId(), permissionAdd, permissionRemove, updateChildren, overridePermission);
     }
 
-    public UpdatePermissions(Serializable dbId, Set<Permission> permissionAdd,
+    private UpdatePermissions(Integer dbId, Set<Permission> permissionAdd,
             Set<Permission> permissionRemove, boolean updateChildren, boolean overridePermission) {
         this.dbId = dbId;
-        addParameter(permissionAdd, permissionRemove, updateChildren, overridePermission);
-    }
-
-    public UpdatePermissions(String uuid, Set<Permission> permissionAdd, boolean updateChildren,
-            boolean overridePermission) {
-        this.uuid = uuid;
-        addParameter(permissionAdd, null, updateChildren, overridePermission);
-    }
-
-    private void addParameter(Set<Permission> permissionAdd, Set<Permission> permissionRemove,
-            boolean updateChildren, boolean overridePermission) {
         this.permissionSetAdd = permissionAdd;
         if (permissionRemove == null) {
             this.permissionSetRemove = Collections.emptySet();
@@ -109,7 +86,7 @@ public class UpdatePermissions extends GenericCommand implements IChangeLoggingC
 
     @Override
     public void execute() {
-        CnATreeElement cte = loadElement();
+        CnATreeElement cte = getDao().findById(dbId);
         if (getConfigurationService().isWriteAllowed(cte)) {
             elementsToSave = new HashSet<>();
 
@@ -118,6 +95,7 @@ public class UpdatePermissions extends GenericCommand implements IChangeLoggingC
                 updateChildren(cte.getChildren());
             }
             getDao().saveOrUpdateAll(elementsToSave);
+            elementsToSave = null;
         }
 
         // Since the result of a change to permissions is that the model is
@@ -134,7 +112,7 @@ public class UpdatePermissions extends GenericCommand implements IChangeLoggingC
         // flush, to delete old entries before inserting new ones
         getPermissionDao().flush();
         for (Permission permission : permissionSetAdd) {
-            permission = addPermission(element, permission);
+            addPermission(element, permission);
         }
         for (Permission permission : permissionSetRemove) {
             removePermission(element, permission);
@@ -146,15 +124,14 @@ public class UpdatePermissions extends GenericCommand implements IChangeLoggingC
         if (element.getPermissions() == null) {
             // initialize
             final int size = (permissionSetAdd != null) ? permissionSetAdd.size() : 0;
-            element.setPermissions(new HashSet<Permission>(size));
+            element.setPermissions(new HashSet<>(size));
         }
     }
 
     private void removeAllPermissions(CnATreeElement element) {
         // remove all old permission
-        for (Permission permission : element.getPermissions()) {
-            getPermissionDao().delete(permission);
-        }
+
+        getPermissionDao().delete(List.copyOf(element.getPermissions()));
         element.getPermissions().clear();
     }
 
@@ -180,18 +157,6 @@ public class UpdatePermissions extends GenericCommand implements IChangeLoggingC
         Permission permissionForCurrentElement = Permission.clonePermission(element, permission);
         getPermissionDao().delete(permissionForCurrentElement);
         element.getPermissions().remove(permissionForCurrentElement);
-    }
-
-    private CnATreeElement loadElement() {
-        CnATreeElement cte = null;
-        if (dbId != null) {
-            cte = getDao().findById(dbId);
-        } else if (uuid != null) {
-            RetrieveInfo ri = RetrieveInfo.getChildrenInstance();
-            ri.setPermissions(true).setChildrenPermissions(true);
-            cte = getDao().findByUuid(uuid, ri);
-        }
-        return cte;
     }
 
     private void updateChildren(Set<CnATreeElement> children) {
