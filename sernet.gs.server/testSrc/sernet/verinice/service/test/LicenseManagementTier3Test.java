@@ -112,8 +112,9 @@ public class LicenseManagementTier3Test extends CommandServiceProvider {
     }
 
     @After
-    public void tearDown() throws CommandException {
+    public void tearDown() throws CommandException, LicenseManagementException {
         Assert.assertTrue(emptyVNLRepo());
+        licenseManagementService.readVNLFiles();
     }
 
     private boolean emptyVNLRepo() {

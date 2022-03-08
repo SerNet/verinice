@@ -108,6 +108,7 @@ public class RightsServiceTest extends UuidLoader {
             userConfiguration.setPerson(user);
             configurationDao.merge(userConfiguration);
         }
+        rightsServerHandler.discardData();
     }
 
     @Test
