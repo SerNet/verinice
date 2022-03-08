@@ -55,7 +55,7 @@
         <setEntry value="com.springsource.org.apache.commons.io@default:default"/>
         <setEntry value="com.springsource.org.apache.commons.lang@default:default"/>
         <setEntry value="com.springsource.org.apache.commons.net@default:default"/>
-        <setEntry value="com.springsource.org.apache.log4j@default:default"/>
+        <setEntry value="org.apache.log4j@default:default"/>
         <setEntry value="com.springsource.org.apache.ws.commons.schema@default:default"/>
         <setEntry value="com.springsource.org.aspectj.runtime@default:default"/>
         <setEntry value="com.springsource.org.aspectj.weaver@default:default"/>

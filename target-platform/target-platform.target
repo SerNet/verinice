@@ -129,5 +129,15 @@
 		<repository location="https://download.eclipse.org/nebula/releases/2.4.2/"/>
 		<unit id="org.eclipse.nebula.widgets.gallery.feature.feature.group" version="0.0.0"/>
 	</location>
+	<location includeDependencyDepth="none" includeDependencyScopes="compile" includeSource="true" missingManifest="error" type="Maven">
+		<dependencies>
+			<dependency>
+				<groupId>ch.qos.reload4j</groupId>
+				<artifactId>reload4j</artifactId>
+				<version>1.2.19</version>
+				<type>jar</type>
+			</dependency>
+		</dependencies>
+	</location>
 </locations>
 </target>

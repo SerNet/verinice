@@ -11,7 +11,7 @@ Require-Bundle: sernet.gs.ui.rcp.main,
  sernet.springclient,
  org.eclipse.ui;bundle-version="3.5.2",
  org.eclipse.core.resources;bundle-version="3.5.2",
- com.springsource.org.apache.log4j,
+ org.apache.log4j,
  org.eclipse.ui.intro;bundle-version="3.3.2",
  org.eclipse.equinox.common;bundle-version="3.6.0",
  com.springsource.org.apache.commons.io;bundle-version="1.4.0"
