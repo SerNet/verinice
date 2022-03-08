@@ -19,12 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.service.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -58,14 +59,14 @@ import sernet.verinice.service.XmlRightsService;
 @TransactionConfiguration(transactionManager = "txManager")
 public class RightsServiceTest extends UuidLoader {
 
-    public static final String[] adminActionIds = { ActionRightIDs.ACCOUNTSETTINGS,
+    public static final Set<String> adminActionIds = Set.of(ActionRightIDs.ACCOUNTSETTINGS,
             ActionRightIDs.ACCESSCONTROL, ActionRightIDs.EDITPROFILE, ActionRightIDs.TASKDELETE,
             ActionRightIDs.TASKSHOWALL, ActionRightIDs.SEARCHREINDEX, ActionRightIDs.SHOWALLFILES,
             ActionRightIDs.TASKCHANGEASSIGNEE, ActionRightIDs.TASKCHANGEDUEDATE,
-            ActionRightIDs.TASKWITHRELEASEPROCESS, };
+            ActionRightIDs.TASKWITHRELEASEPROCESS);
 
-    public static final String[] newProfileActionIds = { ActionRightIDs.IMPORTCSV,
-            ActionRightIDs.IMPORTLDAP, ActionRightIDs.XMLIMPORT };
+    public static final Set<String> newProfileActionIds = Set.of(ActionRightIDs.IMPORTCSV,
+            ActionRightIDs.IMPORTLDAP, ActionRightIDs.XMLIMPORT);
 
     public static final String NEW_ACTION_ID = "RightsServiceTestAction";
 
@@ -154,16 +155,9 @@ public class RightsServiceTest extends UuidLoader {
 
     private void testNewProfile() {
         String[] allActionIds = ActionRightIDs.getAllRightIDs();
-        Arrays.sort(newProfileActionIds);
         for (String id : allActionIds) {
-            boolean expected = Arrays.binarySearch(newProfileActionIds, id) > -1;
-            if (expected) {
-                assertTrue("Action: " + id + " is disabled for user.",
-                        rightsServerHandler.isEnabled(USER_NAME, id));
-            } else {
-                assertFalse("Action: " + id + " is enabled for  user.",
-                        rightsServerHandler.isEnabled(USER_NAME, id));
-            }
+            boolean expected = newProfileActionIds.contains(id);
+            assertEquals(expected, rightsServerHandler.isEnabled(USER_NAME, id));
         }
     }
 
@@ -195,16 +189,9 @@ public class RightsServiceTest extends UuidLoader {
     @Test
     public void testDefaultProfile() throws Exception {
         String[] allActionIds = ActionRightIDs.getAllRightIDs();
-        Arrays.sort(adminActionIds);
         for (String id : allActionIds) {
-            boolean expected = Arrays.binarySearch(adminActionIds, id) < 0;
-            if (expected) {
-                assertTrue("Action: " + id + " is disabled for user.",
-                        rightsServerHandler.isEnabled(USER_NAME, id));
-            } else {
-                assertFalse("Admin action: " + id + " is enabled for non admin user.",
-                        rightsServerHandler.isEnabled(USER_NAME, id));
-            }
+            boolean expected = !adminActionIds.contains(id);
+            assertEquals(expected, rightsServerHandler.isEnabled(USER_NAME, id));
         }
     }
 
