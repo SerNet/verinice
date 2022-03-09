@@ -52,6 +52,9 @@ java.util.concurrent.locks.ReentrantLock
 java.util.concurrent.locks.ReentrantLock$NonfairSync
 java.util.concurrent.locks.ReentrantLock$Sync
 java.util.regex.Pattern
+javax.xml.bind.DataBindingException
+javax.xml.bind.JAXBException
+javax.xml.bind.UnmarshalException
 org.hibernate.collection.AbstractPersistentCollection
 org.hibernate.collection.PersistentList
 org.hibernate.collection.PersistentMap
@@ -75,3 +78,5 @@ org.jgrapht.util.ArrayUnenforcedSet
 org.jgrapht.util.SupplierUtil
 org.springframework.remoting.support.RemoteInvocation
 org.springframework.remoting.support.RemoteInvocationResult
+org.xml.sax.SAXException
+org.xml.sax.SAXParseException
