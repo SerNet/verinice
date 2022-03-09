@@ -22,6 +22,7 @@ package sernet.verinice.service.commands;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -31,10 +32,12 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
-import sernet.gs.service.RuntimeCommandException;
-import sernet.verinice.interfaces.CommandException;
+import sernet.gs.service.CollectionUtil;
+import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnALink;
@@ -70,6 +73,8 @@ public class CopyLinksCommand extends GenericCommand {
 
     private final CopyLinksMode copyLinksMode;
 
+    private transient Map<Integer, CnATreeElement> copiedElementsById;
+
     public CopyLinksCommand(Map<Integer, Integer> sourceDestMap, CopyLinksMode copyLinksMode) {
         super();
         this.sourceDestMap = sourceDestMap;
@@ -85,6 +90,7 @@ public class CopyLinksCommand extends GenericCommand {
             return;
         }
         loadAndCacheLinks();
+        loadAndCacheElements();
         copyLinks();
     }
 
@@ -168,14 +174,10 @@ public class CopyLinksCommand extends GenericCommand {
     }
 
     private void createLink(Integer sourceId, Integer destId, String type, String comment) {
-        CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<>(sourceId, destId,
-                type, comment);
-        try {
-            getCommandService().executeCommand(createLink);
-        } catch (CommandException e) {
-            logger.error("Error while creating link for copy", e);
-            throw new RuntimeCommandException(e);
-        }
+        CnATreeElement source = copiedElementsById.get(sourceId);
+        CnATreeElement target = copiedElementsById.get(destId);
+        CnALink link = new CnALink(source, target, type, comment);
+        getDaoFactory().getDAO(CnALink.class).saveOrUpdate(link);
     }
 
     public void loadAndCacheLinks() {
@@ -196,6 +198,40 @@ public class CopyLinksCommand extends GenericCommand {
                 cacheLink(dependencyId, dependantId, typeId, Direction.TO_COPIED_ELEMENT, comment);
             }
         }
+    }
+
+    private void loadAndCacheElements() {
+        Set<Integer> elementIDs = new HashSet<>();
+        for (Entry<Integer, List<LinkInformation>> entry : existingLinksByCopiedElementId
+                .entrySet()) {
+            elementIDs.add(sourceDestMap.get(entry.getKey()));
+            for (LinkInformation info : entry.getValue()) {
+                Integer otherElementId = info.otherElementId;
+                Integer copyDestinationId = sourceDestMap.get(otherElementId);
+                if (copyDestinationId == null) {
+                    // the element on the other side of the link was not copied
+                    if (copyLinksMode != CopyLinksMode.FROM_COMPENDIUM_TO_MODEL) {
+                        elementIDs.add(otherElementId);
+                    }
+                } else {
+                    elementIDs.add(copyDestinationId);
+                }
+            }
+
+        }
+        copiedElementsById = new HashMap<>(elementIDs.size());
+
+        CollectionUtil.partition(List.copyOf(elementIDs), 500).forEach(chunk -> {
+            DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class)
+                    .add(Restrictions.in("id", chunk));
+            RetrieveInfo.getPropertyInstance().setLinksUp(true).setLinksDown(true)
+                    .configureCriteria(criteria);
+            List<CnATreeElement> elements = getDao().findByCriteria(criteria);
+
+            for (CnATreeElement element : elements) {
+                copiedElementsById.put(element.getDbId(), element);
+            }
+        });
     }
 
     public void cacheLink(Integer copiedElementId, Integer destinationId, String type,
