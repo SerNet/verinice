@@ -69,7 +69,7 @@ pipeline {
                 sh 'mv war/*.war veriniceserver.war'
                 script {
                     def portDatabase = "549${env.EXECUTOR_NUMBER}"
-                    def portTomcat = "809${env.EXECUTOR_NUMBER}"
+                    def portTomcat = "829${env.EXECUTOR_NUMBER}"
                     def portTomcatShutdown = "819${env.EXECUTOR_NUMBER}"
                     def skipTags = ['skipExecution', 'clientOnlyTest']
                     if (!params.runPerformanceTests){
