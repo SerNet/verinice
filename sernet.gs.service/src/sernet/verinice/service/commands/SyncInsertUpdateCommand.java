@@ -216,15 +216,21 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             }
 
             Set<SyncLink> importedLinks = new HashSet<>(syncData.getSyncLink().size());
+            Set<CnALink> importedCnALinks = new HashSet<>(syncData.getSyncLink().size());
             for (SyncLink syncLink : syncData.getSyncLink()) {
                 if (importedLinks.contains(syncLink)) {
                     log.warn("Ignoring duplicate link " + syncLink);
                     continue;
                 }
-                importLink(syncLink);
+                CnALink cnaLink = importLink(syncLink);
+                if (cnaLink != null) {
+                    importedCnALinks.add(cnaLink);
+                }
                 importedLinks.add(syncLink);
             }
 
+            IBaseDao<CnALink, Serializable> linkDao = getDao(CnALink.class);
+            linkDao.saveOrUpdateAll(importedCnALinks);
             importRiskAnalysis();
 
             finalizeDaos();
@@ -669,9 +675,10 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
     /**
      * @param syncLink
+     * @return
      * @throws CommandException
      */
-    private void importLink(SyncLink syncLink) {
+    private CnALink importLink(SyncLink syncLink) {
         String dependantId = syncLink.getDependant();
         String dependencyId = syncLink.getDependency();
         CnATreeElement dependant = idElementMap.get(dependantId);
@@ -681,7 +688,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 log.warn("Can not import link. dependant not found in "
                         + "xml file and db, dependant ext-id: " + dependantId
                         + " dependency ext-id: " + dependencyId);
-                return;
+                return null;
             } else if (log.isDebugEnabled()) {
                 log.debug("dependant not found in XML file but in db, " + "ext-id: " + dependantId);
             }
@@ -693,7 +700,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 log.warn("Can not import link. dependency not found in "
                         + "xml file and db, dependency ext-id: " + dependencyId
                         + " dependant ext-id: " + dependantId);
-                return;
+                return null;
             } else if (log.isDebugEnabled()) {
                 log.debug(
                         "dependency not found in XML file but in db, " + "ext-id: " + dependencyId);
@@ -721,10 +728,11 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 log.debug("Creating new link from: " + titleDependant + " to: " + titleDependency
                         + "...");
             }
-            getDao(CnALink.class).saveOrUpdate(link);
+            return link;
         } else if (log.isDebugEnabled()) {
             log.debug("Link exists: " + titleDependant + " to: " + titleDependency);
         }
+        return null;
 
     }
 

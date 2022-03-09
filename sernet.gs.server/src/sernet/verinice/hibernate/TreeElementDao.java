@@ -19,7 +19,10 @@ package sernet.verinice.hibernate;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -92,8 +95,23 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         super.saveOrUpdate(entity);
         if (entity instanceof CnATreeElement) {
             CnATreeElement elmt = (CnATreeElement) entity;
-            index(elmt);
+            index(Set.of(elmt));
             notifyChangedElement(elmt);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void saveOrUpdateAll(Collection<T> entities) {
+        if (LOG_INHERIT.isDebug()) {
+            LOG_INHERIT.debug("saveOrUpdateAll...");
+        }
+        super.saveOrUpdateAll(entities);
+        if (!entities.isEmpty() && entities.iterator().next() instanceof CnATreeElement) {
+            index((Collection<CnATreeElement>) entities);
+            for (T entity : entities) {
+                CnATreeElement elmt = (CnATreeElement) entity;
+                notifyChangedElement(elmt);
+            }
         }
     }
 
@@ -199,21 +217,36 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
     }
 
     protected void index(CnATreeElement element) {
-        updateTitleCache(element);
-        updateIndex(element);
+        index(Set.of(element));
     }
 
-    private void updateIndex(CnATreeElement element) {
+    protected void index(Collection<CnATreeElement> elements) {
+        for (CnATreeElement element : elements) {
+            updateTitleCache(element);
+
+        }
+        updateIndex(elements);
+    }
+
+    private void updateIndex(Collection<CnATreeElement> elements) {
         try {
             if (getSearchDao() != null) {
                 IJsonBuilder builder = getJsonBuilder();
-                if (builder != null && builder.isIndexableElement(element)) {
-                    getSearchDao().updateOrIndex(element.getUuid(), builder.getJson(element));
+                if (builder != null) {
+
+                    Map<String, String> idToJson = new HashMap<>(elements.size());
+                    for (CnATreeElement element : elements) {
+                        if (builder.isIndexableElement(element)) {
+                            idToJson.put(element.getUuid(), builder.getJson(element));
+                        }
+                    }
+                    getSearchDao().updateOrIndex(idToJson);
                 }
             }
         } catch (Exception e) {
-            String uuid = (element != null) ? element.getUuid() : null;
-            LOG.error("Error while updating index, element: " + uuid, e);
+            String uuids = (elements != null) ? elements.stream().map(CnATreeElement::getUuid)
+                    .collect(Collectors.joining(", ")) : null;
+            LOG.error("Error while updating index, elements: " + uuids, e);
         }
     }
 

@@ -444,10 +444,11 @@ public class ValidationService implements IValidationService {
     @Override
     public void updateValidations(Integer scopeId, Integer elmtDbId, String title) {
         ServerInitializer.inheritVeriniceContextState();
-        for (CnAValidation validation : getValidations(scopeId, elmtDbId)) {
+        List<CnAValidation> validations = getValidations(scopeId, elmtDbId);
+        for (CnAValidation validation : validations) {
             validation.setElmtTitle(StringUtils.abbreviate(title, MAXLENGTH_DBSTRING));
-            getCnaValidationDAO().saveOrUpdate(validation);
         }
+        getCnaValidationDAO().saveOrUpdateAll(validations);
     }
 
     /*

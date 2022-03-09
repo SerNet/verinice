@@ -20,6 +20,7 @@
 package sernet.verinice.interfaces;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNull;
@@ -38,6 +39,8 @@ public interface IDao<T, ID extends Serializable> {
     int QUERY_MAX_ITEMS_IN_LIST = 500;
 
     public abstract void saveOrUpdate(T entity);
+
+    public abstract void saveOrUpdateAll(Collection<T> entities);
 
     public abstract T merge(T entity);
 

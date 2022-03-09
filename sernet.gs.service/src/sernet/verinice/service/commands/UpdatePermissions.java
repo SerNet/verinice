@@ -60,6 +60,7 @@ public class UpdatePermissions extends GenericCommand implements IChangeLoggingC
     private transient IBaseDao<CnATreeElement, Serializable> dao;
     private transient IBaseDao<Permission, Serializable> permissionDao;
     private String stationId;
+    private transient Set<CnATreeElement> elementsToSave;
 
     public UpdatePermissions(CnATreeElement cte, Set<Permission> permissionAdd,
             boolean updateChildren) {
@@ -110,10 +111,13 @@ public class UpdatePermissions extends GenericCommand implements IChangeLoggingC
     public void execute() {
         CnATreeElement cte = loadElement();
         if (getConfigurationService().isWriteAllowed(cte)) {
+            elementsToSave = new HashSet<>();
+
             updateElement(cte);
             if (updateChildren) {
                 updateChildren(cte.getChildren());
             }
+            getDao().saveOrUpdateAll(elementsToSave);
         }
 
         // Since the result of a change to permissions is that the model is
@@ -135,7 +139,7 @@ public class UpdatePermissions extends GenericCommand implements IChangeLoggingC
         for (Permission permission : permissionSetRemove) {
             removePermission(element, permission);
         }
-        getDao().saveOrUpdate(element);
+        elementsToSave.add(element);
     }
 
     private void initializePermissions(CnATreeElement element) {

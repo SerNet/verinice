@@ -20,8 +20,10 @@
 package sernet.verinice.hibernate;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IAccountService;
@@ -50,6 +52,13 @@ public class ConfigurationDao extends TreeElementDao<Configuration, Serializable
     public void saveOrUpdate(Configuration entity) {
         saveAccountGroups(entity.getRoles(false));
         super.saveOrUpdate(entity);
+    }
+
+    @Override
+    public void saveOrUpdateAll(Collection<Configuration> entities) {
+        saveAccountGroups(entities.stream().flatMap(entity -> entity.getRoles(false).stream())
+                .collect(Collectors.toSet()));
+        super.saveOrUpdateAll(entities);
     }
 
     private void saveAccountGroups(Set<String> accountGroupNames) {

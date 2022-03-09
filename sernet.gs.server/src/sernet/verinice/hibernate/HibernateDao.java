@@ -20,6 +20,7 @@
 package sernet.verinice.hibernate;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -150,6 +151,11 @@ public class HibernateDao<T, ID extends Serializable> extends HibernateDaoSuppor
     @Override
     public void saveOrUpdate(T entity) {
         getHibernateTemplate().saveOrUpdate(entity);
+    }
+
+    @Override
+    public void saveOrUpdateAll(Collection<T> entities) {
+        getHibernateTemplate().saveOrUpdateAll(entities);
     }
 
     @Override
