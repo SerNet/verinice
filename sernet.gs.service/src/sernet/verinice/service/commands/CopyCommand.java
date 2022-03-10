@@ -285,7 +285,7 @@ public class CopyCommand extends GenericCommand {
     private void copyChildrenIfExistant(CnATreeElement element,
             Optional<Map<Integer, Integer>> sourceDestMap, CnATreeElement elementCopy)
             throws CommandException, IOException {
-        List<CnATreeElement> children = elementsByParentId.get(element.getDbId());
+        List<CnATreeElement> children = elementsByParentId.remove(element.getDbId());
         if (children != null) {
             for (CnATreeElement child : children) {
                 if (copyDescendant(child, elementCopy)) {

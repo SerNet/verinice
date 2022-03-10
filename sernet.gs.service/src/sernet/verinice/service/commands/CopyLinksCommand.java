@@ -93,7 +93,7 @@ public class CopyLinksCommand extends GenericCommand {
         for (Entry<Integer, Integer> e : sourceDestMap.entrySet()) {
             Integer sourceId = e.getKey();
             Integer targetId = e.getValue();
-            createLinks(targetId, existingLinksByCopiedElementId.get(sourceId));
+            createLinks(targetId, existingLinksByCopiedElementId.remove(sourceId));
         }
     }
 
