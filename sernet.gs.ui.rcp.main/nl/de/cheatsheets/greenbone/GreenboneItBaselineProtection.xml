@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<cheatsheet title="IT-Grundschutz mit Greenbone und verinice">
+<cheatsheet title="klassischen IT-Grundschutz mit Greenbone und verinice">
 
   <intro>
     <description>
      verinice garantiert im Zusammenspiel mit einem <b>Greenbone</b>-Schwachstellenscanner (<b>www.greenbone.net</b>)
      bzw. einem OpenVAS-Schwachstellenscanner (<b>www.openvas.org</b>) ein effizientes Schwachstellenmanagement.<br />
      <br />
-     Im Grundschutz unterstützt verinice Sie nach Import der Ergebnisse eines Greenbone-Schwachstellenscans bei den
+     Im klassischen IT-Grundschutz nach den BSI-Standards der 100er-Reihe unterstützt verinice Sie nach Import der Ergebnisse eines Greenbone-Schwachstellenscans bei den
      Funktionen Strukturanalyse, Baustein-Modellierung und Automatischer Basis-Sicherheitscheck.
     </description>
   </intro>

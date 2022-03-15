@@ -1,59 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <compositeCheatsheet name="Greenbone Security Manager und verinice verbinden">
-
-  <taskGroup name="Greenbone Security Manager und verinice verbinden" skip="false">
-
-    <intro>
-      verinice garantiert im Zusammenspiel mit einem <b>Greenbone</b>-Schwachstellenscanner
+   <taskGroup name="Greenbone Security Manager und verinice verbinden" skip="false">
+      <intro>
+         verinice garantiert im Zusammenspiel mit einem <b>Greenbone</b>-Schwachstellenscanner
       (<b>www.greenbone.net</b>) bzw. einem OpenVAS-Schwachstellenscanner (<b>www.openvas.org</b>) ein effizientes
       Schwachstellenmanagement. Die Anbindung unterstützt grundsätzlich zwei Anwendungsfälle:<br/>
       <br/>
-      <b>IT-Grundschutz mit verinice und Greenbone</b><br/>
-      Im Grundschutz unterstützt verinice Sie nach Import der Ergebnisse eines Greenbone-Schwachstellenscans bei den
+      <b>klassischen IT-Grundschutz mit verinice und Greenbone</b><br/>
+      Im klassischen IT-Grundschutz nach den BSI-Standards der 100er-Reihe unterstützt verinice Sie nach Import der Ergebnisse eines Greenbone-Schwachstellenscans bei den
       Funktionen Strukturanalyse, Baustein-Modellierung und Automatischer Basis-Sicherheitscheck.<br/>
+      Aufgrund der eingeschränkten Verfügbarkeit von Umsetzungshinweisen steht die Greenbone-/OpenVAS-Anbindung für den <b>Modernisierten IT-Grundschutz</b> nicht zur Verfügung.<br />
       <br/>
       <b>Schwachstellen-Management mit verinice und Greenbone</b><br/>
       In der ISM-Perspektive unterstützt verinice Sie nach Import der Ergebnisse eines Greenbone-Schwachstellenscans
       bei der Risikoanalyse und der Schwachstellenverfolgung. In verinice.PRO steht zusätzlich exklusiv der
       Aufgaben-Workflow zur Schwachstellenbehebung zur Verfügung.
-    </intro>
-
-    <task kind="cheatsheet" name="IT-Grundschutz mit Greenbone und Verinice" skip="true">
-      <param name="id" value="sernet.verinice.greenbone.cheatsheets.it_baseline_protection" />
-      <intro>
-        verinice garantiert im Zusammenspiel mit einem <b>Greenbone</b>-Schwachstellenscanner
-        (<b>www.greenbone.net</b>) bzw. einem OpenVAS-Schwachstellenscanner (<b>www.openvas.org</b>) ein effizientes
-        Schwachstellenmanagement.<br />
-        <br />
-        Im Grundschutz unterstützt verinice Sie nach Import der Ergebnisse eines Greenbone-Schwachstellenscans bei den
-        Funktionen Strukturanalyse, Baustein-Modellierung und Automatischer Basis-Sicherheitscheck.
       </intro>
-      <onCompletion>
-        Danke für die Verwendung von verinice.PRO für Ihre Schwachstellenverfolgung. Wenn Sie weitere Fragen haben oder
+      <task kind="cheatsheet" name="klassischen IT-Grundschutz mit Greenbone und Verinice" skip="true">
+         <intro>
+            verinice garantiert im Zusammenspiel mit einem <b>Greenbone</b>-Schwachstellenscanner
+        (<b>www.greenbone.net</b>) bzw. einem OpenVAS-Schwachstellenscanner (<b>www.openvas.org</b>) ein effizientes
+        Schwachstellenmanagement.<br/>
+        <br/>
+        Im klassischen IT-Grundschutz nach den BSI-Standards der 100er-Reihe unterstützt verinice Sie nach Import der Ergebnisse eines Greenbone-Schwachstellenscans bei den
+        Funktionen Strukturanalyse, Baustein-Modellierung und Automatischer Basis-Sicherheitscheck.
+         </intro>
+         <onCompletion>
+            Danke für die Verwendung von verinice.PRO für Ihre Schwachstellenverfolgung. Wenn Sie weitere Fragen haben oder
         professionelle Unterstützung brauchen, helfen wir Ihnen gerne! Kontaktinformationen finden Sie auf unserer Website
         unter <b>www.verinice.com</b>.
-      </onCompletion>
-    </task>
-
-    <task kind="cheatsheet" name="Information Security Management mit Greenbone und verinice" skip="true">
-      <param name="id" value="sernet.verinice.greenbone.cheatsheets.ism" />
-      <intro>
-        verinice garantiert im Zusammenspiel mit einem <b>Greenbone</b>-Schwachstellenscanner
+         </onCompletion>
+         <param name="id" value="sernet.verinice.greenbone.cheatsheets.it_baseline_protection">
+         </param>
+      </task>
+      <task kind="cheatsheet" name="Information Security Management mit Greenbone und verinice" skip="true">
+         <intro>
+            verinice garantiert im Zusammenspiel mit einem <b>Greenbone</b>-Schwachstellenscanner
         (<b>www.greenbone.net</b>) bzw. einem OpenVAS-Schwachstellenscanner (<b>www.openvas.org</b>) ein effizientes
-        Schwachstellenmanagement.<br />
-        <br />
+        Schwachstellenmanagement.<br/>
+        <br/>
         In der ISM-Perspektive unterstützt verinice Sie nach Import der Ergebnisse eines Greenbone-Schwachstellenscans
         bei der Risikoanalyse und der Schwachstellenverfolgung. In verinice.PRO steht zusätzlich exklusiv der
         Aufgaben-Workflow zur Schwachstellenbehebung zur Verfügung.
-      </intro>
-      <onCompletion>
-        Danke für die Verwendung von verinice.PRO für Ihre Schwachstellenverfolgung. Wenn Sie weitere Fragen haben oder
+         </intro>
+         <onCompletion>
+            Danke für die Verwendung von verinice.PRO für Ihre Schwachstellenverfolgung. Wenn Sie weitere Fragen haben oder
         professionelle Unterstützung brauchen, helfen wir Ihnen gerne! Kontaktinformationen finden Sie auf unserer Website
         unter <b>www.verinice.com</b>.
-      </onCompletion>
-    </task>
-
-  </taskGroup>
-
+         </onCompletion>
+         <param name="id" value="sernet.verinice.greenbone.cheatsheets.ism">
+         </param>
+      </task>
+   </taskGroup>
 </compositeCheatsheet>

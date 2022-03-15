@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<cheatsheet title="IT Baseline Protection with Greenbone and verince">
+<cheatsheet title="classic IT Baseline Protection with Greenbone and verince">
 
   <intro>
     <description>
       In connection with a <b>Greenbone</b> vulnerability scanner (<b>www.greenbone.net</b>) as well as a OpenVAS
       vulnerability scanner (<b>www.openvas.org</b>) verinice enables an effective vulnerability management.<br />
       <br />
-      Importing the results of a vulnerability scan into verinice in the BSI Baseline Security provides the
+      Importing the results of a vulnerability scan into verinice in the classic IT-Baseline-Protection according to the BSI standards of the 100 series provides the
       functionalities structural analysis, modeling and automatic basisc security check.
     </description>
   </intro>
