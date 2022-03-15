@@ -99,30 +99,6 @@ h1 {
 	width:200px;
 }
 
-#a-gb {
-	position:absolute; 
-	top:366px; 
-	left:783px;
-	padding:0px;
-	margin-top:0px;
- 	margin-bottom:0px;
-	text-decoration: none;
-    display:block;
-  	background-image:url(link-greenbone.gif);
-	background-position: left top;
-	width:82px;
- 	height:82px;
-}
-#a-gb:hover {background-position: left bottom; }
-
-.link-gb-text {
-	font-size: 16px;
-	position:absolute;
-	top:386px;
-	left:878px;
-	width:200px;
-}
-
 #a-modern-gs {
 	position:absolute; 
 	top:244px; 
