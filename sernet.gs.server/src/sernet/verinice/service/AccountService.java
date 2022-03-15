@@ -39,6 +39,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
+import org.hibernate.Query;
 
 import sernet.gs.service.ServerInitializer;
 import sernet.verinice.interfaces.ApplicationRoles;
@@ -291,8 +292,8 @@ public class AccountService implements IAccountService, Serializable {
     @Override
     public Set<String> addRole(Set<String> usernames, String role) {
         ServerInitializer.inheritVeriniceContextState();
-        Set<String> result = new HashSet<>();
-        for (Configuration account : extractConfiguration(usernames, getAllConfigurations())) {
+        Set<String> result = new HashSet<>(usernames.size());
+        for (Configuration account : getConfigurationsWithUsernames(usernames)) {
             if (!isRoleSet(role, account)) {
                 try {
                     account.addRole(role);
@@ -316,8 +317,8 @@ public class AccountService implements IAccountService, Serializable {
     @Override
     public Set<String> deleteRole(Set<String> usernames, String role) {
         ServerInitializer.inheritVeriniceContextState();
-        Set<String> result = new HashSet<>();
-        for (Configuration account : extractConfiguration(usernames, getAllConfigurations())) {
+        Set<String> result = new HashSet<>(usernames.size());
+        for (Configuration account : getConfigurationsWithUsernames(usernames)) {
             try {
                 account.deleteRole(role);
                 getConfigurationDao().merge(account);
@@ -330,6 +331,20 @@ public class AccountService implements IAccountService, Serializable {
         configurationService.discardUserData();
         rightsServerHandler.discardData();
         return result;
+    }
+
+    private List<Configuration> getConfigurationsWithUsernames(Set<String> usernames) {
+        return getConfigurationDao().findByCallback(session -> {
+            Query query = session
+                    .createQuery("select c from Configuration c inner join fetch c.entity e "
+                            + "inner join fetch e.typedPropertyLists lu inner join fetch lu.properties pu "
+                            + "left join fetch e.typedPropertyLists lr left join fetch lr.properties pr "
+                            + "where pu.propertyType = :utype and cast(pu.propertyValue as string) in (:names) and pr.propertyType = :rtype");
+            query.setParameter("utype", Configuration.PROP_USERNAME);
+            query.setParameter("rtype", Configuration.PROP_ROLES);
+            query.setParameterList("names", usernames);
+            return query.list();
+        });
     }
 
     @Override
@@ -388,20 +403,6 @@ public class AccountService implements IAccountService, Serializable {
                 new String[] {}, new Object[] {});
 
         return configurations == null ? new ArrayList<>() : configurations;
-    }
-
-    private Set<Configuration> extractConfiguration(Set<String> usernames,
-            List<Configuration> configurations) {
-        Set<Configuration> result = new HashSet<>();
-        for (String username : usernames) {
-            for (Configuration c : configurations) {
-                if (c.getUser().equals(username)) {
-                    result.add(c);
-                }
-            }
-        }
-
-        return result;
     }
 
     public IBaseDao<Permission, Serializable> getPermissionDao() {
