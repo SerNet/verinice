@@ -39,14 +39,12 @@ import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.PersonAdapter;
 import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.service.account.AccountSearchParameter;
-import sernet.verinice.service.account.AccountSearchParameterFactory;
 import sernet.verinice.service.commands.LoadVisibleAccounts;
 
 /**
@@ -126,17 +124,25 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
         List<AccountGroup> accountGroups = accountService.listGroups();
         accountGroupToConfiguration = new TreeMap<>(new NumericStringComparator());
         accounts = loadVisibleLoginNames();
+
         for (AccountGroup accountGroup : accountGroups) {
-            IAccountSearchParameter parameter = AccountSearchParameterFactory
-                    .createAccountGroupParameter(accountGroup.getName());
-            List<Configuration> configurationsForAccountGroup = accountService
-                    .findAccounts(parameter);
-            accountGroupToConfiguration.put(accountGroup.getName(), new HashSet<String>());
-            for (Configuration account : configurationsForAccountGroup) {
-                accountGroupToConfiguration.get(accountGroup.getName()).add(account.getUser());
-            }
+            accountGroupToConfiguration.put(accountGroup.getName(), new HashSet<>());
         }
-        initPrettyAccountNames();
+
+        List<Configuration> allAccounts = accountService
+                .findAccounts(AccountSearchParameter.newInstance());
+        prettyAccountNames = new HashMap<>(allAccounts.size());
+
+        for (Configuration conf : allAccounts) {
+            String user = conf.getUser();
+            for (String role : conf.getRoles()) {
+                if (accountGroupToConfiguration.containsKey(role)) {
+                    accountGroupToConfiguration.get(role).add(user);
+                }
+            }
+            prettyAccountNames.put(user, createPrettyAccountName(conf));
+        }
+
         if (view != null) {
             Display.getDefault().syncExec(() -> {
 
