@@ -20,7 +20,9 @@
 package sernet.verinice.interfaces;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import sernet.verinice.model.auth.Auth;
 import sernet.verinice.model.auth.Profiles;
@@ -69,7 +71,11 @@ public interface IRightsService {
      *            The login name of an user
      * @return A {@link List} of userprofiles
      */
-    List<Userprofile> getUserprofile(String username);
+    default List<Userprofile> getUserprofile(String username) {
+        return getUserprofileMap(Set.of(username)).get(username);
+    }
+
+    Map<String, List<Userprofile>> getUserprofileMap(Set<String> usernames);
 
     /**
      * Returns all profiles of the authorization configuration

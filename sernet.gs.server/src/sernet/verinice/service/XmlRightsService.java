@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -352,50 +353,49 @@ public class XmlRightsService implements IRightsService {
         return getAuthConfiguration().getFile().getAbsolutePath() + ".bak";
     }
 
-    /**
-     * Returns the userprofiles of an user by selecting the userprofile of the
-     * user and the userprofiles of the groups the user belongs to.
-     */
     @Override
-    public List<Userprofile> getUserprofile(String username) {
-        List<String> roleList = getRoleList(username);
-        // add the username to the list
-        roleList.add(username);
-        List<Userprofile> userprofileList = new ArrayList<>(1);
-        List<Userprofile> allUserprofileList = getConfiguration().getUserprofiles()
-                .getUserprofile();
-        for (Userprofile userprofile : allUserprofileList) {
-            if (roleList.contains(userprofile.getLogin())) {
-                userprofileList.add(userprofile);
+    public Map<String, List<Userprofile>> getUserprofileMap(Set<String> usernames) {
+        Map<String, List<Userprofile>> result = new HashMap<>(usernames.size());
+        Map<String, List<String>> roleMap = getRoleMap(usernames);
+
+        for (String username : usernames) {
+            List<String> roleList = roleMap.getOrDefault(username, new ArrayList<>());
+            roleList.add(username);
+            List<Userprofile> userprofileList = new ArrayList<>(1);
+            List<Userprofile> allUserprofileList = getConfiguration().getUserprofiles()
+                    .getUserprofile();
+            for (Userprofile userprofile : allUserprofileList) {
+                if (roleList.contains(userprofile.getLogin())) {
+                    userprofileList.add(userprofile);
+                }
             }
+            result.put(username, userprofileList);
         }
-        return userprofileList;
+        return result;
     }
 
-    /**
-     * Returns an list with the role/groups of an user. The returned list
-     * contains the user name.
-     * 
-     * @param username
-     *            an username
-     * @return the role/groups of an user
-     */
-    @SuppressWarnings("unchecked")
-    private List<String> getRoleList(String username) {
-        // select all groups of the user
-        String hql = "select roleprops.propertyValue from Configuration as conf " + //$NON-NLS-1$
-                "inner join conf.entity as entity " + //$NON-NLS-1$
-                "inner join entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
-                "inner join propertyList.properties as props " + //$NON-NLS-1$
-                "inner join entity.typedPropertyLists as propertyList2 " + //$NON-NLS-1$
-                "inner join propertyList2.properties as roleprops " + //$NON-NLS-1$
-                "where props.propertyType = ? " + //$NON-NLS-1$
-                "and props.propertyValue like ? " + //$NON-NLS-1$
-                "and roleprops.propertyType = ?"; //$NON-NLS-1$
-        String escaped = username.replace("\\", "\\\\");
-        Object[] params = new Object[] { Configuration.PROP_USERNAME, escaped,
+    private Map<String, List<String>> getRoleMap(Collection<String> usernames) {
+        String hql = "select roleprops.propertyValue, props.propertyValue from Configuration as conf " //$NON-NLS-1$
+                + "inner join conf.entity as entity "
+                + "inner join entity.typedPropertyLists as propertyList "
+                + "inner join propertyList.properties as props "
+                + "inner join entity.typedPropertyLists as propertyList2 "
+                + "inner join propertyList2.properties as roleprops "
+                + "where props.propertyType = :type "
+                + "and cast(props.propertyValue as string) in (:values) "
+                + "and roleprops.propertyType = :rtype";
+        String[] paramNames = new String[] { "type", "values", "rtype" };
+        Object[] params = new Object[] { Configuration.PROP_USERNAME, usernames,
                 Configuration.PROP_ROLES };
-        return getConfigurationDao().findByQuery(hql, params);
+        Map<String, List<String>> userToRoles = new HashMap<>();
+
+        List<Object[]> result = getConfigurationDao().findByQuery(hql, paramNames, params);
+        for (Object[] object : result) {
+            String role = (String) object[0];
+            String user = (String) object[1];
+            userToRoles.computeIfAbsent(user, u -> new ArrayList<String>()).add(role);
+        }
+        return userToRoles;
     }
 
     @SuppressWarnings("unchecked")

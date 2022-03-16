@@ -22,6 +22,7 @@ package sernet.verinice.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -127,19 +128,7 @@ public class RightsServerHandler
 
     private Map<String, List<Userprofile>> loadUserprofileMap() {
         List<String> usernameList = rightsService.getUsernames();
-        if (usernameList != null) {
-            userprofileMap = new HashMap<>(usernameList.size());
-            for (String name : usernameList) {
-                if (name != null) {
-                    userprofileMap.put(name, rightsService.getUserprofile(name));
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("User-profiles loaded for login-name: " + name);
-                    }
-                } else {
-                    LOG.warn("Empty (NULL) login-name found. Can not load user-profiles.");
-                }
-            }
-        }
+        userprofileMap = rightsService.getUserprofileMap(Set.copyOf(usernameList));
         return userprofileMap;
     }
 

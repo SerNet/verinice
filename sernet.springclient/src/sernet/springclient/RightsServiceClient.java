@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -116,13 +117,9 @@ public class RightsServiceClient implements IRightsServiceClient {
         this.groupNameList = null;
     }
 
-    /*
-     * @see sernet.verinice.interfaces.IRightsService#getUserprofile(java.lang.
-     * String)
-     */
     @Override
-    public List<Userprofile> getUserprofile(String username) {
-        return getRightsServiceExecuter().getUserprofile(username);
+    public Map<String, List<Userprofile>> getUserprofileMap(Set<String> usernames) {
+        return getRightsServiceExecuter().getUserprofileMap(usernames);
     }
 
     /*
