@@ -8,7 +8,8 @@
      bzw. einem OpenVAS-Schwachstellenscanner (<b>www.openvas.org</b>) ein effizientes Schwachstellenmanagement.<br />
      <br />
      Im klassischen IT-Grundschutz nach den BSI-Standards der 100er-Reihe unterstützt verinice Sie nach Import der Ergebnisse eines Greenbone-Schwachstellenscans bei den
-     Funktionen Strukturanalyse, Baustein-Modellierung und Automatischer Basis-Sicherheitscheck.
+     Funktionen Strukturanalyse, Baustein-Modellierung und Automatischer Basis-Sicherheitscheck.<br/>
+     Aufgrund der eingeschränkten Verfügbarkeit von Umsetzungshinweisen steht die Greenbone-/OpenVAS-Anbindung für den <b>Modernisierten IT-Grundschutz</b> nicht zur Verfügung.<br/>.
     </description>
   </intro>
 
