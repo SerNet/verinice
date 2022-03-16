@@ -83,9 +83,9 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
      * java.lang.Object[])
      */
     @Override
-    public List<CnATreeElement> findByQuery(String hqlQuery, Object[] params) {
+    public List findByQuery(String hqlQuery, Object[] params) {
         beforeExecution();
-        List<CnATreeElement> result = super.findByQuery(hqlQuery, params);
+        List result = super.findByQuery(hqlQuery, params);
         afterExecution();
         return result;
     }
@@ -96,10 +96,9 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
      * @see sernet.verinice.hibernate.HibernateDao#findByQuery(java.lang.String,
      * java.lang.String[], java.lang.Object[])
      */
-    public List<CnATreeElement> findByQuery(String hqlQuery, String[] paramNames,
-            Object[] paramValues) {
+    public List findByQuery(String hqlQuery, String[] paramNames, Object[] paramValues) {
         beforeExecution();
-        List<CnATreeElement> result = super.findByQuery(hqlQuery, paramNames, paramValues);
+        List result = super.findByQuery(hqlQuery, paramNames, paramValues);
         afterExecution();
         return result;
     }

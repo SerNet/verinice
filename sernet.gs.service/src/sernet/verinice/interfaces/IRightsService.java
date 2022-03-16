@@ -6,7 +6,7 @@
  * as published by the Free Software Foundation, either version 3 
  * of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty  
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
  * See the GNU Lesser General Public License for more details.
  *
@@ -39,7 +39,9 @@ public interface IRightsService {
     public static String ADMINLOCALDEFAULTGROUPNAME = "admin-local-default-group";
     public static String ADMINDEFAULTGROUPNAME = "admin-default-group";
 
-    public static final String[] STANDARD_GROUPS = { USERDEFAULTGROUPNAME, USERSCOPEDEFAULTGROUPNAME, ADMINDEFAULTGROUPNAME, ADMINLOCALDEFAULTGROUPNAME, ADMINSCOPEDEFAULTGROUPNAME };
+    public static final String[] STANDARD_GROUPS = { USERDEFAULTGROUPNAME,
+            USERSCOPEDEFAULTGROUPNAME, ADMINDEFAULTGROUPNAME, ADMINLOCALDEFAULTGROUPNAME,
+            ADMINSCOPEDEFAULTGROUPNAME };
 
     /**
      * Returns the authorization configuration which is defined in one or more

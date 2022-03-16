@@ -118,7 +118,7 @@ public class HibernateDao<T, ID extends Serializable> extends HibernateDaoSuppor
      * java.lang.Object[])
      */
     @Override
-    public List<T> findByQuery(String hqlQuery, Object[] params) {
+    public List findByQuery(String hqlQuery, Object[] params) {
         return getHibernateTemplate().find(hqlQuery, params);
     }
 
@@ -129,7 +129,7 @@ public class HibernateDao<T, ID extends Serializable> extends HibernateDaoSuppor
      * java.lang.Object[])
      */
     @Override
-    public List<T> findByQuery(String hqlQuery, String[] paramNames, Object[] paramValues) {
+    public List findByQuery(String hqlQuery, String[] paramNames, Object[] paramValues) {
         return getHibernateTemplate().findByNamedParam(hqlQuery, paramNames, paramValues);
     }
 

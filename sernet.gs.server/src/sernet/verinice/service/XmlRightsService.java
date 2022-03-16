@@ -26,7 +26,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -45,8 +44,8 @@ import javax.xml.validation.SchemaFactory;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.core.io.Resource;
@@ -110,12 +109,12 @@ public class XmlRightsService implements IRightsService {
     /**
      * Key: scope name, Value: all users of this scope
      */
-    private Map<String, List<String>> usernameMap = new Hashtable<>();
+    private Map<String, List<String>> usernameMap = new HashMap<>();
 
     /**
      * Key: scope name, Value: all groups of this scope
      */
-    private Map<String, List<String>> groupnameMap = new Hashtable<>();
+    private Map<String, List<String>> groupnameMap = new HashMap<>();
 
     private Resource authConfigurationDefault;
 
@@ -460,7 +459,7 @@ public class XmlRightsService implements IRightsService {
         crit.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN); //$NON-NLS-1$
         crit.setFetchMode("person", FetchMode.JOIN); //$NON-NLS-1$
         crit.add(Restrictions.in("person.id", idList)); //$NON-NLS-1$
-        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        crit.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 
         List<Configuration> confList = getPropertyDao().findByCriteria(crit);
         Set<String> usernameList = new HashSet<>(confList.size());
@@ -471,8 +470,8 @@ public class XmlRightsService implements IRightsService {
             }
             groupnameList.addAll(configuration.getRoles());
         }
-        this.usernameMap.put(username, new ArrayList<String>(usernameList));
-        this.groupnameMap.put(username, new ArrayList<String>(groupnameList));
+        this.usernameMap.put(username, new ArrayList<>(usernameList));
+        this.groupnameMap.put(username, new ArrayList<>(groupnameList));
     }
 
     @Override

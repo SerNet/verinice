@@ -44,10 +44,10 @@ import sernet.verinice.model.auth.Userprofile;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class RightsServiceClient implements IRightsServiceClient{
+public class RightsServiceClient implements IRightsServiceClient {
 
     private static final Logger LOG = Logger.getLogger(RightsServiceClient.class);
-    
+
     private IAuthService authService;
     private IRightsService rightsServiceExecuter;
     private List<Userprofile> userprofileList;
@@ -59,18 +59,20 @@ public class RightsServiceClient implements IRightsServiceClient{
     private List<String> groupNameList;
     private Properties messages;
     private IAccountService accountService;
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IRightsServiceClient#containsAction(java.lang.String)
+
+    /*
+     * @see
+     * sernet.verinice.interfaces.IRightsServiceClient#containsAction(java.lang.
+     * String)
      */
     public boolean isEnabled(String actionId) {
         boolean returnValue = false;
         try {
             returnValue = isBlacklist();
-        
-            if(getUserprofile()!=null) {
-                returnValue = getActionMap().get(actionId)!=null && isWhitelist() || 
-                              getActionMap().get(actionId)==null && isBlacklist();
+
+            if (getUserprofile() != null) {
+                returnValue = getActionMap().get(actionId) != null && isWhitelist()
+                        || getActionMap().get(actionId) == null && isBlacklist();
             }
             return returnValue;
         } catch (Exception e) {
@@ -78,20 +80,22 @@ public class RightsServiceClient implements IRightsServiceClient{
             return returnValue;
         }
     }
-    
-    /* (non-Javadoc)
+
+    /*
      * @see sernet.verinice.interfaces.IRightsService#getConfiguration()
      */
     @Override
     public Auth getConfiguration() {
-        if(auth==null) {
-            auth=getRightsServiceExecuter().getConfiguration();
+        if (auth == null) {
+            auth = getRightsServiceExecuter().getConfiguration();
         }
         return auth;
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IRightsService#updateConfiguration(sernet.verinice.model.auth.Auth)
+
+    /*
+     * @see
+     * sernet.verinice.interfaces.IRightsService#updateConfiguration(sernet.
+     * verinice.model.auth.Auth)
      */
     @Override
     public void updateConfiguration(Auth auth) {
@@ -100,8 +104,8 @@ public class RightsServiceClient implements IRightsServiceClient{
         this.userprofileList = null;
         this.profiles = null;
     }
-    
-    /* (non-Javadoc)
+
+    /*
      * @see sernet.verinice.interfaces.IRightsServiceClient#reload()
      */
     public void reload() {
@@ -112,43 +116,44 @@ public class RightsServiceClient implements IRightsServiceClient{
         this.groupNameList = null;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IRightsService#getUserprofile(java.lang.String)
+    /*
+     * @see sernet.verinice.interfaces.IRightsService#getUserprofile(java.lang.
+     * String)
      */
     @Override
     public List<Userprofile> getUserprofile(String username) {
         return getRightsServiceExecuter().getUserprofile(username);
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.IRightsServiceClient#getUserprofile()
      */
     @Override
     public List<Userprofile> getUserprofile() {
-        if(userprofileList==null) {
+        if (userprofileList == null) {
             userprofileList = loadUserprofile();
         }
         return userprofileList;
     }
-    
-    /* (non-Javadoc)
+
+    /*
      * @see sernet.verinice.interfaces.IRightsService#getProfiles()
      */
     @Override
     public Profiles getProfiles() {
-        if(profiles==null) {
+        if (profiles == null) {
             profiles = loadProfileMap();
         }
         return profiles;
     }
-    
-    /* (non-Javadoc)
+
+    /*
      * @see sernet.verinice.interfaces.IRightsService#getUsernames()
      */
     @Override
     public List<String> getUsernames() {
-        if(userNameList==null) {
-            if(getAuthService().isScopeOnly()) {
+        if (userNameList == null) {
+            if (getAuthService().isScopeOnly()) {
                 userNameList = getUsernames(getAuthService().getUsername());
             } else {
                 userNameList = getRightsServiceExecuter().getUsernames();
@@ -157,13 +162,13 @@ public class RightsServiceClient implements IRightsServiceClient{
         return userNameList;
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.IRightsService#getGroupnames()
      */
     @Override
-    public List<String> getGroupnames() {   
-        if(groupNameList==null) {
-            if(getAuthService().isScopeOnly()) {
+    public List<String> getGroupnames() {
+        if (groupNameList == null) {
+            if (getAuthService().isScopeOnly()) {
                 groupNameList = getGroupnames(getAuthService().getUsername());
             } else {
                 groupNameList = getAccountService().listGroupNames();
@@ -171,93 +176,97 @@ public class RightsServiceClient implements IRightsServiceClient{
         }
         return groupNameList;
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IRightsService#getUsernames(java.lang.Integer)
+
+    /*
+     * @see
+     * sernet.verinice.interfaces.IRightsService#getUsernames(java.lang.Integer)
      */
     @Override
     public List<String> getUsernames(String username) {
         return getRightsServiceExecuter().getUsernames(username);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IRightsService#getGroupnames(java.lang.Integer)
+    /*
+     * @see sernet.verinice.interfaces.IRightsService#getGroupnames(java.lang.
+     * Integer)
      */
     @Override
     public List<String> getGroupnames(String username) {
         return getRightsServiceExecuter().getGroupnames(username);
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IRightsService#getMessage(java.lang.String)
+
+    /*
+     * @see
+     * sernet.verinice.interfaces.IRightsService#getMessage(java.lang.String)
      */
     @Override
     public String getMessage(String key) {
         // switch to debug in log4j.xml to find untranslated messages
         return getAllMessages().getProperty(key, key);
     }
-    
-    /* (non-Javadoc)
+
+    /*
      * @see sernet.verinice.interfaces.IRightsService#getAllMessages()
      */
     @Override
     public Properties getAllMessages() {
-        if(messages==null) {
+        if (messages == null) {
             messages = getRightsServiceExecuter().getAllMessages();
         }
         return messages;
     }
-    
-    private  List<Userprofile> loadUserprofile() {
-        userprofileList = getRightsServiceExecuter().getUserprofile(getAuthService().getUsername());        
-        if(userprofileList==null || userprofileList.isEmpty() ) {
+
+    private List<Userprofile> loadUserprofile() {
+        userprofileList = getRightsServiceExecuter().getUserprofile(getAuthService().getUsername());
+        if (userprofileList == null || userprofileList.isEmpty()) {
             // no userprofile found, create an empty dummy userprofile
             Userprofile dummyprofile = new Userprofile();
             dummyprofile.setLogin(getAuthService().getUsername());
-            userprofileList = new ArrayList<Userprofile>(1);
+            userprofileList = new ArrayList<>(1);
             userprofileList.add(dummyprofile);
         }
         return userprofileList;
     }
-    
+
     public Map<String, Action> getActionMap() {
-        if(actionMap==null) {
-            actionMap=loadActionMap();
+        if (actionMap == null) {
+            actionMap = loadActionMap();
         }
         return actionMap;
     }
-    
+
     private Map<String, Action> loadActionMap() {
-        actionMap = new HashMap<String, Action>();
-        for (Userprofile userprofile : getUserprofile()) {  
+        actionMap = new HashMap<>();
+        for (Userprofile userprofile : getUserprofile()) {
             List<ProfileRef> profileList = userprofile.getProfileRef();
-            if(profileList!=null) {
+            if (profileList != null) {
                 for (ProfileRef profileRef : profileList) {
                     Profile profileWithActions = getProfileMap().get(profileRef.getName());
-                    if(profileWithActions!=null) {
+                    if (profileWithActions != null) {
                         List<Action> actionList = profileWithActions.getAction();
                         for (Action action : actionList) {
-                            actionMap.put(action.getId(), action);            
+                            actionMap.put(action.getId(), action);
                         }
                     } else {
-                        LOG.error("Could not find profile " + profileRef.getName() + " of user " + getAuthService().getUsername());
+                        LOG.error("Could not find profile " + profileRef.getName() + " of user "
+                                + getAuthService().getUsername());
                     }
                 }
             }
         }
         return actionMap;
     }
-    
+
     public Map<String, Profile> getProfileMap() {
-        if(profileMap==null) {
+        if (profileMap == null) {
             loadProfileMap();
         }
         return profileMap;
     }
-    
+
     private Profiles loadProfileMap() {
-        Profiles internalProfiles = getRightsServiceExecuter().getProfiles();   
-        profileMap = new HashMap<String, Profile>();
+        Profiles internalProfiles = getRightsServiceExecuter().getProfiles();
+        profileMap = new HashMap<>();
         for (Profile profile : internalProfiles.getProfile()) {
             profileMap.put(profile.getName(), profile);
         }
@@ -267,7 +276,7 @@ public class RightsServiceClient implements IRightsServiceClient{
     public boolean isBlacklist() {
         return ConfigurationType.BLACKLIST.equals(getConfiguration().getType());
     }
-    
+
     public boolean isWhitelist() {
         return ConfigurationType.WHITELIST.equals(getConfiguration().getType());
     }
@@ -280,7 +289,8 @@ public class RightsServiceClient implements IRightsServiceClient{
     }
 
     /**
-     * @param authService the authService to set
+     * @param authService
+     *            the authService to set
      */
     public void setAuthService(IAuthService authService) {
         this.authService = authService;
@@ -294,7 +304,8 @@ public class RightsServiceClient implements IRightsServiceClient{
     }
 
     /**
-     * @param rightsServiceExecuter the rightsServiceExecuter to set
+     * @param rightsServiceExecuter
+     *            the rightsServiceExecuter to set
      */
     public void setRightsServiceExecuter(IRightsService rightsServiceExecuter) {
         this.rightsServiceExecuter = rightsServiceExecuter;
@@ -310,13 +321,11 @@ public class RightsServiceClient implements IRightsServiceClient{
 
     @Override
     public void addChangeListener(IRightsChangeListener rightsChangeListener) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void removeChangeListener(IRightsChangeListener rightsChangeListener) {
-        // TODO Auto-generated method stub
 
     }
 
