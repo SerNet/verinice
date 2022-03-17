@@ -105,12 +105,6 @@
 <unit id="org.eclipse.babel.nls_eclipse_it.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/technology/babel/update-site/R0.19.2/2021-12/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.babel.nls_datatools_cs.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.babel.nls_datatools_de.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.babel.nls_datatools_it.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/technology/babel/update-site/R0.17.0/2019-06/"/>
-</location>
 	<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 		<repository location="https://download.eclipse.org/nebula/releases/2.6.0/"/>
 		<unit id="org.eclipse.nebula.widgets.gallery.feature.feature.group" version="0.0.0"/>
