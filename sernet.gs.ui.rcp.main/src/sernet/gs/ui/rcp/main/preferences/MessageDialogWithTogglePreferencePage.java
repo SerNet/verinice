@@ -95,6 +95,12 @@ public class MessageDialogWithTogglePreferencePage extends FieldEditorPreference
                 getFieldEditorParent());
         addField(infoDialogBpModeling);
 
+        BooleanFieldEditor infoDialogBpReferencing = new BooleanFieldEditor(
+                PreferenceConstants.INFO_BP_REFERENCING_CONFIRMATION,
+                Messages.getString("GeneralSettingsPage.InfoBpReferencing"), //$NON-NLS-1$
+                getFieldEditorParent());
+        addField(infoDialogBpReferencing);
+
         BooleanFieldEditor infoDialogBpRiskConfiguration = new BooleanFieldEditor(
                 PreferenceConstants.INFO_BP_RISK_CONFIRMATION,
                 Messages.getString("GeneralSettingsPage.InfoBpConfiguration"), //$NON-NLS-1$

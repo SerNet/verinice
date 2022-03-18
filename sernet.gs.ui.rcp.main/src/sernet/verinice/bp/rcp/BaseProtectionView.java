@@ -344,6 +344,7 @@ public class BaseProtectionView extends RightsEnabledView
         BbModelingDropPerformer modelingDropPerformer = new BbModelingDropPerformer();
         GsCatalogModelingDropPerformer gsCatalogModelingDropPerformer = new GsCatalogModelingDropPerformer();
         metaDropAdapter.addAdapter(modelingDropPerformer);
+        metaDropAdapter.addAdapter(new BpReferencingDropPerformer());
         metaDropAdapter.addAdapter(bsiDropAdapter);
         metaDropAdapter.addAdapter(gsCatalogModelingDropPerformer);
 

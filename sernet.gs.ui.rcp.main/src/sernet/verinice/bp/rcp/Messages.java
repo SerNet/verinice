@@ -54,6 +54,18 @@ public class Messages extends NLS {
     public static String BbModelingDropPerformerConfirmation;
     public static String BbModelingDropPerformerConfirmationTitle;
     public static String BbModelingDropPerformerConfirmationToggleMessage;
+    public static String BpReferencingDropPerformer_ReferencingWarning;
+    public static String BpReferencingDropPerformer_ReferencingWarningTitle;
+    public static String BpReferencingDropPerformer_OneModule;
+    public static String BpReferencingDropPerformer_TwoModules;
+    public static String BpReferencingDropPerformer_MultipleModules;
+    public static String BpReferencingDropPerformer_ReferencingAborted;
+    public static String BpReferencingDropPerformer_errorClosingEditors;
+    public static String BpReferencingDropPerformer_ReferencingError;
+    public static String BpReferencingDropPerformerConfirmation;
+    public static String BpReferencingDropPerformerConfirmationTitle;
+    public static String BpReferencingDropPerformerConfirmationToggleMessage;
+
     public static String NewObjectMenu;
 
     static {
