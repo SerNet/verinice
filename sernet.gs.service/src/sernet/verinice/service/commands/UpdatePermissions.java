@@ -105,7 +105,6 @@ public class UpdatePermissions extends GenericCommand implements IChangeLoggingC
             CnATreeElement cte = getDao().findById(dbId);
             if (getConfigurationService().isWriteAllowed(cte)) {
                 elementsToSave = new HashSet<>();
-                updateElement(cte);
                 if (updateChildren) {
                     elementsByParentId = new HashMap<>();
 
@@ -132,13 +131,23 @@ public class UpdatePermissions extends GenericCommand implements IChangeLoggingC
                                                                 .concat(l1.stream(), l2.stream())
                                                                 .collect(Collectors.toList())));
                             });
+                }
+                if (overridePermission) {
+                    removeAllPermissions(cte);
+                    // flush, to delete old entries before inserting new ones
+                    getPermissionDao().flush();
+                }
 
+                updateElement(cte);
+
+                if (updateChildren) {
                     List<CnATreeElement> children = elementsByParentId.get(cte.getDbId());
                     if (children != null) {
                         updateElements(children);
                     }
-                    elementsByParentId = null;
                 }
+                elementsByParentId = null;
+
                 getDao().saveOrUpdateAll(elementsToSave);
                 elementsToSave = null;
 
@@ -155,11 +164,7 @@ public class UpdatePermissions extends GenericCommand implements IChangeLoggingC
 
     private void updateElement(CnATreeElement element) {
         initializePermissions(element);
-        if (overridePermission) {
-            removeAllPermissions(element);
-        }
-        // flush, to delete old entries before inserting new ones
-        getPermissionDao().flush();
+
         for (Permission permission : permissionSetAdd) {
             addPermission(element, permission);
         }
@@ -182,6 +187,14 @@ public class UpdatePermissions extends GenericCommand implements IChangeLoggingC
 
         getPermissionDao().delete(List.copyOf(element.getPermissions()));
         element.getPermissions().clear();
+        if (updateChildren) {
+            List<CnATreeElement> children = elementsByParentId.get(element.getDbId());
+            if (children != null) {
+                for (CnATreeElement child : children) {
+                    removeAllPermissions(child);
+                }
+            }
+        }
     }
 
     private Permission addPermission(CnATreeElement element, Permission permission) {
