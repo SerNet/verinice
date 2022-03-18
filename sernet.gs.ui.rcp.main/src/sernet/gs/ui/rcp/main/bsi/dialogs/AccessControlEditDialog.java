@@ -122,14 +122,6 @@ public class AccessControlEditDialog extends TitleAreaDialog {
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
         newShell.setText(Messages.AccessControlEditDialog_6);
-        newShell.setSize(650, 610);
-
-        // open the window right under the mouse pointer:
-        final int cursorLocationXSubtrahend = 300;
-        final int cursorLocationYSubtrahend = 300;
-        Point cursorLocation = Display.getCurrent().getCursorLocation();
-        newShell.setLocation(new Point(cursorLocation.x - cursorLocationXSubtrahend,
-                cursorLocation.y - cursorLocationYSubtrahend));
     }
 
     @Override
