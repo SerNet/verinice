@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Daniel Murygin.
+ * Copyright (c) 2022 Urs zeidler
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -14,8 +14,6 @@
  * along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  *
- * Contributors:
- *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
 package sernet.verinice.model.report;
 
@@ -23,36 +21,30 @@ import java.io.Serializable;
 
 import sernet.verinice.interfaces.report.IOutputFormat;
 
-public class WordOutputFormat extends AbstractOutputFormat implements IOutputFormat, Serializable {
+public class DOCXOutputFormat  extends AbstractOutputFormat  implements IOutputFormat, Serializable{
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 20141007L;
+    private static final long serialVersionUID = 7300145200374748248L;
 
     @Override
     public String getFileSuffix() {
-        return "doc";
+        return "docx";
     }
 
     @Override
     public String getId() {
-        return "doc";
+        return "docx";
     }
 
-	@Override
-	public String getLabel() {
-		return "Word Format -old- (DOC)";
-	}
+    @Override
+    public String getLabel() {
+        return "Word Format (DOCX)";
+    }
 
-    /*
-     * (non-Javadoc)
-     *
+    /* (non-Javadoc)
      * @see sernet.verinice.model.report.AbstractOutputFormat#isRenderOutput()
      */
     @Override
     public boolean isRenderOutput() {
         return true;
     }
-
 }

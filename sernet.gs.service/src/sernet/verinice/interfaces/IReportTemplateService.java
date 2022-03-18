@@ -41,7 +41,7 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
 public interface IReportTemplateService {
 
     public enum OutputFormat {
-        PDF, HTML, XLS, ODS, ODT, DOC
+        PDF, HTML, XLS, ODS, ODT, DOC, DOCX, XLSX
     }
 
     public static final String PROPERTIES_FILENAME = "filename";

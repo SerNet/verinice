@@ -1,17 +1,17 @@
 /*******************************************************************************
  * Copyright (c) 2010 Robert Schuster <r.schuster@tarent.de>.
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU Lesser General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- *     This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ *     This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
- *     You should have received a copy of the GNU Lesser General Public 
- * License along with this program. 
+ *     You should have received a copy of the GNU Lesser General Public
+ * License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
  ******************************************************************************/
@@ -33,29 +33,28 @@ import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportMetaDataException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 
-
 public class ReportService implements IReportService {
-	
-	private IReportType[] reportTypes;
-	
-	/*
-	 * @see sernet.verinice.interfaces.report.IReportService#getReportTypes()
-	 * 
-	 * List built-in reports offered by this report service.
-	 * 
-	 */
-	@Override
-	public IReportType[] getReportTypes() {
-		if (reportTypes == null){
-			reportTypes = new IReportType[] { 
-		        new GenericReportType()
-		    };
-		}
-		return reportTypes.clone();
-	}
+
+    private IReportType[] reportTypes;
 
     /*
-     * @see sernet.verinice.interfaces.report.IReportService#getOutputFormat(java.lang.String)
+     * @see sernet.verinice.interfaces.report.IReportService#getReportTypes()
+     *
+     * List built-in reports offered by this report service.
+     *
+     */
+    @Override
+    public IReportType[] getReportTypes() {
+        if (reportTypes == null) {
+            reportTypes = new IReportType[] { new GenericReportType() };
+        }
+        return reportTypes.clone();
+    }
+
+    /*
+     * @see
+     * sernet.verinice.interfaces.report.IReportService#getOutputFormat(java.
+     * lang.String)
      */
     @Override
     public IOutputFormat getOutputFormat(String formatLabel) {
@@ -63,7 +62,9 @@ public class ReportService implements IReportService {
     }
 
     /*
-     * @see sernet.verinice.interfaces.report.IReportService#getOutputFormats(java.lang.String[])
+     * @see
+     * sernet.verinice.interfaces.report.IReportService#getOutputFormats(java.
+     * lang.String[])
      */
     @Override
     public IOutputFormat[] getOutputFormats(String[] formatLabel) {
@@ -71,68 +72,88 @@ public class ReportService implements IReportService {
     }
 
     /*
-     * @see sernet.verinice.interfaces.report.IReportService#getReportTemplates(java.lang.String[])
+     * @see
+     * sernet.verinice.interfaces.report.IReportService#getReportTemplates(java.
+     * lang.String[])
      */
     @Override
-    public ReportTemplateMetaData[] getReportTemplates(String[] rptDesignFiles) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    public ReportTemplateMetaData[] getReportTemplates(String[] rptDesignFiles)
+            throws IOException, ReportMetaDataException, PropertyFileExistsException {
         return null;
     }
 
     @Override
-    public IRenderOption getRenderOptions(String format){
-        if("pdf".equalsIgnoreCase(format)){
+    public IRenderOption getRenderOptions(String format) {
+        if ("pdf".equalsIgnoreCase(format)) {
             return getPDFRenderOption();
-        } else if("xls".equalsIgnoreCase(format)){
+        } else if ("xls".equalsIgnoreCase(format)) {
             return getXLSRenderOption();
-        } else if("doc".equalsIgnoreCase(format)){
+        } else if ("doc".equalsIgnoreCase(format)) {
             return getDOCRenderOption();
-        } else if("html".equalsIgnoreCase(format)){
+        } else if ("html".equalsIgnoreCase(format)) {
             return getHTMLRenderOption();
-        } else if("odt".equalsIgnoreCase(format)){
+        } else if ("odt".equalsIgnoreCase(format)) {
             return getODTRenderOption();
-        } else if("ods".equalsIgnoreCase(format)){
+        } else if ("ods".equalsIgnoreCase(format)) {
             return getODSRenderOption();
+        } else if("docx".equalsIgnoreCase(format)) {
+            return getDOXCRenderOption();
+        }else if("xlsx".equalsIgnoreCase(format)) {
+            return getXLSXRenderOption();
         }
         return null;
     }
-    
-    private IRenderOption getPDFRenderOption(){
+
+    private IRenderOption getXLSXRenderOption() {
+        RenderOption options = new RenderOption();
+        options.setOutputFormat("xlsx");
+        return options;
+    }
+
+    private IRenderOption getDOXCRenderOption() {
+        RenderOption options = new RenderOption();
+        options.setOutputFormat("docx");
+        return options;
+    }
+
+    private IRenderOption getPDFRenderOption() {
         PDFRenderOption pdfOptions = new PDFRenderOption();
         pdfOptions.setOutputFormat("pdf");
-        pdfOptions.setOption(IPDFRenderOption.PAGE_OVERFLOW, IPDFRenderOption.OUTPUT_TO_MULTIPLE_PAGES);
+        pdfOptions.setOption(IPDFRenderOption.PAGE_OVERFLOW,
+                IPDFRenderOption.OUTPUT_TO_MULTIPLE_PAGES);
         return pdfOptions;
     }
-    
-    private IRenderOption getXLSRenderOption(){
+
+    private IRenderOption getXLSRenderOption() {
         EXCELRenderOption excelOptions = new EXCELRenderOption();
         excelOptions.setOutputFormat("xls");
         return excelOptions;
     }
-    
-    private IRenderOption getDOCRenderOption(){
+
+    private IRenderOption getDOCRenderOption() {
         RenderOption options = new RenderOption();
         options.setOutputFormat("doc");
         return options;
     }
-    
-    private IRenderOption getHTMLRenderOption(){
+
+    private IRenderOption getHTMLRenderOption() {
         HTMLRenderOption htmlOptions = new HTMLRenderOption();
         htmlOptions.setHtmlPagination(false);
         htmlOptions.setOutputFormat("html");
         htmlOptions.setImageDirectory(".");
         return htmlOptions;
     }
-    
-    private IRenderOption getODSRenderOption(){
+
+    private IRenderOption getODSRenderOption() {
         RenderOption options = new RenderOption();
         options.setOutputFormat("ods");
         return options;
     }
-	
-    private IRenderOption getODTRenderOption(){
+
+    private IRenderOption getODTRenderOption() {
         RenderOption options = new RenderOption();
         options.setOutputFormat("odt");
         return options;
     }
-    
+
 }

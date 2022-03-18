@@ -53,6 +53,7 @@ import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IReportTemplateService;
 import sernet.verinice.interfaces.ReportTemplateServiceException;
 import sernet.verinice.interfaces.report.IOutputFormat;
+import sernet.verinice.model.report.DOCXOutputFormat;
 import sernet.verinice.model.report.ExcelOutputFormat;
 import sernet.verinice.model.report.FileMetaData;
 import sernet.verinice.model.report.HTMLOutputFormat;
@@ -63,6 +64,7 @@ import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.model.report.ReportTemplateMetaData.ReportContext;
 import sernet.verinice.model.report.WordOutputFormat;
+import sernet.verinice.model.report.XLSXOutputFormat;
 
 /**
  * Provides report template metadata and report templates.
@@ -249,9 +251,12 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
             return new ExcelOutputFormat();
         case DOC:
             return new WordOutputFormat();
-        default:
-            return null;
+        case DOCX:
+            return new DOCXOutputFormat();
+        case XLSX:
+            return new XLSXOutputFormat();
         }
+        return new PDFOutputFormat();
     }
 
     @Override

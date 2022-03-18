@@ -1,17 +1,17 @@
 /*******************************************************************************
  * Copyright (c) 2014 Sebastian Hagedorn <sh@sernet.de>.
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- *     This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ *     This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *     You should have received a copy of the GNU General Public 
- * License along with this program. 
+ *     You should have received a copy of the GNU General Public
+ * License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Sebastian Hagedorn <sh@sernet.de> - initial API and implementation
  ******************************************************************************/
@@ -99,6 +99,10 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
 
     private Map<String, ReportTemplateMetaData> templateNames = Collections.emptyMap();
 
+    private Button outputTypeDocxCheckbox;
+
+    private Button outputTypeXLSXCheckbox;
+
     /**
      * @param parentShell
      */
@@ -135,7 +139,8 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     protected Control createDialogArea(Composite parent) {
         try {
             templateNames = getReportService().getReportTemplates(Locale.getDefault()).stream()
-                    .collect(Collectors.toMap(ReportTemplateMetaData::getFilename, Function.identity()));
+                    .collect(Collectors.toMap(ReportTemplateMetaData::getFilename,
+                            Function.identity()));
         } catch (ReportTemplateServiceException e) {
             throw new RuntimeCommandException("report service not avalable");//$NON-NLS-1$
         }
@@ -240,10 +245,6 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         outputTypeHTMLCheckbox.setText(OutputFormat.HTML.toString());
         outputTypeHTMLCheckbox.addSelectionListener(updateDialogListener);
 
-        outputTypeWordCheckbox = new Button(outputFormatGroup, SWT.CHECK);
-        outputTypeWordCheckbox.setText(OutputFormat.DOC.toString());
-        outputTypeWordCheckbox.addSelectionListener(updateDialogListener);
-
         outputTypeODTCheckbox = new Button(outputFormatGroup, SWT.CHECK);
         outputTypeODTCheckbox.setText(OutputFormat.ODT.toString());
         outputTypeODTCheckbox.addSelectionListener(updateDialogListener);
@@ -251,6 +252,18 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         outputTypeODSCheckbox = new Button(outputFormatGroup, SWT.CHECK);
         outputTypeODSCheckbox.setText(OutputFormat.ODS.toString());
         outputTypeODSCheckbox.addSelectionListener(updateDialogListener);
+
+        outputTypeDocxCheckbox = new Button(outputFormatGroup, SWT.CHECK);
+        outputTypeDocxCheckbox.setText(OutputFormat.DOCX.toString());
+        outputTypeDocxCheckbox.addSelectionListener(updateDialogListener);
+
+        outputTypeXLSXCheckbox = new Button(outputFormatGroup, SWT.CHECK);
+        outputTypeXLSXCheckbox.setText(OutputFormat.XLSX.toString());
+        outputTypeXLSXCheckbox.addSelectionListener(updateDialogListener);
+
+        outputTypeWordCheckbox = new Button(outputFormatGroup, SWT.CHECK);
+        outputTypeWordCheckbox.setText(OutputFormat.DOC.toString());
+        outputTypeWordCheckbox.addSelectionListener(updateDialogListener);
 
         outputTypeExcelCheckbox = new Button(outputFormatGroup, SWT.CHECK);
         outputTypeExcelCheckbox.setText(OutputFormat.XLS.toString());
@@ -303,6 +316,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         outputTypeODTCheckbox = checkboxEditMode(outputTypeODTCheckbox, OutputFormat.ODT);
         outputTypeODSCheckbox = checkboxEditMode(outputTypeODSCheckbox, OutputFormat.ODS);
         outputTypeExcelCheckbox = checkboxEditMode(outputTypeExcelCheckbox, OutputFormat.XLS);
+        //TODO: VN-2901
         reportTemplateText.setText(editTemplate.getFilename());
         allowMultipleRootObjects.setSelection(editTemplate.isMultipleRootObjects());
         reportContextCombo.setText(editTemplate.getContext().prettyString());
@@ -420,7 +434,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
             list.add(OutputFormat.ODS);
         }
         return list.toArray(new OutputFormat[list.size()]);
-    }
+    }//TODO: VN-2901
 
     private boolean isAnyFormatSelected() {
         return outputTypeExcelCheckbox.getSelection() || outputTypeHTMLCheckbox.getSelection()
@@ -448,12 +462,14 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         setErrorMessage(errorMessage);
         getButton(IDialogConstants.OK_ID).setEnabled(errorMessage == null);
     }
+
     /**
      * Build the error message, return null when the dialog contains no errors.
      */
     private String buildErrorMessage() {
         if (!templateExistRemote()) {
-            ReportTemplateMetaData reportTemplateMetaData = templateNames.get(getSelectedDesignFileName());
+            ReportTemplateMetaData reportTemplateMetaData = templateNames
+                    .get(getSelectedDesignFileName());
             return String.format(Messages.AddReportToDepositDialog_1,
                     reportTemplateMetaData.getFilename());
         }
@@ -474,7 +490,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
             message.append(ERROR_MESSAGE_PREFIX);
             message.append(Messages.AddReportToDepositDialog_4);
         }
-        if(message.length()==0) {
+        if (message.length() == 0) {
             return null;
         }
         return Messages.ReportDepositView_12 + message.toString();

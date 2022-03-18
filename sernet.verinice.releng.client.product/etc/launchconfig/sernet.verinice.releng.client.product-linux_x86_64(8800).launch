@@ -100,7 +100,9 @@
         <setEntry value="org.apache.batik.xml@default:default"/>
         <setEntry value="org.apache.commons.beanutils@default:default"/>
         <setEntry value="org.apache.commons.codec@default:default"/>
+        <setEntry value="org.apache.commons.collections4@default:default"/>
         <setEntry value="org.apache.commons.collections@default:default"/>
+        <setEntry value="org.apache.commons.compress@default:default"/>
         <setEntry value="org.apache.commons.httpclient@default:default"/>
         <setEntry value="org.apache.commons.jxpath@default:default"/>
         <setEntry value="org.apache.commons.lang3@default:default"/>
@@ -110,9 +112,13 @@
         <setEntry value="org.apache.lucene.analyzers-common@default:default"/>
         <setEntry value="org.apache.lucene.analyzers-smartcn@default:default"/>
         <setEntry value="org.apache.lucene.core@default:default"/>
+        <setEntry value="org.apache.poi.ooxml.schemas@default:default"/>
+        <setEntry value="org.apache.poi.ooxml@default:default"/>
+        <setEntry value="org.apache.poi@default:default"/>
         <setEntry value="org.apache.servicemix.bundles.commons-beanutils@default:default"/>
         <setEntry value="org.apache.servicemix.bundles.elasticsearch@default:default"/>
         <setEntry value="org.apache.xalan@default:default"/>
+        <setEntry value="org.apache.xmlbeans@default:default"/>
         <setEntry value="org.apache.xmlgraphics@default:default"/>
         <setEntry value="org.bouncycastle.bcpg@default:default"/>
         <setEntry value="org.bouncycastle.bcprov@default:default"/>
@@ -132,9 +138,24 @@
         <setEntry value="org.eclipse.birt.report.data.adapter@default:default"/>
         <setEntry value="org.eclipse.birt.report.engine.dataextraction.csv@default:default"/>
         <setEntry value="org.eclipse.birt.report.engine.dataextraction@default:default"/>
+        <setEntry value="org.eclipse.birt.report.engine.emitter.config.docx.nl1@default:false"/>
+        <setEntry value="org.eclipse.birt.report.engine.emitter.config.docx@default:default"/>
+        <setEntry value="org.eclipse.birt.report.engine.emitter.config.excel.nl1@default:false"/>
+        <setEntry value="org.eclipse.birt.report.engine.emitter.config.excel@default:default"/>
+        <setEntry value="org.eclipse.birt.report.engine.emitter.config.html.nl1@default:false"/>
+        <setEntry value="org.eclipse.birt.report.engine.emitter.config.html@default:default"/>
+        <setEntry value="org.eclipse.birt.report.engine.emitter.config.odp@default:default"/>
+        <setEntry value="org.eclipse.birt.report.engine.emitter.config.ods@default:default"/>
+        <setEntry value="org.eclipse.birt.report.engine.emitter.config.odt@default:default"/>
+        <setEntry value="org.eclipse.birt.report.engine.emitter.config.pdf@default:default"/>
+        <setEntry value="org.eclipse.birt.report.engine.emitter.config@default:default"/>
+        <setEntry value="org.eclipse.birt.report.engine.emitter.docx@default:default"/>
         <setEntry value="org.eclipse.birt.report.engine.emitter.html@default:default"/>
         <setEntry value="org.eclipse.birt.report.engine.emitter.pdf@default:default"/>
+        <setEntry value="org.eclipse.birt.report.engine.emitter.prototype.excel@default:default"/>
+        <setEntry value="org.eclipse.birt.report.engine.emitter.wpml@default:default"/>
         <setEntry value="org.eclipse.birt.report.engine.fonts@default:default"/>
+        <setEntry value="org.eclipse.birt.report.engine.ooxml@default:default"/>
         <setEntry value="org.eclipse.birt.report.engine.script.javascript@default:default"/>
         <setEntry value="org.eclipse.birt.report.engine@default:default"/>
         <setEntry value="org.eclipse.birt.report.item.crosstab.core@default:default"/>
@@ -429,6 +450,7 @@
         <setEntry value="org.w3c.dom.smil*1.0.1.v200903091627@default:default"/>
         <setEntry value="org.w3c.dom.svg@default:default"/>
         <setEntry value="org.w3c.sac@default:default"/>
+        <setEntry value="uk.co.spudsoft.birt.emitters.excel@default:default"/>
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
         <setEntry value="jbpm@default:default"/>
