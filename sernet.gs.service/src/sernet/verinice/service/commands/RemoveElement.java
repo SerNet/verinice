@@ -35,12 +35,18 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
+import sernet.gs.service.CollectionUtil;
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.service.SecurityException;
+import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.Property;
+import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
+import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.IFinishedRiskAnalysisListsDao;
 import sernet.verinice.interfaces.INoAccessControl;
 import sernet.verinice.model.bp.IBpElement;
@@ -133,9 +139,27 @@ public class RemoveElement extends GenericCommand
             // we need to delete them by hand. This is not an optimal solution
             // and should be replaced by Hibernate event listeners someday.
             // (see VN-2084)
-            for (CnATreeElement child : element.getChildrenAsArray()) {
-                removeElement(child);
+
+            LoadSubtreeIds loadSubtreeIds = new LoadSubtreeIds(element);
+
+            LoadSubtreeIds subTrees = getCommandService().executeCommand(loadSubtreeIds);
+            Set<Integer> ids = subTrees.getDbIdsOfSubtree();
+            List<CnATreeElement> elements = new ArrayList<>(ids.size());
+            for (List<Integer> chunk : CollectionUtil.partition(List.copyOf(ids),
+                    IDao.QUERY_MAX_ITEMS_IN_LIST)) {
+                DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class)
+                        .add(Restrictions.in("dbId", chunk));
+                RetrieveInfo.getPropertyInstance().configureCriteria(criteria);
+                elements.addAll(dao.findByCriteria(criteria));
             }
+            Set<CnATreeElement> persons = elements.stream().filter(CnATreeElement::isPerson)
+                    .collect(Collectors.toSet());
+            if (!persons.isEmpty()) {
+                removeConfigurations(persons);
+            }
+            removeElements(elements);
+            return;
+
         }
 
         if (element.isPerson()) {
@@ -195,6 +219,35 @@ public class RemoveElement extends GenericCommand
         element.remove();
 
         dao.delete(element);
+    }
+
+    private void removeElements(List<CnATreeElement> elements) {
+        List<Entity> allEntities = elements.stream().map(CnATreeElement::getEntity)
+                .collect(Collectors.toList());
+        List<PropertyList> allPropertyLists = allEntities.stream()
+                .flatMap(e -> e.getTypedPropertyLists().values().stream())
+                .collect(Collectors.toList());
+        List<Property> allProperties = allPropertyLists.stream()
+                .flatMap(l -> l.getProperties().stream()).collect(Collectors.toList());
+
+        @NonNull
+        IBaseDao<Property, Serializable> propertyDao = getDaoFactory().getDAO(Property.class);
+        IBaseDao<PropertyList, Serializable> propertyListDao = getDaoFactory()
+                .getDAO(PropertyList.class);
+
+        propertyDao.delete(allProperties);
+        allPropertyLists.forEach(it -> it.getProperties().clear());
+        propertyDao.flush();
+
+        propertyListDao.delete(allPropertyLists);
+        allEntities.forEach(it -> it.getTypedPropertyLists().clear());
+        propertyListDao.flush();
+
+        elements.forEach(it -> {
+            it.remove();
+            it.getChildren().clear();
+        });
+        dao.delete(elements);
     }
 
     private void checkRightsOfSubtree(CnATreeElement element) throws CommandException {
