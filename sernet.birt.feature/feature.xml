@@ -300,7 +300,8 @@
          id="org.eclipse.birt.report.engine.fonts"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.eclipse.birt.report.model.adapter.oda"
@@ -323,6 +324,7 @@
          version="0.0.0"
          unpack="false"/>
 
+<!-- contains the xradar chart -->
    <plugin
          id="org.eclipse.birt.chart.examples.core"
          download-size="0"
@@ -340,6 +342,42 @@
 
    <plugin
          id="org.apache.batik.ext"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.birt.report.engine.emitter.config.docx"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.birt.report.engine.emitter.config.docx.nl1"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.birt.report.engine.emitter.docx"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.birt.report.engine.emitter.wpml"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.birt.report.engine.ooxml"
          download-size="0"
          install-size="0"
          version="0.0.0"

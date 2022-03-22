@@ -36,8 +36,7 @@ proc "gen-rep" [val report] [val path_to_target_entity] [val suffix ".pdf"]{
 			get-window Fehler | get-button OK | click
 		} -catch {}
 	}
-	get-file [to-report-file $report ] | get exists | assert-true
-	test-for-report-file "bp-reports" $report "" ".pdf"
+	test-for-report-file "bp-reports" $report "" $suffix
 }
 
 log "Start report testing modernized BP"

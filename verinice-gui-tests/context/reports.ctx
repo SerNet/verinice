@@ -5,8 +5,8 @@ Element-Name: reports
 Element-Type: context
 Element-Version: 2.0
 Id: _tlZuIIx1Eei2UKUDmonytQ
-Runtime-Version: 2.5.0.202001211718
-Save-Time: 9/7/20 11:22 AM
+Runtime-Version: 2.5.2.202109092356
+Save-Time: 3/28/22, 10:13 AM
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
 Content-Type: text/ecl
@@ -59,6 +59,7 @@ proc "gen-rep-com" [val report] [val view] [val object] [val qualifier ""] [val 
 	try {
 		with [get-window Report] {
 			get-group "" | get-combo -after [get-label "Report auswählen:"] | select $report
+		    get-group "" | get-combo -after [get-label "Ausgabeformat"] | select [concat ".*" [ $suffix | invoke toUpperCase] "*."]
 			set-dialog-result File [to-report-file $report $qualifier $suffix]
 			get-button OK | click
 		}
