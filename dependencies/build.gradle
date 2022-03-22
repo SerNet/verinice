@@ -24,18 +24,6 @@ platform {
 	determineImportVersions = true
     importVersionStrategy = MINIMUM
 		
-	feature(id: 'antlr', name: 'antlr', version: '2.7.7') {
-		plugin('antlr:antlr:2.7.7')
-	}
-	
-	feature(id: 'net.sf.ehcache', name: 'ehcache', version: '2.10.4') {
-		plugin('net.sf.ehcache:ehcache:2.10.4')
-	}
-
-	feature(id: 'org.jgrapht', name: 'jgrapht-core', version: '1.2.0') {
-		plugin('org.jgrapht:jgrapht-core:1.2.0') 
-	}
-
 	feature(id: 'org.jdom', name: 'jdom', version: '2.0.2') {
 		plugin('org.jdom:jdom:2.0.2')
 		plugin('jaxen:jaxen:1.1.6')
@@ -74,12 +62,6 @@ platform {
 			exclude group: 'org.eclipse.swt', module: 'org.eclipse.swt.cocoa.macosx.x86_64'
 		}
 		plugin('jfree:jfreechart:1.0.13')
-	}
-
-	feature(id: 'com.opencsv', name: 'opencsv', version: '4.1.0') {
-		plugin('com.opencsv:opencsv:4.1') {
-			exclude group: 'commons-logging', module: 'commons-logging'
-		}
 	}
 
 	feature(id: 'pax', name: 'pax', version: '0.6.0') {
