@@ -34,7 +34,6 @@
         <setEntry value="com.github.librepdf.openpdf@default:default"/>
         <setEntry value="com.google.gson@default:default"/>
         <setEntry value="com.ibm.icu@default:default"/>
-        <setEntry value="com.lowagie.text@default:default"/>
         <setEntry value="com.mchange.c3p0@default:default"/>
         <setEntry value="com.mchange.commons-java@default:default"/>
         <setEntry value="com.opencsv@default:default"/>

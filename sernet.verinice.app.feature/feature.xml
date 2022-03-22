@@ -232,11 +232,6 @@ Library.
          optional="true"/>
 
    <includes
-         id="lowagie"
-         version="0.0.0"
-         optional="true"/>
-
-   <includes
          id="sernet.datatools.feature"
          version="0.0.0"
          optional="true"/>

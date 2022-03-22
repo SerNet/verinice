@@ -76,10 +76,6 @@ platform {
 		plugin('jfree:jfreechart:1.0.13')
 	}
 
-	feature(id: 'lowagie', name: 'lowagie', version: '2.1.7') {
-		plugin('org.eclipse.birt.runtime.3_7_1:com.lowagie.text:2.1.7')
-	}
-
 	feature(id: 'com.opencsv', name: 'opencsv', version: '4.1.0') {
 		plugin('com.opencsv:opencsv:4.1') {
 			exclude group: 'commons-logging', module: 'commons-logging'

@@ -93,8 +93,6 @@
         <unit id="com.opencsv.source.feature.group" version="4.1.0"/>
         <unit id="jfree.feature.group" version="1.0.0"/>
         <unit id="jfree.source.feature.group" version="1.0.0"/>
-        <unit id="lowagie.feature.group" version="2.1.7"/>
-        <unit id="lowagie.source.feature.group" version="2.1.7"/>
         <unit id="net.sf.ehcache.feature.group" version="2.10.4"/>
         <unit id="net.sf.ehcache.source.feature.group" version="2.10.4"/>
         <unit id="org.hibernate.feature.group" version="3.6.11"/>
