@@ -106,13 +106,6 @@ platform {
         }
 	}
 
-	feature(id: 'w3c', name: 'w3c', version: '0.6.0') {
-		plugin fileTree("${project.projectDir}/w3c/") {
-   			include '**/*.jar'
-   			exclude '**/*sources.jar'
-		}
-	}
-
 	feature(id: 'spring', name: 'spring', version: '0.7.5.1') {
 		plugin fileTree("${project.projectDir}/spring/") {
    			include '**/*.jar'

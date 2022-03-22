@@ -107,8 +107,6 @@
         <unit id="spring.source.feature.group" version="0.7.5.1"/>
         <unit id="verinicepatches.feature.group" version="1.0.0"/>
         <unit id="verinicepatches.source.feature.group" version="1.0.0"/>
-        <unit id="w3c.feature.group" version="0.6.0"/>
-        <unit id="w3c.source.feature.group" version="0.6.0"/>
         <unit id="jaxb.feature.group" version="2.3.3"/>
         <unit id="jaxb.source.feature.group" version="2.3.3"/>
         <repository location="https://update.verinice.org/pub/verinice/updatesites/verinice-deps-20210823092054/"/>
