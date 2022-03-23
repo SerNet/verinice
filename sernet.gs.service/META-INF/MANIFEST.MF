@@ -125,6 +125,5 @@ Import-Package: org.eclipse.osgi.util,
  org.hibernate.event.def,
  org.hibernate.hql.ast,
  org.hibernate.type,
- org.jdom;version="1.1.0",
  org.springframework.orm.hibernate3
 Automatic-Module-Name: sernet.gs.service

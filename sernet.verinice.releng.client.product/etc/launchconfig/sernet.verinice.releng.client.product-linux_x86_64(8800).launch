@@ -60,7 +60,6 @@
         <setEntry value="com.springsource.org.aspectj.weaver@default:default"/>
         <setEntry value="com.springsource.org.dom4j@default:default"/>
         <setEntry value="com.springsource.org.hibernate@default:default"/>
-        <setEntry value="com.springsource.org.jdom@default:default"/>
         <setEntry value="com.springsource.org.objectweb.asm.attrs@default:default"/>
         <setEntry value="com.springsource.org.objectweb.asm@default:default"/>
         <setEntry value="com.springsource.org.quartz@default:default"/>

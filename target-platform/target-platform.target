@@ -85,8 +85,6 @@
         <unit id="jfree.source.feature.group" version="1.0.0"/>
         <unit id="org.hibernate.feature.group" version="3.6.11"/>
         <unit id="org.hibernate.source.feature.group" version="3.6.11"/>
-        <unit id="org.jdom.feature.group" version="2.0.2"/>
-        <unit id="org.jdom.source.feature.group" version="2.0.2"/>
         <unit id="pax.feature.group" version="0.6.0"/>
         <unit id="pax.source.feature.group" version="0.6.0"/>
         <unit id="spring.feature.group" version="0.7.5.1"/>
