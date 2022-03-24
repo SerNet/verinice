@@ -18,14 +18,27 @@
 package sernet.verinice.rcp.tree;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.IColorProvider;
+import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.service.StringUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElementLabelGenerator;
+import sernet.hui.common.VeriniceContext;
+import sernet.hui.common.connect.ITargetObject;
+import sernet.hui.swt.SWTResourceManager;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.bp.CheckHasReferencesCommand;
 
 /**
  * Label provider for ISO 27000 model elements.
@@ -33,10 +46,23 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class TreeLabelProvider extends LabelProvider {
+public class TreeLabelProvider extends LabelProvider implements IColorProvider, IFontProvider {
 
     private static final Logger LOG = Logger.getLogger(TreeLabelProvider.class);
     private static final int MAX_TEXT_WIDTH = 80;
+
+    private Object currentElement;
+    private boolean currentElementHasReferences;
+    private Font fontElementWithReferences;
+    private Color colorElementWithReferences;
+
+    public TreeLabelProvider() {
+        Font defaultFont = JFaceResources.getDefaultFont();
+        FontData fontData = defaultFont.getFontData()[0];
+        fontElementWithReferences = SWTResourceManager.getFont(fontData.getName(),
+                fontData.getHeight(), SWT.ITALIC);
+        colorElementWithReferences = SWTResourceManager.getColor(80, 95, 121);
+    }
 
     @Override
     public Image getImage(Object obj) {
@@ -73,4 +99,46 @@ public class TreeLabelProvider extends LabelProvider {
         return text;
     }
 
+    @Override
+    public Color getForeground(Object element) {
+        updateResultIfOutdated(element);
+        if (currentElementHasReferences) {
+            return colorElementWithReferences;
+        }
+        return null;
+    }
+
+    @Override
+    public Color getBackground(Object element) {
+        return null;
+    }
+
+    @Override
+    public Font getFont(Object element) {
+        updateResultIfOutdated(element);
+        if (currentElementHasReferences) {
+            return fontElementWithReferences;
+        }
+        return null;
+    }
+
+    private void updateResultIfOutdated(Object element) {
+        if (element != currentElement) {
+            currentElement = element;
+            currentElementHasReferences = false;
+            if (element instanceof ITargetObject) {
+                CnATreeElement targetObject = (CnATreeElement) element;
+                CheckHasReferencesCommand command = new CheckHasReferencesCommand(
+                        targetObject.getDbId());
+                ICommandService commandService = (ICommandService) VeriniceContext
+                        .get(VeriniceContext.COMMAND_SERVICE);
+                try {
+                    command = commandService.executeCommand(command);
+                    currentElementHasReferences = command.getResult();
+                } catch (CommandException e) {
+                    LOG.error("Cannot determine referencing status for " + element, e);
+                }
+            }
+        }
+    }
 }
