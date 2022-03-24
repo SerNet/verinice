@@ -139,7 +139,7 @@ public class RemoveElement extends GenericCommand
         }
 
         if (element.isPerson()) {
-            removeConfiguration(element);
+            removeConfigurations(Set.of(element));
         }
 
         if (element instanceof IBSIStrukturElement || element instanceof IBSIStrukturKategorie) {
@@ -155,8 +155,8 @@ public class RemoveElement extends GenericCommand
             // deleted.
             if (cat != null) {
                 Set<CnATreeElement> personen = cat.getChildren();
-                for (CnATreeElement elmt : personen) {
-                    removeConfiguration(elmt);
+                if (!personen.isEmpty()) {
+                    removeConfigurations(personen);
                 }
             }
         }
@@ -317,17 +317,14 @@ public class RemoveElement extends GenericCommand
         }
     }
 
-    private void removeConfiguration(CnATreeElement person) {
+    private void removeConfigurations(Set<CnATreeElement> persons) {
         IBaseDao<@NonNull Configuration, Serializable> configurationDao = getDaoFactory()
                 .getDAO(Configuration.class);
         @SuppressWarnings("unchecked")
         List<Configuration> configurations = configurationDao.findByCriteria(DetachedCriteria
-                .forClass(Configuration.class).add(Restrictions.eq("person", person)));
+                .forClass(Configuration.class).add(Restrictions.in("person", persons)));
         if (!configurations.isEmpty()) {
-            Configuration conf = configurations.get(0);
-            IBaseDao<Configuration, Serializable> confDAO = getDaoFactory()
-                    .getDAO(Configuration.class);
-            confDAO.delete(conf);
+            configurationDao.delete(configurations);
             // When a Configuration instance got deleted the server needs to
             // update
             // its cached role map. This is done here.
