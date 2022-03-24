@@ -206,13 +206,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.birt.report.engine.emitter.config.odp"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.birt.report.engine.emitter.config.ods"
          download-size="0"
          install-size="0"
@@ -234,21 +227,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.birt.report.engine.emitter.config.wpml"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.birt.report.engine.emitter.html"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.birt.report.engine.emitter.odp"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -270,13 +249,6 @@
 
    <plugin
          id="org.eclipse.birt.report.engine.emitter.pdf"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.birt.report.engine.emitter.wpml"
          download-size="0"
          install-size="0"
          version="0.0.0"

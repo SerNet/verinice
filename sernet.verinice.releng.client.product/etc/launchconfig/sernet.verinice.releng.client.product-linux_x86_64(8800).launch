@@ -143,7 +143,6 @@
         <setEntry value="org.eclipse.birt.report.engine.emitter.config.excel@default:default"/>
         <setEntry value="org.eclipse.birt.report.engine.emitter.config.html.nl1@default:false"/>
         <setEntry value="org.eclipse.birt.report.engine.emitter.config.html@default:default"/>
-        <setEntry value="org.eclipse.birt.report.engine.emitter.config.odp@default:default"/>
         <setEntry value="org.eclipse.birt.report.engine.emitter.config.ods@default:default"/>
         <setEntry value="org.eclipse.birt.report.engine.emitter.config.odt@default:default"/>
         <setEntry value="org.eclipse.birt.report.engine.emitter.config.pdf@default:default"/>
@@ -152,7 +151,6 @@
         <setEntry value="org.eclipse.birt.report.engine.emitter.html@default:default"/>
         <setEntry value="org.eclipse.birt.report.engine.emitter.pdf@default:default"/>
         <setEntry value="org.eclipse.birt.report.engine.emitter.prototype.excel@default:default"/>
-        <setEntry value="org.eclipse.birt.report.engine.emitter.wpml@default:default"/>
         <setEntry value="org.eclipse.birt.report.engine.fonts@default:default"/>
         <setEntry value="org.eclipse.birt.report.engine.ooxml@default:default"/>
         <setEntry value="org.eclipse.birt.report.engine.script.javascript@default:default"/>
