@@ -14,7 +14,7 @@ Require-Bundle: sernet.gs.ui.rcp.main,
  org.apache.log4j,
  org.eclipse.ui.intro;bundle-version="3.3.2",
  org.eclipse.equinox.common;bundle-version="3.6.0",
- com.springsource.org.apache.commons.io;bundle-version="1.4.0"
+ org.apache.commons.io
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.core.runtime;version="3.4.0",

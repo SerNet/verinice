@@ -94,7 +94,7 @@ Export-Package: de.sernet.model.licensemanagement,
  sernet.verinice.service.tree
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Eclipse-RegisterBuddy: sernet.springclient,com.springsource.org.hibernate
-Require-Bundle: com.springsource.org.apache.commons.io;bundle-version="1.4.0",
+Require-Bundle: org.apache.commons.io,
  org.apache.log4j;bundle-version="1.2.19",
  sernet.hui.common,
  jbpm;bundle-version="4.4.1",
