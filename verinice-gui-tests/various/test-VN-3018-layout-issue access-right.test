@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _f8yJoKbCEey0CcHcDg9yRg
 Runtime-Version: 2.5.1.M3
-Save-Time: 3/18/22, 3:13 PM
+Save-Time: 3/28/22, 4:24 PM
 Tags: ISO, issue, serverOnlyTest
 Testcase-Type: ecl
 Verifications: _wm5P0CtBEeuMltfUUtdvug
@@ -25,6 +25,7 @@ get-view ISM | get-tree | select "VN-3018" | get-menu -path "Zugriffsrechte..." 
 screen-shot "Zugriffsrechte" "VN-3018-access-right.png"
 get-window "Zugriffsrechte" | get-button OK | click
 
+delete-iso-model "VN-3018"
 log "VN-3018-access-right stopped"
 
 expect-no-error-dialog
