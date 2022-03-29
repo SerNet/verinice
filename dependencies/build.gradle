@@ -124,11 +124,6 @@ platform {
         }
     }
 
-    feature(id: 'jaxb', name: 'jaxb', version: '2.3.3') {
-        plugin('jakarta.xml.bind:jakarta.xml.bind-api:2.3.3')
-        plugin('com.sun.xml.bind:jaxb-osgi:2.3.3')
-    }
-
 	feature(id: 'com.mchange.c3p0', name: 'c3p0', version: '0.9.5.4') {
 		plugin('com.mchange:c3p0:0.9.5.4')		
 		plugin('com.mchange:mchange-commons-java:0.2.15')
