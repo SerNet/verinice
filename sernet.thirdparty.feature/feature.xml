@@ -45,13 +45,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.apache.commons.collections"
-         download-size="0"
-         install-size="0"
-         version="3.2.2"
-         unpack="false"/>
-
-   <plugin
          id="org.hamcrest.core"
          download-size="0"
          install-size="0"
