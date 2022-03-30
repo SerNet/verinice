@@ -62,17 +62,15 @@
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-    <unit id="ch.qos.logback.classic" version="1.1.2.v20160208-0839"/>
-    <unit id="ch.qos.logback.classic.source" version="1.1.2.v20160208-0839"/>
-    <unit id="ch.qos.logback.core" version="1.1.2.v20160208-0839"/>
-    <unit id="ch.qos.logback.core.source" version="1.1.2.v20160208-0839"/>
-    <unit id="ch.qos.logback.slf4j" version="1.1.2.v20160301-0943"/>
+    <unit id="ch.qos.logback.classic" version="1.2.3.v20200428-2012"/>
+    <unit id="ch.qos.logback.classic.source" version="1.2.3.v20200428-2012"/>
+    <unit id="ch.qos.logback.core" version="1.2.3.v20200428-2012"/>
+    <unit id="ch.qos.logback.core.source" version="1.2.3.v20200428-2012"/>
+    <unit id="ch.qos.logback.slf4j" version="1.2.3.v20200428-2012"/>
     <unit id="javax.xml.ws" version="2.1.0.v200902101523"/>
-    <unit id="org.slf4j.api" version="1.7.10.v20170428-1633"/>
-    <unit id="org.slf4j.api.source" version="1.7.10.v20170428-1633"/>
     <unit id="javax.servlet" version="3.1.0.v201410161800"/>
     <unit id="javax.jws" version="0.0.0"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180330011457/repository/"/>
+<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20211122181901/repository/"/>
 </location>
 
 
