@@ -118,7 +118,10 @@
 		</dependencies>
 	</location>
 	<location includeDependencyDepth="none" includeDependencyScopes="compile" includeSource="true" missingManifest="generate" type="Maven">
-		<feature id="antlr" version="2.7.7"/>
+
+		<feature id="antlr" version="2.7.7">
+
+</feature>
 		<dependencies>
 			<dependency>
 				<groupId>antlr</groupId>
@@ -139,7 +142,10 @@
 		</dependencies>
 	</location>
 	<location includeDependencyDepth="none" includeDependencyScopes="compile" includeSource="true" missingManifest="error" type="Maven">
-		<feature id="org.jgrapht" version="1.2.0"/>
+
+		<feature id="org.jgrapht" version="1.2.0">
+
+</feature>
 		<dependencies>
 			<dependency>
 				<groupId>org.jgrapht</groupId>
@@ -150,7 +156,10 @@
 		</dependencies>
 	</location>
 	<location includeDependencyDepth="direct" includeDependencyScopes="compile" includeSource="true" missingManifest="error" type="Maven">
-		<feature id="com.opencsv" version="4.1"/>
+
+		<feature id="com.opencsv" version="4.1">
+
+</feature>
 		<dependencies>
 			<dependency>
 				<groupId>com.opencsv</groupId>
