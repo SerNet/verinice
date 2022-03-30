@@ -2838,7 +2838,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                         name="Durchsicht von Unterlagen (z.B. Richtlinien, Anweisungen)" />
                     <option
                         id="mnums_gsaudit_methode_a"
-                        name="Verwertug Unterlagen Dritter (z.B. Protokolle, Verträge)" />
+                        name="Verwertung Unterlagen Dritter (z.B. Protokolle, Verträge)" />
                     <option
                         id="mnums_gsaudit_methode_b"
                         name="Beobachtung von Aktivitäten u. Arbeitsabläufen" />
