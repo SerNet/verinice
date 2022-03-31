@@ -20,10 +20,10 @@ platform {
 	useBndHashQualifiers = false
 	useFeatureHashQualifiers = false
 	defaultQualifierMap.prefix = ''
-	
+
 	determineImportVersions = true
     importVersionStrategy = MINIMUM
-		
+
 	feature(id: 'org.hibernate', name: 'hibernate-core', version: '3.6.11') {
 		plugin('org.hibernate:hibernate-core:3.6.10.Final') {
 			bnd {
@@ -33,7 +33,7 @@ platform {
 				optionalImport 'net.sf.cglib.reflect'
 				optionalImport 'net.sf.cglib.transform'
 				optionalImport 'net.sf.cglib.transform.impl'
-				
+
 				instruction 'Eclipse-BuddyPolicy', 'registered'
 			}
 		}
@@ -51,7 +51,7 @@ platform {
 			}
 		}
 	}
-	
+
 	feature(id: 'jfree', name: 'jfreechart-swt', version: '1.0.0') {
 		plugin('jfree:jfreechart-swt:1.0.9') {
 			exclude group: 'org.eclipse.swt', module: 'org.eclipse.swt.cocoa.macosx.x86_64'
@@ -76,7 +76,7 @@ platform {
             bnd {
                 bundleName = 'elasticsearch java 11 patches for verinice'
                 version =  '1.4.1.' + new Date().format('yyyyMMddHHmmss')
-            
+
                 instruction 'Change', 'custom_sernet_build'
                 instruction 'Build-Date', new Date().format('yyyyMMddHHmmss')
             }
@@ -106,9 +106,9 @@ platform {
                 version =  '2.5.6.SEC03-' + new Date().format('yyyyMMddHHmmss')
             }
         }
-		
+
 	}
-	
+
     // this is part of the javav 11 patch, here we fake the existence of some packages to please the old gods of osgi
     feature(id: 'verinicepatches', name: 'verinicepatches', version: '1.0.0') {
        plugin fileTree ("${project.projectDir}/patches/verinice-rmi.jar"), {
@@ -116,7 +116,7 @@ platform {
                 symbolicName = 'org.verinicepatches'
                 bundleName = 'java 11 patches for verinice'
                 version =  '1.0.0'
-            
+
                 instruction 'Export-Package', "javax.rmi, org.omg.CORBA, org.omg.CosNaming"
                 instruction 'Change', 'custom_sernet_build'
                 instruction 'Build-Date', new Date().format('yyyyMMddHHmmss')
@@ -125,7 +125,7 @@ platform {
     }
 
 	feature(id: 'com.mchange.c3p0', name: 'c3p0', version: '0.9.5.4') {
-		plugin('com.mchange:c3p0:0.9.5.4')		
+		plugin('com.mchange:c3p0:0.9.5.4')
 		plugin('com.mchange:mchange-commons-java:0.2.15')
 		plugin('com.typesafe:config:1.3.0')
 	}
