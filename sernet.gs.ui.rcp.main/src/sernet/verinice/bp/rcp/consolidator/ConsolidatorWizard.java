@@ -79,11 +79,9 @@ public class ConsolidatorWizard extends Wizard {
     private @NonNull Collection<Entry<BpRequirementGroup, ItNetwork>> findOtherModules(
             @NonNull BpRequirementGroup module, boolean includeAllScopes) {
 
-        CnATreeElement root = CnATreeElementScopeUtils.getScope(module);
-
         LoadModulesWithParentsAndScope compoundLoader = includeAllScopes
                 ? new LoadModulesWithParentsAndScope()
-                : new LoadModulesWithParentsAndScope(new Integer[] { root.getDbId() });
+                : new LoadModulesWithParentsAndScope(new Integer[] { module.getScopeId() });
         try {
             compoundLoader = ServiceFactory.lookupCommandService().executeCommand(compoundLoader);
         } catch (Exception e) {
@@ -96,7 +94,7 @@ public class ConsolidatorWizard extends Wizard {
                 .filter(x -> !x.equals(module)).filter(x -> !CatalogModel.TYPE_ID
                         .equals(CnATreeElementScopeUtils.getScope(x).getParent().getTypeId()));
         if (!includeAllScopes) {
-            s = s.filter(x -> CnATreeElementScopeUtils.getScope(x).getId().equals(root.getId()));
+            s = s.filter(x -> x.getScopeId().equals(module.getScopeId()));
         }
 
         @NonNull
