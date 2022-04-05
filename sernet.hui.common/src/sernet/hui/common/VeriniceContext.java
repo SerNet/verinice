@@ -100,8 +100,6 @@ public final class VeriniceContext {
 
     public static final String COMMAND_SERVICE = "commandService";
 
-    public static final String WEB_SERVICE_CLIENT = "webServiceClient";
-
     public static final String AUTH_SERVICE = "authService";
 
     public static final String TASK_SERVICE = "taskService";

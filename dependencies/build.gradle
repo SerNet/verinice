@@ -89,40 +89,8 @@ platform {
    			exclude '**/*sources.jar'
             exclude 'spring-web-2.5.6.SEC03'
             exclude 'spring-webmvc-2.5.6.SEC03'
-            exclude 'org.springframework.xml-1.5.5.A'
-            exclude 'org.springframework.ws-1.5.5.A'
-            exclude 'org.springframework.oxm-1.5.5.A'
             exclude 'spring-core-verinice-patch.jar'
 		}
-		//we need to remove javax.xml.stream [1.0.1,2.0.0) from the import packages
-		plugin fileTree ("${project.projectDir}/spring/org.springframework.xml-1.5.5.A.jar"), {
-            bnd {
-                instruction 'Build-Date', new Date().format('yyyyMMddHHmmss')
-                version = '1.5.5.A-' + new Date().format('yyyyMMddHHmmss')
-                optionalImport 'javax.xml.stream'
-                optionalImport 'javax.xml.stream.events'
-                optionalImport 'javax.xml.stream.util'
-            }
-        }
-        plugin fileTree ("${project.projectDir}/spring/org.springframework.ws-1.5.5.A.jar"), {
-            bnd {
-                instruction 'Build-Date', new Date().format('yyyyMMddHHmmss')
-                version = '1.5.5.A-' + new Date().format('yyyyMMddHHmmss')
-                optionalImport 'javax.xml.stream'
-                optionalImport 'javax.xml.stream.events'
-                optionalImport 'javax.xml.stream.util'
-            }
-        }
-        plugin fileTree ("${project.projectDir}/spring/org.springframework.oxm-1.5.5.A.jar"), {
-            bnd {
-                instruction 'Build-Date', new Date().format('yyyyMMddHHmmss')
-                version = '1.5.5.A-' + new Date().format('yyyyMMddHHmmss')
-                optionalImport 'javax.xml.stream'
-                optionalImport 'javax.xml.stream.events'
-                optionalImport 'javax.xml.stream.util'
-            }
-        }
-
 		//we have patched these two jars, we changed the dependency from javax.servlet [2.4,3.0.0) to [2.4,4.0.0) to enable javax.servlet 3.1.0
         plugin fileTree ("${project.projectDir}/spring/spring-web-2.5.6.SEC03.jar"), {
             bnd {

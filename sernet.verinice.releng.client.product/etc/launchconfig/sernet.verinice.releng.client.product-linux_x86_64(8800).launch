@@ -432,13 +432,10 @@
         <setEntry value="org.springframework.osgi.extender@default:default"/>
         <setEntry value="org.springframework.osgi.io@default:default"/>
         <setEntry value="org.springframework.osgi.web@default:default"/>
-        <setEntry value="org.springframework.oxm@default:default"/>
         <setEntry value="org.springframework.security.core@default:default"/>
         <setEntry value="org.springframework.transaction@default:default"/>
         <setEntry value="org.springframework.web.servlet@default:default"/>
         <setEntry value="org.springframework.web@default:default"/>
-        <setEntry value="org.springframework.ws@default:default"/>
-        <setEntry value="org.springframework.xml@default:default"/>
         <setEntry value="org.tukaani.xz@default:default"/>
         <setEntry value="org.verinicepatches@default:default"/>
         <setEntry value="org.w3c.css.sac*1.3.1.v200903091627@default:default"/>
