@@ -71,7 +71,7 @@
         <setEntry value="javax.annotation@default:default"/>
         <setEntry value="javax.inject@default:default"/>
         <setEntry value="javax.jws@default:default"/>
-        <setEntry value="javax.servlet@default:default"/>
+        <setEntry value="javax.servlet-api@default:default"/>
         <setEntry value="wrapped.javax.xml.ws.jaxws-api@default:default"/>
         <setEntry value="javax.xml@default:default"/>
         <setEntry value="jaxen@default:default"/>
