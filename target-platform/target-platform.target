@@ -67,7 +67,6 @@
     <unit id="ch.qos.logback.core" version="1.2.3.v20200428-2012"/>
     <unit id="ch.qos.logback.core.source" version="1.2.3.v20200428-2012"/>
     <unit id="ch.qos.logback.slf4j" version="1.2.3.v20200428-2012"/>
-    <unit id="javax.xml.ws" version="2.1.0.v200902101523"/>
     <unit id="javax.servlet" version="3.1.0.v201410161800"/>
     <unit id="javax.jws" version="0.0.0"/>
 <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20211122181901/repository/"/>
@@ -194,6 +193,16 @@ DynamicImport-Package: *
 				<groupId>jakarta.activation</groupId>
 				<artifactId>jakarta.activation-api</artifactId>
 				<version>1.2.2</version>
+				<type>jar</type>
+			</dependency>
+		</dependencies>
+	</location>
+	<location includeDependencyDepth="none" includeDependencyScopes="compile" includeSource="true" missingManifest="generate" type="Maven">
+		<dependencies>
+			<dependency>
+				<groupId>javax.xml.ws</groupId>
+				<artifactId>jaxws-api</artifactId>
+				<version>2.1</version>
 				<type>jar</type>
 			</dependency>
 		</dependencies>

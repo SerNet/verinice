@@ -115,7 +115,7 @@ Require-Bundle: org.apache.commons.io,
  jakarta.xml.bind-api;bundle-version="2.3.3",
  javax.jws;bundle-version="2.0.0",
  jakarta.activation-api;bundle-version="1.2.2",
- javax.xml.ws;bundle-version="2.1.0",
+ wrapped.javax.xml.ws.jaxws-api;bundle-version="2.1.0",
  org.bouncycastle.bcprov;bundle-version="1.65.1"
 Import-Package: org.eclipse.osgi.util,
  org.hibernate,
