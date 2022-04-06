@@ -116,8 +116,8 @@ public abstract class BaseDao implements ISearchDao {
                             throw new RuntimeException(item.getFailureMessage());
                         }
                     }
-                    index(idToJsonIndex);
                 }
+                index(idToJsonIndex);
             }
             return response;
         } catch (DocumentMissingException e) {
