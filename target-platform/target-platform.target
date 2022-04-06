@@ -73,8 +73,8 @@
 
 
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-        <unit id="apache.feature.group" version="0.6.2"/>
-        <unit id="apache.source.feature.group" version="0.6.2"/>
+        <unit id="apache.feature.group" version="0.7.0"/>
+        <unit id="apache.source.feature.group" version="0.7.0"/>
         <unit id="com.mchange.c3p0.feature.group" version="0.9.5.4"/>
         <unit id="com.mchange.c3p0.source.feature.group" version="0.9.5.4"/>
         <unit id="jfree.feature.group" version="1.0.0"/>
@@ -83,11 +83,11 @@
         <unit id="org.hibernate.source.feature.group" version="3.6.11"/>
         <unit id="pax.feature.group" version="0.6.0"/>
         <unit id="pax.source.feature.group" version="0.6.0"/>
-        <unit id="spring.feature.group" version="0.7.5.1"/>
-        <unit id="spring.source.feature.group" version="0.7.5.1"/>
+        <unit id="spring.feature.group" version="0.8.0"/>
+        <unit id="spring.source.feature.group" version="0.8.0"/>
         <unit id="verinicepatches.feature.group" version="1.0.0"/>
         <unit id="verinicepatches.source.feature.group" version="1.0.0"/>
-        <repository location="http://bob.sernet.private/updatesites/verinice-deps-20220405144441/"/>
+        <repository location="http://bob.sernet.private/updatesites/verinice-deps-20220406122600/"/>
     </location>
 
 
