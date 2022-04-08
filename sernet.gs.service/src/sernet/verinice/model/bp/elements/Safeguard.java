@@ -24,12 +24,12 @@ import java.util.Date;
 
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITaggableElement;
+import sernet.snutils.TagHelper;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.IImplementableSecurityLevelProvider;
 import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bp.SecurityLevelUtil;
-import sernet.snutils.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -65,6 +65,8 @@ public class Safeguard extends CnATreeElement implements IBpElement, IIdentifiab
     public static final String PROP_CHANGE_TYPE = "bp_safeguard_change_type"; //$NON-NLS-1$
     public static final String PROP_CHANGE_TYPE_REMOVED = "bp_safeguard_change_type_removed"; //$NON-NLS-1$
     public static final String PROP_CHANGE_DETAILS = "bp_safeguard_change_details"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_BY_DATE = "bp_safeguard_implementation_by_date"; //$NON-NLS-1$
+    public static final String PROP_NEXT_REVISION_DATE = "bp_safeguard_revision_next_revision_date"; //$NON-NLS-1$
 
     public static final String PROP_GRP_IMPLEMENTATION = "bp_safeguard_implementation"; //$NON-NLS-1$
     public static final String PROP_GRP_GROUP_KOSTEN = "bp_safeguard_group_kosten"; //$NON-NLS-1$

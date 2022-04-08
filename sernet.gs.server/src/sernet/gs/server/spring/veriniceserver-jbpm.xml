@@ -350,7 +350,34 @@
         <property name="samtTopicDao" ref="samtTopicDAO" />
     </bean>
     -->
-
+    <bean name="bpTaskCreatorJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="sernet.verinice.bpm.BpTaskCreatorJob" />
+        <property name="jobDataAsMap">
+            <map>
+               <entry key="enabled" value="${veriniceserver.bpTaskCreator.enabled}" />
+               <entry key="elementDao" value-ref="cnaTreeElementDao" />
+               <entry key="taskService" value-ref="taskService" />
+               <entry key="individualService" value-ref="individualService" />
+               <entry key="configurationDao" value-ref="configurationDao" />
+               <entry key="implementationThresholdDays" value="${veriniceserver.bpTaskCreator.implementation.thresholdDays}" />
+               <entry key="implementationDueDateDays" value="${veriniceserver.bpTaskCreator.implementation.dueDateDays}" />
+               <entry key="implementationTaskTitle" value="${veriniceserver.bpTaskCreator.implementation.taskTitle}" />
+               <entry key="implementationTaskDescription" value="${veriniceserver.bpTaskCreator.implementation.taskDescription}" />
+               <entry key="implementationTaskWithReleaseProcess" value="${veriniceserver.bpTaskCreator.implementation.withReleaseProcess}" />
+               <entry key="implementationReminderPeriodDays" value="${veriniceserver.bpTaskCreator.implementation.reminderPeriodDays}" />
+               <entry key="implementationFieldNamesRequirement" value="${veriniceserver.bpTaskCreator.implementation.fieldNamesRequirement}" />
+               <entry key="implementationFieldNamesSafeguard" value="${veriniceserver.bpTaskCreator.implementation.fieldNamesSafeguard}" />
+               <entry key="nextRevisionThresholdDays" value="${veriniceserver.bpTaskCreator.next_revision.thresholdDays}" />
+               <entry key="nextRevisionDueDateDays" value="${veriniceserver.bpTaskCreator.next_revision.dueDateDays}" />
+               <entry key="nextRevisionTaskTitle" value="${veriniceserver.bpTaskCreator.next_revision.taskTitle}" />
+               <entry key="nextRevisionTaskDescription" value="${veriniceserver.bpTaskCreator.next_revision.taskDescription}" />
+               <entry key="nextRevisionTaskWithReleaseProcess" value="${veriniceserver.bpTaskCreator.next_revision.withReleaseProcess}" />
+               <entry key="nextRevisionReminderPeriodDays" value="${veriniceserver.bpTaskCreator.next_revision.reminderPeriodDays}" />
+               <entry key="nextRevisionFieldNamesRequirement" value="${veriniceserver.bpTaskCreator.next_revision.fieldNamesRequirement}" />
+               <entry key="nextRevisionFieldNamesSafeguard" value="${veriniceserver.bpTaskCreator.next_revision.fieldNamesSafeguard}" />
+            </map>
+        </property>
+    </bean>
 
     <!-- Dao configuration - sessionFactory is defined in veriniceserver-common.xml.            -->
 

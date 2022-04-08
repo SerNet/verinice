@@ -332,6 +332,16 @@
         <property name="samtTopicDao" ref="samtTopicDAO" />
     </bean>
     -->
+    <bean name="bpTaskCreatorJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="sernet.verinice.bpm.BpTaskCreatorJob" />
+        <property name="jobDataAsMap">
+            <map>
+               <entry key="enabled" value="${veriniceserver.bpTaskCreator.enabled}" />
+               <entry key="workObjects" value-ref="workObjects" />
+               <entry key="bpRequirementDAO" value-ref="bpRequirementDAO" />
+            </map>
+        </property>
+    </bean>
 
 
     <!-- Dao configuration - sessionFactory is defined in veriniceserver-common.xml.            -->

@@ -108,6 +108,11 @@
     <property name="cronExpression" value="0 2 0 1/1 * ? *" />
 </bean>
 
+<bean id="bpTaskCreatorTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <property name="jobDetail" ref="bpTaskCreatorJob"/>
+    <property name="cronExpression" value="${veriniceserver.bpTaskCreator.cron}" />
+</bean>
+
 <bean id="quartzSchedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
     <property name="triggers">
         <list>
@@ -118,6 +123,7 @@
               <ref bean="indexTrigger" />
               <ref bean="taskNotificationTrigger" /> 
               <ref bean="licenseRemoverTrigger" /> 
+              <ref bean="bpTaskCreatorTrigger" />
               
             <!--  for debugging purposes, fires the mail scheduler after 2 seconds and then every 60
 			<bean class="org.springframework.scheduling.quartz.SimpleTriggerBean">

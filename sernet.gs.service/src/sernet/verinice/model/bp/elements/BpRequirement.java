@@ -26,13 +26,13 @@ import java.util.Map;
 
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITaggableElement;
+import sernet.snutils.TagHelper;
 import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.IImplementableSecurityLevelProvider;
 import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bp.SecurityLevelUtil;
-import sernet.snutils.TagHelper;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -64,10 +64,10 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
 
     public static final String PROP_IMPLEMENTATION_DEDUCE = "bp_requirement_implementation_deduce"; //$NON-NLS-1$
     public static final String PROP_IMPLEMENTATION_STATUS = "bp_requirement_implementation_status"; //$NON-NLS-1$
-    private static final String PROP_IMPLEMENTATION_STATUS_NO = "bp_requirement_implementation_status_no"; //$NON-NLS-1$
-    private static final String PROP_IMPLEMENTATION_STATUS_YES = "bp_requirement_implementation_status_yes"; //$NON-NLS-1$
-    private static final String PROP_IMPLEMENTATION_STATUS_PARTIALLY = "bp_requirement_implementation_status_partially"; //$NON-NLS-1$
-    private static final String PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE = "bp_requirement_implementation_status_na"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_NO = "bp_requirement_implementation_status_no"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_YES = "bp_requirement_implementation_status_yes"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_PARTIALLY = "bp_requirement_implementation_status_partially"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE = "bp_requirement_implementation_status_na"; //$NON-NLS-1$
     public static final String PROP_RELEASE = "bp_requirement_release"; //$NON-NLS-1$
     public static final String PROP_CHANGE_TYPE = "bp_requirement_change_type"; //$NON-NLS-1$
     public static final String PROP_CHANGE_TYPE_REMOVED = "bp_requirement_change_type_removed"; //$NON-NLS-1$
@@ -78,6 +78,8 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
     public static final String PROP_GRP_DATA_PROTECTION_OBJECTIVES_EUGDPR = "bp_requirement_data_protection_objectives_eugdpr"; //$NON-NLS-1$
     public static final String PROP_GRP_KOSTEN = "bp_requirement_group_kosten"; //$NON-NLS-1$
     public static final String PROP_GRP_IMPLEMENTATION = "bp_requirement_implementation"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_BY_DATE = "bp_requirement_implementation_by_date"; //$NON-NLS-1$
+    public static final String PROP_NEXT_REVISION_DATE = "bp_requirement_revision_next_revision_date"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_THREAT = "rel_bp_requirement_bp_threat"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_SAFEGUARD = "rel_bp_requirement_bp_safeguard"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_ITNETWORK = "rel_bp_requirement_bp_itnetwork"; //$NON-NLS-1$
