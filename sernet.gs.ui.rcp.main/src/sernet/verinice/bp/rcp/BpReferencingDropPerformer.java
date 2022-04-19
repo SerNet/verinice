@@ -80,17 +80,20 @@ public class BpReferencingDropPerformer implements DropPerformer, RightEnabledUs
     @Override
     public boolean performDrop(Object data, Object target, Viewer viewer) {
         try {
-            final List<CnATreeElement> draggedModules = getDraggedElements(data);
-            if (isValid(draggedModules)) {
-                CnATreeElement targetElement = (CnATreeElement) target;
-                Set<String> existingModules = getExistingModules(draggedModules, targetElement);
-                boolean execute = true;
-                if (!existingModules.isEmpty()) {
-                    execute = confirmReferencing(existingModules, targetElement);
-                }
-                if (execute) {
-                    startReferencingByProgressService(draggedModules, targetElement);
-                    showConfirmationDialog();
+            // make sure that we're dropping modules
+            if (BaseProtectionModelingTransfer.isDraggedDataValid(data)) {
+                final List<CnATreeElement> draggedModules = getDraggedElements(data);
+                if (isValid(draggedModules)) {
+                    CnATreeElement targetElement = (CnATreeElement) target;
+                    Set<String> existingModules = getExistingModules(draggedModules, targetElement);
+                    boolean execute = true;
+                    if (!existingModules.isEmpty()) {
+                        execute = confirmReferencing(existingModules, targetElement);
+                    }
+                    if (execute) {
+                        startReferencingByProgressService(draggedModules, targetElement);
+                        showConfirmationDialog();
+                    }
                 }
             }
             return true;
