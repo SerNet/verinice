@@ -70,7 +70,11 @@ public class TreeViewerUpdater {
 
     public void setInput(final Object newModel) {
         final Object newInput = getNewInput(newModel);
-        executeInRenderThread(() -> viewer.setInput(newInput));
+        executeInRenderThread(() -> {
+            if (!viewer.getTree().isDisposed()) {
+                viewer.setInput(newInput);
+            }
+        });
     }
 
     private static void executeInRenderThread(Runnable r) {
