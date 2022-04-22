@@ -33,6 +33,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -767,9 +768,13 @@ public class TaskView extends RightsEnabledView {
 
     private IToolBarManager resetToolbar() {
         IToolBarManager manager = getViewSite().getActionBars().getToolBarManager();
-        manager.removeAll();
-
-        addToolBarActions();
+        IContributionItem[] items = manager.getItems();
+        // skip the dummy and cancel items
+        for (int i = 2; i < items.length; i++) {
+            IContributionItem item = items[i];
+            manager.remove(item);
+            item.dispose();
+        }
         return manager;
     }
 
