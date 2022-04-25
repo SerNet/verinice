@@ -83,7 +83,7 @@ platform {
         }
 	}
 
-	feature(id: 'spring', name: 'spring', version: '0.8.0') {
+	feature(id: 'spring', name: 'spring', version: '0.9.0') {
 		plugin fileTree("${project.projectDir}/spring/") {
    			include '**/*.jar'
    			exclude '**/*sources.jar'
