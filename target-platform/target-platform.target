@@ -87,7 +87,7 @@
         <unit id="spring.source.feature.group" version="0.8.0"/>
         <unit id="verinicepatches.feature.group" version="1.0.0"/>
         <unit id="verinicepatches.source.feature.group" version="1.0.0"/>
-        <repository location="http://bob.sernet.private/updatesites/verinice-deps-20220406143604/"/>
+        <repository location="https://update.verinice.org/pub/verinice/updatesites/verinice-deps-20220406143604/"/>
     </location>
 
 
