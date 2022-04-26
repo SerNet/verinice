@@ -335,13 +335,12 @@ public class AccountService implements IAccountService, Serializable {
 
     private List<Configuration> getConfigurationsWithUsernames(Set<String> usernames) {
         return getConfigurationDao().findByCallback(session -> {
-            Query query = session
-                    .createQuery("select c from Configuration c inner join fetch c.entity e "
-                            + "inner join fetch e.typedPropertyLists lu inner join fetch lu.properties pu "
-                            + "left join fetch e.typedPropertyLists lr left join fetch lr.properties pr "
-                            + "where pu.propertyType = :utype and cast(pu.propertyValue as string) in (:names) and pr.propertyType = :rtype");
+            Query query = session.createQuery(
+                    "select distinct c from Configuration c inner join fetch c.entity e "
+                            + "inner join e.typedPropertyLists lu inner join lu.properties pu "
+                            + "inner join fetch e.typedPropertyLists lr left join fetch lr.properties "
+                            + "where pu.propertyType = :utype and cast(pu.propertyValue as string) in (:names)");
             query.setParameter("utype", Configuration.PROP_USERNAME);
-            query.setParameter("rtype", Configuration.PROP_ROLES);
             query.setParameterList("names", usernames);
             return query.list();
         });
