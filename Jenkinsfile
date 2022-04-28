@@ -14,6 +14,7 @@ pipeline {
         string(name: 'jreversion', defaultValue: 'jdk-11.0.15+10', description: 'Download and pack a JRE with this version. See https://adoptopenjdk.net/archive.html for a list of possible versions.', trim: true)
         booleanParam(name: 'runIntegrationTests', defaultValue: true, description: 'Run integration tests')
         booleanParam(name: 'runRCPTTTests', defaultValue: true, description: 'Run RCPTT tests')
+        booleanParam(name: 'clientSign', defaultValue: false, description: 'Sign verinice clients')
         booleanParam(name: 'dists', defaultValue: false, description: 'Run distribution steps, i.e. build RPMs files etc.')
         // We need an extra flag. Unfortunately it is not possible to find out, if a password is left empty.
         booleanParam(name: 'distSign', defaultValue: false, description: 'Sign RPM packages')
@@ -114,6 +115,20 @@ pipeline {
             steps {
                 sh "./verinice-distribution/build.sh -j4 docs"
                 archiveArtifacts artifacts: 'doc/manual/*/*.pdf,doc/manual/*/*.zip', fingerprint: true
+            }
+        }
+        stage('Sign clients') {
+            when {
+                expression { params.clientSign && currentBuild.result in [null, 'SUCCESS'] }
+            }
+            steps {
+                script {
+                    def fileNameWindows = sh returnStdout: true, script: 'ls sernet.verinice.releng.client.product/target/products/*win32*zip'
+                    def windowsClientUrl = input message: 'Supply URLS to client ZIPs with signed executables', parameters: [string(name: 'windows', description: 'URL to Windows Client ZIP')], submitter: 'dm'
+                    sh "rm $fileNameWindows"
+                    sh "curl $windowsClientUrl --output $fileNameWindows"
+                    archiveArtifacts artifacts: 'sernet.verinice.releng.client.product/target/products/*.zip', fingerprint: true
+                }
             }
         }
         stage('Distributions') {
