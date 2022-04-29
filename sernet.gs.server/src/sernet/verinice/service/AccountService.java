@@ -40,6 +40,7 @@ import java.util.stream.Stream;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
+import org.hibernate.transform.DistinctRootEntityResultTransformer;
 
 import sernet.gs.service.ServerInitializer;
 import sernet.verinice.interfaces.ApplicationRoles;
@@ -335,13 +336,14 @@ public class AccountService implements IAccountService, Serializable {
 
     private List<Configuration> getConfigurationsWithUsernames(Set<String> usernames) {
         return getConfigurationDao().findByCallback(session -> {
-            Query query = session.createQuery(
-                    "select distinct c from Configuration c inner join fetch c.entity e "
+            Query query = session
+                    .createQuery("select c from Configuration c inner join fetch c.entity e "
                             + "inner join e.typedPropertyLists lu inner join lu.properties pu "
                             + "inner join fetch e.typedPropertyLists lr left join fetch lr.properties "
                             + "where pu.propertyType = :utype and cast(pu.propertyValue as string) in (:names)");
             query.setParameter("utype", Configuration.PROP_USERNAME);
             query.setParameterList("names", usernames);
+            query.setResultTransformer(new DistinctRootEntityResultTransformer());
             return query.list();
         });
     }
