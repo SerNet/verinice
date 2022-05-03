@@ -41,6 +41,7 @@ import sernet.verinice.model.bsi.DocumentLink;
 import sernet.verinice.model.bsi.DocumentLinkRoot;
 import sernet.verinice.model.bsi.DocumentReference;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.CnATreeElementLabelGenerator;
 
 /**
  * Retrieves the properties which are URLs as a {@link DocumentLinkRoot}
@@ -116,7 +117,7 @@ public class FindURLs extends GenericCommand {
 
     private void addReferenceIfAllowed(DocumentLink link, CnATreeElement element) {
         DocumentReference reference = new DocumentReference(element);
-        element.getTitle();
+        CnATreeElementLabelGenerator.getElementTitle(element);
         link.addChild(reference);
     }
 
