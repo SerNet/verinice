@@ -34,12 +34,12 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.service.StringUtil;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElementLabelGenerator;
 import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.CnATreeElementLabelGenerator;
 
 /**
  * A collection of useful editor related method. Like calling update on

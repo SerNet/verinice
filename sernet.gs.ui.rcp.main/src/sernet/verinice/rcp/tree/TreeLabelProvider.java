@@ -31,13 +31,13 @@ import org.eclipse.swt.graphics.Image;
 import sernet.gs.service.StringUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElementLabelGenerator;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.ITargetObject;
 import sernet.hui.swt.SWTResourceManager;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.CnATreeElementLabelGenerator;
 import sernet.verinice.service.commands.bp.CheckHasReferencesCommand;
 
 /**

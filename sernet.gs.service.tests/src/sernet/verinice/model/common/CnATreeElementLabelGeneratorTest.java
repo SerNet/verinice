@@ -15,12 +15,12 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.common.model;
+package sernet.verinice.model.common;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import sernet.gs.ui.rcp.main.AbstractRequiresHUITypeFactoryTest;
+import sernet.gs.service.AbstractRequiresHUITypeFactoryTest;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.ItSystem;
 
