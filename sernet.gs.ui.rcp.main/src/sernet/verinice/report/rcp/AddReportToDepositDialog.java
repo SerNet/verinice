@@ -316,7 +316,8 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         outputTypeODTCheckbox = checkboxEditMode(outputTypeODTCheckbox, OutputFormat.ODT);
         outputTypeODSCheckbox = checkboxEditMode(outputTypeODSCheckbox, OutputFormat.ODS);
         outputTypeExcelCheckbox = checkboxEditMode(outputTypeExcelCheckbox, OutputFormat.XLS);
-        //TODO: VN-2901
+        outputTypeDocxCheckbox = checkboxEditMode(outputTypeDocxCheckbox, OutputFormat.DOCX);
+        outputTypeXLSXCheckbox = checkboxEditMode(outputTypeXLSXCheckbox, OutputFormat.XLSX);
         reportTemplateText.setText(editTemplate.getFilename());
         allowMultipleRootObjects.setSelection(editTemplate.isMultipleRootObjects());
         reportContextCombo.setText(editTemplate.getContext().prettyString());
@@ -433,8 +434,14 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         if (outputTypeODSCheckbox.getSelection()) {
             list.add(OutputFormat.ODS);
         }
+        if (outputTypeDocxCheckbox.getSelection()) {
+            list.add(OutputFormat.DOCX);
+        }
+        if (outputTypeXLSXCheckbox.getSelection()) {
+            list.add(OutputFormat.XLSX);
+        }
         return list.toArray(new OutputFormat[list.size()]);
-    }//TODO: VN-2901
+    }
 
     private boolean isAnyFormatSelected() {
         return outputTypeExcelCheckbox.getSelection() || outputTypeHTMLCheckbox.getSelection()
