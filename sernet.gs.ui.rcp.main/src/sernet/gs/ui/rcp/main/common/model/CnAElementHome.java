@@ -498,6 +498,15 @@ public final class CnAElementHome {
         return false;
     }
 
+    public boolean isCatalogElement(CnATreeElement element) {
+        if (element.getScopeId() == null) {
+            return false;
+        }
+        CatalogModel catalogModel = CnAElementFactory.getInstance().getCatalogModel();
+        return catalogModel.getChildren().stream().map(CnATreeElement::getDbId)
+                .anyMatch(element.getScopeId()::equals);
+    }
+
     public void createLinksAccordingToBusinessLogic(final CnATreeElement dropTarget,
             final List<CnATreeElement> toDrop) {
         createLinksAccordingToBusinessLogicAsync(dropTarget, toDrop, null);
