@@ -69,7 +69,6 @@ pipeline {
 	                }
 	                if (params.runIntegrationTests){
 		                junit allowEmptyResults: true, testResults: '**/build/reports/**/*.xml,**/target/surefire-reports/*.xml'
-		                perfReport filterRegex: '', sourceDataFiles: '**/build/reports/TEST*.xml,**/target/surefire-reports/*.xml'
 		                if (params.archiveIntegrationTestResults){
 		                    archiveArtifacts artifacts: '**/build/reports/**/*.xml,**/target/surefire-reports/*.xml'
 		                }
