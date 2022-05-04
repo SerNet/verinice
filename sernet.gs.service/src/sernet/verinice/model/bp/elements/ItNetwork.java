@@ -25,6 +25,7 @@ import java.util.Optional;
 import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.hui.common.connect.ITargetObject;
+import sernet.snutils.TagHelper;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.model.bp.groups.ApplicationGroup;
@@ -44,7 +45,6 @@ import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.bp.risk.configuration.ConfigurationSerializer;
 import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
-import sernet.snutils.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -102,14 +102,13 @@ public class ItNetwork extends CnATreeElement
 
     @Override
     public boolean canContain(Object object) {
-        return object instanceof BpRequirement || object instanceof ApplicationGroup
-                || object instanceof BpPersonGroup || object instanceof BpRequirementGroup
-                || object instanceof BpThreatGroup || object instanceof BusinessProcessGroup
-                || object instanceof DeviceGroup || object instanceof IcsSystemGroup
-                || object instanceof ItSystemGroup || object instanceof NetworkGroup
-                || object instanceof RoomGroup || object instanceof SafeguardGroup
-                || object instanceof BpDocumentGroup || object instanceof BpIncidentGroup
-                || object instanceof BpRecordGroup;
+        return object instanceof ApplicationGroup || object instanceof BpPersonGroup
+                || object instanceof BpRequirementGroup || object instanceof BpThreatGroup
+                || object instanceof BusinessProcessGroup || object instanceof DeviceGroup
+                || object instanceof IcsSystemGroup || object instanceof ItSystemGroup
+                || object instanceof NetworkGroup || object instanceof RoomGroup
+                || object instanceof SafeguardGroup || object instanceof BpDocumentGroup
+                || object instanceof BpIncidentGroup || object instanceof BpRecordGroup;
     }
 
     @Override
