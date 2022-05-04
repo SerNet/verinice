@@ -451,6 +451,10 @@ public final class CnAElementHome {
      */
     public boolean isWriteAllowed(CnATreeElement cte) {
         try {
+            if (isCatalogElement(cte)) {
+                return false;
+            }
+
             // Short cut: If no permission handling is needed than all objects
             // are
             // writable.
