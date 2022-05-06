@@ -33,6 +33,10 @@ public interface IBaseDao<T, ID extends Serializable> extends IDao<T, ID> {
 
     T merge(T entity, boolean fireUpdates, boolean updateIndex);
 
+    /**
+     * @deprecated use {@link #retrieve(Serializable, IRetrieveInfo)}
+     */
+    @Deprecated
     T findByUuid(String uuid, IRetrieveInfo ri);
 
     T retrieve(ID id, IRetrieveInfo ri);

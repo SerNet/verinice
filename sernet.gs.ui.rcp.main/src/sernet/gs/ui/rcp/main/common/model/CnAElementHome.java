@@ -329,6 +329,7 @@ public final class CnAElementHome {
         return command.getFound();
     }
 
+    @Deprecated
     public Set<CnATreeElement> loadElementsByUUID(Collection<String> elementUUIDs,
             RetrieveInfo retrieveInfo) throws CommandException {
         LoadElementsByUuid<CnATreeElement> elementLoader = new LoadElementsByUuid<>(

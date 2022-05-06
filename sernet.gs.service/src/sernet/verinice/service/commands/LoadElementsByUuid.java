@@ -37,6 +37,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * 
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
+@Deprecated
 public class LoadElementsByUuid<T extends CnATreeElement> extends GenericCommand {
 
     private static final long serialVersionUID = 1L;

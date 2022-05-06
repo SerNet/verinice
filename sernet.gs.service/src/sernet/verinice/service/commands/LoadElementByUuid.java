@@ -27,6 +27,7 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
 
+@Deprecated
 public class LoadElementByUuid<T extends CnATreeElement> extends GenericCommand {
 
     private static final Logger log = Logger.getLogger(LoadElementByUuid.class);
