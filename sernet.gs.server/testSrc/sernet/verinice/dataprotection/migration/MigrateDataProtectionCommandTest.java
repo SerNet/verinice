@@ -29,19 +29,19 @@ import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.dataprotection.migration.MigrateDataProtectionCommand;
 import sernet.verinice.service.test.CommandServiceProvider;
 
-
 public class MigrateDataProtectionCommandTest extends CommandServiceProvider {
 
     private static final Logger LOG = Logger.getLogger(MigrateDataProtectionCommandTest.class);
-    private static final Set<String> DP_PROPERTIES = Stream.of(
-            "control_data_protection_objectives_eugdpr_pseudonymization",
-            "control_data_protection_objectives_eugdpr_encryption",
-            "control_data_protection_objectives_eugdpr_confidentiality",
-            "control_data_protection_objectives_eugdpr_integrity",
-            "control_data_protection_objectives_eugdpr_availability",
-            "control_data_protection_objectives_eugdpr_resilience",
-            "control_data_protection_objectives_eugdpr_recoverability",
-            "control_data_protection_objectives_eugdpr_effectiveness").collect(Collectors.toSet());
+    private static final Set<String> DP_PROPERTIES = Stream
+            .of("control_data_protection_objectives_eugdpr_pseudonymization",
+                    "control_data_protection_objectives_eugdpr_encryption",
+                    "control_data_protection_objectives_eugdpr_confidentiality",
+                    "control_data_protection_objectives_eugdpr_integrity",
+                    "control_data_protection_objectives_eugdpr_availability",
+                    "control_data_protection_objectives_eugdpr_resilience",
+                    "control_data_protection_objectives_eugdpr_recoverability",
+                    "control_data_protection_objectives_eugdpr_effectiveness")
+            .collect(Collectors.toSet());
 
     private static Set<CnATreeElement> createdElements = new HashSet<>();
 

@@ -38,42 +38,46 @@ public class CheckWritingPermission extends GenericCommand {
     private static final Logger log = Logger.getLogger(CheckWritingPermission.class);
 
     private String uuid;
-    
-    private String username; 
-    
+
+    private String username;
+
     private boolean isWriteAllowed;
-    
+
     public CheckWritingPermission(String uuid, String username) {
         super();
         this.uuid = uuid;
         this.username = username;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
-        try {         
-            IBaseDao<CnATreeElement, Serializable> daoElement = getDaoFactory().getDAO(CnATreeElement.class);
+        try {
+            IBaseDao<CnATreeElement, Serializable> daoElement = getDaoFactory()
+                    .getDAO(CnATreeElement.class);
             CnATreeElement element = null;
             try {
-                LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid(uuid,new RetrieveInfo());
+                LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid(uuid,
+                        new RetrieveInfo());
                 command = getCommandService().executeCommand(command);
                 element = command.getElement();
-                if(element!=null) {
+                if (element != null) {
                     daoElement.checkRights(element, username);
                     setWriteAllowed(true);
                 }
-            } catch(SecurityException e) {
+            } catch (SecurityException e) {
                 if (log.isInfoEnabled()) {
                     log.info("User " + username + " is not allowed to write element: " + element);
                 }
                 if (log.isDebugEnabled()) {
                     log.debug("SecurityException stacktrace: ", e);
                 }
-                setWriteAllowed(false);                          
-            }             
+                setWriteAllowed(false);
+            }
         } catch (Exception t) {
             log.error("Error while checking writing permission for element uuid: " + uuid, t);
         }
@@ -94,7 +98,5 @@ public class CheckWritingPermission extends GenericCommand {
     public void setWriteAllowed(boolean isWriteAllowed) {
         this.isWriteAllowed = isWriteAllowed;
     }
-
-  
 
 }

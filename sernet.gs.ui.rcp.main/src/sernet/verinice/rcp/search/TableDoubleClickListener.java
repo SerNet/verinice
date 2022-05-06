@@ -8,7 +8,7 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Lesser General Public License for more details.
+ * See the GNU Lesser General Public License for more details. 
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.
@@ -71,29 +71,35 @@ final class TableDoubleClickListener implements IDoubleClickListener {
         if (loadElementByUuid.getElement() != null) {
             EditorFactory.getInstance().updateAndOpenObject(loadElementByUuid.getElement());
         } else {
-            this.searchView.showError(Messages.SearchView_8, Messages.SearchView_7); //$NON-NLS-1$
+            this.searchView.showError(Messages.SearchView_8, Messages.SearchView_7); // $NON-NLS-1$
         }
     }
 
     @SuppressWarnings("rawtypes")
-    private LoadElementByUuid loadCnATreeElementFromRDBM(VeriniceSearchResultRow row) throws CommandException {
+    private LoadElementByUuid loadCnATreeElementFromRDBM(VeriniceSearchResultRow row)
+            throws CommandException {
         RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
-        LoadElementByUuid loadElementByUuid = new LoadElementByUuid(row.getValueFromResultString("uuid"), ri);
+        LoadElementByUuid loadElementByUuid = new LoadElementByUuid(
+                row.getValueFromResultString("uuid"), ri);
         loadElementByUuid = getCommandService().executeCommand(loadElementByUuid);
         return loadElementByUuid;
     }
 
     private VeriniceSearchResultRow getRow() {
-        VeriniceSearchResultRow row = (VeriniceSearchResultRow) ((IStructuredSelection) this.searchView.currentViewer.getSelection()).getFirstElement();
+        VeriniceSearchResultRow row = (VeriniceSearchResultRow) ((IStructuredSelection) this.searchView.currentViewer
+                .getSelection()).getFirstElement();
         return row;
     }
 
     private boolean isTableEnabled() {
-        return this.searchView.currentViewer != null && this.searchView.currentViewer.getControl().isVisible();
+        return this.searchView.currentViewer != null
+                && this.searchView.currentViewer.getControl().isVisible();
     }
 
     private boolean isRowSelected() {
-        return this.searchView.currentViewer.getSelection() instanceof IStructuredSelection && ((IStructuredSelection) this.searchView.currentViewer.getSelection()).getFirstElement() instanceof VeriniceSearchResultRow;
+        return this.searchView.currentViewer.getSelection() instanceof IStructuredSelection
+                && ((IStructuredSelection) this.searchView.currentViewer.getSelection())
+                        .getFirstElement() instanceof VeriniceSearchResultRow;
     }
 
     private ICommandService getCommandService() {

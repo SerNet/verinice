@@ -28,9 +28,9 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Process;
+import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.risk.RiskAnalysisHelper;
 import sernet.verinice.service.risk.RiskAnalysisHelperImpl;
@@ -38,46 +38,47 @@ import sernet.verinice.service.risk.RiskAnalysisHelperImpl;
 /**
  *
  */
-public class LoadReportRemainingRiskWithImplControls extends GenericCommand implements ICachedCommand {
-    
+public class LoadReportRemainingRiskWithImplControls extends GenericCommand
+        implements ICachedCommand {
+
     private int rootObject;
     private int toleratedC, toleratedI, toleratedA;
-    
-    private static final Logger log = Logger.getLogger(LoadReportRemainingRiskWithImplControls.class);
 
-    public static final String[] COLUMNS = new String[] { 
-        "color_name",
-        "confidentiality",
-        "integrity",
-        "availability",
-        "sortID"
-    };
+    private static final Logger log = Logger
+            .getLogger(LoadReportRemainingRiskWithImplControls.class);
+
+    public static final String[] COLUMNS = new String[] { "color_name", "confidentiality",
+            "integrity", "availability", "sortID" };
 
     public static final String PROP_ORG_RISKACCEPT_C = "org_riskaccept_confid";
     public static final String PROP_ORG_RISKACCEPT_I = "org_riskaccept_integ";
     public static final String PROP_ORG_RISKACCEPT_A = "org_riskaccept_avail";
-    
+
     private boolean resultInjectedFromCache = false;
-    
+
     List<List<String>> results = null;
-    
-    public LoadReportRemainingRiskWithImplControls(int root, int tolC, int tolI, int tolA){
+
+    public LoadReportRemainingRiskWithImplControls(int root, int tolC, int tolI, int tolA) {
         this.rootObject = root;
         this.toleratedC = tolC;
         this.toleratedI = tolI;
         this.toleratedA = tolA;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
-        if(!resultInjectedFromCache){
-            //load all processes of root
-            try{
-                LoadReportElements processLoader = new LoadReportElements(Process.TYPE_ID, rootObject);
-                List<CnATreeElement> processes = getCommandService().executeCommand(processLoader).getElements();
+        if (!resultInjectedFromCache) {
+            // load all processes of root
+            try {
+                LoadReportElements processLoader = new LoadReportElements(Process.TYPE_ID,
+                        rootObject);
+                List<CnATreeElement> processes = getCommandService().executeCommand(processLoader)
+                        .getElements();
                 List<CnATreeElement> assets = null;
                 List<CnATreeElement> scenarios = null;
                 ProtectionRequirementsValueAdapter valueAdapter = null;
@@ -93,57 +94,72 @@ public class LoadReportRemainingRiskWithImplControls extends GenericCommand impl
                 int aRedCount = 0;
                 int aYellowCount = 0;
                 int aGreenCount = 0;
-                for(CnATreeElement process : processes){
-                    //load all to process linked assets
-                    LoadReportLinkedElements assetLoader = new LoadReportLinkedElements(Asset.TYPE_ID, process.getDbId(), true, false);
+                for (CnATreeElement process : processes) {
+                    // load all to process linked assets
+                    LoadReportLinkedElements assetLoader = new LoadReportLinkedElements(
+                            Asset.TYPE_ID, process.getDbId(), true, false);
                     assets = getCommandService().executeCommand(assetLoader).getElements();
-                    for(CnATreeElement asset : assets){
+                    for (CnATreeElement asset : assets) {
                         valueAdapter = new ProtectionRequirementsValueAdapter(asset);
                         raService = new RiskAnalysisHelperImpl();
 
                         // reload asset
-                        LoadElementByUuid<CnATreeElement> assetReloader = new LoadElementByUuid<CnATreeElement>(asset.getUuid(), new RetrieveInfo().setLinksDown(true).setLinksUp(true).setLinksDownProperties(true).setLinksUpProperties(true));
+                        LoadElementByUuid<CnATreeElement> assetReloader = new LoadElementByUuid<CnATreeElement>(
+                                asset.getUuid(),
+                                new RetrieveInfo().setLinksDown(true).setLinksUp(true)
+                                        .setLinksDownProperties(true).setLinksUpProperties(true));
                         asset = getCommandService().executeCommand(assetReloader).getElement();
                         int impactC = valueAdapter.getConfidentiality();
                         int impactI = valueAdapter.getIntegrity();
                         int impactA = valueAdapter.getAvailability();
-                        Integer[] reducedImpact = raService.applyControlsToImpact(RiskAnalysisHelper.RISK_WITH_IMPLEMENTED_CONTROLS, asset, impactC, impactI, impactA);
-                        if(reducedImpact != null){
+                        Integer[] reducedImpact = raService.applyControlsToImpact(
+                                RiskAnalysisHelper.RISK_WITH_IMPLEMENTED_CONTROLS, asset, impactC,
+                                impactI, impactA);
+                        if (reducedImpact != null) {
                             impactC = reducedImpact[0];
                             impactI = reducedImpact[1];
                             impactA = reducedImpact[2];
                         }
 
                         // load scenarios for each asset
-                        LoadReportLinkedElements scenarioLoader = new LoadReportLinkedElements(IncidentScenario.TYPE_ID, asset.getDbId());
-                        scenarios = getCommandService().executeCommand(scenarioLoader).getElements();
-                        for(CnATreeElement scenario : scenarios){
-                            int probability = scenario.getNumericProperty(RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
-                            boolean isCrelevant = scenario.getEntity().getProperties(RiskAnalysisHelper.PROP_SCENARIO_AFFECTS_C).getProperty(0).getPropertyValue().equals("1");
-                            boolean isIrelevant = scenario.getEntity().getProperties(RiskAnalysisHelper.PROP_SCENARIO_AFFECTS_I).getProperty(0).getPropertyValue().equals("1");
-                            boolean isArelevant = scenario.getEntity().getProperties(RiskAnalysisHelper.PROP_SCENARIO_AFFECTS_A).getProperty(0).getPropertyValue().equals("1");
-                            if(isCrelevant){
-                                if((probability + impactC) > toleratedC){
+                        LoadReportLinkedElements scenarioLoader = new LoadReportLinkedElements(
+                                IncidentScenario.TYPE_ID, asset.getDbId());
+                        scenarios = getCommandService().executeCommand(scenarioLoader)
+                                .getElements();
+                        for (CnATreeElement scenario : scenarios) {
+                            int probability = scenario.getNumericProperty(
+                                    RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
+                            boolean isCrelevant = scenario.getEntity()
+                                    .getProperties(RiskAnalysisHelper.PROP_SCENARIO_AFFECTS_C)
+                                    .getProperty(0).getPropertyValue().equals("1");
+                            boolean isIrelevant = scenario.getEntity()
+                                    .getProperties(RiskAnalysisHelper.PROP_SCENARIO_AFFECTS_I)
+                                    .getProperty(0).getPropertyValue().equals("1");
+                            boolean isArelevant = scenario.getEntity()
+                                    .getProperties(RiskAnalysisHelper.PROP_SCENARIO_AFFECTS_A)
+                                    .getProperty(0).getPropertyValue().equals("1");
+                            if (isCrelevant) {
+                                if ((probability + impactC) > toleratedC) {
                                     cRedCount++;
-                                } else if((probability + impactC + 2) < toleratedC){
+                                } else if ((probability + impactC + 2) < toleratedC) {
                                     cGreenCount++;
                                 } else {
                                     cYellowCount++;
                                 }
                             }
-                            if(isIrelevant){
-                                if((probability + impactI) > toleratedI){
+                            if (isIrelevant) {
+                                if ((probability + impactI) > toleratedI) {
                                     iRedCount++;
-                                } else if((probability + impactI + 3) < toleratedI){
+                                } else if ((probability + impactI + 3) < toleratedI) {
                                     iGreenCount++;
                                 } else {
                                     iYellowCount++;
                                 }
                             }
-                            if(isArelevant){
-                                if((probability + impactA) > toleratedA){
+                            if (isArelevant) {
+                                if ((probability + impactA) > toleratedA) {
                                     aRedCount++;
-                                } else if((probability + impactA + 2) < toleratedA){
+                                } else if ((probability + impactA + 2) < toleratedA) {
                                     aGreenCount++;
                                 } else {
                                     aYellowCount++;
@@ -161,7 +177,7 @@ public class LoadReportRemainingRiskWithImplControls extends GenericCommand impl
                 result.add(String.valueOf(cGreenCount));
                 result.add(String.valueOf(0));
                 results.add(result);
-                
+
                 result = new ArrayList<String>(0);
                 result.add("Integrity");
                 result.add(String.valueOf(iRedCount));
@@ -177,15 +193,16 @@ public class LoadReportRemainingRiskWithImplControls extends GenericCommand impl
                 result.add(String.valueOf(aGreenCount));
                 result.add(String.valueOf(2));
                 results.add(result);
-                
-                
-            } catch (CommandException e){
+
+            } catch (CommandException e) {
                 log.error("Error while executing command", e);
             }
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
      */
     @Override
@@ -199,27 +216,33 @@ public class LoadReportRemainingRiskWithImplControls extends GenericCommand impl
         return cacheID.toString();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.
+     * Object)
      */
     @Override
     public void injectCacheResult(Object result) {
-        if(result instanceof List<?>){
+        if (result instanceof List<?>) {
             this.results = (List<List<String>>) result;
             resultInjectedFromCache = true;
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
      */
     @Override
     public Object getCacheableResult() {
         return results;
     }
-    
-    public List<List<String>> getResults(){
+
+    public List<List<String>> getResults() {
         return results;
     }
-    
+
 }

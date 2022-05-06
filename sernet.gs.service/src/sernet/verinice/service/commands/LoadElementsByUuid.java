@@ -20,7 +20,9 @@
 package sernet.verinice.service.commands;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -46,12 +48,11 @@ public class LoadElementsByUuid<T extends CnATreeElement> extends GenericCommand
     protected RetrieveInfo ri;
 
     private transient IBaseDao<T, Serializable> dao;
-    
-    
+
     public LoadElementsByUuid(List<String> uuids) {
         this(null, uuids, null);
     }
-	
+
     public LoadElementsByUuid(List<String> uuids, RetrieveInfo ri) {
         this(null, uuids, ri);
     }
@@ -61,16 +62,16 @@ public class LoadElementsByUuid<T extends CnATreeElement> extends GenericCommand
     }
 
     public LoadElementsByUuid(String typeId, List<String> uuids, RetrieveInfo ri) {
-		super();
+        super();
         this.uuids = new HashSet<>(uuids);
-		this.typeId = typeId;
-		if(ri!=null) {
-		    this.ri=ri;
-		} else {
-		    this.ri = new RetrieveInfo();
-		}
-	}
-	
+        this.typeId = typeId;
+        if (ri != null) {
+            this.ri = ri;
+        } else {
+            this.ri = new RetrieveInfo();
+        }
+    }
+
     public void execute() {
         long start = 0;
         if (log.isDebugEnabled()) {
@@ -91,26 +92,25 @@ public class LoadElementsByUuid<T extends CnATreeElement> extends GenericCommand
         if (log.isDebugEnabled()) {
             long duration = System.currentTimeMillis() - start;
             log.debug("execute() finished in: " + TimeFormatter.getHumanRedableTime(duration)); //$NON-NLS-1$
-        }		
+        }
     }
 
     public Set<T> getElements() {
         return elements;
-	}
+    }
 
     /**
      * @return the dao
      */
     public IBaseDao<T, Serializable> getDao() {
-        if(dao==null) {
-            if(typeId==null) {
+        if (dao == null) {
+            if (typeId == null) {
                 dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(CnATreeElement.class);
             } else {
                 dao = getDaoFactory().getDAO(typeId);
-            }       
+            }
         }
         return dao;
     }
-	
 
 }

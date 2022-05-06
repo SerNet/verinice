@@ -86,7 +86,8 @@ public class LoadAncestors extends LoadElementByUuid {
      */
     public IBaseDao<CnATreeElement, Serializable> getElementDao() {
         if (elementDao == null) {
-            elementDao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory().getDAO(CnATreeElement.class);
+            elementDao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory()
+                    .getDAO(CnATreeElement.class);
         }
         return elementDao;
     }

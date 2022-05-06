@@ -62,7 +62,8 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
 
     private HashMap<String, Integer> scenarioGroups;
 
-    public LoadReportRedYellowScenarioGroups(Integer root, int[] numOfYellowFields, String probType) {
+    public LoadReportRedYellowScenarioGroups(Integer root, int[] numOfYellowFields,
+            String probType) {
         this.rootElmt = root;
         results = new ArrayList<ColoredScenarioGroup>(0);
         this.numOfYellowFields = (numOfYellowFields != null) ? numOfYellowFields.clone() : null;
@@ -79,7 +80,8 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
     public void execute() {
         if (!resultInjectedFromCache) {
             try {
-                LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] { rootElmt });
+                LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(
+                        new Integer[] { rootElmt });
                 command = getCommandService().executeCommand(command);
                 CnATreeElement root = command.getElements().get(0);
                 List<Process> processList = new ArrayList<Process>(0);
@@ -102,19 +104,22 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
                         for (CnATreeElement scenario : scenarios) {
                             if (affectsCIA(scenario)) {
 
-                                scenario = (IncidentScenario) getDaoFactory().getDAO(IncidentScenario.TYPE_ID).initializeAndUnproxy(scenario);
+                                scenario = (IncidentScenario) getDaoFactory()
+                                        .getDAO(IncidentScenario.TYPE_ID)
+                                        .initializeAndUnproxy(scenario);
                                 CnATreeElement parent = loadScenarioParent(scenario);
 
                                 if (!isScenarioGroupRoot(parent, scenario)) {
 
                                     int riskColor = getRiskColour(asset, scenario);
-                                    setRiskColourForParentScenarioGroup(parent.getUuid(), riskColor);
+                                    setRiskColourForParentScenarioGroup(parent.getUuid(),
+                                            riskColor);
                                 }
                             }
                         }
                     }
-                }                
-                
+                }
+
                 generateResult();
             } catch (CommandException e) {
                 log.error("Error while executing command", e);
@@ -122,14 +127,16 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
         }
     }
 
-    private void generateResult() throws CommandException  {
-     
+    private void generateResult() throws CommandException {
+
         for (Entry<String, Integer> entry : scenarioGroups.entrySet()) {
             ColoredScenarioGroup coloredScenarioGroup = new ColoredScenarioGroup();
-            LoadElementByUuid<IncidentScenarioGroup> groupLoader = new LoadElementByUuid<IncidentScenarioGroup>(IncidentScenarioGroup.TYPE_ID, entry.getKey(), new RetrieveInfo().setChildren(true).setProperties(true));
+            LoadElementByUuid<IncidentScenarioGroup> groupLoader = new LoadElementByUuid<IncidentScenarioGroup>(
+                    IncidentScenarioGroup.TYPE_ID, entry.getKey(),
+                    new RetrieveInfo().setChildren(true).setProperties(true));
             groupLoader = getCommandService().executeCommand(groupLoader);
             coloredScenarioGroup.title = groupLoader.getElement().getTitle();
-            
+
             switch (entry.getValue().intValue()) {
             case RiskAnalysisHelper.RISK_COLOR_GREEN:
                 coloredScenarioGroup.color = "2green";
@@ -143,20 +150,17 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
             default:
                 coloredScenarioGroup.color = "";
             }
-            
+
             coloredScenarioGroup.databaseId = groupLoader.getElement().getDbId().toString();
             results.add(coloredScenarioGroup);
-        }        
+        }
     }
-    
-   public class ColoredScenarioGroup
-   {
-       String title;
-       String color;
-       String databaseId;
-   }
-    
-    
+
+    public class ColoredScenarioGroup {
+        String title;
+        String color;
+        String databaseId;
+    }
 
     private void setRiskColourForParentScenarioGroup(String parentUuid, int riskColor) {
         if (!scenarioGroups.containsKey(parentUuid)) {
@@ -164,7 +168,8 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
 
         } else {
             if (!(scenarioGroups.get(parentUuid).intValue() == RiskAnalysisHelper.RISK_COLOR_RED)) {
-                if (!(scenarioGroups.get(parentUuid).intValue() == RiskAnalysisHelper.RISK_COLOR_YELLOW)) {
+                if (!(scenarioGroups.get(parentUuid)
+                        .intValue() == RiskAnalysisHelper.RISK_COLOR_YELLOW)) {
                     scenarioGroups.put(parentUuid, riskColor); // previous
                                                                // value
                                                                // green
@@ -180,24 +185,31 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
     }
 
     private boolean isScenarioGroupRoot(CnATreeElement parent, CnATreeElement scenario) {
-        return !(parent instanceof IncidentScenarioGroup && parent.getParent().getDbId().intValue() != scenario.getScopeId().intValue());
+        return !(parent instanceof IncidentScenarioGroup
+                && parent.getParent().getDbId().intValue() != scenario.getScopeId().intValue());
     }
 
     private CnATreeElement loadScenarioParent(CnATreeElement scenario) throws CommandException {
-        LoadElementByUuid<CnATreeElement> scenarioReloader = new LoadElementByUuid<CnATreeElement>(IncidentScenario.TYPE_ID, scenario.getUuid(), new RetrieveInfo().setProperties(true).setParent(true));
+        LoadElementByUuid<CnATreeElement> scenarioReloader = new LoadElementByUuid<CnATreeElement>(
+                IncidentScenario.TYPE_ID, scenario.getUuid(),
+                new RetrieveInfo().setProperties(true).setParent(true));
         scenario = getCommandService().executeCommand(scenarioReloader).getElement();
         CnATreeElement parent = scenario.getParent();
-        return (CnATreeElement) getDaoFactory().getDAO(IncidentScenarioGroup.TYPE_ID).initializeAndUnproxy(parent);
+        return (CnATreeElement) getDaoFactory().getDAO(IncidentScenarioGroup.TYPE_ID)
+                .initializeAndUnproxy(parent);
     }
 
-    private List<CnATreeElement> loadLinkedIncidentSzenarios(CnATreeElement asset) throws CommandException {
-        LoadReportLinkedElements command = new LoadReportLinkedElements(IncidentScenario.TYPE_ID, asset.getDbId());
+    private List<CnATreeElement> loadLinkedIncidentSzenarios(CnATreeElement asset)
+            throws CommandException {
+        LoadReportLinkedElements command = new LoadReportLinkedElements(IncidentScenario.TYPE_ID,
+                asset.getDbId());
         command = getCommandService().executeCommand(command);
         return command.getElements();
     }
 
     private List<CnATreeElement> loadLinkedProcesses(Process p) throws CommandException {
-        LoadReportLinkedElements command = new LoadReportLinkedElements(Asset.TYPE_ID, p.getDbId(), true, false);
+        LoadReportLinkedElements command = new LoadReportLinkedElements(Asset.TYPE_ID, p.getDbId(),
+                true, false);
         command = getCommandService().executeCommand(command);
         return command.getElements();
     }
@@ -214,7 +226,8 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
         for (int i = 0; i < riskTypes.length; i++) {
             if (isColouredRisk(asset, scenario, RiskAnalysisHelper.RISK_COLOR_RED, riskTypes[i])) {
                 return RiskAnalysisHelper.RISK_COLOR_RED;
-            } else if (isColouredRisk(asset, scenario, RiskAnalysisHelper.RISK_COLOR_YELLOW, riskTypes[i])) {
+            } else if (isColouredRisk(asset, scenario, RiskAnalysisHelper.RISK_COLOR_YELLOW,
+                    riskTypes[i])) {
                 return RiskAnalysisHelper.RISK_COLOR_YELLOW;
             }
         }
@@ -232,7 +245,8 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
      * @param riskType
      * @return
      */
-    private boolean isColouredRisk(CnATreeElement asset, CnATreeElement scenario, int riskColour, char riskType) {
+    private boolean isColouredRisk(CnATreeElement asset, CnATreeElement scenario, int riskColour,
+            char riskType) {
         RiskAnalysisHelperImpl raService = new RiskAnalysisHelperImpl();
         int yellowNum = 0;
         switch (riskType) {
@@ -248,7 +262,8 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
         default:
             break;
         }
-        if (raService.getRiskColor(asset, scenario, riskType, yellowNum, scenarioProbType) == riskColour) {
+        if (raService.getRiskColor(asset, scenario, riskType, yellowNum,
+                scenarioProbType) == riskColour) {
             return true;
         }
         return false;
@@ -259,9 +274,12 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
      * checked. (is relevant for group categorization)
      */
     private boolean affectsCIA(CnATreeElement scenario) {
-        String[] sArr = new String[] { RiskAnalysisHelper.PROP_SCENARIO_AFFECTS_C, RiskAnalysisHelper.PROP_SCENARIO_AFFECTS_I, RiskAnalysisHelper.PROP_SCENARIO_AFFECTS_A };
+        String[] sArr = new String[] { RiskAnalysisHelper.PROP_SCENARIO_AFFECTS_C,
+                RiskAnalysisHelper.PROP_SCENARIO_AFFECTS_I,
+                RiskAnalysisHelper.PROP_SCENARIO_AFFECTS_A };
         for (String s : Arrays.asList(sArr)) {
-            if (scenario.getEntity().getProperties(s).getProperty(0).getPropertyValue().equals("1")) {
+            if (scenario.getEntity().getProperties(s).getProperty(0).getPropertyValue()
+                    .equals("1")) {
                 return true;
             }
         }
@@ -281,7 +299,8 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
         if (elmt instanceof Organization) {
             useScopeId = true;
         }
-        LoadReportElements command = new LoadReportElements(Process.TYPE_ID, elmt.getDbId(), useScopeId);
+        LoadReportElements command = new LoadReportElements(Process.TYPE_ID, elmt.getDbId(),
+                useScopeId);
         command = getCommandService().executeCommand(command);
         for (CnATreeElement e : command.getElements()) {
             if (e instanceof Process) {

@@ -65,72 +65,74 @@ import sernet.verinice.service.commands.crud.PrepareObjectWithAccountDataForDele
 public class IndividualWorkflowTest extends CommandServiceProvider {
 
     private static final Logger LOG = Logger.getLogger(IndividualWorkflowTest.class);
-    
-    @Resource(name="individualService")
+
+    @Resource(name = "individualService")
     IIndividualService individualService;
-    
-    @Resource(name="taskService")
+
+    @Resource(name = "taskService")
     ITaskService taskService;
-    
-    @Resource(name="huiTypeFactory")
+
+    @Resource(name = "huiTypeFactory")
     private HUITypeFactory huiTypeFactory;
-    
+
     private List<String> uuidList;
-    
+
     @Test
     public void testIndividualService() throws Exception {
         // create organization
         uuidList = new LinkedList<String>();
         Organization organization = createTestOrganization();
         linkElements(organization);
-        
-        List<String> assetUuidList = createProcesses(organization);     
-        List<String> taskIdList = checkTasks(assetUuidList, false, IIndividualProcess.TASK_EXECUTE);      
-        completeTasks(taskIdList);   
-        taskIdList = checkTasks(assetUuidList, false, IIndividualProcess.TASK_CHECK);    
-        completeTasks(taskIdList);       
+
+        List<String> assetUuidList = createProcesses(organization);
+        List<String> taskIdList = checkTasks(assetUuidList, false, IIndividualProcess.TASK_EXECUTE);
+        completeTasks(taskIdList);
+        taskIdList = checkTasks(assetUuidList, false, IIndividualProcess.TASK_CHECK);
+        completeTasks(taskIdList);
         checkTasks(assetUuidList, true, null);
-        
+
         // remove
-        PrepareObjectWithAccountDataForDeletion removeAccount = new PrepareObjectWithAccountDataForDeletion(organization);
+        PrepareObjectWithAccountDataForDeletion removeAccount = new PrepareObjectWithAccountDataForDeletion(
+                organization);
         commandService.executeCommand(removeAccount);
         RemoveElement removeCommand = new RemoveElement(organization);
         commandService.executeCommand(removeCommand);
-        for (String uuid: uuidList) {
+        for (String uuid : uuidList) {
             LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuid);
             command = commandService.executeCommand(command);
             CnATreeElement element = command.getElement();
             assertNull("Organization was not deleted.", element);
-        } 
+        }
     }
 
     private void completeTasks(List<String> taskIdList) {
         for (String taskId : taskIdList) {
             taskService.completeTask(taskId);
         }
-        
+
     }
 
     protected List<String> checkTasks(List<String> assetUuidList, boolean invert, String taskType) {
         ITaskParameter searchParameter = new TaskParameter();
         searchParameter.setProcessKey(IIndividualProcess.KEY);
         searchParameter.setAllUser(true);
-        List<ITask> taskList = taskService.getTaskList(searchParameter); 
+        List<ITask> taskList = taskService.getTaskList(searchParameter);
         List<String> taskIdList = new LinkedList<String>();
         for (String assetUuid : assetUuidList) {
             boolean found = false;
             for (ITask task : taskList) {
-                if(assetUuid.equals(task.getUuid())) {
-                    if(taskType!=null) {
-                        assertTrue("Wrong task for element, uuid: " + assetUuid + ", type: " + task.getType(), taskType.equals(task.getType()));
+                if (assetUuid.equals(task.getUuid())) {
+                    if (taskType != null) {
+                        assertTrue("Wrong task for element, uuid: " + assetUuid + ", type: "
+                                + task.getType(), taskType.equals(task.getType()));
                     }
                     found = true;
                     taskIdList.add(task.getId());
                     break;
                 }
             }
-            if(invert) {
-                assertTrue("Task for asset found, uuid: " + assetUuid, !found);  
+            if (invert) {
+                assertTrue("Task for asset found, uuid: " + assetUuid, !found);
             } else {
                 assertTrue("Task for asset not found, uuid: " + assetUuid, found);
             }
@@ -139,8 +141,8 @@ public class IndividualWorkflowTest extends CommandServiceProvider {
     }
 
     protected List<String> createProcesses(Organization organization) {
-        IndividualServiceParameter parameter = createParameter();              
-        List<String> assetUuidList = new LinkedList<String>();      
+        IndividualServiceParameter parameter = createParameter();
+        List<String> assetUuidList = new LinkedList<String>();
         Group<CnATreeElement> assetGroup = getGroupForClass(organization, Asset.class);
         Set<CnATreeElement> assetSet = assetGroup.getChildren();
         for (CnATreeElement asset : assetSet) {
@@ -158,7 +160,7 @@ public class IndividualWorkflowTest extends CommandServiceProvider {
         EntityType entityType = huiTypeFactory.getEntityType(Asset.TYPE_ID);
         Set<HuiRelation> personRelations = entityType.getPossibleRelations(PersonIso.TYPE_ID);
         for (HuiRelation huiRelation : personRelations) {
-            if(huiRelation.getId().equals(Asset.REL_ASSET_PERSON_RESPO)) {
+            if (huiRelation.getId().equals(Asset.REL_ASSET_PERSON_RESPO)) {
                 relationTitle = huiRelation.getName();
             }
         }
@@ -180,35 +182,35 @@ public class IndividualWorkflowTest extends CommandServiceProvider {
         parameter.setTypeId(Asset.TYPE_ID);
         return parameter;
     }
-    
+
     private void linkElements(Organization organization) throws CommandException {
-       Group<CnATreeElement> personGroup = getGroupForClass(organization, PersonIso.class);
-       CnATreeElement person = personGroup.getChildren().iterator().next();
-       Group<CnATreeElement> assetGroup = getGroupForClass(organization, Asset.class);
-       Set<CnATreeElement> assetSet = assetGroup.getChildren();
-       for (CnATreeElement asset : assetSet) {
-           createLink(asset, person, Asset.REL_ASSET_PERSON_RESPO);
-       }
-    }
-    
-    private Organization createTestOrganization() throws CommandException {
-        Organization organization = createOrganization();
-        uuidList.add(organization.getUuid());  
-        uuidList.addAll(createInOrganisation(organization,PersonIso.class,1));
-        uuidList.addAll(createInOrganisation(organization,Asset.class,10));
-        
         Group<CnATreeElement> personGroup = getGroupForClass(organization, PersonIso.class);
         CnATreeElement person = personGroup.getChildren().iterator().next();
-            
+        Group<CnATreeElement> assetGroup = getGroupForClass(organization, Asset.class);
+        Set<CnATreeElement> assetSet = assetGroup.getChildren();
+        for (CnATreeElement asset : assetSet) {
+            createLink(asset, person, Asset.REL_ASSET_PERSON_RESPO);
+        }
+    }
+
+    private Organization createTestOrganization() throws CommandException {
+        Organization organization = createOrganization();
+        uuidList.add(organization.getUuid());
+        uuidList.addAll(createInOrganisation(organization, PersonIso.class, 1));
+        uuidList.addAll(createInOrganisation(organization, Asset.class, 10));
+
+        Group<CnATreeElement> personGroup = getGroupForClass(organization, PersonIso.class);
+        CnATreeElement person = personGroup.getChildren().iterator().next();
+
         CreateConfiguration createConfiguration = new CreateConfiguration(person);
         createConfiguration = commandService.executeCommand(createConfiguration);
         Configuration configuration = createConfiguration.getConfiguration();
         configuration.setUser(this.getClass().getSimpleName());
-        SaveConfiguration<Configuration> command = new SaveConfiguration<Configuration>(configuration, false);         
+        SaveConfiguration<Configuration> command = new SaveConfiguration<Configuration>(
+                configuration, false);
         command = commandService.executeCommand(command);
-        
-        return organization;      
+
+        return organization;
     }
 
-    
 }

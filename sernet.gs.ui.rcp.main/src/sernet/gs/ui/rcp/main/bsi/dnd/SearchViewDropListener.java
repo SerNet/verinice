@@ -50,7 +50,6 @@ import sernet.verinice.service.commands.LoadElementByUuid;
 public class SearchViewDropListener extends ViewerDropAdapter
         implements DropPerformer, RightEnabledUserInteraction {
 
-
     private static final Logger log = Logger.getLogger(SearchViewDropListener.class);
 
     private boolean isActive = false;
@@ -60,7 +59,9 @@ public class SearchViewDropListener extends ViewerDropAdapter
         super(viewer);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
@@ -70,7 +71,9 @@ public class SearchViewDropListener extends ViewerDropAdapter
         return service.isEnabled(getRightID());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override
@@ -78,8 +81,12 @@ public class SearchViewDropListener extends ViewerDropAdapter
         return ActionRightIDs.TREEDND;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.iso27k.rcp.action.DropPerformer#validateDrop(java.lang.Object, int, org.eclipse.swt.dnd.TransferData)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.iso27k.rcp.action.DropPerformer#validateDrop(java.lang.
+     * Object, int, org.eclipse.swt.dnd.TransferData)
      */
     @Override
     public boolean validateDrop(Object target, int operation, TransferData transferType) {
@@ -106,7 +113,9 @@ public class SearchViewDropListener extends ViewerDropAdapter
         return isActive;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.iso27k.rcp.action.DropPerformer#isActive()
      */
     @Override

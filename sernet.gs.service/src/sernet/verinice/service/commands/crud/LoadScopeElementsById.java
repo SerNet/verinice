@@ -37,45 +37,47 @@ import sernet.verinice.service.commands.LoadElementByUuid;
 public class LoadScopeElementsById extends GenericCommand {
 
     private static final Logger LOG = Logger.getLogger(LoadScopeElementsById.class);
-    
+
     private List<CnATreeElement> list;
 
     private Integer scopeID;
-    
-    
-    private static final String QUERY = "from CnATreeElement elmt " +
-            "where elmt.scopeId = ? ";
-    
-    public LoadScopeElementsById(Integer scope){
+
+    private static final String QUERY = "from CnATreeElement elmt " + "where elmt.scopeId = ? ";
+
+    public LoadScopeElementsById(Integer scope) {
         this.scopeID = scope;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
-        IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
-        List<CnATreeElement> results = dao.findByQuery(QUERY, new Object[] {scopeID});
-        if(list == null){
+        IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory()
+                .getDAO(BSIModel.class);
+        List<CnATreeElement> results = dao.findByQuery(QUERY, new Object[] { scopeID });
+        if (list == null) {
             list = new ArrayList<CnATreeElement>(0);
         }
-        if(LOG.isDebugEnabled()){
+        if (LOG.isDebugEnabled()) {
             LOG.debug("Elements in Scope " + scopeID + " found:\t" + list.size());
         }
-        for(CnATreeElement elmt : results){
+        for (CnATreeElement elmt : results) {
             RetrieveInfo ri = new RetrieveInfo().setProperties(true);
-            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(elmt.getUuid(), ri); 
+            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(
+                    elmt.getUuid(), ri);
             try {
                 command = getCommandService().executeCommand(command);
                 list.add(command.getElement());
             } catch (CommandException e) {
-                LOG.error("Error while executing command",e);
+                LOG.error("Error while executing command", e);
             }
         }
     }
-    
-    public List<CnATreeElement> getResults(){
+
+    public List<CnATreeElement> getResults() {
         return list;
     }
 

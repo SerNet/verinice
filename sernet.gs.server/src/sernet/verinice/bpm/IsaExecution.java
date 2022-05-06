@@ -30,65 +30,67 @@ import sernet.verinice.service.commands.CheckWritingPermission;
 import sernet.verinice.service.commands.LoadElementByUuid;
 
 /**
- * Execution class for a jBPM Java task of process isa-execution
- * defined in sernet/verinice/bpm/isa-execution.jpdl.xml.
+ * Execution class for a jBPM Java task of process isa-execution defined in
+ * sernet/verinice/bpm/isa-execution.jpdl.xml.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class IsaExecution extends ProzessExecution {
 
     private final Logger log = Logger.getLogger(IsaExecution.class);
-    
+
     /**
-     * Loads an assignee for a {@link SamtTopic} (ISA topic).
-     * An assignee of an ISA topic is an {@link PersonIso}
-     * linked to the topic.
-     * Returns the username of the {@link Configuration}
-     * connected to PersonIso. If there is no linked PersonIso
-     * or no configuration for PersonIso <code>null</code> is returned.
+     * Loads an assignee for a {@link SamtTopic} (ISA topic). An assignee of an
+     * ISA topic is an {@link PersonIso} linked to the topic. Returns the
+     * username of the {@link Configuration} connected to PersonIso. If there is
+     * no linked PersonIso or no configuration for PersonIso <code>null</code>
+     * is returned.
      * 
-     * @param uuid uuid of an ISA topic
+     * @param uuid
+     *            uuid of an ISA topic
      * @return username of the assignee
      */
     public String loadAssignee(String uuid) {
         return loadAssignee(uuid, SamtTopic.REL_SAMTTOPIC_PERSON_ISO);
     }
-    
+
     public String loadWritePermission(String uuid, String username) {
         ServerInitializer.inheritVeriniceContextState();
         boolean isWriteAllowed = false;
         try {
-            CheckWritingPermission command = new CheckWritingPermission(uuid,username);
+            CheckWritingPermission command = new CheckWritingPermission(uuid, username);
             command = getCommandService().executeCommand(command);
-            isWriteAllowed = command.isWriteAllowed();         
-        } catch(Exception t) {
+            isWriteAllowed = command.isWriteAllowed();
+        } catch (Exception t) {
             log.error("Error while loading write permission.", t); //$NON-NLS-1$
         }
         if (log.isDebugEnabled()) {
-            log.debug("uuid element: " + uuid + ", username: " + username + ", write allowed: " + isWriteAllowed); //$NON-NLS-1$ //$NON-NLS-2$
-        } 
+            log.debug("uuid element: " + uuid + ", username: " + username + ", write allowed: " //$NON-NLS-1$ //$NON-NLS-2$
+                    + isWriteAllowed);
+        }
         return Boolean.toString(isWriteAllowed);
     }
-    
-    
+
     /**
-     * Returns the implementation state of the an ISA topic
-     * (SNCA property "samt_topic_maturity").
+     * Returns the implementation state of the an ISA topic (SNCA property
+     * "samt_topic_maturity").
      * 
-     * @param uuid uuid of an ISA topic
+     * @param uuid
+     *            uuid of an ISA topic
      * @return implementation state of the an ISA topic
      */
     public String loadImplementation(String uuid) {
         ServerInitializer.inheritVeriniceContextState();
         String implementation = "0";
         try {
-            LoadElementByUuid<SamtTopic> command = new LoadElementByUuid(SamtTopic.TYPE_ID,uuid,RetrieveInfo.getPropertyInstance());
+            LoadElementByUuid<SamtTopic> command = new LoadElementByUuid(SamtTopic.TYPE_ID, uuid,
+                    RetrieveInfo.getPropertyInstance());
             command = getCommandService().executeCommand(command);
             SamtTopic topic = command.getElement();
-            if(topic!=null) {
+            if (topic != null) {
                 implementation = Integer.valueOf(topic.getMaturity()).toString();
             }
-        } catch(Exception t) {
+        } catch (Exception t) {
             log.error("Error while loading implementation.", t); //$NON-NLS-1$
         }
         if (log.isDebugEnabled()) {

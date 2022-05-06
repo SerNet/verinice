@@ -20,7 +20,6 @@
 package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
@@ -67,8 +66,6 @@ import sernet.verinice.model.iso27k.Interview;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.CreateLink;
-import sernet.verinice.service.commands.LoadElementByUuid;
-import sernet.verinice.service.commands.RemoveElement;
 
 /**
  *
@@ -80,35 +77,25 @@ import sernet.verinice.service.commands.RemoveElement;
 public class LinkTest extends CommandServiceProvider {
 
     private static final Logger LOG = Logger.getLogger(LinkTest.class);
-    
+
     private static final int NUMBER_PER_GROUP = 1;
 
-    private static final String[] IGNORED_TYPES = new String[]{
-        SamtTopic.TYPE_ID,
-        MassnahmenUmsetzung.TYPE_ID,
-        Interview.TYPE_ID,
-        Raum.TYPE_ID,
-        Finding.TYPE_ID,
-        BausteinUmsetzung.TYPE_ID,
-        Anwendung.TYPE_ID,
-        Gebaeude.TYPE_ID,
-        Server.TYPE_ID,
-        Evidence.TYPE_ID,
-        FindingGroup.TYPE_ID,
-        EvidenceGroup.TYPE_ID,        
-    }; 
-    
+    private static final String[] IGNORED_TYPES = new String[] { SamtTopic.TYPE_ID,
+            MassnahmenUmsetzung.TYPE_ID, Interview.TYPE_ID, Raum.TYPE_ID, Finding.TYPE_ID,
+            BausteinUmsetzung.TYPE_ID, Anwendung.TYPE_ID, Gebaeude.TYPE_ID, Server.TYPE_ID,
+            Evidence.TYPE_ID, FindingGroup.TYPE_ID, EvidenceGroup.TYPE_ID, };
+
     static {
         Arrays.sort(IGNORED_TYPES);
     }
-    
-    @Resource(name="huiTypeFactory")
+
+    @Resource(name = "huiTypeFactory")
     private HUITypeFactory huiTypeFactory;
 
     private List<String> uuidList;
     private Map<String, CnATreeElement> elementMap;
     private Map<String, Set<CnALink>> linkMap;
-    
+
     @Test
     public void testCreateLink() throws Exception {
         // create
@@ -116,7 +103,7 @@ public class LinkTest extends CommandServiceProvider {
         Organization organization = createOrganization();
         uuidList.add(organization.getUuid());
         uuidList.addAll(createElementsInGroups(organization, NUMBER_PER_GROUP));
-        
+
         linkMap = new Hashtable<String, Set<CnALink>>();
         elementMap = new Hashtable<String, CnATreeElement>();
         for (String uuid : uuidList) {
@@ -126,23 +113,25 @@ public class LinkTest extends CommandServiceProvider {
             checkElement(element);
             elementMap.put(element.getTypeId(), element);
         }
-        
+
         Set<String> typeIdSet = elementMap.keySet();
         for (String typeId : typeIdSet) {
             createAllLinks(typeId);
         }
-        
-        
+
         // check
-        Collection<CnATreeElement> elements = elementMap.values();      
+        Collection<CnATreeElement> elements = elementMap.values();
         for (CnATreeElement element : elements) {
             element = checkLinksInElement(element);
-        } 
+        }
     }
 
     /**
-     * Test if creating a {@link CnALink} with the wrong direction fails (gets detected by the validation of {@link CreateLink}
-     * asserts that a {@link RelationNotDefinedException} is thrown by executing {@link CreateLink}-Command
+     * Test if creating a {@link CnALink} with the wrong direction fails (gets
+     * detected by the validation of {@link CreateLink} asserts that a
+     * {@link RelationNotDefinedException} is thrown by executing
+     * {@link CreateLink}-Command
+     * 
      * @throws CommandException
      */
     @Test
@@ -150,15 +139,17 @@ public class LinkTest extends CommandServiceProvider {
         Organization organization = createOrganization();
         IncidentScenario scenario = null;
         Asset asset = null;
-        for(CnATreeElement child : organization.getChildren()) {
-            if(IncidentScenarioGroup.TYPE_ID.equals(child.getTypeId()) ) {
-                scenario = (IncidentScenario)createNewElement((Group<CnATreeElement>)child, IncidentScenario.class);
-            } else if(AssetGroup.TYPE_ID.equals(child.getTypeId())) {
-                asset = (Asset)createNewElement((Group<CnATreeElement>)child, Asset.class);
+        for (CnATreeElement child : organization.getChildren()) {
+            if (IncidentScenarioGroup.TYPE_ID.equals(child.getTypeId())) {
+                scenario = (IncidentScenario) createNewElement((Group<CnATreeElement>) child,
+                        IncidentScenario.class);
+            } else if (AssetGroup.TYPE_ID.equals(child.getTypeId())) {
+                asset = (Asset) createNewElement((Group<CnATreeElement>) child, Asset.class);
             }
         }
 
-        for(HuiRelation relation : huiTypeFactory.getPossibleRelations(scenario.getEntityType().getId(), asset.getEntityType().getId())) {
+        for (HuiRelation relation : huiTypeFactory.getPossibleRelations(
+                scenario.getEntityType().getId(), asset.getEntityType().getId())) {
             try {
                 createLink(asset, scenario, relation.getId());
                 Assert.fail("Expected exception was not thrown");
@@ -172,13 +163,16 @@ public class LinkTest extends CommandServiceProvider {
         RetrieveInfo ri = new RetrieveInfo();
         ri.setLinksDown(true).setLinksUp(true);
         element = elementDao.findByUuid(element.getUuid(), ri);
-        Set<CnALink> linkSet =linkMap.get(element.getTypeId());  
-        if(linkSet!=null) {
+        Set<CnALink> linkSet = linkMap.get(element.getTypeId());
+        if (linkSet != null) {
             boolean found = false;
-            Set<CnALink>linksDown = element.getLinksDown();
-            Set<CnALink>linksUp = element.getLinksUp();
+            Set<CnALink> linksDown = element.getLinksDown();
+            Set<CnALink> linksUp = element.getLinksUp();
             for (CnALink link : linkSet) {
-                assertTrue("Link not found, uuid: " + element.getUuid() + ", id: " + link.getRelationId(), linksDown.contains(link) || linksUp.contains(link));
+                assertTrue(
+                        "Link not found, uuid: " + element.getUuid() + ", id: "
+                                + link.getRelationId(),
+                        linksDown.contains(link) || linksUp.contains(link));
             }
         } else {
             LOG.debug("No links created for: " + element.getTypeId());
@@ -191,15 +185,17 @@ public class LinkTest extends CommandServiceProvider {
         EntityType entityType = huiTypeFactory.getEntityType(typeId);
         Set<HuiRelation> relations = entityType.getPossibleRelations();
         for (HuiRelation relation : relations) {
-            String destinationTypeId = (relation.getFrom().equals(typeId)) ? relation.getTo(): relation.getFrom();
-            CnATreeElement destination = elementMap.get(destinationTypeId);        
-            assertTrue("No element found with destination id: " + destinationTypeId, 
-                       destination!=null || isIgnoredType(destinationTypeId));
-            if(destination!=null) {
+            String destinationTypeId = (relation.getFrom().equals(typeId)) ? relation.getTo()
+                    : relation.getFrom();
+            CnATreeElement destination = elementMap.get(destinationTypeId);
+            assertTrue("No element found with destination id: " + destinationTypeId,
+                    destination != null || isIgnoredType(destinationTypeId));
+            if (destination != null) {
                 String linkType = relation.getId();
-                CnALink link = createLink(element, destination, linkType);             
+                CnALink link = createLink(element, destination, linkType);
                 addToLinkMap(element, link);
-                LOG.debug("Link created from: " + element.getTypeId() + " to: " + destinationTypeId);  
+                LOG.debug(
+                        "Link created from: " + element.getTypeId() + " to: " + destinationTypeId);
             } else {
                 LOG.debug("No Link created from: " + typeId + " to: " + destinationTypeId);
             }
@@ -208,7 +204,7 @@ public class LinkTest extends CommandServiceProvider {
 
     protected void addToLinkMap(CnATreeElement element, CnALink link) {
         Set<CnALink> linkSet = linkMap.get(element.getTypeId());
-        if(linkSet==null) {
+        if (linkSet == null) {
             linkSet = new HashSet<CnALink>();
             linkMap.put(element.getTypeId(), linkSet);
         }
@@ -216,6 +212,6 @@ public class LinkTest extends CommandServiceProvider {
     }
 
     protected boolean isIgnoredType(String destinationTypeId) {
-        return Arrays.binarySearch(IGNORED_TYPES, destinationTypeId)!=-1;
+        return Arrays.binarySearch(IGNORED_TYPES, destinationTypeId) != -1;
     }
 }

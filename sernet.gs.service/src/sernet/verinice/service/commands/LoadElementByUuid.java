@@ -31,67 +31,65 @@ public class LoadElementByUuid<T extends CnATreeElement> extends GenericCommand 
 
     private static final Logger log = Logger.getLogger(LoadElementByUuid.class);
 
-	private String uuid;
-	protected T element;
+    private String uuid;
+    protected T element;
     private String typeId;
     protected RetrieveInfo ri;
 
     private transient IBaseDao<T, Serializable> dao;
-    
-    
-	public LoadElementByUuid(String uuid) {
-        this(null,uuid,null);
+
+    public LoadElementByUuid(String uuid) {
+        this(null, uuid, null);
     }
-	
-	public LoadElementByUuid(String uuid, RetrieveInfo ri) {
-        this(null,uuid,ri);
+
+    public LoadElementByUuid(String uuid, RetrieveInfo ri) {
+        this(null, uuid, ri);
     }
 
     public LoadElementByUuid(String typeId, String uuid) {
-        this(typeId,uuid,null);
+        this(typeId, uuid, null);
     }
 
     public LoadElementByUuid(String typeId, String uuid, RetrieveInfo ri) {
-		super();
-        this.uuid= uuid;
-		this.typeId = typeId;
-		if(ri!=null) {
-		    this.ri=ri;
-		} else {
-		    this.ri = new RetrieveInfo();
-		}
-	}
-	
+        super();
+        this.uuid = uuid;
+        this.typeId = typeId;
+        if (ri != null) {
+            this.ri = ri;
+        } else {
+            this.ri = new RetrieveInfo();
+        }
+    }
+
     public void execute() {
         long start = 0;
         if (log.isDebugEnabled()) {
             start = System.currentTimeMillis();
             log.debug("execute() called ..."); //$NON-NLS-1$
         }
-        element = getDao().findByUuid(this.uuid,ri);       
+        element = getDao().findByUuid(this.uuid, ri);
         if (log.isDebugEnabled()) {
             long duration = System.currentTimeMillis() - start;
             log.debug("execute() finished in: " + TimeFormatter.getHumanRedableTime(duration)); //$NON-NLS-1$
-        }		
+        }
     }
 
-	public T getElement() {
-		return element;
-	}
+    public T getElement() {
+        return element;
+    }
 
     /**
      * @return the dao
      */
     public IBaseDao<T, Serializable> getDao() {
-        if(dao==null) {
-            if(typeId==null) {
+        if (dao == null) {
+            if (typeId == null) {
                 dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(CnATreeElement.class);
             } else {
                 dao = getDaoFactory().getDAO(typeId);
-            }       
+            }
         }
         return dao;
     }
-	
 
 }

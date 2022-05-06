@@ -85,7 +85,7 @@ public class TaskServiceTest extends CommandServiceProvider {
     private Organization organization;
     private List<String> assetUuidList;
     private List<String> uuidList;
-    
+
     private Calendar startTime;
 
     @Before
@@ -103,7 +103,8 @@ public class TaskServiceTest extends CommandServiceProvider {
         // remove tasks
         removeTasks();
         // remove
-        PrepareObjectWithAccountDataForDeletion removeAccount = new PrepareObjectWithAccountDataForDeletion(organization);
+        PrepareObjectWithAccountDataForDeletion removeAccount = new PrepareObjectWithAccountDataForDeletion(
+                organization);
         commandService.executeCommand(removeAccount);
         RemoveElement removeCommand = new RemoveElement(organization);
         commandService.executeCommand(removeCommand);
@@ -119,14 +120,16 @@ public class TaskServiceTest extends CommandServiceProvider {
     public void testSearchWithoutPerson() {
         String taskType = IIndividualProcess.TASK_EXECUTE;
         List<ITask> taskList = getTaskList();
-        assertEquals("Size of task list is not " + NUMBER_OF_ASSETS, NUMBER_OF_ASSETS, taskList.size());
+        assertEquals("Size of task list is not " + NUMBER_OF_ASSETS, NUMBER_OF_ASSETS,
+                taskList.size());
         List<String> taskIdList = new LinkedList<String>();
         for (String assetUuid : assetUuidList) {
             boolean found = false;
             for (ITask task : taskList) {
                 if (assetUuid.equals(task.getUuid())) {
                     if (taskType != null) {
-                        assertTrue("Wrong task for element, uuid: " + assetUuid + ", type: " + task.getType(), taskType.equals(task.getType()));
+                        assertTrue("Wrong task for element, uuid: " + assetUuid + ", type: "
+                                + task.getType(), taskType.equals(task.getType()));
                     }
                     found = true;
                     taskIdList.add(task.getId());
@@ -140,11 +143,13 @@ public class TaskServiceTest extends CommandServiceProvider {
     @Test
     public void testSearchPerson() {
         List<ITask> taskList = getTaskListForPerson("person1");
-        assertEquals("Size of task list is not " + NUMBER_OF_ASSETS / 2, NUMBER_OF_ASSETS / 2, taskList.size());
+        assertEquals("Size of task list is not " + NUMBER_OF_ASSETS / 2, NUMBER_OF_ASSETS / 2,
+                taskList.size());
         taskList = getTaskListForPerson("person2");
-        assertEquals("Size of task list is not " + NUMBER_OF_ASSETS / 2, NUMBER_OF_ASSETS / 2, taskList.size());
+        assertEquals("Size of task list is not " + NUMBER_OF_ASSETS / 2, NUMBER_OF_ASSETS / 2,
+                taskList.size());
     }
-    
+
     @Test
     public void testMarkAsRead() {
         ITaskParameter searchParameter = new TaskParameter();
@@ -152,28 +157,30 @@ public class TaskServiceTest extends CommandServiceProvider {
         searchParameter.setAllUser(true);
         searchParameter.setRead(false);
         List<ITask> taskList = taskService.getTaskList(searchParameter);
-        assertEquals("Size of task list is not " + NUMBER_OF_ASSETS, NUMBER_OF_ASSETS, taskList.size());
+        assertEquals("Size of task list is not " + NUMBER_OF_ASSETS, NUMBER_OF_ASSETS,
+                taskList.size());
 
         searchParameter.setRead(true);
         searchParameter.setUnread(false);
         List<ITask> taskListRead = taskService.getTaskList(searchParameter);
         assertEquals("Size of task list is not 0", 0, taskListRead.size());
-        
+
         taskService.markAsRead(taskList.get(0).getId());
         taskService.markAsRead(taskList.get(1).getId());
         taskService.markAsRead(taskList.get(2).getId());
-        
+
         searchParameter.setRead(false);
         searchParameter.setUnread(true);
         taskList = taskService.getTaskList(searchParameter);
-        assertEquals("Size of task list is not " + (NUMBER_OF_ASSETS-3), NUMBER_OF_ASSETS-3, taskList.size());
-        
+        assertEquals("Size of task list is not " + (NUMBER_OF_ASSETS - 3), NUMBER_OF_ASSETS - 3,
+                taskList.size());
+
         searchParameter.setRead(true);
         searchParameter.setUnread(false);
         taskListRead = taskService.getTaskList(searchParameter);
         assertEquals("Size of task list is not 3", 3, taskListRead.size());
     }
-    
+
     @Test
     public void testSearchGetSince() {
         Date afterSetUp = Calendar.getInstance().getTime();
@@ -183,16 +190,17 @@ public class TaskServiceTest extends CommandServiceProvider {
         startTime.add(Calendar.DATE, -1);
         searchParameter.setSince(startTime.getTime());
         List<ITask> taskList = taskService.getTaskList(searchParameter);
-        assertEquals("Size of task list is not " + NUMBER_OF_ASSETS, NUMBER_OF_ASSETS, taskList.size());
+        assertEquals("Size of task list is not " + NUMBER_OF_ASSETS, NUMBER_OF_ASSETS,
+                taskList.size());
         // create another process
         IndividualServiceParameter parameter = createParameter();
         parameter.setUuid(organization.getUuid());
         individualService.startProcess(parameter);
         searchParameter.setSince(afterSetUp);
         taskList = taskService.getTaskList(searchParameter);
-        assertEquals("Size of task list is not " + 1, 1, taskList.size());       
+        assertEquals("Size of task list is not " + 1, 1, taskList.size());
     }
-    
+
     @Test
     public void testSearchTaskType() {
         ITaskParameter searchParameter = new TaskParameter();
@@ -200,15 +208,16 @@ public class TaskServiceTest extends CommandServiceProvider {
         searchParameter.setTaskId(IIndividualProcess.TASK_EXECUTE);
         searchParameter.setAllUser(true);
         List<ITask> taskList = taskService.getTaskList(searchParameter);
-        assertEquals("Size of task list is not " + NUMBER_OF_ASSETS, NUMBER_OF_ASSETS, taskList.size());
+        assertEquals("Size of task list is not " + NUMBER_OF_ASSETS, NUMBER_OF_ASSETS,
+                taskList.size());
 
         searchParameter.setTaskId(IIndividualProcess.TASK_CHECK);
         List<ITask> taskListCheck = taskService.getTaskList(searchParameter);
         assertEquals("Size of task list is not 0", 0, taskListCheck.size());
-        
+
         taskService.completeTask(taskList.get(0).getId());
-        taskService.completeTask(taskList.get(1).getId());  
-        
+        taskService.completeTask(taskList.get(1).getId());
+
         taskListCheck = taskService.getTaskList(searchParameter);
         assertEquals("Size of task list is not 2", 2, taskListCheck.size());
     }
@@ -216,7 +225,7 @@ public class TaskServiceTest extends CommandServiceProvider {
     private List<ITask> getTaskListForPerson(String login) {
         ITaskParameter searchParameter = new TaskParameter();
         searchParameter.setUsername(login);
-        return taskService.getTaskList(searchParameter);        
+        return taskService.getTaskList(searchParameter);
     }
 
     private void removeTasks() {
@@ -305,13 +314,16 @@ public class TaskServiceTest extends CommandServiceProvider {
     private Organization createTestOrganization() throws CommandException {
         Organization organization = createOrganization();
         uuidList.add(organization.getUuid());
-        String uuidPerson1 = createInOrganisation(organization, PersonIso.class, 1).iterator().next();
+        String uuidPerson1 = createInOrganisation(organization, PersonIso.class, 1).iterator()
+                .next();
         uuidList.add(uuidPerson1);
-        String uuidPerson2 = createInOrganisation(organization, PersonIso.class, 1).iterator().next();
+        String uuidPerson2 = createInOrganisation(organization, PersonIso.class, 1).iterator()
+                .next();
         uuidList.add(uuidPerson2);
         uuidList.addAll(createInOrganisation(organization, Asset.class, NUMBER_OF_ASSETS));
 
-        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuidPerson1);
+        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(
+                uuidPerson1);
         command = commandService.executeCommand(command);
         CnATreeElement person1 = command.getElement();
         createAccount(person1, "person1");
@@ -329,7 +341,8 @@ public class TaskServiceTest extends CommandServiceProvider {
         createConfiguration = commandService.executeCommand(createConfiguration);
         Configuration configuration = createConfiguration.getConfiguration();
         configuration.setUser(name);
-        SaveConfiguration<Configuration> saveConfigurationCommand = new SaveConfiguration<Configuration>(configuration, false);
+        SaveConfiguration<Configuration> saveConfigurationCommand = new SaveConfiguration<Configuration>(
+                configuration, false);
         saveConfigurationCommand = commandService.executeCommand(saveConfigurationCommand);
     }
 

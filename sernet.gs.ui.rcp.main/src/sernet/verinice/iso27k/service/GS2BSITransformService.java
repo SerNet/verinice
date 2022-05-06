@@ -48,28 +48,28 @@ import sernet.verinice.service.commands.SaveElement;
 import sernet.verinice.service.parser.GSScraperUtil;
 
 public class GS2BSITransformService {
-	
-	private IProgressObserver progressObserver;
 
-	private static final Logger log = Logger.getLogger(GS2BSITransformService.class);
-	
-	private int numberOfControls;
-	
-	private List<Object> itemList;
-	
-	private IModelUpdater modelUpdater;
-	
-	private Group<?> selectedGroup;
-	
-	private int numberProcessed;
+    private IProgressObserver progressObserver;
 
-	private IAuthService authService;
+    private static final Logger log = Logger.getLogger(GS2BSITransformService.class);
 
-	private ICommandService commandService;
-	
-	private boolean isScenario = false;
-	
-	private ItemTransformer transformer = new ItemTransformer() {
+    private int numberOfControls;
+
+    private List<Object> itemList;
+
+    private IModelUpdater modelUpdater;
+
+    private Group<?> selectedGroup;
+
+    private int numberProcessed;
+
+    private IAuthService authService;
+
+    private ICommandService commandService;
+
+    private boolean isScenario = false;
+
+    private ItemTransformer transformer = new ItemTransformer() {
 
         @Override
         public void transformElement(Group<?> group, Object item, List<CnATreeElement> elements) {
@@ -98,24 +98,24 @@ public class GS2BSITransformService {
         void transformElement(Group<?> group, Object item, List<CnATreeElement> elements);
     }
 
-	public GS2BSITransformService(IProgressObserver progressObserver,
-			IModelUpdater modelUpdater, Group<?> selectedGroup, Object data) {
-		this.progressObserver = progressObserver;
-		itemList = new ArrayList<>(20);
-		if(data instanceof Object[]){
-		    Object[] o = (Object[]) data;
-		    for(Object object : o){
-		        itemList.add(object);
-		    }
-		} else if (data instanceof Collection) {
+    public GS2BSITransformService(IProgressObserver progressObserver, IModelUpdater modelUpdater,
+            Group<?> selectedGroup, Object data) {
+        this.progressObserver = progressObserver;
+        itemList = new ArrayList<>(20);
+        if (data instanceof Object[]) {
+            Object[] o = (Object[]) data;
+            for (Object object : o) {
+                itemList.add(object);
+            }
+        } else if (data instanceof Collection) {
             Collection<?> c = (Collection<?>) data;
             itemList.addAll(c);
         } else {
-		    itemList.add(data);
-		}
-		this.modelUpdater = modelUpdater;
-		this.selectedGroup = selectedGroup;
-	}
+            itemList.add(data);
+        }
+        this.modelUpdater = modelUpdater;
+        this.selectedGroup = selectedGroup;
+    }
 
     /**
      * Creates a Grundschutz transform operation.
@@ -137,9 +137,9 @@ public class GS2BSITransformService {
         this.transformer = transformer;
     }
 
-	public boolean isScenario() {
-		return isScenario;
-	}
+    public boolean isScenario() {
+        return isScenario;
+    }
 
     public void run() {
         try {
@@ -153,24 +153,25 @@ public class GS2BSITransformService {
             log.error("Error while transforming GS element to ISM element", e);
         }
     }
-	
-	/**
-	 * @param monitor
-	 * @param group 
-	 * @param item
-	 */
-	private void insertItem(IProgressObserver monitor, Group<?> group, Object item) {
-		if(monitor.isCanceled()) {
-			log.warn("Transforming canceled. " //$NON-NLS-1$ 
-			        + numberProcessed + " items transformed."); //$NON-NLS-2$ //$NON-NLS-3$
-			return;
-		}
-		List<CnATreeElement> elements = new ArrayList<>();
-		if(item !=null) {
-		    transformer.transformElement(group, item, elements);
-		}
-		saveItems(elements, monitor);
-	}
+
+    /**
+     * @param monitor
+     * @param group
+     * @param item
+     */
+    private void insertItem(IProgressObserver monitor, Group<?> group, Object item) {
+        if (monitor.isCanceled()) {
+            log.warn("Transforming canceled. " //$NON-NLS-1$
+                    + numberProcessed + " items transformed."); // $NON-NLS-2$
+                                                                // //$NON-NLS-3$
+            return;
+        }
+        List<CnATreeElement> elements = new ArrayList<>();
+        if (item != null) {
+            transformer.transformElement(group, item, elements);
+        }
+        saveItems(elements, monitor);
+    }
 
     /**
      * @param group
@@ -226,7 +227,7 @@ public class GS2BSITransformService {
             }
         }
     }
-	
+
     private void saveItems(List<CnATreeElement> elements, IProgressObserver monitor) {
         SaveElement<CnATreeElement> command = null;
         boolean errorOccured = false;
@@ -281,17 +282,17 @@ public class GS2BSITransformService {
                 }
             }
         }
-	}
-	
-	/**
-	 * @param i
-	 * @param title
-	 */
-	private String getText(int i, String title) {
-		return Messages.getString("GS2BSITransformService.1", i, title); //$NON-NLS-1$
-	}
-	
-	private Control generateControl(Massnahme m, CnATreeElement parent){
+    }
+
+    /**
+     * @param i
+     * @param title
+     */
+    private String getText(int i, String title) {
+        return Messages.getString("GS2BSITransformService.1", i, title); //$NON-NLS-1$
+    }
+
+    private Control generateControl(Massnahme m, CnATreeElement parent) {
         Control c = new Control(parent);
         c.setTitel(m.getId() + " " + m.getTitel());
         try {
@@ -302,24 +303,24 @@ public class GS2BSITransformService {
             log.error("Error while transforming massnahme into control", e);
         }
         return c;
-	}
-	
-	private IncidentScenario generateScenario(Gefaehrdung g, Group<?> parent){
-		IncidentScenario s = new IncidentScenario(parent);
-		if(g.getTitel() != null){
-			String title = g.getId() + " " + g.getTitel();
-			s.setTitel(title);
-		} else {
-			s.setTitel("Dummy Scenario");
-		}
-		// TODO: add description from threat to scenario
-		return s;
-	}
-	
-	public int getNumberOfControls() {
-		return numberOfControls;
-	}
-	
+    }
+
+    private IncidentScenario generateScenario(Gefaehrdung g, Group<?> parent) {
+        IncidentScenario s = new IncidentScenario(parent);
+        if (g.getTitel() != null) {
+            String title = g.getId() + " " + g.getTitel();
+            s.setTitel(title);
+        } else {
+            s.setTitel("Dummy Scenario");
+        }
+        // TODO: add description from threat to scenario
+        return s;
+    }
+
+    public int getNumberOfControls() {
+        return numberOfControls;
+    }
+
     public int getNumberProcessed() {
         return numberProcessed;
     }
@@ -334,16 +335,16 @@ public class GS2BSITransformService {
     private IAuthService createAuthService() {
         return ServiceFactory.lookupAuthService();
     }
-    
-    public ICommandService getCommandService() {
-		if (commandService == null) {
-			commandService = createCommandServive();
-		}
-		return commandService;
-	}
 
-	private ICommandService createCommandServive() {
-		return ServiceFactory.lookupCommandService();
-	}
-	
+    public ICommandService getCommandService() {
+        if (commandService == null) {
+            commandService = createCommandServive();
+        }
+        return commandService;
+    }
+
+    private ICommandService createCommandServive() {
+        return ServiceFactory.lookupCommandService();
+    }
+
 }

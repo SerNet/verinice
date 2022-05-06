@@ -44,40 +44,40 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
 /**
  * This command groups child elements of a group.
  * 
- * If a child has a tag a group with the same name as the tag is created
- * and the element is moved to this group.
+ * If a child has a tag a group with the same name as the tag is created and the
+ * element is moved to this group.
  * 
  * If there is already a group with the name of tag this group is used.
  * 
  * If a child has multiple tags the first tag is used after sorting the tags
  * lexicographically.
  * 
- * This command does not extend ChangeLoggingCommand because it uses 
- * other command to change data, which are ChangeLoggingCommands.
+ * This command does not extend ChangeLoggingCommand because it uses other
+ * command to change data, which are ChangeLoggingCommands.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class GroupByTags extends GenericCommand { 
+public class GroupByTags extends GenericCommand {
 
     private static final Logger log = Logger.getLogger(GroupByTags.class);
 
     private String groupUuid;
 
     private Set<String> tags = new HashSet<String>();
-    
+
     private boolean allTags = false;
 
     private transient IBaseDao<CnATreeElement, Serializable> elementDao;
 
     private transient Map<String, CnATreeElement> existingChildrenGroups;
-    
+
     private transient Map<String, List<String>> existingChildren;
 
     public GroupByTags(String uuid, Set<String> tags) {
         this.groupUuid = uuid;
         this.tags = tags;
     }
-    
+
     public GroupByTags(String uuid, boolean allTags) {
         this.groupUuid = uuid;
         this.allTags = allTags;
@@ -93,17 +93,17 @@ public class GroupByTags extends GenericCommand {
         try {
             existingChildrenGroups = new Hashtable<String, CnATreeElement>();
             existingChildren = new Hashtable<String, List<String>>();
-            if(this.groupUuid==null) {
+            if (this.groupUuid == null) {
                 return;
             }
-            if(!isValid()) {
+            if (!isValid()) {
                 return;
             }
             RetrieveInfo ri = new RetrieveInfo();
             ri.setChildren(true);
             ri.setChildrenProperties(true);
             CnATreeElement group = getElementDao().findByUuid(this.groupUuid, ri);
-            cacheExistingChildren(group);           
+            cacheExistingChildren(group);
             createChildrenGroups(group);
             moveChildrenToGroups(group);
         } catch (RuntimeException e) {
@@ -118,9 +118,10 @@ public class GroupByTags extends GenericCommand {
     private void moveChildrenToGroups(CnATreeElement group) throws CommandException {
         for (String tag : existingChildren.keySet()) {
             CnATreeElement targetGroup = existingChildrenGroups.get(tag);
-            CutCommand cutCommand = new CutCommand(targetGroup.getUuid(), existingChildren.get(tag));
+            CutCommand cutCommand = new CutCommand(targetGroup.getUuid(),
+                    existingChildren.get(tag));
             cutCommand = getCommandService().executeCommand(cutCommand);
-        }       
+        }
     }
 
     private void cacheExistingChildren(CnATreeElement group) {
@@ -128,15 +129,16 @@ public class GroupByTags extends GenericCommand {
             if (isGroup(child)) {
                 existingChildrenGroups.put(child.getTitle(), child);
             } else {
-                List<String> childTagList = new ArrayList<String>(LoadTagsOfGroupElements.getTagList(child));
+                List<String> childTagList = new ArrayList<String>(
+                        LoadTagsOfGroupElements.getTagList(child));
                 childTagList.addAll(LoadTagsOfGroupElements.getGsmTagList(child));
-                childTagList.addAll(LoadTagsOfGroupElements.getGsmIsmTagList(child));            
+                childTagList.addAll(LoadTagsOfGroupElements.getGsmIsmTagList(child));
                 Collections.sort(childTagList);
-                if(allTags) {
+                if (allTags) {
                     tags.addAll(childTagList);
                 }
                 for (String childTag : childTagList) {
-                    if(tags.contains(childTag)) {
+                    if (tags.contains(childTag)) {
                         addChild(childTag, child);
                     }
                 }
@@ -145,19 +147,18 @@ public class GroupByTags extends GenericCommand {
     }
 
     private boolean isGroup(CnATreeElement child) {
-        return child instanceof IISO27kGroup &&
-               !(child instanceof Asset) &&
-               !(child instanceof Audit);
+        return child instanceof IISO27kGroup && !(child instanceof Asset)
+                && !(child instanceof Audit);
     }
 
     private void addChild(String childTag, CnATreeElement child) {
         List<String> children = existingChildren.get(childTag);
-        if(children==null) {
+        if (children == null) {
             children = new LinkedList<String>();
         }
         children.add(child.getUuid());
         existingChildren.put(childTag, children);
-        
+
     }
 
     private void createChildrenGroups(CnATreeElement group) throws CommandException {
@@ -176,9 +177,9 @@ public class GroupByTags extends GenericCommand {
         saveCommand = getCommandService().executeCommand(saveCommand);
         return saveCommand.getNewElement();
     }
-    
+
     private boolean isValid() {
-        return (tags!=null && !tags.isEmpty()) || allTags;
+        return (tags != null && !tags.isEmpty()) || allTags;
     }
 
     public Set<String> getTags() {

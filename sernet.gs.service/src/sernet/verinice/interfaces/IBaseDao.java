@@ -67,14 +67,14 @@ public interface IBaseDao<T, ID extends Serializable> extends IDao<T, ID> {
     default void checkRights(ID id, ID scopeId) {
         checkRights(Collections.singletonMap(id, scopeId));
     }
-    
+
     /**
      * Checks if the user calling the function has write permissions for the
      * elements with the given IDs and scopeIds.
      * 
      * Throws a sernet.gs.service.SecurityException if no write permissions are
      * granted.
-     */ 
+     */
     default void checkRights(Map<ID, ID> idToScopeId) {
     }
 

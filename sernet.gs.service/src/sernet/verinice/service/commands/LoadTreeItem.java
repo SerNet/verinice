@@ -32,10 +32,9 @@ import sernet.verinice.interfaces.IParameter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementFilter;
 
-
 /**
- * This command is loading items after user opens elements in the verinice TreeViewer
- * Command is called by sernet.verinice.rcp.tree.ElementLoader.
+ * This command is loading items after user opens elements in the verinice
+ * TreeViewer Command is called by sernet.verinice.rcp.tree.ElementLoader.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -43,33 +42,32 @@ import sernet.verinice.model.common.ElementFilter;
 public class LoadTreeItem extends GenericCommand {
 
     private String uuid;
-    
+
     private RetrieveInfo ri;
-    
+
     private Map<String, Object> parameter;
-    
+
     private CnATreeElement element;
-    
+
     /*
-     * Key: uuid
-     * Value: true if element with uuid has children, false if not
+     * Key: uuid Value: true if element with uuid has children, false if not
      */
     private Map<String, Boolean> hasChildrenMap;
 
     public LoadTreeItem(String uuid, RetrieveInfo ri) {
-        this(uuid,ri,(Map<String, Object>)null);
+        this(uuid, ri, (Map<String, Object>) null);
     }
-    
-    public LoadTreeItem(String uuid, RetrieveInfo ri,  List<IParameter> parameterList) {
-        this(uuid,ri,ElementFilter.convertToMap(parameterList));
+
+    public LoadTreeItem(String uuid, RetrieveInfo ri, List<IParameter> parameterList) {
+        this(uuid, ri, ElementFilter.convertToMap(parameterList));
     }
-    
+
     public LoadTreeItem(String uuid, RetrieveInfo ri, Map<String, Object> parameter) {
         super();
-		this.uuid = uuid;
-		this.ri = ri;
-		this.parameter = parameter;
-	}
+        this.uuid = uuid;
+        this.ri = ri;
+        this.parameter = parameter;
+    }
 
     @Override
     public void execute() {
@@ -101,11 +99,12 @@ public class LoadTreeItem extends GenericCommand {
     }
 
     /**
-     * Returns a map to determine if element have children.
-     * Map contains one entry per child of element.
+     * Returns a map to determine if element have children. Map contains one
+     * entry per child of element.
      * 
-     * Key of the map: uuid
-     * Value of the map:: true if element with uuid has children, false if not
+     * Key of the map: uuid Value of the map:: true if element with uuid has
+     * children, false if not
+     * 
      * @return the hasChildrenMap
      */
     public Map<String, Boolean> getHasChildrenMap() {

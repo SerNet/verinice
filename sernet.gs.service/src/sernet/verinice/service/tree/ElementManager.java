@@ -40,9 +40,10 @@ import sernet.verinice.service.commands.LoadTreeItem;
  * ElementManager manages domain objects ({@link CnATreeElement}) for trees in
  * views.
  * 
- * One instance of this class is created for every view opened at runtime. This instance is
- * used by {@link TreeContentProvider} and {@link TreeUpdateListener}. It's used
- * by {@link ISMView} and {@link BsiModelView} and {@link BaseProtectionView).
+ * One instance of this class is created for every view opened at runtime. This
+ * instance is used by {@link TreeContentProvider} and
+ * {@link TreeUpdateListener}. It's used by {@link ISMView} and
+ * {@link BsiModelView} and {@link BaseProtectionView).
  * 
  * ElementManager caches objects to ensure that they are loaded only once. If an
  * element is not cached already it's loaded from the backend by command
@@ -120,11 +121,13 @@ public class ElementManager {
             CacheObject cachedElement = cache.getCachedObject(parentElement);
             if (cachedElement != null) {
                 hasChildren = (cachedElement.getHasChildren() == ChildrenExist.YES);
-            } else if(ChildrenExist.isAlwaysChildless(parentElement)) {
+            } else if (ChildrenExist.isAlwaysChildless(parentElement)) {
                 hasChildren = false;
             } else {
                 String uuid = (parentElement != null) ? parentElement.getUuid() : "unknown";
-                LOG.warn("Can't determine if element has children (returning true). Element not found in cache, uuid: " + uuid);
+                LOG.warn(
+                        "Can't determine if element has children (returning true). Element not found in cache, uuid: "
+                                + uuid);
             }
             return hasChildren;
         } catch (RuntimeException re) {
@@ -181,7 +184,8 @@ public class ElementManager {
      * 
      * Element is removed also from children set of it's parent.
      * 
-     * @param element Removed element
+     * @param element
+     *            Removed element
      */
     public void elementRemoved(CnATreeElement element) {
         cache.remove(element);
@@ -189,13 +193,14 @@ public class ElementManager {
             LOG.debug("Element removed from cache, uuid: " + element.getUuid());
         }
     }
-    
+
     /**
      * Method is called when an element was removed.
      * 
      * Element is removed also from children set of it's parent.
      * 
-     * @param element Uuid of removed element
+     * @param element
+     *            Uuid of removed element
      */
     public void elementRemoved(String uuid) {
         cache.remove(uuid);
@@ -241,24 +246,26 @@ public class ElementManager {
     }
 
     /**
-     * Replaces the entity of an element in cache.
-     * If element is not found in cache element is not added to cache.
+     * Replaces the entity of an element in cache. If element is not found in
+     * cache element is not added to cache.
      * 
-     * @param element A CnATreeElement
-     * @return The element from cache with replaced entity or 
-     *         unchanged element if element was not found in cache.
+     * @param element
+     *            A CnATreeElement
+     * @return The element from cache with replaced entity or unchanged element
+     *         if element was not found in cache.
      */
     private CnATreeElement replaceEntityInCache(CnATreeElement element) {
         CacheObject cachedObject = cache.getCachedObject(element);
         if (cachedObject != null) {
             CnATreeElement cachedElement = cachedObject.getElement();
             cachedElement.setEntity(element.getEntity());
-            cache.addObject(new CacheObject(cachedElement, cachedObject.isChildrenPropertiesLoaded(), cachedObject.getHasChildren()));
+            cache.addObject(new CacheObject(cachedElement,
+                    cachedObject.isChildrenPropertiesLoaded(), cachedObject.getHasChildren()));
             return cachedElement;
         } else {
             return element;
         }
-        
+
     }
 
     /**
@@ -287,7 +294,8 @@ public class ElementManager {
             } else {
                 LOG.warn("Can not add element to parent's child set in cache.");
             }
-            CacheObject newCacheObjectParent = new CacheObject(parentFromCache, cachObjectParent.isChildrenPropertiesLoaded());
+            CacheObject newCacheObjectParent = new CacheObject(parentFromCache,
+                    cachObjectParent.isChildrenPropertiesLoaded());
             cache.addObject(newCacheObjectParent);
         }
 
@@ -317,20 +325,24 @@ public class ElementManager {
             // no element found in cache, load properties AND children
             ri.setProperties(true);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Loading parent and children from database, parent uuid: " + element.getUuid());
+                LOG.debug("Loading parent and children from database, parent uuid: "
+                        + element.getUuid());
             }
         } else if (LOG.isDebugEnabled()) {
             LOG.debug("Loading children from database, parent uuid: " + element.getUuid());
         }
-        LoadTreeItem command = new LoadTreeItem(element.getUuid(), ri, ElementFilter.convertToMap(getParameterList()));
+        LoadTreeItem command = new LoadTreeItem(element.getUuid(), ri,
+                ElementFilter.convertToMap(getParameterList()));
         command = getCommandService().executeCommand(command);
         CnATreeElement elementWithChildren = command.getElement();
-        CacheObject cacheObject = addChildrenToCache(elementWithChildren, command.getHasChildrenMap());
+        CacheObject cacheObject = addChildrenToCache(elementWithChildren,
+                command.getHasChildrenMap());
         return cacheObject.getElement();
 
     }
 
-    private CacheObject addChildrenToCache(CnATreeElement element, Map<String, Boolean> hasChildrenMap) {
+    private CacheObject addChildrenToCache(CnATreeElement element,
+            Map<String, Boolean> hasChildrenMap) {
         CacheObject cachedElement = cache.getCachedObject(element);
         if (cachedElement == null) {
             // add retrived element to cache
@@ -381,7 +393,7 @@ public class ElementManager {
     }
 
     private ICommandService createCommandService() {
-        return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE); 
+        return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
 
     }
 

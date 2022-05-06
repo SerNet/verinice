@@ -48,38 +48,38 @@ public class CutTest extends CommandServiceProvider {
 
     private static final Logger LOG = Logger.getLogger(CutTest.class);
 
-    private static final int NUMBER_PER_GROUP = 1; 
-    
+    private static final int NUMBER_PER_GROUP = 1;
+
     private List<String> uuidList;
-    
+
     @Test
     public void testCut() throws Exception {
         // create
         uuidList = new LinkedList<String>();
         Organization organization = createOrganization();
         uuidList.add(organization.getUuid());
-        uuidList.addAll(createElementsInGroups(organization, NUMBER_PER_GROUP));       
-        uuidList.addAll(createGroupsInGroups(organization, NUMBER_PER_GROUP));      
+        uuidList.addAll(createElementsInGroups(organization, NUMBER_PER_GROUP));
+        uuidList.addAll(createGroupsInGroups(organization, NUMBER_PER_GROUP));
         LOG.debug("Total number of created elements: " + uuidList.size());
-        
+
         // move (cut and paste) elements
-        moveAllElements(organization); 
+        moveAllElements(organization);
         checkMovedElements(organization);
-        
+
         // remove
         RemoveElement removeCommand = new RemoveElement(organization);
         commandService.executeCommand(removeCommand);
-        for (String uuid: uuidList) {
+        for (String uuid : uuidList) {
             LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuid);
             command = commandService.executeCommand(command);
             CnATreeElement element = command.getElement();
             assertNull("Organization was not deleted.", element);
-        } 
+        }
     }
 
     /**
      * @param organization
-     * @throws CommandException 
+     * @throws CommandException
      */
     private void moveAllElements(Organization organization) throws CommandException {
         Set<CnATreeElement> children = organization.getChildren();
@@ -90,7 +90,7 @@ public class CutTest extends CommandServiceProvider {
             Group<CnATreeElement> subGroup = null;
             CnATreeElement element = null;
             for (CnATreeElement subChild : childrenOfGroup) {
-                if(subChild instanceof Group) {
+                if (subChild instanceof Group) {
                     subGroup = (Group<CnATreeElement>) subChild;
                 } else {
                     element = subChild;
@@ -105,7 +105,7 @@ public class CutTest extends CommandServiceProvider {
             LOG.debug("Element " + element.getTypeId() + " moved to group.");
         }
     }
-    
+
     /**
      * @param organization
      */
@@ -115,16 +115,18 @@ public class CutTest extends CommandServiceProvider {
             child = elementDao.findByUuid(child.getUuid(), RetrieveInfo.getChildrenInstance());
             assertTrue("Child of organization is not a group", child instanceof Group);
             Group<CnATreeElement> group = (Group) child;
-            
-            Set<CnATreeElement> childrenOfGroup =  group.getChildren();
-            assertTrue("Group has more or less than one child (" + childrenOfGroup.size() + "): " + child.getTypeId(), childrenOfGroup.size()==1);
-            
+
+            Set<CnATreeElement> childrenOfGroup = group.getChildren();
+            assertTrue("Group has more or less than one child (" + childrenOfGroup.size() + "): "
+                    + child.getTypeId(), childrenOfGroup.size() == 1);
+
             CnATreeElement subChild = childrenOfGroup.iterator().next();
             assertTrue("Sub-child of organization is not a group", subChild instanceof Group);
             Group<CnATreeElement> subGroup = (Group<CnATreeElement>) subChild;
-            
-            Set<CnATreeElement> childrenOfSubGroup =  subGroup.getChildren();
-            assertTrue("Sub-group has more or less than one child: " + child.getTypeId(), childrenOfGroup.size()==1);        
+
+            Set<CnATreeElement> childrenOfSubGroup = subGroup.getChildren();
+            assertTrue("Sub-group has more or less than one child: " + child.getTypeId(),
+                    childrenOfGroup.size() == 1);
         }
     }
 }

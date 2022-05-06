@@ -325,8 +325,7 @@ public class RightManagementTest extends CommandServiceProvider {
      * 
      * @param removeElement
      */
-    private void satisfyRemoveOperation(RemoveElement removeElement,
-            CnATreeElement element) {
+    private void satisfyRemoveOperation(RemoveElement removeElement, CnATreeElement element) {
         String uuid = element.getUuid();
         // assertNull("Entity need to be null, as it was deleted.",
         // element.getEntity());

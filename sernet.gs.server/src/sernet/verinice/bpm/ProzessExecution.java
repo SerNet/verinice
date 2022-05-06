@@ -33,33 +33,35 @@ import sernet.verinice.service.commands.LoadUsername;
 import sernet.verinice.service.commands.RetrieveCnATreeElement;
 
 /**
- * jBPM 4 process activity for different processes.
- * e.g: individual-task.jpdl.xml
+ * jBPM 4 process activity for different processes. e.g:
+ * individual-task.jpdl.xml
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class ProzessExecution {
 
     private static final Logger LOG = Logger.getLogger(ProzessExecution.class);
-    
+
     private ICommandService commandService;
-    
+
     /**
      * Loads the username of an account which linked to a {@link CnATreeElement}
      * by a {@link CnALink}.
      * 
-     * @param uuid UUID of the person which is linked to an account
-     * @param relationId The id of a {@link CnALink}
+     * @param uuid
+     *            UUID of the person which is linked to an account
+     * @param relationId
+     *            The id of a {@link CnALink}
      * @return The username of an account
      */
     public String loadAssignee(String uuid, String relationId) {
         ServerInitializer.inheritVeriniceContextState();
         String username = null;
         try {
-            LoadUsername command = new LoadUsername(uuid,relationId);
+            LoadUsername command = new LoadUsername(uuid, relationId);
             command = getCommandService().executeCommand(command);
-            username = command.getUsername();         
-        } catch(CommandException t) {
+            username = command.getUsername();
+        } catch (CommandException t) {
             LOG.error("Error while loading assignee.", t); //$NON-NLS-1$
         }
         if (LOG.isDebugEnabled()) {
@@ -67,36 +69,37 @@ public class ProzessExecution {
         }
         return username;
     }
-    
+
     public CnATreeElement loadElement(String typeId, Integer dbId) throws CommandException {
         return loadElement(typeId, dbId, RetrieveInfo.getPropertyInstance());
     }
-    
-    public CnATreeElement loadElement(String typeId, Integer dbId, RetrieveInfo ri) throws CommandException {
+
+    public CnATreeElement loadElement(String typeId, Integer dbId, RetrieveInfo ri)
+            throws CommandException {
         RetrieveCnATreeElement command = new RetrieveCnATreeElement(typeId, dbId, ri);
         command = getCommandService().executeCommand(command);
         return command.getElement();
     }
-    
+
     public CnATreeElement loadElementByUuid(String uuid) throws CommandException {
         return loadElementByUuid(uuid, RetrieveInfo.getPropertyInstance());
     }
-    
+
     public CnATreeElement loadElementByUuid(String uuid, RetrieveInfo ri) throws CommandException {
         LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuid, ri);
         command = getCommandService().executeCommand(command);
         return command.getElement();
     }
-    
+
     protected ICommandService getCommandService() {
-        if(commandService==null) {
+        if (commandService == null) {
             commandService = (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
         }
         return commandService;
     }
-    
+
     protected String setValue(String value) {
         return value;
     }
-    
+
 }
