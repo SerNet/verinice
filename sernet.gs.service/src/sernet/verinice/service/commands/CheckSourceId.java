@@ -18,7 +18,6 @@
 package sernet.verinice.service.commands;
 
 import java.io.Serializable;
-import java.util.List;
 
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
@@ -31,40 +30,24 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class CheckSourceId extends GenericCommand {
 
-	private String sourceID;
+    private String sourceID;
 
-	private static final String QUERY = "select count(dbId) from sernet.verinice.model.common.CnATreeElement elmt where elmt.sourceId = ?"; 
-	
-	private Long number = Long.valueOf(0);
-	
-	public CheckSourceId( String sourceID) {
-		this.sourceID = sourceID;
-	}
+    private static final String QUERY = "select dbId from sernet.verinice.model.common.CnATreeElement elmt where elmt.sourceId = ?";
 
-	public void execute() {
-		IBaseDao<CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
-		List<Long> numberList = dao.findByQuery(QUERY, new Object[] {sourceID});
-		if(numberList!=null && numberList.size()>0) {
-		    number = numberList.get(0);
-		}
-	}
-	
-	public boolean exists() {
-	    return getNumber()>0;
-	}
+    private boolean exists = false;
 
-    /**
-     * @return the number
-     */
-    public Long getNumber() {
-        return number;
+    public CheckSourceId(String sourceID) {
+        this.sourceID = sourceID;
     }
 
-    /**
-     * @param number the number to set
-     */
-    public void setNumber(Long number) {
-        this.number = number;
+    public void execute() {
+        IBaseDao<CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
+        exists = (Boolean) dao.executeCallback(session -> !session.createQuery(QUERY)
+                .setString(0, sourceID).setMaxResults(1).list().isEmpty());
+    }
+
+    public boolean exists() {
+        return exists;
     }
 
 }
