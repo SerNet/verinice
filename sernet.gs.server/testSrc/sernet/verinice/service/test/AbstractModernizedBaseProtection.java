@@ -41,7 +41,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.CreateITNetwork;
-import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.verinice.service.commands.LoadElementById;
 import sernet.verinice.service.commands.UpdateElement;
 import sernet.verinice.service.commands.crud.CreateBpModel;
 import sernet.verinice.service.model.LoadModel;
@@ -286,9 +286,9 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
     protected <T extends CnATreeElement> T reloadElement(T element) throws CommandException {
         RetrieveInfo ri = new RetrieveInfo().setProperties(true).setLinksUp(true)
                 .setLinksDown(true);
-        LoadElementByUuid<CnATreeElement> loadElementByUuid = new LoadElementByUuid<>(
-                element.getTypeId(), Objects.requireNonNull(element).getUuid(), ri);
-        LoadElementByUuid<CnATreeElement> executeCommand = commandService
+        LoadElementById<CnATreeElement> loadElementByUuid = new LoadElementById<>(
+                element.getTypeId(), Objects.requireNonNull(element).getDbId(), ri);
+        LoadElementById<CnATreeElement> executeCommand = commandService
                 .executeCommand(loadElementByUuid);
         return (T) executeCommand.getElement();
     }

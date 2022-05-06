@@ -21,14 +21,12 @@ package sernet.verinice.service.commands;
 
 import java.io.Serializable;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.interfaces.IParameter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementFilter;
 
@@ -41,7 +39,7 @@ import sernet.verinice.model.common.ElementFilter;
 @SuppressWarnings("serial")
 public class LoadTreeItem extends GenericCommand {
 
-    private String uuid;
+    private Integer dbId;
 
     private RetrieveInfo ri;
 
@@ -54,17 +52,13 @@ public class LoadTreeItem extends GenericCommand {
      */
     private Map<String, Boolean> hasChildrenMap;
 
-    public LoadTreeItem(String uuid, RetrieveInfo ri) {
-        this(uuid, ri, (Map<String, Object>) null);
+    public LoadTreeItem(Integer dbId, RetrieveInfo ri) {
+        this(dbId, ri, (Map<String, Object>) null);
     }
 
-    public LoadTreeItem(String uuid, RetrieveInfo ri, List<IParameter> parameterList) {
-        this(uuid, ri, ElementFilter.convertToMap(parameterList));
-    }
-
-    public LoadTreeItem(String uuid, RetrieveInfo ri, Map<String, Object> parameter) {
+    public LoadTreeItem(Integer dbId, RetrieveInfo ri, Map<String, Object> parameter) {
         super();
-        this.uuid = uuid;
+        this.dbId = dbId;
         this.ri = ri;
         this.parameter = parameter;
     }
@@ -73,7 +67,7 @@ public class LoadTreeItem extends GenericCommand {
     public void execute() {
         IBaseDao<CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
         // one select with joins specified in RetrieveInfo
-        element = dao.findByUuid(uuid, ri);
+        element = dao.retrieve(dbId, ri);
         ElementFilter.filterChildrenOfElement(element, parameter);
 
         hasChildrenMap = new Hashtable<String, Boolean>();

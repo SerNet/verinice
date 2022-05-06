@@ -27,14 +27,14 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.verinice.service.commands.LoadElementById;
 
 /**
  * Helper to execute viewer updates from any thread. Avoids the overhead of
  * synchronizing if access is from the same thread.
  * 
  * @author koderman[at]sernet[dot]de
- *
+ * 
  */
 public class ThreadSafeViewerUpdate {
 
@@ -160,8 +160,8 @@ public class ThreadSafeViewerUpdate {
             RetrieveInfo ri = new RetrieveInfo();
             ri.setProperties(true).setPermissions(true).setParent(true).setChildren(true)
                     .setSiblings(true);
-            LoadElementByUuid<CnATreeElement> loadByUuid = new LoadElementByUuid<CnATreeElement>(
-                    element.getUuid(), ri);
+            LoadElementById<CnATreeElement> loadByUuid = new LoadElementById<CnATreeElement>(
+                    element.getDbId(), ri);
             try {
                 Activator.inheritVeriniceContextState();
                 loadByUuid = ServiceFactory.lookupCommandService().executeCommand(loadByUuid);

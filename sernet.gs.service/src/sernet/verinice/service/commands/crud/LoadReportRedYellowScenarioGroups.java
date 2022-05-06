@@ -36,6 +36,7 @@ import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.IncidentScenarioGroup;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Process;
+import sernet.verinice.service.commands.LoadElementById;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.risk.RiskAnalysisHelper;
 import sernet.verinice.service.risk.RiskAnalysisHelperImpl;
@@ -190,8 +191,8 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
     }
 
     private CnATreeElement loadScenarioParent(CnATreeElement scenario) throws CommandException {
-        LoadElementByUuid<CnATreeElement> scenarioReloader = new LoadElementByUuid<CnATreeElement>(
-                IncidentScenario.TYPE_ID, scenario.getUuid(),
+        LoadElementById<CnATreeElement> scenarioReloader = new LoadElementById<CnATreeElement>(
+                IncidentScenario.TYPE_ID, scenario.getDbId(),
                 new RetrieveInfo().setProperties(true).setParent(true));
         scenario = getCommandService().executeCommand(scenarioReloader).getElement();
         CnATreeElement parent = scenario.getParent();

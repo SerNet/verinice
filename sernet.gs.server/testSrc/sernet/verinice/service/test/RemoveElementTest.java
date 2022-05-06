@@ -60,8 +60,8 @@ import sernet.verinice.service.bp.LoadBpModel;
 import sernet.verinice.service.commands.CreateConfiguration;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.LoadConfiguration;
+import sernet.verinice.service.commands.LoadElementById;
 import sernet.verinice.service.commands.LoadElementByTypeId;
-import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.LoadElementsByUuid;
 import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.SyncCommand;
@@ -254,8 +254,8 @@ public class RemoveElementTest extends CommandServiceProvider {
     }
 
     private void assertElementIsDeleted(CnATreeElement element) throws CommandException {
-        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(
-                element.getUuid());
+        LoadElementById<CnATreeElement> command = new LoadElementById<CnATreeElement>(
+                element.getDbId());
         command = commandService.executeCommand(command);
         CnATreeElement loadByUUid = command.getElement();
         assertNull("element " + element.getUuid() + " was not deleted.", loadByUUid);

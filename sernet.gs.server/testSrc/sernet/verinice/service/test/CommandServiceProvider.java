@@ -79,7 +79,7 @@ import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.CreateLink;
 import sernet.verinice.service.commands.LoadCnAElementByExternalID;
-import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.verinice.service.commands.LoadElementById;
 import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.UpdateElementEntity;
 import sernet.verinice.service.model.LoadModel;
@@ -311,7 +311,7 @@ public abstract class CommandServiceProvider extends UuidLoader {
         RemoveElement removeCommand = new RemoveElement(element);
         commandService.executeCommand(removeCommand);
 
-        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<>(element.getUuid());
+        LoadElementById<CnATreeElement> command = new LoadElementById<>(element.getDbId());
         command = commandService.executeCommand(command);
         assertNull("Element " + element.getUuid() + " was not deleted.", command.getElement());
     }

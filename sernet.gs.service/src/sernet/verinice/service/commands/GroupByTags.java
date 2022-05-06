@@ -86,7 +86,7 @@ public class GroupByTags extends GenericCommand {
     /*
      * (non-Javadoc)
      * 
-     * @see sernet.verinice.service.commands.LoadElementByUuid#execute()
+     * @see sernet.verinice.service.commands.LoadElementById#execute()
      */
     @Override
     public void execute() {

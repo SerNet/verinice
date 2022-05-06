@@ -49,8 +49,8 @@ import sernet.verinice.interfaces.iso27k.ILink;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CreateLink;
+import sernet.verinice.service.commands.LoadElementById;
 import sernet.verinice.service.commands.LoadElementByTypeId;
-import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.RemoveLink;
 
 /**
@@ -130,8 +130,8 @@ public class LinkBean {
         RetrieveInfo ri = new RetrieveInfo();
         ri.setLinksDownProperties(true);
         ri.setLinksUpProperties(true);
-        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<>(getTypeId(),
-                getElement().getUuid(), ri);
+        LoadElementById<CnATreeElement> command = new LoadElementById<>(getTypeId(),
+                getElement().getDbId(), ri);
         command = getCommandService().executeCommand(command);
         setElement(command.getElement());
         linkList = new ArrayList<>();

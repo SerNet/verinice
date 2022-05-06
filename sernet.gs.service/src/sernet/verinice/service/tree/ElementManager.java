@@ -331,7 +331,7 @@ public class ElementManager {
         } else if (LOG.isDebugEnabled()) {
             LOG.debug("Loading children from database, parent uuid: " + element.getUuid());
         }
-        LoadTreeItem command = new LoadTreeItem(element.getUuid(), ri,
+        LoadTreeItem command = new LoadTreeItem(element.getDbId(), ri,
                 ElementFilter.convertToMap(getParameterList()));
         command = getCommandService().executeCommand(command);
         CnATreeElement elementWithChildren = command.getElement();

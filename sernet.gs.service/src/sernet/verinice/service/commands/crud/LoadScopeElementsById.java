@@ -29,7 +29,7 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.verinice.service.commands.LoadElementById;
 
 /**
  *
@@ -66,8 +66,8 @@ public class LoadScopeElementsById extends GenericCommand {
         }
         for (CnATreeElement elmt : results) {
             RetrieveInfo ri = new RetrieveInfo().setProperties(true);
-            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(
-                    elmt.getUuid(), ri);
+            LoadElementById<CnATreeElement> command = new LoadElementById<CnATreeElement>(
+                    elmt.getDbId(), ri);
             try {
                 command = getCommandService().executeCommand(command);
                 list.add(command.getElement());

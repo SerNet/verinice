@@ -56,6 +56,7 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.service.commands.LoadElementById;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameterException;
@@ -310,8 +311,8 @@ public class SyncInsertUpdateTest extends CommandServiceProvider {
 
         VNAImportHelper.importFile(VNA_FILE_DELETE, false, false, true, false);
 
-        LoadElementByUuid<Anwendung> loadElementByUuid = new LoadElementByUuid<Anwendung>(
-                anwendung.getUuid());
+        LoadElementById<Anwendung> loadElementByUuid = new LoadElementById<Anwendung>(
+                anwendung.getDbId());
         commandService.executeCommand(loadElementByUuid);
 
         assertTrue("Element " + anwendung.getUuid() + " may not deleted",

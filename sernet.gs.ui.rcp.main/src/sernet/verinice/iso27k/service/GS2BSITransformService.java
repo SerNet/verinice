@@ -43,7 +43,7 @@ import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.IncidentScenarioGroup;
-import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.verinice.service.commands.LoadElementById;
 import sernet.verinice.service.commands.SaveElement;
 import sernet.verinice.service.parser.GSScraperUtil;
 
@@ -262,12 +262,12 @@ public class GS2BSITransformService {
                     e = command.getElement();
                     RetrieveInfo info = new RetrieveInfo().setParent(true).setChildren(true)
                             .setProperties(true);
-                    LoadElementByUuid<CnATreeElement> c2 = new LoadElementByUuid<>(e.getUuid(),
+                    LoadElementById<CnATreeElement> c2 = new LoadElementById<>(e.getDbId(),
                             info);
                     try {
                         c2 = ServiceFactory.lookupCommandService().executeCommand(c2);
                         e = c2.getElement();
-                        c2 = new LoadElementByUuid<>(e.getParent().getUuid(), info);
+                        c2 = new LoadElementById<>(e.getParent().getDbId(), info);
                         c2 = ServiceFactory.lookupCommandService().executeCommand(c2);
                         e.setParent(c2.getElement());
                     } catch (CommandException e1) {

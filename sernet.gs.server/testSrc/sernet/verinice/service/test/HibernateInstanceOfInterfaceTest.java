@@ -41,7 +41,7 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Process;
 import sernet.verinice.model.iso27k.ProcessGroup;
-import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.verinice.service.commands.LoadElementById;
 
 /**
  * This test checks whether entity instances loaded by Hibernate that contain
@@ -64,8 +64,8 @@ public class HibernateInstanceOfInterfaceTest extends CommandServiceProvider {
     public void testInstanceOf() throws CommandException {
         CnATreeElement elementCreated = createOrganization();
         RetrieveInfo doNotRetrieveAnyRelations = new RetrieveInfo();
-        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<>(
-                elementCreated.getUuid(), doNotRetrieveAnyRelations);
+        LoadElementById<CnATreeElement> command = new LoadElementById<>(
+                elementCreated.getDbId(), doNotRetrieveAnyRelations);
         command = commandService.executeCommand(command);
         CnATreeElement element = command.getElement();
         assertNotNull(element);
@@ -81,8 +81,8 @@ public class HibernateInstanceOfInterfaceTest extends CommandServiceProvider {
     public void testInstanceOfChildren() throws CommandException {
         CnATreeElement elementCreated = createOrganization();
         RetrieveInfo doNotRetrieveAnyRelations = new RetrieveInfo();
-        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<>(
-                elementCreated.getUuid(), doNotRetrieveAnyRelations);
+        LoadElementById<CnATreeElement> command = new LoadElementById<>(
+                elementCreated.getDbId(), doNotRetrieveAnyRelations);
         command = commandService.executeCommand(command);
         CnATreeElement element = command.getElement();
         assertNotNull(element);
@@ -100,8 +100,8 @@ public class HibernateInstanceOfInterfaceTest extends CommandServiceProvider {
     public void testInstanceOfParent() throws CommandException {
         CnATreeElement elementCreated = createOrganization();
         RetrieveInfo doNotRetrieveAnyRelations = new RetrieveInfo();
-        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<>(
-                elementCreated.getUuid(), doNotRetrieveAnyRelations);
+        LoadElementById<CnATreeElement> command = new LoadElementById<>(
+                elementCreated.getDbId(), doNotRetrieveAnyRelations);
         command = commandService.executeCommand(command);
         CnATreeElement element = command.getElement();
         assertNotNull(element);
@@ -120,7 +120,7 @@ public class HibernateInstanceOfInterfaceTest extends CommandServiceProvider {
         beforeTestInstanceOfLinks();
 
         RetrieveInfo doNotRetrieveAnyRelations = new RetrieveInfo();
-        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<>(process.getUuid(),
+        LoadElementById<CnATreeElement> command = new LoadElementById<>(process.getDbId(),
                 doNotRetrieveAnyRelations);
         command = commandService.executeCommand(command);
         process = (Process) command.getElement();

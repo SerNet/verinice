@@ -24,7 +24,7 @@ import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Process;
 import sernet.verinice.model.iso27k.ProcessGroup;
-import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.verinice.service.commands.LoadElementById;
 import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.dataprotection.migration.MigrateDataProtectionCommand;
 import sernet.verinice.service.test.CommandServiceProvider;
@@ -349,9 +349,9 @@ public class MigrateDataProtectionCommandTest extends CommandServiceProvider {
     private CnATreeElement loadAllDataFromElement(CnATreeElement control) throws CommandException {
         RetrieveInfo ri = new RetrieveInfo().setProperties(true).setLinksUp(true)
                 .setLinksDown(true);
-        LoadElementByUuid<CnATreeElement> loadElementByUuid = new LoadElementByUuid<CnATreeElement>(
-                control.getUuid(), ri);
-        LoadElementByUuid<CnATreeElement> executeCommand = commandService
+        LoadElementById<CnATreeElement> loadElementByUuid = new LoadElementById<CnATreeElement>(
+                control.getDbId(), ri);
+        LoadElementById<CnATreeElement> executeCommand = commandService
                 .executeCommand(loadElementByUuid);
         control = executeCommand.getElement();
         return control;

@@ -54,6 +54,7 @@ import sernet.verinice.interfaces.validation.IValidationService;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.validation.CnAValidation;
+import sernet.verinice.service.commands.LoadElementById;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.LoadSubtreeIds;
 import sernet.verinice.service.commands.crud.LoadScopeElementsById;
@@ -427,8 +428,8 @@ public class ValidationService implements IValidationService {
         createValidationForSingleElement(elmt);
         for (CnATreeElement child : elmt.getChildren()) {
             if (child.getScopeId() == null) {
-                LoadElementByUuid<CnATreeElement> childReloader = new LoadElementByUuid<>(
-                        child.getUuid());
+                LoadElementById<CnATreeElement> childReloader = new LoadElementById<>(
+                        child.getDbId());
                 childReloader = getCommandService().executeCommand(childReloader);
                 child = childReloader.getElement();
             }

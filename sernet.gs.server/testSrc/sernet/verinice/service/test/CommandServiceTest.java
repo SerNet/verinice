@@ -148,10 +148,10 @@ public class CommandServiceTest extends CommandServiceProvider {
     }
 
     /**
-     * Calls LoadElementByUuid for all elements in DB
+     * Calls LoadElementById for all elements in DB
      */
     @Test
-    public void testLoadElementByUuid() throws Exception {
+    public void testLoadElementById() throws Exception {
         List<String> uuidList = getAllUuids();
 
         for (String uuid : uuidList) {
@@ -245,7 +245,7 @@ public class CommandServiceTest extends CommandServiceProvider {
     protected void loadChildren(CnATreeElement element) throws CommandException {
         RetrieveInfo ri = new RetrieveInfo();
         ri.setChildren(true).setChildrenProperties(true);
-        LoadTreeItem command = new LoadTreeItem(element.getUuid(), ri);
+        LoadTreeItem command = new LoadTreeItem(element.getDbId(), ri);
         command = commandService.executeCommand(command);
         CnATreeElement elementWithChildren = command.getElement();
         Set<CnATreeElement> children = elementWithChildren.getChildren();
