@@ -15,7 +15,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.common.model;
+package sernet.verinice.model.common;
 
 import java.util.Locale;
 
@@ -26,7 +26,6 @@ import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Generate user-presentable labels for elements

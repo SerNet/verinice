@@ -93,7 +93,6 @@ import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateContext;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateResult;
-import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.Preferences;
 import sernet.verinice.service.bp.risk.RiskService;
@@ -678,7 +677,7 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
             frequenciesPageIndex = addNewPage(scrolledComposite,
                     Messages.BSIElementEditorMultiPage_page_name_risk_frequency);
         }
-        if (!isCatalogElement(cnAElement)) {
+        if (!CnAElementHome.getInstance().isCatalogElement(cnAElement)) {
             createChangeMetadataPage();
         }
 
@@ -687,15 +686,6 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
             save(false);
         }
 
-    }
-
-    private boolean isCatalogElement(CnATreeElement element) {
-        if (element.getScopeId() == null) {
-            return false;
-        }
-        CatalogModel catalogModel = CnAElementFactory.getInstance().getCatalogModel();
-        return catalogModel.getChildren().stream().map(CnATreeElement::getDbId)
-                .anyMatch(element.getScopeId()::equals);
     }
 
     private void riskConfigurationChanged() {

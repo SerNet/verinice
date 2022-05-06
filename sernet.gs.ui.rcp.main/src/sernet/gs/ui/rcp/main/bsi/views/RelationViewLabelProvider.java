@@ -25,12 +25,12 @@ import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElementLabelGenerator;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.CnATreeElementLabelGenerator;
 import sernet.verinice.rcp.ElementTitleCache;
 
 /**

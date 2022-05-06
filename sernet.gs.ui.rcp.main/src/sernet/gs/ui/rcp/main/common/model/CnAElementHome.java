@@ -451,6 +451,10 @@ public final class CnAElementHome {
      */
     public boolean isWriteAllowed(CnATreeElement cte) {
         try {
+            if (isCatalogElement(cte)) {
+                return false;
+            }
+
             // Short cut: If no permission handling is needed than all objects
             // are
             // writable.
@@ -496,6 +500,15 @@ public final class CnAElementHome {
             log.error("Error while checking write permission.", e);
         }
         return false;
+    }
+
+    public boolean isCatalogElement(CnATreeElement element) {
+        if (element.getScopeId() == null) {
+            return false;
+        }
+        CatalogModel catalogModel = CnAElementFactory.getInstance().getCatalogModel();
+        return catalogModel.getChildren().stream().map(CnATreeElement::getDbId)
+                .anyMatch(element.getScopeId()::equals);
     }
 
     public void createLinksAccordingToBusinessLogic(final CnATreeElement dropTarget,

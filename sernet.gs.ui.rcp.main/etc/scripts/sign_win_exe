@@ -1,0 +1,83 @@
+#!/bin/bash 
+
+# some basic definitions
+# need to be setup
+DESCRIPTION="SerNet Service Network GmbH"
+URL="https://www.sernet.de/en/"
+FILE_TO_SIGN=verinice/verinice.exe
+CMD=/usr/bin/osslsigncode
+TIMESTAMPURL=http://timestamp.sectigo.com/
+
+
+# usage
+usage() {
+cat <<EOF >&2
+usage: sign_win_exe -k PATH_TO_PKCS_FILE -i PATH_TO_VERINICE_ZIP 
+       sign_win_exe -h Show this help
+
+Example:
+       
+       sign_win_exe -k /mount/usb-drive/pkcs12-file.pfx -i verinice-win.zip
+
+Signs the windows execuable in a given zip. Ask for the key password, 
+
+EOF
+exit 1
+}
+
+# parse arguments
+while getopts k:i:h opt
+do
+    case $opt in
+    k) PATH_TO_KEY="$OPTARG";;
+    i) ZIP_FILE="$OPTARG";;
+    h) usage;;
+    esac
+done
+shift $(($OPTIND - 1))
+
+set -o errexit
+
+KT="${PATH_TO_KEY:?Path to key is manatory.}"
+IT="${ZIP_FILE:?Zip file is mantatory.}"
+
+#unzip in tmp
+TMP_DIR=$(mktemp -d)
+
+echo "Unziping archive $ZIP_FILE to temp dir $TMP_DIR"
+
+unzip -qq -o $ZIP_FILE -d $TMP_DIR
+
+## sign the exe
+IN_FILE=$TMP_DIR/$FILE_TO_SIGN
+OUT=$(mktemp)
+
+echo "
+Sign: $IN_FILE -> $OUT
+PKCS 12 file: $PATH_TO_KEY
+Description: $DESCRIPTION 
+Url: $URL"
+
+# the sign command
+$CMD sign -pkcs12 "$PATH_TO_KEY" \
+  -askpass \
+  -n "$DESCRIPTION" \
+  -i "$URL" \
+  -t $TIMESTAMPURL \
+  -in $IN_FILE \
+  -out $OUT
+  
+# move signed file
+echo "
+Deleting temp dir: $TMP_DIR"
+rm  -rf $TMP_DIR
+echo "Updating archive $ZIP_FILE with signed $FILE_TO_SIGN"
+mkdir -p verinice
+mv $OUT $FILE_TO_SIGN
+zip -q $ZIP_FILE $FILE_TO_SIGN
+rm $FILE_TO_SIGN
+rmdir verinice
+
+echo "Done"
+
+
