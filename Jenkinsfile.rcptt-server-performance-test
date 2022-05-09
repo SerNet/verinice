@@ -27,7 +27,7 @@ pipeline {
           description: 'The postgres database version to use.')
         string(name: 'TEST_OPTIONS', defaultValue: 'testExecTimeout=45000;execTimeout=410000;reportingIncludeIgnoredWaitDetails=true;passedTestDetails=true;runtimeEnableActivityLogs=true;q7ImageCapture=true;jobHangTimeout=900000;contextRunnableTimeout=900000',
           description: 'The options of the rcptt testing program.')
-        booleanParam(name: 'monitor_server', defaultValue: true, 
+        booleanParam(name: 'monitor_server', defaultValue: false, 
           description: 'Install Melody as server monitor.')
     }
     stages {
