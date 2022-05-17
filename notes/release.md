@@ -66,7 +66,7 @@
 
     git fetch
     git remote add github git@github.com:SerNet/verinice.git
-    git push github origin/master
+    git push github origin/master:master
     git push github $version
 
 # Hotfixes
