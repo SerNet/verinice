@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Hitro-UI Common
 Bundle-SymbolicName: sernet.hui.common
-Bundle-Version: 1.1.1.qualifier
+Bundle-Version: 1.24.0.qualifier
 Bundle-ClassPath: .
 Export-Package: sernet.hui.common,
  sernet.hui.common.connect,

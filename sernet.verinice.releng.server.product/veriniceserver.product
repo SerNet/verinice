@@ -25,7 +25,7 @@
    </plugins>
 
    <features>
-      <feature id="sernet.gs.server.feature" version="1.1.1.qualifier"/>
+      <feature id="sernet.gs.server.feature" version="1.24.0.qualifier"/>
    </features>
 
 

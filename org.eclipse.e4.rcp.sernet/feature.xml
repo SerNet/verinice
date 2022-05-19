@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.e4.rcp.sernet"
       label="%featureName"
-      version="1.6.100.qualifier"
+      version="1.24.0.qualifier"
       provider-name="%providerName">
 
    <description>

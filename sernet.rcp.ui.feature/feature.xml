@@ -2,7 +2,7 @@
 <feature
       id="sernet.rcp.ui.feature"
       label="RCP UI"
-      version="1.0.0.qualifier"
+      version="1.24.0.qualifier"
       provider-name="SERNET">
 
    <description url="https://verinice.com">
