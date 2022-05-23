@@ -2,7 +2,7 @@
 <feature
       id="sernet.verinice.extraresources.feature"
       label="Extra-Resources"
-      version="1.0.0.qualifier">
+      version="1.24.1.qualifier">
 
    <description url="https://verinice.com">
       The extra resurouces for verinice, like the jre.

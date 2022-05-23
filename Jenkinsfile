@@ -1,3 +1,5 @@
+def qualifier
+
 pipeline {
     agent {
         dockerfile {
@@ -29,6 +31,8 @@ pipeline {
         stage('Setup') {
             steps {
                 script {
+                    qualifier = "v${new Date().format('yyyyMMddHHmmss')}"
+                    echo "Using build qualifier $qualifier"
                     if (params.distSign && !params.dists) {
                         def msg = 'You have to enable dists, if you want to sign packages.'
                         buildDescription msg
@@ -50,19 +54,19 @@ pipeline {
                     }
                 }
                 buildDescription "${env.GIT_BRANCH} ${env.GIT_COMMIT[0..8]}"
-                sh './verinice-distribution/build.sh clean'
+                sh "./verinice-distribution/build.sh QUALIFIER=${qualifier} clean"
             }
         }
         stage('Fetch JREs') {
             steps {
-                sh "./verinice-distribution/build.sh JREVERSION=${params.jreversion} -j4 jres"
+                sh "./verinice-distribution/build.sh QUALIFIER=${qualifier} JREVERSION=${params.jreversion} -j4 jres"
             }
         }
         stage('Build') {
             steps {
                 script {
                     def buildTask = params.runIntegrationTests ? 'verify' : 'products'
-	                sh "./verinice-distribution/build.sh ${buildTask}"
+	                sh "./verinice-distribution/build.sh QUALIFIER=${qualifier} ${buildTask}"
 	                archiveArtifacts artifacts: 'sernet.verinice.releng.client.product/target/products/*.zip,sernet.verinice.releng.server.product/target/*.war', fingerprint: true
 	                if (params.archiveUpdateSite || params.dists){
 	                    archiveArtifacts artifacts: 'sernet.verinice.releng.client.product/target/repository/**', fingerprint: true
@@ -112,7 +116,7 @@ pipeline {
         }
         stage('Documentation') {
             steps {
-                sh "./verinice-distribution/build.sh -j4 docs"
+                sh "./verinice-distribution/build.sh QUALIFIER=${qualifier} -j4 docs"
                 archiveArtifacts artifacts: 'doc/manual/*/*.pdf,doc/manual/*/*.zip', fingerprint: true
             }
         }
@@ -135,7 +139,7 @@ pipeline {
                 expression { params.dists && currentBuild.result in [null, 'SUCCESS'] }
             }
             steps {
-                sh "./verinice-distribution/build.sh -j2 dists"
+                sh "./verinice-distribution/build.sh QUALIFIER=${qualifier} -j2 dists"
             }
         }
         // Signing is a separate step because we want to be able to build RPMs any time, to test them.
@@ -160,7 +164,7 @@ pipeline {
             emailext body: '${JELLY_SCRIPT,template="text"}', subject: '$DEFAULT_SUBJECT', to: 'dm@sernet.de, uz@sernet.de, jk@sernet.de, fw@sernet.de, ak@sernet.de'
         }
         success {
-            sh './verinice-distribution/build.sh clean'
+            sh './verinice-distribution/build.sh QUALIFIER=${qualifier} clean'
         }
     }
 }

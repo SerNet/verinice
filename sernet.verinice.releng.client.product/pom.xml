@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>sernet.verinice</groupId>
 		<artifactId>sernet.verinice.tycho.root</artifactId>
-		<version>1.24.0-SNAPSHOT</version>
+		<version>1.24.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>sernet.verinice.releng.client.product</artifactId>
