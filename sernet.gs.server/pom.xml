@@ -46,7 +46,7 @@
                 <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
-                        <version>3.0.0-M5</version>
+                        <version>3.0.0-M7</version>
                         <configuration>
                                 <forkMode>once</forkMode>
                                 <argLine>-Xmx2g</argLine>
@@ -62,7 +62,7 @@
                             <dependency>
                                 <groupId>org.apache.maven.surefire</groupId>
                                 <artifactId>surefire-junit4</artifactId>
-                                <version>3.0.0-M5</version>
+                                <version>3.0.0-M7</version>
                             </dependency>
                         </dependencies>
                 </plugin>
