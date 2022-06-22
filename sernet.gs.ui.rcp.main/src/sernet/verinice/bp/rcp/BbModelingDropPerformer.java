@@ -166,7 +166,6 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
         modelCommand.setHandleSafeguards(Preferences.isModelSafeguardsActive());
         modelCommand.setHandleDummySafeguards(Preferences.isModelDummySafeguardsActive());
         modelCommand = getCommandService().executeCommand(modelCommand);
-        CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
     }
 
     private boolean isValid(List<CnATreeElement> draggedModules) {
