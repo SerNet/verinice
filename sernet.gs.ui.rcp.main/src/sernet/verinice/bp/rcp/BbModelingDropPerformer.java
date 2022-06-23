@@ -157,7 +157,7 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
             compendiumUuids.add(module.getUuid());
         }
         executeModelCommand(compendiumUuids, Collections.singletonList(element.getUuid()));
-        CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
+        CnAElementFactory.getInstance().reloadBpModelFromDatabase();
     }
 
     private void executeModelCommand(Set<String> compendiumUuids, List<String> targetUuids)
