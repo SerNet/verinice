@@ -59,9 +59,12 @@ public class CheckHasReferencesCommand extends GenericCommand {
         CnATreeElement containingObject = requirement.getParent();
         while (containingObject != null && !(ITargetObject.class.isAssignableFrom(
                 CnATypeMapper.getClassFromTypeId(containingObject.getTypeId())))) {
+            if (containingObject.getParentId().equals(targetObject.getDbId())) {
+                return false;
+            }
             containingObject = containingObject.getParent();
         }
-        return containingObject != null && !targetObject.equals(containingObject);
+        return true;
     }
 
     public boolean getResult() {
