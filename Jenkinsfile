@@ -161,7 +161,7 @@ pipeline {
             recordIssues(tools: [taskScanner(highTags: 'FIXME', ignoreCase: true, normalTags: 'TODO', includePattern: '**/*.java, **/*.xml')])
         }
         failure {
-            emailext body: '${JELLY_SCRIPT,template="text"}', subject: '$DEFAULT_SUBJECT', to: 'dm@sernet.de, uz@sernet.de, jk@sernet.de, fw@sernet.de, ak@sernet.de'
+            emailext body: '${JELLY_SCRIPT,template="text"}', subject: '$DEFAULT_SUBJECT', to: 'dm@sernet.de, uz@sernet.de, jk@sernet.de, ak@sernet.de'
         }
         success {
             sh './verinice-distribution/build.sh QUALIFIER=${qualifier} clean'
