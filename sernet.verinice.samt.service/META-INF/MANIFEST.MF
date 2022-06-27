@@ -5,7 +5,7 @@ Bundle-SymbolicName: sernet.verinice.samt.service
 Bundle-Version: 1.24.1.qualifier
 Bundle-Activator: sernet.verinice.samt.service.Activator
 Bundle-Vendor: %Bundle-Vendor
-Require-Bundle: org.apache.log4j;bundle-version="1.2.19",
+Require-Bundle: org.apache.log4j;bundle-version="1.2.21",
  com.springsource.org.hibernate;bundle-version="3.2.6",
  sernet.gs.service,
  sernet.hui.common
