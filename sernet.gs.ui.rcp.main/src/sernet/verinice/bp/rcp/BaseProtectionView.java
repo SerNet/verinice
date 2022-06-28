@@ -98,8 +98,8 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.bp.BaseProtectionPerspective;
+import sernet.verinice.rcp.tree.BpTreeLabelProvider;
 import sernet.verinice.rcp.tree.TreeContentProvider;
-import sernet.verinice.rcp.tree.TreeLabelProvider;
 import sernet.verinice.rcp.tree.TreeUpdateListener;
 import sernet.verinice.service.commands.CnATypeMapper;
 import sernet.verinice.service.tree.ElementManager;
@@ -176,7 +176,7 @@ public class BaseProtectionView extends RightsEnabledView
         drillDownAdapter = new DrillDownAdapter(viewer);
         viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
         viewer.setContentProvider(contentProvider);
-        viewer.setLabelProvider(new DecoratingLabelProvider(new TreeLabelProvider(),
+        viewer.setLabelProvider(new DecoratingLabelProvider(new BpTreeLabelProvider(),
                 workbench.getDecoratorManager()));
         viewer.setComparator(new BaseProtectionTreeComparator());
         Collection<ViewerFilter> filters = BaseProtectionFilterBuilder
