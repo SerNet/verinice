@@ -17,8 +17,8 @@
 
 package sernet.verinice.rcp.tree;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.resource.JFaceResources;
@@ -49,7 +49,7 @@ public class BpTreeLabelProvider extends TreeLabelProvider
 
     private static final Logger LOG = Logger.getLogger(BpTreeLabelProvider.class);
 
-    private Map<Integer, Boolean> cache = new HashMap<>(10000);
+    private Map<Integer, Boolean> cache = new ConcurrentHashMap<>(10000);
 
     private Font fontElementWithReferences;
     private Color colorElementWithReferences;
