@@ -9799,8 +9799,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"
-|| row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
+                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Beschreibung</property>
@@ -11175,8 +11174,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"
-|| row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
+                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
@@ -12551,8 +12549,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"
-|| row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
+                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
@@ -13933,8 +13930,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"
-|| row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
+                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
@@ -15315,8 +15311,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"
-|| row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
+                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
@@ -16697,8 +16692,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"
-|| row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
+                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
@@ -18079,8 +18073,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"
-|| row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
+                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
@@ -19467,8 +19460,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"
-|| row._outer["Aus-Mnhm-ableiten-Baustein-Anforderung"]=="0"</expression>
+                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
