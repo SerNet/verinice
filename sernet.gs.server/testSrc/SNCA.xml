@@ -4715,7 +4715,18 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             name="Abbreviation"
             id="org_abbr"
             tags="Basic" />
-
+         <!-- start bcm  -->
+        <huiproperty
+            name="Scope of the business continuity management system"
+            id="bcm_scope"
+            inputtype="text"
+            tags="Basic,BCM" />
+        <huiproperty
+            name="Exclusions"
+            id="exclusions_description"
+            inputtype="text"
+            tags="Basic,BCM" />
+              <!-- ende bcm  -->
         <huiproperty
             name="Description"
             id="org_description"
@@ -5095,8 +5106,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                 id="asset_user_19"
                 name="Buchhaltung" />
         </huiproperty>
-
-
+         <!-- START:  BCM Anforderungen 01062022 -->
     <!-- TODO externalize strings -->
         <huipropertygroup id="asset_bcm_group" name="Business Continuity" tags="BCM" >
             <huiproperty id="asset_bcm_mtpd" name="MTPD (h)" tags="BCM" />
@@ -5236,8 +5246,29 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                     value="3" />
             </huiproperty>
 
-        </huipropertygroup>
+<!-- START:  BCM Aenderung -->
+             <huiproperty id="asset_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung" />
 
+               <huiproperty
+                id="asset_dateOfCollection"
+                name="Datum der Erhebung"
+                inputtype="date">
+                <defaultRule class="Today">
+                </defaultRule>
+                </huiproperty>
+                
+                 <huiproperty id="asset_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
+                        
+               <huiproperty
+                    id="asset_SPoF_value_1"
+                     tags="BCM"
+                    name="Single-Point-of-Failure/of-Knowledge/of-Contact (SPoF/SPoK/SPoC)"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+    <huiproperty id="asset_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />   
+        
+        </huipropertygroup>
+<!-- Ende:  BCM Aenderung -->
         <huipropertygroup id="asset_value_group" name="Business Impact" tags="Risk" >
         <huiproperty
                     id="asset_value_method_confidentiality"
@@ -5501,7 +5532,10 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
 
         <huirelation to="requirement" id="rel_person_requirement_responsible"
             name="responsible for" reversename="responsible" tooltip="" />
-
+<!--  START: BCM Relation -->
+        <huirelation to="requirement" id="rel_person_requirement_interest_group"
+            name="interest group expected/requested" reversename="expected by/requested by" tooltip="" />
+<!-- ENDE : BCM Relation -->
         <huirelation to="record" id="rel_person_record_maint"
             name="maintains" reversename="maintained by" tooltip="" />
 
@@ -5621,7 +5655,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             name="Document"
             id="person-iso_document"
             isURL="true" />
-        <huiproperty
+         <huiproperty
             name="Roles"
             id="person-iso_rollen"
             tooltip="Roles of this employee."
@@ -5652,6 +5686,20 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             <option
                 id="person-iso_8"
                 name="Brandschutzbeauftragter" />
+                                     <!-- START: BCM-Rollen 01062022 -->
+             <option
+                id="person-iso_62"
+                name="BCM-Koordinator/in" />
+             <option
+                id="person-iso_61"
+                name="BCM-Beauftragte/r" />
+             <option
+                id="person-iso_63"
+                name="BCM-Kernteam" />
+                <option
+                id="person-iso_66"
+                name="BCM-Stab" />
+                     <!-- ENDE: BCM-Rollen 01062022 -->
             <option
                 id="person-iso_9"
                 name="Datenschutzbeauftragter" />
@@ -5789,7 +5837,34 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             <option
                 id="person-iso_41"
                 name="Vertretung" />
+                   <!-- START: BCM-Rollen 30052022 -->
+             <option
+                id="person-iso_64"
+                name="Notfallvorsorgeteam" />
+             <option
+                id="person-iso_65"
+                name="Notfallbewältigungsteam" />
+                   <!-- ENDE: BCM-Rollen 30052022 -->
         </huiproperty>
+        <!-- START:  BCM person 01062022 -->
+
+        <huipropertygroup name="Business Continuity Management (BCM)" id="person_bcm_iso" tags="BCM" >
+             <huiproperty id="person_info_degree_of_influence" name="Degree of influence" inputtype="singleoption">
+                <option id="person_info_influence_gering" name="gering" />
+                <option id="person_info_influence_mittel" name="mittel" />
+                <option id="person_info_influence_hoch" name="hoch" />
+                 </huiproperty>
+              
+                     <huiproperty
+                    id="person_SPoF_value_1"
+                     tags="BCM"
+                    name="Single-Point-of-Failure/of-Knowledge/of-Contact (SPoF/SPoK/SPoC)"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+    <huiproperty id="person_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
+          
+         </huipropertygroup>
+           <!-- ENDE:  BCM Aenderung -->
     <huipropertygroup id="infos_dsb" name="Allgemeine Informationen DSB">
     <huiproperty id="person_info_dsb" name="Betrieblicher DSB" inputtype="singleoption">
                 <option id="person_info_dsb_extern" name="Externer DSB" />
@@ -6250,6 +6325,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             id="control_document"
             isURL="true" />
 
+
 <!--
         <huipropertygroup name="Monitoring Results" id="control_auditgroup" >
              add measured effectiveness, notes, date...
@@ -6308,6 +6384,91 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
               </huiproperty>
          </huipropertygroup>
 
+               <!-- START:  BCM control 01062022 -->
+
+        <huipropertygroup name="Business Continuity Management (BCM)" id="control_bcm" tags="BCM" >
+         <huiproperty id="business_continuity_control_selectedBCM"
+                name="Business Continuity control"
+                inputtype="booleanoption"
+                defaultValue="0"
+                tags="BCM" />
+         
+<huiproperty editable="true" id="control_bcStrategie" inputtype="text" name="Beschreibung der BC-Strategie"
+ 			  showInObjectBrowser="false" visible="true" />
+ 			  
+ 			      <huiproperty id="control_bcm_wiederanlaufzeit" name="Wiederanlaufzeit" tags="BCM" inputtype="numericoption" min="0" max="6">
+                       <option
+                    id="control_bcm_time8hMtpd1"
+                    name="8 h"
+                    value="0" />
+                      <option
+                    id="control_bcm_time24hMtpd1"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="control_bcm_time2dMtpd1"
+                    name="2 d"
+                    value="2" />
+                     <option
+                    id="control_bcm_time4dMtpd1"
+                    name="4 d"
+                    value="3" />
+                     <option
+                    id="control_bcm_time14dMtpd1"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="control_bcm_time30dMtpd1"
+                    name="30 d"
+                    value="5" />
+                     <option
+                    id="control_bcm_timeg30dMtpd1"
+                    name=" größer als 30 d"
+                    value="6" />
+            </huiproperty>
+            
+               <huiproperty id="control_schaden" name="Schaden bis zum Wiederanlauf" inputtype="singleoption">
+                <option id="control_schaden_niedrig" name="niedrig" />
+                     <option id="control_schaden_mittel" name="mittel" />
+                <option id="control_schaden_hoch" name="hoch" />
+                 <option id="control_schaden_sehrhoch" name="sehr hoch" />
+ 			</huiproperty>
+ 			  <huiproperty editable="true" id="control_RtoEinhalten" inputtype="text" name="Einhalten der RTO"
+ 			  showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="control_ErreichbaresNotbetriebsniveau" inputtype="text" name="Erreichbares Notbetriebsniveau"
+ 			  showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="control_Restrisiko" inputtype="text" name="Verbleibendes Restrisiko"
+ 			  showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="control_finanzielleAufwaende" inputtype="text" name="Finanzielle Aufwände"
+ 			  showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="control_EinhaltungAnf" inputtype="text" name="Einhaltung interner und externer Anforderungen"
+ 			  showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="control_NotbetriebsdauerMax" inputtype="text" name="Maximal mögliche Notbetriebsdauer"
+ 			  showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="control_aufwaende" inputtype="text" name="Organisatorische Aufwände"
+ 			  showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="control_risken" inputtype="text" name="Entstehende Risiken"
+ 			  showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="control_zusatznutzen" inputtype="text" name="Entstehender Zusatznutzen"
+ 			  showInObjectBrowser="false" visible="true" />
+         </huipropertygroup>
+         
+         <huipropertygroup name="BCM-Maßnahmenplan" id="control_plan" tags="BCM" >
+         
+           <huiproperty editable="true" id="control_desc_plan_korrekturbedarf" inputtype="text" name="Korrekturbedarf/Verbesserungspotenzial"
+            showInObjectBrowser="false" textrows="4" visible="true" />
+            
+               <huiproperty editable="true" id="control_desc_plan_ursache" inputtype="text" name="Ursache"
+            showInObjectBrowser="false" textrows="4" visible="true" />
+            
+                  <huiproperty id="control_desc_plan_priority" inputtype="singleoption" name="Festgelegte Priorität" tags="BCM">
+        <option id="control_desc_plan_priorityGering" name="Gering"/>
+        <option id="control_desc_plan_priorityMittel" name="Mittel"/>
+        <option id="control_desc_plan_priorityHoch" name="Hoch"/>
+      </huiproperty>
+            
+         </huipropertygroup>
+           <!-- ENDE:  BCM control 01062022-->
         <huipropertygroup id="control_data_protection_objectives_eugdpr" name="Data privacy control objectives according to Art. 32 EU GDPR"
             tags="Privacy">
             <huiproperty id="control_data_protection_objectives_eugdpr_pseudonymization"
@@ -6793,6 +6954,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
 	    id="requirementgroup_desc"
 	    inputtype="text"
             showInObjectBrowser="true" />
+           
     </huientity>
 
     <huientity
@@ -6821,6 +6983,8 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             id="requirement_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
+            
+            
 
         <huiproperty
             name="Description"
@@ -6842,6 +7006,24 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             <option name="Business Objective" id="requirement_type_busobj" />
             <option name="IS Objective" id="requirement_type_isobj" />
         </huiproperty>
+          <!-- START:  BCM Anforderungen 01062022 -->
+             <huipropertygroup name="BCM" id="requirement_bcm" tags="BCM" >
+            <huiproperty id="business_continuity_requirement_selectedBCM"
+                name="Business Continuity requirement"
+                inputtype="booleanoption"
+                defaultValue="0"
+                tags="BCM" />
+                
+               <huiproperty id="requirement_info_degree_of_influence" name="Degree of influence" inputtype="singleoption">
+                <option id="requirement_info_influence_gering" name="gering" />
+                <option id="requirement_info_influence_mittel" name="mittel" />
+                <option id="requirement_info_influence_hoch" name="hoch" />
+                 </huiproperty>
+              
+ 			  
+         <!-- ENDE:  BCM Aenderung -->
+         </huipropertygroup>
+           <!-- ENDE:  BCM Anforderungen 01062022 -->
     </huientity>
 
     <huientity
@@ -8468,6 +8650,10 @@ Wurden bereits weitere Stellen informiert?
             <option name="Research information" id="document_type_research" />
             <option name="Manual" id="document_type_manual" />
             <option name="Training materials" id="document_type_training" />
+            <!-- START-BCM  10062022-->
+             <option name="Certificate" id="document_type_certificate" />
+             <option name="Guideline" id="document_type_guideline" />
+               <!-- ENDE-BCM  10062022-->
             <option name="Others" id="document_type_other" />
         </huiproperty>
         
@@ -8484,6 +8670,8 @@ Wurden bereits weitere Stellen informiert?
         </huiproperty>
 
          <huiproperty id="document_version" name="Version" inputtype="line"/>
+         <huiproperty id="document_retention_period" name="Retention Period" inputtype="line"/>
+         
          
         <huiproperty
             name="Document State" id="document_approval" inputtype="singleoption">
@@ -8754,6 +8942,16 @@ Wurden bereits weitere Stellen informiert?
     <huirelation to="process" id="rel_process_process"
             name="depends on" reversename="necessary for" tooltip="This process needs this process to function." />
 
+   <!-- Start: BCM relation -->
+        <huirelation to="process" id="rel_process_bp_process2"
+            name="parallel" reversename="parallel" />
+            
+        <huirelation to="process" id="rel_process_bp_process3"
+            name="vorgelagert" reversename="nachgelagert" />
+            
+        <huirelation to="process" id="rel_bp_process_process4"
+            name="nachgelagert" reversename="vorgelagert" />
+              <!-- Ende: BCM relation -->
     <huirelation to="controlgroup" id="rel_process_controlgroup"
             name="impact reduced by" reversename="reduces impact of" tooltip=""/>
 
@@ -8859,8 +9057,90 @@ Wurden bereits weitere Stellen informiert?
                 id="process_user_19"
                 name="Buchhaltung" />
         </huiproperty>
+<huipropertygroup tags="Risk" id="process_value_group" name="Business Impact">
+        <huiproperty
+                    tags="Risk" id="process_value_method_confidentiality"
+                    name="Deduce Confidentiality"
+                    inputtype="booleanoption"  >
+                </huiproperty>
+        <huiproperty
+                    tags="Risk" id="process_value_method_integrity"
+                    name="Deduce Integrity"
+                    inputtype="booleanoption"  >
+                </huiproperty>
+        <huiproperty
+                    tags="Risk" id="process_value_method_availability"
+                    name="Deduce Availability"
+                    inputtype="booleanoption"  >
+        </huiproperty>
 
+        <huiproperty
+                    tags="Risk" id="process_value_confidentiality"
+                    name="Confidentiality"
+                    inputtype="numericoption" min="0" max="3">
+                    <depends option="process_value_method_confidentiality" value="0"/>
+                    <option
+                        id="process_value_confidentiality_normal"
+                        name="0 Public"
+                        value="0" />
+                    <option
+                        id="process_value_confidentiality_hoch"
+                        name="1 Company confidential"
+                        value ="1" />
+                    <option
+                        id="process_value_confidentiality_sehrhoch"
+                        name="2 Customer confidential"
+                        value="2" />
+                    <option
+                        id="process_value_confidentiality_sehrhoch2"
+                        name="3 Sensitive"
+                        value="3" />
+                </huiproperty>
 
+                <huiproperty
+                    tags="Risk" id="process_value_integrity"
+                    name="Integrity"
+                    inputtype="numericoption"  min="0" max="2" >
+                    <depends option="process_value_method_integrity" value="0"/>
+                    <option
+                        id="process_value_integrity_normal"
+                        name="0 None" value="0"  />
+                    <option
+                        id="process_value_integrity_hoch"
+                        name="1 Normal" value="1"  />
+                    <option
+                        id="process_value_integrity_sehrhoch"
+                        name="2 High" value="2" />
+                </huiproperty>
+
+                <huiproperty
+                    tags="Risk" id="process_value_availability"
+                    name="Availability"
+                    inputtype="numericoption"  min="0" max="4" >
+                    <depends option="process_value_method_availability" value="0"/>
+                    <option
+                        id="process_value_availability_normal"
+                        name="0 Basic" value="0" />
+                    <option
+                        id="process_value_availability_hoch"
+                        name="1 Standard" value="1" />
+                    <option
+                        id="process_value_availability_sehrhoch"
+                        name="2 Premium" value="2" />
+                    <option
+                        id="process_value_availability_sehrhoch2"
+                        name="3 Enterprise" value="3" />
+                    <option
+                        id="process_value_availability_sehrhoch3"
+                        name="4 Exceptional" value="4" />
+                </huiproperty>
+
+                <huiproperty
+                    tags="Risk" name="Explanation"
+                    inputtype="text"
+                    id="process_value_comment" />
+        </huipropertygroup>
+  <!-- START:  BCM Anforderungen 01062022 -->
        <!-- TODO externalize strings -->
         <huipropertygroup id="process_bcm_group" name="Business Continuity" tags="BCM" >
             <huiproperty id="process_bcm_mtpd" name="MTPD (h)" tags="BCM" ></huiproperty>
@@ -9000,91 +9280,82 @@ Wurden bereits weitere Stellen informiert?
                     value="3" />
             </huiproperty>
 
-        </huipropertygroup>
+<!-- START:  BCM Aenderung -->
+             <huiproperty id="process_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung" />
 
-     <huipropertygroup tags="Risk" id="process_value_group" name="Business Impact">
-        <huiproperty
-                    tags="Risk" id="process_value_method_confidentiality"
-                    name="Deduce Confidentiality"
-                    inputtype="booleanoption"  >
+               <huiproperty
+                id="process_dateOfCollection"
+                name="Datum der Erhebung"
+                inputtype="date">
+                <defaultRule class="Today">
+                </defaultRule>
                 </huiproperty>
-        <huiproperty
-                    tags="Risk" id="process_value_method_integrity"
-                    name="Deduce Integrity"
-                    inputtype="booleanoption"  >
-                </huiproperty>
-        <huiproperty
-                    tags="Risk" id="process_value_method_availability"
-                    name="Deduce Availability"
-                    inputtype="booleanoption"  >
+                
+                 <huiproperty id="process_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
+                        
+               <huiproperty
+                    id="process_SPoF_value_1"
+                     tags="BCM"
+                    name="Single-Point-of-Failure/of-Knowledge/of-Contact (SPoF/SPoK/SPoC)"
+                    inputtype="booleanoption"  defaultValue="0" >
         </huiproperty>
+    <huiproperty id="businessprocess_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />   
+            
+         </huipropertygroup>
+         
+            <huipropertygroup name="BCM-Reporting" id="processreporting_bcm" tags="BCM" >
+            
+              <huiproperty id="iso_business_continuity_reporting_selectedBIA"
+                name="Prozess in BIA betrachtet?"
+                inputtype="booleanoption"
+                defaultValue="1"
+                tags="BCM" />
+                
+             <huiproperty id="process_reporting_zeitkritisch" name="Zeitkritischer Geschäftsprozess?" inputtype="singleoption">
+                <option id="process_reporting_zeitkritisch_ja" name="ja" />
+                 <option id="process_reporting_zeitkritisch_nein" name="nein" />
+                 <option id="process_reporting_zeitkritisch_fehlendeDaten" name="Fehlende Daten" />
+ 			</huiproperty>
+ 			
+ 			
+ 			 <huiproperty id="process_reporting_GFP" name="Im Geschäftsfortführungsplan (GFP) vorhanden?" inputtype="singleoption">
+                <option id="process_reporting_GFP_ja" name="ja" />
+                 <option id="process_reporting_GFP_nein" name="nein" />
+                 <option id="process_reporting_GFP_fehlendeDaten" name="Fehlende Daten" />
+                 <option id="process_reporting_GFP_nichtRelevant" name="Nicht relevant" />
+ 			</huiproperty>
+                
+          <huiproperty id="process_reporting_qualityGFP" name="Qualität des Geschäftsfortführungsplans (GFP)?" inputtype="singleoption">
+                <option id="iso_process_reporting_GFP_qualityAngemessen" name="Angemessen und plausibel" />
+                 <option id="process_reporting_GFP_qualityfehlendeDaten" name="Fehlende Daten" />
+                 <option id="process_reporting_GFP_qualityNichtRelevant" name="Nicht relevant" />
+ 			</huiproperty>
+ 			
+ 			<huiproperty id="process_reporting_trainingGFP" name="Anhand des Geschäftsfortführungsplans (GFP) geübt?" inputtype="singleoption">
+                <option id="process_reporting_GFP_trainingAngemessen" name="GFP ist funktionsfähig und wirksam" />
+                 <option id="process_reporting_GFP_trainingfehlendeDaten" name="Fehlende Daten" />
+                 <option id="process_reporting_GFP_trainingNichtVorhanden" name="Nicht vorhanden" />
+ 			</huiproperty>
+ 		
+ 			<huiproperty id="process_reporting_kennzahl1" inputtype="text" name="Kennzahl " tags="Risk"/>
+ 			 <huiproperty id="process_reporting_Zielwert" name="Zielwert" required="false" />
+ 			 	 <huiproperty id="process_reporting_istWert" name="Ist-Wert" required="false" />
+ 			 	  <huiproperty id="process_reporting_sollIstWertAbweichung"
+                name="Abweichung"
+                inputtype="booleanoption"
+                defaultValue="0"
+                tags="BCM" />
+                 <huiproperty id="process_reporting_ursache" name="Ursache" required="false" />
+ 			
+ 			<huiproperty id="process_reporting_schweregrad" name="Schweregrad" inputtype="singleoption">
+                <option id="process_reporting_GFP_schweregradGering" name="Gering" />
+                 <option id="process_reporting_GFP_schweregradMittel" name="Mittel" />
+                 <option id="process_reporting_GFP_schweregradHoch" name="Hoch" />
+ 			</huiproperty>
+              </huipropertygroup>
+           <!-- ENDE:  BCM Aenderung -->
 
-        <huiproperty
-                    tags="Risk" id="process_value_confidentiality"
-                    name="Confidentiality"
-                    inputtype="numericoption" min="0" max="3">
-                    <depends option="process_value_method_confidentiality" value="0"/>
-                    <option
-                        id="process_value_confidentiality_normal"
-                        name="0 Public"
-                        value="0" />
-                    <option
-                        id="process_value_confidentiality_hoch"
-                        name="1 Company confidential"
-                        value ="1" />
-                    <option
-                        id="process_value_confidentiality_sehrhoch"
-                        name="2 Customer confidential"
-                        value="2" />
-                    <option
-                        id="process_value_confidentiality_sehrhoch2"
-                        name="3 Sensitive"
-                        value="3" />
-                </huiproperty>
-
-                <huiproperty
-                    tags="Risk" id="process_value_integrity"
-                    name="Integrity"
-                    inputtype="numericoption"  min="0" max="2" >
-                    <depends option="process_value_method_integrity" value="0"/>
-                    <option
-                        id="process_value_integrity_normal"
-                        name="0 None" value="0"  />
-                    <option
-                        id="process_value_integrity_hoch"
-                        name="1 Normal" value="1"  />
-                    <option
-                        id="process_value_integrity_sehrhoch"
-                        name="2 High" value="2" />
-                </huiproperty>
-
-                <huiproperty
-                    tags="Risk" id="process_value_availability"
-                    name="Availability"
-                    inputtype="numericoption"  min="0" max="4" >
-                    <depends option="process_value_method_availability" value="0"/>
-                    <option
-                        id="process_value_availability_normal"
-                        name="0 Basic" value="0" />
-                    <option
-                        id="process_value_availability_hoch"
-                        name="1 Standard" value="1" />
-                    <option
-                        id="process_value_availability_sehrhoch"
-                        name="2 Premium" value="2" />
-                    <option
-                        id="process_value_availability_sehrhoch2"
-                        name="3 Enterprise" value="3" />
-                    <option
-                        id="process_value_availability_sehrhoch3"
-                        name="4 Exceptional" value="4" />
-                </huiproperty>
-
-                <huiproperty
-                    tags="Risk" name="Explanation"
-                    inputtype="text"
-                    id="process_value_comment" />
-        </huipropertygroup>
+     
 
 
         <!--  Privacy -->
@@ -10281,7 +10552,42 @@ Wurden bereits weitere Stellen informiert?
 	        <huiproperty name="Contact Phone" id="bp_itnetwork_contphone" />
 	        <huiproperty name="Contact email" id="bp_itnetwork_contmail" />
 	    </huipropertygroup>
-        
+         <!-- START: BCM Aenderung -->
+          <huipropertygroup name="Business Continuity Management (BCM)" id="bp_itnetwork_bcm" tags="BCM" >
+             
+             <huiproperty id="bp_itnetwork_geltungsbereichBCM" name="BCMS-Geltungsbereich" />
+             <huiproperty name="Planung/Zweck der Änderung am BCMS" id="bp_itnetwork_modification" inputtype="text" />
+             <huiproperty id="bp_itnetwork_methodBCMS" name="Method of BCMS" inputtype="singleoption">
+                <option id="bp_itnetwork_methodBCMS_reaktiv" name="Reaktiv-BCMS" />
+                <option id="bp_itnetwork_methodBCMS_aufbau" name="Aufbau-BCMS" />
+                <option id="bp_itnetwork_methodBCMS_standard" name="Standard-BCMS" />
+              </huiproperty>
+             
+            <huiproperty
+                    id="bp_itnetwork_value_untragbarkeitsniveau"
+                    name="Untragbarkeitsniveau"
+                     tags="BCM"
+                    inputtype="numericoption" min="1" max="4">
+             <option
+                        id="bp_itnetwork_damage_potential_value_insignificant"
+                        name="1 Unkritisch"
+                        value="1" />
+                    <option
+                        id="bp_itnetwork_damage_potential_value_normal"
+                        name="2 Normal"
+                        value ="2" />
+                    <option
+                        id="bp_itnetwork_damage_potential_value_high"
+                        name="3 Hoch"
+                        value="3" />
+                    <option
+                        id="bp_itnetwork_damage_potential_value_veryhigh"
+                        name="4 Sehr hoch"
+                        value="4" />
+                </huiproperty>
+           
+         </huipropertygroup>
+         <!-- ENDE:  BCM Aenderung -->
         <huipropertygroup id="bp_itnetwork_report" name="Reporting" tags="Dok.mgmt.">
             <huiproperty id="bp_itnetwork_author" name="Author" tags="Dok.mgmt." />
             <huiproperty id="bp_itnetwork_version" name="Version" tags="Dok.mgmt." />
@@ -10632,6 +10938,8 @@ Wurden bereits weitere Stellen informiert?
 			<option	id="bp_application_user_19"	name="Accounting" />
 		</huiproperty>
         <huiproperty id="bp_application_document" isURL="true" name="Document" />
+        
+  
         <huipropertygroup id="bp_application_group_business_impact" name="Protection Requirement"
             tags="Risk">
 	    <huiproperty defaultValue="1" id="bp_application_value_method_confidentiality" inputtype="booleanoption" name="Deduce confidentiality with maximumpriciple" tags="Risk"/>
@@ -10687,8 +10995,293 @@ Wurden bereits weitere Stellen informiert?
           <huiproperty defaultValue="0" id="bp_application_riskanalysis_necessary" inputtype="booleanoption" name="Riskanalysis necessary" tags="Risk"/>
           <huiproperty id="bp_application_riskanalysis_explanation" inputtype="text" name="Explanation riskanalysis" tags="Risk"/>
        </huipropertygroup>
-    </huientity>
 
+
+<!-- START:  BCM Aenderung -->
+            <huipropertygroup name="BCM" id="bp_application_bcm" tags="BCM" >
+               <huiproperty
+                id="bp_application_dateOfCollection"
+                name="Datum der Erhebung"
+                inputtype="date">
+                <defaultRule class="Today">
+                </defaultRule>
+                </huiproperty>
+                
+                 <huiproperty id="bp_application_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
+
+              <huiproperty id="bp_application_bcm_tim24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_application_bcm_time24_1"
+                    name="1 Unsignificant"
+                    value="1" />
+                     <option
+                    id="bp_application_bcm_time24_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_application_bcm_time24_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_application_bcm_time24_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_application_bcm_time3d" name="Impact after 3d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_application_bcm_time3d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_application_bcm_time3d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_application_bcm_time3d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_application_bcm_time3d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_application_bcm_time7d" name="Impact after 7d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_application_bcm_time7d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_application_bcm_time7d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_application_bcm_time7d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_application_bcm_time7d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_application_bcm_time14d" name="Impact after 14d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_application_bcm_time14d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_application_bcm_time14d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_application_bcm_time14d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_application_bcm_time14d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_application_bcm_time30d" name="Impact after 30d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_application_bcm_time30d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_application_bcm_time30d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_application_bcm_time30d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_application_bcm_time30d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+<huiproperty defaultValue="1" id="bp_application_value_deduce_mtpd1" inputtype="booleanoption" name="MTPD ableiten aus der Schadensbewertung" tags="BCM"/>
+                        
+            <huiproperty id="bp_application_bcm_mtpd1" name="MTPD" tags="BCM" inputtype="numericoption" min="0" max="5">
+                <option
+                    id="bp_application_bcm_keineMtpd1"
+                    name="keine MTPD"
+                    value="0" />
+                      <option
+                    id="bp_application_bcm_time24hMtpd1"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_application_bcm_time3dMtpd1"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_application_bcm_time7dMtpd1"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_application_bcm_time14dMtpd1"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_application_bcm_time30dMtpd1"
+                    name="30 d"
+                    value="5" />
+            </huiproperty>
+             <huiproperty id="bp_application_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung" />
+                     <huiproperty
+                    id="bp_application_schadensszenario_value_1"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Beeinträchtigung der Aufgabenerfüllung"
+                    inputtype="booleanoption"  defaultValue="0">
+                </huiproperty>
+        <huiproperty
+                    id="bp_application_schadensszenario_value_2"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Verstoß gegen Gesetze, Vorschriften und Verträge"
+                    inputtype="booleanoption" defaultValue="0">
+                </huiproperty>
+        <huiproperty
+                    id="bp_application_schadensszenario_value_3"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Negative Außen und Innenwirkung (Imageschaden)"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+        
+         <huiproperty
+                    id="bp_application_schadensszenario_value_4"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Finanzielle Auswirkungen"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+        
+         <huiproperty
+                    id="bp_application_schadensszenario_value_5"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Beeinträchtigung der persönlichen Unversertheit"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+        
+           <huiproperty id="bp_application_bcm_mtpd2" name="Geänderte MTPD aufgrund von Prozessabhängigkeiten" tags="BCM" inputtype="numericoption" min="0" max="6">
+                <option
+                    id="bp_application_bcm_keineMtpd2"
+                    name="keine MTPD"
+                    value="0" />
+                      <option
+                    id="bp_application_bcm_time24hMtpd2"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_application_bcm_time3dMtpd2"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_application_bcm_time7dMtpd2"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_application_bcm_time14dMtpd2"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_application_bcm_time30dMtpd2"
+                    name="30 d"
+                    value="5" />
+                     <option
+                    id="bp_application_bcm_keineAenderungMtpd2"
+                    name="-"
+                    value="6" />
+            </huiproperty>
+         <huiproperty id="bp_application_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
+          	 
+         <huiproperty defaultValue="0" id="bp_application_value_deduce_mtpdMIN" inputtype="booleanoption" name="MTPD (MIN) ableiten nach Minimalprinzip" tags="Risk"/>
+     
+              <huiproperty id="bp_application_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="0" max="5">
+                <option
+                    id="bp_application_bcm_timekeineMtpdMin"
+                    name="keine MTPD"
+                    value="0" />
+                      <option
+                    id="bp_application_bcm_time24hMtpdMin"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_application_bcm_time3dMtpdMin"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_application_bcm_time7dMtpdMin"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_application_bcm_time14dMtpdMin"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_application_bcm_time30dMtpdMin"
+                    name="30 d"
+                    value="5" />
+            </huiproperty>
+            
+         <huiproperty id="bp_application__rto" name="Geforderte Wiederanlaufzeit (WAZ/RTO) für notw. Ressourcen aus Prozess-MTPD" tags="BCM" />
+         <huiproperty id="bp_application__rtoK" name="Kleinste RTO der Ressource" tags="BCM" />
+             
+               <huiproperty
+                    id="bp_application_SPoF_value_1"
+                     tags="BCM"
+                    name="Single-Point-of-Failure/of-Knowledge/of-Contact (SPoF/SPoK/SPoC)"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+    <huiproperty id="bp_application_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
+          
+            <huiproperty id="bp_application_bcm_rpo" name="Maximal zulässiger Datenverlust (RPO)" tags="BCM" inputtype="numericoption" min="0" max="9">
+                <option
+                    id="bp_application_bcm_rpo0"
+                    name="-"
+                    value="0" />
+                     <option
+                    id="bp_application_bcm_rpo1"
+                    name="Transaktionsgenau"
+                    value="1" />
+                     <option
+                    id="bp_application_bcm_rpo2"
+                    name="Stündlich"
+                    value="2" />
+                     <option
+                    id="bp_application_bcm_rpo3"
+                    name="12:00 am Tag"
+                    value="3" />
+                       <option
+                    id="bp_application_bcm_rpo4"
+                    name=" Täglich (Werktag)"
+                    value="4" />
+                       <option
+                    id="bp_application_bcm_rpo5"
+                    name="Täglich (Kalendertag)"
+                    value="5" />
+                       <option
+                    id="bp_application_bcm_rpo6"
+                    name="Wöchentlich"
+                    value="6" />
+                       <option
+                    id="bp_application_bcm_rpo7"
+                    name="Monatlich"
+                    value="7" />
+                       <option
+                    id="bp_application_bcm_rpo8"
+                    name="Quartalsweise"
+                    value="8" />
+                       <option
+                    id="bp_application_bcm_rpo9"
+                    name="Jährlich"
+                    value="9" />
+            </huiproperty>
+         </huipropertygroup>
+           <!-- ENDE:  BCM Aenderung -->
+               </huientity>
     <huientity id="bp_application_group" name="Application Group">
         <huiproperty id="bp_application_group_name" name="Title" required="true" />
         <huiproperty id="bp_application_group_desc" inputtype="text" name="Description" />
@@ -10698,6 +11291,19 @@ Wurden bereits weitere Stellen informiert?
     <huientity id="bp_businessprocess" name="Business Process">
         <huirelation to="bp_businessprocess" id="rel_bp_businessprocess_bp_businessprocess"
             name="depends on" reversename="necessary for" />
+            <!-- Start: BCM relation -->
+        <huirelation to="bp_businessprocess" id="rel_bp_businessprocess_bp_businessprocess2"
+            name="parallel" reversename="parallel" />
+            
+        <huirelation to="bp_businessprocess" id="rel_bp_businessprocess_bp_businessprocess3"
+            name="vorgelagert" reversename="nachgelagert" />
+            
+        <huirelation to="bp_businessprocess" id="rel_bp_businessprocess_bp_businessprocess4"
+            name="nachgelagert" reversename="vorgelagert" />
+              <!-- Ende: BCM relation -->
+              <huirelation to="bp_room" id="rel_bp_businessprocess_bp_room"
+            name="findet statt im" reversename="Durchführung von" />
+             <!-- Endet: BCM relation -->
         <huirelation to="bp_application" id="rel_bp_businessprocess_bp_application"
             name="depends on" reversename="necessary for" />
         <huirelation to="bp_itsystem" id="rel_bp_businessprocess_bp_itsystem" name="depends on"
@@ -10749,6 +11355,8 @@ Wurden bereits weitere Stellen informiert?
 			<option	id="bp_businessprocess_user_19"	name="Accounting" />
 		</huiproperty>
         <huiproperty id="bp_businessprocess_document" isURL="true" name="Document" />
+         
+
         <huipropertygroup id="bp_businessprocess_group_business_impact" name="Protection Requirement" tags="Risk">
 		    <huiproperty defaultValue="0" id="bp_businessprocess_value_method_confidentiality" inputtype="booleanoption" name="Deduce confidentiality with maximumpriciple" tags="Risk"/>
 		    <huiproperty defaultValue="0" id="bp_businessprocess_method_confidentiality" inputtype="numericoption" max="2" min="0" name="Deduce confidentiality (other)" tags="Risk">
@@ -10803,6 +11411,349 @@ Wurden bereits weitere Stellen informiert?
       		<huiproperty defaultValue="0" id="bp_businessprocess_riskanalysis_necessary" inputtype="booleanoption" name="Riskanalysis necessary" tags="Risk"/>
       		<huiproperty id="bp_businessprocess_riskanalysis_explanation" inputtype="text" name="Explanation riskanalysis" tags="Risk"/>
     	</huipropertygroup>
+    	
+    	<!-- START:  BCM Aenderung -->
+             <huipropertygroup name="BCM" id="bp_businessprocess_bcm" tags="BCM" >
+               <huiproperty
+                id="bp_businessprocess_dateOfCollection"
+                name="Datum der Erhebung"
+                inputtype="date">
+                <defaultRule class="Today">
+                </defaultRule>
+                </huiproperty>
+                
+                 <huiproperty id="bp_businessprocess_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
+
+              <huiproperty id="bp_businessprocess_bcm_tim24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_businessprocess_bcm_time24_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_businessprocess_bcm_time24_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_businessprocess_bcm_time24_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_businessprocess_bcm_time24_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_businessprocess_bcm_time3d" name="Impact after 3d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_businessprocess_bcm_time3d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_businessprocess_bcm_time3d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_businessprocess_bcm_time3d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_businessprocess_bcm_time3d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_businessprocess_bcm_time7d" name="Impact after 7d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_businessprocess_bcm_time7d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_businessprocess_bcm_time7d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_businessprocess_bcm_time7d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_businessprocess_bcm_time7d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_businessprocess_bcm_time14d" name="Impact after 14d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_businessprocess_bcm_time14d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_businessprocess_bcm_time14d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_businessprocess_bcm_time14d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_businessprocess_bcm_time14d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_businessprocess_bcm_time30d" name="Impact after 30d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_businessprocess_bcm_time30d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_businessprocess_bcm_time30d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_businessprocess_bcm_time30d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_businessprocess_bcm_time30d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+<huiproperty defaultValue="1" id="bp_businessprocess_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="Risk"/>
+                        
+            <huiproperty id="bp_businessprocess_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="0" max="5">
+                <option
+                    id="bp_businessprocess_bcm_keineMtpd1"
+                    name="keine MTPD"
+                    value="0" />
+                      <option
+                    id="bp_businessprocess_bcm_time24hMtpd1"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_businessprocess_bcm_time3dMtpd1"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_businessprocess_bcm_time7dMtpd1"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_businessprocess_bcm_time14dMtpd1"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_businessprocess_bcm_time30dMtpd1"
+                    name="30 d"
+                    value="5" />
+            </huiproperty>
+             <huiproperty id="bp_businessprocess_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung" />
+                     <huiproperty
+                    id="bp_businessprocess_schadensszenario_value_1"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Beeinträchtigung der Aufgabenerfüllung"
+                    inputtype="booleanoption"  defaultValue="0">
+                </huiproperty>
+        <huiproperty
+                    id="bp_businessprocess_schadensszenario_value_2"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Verstoß gegen Gesetze, Vorschriften und Verträge"
+                    inputtype="booleanoption" defaultValue="0">
+                </huiproperty>
+        <huiproperty
+                    id="bp_businessprocess_schadensszenario_value_3"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Negative Außen und Innenwirkung (Imageschaden)"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+        
+         <huiproperty
+                    id="bp_businessprocess_schadensszenario_value_4"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Finanzielle Auswirkungen"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+        
+         <huiproperty
+                    id="bp_businessprocess_schadensszenario_value_5"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Beeinträchtigung der persönlichen Unversertheit"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+        
+           <huiproperty id="bp_businessprocess_bcm_mtpd2" name="Geänderte MTPD aufgrund von Prozessabhängigkeiten" tags="BCM" inputtype="numericoption" min="0" max="6">
+                <option
+                    id="bp_businessprocess_bcm_keineMtpd2"
+                    name="keine MTPD"
+                    value="0" />
+                      <option
+                    id="bp_businessprocess_bcm_time24hMtpd2"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_businessprocess_bcm_time3dMtpd2"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_businessprocess_bcm_time7dMtpd2"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_businessprocess_bcm_time14dMtpd2"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_businessprocess_bcm_time30dMtpd2"
+                    name="30 d"
+                    value="5" />
+                     <option
+                    id="bp_businessprocess_bcm_keineAenderungMtpd2"
+                    name="-"
+                    value="6" />
+            </huiproperty>
+         <huiproperty id="bp_businessprocess_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
+          	 
+         <huiproperty defaultValue="0" id="bp_businessprocess_value_deduce_mtpdMIN" inputtype="booleanoption" name="MTPD (MIN) ableiten nach Minimalprinzip" tags="Risk"/>
+     
+              <huiproperty id="bp_businessprocess_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="0" max="5">
+                <option
+                    id="bp_businessprocess_bcm_timekeineMtpdMin"
+                    name="keine MTPD"
+                    value="0" />
+                      <option
+                    id="bp_businessprocess_bcm_time24hMtpdMin"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_businessprocess_bcm_time3dMtpdMin"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_businessprocess_bcm_time7dMtpdMin"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_businessprocess_bcm_time14dMtpdMin"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_businessprocess_bcm_time30dMtpdMin"
+                    name="30 d"
+                    value="5" />
+            </huiproperty>
+            
+         <huiproperty id="bp_businessprocess__rto" name="Geforderte Wiederanlaufzeit (WAZ/RTO) für notw. Ressourcen aus Prozess-MTPD" tags="BCM" />
+         <huiproperty id="bp_businessprocess__rtoK" name="Kleinste RTO der Ressource" tags="BCM" />
+             
+               <huiproperty
+                    id="bp_businessprocess_SPoF_value_1"
+                     tags="BCM"
+                    name="Single-Point-of-Failure/of-Knowledge/of-Contact (SPoF/SPoK/SPoC)"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+    <huiproperty id="bp_businessprocess_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
+          
+            <huiproperty id="bp_businessprocess_bcm_rpo" name="Maximal zulässiger Datenverlust (RPO)" tags="BCM" inputtype="numericoption" min="0" max="9">
+                <option
+                    id="bp_businessprocess_bcm_rpo0"
+                    name="-"
+                    value="0" />
+                     <option
+                    id="bp_businessprocess_bcm_rpo1"
+                    name="Transaktionsgenau"
+                    value="1" />
+                     <option
+                    id="bp_businessprocess_bcm_rpo2"
+                    name="Stündlich"
+                    value="2" />
+                     <option
+                    id="bp_businessprocess_bcm_rpo3"
+                    name="12:00 am Tag"
+                    value="3" />
+                       <option
+                    id="bp_businessprocess_bcm_rpo4"
+                    name="Täglich (Werktag)"
+                    value="4" />
+                       <option
+                    id="bp_businessprocess_bcm_rpo5"
+                    name="Täglich (Kalendertag)"
+                    value="5" />
+                       <option
+                    id="bp_businessprocess_bcm_rpo6"
+                    name="Wöchentlich"
+                    value="6" />
+                       <option
+                    id="bp_businessprocess_bcm_rpo7"
+                    name="Monatlich"
+                    value="7" />
+                       <option
+                    id="bp_businessprocess_bcm_rpo8"
+                    name="Quartalsweise"
+                    value="8" />
+                       <option
+                    id="bp_businessprocess_bcm_rpo9"
+                    name="Jährlich"
+                    value="9" />
+            </huiproperty>
+            
+         </huipropertygroup>
+         
+            <huipropertygroup name="BCM-Reporting" id="bp_businessprocessreporting_bcm" tags="BCM" >
+            
+              <huiproperty id="bp_business_continuity_reporting_selectedBIA"
+                name="Prozess in BIA betrachtet?"
+                inputtype="booleanoption"
+                defaultValue="1"
+                tags="BCM" />
+                
+             <huiproperty id="bp_business_continuity_reporting_selectedzeitkritisch"
+                name="Status, ob zeitkritisch aus Schadensbewertung ableiten?"
+                inputtype="booleanoption"
+                defaultValue="1"
+                tags="BCM" />
+                
+             <huiproperty id="bp_businessprocess_reporting_zeitkritisch" name="Zeitkritischer Geschäftsprozess" inputtype="singleoption">
+                <option id="bp_businessprocess_reporting_zeitkritisch_ja" name="ja" />
+                 <option id="bp_businessprocess_reporting_zeitkritisch_nein" name="nein" />
+                 <option id="bp_businessprocess_reporting_zeitkritisch_fehlendeDaten" name="Fehlende Daten" />
+ 			</huiproperty>
+ 			
+ 			
+ 			 <huiproperty id="bp_businessprocess_reporting_GFP" name="Im Geschäftsfortführungsplan (GFP) vorhanden?" inputtype="singleoption">
+                <option id="bp_businessprocess_reporting_GFP_ja" name="ja" />
+                 <option id="bp_businessprocess_reporting_GFP_nein" name="nein" />
+                 <option id="bp_businessprocess_reporting_GFP_fehlendeDaten" name="Fehlende Daten" />
+                 <option id="bp_businessprocess_reporting_GFP_nichtRelevant" name="Nicht relevant" />
+ 			</huiproperty>
+                
+          <huiproperty id="bp_businessprocess_reporting_qualityGFP" name="Qualität des Geschäftsfortführungsplans (GFP)?" inputtype="singleoption">
+                <option id="businessprocess_reporting_GFP_qualityAngemessen" name="Angemessen und plausibel" />
+                 <option id="bp_businessprocess_reporting_GFP_qualityfehlendeDaten" name="Fehlende Daten" />
+                 <option id="bp_businessprocess_reporting_GFP_qualityNichtRelevant" name="Nicht relevant" />
+ 			</huiproperty>
+ 			
+ 			<huiproperty id="bp_businessprocess_reporting_trainingGFP" name="Anhand des Geschäftsfortführungsplans (GFP) geübt?" inputtype="singleoption">
+                <option id="bp_businessprocess_reporting_GFP_trainingAngemessen" name="GFP ist funkrtionsfähig und wirksam" />
+                 <option id="bp_businessprocess_reporting_GFP_trainingfehlendeDaten" name="Fehlende Daten" />
+                 <option id="bp_businessprocess_reporting_GFP_trainingNichtVorhanden" name="Nicht vorhanden" />
+ 			</huiproperty>
+ 		
+ 			<huiproperty id="bp_businessprocess_reporting_kennzahl1" inputtype="text" name="Kennzahl " tags="Risk"/>
+ 			 <huiproperty id="bp_businessprocess_reporting_Zielwert" name="Zielwert" required="false" />
+ 			 	 <huiproperty id="bp_businessprocess_reporting_istWert" name="Ist-Wert" required="false" />
+ 			 	  <huiproperty id="bp_businessprocess_reporting_sollIstWertAbweichung"
+                name="Abweichung"
+                inputtype="booleanoption"
+                defaultValue="0"
+                tags="BCM" />
+                 <huiproperty id="bp_businessprocess_reporting_ursache" name="Ursache" required="false" />
+ 			
+ 			<huiproperty id="bp_businessprocess_reporting_schweregrad" name="Schweregrad" inputtype="singleoption">
+                <option id="bp_businessprocess_reporting_GFP_schweregradGering" name="Gering" />
+                 <option id="bp_businessprocess_reporting_GFP_schweregradMittel" name="Mittel" />
+                 <option id="bp_businessprocess_reporting_GFP_schweregradHoch" name="Hoch" />
+ 			</huiproperty>
+              </huipropertygroup>
+           <!-- ENDE:  BCM Aenderung -->
         <huiproperty id="bp_businessprocess_privacy_yesno" name="Aufnahme in das Verzeichnis der Verarbeitungstätigkeiten" inputtype="booleanoption" />
 
         <huipropertygroup tags="Privacy" id="bp_businessprocess_va_group" name="Verarbeitungsangaben">
@@ -11459,6 +12410,7 @@ Wurden bereits weitere Stellen informiert?
 			<option	id="bp_icssystem_user_19"	name="Accounting" />
 		</huiproperty>
         <huiproperty id="bp_icssystem_document" isURL="true" name="Document" />
+         
         <huipropertygroup id="bp_icssystem_group_business_impact" name="Protection Requirement"
             tags="Risk">
 		    <huiproperty defaultValue="1" id="bp_icssystem_value_method_confidentiality" inputtype="booleanoption" name="Deduce confidentiality with maximumpriciple" tags="Risk"/>
@@ -11514,6 +12466,291 @@ Wurden bereits weitere Stellen informiert?
       		<huiproperty defaultValue="0" id="bp_icssystem_riskanalysis_necessary" inputtype="booleanoption" name="Riskanalysis necessary" tags="Risk"/>
       		<huiproperty id="bp_icssystem_riskanalysis_explanation" inputtype="text" name="Explanation riskanalysis" tags="Risk"/>
     	</huipropertygroup>
+    	<!-- START:  BCM Aenderung -->
+             <huipropertygroup name="BCM" id="bp_icssystem_bcm" tags="BCM" >
+               <huiproperty
+                id="bp_icssystem_dateOfCollection"
+                name="Datum der Erhebung"
+                inputtype="date">
+                <defaultRule class="Today">
+                </defaultRule>
+                </huiproperty>
+                
+                 <huiproperty id="bp_icssystem_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
+
+              <huiproperty id="bp_icssystem_bcm_tim24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_icssystem_bcm_time24_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_icssystem_bcm_time24_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_icssystem_bcm_time24_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_icssystem_bcm_time24_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_icssystem_bcm_time3d" name="Impact after 3d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_icssystem_bcm_time3d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_icssystem_bcm_time3d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_icssystem_bcm_time3d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_icssystem_bcm_time3d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_icssystem_bcm_time7d" name="Impact after 7d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_icssystem_bcm_time7d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_icssystem_bcm_time7d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_icssystem_bcm_time7d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_icssystem_bcm_time7d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_icssystem_bcm_time14d" name="Impact after 14d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_icssystem_bcm_time14d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_icssystem_bcm_time14d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_icssystem_bcm_time14d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_icssystem_bcm_time14d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_icssystem_bcm_time30d" name="Impact after 30d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_icssystem_bcm_time30d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_icssystem_bcm_time30d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_icssystem_bcm_time30d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_icssystem_bcm_time30d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+<huiproperty defaultValue="1" id="bp_icssystem_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="Risk"/>
+                        
+            <huiproperty id="bp_icssystem_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="0" max="5">
+                <option
+                    id="bp_icssystem_bcm_keineMtpd1"
+                    name="keine MTPD"
+                    value="0" />
+                      <option
+                    id="bp_icssystem_bcm_time24hMtpd1"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_icssystem_bcm_time3dMtpd1"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_icssystem_bcm_time7dMtpd1"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_icssystem_bcm_time14dMtpd1"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_icssystem_bcm_time30dMtpd1"
+                    name="30 d"
+                    value="5" />
+            </huiproperty>
+             <huiproperty id="bp_icssystem_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung" />
+                     <huiproperty
+                    id="bp_icssystem_schadensszenario_value_1"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Beeinträchtigung der Aufgabenerfüllung"
+                    inputtype="booleanoption"  defaultValue="0">
+                </huiproperty>
+        <huiproperty
+                    id="bp_icssystem_schadensszenario_value_2"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Verstoß gegen Gesetze, Vorschriften und Verträge"
+                    inputtype="booleanoption" defaultValue="0">
+                </huiproperty>
+        <huiproperty
+                    id="bp_icssystem_schadensszenario_value_3"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Negative Außen und Innenwirkung (Imageschaden)"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+        
+         <huiproperty
+                    id="bp_icssystem_schadensszenario_value_4"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Finanzielle Auswirkungen"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+        
+         <huiproperty
+                    id="bp_icssystem_schadensszenario_value_5"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Beeinträchtigung der persönlichen Unversertheit"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+        
+           <huiproperty id="bp_icssystem_bcm_mtpd2" name="Geänderte MTPD aufgrund von Prozessabhängigkeiten" tags="BCM" inputtype="numericoption" min="0" max="6">
+                <option
+                    id="bp_icssystem_bcm_keineMtpd2"
+                    name="keine MTPD"
+                    value="0" />
+                      <option
+                    id="bp_icssystem_bcm_time24hMtpd2"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_icssystem_bcm_time3dMtpd2"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_icssystem_bcm_time7dMtpd2"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_icssystem_bcm_time14dMtpd2"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_icssystem_bcm_time30dMtpd2"
+                    name="30 d"
+                    value="5" />
+                     <option
+                    id="bp_icssystem_bcm_keineAenderungMtpd2"
+                    name="-"
+                    value="6" />
+            </huiproperty>
+         <huiproperty id="bp_icssystem_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
+          	 
+         <huiproperty defaultValue="0" id="bp_icssystem_value_deduce_mtpdMIN" inputtype="booleanoption" name="MTPD (MIN) ableiten nach Minimalprinzip" tags="Risk"/>
+     
+              <huiproperty id="bp_icssystem_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="0" max="5">
+                <option
+                    id="bp_icssystem_bcm_timekeineMtpdMin"
+                    name="keine MTPD"
+                    value="0" />
+                      <option
+                    id="bp_icssystem_bcm_time24hMtpdMin"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_icssystem_bcm_time3dMtpdMin"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_icssystem_bcm_time7dMtpdMin"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_icssystem_bcm_time14dMtpdMin"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_icssystem_bcm_time30dMtpdMin"
+                    name="30 d"
+                    value="5" />
+            </huiproperty>
+            
+         <huiproperty id="bp_icssystem__rto" name="Geforderte Wiederanlaufzeit (WAZ/RTO) für notw. Ressourcen aus Prozess-MTPD" tags="BCM" />
+         <huiproperty id="bp_icssystem__rtoK" name="Kleinste RTO der Ressource" tags="BCM" />
+             
+               <huiproperty
+                    id="bp_icssystem_SPoF_value_1"
+                     tags="BCM"
+                    name="Single-Point-of-Failure/of-Knowledge/of-Contact (SPoF/SPoK/SPoC)"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+    <huiproperty id="bp_icssystem_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
+          
+            <huiproperty id="bp_icssystem_bcm_rpo" name="Maximal zulässiger Datenverlust (RPO)" tags="BCM" inputtype="numericoption" min="0" max="9">
+                <option
+                    id="bp_icssystem_bcm_rpo0"
+                    name="-"
+                    value="0" />
+                     <option
+                    id="bp_icssystem_bcm_rpo1"
+                    name="Transaktionsgenau"
+                    value="1" />
+                     <option
+                    id="bp_icssystem_bcm_rpo2"
+                    name=" Stündlich"
+                    value="2" />
+                     <option
+                    id="bp_icssystem_bcm_rpo3"
+                    name=" 12:00 am Tag"
+                    value="3" />
+                       <option
+                    id="bp_icssystem_bcm_rpo4"
+                    name=" Täglich (Werktag)"
+                    value="4" />
+                       <option
+                    id="bp_icssystem_bcm_rpo5"
+                    name=" Täglich (Kalendertag)"
+                    value="5" />
+                       <option
+                    id="bp_icssystem_bcm_rpo6"
+                    name=" Wöchentlich"
+                    value="6" />
+                       <option
+                    id="bp_icssystem_bcm_rpo7"
+                    name="Monatlich"
+                    value="7" />
+                       <option
+                    id="bp_icssystem_bcm_rpo8"
+                    name=" Quartalsweise"
+                    value="8" />
+                       <option
+                    id="bp_icssystem_bcm_rpo9"
+                    name=" Jährlich"
+                    value="9" />
+            </huiproperty>
+            
+         </huipropertygroup>
+           <!-- ENDE:  BCM Aenderung -->
         <huipropertygroup name="KIX" id="bp_icssystem_kix" tags="KIX" >
             <huiproperty name="KIX Ticket 1" id="bp_icssystem_kix_ticket1" isURL="true"/>
             <huiproperty name="KIX Ticket 2" id="bp_icssystem_kix_ticket2" isURL="true"/>
@@ -11608,6 +12845,7 @@ Wurden bereits weitere Stellen informiert?
 			<option	id="bp_itsystem_user_19"	name="Accounting" />
 		</huiproperty>
         <huiproperty id="bp_itsystem_document" isURL="true" name="Document" />
+         
         <huipropertygroup id="bp_itsystem_group_business_impact" name="Protection Requirement"
             tags="Risk">
 		    <huiproperty defaultValue="1" id="bp_itsystem_value_method_confidentiality" inputtype="booleanoption" name="Deduce confidentiality with maximumpriciple" tags="Risk"/>
@@ -11663,6 +12901,291 @@ Wurden bereits weitere Stellen informiert?
       		<huiproperty defaultValue="0" id="bp_itsystem_riskanalysis_necessary" inputtype="booleanoption" name="Riskanalysis necessary" tags="Risk"/>
       		<huiproperty id="bp_itsystem_riskanalysis_explanation" inputtype="text" name="Explanation riskanalysis" tags="Risk"/>
     	</huipropertygroup>
+    	<!-- START:  BCM Aenderung -->
+           <huipropertygroup name="BCM" id="bp_itsystem_bcm" tags="BCM" >
+               <huiproperty
+                id="bp_itsystem_dateOfCollection"
+                name="Datum der Erhebung"
+                inputtype="date">
+                <defaultRule class="Today">
+                </defaultRule>
+                </huiproperty>
+                
+                 <huiproperty id="bp_itsystem_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
+
+              <huiproperty id="bp_itsystem_bcm_tim24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_itsystem_bcm_time24_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_itsystem_bcm_time24_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_itsystem_bcm_time24_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_itsystem_bcm_time24_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_itsystem_bcm_time3d" name="Impact after 3d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_itsystem_bcm_time3d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_itsystem_bcm_time3d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_itsystem_bcm_time3d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_itsystem_bcm_time3d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_itsystem_bcm_time7d" name="Impact after 7d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_itsystem_bcm_time7d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_itsystem_bcm_time7d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_itsystem_bcm_time7d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_itsystem_bcm_time7d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_itsystem_bcm_time14d" name="Impact after 14d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_itsystem_bcm_time14d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_itsystem_bcm_time14d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_itsystem_bcm_time14d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_itsystem_bcm_time14d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_itsystem_bcm_time30d" name="Impact after 30d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_itsystem_bcm_time30d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_itsystem_bcm_time30d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_itsystem_bcm_time30d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_itsystem_bcm_time30d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+<huiproperty defaultValue="1" id="bp_itsystem_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="Risk"/>
+                        
+            <huiproperty id="bp_itsystem_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="0" max="5">
+                <option
+                    id="bp_itsystem_bcm_keineMtpd1"
+                    name="keine MTPD"
+                    value="0" />
+                      <option
+                    id="bp_itsystem_bcm_time24hMtpd1"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_itsystem_bcm_time3dMtpd1"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_itsystem_bcm_time7dMtpd1"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_itsystem_bcm_time14dMtpd1"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_itsystem_bcm_time30dMtpd1"
+                    name="30 d"
+                    value="5" />
+            </huiproperty>
+             <huiproperty id="bp_itsystem_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung" />
+                     <huiproperty
+                    id="bp_itsystem_schadensszenario_value_1"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Beeinträchtigung der Aufgabenerfüllung"
+                    inputtype="booleanoption"  defaultValue="0">
+                </huiproperty>
+        <huiproperty
+                    id="bp_itsystem_schadensszenario_value_2"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Verstoß gegen Gesetze, Vorschriften und Verträge"
+                    inputtype="booleanoption" defaultValue="0">
+                </huiproperty>
+        <huiproperty
+                    id="bp_itsystem_schadensszenario_value_3"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Negative Außen und Innenwirkung (Imageschaden)"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+        
+         <huiproperty
+                    id="bp_itsystem_schadensszenario_value_4"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Finanzielle Auswirkungen"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+        
+         <huiproperty
+                    id="bp_itsystem_schadensszenario_value_5"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Beeinträchtigung der persönlichen Unversertheit"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+        
+           <huiproperty id="bp_itsystem_bcm_mtpd2" name="Geänderte MTPD aufgrund von Prozessabhängigkeiten" tags="BCM" inputtype="numericoption" min="0" max="6">
+                <option
+                    id="bp_itsystem_bcm_keineMtpd2"
+                    name="keine MTPD"
+                    value="0" />
+                      <option
+                    id="bp_itsystem_bcm_time24hMtpd2"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_itsystem_bcm_time3dMtpd2"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_itsystem_bcm_time7dMtpd2"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_itsystem_bcm_time14dMtpd2"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_itsystem_bcm_time30dMtpd2"
+                    name="30 d"
+                    value="5" />
+                     <option
+                    id="bp_itsystem_bcm_keineAenderungMtpd2"
+                    name="-"
+                    value="6" />
+            </huiproperty>
+         <huiproperty id="bp_itsystem_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
+          	 
+         <huiproperty defaultValue="0" id="bp_itsystem_value_deduce_mtpdMIN" inputtype="booleanoption" name="MTPD (MIN) ableiten nach Minimalprinzip" tags="Risk"/>
+     
+              <huiproperty id="bp_itsystem_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="0" max="5">
+                <option
+                    id="bp_itsystem_bcm_timekeineMtpdMin"
+                    name="keine MTPD"
+                    value="0" />
+                      <option
+                    id="bp_itsystem_bcm_time24hMtpdMin"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_itsystem_bcm_time3dMtpdMin"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_itsystem_bcm_time7dMtpdMin"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_itsystem_bcm_time14dMtpdMin"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_itsystem_bcm_time30dMtpdMin"
+                    name="30 d"
+                    value="5" />
+            </huiproperty>
+            
+         <huiproperty id="bp_itsystem__rto" name="Geforderte Wiederanlaufzeit (WAZ/RTO) für notw. Ressourcen aus Prozess-MTPD" tags="BCM" />
+         <huiproperty id="bp_itsystem__rtoK" name="Kleinste RTO der Ressource" tags="BCM" />
+             
+               <huiproperty
+                    id="bp_itsystem_SPoF_value_1"
+                     tags="BCM"
+                    name="Single-Point-of-Failure/of-Knowledge/of-Contact (SPoF/SPoK/SPoC)"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+    <huiproperty id="bp_itsystem_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
+          
+            <huiproperty id="bp_itsystem_bcm_rpo" name="Maximal zulässiger Datenverlust (RPO)" tags="BCM" inputtype="numericoption" min="0" max="9">
+                <option
+                    id="bp_itsystem_bcm_rpo0"
+                    name="-"
+                    value="0" />
+                     <option
+                    id="bp_itsystem_bcm_rpo1"
+                    name="Transaktionsgenau"
+                    value="1" />
+                     <option
+                    id="bp_itsystem_bcm_rpo2"
+                    name=" Stündlich"
+                    value="2" />
+                     <option
+                    id="bp_itsystem_bcm_rpo3"
+                    name=" 12:00 am Tag"
+                    value="3" />
+                       <option
+                    id="bp_itsystem_bcm_rpo4"
+                    name=" Täglich (Werktag)"
+                    value="4" />
+                       <option
+                    id="bp_itsystem_bcm_rpo5"
+                    name=" Täglich (Kalendertag)"
+                    value="5" />
+                       <option
+                    id="bp_itsystem_bcm_rpo6"
+                    name=" Wöchentlich"
+                    value="6" />
+                       <option
+                    id="bp_itsystem_bcm_rpo7"
+                    name="Monatlich"
+                    value="7" />
+                       <option
+                    id="bp_itsystem_bcm_rpo8"
+                    name=" Quartalsweise"
+                    value="8" />
+                       <option
+                    id="bp_itsystem_bcm_rpo9"
+                    name=" Jährlich"
+                    value="9" />
+            </huiproperty>
+            
+         </huipropertygroup>
+           <!-- ENDE:  BCM Aenderung -->
         <huipropertygroup name="KIX" id="bp_itsystem_kix" tags="KIX" >
             <huiproperty name="KIX Ticket 1" id="bp_itsystem_kix_ticket1" isURL="true"/>
             <huiproperty name="KIX Ticket 2" id="bp_itsystem_kix_ticket2" isURL="true"/>
@@ -11721,7 +13244,10 @@ Wurden bereits weitere Stellen informiert?
             
         <huirelation to="bp_incident" id="rel_bp_person_bp_incident_cp"
             name="is contact person for" reversename="contact person" />    
-
+<!--  START: BCM Relation -->
+        <huirelation to="bp_requirement" id="rel_bp_person_requirement_interest_group"
+            name="interest group expected/requested" reversename="expected by/requested by" tooltip="" />
+<!-- ENDE : BCM Relation -->
         <huirelation to="bp_requirement_group" id="rel_bp_person_bp_requirement_group_additional"
             name="additional responsibility" reversename="additional responsibilities" />
         <huirelation to="bp_requirement_group" id="rel_bp_person_bp_requirement_group_general"
@@ -11806,6 +13332,12 @@ Wurden bereits weitere Stellen informiert?
 			<option id="bp_person_role_4" name="Bauleiter" />
 			<option id="bp_person_role_5"
 				name="Behörden-/Unternehmensleitung" />
+							<!-- START: BCM-Rollen  01062022-->
+			<option id="bp_person_role_61" name="BCM-Beauftragte/r" />
+			<option id="bp_person_role_62" name="BCM-Koordinator/in" />
+			<option id="bp_person_role_63" name="BCM-Kernteam" />
+			<option id="bp_person_role_66" name="BCM-Stab" />
+				<!-- ENDE: BCM-Rollen  01062022-->
 			<option id="bp_person_role_6" name="Benutzer" />
 			<option id="bp_person_role_7" name="Beschaffer" />
 			<option id="bp_person_role_8" name="Brandschutzbeauftragter" />
@@ -11835,6 +13367,10 @@ Wurden bereits weitere Stellen informiert?
 			<option id="bp_person_role_51" name="Leiter Personal" />
 			<option id="bp_person_role_22" name="Mitarbeiter" />
 			<option id="bp_person_role_24" name="Notfall-Verantwortliche" />
+						<!-- START: BCM-Rollen  01062022-->
+			<option id="bp_person_role_64" name="Notfallvorsorgeteam" />
+			<option id="bp_person_role_65" name="Notfallbewältigungsteam" />
+			<!-- ENDE: BCM-Rollen 01062022 -->
 			<option id="bp_person_role_25" name="Personalabteilung" />
 			<option id="bp_person_role_26" name="Personalrat/Betriebsrat" />
 			<option id="bp_person_role_1" name="Planer" />
@@ -11867,10 +13403,11 @@ Wurden bereits weitere Stellen informiert?
 			<option id="bp_person_role_58" name="OT-Betrieb" />
 			<option id="bp_person_role_59" name="IT-Betrieb" />
 			<option id="bp_person_role_60" name="Zentrale Verwaltung" />
+	
 		</huiproperty>
         
         <huiproperty id="bp_person_document" isURL="true" name="Document" />
-
+ 
         <huipropertygroup id="bp_person_dpo_information" name="General information relating to the data protection officer (DPO)">
             <huiproperty id="bp_person_dpo" inputtype="singleoption" name="Data protection officer (DPO)">
                 <option id="bp_person_dpo_external" name="External DPO"/>
@@ -11894,6 +13431,26 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="bp_person_dpo_education_other" name="Other graduates"/>
         </huipropertygroup>
 
+<!-- START:  BCM Aenderung -->
+             <huipropertygroup name="Business Continuity Management (BCM)" id="bp_person_bcm" tags="BCM" >
+
+             <huiproperty id="bp_person_info_degree_of_influence" name="Degree of influence" inputtype="singleoption">
+                <option id="bp_person_info_influence_low" name="low" />
+                <option id="bp_person_info_influence_medium" name="medium" />
+                <option id="bp_person_info_influence_high" name="high" />
+               
+                 </huiproperty>
+                 
+                     <huiproperty
+                    id="bp_person_SPoF_value_1"
+                     tags="BCM"
+                    name="Single-Point-of-Failure/of-Knowledge/of-Contact (SPoF/SPoK/SPoC)"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+    <huiproperty id="bp_person_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
+          
+         </huipropertygroup>
+           <!-- ENDE:  BCM Aenderung -->
     </huientity>
     <huientity id="bp_person_group" name="Person Group">
         <huiproperty id="bp_person_group_name" name="Title" required="true" />
@@ -11954,6 +13511,7 @@ Wurden bereits weitere Stellen informiert?
             inputtype="booleanoption" name="Affects Integrity" tags="Risk" />
         <huiproperty defaultValue="1" id="bp_requirement_value_method_availability"
             inputtype="booleanoption" name="Affects Availability" tags="Risk" />
+            
         <huipropertygroup id="bp_requirement_implementation" name="Implementation">
             <huiproperty defaultValue="1" id="bp_requirement_implementation_deduce"
                 inputtype="booleanoption" name="Deduce Implementation Status from Safeguard" />
@@ -11972,6 +13530,7 @@ Wurden bereits weitere Stellen informiert?
                 <defaultRule class="Today" />
             </huiproperty>
         </huipropertygroup>
+
 
         <huipropertygroup id="bp_requirement_audit" name="IT-Baseline Audit" tags="GS-Audit">
             <huiproperty id="bp_requirement_audit_performed" name="Audit performed"
@@ -12033,6 +13592,89 @@ Wurden bereits weitere Stellen informiert?
                 </defaultRule>
             </huiproperty>
         </huipropertygroup>
+        
+        <!-- START: BCM Aenderung -->
+                  <huipropertygroup name="Business Continuity Management (BCM)" id="bp_requirement_bcm" tags="BCM" >
+             <huiproperty id="bp_business_continuity_requirement_selectedBCM"
+                name="Business Continuity requirement"
+                inputtype="booleanoption"
+                defaultValue="0"
+                tags="BCM" />
+           
+             <huiproperty id="bp_requirement_info_degree_of_influence" name="Degree of influence" inputtype="singleoption">
+                <option id="bp_requirement_info_influence_gering" name="gering" />
+                <option id="bp_requirement_info_influence_mittel" name="mittel" />
+                <option id="bp_requirement_info_influence_hoch" name="hoch" />
+ 			</huiproperty>
+ 			
+ 			  <huiproperty editable="true" id="bp_requirement_bcStrategie" inputtype="text" name="Beschreibung der BC-Strategie"
+ 			  showInObjectBrowser="false" visible="true" />
+ 			  
+ 			      <huiproperty id="bp_requirement_bcm_wiederanlaufzeit" name="Wiederanlaufzeit" tags="BCM" inputtype="numericoption" min="1" max="5">
+                      <option
+                    id="bp_requirement_bcm_time24hMtpd1"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_requirement_bcm_time3dMtpd1"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_requirement_bcm_time7dMtpd1"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_requirement_bcm_time14dMtpd1"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_requirement_bcm_time30dMtpd1"
+                    name="30 d"
+                    value="5" />
+            </huiproperty>
+            
+               <huiproperty id="bp_requirement_schaden" name="Schaden bis zum Wiederanlauf" inputtype="singleoption">
+                <option id="bp_requirement_schaden_unkritisch" name="unkritisch" />
+                <option id="bp_requirement_schaden_normal" name="mittel" />
+                <option id="bp_requirement_schaden_hoch" name="hoch" />
+                 <option id="bp_requirement_schaden_sehrhoch" name="sehr hoch" />
+ 			</huiproperty>
+ 			  <huiproperty editable="true" id="bp_requirement_RtoEinhalten" inputtype="text" name="Einhalten der RTO"
+ 			  showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="bp_requirement_ErreichbaresNotbetriebsniveau" inputtype="text" name="Erreichbares Notbetriebsniveau"
+ 			  showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="bp_requirement_Restrisiko" inputtype="text" name="Verbleibendes Restrisiko"
+ 			  showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="bp_requirement_finanzielleAufwaende" inputtype="text" name="Finanzielle Aufwände"
+ 			  showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="bp_requirement_EinhaltungAnf" inputtype="text" name="Einhaltung interner und externer Anforderungen"
+ 			  showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="bp_requirement_NotbetriebsdauerMax" inputtype="text" name="Maximal mögliche Notbetriebsdauer"
+ 			  showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="bp_requirement_aufwaende" inputtype="text" name="Organisatorische Aufwände"
+ 			  showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="bp_requirement_risken" inputtype="text" name="Entstehende Risiken"
+ 			  showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="bp_requirement_zusatznutzen" inputtype="text" name="Entstehender Zusatznutzen"
+ 			  showInObjectBrowser="false" visible="true" />
+         </huipropertygroup>
+         
+         <huipropertygroup name="BCM-Maßnahmenplan" id="bp_requirement_plan" tags="BCM" >
+         
+           <huiproperty editable="true" id="bp_requirement_desc_plan_korrekturbedarf" inputtype="text" name="Korrekturbedarf/Verbesserungspotenzial"
+            showInObjectBrowser="false" textrows="4" visible="true" />
+            
+               <huiproperty editable="true" id="bp_requirement_desc_plan_ursache" inputtype="text" name="Ursache"
+            showInObjectBrowser="false" textrows="4" visible="true" />
+            
+                  <huiproperty id="bp_requirement_desc_plan_priority" inputtype="singleoption" name="Festgelegte Priorität" tags="BCM">
+        <option id="bp_requirement_desc_plan_priorityGering" name="Gering"/>
+        <option id="bp_requirement_desc_plan_priorityMittel" name="Mittel"/>
+        <option id="bp_requirement_desc_plan_priorityHoch" name="Hoch"/>
+      </huiproperty>
+            
+         </huipropertygroup>
+         <!-- ENDE:  BCM Aenderung -->
     <huipropertygroup id="bp_requirement_group_kosten" name="Kosten" tags="Finance">
       <huiproperty id="bp_requirement_kosten_ptfix" name="Personalkosten fix EUR" tags="Finance"/>
       <huiproperty id="bp_requirement_kosten_ptvar" name="Personalkosten var. EUR" tags="Finance"/>
@@ -12339,6 +13981,7 @@ Wurden bereits weitere Stellen informiert?
             <option id="bp_network_criticality_5" name="K5: No Transfer of Highly Confidential Information" />
         </huiproperty>
         <huiproperty id="bp_network_explanation" inputtype="text" textrows="4" name="Explanation" />
+        
         <huipropertygroup id="bp_network_group_business_impact" name="Protection Requirement"
             tags="Risk">
 		    <huiproperty defaultValue="1" id="bp_network_value_method_confidentiality" inputtype="booleanoption" name="Deduce confidentiality with maximumpriciple" tags="Risk"/>
@@ -12394,6 +14037,291 @@ Wurden bereits weitere Stellen informiert?
       		<huiproperty defaultValue="0" id="bp_network_riskanalysis_necessary" inputtype="booleanoption" name="Riskanalysis necessary" tags="Risk"/>
       		<huiproperty id="bp_network_riskanalysis_explanation" inputtype="text" name="Explanation riskanalysis" tags="Risk"/>
     	</huipropertygroup>
+    	<!-- START:  BCM Aenderung -->
+          <huipropertygroup name="BCM" id="bp_network_bcm" tags="BCM" >
+               <huiproperty
+                id="bp_network_dateOfCollection"
+                name="Datum der Erhebung"
+                inputtype="date">
+                <defaultRule class="Today">
+                </defaultRule>
+                </huiproperty>
+                
+                 <huiproperty id="bp_network_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
+
+              <huiproperty id="bp_network_bcm_tim24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_network_bcm_time24_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_network_bcm_time24_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_network_bcm_time24_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_network_bcm_time24_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_network_bcm_time3d" name="Impact after 3d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_network_bcm_time3d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_network_bcm_time3d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_network_bcm_time3d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_network_bcm_time3d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_network_bcm_time7d" name="Impact after 7d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_network_bcm_time7d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_network_bcm_time7d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_network_bcm_time7d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_network_bcm_time7d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_network_bcm_time14d" name="Impact after 14d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_network_bcm_time14d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_network_bcm_time14d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_network_bcm_time14d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_network_bcm_time14d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_network_bcm_time30d" name="Impact after 30d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_network_bcm_time30d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_network_bcm_time30d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_network_bcm_time30d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_network_bcm_time30d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+<huiproperty defaultValue="1" id="bp_network_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="Risk"/>
+                        
+            <huiproperty id="bp_network_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="0" max="5">
+                <option
+                    id="bp_network_bcm_keineMtpd1"
+                    name="keine MTPD"
+                    value="0" />
+                      <option
+                    id="bp_network_bcm_time24hMtpd1"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_network_bcm_time3dMtpd1"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_network_bcm_time7dMtpd1"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_network_bcm_time14dMtpd1"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_network_bcm_time30dMtpd1"
+                    name="30 d"
+                    value="5" />
+            </huiproperty>
+             <huiproperty id="bp_network_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung" />
+                     <huiproperty
+                    id="bp_network_schadensszenario_value_1"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Beeinträchtigung der Aufgabenerfüllung"
+                    inputtype="booleanoption"  defaultValue="0">
+                </huiproperty>
+        <huiproperty
+                    id="bp_network_schadensszenario_value_2"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Verstoß gegen Gesetze, Vorschriften und Verträge"
+                    inputtype="booleanoption" defaultValue="0">
+                </huiproperty>
+        <huiproperty
+                    id="bp_network_schadensszenario_value_3"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Negative Außen und Innenwirkung (Imageschaden)"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+        
+         <huiproperty
+                    id="bp_network_schadensszenario_value_4"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Finanzielle Auswirkungen"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+        
+         <huiproperty
+                    id="bp_network_schadensszenario_value_5"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Beeinträchtigung der persönlichen Unversertheit"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+        
+           <huiproperty id="bp_network_bcm_mtpd2" name="Geänderte MTPD aufgrund von Prozessabhängigkeiten" tags="BCM" inputtype="numericoption" min="0" max="6">
+                <option
+                    id="bp_network_bcm_keineMtpd2"
+                    name="keine MTPD"
+                    value="0" />
+                      <option
+                    id="bp_network_bcm_time24hMtpd2"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_network_bcm_time3dMtpd2"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_network_bcm_time7dMtpd2"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_network_bcm_time14dMtpd2"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_network_bcm_time30dMtpd2"
+                    name="30 d"
+                    value="5" />
+                     <option
+                    id="bp_network_bcm_keineAenderungMtpd2"
+                    name="-"
+                    value="6" />
+            </huiproperty>
+         <huiproperty id="bp_network_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
+          	 
+         <huiproperty defaultValue="0" id="bp_network_value_deduce_mtpdMIN" inputtype="booleanoption" name="MTPD (MIN) ableiten nach Minimalprinzip" tags="Risk"/>
+     
+              <huiproperty id="bp_network_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="0" max="5">
+                <option
+                    id="bp_network_bcm_timekeineMtpdMin"
+                    name="keine MTPD"
+                    value="0" />
+                      <option
+                    id="bp_network_bcm_time24hMtpdMin"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_network_bcm_time3dMtpdMin"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_network_bcm_time7dMtpdMin"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_network_bcm_time14dMtpdMin"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_network_bcm_time30dMtpdMin"
+                    name="30 d"
+                    value="5" />
+            </huiproperty>
+            
+         <huiproperty id="bp_network__rto" name="Geforderte Wiederanlaufzeit (WAZ/RTO) für notw. Ressourcen aus Prozess-MTPD" tags="BCM" />
+         <huiproperty id="bp_network__rtoK" name="Kleinste RTO der Ressource" tags="BCM" />
+             
+               <huiproperty
+                    id="bp_network_SPoF_value_1"
+                     tags="BCM"
+                    name="Single-Point-of-Failure/of-Knowledge/of-Contact (SPoF/SPoK/SPoC)"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+    <huiproperty id="bp_network_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
+          
+            <huiproperty id="bp_network_bcm_rpo" name="Maximal zulässiger Datenverlust (RPO)" tags="BCM" inputtype="numericoption" min="0" max="9">
+                <option
+                    id="bp_network_bcm_rpo0"
+                    name="-"
+                    value="0" />
+                     <option
+                    id="bp_network_bcm_rpo1"
+                    name="Transaktionsgenau"
+                    value="1" />
+                     <option
+                    id="bp_network_bcm_rpo2"
+                    name=" Stündlich"
+                    value="2" />
+                     <option
+                    id="bp_network_bcm_rpo3"
+                    name=" 12:00 am Tag"
+                    value="3" />
+                       <option
+                    id="bp_network_bcm_rpo4"
+                    name=" Täglich (Werktag)"
+                    value="4" />
+                       <option
+                    id="bp_network_bcm_rpo5"
+                    name=" Täglich (Kalendertag)"
+                    value="5" />
+                       <option
+                    id="bp_network_bcm_rpo6"
+                    name=" Wöchentlich"
+                    value="6" />
+                       <option
+                    id="bp_network_bcm_rpo7"
+                    name="Monatlich"
+                    value="7" />
+                       <option
+                    id="bp_network_bcm_rpo8"
+                    name=" Quartalsweise"
+                    value="8" />
+                       <option
+                    id="bp_network_bcm_rpo9"
+                    name=" Jährlich"
+                    value="9" />
+            </huiproperty>
+            
+         </huipropertygroup>
+        <!-- ENDE:  BCM Aenderung -->
         <huipropertygroup name="KIX" id="bp_network_kix" tags="KIX" >
             <huiproperty name="KIX Ticket 1" id="bp_network_kix_ticket1" isURL="true"/>
             <huiproperty name="KIX Ticket 2" id="bp_network_kix_ticket2" isURL="true"/>
@@ -12462,6 +14390,7 @@ Wurden bereits weitere Stellen informiert?
 			<option	id="bp_device_user_19"	name="Accounting" />
 		</huiproperty>
         <huiproperty id="bp_device_document" isURL="true" name="Document" />
+         
         <huipropertygroup id="bp_device_group_business_impact" name="Protection Requirement"
             tags="Risk">
 		    <huiproperty defaultValue="1" id="bp_device_value_method_confidentiality" inputtype="booleanoption" name="Deduce confidentiality with maximumpriciple" tags="Risk"/>
@@ -12517,6 +14446,290 @@ Wurden bereits weitere Stellen informiert?
       		<huiproperty defaultValue="0" id="bp_device_riskanalysis_necessary" inputtype="booleanoption" name="Riskanalysis necessary" tags="Risk"/>
       		<huiproperty id="bp_device_riskanalysis_explanation" inputtype="text" name="Explanation riskanalysis" tags="Risk"/>
     	</huipropertygroup>
+    	<!-- START:  BCM Aenderung -->
+          <huipropertygroup name="BCM" id="bp_device_bcm" tags="BCM" >
+               <huiproperty
+                id="bp_device_dateOfCollection"
+                name="Datum der Erhebung"
+                inputtype="date">
+                <defaultRule class="Today">
+                </defaultRule>
+                </huiproperty>
+                
+                 <huiproperty id="bp_device_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
+
+              <huiproperty id="bp_device_bcm_tim24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_device_bcm_time24_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_device_bcm_time24_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_device_bcm_time24_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_device_bcm_time24_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_device_bcm_time3d" name="Impact after 3d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_device_bcm_time3d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_device_bcm_time3d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_device_bcm_time3d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_device_bcm_time3d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_device_bcm_time7d" name="Impact after 7d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_device_bcm_time7d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_device_bcm_time7d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_device_bcm_time7d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_device_bcm_time7d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_device_bcm_time14d" name="Impact after 14d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_device_bcm_time14d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_device_bcm_time14d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_device_bcm_time14d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_device_bcm_time14d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_device_bcm_time30d" name="Impact after 30d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_device_bcm_time30d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_device_bcm_time30d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_device_bcm_time30d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_device_bcm_time30d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+<huiproperty defaultValue="1" id="bp_device_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="Risk"/>
+                        
+            <huiproperty id="bp_device_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="0" max="5">
+                <option
+                    id="bp_device_bcm_keineMtpd1"
+                    name="keine MTPD"
+                    value="0" />
+                      <option
+                    id="bp_device_bcm_time24hMtpd1"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_device_bcm_time3dMtpd1"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_device_bcm_time7dMtpd1"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_device_bcm_time14dMtpd1"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_device_bcm_time30dMtpd1"
+                    name="30 d"
+                    value="5" />
+            </huiproperty>
+             <huiproperty id="bp_device_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung" />
+                     <huiproperty
+                    id="bp_device_schadensszenario_value_1"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Beeinträchtigung der Aufgabenerfüllung"
+                    inputtype="booleanoption"  defaultValue="0">
+                </huiproperty>
+        <huiproperty
+                    id="bp_device_schadensszenario_value_2"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Verstoß gegen Gesetze, Vorschriften und Verträge"
+                    inputtype="booleanoption" defaultValue="0">
+                </huiproperty>
+        <huiproperty
+                    id="bp_device_schadensszenario_value_3"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Negative Außen und Innenwirkung (Imageschaden)"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+        
+         <huiproperty
+                    id="bp_device_schadensszenario_value_4"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Finanzielle Auswirkungen"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+        
+         <huiproperty
+                    id="bp_device_schadensszenario_value_5"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Beeinträchtigung der persönlichen Unversertheit"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+        
+           <huiproperty id="bp_device_bcm_mtpd2" name="Geänderte MTPD aufgrund von Prozessabhängigkeiten" tags="BCM" inputtype="numericoption" min="0" max="6">
+                <option
+                    id="bp_device_bcm_keineMtpd2"
+                    name="keine MTPD"
+                    value="0" />
+                      <option
+                    id="bp_device_bcm_time24hMtpd2"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_device_bcm_time3dMtpd2"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_device_bcm_time7dMtpd2"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_device_bcm_time14dMtpd2"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_device_bcm_time30dMtpd2"
+                    name="30 d"
+                    value="5" />
+                     <option
+                    id="bp_device_bcm_keineAenderungMtpd2"
+                    name="-"
+                    value="6" />
+            </huiproperty>
+         <huiproperty id="bp_device_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
+          	 
+         <huiproperty defaultValue="0" id="bp_device_value_deduce_mtpdMIN" inputtype="booleanoption" name="MTPD (MIN) ableiten nach Minimalprinzip" tags="Risk"/>
+     
+              <huiproperty id="bp_device_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="0" max="5">
+                <option
+                    id="bp_device_bcm_timekeineMtpdMin"
+                    name="keine MTPD"
+                    value="0" />
+                      <option
+                    id="bp_device_bcm_time24hMtpdMin"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_device_bcm_time3dMtpdMin"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_device_bcm_time7dMtpdMin"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_device_bcm_time14dMtpdMin"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_device_bcm_time30dMtpdMin"
+                    name="30 d"
+                    value="5" />
+            </huiproperty>
+            
+         <huiproperty id="bp_device__rto" name="Geforderte Wiederanlaufzeit (WAZ/RTO) für notw. Ressourcen aus Prozess-MTPD" tags="BCM" />
+         <huiproperty id="bp_device__rtoK" name="Kleinste RTO der Ressource" tags="BCM" />
+             
+               <huiproperty
+                    id="bp_device_SPoF_value_1"
+                     tags="BCM"
+                    name="Single-Point-of-Failure/of-Knowledge/of-Contact (SPoF/SPoK/SPoC)"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+    <huiproperty id="bp_device_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
+          
+            <huiproperty id="bp_device_bcm_rpo" name="Maximal zulässiger Datenverlust (RPO)" tags="BCM" inputtype="numericoption" min="0" max="9">
+                <option
+                    id="bp_device_bcm_rpo0"
+                    name="-"
+                    value="0" />
+                     <option
+                    id="bp_device_bcm_rpo1"
+                    name="Transaktionsgenau"
+                    value="1" />
+                     <option
+                    id="bp_device_bcm_rpo2"
+                    name=" Stündlich"
+                    value="2" />
+                     <option
+                    id="bp_device_bcm_rpo3"
+                    name=" 12:00 am Tag"
+                    value="3" />
+                       <option
+                    id="bp_device_bcm_rpo4"
+                    name=" Täglich (Werktag)"
+                    value="4" />
+                       <option
+                    id="bp_device_bcm_rpo5"
+                    name=" Täglich (Kalendertag)"
+                    value="5" />
+                       <option
+                    id="bp_device_bcm_rpo6"
+                    name=" Wöchentlich"
+                    value="6" />
+                       <option
+                    id="bp_device_bcm_rpo7"
+                    name="Monatlich"
+                    value="7" />
+                       <option
+                    id="bp_device_bcm_rpo8"
+                    name=" Quartalsweise"
+                    value="8" />
+                       <option
+                    id="bp_device_bcm_rpo9"
+                    name=" Jährlich"
+                    value="9" />
+            </huiproperty>
+         </huipropertygroup>
+           <!-- ENDE:  BCM Aenderung -->
         <huipropertygroup name="KIX" id="bp_device_kix" tags="KIX" >
             <huiproperty name="KIX Ticket 1" id="bp_device_kix_ticket1" isURL="true"/>
             <huiproperty name="KIX Ticket 2" id="bp_device_kix_ticket2" isURL="true"/>
@@ -12581,6 +14794,7 @@ Wurden bereits weitere Stellen informiert?
 			<option	id="bp_room_user_19"	name="Accounting" />
 		</huiproperty>
         <huiproperty id="bp_room_document" isURL="true" name="Document" />
+         
         <huipropertygroup id="bp_room_group_business_impact" name="Protection Requirement"
             tags="Risk">
 		    <huiproperty defaultValue="1" id="bp_room_value_method_confidentiality" inputtype="booleanoption" name="Deduce confidentiality with maximumpriciple" tags="Risk"/>
@@ -12636,12 +14850,299 @@ Wurden bereits weitere Stellen informiert?
       		<huiproperty defaultValue="0" id="bp_room_riskanalysis_necessary" inputtype="booleanoption" name="Riskanalysis necessary" tags="Risk"/>
       		<huiproperty id="bp_room_riskanalysis_explanation" inputtype="text" name="Explanation riskanalysis" tags="Risk"/>
     	</huipropertygroup>
+    	
+    	<!-- START:  BCM Aenderung -->
+             <huipropertygroup name="BCM" id="bp_room_bcm" tags="BCM" >
+               <huiproperty
+                id="bp_room_dateOfCollection"
+                name="Datum der Erhebung"
+                inputtype="date">
+                <defaultRule class="Today">
+                </defaultRule>
+                </huiproperty>
+                
+                 <huiproperty id="bp_room_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
+
+              <huiproperty id="bp_room_bcm_tim24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_room_bcm_time24_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_room_bcm_time24_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_room_bcm_time24_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_room_bcm_time24_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_room_bcm_time3d" name="Impact after 3d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_room_bcm_time3d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_room_bcm_time3d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_room_bcm_time3d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_room_bcm_time3d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_room_bcm_time7d" name="Impact after 7d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_room_bcm_time7d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_room_bcm_time7d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_room_bcm_time7d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_room_bcm_time7d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_room_bcm_time14d" name="Impact after 14d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_room_bcm_time14d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_room_bcm_time14d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_room_bcm_time14d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_room_bcm_time14d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+
+              <huiproperty id="bp_room_bcm_time30d" name="Impact after 30d" tags="BCM" inputtype="numericoption" min="1" max="4">
+                <option
+                    id="bp_room_bcm_time30d_1"
+                    name="1 Uncritical"
+                    value="1" />
+                     <option
+                    id="bp_room_bcm_time30d_2"
+                    name="2 Normal"
+                    value="2" />
+                     <option
+                    id="bp_room_bcm_time30d_3"
+                    name="3 High"
+                    value="3" />
+                     <option
+                    id="bp_room_bcm_time30d_4"
+                    name="4 Very High"
+                    value="4" />
+            </huiproperty>
+<huiproperty defaultValue="1" id="bp_room_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="Risk"/>
+                        
+            <huiproperty id="bp_room_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="0" max="5">
+                <option
+                    id="bp_room_bcm_keineMtpd1"
+                    name="keine MTPD"
+                    value="0" />
+                      <option
+                    id="bp_room_bcm_time24hMtpd1"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_room_bcm_time3dMtpd1"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_room_bcm_time7dMtpd1"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_room_bcm_time14dMtpd1"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_room_bcm_time30dMtpd1"
+                    name="30 d"
+                    value="5" />
+            </huiproperty>
+             <huiproperty id="bp_room_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung" />
+                     <huiproperty
+                    id="bp_room_schadensszenario_value_1"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Beeinträchtigung der Aufgabenerfüllung"
+                    inputtype="booleanoption"  defaultValue="0">
+                </huiproperty>
+        <huiproperty
+                    id="bp_room_schadensszenario_value_2"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Verstoß gegen Gesetze, Vorschriften und Verträge"
+                    inputtype="booleanoption" defaultValue="0">
+                </huiproperty>
+        <huiproperty
+                    id="bp_room_schadensszenario_value_3"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Negative Außen und Innenwirkung (Imageschaden)"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+        
+         <huiproperty
+                    id="bp_room_schadensszenario_value_4"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Finanzielle Auswirkungen"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+        
+         <huiproperty
+                    id="bp_room_schadensszenario_value_5"
+                     tags="BCM"
+                    name="Ausschlagebendes Schadensszenario: Beeinträchtigung der persönlichen Unversertheit"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+        
+           <huiproperty id="bp_room_bcm_mtpd2" name="Geänderte MTPD aufgrund von Prozessabhängigkeiten" tags="BCM" inputtype="numericoption" min="0" max="6">
+                <option
+                    id="bp_room_bcm_keineMtpd2"
+                    name="keine MTPD"
+                    value="0" />
+                      <option
+                    id="bp_room_bcm_time24hMtpd2"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_room_bcm_time3dMtpd2"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_room_bcm_time7dMtpd2"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_room_bcm_time14dMtpd2"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_room_bcm_time30dMtpd2"
+                    name="30 d"
+                    value="5" />
+                     <option
+                    id="bp_room_bcm_keineAenderungMtpd2"
+                    name="-"
+                    value="6" />
+            </huiproperty>
+         <huiproperty id="bp_room_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
+          	 
+         <huiproperty defaultValue="0" id="bp_room_value_deduce_mtpdMIN" inputtype="booleanoption" name="MTPD (MIN) ableiten nach Minimalprinzip" tags="Risk"/>
+     
+              <huiproperty id="bp_room_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="0" max="5">
+                <option
+                    id="bp_room_bcm_timekeineMtpdMin"
+                    name="keine MTPD"
+                    value="0" />
+                      <option
+                    id="bp_room_bcm_time24hMtpdMin"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_room_bcm_time3dMtpdMin"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_room_bcm_time7dMtpdMin"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_room_bcm_time14dMtpdMin"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_room_bcm_time30dMtpdMin"
+                    name="30 d"
+                    value="5" />
+            </huiproperty>
+            
+         <huiproperty id="bp_room__rto" name="Geforderte Wiederanlaufzeit (WAZ/RTO) für notw. Ressourcen aus Prozess-MTPD" tags="BCM" />
+         <huiproperty id="bp_room__rtoK" name="Kleinste RTO der Ressource" tags="BCM" />
+             
+               <huiproperty
+                    id="bp_room_SPoF_value_1"
+                     tags="BCM"
+                    name="Single-Point-of-Failure/of-Knowledge/of-Contact (SPoF/SPoK/SPoC)"
+                    inputtype="booleanoption"  defaultValue="0" >
+        </huiproperty>
+    <huiproperty id="bp_room_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
+          
+            <huiproperty id="bp_room_bcm_rpo" name="Maximal zulässiger Datenverlust (RPO)" tags="BCM" inputtype="numericoption" min="0" max="9">
+                <option
+                    id="bp_room_bcm_rpo0"
+                    name="-"
+                    value="0" />
+                     <option
+                    id="bp_room_bcm_rpo1"
+                    name="Transaktionsgenau"
+                    value="1" />
+                     <option
+                    id="bp_room_bcm_rpo2"
+                    name=" Stündlich"
+                    value="2" />
+                     <option
+                    id="bp_room_bcm_rpo3"
+                    name=" 12:00 am Tag"
+                    value="3" />
+                       <option
+                    id="bp_room_bcm_rpo4"
+                    name=" Täglich (Werktag)"
+                    value="4" />
+                       <option
+                    id="bp_room_bcm_rpo5"
+                    name=" Täglich (Kalendertag)"
+                    value="5" />
+                       <option
+                    id="bp_room_bcm_rpo6"
+                    name=" Wöchentlich"
+                    value="6" />
+                       <option
+                    id="bp_room_bcm_rpo7"
+                    name="Monatlich"
+                    value="7" />
+                       <option
+                    id="bp_room_bcm_rpo8"
+                    name=" Quartalsweise"
+                    value="8" />
+                       <option
+                    id="bp_room_bcm_rpo9"
+                    name=" Jährlich"
+                    value="9" />
+            </huiproperty>
+         </huipropertygroup>
+           <!-- ENDE:  BCM Aenderung -->
     </huientity>
 
     <huientity id="bp_room_group" name="Room Group">
         <huiproperty id="bp_room_group_name" name="Title" required="true" />
         <huiproperty id="bp_room_group_desc" inputtype="text" name="Description" />
         <huiproperty id="bp_room_group_tag" name="Tags" />
+        
+        
     </huientity>
 
     <huientity id="bp_safeguard" name="Safeguard">
@@ -12663,6 +15164,7 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_safeguard_tag" name="Tags"
             tooltip="List of tags, separated by comma or space" />
         <huiproperty id="bp_safeguard_document" isURL="true" name="Document" />
+          
         <huiproperty id="bp_safeguard_last_change" name="Last Change" inputtype="date"
             editable="false">
             <defaultRule class="Today" />
@@ -12707,7 +15209,84 @@ Wurden bereits weitere Stellen informiert?
                     <param id="bp_safeguard_revision_next_revision_date_timeDifference">2</param>
                 </defaultRule>
             </huiproperty>
-        </huipropertygroup>
+        </huipropertygroup><!-- START: BCM Aenderung -->
+                  <huipropertygroup name="Business Continuity Management (BCM)" id="bp_safeguard_bcm" tags="BCM" >
+             <huiproperty id="bp_business_continuity_safeguard_selectedBCM"
+                name="Business Continuity Maßnahme"
+                inputtype="booleanoption"
+                defaultValue="0"
+                tags="BCM" />
+
+ 			  <huiproperty editable="true" id="bp_safeguard_bcStrategie" inputtype="text" name="Beschreibung der BC-Strategie"
+ 			    showInObjectBrowser="false" visible="true" />
+ 			    
+ 			  <huiproperty id="bp_safeguard_bcm_wiederanlaufzeit" name="Wiederanlaufzeit" tags="BCM" inputtype="numericoption" min="1" max="5">
+                      <option
+                    id="bp_safeguard_bcm_time24hMtpd1"
+                    name="24 h"
+                    value="1" />
+                     <option
+                    id="bp_safeguard_bcm_time3dMtpd1"
+                    name="3 d"
+                    value="2" />
+                     <option
+                    id="bp_safeguard_bcm_time7dMtpd1"
+                    name="7 d"
+                    value="3" />
+                     <option
+                    id="bp_safeguard_bcm_time14dMtpd1"
+                    name="14 d"
+                    value="4" />
+                      <option
+                    id="bp_safeguard_bcm_time30dMtpd1"
+                    name="30 d"
+                    value="5" />
+            </huiproperty>
+            
+               <huiproperty id="bp_safeguard_schaden" name="Schaden bis zum Wiederanlauf" inputtype="singleoption">
+                <option id="bp_safeguard_schaden_unkritisch" name="unkritisch" />
+                <option id="bp_safeguard_schaden_normal" name="mittel" />
+                <option id="bp_safeguard_schaden_hoch" name="hoch" />
+                 <option id="bp_safeguard_schaden_sehrhoch" name="sehr hoch" />
+ 			</huiproperty>
+ 			  <huiproperty editable="true" id="bp_safeguard_RtoEinhalten" inputtype="text" name="Einhalten der RTO"
+ 			    showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="bp_safeguard_ErreichbaresNotbetriebsniveau" inputtype="text" name="Erreichbares Notbetriebsniveau"
+ 			    showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="bp_safeguard_Restrisiko" inputtype="text" name="Verbleibendes Restrisiko"
+ 			    showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="bp_safeguard_finanzielleAufwaende" inputtype="text" name="Finanzielle Aufwände"
+ 			    showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="bp_safeguard_EinhaltungAnf" inputtype="text" name="Einhaltung interner und externer Anforderungen"
+ 			    showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="bp_safeguard_NotbetriebsdauerMax" inputtype="text" name="Maximal mögliche Notbetriebsdauer"
+ 			    showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="bp_safeguard_aufwaende" inputtype="text" name="Organisatorische Aufwände"
+ 			    showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="bp_safeguard_risken" inputtype="text" name="Entstehende Risiken"
+ 			    showInObjectBrowser="false" visible="true" />
+ 			  <huiproperty editable="true" id="bp_safeguard_zusatznutzen" inputtype="text" name="Entstehender Zusatznutzen"
+ 			    showInObjectBrowser="false" visible="true" />
+         </huipropertygroup>
+         
+         <huipropertygroup name="BCM-Maßnahmenplan" id="bp_safeguard_plan" tags="BCM" >
+         
+           <huiproperty editable="true" id="bp_safeguard_desc_plan_korrekturbedarf" inputtype="text" name="Korrekturbedarf/Verbesserungspotenzial"
+            showInObjectBrowser="false" textrows="4" visible="true" />
+            
+               <huiproperty editable="true" id="bp_safeguard_desc_plan_ursache" inputtype="text" name="Ursache"
+            showInObjectBrowser="false" textrows="4" visible="true" />
+            
+          <huiproperty id="bp_safeguard_desc_plan_priority" inputtype="singleoption" name="Festgelegte Priorität" tags="BCM">
+        <option id="bp_safeguard_desc_plan_priorityGering" name="Gering"/>
+        <option id="bp_safeguard_desc_plan_priorityMittel" name="Mittel"/>
+        <option id="bp_safeguard_desc_plan_priorityHoch" name="Hoch"/>
+      </huiproperty>
+         </huipropertygroup>
+         
+         <!-- ENDE:  BCM Aenderung -->
+        
+        
     <huipropertygroup id="bp_safeguard_group_kosten" name="Kosten" tags="Finance">
       <huiproperty id="bp_safeguard_kosten_ptfix" name="Personalkosten fix EUR" tags="Finance"/>
       <huiproperty id="bp_safeguard_kosten_ptvar" name="Personalkosten var. EUR" tags="Finance"/>
@@ -12859,6 +15438,10 @@ Wurden bereits weitere Stellen informiert?
             <option name="Research information" id="bp_document_type_research" />
             <option name="Manual" id="bp_document_type_manual" />
             <option name="Training materials" id="bp_document_type_training" />
+                        <!-- START: BCM  -->
+             <option name="Certificate" id="bp_document_type_certificate" />
+             <option name="Guideline" id="bp_document_type_guideline" />
+                        <!-- ENDE: BCM  -->
             <option name="Others" id="bp_document_type_other" />
         </huiproperty>
         
@@ -12875,6 +15458,8 @@ Wurden bereits weitere Stellen informiert?
         </huiproperty>
         
         <huiproperty id="bp_document_version" name="Version" inputtype="line"/>
+        <huiproperty id="bp_document_retention_period" name="Retention Period" inputtype="line"/>
+        
          
         <huiproperty
             name="Document State" id="bp_document_approval" inputtype="singleoption">
