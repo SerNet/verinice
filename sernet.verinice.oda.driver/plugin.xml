@@ -11,22 +11,6 @@
             odaVersion="3.2"
             id="verinice.oda.driver.dataSource.id">
          <properties>
-            <property
-                  allowsEmptyValueAsNull="false"
-                  defaultDisplayName="SNCA URL"
-                  defaultValue="http://localhost:8080/veriniceserver/GetHitroConfig"
-                  isEncryptable="false"
-                  name="sncaUrl"
-                  type="string">
-            </property>
-            <property
-                  allowsEmptyValueAsNull="true"
-                  canInherit="true"
-                  defaultDisplayName="verinice Server URI"
-                  isEncryptable="false"
-                  name="serverURI"
-                  type="string">
-            </property>
          </properties>
       </dataSource>
       <dataSet
@@ -85,7 +69,7 @@
                nativeDataTypeCode="1"
                odaScalarDataType="String"
                nativeDataType="String">
-         </dataTypeMapping>     
+         </dataTypeMapping>
       </dataSet>
    </extension>
    <extension
@@ -114,7 +98,7 @@
             class="sernet.verinice.oda.driver.preferences.ReportPreferencePage"
             id="sernet.verinice.oda.driver.preferences.reportpreferencepage"
             name="%page.name"/>
-   </extension> 
+   </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer class="sernet.verinice.oda.driver.preferences.PreferenceInitializer"/>
