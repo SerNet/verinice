@@ -8558,8 +8558,7 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
             name="Title"
             id="interview_name"
-            required="true"
-            tags="VDA_ISA_Audit"/>
+            required="true"/>
         <huiproperty
             name="Abbreviation"
             id="interview_abbr" />
@@ -8575,10 +8574,10 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
             name="showInReport"
             id="interview_showInISAReport"
-            inputtype="booleanoption"  defaultValue="0" tags="VDA_ISA_Audit"/>
+            inputtype="booleanoption"  defaultValue="0"/>
 
         <huiproperty
-            id="interview_audit_action" name="Audit Action Type" inputtype="singleoption" tags="VDA_ISA_Audit" required="true">
+            id="interview_audit_action" name="Audit Action Type" inputtype="singleoption" required="true">
            <option name="Interview" id="interview_audit_action_type_interview"/>
            <option name="Documentationcheck" id="interview_audit_action_type_documentation_check"/>
            <option name="Inspection" id="interview_audit_action_type_inspection"/>
@@ -8588,7 +8587,7 @@ Wurden bereits weitere Stellen informiert?
         </huiproperty>
 
         <huiproperty
-            id="interview_audit_action_description" name="Audit Action Description" inputtype="text" tags="VDA_ISA_Audit"
+            id="interview_audit_action_description" name="Audit Action Description" inputtype="text"
            textrows="4"
            required="true"/>
 
