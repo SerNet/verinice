@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sernet.verinice.samt.service
-Bundle-Version: 1.24.1.qualifier
+Bundle-Version: 1.25.0.qualifier
 Bundle-Activator: sernet.verinice.samt.service.Activator
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.apache.log4j;bundle-version="1.2.21",

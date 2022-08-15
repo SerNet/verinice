@@ -2,7 +2,7 @@
 <feature
       id="sernet.gs.server.feature"
       label="verinice server Feature"
-      version="1.24.1.qualifier"
+      version="1.25.0.qualifier"
       provider-name="sernet.de">
 
    <description url="https://verinice.com">
