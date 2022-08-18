@@ -76,6 +76,7 @@ import sernet.hui.swt.widgets.IHuiControlFactory;
 import sernet.snutils.AssertException;
 import sernet.snutils.FormInputParser;
 import sernet.springclient.RightsServiceClient;
+import sernet.verinice.bp.rcp.bcm.BCMUiUtils;
 import sernet.verinice.bp.rcp.risk.ui.FrequencyConfigurator;
 import sernet.verinice.bp.rcp.risk.ui.ImpactConfigurator;
 import sernet.verinice.bp.rcp.risk.ui.RiskConfigurationUpdateResultDialog;
@@ -283,6 +284,9 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
             InputHelperFactory.setInputHelpers(entityType, huiComposite);
             if (Arrays.stream(tags).anyMatch("BSI-200-3"::equals)) {
                 RiskUiUtils.addSelectionListener(huiComposite, cnAElement);
+            }
+            if (Arrays.stream(tags).anyMatch("BCM"::equals)) {
+                BCMUiUtils.addSelectionListener(huiComposite, cnAElement);
             }
             huiComposite.resetInitialFocus();
 

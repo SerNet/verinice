@@ -11197,9 +11197,7 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
          <huiproperty id="bp_application_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
           	 
-         <huiproperty defaultValue="0" id="bp_application_value_deduce_mtpdMIN" inputtype="booleanoption" name="MTPD (MIN) ableiten nach Minimalprinzip" tags="Risk"/>
-     
-              <huiproperty id="bp_application_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="0" max="5">
+              <huiproperty id="bp_application_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="0" max="5" editable="false">
                 <option
                     id="bp_application_bcm_timekeineMtpdMin"
                     name="keine MTPD"
@@ -11612,9 +11610,7 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
          <huiproperty id="bp_businessprocess_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
           	 
-         <huiproperty defaultValue="0" id="bp_businessprocess_value_deduce_mtpdMIN" inputtype="booleanoption" name="MTPD (MIN) ableiten nach Minimalprinzip" tags="Risk"/>
-     
-              <huiproperty id="bp_businessprocess_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="0" max="5">
+              <huiproperty id="bp_businessprocess_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="0" max="5" editable="false">
                 <option
                     id="bp_businessprocess_bcm_timekeineMtpdMin"
                     name="keine MTPD"
@@ -12666,9 +12662,7 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
          <huiproperty id="bp_icssystem_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
           	 
-         <huiproperty defaultValue="0" id="bp_icssystem_value_deduce_mtpdMIN" inputtype="booleanoption" name="MTPD (MIN) ableiten nach Minimalprinzip" tags="Risk"/>
-     
-              <huiproperty id="bp_icssystem_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="0" max="5">
+              <huiproperty id="bp_icssystem_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="0" max="5" editable="false">
                 <option
                     id="bp_icssystem_bcm_timekeineMtpdMin"
                     name="keine MTPD"
@@ -13101,9 +13095,7 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
          <huiproperty id="bp_itsystem_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
           	 
-         <huiproperty defaultValue="0" id="bp_itsystem_value_deduce_mtpdMIN" inputtype="booleanoption" name="MTPD (MIN) ableiten nach Minimalprinzip" tags="Risk"/>
-     
-              <huiproperty id="bp_itsystem_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="0" max="5">
+              <huiproperty id="bp_itsystem_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="0" max="5" editable="false">
                 <option
                     id="bp_itsystem_bcm_timekeineMtpdMin"
                     name="keine MTPD"
@@ -14237,9 +14229,7 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
          <huiproperty id="bp_network_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
           	 
-         <huiproperty defaultValue="0" id="bp_network_value_deduce_mtpdMIN" inputtype="booleanoption" name="MTPD (MIN) ableiten nach Minimalprinzip" tags="Risk"/>
-     
-              <huiproperty id="bp_network_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="0" max="5">
+              <huiproperty id="bp_network_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="0" max="5" editable="false">
                 <option
                     id="bp_network_bcm_timekeineMtpdMin"
                     name="keine MTPD"
@@ -14646,9 +14636,7 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
          <huiproperty id="bp_device_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
           	 
-         <huiproperty defaultValue="0" id="bp_device_value_deduce_mtpdMIN" inputtype="booleanoption" name="MTPD (MIN) ableiten nach Minimalprinzip" tags="Risk"/>
-     
-              <huiproperty id="bp_device_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="0" max="5">
+              <huiproperty id="bp_device_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="0" max="5" editable="false">
                 <option
                     id="bp_device_bcm_timekeineMtpdMin"
                     name="keine MTPD"
@@ -15051,9 +15039,7 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
          <huiproperty id="bp_room_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
           	 
-         <huiproperty defaultValue="0" id="bp_room_value_deduce_mtpdMIN" inputtype="booleanoption" name="MTPD (MIN) ableiten nach Minimalprinzip" tags="Risk"/>
-     
-              <huiproperty id="bp_room_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="0" max="5">
+              <huiproperty id="bp_room_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="0" max="5" editable="false">
                 <option
                     id="bp_room_bcm_timekeineMtpdMin"
                     name="keine MTPD"
