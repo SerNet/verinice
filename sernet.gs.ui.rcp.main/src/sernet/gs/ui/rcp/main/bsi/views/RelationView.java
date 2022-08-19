@@ -131,11 +131,18 @@ public class RelationView extends RightsEnabledView
                     command = ServiceFactory.lookupCommandService().executeCommand(command);
                     final CnATreeElement linkElmt = command.getElmt();
                     if (!monitor.isCanceled()) {
-                        Display.getDefault().syncExec(() -> viewer.setInput(linkElmt));
+                        Display.getDefault().syncExec(() -> {
+                            if (!viewer.getTable().isDisposed()) {
+                                viewer.setInput(linkElmt);
+                            }
+                        });
                     }
                 } catch (Exception e) {
-                    Display.getDefault().syncExec(
-                            () -> viewer.setInput(new PlaceHolder(Messages.RelationView_3)));
+                    Display.getDefault().syncExec(() -> {
+                        if (!viewer.getTable().isDisposed()) {
+                            viewer.setInput(new PlaceHolder(Messages.RelationView_3));
+                        }
+                    });
                     ExceptionUtil.log(e, Messages.RelationView_4);
                 }
 
