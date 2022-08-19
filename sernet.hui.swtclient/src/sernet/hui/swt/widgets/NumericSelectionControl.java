@@ -36,6 +36,7 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
+import sernet.hui.common.rules.IFillRule;
 import sernet.hui.swt.SWTResourceManager;
 
 /**
@@ -113,8 +114,15 @@ public class NumericSelectionControl extends AbstractHuiControl {
         combo.setItems(shownItems);
         if (savedProp == null) {
             // create property in which to save entered value:
-            savedProp = entity.createNewProperty(fieldType, "");
-            combo.deselectAll();
+            IFillRule numericDefault = fieldType.getDefaultRule();
+            if(numericDefault == null) {
+                savedProp = entity.createNewProperty(fieldType, "");
+                combo.deselectAll();
+            } else {
+                String defaultValue = numericDefault.getValue();
+                savedProp = entity.createNewProperty(fieldType, defaultValue);
+                combo.select(indexForOption(savedProp));
+            }
         } else {
             // use saved property:
             combo.select(indexForOption(savedProp));
