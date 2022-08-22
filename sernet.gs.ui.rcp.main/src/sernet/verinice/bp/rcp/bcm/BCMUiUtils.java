@@ -28,6 +28,8 @@ import org.eclipse.swt.widgets.Control;
 
 import sernet.hui.common.connect.ITargetObject;
 import sernet.hui.swt.widgets.HitroUIComposite;
+import sernet.verinice.model.bp.BCMUtils;
+import sernet.verinice.model.bp.BCMUtils.BCMProperties;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -46,38 +48,58 @@ public final class BCMUiUtils {
 
         if (element instanceof ITargetObject && element instanceof IBpElement
                 && !(element.isScope())) {
-            String typeId = element.getTypeId();
+            enableMinMtpdDeduction(huiComposite, element);
+        }
+    }
 
-            String targetProperty = typeId + "_bcm_mtpdMIN";
-            String sourceProperty = typeId + "_bcm_mtpd1";
-            String overrideProperty = typeId + "_bcm_mtpd2";
+    private static void enableMinMtpdDeduction(HitroUIComposite huiComposite,
+            CnATreeElement element) {
 
-            Control overrideField = huiComposite.getField(overrideProperty);
-            Control sourceField = huiComposite.getField(sourceProperty);
-            Control targetField = huiComposite.getField(targetProperty);
+        BCMProperties properties = BCMUtils.getPropertiesForElement(element);
 
-            if (!(sourceField instanceof Combo && overrideField instanceof Combo
-                    && targetField instanceof Combo)) {
-                LOG.warn("Illegal fields, requiring combos for " + sourceProperty + ", "
-                        + overrideProperty + ", and " + targetProperty);
+        String targetProperty = properties.propertyMtpdMin;
+        String sourceProperty = properties.propertyMtpd;
+        String overrideProperty = properties.propertyMtpdOverride;
 
-            } else {
+        Control sourceField = huiComposite.getField(sourceProperty);
 
-                Combo overrideCombo = (Combo) overrideField;
-                Combo sourceCombo = (Combo) sourceField;
-                Combo targetCombo = (Combo) targetField;
+        if (!(sourceField instanceof Combo)) {
+            LOG.warn("Illegal field for " + sourceProperty + ", requiring a combo but found "
+                    + sourceField);
+        } else {
+            Combo sourceCombo = (Combo) sourceField;
 
-                if (targetCombo.getItemCount() != sourceCombo.getItemCount()
-                        || overrideCombo.getItemCount() != sourceCombo.getItemCount() + 1) {
-                    LOG.warn("Illegal fields, required item counts do not match for "
-                            + sourceProperty + ", " + overrideProperty + ", and " + targetProperty);
-                } else {
-                    CalculateMinMtpd listener = new CalculateMinMtpd(element, sourceProperty,
-                            targetProperty, overrideProperty);
-                    element.getEntity().addChangeListener(listener);
-                }
+            if (checkIsCombo(huiComposite, targetProperty, sourceCombo.getItemCount())
+                    && checkIsCombo(huiComposite, overrideProperty,
+                            sourceCombo.getItemCount() + 1)) {
+
+                CalculateMinMtpd listener = new CalculateMinMtpd(element, sourceProperty,
+                        overrideProperty);
+                element.getEntity().addChangeListener(listener);
             }
         }
+    }
+
+    private static boolean checkIsCombo(HitroUIComposite huiComposite, String propertyName,
+            int requiredItemCount) {
+        Control field = huiComposite.getField(propertyName);
+        if (field == null) {
+            LOG.warn("Field for " + propertyName + " not found in editor");
+            return false;
+        }
+        if (!(field instanceof Combo)) {
+            LOG.warn(
+                    "Illegal field for " + propertyName + ", requiring a combo but found " + field);
+            return false;
+        }
+        Combo combo = (Combo) field;
+        int itemCount = combo.getItemCount();
+        if (itemCount != requiredItemCount) {
+            LOG.warn("Illegal number of items for " + propertyName + ", requiring "
+                    + requiredItemCount + "but found " + itemCount);
+            return false;
+        }
+        return true;
     }
 
     public static void addControlHints(HitroUIComposite huiComposite, CnATreeElement element) {

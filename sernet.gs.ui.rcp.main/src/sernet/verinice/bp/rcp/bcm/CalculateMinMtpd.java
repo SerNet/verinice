@@ -21,20 +21,18 @@ import sernet.hui.common.connect.IEntityChangedListener;
 import sernet.hui.common.connect.PropertyChangedEvent;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
+import sernet.verinice.model.bp.BCMUtils;
 import sernet.verinice.model.common.CnATreeElement;
 
 class CalculateMinMtpd implements IEntityChangedListener {
 
     private final CnATreeElement element;
     private final String sourceProperty;
-    private final String targetProperty;
     private final String overrideProperty;
 
-    CalculateMinMtpd(CnATreeElement element, String sourceProperty, String targetProperty,
-            String overrideProperty) {
+    CalculateMinMtpd(CnATreeElement element, String sourceProperty, String overrideProperty) {
         this.element = element;
         this.sourceProperty = sourceProperty;
-        this.targetProperty = targetProperty;
         this.overrideProperty = overrideProperty;
     }
 
@@ -42,14 +40,7 @@ class CalculateMinMtpd implements IEntityChangedListener {
     public void propertyChanged(PropertyChangedEvent event) {
         String propertyType = event.getProperty().getPropertyType();
         if (propertyType.equals(sourceProperty) || propertyType.equals(overrideProperty)) {
-            String sourceValueRaw = element.getEntity().getRawPropertyValue(sourceProperty);
-            String overrideValueRaw = element.getEntity().getRawPropertyValue(overrideProperty);
-
-            Integer sourceValue = sourceValueRaw.isEmpty() ? -1 : Integer.valueOf(sourceValueRaw);
-            Integer overrideValue = overrideValueRaw.isEmpty() ? -1
-                    : Integer.valueOf(overrideValueRaw);
-            Integer targetValue = Math.min(sourceValue, overrideValue);
-            element.setNumericProperty(targetProperty, targetValue);
+            BCMUtils.updateMinMtpd(element);
         }
     }
 
