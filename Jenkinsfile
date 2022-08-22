@@ -13,7 +13,7 @@ pipeline {
         JAVA_HOME='/usr/lib/jvm/java-11-openjdk'
     }
     parameters {
-        string(name: 'jreversion', defaultValue: 'jdk-11.0.15+10', description: 'Download and pack a JRE with this version. See https://adoptopenjdk.net/archive.html for a list of possible versions.', trim: true)
+        string(name: 'jreversion', defaultValue: 'jdk-11.0.16.1+1', description: 'Download and pack a JRE with this version. See https://adoptopenjdk.net/archive.html for a list of possible versions.', trim: true)
         booleanParam(name: 'runIntegrationTests', defaultValue: true, description: 'Run integration tests')
         booleanParam(name: 'runRCPTTTests', defaultValue: true, description: 'Run RCPTT tests')
         booleanParam(name: 'clientSign', defaultValue: false, description: 'Sign verinice clients')
