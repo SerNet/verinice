@@ -535,10 +535,12 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         }
 
         if (authService.isPermissionHandlingNeeded()) {
-            if (child.isScope()) {
+            if (parent instanceof CatalogModel) {
                 // VN-1969, grant read/write permissions to the default user
-                // group when importing a new scope
+                // group when importing a new catalog
                 addPermissions(child, IRightsService.USERDEFAULTGROUPNAME);
+            } else if (child.isScope()) {
+                addPermissions(child, authService.getUsername());
             } else {
                 child.setPermissions(Permission.clonePermissionSet(child, parent.getPermissions()));
             }
