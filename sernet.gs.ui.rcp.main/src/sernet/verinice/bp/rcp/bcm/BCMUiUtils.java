@@ -18,6 +18,11 @@
 package sernet.verinice.bp.rcp.bcm;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
 
@@ -73,5 +78,26 @@ public final class BCMUiUtils {
                 }
             }
         }
+    }
+
+    public static void addControlHints(HitroUIComposite huiComposite, CnATreeElement element) {
+        if (element instanceof ITargetObject && element instanceof IBpElement
+                && !(element.isScope())) {
+            String typeId = element.getTypeId();
+            String property = typeId + "__rto";
+            Control control = huiComposite.getField(property);
+            if (control == null) {
+                LOG.warn("Field for " + property + " not found in editor");
+
+            } else {
+                ControlDecoration txtDecorator = new ControlDecoration(control, SWT.TOP | SWT.LEFT);
+                FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault()
+                        .getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION);
+                Image img = fieldDecoration.getImage();
+                txtDecorator.setImage(img);
+                txtDecorator.setDescriptionText(Messages.rtoMustBeSmallerThanMinMtpd);
+            }
+        }
+
     }
 }
