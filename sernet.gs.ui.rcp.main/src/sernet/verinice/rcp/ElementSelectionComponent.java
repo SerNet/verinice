@@ -21,6 +21,7 @@ package sernet.verinice.rcp;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.service.RuntimeCommandException;
@@ -100,7 +103,52 @@ public class ElementSelectionComponent {
     private static final String COLUMN_SCOPE_ID = "_scope_id"; //$NON-NLS-1$
     private static final String COLUMN_LABEL = "_label"; //$NON-NLS-1$
     private static Map<Integer, String> titleMap = new HashMap<>();
+
+    private static final Comparator<CnATreeElement> BY_NAME = (elmt1, elmt2) -> {
+        if (titleMap != null) {
+            String title1 = titleMap.get(elmt1.getScopeId());
+            String title2 = titleMap.get(elmt2.getScopeId());
+            if (title1 != null && title2 != null) {
+                int allScopeTitles = title1.compareTo(title2);
+                if (allScopeTitles == 0) {
+                    return makeTitle(elmt1).compareTo(makeTitle(elmt2));
+                }
+                return title1.compareTo(title2);
+            } else {
+                if (title1 == null && title2 == null) {
+                    return makeTitle(elmt1).compareTo(makeTitle(elmt2));
+                }
+                if (title1 == null) {
+                    return 1;
+                }
+                // title2 == null
+                return -1;
+            }
+        }
+        return makeTitle(elmt1).compareTo(makeTitle(elmt2));
+    };
+
+    private static final Comparator<CnATreeElement> BY_SCOPE = (elmt1, elmt2) -> {
+        return getScopeTitle(elmt1).compareTo(getScopeTitle(elmt2));
+    };
+
     private Map<Integer, CnATreeElement> containingObjectsByElementId;
+
+    private final Comparator<CnATreeElement> byContainingObject = (elmt1, elmt2) -> {
+
+        String text1 = getContainingObjectTitle(elmt1).orElse(null);
+        String text2 = getContainingObjectTitle(elmt2).orElse(null);
+
+        if (text1 != null && text2 != null) {
+            return text1.compareTo(text2);
+        }
+        if (text1 == null) {
+            return 1;
+        }
+        // text2 == null
+        return -1;
+
+    };
 
     private List<CnATreeElement> selectedElements = new ArrayList<>();
 
@@ -219,6 +267,7 @@ public class ElementSelectionComponent {
         column2.getColumn().setText(Messages.CnATreeElementSelectionDialog_9);
         column2.getColumn().setResizable(true);
         column2.getColumn().setWidth(column2Width);
+        column2.getColumn().setData(BY_NAME);
         column2.setLabelProvider(new LabelColumnCellLabelProvider());
 
         // scope id column:
@@ -226,6 +275,7 @@ public class ElementSelectionComponent {
         column3.getColumn().setText(Messages.CnATreeElementSelectionDialog_10);
         column3.getColumn().setWidth(column3Width);
         column3.getColumn().setResizable(true);
+        column3.getColumn().setData(BY_SCOPE);
         column3.setLabelProvider(new ScopeIdColumnCellLabelProvider());
 
         // path column:
@@ -234,13 +284,37 @@ public class ElementSelectionComponent {
             containingObject.getColumn().setText(Messages.ContainingObject);
             containingObject.getColumn().setWidth(pathColomnWidth);
             containingObject.getColumn().setResizable(true);
+            containingObject.getColumn().setData(byContainingObject);
             containingObject.setLabelProvider(new ContainingObjectLabelProvider());
 
         }
+        Table table = viewer.getTable();
+        TableColumn[] columns = table.getColumns();
+
+        // index starts at 1, we don't want to sort after the image column
+        for (int i = 1; i < columns.length; i++) {
+            TableColumn column = columns[i];
+            column.addListener(SWT.Selection, e -> {
+                final TableColumn sortColumn = table.getSortColumn();
+                int direction = table.getSortDirection();
+
+                if (column.equals(sortColumn)) {
+                    direction = direction == SWT.UP ? SWT.DOWN : SWT.UP;
+                } else {
+                    table.setSortColumn(column);
+                    direction = SWT.UP;
+                }
+                table.setSortDirection(direction);
+                viewer.refresh();
+            });
+        }
+        table.setSortColumn(columns[1]);
+        table.setSortDirection(SWT.DOWN);
 
         viewer.setColumnProperties(new String[] { COLUMN_IMG, COLUMN_SCOPE_ID, COLUMN_LABEL });
         viewer.setContentProvider(new ArrayContentProvider());
         filter = new CnaTreeElementTitleFilter(viewer);
+
         viewer.setComparator(new ElementTableViewerComparator());
 
         viewer.addSelectionChangedListener(
@@ -424,33 +498,45 @@ public class ElementSelectionComponent {
         this.height = height;
     }
 
+    private static String getScopeTitle(CnATreeElement elmt) {
+        String title = "";
+
+        try {
+            if (!titleMap.containsKey(elmt.getScopeId())) {
+                title = loadElementsTitles(elmt);
+            } else {
+                title = titleMap.get(elmt.getScopeId());
+            }
+        } catch (CommandException e) {
+            log.error("Error while getting element", e);
+        }
+        return title;
+    }
+
+    private Optional<String> getContainingObjectTitle(CnATreeElement elmt) {
+        CnATreeElement containingObject = containingObjectsByElementId.get(elmt.getDbId());
+        return Optional.ofNullable(containingObject)
+                .map(CnATreeElementLabelGenerator::getElementTitle);
+    }
+
+    private static String loadElementsTitles(CnATreeElement elmt) throws CommandException {
+        LoadElementTitles scopeCommand;
+        scopeCommand = new LoadElementTitles();
+        scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);
+        titleMap = scopeCommand.getElements();
+        return titleMap.get(elmt.getScopeId());
+    }
+
     private static final class ElementTableViewerComparator extends ViewerComparator {
         @Override
         public int compare(Viewer viewer, Object e1, Object e2) {
-
-            CnATreeElement elmt1 = (CnATreeElement) e1;
-            CnATreeElement elmt2 = (CnATreeElement) e2;
-            if (titleMap != null) {
-                String title1 = titleMap.get(elmt1.getScopeId());
-                String title2 = titleMap.get(elmt2.getScopeId());
-                if (title1 != null && title2 != null) {
-                    int allScopeTitles = title1.compareTo(title2);
-                    if (allScopeTitles == 0) {
-                        return makeTitle(elmt1).compareTo(makeTitle(elmt2));
-                    }
-                    return title1.compareTo(title2);
-                } else {
-                    if (title1 == null && title2 == null) {
-                        return makeTitle(elmt1).compareTo(makeTitle(elmt2));
-                    }
-                    if (title1 == null) {
-                        return 1;
-                    }
-                    // title2 == null
-                    return -1;
-                }
+            Table table = ((TableViewer) viewer).getTable();
+            TableColumn sortColumn = table.getSortColumn();
+            Comparator comparator = sortColumn == null ? null : (Comparator) sortColumn.getData();
+            if (comparator != null && table.getSortDirection() == SWT.UP) {
+                comparator = comparator.reversed();
             }
-            return makeTitle(elmt1).compareTo(makeTitle(elmt2));
+            return comparator == null ? 0 : comparator.compare(e1, e2);
         }
     }
 
@@ -461,28 +547,12 @@ public class ElementSelectionComponent {
                 cell.setText(((PlaceHolder) cell.getElement()).getTitle());
                 return;
             }
-            String title = "";
             CnATreeElement elmt = (CnATreeElement) cell.getElement();
 
-            try {
-                if (!titleMap.containsKey(elmt.getScopeId())) {
-                    title = loadElementsTitles(elmt);
-                } else {
-                    title = titleMap.get(elmt.getScopeId());
-                }
-            } catch (CommandException e) {
-                log.error("Error while getting element", e);
-            }
+            String title = getScopeTitle(elmt);
             cell.setText(title);
         }
 
-        private static String loadElementsTitles(CnATreeElement elmt) throws CommandException {
-            LoadElementTitles scopeCommand;
-            scopeCommand = new LoadElementTitles();
-            scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);
-            titleMap = scopeCommand.getElements();
-            return titleMap.get(elmt.getScopeId());
-        }
     }
 
     private static final class LabelColumnCellLabelProvider extends CellLabelProvider {
@@ -515,11 +585,9 @@ public class ElementSelectionComponent {
                 cell.setText(((PlaceHolder) cell.getElement()).getTitle());
                 return;
             }
-            CnATreeElement containingObject = containingObjectsByElementId
-                    .get(((CnATreeElement) cell.getElement()).getDbId());
-            Optional.ofNullable(containingObject).ifPresent(targetObject -> cell
-                    .setText(CnATreeElementLabelGenerator.getElementTitle(targetObject)));
 
+            CnATreeElement element = (CnATreeElement) cell.getElement();
+            getContainingObjectTitle(element).ifPresent(cell::setText);
         }
     }
 
