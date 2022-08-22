@@ -190,8 +190,10 @@ public class BsiModelView extends RightsEnabledView
 
         Display.getDefault().asyncExec(() -> {
             try {
-                viewer.setInput(model);
-                viewer.refresh();
+                if (!viewer.getControl().isDisposed()) {
+                    viewer.setInput(model);
+                    viewer.refresh();
+                }
             } catch (Exception e) {
                 ExceptionUtil.log(e, Messages.BsiModelView_18);
             }
