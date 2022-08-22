@@ -26,12 +26,73 @@ public final class BCMUtils {
 
     private static final Map<String, BCMProperties> PROPERTIES_BY_TYPE_ID = new ConcurrentHashMap<>();
 
+    private static final int NO_MTPD = 0;
+    private static final int MTPD_UNEDITED = -1;
+    private static final int DAMAGE_POTENTIAL_VALUE_UNEDITED = 0;
+    private static final String IMPACT_VALUE_UNEDITED_RAW = "0";
+
     private BCMUtils() {
     }
 
     public static BCMProperties getPropertiesForElement(CnATreeElement element) {
         String typeId = element.getTypeId();
         return PROPERTIES_BY_TYPE_ID.computeIfAbsent(typeId, BCMProperties::new);
+    }
+
+    public static boolean isMtpdCalculationEnabled(CnATreeElement element) {
+        return element.getEntity()
+                .isFlagged(getPropertiesForElement(element).deductionFlagProperty);
+    }
+
+    public static void updateMtpd(CnATreeElement element, Integer damagePotentialValue) {
+        if (!isMtpdCalculationEnabled(element)) {
+            return;
+        }
+        DamagePotentialAssessment damagePotentialAssessment = performDamageAssessment(element,
+                damagePotentialValue);
+        BCMProperties properties = getPropertiesForElement(element);
+
+        if (damagePotentialAssessment == DamagePotentialAssessment.NOT_REACHED) {
+            element.setNumericProperty(properties.propertyMtpd, NO_MTPD);
+        } else if (damagePotentialAssessment == DamagePotentialAssessment.UNKNOWN) {
+            element.setNumericProperty(properties.propertyMtpd, MTPD_UNEDITED);
+        } else {
+            element.setNumericProperty(properties.propertyMtpd,
+                    damagePotentialAssessment.ordinal());
+        }
+
+    }
+
+    private static DamagePotentialAssessment performDamageAssessment(CnATreeElement element,
+            Integer damagePotentialValue) {
+        if (damagePotentialValue.intValue() == DAMAGE_POTENTIAL_VALUE_UNEDITED) {
+            return DamagePotentialAssessment.UNKNOWN;
+        }
+        BCMProperties properties = getPropertiesForElement(element);
+
+        String[] impactProperties = new String[] { properties.propertyImpact24h,
+                properties.propertyImpact3d, properties.propertyImpact7d,
+                properties.propertyImpact14d, properties.propertyImpact30d };
+
+        boolean allValuesPresent = true;
+
+        for (int i = 0; i < impactProperties.length; i++) {
+            String impactProperty = impactProperties[i];
+
+            String sourceValueRaw = element.getEntity().getRawPropertyValue(impactProperty);
+            if (sourceValueRaw == null || sourceValueRaw.isEmpty()
+                    || IMPACT_VALUE_UNEDITED_RAW.equals(sourceValueRaw)) {
+                allValuesPresent = false;
+                continue;
+            }
+            Integer sourceValue = Integer.valueOf(sourceValueRaw);
+            if (sourceValue >= damagePotentialValue) {
+                return DamagePotentialAssessment.values()[i + 1];
+            }
+        }
+        return allValuesPresent ? DamagePotentialAssessment.NOT_REACHED
+                : DamagePotentialAssessment.UNKNOWN;
+
     }
 
     public static void updateMinMtpd(CnATreeElement element) {
@@ -50,6 +111,12 @@ public final class BCMUtils {
     public static class BCMProperties {
 
         public final String propertyMtpd;
+        public final String deductionFlagProperty;
+        public final String propertyImpact24h;
+        public final String propertyImpact3d;
+        public final String propertyImpact7d;
+        public final String propertyImpact14d;
+        public final String propertyImpact30d;
         public final String propertyMtpdOverride;
         public final String propertyMtpdMin;
 
@@ -57,6 +124,19 @@ public final class BCMUtils {
             this.propertyMtpd = typeId + "_bcm_mtpd1";
             this.propertyMtpdOverride = typeId + "_bcm_mtpd2";
             this.propertyMtpdMin = typeId + "_bcm_mtpdMIN";
+            this.deductionFlagProperty = typeId + "_value_deduce_mtpd1";
+            this.propertyImpact24h = typeId + "_bcm_tim24h";
+            this.propertyImpact3d = typeId + "_bcm_time3d";
+            this.propertyImpact7d = typeId + "_bcm_time7d";
+            this.propertyImpact14d = typeId + "_bcm_time14d";
+            this.propertyImpact30d = typeId + "_bcm_time30d";
+
         }
+
     }
+
+    private enum DamagePotentialAssessment {
+        NOT_REACHED, REACHED_AFTER_24H, REACHED_AFTER_3D, REACHED_AFTER_7D, REACHED_AFTER_14D, REACHED_AFTER_30D, UNKNOWN,
+    }
+
 }

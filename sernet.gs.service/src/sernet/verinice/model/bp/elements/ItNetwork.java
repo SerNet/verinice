@@ -26,7 +26,9 @@ import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.hui.common.connect.ITargetObject;
 import sernet.snutils.TagHelper;
+import sernet.verinice.model.bp.BCMUtils;
 import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.model.bp.groups.ApplicationGroup;
 import sernet.verinice.model.bp.groups.BpDocumentGroup;
@@ -46,6 +48,7 @@ import sernet.verinice.model.bp.risk.configuration.ConfigurationSerializer;
 import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.CnATypeMapper;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -70,6 +73,8 @@ public class ItNetwork extends CnATreeElement
     private static final String PROP_QUALIFIER_CORE = "bp_itnetwork_qualifier_high"; //$NON-NLS-1$
 
     private static final String PROP_RISK_CONFIGURATION = "bp_itnetwork_risk_configuration"; //$NON-NLS-1$
+
+    public static final String PROP_UNTRAGBARKEITSNIVEAU = "bp_itnetwork_value_untragbarkeitsniveau";
 
     protected ItNetwork() {
     }
@@ -204,5 +209,33 @@ public class ItNetwork extends CnATreeElement
         }
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_RISK_CONFIGURATION),
                 rawPropertyValue);
+    }
+
+    @Override
+    public void valuesChanged() {
+        super.valuesChanged();
+        // Untragbarkeitsniveau might have changed -> update target objects.
+        String damagePotentialValueRaw = getEntity().getRawPropertyValue(PROP_UNTRAGBARKEITSNIVEAU);
+        if (damagePotentialValueRaw != null && !damagePotentialValueRaw.isEmpty()) {
+            Integer damagePotentialValue = Integer.valueOf(damagePotentialValueRaw);
+            getChildren().forEach(c -> updateMtpdValues(c, damagePotentialValue));
+        }
+
+    }
+
+    private void updateMtpdValues(CnATreeElement child, Integer damagePotentialValue) {
+        if (child instanceof ITargetObject && child instanceof IBpElement) {
+            if (BCMUtils.isMtpdCalculationEnabled(child)) {
+                BCMUtils.updateMtpd(child, damagePotentialValue);
+                BCMUtils.updateMinMtpd(child);
+            }
+        } else if (child instanceof IBpGroup) {
+            Class<Object> elementType = CnATypeMapper.getClassFromTypeId(
+                    CnATypeMapper.getElementTypeIdFromGroupTypeId(child.getTypeId()));
+            if (ITargetObject.class.isAssignableFrom(elementType)
+                    && IBpElement.class.isAssignableFrom(elementType)) {
+                child.getChildren().forEach(c -> updateMtpdValues(c, damagePotentialValue));
+            }
+        }
     }
 }

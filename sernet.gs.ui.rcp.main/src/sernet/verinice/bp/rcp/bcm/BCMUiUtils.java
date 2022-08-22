@@ -26,11 +26,14 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
 
+import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.ITargetObject;
+import sernet.hui.common.connect.PropertyType;
 import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.verinice.model.bp.BCMUtils;
 import sernet.verinice.model.bp.BCMUtils.BCMProperties;
 import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.common.CnATreeElement;
 
 public final class BCMUiUtils {
@@ -49,6 +52,32 @@ public final class BCMUiUtils {
         if (element instanceof ITargetObject && element instanceof IBpElement
                 && !(element.isScope())) {
             enableMinMtpdDeduction(huiComposite, element);
+            enableMtpdDeduction(huiComposite, element);
+        }
+    }
+
+    private static void enableMtpdDeduction(HitroUIComposite huiComposite, CnATreeElement element) {
+        BCMProperties properties = BCMUtils.getPropertiesForElement(element);
+
+        PropertyType prop = HUITypeFactory.getInstance().getEntityType(ItNetwork.TYPE_ID)
+                .getPropertyType(ItNetwork.PROP_UNTRAGBARKEITSNIVEAU);
+        int numberOfDamagePotentialOptions = prop.getOptions().size();
+
+        if (checkIsCombo(huiComposite, properties.propertyImpact24h, numberOfDamagePotentialOptions)
+                && checkIsCombo(huiComposite, properties.propertyImpact3d,
+                        numberOfDamagePotentialOptions)
+                && checkIsCombo(huiComposite, properties.propertyImpact7d,
+                        numberOfDamagePotentialOptions)
+                && checkIsCombo(huiComposite, properties.propertyImpact14d,
+                        numberOfDamagePotentialOptions)
+                && checkIsCombo(huiComposite, properties.propertyImpact30d,
+                        numberOfDamagePotentialOptions)
+                // 5 intervals plus "Unedited plus "No MTPD"
+                && checkIsCombo(huiComposite, properties.propertyMtpd, 7)) {
+
+            CalculateMtpd listener = new CalculateMtpd(element, properties);
+
+            element.getEntity().addChangeListener(listener);
         }
     }
 

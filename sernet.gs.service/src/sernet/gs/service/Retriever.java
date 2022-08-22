@@ -186,7 +186,11 @@ public final class Retriever {
     }
 
     public static CnATreeElement retrieveElement(final CnATreeElement element, RetrieveInfo ri) {
-        RetrieveCnATreeElement retrieveCommand = new RetrieveCnATreeElement(element.getDbId(), ri);
+        return retrieveElement(element.getDbId(), ri);
+    }
+
+    public static CnATreeElement retrieveElement(Integer elementId, RetrieveInfo ri) {
+        RetrieveCnATreeElement retrieveCommand = new RetrieveCnATreeElement(elementId, ri);
         try {
             retrieveCommand = getCommandService().executeCommand(retrieveCommand);
         } catch (CommandException e1) {
