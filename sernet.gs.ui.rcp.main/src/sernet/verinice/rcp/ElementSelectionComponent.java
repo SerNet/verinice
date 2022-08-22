@@ -64,8 +64,8 @@ import org.eclipse.swt.widgets.Text;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.dialogs.CnaTreeElementTitleFilter;
 import sernet.gs.ui.rcp.main.bsi.dialogs.Messages;
+import sernet.gs.ui.rcp.main.bsi.filter.TextFilter;
 import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -91,7 +91,7 @@ public class ElementSelectionComponent {
     private Text text;
     private Button checkbox;
 
-    private CnaTreeElementTitleFilter filter;
+    private CnATreeElementTitleFilter filter;
 
     private List<CnATreeElement> elementList;
     private Integer scopeId;
@@ -313,7 +313,7 @@ public class ElementSelectionComponent {
 
         viewer.setColumnProperties(new String[] { COLUMN_IMG, COLUMN_SCOPE_ID, COLUMN_LABEL });
         viewer.setContentProvider(new ArrayContentProvider());
-        filter = new CnaTreeElementTitleFilter(viewer);
+        filter = new CnATreeElementTitleFilter(viewer);
 
         viewer.setComparator(new ElementTableViewerComparator());
 
@@ -591,4 +591,35 @@ public class ElementSelectionComponent {
         }
     }
 
+    private class CnATreeElementTitleFilter extends TextFilter {
+
+        public CnATreeElementTitleFilter(TableViewer viewer) {
+            super(viewer);
+        }
+
+        @Override
+        public boolean select(Viewer viewer, Object parentElement, Object element) {
+            if (!(element instanceof CnATreeElement) || getRegex() == null) {
+                return true;
+            }
+            CnATreeElement elmt = (CnATreeElement) element;
+
+            if (getRegex().matcher(elmt.getTitle()).find()) {
+                return true;
+            }
+
+            if (getRegex().matcher(getScopeTitle(elmt)).find()) {
+                return true;
+            }
+
+            if (showContainingObject) {
+                Optional<String> containingObjectTitle = getContainingObjectTitle(elmt);
+                if (containingObjectTitle.isPresent()
+                        && getRegex().matcher(containingObjectTitle.get()).find()) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 }
