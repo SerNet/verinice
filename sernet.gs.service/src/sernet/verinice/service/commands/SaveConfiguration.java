@@ -43,159 +43,188 @@ import sernet.verinice.model.common.configuration.Configuration;
  * 
  * @param <T>
  */
-public class SaveConfiguration<T extends Configuration> extends GenericCommand implements IAuthAwareCommand {
+public class SaveConfiguration<T extends Configuration> extends GenericCommand
+        implements IAuthAwareCommand {
 
-	private static final Logger log = Logger.getLogger(SaveConfiguration.class);
+    private static final Logger log = Logger.getLogger(SaveConfiguration.class);
 
-	private T element;
-	private boolean updatePassword;
+    private T element;
+    private boolean updatePassword;
 
-	private transient IAuthService authService;
-	
-	private transient IBaseDao<T, Serializable> dao;
-	
-	private transient IBaseDao<Entity, Serializable> entityDao;
+    private transient IAuthService authService;
 
-	/**
-	 * Save a configuration item
-	 * 
-	 * @param element
-	 *            item to save / update
-	 * @param updatePassword
-	 *            was the password newly entered and needs to be hashed?
-	 */
-	public SaveConfiguration(T element, boolean updatePassword) {
-		this.element = element;
-		this.updatePassword = updatePassword;
-	}
+    private transient IBaseDao<T, Serializable> dao;
 
-	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
-	 */
-	public void execute() {
-		try {
-			// check if username is unique
-			checkUsername(element);
-			
-			if (updatePassword) {
-				hashPassword();
-			}
-			
-			element = getDao().merge(element);
-	
-			// The roles may have been modified. As such the server needs to throw
-			// away its
-			// cached role data.
-			getCommandService().discardUserData();
-		} catch(UsernameExistsRuntimeException uere) {
-			// already logged in checkUsername
-			throw uere;
-		} catch(RuntimeException re) {
-			log.error("Runtime Error while saving configuration", re);
-			throw re;
-		} catch(Exception re) {
-			log.error("Error while saving configuration", re);
-			throw new RuntimeException(re);
-		}
-	}
+    private transient IBaseDao<Entity, Serializable> entityDao;
 
-	/**
-	 * Checks if the username in a {@link Configuration} is unique in the database.
-	 * Throws {@link UsernameExistsRuntimeException} if username is not available.
-	 * If username is not set or null no exception is thrown
-	 * 
-	 * @param element a {@link Configuration}
-	 * @throws UsernameExistsRuntimeException if username is not available
-	 */
-	private void checkUsername(T element) throws UsernameExistsRuntimeException {
-		if(element!=null && element.getEntity()!=null && element.getEntity().getProperties(Configuration.PROP_USERNAME)!=null) {		
-			PropertyList usernamePropertyList = element.getEntity().getProperties(Configuration.PROP_USERNAME);
-			Property usernameProperty = usernamePropertyList.getProperty(0);
-			if(usernameProperty!=null && usernameProperty.getPropertyValue()!=null) {
-				String username = usernameProperty.getPropertyValue();
-				if(getAuthService().getAdminUsername().equals(username)) {
-				    if (log.isDebugEnabled()) {
+    /**
+     * Save a configuration item
+     * 
+     * @param element
+     *            item to save / update
+     * @param updatePassword
+     *            was the password newly entered and needs to be hashed?
+     */
+    public SaveConfiguration(T element, boolean updatePassword) {
+        this.element = element;
+        this.updatePassword = updatePassword;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
+     */
+    public void execute() {
+        try {
+            // check if username is unique
+            checkUsername(element);
+
+            if (updatePassword) {
+                hashPassword();
+            }
+
+            element = getDao().merge(element);
+
+            // The roles may have been modified. As such the server needs to
+            // throw
+            // away its
+            // cached role data.
+            getCommandService().discardUserData();
+        } catch (UsernameExistsRuntimeException uere) {
+            // already logged in checkUsername
+            throw uere;
+        } catch (RuntimeException re) {
+            log.error("Runtime Error while saving configuration", re);
+            throw re;
+        } catch (Exception re) {
+            log.error("Error while saving configuration", re);
+            throw new RuntimeException(re);
+        }
+    }
+
+    /**
+     * Checks if the username in a {@link Configuration} is unique in the
+     * database. Throws {@link UsernameExistsRuntimeException} if username is
+     * not available. If username is not set or null no exception is thrown
+     * 
+     * @param element
+     *            a {@link Configuration}
+     * @throws UsernameExistsRuntimeException
+     *             if username is not available
+     */
+    private void checkUsername(T element) throws UsernameExistsRuntimeException {
+        if (element != null && element.getEntity() != null
+                && element.getEntity().getProperties(Configuration.PROP_USERNAME) != null) {
+            PropertyList usernamePropertyList = element.getEntity()
+                    .getProperties(Configuration.PROP_USERNAME);
+            Property usernameProperty = usernamePropertyList.getProperty(0);
+            if (usernameProperty != null && usernameProperty.getPropertyValue() != null) {
+                String username = usernameProperty.getPropertyValue();
+                if (getAuthService().getAdminUsername().equals(username)) {
+                    if (log.isDebugEnabled()) {
                         log.debug("Username is admin name: " + username);
                     }
-				    throw new UsernameExistsRuntimeException(username,"Username already exists: " + username);
-				}
-				
-				DetachedCriteria criteria = DetachedCriteria.forClass(Property.class);
-				criteria.add(Restrictions.eq("propertyType", Configuration.PROP_USERNAME));
-				criteria.add(Restrictions.like("propertyValue", username));
-				
-				List resultList = getDao().findByCriteria(criteria);
-				if(resultList!=null && !resultList.isEmpty()) {
-					// save only if this is really the same user object:
-					boolean doubleUsername = false;
-					
-					// reload entity because in some causes new entities alredy exists in db 
-					getEntityDao().findByUuid(element.getEntity().getUuid(), new RetrieveInfo());
-					usernamePropertyList = element.getEntity().getProperties(Configuration.PROP_USERNAME);
-					
-					checkDoubles: for (Object t : resultList) {
-						Property foundProperty = (Property) t;
-						
-						if ( (usernamePropertyList==null || usernamePropertyList.getDbId() == null) // current object was never saved, found name must be double
-								|| !usernamePropertyList.getDbId().equals(foundProperty.getDbId()) ) { // current dbId doesn't match found username, is double
-							doubleUsername = true;
-							break checkDoubles;
-						}
-					}
-					if (doubleUsername) {
-						if (log.isDebugEnabled()) {
-							log.debug("Username exists: " + username);
-						}
-						throw new UsernameExistsRuntimeException(username,"Username already exists: " + username);
-					}
-				}
-			}
-		}
-	}
+                    throw new UsernameExistsRuntimeException(username,
+                            "Username already exists: " + username);
+                }
 
+                DetachedCriteria criteria = DetachedCriteria.forClass(Property.class);
+                criteria.add(Restrictions.eq("propertyType", Configuration.PROP_USERNAME));
+                criteria.add(Restrictions.like("propertyValue", username));
 
-	private void hashPassword() {
-		Property passProperty = element.getEntity().getProperties(Configuration.PROP_PASSWORD).getProperty(0);
-		Property userProperty = element.getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0);
+                List resultList = getDao().findByCriteria(criteria);
+                if (resultList != null && !resultList.isEmpty()) {
+                    // save only if this is really the same user object:
+                    boolean doubleUsername = false;
 
-		String hash = getAuthService().hashPassword(userProperty.getPropertyValue(), passProperty.getPropertyValue());
-		passProperty.setPropertyValue(hash, false);
-	}
+                    // reload entity because in some causes new entities alredy
+                    // exists in db
+                    getEntityDao().findByUuid(element.getEntity().getUuid(), new RetrieveInfo());
+                    usernamePropertyList = element.getEntity()
+                            .getProperties(Configuration.PROP_USERNAME);
 
-	public T getElement() {
-		return element;
-	}
+                    checkDoubles: for (Object t : resultList) {
+                        Property foundProperty = (Property) t;
 
-	public IAuthService getAuthService() {
-		return this.authService;
-	}
-	
-	public IBaseDao<Entity, Serializable> getEntityDao() {
-		if (entityDao == null) {
-			entityDao = createEntityDao();
-		}
-		return entityDao;
-	}
+                        if ((usernamePropertyList == null || usernamePropertyList.getDbId() == null) // current
+                                                                                                     // object
+                                                                                                     // was
+                                                                                                     // never
+                                                                                                     // saved,
+                                                                                                     // found
+                                                                                                     // name
+                                                                                                     // must
+                                                                                                     // be
+                                                                                                     // double
+                                || !usernamePropertyList.getDbId()
+                                        .equals(foundProperty.getDbId())) { // current
+                                                                            // dbId
+                                                                            // doesn't
+                                                                            // match
+                                                                            // found
+                                                                            // username,
+                                                                            // is
+                                                                            // double
+                            doubleUsername = true;
+                            break checkDoubles;
+                        }
+                    }
+                    if (doubleUsername) {
+                        if (log.isDebugEnabled()) {
+                            log.debug("Username exists: " + username);
+                        }
+                        throw new UsernameExistsRuntimeException(username,
+                                "Username already exists: " + username);
+                    }
+                }
+            }
+        }
+    }
 
-	private IBaseDao<Entity, Serializable> createEntityDao() {
-		return (IBaseDao<Entity, Serializable>) getDaoFactory().getDAO(Entity.class);
-	}
+    private void hashPassword() {
+        Property passProperty = element.getEntity().getProperties(Configuration.PROP_PASSWORD)
+                .getProperty(0);
+        Property userProperty = element.getEntity().getProperties(Configuration.PROP_USERNAME)
+                .getProperty(0);
 
-	public void setAuthService(IAuthService service) {
-		this.authService = service;
-	}
-	
-	public IBaseDao<T, Serializable> getDao() {
-		if (dao == null) {
-			dao = createDao();
-		}
-		return dao;
-	}
+        String hash = getAuthService().hashPassword(userProperty.getPropertyValue(),
+                passProperty.getPropertyValue());
+        passProperty.setPropertyValue(hash, false);
+    }
 
-	private IBaseDao<T, Serializable> createDao() {
-		return (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getTypeId());
-	}
+    public T getElement() {
+        return element;
+    }
 
+    public IAuthService getAuthService() {
+        return this.authService;
+    }
+
+    public IBaseDao<Entity, Serializable> getEntityDao() {
+        if (entityDao == null) {
+            entityDao = createEntityDao();
+        }
+        return entityDao;
+    }
+
+    private IBaseDao<Entity, Serializable> createEntityDao() {
+        return (IBaseDao<Entity, Serializable>) getDaoFactory().getDAO(Entity.class);
+    }
+
+    public void setAuthService(IAuthService service) {
+        this.authService = service;
+    }
+
+    public IBaseDao<T, Serializable> getDao() {
+        if (dao == null) {
+            dao = createDao();
+        }
+        return dao;
+    }
+
+    private IBaseDao<T, Serializable> createDao() {
+        return (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getTypeId());
+    }
 
 }
