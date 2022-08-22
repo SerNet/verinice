@@ -18,20 +18,24 @@
 package sernet.verinice.service.commands;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
+import sernet.gs.service.PermissionException;
 import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
@@ -77,6 +81,17 @@ public class SaveConfiguration<T extends Configuration> extends GenericCommand
      */
     public void execute() {
         try {
+            if (element.isAdminUser() || element.isLocalAdminUser()
+                    || element.getRoles().contains(IRightsService.ADMINDEFAULTGROUPNAME)
+                    || element.getRoles().contains(IRightsService.ADMINLOCALDEFAULTGROUPNAME)
+                    || element.getRoles().contains(IRightsService.ADMINSCOPEDEFAULTGROUPNAME)) {
+                boolean currentUserIsAdmin = Arrays.asList(authService.getRoles())
+                        .contains(ApplicationRoles.ROLE_ADMIN);
+                if (!currentUserIsAdmin) {
+                    throw new PermissionException(
+                            "Only admin users are allowed to save this account");
+                }
+            }
             // check if username is unique
             checkUsername(element);
 
