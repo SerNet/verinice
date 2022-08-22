@@ -1,41 +1,96 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <cheatsheet title="Konsolidator">
-  <intro>
-    <description>
-      Mit dem Konsolidator kann man bestimmte Werte von einem Baustein und seiner verknüpften Gefährdungen und Maßnahmen auf mehrere andere Bausteine übertragen.
-    </description>
-  </intro>
-  <item
-        title="Auswahl des Quellbausteins">
-     <description>
-        Zuerst drückt man <b>Rechtsklick auf einen Baustein &gt; Konsolidator ...</b><br/>
-Dieser Baustein dient als Quelle, von diesem werden die Daten auf andere Bausteine übertragen.
-     </description>
-  </item>
-  <item
-        title="Bausteine auswählen">
-     <description>
-        Der Konsolidator sucht als nächstes nach anderen Bausteinen mit dem gleichen Identifier, Sie können vorher noch auswählen ob Sie nur im gleichen oder in allen Informationsverbünden suchen möchten.<br/>
-<b>Ja / Nein</b>
-<br/><br/>
-Jetzt sollte eine Liste der gefundenen Bausteine angezeigt werden.<br/>
-Hier wählen Sie aus welche Bausteine bearbeitet werden sollen.<br/>
-Mit einem Klick auf <b>Weiter</b> kommen Sie zur Auswahl der Eigenschaften, die Sie übernehmen können.
-     </description>
-  </item>
-  <item
-        title="Daten auswählen &amp; Fertigstellen">
-     <description>
-        Hier wählen Sie aus welche Eigenschaften von welchen Objekttypen überschrieben werden sollen.<br/>
-Wenn Sie jetzt <b>Fertigstellen</b> drücken und ein wenig warten, dann werden Sie sehen, dass die Daten auf die ausgewählten Bausteine konsolidiert wurden.
-      </description>
-  </item>
-  <item
-        title="Genauere Infos">
-     <description>
-        Der Konsolidator findet anhand des Identifiers passende Bausteine und identifiziert damit auch die richtigen Gefährdungen und Maßnahmen in den ausgewählten Bausteinen. <br/>
-Welche Daten von welchen Bausteinen  überschrieben werden sollen, kann genau definiert werden.<br/>
-Der Konsolidator löscht keine Gefährungen oder Maßnahmen in den Zielbausteinen wenn sie in dem Quellbaustein nicht existieren, er überschreibt nur vorhandene Werte.
-     </description>
-  </item>
+    <intro>
+        <description>
+            Der Konsolidator kann den Aufwand bei der Bearbeitung der Bausteine reduzieren. Denn
+            mithilfe des Konsolidators können Sie Werte eines
+            <u>Bausteins</u>
+            , seiner
+            <u>Anforderungen</u>
+            und deren verknüpften
+            <u>Gefährdungen</u>
+            und
+            <u>Maßnahmen</u>
+            , auf
+            ausgewählte Bausteine mit dem gleichen
+            <u>Identifier</u>
+            übertragen. In diesem
+            Tutorial lernen Sie den Konsolidator zu bedienen.
+        </description>
+    </intro>
+    <item title="Auswahl der Bausteine">
+        <description>
+            Wählen Sie einen bereits modellierten (und bearbeiteten) Baustein, der anschließend als
+            <u>Vorlage</u>
+            dient, in Ihrer Modernisierter IT-Grundschutz View aus und öffnen Sie durch
+            <b>Recktsklick
+                auf den Baustein</b>
+            das Kontextmenü. Nach Auswahl von
+            <b>Konsolidator</b>
+            erfolgt die Abfrage,
+            ob nur der aktuelle oder alle Scopes nach Bausteinen durchsucht
+            werden sollen. Treffen
+            Sie hier Ihr gewünschtes Vorgehen aus und verinice durchsucht die
+            entsprechenden
+            Verbünde. In der anschließenden Übersicht stehen alle gefundenen Bausteine
+            mit den
+            dazugehörigen Zielobjekten und Scopes zum konsolidieren zur Auswahl.
+        </description>
+    </item>
+    <item title="Auswahl der zu konsolidierenden Daten">
+        <description>
+            Nachdem Sie die benötigten Bausteine selektiert haben, folgt die Auswahl der zu
+            <b>übertragenen Inhalte</b>
+            .
+            Standardmäßig sind vordefinierte Werte selektiert, können aber
+            Ihren Anforderungen
+            entsprechend geändert werden. Nehmen Sie auch hier eine Auswahl vor.
+        </description>
+    </item>
+    <item title="Konsolidieren der Daten">
+        <description>
+            Nach dem
+            <b>Fertigstellen</b>
+            und
+            <b>Bestätigen</b>
+            , dass die Inhalte überschrieben
+            werden, werden die Daten
+            konsolidiert, neu berechnet und
+            die View neu geladen.
+        </description>
+    </item>
+    <item title="Hinweise">
+        <description>
+        Some text
+            • Ist das ausgewählte Startelement kein
+            <b>Baustein</b>
+            , kann der Konsolidator nicht
+            gestartet werden.
+            <br />
+            • Der Konsolidator findet anhand des
+            <b>Identifiers</b>
+            die passenden
+            Bausteine und damit
+            verknüpfte Gefährdungen und Maßnahmen.
+            <br />
+            • Der Konsolidator löscht oder
+            erzeugt keine Zielobjekte (Gefährdungen,
+            Anforderungen, Maßnahmen),
+            sondern <b>überschreibt
+            nur vorhandene Werte</b> im
+            Zielbaustein.
+            <br />
+            • Der Konsolidator überschreibt die Werte nur
+            <b>einmalig</b>
+            , d.h. sollten Sie Änderungen an dem
+            Vorlage Baustein vorgenommen haben, die
+            für
+            die anderen Bausteine ebenfalls relevant
+            sind, so müssen Sie den
+            <b>Konsolidator erneut
+                starten</b>
+            oder die Änderungen an den
+            benötigten Bausteinen manuell vornehmen.
+        </description>
+    </item>
 </cheatsheet>
