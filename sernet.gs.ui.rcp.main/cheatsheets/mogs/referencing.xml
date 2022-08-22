@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cheatsheet title="Baustein-Referenzierung">
+    <intro>
+        <description>
+            Mit der Baustein-Referenzierung ist es möglich im Informationsverbund bereits
+            modellierte Bausteine für mehrere Zielobjekte gleichzeitig zu nutzen. Daruch verringert
+            sich sowohl der Aufwand für die Bearbeitung und Pflege der Bausteine, also auch die
+            Anzahl der im Informationsverbund enthaltenen Bausteine. In diesem Tutorial wird Ihnen
+            die Referenzierung erläutert.
+        </description>
+    </intro>
+    <item title="Referenzieren von Bausteinen">
+        <description>
+            Im Informationsverbund sollte ein bereits modellierter Baustein vorhanden sein. Nun soll
+            dieser Baustein auch für andere Zielobjekte herangezogen werden. Ziehen Sie hierfür den
+            notwendigen Baustein per <b>Drag&amp;Drop</b> auf das gewünschte Zielobjekt und die
+            Referenzierung wird durchgeführt. Bei dieser Aktion wird folgendes im Hintergrund
+            ausgeführt:
+            <br />
+            Das gewünschte Zielobjekt wird mit allen Anforderungen und den elementaren Gefährdungen
+            des Bausteins verknüpft. Dabei handelt es sich um den Verknüpfungstyp <i>modelliert mit</i>
+            (Verknüpfungen zwischen Anforderung und Zielobjekt) und <i>beeinflusst durch</i>
+            (Verknüpfungen zwischen Gefährdung und Zielobjekt).
+            <br />
+            Sollten bereits Verknüpfungen zwischen dem Zielobjekt und einem Baustein (sprich
+            Anforderungen und Gefährdungen) mit dem selben Identifiere vorhanden sein, so wird
+            mittels eines Hinweis-Dialogs abgefragt, ob die Referenzierung trotzdem erfolgen soll.
+            Ist die zusätzliche Referenzierung gewünscht, so werden weitere Verknüpfungen angelegt.
+            Unter Umständen können dadurch Anforderungen mehrfach verknüpft sein.
+        </description>
+    </item>
+    <item title="Darstellung">
+        <description>
+            Optisch erkennen Sie die Zielobjekte, bei denen eine Baustein-Referenzierung
+            vorliegt, an der <i>kursiven</i> und _leicht ausgegrauten_ Schrift. Weitere Informationen zu
+            den Verknüpfungen entnehmen Sie dann der <b>View: Verknüpfungen</b>. Sollte ein Baustein
+            direkt auf dem Zielobjekt modelliert sein, so wird dieser nachwievor unterhalb des
+            Zielobjektes angezeigt. Dadurch sind Hybrid-Modellierungen möglich: Bausteine sind
+            direkt (unterhalb des Zielobjektes) modelliert und als Baustein-Referenzen (durch
+            Verknüpfungen realisiert) vorhanden.
+        </description>
+    </item>
+</cheatsheet>

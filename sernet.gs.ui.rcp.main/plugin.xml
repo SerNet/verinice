@@ -1901,6 +1901,14 @@
         </cheatsheet>
         <cheatsheet
             category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.referencing"
+            composite="false"
+            contentFile="$nl$/cheatsheets/mogs/referencing.xml"
+            name="%cheatsheets.mogs.referencing.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
             id="sernet.verinice.cheatsheets.mogs.check"
             composite="false"
             contentFile="$nl$/cheatsheets/mogs/check.xml"
