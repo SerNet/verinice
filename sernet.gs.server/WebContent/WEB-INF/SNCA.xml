@@ -11252,6 +11252,7 @@ Wurden bereits weitere Stellen informiert?
 <huiproperty defaultValue="1" id="bp_application_value_deduce_mtpd1" inputtype="booleanoption" name="MTPD ableiten aus der Schadensbewertung" tags="BCM"/>
 
             <huiproperty id="bp_application_bcm_mtpd1" name="MTPD" tags="BCM" inputtype="numericoption" min="-1" max="5">
+                <depends option="bp_application_value_deduce_mtpd1" value="0" />
                 <defaultRule class="SimpleValue">
                     <param id="bp_application_bcm_mtpd1_default">-1</param>
                 </defaultRule>
@@ -11728,6 +11729,7 @@ Wurden bereits weitere Stellen informiert?
 <huiproperty defaultValue="1" id="bp_businessprocess_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="Risk"/>
 
             <huiproperty id="bp_businessprocess_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="-1" max="5">
+                <depends option="bp_businessprocess_value_deduce_mtpd1" value="0" />
                 <defaultRule class="SimpleValue">
                     <param id="bp_businessprocess_bcm_mtpd1_default">-1</param>
                 </defaultRule>
@@ -12843,6 +12845,7 @@ Wurden bereits weitere Stellen informiert?
 <huiproperty defaultValue="1" id="bp_icssystem_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="Risk"/>
 
             <huiproperty id="bp_icssystem_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="-1" max="5">
+                <depends option="bp_icssystem_value_deduce_mtpd1" value="0" />
                 <defaultRule class="SimpleValue">
                     <param id="bp_icssystem_bcm_mtpd1_default">-1</param>
                 </defaultRule>
@@ -13339,6 +13342,7 @@ Wurden bereits weitere Stellen informiert?
 <huiproperty defaultValue="1" id="bp_itsystem_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="Risk"/>
 
             <huiproperty id="bp_itsystem_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="-1" max="5">
+                <depends option="bp_itsystem_value_deduce_mtpd1" value="0" />
                 <defaultRule class="SimpleValue">
                     <param id="bp_itsystem_bcm_mtpd1_default">-1</param>
                 </defaultRule>
@@ -14536,6 +14540,7 @@ Wurden bereits weitere Stellen informiert?
 <huiproperty defaultValue="1" id="bp_network_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="Risk"/>
 
             <huiproperty id="bp_network_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="-1" max="5">
+                <depends option="bp_network_value_deduce_mtpd1" value="0" />
                 <defaultRule class="SimpleValue">
                     <param id="bp_network_bcm_mtpd1_default">-1</param>
                 </defaultRule>
@@ -15006,6 +15011,7 @@ Wurden bereits weitere Stellen informiert?
 <huiproperty defaultValue="1" id="bp_device_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="Risk"/>
 
             <huiproperty id="bp_device_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="-1" max="5">
+                <depends option="bp_device_value_deduce_mtpd1" value="0" />
                 <defaultRule class="SimpleValue">
                     <param id="bp_device_bcm_mtpd1_default">-1</param>
                 </defaultRule>
@@ -15472,6 +15478,7 @@ Wurden bereits weitere Stellen informiert?
 <huiproperty defaultValue="1" id="bp_room_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="Risk"/>
 
             <huiproperty id="bp_room_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="-1" max="5">
+                <depends option="bp_room_value_deduce_mtpd1" value="0" />
                 <defaultRule class="SimpleValue">
                     <param id="bp_room_bcm_mtpd1_default">-1</param>
                 </defaultRule>
