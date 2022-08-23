@@ -20,6 +20,7 @@ package sernet.verinice.model.bp;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import sernet.verinice.model.bp.elements.BusinessProcess;
 import sernet.verinice.model.common.CnATreeElement;
 
 public final class BCMUtils {
@@ -29,6 +30,9 @@ public final class BCMUtils {
     private static final int NO_MTPD = 0;
     private static final int MTPD_UNEDITED = -1;
     private static final int DAMAGE_POTENTIAL_VALUE_UNEDITED = 0;
+    public static final String DAMAGE_POTENTIAL_VALUE_UNEDITED_RAW = Integer
+            .toString(DAMAGE_POTENTIAL_VALUE_UNEDITED);
+
     private static final String IMPACT_VALUE_UNEDITED_RAW = "0";
 
     private BCMUtils() {
@@ -106,6 +110,38 @@ public final class BCMUtils {
         Integer targetValue = Math.min(sourceValue, overrideValue);
 
         element.setNumericProperty(properties.propertyMtpdMin, targetValue);
+    }
+
+    public static boolean updateProcessZeitkritisch(CnATreeElement element,
+            String damagePotentialValueRaw) {
+        if (!(element.getTypeId().equals(BusinessProcess.TYPE_ID))) {
+            throw new IllegalArgumentException("Cannot handle " + element);
+        }
+        if (!element.getEntity().isFlagged(BusinessProcess.PROP_DEDUCE_PROCESS_ZEITKRITISCH)) {
+            return false;
+        }
+        String value = BusinessProcess.PROP_PROCESS_ZEITKRITISCH_MISSING_DATA;
+        if (damagePotentialValueRaw != null && !damagePotentialValueRaw.isEmpty()) {
+
+            Integer damagePotentialValue = Integer.valueOf(damagePotentialValueRaw);
+            DamagePotentialAssessment damagePotentialAssessment = performDamageAssessment(element,
+                    damagePotentialValue);
+            switch (damagePotentialAssessment) {
+            case UNKNOWN:
+                // missing data, nothing to do;
+                break;
+            case NOT_REACHED:
+                value = BusinessProcess.PROP_PROCESS_ZEITKRITISCH_NO;
+                break;
+            default:
+                value = BusinessProcess.PROP_PROCESS_ZEITKRITISCH_YES;
+            }
+        }
+        element.getEntity().setSimpleValue(
+                element.getEntityType().getPropertyType(BusinessProcess.PROP_PROCESS_ZEITKRITISCH),
+                value);
+        return !value.equals(BusinessProcess.PROP_PROCESS_ZEITKRITISCH_MISSING_DATA);
+
     }
 
     public static class BCMProperties {

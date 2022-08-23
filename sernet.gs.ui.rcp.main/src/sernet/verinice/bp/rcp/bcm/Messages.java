@@ -24,6 +24,8 @@ public class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.verinice.bp.rcp.bcm.messages"; //$NON-NLS-1$
 
     public static String rtoMustBeSmallerThanMinMtpd;
+    public static String untragbarkeitsniveauMissing;
+    public static String damageAssessmentIncomplete;
 
     static {
         // initialize resource bundle

@@ -229,6 +229,9 @@ public class ItNetwork extends CnATreeElement
                 BCMUtils.updateMtpd(child, damagePotentialValue);
                 BCMUtils.updateMinMtpd(child);
             }
+            if (BusinessProcess.TYPE_ID.equals(child.getTypeId())) {
+                BCMUtils.updateProcessZeitkritisch(child, damagePotentialValue.toString());
+            }
         } else if (child instanceof IBpGroup) {
             Class<Object> elementType = CnATypeMapper.getClassFromTypeId(
                     CnATypeMapper.getElementTypeIdFromGroupTypeId(child.getTypeId()));

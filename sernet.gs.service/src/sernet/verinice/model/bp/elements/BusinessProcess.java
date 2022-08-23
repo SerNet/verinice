@@ -24,13 +24,13 @@ import java.util.Collection;
 import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.hui.common.connect.ITargetObject;
+import sernet.snutils.TagHelper;
 import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
-import sernet.snutils.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementWithChilds;
 import sernet.verinice.model.common.ILinkChangeListener;
@@ -51,6 +51,11 @@ public class BusinessProcess extends ElementWithChilds
     public static final String PROP_TAG = "bp_businessprocess_tag"; //$NON-NLS-1$
     public static final String PROP_ABBR = "bp_businessprocess_abbr"; //$NON-NLS-1$
     public static final String PROP_RISKANALYSIS_NECESSARY = "bp_businessprocess_riskanalysis_necessary"; //$NON-NLS-1$
+    public static final String PROP_DEDUCE_PROCESS_ZEITKRITISCH = "bp_business_continuity_reporting_selectedzeitkritisch"; //$NON-NLS-1$
+    public static final String PROP_PROCESS_ZEITKRITISCH = "bp_businessprocess_reporting_zeitkritisch"; //$NON-NLS-1$
+    public static final String PROP_PROCESS_ZEITKRITISCH_YES = "bp_businessprocess_reporting_zeitkritisch_ja"; //$NON-NLS-1$
+    public static final String PROP_PROCESS_ZEITKRITISCH_NO = "bp_businessprocess_reporting_zeitkritisch_nein"; //$NON-NLS-1$
+    public static final String PROP_PROCESS_ZEITKRITISCH_MISSING_DATA = "bp_businessprocess_reporting_zeitkritisch_fehlendeDaten"; //$NON-NLS-1$
 
     public static final String[] CHILD_TYPES = new String[] { BpRequirementGroup.TYPE_ID,
             SafeguardGroup.TYPE_ID, BpThreatGroup.TYPE_ID };

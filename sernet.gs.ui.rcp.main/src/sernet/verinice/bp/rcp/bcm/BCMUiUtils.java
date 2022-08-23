@@ -33,6 +33,7 @@ import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.verinice.model.bp.BCMUtils;
 import sernet.verinice.model.bp.BCMUtils.BCMProperties;
 import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bp.elements.BusinessProcess;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -51,40 +52,65 @@ public final class BCMUiUtils {
 
         if (element instanceof ITargetObject && element instanceof IBpElement
                 && !(element.isScope())) {
-            enableMinMtpdDeduction(huiComposite, element);
-            enableMtpdDeduction(huiComposite, element);
+            BCMProperties properties = BCMUtils.getPropertiesForElement(element);
+            enableMinMtpdDeduction(huiComposite, element, properties);
+
+            PropertyType prop = HUITypeFactory.getInstance().getEntityType(ItNetwork.TYPE_ID)
+                    .getPropertyType(ItNetwork.PROP_UNTRAGBARKEITSNIVEAU);
+            int numberOfDamagePotentialOptions = prop.getOptions().size();
+
+            if (checkIsCombo(huiComposite, properties.propertyImpact24h,
+                    numberOfDamagePotentialOptions)
+                    && checkIsCombo(huiComposite, properties.propertyImpact3d,
+                            numberOfDamagePotentialOptions)
+                    && checkIsCombo(huiComposite, properties.propertyImpact7d,
+                            numberOfDamagePotentialOptions)
+                    && checkIsCombo(huiComposite, properties.propertyImpact14d,
+                            numberOfDamagePotentialOptions)
+                    && checkIsCombo(huiComposite, properties.propertyImpact30d,
+                            numberOfDamagePotentialOptions)
+                    // 5 intervals plus "Unedited plus "No MTPD"
+                    && checkIsCombo(huiComposite, properties.propertyMtpd, 7)) {
+                enableMtpdDeduction(element, properties);
+                if (BusinessProcess.TYPE_ID.equals(element.getTypeId()) && checkIsCombo(
+                        huiComposite, BusinessProcess.PROP_PROCESS_ZEITKRITISCH, 4)) {
+                    Control zeitkritischControl = huiComposite
+                            .getField(BusinessProcess.PROP_PROCESS_ZEITKRITISCH);
+                    enableZeitkritischUiUpdater(element, properties, zeitkritischControl);
+                }
+            }
         }
     }
 
-    private static void enableMtpdDeduction(HitroUIComposite huiComposite, CnATreeElement element) {
-        BCMProperties properties = BCMUtils.getPropertiesForElement(element);
+    private static void enableMtpdDeduction(CnATreeElement element, BCMProperties properties) {
 
-        PropertyType prop = HUITypeFactory.getInstance().getEntityType(ItNetwork.TYPE_ID)
-                .getPropertyType(ItNetwork.PROP_UNTRAGBARKEITSNIVEAU);
-        int numberOfDamagePotentialOptions = prop.getOptions().size();
+        CalculateMtpd listener = new CalculateMtpd(element, properties);
 
-        if (checkIsCombo(huiComposite, properties.propertyImpact24h, numberOfDamagePotentialOptions)
-                && checkIsCombo(huiComposite, properties.propertyImpact3d,
-                        numberOfDamagePotentialOptions)
-                && checkIsCombo(huiComposite, properties.propertyImpact7d,
-                        numberOfDamagePotentialOptions)
-                && checkIsCombo(huiComposite, properties.propertyImpact14d,
-                        numberOfDamagePotentialOptions)
-                && checkIsCombo(huiComposite, properties.propertyImpact30d,
-                        numberOfDamagePotentialOptions)
-                // 5 intervals plus "Unedited plus "No MTPD"
-                && checkIsCombo(huiComposite, properties.propertyMtpd, 7)) {
+        element.getEntity().addChangeListener(listener);
 
-            CalculateMtpd listener = new CalculateMtpd(element, properties);
+    }
 
-            element.getEntity().addChangeListener(listener);
-        }
+    private static void enableZeitkritischUiUpdater(CnATreeElement element,
+            BCMProperties properties, Control zeitkritischControl) {
+
+        ControlDecoration txtDecorator = new ControlDecoration(zeitkritischControl,
+                SWT.TOP | SWT.LEFT);
+        FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault()
+                .getFieldDecoration(FieldDecorationRegistry.DEC_WARNING);
+        Image img = fieldDecoration.getImage();
+        txtDecorator.setImage(img);
+
+        ZeitkritischUIUpdater listener = new ZeitkritischUIUpdater(element, properties,
+                txtDecorator);
+
+        element.getEntity().addChangeListener(listener);
+        // force UI update to update control decorations
+        listener.performUIUpdate();
+
     }
 
     private static void enableMinMtpdDeduction(HitroUIComposite huiComposite,
-            CnATreeElement element) {
-
-        BCMProperties properties = BCMUtils.getPropertiesForElement(element);
+            CnATreeElement element, BCMProperties properties) {
 
         String targetProperty = properties.propertyMtpdMin;
         String sourceProperty = properties.propertyMtpd;
