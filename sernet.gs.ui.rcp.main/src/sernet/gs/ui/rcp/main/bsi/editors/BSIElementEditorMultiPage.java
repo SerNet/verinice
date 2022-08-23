@@ -88,7 +88,6 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
-import sernet.verinice.model.bp.elements.BusinessProcess;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.risk.RiskPropertyValue;
 import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
@@ -289,6 +288,7 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
             if (Arrays.stream(tags).anyMatch("BCM"::equals)) {
                 BCMUiUtils.addSelectionListener(huiComposite, cnAElement);
                 BCMUiUtils.addControlHints(huiComposite, cnAElement);
+                BCMUiUtils.addInputHelper(huiComposite, cnAElement);
             }
             huiComposite.resetInitialFocus();
 

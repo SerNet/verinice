@@ -17,25 +17,43 @@
  ******************************************************************************/
 package sernet.verinice.bp.rcp.bcm;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.apache.log4j.Logger;
+import org.eclipse.jface.fieldassist.ContentProposal;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
+import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
 
+import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.ITargetObject;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.swt.widgets.HitroUIComposite;
+import sernet.hui.swt.widgets.IInputHelper;
 import sernet.verinice.model.bp.BCMUtils;
 import sernet.verinice.model.bp.BCMUtils.BCMProperties;
 import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bp.elements.Application;
 import sernet.verinice.model.bp.elements.BusinessProcess;
+import sernet.verinice.model.bp.elements.Device;
+import sernet.verinice.model.bp.elements.IcsSystem;
 import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.elements.ItSystem;
+import sernet.verinice.model.bp.elements.Network;
+import sernet.verinice.model.bp.elements.Room;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.CnATreeElementLabelGenerator;
 
 public final class BCMUiUtils {
 
@@ -176,5 +194,38 @@ public final class BCMUiUtils {
             }
         }
 
+    }
+
+    public static void addInputHelper(HitroUIComposite huiComposite, CnATreeElement element) {
+
+        IInputHelper minRtoHelper = () -> {
+            Set<CnATreeElement> linkedBusinessProcesses = element.getLinksUp().stream()
+                    .filter(link -> link.getDependant().getTypeId().equals(BusinessProcess.TYPE_ID))
+                    .map(CnALink::getDependant).collect(Collectors.toSet());
+
+            Set<IContentProposal> proposals = new HashSet<>(linkedBusinessProcesses.size());
+
+            for (CnATreeElement linkedBusinessProcess : linkedBusinessProcesses) {
+                String rto = linkedBusinessProcess.getEntity()
+                        .getRawPropertyValue("bp_businessprocess__rto");
+                if (rto != null) {
+                    String title = CnATreeElementLabelGenerator
+                            .getElementTitle(linkedBusinessProcess);
+                    proposals.add(new ContentProposal(rto, title + ": " + rto, null));
+                }
+            }
+            return proposals.toArray(new IContentProposal[0]);
+        };
+
+        boolean showHint = Activator.getDefault().getPluginPreferences()
+                .getBoolean(PreferenceConstants.INPUTHINTS);
+
+        Stream.of(Application.TYPE_ID, ItSystem.TYPE_ID, IcsSystem.TYPE_ID, Device.TYPE_ID,
+                Network.TYPE_ID, Room.TYPE_ID).forEach(typeId -> {
+                    String propertyName = typeId + "__rtoK";
+                    huiComposite.setInputHelper(propertyName, minRtoHelper,
+                            IInputHelper.TYPE_REPLACE, showHint);
+
+                });
     }
 }
