@@ -23,7 +23,6 @@ pipeline {
         password(name: 'GNUPGPASSPHRASE', description: 'The passphrase of the key stored in KEYDIR/verinice.public.')
         booleanParam(name: 'archiveUpdateSite', defaultValue: false, description: 'archive the update site')
         booleanParam(name: 'archiveIntegrationTestResults', defaultValue: false, description: 'archive the integration test results')
-        booleanParam(name: 'validateSNCA', defaultValue: true, description: 'validate the snca with snca editor')
     }
     options {
         buildDiscarder(logRotator(numToKeepStr: '3'))
@@ -113,15 +112,6 @@ pipeline {
                 // runStandaloneUITests os: 'macOS current', tests: '*.test'
                 // runStandaloneUITests os: 'macOS predecessor', tests: '*.test'
                 // runStandaloneUITests os: 'Windows 10', tests: '*.test'
-            }
-        }
-        stage('validate SNCA') {
-            steps {
-                archiveArtifacts artifacts: 'sernet.gs.server/WebContent/WEB-INF/SNCA.xml,sernet.gs.server/WebContent/WEB-INF/snca-messages*.properties', fingerprint: true
-                build job: 'snca-validation', wait: false, parameters: [
-                                string(name: 'job_to_copy_from', value: "${currentBuild.fullProjectName}"),
-                                string(name: 'build_to_copy_from', value: "<SpecificBuildSelector plugin=\"copyartifact@1.42.1\"><buildNumber>${env.BUILD_NUMBER}</buildNumber></SpecificBuildSelector>"),
-                                ]
             }
         }
         stage('Documentation') {
