@@ -49,12 +49,7 @@ class CalculateMinMtpd implements IEntityChangedListener {
             Integer overrideValue = overrideValueRaw.isEmpty() ? -1
                     : Integer.valueOf(overrideValueRaw);
             Integer targetValue = Math.min(sourceValue, overrideValue);
-
-            if (targetValue == -1) {
-                element.getEntity().getTypedPropertyLists().remove(targetProperty);
-            } else {
-                element.setNumericProperty(targetProperty, targetValue);
-            }
+            element.setNumericProperty(targetProperty, targetValue);
         }
     }
 
