@@ -32,7 +32,6 @@ import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.PopupList;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -204,18 +203,6 @@ public class HitroUIView implements IEntityChangedListener {
         control.addFocusListener(focusAdapter);
         control.addDisposeListener(arg0 -> control.removeFocusListener(focusAdapter));
 
-    }
-
-    protected void showPopupList(Control control, IInputHelper helper) {
-        PopupList popup = new PopupList(new Shell(control.getShell(), SWT.ON_TOP | SWT.TOOL));
-        popup.setItems(helper.getSuggestions());
-        Rectangle rect = control.getBounds();
-        Point pt = control.getParent().toDisplay(rect.x, rect.y);
-        String choice = popup.open(
-                new Rectangle(pt.x, pt.y, control.getBounds().width, control.getBounds().height));
-        if (choice != null && choice.length() > 0) {
-            ((Text) control).setText(choice);
-        }
     }
 
     public void closeView() {
