@@ -609,32 +609,29 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
      *            A list with property ids which will not be copied
      */
     public void copyEntity(Entity source, List<String> propertyTypeBlacklist) {
-        Map<String, PropertyList> sourceProperties = source.getTypedPropertyLists();
-        for (Entry<String, PropertyList> propertyListMapEntry : sourceProperties.entrySet()) {
-            copyPropertyList(propertyListMapEntry, propertyTypeBlacklist);
-        }
+        typedPropertyLists.putAll(source.getTypedPropertyLists().entrySet().stream()
+                .filter(e -> !propertyTypeBlacklist.contains(e.getKey()))
+                .filter(e -> !e.getValue().isEmpty()).map(this::copyPropertyList)
+                .filter(e -> !e.getValue().isEmpty())
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue)));
     }
 
-    private void copyPropertyList(Entry<String, PropertyList> propertyListMapEntry,
-            List<String> propertyTypeBlacklist) {
+    private Entry<String, PropertyList> copyPropertyList(
+            Entry<String, PropertyList> propertyListMapEntry) {
         PropertyList sourcePropertyList = propertyListMapEntry.getValue();
+
         PropertyList newPropertyList = new PropertyList(sourcePropertyList.getProperties().size());
         for (Property sourceProp : sourcePropertyList.getProperties()) {
-            if (checkProperty(sourceProp, propertyTypeBlacklist)) {
-                newPropertyList.add(sourceProp.copy(this));
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Prop " + propertyListMapEntry.getKey() + " set to value: "
-                            + sourceProp.getPropertyValue());
-                }
+            if (sourceProp.isEmpty()) {
+                continue;
+            }
+            newPropertyList.add(sourceProp.copy(this));
+            if (logger.isDebugEnabled()) {
+                logger.debug("Prop " + propertyListMapEntry.getKey() + " set to value: "
+                        + sourceProp.getPropertyValue());
             }
         }
-        if (!newPropertyList.getProperties().isEmpty()) {
-            typedPropertyLists.put(propertyListMapEntry.getKey(), newPropertyList);
-        }
-    }
-
-    private boolean checkProperty(Property property, List<String> propertyTypeBlacklist) {
-        return !property.isEmpty() && !propertyTypeBlacklist.contains(property.getPropertyType());
+        return Map.entry(propertyListMapEntry.getKey(), newPropertyList);
     }
 
     /**
