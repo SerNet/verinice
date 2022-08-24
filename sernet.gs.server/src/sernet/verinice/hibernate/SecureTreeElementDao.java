@@ -141,6 +141,15 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
         return super.merge(entity, fireChange);
     }
 
+    @Override
+    public CnATreeElement merge(CnATreeElement entity, boolean fireChange, boolean updateIndex) {
+        // check rights only while updating
+        if (entity.getDbId() != null) {
+            checkRights(entity);
+        }
+        return super.merge(entity, fireChange, updateIndex);
+    }
+
     /*
      * (non-Javadoc)
      * 
