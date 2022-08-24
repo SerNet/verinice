@@ -31,11 +31,11 @@ import org.apache.log4j.Logger;
 
 import com.opencsv.CSVWriter;
 
-
 /**
  * Exports a table (List<String[]>) to a CSV file.
  *
- * This implementation uses opencsv to create CSV, see: http://opencsv.sourceforge.net/
+ * This implementation uses opencsv to create CSV, see:
+ * http://opencsv.sourceforge.net/
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -54,8 +54,12 @@ public class CsvExport implements ICsvExport {
         super();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.ICsvExport#exportToFile(sernet.verinice.model.search.VeriniceSearchResultTable, sernet.verinice.rcp.search.ColumnStore)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.rcp.search.ICsvExport#exportToFile(sernet.verinice.model.
+     * search.VeriniceSearchResultTable, sernet.verinice.rcp.search.ColumnStore)
      */
     @Override
     public void exportToFile(List<String[]> table) throws CsvExportException {
@@ -66,8 +70,12 @@ public class CsvExport implements ICsvExport {
         }
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.ICsvExport#export(sernet.verinice.model.search.VeriniceSearchResultTable, sernet.verinice.rcp.search.ColumnStore)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.rcp.search.ICsvExport#export(sernet.verinice.model.search
+     * .VeriniceSearchResultTable, sernet.verinice.rcp.search.ColumnStore)
      */
     @Override
     public byte[] export(List<String[]> table) throws CsvExportException {
@@ -83,7 +91,7 @@ public class CsvExport implements ICsvExport {
             throw new CsvExportException(ERROR_MESSAGE, e);
         } finally {
             try {
-                if(writer!=null) {
+                if (writer != null) {
                     writer.close();
                 }
             } catch (IOException e) {
@@ -92,7 +100,9 @@ public class CsvExport implements ICsvExport {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.service.csv.ICsvExport#convert(java.util.List)
      */
     @Override
@@ -112,7 +122,9 @@ public class CsvExport implements ICsvExport {
         return getCharset().name();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.rcp.search.ICsvExport#setFilePath(java.lang.String)
      */
     @Override
@@ -120,24 +132,29 @@ public class CsvExport implements ICsvExport {
         this.filePath = path;
     }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.rcp.search.ICsvExport#setSeperator(char)
      */
     @Override
-    public void setSeperator(char seperator)    {
+    public void setSeperator(char seperator) {
         this.seperator = seperator;
     }
 
     public char getSeperator() {
-       return seperator;
+        return seperator;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.ICsvExport#setCharset(org.apache.commons.lang.CharSet)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.rcp.search.ICsvExport#setCharset(org.apache.commons.lang.
+     * CharSet)
      */
     @Override
     public void setCharset(Charset charset) {
-       this.charset = charset;
+        this.charset = charset;
     }
 }

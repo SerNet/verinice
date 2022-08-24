@@ -66,7 +66,7 @@ public class CsvExportTest {
         }
 
     }
-    
+
     @Test
     public void testExport() throws CsvExportException, FileNotFoundException, IOException {
         for (int i = 0; i < 100; i++) {
@@ -74,7 +74,8 @@ public class CsvExportTest {
             VeriniceSearchResultTable result = SearchResultGenerator.createResult(phrase);
             IColumnStore columnStore = ColumnStore.createColumnStore(result);
             setInvisibleColumns(columnStore);
-            //assertTrue("No visible column", columnStore.getColumns().size()>0);
+            // assertTrue("No visible column",
+            // columnStore.getColumns().size()>0);
             ICsvExport exporter = new CsvExport();
             exporter.setFilePath(getFilePath());
             exporter.setSeperator(SearchPreferencePage.SEMICOLON.charAt(0));
@@ -84,7 +85,7 @@ public class CsvExportTest {
         }
     }
 
-    @Test(expected=CsvExportException.class)
+    @Test(expected = CsvExportException.class)
     public void testExeptions() throws CsvExportException {
         ICsvExport exporter = new CsvExport();
         exporter.setFilePath("/diesen/ordner/gibt/es/nicht/export.csv");
@@ -95,20 +96,21 @@ public class CsvExportTest {
         exporter.setCharset(VeriniceCharset.CHARSET_DEFAULT);
         exporter.exportToFile(SearchResultTableConverter.convertTable(result, columnStore));
     }
-    
+
     @Test()
     public void testEmptyResult() throws CsvExportException, FileNotFoundException, IOException {
         ICsvExport exporter = new CsvExport();
         exporter.setFilePath(getFilePath());
         String phrase = LOREM.randomWord();
-        VeriniceSearchResultTable result = new VeriniceSearchResultTable(phrase, phrase, new String[]{});
+        VeriniceSearchResultTable result = new VeriniceSearchResultTable(phrase, phrase,
+                new String[] {});
         IColumnStore columnStore = ColumnStore.createColumnStore(result);
         exporter.setSeperator(SearchPreferencePage.SEMICOLON.charAt(0));
         exporter.setCharset(VeriniceCharset.CHARSET_DEFAULT);
         exporter.exportToFile(SearchResultTableConverter.convertTable(result, columnStore));
         checkExportFile(result, columnStore);
     }
-    
+
     private void testSearchResult() {
         String phrase = LOREM.randomWord();
         VeriniceSearchResultTable result = SearchResultGenerator.createResult(phrase);
@@ -118,7 +120,8 @@ public class CsvExportTest {
         for (VeriniceSearchResultRow row : rows) {
             String occurence = row.getFieldOfOccurence();
             assertNotNull("occurence is null", occurence);
-            assertTrue("Occurence field does not contain phrase: " + phrase, occurence.contains(phrase));
+            assertTrue("Occurence field does not contain phrase: " + phrase,
+                    occurence.contains(phrase));
             boolean found = false;
             Set<String> types = row.getPropertyTypes();
             assertFalse("Row is empty", types.isEmpty());
@@ -132,16 +135,18 @@ public class CsvExportTest {
         }
     }
 
-    private void checkExportFile(VeriniceSearchResultTable result, IColumnStore columnStore) throws FileNotFoundException, IOException {
+    private void checkExportFile(VeriniceSearchResultTable result, IColumnStore columnStore)
+            throws FileNotFoundException, IOException {
         File exportFile = new File(getFilePath());
         assertTrue("Export file does not exists", exportFile.exists());
         CSVReader reader = null;
         try {
-            reader = new CSVReader(new FileReader(exportFile), SearchPreferencePage.SEMICOLON.charAt(0), '"', 1);
+            reader = new CSVReader(new FileReader(exportFile),
+                    SearchPreferencePage.SEMICOLON.charAt(0), '"', 1);
             String[] nextLine;
             Iterator<VeriniceSearchResultRow> rows = result.getAllResults().iterator();
             while ((nextLine = reader.readNext()) != null && rows.hasNext()) {
-                VeriniceSearchResultRow row = rows.next(); 
+                VeriniceSearchResultRow row = rows.next();
                 checkLine(nextLine, row, columnStore);
             }
         } finally {
@@ -151,26 +156,29 @@ public class CsvExportTest {
         }
     }
 
-    private void checkLine(String[] nextLine, VeriniceSearchResultRow row, IColumnStore columnStore) {
+    private void checkLine(String[] nextLine, VeriniceSearchResultRow row,
+            IColumnStore columnStore) {
         Set<IColumn> columns = columnStore.getColumns();
-        assertTrue("Wrong number of columns in CSV line: " + nextLine.length, nextLine.length==1 || columns.size()==nextLine.length);
-        int i=0;
-        for (IColumn col : columns ) {
+        assertTrue("Wrong number of columns in CSV line: " + nextLine.length,
+                nextLine.length == 1 || columns.size() == nextLine.length);
+        int i = 0;
+        for (IColumn col : columns) {
             String searchResultValue = row.getValueFromResultString(col.getId());
             String csvValue = nextLine[i];
-            while(!searchResultValue.isEmpty() && csvValue.isEmpty()) {
+            while (!searchResultValue.isEmpty() && csvValue.isEmpty()) {
                 i++;
                 csvValue = nextLine[i];
             }
-            assertTrue("Search result values is different from CSV value: " + searchResultValue + " - " + csvValue, searchResultValue.equals(csvValue));
-            i++;                              
+            assertTrue("Search result values is different from CSV value: " + searchResultValue
+                    + " - " + csvValue, searchResultValue.equals(csvValue));
+            i++;
         }
     }
-    
+
     private IColumnStore setInvisibleColumns(IColumnStore columnStore) {
         List<IColumn> columns = new LinkedList<IColumn>(columnStore.getColumns());
         for (IColumn column : columns) {
-            if(Math.random() > visabilityFactor) {
+            if (Math.random() > visabilityFactor) {
                 columnStore.setVisible(column, false);
             }
         }
@@ -182,7 +190,5 @@ public class CsvExportTest {
         tempFile.deleteOnExit();
         return tempFile.getAbsolutePath();
     }
-    
-    
 
 }

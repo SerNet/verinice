@@ -26,6 +26,8 @@ import java.nio.charset.Charset;
 
 import org.apache.log4j.Logger;
 
+import com.opencsv.CSVReader;
+
 import sernet.gs.service.CsvFile;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.service.VeriniceCharset;
@@ -33,8 +35,6 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.iso27k.ICatalog;
 import sernet.verinice.interfaces.iso27k.ICatalogImporter;
 import sernet.verinice.model.iso27k.IControl;
-
-import com.opencsv.CSVReader;
 
 /**
  * Command to import a CSV file.
@@ -103,24 +103,26 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
     public void importCatalog() {
         try {
             @SuppressWarnings("resource")
-            CSVReader reader = new CSVReader(new BufferedReader(new InputStreamReader(new ByteArrayInputStream(csvFile.getFileContent()), Charset.forName("UTF-8"))), config.getSeperator(), '"', false);
+            CSVReader reader = new CSVReader(new BufferedReader(new InputStreamReader(
+                    new ByteArrayInputStream(csvFile.getFileContent()), Charset.forName("UTF-8"))),
+                    config.getSeperator(), '"', false);
             String[] nextLine;
             Item item = null;
-            int n=1;
+            int n = 1;
             while ((nextLine = reader.readNext()) != null) {
                 // nextLine[] is an array of values from the line
                 if (nextLine.length >= 4) {
-                	item = processLine(nextLine, item);
+                    item = processLine(nextLine, item);
                 } else {
                     log.warn("Invalid line (number: " + n + ") in CSV file. Line content is: '");
                     for (int i = 0; i < nextLine.length; i++) {
-                    	log.warn(nextLine[i]);
+                        log.warn(nextLine[i]);
                     }
                     log.warn("'");
                 }
                 n++;
             } // end while
-            // buffer the last item
+              // buffer the last item
             catalog.bufferItem(item);
 
             // create the tree
@@ -140,15 +142,16 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
         String heading = nextLine[1];
         String type = nextLine[2];
         String text = nextLine[3];
-        String weight1=null, weight2=null,maturity=null,threshold1=null,threshold2=null;
+        String weight1 = null, weight2 = null, maturity = null, threshold1 = null,
+                threshold2 = null;
         if (hasMaturityLevels(nextLine)) {
-        	weight1 = nextLine[4];
-        	weight2 = nextLine[5];
-        	maturity = nextLine[6];
-        	threshold1 = nextLine[7];
-        	threshold2 = nextLine[8];
+            weight1 = nextLine[4];
+            weight2 = nextLine[5];
+            maturity = nextLine[6];
+            threshold1 = nextLine[7];
+            threshold2 = nextLine[8];
         }
-        if (isNewTopic(nextLine)) {             	
+        if (isNewTopic(nextLine)) {
             if (log.isDebugEnabled()) {
                 log.debug("#: " + number);
                 log.debug("heading: " + heading);
@@ -169,16 +172,16 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
             // line can have optional weight and threshold
             // levels:
             if (hasMaturityLevels(nextLine)) {
-            	if (log.isDebugEnabled()) {
-            		log.debug("maturity: " + maturity);
+                if (log.isDebugEnabled()) {
+                    log.debug("maturity: " + maturity);
                     log.debug("weight 1: " + weight1);
                     log.debug("weight 2: " + weight2);
                     log.debug("threshold 1: " + threshold1);
                     log.debug("threshold 2: " + threshold2);
-            	}
-            	item.setWeight1(weight1);
+                }
+                item.setWeight1(weight1);
                 item.setWeight2(weight2);
-                if(maturity==null || maturity.isEmpty()) {
+                if (maturity == null || maturity.isEmpty()) {
                     maturity = String.valueOf(IControl.IMPLEMENTED_NOTEDITED_NUMERIC);
                 }
                 item.setMaturity(maturity);
@@ -186,7 +189,7 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
                 item.setThreshold2(threshold2);
                 item.setMaturityLevelSupport(true);
             }
-            if(hasVersion(nextLine)) {
+            if (hasVersion(nextLine)) {
                 String version = nextLine[9];
                 item.setVersion(version);
             }
@@ -214,7 +217,7 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
     private boolean hasMaturityLevels(String[] nextLine) {
         return nextLine.length >= 9;
     }
-    
+
     private boolean hasVersion(String[] nextLine) {
         return nextLine.length >= 10;
     }

@@ -71,7 +71,7 @@ public class CsvExportTest {
         exporter.setFilePath(outputFilePath);
         exporter.setSeperator(SEMICOLON);
         exporter.setCharset(VeriniceCharset.CHARSET_DEFAULT);
-        List<String[]> table = createTable(MAX_COLUMNS,MAX_ROWS);
+        List<String[]> table = createTable(MAX_COLUMNS, MAX_ROWS);
         exporter.exportToFile(table);
         checkExportFile(table);
     }
@@ -108,11 +108,13 @@ public class CsvExportTest {
     }
 
     private void checkLine(String[] nextLine, String[] tableRow) {
-        assertTrue("Wrong number of columns in CSV line: " + nextLine.length, tableRow.length==nextLine.length);
-        int i=0;
-        for (String csvColumn : nextLine ) {
+        assertTrue("Wrong number of columns in CSV line: " + nextLine.length,
+                tableRow.length == nextLine.length);
+        int i = 0;
+        for (String csvColumn : nextLine) {
             String tableColumn = tableRow[i];
-            assertEquals("CSV column is different from  table column: " + csvColumn + " - " + tableColumn, csvColumn, tableColumn);
+            assertEquals("CSV column is different from  table column: " + csvColumn + " - "
+                    + tableColumn, csvColumn, tableColumn);
             i++;
         }
     }
@@ -144,17 +146,16 @@ public class CsvExportTest {
     }
 
     private long getNumberOfRows() {
-        return Math.round(Math.random()*(getMaxRows()*1.0)) + 1;
+        return Math.round(Math.random() * (getMaxRows() * 1.0)) + 1;
     }
 
     private long getNumberOfColumns() {
-        return Math.round(Math.random()*(getMaxColumns()*1.0)) + 1;
+        return Math.round(Math.random() * (getMaxColumns() * 1.0)) + 1;
     }
 
     private int getNumberOfWords() {
-        return (int) (Math.round(Math.random()*(getMaxWords()*1.0)) + 1);
+        return (int) (Math.round(Math.random() * (getMaxWords() * 1.0)) + 1);
     }
-
 
     private int getMaxRows() {
         return MAX_ROWS;
