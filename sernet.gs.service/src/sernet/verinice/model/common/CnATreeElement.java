@@ -39,16 +39,19 @@ import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.elements.BpPerson;
 import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.bsi.LinkKategorie;
 import sernet.verinice.model.bsi.Note;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.Schutzbedarf;
 import sernet.verinice.model.iso27k.IISO27kGroup;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.InheritLogger;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.PersonIso;
@@ -924,6 +927,12 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
     public boolean isBpPerson() {
         return BpPerson.class.equals(getClass()) || BpPerson.TYPE_ID.equals(getTypeId());
+    }
+
+    public boolean isImportRoot() {
+        String typeId = getTypeId();
+        return ImportBpGroup.TYPE_ID.equals(typeId) || ImportIsoGroup.TYPE_ID.equals(typeId)
+                || ImportBsiGroup.TYPE_ID.equals(typeId);
     }
 
     private String getDynamicPropertyName(String propertyType) {

@@ -539,7 +539,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 // VN-1969, grant read/write permissions to the default user
                 // group when importing a new catalog
                 addPermissions(child, IRightsService.USERDEFAULTGROUPNAME);
-            } else if (child.isScope()) {
+            } else if (parent.isImportRoot()) {
                 addPermissions(child, authService.getUsername());
             } else {
                 child.setPermissions(Permission.clonePermissionSet(child, parent.getPermissions()));
