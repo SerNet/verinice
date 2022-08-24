@@ -15,7 +15,7 @@ Require-Bundle: org.eclipse.core.commands;bundle-version="3.5.0",
  org.eclipse.jface;bundle-version="3.5.2",
  sernet.hui.common,
  org.eclipse.ui.forms;bundle-version="3.4.1",
- org.apache.log4j;bundle-version="1.2.21"
+ org.apache.log4j;bundle-version="1.2.22"
 Import-Package: org.eclipse.osgi.util
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: sernet.hui.swtclient
