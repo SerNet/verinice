@@ -160,14 +160,14 @@ DynamicImport-Package: *
 	</location>
 	<location includeDependencyDepth="direct" includeDependencyScopes="compile" includeSource="true" missingManifest="error" type="Maven">
 
-		<feature id="com.opencsv" version="4.1">
+		<feature id="com.opencsv" version="4.6">
 
 </feature>
 		<dependencies>
 			<dependency>
 				<groupId>com.opencsv</groupId>
 				<artifactId>opencsv</artifactId>
-				<version>4.1</version>
+				<version>4.6</version>
 				<type>jar</type>
 			</dependency>
 		</dependencies>
