@@ -17,11 +17,13 @@
  ******************************************************************************/
 package sernet.hui.swt.widgets;
 
+import org.eclipse.jface.fieldassist.IContentProposal;
+
 public interface IInputHelper {
 
     static final int TYPE_REPLACE = 0;
     static final int TYPE_ADD = 1;
 
-    String[] getSuggestions();
+    IContentProposal[] getSuggestions();
 
 }

@@ -20,6 +20,9 @@ package sernet.gs.ui.rcp.main.bsi.editors;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.eclipse.jface.fieldassist.ContentProposal;
+import org.eclipse.jface.fieldassist.IContentProposal;
+
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
@@ -101,13 +104,16 @@ public final class InputHelperFactory {
                 try {
                     List<Person> personen = CnAElementHome.getInstance().getPersonen();
                     if (personen.isEmpty()) {
-                        return new String[] { Messages.InputHelperFactory_0 };
+                        return new IContentProposal[] {
+                                new ContentProposal(Messages.InputHelperFactory_0) };
                     }
-                    return personen.stream().map(Person::getTitle).toArray(String[]::new);
+                    return personen.stream().map(Person::getTitle).map(ContentProposal::new)
+                            .toArray(IContentProposal[]::new);
 
                 } catch (CommandException e) {
                     ExceptionUtil.log(e, Messages.InputHelperFactory_1);
-                    return new String[] { Messages.InputHelperFactory_0 };
+                    return new IContentProposal[] {
+                            new ContentProposal(Messages.InputHelperFactory_0) };
                 }
             };
         }
@@ -115,17 +121,20 @@ public final class InputHelperFactory {
         if (tagHelper == null) {
             tagHelper = () -> {
                 try {
-                    return CnAElementHome.getInstance().getTags().stream().toArray(String[]::new);
+                    return CnAElementHome.getInstance().getTags().stream().map(ContentProposal::new)
+                            .toArray(IContentProposal[]::new);
                 } catch (CommandException e) {
                     ExceptionUtil.log(e, Messages.InputHelperFactory_5);
-                    return new String[] {};
+                    return new IContentProposal[] {};
                 }
             };
         }
 
         if (schutzbedarfHelper == null) {
-            schutzbedarfHelper = () -> new String[] { Messages.InputHelperFactory_4,
-                    Messages.InputHelperFactory_2, Messages.InputHelperFactory_3 };
+            schutzbedarfHelper = () -> new IContentProposal[] {
+                    new ContentProposal(Messages.InputHelperFactory_4),
+                    new ContentProposal(Messages.InputHelperFactory_2),
+                    new ContentProposal(Messages.InputHelperFactory_3) };
         }
 
         boolean showHint = Activator.getDefault().getPluginPreferences()

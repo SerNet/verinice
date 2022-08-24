@@ -29,7 +29,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.bindings.keys.ParseException;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
-import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
+import org.eclipse.jface.fieldassist.IContentProposal;
+import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -154,8 +155,7 @@ public class HitroUIView implements IEntityChangedListener {
         } catch (ParseException e) {
             LOG.warn("Parsing error", e);
         }
-        SimpleContentProposalProvider contentProposalProvider = new SimpleContentProposalProvider(
-                new String[0]);
+        HitroContentProposalProvider contentProposalProvider = new HitroContentProposalProvider();
         ContentProposalAdapter adapter = new ContentProposalAdapter(control,
                 new TextContentAdapter(), contentProposalProvider, keyStroke, null);
         if (type == IInputHelper.TYPE_REPLACE) {
@@ -171,11 +171,11 @@ public class HitroUIView implements IEntityChangedListener {
                 if (!showHint) {
                     return; // do not show activation hint
                 }
-                String[] suggestions = helper.getSuggestions();
+                IContentProposal[] suggestions = helper.getSuggestions();
                 if (suggestions.length < 1) {
                     return; // no suggestions
                 }
-                contentProposalProvider.setProposals(suggestions);
+                contentProposalProvider.proposals = suggestions;
                 tip = new Shell(control.getShell(), SWT.ON_TOP | SWT.NO_FOCUS | SWT.TOOL);
                 FillLayout layout = new FillLayout();
                 layout.marginWidth = 2;
@@ -622,6 +622,16 @@ public class HitroUIView implements IEntityChangedListener {
             control = huiControl.getControl();
         }
         return control;
+    }
+
+    private static class HitroContentProposalProvider implements IContentProposalProvider {
+
+        IContentProposal[] proposals;
+
+        @Override
+        public IContentProposal[] getProposals(String contents, int position) {
+            return proposals;
+        }
     }
 
 }
