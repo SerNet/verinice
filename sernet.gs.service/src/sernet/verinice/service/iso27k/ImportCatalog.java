@@ -23,10 +23,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.log4j.Logger;
 
+import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 
 import sernet.gs.service.CsvFile;
 import sernet.gs.service.RuntimeCommandException;
@@ -101,11 +104,11 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
      * @see sernet.verinice.iso27k.service.ICatalogImporter#importCatalog()
      */
     public void importCatalog() {
-        try {
-            @SuppressWarnings("resource")
-            CSVReader reader = new CSVReader(new BufferedReader(new InputStreamReader(
-                    new ByteArrayInputStream(csvFile.getFileContent()), Charset.forName("UTF-8"))),
-                    config.getSeperator(), '"', false);
+        try (CSVReader reader = new CSVReaderBuilder(new BufferedReader(new InputStreamReader(
+                new ByteArrayInputStream(csvFile.getFileContent()), StandardCharsets.UTF_8)))
+                        .withCSVParser(
+                                new CSVParserBuilder().withSeparator(config.getSeperator()).build())
+                        .build()) {
             String[] nextLine;
             Item item = null;
             int n = 1;

@@ -29,7 +29,9 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
+import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.connect.EntityType;
@@ -289,10 +291,11 @@ public class PropertiesSelectionPage extends WizardPage {
 
     // get property and values of the csv
     private void readFile() throws IOException {
-        try (CSVReader reader = new CSVReader(
-                new BufferedReader(
-                        new InputStreamReader(new FileInputStream(csvDatei), getCharset())),
-                getSeparator(), '"', false)) {
+
+        try (CSVReader reader = new CSVReaderBuilder(new BufferedReader(
+                new InputStreamReader(new FileInputStream(csvDatei), getCharset())))
+                        .withCSVParser(new CSVParserBuilder().withSeparator(getSeparator()).build())
+                        .build()) {
             // ignore first line
             columnHeaders = reader.readNext();
             this.csvContent.clear();

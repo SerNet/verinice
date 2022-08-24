@@ -35,7 +35,9 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 
 import net._01001111.text.LoremIpsum;
 import sernet.gs.service.VeriniceCharset;
@@ -139,19 +141,15 @@ public class CsvExportTest {
             throws FileNotFoundException, IOException {
         File exportFile = new File(getFilePath());
         assertTrue("Export file does not exists", exportFile.exists());
-        CSVReader reader = null;
-        try {
-            reader = new CSVReader(new FileReader(exportFile),
-                    SearchPreferencePage.SEMICOLON.charAt(0), '"', 1);
+
+        try (CSVReader reader = new CSVReaderBuilder(new FileReader(exportFile))
+                .withCSVParser(new CSVParserBuilder().withSeparator(';').build()).withSkipLines(1)
+                .build()) {
             String[] nextLine;
             Iterator<VeriniceSearchResultRow> rows = result.getAllResults().iterator();
             while ((nextLine = reader.readNext()) != null && rows.hasNext()) {
                 VeriniceSearchResultRow row = rows.next();
                 checkLine(nextLine, row, columnStore);
-            }
-        } finally {
-            if (reader != null) {
-                reader.close();
             }
         }
     }

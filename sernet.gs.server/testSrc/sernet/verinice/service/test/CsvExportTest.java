@@ -35,7 +35,9 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 
 import net._01001111.text.LoremIpsum;
 import sernet.gs.service.VeriniceCharset;
@@ -90,19 +92,14 @@ public class CsvExportTest {
     private void checkExportFile(List<String[]> table) throws FileNotFoundException, IOException {
         File exportFile = new File(outputFilePath);
         assertTrue("Export file does not exists", exportFile.exists());
-        CSVReader reader = null;
-        try {
-            reader = new CSVReader(new FileReader(exportFile), ';', '"');
+        try (CSVReader reader = new CSVReaderBuilder(new FileReader(exportFile))
+                .withCSVParser(new CSVParserBuilder().withSeparator(';').build()).build()) {
             String[] nextLine;
             Iterator<String[]> rowIterator = table.iterator();
             while ((nextLine = reader.readNext()) != null) {
                 assertTrue("Not enough rows in CSV file", rowIterator.hasNext());
                 String[] row = rowIterator.next();
                 checkLine(nextLine, row);
-            }
-        } finally {
-            if (reader != null) {
-                reader.close();
             }
         }
     }

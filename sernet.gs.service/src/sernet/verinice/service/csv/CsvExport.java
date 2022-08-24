@@ -29,7 +29,8 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
-import com.opencsv.CSVWriter;
+import com.opencsv.CSVWriterBuilder;
+import com.opencsv.ICSVWriter;
 
 /**
  * Exports a table (List<String[]>) to a CSV file.
@@ -79,24 +80,15 @@ public class CsvExport implements ICsvExport {
      */
     @Override
     public byte[] export(List<String[]> table) throws CsvExportException {
-        CSVWriter writer = null;
-        try {
-            StringWriter stringWriter = new StringWriter();
-            writer = new CSVWriter(stringWriter, getSeperator());
+        try (StringWriter stringWriter = new StringWriter();
+                ICSVWriter writer = new CSVWriterBuilder(stringWriter).withSeparator(getSeperator())
+                        .build()) {
             writer.writeAll(table);
             return stringWriter.toString().getBytes(getCharsetName());
         } catch (RuntimeException e) {
             throw new CsvExportException(ERROR_MESSAGE, e);
         } catch (Exception e) {
             throw new CsvExportException(ERROR_MESSAGE, e);
-        } finally {
-            try {
-                if (writer != null) {
-                    writer.close();
-                }
-            } catch (IOException e) {
-                LOG.error(ERROR_MESSAGE, e);
-            }
         }
     }
 

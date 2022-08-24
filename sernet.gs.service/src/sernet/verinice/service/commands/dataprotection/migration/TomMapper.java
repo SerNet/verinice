@@ -74,7 +74,7 @@ public final class TomMapper {
         try (InputStream resourceAsStream = getClass().getResourceAsStream(filename);
                 InputStreamReader reader = new InputStreamReader(resourceAsStream,
                         StandardCharsets.UTF_8);
-                CSVReader csvReader = new CSVReader(reader, ',', '"')) {
+                CSVReader csvReader = new CSVReader(reader)) {
             return csvReader.readAll();
         }
     }
