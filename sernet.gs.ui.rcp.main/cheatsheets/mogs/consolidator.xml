@@ -4,16 +4,16 @@
         <description>
             Der Konsolidator kann den Aufwand bei der Bearbeitung der Bausteine reduzieren. Denn
             mithilfe des Konsolidators können Sie Werte eines
-            <u>Bausteins</u>
+            <b>Bausteins</b>
             , seiner
-            <u>Anforderungen</u>
+            <b>Anforderungen</b>
             und deren verknüpften
-            <u>Gefährdungen</u>
+            <b>Gefährdungen</b>
             und
-            <u>Maßnahmen</u>
+            <b>Maßnahmen</b>
             , auf
             ausgewählte Bausteine mit dem gleichen
-            <u>Identifier</u>
+            <b>Identifier</b>
             übertragen. In diesem
             Tutorial lernen Sie den Konsolidator zu bedienen.
         </description>
@@ -21,7 +21,7 @@
     <item title="Auswahl der Bausteine">
         <description>
             Wählen Sie einen bereits modellierten (und bearbeiteten) Baustein, der anschließend als
-            <u>Vorlage</u>
+            <b>Vorlage</b>
             dient, in Ihrer Modernisierter IT-Grundschutz View aus und öffnen Sie durch
             <b>Recktsklick
                 auf den Baustein</b>
@@ -61,7 +61,6 @@
     </item>
     <item title="Hinweise">
         <description>
-        Some text
             • Ist das ausgewählte Startelement kein
             <b>Baustein</b>
             , kann der Konsolidator nicht
