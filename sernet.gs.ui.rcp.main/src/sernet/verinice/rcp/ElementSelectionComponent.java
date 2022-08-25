@@ -69,6 +69,8 @@ import sernet.gs.ui.rcp.main.bsi.filter.TextFilter;
 import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.hui.common.connect.IAbbreviatedElement;
+import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.CnATreeElementLabelGenerator;
@@ -605,6 +607,16 @@ public class ElementSelectionComponent {
             CnATreeElement elmt = (CnATreeElement) element;
 
             if (getRegex().matcher(elmt.getTitle()).find()) {
+                return true;
+            }
+
+            if (elmt instanceof IAbbreviatedElement
+                    && getRegex().matcher(((IAbbreviatedElement) elmt).getAbbreviation()).find()) {
+                return true;
+            }
+
+            if (elmt instanceof IIdentifiableElement
+                    && getRegex().matcher(((IIdentifiableElement) elmt).getIdentifier()).find()) {
                 return true;
             }
 
