@@ -13969,7 +13969,14 @@ Wurden bereits weitere Stellen informiert?
  			  <huiproperty editable="true" id="bp_requirement_bcStrategie" inputtype="text" name="Beschreibung der BC-Strategie"
  			  showInObjectBrowser="false" visible="true" />
  			  
- 			      <huiproperty id="bp_requirement_bcm_wiederanlaufzeit" name="Wiederanlaufzeit" tags="BCM" inputtype="numericoption" min="1" max="5">
+ 			    <huiproperty id="bp_requirement_bcm_wiederanlaufzeit" name="Wiederanlaufzeit" tags="BCM" inputtype="numericoption" min="0" max="5">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_requirement_bcm_wiederanlaufzeit_default">0</param>
+                </defaultRule>
+                      <option
+                    id="bp_requirement_bcm_time_unset"
+                    name="Unbearbeitet"
+                    value="0" />
                       <option
                     id="bp_requirement_bcm_time24hMtpd1"
                     name="24 h"
