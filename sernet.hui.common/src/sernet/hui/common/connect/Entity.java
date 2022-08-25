@@ -802,67 +802,6 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         return value;
     }
 
-    /**
-     * Sets the value for a given property.
-     *
-     * <p>
-     * Since internally a property value is a multi-value this interface allows
-     * setting these values in one row.
-     * </p>
-     *
-     * <p>
-     * Note: Using this method is preferred over modifying a
-     * {@link PropertyList} object itself.
-     * </p>
-     *
-     * <p>
-     * Note: The actual values that are imported have to be
-     * <em>untranslated</em> IOW should directly represent the strings used in
-     * the SNCA.xml
-     * </p>
-     *
-     * @param huiTypeFactory
-     * @param propertyTypeId
-     * @param foreignProperties
-     */
-    public void importProperties(HUITypeFactory huiTypeFactory, String propertyTypeId,
-            List<String> foreignProperties) {
-        List<Property> properties = initializePropertyListForImport(propertyTypeId);
-
-        for (String value : foreignProperties) {
-            PropertyType propertyType = huiTypeFactory.getPropertyType(this.entityType,
-                    propertyTypeId);
-            Property p = new Property();
-
-            if (propertyType == null && logger.isInfoEnabled()) {
-                logger.info("Property-type was not found in SNCA.xml: " + propertyTypeId
-                        + ", entity type: " + this.entityType);
-            }
-
-            if (propertyType != null && propertyType.isSingleSelect() && value != null) {
-                List<IMLPropertyOption> optionList = propertyType.getOptions();
-                boolean found = false;
-                for (IMLPropertyOption option : optionList) {
-                    if (value.equals(option.getName())) {
-                        value = option.getId();
-                        found = true;
-                    } else if (value.equals(option.getId())) {
-                        found = true;
-                    }
-                }
-                if (!found && logger.isInfoEnabled()) {
-                    logger.info(
-                            "No value found for option property: " + propertyTypeId + " of entity: "
-                                    + this.entityType + ". Importing unmapped value: " + value);
-                }
-            }
-            p.setPropertyType(propertyTypeId);
-            p.setPropertyValue(value);
-            p.setParent(this);
-            properties.add(p);
-        }
-    }
-
     protected List<Property> initializePropertyListForImport(String propertyTypeId) {
         PropertyList propertyList = typedPropertyLists.get(propertyTypeId);
         if (propertyList == null) {
