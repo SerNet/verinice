@@ -32,9 +32,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -501,12 +503,13 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
             }
         } else if (newSize > oldSize) {
             propertyValueChanged = true;
-            for (int i = oldSize; i < newSize; i++) {
+            Set<Property> fillUpProperties = Stream.generate(() -> {
                 Property p = new Property();
                 p.setParent(this);
                 p.setPropertyType(propertyTypeId);
-                properties.add(p);
-            }
+                return p;
+            }).limit((long) newSize - oldSize).collect(Collectors.toSet());
+            properties.addAll(fillUpProperties);
         }
 
         PropertyType propertyType = huiTypeFactory.getPropertyType(this.entityType, propertyTypeId);
