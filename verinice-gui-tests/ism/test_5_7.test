@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _hcNf8MVmEei4p80S5TXbug
-Runtime-Version: 2.3.0.201806262310
-Save-Time: 10/25/18 2:00 PM
+Runtime-Version: 2.5.3.202205021448
+Save-Time: 8/25/22, 1:29 PM
 Testcase-Type: ecl
 Verifications: _wm5P0CtBEeuMltfUUtdvug
 
@@ -62,6 +62,7 @@ try -command {
 		get-item -path beeinflusst -column "Verknüpfung" | get-property "columns[1]" | equals beeinflusst | verify-true
 		get-item -path beeinflusst -column "Verknüpfung" | get-property "columns[3]" | equals xAsset | verify-true
 	}
+	get-view "Verknüpfungen" | close
 	get-button "ISO/IEC 27005 Risikoanalyse durchführen..." | click
 	get-window "ISO/IEC 27005 Risikoanalyse" | get-button Fertigstellen | click
 	get-window "ISO/IEC 27005 Risikoanalyse" | get-button OK | click
