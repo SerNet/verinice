@@ -69,8 +69,6 @@ import sernet.verinice.service.commands.task.FindHuiUrls;
  */
 public class BSIEntityResolverFactory implements IEntityResolverFactory {
 
-    private IReferenceResolver cnalinkresolver;
-
     private static final Logger LOG = Logger.getLogger(BSIEntityResolverFactory.class);
     private static final String STD_ERR_MSG = "Error while loading data";
 
@@ -129,9 +127,9 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
         }
     }
 
-    private void createUrlResolver(HUITypeFactory typeFactory) {
+    private static void createUrlResolver(HUITypeFactory typeFactory) {
         // create list of all fields containing urls:
-        final Set<String> allIDs = new HashSet<String>();
+        final Set<String> allIDs = new HashSet<>();
         try {
             List<PropertyType> types;
             types = typeFactory.getURLPropertyTypes();
@@ -143,23 +141,21 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
         }
 
         // get urls out of these fields:
-        urlresolver = new IUrlResolver() {
-            public List<HuiUrl> resolve() {
-                List<HuiUrl> result = Collections.emptyList();
+        urlresolver = () -> {
+            List<HuiUrl> result = Collections.emptyList();
 
-                try {
-                    FindHuiUrls command = new FindHuiUrls(allIDs);
+            try {
+                FindHuiUrls command = new FindHuiUrls(allIDs);
 
-                    command = ServiceFactory.lookupCommandService().executeCommand(command);
+                command = ServiceFactory.lookupCommandService().executeCommand(command);
 
-                    result = command.getList();
+                result = command.getList();
 
-                } catch (Exception e) {
-                    LOG.error(STD_ERR_MSG, e); // $NON-NLS-1$
-                }
-
-                return result;
+            } catch (Exception e) {
+                LOG.error(STD_ERR_MSG, e); // $NON-NLS-1$
             }
+
+            return result;
         };
     }
 
@@ -169,31 +165,31 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
         return command.getElement();
     }
 
-    private void createPersonResolver() {
+    private static void createPersonResolver() {
         if (personResolver == null) {
             personResolver = new IReferenceResolver() {
 
                 public List<IMLPropertyOption> getAllEntitesForType(String entityTypeID) {
 
-                    List<IMLPropertyOption> result = new ArrayList<IMLPropertyOption>();
 
-                    LoadCnAElementByType<Person> command = new LoadCnAElementByType<Person>(
-                            Person.class);
 
                     try {
+                        LoadCnAElementByType<Person> command = new LoadCnAElementByType<>(Person.class);
+
                         command = ServiceFactory.lookupCommandService().executeCommand(command);
 
                         List<Person> personen = command.getElements();
+                        List<IMLPropertyOption> result = new ArrayList<>(personen.size());
 
                         for (Person person : personen) {
                             result.add(new PersonEntityOptionWrapper(person.getEntity()));
                         }
+                        return result;
 
                     } catch (Exception e) {
                         LOG.error("Error while loading element", e); //$NON-NLS-1$
                         throw new RuntimeCommandException(STD_ERR_MSG, e); // $NON-NLS-1$
                     }
-                    return result;
                 }
 
                 public void addNewEntity(Entity parentEntity, String name) {
@@ -203,9 +199,9 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
                 public List<IMLPropertyOption> getReferencedEntitesForType(
                         String referencedEntityTypeId, List<Property> references) {
 
-                    List<IMLPropertyOption> result = new ArrayList<IMLPropertyOption>();
+                    List<IMLPropertyOption> result = new ArrayList<>();
 
-                    List<Integer> dbIds = new ArrayList<Integer>();
+                    List<Integer> dbIds = new ArrayList<>(references.size());
                     for (Property prop : references) {
                         try {
                             dbIds.add(Integer.parseInt(prop.getPropertyValue()));
@@ -254,12 +250,12 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
         }
     }
 
-    private void createRoleResolver() {
+    private static void createRoleResolver() {
         if (roleResolver == null) {
             roleResolver = new IReferenceResolver() {
 
                 public List<IMLPropertyOption> getAllEntitesForType(String entityTypeID) {
-                    List<IMLPropertyOption> result = new ArrayList<IMLPropertyOption>();
+                    List<IMLPropertyOption> result = new ArrayList<>();
 
                     try {
                         FindAllRoles far = new FindAllRoles(
@@ -290,7 +286,7 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
                                 .getPropertyType(Configuration.TYPE_ID, Configuration.PROP_ROLES);
                         parentEntity.createNewProperty(type, newName);
 
-                        SaveElement<Entity> command = new SaveElement<Entity>(parentEntity);
+                        SaveElement<Entity> command = new SaveElement<>(parentEntity);
                         ServiceFactory.lookupCommandService().executeCommand(command);
                     } catch (CommandException e) {
                         LOG.error("Error while saving elements", e); //$NON-NLS-1$

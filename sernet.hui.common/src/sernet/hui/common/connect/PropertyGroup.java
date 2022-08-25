@@ -25,8 +25,8 @@ import java.util.Set;
 public class PropertyGroup implements IEntityElement {
     private String id;
     private String name;
-    private List<PropertyType> propertyTypes = new ArrayList<PropertyType>();
-    private Set<DependsType> dependencies = new HashSet<DependsType>();
+    private List<PropertyType> propertyTypes = new ArrayList<>();
+    private Set<DependsType> dependencies = new HashSet<>();
     private String tags;
 
     public void addPropertyType(PropertyType prop) {
@@ -53,10 +53,6 @@ public class PropertyGroup implements IEntityElement {
 
     public List<PropertyType> getPropertyTypes() {
         return propertyTypes;
-    }
-
-    public void setPropertyTypes(List<PropertyType> propertyTypes) {
-        this.propertyTypes = propertyTypes;
     }
 
     public PropertyType getPropertyType(String id) {

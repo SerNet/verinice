@@ -200,8 +200,7 @@ public class EntityType {
      *         given ID.
      */
     public Set<HuiRelation> getPossibleRelations(String entityTypeId) {
-        return relations.get(entityTypeId) != null ? relations.get(entityTypeId)
-                : new HashSet<HuiRelation>(0);
+        return relations.get(entityTypeId) != null ? relations.get(entityTypeId) : new HashSet<>(0);
     }
 
     /**
@@ -214,7 +213,7 @@ public class EntityType {
      */
     public void addRelation(HuiRelation relation) {
         if (relations.get(relation.getTo()) == null) {
-            this.relations.put(relation.getTo(), new HashSet<HuiRelation>());
+            this.relations.put(relation.getTo(), new HashSet<>());
         }
         this.relations.get(relation.getTo()).add(relation);
     }

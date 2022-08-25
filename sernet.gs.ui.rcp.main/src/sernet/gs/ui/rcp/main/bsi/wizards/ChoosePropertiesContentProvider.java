@@ -33,22 +33,20 @@ import sernet.hui.common.connect.PropertyType;
 
 public class ChoosePropertiesContentProvider implements ITreeContentProvider {
 
-    public ChoosePropertiesContentProvider() {
-    }
-
     public Object[] getChildren(Object element) {
         if (element instanceof EntityType) {
             EntityType type = (EntityType) element;
-            ArrayList<IEntityElement> result = new ArrayList<IEntityElement>();
+            ArrayList<IEntityElement> result = new ArrayList<>(
+                    type.getPropertyTypes().size() + type.getPropertyGroups().size());
             result.addAll(type.getPropertyTypes());
             result.addAll(type.getPropertyGroups());
-            return (IEntityElement[]) result.toArray(new IEntityElement[result.size()]);
+            return result.toArray(new IEntityElement[result.size()]);
         }
 
         if (element instanceof PropertyGroup) {
             PropertyGroup group = (PropertyGroup) element;
             List<PropertyType> types = group.getPropertyTypes();
-            return (PropertyType[]) types.toArray(new PropertyType[types.size()]);
+            return types.toArray(new PropertyType[types.size()]);
         }
 
         return null;
@@ -62,12 +60,12 @@ public class ChoosePropertiesContentProvider implements ITreeContentProvider {
     public boolean hasChildren(Object element) {
         if (element instanceof EntityType) {
             EntityType type = (EntityType) element;
-            return type.getPropertyTypes().size() > 0 || type.getPropertyGroups().size() > 0;
+            return !type.getPropertyTypes().isEmpty() || !type.getPropertyGroups().isEmpty();
         }
 
         if (element instanceof PropertyGroup) {
             PropertyGroup group = (PropertyGroup) element;
-            return group.getPropertyTypes().size() > 0;
+            return !group.getPropertyTypes().isEmpty();
         }
 
         return false;
@@ -75,13 +73,15 @@ public class ChoosePropertiesContentProvider implements ITreeContentProvider {
 
     public Object[] getElements(Object inputElement) {
         Collection list = (Collection) inputElement;
-        return (EntityType[]) list.toArray(new EntityType[list.size()]);
+        return list.toArray(new EntityType[list.size()]);
     }
 
+    @Override
     public void dispose() {
-
+        // nothing to do
     }
 
+    @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         (new ThreadSafeViewerUpdate((TreeViewer) viewer)).refresh();
     }
