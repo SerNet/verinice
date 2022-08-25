@@ -305,8 +305,8 @@ public class HUITypeFactory {
     }
 
     /**
-     * Returns the key of a resource bundle property for a given id and attribute
-     * name.
+     * Returns the key of a resource bundle property for a given id and
+     * attribute name.
      * 
      * @param id
      *            the id of an hui element
@@ -523,8 +523,7 @@ public class HUITypeFactory {
                     dv.setValue(Integer.parseInt(optValue));
                 } catch (NumberFormatException e) {
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Not a valid number for option "
-                                + optValue, e);
+                        LOG.debug("Not a valid number for option " + optValue, e);
                     }
                 }
             }

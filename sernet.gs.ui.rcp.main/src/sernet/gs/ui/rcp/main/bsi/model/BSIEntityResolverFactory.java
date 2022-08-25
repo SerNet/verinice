@@ -73,11 +73,11 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
 
     private static final Logger LOG = Logger.getLogger(BSIEntityResolverFactory.class);
     private static final String STD_ERR_MSG = "Error while loading data";
-    
+
     private static IReferenceResolver roleResolver;
     private static IReferenceResolver personResolver;
     private static IUrlResolver urlresolver;
-    
+
     public void createResolvers(HUITypeFactory typeFactory) {
         createPersonResolver();
         createRoleResolver();
@@ -107,20 +107,24 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
         }
     }
 
-    private void addPersonResolverToTypes(HUITypeFactory typeFactory, EntityType entityType, List<PropertyType> propertyTypes) {
+    private void addPersonResolverToTypes(HUITypeFactory typeFactory, EntityType entityType,
+            List<PropertyType> propertyTypes) {
         for (PropertyType propertyType : propertyTypes) {
-            if (propertyType.isReference() &&
-                    propertyType.getReferencedEntityTypeId().equals(Person.TYPE_ID)) {
-                typeFactory.getPropertyType(entityType.getId(), propertyType.getId()).setReferenceResolver(personResolver);
+            if (propertyType.isReference()
+                    && propertyType.getReferencedEntityTypeId().equals(Person.TYPE_ID)) {
+                typeFactory.getPropertyType(entityType.getId(), propertyType.getId())
+                        .setReferenceResolver(personResolver);
             }
         }
     }
 
-    private void addRoleResolverToTypes(HUITypeFactory typeFactory, EntityType entityType, List<PropertyType> propertyTypes) {
+    private void addRoleResolverToTypes(HUITypeFactory typeFactory, EntityType entityType,
+            List<PropertyType> propertyTypes) {
         for (PropertyType propertyType : propertyTypes) {
-            if (propertyType.isReference() && 
-                    propertyType.getReferencedEntityTypeId().equals(Configuration.ROLE_TYPE_ID)) {
-                typeFactory.getPropertyType(entityType.getId(), propertyType.getId()).setReferenceResolver(roleResolver);
+            if (propertyType.isReference() && propertyType.getReferencedEntityTypeId()
+                    .equals(Configuration.ROLE_TYPE_ID)) {
+                typeFactory.getPropertyType(entityType.getId(), propertyType.getId())
+                        .setReferenceResolver(roleResolver);
             }
         }
     }
@@ -151,20 +155,19 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
                     result = command.getList();
 
                 } catch (Exception e) {
-                    LOG.error(STD_ERR_MSG, e); //$NON-NLS-1$
+                    LOG.error(STD_ERR_MSG, e); // $NON-NLS-1$
                 }
 
                 return result;
             }
         };
     }
-    
+
     protected CnATreeElement loadElementByEntityUuid(String entityUuid) throws CommandException {
         LoadCnAElementByEntityUuid command = new LoadCnAElementByEntityUuid(entityUuid);
         command = ServiceFactory.lookupCommandService().executeCommand(command);
         return command.getElement();
     }
-    
 
     private void createPersonResolver() {
         if (personResolver == null) {
@@ -174,7 +177,8 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
 
                     List<IMLPropertyOption> result = new ArrayList<IMLPropertyOption>();
 
-                    LoadCnAElementByType<Person> command = new LoadCnAElementByType<Person>(Person.class);
+                    LoadCnAElementByType<Person> command = new LoadCnAElementByType<Person>(
+                            Person.class);
 
                     try {
                         command = ServiceFactory.lookupCommandService().executeCommand(command);
@@ -186,8 +190,8 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
                         }
 
                     } catch (Exception e) {
-                    	LOG.error("Error while loading element", e); //$NON-NLS-1$
-                        throw new RuntimeCommandException(STD_ERR_MSG, e); //$NON-NLS-1$
+                        LOG.error("Error while loading element", e); //$NON-NLS-1$
+                        throw new RuntimeCommandException(STD_ERR_MSG, e); // $NON-NLS-1$
                     }
                     return result;
                 }
@@ -196,7 +200,8 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
                     // not supported, do nothing
                 }
 
-                public List<IMLPropertyOption> getReferencedEntitesForType(String referencedEntityTypeId, List<Property> references) {
+                public List<IMLPropertyOption> getReferencedEntitesForType(
+                        String referencedEntityTypeId, List<Property> references) {
 
                     List<IMLPropertyOption> result = new ArrayList<IMLPropertyOption>();
 
@@ -226,20 +231,22 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
                         }
 
                     } catch (Exception e) {
-                    	LOG.error("Error while loading elements", e); //$NON-NLS-1$
-                        throw new RuntimeCommandException(STD_ERR_MSG, e); //$NON-NLS-1$
+                        LOG.error("Error while loading elements", e); //$NON-NLS-1$
+                        throw new RuntimeCommandException(STD_ERR_MSG, e); // $NON-NLS-1$
                     }
                     return result;
 
                 }
 
                 @Override
-                public void createLinks(String referencedEntityType, String linkType, String entityUuid) {
-                 // do nothing, not implemented for persons
+                public void createLinks(String referencedEntityType, String linkType,
+                        String entityUuid) {
+                    // do nothing, not implemented for persons
                 }
 
                 @Override
-                public String getTitlesOfLinkedObjects(String referencedCnaLinkType, String entityUuid) {
+                public String getTitlesOfLinkedObjects(String referencedCnaLinkType,
+                        String entityUuid) {
                     // not implemented
                     return null;
                 }
@@ -255,14 +262,11 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
                     List<IMLPropertyOption> result = new ArrayList<IMLPropertyOption>();
 
                     try {
-                        FindAllRoles far = new FindAllRoles(false /*
-                                                                   * filter out
-                                                                   * user roles,
-                                                                   * should not
-                                                                   * be
-                                                                   * selectable
-                                                                   * by end user
-                                                                   */);
+                        FindAllRoles far = new FindAllRoles(
+                                false /*
+                                       * filter out user roles, should not be
+                                       * selectable by end user
+                                       */);
                         far = ServiceFactory.lookupCommandService().executeCommand(far);
 
                         for (String role : far.getRoles()) {
@@ -274,29 +278,30 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
                         }
 
                     } catch (Exception e) {
-                    	LOG.error("Error while loading roles", e); //$NON-NLS-1$
-                        throw new RuntimeCommandException(STD_ERR_MSG, e); //$NON-NLS-1$
+                        LOG.error("Error while loading roles", e); //$NON-NLS-1$
+                        throw new RuntimeCommandException(STD_ERR_MSG, e); // $NON-NLS-1$
                     }
                     return result;
                 }
 
                 public void addNewEntity(Entity parentEntity, String newName) {
                     try {
-                        PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Configuration.TYPE_ID, Configuration.PROP_ROLES);
+                        PropertyType type = HitroUtil.getInstance().getTypeFactory()
+                                .getPropertyType(Configuration.TYPE_ID, Configuration.PROP_ROLES);
                         parentEntity.createNewProperty(type, newName);
 
                         SaveElement<Entity> command = new SaveElement<Entity>(parentEntity);
                         ServiceFactory.lookupCommandService().executeCommand(command);
                     } catch (CommandException e) {
-                    	LOG.error("Error while saving elements", e); //$NON-NLS-1$
-                        throw new RuntimeCommandException(STD_ERR_MSG, e); //$NON-NLS-1$
+                        LOG.error("Error while saving elements", e); //$NON-NLS-1$
+                        throw new RuntimeCommandException(STD_ERR_MSG, e); // $NON-NLS-1$
                     }
                 }
 
-                public List<IMLPropertyOption> getReferencedEntitesForType(String referencedEntityTypeId, List<Property> references) {
+                public List<IMLPropertyOption> getReferencedEntitesForType(
+                        String referencedEntityTypeId, List<Property> references) {
                     return null;
                 }
-
 
                 @Override
                 public String getTitlesOfLinkedObjects(String referencedCnaLinkType, String uuid) {
@@ -305,7 +310,8 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
                 }
 
                 @Override
-                public void createLinks(String referencedEntityType, String linkType, String entityUuid) {
+                public void createLinks(String referencedEntityType, String linkType,
+                        String entityUuid) {
                     // not implemented, do nothing
                 }
             };

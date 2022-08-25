@@ -23,53 +23,58 @@ import java.util.List;
 import java.util.Set;
 
 public class PropertyGroup implements IEntityElement {
-	private String id;
-	private String name;
-	private List<PropertyType> propertyTypes = new ArrayList<PropertyType>();
-	private Set<DependsType> dependencies = new HashSet<DependsType>();
+    private String id;
+    private String name;
+    private List<PropertyType> propertyTypes = new ArrayList<PropertyType>();
+    private Set<DependsType> dependencies = new HashSet<DependsType>();
     private String tags;
-	
-	public void addPropertyType(PropertyType prop) {
-		propertyTypes.add(prop);
-	}
-	
-	@Override
-    public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	@Override
-    public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public List<PropertyType> getPropertyTypes() {
-		return propertyTypes;
-	}
-	public void setPropertyTypes(List<PropertyType>  propertyTypes) {
-		this.propertyTypes = propertyTypes;
-	}
-	
-	public PropertyType getPropertyType(String id) {
-		for (PropertyType type : propertyTypes) {
-			if (type.getId().equals(id)){
-				return type;
-			}
-		}
-		return null;
-	}
 
-	public void setDependencies(Set<DependsType> set) {
-		this.dependencies = set;
-	}
-	
-	public Set<DependsType> getDependencies(){
-	    return dependencies;
-	}
+    public void addPropertyType(PropertyType prop) {
+        propertyTypes.add(prop);
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<PropertyType> getPropertyTypes() {
+        return propertyTypes;
+    }
+
+    public void setPropertyTypes(List<PropertyType> propertyTypes) {
+        this.propertyTypes = propertyTypes;
+    }
+
+    public PropertyType getPropertyType(String id) {
+        for (PropertyType type : propertyTypes) {
+            if (type.getId().equals(id)) {
+                return type;
+            }
+        }
+        return null;
+    }
+
+    public void setDependencies(Set<DependsType> set) {
+        this.dependencies = set;
+    }
+
+    public Set<DependsType> getDependencies() {
+        return dependencies;
+    }
 
     /**
      * @param attribute

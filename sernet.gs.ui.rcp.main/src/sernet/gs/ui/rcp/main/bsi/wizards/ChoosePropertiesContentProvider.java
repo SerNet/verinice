@@ -32,61 +32,58 @@ import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
 
 public class ChoosePropertiesContentProvider implements ITreeContentProvider {
-	
-	public ChoosePropertiesContentProvider() {
-	}
 
-	public Object[] getChildren(Object element) {
-		if (element instanceof EntityType) {
-			EntityType type = (EntityType) element;
-			ArrayList<IEntityElement> result = new ArrayList<IEntityElement>();
-			result.addAll(type.getPropertyTypes());
-			result.addAll(type.getPropertyGroups());
-			return (IEntityElement[]) result.toArray(new IEntityElement[result.size()]);
-		}
-		
-		if (element instanceof PropertyGroup) {
-			PropertyGroup group = (PropertyGroup) element;
-			List<PropertyType> types = group.getPropertyTypes();
-			return (PropertyType[]) types.toArray(new PropertyType[types.size()]);
-		}
-		
-		return null;
-		
-	}
+    public ChoosePropertiesContentProvider() {
+    }
 
-	public Object getParent(Object element) {
-		return null;
-	}
+    public Object[] getChildren(Object element) {
+        if (element instanceof EntityType) {
+            EntityType type = (EntityType) element;
+            ArrayList<IEntityElement> result = new ArrayList<IEntityElement>();
+            result.addAll(type.getPropertyTypes());
+            result.addAll(type.getPropertyGroups());
+            return (IEntityElement[]) result.toArray(new IEntityElement[result.size()]);
+        }
 
-	public boolean hasChildren(Object element) {
-		if (element instanceof EntityType ) {
-			EntityType type = (EntityType) element;
-			return type.getPropertyTypes().size() > 0
-			|| type.getPropertyGroups().size() > 0;
-		}
-		
-		if (element instanceof PropertyGroup) {
-			PropertyGroup group = (PropertyGroup) element;
-			return group.getPropertyTypes().size() > 0;
-		}
-		
-		return false;
-	}
+        if (element instanceof PropertyGroup) {
+            PropertyGroup group = (PropertyGroup) element;
+            List<PropertyType> types = group.getPropertyTypes();
+            return (PropertyType[]) types.toArray(new PropertyType[types.size()]);
+        }
 
-	public Object[] getElements(Object inputElement) {
-		Collection list = (Collection) inputElement;
-		return (EntityType[]) list.toArray(new EntityType[list.size()]);
-	}
+        return null;
 
-	public void dispose() {
+    }
 
-	}
+    public Object getParent(Object element) {
+        return null;
+    }
 
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		(new ThreadSafeViewerUpdate((TreeViewer) viewer)).refresh();
-	}
-	
-	
+    public boolean hasChildren(Object element) {
+        if (element instanceof EntityType) {
+            EntityType type = (EntityType) element;
+            return type.getPropertyTypes().size() > 0 || type.getPropertyGroups().size() > 0;
+        }
+
+        if (element instanceof PropertyGroup) {
+            PropertyGroup group = (PropertyGroup) element;
+            return group.getPropertyTypes().size() > 0;
+        }
+
+        return false;
+    }
+
+    public Object[] getElements(Object inputElement) {
+        Collection list = (Collection) inputElement;
+        return (EntityType[]) list.toArray(new EntityType[list.size()]);
+    }
+
+    public void dispose() {
+
+    }
+
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        (new ThreadSafeViewerUpdate((TreeViewer) viewer)).refresh();
+    }
 
 }

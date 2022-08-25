@@ -47,9 +47,9 @@ import sernet.verinice.service.commands.LoadEntitiesByIds;
 import sernet.verinice.service.linktable.ILinkTableConfiguration;
 
 /**
- * This graph command loads the values of element properties of input type "reference".
- * Loaded properties values are saved in a reference value cache in the entity that 
- * contains the property.
+ * This graph command loads the values of element properties of input type
+ * "reference". Loaded properties values are saved in a reference value cache in
+ * the entity that contains the property.
  * 
  * The command is used to load data for link tables (link tables reports, LTR).
  * 
@@ -62,7 +62,7 @@ public class LinkTableGraphCommand extends GraphCommand {
     private static final long serialVersionUID = 9088625615234598118L;
 
     private static final Logger log = Logger.getLogger(LinkTableGraphCommand.class);
-    
+
     private static final NumericStringComparator NSC = new NumericStringComparator();
 
     /**
@@ -86,11 +86,10 @@ public class LinkTableGraphCommand extends GraphCommand {
      * Set with db ids of referenced entities
      */
     private Set<Integer> referenceIds;
-    
+
     /**
-     * Map to save the values of the reference properties.
-     * Key: Entity database id
-     * Values: The values (or label) of the referenced entity
+     * Map to save the values of the reference properties. Key: Entity database
+     * id Values: The values (or label) of the referenced entity
      */
     private Map<Integer, String> referenceValueMap;
 
@@ -109,10 +108,9 @@ public class LinkTableGraphCommand extends GraphCommand {
     /**
      * The following steps are executed:
      * 
-     * 1. Collect property type ids of reference properties
-     * 2. Collect the ids of there referenced entities
-     * 3. Load the referenced entities
-     * 4. Cache the values of the reference properties
+     * 1. Collect property type ids of reference properties 2. Collect the ids
+     * of there referenced entities 3. Load the referenced entities 4. Cache the
+     * values of the reference properties
      * 
      * @see sernet.verinice.interfaces.IGraphCommand#executeWithGraph()
      */
@@ -123,7 +121,7 @@ public class LinkTableGraphCommand extends GraphCommand {
         } catch (CommandException e) {
             log.error("Error while loading reference properties", e);
             throw new RuntimeCommandException(e);
-        }  
+        }
     }
 
     private void doExecute() throws CommandException {
@@ -134,7 +132,7 @@ public class LinkTableGraphCommand extends GraphCommand {
             log.debug("No reference properties found.");
             return;
         }
-        
+
         log.debug("Collecting reference ids in verinice graph...");
         collectReferencedEntityIds();
         if (referenceIds.isEmpty()) {
@@ -144,18 +142,16 @@ public class LinkTableGraphCommand extends GraphCommand {
         }
         if (log.isDebugEnabled()) {
             log.debug("Loading " + referenceIds.size() + " references...");
-        } 
-        
+        }
+
         loadReferencedEntities();
-        
+
         cacheReferencePropertyValues();
     }
-    
 
-    
     /**
-     * Collects all property and element type ids of reference properties from the link
-     * table configuration 
+     * Collects all property and element type ids of reference properties from
+     * the link table configuration
      */
     private void collectReferencePropertyTypeIds() {
         referenceElementTypeIds = new HashSet<>();
@@ -174,17 +170,17 @@ public class LinkTableGraphCommand extends GraphCommand {
     }
 
     private void collectReferencePropertyTypeIds(EntityType entityType, PropertyType propertyType) {
-        if (propertyType.isReference() && propertyTypeIdsInConfiguration.contains(propertyType.getId())) {
+        if (propertyType.isReference()
+                && propertyTypeIdsInConfiguration.contains(propertyType.getId())) {
             referenceElementTypeIds.add(entityType.getId());
             referencePropertyTypeIds.add(propertyType.getId());
             if (log.isDebugEnabled()) {
-                log.debug("Reference property found, element type: " + entityType.getId() + ", property type: " + propertyType.getId());
+                log.debug("Reference property found, element type: " + entityType.getId()
+                        + ", property type: " + propertyType.getId());
             }
         }
     }
-    
-    
-   
+
     private void collectReferencedEntityIds() {
         referenceIds = new HashSet<>();
         Set<CnATreeElement> elements = getGraph().getElements();
@@ -207,16 +203,17 @@ public class LinkTableGraphCommand extends GraphCommand {
     }
 
     private void collectReferenceIds(PropertyList propertyList) {
-        if(propertyList==null) {
+        if (propertyList == null) {
             return;
         }
         List<Property> listOfProperties = propertyList.getProperties();
         for (Property property : listOfProperties) {
-            if(isPropertyValue(property)) {
+            if (isPropertyValue(property)) {
                 Integer entityDbId = Integer.valueOf(property.getPropertyValue());
                 referenceIds.add(entityDbId);
                 if (log.isDebugEnabled()) {
-                    log.debug("Reference id found, property type: " + property.getPropertyType() + ", entity db id: " + entityDbId);
+                    log.debug("Reference id found, property type: " + property.getPropertyType()
+                            + ", entity db id: " + entityDbId);
                 }
             }
         }
@@ -224,10 +221,9 @@ public class LinkTableGraphCommand extends GraphCommand {
     }
 
     private boolean isPropertyValue(Property property) {
-        return property!=null && property.getPropertyValue()!=null && !property.getPropertyValue().isEmpty();
+        return property != null && property.getPropertyValue() != null
+                && !property.getPropertyValue().isEmpty();
     }
-    
-    
 
     private void loadReferencedEntities() throws CommandException {
         referenceValueMap = new HashMap<>();
@@ -235,19 +231,19 @@ public class LinkTableGraphCommand extends GraphCommand {
         command = getCommandService().executeCommand(command);
         List<Entity> entities = command.getEntities();
         for (Entity entity : entities) {
-            if(!Person.TYPE_ID.equals(entity.getEntityType())) {
-                log.error("Referenced entity type is not supported. The only supported type is: " + Person.TYPE_ID );
+            if (!Person.TYPE_ID.equals(entity.getEntityType())) {
+                log.error("Referenced entity type is not supported. The only supported type is: "
+                        + Person.TYPE_ID);
             }
             String value = Person.getTitel(entity);
             referenceValueMap.put(entity.getDbId(), value);
             if (log.isDebugEnabled()) {
-                log.debug("Reference values loaded, entity db id: " + entity.getDbId() + ", value: " + value);
+                log.debug("Reference values loaded, entity db id: " + entity.getDbId() + ", value: "
+                        + value);
             }
         }
     }
-    
 
-   
     private void cacheReferencePropertyValues() {
         Set<CnATreeElement> elements = getGraph().getElements();
         for (CnATreeElement element : elements) {
@@ -256,7 +252,7 @@ public class LinkTableGraphCommand extends GraphCommand {
             }
         }
     }
-    
+
     private void cacheReferencePropertyValues(CnATreeElement element) {
         Entity entity = element.getEntity();
         // key: propertyTypeId, value: PropertyList with propertyTypeId
@@ -264,28 +260,30 @@ public class LinkTableGraphCommand extends GraphCommand {
         for (Map.Entry<String, PropertyList> propertyEntry : propertyMap.entrySet()) {
             String propertyTypeId = propertyEntry.getKey();
             if (referencePropertyTypeIds.contains(propertyTypeId)) {
-                cacheReferencePropertyValues(entity,propertyEntry);
+                cacheReferencePropertyValues(entity, propertyEntry);
             }
         }
     }
-    
-    private void cacheReferencePropertyValues(Entity entity, Entry<String, PropertyList> propertyEntry) {
+
+    private void cacheReferencePropertyValues(Entity entity,
+            Entry<String, PropertyList> propertyEntry) {
         String propertyTypeId = propertyEntry.getKey();
         PropertyList propertyList = propertyEntry.getValue();
         List<Property> listOfProperties = propertyList.getProperties();
-        
+
         List<String> values = new LinkedList<>();
         for (Property property : listOfProperties) {
             String value = getReferenceValue(property);
-            if(value!=null) {
+            if (value != null) {
                 values.add(value);
-            }             
-        } 
-        
-        String referenceValue = sortAndConvertListToString(values);                 
+            }
+        }
+
+        String referenceValue = sortAndConvertListToString(values);
         entity.addToReferenceValueCache(propertyTypeId, referenceValue);
         if (log.isDebugEnabled()) {
-            log.debug("Reference value added to cache: " + referenceValue + ", entity db id: " + entity.getDbId() + ", property type id: " + propertyTypeId);
+            log.debug("Reference value added to cache: " + referenceValue + ", entity db id: "
+                    + entity.getDbId() + ", property type id: " + propertyTypeId);
         }
     }
 
@@ -294,18 +292,14 @@ public class LinkTableGraphCommand extends GraphCommand {
         return StringUtils.join(values, ",");
     }
 
-    
-    
     private String getReferenceValue(Property property) {
         String value = null;
-        if(isPropertyValue(property)) {           
+        if (isPropertyValue(property)) {
             Integer entityDbId = Integer.valueOf(property.getPropertyValue());
             value = referenceValueMap.get(entityDbId);
         }
         return value;
     }
-     
-
 
     private HUITypeFactory getHuiTypeFactory() {
         return HUITypeFactory.getInstance();

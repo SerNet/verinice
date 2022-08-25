@@ -37,8 +37,10 @@ import sernet.hui.common.connect.PropertyType;
 public class PropertyTreeContentProvider implements ITreeContentProvider {
 
     List<PropertyType> visibleTyps;
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
     @Override
@@ -47,8 +49,12 @@ public class PropertyTreeContentProvider implements ITreeContentProvider {
 
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface
+     * .viewers.Viewer, java.lang.Object, java.lang.Object)
      */
     @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
@@ -56,40 +62,51 @@ public class PropertyTreeContentProvider implements ITreeContentProvider {
 
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ITreeContentProvider#getElements(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.jface.viewers.ITreeContentProvider#getElements(java.lang.
+     * Object)
      */
     @Override
     public Object[] getElements(Object inputElement) {
         return getChildren(inputElement);
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.
+     * Object)
      */
     @Override
     public Object[] getChildren(Object parentElement) {
         List children;
-        if(parentElement instanceof List) {
-            children = (List)parentElement;
-        } else if(parentElement instanceof PropertyGroup) {
-            children = ((PropertyGroup)parentElement).getPropertyTypes();
+        if (parentElement instanceof List) {
+            children = (List) parentElement;
+        } else if (parentElement instanceof PropertyGroup) {
+            children = ((PropertyGroup) parentElement).getPropertyTypes();
         } else {
             children = Collections.EMPTY_LIST;
         }
         List visibleChildren = new ArrayList(children.size());
         for (Object object : children) {
-            if(object instanceof PropertyGroup && hasChildren(object)) {
+            if (object instanceof PropertyGroup && hasChildren(object)) {
                 visibleChildren.add(object);
-            } else if(visibleTyps.contains(object)) {
+            } else if (visibleTyps.contains(object)) {
                 visibleChildren.add(object);
             }
         }
         return visibleChildren.toArray();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.
+     * Object)
      */
     @Override
     public Object getParent(Object element) {
@@ -97,8 +114,12 @@ public class PropertyTreeContentProvider implements ITreeContentProvider {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.
+     * Object)
      */
     @Override
     public boolean hasChildren(Object element) {
