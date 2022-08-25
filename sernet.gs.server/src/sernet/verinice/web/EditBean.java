@@ -21,6 +21,7 @@ package sernet.verinice.web;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -221,7 +222,7 @@ public class EditBean {
             if (isVisible(groupHui)) {
                 sernet.verinice.web.PropertyGroup group = new sernet.verinice.web.PropertyGroup(
                         groupHui.getId(), groupHui.getName());
-                List<PropertyType> typeListHui = groupHui.getPropertyTypes();
+                Collection<PropertyType> typeListHui = groupHui.getPropertyTypes();
                 List<HuiProperty> listOfGroup = createPropertyList(entity, typeListHui);
                 group.setPropertyList(listOfGroup);
                 allProperties.addAll(listOfGroup);
@@ -237,7 +238,8 @@ public class EditBean {
         generalPropertyList = moveURLPropertyToEndOfList(createPropertyList(entity, typeList));
     }
 
-    protected List<HuiProperty> createPropertyList(Entity entity, List<PropertyType> typeListHui) {
+    protected List<HuiProperty> createPropertyList(Entity entity,
+            Collection<PropertyType> typeListHui) {
         ArrayList<HuiProperty> properties = new ArrayList<>(typeListHui.size());
         initHuiProperties(entity, typeListHui, properties);
         allProperties.addAll(properties);
@@ -294,7 +296,7 @@ public class EditBean {
         return key2HuiProperty;
     }
 
-    private void initHuiProperties(Entity entity, List<PropertyType> typeListHui,
+    private void initHuiProperties(Entity entity, Collection<PropertyType> typeListHui,
             List<HuiProperty> huiProperties) {
         for (PropertyType huiType : typeListHui) {
             initHuiProperty(entity, huiType, huiProperties);

@@ -27,6 +27,7 @@ import static org.junit.Assert.assertTrue;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -271,7 +272,7 @@ public class CommandServiceTest extends CommandServiceProvider {
         Entity entity = element.getEntity();
         EntityType type = huiTypeFactory.getEntityType(element.getTypeId());
         assertNotNull("Entity type not found, id: " + element.getTypeId(), type);
-        List<PropertyType> propertyList = type.getAllPropertyTypes();
+        Collection<PropertyType> propertyList = type.getAllPropertyTypes();
         for (PropertyType propertyType : propertyList) {
             if (propertyType.isLine() || propertyType.isText()) {
                 String id = propertyType.getId();
@@ -290,7 +291,7 @@ public class CommandServiceTest extends CommandServiceProvider {
         Entity entity = element.getEntity();
         EntityType type = huiTypeFactory.getEntityType(typeId);
         assertNotNull("Entity type not found, id: " + typeId, type);
-        List<PropertyType> propertyList = type.getAllPropertyTypes();
+        Collection<PropertyType> propertyList = type.getAllPropertyTypes();
         for (PropertyType propertyType : propertyList) {
             if (propertyType.isLine() || propertyType.isText()) {
                 String id = propertyType.getId();

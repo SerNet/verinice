@@ -19,7 +19,6 @@ package sernet.gs.ui.rcp.main.bsi.wizards;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -45,7 +44,7 @@ public class ChoosePropertiesContentProvider implements ITreeContentProvider {
 
         if (element instanceof PropertyGroup) {
             PropertyGroup group = (PropertyGroup) element;
-            List<PropertyType> types = group.getPropertyTypes();
+            Collection<PropertyType> types = group.getPropertyTypes();
             return types.toArray(new PropertyType[types.size()]);
         }
 

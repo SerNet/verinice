@@ -163,7 +163,7 @@ public class LinkTableGraphCommand extends GraphCommand {
     }
 
     private void collectReferencePropertyTypeIds(EntityType entityType) {
-        List<PropertyType> propertyTypes = entityType.getAllPropertyTypes();
+        Collection<PropertyType> propertyTypes = entityType.getAllPropertyTypes();
         for (PropertyType propertyType : propertyTypes) {
             collectReferencePropertyTypeIds(entityType, propertyType);
         }

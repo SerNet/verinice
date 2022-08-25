@@ -275,8 +275,8 @@ public class HUITypeFactory {
             }
         } else if (child.getTagName().equals(HUI_PROPERTY_GROUP)) {
             PropertyGroup group = readPropertyGroup(child.getAttribute(ATTRIBUTE_ID));
-            entityType.addPropertyGroup(group);
             readChildElements(entityType, group);
+            entityType.addPropertyGroup(group);
         } else if (child.getTagName().equals(HUI_RELATION)) {
             HuiRelation relation = new HuiRelation(child.getAttribute(ATTRIBUTE_ID));
             readRelation(child, entityType.getId(), relation);

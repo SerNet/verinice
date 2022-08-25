@@ -90,7 +90,7 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
 
             List<PropertyGroup> groups = entityType.getPropertyGroups();
             for (PropertyGroup group : groups) {
-                List<PropertyType> typesInGroup = group.getPropertyTypes();
+                Collection<PropertyType> typesInGroup = group.getPropertyTypes();
                 addPersonResolverToTypes(typeFactory, entityType, typesInGroup);
                 addRoleResolverToTypes(typeFactory, entityType, typesInGroup);
             }
@@ -106,7 +106,7 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
     }
 
     private void addPersonResolverToTypes(HUITypeFactory typeFactory, EntityType entityType,
-            List<PropertyType> propertyTypes) {
+            Collection<PropertyType> propertyTypes) {
         for (PropertyType propertyType : propertyTypes) {
             if (propertyType.isReference()
                     && propertyType.getReferencedEntityTypeId().equals(Person.TYPE_ID)) {
@@ -117,7 +117,7 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
     }
 
     private void addRoleResolverToTypes(HUITypeFactory typeFactory, EntityType entityType,
-            List<PropertyType> propertyTypes) {
+            Collection<PropertyType> propertyTypes) {
         for (PropertyType propertyType : propertyTypes) {
             if (propertyType.isReference() && propertyType.getReferencedEntityTypeId()
                     .equals(Configuration.ROLE_TYPE_ID)) {

@@ -20,6 +20,7 @@
 package sernet.verinice.bpm.rcp;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -83,7 +84,7 @@ public class PropertyTreeContentProvider implements ITreeContentProvider {
      */
     @Override
     public Object[] getChildren(Object parentElement) {
-        List children;
+        Collection children;
         if (parentElement instanceof List) {
             children = (List) parentElement;
         } else if (parentElement instanceof PropertyGroup) {

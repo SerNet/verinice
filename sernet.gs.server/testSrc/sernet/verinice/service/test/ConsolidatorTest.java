@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map.Entry;
@@ -245,8 +246,11 @@ public class ConsolidatorTest extends AbstractModernizedBaseProtection {
                 .get(random.nextInt(type.getPropertyGroups().size()));
         String propertyGroupId = propertyGroup.getId();
 
-        String propertyId = propertyGroup.getPropertyTypes()
-                .get(random.nextInt(propertyGroup.getPropertyTypes().size())).getId();
+        ArrayList<PropertyType> propertyTypesAsList = new ArrayList<>(
+                propertyGroup.getPropertyTypes());
+
+        String propertyId = propertyTypesAsList.get(random.nextInt(propertyTypesAsList.size()))
+                .getId();
         return new AbstractMap.SimpleEntry<>(propertyGroupId, propertyId);
     }
 }

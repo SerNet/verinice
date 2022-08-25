@@ -18,8 +18,10 @@
 package sernet.hui.common.connect;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -46,6 +48,9 @@ public class EntityType {
     // All properties of an entity type, Map of property ID : PropertyType
     private Map<String, PropertyType> propertyTypes = new HashMap<>();
 
+    // All properties of all entity types, Map of property ID : PropertyType
+    private Map<String, PropertyType> allPropertyTypes = new LinkedHashMap<>();
+
     // map of target EntityType ID : set of HuiRelations (links to EntityTypes)
     private Map<String, Set<HuiRelation>> relations = new HashMap<>();
 
@@ -71,7 +76,7 @@ public class EntityType {
      * @return A SNCA sorted list with the property types of this entity type
      */
     public List<PropertyType> getPropertyTypesSorted() {
-        List<PropertyType> propertyTypesSorted = new ArrayList<>();
+        List<PropertyType> propertyTypesSorted = new ArrayList<>(propertyTypes.size());
         for (IEntityElement entity : getElements()) {
             if (entity instanceof PropertyType) {
                 propertyTypesSorted.add((PropertyType) entity);
@@ -87,13 +92,8 @@ public class EntityType {
      * @return A list with all property types of this entity type and property
      *         groups.
      */
-    public List<PropertyType> getAllPropertyTypes() {
-        List<PropertyType> types = getPropertyTypes();
-        for (PropertyGroup pg : propertyGroups) {
-            types.addAll(pg.getPropertyTypes());
-        }
-
-        return types;
+    public Collection<PropertyType> getAllPropertyTypes() {
+        return allPropertyTypes.values();
     }
 
     public boolean hasPropertyType(String id) {
@@ -110,7 +110,7 @@ public class EntityType {
      *         and property groups.
      */
     public List<PropertyType> getAllPropertyTypesSorted() {
-        List<PropertyType> propertyTypeList = new ArrayList<>();
+        List<PropertyType> propertyTypeList = new ArrayList<>(allPropertyTypes.size());
         for (IEntityElement entity : getElements()) {
             if (entity instanceof PropertyType) {
                 propertyTypeList.add((PropertyType) entity);
@@ -130,18 +130,7 @@ public class EntityType {
      * @return The property type with the given ID or null
      */
     public PropertyType getPropertyType(String id) {
-        PropertyType type = this.propertyTypes.get(id);
-        if (type != null) {
-            return type;
-        }
-        // search in groups:
-        for (PropertyGroup group : this.propertyGroups) {
-            if ((type = group.getPropertyType(id)) != null) {
-                return type;
-            }
-        }
-        // none found:
-        return null;
+        return allPropertyTypes.get(id);
     }
 
     /**
@@ -149,12 +138,7 @@ public class EntityType {
      *         the types which are contained in property groups.
      */
     public String[] getAllPropertyTypeIds() {
-        List<PropertyType> types = getAllPropertyTypes();
-        List<String> ids = new ArrayList<>();
-        for (PropertyType type : types) {
-            ids.add(type.getId());
-        }
-        return ids.toArray(new String[ids.size()]);
+        return allPropertyTypes.keySet().toArray(String[]::new);
     }
 
     /**
@@ -172,12 +156,7 @@ public class EntityType {
      *         including the types which are contained in property groups.
      */
     public String[] getAllPropertyTypeTitles() {
-        ArrayList<String> result = new ArrayList<>();
-        String[] typeIDs = getAllPropertyTypeIds();
-        for (String typeId : typeIDs) {
-            result.add(getPropertyType(typeId).getName());
-        }
-        return result.toArray(new String[result.size()]);
+        return allPropertyTypes.values().stream().map(PropertyType::getName).toArray(String[]::new);
     }
 
     /**
@@ -268,11 +247,13 @@ public class EntityType {
 
     public void addPropertyType(PropertyType prop) {
         propertyTypes.put(prop.getId(), prop);
+        allPropertyTypes.put(prop.getId(), prop);
         elements.add(prop);
     }
 
     public void addPropertyGroup(PropertyGroup group) {
         propertyGroups.add(group);
+        group.getPropertyTypes().forEach(type -> allPropertyTypes.put(type.getId(), type));
         elements.add(group);
     }
 

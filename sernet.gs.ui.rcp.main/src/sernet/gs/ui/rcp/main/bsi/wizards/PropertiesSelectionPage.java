@@ -134,7 +134,7 @@ public class PropertiesSelectionPage extends WizardPage {
             Activator.inheritVeriniceContextState();
             EntityType entityType = HitroUtil.getInstance().getTypeFactory()
                     .getEntityType(entityId);
-            List<PropertyType> propertyTypes = entityType.getAllPropertyTypes();
+            List<PropertyType> propertyTypes = new ArrayList<>(entityType.getAllPropertyTypes());
             Collections.sort(propertyTypes, PropertyTypeNameComparator.getInstance());
             propertyNames = new String[propertyTypes.size()];
             int count = 0;

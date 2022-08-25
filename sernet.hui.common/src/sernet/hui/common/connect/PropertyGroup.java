@@ -17,20 +17,21 @@
  ******************************************************************************/
 package sernet.hui.common.connect;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class PropertyGroup implements IEntityElement {
     private String id;
     private String name;
-    private List<PropertyType> propertyTypes = new ArrayList<>();
+    private Map<String, PropertyType> propertyTypesById = new LinkedHashMap<>();
     private Set<DependsType> dependencies = new HashSet<>();
     private String tags;
 
     public void addPropertyType(PropertyType prop) {
-        propertyTypes.add(prop);
+        propertyTypesById.put(prop.getId(), prop);
     }
 
     @Override
@@ -51,17 +52,12 @@ public class PropertyGroup implements IEntityElement {
         this.name = name;
     }
 
-    public List<PropertyType> getPropertyTypes() {
-        return propertyTypes;
+    public Collection<PropertyType> getPropertyTypes() {
+        return propertyTypesById.values();
     }
 
     public PropertyType getPropertyType(String id) {
-        for (PropertyType type : propertyTypes) {
-            if (type.getId().equals(id)) {
-                return type;
-            }
-        }
-        return null;
+        return propertyTypesById.get(id);
     }
 
     public void setDependencies(Set<DependsType> set) {

@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertThat;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -247,7 +248,7 @@ public class ValidationServiceTest extends AbstractModernizedBaseProtection {
         Entity entity = element.getEntity();
         EntityType type = huiTypeFactory.getEntityType(element.getTypeId());
         assertNotNull("Entity type not found, id: " + element.getTypeId(), type);
-        List<PropertyType> propertyList = type.getAllPropertyTypes();
+        Collection<PropertyType> propertyList = type.getAllPropertyTypes();
         for (PropertyType propertyType : propertyList) {
             if (propertyType.getId().equals(propertyName)) {
                 if (propertyType.isLine() || propertyType.isText()) {
