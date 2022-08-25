@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _SlfjEGUPEeqN8MswvNs8LA
-Runtime-Version: 2.5.1.M3
-Save-Time: 9/3/20, 12:48 PM
+Runtime-Version: 2.5.3.202205021448
+Save-Time: 8/25/22, 12:02 PM
 Tags: ISM
 Testcase-Type: ecl
 Verifications: _wm5P0CtBEeuMltfUUtdvug
@@ -40,21 +40,25 @@ proc "try-dont-switch" {
 	}
 }
 
-proc "does-exist-in-other-perspecive" [val viewPathName] [val view] [val path] [val caption] {
-	get-menu -path [concat "Ansicht/Zeige View.../" $viewPathName] | click
-	try-dont-switch
-	get-view $view | get-tree | get-item -path $path | get-property caption | equals $caption | verify-true
-	get-view $view | close
+proc "verify-element-exists" [val view] [val path] [val caption] {
+    get-view $view | get-tree | get-item -path $path | get-property caption | equals $caption | verify-true
 }
 
 proc "wait-for-imports-or-fail" {
+	get-menu -path "Ansicht/Zeige View.../Modernisierter IT-Grundschutz" | click
+	try-dont-switch
+	get-menu -path "Ansicht/Zeige View.../GS-Modell" | click
+	try-dont-switch
 	try -times 40 -delay 10000 -command {
-		get-view ISM | get-tree | get-item -path "importierte Objekte/Beispiel: NoKyTo GmbH 2018 \\[DP\\]"
-			| get-property caption | equals "Beispiel: NoKyTo GmbH 2018 [DP]" | verify-true
-		does-exist-in-other-perspecive "Modernisierter IT-Grundschutz" "Modernisierter IT-Grundschutz"
+		verify-element-exists ISM "importierte Objekte/Beispiel: NoKyTo GmbH 2018 \\[DP\\]"
+			"Beispiel: NoKyTo GmbH 2018 [DP]"
+		verify-element-exists "Modernisierter IT-Grundschutz"
 			"importierte Objekte/MODPLAST \\[SerNet-DM\\]" "MODPLAST [SerNet-DM]"
-		does-exist-in-other-perspecive "GS-Modell" Grundschutzmodell "importierte Objekte/  RECPLAST \\[SerNet\\]"
+		verify-element-exists Grundschutzmodell "importierte Objekte/  RECPLAST \\[SerNet\\]"
 			"RECPLAST [SerNet]"
+	} -finally {
+        get-view "Modernisierter IT-Grundschutz" | close
+        get-view Grundschutzmodell | close
 	}
 }
 
