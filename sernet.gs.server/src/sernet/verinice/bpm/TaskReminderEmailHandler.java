@@ -53,8 +53,7 @@ public class TaskReminderEmailHandler extends GenericEmailHandler implements IEm
         String taskTitleHtml = escapeForHTMLIfNecessary(taskTitle);
         emailParameter.put(TEMPLATE_TASK_TITLE, taskTitleHtml);
 
-        String description = escapeForHTMLIfNecessary(
-                getTaskService().loadTaskDescription(type, processVariables));
+        String description = getTaskService().loadTaskDescription(type, processVariables);
         emailParameter.put(TEMPLATE_TASK_DESCRIPTION, description);
 
         emailParameter.put(IRemindService.TEMPLATE_SUBJECT, "verinice task reminder: " + taskTitle);
