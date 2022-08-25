@@ -20,7 +20,6 @@ package sernet.gs.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -62,7 +61,7 @@ public class GetHitroConfig extends HttpServlet {
             String basePath = getInitParameter("snca.xml.path");
             if (basePath == null) {
                 String message = "init parameter snca.xml.path is not set in web.xml";
-                sendErrorMessage(response, message);
+                sendErrorMessage(response, message, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 throw new RuntimeException(message);
             } else {
                 String fileName = HUITypeFactory.HUI_CONFIGURATION_FILE;
@@ -75,7 +74,7 @@ public class GetHitroConfig extends HttpServlet {
                             || !resourceParameter.startsWith(SNCAMessages.BUNDLE_NAME)
                             || !resourceParameter.endsWith(SNCAMessages.BUNDLE_EXTENSION)) {
                         String message = "illegal parameter: " + resourceParameter;
-                        sendErrorMessage(response, message);
+                        sendErrorMessage(response, message, HttpServletResponse.SC_BAD_REQUEST);
                         throw new RuntimeException(message);
                     }
                     fileName = resourceParameter;
@@ -88,7 +87,7 @@ public class GetHitroConfig extends HttpServlet {
                 try (InputStream in = getServletContext().getResourceAsStream(path)) {
                     if (in == null) {
                         String message = "Resource not found: " + path;
-                        sendErrorMessage(response, message);
+                        sendErrorMessage(response, message, HttpServletResponse.SC_NOT_FOUND);
                         // check if an language only file is searched (i.e.
                         // snca-messages_de.properties)
                         // or an language-region file (i.e.
@@ -113,10 +112,8 @@ public class GetHitroConfig extends HttpServlet {
         }
     }
 
-    protected void sendErrorMessage(HttpServletResponse response, String message)
+    protected void sendErrorMessage(HttpServletResponse response, String message, int statusCode)
             throws IOException {
-        try (PrintWriter writer = response.getWriter()) {
-            writer.append(message);
-        }
+        response.sendError(statusCode, message);
     }
 }
