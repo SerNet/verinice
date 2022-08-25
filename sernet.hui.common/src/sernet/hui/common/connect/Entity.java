@@ -485,15 +485,15 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
             Collection<String> propertiesRequiringExactMatches) {
         boolean propertyValueChanged = false;
         PropertyList pl = typedPropertyLists.get(propertyTypeId);
+        int newSize = foreignProperties.size();
         if (pl == null) {
-            pl = new PropertyList();
+            pl = new PropertyList(newSize);
             typedPropertyLists.put(propertyTypeId, pl);
             propertyValueChanged = true;
         }
 
         List<Property> properties = pl.getProperties();
         int oldSize = properties.size();
-        int newSize = foreignProperties.size();
         if (oldSize > newSize) {
             propertyValueChanged = true;
             for (int i = oldSize; i > newSize; i--) {
