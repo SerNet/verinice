@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -503,12 +502,12 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
             }
         } else if (newSize > oldSize) {
             propertyValueChanged = true;
-            Set<Property> fillUpProperties = Stream.generate(() -> {
+            List<Property> fillUpProperties = Stream.generate(() -> {
                 Property p = new Property();
                 p.setParent(this);
                 p.setPropertyType(propertyTypeId);
                 return p;
-            }).limit((long) newSize - oldSize).collect(Collectors.toSet());
+            }).limit((long) newSize - oldSize).collect(Collectors.toList());
             properties.addAll(fillUpProperties);
         }
 
