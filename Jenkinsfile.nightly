@@ -25,6 +25,7 @@ pipeline {
                       parameters: [
                         booleanParam(name: 'runRCPTTTests', value: false),
                         booleanParam(name: 'archiveIntegrationTestResults', value: true)
+                        booleanParam(name: 'generateSNCAReport', value: true)
                       ]
                     )
                     copyArtifacts(
