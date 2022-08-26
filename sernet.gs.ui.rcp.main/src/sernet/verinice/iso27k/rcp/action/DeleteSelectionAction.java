@@ -63,6 +63,8 @@ public class DeleteSelectionAction extends RightsEnabledAction
 
     @Override
     public void doRun() {
-        new DeleteHandler().execute((IStructuredSelection) selection);
+        if (isEnabled()) {
+            new DeleteHandler().execute((IStructuredSelection) selection);
+        }
     }
 }
