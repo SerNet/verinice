@@ -32,57 +32,60 @@ import sernet.verinice.model.common.configuration.Configuration;
  *
  */
 public class LoadAttachmentsUserFiltered extends GenericCommand {
-    
+
     private static final long serialVersionUID = 20140530;
 
     private static final Logger LOG = Logger.getLogger(LoadAttachmentsUserFiltered.class);
-    
+
     private Integer id;
-    
+
     private List<Attachment> result;
-    
-    public LoadAttachmentsUserFiltered(Integer id){
+
+    public LoadAttachmentsUserFiltered(Integer id) {
         this.id = id;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
-        try{
+        try {
             Set<String> roles = null;
             LoadAttachments command = null;
-            if(id == null){
+            if (id == null) {
                 LoadCurrentUserConfiguration lcuc = new LoadCurrentUserConfiguration();
                 lcuc = getCommandService().executeCommand(lcuc);
                 Configuration c = lcuc.getConfiguration();
                 boolean isAdminUser = false;
                 boolean isScopeOnly = false;
                 Integer scopeId = -1;
-                if(c != null){
+                if (c != null) {
                     roles = c.getRoles();
                     isAdminUser = c.isAdminUser();
                     isScopeOnly = c.isScopeOnly();
                     scopeId = c.getPerson().getScopeId();
                 }
 
-                if(roles == null){
+                if (roles == null) {
                     roles = new HashSet<String>(0);
                 }
-                command = new LoadAttachments(id, roles.toArray(new String[roles.size()]), isAdminUser, isScopeOnly, scopeId);
+                command = new LoadAttachments(id, roles.toArray(new String[roles.size()]),
+                        isAdminUser, isScopeOnly, scopeId);
             } else {
                 command = new LoadAttachments(id);
             }
             command = getCommandService().executeCommand(command);
             result = command.getAttachmentList();
-        } catch(Exception e){
+        } catch (Exception e) {
             LOG.error("Error loading attachments filtered by user", e);
         }
     }
-    
-    public List<Attachment> getResult(){
-        if(result == null){
+
+    public List<Attachment> getResult() {
+        if (result == null) {
             return new ArrayList<Attachment>(0);
         }
         return this.result;

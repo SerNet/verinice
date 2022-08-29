@@ -31,74 +31,73 @@ import sernet.verinice.service.commands.LoadAttachmentsUserFiltered;
 /**
  *
  */
-public class LoadReportISAAttachmentImageCount extends GenericCommand implements ICachedCommand{
-    
-    private static final Logger LOG = Logger.getLogger(LoadReportISAAttachmentImageCount.class);
-    
-    private Integer rootElmt;
-    
-    private List<String> results;
-    
-    private boolean resultInjectedFromCache = false;
-    
-    public static final String[] COLUMNS = new String[] { 
-        "imageNr"
-    };
-    
-    private static final String[] IMAGEMIMETYPES = new String[]{
-        "jpg",
-        "png"
-    };
+public class LoadReportISAAttachmentImageCount extends GenericCommand implements ICachedCommand {
 
-    public LoadReportISAAttachmentImageCount(){
+    private static final Logger LOG = Logger.getLogger(LoadReportISAAttachmentImageCount.class);
+
+    private Integer rootElmt;
+
+    private List<String> results;
+
+    private boolean resultInjectedFromCache = false;
+
+    public static final String[] COLUMNS = new String[] { "imageNr" };
+
+    private static final String[] IMAGEMIMETYPES = new String[] { "jpg", "png" };
+
+    public LoadReportISAAttachmentImageCount() {
         // do nothing
     }
-    
-    public LoadReportISAAttachmentImageCount(Integer root){
+
+    public LoadReportISAAttachmentImageCount(Integer root) {
         this.rootElmt = root;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
-        if(!resultInjectedFromCache){
+        if (!resultInjectedFromCache) {
             results = new ArrayList<String>(0);
             int count = 0;
             try {
                 LoadAttachmentsUserFiltered command = new LoadAttachmentsUserFiltered(rootElmt);
                 command = getCommandService().executeCommand(command);
-                for(Attachment attachment : command.getResult()){
-                    if(isSupportedMIMEType(attachment.getMimeType())){
+                for (Attachment attachment : command.getResult()) {
+                    if (isSupportedMIMEType(attachment.getMimeType())) {
                         results.add(String.valueOf(count));
                         count++;
                     }
                 }
-            } catch (CommandException e){
+            } catch (CommandException e) {
                 LOG.error("Error while executing command", e);
             }
         }
     }
-    
-    public void setRoot(Integer root){
+
+    public void setRoot(Integer root) {
         this.rootElmt = root;
     }
-    
-    private boolean isSupportedMIMEType(String mimetype){
-        for(String s : IMAGEMIMETYPES){
-            if(s.equalsIgnoreCase(mimetype)){
-               return true; 
+
+    private boolean isSupportedMIMEType(String mimetype) {
+        for (String s : IMAGEMIMETYPES) {
+            if (s.equalsIgnoreCase(mimetype)) {
+                return true;
             }
         }
         return false;
     }
-    
-    public List<String> getResult(){
+
+    public List<String> getResult() {
         return results;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
      */
     @Override
@@ -109,24 +108,29 @@ public class LoadReportISAAttachmentImageCount extends GenericCommand implements
         return cacheID.toString();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.
+     * Object)
      */
     @Override
     public void injectCacheResult(Object result) {
-        this.results = (ArrayList<String>)result;
+        this.results = (ArrayList<String>) result;
         resultInjectedFromCache = true;
-        if(LOG.isDebugEnabled()){
+        if (LOG.isDebugEnabled()) {
             LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
      */
     @Override
     public Object getCacheableResult() {
         return results;
     }
-
 }

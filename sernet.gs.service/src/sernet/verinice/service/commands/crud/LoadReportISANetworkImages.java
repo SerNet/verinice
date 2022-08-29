@@ -50,69 +50,66 @@ import sernet.verinice.service.commands.LoadAttachmentsUserFiltered;
  *
  */
 public class LoadReportISANetworkImages extends GenericCommand implements ICachedCommand {
-    
 
     private int rootElmt;
-    
+
     private boolean resultInjectedFromCache = false;
-    
+
     private static final Logger LOG = Logger.getLogger(LoadReportISANetworkImages.class);
-    
+
     private boolean oddNumbers = false;
-    
+
     private List<List<Object>> results;
-    
+
     // max picture size in pixels (max is a 350x350 rectangle)
     private static final int maxImageHeightAndWidth = 350;
-    
-    private static final String[] IMAGEMIMETYPES = new String[]{
-        "jpg",
-        "png"
-    };
-    
-    public static final String[] COLUMNS = new String[] { 
-        "imageData",
-        "imageDescription"
-    };
-    
-    public LoadReportISANetworkImages(){
+
+    private static final String[] IMAGEMIMETYPES = new String[] { "jpg", "png" };
+
+    public static final String[] COLUMNS = new String[] { "imageData", "imageDescription" };
+
+    public LoadReportISANetworkImages() {
         // do nothing
     }
 
-    public LoadReportISANetworkImages(int root, boolean oddImages){
+    public LoadReportISANetworkImages(int root, boolean oddImages) {
         this.rootElmt = root;
         this.oddNumbers = oddImages;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
-        if(!resultInjectedFromCache){
+        if (!resultInjectedFromCache) {
             results = new ArrayList<List<Object>>(0);
-            for(SamtTopic topic : getSamtChildren(rootElmt)){
+            for (SamtTopic topic : getSamtChildren(rootElmt)) {
                 List<Object[]> topicPictureList = getNetworkPictures(getLinkedEvidences(topic));
-                for(Object[] picture : topicPictureList){
+                for (Object[] picture : topicPictureList) {
                     results.add(Arrays.asList(picture));
                 }
             }
         }
     }
-    
-    public List<List<Object>> getResults(){
+
+    public List<List<Object>> getResults() {
         return results;
     }
 
-    private List<SamtTopic> getSamtChildren(int dbid){
-        String hql = "from CnATreeElement where " +
-                   " objectType = ?" + 
-                   " AND parentId = ?";
-        Object[] params = new Object[]{SamtTopic.TYPE_ID, dbid};
-        List<SamtTopic> hqlResult   = getDaoFactory().getDAO(SamtTopic.TYPE_ID).findByQuery(hql, params);
+    private List<SamtTopic> getSamtChildren(int dbid) {
+        String hql = "from CnATreeElement where " + " objectType = ?" + " AND parentId = ?";
+        Object[] params = new Object[] { SamtTopic.TYPE_ID, dbid };
+        List<SamtTopic> hqlResult = getDaoFactory().getDAO(SamtTopic.TYPE_ID).findByQuery(hql,
+                params);
         return hqlResult;
     }
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
      */
     @Override
@@ -124,49 +121,61 @@ public class LoadReportISANetworkImages extends GenericCommand implements ICache
         return cacheID.toString();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.
+     * Object)
      */
     @Override
     public void injectCacheResult(Object result) {
-        this.results = (List<List<Object>>)result;
+        this.results = (List<List<Object>>) result;
         resultInjectedFromCache = true;
-        if(LOG.isDebugEnabled()){
+        if (LOG.isDebugEnabled()) {
             LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
      */
     @Override
     public Object getCacheableResult() {
         return this.results;
     }
-    
-    private List<Object[]> getNetworkPictures(List<Evidence> evidences){
+
+    private List<Object[]> getNetworkPictures(List<Evidence> evidences) {
         List<Object[]> pictures = new ArrayList<Object[]>(0);
-        for(Evidence evidence : evidences){
+        for (Evidence evidence : evidences) {
 
             try {
-                LoadAttachmentsUserFiltered attachmentLoader = new LoadAttachmentsUserFiltered(evidence.getDbId());
+                LoadAttachmentsUserFiltered attachmentLoader = new LoadAttachmentsUserFiltered(
+                        evidence.getDbId());
                 attachmentLoader = getCommandService().executeCommand(attachmentLoader);
-                for(int i = 0; i < attachmentLoader.getResult().size(); i++){
-                    // report uses two tables next to each other showing odd/even numbered images only
+                for (int i = 0; i < attachmentLoader.getResult().size(); i++) {
+                    // report uses two tables next to each other showing
+                    // odd/even numbered images only
                     // done to restriction showing always two images in a row
-                    if((i % 2 == 0 && !oddNumbers) || (i % 2 == 1 && oddNumbers)){ 
-                        Attachment attachment = (Attachment)attachmentLoader.getResult().get(i);
-                        if(LOG.isDebugEnabled()){
-                            LOG.debug("\t\tChecking MIME-Type of Attachment:\t" + attachment.getFileName());
+                    if ((i % 2 == 0 && !oddNumbers) || (i % 2 == 1 && oddNumbers)) {
+                        Attachment attachment = (Attachment) attachmentLoader.getResult().get(i);
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("\t\tChecking MIME-Type of Attachment:\t"
+                                    + attachment.getFileName());
                         }
-                        if(isSupportedMIMEType(attachment.getMimeType())){
-                            if(LOG.isDebugEnabled()){
+                        if (isSupportedMIMEType(attachment.getMimeType())) {
+                            if (LOG.isDebugEnabled()) {
                                 LOG.debug("\t\t\tMime-Type is suiteable");
                             }
-                            LoadAttachmentFile fileLoader = new LoadAttachmentFile(attachment.getDbId());
+                            LoadAttachmentFile fileLoader = new LoadAttachmentFile(
+                                    attachment.getDbId());
                             fileLoader = getCommandService().executeCommand(fileLoader);
                             Object[] picture = new Object[2];
-                            picture[0] = (scaleImageIfNeeded(fileLoader.getAttachmentFile().getFileData(), attachment.getMimeType()));
+                            picture[0] = (scaleImageIfNeeded(
+                                    fileLoader.getAttachmentFile().getFileData(),
+                                    attachment.getMimeType()));
                             picture[1] = attachment.getText();
                             pictures.add(picture);
                         }
@@ -178,53 +187,55 @@ public class LoadReportISANetworkImages extends GenericCommand implements ICache
         }
         return pictures;
     }
-    
-    private boolean isSupportedMIMEType(String mimetype){
-        for(String s : IMAGEMIMETYPES){
-            if(s.equalsIgnoreCase(mimetype)){
-               return true; 
+
+    private boolean isSupportedMIMEType(String mimetype) {
+        for (String s : IMAGEMIMETYPES) {
+            if (s.equalsIgnoreCase(mimetype)) {
+                return true;
             }
         }
         return false;
     }
-    
-    private List<Evidence> getLinkedEvidences(SamtTopic topic){
+
+    private List<Evidence> getLinkedEvidences(SamtTopic topic) {
         List<Evidence> evidences = new ArrayList<Evidence>(0);
-        topic = (SamtTopic)Retriever.checkRetrieveLinks(topic, true);
-        Set<Entry<CnATreeElement, CnALink>> entryset = CnALink.getLinkedElements(topic, Evidence.TYPE_ID).entrySet();
+        topic = (SamtTopic) Retriever.checkRetrieveLinks(topic, true);
+        Set<Entry<CnATreeElement, CnALink>> entryset = CnALink
+                .getLinkedElements(topic, Evidence.TYPE_ID).entrySet();
         Iterator<Entry<CnATreeElement, CnALink>> iter = entryset.iterator();
-        while(iter.hasNext()){
-            evidences.add((Evidence)iter.next().getKey());
+        while (iter.hasNext()) {
+            evidences.add((Evidence) iter.next().getKey());
         }
         return evidences;
     }
-    
-    private byte[] scaleImageIfNeeded(byte[] imageData, String mimetype){
+
+    private byte[] scaleImageIfNeeded(byte[] imageData, String mimetype) {
         ByteArrayInputStream in = new ByteArrayInputStream(imageData);
-        try{
+        try {
             BufferedImage img = ImageIO.read(in);
-            if(img.getWidth() > maxImageHeightAndWidth || img.getHeight() > maxImageHeightAndWidth){
+            if (img.getWidth() > maxImageHeightAndWidth
+                    || img.getHeight() > maxImageHeightAndWidth) {
                 // compute scalefactor (percentage)
                 int biggerOne = img.getWidth();
-                if(img.getHeight() > biggerOne){
+                if (img.getHeight() > biggerOne) {
                     biggerOne = img.getHeight();
                 }
                 float onePercent = biggerOne / 100;
-                int percentage = (int)(maxImageHeightAndWidth / onePercent);
+                int percentage = (int) (maxImageHeightAndWidth / onePercent);
                 // resize image
                 int newHeight = (img.getHeight() / 100) * percentage;
                 int newWidth = (img.getWidth() / 100) * percentage;
                 Image scaledImage = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
-                BufferedImage imageBuff = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
-                imageBuff.getGraphics().drawImage(scaledImage, 0, 0, new Color(0,0,0),null);
+                BufferedImage imageBuff = new BufferedImage(newWidth, newHeight,
+                        BufferedImage.TYPE_INT_RGB);
+                imageBuff.getGraphics().drawImage(scaledImage, 0, 0, new Color(0, 0, 0), null);
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
                 ImageIO.write(imageBuff, mimetype, buffer);
                 return buffer.toByteArray();
             }
-        } catch(IOException e){
+        } catch (IOException e) {
             LOG.error("Error while scaling image", e);
         }
         return imageData;
     }
-
 }

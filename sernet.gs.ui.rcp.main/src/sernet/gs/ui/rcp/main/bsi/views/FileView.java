@@ -1001,5 +1001,4 @@ public class FileView extends RightsEnabledView
             CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
         }
     }
-
 }

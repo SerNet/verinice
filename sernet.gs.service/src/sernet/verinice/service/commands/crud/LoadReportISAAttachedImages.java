@@ -46,83 +46,88 @@ import sernet.verinice.service.commands.LoadAttachmentsUserFiltered;
 /**
  *
  */
-public class LoadReportISAAttachedImages extends GenericCommand implements ICachedCommand{
-    
+public class LoadReportISAAttachedImages extends GenericCommand implements ICachedCommand {
+
     private static final Logger LOG = Logger.getLogger(LoadReportISAAttachedImages.class);
-    
+
     private Integer rootElmt;
-    
+
     private List<byte[]> results;
-    
+
     private boolean oddNumbers = false; // return only images with odd number
-    
+
     private boolean resultInjectedFromCache = false;
 
     // max picture size in pixels (max is a 350x350 rectangle)
     private static final int maxImageHeightAndWidth = 350;
-    
-    private static final String[] IMAGEMIMETYPES = new String[]{
-        "jpg",
-        "png"
-    };
-    
-    public static final String[] COLUMNS = new String[] { 
-        "imageData"
-    };
-    
-    public LoadReportISAAttachedImages(){
+
+    private static final String[] IMAGEMIMETYPES = new String[] { "jpg", "png" };
+
+    public static final String[] COLUMNS = new String[] { "imageData" };
+
+    public LoadReportISAAttachedImages() {
         // do nothing
     }
-    
-    public LoadReportISAAttachedImages(Integer root){
+
+    public LoadReportISAAttachedImages(Integer root) {
         this(root, false);
     }
-    
-    public LoadReportISAAttachedImages(Integer root, boolean odd){
+
+    public LoadReportISAAttachedImages(Integer root, boolean odd) {
         this.rootElmt = root;
         this.oddNumbers = odd;
     }
-    
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
-        if(!resultInjectedFromCache){
+        if (!resultInjectedFromCache) {
             results = new ArrayList<byte[]>(0);
-            for(int dbid : getChildren(rootElmt, SamtTopic.TYPE_ID)){
-                SamtTopic topic = (SamtTopic)getDaoFactory().getDAO(SamtTopic.TYPE_ID).findById(dbid);
-                if(LOG.isDebugEnabled()){
+            for (int dbid : getChildren(rootElmt, SamtTopic.TYPE_ID)) {
+                SamtTopic topic = (SamtTopic) getDaoFactory().getDAO(SamtTopic.TYPE_ID)
+                        .findById(dbid);
+                if (LOG.isDebugEnabled()) {
                     LOG.debug("Inspecting Evidences of SamtTopic:\t" + topic.getTitle());
                 }
 
-                
-                Iterator<Entry<CnATreeElement, CnALink>> iterator = CnALink.getLinkedElements(topic,Evidence.TYPE_ID).entrySet().iterator();
-                while(iterator.hasNext()){
+                Iterator<Entry<CnATreeElement, CnALink>> iterator = CnALink
+                        .getLinkedElements(topic, Evidence.TYPE_ID).entrySet().iterator();
+                while (iterator.hasNext()) {
                     Entry<CnATreeElement, CnALink> entry = iterator.next();
-                    if(LOG.isDebugEnabled()){
-                        LOG.debug("\tInspecting Attachments of Evidence:\t" + entry.getKey().getTitle());
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("\tInspecting Attachments of Evidence:\t"
+                                + entry.getKey().getTitle());
                     }
                     try {
-                        LoadAttachmentsUserFiltered command = new LoadAttachmentsUserFiltered(entry.getKey().getDbId());
+                        LoadAttachmentsUserFiltered command = new LoadAttachmentsUserFiltered(
+                                entry.getKey().getDbId());
 
                         command = getCommandService().executeCommand(command);
-                        for(int i = 0; i < command.getResult().size(); i++){
-                            // report uses two tables next to each other showing odd/even numbered images only
-                            // done to restriction showing always two images in a row
-                            if((i % 2 == 0 && !oddNumbers) || (i % 2 == 1 && oddNumbers)){ 
-                                Attachment attachment = (Attachment)command.getResult().get(i);
-                                if(LOG.isDebugEnabled()){
-                                    LOG.debug("\t\tChecking MIME-Type of Attachment:\t" + attachment.getFileName());
+                        for (int i = 0; i < command.getResult().size(); i++) {
+                            // report uses two tables next to each other showing
+                            // odd/even numbered images only
+                            // done to restriction showing always two images in
+                            // a row
+                            if ((i % 2 == 0 && !oddNumbers) || (i % 2 == 1 && oddNumbers)) {
+                                Attachment attachment = (Attachment) command.getResult().get(i);
+                                if (LOG.isDebugEnabled()) {
+                                    LOG.debug("\t\tChecking MIME-Type of Attachment:\t"
+                                            + attachment.getFileName());
                                 }
-                                if(isSupportedMIMEType(attachment.getMimeType())){
-                                    if(LOG.isDebugEnabled()){
+                                if (isSupportedMIMEType(attachment.getMimeType())) {
+                                    if (LOG.isDebugEnabled()) {
                                         LOG.debug("\t\t\tMime-Type is suiteable");
                                     }
-                                    LoadAttachmentFile fileLoader = new LoadAttachmentFile(attachment.getDbId());
+                                    LoadAttachmentFile fileLoader = new LoadAttachmentFile(
+                                            attachment.getDbId());
                                     fileLoader = getCommandService().executeCommand(fileLoader);
-                                    results.add(scaleImageIfNeeded(fileLoader.getAttachmentFile().getFileData(), attachment.getMimeType()));
+                                    results.add(scaleImageIfNeeded(
+                                            fileLoader.getAttachmentFile().getFileData(),
+                                            attachment.getMimeType()));
                                 }
                             }
                         }
@@ -133,42 +138,44 @@ public class LoadReportISAAttachedImages extends GenericCommand implements ICach
             }
         }
     }
-    
-    public List<byte[]> getResult(){
+
+    public List<byte[]> getResult() {
         return results;
     }
-    
-    public List<List<String>> getDummyResult(){
+
+    public List<List<String>> getDummyResult() {
         List<List<String>> result = new ArrayList<List<String>>();
-        for(int i = 0; i < results.size(); i++){
+        for (int i = 0; i < results.size(); i++) {
             ArrayList<String> nList = new ArrayList<String>(0);
             nList.add(String.valueOf(i));
             result.add(nList);
         }
         return result;
     }
-    
-    public void setRootElmt(int root){
+
+    public void setRootElmt(int root) {
         this.rootElmt = Integer.valueOf(root);
     }
-    
-    public byte[] getResult(int resultNr){
-        if(results.size() >= resultNr + 1){
+
+    public byte[] getResult(int resultNr) {
+        if (results.size() >= resultNr + 1) {
             return results.get(resultNr);
-        }
-        else return new byte[0];
+        } else
+            return new byte[0];
     }
-    
-    private boolean isSupportedMIMEType(String mimetype){
-        for(String s : IMAGEMIMETYPES){
-            if(s.equalsIgnoreCase(mimetype)){
-               return true; 
+
+    private boolean isSupportedMIMEType(String mimetype) {
+        for (String s : IMAGEMIMETYPES) {
+            if (s.equalsIgnoreCase(mimetype)) {
+                return true;
             }
         }
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
      */
     @Override
@@ -180,65 +187,73 @@ public class LoadReportISAAttachedImages extends GenericCommand implements ICach
         return cacheID.toString();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.
+     * Object)
      */
     @Override
     public void injectCacheResult(Object result) {
-        this.results = (ArrayList<byte[]>)result;
+        this.results = (ArrayList<byte[]>) result;
         resultInjectedFromCache = true;
-        if(LOG.isDebugEnabled()){
+        if (LOG.isDebugEnabled()) {
             LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
      */
     @Override
     public Object getCacheableResult() {
         return this.results;
     }
-    
+
     private List<Integer> getChildren(int parent, String type) {
         List<Integer> results = new ArrayList<Integer>(0);
         String hql = "select dbId from CnATreeElement where objectType = ? AND parentId = ?";
-        Object[] scopeIDparams = new Object[]{type, parent};
-        List<Object> hqlResult   = getDaoFactory().getDAO(CnATreeElement.class).findByQuery(hql, scopeIDparams);
+        Object[] scopeIDparams = new Object[] { type, parent };
+        List<Object> hqlResult = getDaoFactory().getDAO(CnATreeElement.class).findByQuery(hql,
+                scopeIDparams);
         if (hqlResult != null && hqlResult.size() > 0) {
-            for(int i = 0; i < hqlResult.size(); i++){
-                results.add((Integer)hqlResult.get(i));
+            for (int i = 0; i < hqlResult.size(); i++) {
+                results.add((Integer) hqlResult.get(i));
             }
         }
         return results;
     }
-    
-    private byte[] scaleImageIfNeeded(byte[] imageData, String mimetype){
+
+    private byte[] scaleImageIfNeeded(byte[] imageData, String mimetype) {
         ByteArrayInputStream in = new ByteArrayInputStream(imageData);
-        try{
+        try {
             BufferedImage img = ImageIO.read(in);
-            if(img.getWidth() > maxImageHeightAndWidth || img.getHeight() > maxImageHeightAndWidth){
+            if (img.getWidth() > maxImageHeightAndWidth
+                    || img.getHeight() > maxImageHeightAndWidth) {
                 // compute scalefactor (percentage)
                 int biggerOne = img.getWidth();
-                if(img.getHeight() > biggerOne){
+                if (img.getHeight() > biggerOne) {
                     biggerOne = img.getHeight();
                 }
                 float onePercent = biggerOne / 100;
-                int percentage = (int)(maxImageHeightAndWidth / onePercent);
+                int percentage = (int) (maxImageHeightAndWidth / onePercent);
                 // resize image
                 int newHeight = (img.getHeight() / 100) * percentage;
                 int newWidth = (img.getWidth() / 100) * percentage;
                 Image scaledImage = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
-                BufferedImage imageBuff = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
-                imageBuff.getGraphics().drawImage(scaledImage, 0, 0, new Color(0,0,0),null);
+                BufferedImage imageBuff = new BufferedImage(newWidth, newHeight,
+                        BufferedImage.TYPE_INT_RGB);
+                imageBuff.getGraphics().drawImage(scaledImage, 0, 0, new Color(0, 0, 0), null);
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
                 ImageIO.write(imageBuff, mimetype, buffer);
                 return buffer.toByteArray();
             }
-        } catch(IOException e){
+        } catch (IOException e) {
             LOG.error("Error while scaling image", e);
         }
         return imageData;
     }
-
 }

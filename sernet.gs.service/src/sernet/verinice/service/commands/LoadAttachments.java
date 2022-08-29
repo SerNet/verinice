@@ -252,5 +252,4 @@ public class LoadAttachments extends GenericCommand implements IAuthAwareCommand
     public void setAuthService(IAuthService authService) {
         this.authService = authService;
     }
-
 }
