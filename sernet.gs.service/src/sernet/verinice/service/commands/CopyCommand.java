@@ -115,9 +115,12 @@ public class CopyCommand extends GenericCommand {
     public void execute() {
         try {
             number = 0;
-            List<CnATreeElement> allElements = getDao()
-                    .findByCriteria(DetachedCriteria.forClass(CnATreeElement.class)
-                            .add(Restrictions.in(CnATreeElement.UUID, uuidList)));
+            List<CnATreeElement> allElements = new ArrayList<>(uuidList.size());
+            CollectionUtil.partition(new ArrayList<>(uuidList), IDao.QUERY_MAX_ITEMS_IN_LIST)
+                    .stream()
+                    .forEach(partition -> allElements.addAll(
+                            getDao().findByCriteria(DetachedCriteria.forClass(CnATreeElement.class)
+                                    .add(Restrictions.in(CnATreeElement.UUID, partition)))));
 
             List<CnATreeElement> rootElementsToCopy;
             if (allElements.size() == 1) {
