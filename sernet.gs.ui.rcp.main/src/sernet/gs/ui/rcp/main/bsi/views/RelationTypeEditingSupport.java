@@ -170,16 +170,17 @@ public class RelationTypeEditingSupport extends EditingSupport {
         }
         CnALink cnaLink = (CnALink) element;
         int index = (Integer) value;
-
-        String[] possibleLinkTypeNames = getPossibleLinkTypeNames(cnaLink);
-        String linkTypeName = possibleLinkTypeNames[index];
-        String linkTypeId = getLinkTypeIdForName(cnaLink, linkTypeName);
-        if (linkTypeId.equals(cnaLink.getRelationId())) {
+        int oldIndex = (int) getValue(cnaLink);
+        if (index == oldIndex) {
             if (log.isDebugEnabled()) {
                 log.debug("Link type unchanged, returning");
             }
             return;
         }
+        String[] possibleLinkTypeNames = getPossibleLinkTypeNames(cnaLink);
+        String linkTypeName = possibleLinkTypeNames[index];
+        String linkTypeId = getLinkTypeIdForName(cnaLink, linkTypeName);
+
         if (log.isDebugEnabled()) {
             log.debug("Setting value " + linkTypeId);
         }
