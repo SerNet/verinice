@@ -3,8 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sernet.gs.ui.rcp.main;singleton:=true
 Bundle-Version: 1.25.0.qualifier
-Bundle-ClassPath: .,
- lib/miglayout/miglayout-3.7.1-swt.jar
+Bundle-ClassPath: .
 Bundle-Activator: sernet.gs.ui.rcp.main.Activator
 Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: plugin
