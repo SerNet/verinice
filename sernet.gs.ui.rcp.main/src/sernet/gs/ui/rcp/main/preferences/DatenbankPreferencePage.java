@@ -43,7 +43,8 @@ import sernet.gs.ui.rcp.main.CnAWorkspace;
  * @author akoderman[at]sernet[dot]de
  * 
  */
-public class DatenbankPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+public class DatenbankPreferencePage extends FieldEditorPreferencePage
+        implements IWorkbenchPreferencePage {
 
     private RadioGroupFieldEditor dbDriver;
     private StringFieldEditor dialect;
@@ -58,7 +59,7 @@ public class DatenbankPreferencePage extends FieldEditorPreferencePage implement
         setPreferenceStore(Activator.getDefault().getPreferenceStore());
         setDescription(Messages.getString("DatenbankPreferencePage.0"));//$NON-NLS-1$
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -88,21 +89,24 @@ public class DatenbankPreferencePage extends FieldEditorPreferencePage implement
     public void createFieldEditors() {
 
         createRadioGroup();
-        dialect = new StringFieldEditor(PreferenceConstants.DB_DIALECT, Messages.getString("DatenbankPreferencePage.7"), //$NON-NLS-1$
+        dialect = new StringFieldEditor(PreferenceConstants.DB_DIALECT,
+                Messages.getString("DatenbankPreferencePage.7"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(dialect);
-        
 
-        url = new StringFieldEditor(PreferenceConstants.DB_URL, Messages.getString("DatenbankPreferencePage.8"), //$NON-NLS-1$
+        url = new StringFieldEditor(PreferenceConstants.DB_URL,
+                Messages.getString("DatenbankPreferencePage.8"), //$NON-NLS-1$
                 getFieldEditorParent());
-        
+
         addField(url);
 
-        user = new StringFieldEditor(PreferenceConstants.DB_USER, Messages.getString("DatenbankPreferencePage.9"), //$NON-NLS-1$
+        user = new StringFieldEditor(PreferenceConstants.DB_USER,
+                Messages.getString("DatenbankPreferencePage.9"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(user);
 
-        pass = new StringFieldEditor(PreferenceConstants.DB_PASS, Messages.getString("DatenbankPreferencePage.10"), //$NON-NLS-1$
+        pass = new StringFieldEditor(PreferenceConstants.DB_PASS,
+                Messages.getString("DatenbankPreferencePage.10"), //$NON-NLS-1$
                 getFieldEditorParent());
         pass.getTextControl(getFieldEditorParent()).setEchoChar('*');
         addField(pass);
@@ -114,7 +118,8 @@ public class DatenbankPreferencePage extends FieldEditorPreferencePage implement
         super.setVisible(visible);
 
         if (visible) {
-            boolean standalone = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
+            boolean standalone = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE)
+                    .equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
 
             // Do not show the fields when the remote server is in use
             setEnabledFields(standalone);
@@ -128,12 +133,16 @@ public class DatenbankPreferencePage extends FieldEditorPreferencePage implement
         url.setEnabled(enable, parent);
         user.setEnabled(enable, parent);
         pass.setEnabled(enable, parent);
-        
-        // always disable the Oracle-Button, it's just there to point the user to verinice.PRO:
+
+        // always disable the Oracle-Button, it's just there to point the user
+        // to verinice.PRO:
         Control[] radioButtons = dbDriver.getRadioBoxControl(parent).getChildren();
-        radioButtons[radioButtons.length-1].setEnabled(false);
-        if(Activator.getDefault().isStandalone()){
-            radioButtons[radioButtons.length-2].setEnabled(false); // standalone only derby is supported
+        radioButtons[radioButtons.length - 1].setEnabled(false);
+        if (Activator.getDefault().isStandalone()) {
+            radioButtons[radioButtons.length - 2].setEnabled(false); // standalone
+                                                                     // only
+                                                                     // derby is
+                                                                     // supported
         }
 
         if (enable) {
@@ -144,11 +153,15 @@ public class DatenbankPreferencePage extends FieldEditorPreferencePage implement
     }
 
     private void createRadioGroup() {
-        dbDriver = new RadioGroupFieldEditor(PreferenceConstants.DB_DRIVER, Messages.getString("DatenbankPreferencePage.11"), //$NON-NLS-1$
-                1, new String[][] { { Messages.getString("DatenbankPreferencePage.12"), PreferenceConstants.DB_DRIVER_DERBY }, //$NON-NLS-1$
-                        { Messages.getString("DatenbankPreferencePage.13"), PreferenceConstants.DB_DRIVER_POSTGRES }, //$NON-NLS-1$
-                        { Messages.getString("DatenbankPreferencePage.15"), PreferenceConstants.DB_DRIVER_ORACLE } //$NON-NLS-1$
-                }, getFieldEditorParent());
+        dbDriver = new RadioGroupFieldEditor(PreferenceConstants.DB_DRIVER,
+                Messages.getString("DatenbankPreferencePage.11"), //$NON-NLS-1$
+                1, new String[][] { { Messages.getString("DatenbankPreferencePage.12"), //$NON-NLS-1$
+                        PreferenceConstants.DB_DRIVER_DERBY },
+                        { Messages.getString("DatenbankPreferencePage.13"), //$NON-NLS-1$
+                                PreferenceConstants.DB_DRIVER_POSTGRES },
+                        { Messages.getString("DatenbankPreferencePage.15"), //$NON-NLS-1$
+                                PreferenceConstants.DB_DRIVER_ORACLE } },
+                getFieldEditorParent());
         addField(dbDriver);
     }
 
@@ -158,7 +171,7 @@ public class DatenbankPreferencePage extends FieldEditorPreferencePage implement
         if (event.getProperty().equals(FieldEditor.VALUE)) {
             if (event.getSource() == dbDriver) {
                 setDefaults((String) event.getNewValue());
-            } 
+            }
             checkState();
         }
 
@@ -194,7 +207,7 @@ public class DatenbankPreferencePage extends FieldEditorPreferencePage implement
             return;
         }
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -208,7 +221,9 @@ public class DatenbankPreferencePage extends FieldEditorPreferencePage implement
     @Override
     public boolean performOk() {
         if (modified) {
-            MessageDialog.openInformation(this.getShell(), Messages.getString("DatenbankPreferencePage.RestartRequired"), Messages.getString("DatenbankPreferencePage.RestartRequiredText"));
+            MessageDialog.openInformation(this.getShell(),
+                    Messages.getString("DatenbankPreferencePage.RestartRequired"),
+                    Messages.getString("DatenbankPreferencePage.RestartRequiredText"));
         }
 
         return super.performOk();

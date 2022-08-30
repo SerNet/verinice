@@ -39,14 +39,13 @@ import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.verinice.model.bsi.SonstIT;
 
 /**
- * This class provides access to the mapping from a GSTOOL
- * type or subtype id to a verinice element type id.
+ * This class provides access to the mapping from a GSTOOL type or subtype id to
+ * a verinice element type id.
  * 
  * A verinice element type id is the id of a huientity in file SNCA.xml.
  * 
- * A default mapping is defined in this class in maps
- * DEFAULT_GSTOOL_TYPES and DEFAULT_GSTOOL_SUBTYPES.
- * Additional mapping are read from two property files.
+ * A default mapping is defined in this class in maps DEFAULT_GSTOOL_TYPES and
+ * DEFAULT_GSTOOL_SUBTYPES. Additional mapping are read from two property files.
  * 
  * @author Alexander Koderman <ak[at]sernet[dot]de>
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -54,79 +53,87 @@ import sernet.verinice.model.bsi.SonstIT;
 public abstract class GstoolTypeMapper {
 
     private static final Logger LOG = Logger.getLogger(GstoolTypeMapper.class);
-    
+
     public static final String TYPE_PROPERTIES_FILE = "gstool-types.properties";
     public static final String SUBTYPE_PROPERTIES_FILE = "gstool-subtypes.properties";
-    public static final String SUBTYPE_PROPERTIES_FILE_ENCODING = VeriniceCharset.CHARSET_ISO_8859_15.toString();
- 
+    public static final String SUBTYPE_PROPERTIES_FILE_ENCODING = VeriniceCharset.CHARSET_ISO_8859_15
+            .toString();
+
     /**
-     * DEFAULT_TYPE_ID is used as element type id if no 
-     * type id is found in mapping or no type id is set by user
+     * DEFAULT_TYPE_ID is used as element type id if no type id is found in
+     * mapping or no type id is set by user
      * 
      * DEFAULT_TYPE_ID must be a id of a huientity from SNCA.xml
      */
     public static final String DEFAULT_TYPE_ID = SonstIT.TYPE_ID;
-    
-	
-	private static Map<String, String> gstoolTypes;
+
+    private static Map<String, String> gstoolTypes;
     private static Map<String, String> gstoolSubtypesMap;
     private static List<GstoolImportMappingElement> gstoolSubtypesList;
 
-
     private static Set<IGstoolImportMappingChangeListener> changeListenerSet;
 
-	/**
-	 * The verinice type-id for a GSTOOL type and subtype.
-	 * The verinice type is derived from the mapping defined in this class and in thr property files
-	 * TYPE_PROPERTIES_FILE and SUBTYPE_PROPERTIES_FILE.
-	 * 
-	 * If no type is found in the mapping DEFAULT_TYPE_ID is returned.
-	 * 
-	 * @param gstoolType A GSTOOL type
-	 * @param gstoolSubtype A GSTOOL subtype
-	 * @return The verinice type-id for a GSTOOL type and subtype
-	 */
-	public static String getVeriniceTypeOrDefault(String gstoolType, String gstoolSubtype) {
-	    String type;
+    /**
+     * The verinice type-id for a GSTOOL type and subtype. The verinice type is
+     * derived from the mapping defined in this class and in thr property files
+     * TYPE_PROPERTIES_FILE and SUBTYPE_PROPERTIES_FILE.
+     * 
+     * If no type is found in the mapping DEFAULT_TYPE_ID is returned.
+     * 
+     * @param gstoolType
+     *            A GSTOOL type
+     * @param gstoolSubtype
+     *            A GSTOOL subtype
+     * @return The verinice type-id for a GSTOOL type and subtype
+     */
+    public static String getVeriniceTypeOrDefault(String gstoolType, String gstoolSubtype) {
+        String type;
         try {
             type = getVeriniceType(gstoolType, gstoolSubtype);
         } catch (GstoolTypeNotFoundException e) {
-            LOG.error(e.getMessage() + ", using default verinice type id instead: " + DEFAULT_TYPE_ID);
+            LOG.error(e.getMessage() + ", using default verinice type id instead: "
+                    + DEFAULT_TYPE_ID);
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Stacktrace: ", e);
             }
             type = DEFAULT_TYPE_ID;
         }
-		return type;
-	}
-	
-	/**
-     * The verinice type-id for a GSTOOL type and subtype.
-     * The verinice type is derived from the mapping defined in this class and in thr property files
+        return type;
+    }
+
+    /**
+     * The verinice type-id for a GSTOOL type and subtype. The verinice type is
+     * derived from the mapping defined in this class and in thr property files
      * TYPE_PROPERTIES_FILE and SUBTYPE_PROPERTIES_FILE.
      * 
      * If no type is found in the mapping GstoolTypeNotFoundException is thrown.
      * 
-     * @param gstoolType A GSTOOL type
-     * @param gstoolSubtype A GSTOOL subtype
+     * @param gstoolType
+     *            A GSTOOL type
+     * @param gstoolSubtype
+     *            A GSTOOL subtype
      * @return The verinice type-id for a GSTOOL type and subtype
-	 * @throws GstoolTypeNotFoundException If no type is found
-	 */
-	public static String getVeriniceType(String gstoolType, String gstoolSubtype) throws GstoolTypeNotFoundException {
-	    String type = getGstoolTypes().get(gstoolType);
-        if (type == null){
+     * @throws GstoolTypeNotFoundException
+     *             If no type is found
+     */
+    public static String getVeriniceType(String gstoolType, String gstoolSubtype)
+            throws GstoolTypeNotFoundException {
+        String type = getGstoolTypes().get(gstoolType);
+        if (type == null) {
             type = getGstoolSubtypes().get(gstoolSubtype);
         }
-        if(type == null || type.equals(GstoolImportMappingElement.UNKNOWN)){
-            throw new GstoolTypeNotFoundException("Could not find a type id for GSTOOL type: " + gstoolType + " and sub type: " + gstoolSubtype);
+        if (type == null || type.equals(GstoolImportMappingElement.UNKNOWN)) {
+            throw new GstoolTypeNotFoundException("Could not find a type id for GSTOOL type: "
+                    + gstoolType + " and sub type: " + gstoolSubtype);
         }
         if (LOG.isDebugEnabled()) {
-            LOG.debug("GSTOOL type: '" + gstoolType + "' and subtype: '" + gstoolSubtype + "', returning verinice type: " + type);
+            LOG.debug("GSTOOL type: '" + gstoolType + "' and subtype: '" + gstoolSubtype
+                    + "', returning verinice type: " + type);
         }
         return type;
-	}
+    }
 
-    public static void addGstoolSubtypeToPropertyFile(GstoolImportMappingElement mappingEntry)  {
+    public static void addGstoolSubtypeToPropertyFile(GstoolImportMappingElement mappingEntry) {
         Properties properties = readPropertyFile(SUBTYPE_PROPERTIES_FILE);
         properties.put(mappingEntry.getKey(), mappingEntry.getValue());
         writePropertyFile(properties, SUBTYPE_PROPERTIES_FILE);
@@ -140,7 +147,8 @@ public abstract class GstoolTypeMapper {
         fireMappingRemovedEvent(oldElement);
     }
 
-    public static void editGstoolSubtypeToPropertyFile(GstoolImportMappingElement oldElement, GstoolImportMappingElement mappingEntry) {
+    public static void editGstoolSubtypeToPropertyFile(GstoolImportMappingElement oldElement,
+            GstoolImportMappingElement mappingEntry) {
         Properties properties = readPropertyFile(SUBTYPE_PROPERTIES_FILE);
         properties.remove(oldElement.getKey());
         properties.put(mappingEntry.getKey(), mappingEntry.getValue());
@@ -149,15 +157,14 @@ public abstract class GstoolTypeMapper {
     }
 
     private static Map<String, String> getGstoolTypes() {
-        if(gstoolTypes==null) {
+        if (gstoolTypes == null) {
             gstoolTypes = getGstoolTypesFromFile();
         }
         return gstoolTypes;
     }
 
-
     private static Map<String, String> getGstoolTypesFromFile() {
-        Properties properties =  readPropertyFile(TYPE_PROPERTIES_FILE);
+        Properties properties = readPropertyFile(TYPE_PROPERTIES_FILE);
         Set<Object> keys = properties.keySet();
         gstoolTypes = new HashMap<>();
         for (Object key : keys) {
@@ -193,7 +200,8 @@ public abstract class GstoolTypeMapper {
         ArrayList<GstoolImportMappingElement> gsToolSubtypesList = new ArrayList<>();
         Set<Object> keys = properties.keySet();
         for (Object key : keys) {
-            gsToolSubtypesList.add(new GstoolImportMappingElement((String) key, (String) properties.get(key)));
+            gsToolSubtypesList.add(
+                    new GstoolImportMappingElement((String) key, (String) properties.get(key)));
 
             if (LOG.isInfoEnabled()) {
                 LOG.info("Subtype added: " + key + " = " + properties.get(key));
@@ -214,7 +222,7 @@ public abstract class GstoolTypeMapper {
         return gstoolSubtypesMap;
     }
 
-    public static Map<String, String> getGstoolSubtypesFromFile(){
+    public static Map<String, String> getGstoolSubtypesFromFile() {
         gstoolSubtypesMap = new HashMap<>();
         Properties subProperties = readPropertyFile(SUBTYPE_PROPERTIES_FILE);
         return changePropertiesToMap(subProperties);
@@ -235,7 +243,8 @@ public abstract class GstoolTypeMapper {
             }
             file = new File(filepath);
             fileOut = new FileOutputStream(file);
-            OutputStreamWriter outWrite = new OutputStreamWriter(fileOut, SUBTYPE_PROPERTIES_FILE_ENCODING);
+            OutputStreamWriter outWrite = new OutputStreamWriter(fileOut,
+                    SUBTYPE_PROPERTIES_FILE_ENCODING);
             properties.store(outWrite, "");
             refreshGstoolSubTypes(properties);
         } catch (IOException e) {
@@ -245,13 +254,14 @@ public abstract class GstoolTypeMapper {
             IOUtils.closeQuietly(fileOut);
         }
     }
-    
+
     private static Properties readPropertyFile(String fileName) {
         String fullPath = null;
         Properties properties = new Properties();
-        try {  
+        try {
             fullPath = getPropertyFolderPath() + File.separator + fileName;
-            InputStreamReader reader = new InputStreamReader(new FileInputStream(fullPath), SUBTYPE_PROPERTIES_FILE_ENCODING);
+            InputStreamReader reader = new InputStreamReader(new FileInputStream(fullPath),
+                    SUBTYPE_PROPERTIES_FILE_ENCODING);
             properties.load(reader);
             LOG.debug("Reading types from " + fullPath + "...");
         } catch (RuntimeException e) {
@@ -267,7 +277,7 @@ public abstract class GstoolTypeMapper {
     private static String getPropertyFolderPath() {
         return CnAWorkspace.getInstance().getConfDir();
     }
-    
+
     private static void fireMappingAddedEvent(GstoolImportMappingElement mappingEntry) {
         for (IGstoolImportMappingChangeListener listener : getChangeListenerSet()) {
             listener.mappingAdded(mappingEntry);
@@ -295,7 +305,7 @@ public abstract class GstoolTypeMapper {
     }
 
     private static Set<IGstoolImportMappingChangeListener> getChangeListenerSet() {
-        if(changeListenerSet==null) {
+        if (changeListenerSet == null) {
             changeListenerSet = new HashSet<IGstoolImportMappingChangeListener>();
         }
         return changeListenerSet;

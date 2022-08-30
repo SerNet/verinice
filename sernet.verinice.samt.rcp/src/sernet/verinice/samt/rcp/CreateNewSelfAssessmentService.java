@@ -37,13 +37,12 @@ import sernet.verinice.service.model.LoadModel;
 
 /**
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
 public class CreateNewSelfAssessmentService {
     private static final Logger LOG = Logger.getLogger(CreateNewSelfAssessmentService.class);
-    
+
     private ICommandService commandService;
 
     public ICommandService getCommandService() {
@@ -56,22 +55,23 @@ public class CreateNewSelfAssessmentService {
     private ICommandService createCommandServive() {
         return ServiceFactory.lookupCommandService();
     }
+
     /**
-     * Load the self assessment CSV-File:
-     * SamtWorkspace.SAMT_CATALOG_FILE_NAME
+     * Load the self assessment CSV-File: SamtWorkspace.SAMT_CATALOG_FILE_NAME
      * from the file system.
      * 
      * File is saved in verinice workspace in folder:
      * SamtWorkspace.getInstance().getConfDir().
      * 
      * @return the self assessment CSV-File
-     * @throws IOException if file can not be found
+     * @throws IOException
+     *             if file can not be found
      */
     protected CsvFile getCsvFile() throws IOException {
-        CsvFile csvFile = null;    
+        CsvFile csvFile = null;
         final String fullSamtCatalogPath = getFullSamtCatalogPath();
         try {
-            csvFile = new CsvFile(fullSamtCatalogPath,getCharset());
+            csvFile = new CsvFile(fullSamtCatalogPath, getCharset());
         } catch (RuntimeException e) {
             LOG.error("Error while reading samt catalog file from path: " + fullSamtCatalogPath, e); //$NON-NLS-1$
             throw e;
@@ -79,7 +79,8 @@ public class CreateNewSelfAssessmentService {
             LOG.error("Error while reading samt catalog file from path: " + fullSamtCatalogPath, e); //$NON-NLS-1$
             throw e;
         } catch (Exception e) {
-            final String message = "Error while reading samt catalog file from path: " + fullSamtCatalogPath; //$NON-NLS-1$
+            final String message = "Error while reading samt catalog file from path: " //$NON-NLS-1$
+                    + fullSamtCatalogPath;
             LOG.error(message, e);
             throw new RuntimeException(message, e);
         }
@@ -87,23 +88,27 @@ public class CreateNewSelfAssessmentService {
     }
 
     private Charset getCharset() {
-        String charsetName = Activator.getDefault().getPreferenceStore().getString(SamtPreferencePage.CHARSET_SAMT);
-        if(charsetName==null || charsetName.equals("")) { //$NON-NLS-1$
-            charsetName = Activator.getDefault().getPreferenceStore().getDefaultString(SamtPreferencePage.CHARSET_SAMT); 
+        String charsetName = Activator.getDefault().getPreferenceStore()
+                .getString(SamtPreferencePage.CHARSET_SAMT);
+        if (charsetName == null || charsetName.equals("")) { //$NON-NLS-1$
+            charsetName = Activator.getDefault().getPreferenceStore()
+                    .getDefaultString(SamtPreferencePage.CHARSET_SAMT);
         }
         return Charset.forName(charsetName);
     }
 
     private String getFullSamtCatalogPath() {
-        StringBuilder sb = new StringBuilder(SamtWorkspace.getInstance().getConfDir()).append(File.separatorChar);
-        sb.append(Activator.getDefault().getPreferenceStore().getString(SamtPreferencePage.CATALOG_FILENAME)).toString();
+        StringBuilder sb = new StringBuilder(SamtWorkspace.getInstance().getConfDir())
+                .append(File.separatorChar);
+        sb.append(Activator.getDefault().getPreferenceStore()
+                .getString(SamtPreferencePage.CATALOG_FILENAME)).toString();
         return sb.toString();
     }
-    
+
     public void createSelfAssessment() throws CommandException, IOException {
         createSelfAssessment(null);
     }
-    
+
     /**
      * @throws CommandException
      * @param addSelfAssessment
@@ -112,32 +117,32 @@ public class CreateNewSelfAssessmentService {
     public void createSelfAssessment(final AuditGroup parent) throws CommandException, IOException {
         CreateSelfAssessment command;
         ISO27KModel model = null;
-        if(parent==null) {
+        if (parent == null) {
             // load the model to create a new organization first
             LoadModel<ISO27KModel> loadModel = new LoadModel<>(ISO27KModel.class);
             loadModel = getCommandService().executeCommand(loadModel);
             model = loadModel.getModel();
-            command = new CreateSelfAssessment(model, AddSelfAssessment.TITEL_ORGANIZATION, AddSelfAssessment.TITEL);
+            command = new CreateSelfAssessment(model, AddSelfAssessment.TITEL_ORGANIZATION,
+                    AddSelfAssessment.TITEL);
         } else {
-            command = new CreateSelfAssessment(parent, AddSelfAssessment.TITEL_ORGANIZATION, AddSelfAssessment.TITEL);
+            command = new CreateSelfAssessment(parent, AddSelfAssessment.TITEL_ORGANIZATION,
+                    AddSelfAssessment.TITEL);
         }
-        
-        // create self-assessment 
+
+        // create self-assessment
         command.setCsvFile(getCsvFile());
         command = getCommandService().executeCommand(command);
         Organization organization = command.getOrganization();
         AuditGroup auditGroup = command.getAuditGroup();
         Audit isaAudit = command.getIsaAudit();
-        if(parent==null) { 
+        if (parent == null) {
             CnAElementFactory.getModel(organization).childAdded(model, organization);
             CnAElementFactory.getModel(organization).databaseChildAdded(organization);
         } else {
             CnAElementFactory.getModel(isaAudit).childAdded(auditGroup, isaAudit);
-            CnAElementFactory.getModel(isaAudit).databaseChildAdded(isaAudit);     
+            CnAElementFactory.getModel(isaAudit).databaseChildAdded(isaAudit);
         }
-        
+
     }
 
 }
-
-

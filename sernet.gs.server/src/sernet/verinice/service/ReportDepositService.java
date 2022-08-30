@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -44,6 +42,7 @@ public class ReportDepositService extends AbstractReportTemplateService
     private static final Logger LOG = Logger.getLogger(ReportDepositService.class);
 
     private Resource reportDeposit;
+
     private ReportDepositService() {
     }
 
@@ -131,8 +130,7 @@ public class ReportDepositService extends AbstractReportTemplateService
         }
     }
 
-    private void updateSafe(ReportTemplateMetaData metadata, Locale locale)
-            throws IOException {
+    private void updateSafe(ReportTemplateMetaData metadata, Locale locale) throws IOException {
         File propertiesFile = PropertiesFileUtil.getPropertiesFile(
                 new File(getTemplateDirectory(), metadata.getFilename()), locale);
         if (propertiesFile.exists()) {
