@@ -8,10 +8,6 @@
             <property name="name">queryText</property>
             <property name="id">6713</property>
         </structure>
-        <structure>
-            <property name="name">queryText</property>
-            <property name="id">8105</property>
-        </structure>
     </list-property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
@@ -6884,7 +6880,8 @@ else &#13;
                 </structure>
                 <structure>
                     <property name="name">ModuleIdTargetObjectId</property>
-                    <expression name="expression">row["Identifier__(Baustein(e))"]+":"+row["Datenbank-Id__(AnderesIoT-System)"]+row["Datenbank-Id__(Anwendung)"]+row["Datenbank-Id__(Geschäftsprozess)"]+row["Datenbank-Id__(ICS-System)"]+row["Datenbank-Id__(IT-System)"]+row["Datenbank-Id__(Informationsverbund)"]+row["Datenbank-Id__(Raum)"]</expression>
+                    <expression name="expression">row["Identifier__(Baustein(e))"]+":"+row["Datenbank-Id__(AnderesIoT-System)"]+row["Datenbank-Id__(Anwendung)"]+row["Datenbank-Id__(Geschäftsprozess)"]+row["Datenbank-Id__(ICS-System)"]+row["Datenbank-Id__(IT-System)"]
++row["Datenbank-Id__(Informationsverbund)"]+row["Datenbank-Id__(Raum)"]+row["Datenbank-Id_(Kommunikationsverbindung)"]</expression>
                     <property name="dataType">string</property>
                     <list-property name="arguments">
                         <structure>
@@ -6949,6 +6946,12 @@ else &#13;
                     <text-property name="displayName">Datenbank-Id__(Raum)</text-property>
                     <text-property name="heading">Datenbank-Id__(Raum)</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">Datenbank-Id_(Kommunikationsverbindung)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">Datenbank-Id_(Kommunikationsverbindung)</text-property>
+                    <text-property name="heading">Datenbank-Id_(Kommunikationsverbindung)</text-property>
+                </structure>
             </list-property>
             <list-property name="filter"/>
             <list-property name="parameters"/>
@@ -7001,11 +7004,16 @@ else &#13;
                     </structure>
                     <structure>
                         <property name="position">10</property>
+                        <property name="name">Datenbank-Id_(Kommunikationsverbindung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
                         <property name="name">sortkey</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">11</property>
+                        <property name="position">12</property>
                         <property name="name">ModuleIdTargetObjectId</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -7076,6 +7084,13 @@ else &#13;
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">Datenbank-Id_(Kommunikationsverbindung)</property>
+                    <property name="nativeName">Datenbank-Id_(Kommunikationsverbindung)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[{
   "followLinksOutsideOfScope": false,
@@ -7090,8 +7105,8 @@ else &#13;
     "bp_requirement/bp_itsystem.dbid AS Datenbank-Id__(IT-System)",
     "bp_requirement/bp_icssystem.dbid AS Datenbank-Id__(ICS-System)",
     "bp_requirement/bp_device.dbid AS Datenbank-Id__(AnderesIoT-System)",
-    "bp_requirement/bp_itnetwork.dbid AS Datenbank-Id__(Informationsverbund)",
-    "bp_requirement/bp_room.dbid AS Datenbank-Id__(Raum)"
+    "bp_requirement/bp_room.dbid AS Datenbank-Id__(Raum)",
+    "bp_requirement/bp_network.dbid AS Datenbank-Id_(Kommunikationsverbindung)"
   ],
   "relationIds": []
 }]]></xml-property>
