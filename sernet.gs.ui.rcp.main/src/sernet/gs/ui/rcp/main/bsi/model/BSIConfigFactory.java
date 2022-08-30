@@ -43,11 +43,9 @@ public final class BSIConfigFactory {
      */
     public static IBSIConfig createStandaloneConfig() {
         String bpCatalogFilePath = sernet.verinice.rcp.Preferences.getBpCatalogFilePath();
-        String privacyCatalogFilePath = sernet.verinice.rcp.Preferences.getPrivacyCatalogFilePath();
         boolean fromZipFile = sernet.verinice.rcp.Preferences.isBpCatalogLoadedFromZipFile();
         String cacheDir = CnAWorkspace.getInstance().getWorkdir() + File.separator + "gscache";
-        return new BSIConfigurationStandalone(bpCatalogFilePath, privacyCatalogFilePath,
-                fromZipFile, cacheDir);
+        return new BSIConfigurationStandalone(bpCatalogFilePath, fromZipFile, cacheDir);
     }
 
 }

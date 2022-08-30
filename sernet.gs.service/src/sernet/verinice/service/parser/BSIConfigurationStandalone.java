@@ -33,27 +33,14 @@ public class BSIConfigurationStandalone implements IBSIConfig, Serializable {
     private static final long serialVersionUID = 4369805673754690041L;
 
     private String bpCatalogFilePath;
-    private String privacyCatalogFilePath;
     private boolean fromZipFile;
     private String cacheDir;
 
-    public BSIConfigurationStandalone(String gsPath, String dsPath, boolean fromZipFile,
-            String cacheDir) {
+    public BSIConfigurationStandalone(String gsPath, boolean fromZipFile, String cacheDir) {
         super();
         this.bpCatalogFilePath = gsPath;
-        this.privacyCatalogFilePath = dsPath;
         this.fromZipFile = fromZipFile;
         this.cacheDir = cacheDir;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.interfaces.IBSIConfig#getDsPath()
-     */
-    @Override
-    public String getDsPath() {
-        return privacyCatalogFilePath;
     }
 
     /*

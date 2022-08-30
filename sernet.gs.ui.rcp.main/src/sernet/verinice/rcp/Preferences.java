@@ -85,10 +85,6 @@ public final class Preferences {
         return getPreferenceStore().getBoolean(PreferenceConstants.BP_MODEL_DUMMY_SAFEGUARDS);
     }
 
-    public static String getPrivacyCatalogFilePath() {
-        return getPreferenceStore().getString(PreferenceConstants.DSZIPFILE);
-    }
-
     public static String getServerUrl() {
         return getPreferenceStore().getString(PreferenceConstants.VNSERVER_URI);
     }

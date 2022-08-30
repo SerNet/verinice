@@ -28,7 +28,6 @@ public class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.verinice.service.parser.messages"; //$NON-NLS-1$
     public static String BSIMassnahmenModel_0;
     public static String BSIMassnahmenModel_1;
-    public static String BSIMassnahmenModel_10;
     public static String BSIMassnahmenModel_2;
     public static String BSIMassnahmenModel_3;
     public static String BSIMassnahmenModel_4;

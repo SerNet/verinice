@@ -140,11 +140,6 @@ public class InternalServer implements IInternalServer {
         ServerPropertyPlaceholderConfigurer.setGSCatalogURL(url);
     }
 
-    @Override
-    public void setDSCatalogURL(URL url) {
-        ServerPropertyPlaceholderConfigurer.setDSCatalogURL(url);
-    }
-
     /**
      * Starts the verinice server.
      * 

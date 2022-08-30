@@ -69,7 +69,6 @@ veriniceserver.nonceValiditySeconds=300
 # Location of the catalogue files. The filenames denote a Java resource path.
 # By default put the catalogue files into
 veriniceserver.grundschutzKataloge=/WEB-INF/it-grundschutz_el12_html_de.zip
-veriniceserver.datenschutzBaustein=/WEB-INF/B1.5-Datenschutz-2008-08-26.zip
 
 
 # Access credentials of the mail server that should be used to send email notifications.

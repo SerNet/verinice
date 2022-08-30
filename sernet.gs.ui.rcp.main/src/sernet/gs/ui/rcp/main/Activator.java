@@ -313,7 +313,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
     }
 
     public void configureInternalServer() {
-        setGSDSCatalog();
+        setGSCatalog();
 
         // Provide initial DB connection details to server.
         internalServer.configureDatabase(getPreferences().getString(PreferenceConstants.DB_URL),
@@ -353,14 +353,13 @@ public class Activator extends AbstractUIPlugin implements IMain {
         JobScheduler.scheduleInitJob(job);
     }
 
-    private void setGSDSCatalog() {
+    private void setGSCatalog() {
         try {
             if (Preferences.isBpCatalogLoadedFromZipFile()) {
                 internalServer.setGSCatalogURL(propertyToURL(PreferenceConstants.BSIZIPFILE));
             } else {
                 internalServer.setGSCatalogURL(propertyToURL(PreferenceConstants.BSIDIR));
             }
-            internalServer.setDSCatalogURL(propertyToURL(PreferenceConstants.DSZIPFILE));
         } catch (MalformedURLException mfue) {
             LOG.warn("Error while setting base protection catalog pathes", mfue); //$NON-NLS-1$
         }
@@ -669,11 +668,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
         @Override
         public void setGSCatalogURL(URL url) {
-            // Intentionally do nothing.
-        }
-
-        @Override
-        public void setDSCatalogURL(URL url) {
             // Intentionally do nothing.
         }
 

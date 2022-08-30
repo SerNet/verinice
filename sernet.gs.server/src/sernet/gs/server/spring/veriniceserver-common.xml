@@ -49,7 +49,6 @@ This variant:
 				<constructor-arg>
 					<bean class="sernet.verinice.service.gstoolimport.BSIConfigurationServer">
 						<property name="grundschutzKataloge" value="${veriniceserver.grundschutzKataloge}" />
-						<property name="datenschutzBaustein" value="${veriniceserver.datenschutzBaustein}" />
 					</bean>
 				</constructor-arg>
 			</bean>

@@ -34,22 +34,11 @@ public class BSIConfigurationServer implements IBSIConfig {
 
     private Resource grundschutzKataloge;
 
-    private Resource datenschutzBaustein;
-
     private URL getGrundschutzKatalogeURL() {
         try {
             return grundschutzKataloge.getURL();
         } catch (IOException e) {
             LOG.error("accessing the URL for the Grundschutz catalog failed.");
-            throw new RuntimeException(e);
-        }
-    }
-
-    private URL getDatenschutzBausteinURL() {
-        try {
-            return datenschutzBaustein.getURL();
-        } catch (IOException e) {
-            LOG.error("accessing the URL for the Datenschutzbaustein catalog failed.");
             throw new RuntimeException(e);
         }
     }
@@ -61,10 +50,6 @@ public class BSIConfigurationServer implements IBSIConfig {
             LOG.debug("Setting temp dir to " + property);
         }
         return property;
-    }
-
-    public String getDsPath() {
-        return getDatenschutzBausteinURL().toString();
     }
 
     public String getGsPath() {
@@ -86,14 +71,6 @@ public class BSIConfigurationServer implements IBSIConfig {
 
     public Resource getGrundschutzKataloge() {
         return grundschutzKataloge;
-    }
-
-    public void setDatenschutzBaustein(Resource datenschutzBaustein) {
-        this.datenschutzBaustein = datenschutzBaustein;
-    }
-
-    public Resource getDatenschutzBaustein() {
-        return datenschutzBaustein;
     }
 
 }

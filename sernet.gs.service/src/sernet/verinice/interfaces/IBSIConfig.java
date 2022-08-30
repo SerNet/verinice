@@ -33,11 +33,6 @@ public interface IBSIConfig {
     String getGsPath();
 
     /**
-     * @return The path to the privacy catalog file
-     */
-    String getDsPath();
-
-    /**
      * @return True if the ITBP catalog is a ZIP file
      */
     boolean isFromZipFile();

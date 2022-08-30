@@ -31,7 +31,6 @@ public final class PreferenceConstants {
 
     // location of ZIP-file or URL:
     public static final String BSIZIPFILE = "cna_bsizipfile"; //$NON-NLS-1$
-    public static final String DSZIPFILE = "cna_dszipfile"; //$NON-NLS-1$
     public static final String BSIDIR = "cna_bsiurl"; //$NON-NLS-1$
 
     public static final String FIRSTSTART = "cna_derbywarning"; //$NON-NLS-1$

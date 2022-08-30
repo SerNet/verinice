@@ -53,7 +53,6 @@ veriniceserver.nonceValiditySeconds=300
 # Location of the IT baseline protection catalogue files. 
 # Relative paths within the web application root directory with leading slash.
 veriniceserver.grundschutzKataloge=/WEB-INF/it-grundschutz_el14_html_de.zip
-veriniceserver.datenschutzBaustein=/WEB-INF/B1.5-Datenschutz-2008-08-26.zip
 
 
 # Access credentials of the mail server that should be used to send email notifications.

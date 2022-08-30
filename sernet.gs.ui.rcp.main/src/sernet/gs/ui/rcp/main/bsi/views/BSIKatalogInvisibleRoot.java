@@ -56,8 +56,7 @@ public final class BSIKatalogInvisibleRoot {
         public void propertyChange(PropertyChangeEvent event) {
             if (event.getProperty().equals(PreferenceConstants.BSIZIPFILE)
                     || event.getProperty().equals(PreferenceConstants.BSIDIR)
-                    || event.getProperty().equals(PreferenceConstants.GSACCESS)
-                    || event.getProperty().equals(PreferenceConstants.DSZIPFILE)) {
+                    || event.getProperty().equals(PreferenceConstants.GSACCESS)) {
                 LOG.debug("Reloading catalogues since catalogue properties changed: " //$NON-NLS-1$
                         + event.getProperty());
                 try {

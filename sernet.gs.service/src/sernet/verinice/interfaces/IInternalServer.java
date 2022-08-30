@@ -23,8 +23,6 @@ public interface IInternalServer {
 
     void setGSCatalogURL(URL url);
 
-    void setDSCatalogURL(URL url);
-
     void configureDatabase(String url, String user, String pass, String driver, String dialect);
 
     void configureSearch(boolean disable, boolean indexOnStartup);

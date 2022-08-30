@@ -107,8 +107,4 @@ public class ServerPropertyPlaceholderConfigurer extends PropertyPlaceholderConf
         overrideProperties.put("veriniceserver.grundschutzKataloge", url.toString());
     }
 
-    public static void setDSCatalogURL(URL url) {
-        overrideProperties.put("veriniceserver.datenschutzBaustein", url.toString());
-    }
-
 }

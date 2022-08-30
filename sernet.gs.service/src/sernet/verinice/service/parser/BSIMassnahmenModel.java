@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -34,7 +33,6 @@ import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
 import sernet.gs.scraper.GSScraper;
 import sernet.gs.scraper.IGSSource;
-import sernet.gs.scraper.PatternBfDI2008;
 import sernet.gs.scraper.PatternGSHB2005_2006;
 import sernet.gs.scraper.PatternGSHB2009;
 import sernet.gs.scraper.URLGSSource;
@@ -53,23 +51,11 @@ public class BSIMassnahmenModel {
 
     private static final Logger LOG = Logger.getLogger(BSIMassnahmenModel.class);
 
-    private static final String DS_B01005_BFDI = "b01005_bfdi"; //$NON-NLS-1$
-
-    private static final String DS_B_1_5 = "B 1.5"; //$NON-NLS-1$
-
-    private static final String DS_2008 = "2008"; //$NON-NLS-1$
-
-    private static final String B01005 = "b01005"; //$NON-NLS-1$
-
     private static List<Baustein> cache;
 
     private static GSScraper scrape;
 
     private static String previouslyReadFile = ""; //$NON-NLS-1$
-
-    private static GSScraper dsScrape;
-
-    private static String previouslyReadFileDS = ""; //$NON-NLS-1$
 
     private IBSIConfig config;
 
@@ -103,14 +89,12 @@ public class BSIMassnahmenModel {
         final int maxTaskSteps = 5;
 
         String gsPath = config.getGsPath();
-        String dsPath = config.getDsPath();
         boolean fromZipFile = config.isFromZipFile();
         IGSSource gsSource = null;
         String cacheDir = config.getCacheDir();
 
         if (LOG.isInfoEnabled()) {
             LOG.info("Loading Grundschutzkatalog, path: " + gsPath);
-            LOG.info("Loading Datenschutzbaustein, path: " + dsPath);
         }
         if (LOG.isDebugEnabled()) {
             LOG.debug("Cache dir is: " + cacheDir);
@@ -118,9 +102,8 @@ public class BSIMassnahmenModel {
         }
 
         // did user really change the path to file?
-        if (!(previouslyReadFile.equals(gsPath) && previouslyReadFileDS.equals(dsPath))) {
+        if (!(previouslyReadFile.equals(gsPath))) {
             previouslyReadFile = gsPath;
-            previouslyReadFileDS = dsPath;
 
             try {
                 if (fromZipFile) {
@@ -158,41 +141,11 @@ public class BSIMassnahmenModel {
 
             this.language = scrape.getLanguage();
 
-            // if a source for data privacy module is defined, replace the
-            // temporary module with the real one:
-            cache = handleDataPrivacyModule(dsPath, cacheDir, alleBst);
-
             mon.done();
             Logger.getLogger(BSIMassnahmenModel.class).debug(Messages.BSIMassnahmenModel_4);
 
         }
         return cache;
-    }
-
-    private List<Baustein> handleDataPrivacyModule(String dsPath, String cacheDir,
-            List<Baustein> alleBst) {
-        if (dsPath != null && dsPath.length() > 0) {
-            try {
-                ZIPGSSource dsSource = new ZIPGSSource(dsPath);
-                dsScrape = new GSScraper(dsSource, new PatternBfDI2008());
-                dsScrape.setCacheDir(cacheDir); // $NON-NLS-1$
-
-                Baustein dsBaustein = scrapeDatenschutzBaustein();
-
-                for (Iterator<Baustein> iterator = alleBst.iterator(); iterator.hasNext();) {
-                    Baustein baustein = iterator.next();
-                    if (baustein.getUrl().indexOf(B01005) > -1) {
-                        alleBst.remove(baustein);
-                        break;
-                    }
-                }
-                alleBst.add(dsBaustein);
-            } catch (Exception e) {
-                Logger.getLogger(BSIMassnahmenModel.class)
-                        .debug("Datenschutz-Baustein nicht gefunden."); //$NON-NLS-1$
-            }
-        }
-        return alleBst;
     }
 
     private void processBausteinLayer(IProgress mon, List<Baustein> alleBst, String layer,
@@ -214,23 +167,6 @@ public class BSIMassnahmenModel {
         }
     }
 
-    private Baustein scrapeDatenschutzBaustein() throws GSServiceException, IOException {
-        Baustein b = new Baustein();
-        b.setStand(DS_2008);
-        b.setId(DS_B_1_5);
-        b.setTitel(Messages.BSIMassnahmenModel_10);
-        b.setUrl(DS_B01005_BFDI);
-        b.setSchicht(1);
-
-        List<Massnahme> massnahmen = dsScrape.getMassnahmen(b.getUrl());
-        b.setMassnahmen(massnahmen);
-
-        List<Gefaehrdung> gefaehrdungen = dsScrape.getGefaehrdungen(b.getUrl());
-        b.setGefaehrdungen(gefaehrdungen);
-
-        return b;
-    }
-
     public InputStream getBaustein(String url, String stand) throws GSServiceException {
 
         if (config instanceof BSIConfigurationRemoteSource) {
@@ -241,9 +177,7 @@ public class BSIMassnahmenModel {
         try {
             bausteinText = scrape.getBausteinText(url, stand);
         } catch (Exception e) {
-            if (dsScrape != null) {
-                bausteinText = dsScrape.getBausteinText(url, stand);
-            }
+            // ignore
         }
         return bausteinText;
     }
@@ -274,9 +208,7 @@ public class BSIMassnahmenModel {
         try {
             massnahme = scrape.getMassnahme(url, stand);
         } catch (Exception e) {
-            if (dsScrape != null) {
-                massnahme = dsScrape.getMassnahme(url, stand);
-            }
+            // ignore
         }
         return massnahme;
     }
@@ -366,9 +298,6 @@ public class BSIMassnahmenModel {
             gefaehrdung = scrape.getGefaehrdung(url, stand);
         } catch (GSServiceException e) {
             LOG.error("Error while getting gefaehrdung", e);
-            if (dsScrape != null) {
-                gefaehrdung = dsScrape.getGefaehrdung(url, stand);
-            }
 
         }
         return gefaehrdung;
@@ -393,9 +322,6 @@ public class BSIMassnahmenModel {
     private void flushCache() {
         if (scrape != null) {
             scrape.flushCache();
-        }
-        if (dsScrape != null) {
-            dsScrape.flushCache();
         }
     }
 
