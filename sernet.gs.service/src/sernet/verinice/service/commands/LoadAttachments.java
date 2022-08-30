@@ -18,14 +18,18 @@
 package sernet.verinice.service.commands;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.service.TimeFormatter;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAttachmentDao;
 import sernet.verinice.interfaces.IAuthAwareCommand;
@@ -34,6 +38,7 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.Addition;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.configuration.Configuration;
 
 /**
  * Loads files/attachments meta data for a {@link CnATreeElement} or for all
@@ -57,18 +62,18 @@ public class LoadAttachments extends GenericCommand implements IAuthAwareCommand
 
     private List<Attachment> attachmentList;
 
-    private String[] roles;
-
-    private boolean isAdmin;
-
-    private boolean isScopeOnly;
-
-    private Integer scopeId;
-
     /** Query-Setup-Objects **/
     private String hql;
     private Object[] params;
     private String[] paramNames;
+
+    private transient Set<String> roles;
+
+    private transient boolean isAdmin;
+
+    private transient boolean isScopeOnly;
+
+    private transient Integer scopeId;
 
     public List<Attachment> getAttachmentList() {
         return attachmentList;
@@ -90,15 +95,6 @@ public class LoadAttachments extends GenericCommand implements IAuthAwareCommand
         this.cnAElementId = cnAElementId;
     }
 
-    public LoadAttachments(Integer cnAElementId, String[] roles, boolean isAdmin,
-            boolean isScopeOnly, Integer scopeId) {
-        this(cnAElementId);
-        this.roles = (roles != null) ? roles.clone() : null;
-        this.isAdmin = isAdmin;
-        this.isScopeOnly = isScopeOnly;
-        this.scopeId = scopeId;
-    }
-
     /**
      * Loads attachments for for {@link CnATreeElement} with id cnAElementId.
      * File data will not be loaded by this command. Use
@@ -115,7 +111,30 @@ public class LoadAttachments extends GenericCommand implements IAuthAwareCommand
             log.debug("executing, id is: " + getCnAElementId() + "...");
         }
         long startTime = System.currentTimeMillis();
+        if (getAuthService().isPermissionHandlingNeeded()) {
+            try {
+                LoadCurrentUserConfiguration lcuc = new LoadCurrentUserConfiguration();
 
+                lcuc = getCommandService().executeCommand(lcuc);
+
+                Configuration c = lcuc.getConfiguration();
+                isAdmin = false;
+                isScopeOnly = false;
+                scopeId = -1;
+                if (c != null) {
+                    roles = c.getRoles();
+                    isAdmin = c.isAdminUser();
+                    isScopeOnly = c.isScopeOnly();
+                    scopeId = c.getPerson().getScopeId();
+                }
+
+                if (roles == null) {
+                    roles = Collections.emptySet();
+                }
+            } catch (CommandException e) {
+                throw new RuntimeCommandException("Failed to load user data", e);
+            }
+        }
         fillAttachmentList();
 
         if (log.isDebugEnabled()) {

@@ -18,19 +18,17 @@
 package sernet.verinice.service.commands;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.bsi.Attachment;
-import sernet.verinice.model.common.configuration.Configuration;
 
 /**
- *
+ * @deprecated use {@link LoadAttachments}
  */
+@Deprecated
 public class LoadAttachmentsUserFiltered extends GenericCommand {
 
     private static final long serialVersionUID = 20140530;
@@ -53,30 +51,10 @@ public class LoadAttachmentsUserFiltered extends GenericCommand {
     @Override
     public void execute() {
         try {
-            Set<String> roles = null;
             LoadAttachments command = null;
-            if (id == null) {
-                LoadCurrentUserConfiguration lcuc = new LoadCurrentUserConfiguration();
-                lcuc = getCommandService().executeCommand(lcuc);
-                Configuration c = lcuc.getConfiguration();
-                boolean isAdminUser = false;
-                boolean isScopeOnly = false;
-                Integer scopeId = -1;
-                if (c != null) {
-                    roles = c.getRoles();
-                    isAdminUser = c.isAdminUser();
-                    isScopeOnly = c.isScopeOnly();
-                    scopeId = c.getPerson().getScopeId();
-                }
 
-                if (roles == null) {
-                    roles = new HashSet<String>(0);
-                }
-                command = new LoadAttachments(id, roles.toArray(new String[roles.size()]),
-                        isAdminUser, isScopeOnly, scopeId);
-            } else {
-                command = new LoadAttachments(id);
-            }
+            command = new LoadAttachments(id);
+
             command = getCommandService().executeCommand(command);
             result = command.getAttachmentList();
         } catch (Exception e) {
