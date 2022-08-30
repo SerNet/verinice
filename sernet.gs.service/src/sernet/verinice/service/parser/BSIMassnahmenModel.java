@@ -179,12 +179,11 @@ public class BSIMassnahmenModel {
 
                 Baustein dsBaustein = scrapeDatenschutzBaustein();
 
-                searchDataPrivacyModule: for (Iterator<Baustein> iterator = alleBst
-                        .iterator(); iterator.hasNext();) {
+                for (Iterator<Baustein> iterator = alleBst.iterator(); iterator.hasNext();) {
                     Baustein baustein = iterator.next();
                     if (baustein.getUrl().indexOf(B01005) > -1) {
                         alleBst.remove(baustein);
-                        break searchDataPrivacyModule;
+                        break;
                     }
                 }
                 alleBst.add(dsBaustein);

@@ -22,7 +22,7 @@ import sernet.verinice.rcp.search.SearchView;
 /**
  * Constant definitions for plug-in preferences
  */
-public class PreferenceConstants {
+public final class PreferenceConstants {
 
     // which method to use to access the BSI catalogues:
     public static final String GSACCESS = "cna_gsaccess"; //$NON-NLS-1$
@@ -183,6 +183,9 @@ public class PreferenceConstants {
     public static String getSwitch(final Class clazz) {
         return new StringBuilder(clazz.getName()).append("_")
                 .append(PreferenceConstants.SWITCH_PERSPECTIVE).toString();
+    }
+
+    private PreferenceConstants() {
     }
 
 }

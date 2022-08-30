@@ -48,6 +48,7 @@ public class ServerPropertyPlaceholderConfigurer extends PropertyPlaceholderConf
 
     private static Properties overrideProperties = new Properties();
 
+    @Override
     protected String resolvePlaceholder(String placeholder, Properties props) {
 
         String value = overrideProperties.getProperty(placeholder);
@@ -99,7 +100,7 @@ public class ServerPropertyPlaceholderConfigurer extends PropertyPlaceholderConf
 
     public static void setSearchProperties(boolean indexOnStartUp) {
         overrideProperties.put("veriniceserver.search.indexingOnStartup",
-                Boolean.valueOf(indexOnStartUp).toString());
+                Boolean.toString(indexOnStartUp));
     }
 
     public static void setGSCatalogURL(URL url) {

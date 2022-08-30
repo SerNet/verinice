@@ -36,6 +36,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.equinox.internal.p2.ui.ProvUI;
 import org.eclipse.equinox.internal.p2.ui.ProvUIActivator;
 import org.eclipse.equinox.p2.repository.IRepository;
+import org.eclipse.equinox.p2.repository.IRepositoryManager;
 import org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
 import org.eclipse.equinox.p2.ui.ProvisioningUI;
@@ -584,7 +585,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
     private void removeRepository() {
         URI[] uriArray = getMetadataRepositoryManager()
-                .getKnownRepositories(IArtifactRepositoryManager.REPOSITORIES_ALL);
+                .getKnownRepositories(IRepositoryManager.REPOSITORIES_ALL);
         if (uriArray != null) {
             for (int i = 0; i < uriArray.length; i++) {
                 URI uri = uriArray[i];

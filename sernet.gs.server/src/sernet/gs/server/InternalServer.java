@@ -71,7 +71,7 @@ public class InternalServer implements IInternalServer {
 
     private HttpContext ctx;
 
-    private List<IInternalServerStartListener> listeners = new LinkedList<IInternalServerStartListener>();
+    private List<IInternalServerStartListener> listeners = new LinkedList<>();
 
     private static final String INTERNAL_SERVER_CONFIGURE_FAILURE = "InternalServer.configure.failed";
 
@@ -175,12 +175,6 @@ public class InternalServer implements IInternalServer {
                 initialSetup();
             }
             setupSpringServlets();
-        } catch (ServletException se) {
-            log.error("Error while starting internal server.", se);
-            throw new IllegalStateException(Messages.InternalServer_3, se);
-        } catch (NamespaceException nse) {
-            log.error("Error while starting internal server.", nse);
-            throw new IllegalStateException(Messages.InternalServer_3, nse);
         } catch (Exception e) {
             log.error("Error while starting internal server.", e);
             throw new IllegalStateException(Messages.InternalServer_3, e);
@@ -235,7 +229,7 @@ public class InternalServer implements IInternalServer {
 
         ctx = wc.createDefaultHttpContext();
 
-        Dictionary<String, String> dict = new Hashtable<String, String>();
+        Dictionary<String, String> dict = new Hashtable<>();
         dict.put("contextConfigLocation", "\n" //$NON-NLS-1$ //$NON-NLS-2$
                 + "classpath:/sernet/gs/server/spring/veriniceserver-common.xml \n" //$NON-NLS-1$
                 + "classpath:/sernet/gs/server/spring/command-actionid-mapping.xml \n" //$NON-NLS-1$
@@ -257,12 +251,12 @@ public class InternalServer implements IInternalServer {
                 OsgiBundleXmlWebApplicationContext.class.getName());
         wc.setContextParam(dict, ctx);
 
-        dict = new Hashtable<String, String>();
+        dict = new Hashtable<>();
         dict.put(SERVLET_NAME, "GetHitroConfig"); //$NON-NLS-1$ //$NON-NLS-2$
         dict.put("snca.xml.path", "/WebContent/WEB-INF/"); //$NON-NLS-1$ //$NON-NLS-2$
         wc.registerServlet(new GetHitroConfig(), new String[] { "/GetHitroConfig" }, dict, ctx); //$NON-NLS-1$
 
-        dict = new Hashtable<String, String>();
+        dict = new Hashtable<>();
         dict.put(SERVLET_NAME, "serverTest"); //$NON-NLS-1$ //$NON-NLS-2$
         wc.registerServlet(new ServerTestServlet(), new String[] { "/servertest" }, dict, ctx); //$NON-NLS-1$
     }
@@ -289,14 +283,14 @@ public class InternalServer implements IInternalServer {
         if (log.isDebugEnabled()) {
             log.debug("setupSpringServlets...");
         }
-        Dictionary<String, String> dict = new Hashtable<String, String>();
+        Dictionary<String, String> dict = new Hashtable<>();
         dict.put(SERVLET_NAME, "context"); //$NON-NLS-1$ //$NON-NLS-2$
         dict.put(ContextLoader.CONTEXT_CLASS_PARAM,
                 OsgiBundleXmlWebApplicationContext.class.getName());
         contextLoaderServlet = new ContextLoaderServlet();
         wc.registerServlet("/context", contextLoaderServlet, dict, ctx); //$NON-NLS-1$
 
-        dict = new Hashtable<String, String>();
+        dict = new Hashtable<>();
         dict.put(SERVLET_NAME, "springDispatcher"); //$NON-NLS-1$ //$NON-NLS-2$
         dict.put("contextConfigLocation", //$NON-NLS-1$
                 "classpath:/sernet/gs/server/spring/springDispatcher-servlet.xml"); //$NON-NLS-1$

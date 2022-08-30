@@ -89,10 +89,9 @@ public final class BSIKatalogInvisibleRoot {
     }
 
     private static volatile BSIKatalogInvisibleRoot instance;
-    private List<Baustein> bausteine = new ArrayList<Baustein>();
+    private List<Baustein> bausteine = new ArrayList<>();
 
-    private List<ISelectionListener> listeners = new ArrayList<ISelectionListener>(
-            DEFAULT_LISTENER_AMOUNT);
+    private List<ISelectionListener> listeners = new ArrayList<>(DEFAULT_LISTENER_AMOUNT);
 
     public void addListener(ISelectionListener listener) {
         synchronized (listeners) {
@@ -117,7 +116,7 @@ public final class BSIKatalogInvisibleRoot {
     }
 
     public List<Baustein> getBausteine() {
-        if (bausteine.size() < 1) {
+        if (bausteine.isEmpty()) {
             bausteine.add(new NullBaustein());
         }
         // language is only set, if gs content is load from file (not from
@@ -130,7 +129,7 @@ public final class BSIKatalogInvisibleRoot {
 
     void setBausteine(List<Baustein> bst) {
         if (bst == null) {
-            bausteine = new ArrayList<Baustein>();
+            bausteine = new ArrayList<>();
         } else {
             this.bausteine = bst;
         }

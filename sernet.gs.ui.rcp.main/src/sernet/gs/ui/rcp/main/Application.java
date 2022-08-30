@@ -27,7 +27,6 @@ import sernet.hui.swt.SWTResourceManager;
 /**
  * This class controls all aspects of the application's execution
  */
-@SuppressWarnings("restriction")
 public class Application implements IApplication {
 
     /*
