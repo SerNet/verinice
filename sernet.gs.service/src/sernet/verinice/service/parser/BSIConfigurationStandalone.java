@@ -22,20 +22,20 @@ import java.io.Serializable;
 import sernet.verinice.interfaces.IBSIConfig;
 
 /**
- * A IBSIConfig for operating mode standalone.
- * On the client you can use sernet.gs.ui.rcp.main.bsi.model.BSIConfigFactory
- * to create instances of this class.
+ * A IBSIConfig for operating mode standalone. On the client you can use
+ * sernet.gs.ui.rcp.main.bsi.model.BSIConfigFactory to create instances of this
+ * class.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
 public class BSIConfigurationStandalone implements IBSIConfig, Serializable {
-	
+
     private static final long serialVersionUID = 4369805673754690041L;
 
     private String bpCatalogFilePath;
-	private String privacyCatalogFilePath;
-	private boolean fromZipFile;
-	private String cacheDir;
+    private String privacyCatalogFilePath;
+    private boolean fromZipFile;
+    private String cacheDir;
 
     public BSIConfigurationStandalone(String gsPath, String dsPath, boolean fromZipFile,
             String cacheDir) {
@@ -44,7 +44,7 @@ public class BSIConfigurationStandalone implements IBSIConfig, Serializable {
         this.privacyCatalogFilePath = dsPath;
         this.fromZipFile = fromZipFile;
         this.cacheDir = cacheDir;
-    }   
+    }
 
     /*
      * (non-Javadoc)
@@ -53,8 +53,8 @@ public class BSIConfigurationStandalone implements IBSIConfig, Serializable {
      */
     @Override
     public String getDsPath() {
-		return privacyCatalogFilePath;
-	}
+        return privacyCatalogFilePath;
+    }
 
     /*
      * (non-Javadoc)
@@ -63,8 +63,8 @@ public class BSIConfigurationStandalone implements IBSIConfig, Serializable {
      */
     @Override
     public String getGsPath() {
-		return bpCatalogFilePath;
-	}
+        return bpCatalogFilePath;
+    }
 
     /*
      * (non-Javadoc)
@@ -72,9 +72,9 @@ public class BSIConfigurationStandalone implements IBSIConfig, Serializable {
      * @see sernet.verinice.interfaces.IBSIConfig#isFromZipFile()
      */
     @Override
-	public boolean isFromZipFile() {
-		return fromZipFile;
-	}
+    public boolean isFromZipFile() {
+        return fromZipFile;
+    }
 
     /*
      * (non-Javadoc)
@@ -82,8 +82,8 @@ public class BSIConfigurationStandalone implements IBSIConfig, Serializable {
      * @see sernet.verinice.interfaces.IBSIConfig#getCacheDir()
      */
     @Override
-	public String getCacheDir() {
-		return cacheDir;
-	}
+    public String getCacheDir() {
+        return cacheDir;
+    }
 
 }

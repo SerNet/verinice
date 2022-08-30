@@ -30,21 +30,21 @@ public interface IBSIConfig {
     /**
      * @return The path to ITBP catalog file
      */
-	String getGsPath();
+    String getGsPath();
 
     /**
      * @return The path to the privacy catalog file
      */
-	String getDsPath();
+    String getDsPath();
 
     /**
      * @return True if the ITBP catalog is a ZIP file
      */
-	boolean isFromZipFile();
+    boolean isFromZipFile();
 
     /**
      * @return The path to the cache directory
      */
-	String  getCacheDir();
+    String getCacheDir();
 
 }

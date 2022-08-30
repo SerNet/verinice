@@ -26,8 +26,8 @@ import sernet.verinice.interfaces.IBSIConfig;
 import sernet.verinice.service.parser.BSIConfigurationStandalone;
 
 /**
- * Factory class to create IBSIConfig instances.
- * This factory must only be used on the client.
+ * Factory class to create IBSIConfig instances. This factory must only be used
+ * on the client.
  * 
  * Do no instantiate this class use public static methods.
  *
@@ -46,8 +46,8 @@ public final class BSIConfigFactory {
         String privacyCatalogFilePath = sernet.verinice.rcp.Preferences.getPrivacyCatalogFilePath();
         boolean fromZipFile = sernet.verinice.rcp.Preferences.isBpCatalogLoadedFromZipFile();
         String cacheDir = CnAWorkspace.getInstance().getWorkdir() + File.separator + "gscache";
-        return new BSIConfigurationStandalone(bpCatalogFilePath, privacyCatalogFilePath, fromZipFile,
-                cacheDir);
+        return new BSIConfigurationStandalone(bpCatalogFilePath, privacyCatalogFilePath,
+                fromZipFile, cacheDir);
     }
 
 }

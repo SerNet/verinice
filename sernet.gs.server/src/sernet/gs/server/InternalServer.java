@@ -93,7 +93,8 @@ public class InternalServer implements IInternalServer {
      * </p>
      */
     @Override
-    public void configureDatabase(String url, String user, String pass, String driver, String dialect) {
+    public void configureDatabase(String url, String user, String pass, String driver,
+            String dialect) {
 
         boolean fail = false;
         Connection c = null;
@@ -109,7 +110,7 @@ public class InternalServer implements IInternalServer {
             fail = true;
         } finally {
             try {
-                if(c != null){
+                if (c != null) {
                     c.close();
                 }
             } catch (SQLException e) {
@@ -118,18 +119,21 @@ public class InternalServer implements IInternalServer {
         }
 
         if (fail) {
-            ServerPropertyPlaceholderConfigurer.setDatabaseProperties(INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE);	            
+            ServerPropertyPlaceholderConfigurer.setDatabaseProperties(
+                    INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE,
+                    INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE,
+                    INTERNAL_SERVER_CONFIGURE_FAILURE);
         } else {
-            ServerPropertyPlaceholderConfigurer.setDatabaseProperties(url, user, pass, driver, dialect);   
+            ServerPropertyPlaceholderConfigurer.setDatabaseProperties(url, user, pass, driver,
+                    dialect);
         }
     }
 
     @Override
     public void configureSearch(boolean disable, boolean indexOnStartup) {
-        ServerPropertyPlaceholderConfigurer.setSearchProperties(indexOnStartup); 
+        ServerPropertyPlaceholderConfigurer.setSearchProperties(indexOnStartup);
         searchDisabled = disable;
     }
-
 
     @Override
     public void setGSCatalogURL(URL url) {
@@ -172,13 +176,13 @@ public class InternalServer implements IInternalServer {
             }
             setupSpringServlets();
         } catch (ServletException se) {
-            log.error("Error while starting internal server.",se);
+            log.error("Error while starting internal server.", se);
             throw new IllegalStateException(Messages.InternalServer_3, se);
         } catch (NamespaceException nse) {
-            log.error("Error while starting internal server.",nse);
+            log.error("Error while starting internal server.", nse);
             throw new IllegalStateException(Messages.InternalServer_3, nse);
         } catch (Exception e) {
-            log.error("Error while starting internal server.",e);
+            log.error("Error while starting internal server.", e);
             throw new IllegalStateException(Messages.InternalServer_3, e);
         }
         running = true;
@@ -201,7 +205,7 @@ public class InternalServer implements IInternalServer {
      */
     @Override
     public void stop() {
-        if (!running){
+        if (!running) {
             return;
         }
         teardownSpringServlets();
@@ -220,7 +224,8 @@ public class InternalServer implements IInternalServer {
     /**
      * Performs the initial setup of the server which means configuring things
      * that cannot be changed afterwards or are not dependent upon the Spring
-     * configuration.</p>
+     * configuration.
+     * </p>
      * 
      * @throws ServletException
      * @throws NamespaceException
@@ -228,10 +233,10 @@ public class InternalServer implements IInternalServer {
     private void initialSetup() throws ServletException {
         wc = Activator.getDefault().getWebContainer();
 
-        ctx = wc.createDefaultHttpContext();	
+        ctx = wc.createDefaultHttpContext();
 
         Dictionary<String, String> dict = new Hashtable<String, String>();
-        dict.put("contextConfigLocation", "\n" //$NON-NLS-1$ //$NON-NLS-2$	        
+        dict.put("contextConfigLocation", "\n" //$NON-NLS-1$ //$NON-NLS-2$
                 + "classpath:/sernet/gs/server/spring/veriniceserver-common.xml \n" //$NON-NLS-1$
                 + "classpath:/sernet/gs/server/spring/command-actionid-mapping.xml \n" //$NON-NLS-1$
                 + "classpath:/sernet/gs/server/spring/veriniceserver-osgi.xml \n" //$NON-NLS-1$
@@ -240,15 +245,16 @@ public class InternalServer implements IInternalServer {
                 + "classpath:/sernet/gs/server/spring/veriniceserver-security-osgi.xml \n" //$NON-NLS-1$
                 + "classpath:/sernet/gs/server/spring/veriniceserver-ldap.xml \n" //$NON-NLS-1$
                 + "classpath:/sernet/gs/server/spring/veriniceserver-jbpm-dummy.xml \n" //$NON-NLS-1$
-                + "classpath:/sernet/gs/server/spring/veriniceserver-rightmanagement-dummy.xml \n" //NON-NLS-1$
+                + "classpath:/sernet/gs/server/spring/veriniceserver-rightmanagement-dummy.xml \n" // NON-NLS-1$
                 + getSearchConfigFiles()
-                + "classpath:/sernet/gs/server/spring/veriniceserver-reportdeposit-dummy.xml \n" //NON-NLS-1$
-                + "classpath:/sernet/gs/server/spring/veriniceserver-account-dummy.xml \n" //NON-NLS-1$
-                + "classpath:/sernet/gs/server/spring/veriniceserver-updatenews.xml \n" //NON-NLS-1$
-                + "classpath:/sernet/gs/server/spring/veriniceserver-risk-analysis-standalone.xml \n" //NON-NLS-1$
-                        + "classpath:/sernet/gs/server/spring/veriniceserver-licensemanagement-osgi.xml"); // NON-NLS-1$
+                + "classpath:/sernet/gs/server/spring/veriniceserver-reportdeposit-dummy.xml \n" // NON-NLS-1$
+                + "classpath:/sernet/gs/server/spring/veriniceserver-account-dummy.xml \n" // NON-NLS-1$
+                + "classpath:/sernet/gs/server/spring/veriniceserver-updatenews.xml \n" // NON-NLS-1$
+                + "classpath:/sernet/gs/server/spring/veriniceserver-risk-analysis-standalone.xml \n" // NON-NLS-1$
+                + "classpath:/sernet/gs/server/spring/veriniceserver-licensemanagement-osgi.xml"); // NON-NLS-1$
 
-        dict.put(ContextLoader.CONTEXT_CLASS_PARAM, OsgiBundleXmlWebApplicationContext.class.getName());
+        dict.put(ContextLoader.CONTEXT_CLASS_PARAM,
+                OsgiBundleXmlWebApplicationContext.class.getName());
         wc.setContextParam(dict, ctx);
 
         dict = new Hashtable<String, String>();
@@ -262,12 +268,12 @@ public class InternalServer implements IInternalServer {
     }
 
     private String getSearchConfigFiles() {
-        StringBuilder sb = new StringBuilder();  
-        if(searchDisabled) {
-            sb.append("classpath:/sernet/gs/server/spring/veriniceserver-search-dummy.xml \n"); //NON-NLS-1$
+        StringBuilder sb = new StringBuilder();
+        if (searchDisabled) {
+            sb.append("classpath:/sernet/gs/server/spring/veriniceserver-search-dummy.xml \n"); // NON-NLS-1$
         } else {
-            sb.append("classpath:/sernet/gs/server/spring/veriniceserver-search-base.xml \n"); //NON-NLS-1$
-            sb.append("classpath:/sernet/gs/server/spring/veriniceserver-search-osgi.xml \n"); //NON-NLS-1$
+            sb.append("classpath:/sernet/gs/server/spring/veriniceserver-search-base.xml \n"); // NON-NLS-1$
+            sb.append("classpath:/sernet/gs/server/spring/veriniceserver-search-osgi.xml \n"); // NON-NLS-1$
         }
         return sb.toString();
     }
@@ -285,18 +291,20 @@ public class InternalServer implements IInternalServer {
         }
         Dictionary<String, String> dict = new Hashtable<String, String>();
         dict.put(SERVLET_NAME, "context"); //$NON-NLS-1$ //$NON-NLS-2$
-        dict.put(ContextLoader.CONTEXT_CLASS_PARAM, OsgiBundleXmlWebApplicationContext.class.getName());
+        dict.put(ContextLoader.CONTEXT_CLASS_PARAM,
+                OsgiBundleXmlWebApplicationContext.class.getName());
         contextLoaderServlet = new ContextLoaderServlet();
         wc.registerServlet("/context", contextLoaderServlet, dict, ctx); //$NON-NLS-1$
 
         dict = new Hashtable<String, String>();
         dict.put(SERVLET_NAME, "springDispatcher"); //$NON-NLS-1$ //$NON-NLS-2$
-        dict.put("contextConfigLocation", "classpath:/sernet/gs/server/spring/springDispatcher-servlet.xml"); //$NON-NLS-1$ //$NON-NLS-2$      
+        dict.put("contextConfigLocation", //$NON-NLS-1$
+                "classpath:/sernet/gs/server/spring/springDispatcher-servlet.xml"); //$NON-NLS-1$
         dispatcherServlet = new DispatcherServlet();
         wc.registerServlet(dispatcherServlet, new String[] { "/service/*" }, dict, ctx); //$NON-NLS-1$
         if (log.isDebugEnabled()) {
             log.debug("setupSpringServlets finished");
-        }		
+        }
     }
 
     /**
@@ -315,8 +323,8 @@ public class InternalServer implements IInternalServer {
      * Helper servlet which tells the state of the internal server.
      * 
      * <p>
-     * The servlet's output can be seen with a web browser at <a
-     * href="localhost:8800/servertest">localhost:8800/servertest</a> .
+     * The servlet's output can be seen with a web browser at
+     * <a href="localhost:8800/servertest">localhost:8800/servertest</a> .
      * </p>
      */
     private class ServerTestServlet extends HttpServlet {
@@ -324,14 +332,15 @@ public class InternalServer implements IInternalServer {
         private static final long serialVersionUID = 131427514191056452L;
 
         @Override
-        protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+                throws ServletException, IOException {
             log.error("doGet"); //$NON-NLS-1$
 
             resp.setContentType("text/html"); //$NON-NLS-1$
 
             PrintWriter w = resp.getWriter();
 
-            if (running){
+            if (running) {
                 w.println(Messages.InternalServer_4);
             } else {
                 w.println(Messages.InternalServer_5);
@@ -340,19 +349,19 @@ public class InternalServer implements IInternalServer {
         }
     }
 
-    protected synchronized void notifyStatusChange(InternalServerEvent event){
-        for(IInternalServerStartListener l : listeners){
+    protected synchronized void notifyStatusChange(InternalServerEvent event) {
+        for (IInternalServerStartListener l : listeners) {
             l.statusChanged(event);
         }
     }
 
     @Override
-    public void addInternalServerStatusListener(IInternalServerStartListener listener){
+    public void addInternalServerStatusListener(IInternalServerStartListener listener) {
         listeners.add(listener);
     }
 
     @Override
-    public void removeInternalServerStatusListener(IInternalServerStartListener listener){
+    public void removeInternalServerStatusListener(IInternalServerStartListener listener) {
         listeners.remove(listener);
     }
 }

@@ -38,148 +38,147 @@ import sernet.gs.ui.rcp.main.bsi.model.BSIConfigFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
 public final class BSIKatalogInvisibleRoot {
-	
-	private static final Logger LOG = Logger.getLogger(BSIKatalogInvisibleRoot.class); 
 
-	private static Pattern kapitelPattern = Pattern.compile("(\\d+)\\.(\\d+)"); //$NON-NLS-1$
-	
-	private static final int DEFAULT_LISTENER_AMOUNT = 5;
-	
-	private static final int WHOLE_FACTOR = 1000;
-		
-	private String language = "";
+    private static final Logger LOG = Logger.getLogger(BSIKatalogInvisibleRoot.class);
 
-	/**
-	 * Listen for preference changes and update model if necessary:
-	 */
-	private final IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty().equals(PreferenceConstants.BSIZIPFILE)
-					|| event.getProperty().equals(PreferenceConstants.BSIDIR)
-					|| event.getProperty().equals(PreferenceConstants.GSACCESS)
-					|| event.getProperty()
-							.equals(PreferenceConstants.DSZIPFILE))
-			{
-				LOG.debug("Reloading catalogues since catalogue properties changed: " + event.getProperty()); //$NON-NLS-1$
-				try {
-					// Load the catalogues using a configuration object which points
-					// to local files.
-					WorkspaceJob job = new OpenCataloguesJob(
-							Messages.BSIMassnahmenView_0,
+    private static Pattern kapitelPattern = Pattern.compile("(\\d+)\\.(\\d+)"); //$NON-NLS-1$
+
+    private static final int DEFAULT_LISTENER_AMOUNT = 5;
+
+    private static final int WHOLE_FACTOR = 1000;
+
+    private String language = "";
+
+    /**
+     * Listen for preference changes and update model if necessary:
+     */
+    private final IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
+        public void propertyChange(PropertyChangeEvent event) {
+            if (event.getProperty().equals(PreferenceConstants.BSIZIPFILE)
+                    || event.getProperty().equals(PreferenceConstants.BSIDIR)
+                    || event.getProperty().equals(PreferenceConstants.GSACCESS)
+                    || event.getProperty().equals(PreferenceConstants.DSZIPFILE)) {
+                LOG.debug("Reloading catalogues since catalogue properties changed: " //$NON-NLS-1$
+                        + event.getProperty());
+                try {
+                    // Load the catalogues using a configuration object which
+                    // points
+                    // to local files.
+                    WorkspaceJob job = new OpenCataloguesJob(Messages.BSIMassnahmenView_0,
                             BSIConfigFactory.createStandaloneConfig());
-					job.setUser(true);
-					job.schedule();
-				} catch (Exception e) {
-					Logger.getLogger(this.getClass()).error(
-							Messages.BSIMassnahmenView_2, e);
-				}
-			}
-		}
-	};
+                    job.setUser(true);
+                    job.schedule();
+                } catch (Exception e) {
+                    Logger.getLogger(this.getClass()).error(Messages.BSIMassnahmenView_2, e);
+                }
+            }
+        }
+    };
 
-	public interface ISelectionListener {
-		void cataloguesChanged();
-	}
+    public interface ISelectionListener {
+        void cataloguesChanged();
+    }
 
-	private class NullBaustein extends Baustein {
-		private static final long serialVersionUID = -399972333143198070L;
+    private class NullBaustein extends Baustein {
+        private static final long serialVersionUID = -399972333143198070L;
 
-		@Override
-		public String toString() {
-			return Messages.BSIKatalogInvisibleRoot_2;
-		}
-	}
+        @Override
+        public String toString() {
+            return Messages.BSIKatalogInvisibleRoot_2;
+        }
+    }
 
-	private static volatile BSIKatalogInvisibleRoot instance;
-	private List<Baustein> bausteine = new ArrayList<Baustein>();
+    private static volatile BSIKatalogInvisibleRoot instance;
+    private List<Baustein> bausteine = new ArrayList<Baustein>();
 
-	private List<ISelectionListener> listeners = new ArrayList<ISelectionListener>(
-			DEFAULT_LISTENER_AMOUNT);
+    private List<ISelectionListener> listeners = new ArrayList<ISelectionListener>(
+            DEFAULT_LISTENER_AMOUNT);
 
-	public void addListener(ISelectionListener listener) {
-		synchronized (listeners) {
-			if (!listeners.contains(listener)){
-				listeners.add(listener);
-			}
-		}
-	}
+    public void addListener(ISelectionListener listener) {
+        synchronized (listeners) {
+            if (!listeners.contains(listener)) {
+                listeners.add(listener);
+            }
+        }
+    }
 
-	public void removeListener(ISelectionListener lst) {
-		synchronized (listeners) {
-			listeners.remove(lst);
-		}
-	}
+    public void removeListener(ISelectionListener lst) {
+        synchronized (listeners) {
+            listeners.remove(lst);
+        }
+    }
 
-	private void fireChanged() {
-		synchronized (listeners) {
-			for (ISelectionListener listener : listeners) {
-				listener.cataloguesChanged();
-			}
-		}
-	}
+    private void fireChanged() {
+        synchronized (listeners) {
+            for (ISelectionListener listener : listeners) {
+                listener.cataloguesChanged();
+            }
+        }
+    }
 
-	public List<Baustein> getBausteine() {
-		if (bausteine.size() < 1){
-			bausteine.add(new NullBaustein());
-		}
-		// language is only set, if gs content is load from file (not from cache)
-		if(language == null || language.isEmpty()){
-		    language = determineLanguage(bausteine);
-		}
-		return bausteine;
-	}
+    public List<Baustein> getBausteine() {
+        if (bausteine.size() < 1) {
+            bausteine.add(new NullBaustein());
+        }
+        // language is only set, if gs content is load from file (not from
+        // cache)
+        if (language == null || language.isEmpty()) {
+            language = determineLanguage(bausteine);
+        }
+        return bausteine;
+    }
 
-	void setBausteine(List<Baustein> bst) {
-		if (bst == null) {
-			bausteine = new ArrayList<Baustein>();
-		} else {
-			this.bausteine = bst;
-		}
-		fireChanged();
-	}
+    void setBausteine(List<Baustein> bst) {
+        if (bst == null) {
+            bausteine = new ArrayList<Baustein>();
+        } else {
+            this.bausteine = bst;
+        }
+        fireChanged();
+    }
 
-	@Override
-	protected void finalize() throws Throwable {
-		Activator.getDefault().getPluginPreferences()
-				.removePropertyChangeListener(this.prefChangeListener);
-	}
+    @Override
+    protected void finalize() throws Throwable {
+        Activator.getDefault().getPluginPreferences()
+                .removePropertyChangeListener(this.prefChangeListener);
+    }
 
-	private BSIKatalogInvisibleRoot() {
-		Activator.getDefault().getPluginPreferences()
-				.addPropertyChangeListener(this.prefChangeListener);
-	}
+    private BSIKatalogInvisibleRoot() {
+        Activator.getDefault().getPluginPreferences()
+                .addPropertyChangeListener(this.prefChangeListener);
+    }
 
-	public static BSIKatalogInvisibleRoot getInstance() {
-		if (instance == null){
-			instance = new BSIKatalogInvisibleRoot();
-		}
-		return instance;
-	}
+    public static BSIKatalogInvisibleRoot getInstance() {
+        if (instance == null) {
+            instance = new BSIKatalogInvisibleRoot();
+        }
+        return instance;
+    }
 
-	public Baustein getBaustein(String id) {
-		for (Baustein baustein : bausteine) {
-			if (baustein.getId().equals(id)){
-				return baustein;
-			}
-		}
-		return null;
-	}
+    public Baustein getBaustein(String id) {
+        for (Baustein baustein : bausteine) {
+            if (baustein.getId().equals(id)) {
+                return baustein;
+            }
+        }
+        return null;
+    }
 
-	public Baustein getBausteinByKapitel(String id) {
-		Matcher m = kapitelPattern.matcher(id);
-		if (m.find()) {
-			int whole = Integer.parseInt(m.group(1));
-			int radix = Integer.parseInt(m.group(2));
-			int kapitelValue = whole * WHOLE_FACTOR + radix;
+    public Baustein getBausteinByKapitel(String id) {
+        Matcher m = kapitelPattern.matcher(id);
+        if (m.find()) {
+            int whole = Integer.parseInt(m.group(1));
+            int radix = Integer.parseInt(m.group(2));
+            int kapitelValue = whole * WHOLE_FACTOR + radix;
 
-			for (Baustein baustein : bausteine) {
-				if (baustein.getKapitelValue() == kapitelValue){
-					return baustein;
-				}
-			}
-		}
-		return null;
-	}
+            for (Baustein baustein : bausteine) {
+                if (baustein.getKapitelValue() == kapitelValue) {
+                    return baustein;
+                }
+            }
+        }
+        return null;
+    }
 
     public String getLanguage() {
         return language;
@@ -190,19 +189,23 @@ public final class BSIKatalogInvisibleRoot {
     }
 
     /**
-     * since sernet.gs.scraper.GSScraper.getLanguage(Node) is only used, when content is not existant in gscache, this needs to be done if language is not
-     * determined by scraper (because of existing cache-entry)
+     * since sernet.gs.scraper.GSScraper.getLanguage(Node) is only used, when
+     * content is not existant in gscache, this needs to be done if language is
+     * not determined by scraper (because of existing cache-entry)
+     * 
      * @param bausteine
      * @return
      */
-    private String determineLanguage(List<Baustein> bausteine){
+    private String determineLanguage(List<Baustein> bausteine) {
         Baustein firstBaustein = null;
-        if(bausteine.size() > 1){ // avoid call on dummy list
+        if (bausteine.size() > 1) { // avoid call on dummy list
             firstBaustein = getBaustein(GSScraper.FIRST_BAUSTEIN_ID);
         }
-        if(firstBaustein != null && GSScraper.TITLE_OF_FIRST_BAUSTEIN_GERMAN.equals(firstBaustein.getTitel())){
+        if (firstBaustein != null
+                && GSScraper.TITLE_OF_FIRST_BAUSTEIN_GERMAN.equals(firstBaustein.getTitel())) {
             return GSScraper.CATALOG_LANGUAGE_GERMAN;
-        } else if(firstBaustein != null && GSScraper.TITLE_OF_FIRST_BAUSTEIN_ENGLISH.equals(firstBaustein.getTitel())){ 
+        } else if (firstBaustein != null
+                && GSScraper.TITLE_OF_FIRST_BAUSTEIN_ENGLISH.equals(firstBaustein.getTitel())) {
             return GSScraper.CATALOG_LANGUAGE_ENGLISH;
         }
         return "";

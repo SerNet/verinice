@@ -55,8 +55,8 @@ public class BSIConfigurationServer implements IBSIConfig {
     }
 
     public String getCacheDir() {
-        String property = System.getProperty(IVeriniceConstants.JAVA_IO_TMPDIR)
-                + File.separator + "gscache";
+        String property = System.getProperty(IVeriniceConstants.JAVA_IO_TMPDIR) + File.separator
+                + "gscache";
         if (LOG.isDebugEnabled()) {
             LOG.debug("Setting temp dir to " + property);
         }

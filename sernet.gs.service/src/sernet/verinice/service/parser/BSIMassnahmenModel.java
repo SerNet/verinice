@@ -81,7 +81,7 @@ public class BSIMassnahmenModel {
 
     public BSIMassnahmenModel() {
     }
-    
+
     public BSIMassnahmenModel(IBSIConfig config) {
         this.config = config;
     }
@@ -179,8 +179,8 @@ public class BSIMassnahmenModel {
 
                 Baustein dsBaustein = scrapeDatenschutzBaustein();
 
-                searchDataPrivacyModule: for (Iterator<Baustein> iterator = alleBst.iterator(); iterator
-                        .hasNext();) {
+                searchDataPrivacyModule: for (Iterator<Baustein> iterator = alleBst
+                        .iterator(); iterator.hasNext();) {
                     Baustein baustein = iterator.next();
                     if (baustein.getUrl().indexOf(B01005) > -1) {
                         alleBst.remove(baustein);
@@ -257,7 +257,7 @@ public class BSIMassnahmenModel {
             return stringToStream(bausteinText, command.getEncoding());
         } catch (CommandException | UnsupportedEncodingException e) {
             throw new GSServiceException(e.getCause());
-        } 
+        }
     }
 
     private InputStream stringToStream(String text, String encoding)
@@ -339,9 +339,9 @@ public class BSIMassnahmenModel {
             String text = command.getText();
             encoding = command.getEncoding();
             return stringToStream(text, getEncoding());
-        } catch (CommandException| UnsupportedEncodingException e) {
+        } catch (CommandException | UnsupportedEncodingException e) {
             throw new GSServiceException(e.getCause());
-        } 
+        }
     }
 
     private List<Baustein> scrapeBausteine(String schicht) throws GSServiceException, IOException {
@@ -424,7 +424,7 @@ public class BSIMassnahmenModel {
     public ILayoutConfig getLayoutConfig() {
         return layoutConfig;
     }
-    
+
     public void setLayoutConfig(ILayoutConfig layoutConfig) {
         this.layoutConfig = layoutConfig;
     }

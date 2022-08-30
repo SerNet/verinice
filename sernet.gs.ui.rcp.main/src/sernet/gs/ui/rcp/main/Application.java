@@ -30,8 +30,6 @@ import sernet.hui.swt.SWTResourceManager;
 @SuppressWarnings("restriction")
 public class Application implements IApplication {
 
-    
-
     /*
      * (non-Javadoc)
      * 
@@ -47,20 +45,20 @@ public class Application implements IApplication {
 
         Display display = PlatformUI.createDisplay();
         try {
-            int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor());
+            int returnCode = PlatformUI.createAndRunWorkbench(display,
+                    new ApplicationWorkbenchAdvisor());
             if (returnCode == PlatformUI.RETURN_RESTART) {
                 return IApplication.EXIT_RESTART;
             }
             return IApplication.EXIT_OK;
         } finally {
             ConfigurationLogger.logStop();
-        	SWTResourceManager.dispose();
-        	ImageCache.getInstance().dispose();
+            SWTResourceManager.dispose();
+            ImageCache.getInstance().dispose();
             display.dispose();
         }
     }
 
-    
     /*
      * (non-Javadoc)
      * 

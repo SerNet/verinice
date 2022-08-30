@@ -20,22 +20,22 @@ package sernet.verinice.interfaces;
 import java.net.URL;
 
 public interface IInternalServer {
-	
-	void setGSCatalogURL(URL url);
-	
-	void setDSCatalogURL(URL url);
-	
-	void configureDatabase(String url, String user, String pass, String driver, String dialect);
-	
-	void configureSearch(boolean disable, boolean indexOnStartup);
 
-	void start() throws IllegalStateException;
-	
-	void stop();
-	
-	boolean isRunning();
-	
-	void addInternalServerStatusListener(IInternalServerStartListener listener);
-	
-	void removeInternalServerStatusListener(IInternalServerStartListener listener);
+    void setGSCatalogURL(URL url);
+
+    void setDSCatalogURL(URL url);
+
+    void configureDatabase(String url, String user, String pass, String driver, String dialect);
+
+    void configureSearch(boolean disable, boolean indexOnStartup);
+
+    void start() throws IllegalStateException;
+
+    void stop();
+
+    boolean isRunning();
+
+    void addInternalServerStatusListener(IInternalServerStartListener listener);
+
+    void removeInternalServerStatusListener(IInternalServerStartListener listener);
 }
