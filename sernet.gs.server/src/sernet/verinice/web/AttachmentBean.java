@@ -43,7 +43,7 @@ import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.AttachmentFileCreationFactory;
 import sernet.verinice.service.commands.LoadAttachmentFile;
-import sernet.verinice.service.commands.LoadAttachmentsUserFiltered;
+import sernet.verinice.service.commands.LoadAttachments;
 import sernet.verinice.service.commands.SaveNote;
 
 /**
@@ -106,10 +106,9 @@ public class AttachmentBean {
     }
 
     private List<Attachment> loadAttachmentsByCommand() throws CommandException {
-        LoadAttachmentsUserFiltered command = new LoadAttachmentsUserFiltered(
-                getElement().getDbId());
+        LoadAttachments command = new LoadAttachments(getElement().getDbId());
         command = getCommandService().executeCommand(command);
-        List<Attachment> result = command.getResult();
+        List<Attachment> result = command.getAttachmentList();
         if (result != null) {
             for (final Attachment attachment : result) {
                 // set transient cna-element-titel

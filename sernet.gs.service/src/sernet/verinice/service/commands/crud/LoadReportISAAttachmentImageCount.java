@@ -26,7 +26,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.bsi.Attachment;
-import sernet.verinice.service.commands.LoadAttachmentsUserFiltered;
+import sernet.verinice.service.commands.LoadAttachments;
 
 /**
  *
@@ -64,9 +64,9 @@ public class LoadReportISAAttachmentImageCount extends GenericCommand implements
             results = new ArrayList<String>(0);
             int count = 0;
             try {
-                LoadAttachmentsUserFiltered command = new LoadAttachmentsUserFiltered(rootElmt);
+                LoadAttachments command = new LoadAttachments(rootElmt);
                 command = getCommandService().executeCommand(command);
-                for (Attachment attachment : command.getResult()) {
+                for (Attachment attachment : command.getAttachmentList()) {
                     if (isSupportedMIMEType(attachment.getMimeType())) {
                         results.add(String.valueOf(count));
                         count++;

@@ -44,7 +44,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Evidence;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.LoadAttachmentFile;
-import sernet.verinice.service.commands.LoadAttachmentsUserFiltered;
+import sernet.verinice.service.commands.LoadAttachments;
 
 /**
  *
@@ -152,15 +152,15 @@ public class LoadReportISANetworkImages extends GenericCommand implements ICache
         for (Evidence evidence : evidences) {
 
             try {
-                LoadAttachmentsUserFiltered attachmentLoader = new LoadAttachmentsUserFiltered(
-                        evidence.getDbId());
+                LoadAttachments attachmentLoader = new LoadAttachments(evidence.getDbId());
                 attachmentLoader = getCommandService().executeCommand(attachmentLoader);
-                for (int i = 0; i < attachmentLoader.getResult().size(); i++) {
+                for (int i = 0; i < attachmentLoader.getAttachmentList().size(); i++) {
                     // report uses two tables next to each other showing
                     // odd/even numbered images only
                     // done to restriction showing always two images in a row
                     if ((i % 2 == 0 && !oddNumbers) || (i % 2 == 1 && oddNumbers)) {
-                        Attachment attachment = (Attachment) attachmentLoader.getResult().get(i);
+                        Attachment attachment = (Attachment) attachmentLoader.getAttachmentList()
+                                .get(i);
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("\t\tChecking MIME-Type of Attachment:\t"
                                     + attachment.getFileName());

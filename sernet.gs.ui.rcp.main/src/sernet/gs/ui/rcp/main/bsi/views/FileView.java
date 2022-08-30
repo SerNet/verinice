@@ -96,7 +96,7 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.LoadAttachmentFile;
-import sernet.verinice.service.commands.LoadAttachmentsUserFiltered;
+import sernet.verinice.service.commands.LoadAttachments;
 import sernet.verinice.service.commands.LoadFileSizeLimit;
 import sernet.verinice.service.commands.crud.DeleteNote;
 
@@ -432,9 +432,9 @@ public class FileView extends RightsEnabledView
                     return;
                 }
             }
-            LoadAttachmentsUserFiltered command = new LoadAttachmentsUserFiltered(id);
+            LoadAttachments command = new LoadAttachments(id);
             command = getCommandService().executeCommand(command);
-            attachmentList = command.getResult();
+            attachmentList = command.getAttachmentList();
             if (attachmentList != null && !attachmentList.isEmpty()) {
                 Display.getDefault().syncExec(() -> viewer.setInput(attachmentList));
                 for (final Attachment attachment : attachmentList) {
