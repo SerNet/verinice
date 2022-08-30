@@ -141,6 +141,8 @@ public class BSIMassnahmenModel {
 
             this.language = scrape.getLanguage();
 
+            cache = alleBst;
+
             mon.done();
             Logger.getLogger(BSIMassnahmenModel.class).debug(Messages.BSIMassnahmenModel_4);
 
