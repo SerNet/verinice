@@ -365,6 +365,22 @@
                     <property name="columnName">bp_requirement::Last__name__(Person)</property>
                     <property name="alias">Last__name__(Person)</property>
                 </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -506,6 +522,26 @@
                     <structure>
                         <property name="position">28</property>
                         <property name="name">Last__name__(Person)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">29</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">30</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">31</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">32</property>
+                        <property name="name">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -880,6 +916,22 @@
                     <property name="columnName">bp_requirement::Last__name__(Person)</property>
                     <property name="alias">Last__name__(Person)</property>
                 </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -1021,6 +1073,26 @@
                     <structure>
                         <property name="position">28</property>
                         <property name="name">Last__name__(Person)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">29</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">30</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">31</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">32</property>
+                        <property name="name">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -1310,6 +1382,22 @@
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">bp_requirement::IT-Baseline__Audit__-__Audit__performed__(Module-Requirement)</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -1441,6 +1529,26 @@
                     <structure>
                         <property name="position">26</property>
                         <property name="name">Last__name__(Person)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">27</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">28</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">29</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">30</property>
+                        <property name="name">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -1821,6 +1929,22 @@
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">bp_requirement::IT-Baseline__Audit__-__Audit__performed__(Module-Requirement)</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -1962,6 +2086,26 @@
                     <structure>
                         <property name="position">28</property>
                         <property name="name">Last__name__(Person)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">29</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">30</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">31</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">32</property>
+                        <property name="name">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -2895,6 +3039,22 @@
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">bp_requirement::IT-Baseline__Audit__-__Audit__performed__(Module-Requirement)</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -3036,6 +3196,26 @@
                     <structure>
                         <property name="position">28</property>
                         <property name="name">Last__name__(Person)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">29</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">30</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">31</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">32</property>
+                        <property name="name">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -3225,6 +3405,22 @@
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">bp_requirement::IT-Baseline__Audit__-__Audit__performed__(Module-Requirement)</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -3366,6 +3562,26 @@
                     <structure>
                         <property name="position">28</property>
                         <property name="name">Last__name__(Person)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">29</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">30</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">31</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">32</property>
+                        <property name="name">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -3555,6 +3771,22 @@
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">bp_requirement::IT-Baseline__Audit__-__Audit__performed__(Module-Requirement)</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -3696,6 +3928,26 @@
                     <structure>
                         <property name="position">28</property>
                         <property name="name">Last__name__(Person)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">29</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">30</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">31</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">32</property>
+                        <property name="name">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -3885,6 +4137,22 @@
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">bp_requirement::IT-Baseline__Audit__-__Audit__performed__(Module-Requirement)</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                </structure>
+                <structure>
+                    <property name="columnName">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                    <property name="alias">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -4026,6 +4294,26 @@
                     <structure>
                         <property name="position">28</property>
                         <property name="name">Last__name__(Person)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">29</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">30</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">31</property>
+                        <property name="name">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">32</property>
+                        <property name="name">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -4250,6 +4538,7 @@
         </grid>
         <list name="ItNetwork" id="78129">
             <property name="display">block</property>
+            <property name="pageBreakInside">avoid</property>
             <property name="dataSet">itnetwork_req</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -4408,7 +4697,34 @@
                     <expression name="expression" type="javascript">dataSetRow["Last__name__(Person)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">reportContext.getMessage("it_network", reportContext.getLocale());</expression>
+            </structure>
             <property name="repeatHeader">false</property>
             <header>
                 <label name="Title3" id="78130">
@@ -4421,9 +4737,6 @@
             <group id="78143">
                 <property name="groupName">modules</property>
                 <expression name="keyExpr" type="javascript">row["UUID__(Module(s))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["UUID__(Module(s))"]</expression>
-                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
@@ -4467,9 +4780,6 @@
             <group id="78165">
                 <property name="groupName">requirements</property>
                 <expression name="keyExpr" type="javascript">row["bp_requirement::UUID__(Module-Requirement)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["bp_requirement::UUID__(Module-Requirement)"]</expression>
-                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
@@ -4495,12 +4805,14 @@
                             <ref-entry baseId="76843" id="76843"/>
                             <ref-entry baseId="76937" name="Title1" id="80575"/>
                             <ref-entry baseId="76844" id="76844"/>
-                            <ref-entry baseId="76938" name="ImplStatus" id="80576"/>
-                            <ref-entry baseId="76845" id="76845"/>
-                            <ref-entry baseId="76939" name="DeduceImpl" id="80577"/>
-                            <ref-entry baseId="76846" id="76846"/>
-                            <ref-entry baseId="76847" id="76847"/>
                             <ref-entry baseId="76948" name="ModuleDescrpition" id="80578"/>
+                            <ref-entry baseId="76957" id="76957"/>
+                            <ref-entry baseId="76958" id="76958"/>
+                            <ref-entry baseId="76938" name="ImplStatus" id="80576"/>
+                            <ref-entry baseId="76959" id="76959"/>
+                            <ref-entry baseId="76939" name="DeduceImpl" id="80577"/>
+                            <ref-entry baseId="76960" id="76960"/>
+                            <ref-entry baseId="76962" name="ModuleDescrpition1" id="76962"/>
                             <ref-entry baseId="76851" id="76851"/>
                             <ref-entry baseId="76852" id="76852"/>
                             <ref-entry baseId="76935" name="AuditDate" id="80579"/>
@@ -4510,22 +4822,27 @@
                             <ref-entry baseId="76934" name="Interviewee" id="80581"/>
                             <ref-entry baseId="76855" id="76855"/>
                             <ref-entry baseId="76940" name="Methods" id="76940"/>
+                            <ref-entry baseId="76968" id="76968"/>
+                            <ref-entry baseId="76969" id="80582"/>
+                            <ref-entry baseId="76941" name="Questions" id="76941"/>
+                            <ref-entry baseId="76970" id="80583"/>
+                            <ref-entry baseId="76979" name="Improvement11" id="80584"/>
+                            <ref-entry baseId="76971" id="76971"/>
+                            <ref-entry baseId="76980" name="Improvement111" id="80585"/>
+                            <ref-entry baseId="76973" id="80586"/>
+                            <ref-entry baseId="76974" id="80587"/>
+                            <ref-entry baseId="76942" name="State" id="76942"/>
+                            <ref-entry baseId="76975" id="80588"/>
+                            <ref-entry baseId="76943" name="NonConformity" id="76943"/>
+                            <ref-entry baseId="76976" id="80589"/>
+                            <ref-entry baseId="76944" name="DeadlineForCorrection" id="80590"/>
+                            <ref-entry baseId="76977" id="80591"/>
+                            <ref-entry baseId="76945" name="ImprovementOccurred" id="80592"/>
                             <ref-entry baseId="76856" id="76856"/>
                             <ref-entry baseId="76857" id="76857"/>
-                            <ref-entry baseId="76941" name="Questions" id="76941"/>
+                            <ref-entry baseId="76946" name="Improvement" id="80593"/>
                             <ref-entry baseId="76859" id="76859"/>
-                            <ref-entry baseId="76942" name="State" id="76942"/>
-                            <ref-entry baseId="76861" id="76861"/>
-                            <ref-entry baseId="76864" id="76864"/>
-                            <ref-entry baseId="76943" name="NonConformity" id="76943"/>
-                            <ref-entry baseId="76866" id="76866"/>
-                            <ref-entry baseId="76869" id="76869"/>
-                            <ref-entry baseId="76944" name="DeadlineForCorrection" id="80582"/>
-                            <ref-entry baseId="76871" id="76871"/>
-                            <ref-entry baseId="76872" id="76872"/>
-                            <ref-entry baseId="76945" name="ImprovementOccurred" id="80583"/>
-                            <ref-entry baseId="76873" id="76873"/>
-                            <ref-entry baseId="76946" name="Improvement" id="80584"/>
+                            <ref-entry baseId="76978" name="Improvement1" id="80594"/>
                         </overridden-values>
                     </grid>
                 </header>
@@ -4533,6 +4850,7 @@
         </list>
         <list name="Processes" id="76972">
             <property name="display">block</property>
+            <property name="pageBreakInside">avoid</property>
             <property name="dataSet">proc_req</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -4703,7 +5021,34 @@
                     <expression name="expression" type="javascript">dataSetRow["Last__name__(Person)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">reportContext.getMessage("business_processes", reportContext.getLocale());</expression>
+            </structure>
             <property name="repeatHeader">false</property>
             <header>
                 <label name="ProcessesTitle" id="76973">
@@ -4717,7 +5062,7 @@
                 <property name="groupName">processes</property>
                 <expression name="keyExpr" type="javascript">row["UUID__(Business__Process)"]</expression>
                 <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["UUID__(Business__Process)"]</expression>
+                    <expression name="expressionValue" type="javascript">row["Title__(Business__Process)"]</expression>
                 </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
@@ -4763,9 +5108,6 @@
             <group id="76986">
                 <property name="groupName">modules</property>
                 <expression name="keyExpr" type="javascript">row["UUID__(Module(s))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["UUID__(Module(s))"]</expression>
-                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
@@ -4778,25 +5120,25 @@
                 <header>
                     <grid name="Module1" id="76987" extends="bp_audit.Module">
                         <overridden-values>
-                            <ref-entry baseId="76798" id="80585"/>
-                            <ref-entry baseId="76799" id="80586"/>
-                            <ref-entry baseId="76800" id="80587"/>
-                            <ref-entry baseId="76801" id="80588"/>
-                            <ref-entry baseId="76802" id="80589"/>
-                            <ref-entry baseId="76803" id="80590"/>
-                            <ref-entry baseId="76950" name="ModuleHeader1" id="80591"/>
-                            <ref-entry baseId="76807" id="80592"/>
-                            <ref-entry baseId="76808" id="80593"/>
-                            <ref-entry baseId="76951" name="ModuleIdentifier1" id="80594"/>
-                            <ref-entry baseId="76809" id="80595"/>
-                            <ref-entry baseId="76952" name="ModuleTitle1" id="80596"/>
-                            <ref-entry baseId="76810" id="80597"/>
-                            <ref-entry baseId="76953" name="ImplOrder1" id="80598"/>
-                            <ref-entry baseId="76811" id="80599"/>
-                            <ref-entry baseId="76954" name="Release1" id="80600"/>
-                            <ref-entry baseId="76816" id="80601"/>
-                            <ref-entry baseId="76817" id="80602"/>
-                            <ref-entry baseId="76955" name="Description1" id="80603"/>
+                            <ref-entry baseId="76798" id="80595"/>
+                            <ref-entry baseId="76799" id="80596"/>
+                            <ref-entry baseId="76800" id="80597"/>
+                            <ref-entry baseId="76801" id="80598"/>
+                            <ref-entry baseId="76802" id="80599"/>
+                            <ref-entry baseId="76803" id="80600"/>
+                            <ref-entry baseId="76950" name="ModuleHeader1" id="80601"/>
+                            <ref-entry baseId="76807" id="80602"/>
+                            <ref-entry baseId="76808" id="80603"/>
+                            <ref-entry baseId="76951" name="ModuleIdentifier1" id="80604"/>
+                            <ref-entry baseId="76809" id="80605"/>
+                            <ref-entry baseId="76952" name="ModuleTitle1" id="80606"/>
+                            <ref-entry baseId="76810" id="80607"/>
+                            <ref-entry baseId="76953" name="ImplOrder1" id="80608"/>
+                            <ref-entry baseId="76811" id="80609"/>
+                            <ref-entry baseId="76954" name="Release1" id="80610"/>
+                            <ref-entry baseId="76816" id="80611"/>
+                            <ref-entry baseId="76817" id="80612"/>
+                            <ref-entry baseId="76955" name="Description1" id="80613"/>
                         </overridden-values>
                     </grid>
                 </header>
@@ -4804,9 +5146,6 @@
             <group id="77007">
                 <property name="groupName">requirements</property>
                 <expression name="keyExpr" type="javascript">row["bp_requirement::UUID__(Module-Requirement)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["bp_requirement::UUID__(Module-Requirement)"]</expression>
-                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
@@ -4819,50 +5158,57 @@
                 <header>
                     <grid name="Requirement1" id="77008" extends="bp_audit.Requirement">
                         <overridden-values>
-                            <ref-entry baseId="76832" id="80604"/>
-                            <ref-entry baseId="76833" id="80605"/>
-                            <ref-entry baseId="76834" id="80606"/>
-                            <ref-entry baseId="76835" id="80607"/>
-                            <ref-entry baseId="76836" id="80608"/>
-                            <ref-entry baseId="76837" id="80609"/>
-                            <ref-entry baseId="76876" name="NewLabel11" id="80610"/>
-                            <ref-entry baseId="76841" id="80611"/>
-                            <ref-entry baseId="76842" id="80612"/>
-                            <ref-entry baseId="76936" name="Identifier1" id="80613"/>
-                            <ref-entry baseId="76843" id="80614"/>
-                            <ref-entry baseId="76937" name="Title2" id="80615"/>
-                            <ref-entry baseId="76844" id="80616"/>
-                            <ref-entry baseId="76938" name="ImplStatus1" id="80617"/>
-                            <ref-entry baseId="76845" id="80618"/>
-                            <ref-entry baseId="76939" name="DeduceImpl1" id="80619"/>
-                            <ref-entry baseId="76846" id="80620"/>
-                            <ref-entry baseId="76847" id="80621"/>
-                            <ref-entry baseId="76948" name="ModuleDescrpition1" id="80622"/>
-                            <ref-entry baseId="76851" id="80623"/>
-                            <ref-entry baseId="76852" id="80624"/>
-                            <ref-entry baseId="76935" name="AuditDate1" id="80625"/>
-                            <ref-entry baseId="76853" id="80626"/>
-                            <ref-entry baseId="76933" name="Auditor1" id="80627"/>
-                            <ref-entry baseId="76854" id="80628"/>
-                            <ref-entry baseId="76934" name="Interviewee1" id="80629"/>
-                            <ref-entry baseId="76855" id="80630"/>
-                            <ref-entry baseId="76940" name="Methods1" id="80631"/>
-                            <ref-entry baseId="76856" id="80632"/>
-                            <ref-entry baseId="76857" id="80633"/>
-                            <ref-entry baseId="76941" name="Questions1" id="80634"/>
-                            <ref-entry baseId="76859" id="80635"/>
-                            <ref-entry baseId="76942" name="State1" id="80636"/>
-                            <ref-entry baseId="76861" id="80637"/>
-                            <ref-entry baseId="76864" id="80638"/>
-                            <ref-entry baseId="76943" name="NonConformity1" id="80639"/>
-                            <ref-entry baseId="76866" id="80640"/>
-                            <ref-entry baseId="76869" id="80641"/>
-                            <ref-entry baseId="76944" name="DeadlineForCorrection1" id="80642"/>
-                            <ref-entry baseId="76871" id="80643"/>
-                            <ref-entry baseId="76872" id="80644"/>
-                            <ref-entry baseId="76945" name="ImprovementOccurred1" id="80645"/>
-                            <ref-entry baseId="76873" id="80646"/>
-                            <ref-entry baseId="76946" name="Improvement1" id="80647"/>
+                            <ref-entry baseId="76832" id="80614"/>
+                            <ref-entry baseId="76833" id="80615"/>
+                            <ref-entry baseId="76834" id="80616"/>
+                            <ref-entry baseId="76835" id="80617"/>
+                            <ref-entry baseId="76836" id="80618"/>
+                            <ref-entry baseId="76837" id="80619"/>
+                            <ref-entry baseId="76876" name="NewLabel11" id="80620"/>
+                            <ref-entry baseId="76841" id="80621"/>
+                            <ref-entry baseId="76842" id="80622"/>
+                            <ref-entry baseId="76936" name="Identifier1" id="80623"/>
+                            <ref-entry baseId="76843" id="80624"/>
+                            <ref-entry baseId="76937" name="Title2" id="80625"/>
+                            <ref-entry baseId="76844" id="80626"/>
+                            <ref-entry baseId="76948" name="ModuleDescrpition11" id="80627"/>
+                            <ref-entry baseId="76957" id="80628"/>
+                            <ref-entry baseId="76958" id="80629"/>
+                            <ref-entry baseId="76938" name="ImplStatus1" id="80630"/>
+                            <ref-entry baseId="76959" id="80631"/>
+                            <ref-entry baseId="76939" name="DeduceImpl1" id="80632"/>
+                            <ref-entry baseId="76960" id="80633"/>
+                            <ref-entry baseId="76962" name="ModuleDescrpition12" id="80634"/>
+                            <ref-entry baseId="76851" id="80635"/>
+                            <ref-entry baseId="76852" id="80636"/>
+                            <ref-entry baseId="76935" name="AuditDate1" id="80637"/>
+                            <ref-entry baseId="76853" id="80638"/>
+                            <ref-entry baseId="76933" name="Auditor1" id="80639"/>
+                            <ref-entry baseId="76854" id="80640"/>
+                            <ref-entry baseId="76934" name="Interviewee1" id="80641"/>
+                            <ref-entry baseId="76855" id="80642"/>
+                            <ref-entry baseId="76940" name="Methods1" id="80643"/>
+                            <ref-entry baseId="76968" id="80644"/>
+                            <ref-entry baseId="76969" id="80645"/>
+                            <ref-entry baseId="76941" name="Questions1" id="80646"/>
+                            <ref-entry baseId="76970" id="80647"/>
+                            <ref-entry baseId="76979" name="Improvement112" id="80648"/>
+                            <ref-entry baseId="76971" id="80649"/>
+                            <ref-entry baseId="76980" name="Improvement1111" id="80650"/>
+                            <ref-entry baseId="76973" id="80651"/>
+                            <ref-entry baseId="76974" id="80652"/>
+                            <ref-entry baseId="76942" name="State1" id="80653"/>
+                            <ref-entry baseId="76975" id="80654"/>
+                            <ref-entry baseId="76943" name="NonConformity1" id="80655"/>
+                            <ref-entry baseId="76976" id="80656"/>
+                            <ref-entry baseId="76944" name="DeadlineForCorrection1" id="80657"/>
+                            <ref-entry baseId="76977" id="80658"/>
+                            <ref-entry baseId="76945" name="ImprovementOccurred1" id="80659"/>
+                            <ref-entry baseId="76856" id="80660"/>
+                            <ref-entry baseId="76857" id="80661"/>
+                            <ref-entry baseId="76946" name="Improvement12" id="80662"/>
+                            <ref-entry baseId="76859" id="80663"/>
+                            <ref-entry baseId="76978" name="Improvement13" id="80664"/>
                         </overridden-values>
                     </grid>
                 </header>
@@ -4875,6 +5221,7 @@
         </list>
         <list name="Applications" id="76793">
             <property name="display">block</property>
+            <property name="pageBreakInside">avoid</property>
             <property name="dataSet">app_req</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -5063,7 +5410,34 @@
                     <expression name="expression" type="javascript">dataSetRow["Last__name__(Person)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">reportContext.getMessage("applications", reportContext.getLocale());</expression>
+            </structure>
             <property name="repeatHeader">false</property>
             <header>
                 <label name="Title" id="76944">
@@ -5077,7 +5451,7 @@
                 <property name="groupName">applications</property>
                 <expression name="keyExpr" type="javascript">row["UUID__(Application)"]</expression>
                 <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["UUID__(Application)"]</expression>
+                    <expression name="expressionValue" type="javascript">row["Title__(Application)"]</expression>
                 </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
@@ -5110,7 +5484,7 @@
                                 <property name="colSpan">3</property>
                                 <property name="rowSpan">1</property>
                                 <text-data name="AppTitle" id="78633">
-                                    <expression name="valueExpr">row["AppTitle"]</expression>
+                                    <expression name="valueExpr" type="javascript">row["Title__(Application)"]</expression>
                                     <property name="contentType">html</property>
                                 </text-data>
                             </cell>
@@ -5124,9 +5498,6 @@
             <group id="76795">
                 <property name="groupName">modules</property>
                 <expression name="keyExpr" type="javascript">row["UUID__(Module(s))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["UUID__(Module(s))"]</expression>
-                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
@@ -5139,25 +5510,25 @@
                 <header>
                     <grid name="Module" id="76948" extends="bp_audit.Module">
                         <overridden-values>
-                            <ref-entry baseId="76798" id="80648"/>
-                            <ref-entry baseId="76799" id="80649"/>
-                            <ref-entry baseId="76800" id="80650"/>
-                            <ref-entry baseId="76801" id="80651"/>
-                            <ref-entry baseId="76802" id="80652"/>
-                            <ref-entry baseId="76803" id="80653"/>
-                            <ref-entry baseId="76950" name="ModuleHeader2" id="80654"/>
-                            <ref-entry baseId="76807" id="80655"/>
-                            <ref-entry baseId="76808" id="80656"/>
-                            <ref-entry baseId="76951" name="ModuleIdentifier2" id="80657"/>
-                            <ref-entry baseId="76809" id="80658"/>
-                            <ref-entry baseId="76952" name="ModuleTitle2" id="80659"/>
-                            <ref-entry baseId="76810" id="80660"/>
-                            <ref-entry baseId="76953" name="ImplOrder2" id="80661"/>
-                            <ref-entry baseId="76811" id="80662"/>
-                            <ref-entry baseId="76954" name="Release2" id="80663"/>
-                            <ref-entry baseId="76816" id="80664"/>
-                            <ref-entry baseId="76817" id="80665"/>
-                            <ref-entry baseId="76955" name="Description2" id="80666"/>
+                            <ref-entry baseId="76798" id="80668"/>
+                            <ref-entry baseId="76799" id="80669"/>
+                            <ref-entry baseId="76800" id="80670"/>
+                            <ref-entry baseId="76801" id="80671"/>
+                            <ref-entry baseId="76802" id="80672"/>
+                            <ref-entry baseId="76803" id="80673"/>
+                            <ref-entry baseId="76950" name="ModuleHeader2" id="80674"/>
+                            <ref-entry baseId="76807" id="80675"/>
+                            <ref-entry baseId="76808" id="80676"/>
+                            <ref-entry baseId="76951" name="ModuleIdentifier2" id="80677"/>
+                            <ref-entry baseId="76809" id="80678"/>
+                            <ref-entry baseId="76952" name="ModuleTitle2" id="80679"/>
+                            <ref-entry baseId="76810" id="80680"/>
+                            <ref-entry baseId="76953" name="ImplOrder2" id="80681"/>
+                            <ref-entry baseId="76811" id="80682"/>
+                            <ref-entry baseId="76954" name="Release2" id="80683"/>
+                            <ref-entry baseId="76816" id="80684"/>
+                            <ref-entry baseId="76817" id="80685"/>
+                            <ref-entry baseId="76955" name="Description2" id="80686"/>
                         </overridden-values>
                     </grid>
                 </header>
@@ -5170,9 +5541,6 @@
             <group id="76926">
                 <property name="groupName">requirements</property>
                 <expression name="keyExpr" type="javascript">row["bp_requirement::UUID__(Module-Requirement)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["bp_requirement::UUID__(Module-Requirement)"]</expression>
-                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
@@ -5185,50 +5553,57 @@
                 <header>
                     <grid name="Requirement" id="77543" extends="bp_audit.Requirement">
                         <overridden-values>
-                            <ref-entry baseId="76832" id="80667"/>
-                            <ref-entry baseId="76833" id="80668"/>
-                            <ref-entry baseId="76834" id="80669"/>
-                            <ref-entry baseId="76835" id="80670"/>
-                            <ref-entry baseId="76836" id="80671"/>
-                            <ref-entry baseId="76837" id="80672"/>
-                            <ref-entry baseId="76876" name="NewLabel13" id="80673"/>
-                            <ref-entry baseId="76841" id="80674"/>
-                            <ref-entry baseId="76842" id="80675"/>
-                            <ref-entry baseId="76936" name="Identifier2" id="80676"/>
-                            <ref-entry baseId="76843" id="80677"/>
-                            <ref-entry baseId="76937" name="Title4" id="80678"/>
-                            <ref-entry baseId="76844" id="80679"/>
-                            <ref-entry baseId="76938" name="ImplStatus2" id="80680"/>
-                            <ref-entry baseId="76845" id="80681"/>
-                            <ref-entry baseId="76939" name="DeduceImpl2" id="80682"/>
-                            <ref-entry baseId="76846" id="80683"/>
-                            <ref-entry baseId="76847" id="80684"/>
-                            <ref-entry baseId="76948" name="ModuleDescrpition2" id="80685"/>
-                            <ref-entry baseId="76851" id="80686"/>
-                            <ref-entry baseId="76852" id="80687"/>
-                            <ref-entry baseId="76935" name="AuditDate2" id="80688"/>
-                            <ref-entry baseId="76853" id="80689"/>
-                            <ref-entry baseId="76933" name="Auditor2" id="80690"/>
-                            <ref-entry baseId="76854" id="80691"/>
-                            <ref-entry baseId="76934" name="Interviewee2" id="80692"/>
-                            <ref-entry baseId="76855" id="80693"/>
-                            <ref-entry baseId="76940" name="Methods2" id="80694"/>
-                            <ref-entry baseId="76856" id="80695"/>
-                            <ref-entry baseId="76857" id="80696"/>
-                            <ref-entry baseId="76941" name="Questions2" id="80697"/>
-                            <ref-entry baseId="76859" id="80698"/>
-                            <ref-entry baseId="76942" name="State2" id="80699"/>
-                            <ref-entry baseId="76861" id="80700"/>
-                            <ref-entry baseId="76864" id="80701"/>
-                            <ref-entry baseId="76943" name="NonConformity2" id="80702"/>
-                            <ref-entry baseId="76866" id="80703"/>
-                            <ref-entry baseId="76869" id="80704"/>
-                            <ref-entry baseId="76944" name="DeadlineForCorrection2" id="80705"/>
-                            <ref-entry baseId="76871" id="80706"/>
-                            <ref-entry baseId="76872" id="80707"/>
-                            <ref-entry baseId="76945" name="ImprovementOccurred2" id="80708"/>
-                            <ref-entry baseId="76873" id="80709"/>
-                            <ref-entry baseId="76946" name="Improvement2" id="80710"/>
+                            <ref-entry baseId="76832" id="80687"/>
+                            <ref-entry baseId="76833" id="80688"/>
+                            <ref-entry baseId="76834" id="80689"/>
+                            <ref-entry baseId="76835" id="80690"/>
+                            <ref-entry baseId="76836" id="80691"/>
+                            <ref-entry baseId="76837" id="80692"/>
+                            <ref-entry baseId="76876" name="NewLabel13" id="80693"/>
+                            <ref-entry baseId="76841" id="80694"/>
+                            <ref-entry baseId="76842" id="80695"/>
+                            <ref-entry baseId="76936" name="Identifier2" id="80696"/>
+                            <ref-entry baseId="76843" id="80697"/>
+                            <ref-entry baseId="76937" name="Title4" id="80698"/>
+                            <ref-entry baseId="76844" id="80699"/>
+                            <ref-entry baseId="76948" name="ModuleDescrpition2" id="80700"/>
+                            <ref-entry baseId="76957" id="80701"/>
+                            <ref-entry baseId="76958" id="80702"/>
+                            <ref-entry baseId="76938" name="ImplStatus2" id="80703"/>
+                            <ref-entry baseId="76959" id="80704"/>
+                            <ref-entry baseId="76939" name="DeduceImpl2" id="80705"/>
+                            <ref-entry baseId="76960" id="80706"/>
+                            <ref-entry baseId="76962" name="ModuleDescrpition13" id="80707"/>
+                            <ref-entry baseId="76851" id="80708"/>
+                            <ref-entry baseId="76852" id="80709"/>
+                            <ref-entry baseId="76935" name="AuditDate2" id="80710"/>
+                            <ref-entry baseId="76853" id="80711"/>
+                            <ref-entry baseId="76933" name="Auditor2" id="80712"/>
+                            <ref-entry baseId="76854" id="80713"/>
+                            <ref-entry baseId="76934" name="Interviewee2" id="80714"/>
+                            <ref-entry baseId="76855" id="80715"/>
+                            <ref-entry baseId="76940" name="Methods2" id="80716"/>
+                            <ref-entry baseId="76968" id="80717"/>
+                            <ref-entry baseId="76969" id="80718"/>
+                            <ref-entry baseId="76941" name="Questions2" id="80719"/>
+                            <ref-entry baseId="76970" id="80720"/>
+                            <ref-entry baseId="76979" name="Improvement113" id="80721"/>
+                            <ref-entry baseId="76971" id="80722"/>
+                            <ref-entry baseId="76980" name="Improvement1112" id="80723"/>
+                            <ref-entry baseId="76973" id="80724"/>
+                            <ref-entry baseId="76974" id="80725"/>
+                            <ref-entry baseId="76942" name="State2" id="80726"/>
+                            <ref-entry baseId="76975" id="80727"/>
+                            <ref-entry baseId="76943" name="NonConformity2" id="80728"/>
+                            <ref-entry baseId="76976" id="80729"/>
+                            <ref-entry baseId="76944" name="DeadlineForCorrection2" id="80730"/>
+                            <ref-entry baseId="76977" id="80731"/>
+                            <ref-entry baseId="76945" name="ImprovementOccurred2" id="80732"/>
+                            <ref-entry baseId="76856" id="80733"/>
+                            <ref-entry baseId="76857" id="80734"/>
+                            <ref-entry baseId="76946" name="Improvement2" id="80735"/>
+                            <ref-entry baseId="76859" id="80736"/>
+                            <ref-entry baseId="76978" name="Improvement14" id="80737"/>
                         </overridden-values>
                     </grid>
                 </header>
@@ -5236,6 +5611,7 @@
         </list>
         <list name="ItSystems" id="78716">
             <property name="display">block</property>
+            <property name="pageBreakInside">avoid</property>
             <property name="dataSet">itsystem_req</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -5406,7 +5782,34 @@
                     <expression name="expression" type="javascript">dataSetRow["Last__name__(Person)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">reportContext.getMessage("it_systems", reportContext.getLocale());</expression>
+            </structure>
             <property name="repeatHeader">false</property>
             <header>
                 <label name="Title5" id="78717">
@@ -5420,7 +5823,7 @@
                 <property name="groupName">itsystems</property>
                 <expression name="keyExpr" type="javascript">row["UUID__(IT__System)"]</expression>
                 <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["UUID__(IT__System)"]</expression>
+                    <expression name="expressionValue" type="javascript">row["Title__(IT__System)"]</expression>
                 </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
@@ -5466,9 +5869,6 @@
             <group id="78730">
                 <property name="groupName">modules</property>
                 <expression name="keyExpr" type="javascript">row["UUID__(Module(s))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["UUID__(Module(s))"]</expression>
-                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
@@ -5481,25 +5881,25 @@
                 <header>
                     <grid name="Module3" id="78731" extends="bp_audit.Module">
                         <overridden-values>
-                            <ref-entry baseId="76798" id="80711"/>
-                            <ref-entry baseId="76799" id="80712"/>
-                            <ref-entry baseId="76800" id="80713"/>
-                            <ref-entry baseId="76801" id="80714"/>
-                            <ref-entry baseId="76802" id="80715"/>
-                            <ref-entry baseId="76803" id="80716"/>
-                            <ref-entry baseId="76950" name="ModuleHeader3" id="80717"/>
-                            <ref-entry baseId="76807" id="80718"/>
-                            <ref-entry baseId="76808" id="80719"/>
-                            <ref-entry baseId="76951" name="ModuleIdentifier3" id="80720"/>
-                            <ref-entry baseId="76809" id="80721"/>
-                            <ref-entry baseId="76952" name="ModuleTitle3" id="80722"/>
-                            <ref-entry baseId="76810" id="80723"/>
-                            <ref-entry baseId="76953" name="ImplOrder3" id="80724"/>
-                            <ref-entry baseId="76811" id="80725"/>
-                            <ref-entry baseId="76954" name="Release3" id="80726"/>
-                            <ref-entry baseId="76816" id="80727"/>
-                            <ref-entry baseId="76817" id="80728"/>
-                            <ref-entry baseId="76955" name="Description3" id="80729"/>
+                            <ref-entry baseId="76798" id="80741"/>
+                            <ref-entry baseId="76799" id="80742"/>
+                            <ref-entry baseId="76800" id="80743"/>
+                            <ref-entry baseId="76801" id="80744"/>
+                            <ref-entry baseId="76802" id="80745"/>
+                            <ref-entry baseId="76803" id="80746"/>
+                            <ref-entry baseId="76950" name="ModuleHeader3" id="80747"/>
+                            <ref-entry baseId="76807" id="80748"/>
+                            <ref-entry baseId="76808" id="80749"/>
+                            <ref-entry baseId="76951" name="ModuleIdentifier3" id="80750"/>
+                            <ref-entry baseId="76809" id="80751"/>
+                            <ref-entry baseId="76952" name="ModuleTitle3" id="80752"/>
+                            <ref-entry baseId="76810" id="80753"/>
+                            <ref-entry baseId="76953" name="ImplOrder3" id="80754"/>
+                            <ref-entry baseId="76811" id="80755"/>
+                            <ref-entry baseId="76954" name="Release3" id="80756"/>
+                            <ref-entry baseId="76816" id="80757"/>
+                            <ref-entry baseId="76817" id="80758"/>
+                            <ref-entry baseId="76955" name="Description3" id="80759"/>
                         </overridden-values>
                     </grid>
                 </header>
@@ -5512,9 +5912,6 @@
             <group id="78752">
                 <property name="groupName">requirements</property>
                 <expression name="keyExpr" type="javascript">row["bp_requirement::UUID__(Module-Requirement)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["bp_requirement::UUID__(Module-Requirement)"]</expression>
-                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
@@ -5527,50 +5924,57 @@
                 <header>
                     <grid name="Requirement3" id="78753" extends="bp_audit.Requirement">
                         <overridden-values>
-                            <ref-entry baseId="76832" id="80730"/>
-                            <ref-entry baseId="76833" id="80731"/>
-                            <ref-entry baseId="76834" id="80732"/>
-                            <ref-entry baseId="76835" id="80733"/>
-                            <ref-entry baseId="76836" id="80734"/>
-                            <ref-entry baseId="76837" id="80735"/>
-                            <ref-entry baseId="76876" name="NewLabel14" id="80736"/>
-                            <ref-entry baseId="76841" id="80737"/>
-                            <ref-entry baseId="76842" id="80738"/>
-                            <ref-entry baseId="76936" name="Identifier3" id="80739"/>
-                            <ref-entry baseId="76843" id="80740"/>
-                            <ref-entry baseId="76937" name="Title6" id="80741"/>
-                            <ref-entry baseId="76844" id="80742"/>
-                            <ref-entry baseId="76938" name="ImplStatus3" id="80743"/>
-                            <ref-entry baseId="76845" id="80744"/>
-                            <ref-entry baseId="76939" name="DeduceImpl3" id="80745"/>
-                            <ref-entry baseId="76846" id="80746"/>
-                            <ref-entry baseId="76847" id="80747"/>
-                            <ref-entry baseId="76948" name="ModuleDescrpition3" id="80748"/>
-                            <ref-entry baseId="76851" id="80749"/>
-                            <ref-entry baseId="76852" id="80750"/>
-                            <ref-entry baseId="76935" name="AuditDate3" id="80751"/>
-                            <ref-entry baseId="76853" id="80752"/>
-                            <ref-entry baseId="76933" name="Auditor3" id="80753"/>
-                            <ref-entry baseId="76854" id="80754"/>
-                            <ref-entry baseId="76934" name="Interviewee3" id="80755"/>
-                            <ref-entry baseId="76855" id="80756"/>
-                            <ref-entry baseId="76940" name="Methods3" id="80757"/>
-                            <ref-entry baseId="76856" id="80758"/>
-                            <ref-entry baseId="76857" id="80759"/>
-                            <ref-entry baseId="76941" name="Questions3" id="80760"/>
-                            <ref-entry baseId="76859" id="80761"/>
-                            <ref-entry baseId="76942" name="State3" id="80762"/>
-                            <ref-entry baseId="76861" id="80763"/>
-                            <ref-entry baseId="76864" id="80764"/>
-                            <ref-entry baseId="76943" name="NonConformity3" id="80765"/>
-                            <ref-entry baseId="76866" id="80766"/>
-                            <ref-entry baseId="76869" id="80767"/>
-                            <ref-entry baseId="76944" name="DeadlineForCorrection3" id="80768"/>
-                            <ref-entry baseId="76871" id="80769"/>
-                            <ref-entry baseId="76872" id="80770"/>
-                            <ref-entry baseId="76945" name="ImprovementOccurred3" id="80771"/>
-                            <ref-entry baseId="76873" id="80772"/>
-                            <ref-entry baseId="76946" name="Improvement3" id="80773"/>
+                            <ref-entry baseId="76832" id="80760"/>
+                            <ref-entry baseId="76833" id="80761"/>
+                            <ref-entry baseId="76834" id="80762"/>
+                            <ref-entry baseId="76835" id="80763"/>
+                            <ref-entry baseId="76836" id="80764"/>
+                            <ref-entry baseId="76837" id="80765"/>
+                            <ref-entry baseId="76876" name="NewLabel14" id="80766"/>
+                            <ref-entry baseId="76841" id="80767"/>
+                            <ref-entry baseId="76842" id="80768"/>
+                            <ref-entry baseId="76936" name="Identifier3" id="80769"/>
+                            <ref-entry baseId="76843" id="80770"/>
+                            <ref-entry baseId="76937" name="Title6" id="80771"/>
+                            <ref-entry baseId="76844" id="80772"/>
+                            <ref-entry baseId="76948" name="ModuleDescrpition3" id="80773"/>
+                            <ref-entry baseId="76957" id="80774"/>
+                            <ref-entry baseId="76958" id="80775"/>
+                            <ref-entry baseId="76938" name="ImplStatus3" id="80776"/>
+                            <ref-entry baseId="76959" id="80777"/>
+                            <ref-entry baseId="76939" name="DeduceImpl3" id="80778"/>
+                            <ref-entry baseId="76960" id="80779"/>
+                            <ref-entry baseId="76962" name="ModuleDescrpition14" id="80780"/>
+                            <ref-entry baseId="76851" id="80781"/>
+                            <ref-entry baseId="76852" id="80782"/>
+                            <ref-entry baseId="76935" name="AuditDate3" id="80783"/>
+                            <ref-entry baseId="76853" id="80784"/>
+                            <ref-entry baseId="76933" name="Auditor3" id="80785"/>
+                            <ref-entry baseId="76854" id="80786"/>
+                            <ref-entry baseId="76934" name="Interviewee3" id="80787"/>
+                            <ref-entry baseId="76855" id="80788"/>
+                            <ref-entry baseId="76940" name="Methods3" id="80789"/>
+                            <ref-entry baseId="76968" id="80790"/>
+                            <ref-entry baseId="76969" id="80791"/>
+                            <ref-entry baseId="76941" name="Questions3" id="80792"/>
+                            <ref-entry baseId="76970" id="80793"/>
+                            <ref-entry baseId="76979" name="Improvement114" id="80794"/>
+                            <ref-entry baseId="76971" id="80795"/>
+                            <ref-entry baseId="76980" name="Improvement1113" id="80796"/>
+                            <ref-entry baseId="76973" id="80797"/>
+                            <ref-entry baseId="76974" id="80798"/>
+                            <ref-entry baseId="76942" name="State3" id="80799"/>
+                            <ref-entry baseId="76975" id="80800"/>
+                            <ref-entry baseId="76943" name="NonConformity3" id="80801"/>
+                            <ref-entry baseId="76976" id="80802"/>
+                            <ref-entry baseId="76944" name="DeadlineForCorrection3" id="80803"/>
+                            <ref-entry baseId="76977" id="80804"/>
+                            <ref-entry baseId="76945" name="ImprovementOccurred3" id="80805"/>
+                            <ref-entry baseId="76856" id="80806"/>
+                            <ref-entry baseId="76857" id="80807"/>
+                            <ref-entry baseId="76946" name="Improvement3" id="80808"/>
+                            <ref-entry baseId="76859" id="80809"/>
+                            <ref-entry baseId="76978" name="Improvement15" id="80810"/>
                         </overridden-values>
                     </grid>
                 </header>
@@ -5578,6 +5982,7 @@
         </list>
         <list name="IcsSystems" id="78890">
             <property name="display">block</property>
+            <property name="pageBreakInside">avoid</property>
             <property name="dataSet">icssystem_req</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -5748,7 +6153,34 @@
                     <expression name="expression" type="javascript">dataSetRow["Last__name__(Person)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">reportContext.getMessage("ics_systems", reportContext.getLocale());</expression>
+            </structure>
             <property name="repeatHeader">false</property>
             <header>
                 <label name="Title51" id="78891">
@@ -5762,7 +6194,7 @@
                 <property name="groupName">icssystems</property>
                 <expression name="keyExpr" type="javascript">row["UUID__(ICS__System)"]</expression>
                 <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["UUID__(ICS__System)"]</expression>
+                    <expression name="expressionValue" type="javascript">row["Title__(ICS__System)"]</expression>
                 </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
@@ -5808,9 +6240,6 @@
             <group id="78904">
                 <property name="groupName">modules</property>
                 <expression name="keyExpr" type="javascript">row["UUID__(Module(s))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["UUID__(Module(s))"]</expression>
-                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
@@ -5823,25 +6252,25 @@
                 <header>
                     <grid name="Module31" id="78905" extends="bp_audit.Module">
                         <overridden-values>
-                            <ref-entry baseId="76798" id="80774"/>
-                            <ref-entry baseId="76799" id="80775"/>
-                            <ref-entry baseId="76800" id="80776"/>
-                            <ref-entry baseId="76801" id="80777"/>
-                            <ref-entry baseId="76802" id="80778"/>
-                            <ref-entry baseId="76803" id="80779"/>
-                            <ref-entry baseId="76950" name="ModuleHeader4" id="80780"/>
-                            <ref-entry baseId="76807" id="80781"/>
-                            <ref-entry baseId="76808" id="80782"/>
-                            <ref-entry baseId="76951" name="ModuleIdentifier4" id="80783"/>
-                            <ref-entry baseId="76809" id="80784"/>
-                            <ref-entry baseId="76952" name="ModuleTitle4" id="80785"/>
-                            <ref-entry baseId="76810" id="80786"/>
-                            <ref-entry baseId="76953" name="ImplOrder4" id="80787"/>
-                            <ref-entry baseId="76811" id="80788"/>
-                            <ref-entry baseId="76954" name="Release4" id="80789"/>
-                            <ref-entry baseId="76816" id="80790"/>
-                            <ref-entry baseId="76817" id="80791"/>
-                            <ref-entry baseId="76955" name="Description4" id="80792"/>
+                            <ref-entry baseId="76798" id="80814"/>
+                            <ref-entry baseId="76799" id="80815"/>
+                            <ref-entry baseId="76800" id="80816"/>
+                            <ref-entry baseId="76801" id="80817"/>
+                            <ref-entry baseId="76802" id="80818"/>
+                            <ref-entry baseId="76803" id="80819"/>
+                            <ref-entry baseId="76950" name="ModuleHeader4" id="80820"/>
+                            <ref-entry baseId="76807" id="80821"/>
+                            <ref-entry baseId="76808" id="80822"/>
+                            <ref-entry baseId="76951" name="ModuleIdentifier4" id="80823"/>
+                            <ref-entry baseId="76809" id="80824"/>
+                            <ref-entry baseId="76952" name="ModuleTitle4" id="80825"/>
+                            <ref-entry baseId="76810" id="80826"/>
+                            <ref-entry baseId="76953" name="ImplOrder4" id="80827"/>
+                            <ref-entry baseId="76811" id="80828"/>
+                            <ref-entry baseId="76954" name="Release4" id="80829"/>
+                            <ref-entry baseId="76816" id="80830"/>
+                            <ref-entry baseId="76817" id="80831"/>
+                            <ref-entry baseId="76955" name="Description4" id="80832"/>
                         </overridden-values>
                     </grid>
                 </header>
@@ -5854,9 +6283,6 @@
             <group id="78926">
                 <property name="groupName">requirements</property>
                 <expression name="keyExpr" type="javascript">row["bp_requirement::UUID__(Module-Requirement)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["bp_requirement::UUID__(Module-Requirement)"]</expression>
-                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
@@ -5869,50 +6295,57 @@
                 <header>
                     <grid name="Requirement31" id="78927" extends="bp_audit.Requirement">
                         <overridden-values>
-                            <ref-entry baseId="76832" id="80793"/>
-                            <ref-entry baseId="76833" id="80794"/>
-                            <ref-entry baseId="76834" id="80795"/>
-                            <ref-entry baseId="76835" id="80796"/>
-                            <ref-entry baseId="76836" id="80797"/>
-                            <ref-entry baseId="76837" id="80798"/>
-                            <ref-entry baseId="76876" name="NewLabel15" id="80799"/>
-                            <ref-entry baseId="76841" id="80800"/>
-                            <ref-entry baseId="76842" id="80801"/>
-                            <ref-entry baseId="76936" name="Identifier4" id="80802"/>
-                            <ref-entry baseId="76843" id="80803"/>
-                            <ref-entry baseId="76937" name="Title7" id="80804"/>
-                            <ref-entry baseId="76844" id="80805"/>
-                            <ref-entry baseId="76938" name="ImplStatus4" id="80806"/>
-                            <ref-entry baseId="76845" id="80807"/>
-                            <ref-entry baseId="76939" name="DeduceImpl4" id="80808"/>
-                            <ref-entry baseId="76846" id="80809"/>
-                            <ref-entry baseId="76847" id="80810"/>
-                            <ref-entry baseId="76948" name="ModuleDescrpition4" id="80811"/>
-                            <ref-entry baseId="76851" id="80812"/>
-                            <ref-entry baseId="76852" id="80813"/>
-                            <ref-entry baseId="76935" name="AuditDate4" id="80814"/>
-                            <ref-entry baseId="76853" id="80815"/>
-                            <ref-entry baseId="76933" name="Auditor4" id="80816"/>
-                            <ref-entry baseId="76854" id="80817"/>
-                            <ref-entry baseId="76934" name="Interviewee4" id="80818"/>
-                            <ref-entry baseId="76855" id="80819"/>
-                            <ref-entry baseId="76940" name="Methods4" id="80820"/>
-                            <ref-entry baseId="76856" id="80821"/>
-                            <ref-entry baseId="76857" id="80822"/>
-                            <ref-entry baseId="76941" name="Questions4" id="80823"/>
-                            <ref-entry baseId="76859" id="80824"/>
-                            <ref-entry baseId="76942" name="State4" id="80825"/>
-                            <ref-entry baseId="76861" id="80826"/>
-                            <ref-entry baseId="76864" id="80827"/>
-                            <ref-entry baseId="76943" name="NonConformity4" id="80828"/>
-                            <ref-entry baseId="76866" id="80829"/>
-                            <ref-entry baseId="76869" id="80830"/>
-                            <ref-entry baseId="76944" name="DeadlineForCorrection4" id="80831"/>
-                            <ref-entry baseId="76871" id="80832"/>
-                            <ref-entry baseId="76872" id="80833"/>
-                            <ref-entry baseId="76945" name="ImprovementOccurred4" id="80834"/>
-                            <ref-entry baseId="76873" id="80835"/>
-                            <ref-entry baseId="76946" name="Improvement4" id="80836"/>
+                            <ref-entry baseId="76832" id="80833"/>
+                            <ref-entry baseId="76833" id="80834"/>
+                            <ref-entry baseId="76834" id="80835"/>
+                            <ref-entry baseId="76835" id="80836"/>
+                            <ref-entry baseId="76836" id="80837"/>
+                            <ref-entry baseId="76837" id="80838"/>
+                            <ref-entry baseId="76876" name="NewLabel15" id="80839"/>
+                            <ref-entry baseId="76841" id="80840"/>
+                            <ref-entry baseId="76842" id="80841"/>
+                            <ref-entry baseId="76936" name="Identifier4" id="80842"/>
+                            <ref-entry baseId="76843" id="80843"/>
+                            <ref-entry baseId="76937" name="Title7" id="80844"/>
+                            <ref-entry baseId="76844" id="80845"/>
+                            <ref-entry baseId="76948" name="ModuleDescrpition4" id="80846"/>
+                            <ref-entry baseId="76957" id="80847"/>
+                            <ref-entry baseId="76958" id="80848"/>
+                            <ref-entry baseId="76938" name="ImplStatus4" id="80849"/>
+                            <ref-entry baseId="76959" id="80850"/>
+                            <ref-entry baseId="76939" name="DeduceImpl4" id="80851"/>
+                            <ref-entry baseId="76960" id="80852"/>
+                            <ref-entry baseId="76962" name="ModuleDescrpition15" id="80853"/>
+                            <ref-entry baseId="76851" id="80854"/>
+                            <ref-entry baseId="76852" id="80855"/>
+                            <ref-entry baseId="76935" name="AuditDate4" id="80856"/>
+                            <ref-entry baseId="76853" id="80857"/>
+                            <ref-entry baseId="76933" name="Auditor4" id="80858"/>
+                            <ref-entry baseId="76854" id="80859"/>
+                            <ref-entry baseId="76934" name="Interviewee4" id="80860"/>
+                            <ref-entry baseId="76855" id="80861"/>
+                            <ref-entry baseId="76940" name="Methods4" id="80862"/>
+                            <ref-entry baseId="76968" id="80863"/>
+                            <ref-entry baseId="76969" id="80864"/>
+                            <ref-entry baseId="76941" name="Questions4" id="80865"/>
+                            <ref-entry baseId="76970" id="80866"/>
+                            <ref-entry baseId="76979" name="Improvement115" id="80867"/>
+                            <ref-entry baseId="76971" id="80868"/>
+                            <ref-entry baseId="76980" name="Improvement1114" id="80869"/>
+                            <ref-entry baseId="76973" id="80870"/>
+                            <ref-entry baseId="76974" id="80871"/>
+                            <ref-entry baseId="76942" name="State4" id="80872"/>
+                            <ref-entry baseId="76975" id="80873"/>
+                            <ref-entry baseId="76943" name="NonConformity4" id="80874"/>
+                            <ref-entry baseId="76976" id="80875"/>
+                            <ref-entry baseId="76944" name="DeadlineForCorrection4" id="80876"/>
+                            <ref-entry baseId="76977" id="80877"/>
+                            <ref-entry baseId="76945" name="ImprovementOccurred4" id="80878"/>
+                            <ref-entry baseId="76856" id="80879"/>
+                            <ref-entry baseId="76857" id="80880"/>
+                            <ref-entry baseId="76946" name="Improvement4" id="80881"/>
+                            <ref-entry baseId="76859" id="80882"/>
+                            <ref-entry baseId="76978" name="Improvement16" id="80883"/>
                         </overridden-values>
                     </grid>
                 </header>
@@ -5920,6 +6353,7 @@
         </list>
         <list name="Devices" id="78972">
             <property name="display">block</property>
+            <property name="pageBreakInside">avoid</property>
             <property name="dataSet">device_req</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -6090,7 +6524,34 @@
                     <expression name="expression" type="javascript">dataSetRow["Last__name__(Person)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">reportContext.getMessage("devices", reportContext.getLocale());</expression>
+            </structure>
             <property name="repeatHeader">false</property>
             <header>
                 <label name="Title511" id="78973">
@@ -6104,7 +6565,7 @@
                 <property name="groupName">devices</property>
                 <expression name="keyExpr" type="javascript">row["UUID__(OtherIoT__System)"]</expression>
                 <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["UUID__(OtherIoT__System)"]</expression>
+                    <expression name="expressionValue" type="javascript">row["Title__(OtherIoT__System)"]</expression>
                 </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
@@ -6150,9 +6611,6 @@
             <group id="78986">
                 <property name="groupName">modules</property>
                 <expression name="keyExpr" type="javascript">row["UUID__(Module(s))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["UUID__(Module(s))"]</expression>
-                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
@@ -6165,25 +6623,25 @@
                 <header>
                     <grid name="Module311" id="78987" extends="bp_audit.Module">
                         <overridden-values>
-                            <ref-entry baseId="76798" id="80837"/>
-                            <ref-entry baseId="76799" id="80838"/>
-                            <ref-entry baseId="76800" id="80839"/>
-                            <ref-entry baseId="76801" id="80840"/>
-                            <ref-entry baseId="76802" id="80841"/>
-                            <ref-entry baseId="76803" id="80842"/>
-                            <ref-entry baseId="76950" name="ModuleHeader5" id="80843"/>
-                            <ref-entry baseId="76807" id="80844"/>
-                            <ref-entry baseId="76808" id="80845"/>
-                            <ref-entry baseId="76951" name="ModuleIdentifier5" id="80846"/>
-                            <ref-entry baseId="76809" id="80847"/>
-                            <ref-entry baseId="76952" name="ModuleTitle5" id="80848"/>
-                            <ref-entry baseId="76810" id="80849"/>
-                            <ref-entry baseId="76953" name="ImplOrder5" id="80850"/>
-                            <ref-entry baseId="76811" id="80851"/>
-                            <ref-entry baseId="76954" name="Release5" id="80852"/>
-                            <ref-entry baseId="76816" id="80853"/>
-                            <ref-entry baseId="76817" id="80854"/>
-                            <ref-entry baseId="76955" name="Description5" id="80855"/>
+                            <ref-entry baseId="76798" id="80887"/>
+                            <ref-entry baseId="76799" id="80888"/>
+                            <ref-entry baseId="76800" id="80889"/>
+                            <ref-entry baseId="76801" id="80890"/>
+                            <ref-entry baseId="76802" id="80891"/>
+                            <ref-entry baseId="76803" id="80892"/>
+                            <ref-entry baseId="76950" name="ModuleHeader5" id="80893"/>
+                            <ref-entry baseId="76807" id="80894"/>
+                            <ref-entry baseId="76808" id="80895"/>
+                            <ref-entry baseId="76951" name="ModuleIdentifier5" id="80896"/>
+                            <ref-entry baseId="76809" id="80897"/>
+                            <ref-entry baseId="76952" name="ModuleTitle5" id="80898"/>
+                            <ref-entry baseId="76810" id="80899"/>
+                            <ref-entry baseId="76953" name="ImplOrder5" id="80900"/>
+                            <ref-entry baseId="76811" id="80901"/>
+                            <ref-entry baseId="76954" name="Release5" id="80902"/>
+                            <ref-entry baseId="76816" id="80903"/>
+                            <ref-entry baseId="76817" id="80904"/>
+                            <ref-entry baseId="76955" name="Description5" id="80905"/>
                         </overridden-values>
                     </grid>
                 </header>
@@ -6196,9 +6654,6 @@
             <group id="79008">
                 <property name="groupName">requirements</property>
                 <expression name="keyExpr" type="javascript">row["bp_requirement::UUID__(Module-Requirement)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["bp_requirement::UUID__(Module-Requirement)"]</expression>
-                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
@@ -6211,50 +6666,57 @@
                 <header>
                     <grid name="Requirement311" id="79009" extends="bp_audit.Requirement">
                         <overridden-values>
-                            <ref-entry baseId="76832" id="80856"/>
-                            <ref-entry baseId="76833" id="80857"/>
-                            <ref-entry baseId="76834" id="80858"/>
-                            <ref-entry baseId="76835" id="80859"/>
-                            <ref-entry baseId="76836" id="80860"/>
-                            <ref-entry baseId="76837" id="80861"/>
-                            <ref-entry baseId="76876" name="NewLabel16" id="80862"/>
-                            <ref-entry baseId="76841" id="80863"/>
-                            <ref-entry baseId="76842" id="80864"/>
-                            <ref-entry baseId="76936" name="Identifier5" id="80865"/>
-                            <ref-entry baseId="76843" id="80866"/>
-                            <ref-entry baseId="76937" name="Title8" id="80867"/>
-                            <ref-entry baseId="76844" id="80868"/>
-                            <ref-entry baseId="76938" name="ImplStatus5" id="80869"/>
-                            <ref-entry baseId="76845" id="80870"/>
-                            <ref-entry baseId="76939" name="DeduceImpl5" id="80871"/>
-                            <ref-entry baseId="76846" id="80872"/>
-                            <ref-entry baseId="76847" id="80873"/>
-                            <ref-entry baseId="76948" name="ModuleDescrpition5" id="80874"/>
-                            <ref-entry baseId="76851" id="80875"/>
-                            <ref-entry baseId="76852" id="80876"/>
-                            <ref-entry baseId="76935" name="AuditDate5" id="80877"/>
-                            <ref-entry baseId="76853" id="80878"/>
-                            <ref-entry baseId="76933" name="Auditor5" id="80879"/>
-                            <ref-entry baseId="76854" id="80880"/>
-                            <ref-entry baseId="76934" name="Interviewee5" id="80881"/>
-                            <ref-entry baseId="76855" id="80882"/>
-                            <ref-entry baseId="76940" name="Methods5" id="80883"/>
-                            <ref-entry baseId="76856" id="80884"/>
-                            <ref-entry baseId="76857" id="80885"/>
-                            <ref-entry baseId="76941" name="Questions5" id="80886"/>
-                            <ref-entry baseId="76859" id="80887"/>
-                            <ref-entry baseId="76942" name="State5" id="80888"/>
-                            <ref-entry baseId="76861" id="80889"/>
-                            <ref-entry baseId="76864" id="80890"/>
-                            <ref-entry baseId="76943" name="NonConformity5" id="80891"/>
-                            <ref-entry baseId="76866" id="80892"/>
-                            <ref-entry baseId="76869" id="80893"/>
-                            <ref-entry baseId="76944" name="DeadlineForCorrection5" id="80894"/>
-                            <ref-entry baseId="76871" id="80895"/>
-                            <ref-entry baseId="76872" id="80896"/>
-                            <ref-entry baseId="76945" name="ImprovementOccurred5" id="80897"/>
-                            <ref-entry baseId="76873" id="80898"/>
-                            <ref-entry baseId="76946" name="Improvement5" id="80899"/>
+                            <ref-entry baseId="76832" id="80906"/>
+                            <ref-entry baseId="76833" id="80907"/>
+                            <ref-entry baseId="76834" id="80908"/>
+                            <ref-entry baseId="76835" id="80909"/>
+                            <ref-entry baseId="76836" id="80910"/>
+                            <ref-entry baseId="76837" id="80911"/>
+                            <ref-entry baseId="76876" name="NewLabel16" id="80912"/>
+                            <ref-entry baseId="76841" id="80913"/>
+                            <ref-entry baseId="76842" id="80914"/>
+                            <ref-entry baseId="76936" name="Identifier5" id="80915"/>
+                            <ref-entry baseId="76843" id="80916"/>
+                            <ref-entry baseId="76937" name="Title8" id="80917"/>
+                            <ref-entry baseId="76844" id="80918"/>
+                            <ref-entry baseId="76948" name="ModuleDescrpition5" id="80919"/>
+                            <ref-entry baseId="76957" id="80920"/>
+                            <ref-entry baseId="76958" id="80921"/>
+                            <ref-entry baseId="76938" name="ImplStatus5" id="80922"/>
+                            <ref-entry baseId="76959" id="80923"/>
+                            <ref-entry baseId="76939" name="DeduceImpl5" id="80924"/>
+                            <ref-entry baseId="76960" id="80925"/>
+                            <ref-entry baseId="76962" name="ModuleDescrpition16" id="80926"/>
+                            <ref-entry baseId="76851" id="80927"/>
+                            <ref-entry baseId="76852" id="80928"/>
+                            <ref-entry baseId="76935" name="AuditDate5" id="80929"/>
+                            <ref-entry baseId="76853" id="80930"/>
+                            <ref-entry baseId="76933" name="Auditor5" id="80931"/>
+                            <ref-entry baseId="76854" id="80932"/>
+                            <ref-entry baseId="76934" name="Interviewee5" id="80933"/>
+                            <ref-entry baseId="76855" id="80934"/>
+                            <ref-entry baseId="76940" name="Methods5" id="80935"/>
+                            <ref-entry baseId="76968" id="80936"/>
+                            <ref-entry baseId="76969" id="80937"/>
+                            <ref-entry baseId="76941" name="Questions5" id="80938"/>
+                            <ref-entry baseId="76970" id="80939"/>
+                            <ref-entry baseId="76979" name="Improvement116" id="80940"/>
+                            <ref-entry baseId="76971" id="80941"/>
+                            <ref-entry baseId="76980" name="Improvement1115" id="80942"/>
+                            <ref-entry baseId="76973" id="80943"/>
+                            <ref-entry baseId="76974" id="80944"/>
+                            <ref-entry baseId="76942" name="State5" id="80945"/>
+                            <ref-entry baseId="76975" id="80946"/>
+                            <ref-entry baseId="76943" name="NonConformity5" id="80947"/>
+                            <ref-entry baseId="76976" id="80948"/>
+                            <ref-entry baseId="76944" name="DeadlineForCorrection5" id="80949"/>
+                            <ref-entry baseId="76977" id="80950"/>
+                            <ref-entry baseId="76945" name="ImprovementOccurred5" id="80951"/>
+                            <ref-entry baseId="76856" id="80952"/>
+                            <ref-entry baseId="76857" id="80953"/>
+                            <ref-entry baseId="76946" name="Improvement5" id="80954"/>
+                            <ref-entry baseId="76859" id="80955"/>
+                            <ref-entry baseId="76978" name="Improvement17" id="80956"/>
                         </overridden-values>
                     </grid>
                 </header>
@@ -6262,6 +6724,7 @@
         </list>
         <list name="Networks" id="79054">
             <property name="display">block</property>
+            <property name="pageBreakInside">avoid</property>
             <property name="dataSet">network_req</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -6432,13 +6895,41 @@
                     <expression name="expression" type="javascript">dataSetRow["Last__name__(Person)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">reportContext.getMessage("networks", reportContext.getLocale());</expression>
+            </structure>
             <property name="repeatHeader">false</property>
             <header>
                 <label name="Title5111" id="79055">
                     <property name="style">section-header</property>
                     <property name="paddingTop">10pt</property>
                     <property name="paddingBottom">5pt</property>
+                    <structure name="toc"/>
                     <text-property name="text" key="networks"></text-property>
                 </label>
             </header>
@@ -6446,7 +6937,7 @@
                 <property name="groupName">networks</property>
                 <expression name="keyExpr" type="javascript">row["UUID__(Network)"]</expression>
                 <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["UUID__(Network)"]</expression>
+                    <expression name="expressionValue" type="javascript">row["Title__(Network)"]</expression>
                 </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
@@ -6492,9 +6983,6 @@
             <group id="79068">
                 <property name="groupName">modules</property>
                 <expression name="keyExpr" type="javascript">row["UUID__(Module(s))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["UUID__(Module(s))"]</expression>
-                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
@@ -6507,25 +6995,25 @@
                 <header>
                     <grid name="Module3111" id="79069" extends="bp_audit.Module">
                         <overridden-values>
-                            <ref-entry baseId="76798" id="80900"/>
-                            <ref-entry baseId="76799" id="80901"/>
-                            <ref-entry baseId="76800" id="80902"/>
-                            <ref-entry baseId="76801" id="80903"/>
-                            <ref-entry baseId="76802" id="80904"/>
-                            <ref-entry baseId="76803" id="80905"/>
-                            <ref-entry baseId="76950" name="ModuleHeader6" id="80906"/>
-                            <ref-entry baseId="76807" id="80907"/>
-                            <ref-entry baseId="76808" id="80908"/>
-                            <ref-entry baseId="76951" name="ModuleIdentifier6" id="80909"/>
-                            <ref-entry baseId="76809" id="80910"/>
-                            <ref-entry baseId="76952" name="ModuleTitle6" id="80911"/>
-                            <ref-entry baseId="76810" id="80912"/>
-                            <ref-entry baseId="76953" name="ImplOrder6" id="80913"/>
-                            <ref-entry baseId="76811" id="80914"/>
-                            <ref-entry baseId="76954" name="Release6" id="80915"/>
-                            <ref-entry baseId="76816" id="80916"/>
-                            <ref-entry baseId="76817" id="80917"/>
-                            <ref-entry baseId="76955" name="Description6" id="80918"/>
+                            <ref-entry baseId="76798" id="80960"/>
+                            <ref-entry baseId="76799" id="80961"/>
+                            <ref-entry baseId="76800" id="80962"/>
+                            <ref-entry baseId="76801" id="80963"/>
+                            <ref-entry baseId="76802" id="80964"/>
+                            <ref-entry baseId="76803" id="80965"/>
+                            <ref-entry baseId="76950" name="ModuleHeader6" id="80966"/>
+                            <ref-entry baseId="76807" id="80967"/>
+                            <ref-entry baseId="76808" id="80968"/>
+                            <ref-entry baseId="76951" name="ModuleIdentifier6" id="80969"/>
+                            <ref-entry baseId="76809" id="80970"/>
+                            <ref-entry baseId="76952" name="ModuleTitle6" id="80971"/>
+                            <ref-entry baseId="76810" id="80972"/>
+                            <ref-entry baseId="76953" name="ImplOrder6" id="80973"/>
+                            <ref-entry baseId="76811" id="80974"/>
+                            <ref-entry baseId="76954" name="Release6" id="80975"/>
+                            <ref-entry baseId="76816" id="80976"/>
+                            <ref-entry baseId="76817" id="80977"/>
+                            <ref-entry baseId="76955" name="Description6" id="80978"/>
                         </overridden-values>
                     </grid>
                 </header>
@@ -6538,9 +7026,6 @@
             <group id="79090">
                 <property name="groupName">requirements</property>
                 <expression name="keyExpr" type="javascript">row["bp_requirement::UUID__(Module-Requirement)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["bp_requirement::UUID__(Module-Requirement)"]</expression>
-                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
@@ -6553,50 +7038,57 @@
                 <header>
                     <grid name="Requirement3111" id="79091" extends="bp_audit.Requirement">
                         <overridden-values>
-                            <ref-entry baseId="76832" id="80919"/>
-                            <ref-entry baseId="76833" id="80920"/>
-                            <ref-entry baseId="76834" id="80921"/>
-                            <ref-entry baseId="76835" id="80922"/>
-                            <ref-entry baseId="76836" id="80923"/>
-                            <ref-entry baseId="76837" id="80924"/>
-                            <ref-entry baseId="76876" name="NewLabel17" id="80925"/>
-                            <ref-entry baseId="76841" id="80926"/>
-                            <ref-entry baseId="76842" id="80927"/>
-                            <ref-entry baseId="76936" name="Identifier6" id="80928"/>
-                            <ref-entry baseId="76843" id="80929"/>
-                            <ref-entry baseId="76937" name="Title9" id="80930"/>
-                            <ref-entry baseId="76844" id="80931"/>
-                            <ref-entry baseId="76938" name="ImplStatus6" id="80932"/>
-                            <ref-entry baseId="76845" id="80933"/>
-                            <ref-entry baseId="76939" name="DeduceImpl6" id="80934"/>
-                            <ref-entry baseId="76846" id="80935"/>
-                            <ref-entry baseId="76847" id="80936"/>
-                            <ref-entry baseId="76948" name="ModuleDescrpition6" id="80937"/>
-                            <ref-entry baseId="76851" id="80938"/>
-                            <ref-entry baseId="76852" id="80939"/>
-                            <ref-entry baseId="76935" name="AuditDate6" id="80940"/>
-                            <ref-entry baseId="76853" id="80941"/>
-                            <ref-entry baseId="76933" name="Auditor6" id="80942"/>
-                            <ref-entry baseId="76854" id="80943"/>
-                            <ref-entry baseId="76934" name="Interviewee6" id="80944"/>
-                            <ref-entry baseId="76855" id="80945"/>
-                            <ref-entry baseId="76940" name="Methods6" id="80946"/>
-                            <ref-entry baseId="76856" id="80947"/>
-                            <ref-entry baseId="76857" id="80948"/>
-                            <ref-entry baseId="76941" name="Questions6" id="80949"/>
-                            <ref-entry baseId="76859" id="80950"/>
-                            <ref-entry baseId="76942" name="State6" id="80951"/>
-                            <ref-entry baseId="76861" id="80952"/>
-                            <ref-entry baseId="76864" id="80953"/>
-                            <ref-entry baseId="76943" name="NonConformity6" id="80954"/>
-                            <ref-entry baseId="76866" id="80955"/>
-                            <ref-entry baseId="76869" id="80956"/>
-                            <ref-entry baseId="76944" name="DeadlineForCorrection6" id="80957"/>
-                            <ref-entry baseId="76871" id="80958"/>
-                            <ref-entry baseId="76872" id="80959"/>
-                            <ref-entry baseId="76945" name="ImprovementOccurred6" id="80960"/>
-                            <ref-entry baseId="76873" id="80961"/>
-                            <ref-entry baseId="76946" name="Improvement6" id="80962"/>
+                            <ref-entry baseId="76832" id="80979"/>
+                            <ref-entry baseId="76833" id="80980"/>
+                            <ref-entry baseId="76834" id="80981"/>
+                            <ref-entry baseId="76835" id="80982"/>
+                            <ref-entry baseId="76836" id="80983"/>
+                            <ref-entry baseId="76837" id="80984"/>
+                            <ref-entry baseId="76876" name="NewLabel17" id="80985"/>
+                            <ref-entry baseId="76841" id="80986"/>
+                            <ref-entry baseId="76842" id="80987"/>
+                            <ref-entry baseId="76936" name="Identifier6" id="80988"/>
+                            <ref-entry baseId="76843" id="80989"/>
+                            <ref-entry baseId="76937" name="Title9" id="80990"/>
+                            <ref-entry baseId="76844" id="80991"/>
+                            <ref-entry baseId="76948" name="ModuleDescrpition6" id="80992"/>
+                            <ref-entry baseId="76957" id="80993"/>
+                            <ref-entry baseId="76958" id="80994"/>
+                            <ref-entry baseId="76938" name="ImplStatus6" id="80995"/>
+                            <ref-entry baseId="76959" id="80996"/>
+                            <ref-entry baseId="76939" name="DeduceImpl6" id="80997"/>
+                            <ref-entry baseId="76960" id="80998"/>
+                            <ref-entry baseId="76962" name="ModuleDescrpition17" id="80999"/>
+                            <ref-entry baseId="76851" id="81000"/>
+                            <ref-entry baseId="76852" id="81001"/>
+                            <ref-entry baseId="76935" name="AuditDate6" id="81002"/>
+                            <ref-entry baseId="76853" id="81003"/>
+                            <ref-entry baseId="76933" name="Auditor6" id="81004"/>
+                            <ref-entry baseId="76854" id="81005"/>
+                            <ref-entry baseId="76934" name="Interviewee6" id="81006"/>
+                            <ref-entry baseId="76855" id="81007"/>
+                            <ref-entry baseId="76940" name="Methods6" id="81008"/>
+                            <ref-entry baseId="76968" id="81009"/>
+                            <ref-entry baseId="76969" id="81010"/>
+                            <ref-entry baseId="76941" name="Questions6" id="81011"/>
+                            <ref-entry baseId="76970" id="81012"/>
+                            <ref-entry baseId="76979" name="Improvement117" id="81013"/>
+                            <ref-entry baseId="76971" id="81014"/>
+                            <ref-entry baseId="76980" name="Improvement1116" id="81015"/>
+                            <ref-entry baseId="76973" id="81016"/>
+                            <ref-entry baseId="76974" id="81017"/>
+                            <ref-entry baseId="76942" name="State6" id="81018"/>
+                            <ref-entry baseId="76975" id="81019"/>
+                            <ref-entry baseId="76943" name="NonConformity6" id="81020"/>
+                            <ref-entry baseId="76976" id="81021"/>
+                            <ref-entry baseId="76944" name="DeadlineForCorrection6" id="81022"/>
+                            <ref-entry baseId="76977" id="81023"/>
+                            <ref-entry baseId="76945" name="ImprovementOccurred6" id="81024"/>
+                            <ref-entry baseId="76856" id="81025"/>
+                            <ref-entry baseId="76857" id="81026"/>
+                            <ref-entry baseId="76946" name="Improvement6" id="81027"/>
+                            <ref-entry baseId="76859" id="81028"/>
+                            <ref-entry baseId="76978" name="Improvement18" id="81029"/>
                         </overridden-values>
                     </grid>
                 </header>
@@ -6604,6 +7096,7 @@
         </list>
         <list name="Rooms" id="79136">
             <property name="display">block</property>
+            <property name="pageBreakInside">avoid</property>
             <property name="dataSet">room_req</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -6774,7 +7267,34 @@
                     <expression name="expression" type="javascript">dataSetRow["Last__name__(Person)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">reportContext.getMessage("rooms", reportContext.getLocale());</expression>
+            </structure>
             <property name="repeatHeader">false</property>
             <header>
                 <label name="Title51111" id="79137">
@@ -6788,7 +7308,7 @@
                 <property name="groupName">rooms</property>
                 <expression name="keyExpr" type="javascript">row["UUID__(Room)"]</expression>
                 <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["UUID__(Room)"]</expression>
+                    <expression name="expressionValue" type="javascript">row["Title__(Room)"]</expression>
                 </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
@@ -6834,9 +7354,6 @@
             <group id="79150">
                 <property name="groupName">modules</property>
                 <expression name="keyExpr" type="javascript">row["UUID__(Module(s))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["UUID__(Module(s))"]</expression>
-                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
@@ -6849,25 +7366,25 @@
                 <header>
                     <grid name="Module31111" id="79151" extends="bp_audit.Module">
                         <overridden-values>
-                            <ref-entry baseId="76798" id="80963"/>
-                            <ref-entry baseId="76799" id="80964"/>
-                            <ref-entry baseId="76800" id="80965"/>
-                            <ref-entry baseId="76801" id="80966"/>
-                            <ref-entry baseId="76802" id="80967"/>
-                            <ref-entry baseId="76803" id="80968"/>
-                            <ref-entry baseId="76950" name="ModuleHeader7" id="80969"/>
-                            <ref-entry baseId="76807" id="80970"/>
-                            <ref-entry baseId="76808" id="80971"/>
-                            <ref-entry baseId="76951" name="ModuleIdentifier7" id="80972"/>
-                            <ref-entry baseId="76809" id="80973"/>
-                            <ref-entry baseId="76952" name="ModuleTitle7" id="80974"/>
-                            <ref-entry baseId="76810" id="80975"/>
-                            <ref-entry baseId="76953" name="ImplOrder7" id="80976"/>
-                            <ref-entry baseId="76811" id="80977"/>
-                            <ref-entry baseId="76954" name="Release7" id="80978"/>
-                            <ref-entry baseId="76816" id="80979"/>
-                            <ref-entry baseId="76817" id="80980"/>
-                            <ref-entry baseId="76955" name="Description7" id="80981"/>
+                            <ref-entry baseId="76798" id="81033"/>
+                            <ref-entry baseId="76799" id="81034"/>
+                            <ref-entry baseId="76800" id="81035"/>
+                            <ref-entry baseId="76801" id="81036"/>
+                            <ref-entry baseId="76802" id="81037"/>
+                            <ref-entry baseId="76803" id="81038"/>
+                            <ref-entry baseId="76950" name="ModuleHeader7" id="81039"/>
+                            <ref-entry baseId="76807" id="81040"/>
+                            <ref-entry baseId="76808" id="81041"/>
+                            <ref-entry baseId="76951" name="ModuleIdentifier7" id="81042"/>
+                            <ref-entry baseId="76809" id="81043"/>
+                            <ref-entry baseId="76952" name="ModuleTitle7" id="81044"/>
+                            <ref-entry baseId="76810" id="81045"/>
+                            <ref-entry baseId="76953" name="ImplOrder7" id="81046"/>
+                            <ref-entry baseId="76811" id="81047"/>
+                            <ref-entry baseId="76954" name="Release7" id="81048"/>
+                            <ref-entry baseId="76816" id="81049"/>
+                            <ref-entry baseId="76817" id="81050"/>
+                            <ref-entry baseId="76955" name="Description7" id="81051"/>
                         </overridden-values>
                     </grid>
                 </header>
@@ -6880,9 +7397,6 @@
             <group id="79172">
                 <property name="groupName">requirements</property>
                 <expression name="keyExpr" type="javascript">row["bp_requirement::UUID__(Module-Requirement)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["bp_requirement::UUID__(Module-Requirement)"]</expression>
-                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
@@ -6895,50 +7409,57 @@
                 <header>
                     <grid name="Requirement31111" id="79173" extends="bp_audit.Requirement">
                         <overridden-values>
-                            <ref-entry baseId="76832" id="80982"/>
-                            <ref-entry baseId="76833" id="80983"/>
-                            <ref-entry baseId="76834" id="80984"/>
-                            <ref-entry baseId="76835" id="80985"/>
-                            <ref-entry baseId="76836" id="80986"/>
-                            <ref-entry baseId="76837" id="80987"/>
-                            <ref-entry baseId="76876" name="NewLabel18" id="80988"/>
-                            <ref-entry baseId="76841" id="80989"/>
-                            <ref-entry baseId="76842" id="80990"/>
-                            <ref-entry baseId="76936" name="Identifier7" id="80991"/>
-                            <ref-entry baseId="76843" id="80992"/>
-                            <ref-entry baseId="76937" name="Title10" id="80993"/>
-                            <ref-entry baseId="76844" id="80994"/>
-                            <ref-entry baseId="76938" name="ImplStatus7" id="80995"/>
-                            <ref-entry baseId="76845" id="80996"/>
-                            <ref-entry baseId="76939" name="DeduceImpl7" id="80997"/>
-                            <ref-entry baseId="76846" id="80998"/>
-                            <ref-entry baseId="76847" id="80999"/>
-                            <ref-entry baseId="76948" name="ModuleDescrpition7" id="81000"/>
-                            <ref-entry baseId="76851" id="81001"/>
-                            <ref-entry baseId="76852" id="81002"/>
-                            <ref-entry baseId="76935" name="AuditDate7" id="81003"/>
-                            <ref-entry baseId="76853" id="81004"/>
-                            <ref-entry baseId="76933" name="Auditor7" id="81005"/>
-                            <ref-entry baseId="76854" id="81006"/>
-                            <ref-entry baseId="76934" name="Interviewee7" id="81007"/>
-                            <ref-entry baseId="76855" id="81008"/>
-                            <ref-entry baseId="76940" name="Methods7" id="81009"/>
-                            <ref-entry baseId="76856" id="81010"/>
-                            <ref-entry baseId="76857" id="81011"/>
-                            <ref-entry baseId="76941" name="Questions7" id="81012"/>
-                            <ref-entry baseId="76859" id="81013"/>
-                            <ref-entry baseId="76942" name="State7" id="81014"/>
-                            <ref-entry baseId="76861" id="81015"/>
-                            <ref-entry baseId="76864" id="81016"/>
-                            <ref-entry baseId="76943" name="NonConformity7" id="81017"/>
-                            <ref-entry baseId="76866" id="81018"/>
-                            <ref-entry baseId="76869" id="81019"/>
-                            <ref-entry baseId="76944" name="DeadlineForCorrection7" id="81020"/>
-                            <ref-entry baseId="76871" id="81021"/>
-                            <ref-entry baseId="76872" id="81022"/>
-                            <ref-entry baseId="76945" name="ImprovementOccurred7" id="81023"/>
-                            <ref-entry baseId="76873" id="81024"/>
-                            <ref-entry baseId="76946" name="Improvement7" id="81025"/>
+                            <ref-entry baseId="76832" id="81052"/>
+                            <ref-entry baseId="76833" id="81053"/>
+                            <ref-entry baseId="76834" id="81054"/>
+                            <ref-entry baseId="76835" id="81055"/>
+                            <ref-entry baseId="76836" id="81056"/>
+                            <ref-entry baseId="76837" id="81057"/>
+                            <ref-entry baseId="76876" name="NewLabel18" id="81058"/>
+                            <ref-entry baseId="76841" id="81059"/>
+                            <ref-entry baseId="76842" id="81060"/>
+                            <ref-entry baseId="76936" name="Identifier7" id="81061"/>
+                            <ref-entry baseId="76843" id="81062"/>
+                            <ref-entry baseId="76937" name="Title10" id="81063"/>
+                            <ref-entry baseId="76844" id="81064"/>
+                            <ref-entry baseId="76948" name="ModuleDescrpition7" id="81065"/>
+                            <ref-entry baseId="76957" id="81066"/>
+                            <ref-entry baseId="76958" id="81067"/>
+                            <ref-entry baseId="76938" name="ImplStatus7" id="81068"/>
+                            <ref-entry baseId="76959" id="81069"/>
+                            <ref-entry baseId="76939" name="DeduceImpl7" id="81070"/>
+                            <ref-entry baseId="76960" id="81071"/>
+                            <ref-entry baseId="76962" name="ModuleDescrpition18" id="81072"/>
+                            <ref-entry baseId="76851" id="81073"/>
+                            <ref-entry baseId="76852" id="81074"/>
+                            <ref-entry baseId="76935" name="AuditDate7" id="81075"/>
+                            <ref-entry baseId="76853" id="81076"/>
+                            <ref-entry baseId="76933" name="Auditor7" id="81077"/>
+                            <ref-entry baseId="76854" id="81078"/>
+                            <ref-entry baseId="76934" name="Interviewee7" id="81079"/>
+                            <ref-entry baseId="76855" id="81080"/>
+                            <ref-entry baseId="76940" name="Methods7" id="81081"/>
+                            <ref-entry baseId="76968" id="81082"/>
+                            <ref-entry baseId="76969" id="81083"/>
+                            <ref-entry baseId="76941" name="Questions7" id="81084"/>
+                            <ref-entry baseId="76970" id="81085"/>
+                            <ref-entry baseId="76979" name="Improvement118" id="81086"/>
+                            <ref-entry baseId="76971" id="81087"/>
+                            <ref-entry baseId="76980" name="Improvement1117" id="81088"/>
+                            <ref-entry baseId="76973" id="81089"/>
+                            <ref-entry baseId="76974" id="81090"/>
+                            <ref-entry baseId="76942" name="State7" id="81091"/>
+                            <ref-entry baseId="76975" id="81092"/>
+                            <ref-entry baseId="76943" name="NonConformity7" id="81093"/>
+                            <ref-entry baseId="76976" id="81094"/>
+                            <ref-entry baseId="76944" name="DeadlineForCorrection7" id="81095"/>
+                            <ref-entry baseId="76977" id="81096"/>
+                            <ref-entry baseId="76945" name="ImprovementOccurred7" id="81097"/>
+                            <ref-entry baseId="76856" id="81098"/>
+                            <ref-entry baseId="76857" id="81099"/>
+                            <ref-entry baseId="76946" name="Improvement7" id="81100"/>
+                            <ref-entry baseId="76859" id="81101"/>
+                            <ref-entry baseId="76978" name="Improvement19" id="81102"/>
                         </overridden-values>
                     </grid>
                 </header>

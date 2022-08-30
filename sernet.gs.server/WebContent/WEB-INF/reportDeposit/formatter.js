@@ -42,6 +42,10 @@ function getLabeledEnumVal(messageKey, numberValue) {
 }
 
 function getLabeledVal(labelKey, value) {
+    return "<b>" + getMessage(labelKey) + "</b>: " + (value || "-");
+}
+
+function getLabeledVal_normal(labelKey, value) {
     return getMessage(labelKey) + ": " + (value || "-");
 }
 

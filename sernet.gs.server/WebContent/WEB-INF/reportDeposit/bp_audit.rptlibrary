@@ -169,6 +169,29 @@
                     <text-property name="displayName">Last__name__(Person)</text-property>
                     <text-property name="heading">Last__name__(Person)</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</text-property>
+                    <text-property name="heading">Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</text-property>
+                    <text-property name="heading">Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</text-property>
+                    <text-property name="heading">Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                    <text-property name="displayName">Umsetzung_-_Erläuterung_(Baustein-Anforderung)</text-property>
+                    <text-property name="heading">Umsetzung_-_Erläuterung_(Baustein-Anforderung)</text-property>
+                </structure>
             </list-property>
             <list-property name="filter">
                 <structure>
@@ -297,6 +320,26 @@
                     <structure>
                         <property name="position">24</property>
                         <property name="name">Last__name__(Person)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">25</property>
+                        <property name="name">Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">26</property>
+                        <property name="name">Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">27</property>
+                        <property name="name">Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">28</property>
+                        <property name="name">Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -471,6 +514,34 @@
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
+                <structure>
+                    <property name="position">25</property>
+                    <property name="name">Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                    <property name="nativeName">Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">26</property>
+                    <property name="name">Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                    <property name="nativeName">Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">27</property>
+                    <property name="name">Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                    <property name="nativeName">Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">28</property>
+                    <property name="name">Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                    <property name="nativeName">Umsetzung_-_Erläuterung_(Baustein-Anforderung)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[{
   "followLinksOutsideOfScope": false,
@@ -500,7 +571,11 @@
     "bp_requirement<bp_requirement_group.bp_requirement_group_name AS Title__(Module(s))",
     "bp_requirement:bp_person.title AS Title",
     "bp_requirement/bp_person.bp_person_first_name AS First__name__(Person)",
-    "bp_requirement/bp_person.bp_person_last_name AS Last__name__(Person)"
+    "bp_requirement/bp_person.bp_person_last_name AS Last__name__(Person)",
+    "bp_requirement.bp_requirement_audit_observations AS Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)",
+    "bp_requirement.bp_requirement_audit_report AS Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)",
+    "bp_requirement.bp_requirement_audit_vote AS Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)",
+    "bp_requirement.bp_requirement_implementation_desc AS Umsetzung_-_Erläuterung_(Baustein-Anforderung)"
   ],
   "relationIds": []
 }]]></xml-property>
@@ -621,6 +696,7 @@
                     <property name="colSpan">4</property>
                     <property name="rowSpan">1</property>
                     <property name="style">defaultCell</property>
+                    <property name="backgroundColor">#C9C9C9</property>
                     <label name="ModuleHeader" id="76950">
                         <property name="style">sub-header-row</property>
                         <property name="textAlign">center</property>
@@ -632,6 +708,7 @@
                 <cell id="76808">
                     <property name="style">defaultCell</property>
                     <text-data name="ModuleIdentifier" id="76951">
+                        <property name="fontWeight">bold</property>
                         <expression name="valueExpr">row["Identifier__(Module(s))"]</expression>
                         <property name="contentType">html</property>
                     </text-data>
@@ -639,6 +716,7 @@
                 <cell id="76809">
                     <property name="style">defaultCell</property>
                     <text-data name="ModuleTitle" id="76952">
+                        <property name="fontWeight">bold</property>
                         <expression name="valueExpr">row["Title__(Module(s))"]</expression>
                         <property name="contentType">html</property>
                     </text-data>
@@ -701,6 +779,7 @@
                     <property name="colSpan">4</property>
                     <property name="rowSpan">1</property>
                     <property name="style">defaultCell</property>
+                    <property name="backgroundColor">#C9C9C9</property>
                     <label name="NewLabel1" id="76876">
                         <property name="style">sub-header-row</property>
                         <property name="textAlign">center</property>
@@ -712,6 +791,7 @@
                 <cell id="76842">
                     <property name="style">defaultCell</property>
                     <text-data name="Identifier" id="76936">
+                        <property name="fontWeight">bold</property>
                         <expression name="valueExpr">row["Identifier__(Module-Requirement)"]</expression>
                         <property name="contentType">html</property>
                     </text-data>
@@ -719,11 +799,23 @@
                 <cell id="76843">
                     <property name="style">defaultCell</property>
                     <text-data name="Title" id="76937">
+                        <property name="fontWeight">bold</property>
                         <expression name="valueExpr">row["Title__(Module-Requirement)"]</expression>
                         <property name="contentType">html</property>
                     </text-data>
                 </cell>
                 <cell id="76844">
+                    <property name="colSpan">2</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">defaultCell</property>
+                    <text-data name="ModuleDescrpition" id="76948">
+                        <expression name="valueExpr" type="javascript">getLabeledVal("description", row["Description__(Module-Requirement)"])</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+            </row>
+            <row id="76957">
+                <cell id="76958">
                     <property name="style">defaultCell</property>
                     <text-data name="ImplStatus" id="76938">
                         <method name="onRender"><![CDATA[applyImplementationStatusStyle(this, row["Implementation__-__Implementation__Status__(Module-Requirement)"])]]></method>
@@ -731,21 +823,19 @@
                         <property name="contentType">html</property>
                     </text-data>
                 </cell>
-                <cell id="76845">
+                <cell id="76959">
                     <property name="style">defaultCell</property>
                     <text-data name="DeduceImpl" id="76939">
                         <expression name="valueExpr">getLabeledVal("deduce_implementation", yesOrNo(row["Implementation__-__Deduce__Implementation__Status__from__Safeguard__(Module-Requirement)"]))</expression>
                         <property name="contentType">html</property>
                     </text-data>
                 </cell>
-            </row>
-            <row id="76846">
-                <cell id="76847">
-                    <property name="colSpan">4</property>
+                <cell id="76960">
+                    <property name="colSpan">2</property>
                     <property name="rowSpan">1</property>
                     <property name="style">defaultCell</property>
-                    <text-data name="ModuleDescrpition" id="76948">
-                        <expression name="valueExpr" type="javascript">getLabeledVal("description", row["Description__(Module-Requirement)"])</expression>
+                    <text-data name="ModuleDescrpition1" id="76962">
+                        <expression name="valueExpr">getLabeledVal("explanation", row["bp_requirement::Umsetzung_-_Erläuterung_(Baustein-Anforderung)"])</expression>
                         <property name="contentType">html</property>
                     </text-data>
                 </cell>
@@ -780,13 +870,68 @@
                     </text-data>
                 </cell>
             </row>
-            <row id="76856">
-                <cell id="76857">
-                    <property name="colSpan">2</property>
-                    <property name="rowSpan">3</property>
+            <row id="76968">
+                <cell id="76969">
                     <property name="style">defaultCell</property>
                     <text-data name="Questions" id="76941">
                         <expression name="valueExpr">getLabeledVal("questions", row["IT-Baseline__Audit__-__Questions__(Module-Requirement)"])</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+                <cell id="76970">
+                    <property name="style">defaultCell</property>
+                    <text-data name="Improvement11" id="76979">
+                        <expression name="valueExpr">getLabeledVal("auditbeobachtung", row["bp_requirement::Grundschutz_Audit_-_Auditbeobachtung_(Baustein-Anforderung)"])</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+                <cell id="76971">
+                    <property name="colSpan">2</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">defaultCell</property>
+                    <text-data name="Improvement111" id="76980">
+                        <expression name="valueExpr">getLabeledVal("auditreport", row["bp_requirement::Grundschutz_Audit_-_Auditbericht_(Baustein-Anforderung)"])</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+            </row>
+            <row id="76973">
+                <cell id="76974">
+                    <property name="style">defaultCell</property>
+                    <text-data name="State" id="76942">
+                        <expression name="valueExpr">getLabeledEnumVal("audit_state", row["IT-Baseline__Audit__-__State__(Module-Requirement)"])</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+                <cell id="76975">
+                    <property name="style">defaultCell</property>
+                    <text-data name="NonConformity" id="76943">
+                        <expression name="valueExpr">getLabeledEnumVal("deviation", row["IT-Baseline__Audit__-__Non-Conformity__(Module-Requirement)"])</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+                <cell id="76976">
+                    <property name="style">defaultCell</property>
+                    <text-data name="DeadlineForCorrection" id="76944">
+                        <expression name="valueExpr">getLabeledVal("deadline_for_correction", formatDate(row["IT-Baseline__Audit__-__Deadline__for__correction__(Module-Requirement)"]))</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+                <cell id="76977">
+                    <property name="style">defaultCell</property>
+                    <text-data name="ImprovementOccurred" id="76945">
+                        <expression name="valueExpr">getLabeledVal("improvement_occurred", yesOrNo(row["IT-Baseline__Audit__-__Improvement__occurs"]))</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+            </row>
+            <row id="76856">
+                <cell id="76857">
+                    <property name="colSpan">2</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">defaultCell</property>
+                    <text-data name="Improvement" id="76946">
+                        <expression name="valueExpr">getLabeledVal("improvement", row["IT-Baseline__Audit__-__Improvement__(Module-Requirement)"])</expression>
                         <property name="contentType">html</property>
                     </text-data>
                 </cell>
@@ -794,48 +939,8 @@
                     <property name="colSpan">2</property>
                     <property name="rowSpan">1</property>
                     <property name="style">defaultCell</property>
-                    <text-data name="State" id="76942">
-                        <expression name="valueExpr">getLabeledEnumVal("audit_state", row["IT-Baseline__Audit__-__State__(Module-Requirement)"])</expression>
-                        <property name="contentType">html</property>
-                    </text-data>
-                </cell>
-            </row>
-            <row id="76861">
-                <cell id="76864">
-                    <property name="colSpan">2</property>
-                    <property name="rowSpan">1</property>
-                    <property name="style">defaultCell</property>
-                    <text-data name="NonConformity" id="76943">
-                        <expression name="valueExpr">getLabeledEnumVal("deviation", row["IT-Baseline__Audit__-__Non-Conformity__(Module-Requirement)"])</expression>
-                        <property name="contentType">html</property>
-                    </text-data>
-                </cell>
-            </row>
-            <row id="76866">
-                <cell id="76869">
-                    <property name="colSpan">2</property>
-                    <property name="rowSpan">1</property>
-                    <property name="style">defaultCell</property>
-                    <text-data name="DeadlineForCorrection" id="76944">
-                        <expression name="valueExpr">getLabeledVal("deadline_for_correction", formatDate(row["IT-Baseline__Audit__-__Deadline__for__correction__(Module-Requirement)"]))</expression>
-                        <property name="contentType">html</property>
-                    </text-data>
-                </cell>
-            </row>
-            <row id="76871">
-                <cell id="76872">
-                    <property name="style">defaultCell</property>
-                    <text-data name="ImprovementOccurred" id="76945">
-                        <expression name="valueExpr">getLabeledVal("improvement_occurred", yesOrNo(row["IT-Baseline__Audit__-__Improvement__occurs"]))</expression>
-                        <property name="contentType">html</property>
-                    </text-data>
-                </cell>
-                <cell id="76873">
-                    <property name="colSpan">3</property>
-                    <property name="rowSpan">1</property>
-                    <property name="style">defaultCell</property>
-                    <text-data name="Improvement" id="76946">
-                        <expression name="valueExpr">getLabeledVal("improvement", row["IT-Baseline__Audit__-__Improvement__(Module-Requirement)"])</expression>
+                    <text-data name="Improvement1" id="76978">
+                        <expression name="valueExpr">getLabeledVal("auditorvotum", row["bp_requirement::Grundschutz_Audit_-_Auditor-Votum_(Baustein-Anforderung)"])</expression>
                         <property name="contentType">html</property>
                     </text-data>
                 </cell>
