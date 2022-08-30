@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _jj-yUIwOEei2UKUDmonytQ
 Runtime-Version: 2.5.3.202205021448
-Save-Time: 8/29/22, 1:25 PM
+Save-Time: 8/30/22, 4:13 PM
 Tags: report
 Testcase-Type: ecl
 Verifications: _wm5P0CtBEeuMltfUUtdvug
@@ -25,6 +25,7 @@ Entry-Name: .content
 global [val path_org_reportTestData1 "importierte Objekte/Informationsverbund-1 [b71753]"]
        [val path_org_Datenschutz_GmbH "importierte Objekte/DS Datenschutz  GmbH Vorfälle [c78491]"]
        [val path_2968 "importierte Objekte/IV für A.1 Strukturanalyse mit Gruppen [a.1test]"]
+       [val path_audit "importierte Objekte/Audit [2bf69e]"]
 
 proc "gen-rep" [val report] [val path_to_target_entity] [val suffix ".pdf"]{
 	try {
@@ -46,6 +47,7 @@ enable-reporting-log
 bp-import-vna "Informationsverbund-1.vna"
 bp-import-vna "Datenschutz__GmbH_Vorfälle.vna"
 bp-import-vna "A.1-FehlerTest-Verbund.vna"
+bp-import-vna "Audit.vna"
 
 gen-rep "(S) ITGS: A.1 Strukturanalyse" $path_org_reportTestData1
 gen-rep "(S) ITGS: A.1 Strukturanalyse-Abhängigkeiten" $path_2968
@@ -56,6 +58,7 @@ gen-rep "(S) ITGS: A.5 Risikoanalyse" $path_org_reportTestData1
 gen-rep "(S) ITGS: A.6 Realisierungsplan" $path_org_reportTestData1
 gen-rep "(S) ITGS: Risikomatrix" $path_org_reportTestData1
 gen-rep "(S) ITGS: Meldeformular BSIG8b IS" $path_org_Datenschutz_GmbH
+gen-rep "(S) ITGS: Auditbericht" $path_audit
 
 //test docx
 gen-rep "(S) ITGS: A.1 Strukturanalyse" $path_org_reportTestData1 ".docx"
@@ -66,6 +69,7 @@ gen-rep "(S) ITGS: A.5 Risikoanalyse" $path_org_reportTestData1 ".docx"
 gen-rep "(S) ITGS: A.6 Realisierungsplan" $path_org_reportTestData1 ".docx"
 gen-rep "(S) ITGS: Risikomatrix" $path_org_reportTestData1 ".docx"
 gen-rep "(S) ITGS: Meldeformular BSIG8b IS" $path_org_Datenschutz_GmbH ".docx"
+gen-rep "(S) ITGS: Auditbericht" $path_audit ".docx"
 
 // text xlsx
 // disabled because it causes a warning
@@ -74,6 +78,7 @@ gen-rep "(S) ITGS: Meldeformular BSIG8b IS" $path_org_Datenschutz_GmbH ".docx"
 delete-bpelement $path_org_reportTestData1
 delete-bpelement $path_org_Datenschutz_GmbH
 delete-bpelement $path_2968
+delete-bpelement $path_audit
 
 test-for-report-errors "bp-reports"
 
