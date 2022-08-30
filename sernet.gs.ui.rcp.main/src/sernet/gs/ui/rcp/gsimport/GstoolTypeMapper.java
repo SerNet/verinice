@@ -18,11 +18,11 @@
 package sernet.gs.ui.rcp.gsimport;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.VeriniceCharset;
@@ -56,8 +55,7 @@ public abstract class GstoolTypeMapper {
 
     public static final String TYPE_PROPERTIES_FILE = "gstool-types.properties";
     public static final String SUBTYPE_PROPERTIES_FILE = "gstool-subtypes.properties";
-    public static final String SUBTYPE_PROPERTIES_FILE_ENCODING = VeriniceCharset.CHARSET_ISO_8859_15
-            .toString();
+    public static final Charset SUBTYPE_PROPERTIES_FILE_ENCODING = VeriniceCharset.CHARSET_ISO_8859_15;
 
     /**
      * DEFAULT_TYPE_ID is used as element type id if no type id is found in
@@ -234,47 +232,41 @@ public abstract class GstoolTypeMapper {
     }
 
     private static void writePropertyFile(Properties properties, String filename) {
-        File file = null;
-        FileOutputStream fileOut = null;
-        String filepath = getPropertyFolderPath() + File.separator + filename;
+        File file = new File(getPropertyFolderPath(), filename);
         try {
-            if (new File(filepath).delete() && LOG.isDebugEnabled()) {
+            if (file.delete() && LOG.isDebugEnabled()) {
                 LOG.debug("File deleted");
             }
-            file = new File(filepath);
-            fileOut = new FileOutputStream(file);
-            OutputStreamWriter outWrite = new OutputStreamWriter(fileOut,
-                    SUBTYPE_PROPERTIES_FILE_ENCODING);
-            properties.store(outWrite, "");
+            try (Writer writer = Files.newBufferedWriter(file.toPath(),
+                    SUBTYPE_PROPERTIES_FILE_ENCODING)) {
+                properties.store(writer, "");
+            }
+
             refreshGstoolSubTypes(properties);
         } catch (IOException e) {
             LOG.error("Error wgile writing to property file: " + filename, e);
             throw new RuntimeException(e);
-        } finally {
-            IOUtils.closeQuietly(fileOut);
         }
     }
 
     private static Properties readPropertyFile(String fileName) {
-        String fullPath = null;
+        File file = new File(getPropertyFolderPath(), fileName);
         Properties properties = new Properties();
-        try {
-            fullPath = getPropertyFolderPath() + File.separator + fileName;
-            InputStreamReader reader = new InputStreamReader(new FileInputStream(fullPath),
-                    SUBTYPE_PROPERTIES_FILE_ENCODING);
+        try (Reader reader = Files.newBufferedReader(file.toPath(),
+                SUBTYPE_PROPERTIES_FILE_ENCODING)) {
             properties.load(reader);
-            LOG.debug("Reading types from " + fullPath + "...");
+            LOG.debug("Reading types from " + file + "...");
         } catch (RuntimeException e) {
-            LOG.error("Can not read properties from file " + fullPath, e);
+            LOG.error("Can not read properties from file " + file, e);
             throw e;
         } catch (Exception e) {
-            LOG.error("Can not read properties from file " + fullPath, e);
+            LOG.error("Can not read properties from file " + file, e);
             throw new RuntimeException(e);
         }
         return properties;
     }
 
-    private static String getPropertyFolderPath() {
+    private static File getPropertyFolderPath() {
         return CnAWorkspace.getInstance().getConfDir();
     }
 

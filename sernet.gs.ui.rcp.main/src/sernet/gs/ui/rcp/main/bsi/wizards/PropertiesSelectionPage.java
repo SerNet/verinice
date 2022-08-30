@@ -1,11 +1,9 @@
 package sernet.gs.ui.rcp.main.bsi.wizards;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -292,8 +290,8 @@ public class PropertiesSelectionPage extends WizardPage {
     // get property and values of the csv
     private void readFile() throws IOException {
 
-        try (CSVReader reader = new CSVReaderBuilder(new BufferedReader(
-                new InputStreamReader(new FileInputStream(csvDatei), getCharset())))
+        try (CSVReader reader = new CSVReaderBuilder(
+                Files.newBufferedReader(csvDatei.toPath(), getCharset()))
                         .withCSVParser(new CSVParserBuilder().withSeparator(getSeparator()).build())
                         .build()) {
             // ignore first line

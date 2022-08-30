@@ -185,7 +185,7 @@ public class DatenbankPreferencePage extends FieldEditorPreferencePage
             // replace backslashes
             // derby db url looks like this on windows: c:/Programme/Verinice...
             String derbyUrl = PreferenceConstants.DB_URL_DERBY.replace("%s", CnAWorkspace //$NON-NLS-1$
-                    .getInstance().getWorkdir().replaceAll("\\\\", "/"));
+                    .getInstance().getWorkdir().getAbsolutePath().replaceAll("\\\\", "/"));
             Logger.getLogger(this.getClass()).debug("Derby url is " + derbyUrl);
             url.setStringValue(derbyUrl);
             user.setStringValue(""); //$NON-NLS-1$

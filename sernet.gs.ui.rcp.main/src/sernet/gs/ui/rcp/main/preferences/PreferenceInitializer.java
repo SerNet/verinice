@@ -44,7 +44,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
         store.setDefault(PreferenceConstants.GSACCESS, PreferenceConstants.GSACCESS_ZIP);
 
-        store.setDefault(PreferenceConstants.BSIDIR, CnAWorkspace.getInstance().getWorkdir());
+        store.setDefault(PreferenceConstants.BSIDIR,
+                CnAWorkspace.getInstance().getWorkdir().getAbsolutePath());
 
         store.setDefault(PreferenceConstants.ERRORPOPUPS, true);
         store.setDefault(PreferenceConstants.FIRSTSTART, true);
@@ -56,7 +57,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
         store.setDefault(PreferenceConstants.DB_DIALECT, PreferenceConstants.DB_DIALECT_DERBY);
 
         final String derbyUrl = PreferenceConstants.DB_URL_DERBY.replace("%s", CnAWorkspace //$NON-NLS-1$
-                .getInstance().getWorkdir().replaceAll("\\\\", "/"));
+                .getInstance().getWorkdir().getAbsolutePath().replaceAll("\\\\", "/"));
         store.setDefault(PreferenceConstants.DB_URL, derbyUrl);
 
         store.setDefault(PreferenceConstants.DB_USER, ""); //$NON-NLS-1$

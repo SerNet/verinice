@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.verinice.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
@@ -59,12 +60,12 @@ public class DummyReportDepositService extends AbstractReportTemplateService
     }
 
     @Override
-    protected String getTemplateDirectory() {
+    protected File getTemplateDirectory() {
         try {
             URL url = FileLocator.find(Activator.getDefault().getBundle(),
                     new Path("/WebContent/WEB-INF/reportDeposit/"), null);
             URL fileUrl = FileLocator.toFileURL(url);
-            return FileUtils.toFile(fileUrl).getAbsolutePath();
+            return FileUtils.toFile(fileUrl);
         } catch (IOException ex) {
             LOG.error("jar file with reports not found", ex);
         }

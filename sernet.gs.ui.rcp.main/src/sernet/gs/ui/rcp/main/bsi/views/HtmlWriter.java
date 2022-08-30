@@ -20,7 +20,6 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
@@ -474,8 +473,8 @@ public abstract class HtmlWriter {
         }
         String cssFile = "screen.css";
 
-        String cssDir = CnAWorkspace.getInstance().getWorkdir() + File.separator + "html" //$NON-NLS-1$
-                + File.separator + cssFile; // $NON-NLS-2$
+        String cssDir = CnAWorkspace.getInstance().getWorkdir().toPath().resolve("html") //$NON-NLS-1$
+                .resolve(cssFile).toString(); // $NON-NLS-2$
         buf.append("<html><head>"); //$NON-NLS-1$
         buf.append("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=")
                 .append(encoding).append("\"/>\n"); //$NON-NLS-1$
@@ -508,8 +507,8 @@ public abstract class HtmlWriter {
             String line;
             boolean skip = false;
             boolean skipComplete = false;
-            String cssDir = CnAWorkspace.getInstance().getWorkdir() + File.separator + "html" //$NON-NLS-1$
-                    + File.separator + "screen.css"; //$NON-NLS-1$
+            String cssDir = CnAWorkspace.getInstance().getWorkdir().toPath().resolve("html")//$NON-NLS-1$
+                    .resolve("screen.css").toString(); //$NON-NLS-1$
 
             while ((line = buffRead.readLine()) != null) {
                 if (!skipComplete) {

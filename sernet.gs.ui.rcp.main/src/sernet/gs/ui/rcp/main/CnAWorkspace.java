@@ -19,8 +19,6 @@ package sernet.gs.ui.rcp.main;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -28,6 +26,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -63,7 +62,7 @@ public class CnAWorkspace {
 
     public static final String LINE_SEP = System.getProperty(IVeriniceConstants.LINE_SEPARATOR); // $NON-NLS-1$
 
-    private static String workDir;
+    private static File workDir;
 
     // copy binary data using 100K buffer:
     private static final int BUFF_SIZE = 100000;
@@ -108,7 +107,7 @@ public class CnAWorkspace {
 
     public String createTempImportDbUrl() {
         String tmpDerbyUrl = PreferenceConstants.DB_URL_DERBY.replace("%s", //$NON-NLS-1$
-                CnAWorkspace.getInstance().getWorkdir().replaceAll("\\\\", "/")); //$NON-NLS-1$ //$NON-NLS-2$
+                CnAWorkspace.getInstance().getWorkdir().getAbsolutePath().replaceAll("\\\\", "/")); //$NON-NLS-1$ //$NON-NLS-2$
         return tmpDerbyUrl.replace(VERINICEDB, TEMPIMPORTDB);
     }
 
@@ -156,7 +155,7 @@ public class CnAWorkspace {
         File confFile = new File(confDir, "configuration.version"); //$NON-NLS-1$
         if (confFile.exists()) {
             Properties props = new Properties();
-            try (FileInputStream fis = new FileInputStream(confFile)) {
+            try (InputStream fis = Files.newInputStream(confFile.toPath())) {
                 props.load(fis);
                 if (props.get("version").equals(CONFIG_CURRENT_VERSION)) { //$NON-NLS-1$
                     LOG.debug("Arbeitsverzeichnis bereits vorhanden, wird nicht neu erzeugt: " //$NON-NLS-1$
@@ -171,11 +170,11 @@ public class CnAWorkspace {
     public synchronized void prepareWorkDir() {
         URL url = Platform.getInstanceLocation().getURL();
         String path = url.getPath().replace("/", File.separator); //$NON-NLS-1$
-        workDir = (new File(path)).getAbsolutePath();
-        confDir = new File(url.getPath() + File.separator + CONF); // $NON-NLS-1$
+        workDir = new File(path);
+        confDir = new File(url.getPath(), CONF); // $NON-NLS-1$
     }
 
-    public String getWorkdir() {
+    public File getWorkdir() {
         return workDir;
     }
 
@@ -186,8 +185,8 @@ public class CnAWorkspace {
      *
      * @return the full path to configuration dir of the client
      */
-    public String getConfDir() {
-        return workDir + File.separator + CONF; // $NON-NLS-1$
+    public File getConfDir() {
+        return new File(workDir, CONF); // $NON-NLS-1$
     }
 
     private void createConfDirFiles() throws IOException {
@@ -199,13 +198,13 @@ public class CnAWorkspace {
 
     public void createConfDir() {
         URL url = Platform.getInstanceLocation().getURL();
-        File dir = new File(url.getPath() + File.separator + CONF); // $NON-NLS-1$
+        File dir = new File(url.getPath(), CONF); // $NON-NLS-1$
         dir.mkdirs();
     }
 
     private void createOfficeDir() throws IOException {
         URL url = Platform.getInstanceLocation().getURL();
-        File officeDir = new File(url.getPath() + File.separator + OFFICEDIR);
+        File officeDir = new File(url.getPath(), OFFICEDIR);
         officeDir.mkdirs();
 
         createBinaryFile(OFFICEDIR + File.separator + "report.ods", workDir); //$NON-NLS-1$
@@ -217,12 +216,12 @@ public class CnAWorkspace {
     private void createHtmlDir() throws IOException {
         URL url = Platform.getInstanceLocation().getURL();
         String html = "html";
-        File htmlDir = new File(url.getPath() + File.separator + html); // $NON-NLS-1$
+        File htmlDir = new File(url.getPath(), html); // $NON-NLS-1$
         htmlDir.mkdirs();
 
         createTextFile(html + File.separator + "screen.css", workDir); //$NON-NLS-1$ //$NON-NLS-2$
         createTextFile(html + File.separator + "about.html", workDir); //$NON-NLS-1$ //$NON-NLS-2$
-        createBinaryFile("browserdefault.png", workDir + File.separator + html); //$NON-NLS-1$ //$NON-NLS-2$
+        createBinaryFile("browserdefault.png", new File(workDir, html)); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     private void createGstoolPropertyFiles() throws IOException {
@@ -242,12 +241,12 @@ public class CnAWorkspace {
      * @param toDir
      * @throws IOException
      */
-    private void createBinaryFile(String infile, String toDir) throws IOException {
+    private void createBinaryFile(String infile, File toDir) throws IOException {
         backupFile(toDir, infile);
 
         String infileResource = infile.replace('\\', '/');
         InputStream in = getClass().getClassLoader().getResourceAsStream(infileResource);
-        try (OutputStream out = new FileOutputStream(toDir + File.separator + infile)) {
+        try (OutputStream out = Files.newOutputStream(new File(toDir, infile).toPath())) {
             while (true) {
                 synchronized (BUFFER) {
                     int amountRead = in.read(BUFFER);
@@ -294,11 +293,11 @@ public class CnAWorkspace {
                 prefs.getString(PreferenceConstants.GS_DB_PASS));
     }
 
-    private void createTextFile(String infile, String toDir) throws IOException {
+    private void createTextFile(String infile, File toDir) throws IOException {
         createTextFile(infile, toDir, infile, null);
     }
 
-    private void createTextFile(String infile, String toDir, String outfile) throws IOException {
+    private void createTextFile(String infile, File toDir, String outfile) throws IOException {
         createTextFile(infile, toDir, outfile, null);
     }
 
@@ -320,7 +319,7 @@ public class CnAWorkspace {
      * @throws NullPointerException
      * @throws IOException
      */
-    protected void createTextFile(String infile, String toDir, String outfile,
+    protected void createTextFile(String infile, File toDir, String outfile,
             Map<String, String> variables) throws IOException {
         createTextFile(infile, VeriniceCharset.CHARSET_DEFAULT, toDir, outfile,
                 VeriniceCharset.CHARSET_DEFAULT, variables);
@@ -349,8 +348,8 @@ public class CnAWorkspace {
      * @throws NullPointerException
      * @throws IOException
      */
-    protected void createTextFile(String infile, Charset charsetInfile, String toDir,
-            String outfile, Map<String, String> variables) throws IOException {
+    protected void createTextFile(String infile, Charset charsetInfile, File toDir, String outfile,
+            Map<String, String> variables) throws IOException {
         createTextFile(infile, charsetInfile, toDir, outfile, VeriniceCharset.CHARSET_DEFAULT,
                 variables);
     }
@@ -380,9 +379,8 @@ public class CnAWorkspace {
      * @throws NullPointerException
      * @throws IOException
      */
-    protected void createTextFile(String infile, Charset charsetInfile, String toDir,
-            String outfile, Charset charsetOutfile, Map<String, String> variables)
-            throws IOException {
+    protected void createTextFile(String infile, Charset charsetInfile, File toDir, String outfile,
+            Charset charsetOutfile, Map<String, String> variables) throws IOException {
 
         String infileResource = infile.replace('\\', '/');
         InputStream is = getClass().getClassLoader().getResourceAsStream(infileResource);
@@ -409,17 +407,16 @@ public class CnAWorkspace {
         is.close();
 
         backupFile(toDir, outfile);
-        FileOutputStream fout = new FileOutputStream(toDir + File.separator + outfile, false);
-        try (OutputStreamWriter outWrite = new OutputStreamWriter(fout, charsetOutfile)) {
+        try (OutputStreamWriter outWrite = new OutputStreamWriter(
+                Files.newOutputStream(new File(toDir, outfile).toPath()), charsetOutfile)) {
             outWrite.write(skelFile.toString());
         }
-        fout.close();
     }
 
-    private void backupFile(String dir, String filepath) throws IOException {
-        File file = new File(dir + File.separator + filepath);
+    private void backupFile(File dir, String filepath) throws IOException {
+        File file = new File(dir, filepath);
         if (file.exists()) {
-            File outfile = new File(dir + File.separator + filepath + ".bak"); //$NON-NLS-1$
+            File outfile = new File(dir, filepath + ".bak"); //$NON-NLS-1$
             FileUtils.copyFile(file, outfile);
         }
     }
@@ -469,21 +466,16 @@ public class CnAWorkspace {
         }
     }
 
-    public String getLocalReportTemplateDir() {
+    public File getLocalReportTemplateDir() {
         return attachDirToWorkDir(IReportService.VERINICE_REPORTS_LOCAL);
     }
 
-    public String getRemoteReportTemplateDir() {
+    public File getRemoteReportTemplateDir() {
         return attachDirToWorkDir(IReportService.VERINICE_REPORTS_REMOTE);
     }
 
-    private String attachDirToWorkDir(String dir) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getWorkdir());
-        sb.append(File.separatorChar);
-        sb.append(dir);
-        sb.append(File.separatorChar);
-        return sb.toString();
+    private File attachDirToWorkDir(String dir) {
+        return new File(getWorkdir(), dir);
     }
 
 }

@@ -98,11 +98,9 @@ public class CreateNewSelfAssessmentService {
     }
 
     private String getFullSamtCatalogPath() {
-        StringBuilder sb = new StringBuilder(SamtWorkspace.getInstance().getConfDir())
-                .append(File.separatorChar);
-        sb.append(Activator.getDefault().getPreferenceStore()
-                .getString(SamtPreferencePage.CATALOG_FILENAME)).toString();
-        return sb.toString();
+        return new File(SamtWorkspace.getInstance().getConfDir(), Activator.getDefault()
+                .getPreferenceStore().getString(SamtPreferencePage.CATALOG_FILENAME))
+                        .getAbsolutePath();
     }
 
     public void createSelfAssessment() throws CommandException, IOException {

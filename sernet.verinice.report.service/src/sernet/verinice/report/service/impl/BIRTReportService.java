@@ -18,10 +18,10 @@
 package sernet.verinice.report.service.impl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -246,9 +246,9 @@ public class BIRTReportService {
     public void extract(IDataExtractionTask task, IReportOptions options, int resultSetIndex) {
         IDataExtractionOption extractionOptions = (IDataExtractionOption) ((AbstractOutputFormat) options
                 .getOutputFormat()).createBIRTExtractionOptions();
-        try {
-            extractionOptions.setOutputStream(new FileOutputStream(options.getOutputFile()));
-        } catch (FileNotFoundException e) {
+        try (OutputStream os = Files.newOutputStream(options.getOutputFile().toPath())) {
+            extractionOptions.setOutputStream(os);
+        } catch (IOException e) {
             log.error("Could not prepare output stream: ", e);
             throw new IllegalStateException(e);
         }

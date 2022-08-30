@@ -18,9 +18,10 @@
 package sernet.verinice.model.bsi;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 
 import org.apache.commons.io.FileUtils;
@@ -62,9 +63,7 @@ public class AttachmentFile implements Serializable, ITypedElement {
     }
 
     public void writeFileData(String path) throws IOException {
-        FileOutputStream fos = new FileOutputStream(path);
-        fos.write(getFileData());
-        fos.close();
+        Files.write(Paths.get(path), fileData);
     }
 
     public void readFileData(String path) throws IOException {

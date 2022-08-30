@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.reports;
 
+import java.io.File;
+
 import sernet.gs.service.AbstractReportTemplateService;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.verinice.interfaces.IReportDepositService;
@@ -42,7 +44,7 @@ public class ReportDepositCache extends AbstractReportTemplateService {
     }
 
     @Override
-    protected String getTemplateDirectory() {
+    protected File getTemplateDirectory() {
         return CnAWorkspace.getInstance().getRemoteReportTemplateDir();
     }
 }

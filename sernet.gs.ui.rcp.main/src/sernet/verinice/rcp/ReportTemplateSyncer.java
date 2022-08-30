@@ -19,8 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.rcp;
 
-import static org.apache.commons.io.FilenameUtils.concat;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
@@ -176,8 +174,8 @@ public class ReportTemplateSyncer extends WorkspaceJob implements IModelLoadList
         deleteLocalFile(filename);
 
         byte[] content = getRemoteReportDeposit().readResource(filename);
-        String directory = CnAWorkspace.getInstance().getRemoteReportTemplateDir();
-        File rptdesignTemplate = new File(concat(directory, filename));
+        File directory = CnAWorkspace.getInstance().getRemoteReportTemplateDir();
+        File rptdesignTemplate = new File(directory, filename);
         FileUtils.writeByteArrayToFile(rptdesignTemplate, content);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Template:\t" + filename + " written to:\t"
@@ -186,12 +184,9 @@ public class ReportTemplateSyncer extends WorkspaceJob implements IModelLoadList
     }
 
     private void deleteLocalFile(String fileName) {
-        String filePath = CnAWorkspace.getInstance().getRemoteReportTemplateDir();
-        if (!filePath.endsWith(String.valueOf(File.separatorChar))) {
-            filePath = filePath + File.separatorChar;
-        }
-        filePath = filePath + fileName;
-        File file = new File(filePath);
+        File filePath = CnAWorkspace.getInstance().getRemoteReportTemplateDir();
+
+        File file = new File(filePath, fileName);
 
         if (file.exists()) {
             file.delete();

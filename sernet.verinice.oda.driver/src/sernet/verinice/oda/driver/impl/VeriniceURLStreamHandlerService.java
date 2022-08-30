@@ -23,12 +23,11 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,8 +51,8 @@ public class VeriniceURLStreamHandlerService extends AbstractURLStreamHandlerSer
             @Override
             public InputStream newInputStream(int width, int height) {
                 try {
-                    return new FileInputStream(f);
-                } catch (FileNotFoundException e) {
+                    return Files.newInputStream(f.toPath());
+                } catch (IOException e) {
                     LOG.error("Could not register 'test' image");
                     throw new RuntimeException();
                 }

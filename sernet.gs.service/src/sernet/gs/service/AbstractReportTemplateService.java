@@ -20,10 +20,10 @@
 package sernet.gs.service;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -92,7 +92,7 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
 
     protected abstract boolean isHandeledByReportDeposit();
 
-    protected abstract String getTemplateDirectory();
+    protected abstract File getTemplateDirectory();
 
     protected void handleException(String msg, Exception ex) throws ReportTemplateServiceException {
         logger.error(msg, ex);
@@ -102,8 +102,8 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
     protected Properties parseAndExtendMetaData(File rptDesign, Locale locale) throws IOException {
         File propFile = PropertiesFileUtil.getPropertiesFile(rptDesign, locale);
         Properties props = new Properties();
-        try (FileInputStream fis = new FileInputStream(propFile.getAbsoluteFile())) {
-            props.load(fis);
+        try (InputStream is = Files.newInputStream(propFile.toPath())) {
+            props.load(is);
         }
 
         String fileName = FilenameUtils.getName(rptDesign.getPath());
@@ -123,7 +123,7 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
         }
 
         if (changed) {
-            try (OutputStream out = new FileOutputStream(propFile.getAbsoluteFile())) {
+            try (OutputStream out = Files.newOutputStream(propFile.toPath())) {
                 props.store(out, String.format("Metadata for the report deposit %s",
                         FilenameUtils.getName(rptDesign.getPath())));
             }
@@ -139,7 +139,7 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
             throw new PropertyFileExistsException();
         } else {
             Properties props = getDefaultProperties(name);
-            try (FileOutputStream fos = new FileOutputStream(propFile)) {
+            try (OutputStream fos = Files.newOutputStream(propFile.toPath())) {
                 props.store(fos, "Default Properties for verinice-" + "Report " + name
                         + "\nauto-generated content");
             }
@@ -195,17 +195,17 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
         String baseName = FilenameUtils.removeExtension(fileName);
         IOFileFilter filter = new RegexFileFilter(baseName + "\\_?.*\\.properties",
                 IOCase.INSENSITIVE);
-        return FileUtils.iterateFiles(new File(getTemplateDirectory()), filter, null);
+        return FileUtils.iterateFiles(getTemplateDirectory(), filter, null);
     }
 
     private String getCheckSum(String fileName) throws IOException {
-        String filePath;
-        if (!fileName.contains(getTemplateDirectory())) {
-            filePath = getTemplateDirectory() + File.separatorChar + fileName;
+        File file;
+        if (!fileName.contains(getTemplateDirectory().getAbsolutePath())) {
+            file = new File(getTemplateDirectory(), fileName);
         } else {
-            filePath = fileName;
+            file = new File(fileName);
         }
-        return MD5.getMD5Checksum(FileUtils.readFileToByteArray(new File(filePath)));
+        return MD5.getMD5Checksum(FileUtils.readFileToByteArray(file));
     }
 
     @Override
@@ -228,8 +228,7 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
     private String[] getReportTemplateFileNames() {
         List<String> list = new ArrayList<>();
         IOFileFilter filter = new SuffixFileFilter("rptdesign", IOCase.INSENSITIVE);
-        Iterator<File> iter = FileUtils.iterateFiles(new File(getTemplateDirectory()), filter,
-                null);
+        Iterator<File> iter = FileUtils.iterateFiles(getTemplateDirectory(), filter, null);
         while (iter.hasNext()) {
             list.add(iter.next().getAbsolutePath());
         }
@@ -277,8 +276,8 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
     public byte[] readResource(String filename) throws ReportTemplateServiceException {
         try {
             lock.readLock().lock();
-            String filePath = getTemplateDirectory() + File.separatorChar + filename;
-            return FileUtils.readFileToByteArray(new File(filePath));
+            File file = new File(getTemplateDirectory(), filename);
+            return FileUtils.readFileToByteArray(file);
         } catch (IOException ex) {
             handleException("error while fetching file", ex);
         } finally {
@@ -359,8 +358,7 @@ public abstract class AbstractReportTemplateService implements IReportTemplateSe
         IOFileFilter filter = new SuffixFileFilter(
                 new String[] { "rptdesign", "rptlibrary", "properties", "js", "css" },
                 IOCase.INSENSITIVE);
-        Iterator<File> iter = FileUtils.iterateFiles(new File(getTemplateDirectory()), filter,
-                null);
+        Iterator<File> iter = FileUtils.iterateFiles(getTemplateDirectory(), filter, null);
         while (iter.hasNext()) {
             filenames.add(iter.next().getName());
         }

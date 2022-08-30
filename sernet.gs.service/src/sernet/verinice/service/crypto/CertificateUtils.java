@@ -1,8 +1,9 @@
 package sernet.verinice.service.crypto;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.security.NoSuchProviderException;
 import java.security.Security;
 import java.security.cert.Certificate;
@@ -40,6 +41,7 @@ public final class CertificateUtils {
     static {
         if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
             Security.addProvider(new BouncyCastleProvider());
+
         }
     }
 
@@ -94,28 +96,29 @@ public final class CertificateUtils {
             throw new RuntimeException("Certificate provider not found.", e);
         }
 
-        Certificate certificate = certificateFactory
-                .generateCertificate(new FileInputStream(x509CertificateFile));
-        if (certificate == null) {
-            String message = "The given file \"" + x509CertificateFile
-                    + "\" does not contain a X.509 certificate.";
-            LOG.error(message);
-            throw new CertificateException(message);
-        }
-        if (!certificate.getType().equalsIgnoreCase("x.509")) {
-            String message = "The certificate contained in the given file \"" + x509CertificateFile
-                    + "\" is not a X.509 certificate.";
-            LOG.error(message);
-            throw new CertificateException(message);
-        }
+        try (InputStream is = Files.newInputStream(x509CertificateFile.toPath())) {
+            Certificate certificate = certificateFactory.generateCertificate(is);
+            if (certificate == null) {
+                String message = "The given file \"" + x509CertificateFile
+                        + "\" does not contain a X.509 certificate.";
+                LOG.error(message);
+                throw new CertificateException(message);
+            }
+            if (!certificate.getType().equalsIgnoreCase("x.509")) {
+                String message = "The certificate contained in the given file \""
+                        + x509CertificateFile + "\" is not a X.509 certificate.";
+                LOG.error(message);
+                throw new CertificateException(message);
+            }
 
-        X509Certificate x509Certificate = (X509Certificate) certificate;
-        // Lastly checks if the certificate is (still) valid.
-        // If not this throws a CertificateExpiredException or
-        // CertificateNotYetValidException respectively.
-        x509Certificate.checkValidity();
+            X509Certificate x509Certificate = (X509Certificate) certificate;
+            // Lastly checks if the certificate is (still) valid.
+            // If not this throws a CertificateExpiredException or
+            // CertificateNotYetValidException respectively.
+            x509Certificate.checkValidity();
 
-        return x509Certificate;
+            return x509Certificate;
+        }
     }
 
     private CertificateUtils() {

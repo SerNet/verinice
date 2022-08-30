@@ -18,8 +18,8 @@
 package sernet.verinice.service;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.Locale;
 import java.util.Properties;
@@ -153,12 +153,12 @@ public class ReportDepositService extends AbstractReportTemplateService
 
     private void writePropertiesFile(Properties properties, File propFile, String comment)
             throws IOException {
-        String path = getTemplateDirectory() + propFile.getName();
+        File file = new File(getTemplateDirectory(), propFile.getName());
         if (LOG.isDebugEnabled()) {
             LOG.debug("writing properties for " + properties.getProperty(PROPERTIES_FILENAME)
-                    + " to " + path);
+                    + " to " + file);
         }
-        try (FileOutputStream fos = new FileOutputStream(path)) {
+        try (OutputStream fos = Files.newOutputStream(file.toPath())) {
             properties.store(fos, comment);
         }
     }
@@ -181,16 +181,9 @@ public class ReportDepositService extends AbstractReportTemplateService
     }
 
     @Override
-    protected String getTemplateDirectory() {
+    protected File getTemplateDirectory() {
         try {
-            if (reportDeposit != null) {
-                String location = reportDeposit.getFile().getAbsolutePath();
-                if (!(location.endsWith(String.valueOf(File.separatorChar)))) {
-                    location = location + File.separatorChar;
-                }
-                return location;
-            }
-            return "";
+            return reportDeposit.getFile();
         } catch (IOException ex) {
             LOG.error("error while locating report template directory", ex);
             throw new RuntimeException(ex);

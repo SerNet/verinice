@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.reports;
 
+import java.io.File;
+
 import sernet.gs.service.AbstractReportTemplateService;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -38,8 +40,8 @@ public class LocalReportTemplateService extends AbstractReportTemplateService {
     }
 
     @Override
-    protected String getTemplateDirectory() {
-        return getLocalReportPath();
+    protected File getTemplateDirectory() {
+        return new File(getLocalReportPath());
     }
 
     private String getLocalReportPath() {

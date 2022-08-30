@@ -256,8 +256,8 @@ public class ReportDepositTest extends CommandServiceProvider {
             }
 
             @Override
-            protected String getTemplateDirectory() {
-                return dir.getAbsolutePath();
+            protected File getTemplateDirectory() {
+                return dir;
             }
         };
 

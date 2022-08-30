@@ -18,19 +18,23 @@
 package sernet.gs.scraper;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.log4j.Logger;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import net.sf.saxon.Configuration;
 import net.sf.saxon.dom.DocumentWrapper;
@@ -40,16 +44,10 @@ import net.sf.saxon.query.DynamicQueryContext;
 import net.sf.saxon.query.StaticQueryContext;
 import net.sf.saxon.query.XQueryExpression;
 import net.sf.saxon.trans.XPathException;
-
-import org.apache.log4j.Logger;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
 import sernet.gs.service.GSServiceException;
-import sernet.verinice.model.bsi.BSIModel;
 
 /**
  * Scraper to extract modules and safeguards from BSI's HTML Files using XQuery
@@ -275,12 +273,11 @@ public class GSScraper {
         }
         String filename0 = fileName.replace("../", "").replace("/", "_");
 
-        FileInputStream fin = new FileInputStream(
-                dir.getAbsolutePath() + File.separator + filename0);
-        ObjectInputStream ois = new ObjectInputStream(fin);
-        ArrayList result = (ArrayList) ois.readObject();
-        ois.close();
-        return result;
+        try (InputStream in = Files.newInputStream(dir.toPath().resolve(filename0));
+                ObjectInputStream ois = new ObjectInputStream(in);) {
+            ArrayList result = (ArrayList) ois.readObject();
+            return result;
+        }
     }
 
     public boolean flushCache() {
@@ -319,12 +316,9 @@ public class GSScraper {
                     .debug("Creating GS cache dir " + dir.getAbsolutePath());
         }
 
-        try {
-            FileOutputStream fout = new FileOutputStream(
-                    dir.getAbsolutePath() + File.separator + fileName);
-            ObjectOutputStream oos = new ObjectOutputStream(fout);
+        try (OutputStream os = Files.newOutputStream(dir.toPath().resolve(fileName));
+                ObjectOutputStream oos = new ObjectOutputStream(os)) {
             oos.writeObject(object);
-            oos.close();
         } catch (Exception e) {
             Logger.getLogger(this.getClass())
                     .error("Fehler beim Schreiben von Objekt in Festplatten-Cache", e);

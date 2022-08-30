@@ -20,9 +20,10 @@
 package sernet.verinice.service;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.StringWriter;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -261,7 +262,8 @@ public class XmlRightsService implements IRightsService {
 
             // Block all other threads before writing the file
             writeLock.lock();
-            try {
+            try (OutputStream os = Files
+                    .newOutputStream(getAuthConfiguration().getFile().toPath())) {
                 // create a backup of the old configuration
                 backupConfigurationFile();
                 // write the new configuration
@@ -269,8 +271,7 @@ public class XmlRightsService implements IRightsService {
                 marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
                 marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
                 marshaller.setSchema(getSchema());
-                marshaller.marshal(authNew,
-                        new FileOutputStream(getAuthConfiguration().getFile().getPath()));
+                marshaller.marshal(authNew, os);
                 // set auth to null,
                 // next call of getCofiguration will read the new configuration
                 // from disk
