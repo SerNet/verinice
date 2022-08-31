@@ -29,15 +29,11 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.URLUtil;
-import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.DocumentLink;
 import sernet.verinice.model.bsi.DocumentLinkRoot;
 import sernet.verinice.model.bsi.DocumentReference;
-import sernet.verinice.model.bsi.IBSIModelListener;
-import sernet.verinice.model.common.ChangeLogEntry;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.validation.CnAValidation;
+import sernet.verinice.model.common.NullListener;
 
 /**
  * Content Provider for document view.
@@ -46,7 +42,7 @@ import sernet.verinice.model.validation.CnAValidation;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
-public class DocumentContentProvider implements ITreeContentProvider, IBSIModelListener {
+public class DocumentContentProvider extends NullListener implements ITreeContentProvider {
 
     private TreeViewer viewer;
 
@@ -66,7 +62,7 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
         if (parentElement instanceof DocumentLink) {
             DocumentLink doclink = (DocumentLink) parentElement;
             Set<DocumentReference> children = doclink.getChildren();
-            return (DocumentReference[]) children.toArray(new DocumentReference[children.size()]);
+            return children.toArray(new DocumentReference[children.size()]);
         } else if (parentElement instanceof DocumentLinkRoot) {
             DocumentLinkRoot root = (DocumentLinkRoot) parentElement;
             return root.getChildren();
@@ -85,17 +81,19 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
     public boolean hasChildren(Object element) {
         if (element instanceof DocumentLink) {
             DocumentLink doclink = (DocumentLink) element;
-            return doclink.getChildren().size() > 0;
+            return !doclink.getChildren().isEmpty();
         }
         return false;
     }
 
+    @Override
     public void dispose() {
         if (CnAElementFactory.getLoadedModel() != null) {
             CnAElementFactory.getLoadedModel().removeBSIModelListener(this);
         }
     }
 
+    @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         if (CnAElementFactory.getLoadedModel() != null) {
             CnAElementFactory.getLoadedModel().removeBSIModelListener(this);
@@ -109,8 +107,9 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
         return getChildren(inputElement);
     }
 
+    @Override
     public void childAdded(CnATreeElement category, CnATreeElement child) {
-        if (hasDocumentProperty(child) && !getDocumentPropertyId(child).isEmpty()) {
+        if (hasDocumentProperty(child)) {
             updateViewer(ADD, child, category);
             modelRefresh(null);
         }
@@ -138,23 +137,17 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
     }
 
     private boolean isDocumentProperty(String id) {
-        if (id != null && (id.contains(DOCUMENT_PROPERTY_SUFFIX_ENGLISH)
-                || id.contains(DOCUMENT_PROPERTY_SUFFIX_GERMAN))) {
-            return true;
-        }
-        return false;
+        return id != null && (id.contains(DOCUMENT_PROPERTY_SUFFIX_ENGLISH)
+                || id.contains(DOCUMENT_PROPERTY_SUFFIX_GERMAN));
     }
 
+    @Override
     public void childChanged(CnATreeElement child) {
         try {
             if (hasDocumentProperty(child)) {
                 DocumentLinkRoot dlr = (DocumentLinkRoot) viewer.getInput();
-                if (!getDocumentPropertyId(child).isEmpty()) {
-                    setThreadSetViewerInput(addInputElement(dlr, child));
-                } else { // documentProperty is existant but empty, remove link
-                         // if necessary
-                    setThreadSetViewerInput(removeInputElement(dlr, child));
-                }
+                setThreadSetViewerInput(addInputElement(dlr, child));
+
                 modelRefresh(null);
             }
         } catch (Exception t) {
@@ -164,19 +157,7 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
 
     }
 
-    public void linkChanged(CnALink old, CnALink link, Object source) {
-        // do nothing
-    }
-
-    public void linkRemoved(CnALink link) {
-        // do nothing
-
-    }
-
-    public void linkAdded(CnALink link) {
-        // do nothing
-    }
-
+    @Override
     public void childRemoved(CnATreeElement category, CnATreeElement child) {
         modelRefresh(null);
     }
@@ -185,64 +166,19 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
      * @deprecated Es soll stattdessen {@link #modelRefresh(Object)} verwendet
      *             werden
      */
+    @Override
     public void modelRefresh() {
         modelRefresh(null);
     }
 
+    @Override
     public void modelRefresh(Object source) {
         if (Display.getCurrent() != null) {
             viewer.refresh();
         } else {
-            Display.getDefault().asyncExec(new Runnable() {
-                public void run() {
-                    viewer.refresh();
-                }
-            });
+            Display.getDefault().asyncExec(() -> viewer.refresh());
         }
     }
-
-    public void databaseChildAdded(CnATreeElement child) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void databaseChildChanged(CnATreeElement child) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void databaseChildRemoved(CnATreeElement child) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void modelReload(BSIModel newModel) {
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(
-     * java.lang.Integer)
-     */
-    public void databaseChildRemoved(ChangeLogEntry id) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void validationAdded(Integer scopeId) {
-    };
-
-    @Override
-    public void validationRemoved(Integer scopeId) {
-    };
-
-    @Override
-    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation) {
-    };
 
     void updateViewer(final int type, final Object child, final Object parent) {
 
@@ -250,11 +186,7 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
             doUpdateViewer(type, child, parent);
             return;
         }
-        Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
-                doUpdateViewer(type, child, parent);
-            }
-        });
+        Display.getDefault().asyncExec(() -> doUpdateViewer(type, child, parent));
     }
 
     private void doUpdateViewer(int type, Object child, Object parent) {
@@ -296,14 +228,6 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
         return root;
     }
 
-    private DocumentLinkRoot removeInputElement(DocumentLinkRoot root, CnATreeElement elmt) {
-        DocumentLink link = getDocumentLink(elmt);
-        if (isLinkContainedInRoot(root, link)) {
-            root.removeChild(link);
-        }
-        return root;
-    }
-
     private boolean isLinkContainedInRoot(DocumentLinkRoot root, DocumentLink link) {
         for (DocumentLink child : root.getChildren()) {
             if (child != null && child.equals(link)) {
@@ -317,12 +241,7 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
     private void setThreadSetViewerInput(final DocumentLinkRoot dlr) {
         Display display = (Display.getCurrent() != null) ? Display.getCurrent()
                 : Display.getDefault();
-        display.asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                viewer.setInput(dlr);
-            }
-        });
+        display.asyncExec(() -> viewer.setInput(dlr));
     }
 
 }
