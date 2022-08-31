@@ -236,12 +236,15 @@ public class DocumentView extends RightsEnabledView {
                     /**
                      * this ensures a refresh on reopening the view
                      */
+
                     @Override
-                    public void partActivated(IWorkbenchPartReference reference) {
-                        if (!Activator.getDefault().isStandalone()
-                                || Activator.getDefault().getInternalServer().isRunning()) {
+                    public void partVisible(IWorkbenchPartReference partRef) {
+                        IWorkbenchPart part = partRef.getPart(false);
+                        if (part == DocumentView.this && (!Activator.getDefault().isStandalone()
+                                || Activator.getDefault().getInternalServer().isRunning())) {
                             setInput();
                         }
+                        super.partVisible(partRef);
                     }
 
                     @Override
