@@ -34,6 +34,7 @@ import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 
 import sernet.gs.ui.rcp.main.Activator;
@@ -197,6 +198,12 @@ public class DocumentView extends RightsEnabledView {
         // we don't handle the focus event
     }
 
+    @Override
+    public void dispose() {
+        CnAElementFactory.getInstance().removeLoadListener(loadListener);
+        super.dispose();
+    }
+
     private void makeActions() {
 
         refreshAction = new Action(Messages.DocumentView_7, SWT.NONE) {
@@ -235,6 +242,16 @@ public class DocumentView extends RightsEnabledView {
                                 || Activator.getDefault().getInternalServer().isRunning()) {
                             setInput();
                         }
+                    }
+
+                    @Override
+                    public void partClosed(IWorkbenchPartReference partRef) {
+                        IWorkbenchPart part = partRef.getPart(false);
+                        if (part == DocumentView.this) {
+                            getSite().getWorkbenchWindow().getPartService()
+                                    .removePartListener(this);
+                        }
+                        super.partClosed(partRef);
                     }
                 });
     }
