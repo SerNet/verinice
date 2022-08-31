@@ -176,10 +176,6 @@ public class DocumentView extends RightsEnabledView {
                 return 0;
             }
         });
-        if (!Activator.getDefault().isStandalone()
-                || Activator.getDefault().getInternalServer().isRunning()) {
-            setInput();
-        }
 
         column.getColumn().setWidth(colum1Width);
         column2.getColumn().setWidth(colum2Width);
