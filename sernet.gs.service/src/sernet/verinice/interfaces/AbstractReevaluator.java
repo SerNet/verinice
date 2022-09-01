@@ -27,6 +27,7 @@ import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.TransactionAbortedException;
+import sernet.verinice.model.iso27k.ProtectionRequirementUtils;
 
 /**
  * Convenient class to implement a {@link IReevaluator} to spare the override of
@@ -58,7 +59,7 @@ public abstract class AbstractReevaluator implements IReevaluator {
 
         int countLinks = 0;
         for (CnALink link : downwardElement.getLinksDown()) {
-            if (link.getDependency().isProtectionRequirementsProvider()) {
+            if (ProtectionRequirementUtils.dependencyIsProtectionRequirementsProvider(link)) {
                 countLinks++;
                 findBottomNodes(link.getDependency(), bottomNodes, downwardsTA);
             }

@@ -67,8 +67,10 @@ public class MaximumProtectionRequirementsValueListener extends AbstractLinkChan
         // get protection level from upward links:
         int highestValue = 0;
         for (CnALink link : sbTarget.getLinksUp()) {
-            CnATreeElement upwardElmt = link.getDependant();
-            if (upwardElmt.isProtectionRequirementsProvider()) {
+            if (ProtectionRequirementUtils.dependantIsProtectionRequirementsProvider(link)) {
+
+                CnATreeElement upwardElmt = link.getDependant();
+
                 // upwardElement might depend on maximum level itself, so
                 // recurse up:
                 upwardElmt.getLinkChangeListener().determineIntegrity(ta);
@@ -113,8 +115,8 @@ public class MaximumProtectionRequirementsValueListener extends AbstractLinkChan
         // otherwise get protection level from upward links:
         int highestValue = 0;
         for (CnALink link : sbTarget.getLinksUp()) {
-            CnATreeElement upwardElmt = link.getDependant();
-            if (upwardElmt.isProtectionRequirementsProvider()) {
+            if (ProtectionRequirementUtils.dependantIsProtectionRequirementsProvider(link)) {
+                CnATreeElement upwardElmt = link.getDependant();
 
                 // upwardElement might depend on maximum level itself, so
                 // recurse up:
@@ -161,8 +163,8 @@ public class MaximumProtectionRequirementsValueListener extends AbstractLinkChan
         // otherwise get protection level from upward links:
         int highestValue = 0;
         for (CnALink link : sbTarget.getLinksUp()) {
-            CnATreeElement upwardElmt = link.getDependant();
-            if (upwardElmt.isProtectionRequirementsProvider()) {
+            if (ProtectionRequirementUtils.dependantIsProtectionRequirementsProvider(link)) {
+                CnATreeElement upwardElmt = link.getDependant();
 
                 // upwardElement might depend on maximum level itself, so
                 // recurse up:

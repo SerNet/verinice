@@ -55,6 +55,7 @@ import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.InheritLogger;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.PersonIso;
+import sernet.verinice.model.iso27k.ProtectionRequirementUtils;
 import sernet.verinice.model.validation.CnAValidation;
 
 /**
@@ -595,8 +596,8 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
         return null;
     }
 
-    public boolean isProtectionRequirementsProvider() {
-        return getProtectionRequirementsProvider() != null;
+    public final boolean isProtectionRequirementsProvider() {
+        return ProtectionRequirementUtils.isProtectionRequirementsProvider(getTypeId());
     }
 
     public boolean isAdditionalMgmtReviewNeeded() {
