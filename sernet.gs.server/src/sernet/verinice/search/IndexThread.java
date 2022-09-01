@@ -43,7 +43,7 @@ public class IndexThread extends DummyAuthenticatorCallable<List<IndexedElementD
     private IBaseDao<CnATreeElement, Integer> elementDao;
     private ISearchDao searchDao;
     private ISearchService searchService;
-    private List<String> uuids;
+    private List<String> ids;
     private IJsonBuilder jsonBuilder;
     private boolean logIndexedElementDetails = false;
 
@@ -77,7 +77,7 @@ public class IndexThread extends DummyAuthenticatorCallable<List<IndexedElementD
 
     private List<CnATreeElement> loadElements() {
         DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class);
-        criteria.add(Restrictions.in("uuid", uuids));
+        criteria.add(Restrictions.in("dbId", ids));
         criteria.setFetchMode("permissions", FetchMode.JOIN);
         criteria.setFetchMode("entity", FetchMode.JOIN);
         criteria.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
@@ -85,8 +85,8 @@ public class IndexThread extends DummyAuthenticatorCallable<List<IndexedElementD
         return getElementDao().findByCriteria(criteria);
     }
 
-    public void setUuids(List<String> uuids) {
-        this.uuids = uuids;
+    public void setIDs(List<String> ids) {
+        this.ids = ids;
     }
 
     public IBaseDao<CnATreeElement, Integer> getElementDao() {

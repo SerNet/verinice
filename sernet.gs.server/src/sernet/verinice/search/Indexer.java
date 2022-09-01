@@ -55,7 +55,7 @@ public class Indexer {
 
     private static final Logger LOG = Logger.getLogger(Indexer.class);
 
-    private static final String HQL_LOAD_UUIDS = "select e.uuid from CnATreeElement e";
+    private static final String HQL_LOAD_IDS = "select dbId from CnATreeElement";
 
     private static final int INDEXING_CHUNK_SIZE = 50;
 
@@ -108,16 +108,15 @@ public class Indexer {
 
         ClosableCompletionService<List<IndexedElementDetails>> completionService = TrackableCompletionService
                 .newInstance();
-        List<String> allUuids = geAllCnATreeElementUUIDS();
+        List<String> allIDs = geAllCnATreeElementIDS();
 
         if (LOG.isInfoEnabled()) {
-            LOG.info("Elements: " + allUuids.size() + ", start indexing...");
+            LOG.info("Elements: " + allIDs.size() + ", start indexing...");
         }
 
         getTitleCache().load(ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID, ItNetwork.TYPE_ID);
-        Collection<IndexThread> indexThreads = createIndexThreadsByUuids(allUuids,
+        Collection<IndexThread> indexThreads = createIndexThreadsByIDs(allIDs,
                 logIndexedElementDetails);
-
         for (IndexThread indexThread : indexThreads) {
             completionService.submit(indexThread);
         }
@@ -131,11 +130,11 @@ public class Indexer {
     }
 
     @SuppressWarnings("unchecked")
-    private List<String> geAllCnATreeElementUUIDS() {
+    private List<String> geAllCnATreeElementIDS() {
         List<String> allUuids;
 
         ServerInitializer.inheritVeriniceContextState();
-        allUuids = getElementDao().findByQuery(HQL_LOAD_UUIDS, null);
+        allUuids = getElementDao().findByQuery(HQL_LOAD_IDS, null);
 
         return allUuids;
     }
@@ -225,13 +224,13 @@ public class Indexer {
         }
     }
 
-    private Collection<IndexThread> createIndexThreadsByUuids(List<String> allUuids,
+    private Collection<IndexThread> createIndexThreadsByIDs(List<String> allIDs,
             boolean logIndexedElementDetails) {
-        List<List<String>> chunks = Lists.partition(allUuids, INDEXING_CHUNK_SIZE);
+        List<List<String>> chunks = Lists.partition(allIDs, INDEXING_CHUNK_SIZE);
         Collection<IndexThread> indexThreads = new ArrayList<>(chunks.size());
         for (List<String> chunk : chunks) {
             IndexThread indexThread = (IndexThread) indexThreadFactory.getObject();
-            indexThread.setUuids(chunk);
+            indexThread.setIDs(chunk);
             indexThread.setReturnIndexedElementDetails(logIndexedElementDetails);
             indexThreads.add(indexThread);
         }
