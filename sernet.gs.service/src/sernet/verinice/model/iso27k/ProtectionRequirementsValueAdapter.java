@@ -358,15 +358,8 @@ public class ProtectionRequirementsValueAdapter extends AbstractReevaluator
      */
     @Override
     public boolean isCalculatedAvailability() {
-        PropertyList properties = cnaTreeElement.getEntity()
-                .getProperties(cnaTreeElement.getTypeId() + AssetValueService.METHOD_AVAILABILITY);
-        if (properties != null && properties.getProperties() != null
-                && !properties.getProperties().isEmpty()) {
-            return properties.getProperty(0)
-                    .getNumericPropertyValue() == AssetValueService.METHOD_AUTO;
-        } else {
-            return false;
-        }
+        return cnaTreeElement.getEntity().isSelected(
+                cnaTreeElement.getTypeId() + AssetValueService.METHOD_AVAILABILITY, "1");
     }
 
     /*
@@ -377,15 +370,8 @@ public class ProtectionRequirementsValueAdapter extends AbstractReevaluator
      */
     @Override
     public boolean isCalculatedConfidentiality() {
-        PropertyList properties = cnaTreeElement.getEntity().getProperties(
-                cnaTreeElement.getTypeId() + AssetValueService.METHOD_CONFIDENTIALITY);
-        if (properties != null && properties.getProperties() != null
-                && !properties.getProperties().isEmpty()) {
-            return properties.getProperty(0)
-                    .getNumericPropertyValue() == AssetValueService.METHOD_AUTO;
-        } else {
-            return false;
-        }
+        return cnaTreeElement.getEntity().isSelected(
+                cnaTreeElement.getTypeId() + AssetValueService.METHOD_CONFIDENTIALITY, "1");
     }
 
     /*
@@ -396,14 +382,7 @@ public class ProtectionRequirementsValueAdapter extends AbstractReevaluator
      */
     @Override
     public boolean isCalculatedIntegrity() {
-        PropertyList properties = cnaTreeElement.getEntity()
-                .getProperties(cnaTreeElement.getTypeId() + AssetValueService.METHOD_INTEGRITY);
-        if (properties != null && properties.getProperties() != null
-                && !properties.getProperties().isEmpty()) {
-            return properties.getProperty(0)
-                    .getNumericPropertyValue() == AssetValueService.METHOD_AUTO;
-        } else {
-            return false;
-        }
+        return cnaTreeElement.getEntity()
+                .isSelected(cnaTreeElement.getTypeId() + AssetValueService.METHOD_INTEGRITY, "1");
     }
 }
