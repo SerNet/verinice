@@ -18,26 +18,34 @@
 package sernet.verinice.hibernate;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
+import sernet.gs.service.CollectionUtil;
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.IElementTitleCache;
 import sernet.verinice.interfaces.IRetrieveInfo;
 import sernet.verinice.interfaces.search.IJsonBuilder;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.TransactionAbortedException;
 import sernet.verinice.model.iso27k.InheritLogger;
+import sernet.verinice.model.iso27k.ProtectionRequirementUtils;
 import sernet.verinice.search.IElementSearchDao;
 
 public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, ID>
@@ -286,9 +294,74 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         if (LOG_INHERIT.isDebug()) {
             LOG_INHERIT.debug("fireChange...");
         }
-        elmt.fireIntegritaetChanged(new CascadingTransaction());
-        elmt.fireVerfuegbarkeitChanged(new CascadingTransaction());
-        elmt.fireVertraulichkeitChanged(new CascadingTransaction());
+        if (ProtectionRequirementUtils.isProtectionRequirementsProvider(elmt.getTypeId())) {
+            initializeDeductionTree(elmt);
+            elmt.fireIntegritaetChanged(new CascadingTransaction());
+            elmt.fireVerfuegbarkeitChanged(new CascadingTransaction());
+            elmt.fireVertraulichkeitChanged(new CascadingTransaction());
+        }
+    }
+
+    private void initializeDeductionTree(CnATreeElement elmt) {
+        try {
+            Set<Integer> initializeIDs = collectAffectedIDs(elmt);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Initialize " + initializeIDs.size() + " elements");
+            }
+            List<CnATreeElement> result = new ArrayList<>(initializeIDs.size());
+
+            CollectionUtil.partition(List.copyOf(initializeIDs), IDao.QUERY_MAX_ITEMS_IN_LIST)
+                    .forEach(partition -> {
+                        DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class)
+                                .add(Restrictions.in("dbId", initializeIDs));
+                        RetrieveInfo.getPropertyInstance().configureCriteria(crit);
+                        result.addAll((Collection<? extends CnATreeElement>) findByCriteria(crit));
+                    });
+        } catch (TransactionAbortedException e) {
+            throw new RuntimeCommandException(e);
+        }
+    }
+
+    private Set<Integer> collectAffectedIDs(CnATreeElement element)
+            throws TransactionAbortedException {
+        Set<CnATreeElement> initializeElements = new HashSet<>();
+        collectAffectedElementsDown(element, initializeElements);
+        if (!initializeElements.isEmpty()) {
+            collectAffectedElementsUp(Set.copyOf(initializeElements), initializeElements);
+        }
+        return initializeElements.stream().map(CnATreeElement::getDbId).collect(Collectors.toSet());
+    }
+
+    private void collectAffectedElementsDown(CnATreeElement element,
+            Set<CnATreeElement> initializeElements) throws TransactionAbortedException {
+        for (CnALink ld : element.getLinksDown()) {
+            if (ProtectionRequirementUtils.dependencyIsProtectionRequirementsProvider(ld)
+                    && initializeElements.add(ld.getDependency())) {
+                collectAffectedElementsDown(ld.getDependency(), initializeElements);
+            }
+        }
+    }
+
+    private void collectAffectedElementsUp(Set<CnATreeElement> elements,
+            Set<CnATreeElement> initializeElements) throws TransactionAbortedException {
+
+        DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class)
+                .setFetchMode("linksUp", FetchMode.JOIN).add(Restrictions.in("dbId", elements
+                        .stream().map(CnATreeElement::getDbId).collect(Collectors.toSet())));
+        findByCriteria(crit);
+
+        Set<CnATreeElement> dependants = new HashSet<>();
+
+        for (CnATreeElement element : elements)
+            for (CnALink lu : element.getLinksUp()) {
+                if (ProtectionRequirementUtils.dependantIsProtectionRequirementsProvider(lu)
+                        && initializeElements.add(lu.getDependant())) {
+                    dependants.add(lu.getDependant());
+                }
+            }
+        if (!dependants.isEmpty()) {
+            collectAffectedElementsUp(dependants, initializeElements);
+        }
     }
 
     public Class<T> getType() {
