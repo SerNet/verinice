@@ -32,8 +32,8 @@ import java.util.Set;
  */
 public class CascadingTransaction {
 
-    private Object initiator;
-    private Set<CnATreeElement> visited = new HashSet<>();
+    private Integer initiatorId;
+    private Set<Integer> visited = new HashSet<>();
     private boolean aborted;
 
     private Object loopObject = "";
@@ -54,22 +54,22 @@ public class CascadingTransaction {
             throw new TransactionAbortedException();
         }
         // keep track of entered objects:
-        visited.add(obj);
-        if (this.initiator != null) {
+        visited.add(obj.getDbId());
+        if (this.initiatorId != null) {
             return false;
         }
         // create new transaction:
-        this.initiator = obj;
+        this.initiatorId = obj.getDbId();
         aborted = false;
         return true;
     }
 
     public synchronized boolean isInitiator(CnATreeElement o) {
-        return o.equals(initiator);
+        return o.getDbId().equals(initiatorId);
     }
 
-    public synchronized boolean hasBeenVisited(Object o) {
-        boolean loop = visited.contains(o) || aborted;
+    public synchronized boolean hasBeenVisited(CnATreeElement o) {
+        boolean loop = visited.contains(o.getDbId()) || aborted;
         if (loop) {
             loopDetected = true;
             loopObject = o;
@@ -94,11 +94,11 @@ public class CascadingTransaction {
      * @return
      */
     public synchronized boolean end(CnATreeElement o) {
-        if (!o.equals(initiator)) {
+        if (!o.getDbId().equals(initiatorId)) {
             return false;
         }
         visited = new HashSet<>();
-        initiator = null;
+        initiatorId = null;
         aborted = false;
         return true;
     }
