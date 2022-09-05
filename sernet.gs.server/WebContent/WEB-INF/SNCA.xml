@@ -5114,9 +5114,6 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             <huiproperty id="asset_bcm_rto" name="RTO (h)" tags="BCM" />
 
             <huiproperty id="asset_bcm_time1" name="Impact after 8h" tags="BCM" inputtype="numericoption" min="-1" max="3">
-                <defaultRule class="SimpleValue">
-                    <param id="asset_bcm_time1_default">-1</param>
-                </defaultRule>
                 <option
                     id="asset_bcm_time1_unset"
                     name="unedited"
@@ -5140,9 +5137,6 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             </huiproperty>
 
               <huiproperty id="asset_bcm_tim24" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="-1" max="3">
-                <defaultRule class="SimpleValue">
-                    <param id="asset_bcm_tim24_default">-1</param>
-                </defaultRule>
                 <option
                     id="asset_bcm_tim24_unset"
                     name="unedited"
@@ -5166,9 +5160,6 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             </huiproperty>
 
               <huiproperty id="asset_bcm_time48" name="Impact after 48h" tags="BCM" inputtype="numericoption" min="-1" max="3">
-                <defaultRule class="SimpleValue">
-                    <param id="asset_bcm_time48_default">-1</param>
-                </defaultRule>
                 <option
                     id="asset_bcm_time48_unset"
                     name="unedited"
@@ -5192,9 +5183,6 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             </huiproperty>
 
               <huiproperty id="asset_bcm_time96" name="Impact after 96h" tags="BCM" inputtype="numericoption" min="-1" max="3">
-                <defaultRule class="SimpleValue">
-                    <param id="asset_bcm_time96_default">-1</param>
-                </defaultRule>
                 <option
                     id="asset_bcm_time96_unset"
                     name="unedited"
@@ -5218,9 +5206,6 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             </huiproperty>
 
               <huiproperty id="asset_bcm_time168" name="Impact after 168h" tags="BCM" inputtype="numericoption" min="-1" max="3">
-                <defaultRule class="SimpleValue">
-                    <param id="asset_bcm_time168_default">-1</param>
-                </defaultRule>
                 <option
                     id="asset_bcm_time168_unset"
                     name="unedited"
@@ -5244,9 +5229,6 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             </huiproperty>
 
               <huiproperty id="asset_bcm_time720" name="Impact after 720h" tags="BCM" inputtype="numericoption" min="-1" max="3">
-                <defaultRule class="SimpleValue">
-                    <param id="asset_bcm_time720_default">-1</param>
-                </defaultRule>
                 <option
                     id="asset_bcm_time720_unset"
                     name="unedited"
@@ -5270,9 +5252,6 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             </huiproperty>
 
              <huiproperty id="asset_bcm_timegt720" name="Impact after >720h" tags="BCM" inputtype="numericoption" min="-1" max="3">
-                <defaultRule class="SimpleValue">
-                    <param id="asset_bcm_timegt720_default">-1</param>
-                </defaultRule>
                 <option
                     id="asset_bcm_timegt720_unset"
                     name="unedited"
@@ -6446,9 +6425,6 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
  			  showInObjectBrowser="false" visible="true" />
 
               <huiproperty id="control_bcm_wiederanlaufzeit" name="Wiederanlaufzeit" tags="BCM" inputtype="numericoption" min="-1" max="6">
-                <defaultRule class="SimpleValue">
-                    <param id="control_bcm_wiederanlaufzeit_default">-1</param>
-                </defaultRule>
                        <option
                     id="control_bcm_wiederanlaufzeit_unset"
                     name="unedited"
@@ -9204,9 +9180,6 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="process_bcm_rto" name="RTO (h)" tags="BCM" ></huiproperty>
 
             <huiproperty id="process_bcm_time1" name="Impact after 8h" tags="BCM" inputtype="numericoption" min="-1" max="3">
-                <defaultRule class="SimpleValue">
-                    <param id="process_bcm_time1_default">-1</param>
-                </defaultRule>
                 <option
                     id="process_bcm_time1_unset"
                     name="unedited"
@@ -9230,9 +9203,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="process_bcm_tim24" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="-1" max="3">
-                <defaultRule class="SimpleValue">
-                    <param id="process_bcm_tim24_default">-1</param>
-                </defaultRule>
                 <option
                     id="process_bcm_tim24_unset"
                     name="unedited"
@@ -9256,9 +9226,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="process_bcm_time48" name="Impact after 48h" tags="BCM" inputtype="numericoption" min="-1" max="3">
-                <defaultRule class="SimpleValue">
-                    <param id="process_bcm_time48_default">-1</param>
-                </defaultRule>
                 <option
                     id="process_bcm_time48_unset"
                     name="unedited"
@@ -9282,9 +9249,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="process_bcm_time96" name="Impact after 96h" tags="BCM" inputtype="numericoption" min="-1" max="3">
-                <defaultRule class="SimpleValue">
-                    <param id="process_bcm_time96_default">-1</param>
-                </defaultRule>
                 <option
                     id="process_bcm_time96_unset"
                     name="unedited"
@@ -9308,9 +9272,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="process_bcm_time168" name="Impact after 168h" tags="BCM" inputtype="numericoption" min="-1" max="3">
-                <defaultRule class="SimpleValue">
-                    <param id="process_bcm_time168_default">-1</param>
-                </defaultRule>
                 <option
                     id="process_bcm_time168_unset"
                     name="unedited"
@@ -9334,9 +9295,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="process_bcm_time720" name="Impact after 720h" tags="BCM" inputtype="numericoption" min="-1" max="3">
-                <defaultRule class="SimpleValue">
-                    <param id="process_bcm_time720_default">-1</param>
-                </defaultRule>
                 <option
                     id="process_bcm_time720_unset"
                     name="unedited"
@@ -9360,9 +9318,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
              <huiproperty id="process_bcm_timegt720" name="Impact after >720h" tags="BCM" inputtype="numericoption" min="-1" max="3">
-                <defaultRule class="SimpleValue">
-                    <param id="process_bcm_timegt720_default">-1</param>
-                </defaultRule>
                 <option
                     id="process_bcm_timegt720_unset"
                     name="unedited"
@@ -10672,9 +10627,6 @@ Wurden bereits weitere Stellen informiert?
                     name="Untragbarkeitsniveau"
                      tags="BCM"
                     inputtype="numericoption" min="0" max="4" >
-                <defaultRule class="SimpleValue">
-                    <param id="bp_itnetwork_value_untragbarkeitsniveau_default">0</param>
-                </defaultRule>
              <option
                         id="bp_itnetwork_damage_potential_value_unset"
                         name="0 Unbearbeitet"
@@ -11121,9 +11073,6 @@ Wurden bereits weitere Stellen informiert?
                  <huiproperty id="bp_application_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
 
               <huiproperty id="bp_application_bcm_tim24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_application_bcm_tim24h_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_application_bcm_time24_unset"
                     name="0 Unedited"
@@ -11147,9 +11096,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_application_bcm_time3d" name="Impact after 3d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_application_bcm_time3d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_application_bcm_time3d_unset"
                     name="0 Unedited"
@@ -11173,9 +11119,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_application_bcm_time7d" name="Impact after 7d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_application_bcm_time7d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_application_bcm_time7d_unset"
                     name="0 Unedited"
@@ -11199,9 +11142,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_application_bcm_time14d" name="Impact after 14d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_application_bcm_time14d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_application_bcm_time14d_unset"
                     name="0 Unedited"
@@ -11225,9 +11165,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_application_bcm_time30d" name="Impact after 30d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_application_bcm_time30d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_application_bcm_time30d_unset"
                     name="0 Unedited"
@@ -11253,9 +11190,6 @@ Wurden bereits weitere Stellen informiert?
 
             <huiproperty id="bp_application_bcm_mtpd1" name="MTPD" tags="BCM" inputtype="numericoption" min="-1" max="5">
                 <depends option="bp_application_value_deduce_mtpd1" value="0" />
-                <defaultRule class="SimpleValue">
-                    <param id="bp_application_bcm_mtpd1_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_application_bcm_Mtpd1_unset"
                     name="unset"
@@ -11320,9 +11254,6 @@ Wurden bereits weitere Stellen informiert?
         </huiproperty>
 
            <huiproperty id="bp_application_bcm_mtpd2" name="Geänderte MTPD aufgrund von Prozessabhängigkeiten" tags="BCM" inputtype="numericoption" min="-1" max="6">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_application_bcm_mtpd2_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_application_bcm_Mtpd2_unset"
                     name="Unedited"
@@ -11359,9 +11290,6 @@ Wurden bereits weitere Stellen informiert?
          <huiproperty id="bp_application_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
 
               <huiproperty id="bp_application_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="-1" max="5" editable="false">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_application_bcm_mtpdMIN_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_application_bcm_timeMtpdMin_unset"
                     name="Unedited"
@@ -11404,9 +11332,6 @@ Wurden bereits weitere Stellen informiert?
     <huiproperty id="bp_application_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
 
             <huiproperty id="bp_application_bcm_rpo" name="Maximal zulässiger Datenverlust (RPO)" tags="BCM" inputtype="numericoption" min="-1" max="9">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_application_bcm_rpo_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_application_bcm_rpo_unset"
                     name="unedited"
@@ -11598,9 +11523,6 @@ Wurden bereits weitere Stellen informiert?
                  <huiproperty id="bp_businessprocess_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
 
               <huiproperty id="bp_businessprocess_bcm_tim24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_businessprocess_bcm_tim24h_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_businessprocess_bcm_time24_unset"
                     name="unedited"
@@ -11624,9 +11546,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_businessprocess_bcm_time3d" name="Impact after 3d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_businessprocess_bcm_time3d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_businessprocess_bcm_time3d_unset"
                     name="unedited"
@@ -11650,9 +11569,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_businessprocess_bcm_time7d" name="Impact after 7d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_businessprocess_bcm_time7d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_businessprocess_bcm_time7d_unset"
                     name="unedited"
@@ -11676,9 +11592,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_businessprocess_bcm_time14d" name="Impact after 14d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_businessprocess_bcm_time14d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_businessprocess_bcm_time14d_unset"
                     name="unedited"
@@ -11702,9 +11615,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_businessprocess_bcm_time30d" name="Impact after 30d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_businessprocess_bcm_time30d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_businessprocess_bcm_time30d_unset"
                     name="unedited"
@@ -11730,9 +11640,6 @@ Wurden bereits weitere Stellen informiert?
 
             <huiproperty id="bp_businessprocess_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="-1" max="5">
                 <depends option="bp_businessprocess_value_deduce_mtpd1" value="0" />
-                <defaultRule class="SimpleValue">
-                    <param id="bp_businessprocess_bcm_mtpd1_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_businessprocess_bcm_Mtpd1_unset"
                     name="unedited"
@@ -11797,9 +11704,6 @@ Wurden bereits weitere Stellen informiert?
         </huiproperty>
 
            <huiproperty id="bp_businessprocess_bcm_mtpd2" name="Geänderte MTPD aufgrund von Prozessabhängigkeiten" tags="BCM" inputtype="numericoption" min="-1" max="6">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_businessprocess_bcm_mtpd2_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_businessprocess_bcm_Mtpd2_unset"
                     name="unedited"
@@ -11836,9 +11740,6 @@ Wurden bereits weitere Stellen informiert?
          <huiproperty id="bp_businessprocess_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
 
               <huiproperty id="bp_businessprocess_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="-1" max="5" editable="false">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_businessprocess_bcm_mtpdMIN_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_businessprocess_bcm_timeMtpdMin_unset"
                     name="unedited"
@@ -11881,9 +11782,6 @@ Wurden bereits weitere Stellen informiert?
     <huiproperty id="bp_businessprocess_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
 
             <huiproperty id="bp_businessprocess_bcm_rpo" name="Maximal zulässiger Datenverlust (RPO)" tags="BCM" inputtype="numericoption" min="-1" max="9">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_businessprocess_bcm_rpo_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_businessprocess_bcm_rpo_unset"
                     name="unedited"
@@ -12714,9 +12612,6 @@ Wurden bereits weitere Stellen informiert?
                  <huiproperty id="bp_icssystem_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
 
               <huiproperty id="bp_icssystem_bcm_tim24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_icssystem_bcm_tim24h_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_icssystem_bcm_time24_unset"
                     name="unedited"
@@ -12740,9 +12635,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_icssystem_bcm_time3d" name="Impact after 3d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_icssystem_bcm_time3d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_icssystem_bcm_time3d_unset"
                     name="unedited"
@@ -12766,9 +12658,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_icssystem_bcm_time7d" name="Impact after 7d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_icssystem_bcm_time7d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_icssystem_bcm_time7d_unset"
                     name="unedited"
@@ -12792,9 +12681,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_icssystem_bcm_time14d" name="Impact after 14d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_icssystem_bcm_time14d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_icssystem_bcm_time14d_unset"
                     name="unedited"
@@ -12818,9 +12704,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_icssystem_bcm_time30d" name="Impact after 30d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_icssystem_bcm_time30d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_icssystem_bcm_time30d_unset"
                     name="unedited"
@@ -12846,9 +12729,6 @@ Wurden bereits weitere Stellen informiert?
 
             <huiproperty id="bp_icssystem_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="-1" max="5">
                 <depends option="bp_icssystem_value_deduce_mtpd1" value="0" />
-                <defaultRule class="SimpleValue">
-                    <param id="bp_icssystem_bcm_mtpd1_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_icssystem_bcm_Mtpd1_unset"
                     name="unedited"
@@ -12913,9 +12793,6 @@ Wurden bereits weitere Stellen informiert?
         </huiproperty>
 
            <huiproperty id="bp_icssystem_bcm_mtpd2" name="Geänderte MTPD aufgrund von Prozessabhängigkeiten" tags="BCM" inputtype="numericoption" min="-1" max="6">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_icssystem_bcm_mtpd2_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_icssystem_bcm_Mtpd2_unset"
                     name="unedited"
@@ -12952,9 +12829,6 @@ Wurden bereits weitere Stellen informiert?
          <huiproperty id="bp_icssystem_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
 
               <huiproperty id="bp_icssystem_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="-1" max="5" editable="false">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_icssystem_bcm_mtpdMIN_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_icssystem_bcm_timeMtpdMin_unset"
                     name="unedited"
@@ -12997,9 +12871,6 @@ Wurden bereits weitere Stellen informiert?
     <huiproperty id="bp_icssystem_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
 
             <huiproperty id="bp_icssystem_bcm_rpo" name="Maximal zulässiger Datenverlust (RPO)" tags="BCM" inputtype="numericoption" min="-1" max="9">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_icssystem_bcm_rpo_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_icssystem_bcm_rpo_unset"
                     name="unedited"
@@ -13211,9 +13082,6 @@ Wurden bereits weitere Stellen informiert?
                  <huiproperty id="bp_itsystem_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
 
               <huiproperty id="bp_itsystem_bcm_tim24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_itsystem_bcm_tim24h_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_itsystem_bcm_time24_unset"
                     name="unedited"
@@ -13237,9 +13105,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_itsystem_bcm_time3d" name="Impact after 3d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_itsystem_bcm_time3d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_itsystem_bcm_time3d_unset"
                     name="unedited"
@@ -13263,9 +13128,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_itsystem_bcm_time7d" name="Impact after 7d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_itsystem_bcm_time7d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_itsystem_bcm_time7d_unset"
                     name="unedited"
@@ -13289,9 +13151,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_itsystem_bcm_time14d" name="Impact after 14d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_itsystem_bcm_time14d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_itsystem_bcm_time14d_unset"
                     name="unedited"
@@ -13315,9 +13174,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_itsystem_bcm_time30d" name="Impact after 30d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_itsystem_bcm_time30d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_itsystem_bcm_time30d_unset"
                     name="unedited"
@@ -13343,9 +13199,6 @@ Wurden bereits weitere Stellen informiert?
 
             <huiproperty id="bp_itsystem_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="-1" max="5">
                 <depends option="bp_itsystem_value_deduce_mtpd1" value="0" />
-                <defaultRule class="SimpleValue">
-                    <param id="bp_itsystem_bcm_mtpd1_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_itsystem_bcm_Mtpd1_unset"
                     name="unedited"
@@ -13410,9 +13263,6 @@ Wurden bereits weitere Stellen informiert?
         </huiproperty>
 
            <huiproperty id="bp_itsystem_bcm_mtpd2" name="Geänderte MTPD aufgrund von Prozessabhängigkeiten" tags="BCM" inputtype="numericoption" min="-1" max="6">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_itsystem_bcm_mtpd2_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_itsystem_bcm_Mtpd2_unset"
                     name="unedited"
@@ -13449,9 +13299,6 @@ Wurden bereits weitere Stellen informiert?
          <huiproperty id="bp_itsystem_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
 
               <huiproperty id="bp_itsystem_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="-1" max="5" editable="false">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_itsystem_bcm_mtpdMIN_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_itsystem_bcm_timeMtpdMin_unset"
                     name="unedited"
@@ -13494,9 +13341,6 @@ Wurden bereits weitere Stellen informiert?
     <huiproperty id="bp_itsystem_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
 
             <huiproperty id="bp_itsystem_bcm_rpo" name="Maximal zulässiger Datenverlust (RPO)" tags="BCM" inputtype="numericoption" min="-1" max="9">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_itsystem_bcm_rpo_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_itsystem_bcm_rpo_unset"
                     name="unedited"
@@ -13970,9 +13814,6 @@ Wurden bereits weitere Stellen informiert?
  			  showInObjectBrowser="false" visible="true" />
  			  
  			    <huiproperty id="bp_requirement_bcm_wiederanlaufzeit" name="Wiederanlaufzeit" tags="BCM" inputtype="numericoption" min="0" max="5">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_requirement_bcm_wiederanlaufzeit_default">0</param>
-                </defaultRule>
                       <option
                     id="bp_requirement_bcm_time_unset"
                     name="Unbearbeitet"
@@ -14416,9 +14257,6 @@ Wurden bereits weitere Stellen informiert?
                  <huiproperty id="bp_network_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
 
               <huiproperty id="bp_network_bcm_tim24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_network_bcm_tim24h_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_network_bcm_time24_unset"
                     name="unedited"
@@ -14442,9 +14280,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_network_bcm_time3d" name="Impact after 3d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_network_bcm_time3d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_network_bcm_time3d_unset"
                     name="unedited"
@@ -14468,9 +14303,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_network_bcm_time7d" name="Impact after 7d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_network_bcm_time7d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_network_bcm_time7d_unset"
                     name="unedited"
@@ -14494,9 +14326,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_network_bcm_time14d" name="Impact after 14d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_network_bcm_time14d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_network_bcm_time14d_unset"
                     name="unedited"
@@ -14520,9 +14349,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_network_bcm_time30d" name="Impact after 30d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_network_bcm_time30d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_network_bcm_time30d_unset"
                     name="unedited"
@@ -14548,9 +14374,6 @@ Wurden bereits weitere Stellen informiert?
 
             <huiproperty id="bp_network_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="-1" max="5">
                 <depends option="bp_network_value_deduce_mtpd1" value="0" />
-                <defaultRule class="SimpleValue">
-                    <param id="bp_network_bcm_mtpd1_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_network_bcm_Mtpd1_unset"
                     name="unedited"
@@ -14615,9 +14438,6 @@ Wurden bereits weitere Stellen informiert?
         </huiproperty>
 
            <huiproperty id="bp_network_bcm_mtpd2" name="Geänderte MTPD aufgrund von Prozessabhängigkeiten" tags="BCM" inputtype="numericoption" min="-1" max="6">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_network_bcm_mtpd2_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_network_bcm_Mtpd2_unset"
                     name="unedited"
@@ -14654,9 +14474,6 @@ Wurden bereits weitere Stellen informiert?
          <huiproperty id="bp_network_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
 
               <huiproperty id="bp_network_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="-1" max="5" editable="false">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_network_bcm_mtpdMIN_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_network_bcm_timeMtpdMin_unset"
                     name="unedited"
@@ -14699,9 +14516,6 @@ Wurden bereits weitere Stellen informiert?
     <huiproperty id="bp_network_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
 
             <huiproperty id="bp_network_bcm_rpo" name="Maximal zulässiger Datenverlust (RPO)" tags="BCM" inputtype="numericoption" min="-1" max="9">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_network_bcm_rpo_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_network_bcm_rpo_unset"
                     name="unedited"
@@ -14887,9 +14701,6 @@ Wurden bereits weitere Stellen informiert?
                  <huiproperty id="bp_device_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
 
               <huiproperty id="bp_device_bcm_tim24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_device_bcm_tim24h_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_device_bcm_time24_unset"
                     name="unedited"
@@ -14913,9 +14724,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_device_bcm_time3d" name="Impact after 3d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_device_bcm_time3d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_device_bcm_time3d_unset"
                     name="unedited"
@@ -14939,9 +14747,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_device_bcm_time7d" name="Impact after 7d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_device_bcm_time7d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_device_bcm_time7d_unset"
                     name="unedited"
@@ -14965,9 +14770,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_device_bcm_time14d" name="Impact after 14d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_device_bcm_time14d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_device_bcm_time14d_unset"
                     name="unedited"
@@ -14991,9 +14793,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_device_bcm_time30d" name="Impact after 30d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_device_bcm_time30d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_device_bcm_time30d_unset"
                     name="unedited"
@@ -15019,9 +14818,6 @@ Wurden bereits weitere Stellen informiert?
 
             <huiproperty id="bp_device_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="-1" max="5">
                 <depends option="bp_device_value_deduce_mtpd1" value="0" />
-                <defaultRule class="SimpleValue">
-                    <param id="bp_device_bcm_mtpd1_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_device_bcm_Mtpd1_unset"
                     name="unedited"
@@ -15086,9 +14882,6 @@ Wurden bereits weitere Stellen informiert?
         </huiproperty>
 
            <huiproperty id="bp_device_bcm_mtpd2" name="Geänderte MTPD aufgrund von Prozessabhängigkeiten" tags="BCM" inputtype="numericoption" min="-1" max="6">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_device_bcm_mtpd2_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_device_bcm_Mtpd2_unset"
                     name="unedited"
@@ -15125,9 +14918,6 @@ Wurden bereits weitere Stellen informiert?
          <huiproperty id="bp_device_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
 
               <huiproperty id="bp_device_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="-1" max="5" editable="false">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_device_bcm_mtpdMIN_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_device_bcm_timeMtpdMin_unset"
                     name="keine MTPD"
@@ -15170,9 +14960,6 @@ Wurden bereits weitere Stellen informiert?
     <huiproperty id="bp_device_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
 
             <huiproperty id="bp_device_bcm_rpo" name="Maximal zulässiger Datenverlust (RPO)" tags="BCM" inputtype="numericoption" min="-1" max="9">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_device_bcm_rpo_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_device_bcm_rpo_unset"
                     name="unedited"
@@ -15354,9 +15141,6 @@ Wurden bereits weitere Stellen informiert?
                  <huiproperty id="bp_room_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
 
               <huiproperty id="bp_room_bcm_tim24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_room_bcm_tim24h_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_room_bcm_time24_unset"
                     name="unedited"
@@ -15380,9 +15164,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_room_bcm_time3d" name="Impact after 3d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_room_bcm_time3d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_room_bcm_time3d_unset"
                     name="unedited"
@@ -15406,9 +15187,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_room_bcm_time7d" name="Impact after 7d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_room_bcm_time7d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_room_bcm_time7d_unset"
                     name="unedited"
@@ -15432,9 +15210,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_room_bcm_time14d" name="Impact after 14d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_room_bcm_time14d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_room_bcm_time14d_unset"
                     name="unedited"
@@ -15458,9 +15233,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
 
               <huiproperty id="bp_room_bcm_time30d" name="Impact after 30d" tags="BCM" inputtype="numericoption" min="0" max="4">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_room_bcm_time30d_default">0</param>
-                </defaultRule>
                 <option
                     id="bp_room_bcm_time30d_unset"
                     name="unedited"
@@ -15486,9 +15258,6 @@ Wurden bereits weitere Stellen informiert?
 
             <huiproperty id="bp_room_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="-1" max="5">
                 <depends option="bp_room_value_deduce_mtpd1" value="0" />
-                <defaultRule class="SimpleValue">
-                    <param id="bp_room_bcm_mtpd1_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_room_bcm_Mtpd1_unset"
                     name="unedited"
@@ -15553,9 +15322,6 @@ Wurden bereits weitere Stellen informiert?
         </huiproperty>
 
            <huiproperty id="bp_room_bcm_mtpd2" name="Geänderte MTPD aufgrund von Prozessabhängigkeiten" tags="BCM" inputtype="numericoption" min="-1" max="6">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_room_bcm_mtpd2_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_room_bcm_Mtpd2_unset"
                     name="unedited"
@@ -15592,9 +15358,6 @@ Wurden bereits weitere Stellen informiert?
          <huiproperty id="bp_room_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
 
               <huiproperty id="bp_room_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="-1" max="5" editable="false">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_room_bcm_mtpdMIN_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_room_bcm_timeMtpdMin_unset"
                     name="unedited"
@@ -15637,9 +15400,6 @@ Wurden bereits weitere Stellen informiert?
     <huiproperty id="bp_room_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
 
             <huiproperty id="bp_room_bcm_rpo" name="Maximal zulässiger Datenverlust (RPO)" tags="BCM" inputtype="numericoption" min="-1" max="9">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_room_bcm_rpo_default">-1</param>
-                </defaultRule>
                 <option
                     id="bp_room_bcm_rpo_unset"
                     name="unedited"
@@ -15773,9 +15533,6 @@ Wurden bereits weitere Stellen informiert?
  			    showInObjectBrowser="false" visible="true" />
 
  			  <huiproperty id="bp_safeguard_bcm_wiederanlaufzeit" name="Wiederanlaufzeit" tags="BCM" inputtype="numericoption" min="0" max="5">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_safeguard_bcm_wiederanlaufzeit_default">0</param>
-                </defaultRule>
                       <option
                     id="bp_safeguard_bcm_time_unset"
                     name="Unbearbeitet"
