@@ -9784,7 +9784,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
@@ -9799,7 +9799,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Beschreibung</property>
@@ -10150,7 +10150,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
@@ -10161,7 +10161,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Beschreibung</property>
@@ -11159,7 +11159,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
@@ -11174,7 +11174,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
@@ -11522,23 +11522,11 @@ else {&#13;
                                         </cell>
                                         <cell id="13074">
                                             <label id="13080">
-                                                <list-property name="visibility">
-                                                    <structure>
-                                                        <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
-                                                    </structure>
-                                                </list-property>
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
                                             </label>
                                         </cell>
                                         <cell id="13077">
                                             <data id="13081">
-                                                <list-property name="visibility">
-                                                    <structure>
-                                                        <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
-                                                    </structure>
-                                                </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
                                             </data>
                                         </cell>
@@ -12534,7 +12522,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
@@ -12549,7 +12537,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
@@ -12906,7 +12894,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
@@ -12917,7 +12905,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
@@ -13915,7 +13903,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
@@ -13930,7 +13918,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
@@ -14287,7 +14275,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
@@ -14298,7 +14286,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
@@ -15296,7 +15284,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
@@ -15311,7 +15299,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
@@ -15668,7 +15656,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
@@ -15679,7 +15667,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
@@ -16677,7 +16665,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
@@ -16692,7 +16680,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
@@ -17049,7 +17037,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
@@ -17060,7 +17048,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
@@ -18058,7 +18046,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
@@ -18073,7 +18061,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
@@ -18430,7 +18418,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
@@ -18441,7 +18429,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
@@ -19445,7 +19433,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
@@ -19460,7 +19448,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Baustein-Anforderung)</property>
@@ -19817,7 +19805,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <text-property name="text" key="field_implemented_until">Umsetzung bis:</text-property>
@@ -19828,7 +19816,7 @@ else {&#13;
                                                 <list-property name="visibility">
                                                     <structure>
                                                         <property name="format">all</property>
-                                                        <expression name="valueExpr" type="javascript">row["Titel"]!="Umsetzung durch"</expression>
+                                                        <expression name="valueExpr" type="javascript">Total.count()!=row.__rownum+1</expression>
                                                     </structure>
                                                 </list-property>
                                                 <property name="resultSetColumn">Umsetzung__-__Umsetzung__bis__(Maßnahme)</property>
