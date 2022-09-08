@@ -13,7 +13,7 @@
 <unit id="org.apache.batik.css" version="0.0.0"/>
 <unit id="org.apache.batik.util" version="0.0.0"/>
 <unit id="org.apache.xmlgraphics" version="0.0.0"/>
-<repository location="https://download.eclipse.org/eclipse/updates/4.22/"/>
+<repository location="https://download.eclipse.org/eclipse/updates/4.25"/>
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -58,7 +58,7 @@
 <unit id="org.mozilla.javascript.source" version="0.0.0"/>
 <unit id="javax.xml.soap" version="0.0.0"/>
 <unit id="com.google.gson" version="0.0.0"/>
-<repository location="https://download.eclipse.org/birt/update-site/4.9.0/"/>
+<repository location="https://download.eclipse.org/birt/update-site/4.12.0/"/>
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">

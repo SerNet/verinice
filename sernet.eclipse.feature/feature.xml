@@ -21,7 +21,7 @@
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.equinox.server.p2"
+         id="org.eclipse.equinox.p2.core.feature"
          version="0.0.0"/>
          
    <plugin
