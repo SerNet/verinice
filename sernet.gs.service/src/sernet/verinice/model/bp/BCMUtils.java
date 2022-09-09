@@ -161,7 +161,7 @@ public final class BCMUtils {
             this.propertyMtpdOverride = typeId + "_bcm_mtpd2";
             this.propertyMtpdMin = typeId + "_bcm_mtpdMIN";
             this.deductionFlagProperty = typeId + "_value_deduce_mtpd1";
-            this.propertyImpact24h = typeId + "_bcm_tim24h";
+            this.propertyImpact24h = typeId + "_bcm_time24h";
             this.propertyImpact3d = typeId + "_bcm_time3d";
             this.propertyImpact7d = typeId + "_bcm_time7d";
             this.propertyImpact14d = typeId + "_bcm_time14d";

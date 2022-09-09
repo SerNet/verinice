@@ -11072,25 +11072,25 @@ Wurden bereits weitere Stellen informiert?
                 
                  <huiproperty id="bp_application_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
 
-              <huiproperty id="bp_application_bcm_tim24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
+              <huiproperty id="bp_application_bcm_time24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
-                    id="bp_application_bcm_time24_unset"
+                    id="bp_application_bcm_time24h_unset"
                     name="0 Unedited"
                     value="0" />
                 <option
-                    id="bp_application_bcm_time24_1"
+                    id="bp_application_bcm_time24h_1"
                     name="1 Unsignificant"
                     value="1" />
                      <option
-                    id="bp_application_bcm_time24_2"
+                    id="bp_application_bcm_time24h_2"
                     name="2 Normal"
                     value="2" />
                      <option
-                    id="bp_application_bcm_time24_3"
+                    id="bp_application_bcm_time24h_3"
                     name="3 High"
                     value="3" />
                      <option
-                    id="bp_application_bcm_time24_4"
+                    id="bp_application_bcm_time24h_4"
                     name="4 Very High"
                     value="4" />
             </huiproperty>
@@ -11522,25 +11522,25 @@ Wurden bereits weitere Stellen informiert?
                 
                  <huiproperty id="bp_businessprocess_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
 
-              <huiproperty id="bp_businessprocess_bcm_tim24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
+              <huiproperty id="bp_businessprocess_bcm_time24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
-                    id="bp_businessprocess_bcm_time24_unset"
+                    id="bp_businessprocess_bcm_time24h_unset"
                     name="unedited"
                     value="0" />
                 <option
-                    id="bp_businessprocess_bcm_time24_1"
+                    id="bp_businessprocess_bcm_time24h_1"
                     name="1 Uncritical"
                     value="1" />
                      <option
-                    id="bp_businessprocess_bcm_time24_2"
+                    id="bp_businessprocess_bcm_time24h_2"
                     name="2 Normal"
                     value="2" />
                      <option
-                    id="bp_businessprocess_bcm_time24_3"
+                    id="bp_businessprocess_bcm_time24h_3"
                     name="3 High"
                     value="3" />
                      <option
-                    id="bp_businessprocess_bcm_time24_4"
+                    id="bp_businessprocess_bcm_time24h_4"
                     name="4 Very High"
                     value="4" />
             </huiproperty>
@@ -12611,25 +12611,25 @@ Wurden bereits weitere Stellen informiert?
                 
                  <huiproperty id="bp_icssystem_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
 
-              <huiproperty id="bp_icssystem_bcm_tim24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4" defaultValue="-1">
+              <huiproperty id="bp_icssystem_bcm_time24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4" defaultValue="-1">
                 <option
-                    id="bp_icssystem_bcm_time24_unset"
+                    id="bp_icssystem_bcm_time24h_unset"
                     name="unedited"
                     value="0" />
                 <option
-                    id="bp_icssystem_bcm_time24_1"
+                    id="bp_icssystem_bcm_time24h_1"
                     name="1 Uncritical"
                     value="1" />
                      <option
-                    id="bp_icssystem_bcm_time24_2"
+                    id="bp_icssystem_bcm_time24h_2"
                     name="2 Normal"
                     value="2" />
                      <option
-                    id="bp_icssystem_bcm_time24_3"
+                    id="bp_icssystem_bcm_time24h_3"
                     name="3 High"
                     value="3" />
                      <option
-                    id="bp_icssystem_bcm_time24_4"
+                    id="bp_icssystem_bcm_time24h_4"
                     name="4 Very High"
                     value="4" />
             </huiproperty>
@@ -13081,25 +13081,25 @@ Wurden bereits weitere Stellen informiert?
                 
                  <huiproperty id="bp_itsystem_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
 
-              <huiproperty id="bp_itsystem_bcm_tim24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
+              <huiproperty id="bp_itsystem_bcm_time24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
-                    id="bp_itsystem_bcm_time24_unset"
+                    id="bp_itsystem_bcm_time24h_unset"
                     name="unedited"
                     value="0" />
                 <option
-                    id="bp_itsystem_bcm_time24_1"
+                    id="bp_itsystem_bcm_time24h_1"
                     name="1 Uncritical"
                     value="1" />
                      <option
-                    id="bp_itsystem_bcm_time24_2"
+                    id="bp_itsystem_bcm_time24h_2"
                     name="2 Normal"
                     value="2" />
                      <option
-                    id="bp_itsystem_bcm_time24_3"
+                    id="bp_itsystem_bcm_time24h_3"
                     name="3 High"
                     value="3" />
                      <option
-                    id="bp_itsystem_bcm_time24_4"
+                    id="bp_itsystem_bcm_time24h_4"
                     name="4 Very High"
                     value="4" />
             </huiproperty>
@@ -14256,25 +14256,25 @@ Wurden bereits weitere Stellen informiert?
                 
                  <huiproperty id="bp_network_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
 
-              <huiproperty id="bp_network_bcm_tim24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
+              <huiproperty id="bp_network_bcm_time24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
-                    id="bp_network_bcm_time24_unset"
+                    id="bp_network_bcm_time24h_unset"
                     name="unedited"
                     value="0" />
                 <option
-                    id="bp_network_bcm_time24_1"
+                    id="bp_network_bcm_time24h_1"
                     name="1 Uncritical"
                     value="1" />
                      <option
-                    id="bp_network_bcm_time24_2"
+                    id="bp_network_bcm_time24h_2"
                     name="2 Normal"
                     value="2" />
                      <option
-                    id="bp_network_bcm_time24_3"
+                    id="bp_network_bcm_time24h_3"
                     name="3 High"
                     value="3" />
                      <option
-                    id="bp_network_bcm_time24_4"
+                    id="bp_network_bcm_time24h_4"
                     name="4 Very High"
                     value="4" />
             </huiproperty>
@@ -14700,25 +14700,25 @@ Wurden bereits weitere Stellen informiert?
                 
                  <huiproperty id="bp_device_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
 
-              <huiproperty id="bp_device_bcm_tim24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
+              <huiproperty id="bp_device_bcm_time24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
-                    id="bp_device_bcm_time24_unset"
+                    id="bp_device_bcm_time24h_unset"
                     name="unedited"
                     value="0" />
                 <option
-                    id="bp_device_bcm_time24_1"
+                    id="bp_device_bcm_time24h_1"
                     name="1 Uncritical"
                     value="1" />
                      <option
-                    id="bp_device_bcm_time24_2"
+                    id="bp_device_bcm_time24h_2"
                     name="2 Normal"
                     value="2" />
                      <option
-                    id="bp_device_bcm_time24_3"
+                    id="bp_device_bcm_time24h_3"
                     name="3 High"
                     value="3" />
                      <option
-                    id="bp_device_bcm_time24_4"
+                    id="bp_device_bcm_time24h_4"
                     name="4 Very High"
                     value="4" />
             </huiproperty>
@@ -15140,25 +15140,25 @@ Wurden bereits weitere Stellen informiert?
                 
                  <huiproperty id="bp_room_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
 
-              <huiproperty id="bp_room_bcm_tim24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
+              <huiproperty id="bp_room_bcm_time24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
-                    id="bp_room_bcm_time24_unset"
+                    id="bp_room_bcm_time24h_unset"
                     name="unedited"
                     value="0" />
                 <option
-                    id="bp_room_bcm_time24_1"
+                    id="bp_room_bcm_time24h_1"
                     name="1 Uncritical"
                     value="1" />
                      <option
-                    id="bp_room_bcm_time24_2"
+                    id="bp_room_bcm_time24h_2"
                     name="2 Normal"
                     value="2" />
                      <option
-                    id="bp_room_bcm_time24_3"
+                    id="bp_room_bcm_time24h_3"
                     name="3 High"
                     value="3" />
                      <option
-                    id="bp_room_bcm_time24_4"
+                    id="bp_room_bcm_time24h_4"
                     name="4 Very High"
                     value="4" />
             </huiproperty>
