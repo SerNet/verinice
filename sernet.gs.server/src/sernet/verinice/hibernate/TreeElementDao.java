@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.hibernate.FetchMode;
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
@@ -345,11 +346,18 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
     private void collectAffectedElementsUp(Set<CnATreeElement> elements,
             Set<CnATreeElement> initializeElements) throws TransactionAbortedException {
 
-        DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class)
-                .setFetchMode("linksUp", FetchMode.JOIN).add(Restrictions.in("dbId", elements
-                        .stream().map(CnATreeElement::getDbId).collect(Collectors.toSet())));
-        findByCriteria(crit);
+        Set<CnATreeElement> elementsWithoutInitializedLinksUp = elements.stream()
+                .filter(el -> !Hibernate.isInitialized(el.getLinksUp()))
+                .collect(Collectors.toSet());
 
+        if (!elementsWithoutInitializedLinksUp.isEmpty()) {
+
+            DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class)
+                    .setFetchMode("linksUp", FetchMode.JOIN)
+                    .add(Restrictions.in("dbId", elementsWithoutInitializedLinksUp.stream()
+                            .map(CnATreeElement::getDbId).collect(Collectors.toSet())));
+            findByCriteria(crit);
+        }
         Set<CnATreeElement> dependants = new HashSet<>();
 
         for (CnATreeElement element : elements)
