@@ -122,7 +122,7 @@ public class UserReportType implements IReportType {
         {
             ReportSecurityContext reportSecurityContext = new ReportSecurityContext(reportOptions, reportDesign, brs.getLogfile(), null);
             ReportSecurityManager secureReportExecutionManager = new ReportSecurityManager(reportSecurityContext);
-            IRunAndRenderTask task = brs.createTask(reportSecurityContext.getRptDesignUrl());
+            IRunAndRenderTask task = brs.createTask(reportSecurityContext.getRptDesignUrl(),reportOptions);
             task = brs.prepareTaskForRendering(task, reportOptions);
             int iterations = getEngineIterations(task);
             if(LOG.isDebugEnabled()){

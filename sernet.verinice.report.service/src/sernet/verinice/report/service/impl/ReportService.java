@@ -32,6 +32,7 @@ import sernet.verinice.interfaces.report.IReportType;
 import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportMetaDataException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
+import sernet.verinice.oda.driver.Activator;
 
 public class ReportService implements IReportService {
 
@@ -102,6 +103,11 @@ public class ReportService implements IReportService {
             return getXLSXRenderOption();
         }
         return null;
+    }
+
+    @Override
+    public String[] getClassificationHints() {
+        return Activator.getDefault().getClassificationHints();
     }
 
     private IRenderOption getXLSXRenderOption() {

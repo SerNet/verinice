@@ -95,6 +95,7 @@ public class Messages extends NLS {
     public static String ReportDepositView_9;
     public static String ErrorOpeningGenereratedReport;
     public static String ReportMetaDataContext;
+    public static String GenerateReportDialog_lblclassification;
 
     static {
         // initialize resource bundle

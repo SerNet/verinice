@@ -127,6 +127,7 @@ public abstract class ReportAction extends RightsEnabledActionDelegate
         final IReportOptions ro = new IReportOptions() {
             Integer rootElmt;
             Integer[] rootElmts;
+            String classificationHint;
 
             @Override
             public boolean isToBeEncrypted() {
@@ -172,6 +173,11 @@ public abstract class ReportAction extends RightsEnabledActionDelegate
             public String getServerURL() {
                 return Activator.getDefault().getPreferenceStore()
                         .getString(PreferenceConstants.VNSERVER_URI);
+            }
+
+            @Override
+            public String getClassificationHint() {
+                return dialog.getClassificationHint();
             }
         };
         if (dialog.getRootElement() != null) {

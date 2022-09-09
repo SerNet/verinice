@@ -17,14 +17,18 @@
  ******************************************************************************/
 package sernet.verinice.oda.driver.preferences;
 
+import java.util.Arrays;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.PathEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
@@ -82,6 +86,27 @@ public class ReportPreferencePage extends FieldEditorPreferencePage implements I
 		useSandboxEditor = new BooleanFieldEditor(PreferenceConstants.REPORT_USE_SANDBOX,
 				Messages.getString("ReportPreferencePage.9"), getFieldEditorParent());
 		addField(useSandboxEditor);
+		
+        addField(new PathEditor(PreferenceConstants.REPORT_CLASSIFICATION_HINTS, Messages.getString("ReportPreferencePage.classifications"), null, getFieldEditorParent()){
+            @Override
+            protected String getNewInputObject() {
+                InputDialog inputDialog = new InputDialog(getShell(), Messages.getString("ReportPreferencePage.addclassifications"),
+                        Messages.getString("ReportPreferencePage.addclassifications"),
+                        "",null);
+                inputDialog.open();
+                return inputDialog.getValue();
+            }
+            @Override
+            protected String createList(String[] items) {
+              return  Arrays.stream(items).collect(Collectors.joining("///"));
+            }
+            
+            @Override
+            protected String[] parseString(String hints) {
+                return hints.split("///");
+            }
+            
+        });
 	}
 
 	@Override

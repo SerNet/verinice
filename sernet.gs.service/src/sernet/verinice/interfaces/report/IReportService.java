@@ -45,4 +45,6 @@ public interface IReportService {
             throws IOException, ReportMetaDataException, PropertyFileExistsException;
 
     public Object getRenderOptions(String format);
+
+    String[] getClassificationHints();
 }

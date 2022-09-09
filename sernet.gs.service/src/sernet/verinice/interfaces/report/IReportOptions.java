@@ -26,7 +26,8 @@ import java.io.File;
  *
  */
 public interface IReportOptions {
-	
+	public static final String CLASSIFICATION_HINT = "classification_hint";
+	String getClassificationHint();
 	IOutputFormat getOutputFormat();
 
 	File getOutputFile();

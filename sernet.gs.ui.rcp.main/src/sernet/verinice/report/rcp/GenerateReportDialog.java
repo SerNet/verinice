@@ -3,6 +3,7 @@ package sernet.verinice.report.rcp;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -64,8 +66,12 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.model.report.ReportTemplateMetaData.ReportContext;
 import sernet.verinice.service.commands.crud.LoadCnAElementByType;
 import sernet.verinice.service.commands.crud.LoadCnATreeElementTitles;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 
 public class GenerateReportDialog extends TitleAreaDialog {
+    private DataBindingContext bindingContext = new DataBindingContext();
 
     private static final Logger LOG = Logger.getLogger(GenerateReportDialog.class);
 
@@ -119,6 +125,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
     private static final int SIZE_Y = 550;
 
     private IReportSupplier supplier;
+
+    private WritableValue<String> classificationHint = new WritableValue<String>();
 
     public GenerateReportDialog(Shell parentShell) {
         super(parentShell);
@@ -306,6 +314,15 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 }
             });
         }
+        
+        Label labelClassification = new Label(reportGroup, SWT.NONE);
+        labelClassification.setText(Messages.GenerateReportDialog_lblclassification);
+        
+        ComboViewer comboClassification = new ComboViewer(reportGroup, SWT.NONE);
+        comboClassification.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+        comboClassification.setContentProvider(ArrayContentProvider.getInstance());
+        comboClassification.setInput(ServiceComponent.getDefault().getReportService().getClassificationHints());
+        bindingContext.bindValue(WidgetProperties.text().observe(comboClassification.getCombo()), classificationHint, null, null);
 
         Label reportGroupLabel = new Label(reportGroup, SWT.SEPARATOR | SWT.HORIZONTAL);
         reportGroupLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
@@ -555,6 +572,10 @@ public class GenerateReportDialog extends TitleAreaDialog {
             }
         }
         return false;
+    }
+
+    public String getClassificationHint() {
+        return classificationHint.doGetValue();
     }
 
     public File getOutputFile() {

@@ -148,4 +148,9 @@ public class Activator extends AbstractUIPlugin {
 	public IReportLocalTemplateDirectoryService getIReportTemplateDirectoryService() {
 		return templateDirService;
 	}
+
+    public String[] getClassificationHints() {
+        String hints = getPreferenceStore().getString(PreferenceConstants.REPORT_CLASSIFICATION_HINTS);
+        return hints.split("///");
+    }
 }

@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.birt.core.data.DataTypeUtil;
 import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.core.framework.Platform;
@@ -37,7 +38,6 @@ import org.eclipse.birt.report.engine.api.EngineException;
 import org.eclipse.birt.report.engine.api.IDataExtractionOption;
 import org.eclipse.birt.report.engine.api.IDataExtractionTask;
 import org.eclipse.birt.report.engine.api.IRenderOption;
-import org.eclipse.birt.report.engine.api.IRenderTask;
 import org.eclipse.birt.report.engine.api.IReportDocument;
 import org.eclipse.birt.report.engine.api.IReportEngine;
 import org.eclipse.birt.report.engine.api.IReportEngineFactory;
@@ -45,8 +45,20 @@ import org.eclipse.birt.report.engine.api.IReportRunnable;
 import org.eclipse.birt.report.engine.api.IResultSetItem;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 import org.eclipse.birt.report.engine.api.IRunTask;
+import org.eclipse.birt.report.engine.api.script.element.IMasterPage;
+import org.eclipse.birt.report.engine.api.script.element.IReportDesign;
+import org.eclipse.birt.report.model.api.DesignElementHandle;
+import org.eclipse.birt.report.model.api.ElementFactory;
 import org.eclipse.birt.report.model.api.IResourceLocator;
 import org.eclipse.birt.report.model.api.ModuleOption;
+import org.eclipse.birt.report.model.api.ReportDesignHandle;
+import org.eclipse.birt.report.model.api.SimpleMasterPageHandle;
+import org.eclipse.birt.report.model.api.SlotHandle;
+import org.eclipse.birt.report.model.api.TextDataHandle;
+import org.eclipse.birt.report.model.api.activity.SemanticException;
+import org.eclipse.birt.report.model.api.elements.DesignChoiceConstants;
+import org.eclipse.birt.report.model.core.DesignElement;
+import org.eclipse.birt.report.model.elements.SimpleMasterPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,8 +130,7 @@ public class BIRTReportService {
         engine = factory.createReportEngine(config);
     }
 
-    public IRunAndRenderTask createTask(URL rptDesignURL) {
-
+    public IRunAndRenderTask createTask(URL rptDesignURL, IReportOptions options) {
         if (log.isDebugEnabled()) {
             log.debug("DesignURL:\t" + rptDesignURL);
             log.debug("Locale:\t" + Locale.getDefault().toString());
@@ -132,6 +143,10 @@ public class BIRTReportService {
         IRunAndRenderTask task = null;
         try {
             design = engine.openReportDesign(null, rptDesignURL.openStream(), map);
+            ReportDesignHandle designHandle = (ReportDesignHandle) design.getDesignHandle();
+            if(StringUtils.isNotBlank(options.getClassificationHint())) {
+                addClassificationHeader(designHandle);
+            }
             task = engine.createRunAndRenderTask(design);
         } catch (EngineException e) {
             log.error(COULD_NOT_OPEN_DESIGN_ERR, e);
@@ -146,48 +161,31 @@ public class BIRTReportService {
         return task;
     }
 
-    public IRunTask createRunTask(URL rptDesignURL, URL rptDocumentURL) {
-
-        if (log.isDebugEnabled()) {
-            log.debug("DesignURL:\t" + rptDesignURL + "\tDocumentURL:\t" + rptDocumentURL);
-        }
-
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put(ModuleOption.RESOURCE_LOCATOR_KEY, resourceLocator);
-
-        IRunTask runTask = null;
+    private void addClassificationHeader(ReportDesignHandle designHandle) {
+        ElementFactory elementFactory = designHandle.getElementFactory();
         try {
-            design = engine.openReportDesign(null, rptDesignURL.openStream(), map);
-            runTask = engine.createRunTask(design);
-            runTask.setReportDocument(rptDocumentURL.toString());
-        } catch (EngineException e) {
-            log.error(COULD_NOT_OPEN_DESIGN_ERR, e);
-            throw new IllegalStateException(e);
-        } catch (IOException e) {
-            log.error(COULD_NOT_OPEN_DESIGN_ERR, e);
-            throw new IllegalStateException(e);
+            SlotHandle masterPages = designHandle.getMasterPages();
+            List<DesignElementHandle> contents = masterPages.getContents();
+            if(contents.size()!=1) {
+                log.info("not only one slot in master pages");
+                return;
+            }
+            TextDataHandle newTextData = elementFactory.newTextData("classification");
+            newTextData.setHeight("15pt");
+            newTextData.setWidth("100%");
+            newTextData.setContentType(DesignChoiceConstants.TEXT_DATA_CONTENT_TYPE_PLAIN);
+            newTextData.setName("classificationHint");
+            newTextData.setValueExpr("reportContext.getAppContext().get(\"classification_hint\")");
+            newTextData.setProperty("textAlign", "center");
+            newTextData.setProperty("fontSize", "12pt");
+            
+            SimpleMasterPageHandle designElementHandle = (SimpleMasterPageHandle)contents.get(0);
+            SimpleMasterPage masterPage = (SimpleMasterPage) designElementHandle.getElement();
+            
+            masterPage.add(newTextData.getElement(), 0);
+        } catch (SemanticException e) {
+            //if we cannot add the header it is ok
         }
-
-        return runTask;
-    }
-
-    public IRenderTask createRenderTask(URL rptDocumentURL) {
-
-        if (log.isDebugEnabled()) {
-            log.debug("ReportDocumentURL:\t" + rptDocumentURL.toString());
-        }
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put(ModuleOption.RESOURCE_LOCATOR_KEY, resourceLocator);
-
-        IRenderTask renderTask = null;
-        try {
-            IReportDocument ird = engine.openReportDocument(rptDocumentURL.toString());
-            renderTask = engine.createRenderTask(ird);
-        } catch (EngineException e) {
-            log.error("Could not open report design: ", e);
-            throw new IllegalStateException(e);
-        }
-        return renderTask;
     }
 
     public IDataExtractionTask createExtractionTask(URL rptDesignURL) {
@@ -285,6 +283,8 @@ public class BIRTReportService {
     public IRunAndRenderTask prepareTaskForRendering(IRunAndRenderTask task,
             IReportOptions options) {
 
+        task.getAppContext().put(IReportOptions.CLASSIFICATION_HINT, options.getClassificationHint());
+
         IRenderOption renderOptions = (IRenderOption) ServiceComponent.getDefault()
                 .getReportService().getRenderOptions(options.getOutputFormat().getId());
         renderOptions.setOutputFileName(options.getOutputFile().getAbsolutePath());
@@ -345,72 +345,6 @@ public class BIRTReportService {
             DataTypeUtil.toOdiTypeClass(1);
         } catch (BirtException e) {
             log.error("Error while preloading class DataTypeUtil", e);
-        }
-    }
-
-    public void run(IRunTask task, IReportOptions options) {
-        // Makes the chosen root element available via the appContext variable
-        // 'rootElementId'
-        if (options.getRootElement() != null) {
-            task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME,
-                    options.getRootElement());
-            if (log.isDebugEnabled()) {
-                log.debug("Root-Element:\t" + options.getRootElement());
-            }
-        } else if (options.getRootElements() != null && options.getRootElements().length > 0) {
-            task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME,
-                    options.getRootElements());
-            if (log.isDebugEnabled()) {
-                log.debug("Root-Elements: " + Arrays.toString(options.getRootElements()));
-            }
-        }
-        try {
-            long startTime = System.currentTimeMillis();
-            task.run();
-            if (log.isDebugEnabled()) {
-                long duration = (System.currentTimeMillis() - startTime) / MILLIS_PER_SECOND;
-                log.debug("RunTask lasts " + duration + " seconds");
-            }
-        } catch (EngineException e) {
-            log.error("Could not run report: ", e);
-            throw new IllegalStateException(e);
-        }
-    }
-
-    public void render(IRenderTask task, IReportOptions options) {
-        IRenderOption renderOptions = (IRenderOption) ((AbstractOutputFormat) options
-                .getOutputFormat()).createBIRTRenderOptions();
-        renderOptions.setOutputFileName(options.getOutputFile().getAbsolutePath());
-        // Makes the chosen root element available via the appContext variable
-        // 'rootElementId'
-        if (options.getRootElement() != null) {
-            task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME,
-                    options.getRootElement());
-            if (log.isDebugEnabled()) {
-                log.debug("Root-Element:\t" + options.getRootElement());
-            }
-        } else if (options.getRootElements() != null && options.getRootElements().length > 0) {
-            task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME,
-                    options.getRootElements());
-            if (log.isDebugEnabled()) {
-                log.debug("Root-Elements: " + Arrays.toString(options.getRootElements()));
-            }
-        }
-
-        task.setRenderOption(renderOptions);
-
-        try {
-            long startTime = System.currentTimeMillis();
-            task.render();
-            if (log.isDebugEnabled()) {
-                long duration = (System.currentTimeMillis() - startTime) / 1000;
-                log.debug("RenderTask lasts " + duration + " seconds");
-            }
-        } catch (EngineException e) {
-            log.error("Could not render design: ", e);
-            throw new IllegalStateException(e);
-        } finally {
-            destroyEngine();
         }
     }
 
