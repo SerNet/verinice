@@ -27,17 +27,23 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
+import sernet.gs.service.CollectionUtil;
+import sernet.gs.service.RetrieveInfo;
+import sernet.hui.common.connect.IPerson;
 import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IConfigurationService;
+import sernet.verinice.interfaces.IDao;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.PersonAdapter;
@@ -75,13 +81,23 @@ public class ConfigurationService implements IConfigurationService {
         criteria.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
         criteria.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
         criteria.setFetchMode("person", FetchMode.JOIN);
-        criteria.setFetchMode("person.entity", FetchMode.JOIN);
-        criteria.setFetchMode("person.entity.typedPropertyLists", FetchMode.JOIN);
-        criteria.setFetchMode("person.entity.typedPropertyLists.properties", FetchMode.JOIN);
-        criteria.setFetchMode("person.entity.typedPropertyLists.properties", FetchMode.JOIN);
 
         @SuppressWarnings("unchecked")
         List<Configuration> configurations = getConfigurationDao().findByCriteria(criteria);
+        Set<Integer> personIDs = configurations.stream().map(c -> c.getPerson().getDbId())
+                .collect(Collectors.toSet());
+        Map<Integer, CnATreeElement> personsById = new HashMap<>(personIDs.size());
+        CollectionUtil.partition(List.copyOf(personIDs), IDao.QUERY_MAX_ITEMS_IN_LIST)
+                .forEach(partition -> {
+                    DetachedCriteria crit = DetachedCriteria.forClass(IPerson.class)
+                            .add(Restrictions.in("dbId", partition));
+                    RetrieveInfo.getPropertyInstance().configureCriteria(crit);
+                    List<CnATreeElement> persons = getConfigurationDao().findByCriteria(crit);
+                    for (CnATreeElement person : persons) {
+                        personsById.put(person.getDbId(), person);
+                    }
+                });
+
         // Block all other threads before filling the maps
         writeLock.lock();
         try {
