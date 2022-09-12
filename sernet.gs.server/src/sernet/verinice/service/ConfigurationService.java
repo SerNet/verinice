@@ -85,7 +85,9 @@ public class ConfigurationService implements IConfigurationService {
         // Block all other threads before filling the maps
         writeLock.lock();
         try {
+            StringBuilder sb = new StringBuilder();
             for (Configuration c : configurations) {
+                sb.setLength(0);
                 String[] roleArray = getRoles(c);
                 String user = c.getUser();
                 // Put result into map and save asking the DB next time.
@@ -94,8 +96,8 @@ public class ConfigurationService implements IConfigurationService {
                 CnATreeElement person = c.getPerson();
                 if (person != null) {
                     scopeIdMap.put(user, person.getScopeId());
-                    StringBuilder sb = new StringBuilder(PersonAdapter.getFullName(person));
-                    sb.append(" [").append(c.getUser()).append("]");
+                    sb.append(PersonAdapter.getFullName(person)).append(" [").append(c.getUser())
+                            .append("]");
                     nameMap.put(user, sb.toString());
                 }
             }
