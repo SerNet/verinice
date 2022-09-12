@@ -37,7 +37,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
@@ -74,6 +73,7 @@ import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
+import sernet.gs.ui.rcp.main.bsi.views.ImportGroupFirstComparator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
@@ -236,7 +236,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
         viewer.setContentProvider(contentProvider);
         viewer.setLabelProvider(new DecoratingLabelProvider(new TreeLabelProvider(),
                 workbench.getDecoratorManager()));
-        viewer.setComparator(new ViewerComparator(new NumericStringComparator()));
+        viewer.setComparator(new ImportGroupFirstComparator(new NumericStringComparator()));
         toggleLinking(Activator.getDefault().getPreferenceStore()
                 .getBoolean(PreferenceConstants.LINK_TO_EDITOR));
 
@@ -340,8 +340,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
     private void makeActions() {
         BSIModelViewDropListener bsiDropAdapter;
 
-        bulkEditAction = new ShowBulkEditAction(getViewSite(),
-                Messages.ISMView_6);
+        bulkEditAction = new ShowBulkEditAction(getViewSite(), Messages.ISMView_6);
         bulkEditAccountsAction = new ShowBulkEditAccountsAction(getViewSite(),
                 sernet.gs.ui.rcp.main.Messages.ContextMenuAccountBulkEditor);
 
@@ -395,8 +394,8 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
         metaDropAdapter.addAdapter(bsi2IsmDropAdapter);
         metaDropAdapter.addAdapter(fileDropPerformer);
 
-        accessControlEditAction = new ShowAccessControlEditAction(
-                getViewSite(), Messages.ISMView_11);
+        accessControlEditAction = new ShowAccessControlEditAction(getViewSite(),
+                Messages.ISMView_11);
 
         naturalizeAction = new NaturalizeAction(getViewSite());
 

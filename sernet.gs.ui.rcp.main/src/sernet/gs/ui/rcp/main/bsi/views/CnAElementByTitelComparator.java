@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
+import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -37,6 +38,11 @@ class CnAElementByTitelComparator extends ViewerComparator {
 
     @Override
     public int compare(Viewer viewer, Object e1, Object e2) {
+        if (e1 instanceof ImportBsiGroup) {
+            return -1;
+        } else if (e2 instanceof ImportBsiGroup) {
+            return 1;
+        }
         final int chapterFactor = 1000;
         if (e1 instanceof MassnahmenUmsetzung && e2 instanceof MassnahmenUmsetzung) {
             // sort chapters correctly by converting 2.45, 2.221, 3.42

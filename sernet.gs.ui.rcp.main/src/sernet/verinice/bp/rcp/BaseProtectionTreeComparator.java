@@ -28,9 +28,9 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
 
 import sernet.gs.service.NumericStringCollator;
+import sernet.gs.ui.rcp.main.bsi.views.ImportGroupFirstComparator;
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITitledElement;
 import sernet.verinice.model.bp.SecurityLevel;
@@ -72,7 +72,7 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class BaseProtectionTreeComparator extends ViewerComparator {
+public class BaseProtectionTreeComparator extends ImportGroupFirstComparator {
     private static Map<String, Integer> typeSortCategoryMap = new HashMap<>();
 
     private static final List<String> SORT_ORDER_REQUIREMENT_AND_SAFEGUARD_GROUPS = Arrays
