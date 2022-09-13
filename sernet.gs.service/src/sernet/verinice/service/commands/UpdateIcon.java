@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jdt.annotation.NonNull;
+import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
@@ -58,7 +59,8 @@ public class UpdateIcon extends GenericCommand implements IChangeLoggingCommand 
                 .getDAO(CnATreeElement.class);
         List<CnATreeElement> elements = dao
                 .findByCriteria(DetachedCriteria.forClass(CnATreeElement.class)
-                        .add(Restrictions.in(CnATreeElement.UUID, elementUUIDs)));
+                        .add(Restrictions.in(CnATreeElement.UUID, elementUUIDs))
+                        .setFetchMode("parent", FetchMode.JOIN));
         for (CnATreeElement element : elements) {
             element.setIconPath(iconPath);
             dao.saveOrUpdate(element);
