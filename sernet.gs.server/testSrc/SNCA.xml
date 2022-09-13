@@ -11845,6 +11845,7 @@ Wurden bereits weitere Stellen informiert?
                 tags="BCM" />
                 
              <huiproperty id="bp_businessprocess_reporting_zeitkritisch" name="Zeitkritischer Geschäftsprozess" inputtype="singleoption">
+                <depends option="bp_business_continuity_reporting_selectedzeitkritisch" value="0" />
                 <option id="bp_businessprocess_reporting_zeitkritisch_ja" name="ja" />
                  <option id="bp_businessprocess_reporting_zeitkritisch_nein" name="nein" />
                  <option id="bp_businessprocess_reporting_zeitkritisch_fehlendeDaten" name="Fehlende Daten" />
