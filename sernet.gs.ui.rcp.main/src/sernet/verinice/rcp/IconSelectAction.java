@@ -87,12 +87,12 @@ public class IconSelectAction
                         IStatus status = Status.OK_STATUS;
                         try {
                             monitor.setTaskName(Messages.IconSelectAction_1);
-                            String iconPath = dialog.getSelectedPath();
-                            if (dialog.isDefaultIcon()) {
-                                iconPath = null;
-                            }
+                            String iconPath = dialog.isDefaultIcon() ? null
+                                    : dialog.getSelectedPath();
 
                             Activator.inheritVeriniceContextState();
+                            // update our local copies
+                            selectedElments.forEach(el -> el.setIconPath(iconPath));
                             UpdateIcon updateIcon = new UpdateIcon(
                                     selectedElments.stream().map(CnATreeElement::getUuid)
                                             .collect(Collectors.toSet()),
