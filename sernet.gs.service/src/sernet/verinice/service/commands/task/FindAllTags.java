@@ -21,13 +21,16 @@ package sernet.verinice.service.commands.task;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
+import sernet.hui.common.connect.HUITypeFactory;
 import sernet.snutils.TagHelper;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.bsi.BSIModel;
@@ -54,8 +57,7 @@ public class FindAllTags extends GenericCommand {
         // own if the data model would allow this. Unfortunately it is not done
         // this way.
 
-        List<String> tempTags = (List<String>) getDaoFactory().getDAO(BSIModel.class)
-                .findByCallback(hcb);
+        List<String> tempTags = getDaoFactory().getDAO(BSIModel.class).findByCallback(hcb);
         tags = tempTags.stream().flatMap(tagList -> TagHelper.getTags(tagList).stream()).distinct()
                 .sorted().collect(Collectors.toList());
     }
@@ -66,21 +68,26 @@ public class FindAllTags extends GenericCommand {
 
     private static class FindTagsCallback implements HibernateCallback, Serializable {
 
+        private final static Set<String> allPropertyTypes = HUITypeFactory.getInstance()
+                .getAllEntityTypes().stream()
+                .flatMap(entityType -> Stream.of(entityType.getAllPropertyTypeIds()))
+                .filter(propertyId ->
+                // TODO: Implicitly we assume that all propertytypes that denote
+                // a tag have the common suffix '_tag'.
+                propertyId.endsWith("_tag")).collect(Collectors.toSet());
+
         public Object doInHibernate(Session session) throws HibernateException, SQLException {
             /*
              * Retrieves all tags. The resulting entries are non-empty and
              * distinct. Unfortunately they are still in the CSV format, e.g.
              * "foo, baz, bar"
              */
-
-            // TODO: Implicitly we assume that all propertytypes that denote a
-            // tag
-            // have the common suffix '_tag'.
             @SuppressWarnings("unchecked")
             List<String> list = session
                     .createSQLQuery(
-                            "select propertyValue from properties where propertytype like '%_tag'")
-                    .addScalar("propertyValue", sernet.gs.reveng.type.Types.STRING_TYPE).list();
+                            "select propertyValue from properties where propertytype in (:types)")
+                    .addScalar("propertyValue", sernet.gs.reveng.type.Types.STRING_TYPE)
+                    .setParameterList("types", allPropertyTypes).list();
             return list.stream().filter(StringUtils::isNotBlank).distinct()
                     .collect(Collectors.toList());
         }
