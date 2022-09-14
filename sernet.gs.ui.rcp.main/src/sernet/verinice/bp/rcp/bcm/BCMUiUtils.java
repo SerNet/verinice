@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.fieldassist.ContentProposal;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -208,7 +209,7 @@ public final class BCMUiUtils {
             for (CnATreeElement linkedBusinessProcess : linkedBusinessProcesses) {
                 String rto = linkedBusinessProcess.getEntity()
                         .getRawPropertyValue("bp_businessprocess__rto");
-                if (rto != null) {
+                if (!StringUtils.isBlank(rto)) {
                     String title = CnATreeElementLabelGenerator
                             .getElementTitle(linkedBusinessProcess);
                     proposals.add(new ContentProposal(rto, title + ": " + rto, null));
