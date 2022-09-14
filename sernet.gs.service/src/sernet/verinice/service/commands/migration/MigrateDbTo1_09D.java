@@ -18,6 +18,9 @@
 package sernet.verinice.service.commands.migration;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import org.eclipse.jdt.annotation.NonNull;
@@ -38,22 +41,37 @@ public class MigrateDbTo1_09D extends DbMigration {
 
         dao.executeCallback(session -> {
 
-            Stream.of("CREATE INDEX dependant_id_idx ON cnalink (dependant_id)",
-                    "CREATE INDEX dependency_id_idx ON cnalink (dependency_id)",
-                    "CREATE INDEX entity_id_idx ON cnatreeelement (entity_id)",
-                    "CREATE INDEX parent_idx ON cnatreeelement (parent)",
-                    "CREATE INDEX typedlist_id_idx ON propertylist (typedlist_id)",
-                    "CREATE INDEX properties_id_idx ON properties (properties_id)",
-                    "CREATE INDEX cte_id_idx ON permission (cte_id)",
-                    "CREATE INDEX cnatreeelement_id_idx ON note (cnatreeelement_id)",
-                    "CREATE INDEX cnalink_type_idx ON cnalink (type_id)",
-                    "CREATE INDEX jbpm4_task_asignee_idx ON jbpm4_task (assignee_)",
-                    "CREATE INDEX jbpm4_execution_parent_idx ON jbpm4_execution (parent_)",
-                    "CREATE INDEX jbpm4_variable_execution_idx ON jbpm4_variable (execution_)")
-                    .forEach(statement -> {
-                        if (isPostgres() || isOracle()) {
-                            statement = statement.replace("CREATE INDEX ",
-                                    "CREATE INDEX IF NOT EXISTS ");
+            Set<String> existingIndexes = new HashSet<>();
+            if (isOracle()) {
+                existingIndexes.addAll((List<String>) session
+                        .createSQLQuery("select index_name from USER_INDEXES").list());
+            }
+
+            Stream.of("dependant_id_idx ON cnalink (dependant_id)",
+                    "dependency_id_idx ON cnalink (dependency_id)",
+                    "entity_id_idx ON cnatreeelement (entity_id)",
+                    "parent_idx ON cnatreeelement (parent)",
+                    "typedlist_id_idx ON propertylist (typedlist_id)",
+                    "properties_id_idx ON properties (properties_id)",
+                    "cte_id_idx ON permission (cte_id)",
+                    "cnatreeelement_id_idx ON note (cnatreeelement_id)",
+                    "cnalink_type_idx ON cnalink (type_id)",
+                    "jbpm4_task_asignee_idx ON jbpm4_task (assignee_)",
+                    "jbpm4_execution_parent_idx ON jbpm4_execution (parent_)",
+                    "jbpm4_variable_execution_idx ON jbpm4_variable (execution_)").forEach(spec -> {
+                        String statement = null;
+                        if (isPostgres()) {
+                            statement = "CREATE INDEX IF NOT EXISTS " + spec;
+                        } else if (isOracle()) {
+                            String indexName = spec.substring(0, spec.indexOf(' '));
+                            if (existingIndexes.contains(indexName)) {
+                                return;
+                            }
+                            statement = "CREATE INDEX " + spec;
+                        } else if (isDerby()) {
+                            // derby seems to just ignore duplicate indexes, so
+                            // no special precautions here
+                            statement = "CREATE INDEX " + spec;
                         }
                         session.createSQLQuery(statement).executeUpdate();
                     });
