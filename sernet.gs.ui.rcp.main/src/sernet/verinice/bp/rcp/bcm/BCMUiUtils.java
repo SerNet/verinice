@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.verinice.bp.rcp.bcm;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,6 +35,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
 
+import sernet.gs.service.AbstractNumericStringComparator;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -59,6 +61,17 @@ import sernet.verinice.model.common.CnATreeElementLabelGenerator;
 public final class BCMUiUtils {
 
     private static final Logger LOG = Logger.getLogger(BCMUiUtils.class);
+
+    private final static Comparator<IContentProposal> proposalComparator = new AbstractNumericStringComparator<IContentProposal>() {
+
+        private static final long serialVersionUID = 4673848808543338310L;
+
+        @Override
+        public String convertToString(IContentProposal o) {
+            return o.getLabel();
+        }
+
+    };
 
     private BCMUiUtils() {
         // Do not instantiate this class.
@@ -215,7 +228,8 @@ public final class BCMUiUtils {
                     proposals.add(new ContentProposal(rto, title + ": " + rto, null));
                 }
             }
-            return proposals.toArray(new IContentProposal[0]);
+
+            return proposals.stream().sorted(proposalComparator).toArray(IContentProposal[]::new);
         };
 
         boolean showHint = Activator.getDefault().getPluginPreferences()
