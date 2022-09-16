@@ -955,6 +955,7 @@ public final class CnAElementFactory {
         createBausteinVorschlaege();
 
         loadedModel = dbHome.save(loadedModel);
+        Activator.checkDbVersion();
         ITVerbund verbund = (ITVerbund) CnAElementFactory.getInstance().saveNew(loadedModel,
                 ITVerbund.TYPE_ID, null, false);
         loadedModel.addChild(verbund);
