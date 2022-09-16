@@ -18,10 +18,10 @@
 package sernet.verinice.service.commands.migration;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.eclipse.jdt.annotation.NonNull;
 
@@ -46,7 +46,7 @@ public class MigrateDbTo1_09D extends DbMigration {
                 existingIndexes.addAll((List<String>) session
                         .createSQLQuery("select index_name from USER_INDEXES").list());
             }
-            List<String> specs = Arrays.asList("dependant_id_idx ON cnalink (dependant_id)",
+            Stream<String> specs = Stream.of("dependant_id_idx ON cnalink (dependant_id)",
                     "dependency_id_idx ON cnalink (dependency_id)",
                     "entity_id_idx ON cnatreeelement (entity_id)",
                     "parent_idx ON cnatreeelement (parent)",
@@ -57,19 +57,20 @@ public class MigrateDbTo1_09D extends DbMigration {
                     "cnalink_type_idx ON cnalink (type_id)");
             if (!isDerby()) {
                 // only create these in 3-tier mode
-                specs.addAll(Arrays.asList("jbpm4_task_asignee_idx ON jbpm4_task (assignee_)",
-                        "jbpm4_execution_parent_idx ON jbpm4_execution (parent_)",
-                        "jbpm4_variable_execution_idx ON jbpm4_variable (execution_)"));
+                specs = Stream.concat(specs,
+                        Stream.of("jbpm4_task_asignee_idx ON jbpm4_task (assignee_)",
+                                "jbpm4_execution_parent_idx ON jbpm4_execution (parent_)",
+                                "jbpm4_variable_execution_idx ON jbpm4_variable (execution_)"));
             }
 
-            for (String spec : specs) {
+            specs.forEach(spec -> {
                 String statement = null;
                 if (isPostgres()) {
                     statement = "CREATE INDEX IF NOT EXISTS " + spec;
                 } else if (isOracle()) {
                     String indexName = spec.substring(0, spec.indexOf(' '));
                     if (existingIndexes.contains(indexName)) {
-                        continue;
+                        return;
                     }
                     statement = "CREATE INDEX " + spec;
                 } else if (isDerby()) {
@@ -78,7 +79,7 @@ public class MigrateDbTo1_09D extends DbMigration {
                     statement = "CREATE INDEX " + spec;
                 }
                 session.createSQLQuery(statement).executeUpdate();
-            }
+            });
             return null;
         });
         updateVersion();
