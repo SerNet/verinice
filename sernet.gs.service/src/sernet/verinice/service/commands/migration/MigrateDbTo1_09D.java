@@ -45,6 +45,9 @@ public class MigrateDbTo1_09D extends DbMigration {
             if (isOracle()) {
                 existingIndexes.addAll((List<String>) session
                         .createSQLQuery("select index_name from USER_INDEXES").list());
+            } else if (isPostgres()) {
+                existingIndexes.addAll((List<String>) session
+                        .createSQLQuery("select indexname from pg_indexes").list());
             }
             Stream<String> specs = Stream.of("dependant_id_idx ON cnalink (dependant_id)",
                     "dependency_id_idx ON cnalink (dependency_id)",
@@ -65,9 +68,7 @@ public class MigrateDbTo1_09D extends DbMigration {
 
             specs.forEach(spec -> {
                 String statement = null;
-                if (isPostgres()) {
-                    statement = "CREATE INDEX IF NOT EXISTS " + spec;
-                } else if (isOracle()) {
+                if (isPostgres() || isOracle()) {
                     String indexName = spec.substring(0, spec.indexOf(' '));
                     if (existingIndexes.contains(indexName)) {
                         return;
