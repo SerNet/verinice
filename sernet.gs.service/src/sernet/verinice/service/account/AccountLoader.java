@@ -100,9 +100,10 @@ public final class AccountLoader {
     public static List<String> loadGroupNamesForLocalAdmin() {
         List<String> groups = new ArrayList<>();
         List<String> groupNames = AccountLoader.loadGroupNames();
+        Set<String> userGroups = AccountLoader.loadCurrentUserGroups();
 
         for (String groupName : groupNames) {
-            if (AccountLoader.isLocalAdminOwnerOrCreator(groupName)) {
+            if (AccountLoader.isLocalAdminOwnerOrCreator(groupName, userGroups)) {
                 groups.add(groupName);
             }
         }
@@ -112,17 +113,17 @@ public final class AccountLoader {
     public static List<String> loadAccountsAndGroupNamesForLocalAdmin() {
         List<String> accountsAndGroups = AccountLoader.loadLoginNames();
         List<String> groupNames = AccountLoader.loadGroupNames();
+        Set<String> userGroups = AccountLoader.loadCurrentUserGroups();
 
         for (String groupName : groupNames) {
-            if (AccountLoader.isLocalAdminOwnerOrCreator(groupName)) {
+            if (AccountLoader.isLocalAdminOwnerOrCreator(groupName, userGroups)) {
                 accountsAndGroups.add(groupName);
             }
         }
         return accountsAndGroups;
     }
 
-    public static boolean isLocalAdminOwnerOrCreator(String groupName) {
-        Set<String> userGroups = AccountLoader.loadCurrentUserGroups();
+    public static boolean isLocalAdminOwnerOrCreator(String groupName, Set<String> userGroups) {
         if (IRightsService.ADMINLOCALDEFAULTGROUPNAME.equals(groupName)
                 || userGroups.contains(groupName)) {
             return true;

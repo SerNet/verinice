@@ -18,6 +18,7 @@
 package sernet.verinice.service.commands.crud;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -56,10 +57,11 @@ public class LoadPermissions extends GenericCommand {
         boolean isLocalAdmin = getAuthService()
                 .currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
         Set<Permission> filteredPermissions = new HashSet<>(permissions.size());
-
+        Set<String> userGroups = isLocalAdmin ? AccountLoader.loadCurrentUserGroups()
+                : Collections.emptySet();
         // Hydrate and filter the permissions
         for (Permission p : permissions) {
-            if (isLocalAdmin && AccountLoader.isLocalAdminOwnerOrCreator(p.getRole())) {
+            if (isLocalAdmin && AccountLoader.isLocalAdminOwnerOrCreator(p.getRole(), userGroups)) {
                 filteredPermissions.add(p);
             }
             p.getRole();
