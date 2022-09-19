@@ -37,30 +37,30 @@ import sernet.verinice.service.account.AccountLoader;
 @SuppressWarnings("serial")
 public class LoadPermissions extends GenericCommand {
 
-	private CnATreeElement cte;
-	
-	private Set<Permission> permissions;
-	
-	public LoadPermissions(CnATreeElement cte) {
-		this.cte = cte;
-	}
+    private CnATreeElement cte;
+
+    private Set<Permission> permissions;
+
+    public LoadPermissions(CnATreeElement cte) {
+        this.cte = cte;
+    }
 
     @Override
     public void execute() {
-        IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(cte.getTypeId());
+        IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory()
+                .getDAO(cte.getTypeId());
 
         cte = dao.findById(cte.getDbId());
         permissions = cte.getPermissions();
 
-        boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
-        Set<Permission> filteredPermissions = new HashSet<Permission>(permissions.size());
+        boolean isLocalAdmin = getAuthService()
+                .currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        Set<Permission> filteredPermissions = new HashSet<>(permissions.size());
 
         // Hydrate and filter the permissions
         for (Permission p : permissions) {
-            if (isLocalAdmin) {
-                if (AccountLoader.isLocalAdminOwnerOrCreator(p.getRole())) {
-                    filteredPermissions.add(p);
-                }
+            if (isLocalAdmin && AccountLoader.isLocalAdminOwnerOrCreator(p.getRole())) {
+                filteredPermissions.add(p);
             }
             p.getRole();
             p.isReadAllowed();
