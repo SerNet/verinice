@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -81,7 +82,9 @@ public class FindURLs extends GenericCommand {
         // FindCnATreeElementsCallback.
         List<Integer> treeElementIds = new ArrayList<>();
         for (Object[] result : resultList) {
-            treeElementIds.add((Integer) result[1]);
+            if (!StringUtils.isBlank((String) result[0])) {
+                treeElementIds.add((Integer) result[1]);
+            }
         }
 
         // Retrieves all the CnATreeElement instances which have a document link
@@ -165,7 +168,7 @@ public class FindURLs extends GenericCommand {
 
         private static final String HQL = "SELECT p.propertyValue,pl.entityId FROM PropertyList as pl "
                 + "INNER JOIN pl.properties as p WHERE p.propertyType IN (:types) "
-                + "AND p.propertyValue IS NOT NULL AND p.propertyValue NOT LIKE ''";
+                + "AND p.propertyValue IS NOT NULL";
 
         FindURLsCallbackWithCnATreeElement(Set<String> types) {
             this.types = types;
