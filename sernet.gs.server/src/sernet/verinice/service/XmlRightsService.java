@@ -68,6 +68,7 @@ import sernet.verinice.model.auth.ProfileRef;
 import sernet.verinice.model.auth.Profiles;
 import sernet.verinice.model.auth.Userprofile;
 import sernet.verinice.model.auth.Userprofiles;
+import sernet.verinice.model.bp.elements.BpPerson;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
@@ -445,8 +446,9 @@ public class XmlRightsService implements IRightsService {
 
         String hql = "from CnATreeElement c " + //$NON-NLS-1$
                 "where c.scopeId = ? " + //$NON-NLS-1$
-                "and (c.objectType = ? or c.objectType = ?)"; //$NON-NLS-1$
-        Object[] params = new Object[] { scopeId, PersonIso.TYPE_ID, Person.TYPE_ID };
+                "and (c.objectType = ? or c.objectType = ? or c.objectType = ?)"; //$NON-NLS-1$
+        Object[] params = new Object[] { scopeId, PersonIso.TYPE_ID, Person.TYPE_ID,
+                BpPerson.TYPE_ID };
         List<CnATreeElement> elementList = getPropertyDao().findByQuery(hql, params);
         Object[] idList = new Object[elementList.size()];
         int i = 0;
