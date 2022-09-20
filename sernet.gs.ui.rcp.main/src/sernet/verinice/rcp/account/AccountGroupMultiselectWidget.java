@@ -36,20 +36,20 @@ import sernet.verinice.rcp.MultiselectWidget;
 public class AccountGroupMultiselectWidget extends MultiselectWidget<AccountGroup> {
 
     private static final Logger LOG = Logger.getLogger(AccountGroupMultiselectWidget.class);
-    
+
     private Configuration account;
-    
+
     private IAccountService accountService;
-    
+
     public AccountGroupMultiselectWidget(Composite parent, Configuration account) {
         this.account = account;
-        try{
+        try {
             initData();
             initGui(parent);
-        } catch( Exception e ) {
-           String message = "Error while creating widget."; //$NON-NLS-1$
-           LOG.error(message, e);
-           throw new RuntimeException(message, e);
+        } catch (Exception e) {
+            String message = "Error while creating widget."; //$NON-NLS-1$
+            LOG.error(message, e);
+            throw new RuntimeException(message, e);
         }
     }
 
@@ -63,20 +63,20 @@ public class AccountGroupMultiselectWidget extends MultiselectWidget<AccountGrou
         itemList = getAccountService().listGroups();
         itemList = sortItems(itemList);
         Set<String> rolesOfAccount = account.getRoles(false);
-        
+
         for (AccountGroup group : itemList) {
-            if(rolesOfAccount.contains(group.getName())) {
+            if (rolesOfAccount.contains(group.getName())) {
                 preSelectedElements.add(group);
                 if (LOG.isDebugEnabled()) {
                     LOG.debug(group.getName() + " added to preSelectedElements");
                 }
             }
         }
-        if(rolesOfAccount.isEmpty()) {
+        if (rolesOfAccount.isEmpty()) {
             setShowOnlySelected(false);
         }
     }
-    
+
     public void resetData() {
         try {
             initData();
@@ -86,7 +86,7 @@ public class AccountGroupMultiselectWidget extends MultiselectWidget<AccountGrou
         removeCheckboxes();
         addCheckboxes();
     }
-    
+
     public IAccountService getAccountService() {
         if (accountService == null) {
             accountService = createAccountServive();
