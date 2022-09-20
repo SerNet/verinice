@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _SlfjEGUPEeqN8MswvNs8LA
 Runtime-Version: 2.5.3.202205021448
-Save-Time: 8/25/22, 12:02 PM
+Save-Time: 9/20/22, 8:21 AM
 Tags: ISM
 Testcase-Type: ecl
 Verifications: _wm5P0CtBEeuMltfUUtdvug
@@ -34,7 +34,7 @@ proc "exec-and-export" [val reportname] [val scopelist] [val filename] {
 }
 
 proc "try-dont-switch" {
-	try -command {
+	try -times 3 -delay 1000 -command {
 		get-window "Wechseln zur zugeordneten Perspektive" | get-button Nein | click
 	} -catch {
 	}
@@ -65,11 +65,6 @@ proc "wait-for-imports-or-fail" {
 log "6.2: 6.2 started"
 get-view Objektbrowser | close
 
-
-open-vlt "TestReportISM.vlt"
-open-vlt "TestReportMod.vlt"
-open-vlt "TestReportAlt.vlt"
-
 ism-import-vna "RECPLAST.vna"
 ism-import-vna "Beispiel_NoKyTo_GmbH_2018.vna"
 ism-import-vna "modplast-1.1.vna"
@@ -78,14 +73,18 @@ wait-for-imports-or-fail
 
 log "6.2: starting to execute queries"
 
+open-vlt "TestReportAlt.vlt"
+
 exec-and-export "TestReportAlt.vlt" [list "Beispiel: NoKyTo GmbH 2018" MODPLAST RECPLAST] "TestReportAlt-All.csv"
 exec-and-export "TestReportAlt.vlt" [list "Beispiel: NoKyTo GmbH 2018"] "TestReportAlt.csv"
+
+open-vlt "TestReportMod.vlt"
 
 exec-and-export "TestReportMod.vlt" [list "Beispiel: NoKyTo GmbH 2018" MODPLAST RECPLAST] "TestReportMod-All.csv"
 exec-and-export "TestReportAlt.vlt" [list MODPLAST] "TestReportMod.csv"
 
+open-vlt "TestReportISM.vlt"
+
 exec-and-export"TestReportISM.vlt" [list "Beispiel: NoKyTo GmbH 2018" MODPLAST RECPLAST] "TestReportISM-All.csv"
 exec-and-export "TestReportAlt.vlt" [list RECPLAST] "TestReportISM.csv"
-
-
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
