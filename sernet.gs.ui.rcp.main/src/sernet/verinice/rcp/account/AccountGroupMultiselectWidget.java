@@ -22,16 +22,19 @@ package sernet.verinice.rcp.account;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Composite;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.rcp.MultiselectWidget;
+import sernet.verinice.service.account.AccountLoader;
 
 public class AccountGroupMultiselectWidget extends MultiselectWidget<AccountGroup> {
 
@@ -61,6 +64,15 @@ public class AccountGroupMultiselectWidget extends MultiselectWidget<AccountGrou
     @Override
     protected void initData() throws CommandException {
         itemList = getAccountService().listGroups();
+
+        boolean isLocalAdmin = ServiceFactory.lookupAuthService()
+                .currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+
+        if (isLocalAdmin) {
+            List<String> groupNamesForLocalAdmin = AccountLoader.loadGroupNamesForLocalAdmin();
+            itemList = itemList.stream().filter(g -> groupNamesForLocalAdmin.contains(g.getName()))
+                    .collect(Collectors.toList());
+        }
         itemList = sortItems(itemList);
         Set<String> rolesOfAccount = account.getRoles(false);
 
