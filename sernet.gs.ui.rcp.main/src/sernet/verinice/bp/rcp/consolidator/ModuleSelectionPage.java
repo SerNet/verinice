@@ -16,6 +16,7 @@
  ******************************************************************************/
 package sernet.verinice.bp.rcp.consolidator;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,7 @@ import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -77,6 +79,7 @@ public class ModuleSelectionPage extends WizardPage {
         container.setLayout(new GridLayout(1, false));
 
         treeViewer = new CheckboxTreeViewer(container, SWT.BORDER);
+
         Tree tree = treeViewer.getTree();
         tree.setHeaderVisible(true);
         tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -85,17 +88,54 @@ public class ModuleSelectionPage extends WizardPage {
         TreeColumn tblclmnNewColumn = tableViewerColumn.getColumn();
         tblclmnNewColumn.setWidth(160);
         tblclmnNewColumn.setText(Messages.title);
+        tblclmnNewColumn.setData(Comparator.comparing(ConsolidatorTableContent::getTitle));
 
         TreeViewerColumn tableViewerColumn1 = new TreeViewerColumn(treeViewer, SWT.NONE);
         TreeColumn tblclmnNewColumn1 = tableViewerColumn1.getColumn();
         tblclmnNewColumn1.setWidth(200);
         tblclmnNewColumn1.setText(Messages.scope);
+        tblclmnNewColumn1.setData(Comparator.comparing(ConsolidatorTableContent::getScope));
 
         TreeViewerColumn tableViewerColumn2 = new TreeViewerColumn(treeViewer, SWT.NONE);
         TreeColumn tblclmnNewColumn2 = tableViewerColumn2.getColumn();
         tblclmnNewColumn2.setWidth(100);
         tblclmnNewColumn2.setText(Messages.parent);
+        tblclmnNewColumn2.setData(Comparator.comparing(ConsolidatorTableContent::getParent));
         initDataBindings(new DataBindingContext());
+
+        treeViewer.setComparator(new ViewerComparator() {
+            @Override
+            public int compare(Viewer viewer, Object e1, Object e2) {
+                Tree tree = ((CheckboxTreeViewer) viewer).getTree();
+                TreeColumn sortColumn = tree.getSortColumn();
+                Comparator comparator = sortColumn == null ? null
+                        : (Comparator) sortColumn.getData();
+                if (comparator != null && tree.getSortDirection() == SWT.UP) {
+                    comparator = comparator.reversed();
+                }
+                return comparator == null ? 0 : comparator.compare(e1, e2);
+            }
+        });
+        TreeColumn[] columns = tree.getColumns();
+
+        for (int i = 0; i < columns.length; i++) {
+            TreeColumn column = columns[i];
+            column.addListener(SWT.Selection, e -> {
+                final TreeColumn sortColumn = tree.getSortColumn();
+                int direction = tree.getSortDirection();
+
+                if (column.equals(sortColumn)) {
+                    direction = direction == SWT.UP ? SWT.DOWN : SWT.UP;
+                } else {
+                    tree.setSortColumn(column);
+                    direction = SWT.DOWN;
+                }
+                tree.setSortDirection(direction);
+                treeViewer.refresh();
+            });
+        }
+        tree.setSortColumn(columns[0]);
+        tree.setSortDirection(SWT.DOWN);
 
         if (allModules.isEmpty()) {
             setErrorMessage(Messages.noMatchingModules);
