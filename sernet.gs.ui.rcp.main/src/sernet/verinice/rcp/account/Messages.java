@@ -78,7 +78,6 @@ public class Messages extends NLS {
     public static String NotificationPage_1;
     public static String NotificationPage_2;
     public static String NotificationPage_3;
-    public static String NotificationPage_4;
     public static String NotificationPage_5;
     public static String PersonPage_0;
     public static String PersonPage_1;
