@@ -71,7 +71,7 @@ public class IndexThread extends DummyAuthenticatorCallable<List<IndexedElementD
                 }
             }
         }
-        getSearchDao().updateOrIndex(updateDetails);
+        getSearchDao().index(updateDetails);
         return result;
     }
 
