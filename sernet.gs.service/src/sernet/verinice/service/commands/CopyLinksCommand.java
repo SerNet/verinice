@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
@@ -40,6 +41,7 @@ import sernet.gs.service.CollectionUtil;
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IDao;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -182,15 +184,15 @@ public class CopyLinksCommand extends GenericCommand {
 
     public void loadAndCacheLinks() {
         final Set<Integer> copiedElementUUIDs = sourceDestMap.keySet();
-        List<Object[]> allLinkedUuids = getDao()
+        List<ElementLink> allLinkedUuids = getDao()
                 .findByCallback(new FindLinksForElements(copiedElementUUIDs));
 
         existingLinksByCopiedElementId = new HashMap<>(copiedElementUUIDs.size());
-        for (Object[] entry : allLinkedUuids) {
-            Integer dependantId = (Integer) entry[0];
-            Integer dependencyId = (Integer) entry[1];
-            String typeId = (String) entry[2];
-            String comment = (String) entry[3];
+        for (ElementLink entry : allLinkedUuids) {
+            Integer dependantId = entry.dependantId;
+            Integer dependencyId = entry.dependencyId;
+            String typeId = entry.typeId;
+            String comment = entry.comment;
             if (copiedElementUUIDs.contains(dependantId)) {
                 cacheLink(dependantId, dependencyId, typeId, Direction.FROM_COPIED_ELEMENT,
                         comment);
@@ -260,12 +262,32 @@ public class CopyLinksCommand extends GenericCommand {
 
         @Override
         public Object doInHibernate(Session session) throws SQLException {
-            Query query = session
-                    .createQuery("select l.dependant.dbId,l.dependency.dbId,l.id.typeId,l.comment "
+            Set<ElementLink> links = new HashSet<>();
+            Query query1 = session
+                    .createQuery("select l.id.dependantId,l.id.dependencyId,l.id.typeId,l.comment "
                             + "from sernet.verinice.model.common.CnALink l "
-                            + "where l.dependant.dbId in (:ids) or l.dependency.dbId in (:ids)");
-            query.setParameterList("ids", sourceIds);
-            return query.list();
+                            + "where l.id.dependantId in (:ids)");
+            Query query2 = session
+                    .createQuery("select l.id.dependantId,l.id.dependencyId,l.id.typeId,l.comment "
+                            + "from sernet.verinice.model.common.CnALink l "
+                            + "where l.id.dependencyId in (:ids)");
+            CollectionUtil.partition(List.copyOf(sourceIds), IDao.QUERY_MAX_ITEMS_IN_LIST)
+                    .forEach(partition -> {
+                        Set.of(query1, query2).forEach(query -> {
+                            query.setParameterList("ids", partition);
+                            List<Object[]> result = query.list();
+                            links.addAll(result.stream().map(entry -> {
+                                Integer dependantId = (Integer) entry[0];
+                                Integer dependencyId = (Integer) entry[1];
+                                String typeId = (String) entry[2];
+                                String comment = (String) entry[3];
+                                return new ElementLink(dependantId, dependencyId, typeId, comment);
+                            }).collect(Collectors.toSet()));
+
+                        });
+
+                    });
+            return List.copyOf(links);
         }
     }
 
@@ -294,5 +316,57 @@ public class CopyLinksCommand extends GenericCommand {
 
     public enum CopyLinksMode {
         NONE, ALL, FROM_COMPENDIUM_TO_MODEL
+    }
+
+    private static final class ElementLink {
+        public ElementLink(Integer dependantId, Integer dependencyId, String typeId,
+                String comment) {
+            this.dependantId = dependantId;
+            this.dependencyId = dependencyId;
+            this.typeId = typeId;
+            this.comment = comment;
+        }
+
+        private final Integer dependantId;
+        private final Integer dependencyId;
+        private final String typeId;
+        private final String comment;
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((dependantId == null) ? 0 : dependantId.hashCode());
+            result = prime * result + ((dependencyId == null) ? 0 : dependencyId.hashCode());
+            result = prime * result + ((typeId == null) ? 0 : typeId.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            ElementLink other = (ElementLink) obj;
+            if (dependantId == null) {
+                if (other.dependantId != null)
+                    return false;
+            } else if (!dependantId.equals(other.dependantId))
+                return false;
+            if (dependencyId == null) {
+                if (other.dependencyId != null)
+                    return false;
+            } else if (!dependencyId.equals(other.dependencyId))
+                return false;
+            if (typeId == null) {
+                if (other.typeId != null)
+                    return false;
+            } else if (!typeId.equals(other.typeId))
+                return false;
+            return true;
+        }
     }
 }
