@@ -27,7 +27,13 @@ import java.util.concurrent.TimeUnit;
 /**
  * Inits as many workers as processors are available.
  *
- * <p>The max pooling size is <pre>2 * |procoessors|</pre></p>
+ * <p>
+ * The max pooling size is
+ * 
+ * <pre>
+ * 2 * |procoessors|
+ * </pre>
+ * </p>
  *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
@@ -35,18 +41,18 @@ public class VeriniceThreadPoolExecutor extends ThreadPoolExecutor {
 
     private static final int DEFAULT_NUMBER_OF_THREADS = Runtime.getRuntime().availableProcessors();
 
-    private static final String VERINICE_THREADS_POOL = "verinice-thread-pool"; 
+    private static final String VERINICE_THREADS_POOL = "verinice-thread-pool";
 
-    public VeriniceThreadPoolExecutor(String poolName, int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {
-        super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, new CustomNamedThreadGroupFactory(poolName));
+    public VeriniceThreadPoolExecutor(String poolName, int corePoolSize, int maximumPoolSize,
+            long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {
+        super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
+                new CustomNamedThreadGroupFactory(poolName));
     }
 
-    static public ThreadPoolExecutor newInstance() {
-        return new VeriniceThreadPoolExecutor(VERINICE_THREADS_POOL, DEFAULT_NUMBER_OF_THREADS, 2 * DEFAULT_NUMBER_OF_THREADS, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
-    }
-    
-    static public ThreadPoolExecutor newInstance(String poolName) {
-        return new VeriniceThreadPoolExecutor(poolName, DEFAULT_NUMBER_OF_THREADS, 2 * DEFAULT_NUMBER_OF_THREADS, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+    public static ThreadPoolExecutor newInstance() {
+        return new VeriniceThreadPoolExecutor(VERINICE_THREADS_POOL, DEFAULT_NUMBER_OF_THREADS,
+                2 * DEFAULT_NUMBER_OF_THREADS, 0L, TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<>());
     }
 
 }

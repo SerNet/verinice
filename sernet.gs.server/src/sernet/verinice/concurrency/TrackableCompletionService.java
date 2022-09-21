@@ -27,12 +27,12 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Wraps a Provides a {@link CompletionService} and a {@link ThreadPoolExecutor} 
+ * Wraps a Provides a {@link CompletionService} and a {@link ThreadPoolExecutor}
  * and provides convenient methods for handling tasks.
  * 
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-final public class TrackableCompletionService<V> implements ClosableCompletionService<V> {
+public final class TrackableCompletionService<V> implements ClosableCompletionService<V> {
 
     private final CompletionService<V> completionService;
 
@@ -40,18 +40,12 @@ final public class TrackableCompletionService<V> implements ClosableCompletionSe
 
     private TrackableCompletionService() {
         threadPoolExecutor = VeriniceThreadPoolExecutor.newInstance();
-        completionService = new ExecutorCompletionService<V>(threadPoolExecutor);
-    }
-
-    private TrackableCompletionService(String name) {
-        threadPoolExecutor = VeriniceThreadPoolExecutor.newInstance(name);
-        completionService = new ExecutorCompletionService<V>(threadPoolExecutor);
+        completionService = new ExecutorCompletionService<>(threadPoolExecutor);
     }
 
     /*
-     * @see
-     * java.util.concurrent.CompletionService#submit(java.util.concurrent.Callable
-     * )
+     * @see java.util.concurrent.CompletionService#submit(java.util.concurrent.
+     * Callable )
      */
     @Override
     public Future<V> submit(Callable<V> task) {
@@ -109,20 +103,7 @@ final public class TrackableCompletionService<V> implements ClosableCompletionSe
     }
 
     public static <V> ClosableCompletionService<V> newInstance() {
-        return new TrackableCompletionService<V>();
-    }
-
-    /**
-     * Returns new {@link ClosableCompletionService}.
-     * 
-     * @param name
-     *            all worker threads will have this as prefix.
-     */
-    public static <V> ClosableCompletionService<V> newInstance(String name) {
-        if (name == null) {
-            new TrackableCompletionService<>();
-        }
-        return new TrackableCompletionService<V>(name);
+        return new TrackableCompletionService<>();
     }
 
 }
