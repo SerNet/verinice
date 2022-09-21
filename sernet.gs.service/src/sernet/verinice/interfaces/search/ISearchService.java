@@ -67,11 +67,6 @@ public interface ISearchService {
     VeriniceSearchResult query(VeriniceQuery query, String elementTypeId);
 
     /**
-     * Creates the search index for all elements
-     */
-    void index();
-
-    /**
      * Deletes and creates the search index for all elements
      */
     void reindex();

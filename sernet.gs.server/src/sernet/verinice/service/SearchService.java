@@ -196,14 +196,6 @@ public class SearchService implements ISearchService {
     }
 
     /*
-     * @see sernet.verinice.interfaces.search.ISearchService#index()
-     */
-    @Override
-    public void index() {
-        searchIndexer.nonBlockingIndexing();
-    }
-
-    /*
      * @see sernet.verinice.interfaces.search.ISearchService#reindex()
      */
     @Override

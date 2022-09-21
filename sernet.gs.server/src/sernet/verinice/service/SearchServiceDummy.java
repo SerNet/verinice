@@ -56,15 +56,6 @@ public class SearchServiceDummy implements ISearchService {
     /*
      * (non-Javadoc)
      * 
-     * @see sernet.verinice.interfaces.search.ISearchService#index()
-     */
-    @Override
-    public void index() {
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.search.ISearchService#reindex()
      */
     @Override
