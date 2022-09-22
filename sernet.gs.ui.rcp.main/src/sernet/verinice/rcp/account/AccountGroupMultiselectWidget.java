@@ -127,8 +127,4 @@ public class AccountGroupMultiselectWidget extends MultiselectWidget<AccountGrou
             LOG.debug(accountGroup + " removed from preSelectedElements");
         }
     }
-
-    public void setEnabled(boolean enabled) {
-        group.getParent().setEnabled(enabled);
-    }
 }

@@ -60,7 +60,6 @@ public class GroupPage extends BaseWizardPage {
         setTitle(Messages.GroupPage_1);
         setMessage(Messages.GroupPage_2);
         groupWidget = new AccountGroupMultiselectWidget(composite, account);
-        groupWidget.setEnabled(!AccountWizard.isCurrentUserLocalAdmin());
     }
 
     @Override
