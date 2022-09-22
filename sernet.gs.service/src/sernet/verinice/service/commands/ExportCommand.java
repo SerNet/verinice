@@ -20,7 +20,6 @@
 package sernet.verinice.service.commands;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -35,10 +34,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipOutputStream;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.annotation.NonNull;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import de.sernet.sync.data.SyncData;
@@ -49,6 +48,7 @@ import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
 import de.sernet.sync.risk.Risk;
 import de.sernet.sync.sync.SyncRequest;
 import de.sernet.sync.sync.SyncRequest.SyncVnaSchemaVersion;
+import sernet.gs.service.CollectionUtil;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.VeriniceContext;
@@ -59,6 +59,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
+import sernet.verinice.interfaces.IDao;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
@@ -229,20 +230,25 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
     }
 
     private void loadElements(Integer scopeId) {
-        Thread loadElementsThread = new Thread(() -> {
-            DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class)
-                    .add(Restrictions.eq("scopeId", scopeId));
-            RetrieveInfo retrieveInfo = RetrieveInfo.getPropertyInstance();
-            retrieveInfo.configureCriteria(criteria);
-            @SuppressWarnings("unchecked")
-            List<CnATreeElement> elementsToCache = getDao().findByCriteria(criteria);
-            elementsToCache.forEach(element -> elementsByParentId
-                    .computeIfAbsent(element.getParentId(), parentId -> new LinkedList<>())
-                    .add(element));
-        }, "export-" + scopeId + "-load-elements");
+        @SuppressWarnings("unchecked")
+        List<Integer> elementIDs = getDao().findByCriteria(DetachedCriteria
+                .forClass(CnATreeElement.class).add(Restrictions.eq("scopeId", scopeId))
+                .setProjection(Projections.property("id")));
+        Thread loadElementsThread = new Thread(() -> CollectionUtil
+                .partition(elementIDs, IDao.QUERY_MAX_ITEMS_IN_LIST).forEach(partition -> {
+                    DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class)
+                            .add(Restrictions.in("id", partition));
+                    RetrieveInfo retrieveInfo = RetrieveInfo.getPropertyInstance();
+                    retrieveInfo.configureCriteria(criteria);
+                    @SuppressWarnings("unchecked")
+                    List<CnATreeElement> elementsToCache = getDao().findByCriteria(criteria);
+                    elementsToCache.forEach(element -> elementsByParentId
+                            .computeIfAbsent(element.getParentId(), parentId -> new LinkedList<>())
+                            .add(element));
+                }), "export-" + scopeId + "-load-elements");
         loadElementsThread.start();
 
-        loadLinks(scopeId);
+        loadLinks(elementIDs);
         try {
             loadElementsThread.join();
         } catch (InterruptedException e) {
@@ -262,18 +268,16 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
                 Collectors.groupingBy(attachment -> attachment.getCnATreeElement().getDbId()));
     }
 
-    private void loadLinks(Integer scopeId) {
-        DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class)
-                .add(Restrictions.eq("scopeId", scopeId));
-        RetrieveInfo retrieveInfo = new RetrieveInfo();
-        retrieveInfo.setLinksDown(true);
-        retrieveInfo.setLinksUp(true);
-        retrieveInfo.configureCriteria(criteria);
-        @SuppressWarnings("unchecked")
-        List<CnATreeElement> elementsWithLinks = getDao().findByCriteria(criteria);
-        elementsWithLinks.forEach(element -> {
-            linkSet.addAll(element.getLinksDown());
-            linkSet.addAll(element.getLinksUp());
+    private void loadLinks(List<Integer> elementIDs) {
+        @NonNull
+        IBaseDao<CnALink, Serializable> linkDao = getDaoFactory().getDAO(CnALink.class);
+        CollectionUtil.partition(elementIDs, IDao.QUERY_MAX_ITEMS_IN_LIST).forEach(partition -> {
+            DetachedCriteria criteria = DetachedCriteria.forClass(CnALink.class)
+                    .add(Restrictions.in("id.dependantId", partition));
+            linkSet.addAll(linkDao.findByCriteria(criteria));
+            criteria = DetachedCriteria.forClass(CnALink.class)
+                    .add(Restrictions.in("id.dependencyId", partition));
+            linkSet.addAll(linkDao.findByCriteria(criteria));
         });
     }
 
