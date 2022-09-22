@@ -30,14 +30,12 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.hibernate.Hibernate;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.CollectionUtil;
 import sernet.gs.service.RetrieveInfo;
-import sernet.gs.service.Retriever;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.connect.Entity;
@@ -54,7 +52,6 @@ import sernet.verinice.interfaces.validation.IValidationService;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.validation.CnAValidation;
-import sernet.verinice.service.commands.LoadElementById;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.LoadSubtreeIds;
 import sernet.verinice.service.commands.crud.LoadScopeElementsById;
@@ -420,20 +417,38 @@ public class ValidationService implements IValidationService {
     @Override
     public void createValidationsForSubTree(CnATreeElement elmt) throws CommandException {
         ServerInitializer.inheritVeriniceContextState();
-        if (Hibernate.isInitialized(elmt) || !elmt.isChildrenLoaded()) {
-            elmt = Retriever.retrieveElement(elmt, new RetrieveInfo().setChildren(true)
-                    .setChildrenProperties(true).setProperties(true));
-            elmt.setChildrenLoaded(true);
+        LoadSubtreeIds loadSubtreeIds = new LoadSubtreeIds(elmt);
+        loadSubtreeIds = getCommandService().executeCommand(loadSubtreeIds);
+        List<Integer> dbIdsOfSubtree = new ArrayList<>(loadSubtreeIds.getDbIdsOfSubtree());
+
+        createValidationsByIds(dbIdsOfSubtree);
+    }
+
+    private void createValidationsByIds(List<Integer> dbIdsOfSubtree) {
+        Collection<List<Integer>> partitions = CollectionUtil.partition(dbIdsOfSubtree,
+                IDao.QUERY_MAX_ITEMS_IN_LIST);
+        for (List<Integer> partitionIDs : partitions) {
+
+            DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class)
+                    .add(Restrictions.in("id", partitionIDs));
+            RetrieveInfo.getPropertyInstance().configureCriteria(criteria);
+
+            List<CnATreeElement> partitionElements = getCnaTreeElementDAO()
+                    .findByCriteria(criteria);
+            createValidationsForElements(partitionElements, loadValidations(partitionElements));
         }
-        createValidationForSingleElement(elmt);
-        for (CnATreeElement child : elmt.getChildren()) {
-            if (child.getScopeId() == null) {
-                LoadElementById<CnATreeElement> childReloader = new LoadElementById<>(
-                        child.getDbId());
-                childReloader = getCommandService().executeCommand(childReloader);
-                child = childReloader.getElement();
-            }
-            createValidationsForSubTree(child);
+    }
+
+    private void createValidationsForElements(List<CnATreeElement> elements,
+            List<CnAValidation> existingValidations) {
+        Map<Integer, List<CnAValidation>> existingValidationsByElementId = existingValidations
+                .stream().collect(Collectors.groupingBy(CnAValidation::getElmtDbId));
+        ServerInitializer.inheritVeriniceContextState();
+
+        for (CnATreeElement element : elements) {
+            createValidationForSingleElement(element, element.getEntityType(),
+                    existingValidationsByElementId.getOrDefault(element.getDbId(),
+                            Collections.emptyList()));
         }
     }
 
@@ -559,15 +574,7 @@ public class ValidationService implements IValidationService {
             existingValidations.addAll(loadValidations(partitionElements));
         }
 
-        Map<Integer, List<CnAValidation>> existingValidationsByElementId = existingValidations
-                .stream().collect(Collectors.groupingBy(CnAValidation::getElmtDbId));
-        ServerInitializer.inheritVeriniceContextState();
-
-        for (CnATreeElement element : elements) {
-            createValidationForSingleElement(element, element.getEntityType(),
-                    existingValidationsByElementId.getOrDefault(element.getDbId(),
-                            Collections.emptyList()));
-        }
+        createValidationsForElements(elements, existingValidations);
     }
 
     @SuppressWarnings("unchecked")
