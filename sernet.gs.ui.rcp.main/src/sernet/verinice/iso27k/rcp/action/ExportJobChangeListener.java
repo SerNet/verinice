@@ -24,16 +24,14 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Display;
 
 public class ExportJobChangeListener extends JobChangeAdapter {
-    Shell shell;
     String path;
     String title;
 
-    public ExportJobChangeListener(Shell shell, String path, String title) {
+    public ExportJobChangeListener(String path, String title) {
         super();
-        this.shell = shell;
         this.path = path;
         this.title = title;
     }
@@ -46,10 +44,9 @@ public class ExportJobChangeListener extends JobChangeAdapter {
     @Override
     public void done(IJobChangeEvent event) {
         if (Status.OK_STATUS.equals(event.getResult())) {
-            shell.getDisplay().asyncExec(() -> MessageDialog.openInformation(shell,
-                    Messages.getString("ExportAction_2"),
+            Display.getDefault().asyncExec(() -> MessageDialog.openInformation(
+                    Display.getDefault().getActiveShell(), Messages.getString("ExportAction_2"),
                     NLS.bind(Messages.getString("ExportAction_3"), new Object[] { title, path })));
         }
     }
-
 }

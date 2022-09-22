@@ -146,8 +146,7 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
                 }
             };
             exportJob.addJobChangeListener(
-                    new ExportJobChangeListener(Display.getDefault().getActiveShell(), filePath,
-                            dialog.getSelectedElement().getTitle()));
+                    new ExportJobChangeListener(filePath, dialog.getSelectedElement().getTitle()));
             JobScheduler.scheduleJob(exportJob, iSchedulingRule);
         }
     }
