@@ -21,15 +21,16 @@ package sernet.verinice.iso27k.rcp.action;
 
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.IJobChangeListener;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 
-public class ExportJobChangeListener implements IJobChangeListener {
-    Shell shell; 
+public class ExportJobChangeListener extends JobChangeAdapter {
+    Shell shell;
     String path;
     String title;
+
     public ExportJobChangeListener(Shell shell, String path, String title) {
         super();
         this.shell = shell;
@@ -37,49 +38,18 @@ public class ExportJobChangeListener implements IJobChangeListener {
         this.title = title;
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.runtime.jobs.IJobChangeListener#aboutToRun(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-     */
-    @Override
-    public void aboutToRun(IJobChangeEvent event) {}
-
-    /* (non-Javadoc)
-     * @see org.eclipse.core.runtime.jobs.IJobChangeListener#awake(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-     */
-    @Override
-    public void awake(IJobChangeEvent event) {}
-
-    /* (non-Javadoc)
-     * @see org.eclipse.core.runtime.jobs.IJobChangeListener#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+    /*
+     * @see
+     * org.eclipse.core.runtime.jobs.IJobChangeListener#done(org.eclipse.core.
+     * runtime.jobs.IJobChangeEvent)
      */
     @Override
     public void done(IJobChangeEvent event) {
-        if(Status.OK_STATUS.equals(event.getResult())) {
-            shell.getDisplay().asyncExec(new Runnable() {          
-                @Override
-                public void run() {
-                    MessageDialog.openInformation(shell, 
-                            Messages.getString("ExportAction_2"), 
-                            NLS.bind(Messages.getString("ExportAction_3"), new Object[] {title, path}));
-                }
-            });   
+        if (Status.OK_STATUS.equals(event.getResult())) {
+            shell.getDisplay().asyncExec(() -> MessageDialog.openInformation(shell,
+                    Messages.getString("ExportAction_2"),
+                    NLS.bind(Messages.getString("ExportAction_3"), new Object[] { title, path })));
         }
     }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.core.runtime.jobs.IJobChangeListener#running(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-     */
-    @Override
-    public void running(IJobChangeEvent event) {}
-    /* (non-Javadoc)
-     * @see org.eclipse.core.runtime.jobs.IJobChangeListener#scheduled(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-     */
-    @Override
-    public void scheduled(IJobChangeEvent event) {}
-    /* (non-Javadoc)
-     * @see org.eclipse.core.runtime.jobs.IJobChangeListener#sleeping(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-     */
-    @Override
-    public void sleeping(IJobChangeEvent event) {}
 
 }
