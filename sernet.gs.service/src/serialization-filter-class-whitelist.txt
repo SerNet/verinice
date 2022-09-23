@@ -7,6 +7,7 @@ java.lang.Byte
 java.lang.Double
 java.lang.Enum
 java.lang.Exception
+java.lang.Long
 java.lang.NoClassDefFoundError
 java.lang.Number
 java.lang.invoke.SerializedLambda
