@@ -18,10 +18,11 @@
 package sernet.verinice.service.commands;
 
 import java.io.Serializable;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -42,21 +43,25 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class LoadSubtreeIds extends GenericCommand {
 
-    private static final long serialVersionUID = 3225159241813826719L;
+    private static final long serialVersionUID = 3043489856797859790L;
 
-    private CnATreeElement element;
+    private Collection<CnATreeElement> elements;
 
     private Set<Integer> dbIdsOfSubtree = new HashSet<>();
 
     private String typeId;
 
-    public LoadSubtreeIds(CnATreeElement element) {
-        this(element, null);
+    public LoadSubtreeIds(List<CnATreeElement> elements) {
+        this(elements, null);
     }
 
-    public LoadSubtreeIds(CnATreeElement element, String typeId) {
+    public LoadSubtreeIds(CnATreeElement element) {
+        this(Set.of(element), null);
+    }
+
+    public LoadSubtreeIds(Collection<CnATreeElement> elements, String typeId) {
         super();
-        this.element = element;
+        this.elements = elements;
         this.typeId = typeId;
     }
 
@@ -65,14 +70,17 @@ public class LoadSubtreeIds extends GenericCommand {
      */
     @Override
     public void execute() {
-        validateElement(this.element);
+        this.elements.forEach(this::validateElement);
+        Set<Integer> scopeIDs = elements.stream().map(CnATreeElement::getScopeId)
+                .collect(Collectors.toSet());
 
-        List<Object[]> parentChildRelationships = loadDbAndParentIdsOfScope(element.getScopeId());
+        List<Object[]> parentChildRelationships = loadDbAndParentIdsOfScope(scopeIDs);
         Map<Object, List<Object[]>> childIdsByParentId = parentChildRelationships.stream()
                 .collect(Collectors.groupingBy(item -> (Integer) item[1]));
 
-        Set<Object[]> childrenOnCurrentLevel = Collections
-                .singleton(new Object[] { element.getDbId(), null, element.getTypeId() });
+        Set<Object[]> childrenOnCurrentLevel = elements.stream()
+                .map(element -> new Object[] { element.getDbId(), null, element.getTypeId() })
+                .collect(Collectors.toSet());
         while (!childrenOnCurrentLevel.isEmpty()) {
             Set<Object[]> childrenOnNextLevel = new HashSet<>();
             for (Object[] childData : childrenOnCurrentLevel) {
@@ -90,14 +98,14 @@ public class LoadSubtreeIds extends GenericCommand {
         }
     }
 
-    private List<Object[]> loadDbAndParentIdsOfScope(Integer scopeId) {
+    private List<Object[]> loadDbAndParentIdsOfScope(Collection<Integer> scopeIds) {
         @SuppressWarnings("unchecked")
         List<Object[]> parentChildRelationships = (List<Object[]>) getElementDAO()
                 .executeCallback(session -> {
                     Criteria criteria = session.createCriteria(CnATreeElement.class);
                     criteria.add(Restrictions.isNotNull("parentId"));
-                    if (scopeId != null) {
-                        criteria.add(Restrictions.eq("scopeId", scopeId));
+                    if (scopeIds.stream().allMatch(Objects::nonNull)) {
+                        criteria.add(Restrictions.in("scopeId", scopeIds));
                     }
 
                     ProjectionList projectionList = Projections.projectionList();
