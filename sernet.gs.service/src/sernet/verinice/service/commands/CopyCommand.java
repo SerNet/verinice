@@ -129,28 +129,25 @@ public class CopyCommand extends GenericCommand {
                 rootElementsToCopy = filterRoots(allElements);
             }
             elementsByParentId = new HashMap<>();
+            LoadSubtreeIds loadSubtreeIds = new LoadSubtreeIds(rootElementsToCopy);
+            Set<Integer> subTreeIds = getCommandService().executeCommand(loadSubtreeIds)
+                    .getDbIdsOfSubtree();
 
-            for (CnATreeElement cnATreeElement : rootElementsToCopy) {
-                LoadSubtreeIds loadSubtreeIds = new LoadSubtreeIds(cnATreeElement);
-                Set<Integer> subTreeIds = getCommandService().executeCommand(loadSubtreeIds)
-                        .getDbIdsOfSubtree();
-                CollectionUtil.partition(new ArrayList<>(subTreeIds), IDao.QUERY_MAX_ITEMS_IN_LIST)
-                        .stream().forEach(partition -> {
-                            DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class)
-                                    .add(Restrictions.in("dbId", partition));
-                            RetrieveInfo.getPropertyInstance().configureCriteria(crit);
-                            List<CnATreeElement> allElementsInPartition = dao.findByCriteria(crit);
-                            Map<Integer, List<CnATreeElement>> allElementsInPartitionByParentId = allElementsInPartition
-                                    .stream()
-                                    .collect(Collectors.groupingBy(CnATreeElement::getParentId));
-                            allElementsInPartitionByParentId.forEach(
-                                    (parentId, childrenInCurrentPartition) -> elementsByParentId
-                                            .merge(parentId, childrenInCurrentPartition,
-                                                    (l1, l2) -> Stream
-                                                            .concat(l1.stream(), l2.stream())
-                                                            .collect(Collectors.toList())));
-                        });
-            }
+            CollectionUtil.partition(new ArrayList<>(subTreeIds), IDao.QUERY_MAX_ITEMS_IN_LIST)
+                    .stream().forEach(partition -> {
+                        DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class)
+                                .add(Restrictions.in("dbId", partition));
+                        RetrieveInfo.getPropertyInstance().configureCriteria(crit);
+                        List<CnATreeElement> allElementsInPartition = dao.findByCriteria(crit);
+                        Map<Integer, List<CnATreeElement>> allElementsInPartitionByParentId = allElementsInPartition
+                                .stream()
+                                .collect(Collectors.groupingBy(CnATreeElement::getParentId));
+                        allElementsInPartitionByParentId.forEach(
+                                (parentId, childrenInCurrentPartition) -> elementsByParentId.merge(
+                                        parentId, childrenInCurrentPartition,
+                                        (l1, l2) -> Stream.concat(l1.stream(), l2.stream())
+                                                .collect(Collectors.toList())));
+                    });
 
             newElements = new ArrayList<>(rootElementsToCopy.size());
             groupToPasteTo = getDao().findByUuid(uuidGroup,

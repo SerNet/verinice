@@ -64,31 +64,33 @@ public class ValidateLinksInSubtrees extends GenericCommand {
         List<CnATreeElement> elements = dao.findByCriteria(criteria);
 
         try {
-            for (CnATreeElement element : elements) {
-                LoadSubtreeIds loadSubtreeIds = new LoadSubtreeIds(element);
-                Set<Integer> subTreeIds = getCommandService().executeCommand(loadSubtreeIds)
-                        .getDbIdsOfSubtree();
+            LoadSubtreeIds loadSubtreeIds = new LoadSubtreeIds(elements);
+            Set<Integer> subTreeIds = getCommandService().executeCommand(loadSubtreeIds)
+                    .getDbIdsOfSubtree();
 
-                // Process data in partitions due to Oracle limitations
-                this.invalidLinks = CollectionUtil
-                        .partition(new ArrayList<>(subTreeIds), IDao.QUERY_MAX_ITEMS_IN_LIST)
-                        .stream().flatMap(partition -> {
-                            DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class)
-                                    .add(Restrictions.in("dbId", partition));
-                            List<CnATreeElement> subtreeElements = dao.findByCriteria(crit);
-                            return subtreeElements.stream().flatMap(this::getInvalidLinks);
-                        }).collect(Collectors.toUnmodifiableSet());
+            // Process data in partitions due to Oracle limitations
+            this.invalidLinks = CollectionUtil
+                    .partition(new ArrayList<>(subTreeIds), IDao.QUERY_MAX_ITEMS_IN_LIST).stream()
+                    .flatMap(partition -> {
+                        DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class)
+                                .add(Restrictions.in("dbId", partition));
+                        List<CnATreeElement> subtreeElements = dao.findByCriteria(crit);
+                        return subtreeElements.stream();
+                    }).flatMap(this::getInvalidLinks).collect(Collectors.toUnmodifiableSet());
 
-            }
         } catch (CommandException e) {
             throw new RuntimeCommandException(e);
         }
     }
 
     private Stream<CnALink> getInvalidLinks(CnATreeElement element) {
-        return Stream.concat(element.getLinksUp().stream(), element.getLinksDown().stream())
-                .filter(link -> !LinkValidator.isRelationValid(link.getDependant(),
-                        link.getDependency(), link.getRelationId()))
+        return Stream
+                .concat(element.getLinksUp().stream()
+                        .filter(link -> !LinkValidator.isRelationValid(link.getDependant(), element,
+                                link.getRelationId())),
+                        element.getLinksDown().stream()
+                                .filter(link -> !LinkValidator.isRelationValid(element,
+                                        link.getDependency(), link.getRelationId())))
                 .map(link -> {
                     // initialize dependant and dependency title so we
                     // can use them in a potential error message
