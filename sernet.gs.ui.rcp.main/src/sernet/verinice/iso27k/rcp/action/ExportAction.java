@@ -40,6 +40,7 @@ import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -113,7 +114,8 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
      */
     @Override
     public void doRun(IAction action) {
-        dialog = new ExportDialog(Display.getCurrent().getActiveShell(), selection);
+        Shell shell = Display.getCurrent().getActiveShell();
+        dialog = new ExportDialog(shell, selection);
         if (dialog.open() == Dialog.OK) {
             if (dialog.getEncryptOutput() && Window.CANCEL == openEncryptionDialog()) {
                 return;
@@ -145,9 +147,8 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
                     return status;
                 }
             };
-            exportJob.addJobChangeListener(
-                    new ExportJobChangeListener(Display.getDefault().getActiveShell(), filePath,
-                            dialog.getSelectedElement().getTitle()));
+            exportJob.addJobChangeListener(new ExportJobChangeListener(shell, filePath,
+                    dialog.getSelectedElement().getTitle()));
             JobScheduler.scheduleJob(exportJob, iSchedulingRule);
         }
     }
