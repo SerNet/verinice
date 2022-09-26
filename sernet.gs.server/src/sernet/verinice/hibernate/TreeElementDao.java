@@ -200,29 +200,34 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         return mergedElement;
     }
 
-    public T merge(T entity, boolean fireChange, boolean updateIndex) {
+    public Collection<T> mergeAll(Collection<T> entities, boolean fireChange, boolean updateIndex) {
         if (LOG_INHERIT.isDebug()) {
             LOG_INHERIT.debug("merge...");
         }
-
-        T mergedElement = super.merge(entity);
-
-        if (mergedElement instanceof CnATreeElement) {
-            CnATreeElement element = (CnATreeElement) mergedElement;
-            if (updateIndex) {
-                index(element);
+        ArrayList<T> result = new ArrayList<T>(entities.size());
+        Set<CnATreeElement> elementsToIndex = new HashSet<>(entities.size());
+        for (T entity : entities) {
+            T mergedElement = super.merge(entity);
+            result.add(mergedElement);
+            if (mergedElement instanceof CnATreeElement) {
+                CnATreeElement element = (CnATreeElement) mergedElement;
+                if (updateIndex) {
+                    elementsToIndex.add(element);
+                }
+                if (fireChange) {
+                    notifyChangedElement(element);
+                }
             }
-            if (fireChange) {
-                notifyChangedElement(element);
+            if (fireChange && mergedElement instanceof CnALink) {
+                CnALink link = (CnALink) mergedElement;
+                notifyChangedElement(link.getDependency());
             }
         }
 
-        if (fireChange && mergedElement instanceof CnALink) {
-            CnALink link = (CnALink) mergedElement;
-            notifyChangedElement(link.getDependency());
+        if (elementsToIndex.isEmpty()) {
+            index(elementsToIndex);
         }
-
-        return mergedElement;
+        return result;
     }
 
     protected void index(CnATreeElement element) {

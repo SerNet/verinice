@@ -34,7 +34,11 @@ public interface IBaseDao<T, ID extends Serializable> extends IDao<T, ID> {
         return merge(entity, fireUpdates, true);
     }
 
-    T merge(T entity, boolean fireUpdates, boolean updateIndex);
+    default T merge(T entity, boolean fireUpdates, boolean updateIndex) {
+        return mergeAll(Set.of(entity), fireUpdates, updateIndex).iterator().next();
+    }
+
+    Collection<T> mergeAll(Collection<T> entities, boolean fireUpdates, boolean updateIndex);
 
     /**
      * @deprecated use {@link #retrieve(Serializable, IRetrieveInfo)}
