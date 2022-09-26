@@ -264,13 +264,16 @@ public final class CnAElementHome {
         return command.getLink();
     }
 
-    public void remove(CnATreeElement element) throws CommandException {
+    public void remove(Collection<CnATreeElement> elements) throws CommandException {
         if (log.isDebugEnabled()) {
-            log.debug("Deleting element, uuid: " + element.getUuid()); //$NON-NLS-1$
+            elements.forEach(element -> {
+                log.debug("Deleting element, uuid: " + element.getUuid()); //$NON-NLS-1$
+            });
         }
-
-        RemoveElement command = new RemoveElement(element);
-        deleteValidations(element);
+        RemoveElement command = new RemoveElement(elements);
+        for (CnATreeElement element : elements) {
+            deleteValidations(element);
+        }
         getCommandService().executeCommand(command);
     }
 

@@ -21,8 +21,8 @@ package sernet.gs.ui.rcp.main.bsi.actions;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -242,15 +242,8 @@ public class DeleteHandler extends RightsEnabledHandler {
                 try {
                     Activator.inheritVeriniceContextState();
                     monitor.beginTask(Messages.DeleteActionDelegate_11, deleteList.size());
-                    for (Iterator<CnATreeElement> iter = deleteList.iterator(); iter.hasNext();) {
-                        sel = iter.next();
-
-                        CnATreeElement el = (CnATreeElement) sel;
-                        monitor.setTaskName(Messages.DeleteActionDelegate_14);
-
-                        removeElement(el);
-                        monitor.worked(1);
-                    }
+                    monitor.setTaskName(Messages.DeleteActionDelegate_14);
+                    removeElements(deleteList);
                 } catch (DataIntegrityViolationException dive) {
                     deleteElementWithAccountAsync((CnATreeElement) sel);
                 } catch (Exception e) {
@@ -319,13 +312,16 @@ public class DeleteHandler extends RightsEnabledHandler {
                 return;
             }
         }
-        removeElement(element);
+        removeElements(Set.of(element));
     }
 
-    protected static void removeElement(CnATreeElement elementToRemove) throws CommandException {
-        CnAElementHome.getInstance().remove(elementToRemove);
-        CnAElementFactory.getModel(elementToRemove).databaseChildRemoved(elementToRemove);
-        CnAElementFactory.getInstance().getCatalogModel().databaseChildRemoved(elementToRemove);
+    protected static void removeElements(Collection<CnATreeElement> elementsToRemove)
+            throws CommandException {
+        CnAElementHome.getInstance().remove(elementsToRemove);
+        elementsToRemove.forEach(elementToRemove -> {
+            CnAElementFactory.getModel(elementToRemove).databaseChildRemoved(elementToRemove);
+            CnAElementFactory.getInstance().getCatalogModel().databaseChildRemoved(elementToRemove);
+        });
     }
 
     protected static boolean loadConfiguration(CnATreeElement elmt) {
@@ -392,12 +388,8 @@ public class DeleteHandler extends RightsEnabledHandler {
             try {
                 Activator.inheritVeriniceContextState();
                 monitor.beginTask(Messages.DeleteActionDelegate_14, IProgressMonitor.UNKNOWN);
-                boolean reloadBpModel = false;
-                for (Iterator<CnATreeElement> iter = deleteList.iterator(); iter.hasNext();) {
-                    sel = iter.next();
-                    removeElement(sel);
-                    reloadBpModel |= sel instanceof IBpElement;
-                }
+                boolean reloadBpModel = deleteList.stream().anyMatch(IBpElement.class::isInstance);
+                removeElements(deleteList);
                 if (reloadBpModel) {
                     BpModel bpModel = CnAElementFactory.getInstance().getBpModel();
                     bpModel.modelReload(bpModel);
