@@ -320,7 +320,7 @@ public class ElementManager {
      */
     public CnATreeElement loadElementWithChildren(CnATreeElement element) throws CommandException {
         RetrieveInfo ri = new RetrieveInfo();
-        ri.setChildren(true).setChildrenProperties(true);
+        ri.setChildren(true).setChildrenProperties(true).setGrandchildren(true);
         if (cache.getCachedObject(element) == null) {
             // no element found in cache, load properties AND children
             ri.setProperties(true);
@@ -342,7 +342,7 @@ public class ElementManager {
     }
 
     private CacheObject addChildrenToCache(CnATreeElement element,
-            Map<String, Boolean> hasChildrenMap) {
+            Map<Integer, Boolean> hasChildrenMap) {
         CacheObject cachedElement = cache.getCachedObject(element);
         if (cachedElement == null) {
             // add retrived element to cache
@@ -357,7 +357,7 @@ public class ElementManager {
         }
         // add children to cache
         for (CnATreeElement child : element.getChildren()) {
-            ChildrenExist hasChildren = ChildrenExist.convert(hasChildrenMap.get(child.getUuid()));
+            ChildrenExist hasChildren = ChildrenExist.convert(hasChildrenMap.get(child.getDbId()));
             cache.addObject(new CacheObject(child, false, hasChildren));
         }
         return cachedElement;

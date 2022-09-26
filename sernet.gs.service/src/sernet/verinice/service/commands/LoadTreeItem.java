@@ -20,7 +20,7 @@
 package sernet.verinice.service.commands;
 
 import java.io.Serializable;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -50,7 +50,7 @@ public class LoadTreeItem extends GenericCommand {
     /*
      * Key: uuid Value: true if element with uuid has children, false if not
      */
-    private Map<String, Boolean> hasChildrenMap;
+    private Map<Integer, Boolean> hasChildrenMap;
 
     public LoadTreeItem(Integer dbId, RetrieveInfo ri) {
         this(dbId, ri, (Map<String, Object>) null);
@@ -70,17 +70,17 @@ public class LoadTreeItem extends GenericCommand {
         element = dao.retrieve(dbId, ri);
         ElementFilter.filterChildrenOfElement(element, parameter);
 
-        hasChildrenMap = new Hashtable<String, Boolean>();
+        hasChildrenMap = new HashMap<>();
         Set<CnATreeElement> children = element.getChildren();
-        hasChildrenMap.put(element.getUuid(), (children != null && children.size() > 0));
+        hasChildrenMap.put(element.getDbId(), (children != null && !children.isEmpty()));
         if (children != null) {
             for (CnATreeElement child : children) {
                 Set<CnATreeElement> grandchildren = child.getChildren();
                 // calling grandchildren.size() is starting the hibernate
                 // initialization of set grand children
                 // if grand children is set to false in RetrieveInfo
-                hasChildrenMap.put(child.getUuid(),
-                        (grandchildren != null && grandchildren.size() > 0));
+                hasChildrenMap.put(child.getDbId(),
+                        (grandchildren != null && !grandchildren.isEmpty()));
             }
         }
     }
@@ -96,12 +96,12 @@ public class LoadTreeItem extends GenericCommand {
      * Returns a map to determine if element have children. Map contains one
      * entry per child of element.
      * 
-     * Key of the map: uuid Value of the map:: true if element with uuid has
+     * Key of the map: id Value of the map:: true if element with id has
      * children, false if not
      * 
      * @return the hasChildrenMap
      */
-    public Map<String, Boolean> getHasChildrenMap() {
+    public Map<Integer, Boolean> getHasChildrenMap() {
         return hasChildrenMap;
     }
 
