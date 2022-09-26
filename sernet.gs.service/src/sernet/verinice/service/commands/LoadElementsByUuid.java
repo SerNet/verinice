@@ -22,14 +22,21 @@ package sernet.verinice.service.commands;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
+import sernet.gs.service.CollectionUtil;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.TimeFormatter;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IDao;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -80,13 +87,23 @@ public class LoadElementsByUuid<T extends CnATreeElement> extends GenericCommand
             log.debug("execute() called ..."); //$NON-NLS-1$
         }
         elements = new HashSet<>(uuids.size());
-        for (String uuid : uuids) {
-            T element = getDao().findByUuid(uuid, ri);
-            if (element != null) {
+        CollectionUtil.partition(List.copyOf(uuids), IDao.QUERY_MAX_ITEMS_IN_LIST)
+                .forEach(partition -> {
+                    DetachedCriteria crit = DetachedCriteria.forClass(getDao().getType())
+                            .add(Restrictions.in("uuid", partition));
+                    ri.configureCriteria(crit);
+                    List result = getDao().findByCriteria(crit);
+                    elements.addAll(result);
 
-                elements.add(element);
-            } else {
-                log.warn("element " + uuid + " not found!");
+                });
+
+        if (elements.size() != uuids.size()) {
+            Map<String, T> elementsByUuid = elements.stream()
+                    .collect(Collectors.toMap(CnATreeElement::getUuid, Function.identity()));
+            for (String uuid : uuids) {
+                if (!elementsByUuid.containsKey(uuid)) {
+                    log.warn("element " + uuid + " not found!");
+                }
             }
         }
 
