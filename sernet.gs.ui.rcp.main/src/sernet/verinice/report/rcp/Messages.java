@@ -55,6 +55,8 @@ public class Messages extends NLS {
     public static String GenerateReportDialog_3;
     public static String GenerateReportDialog_30;
     public static String GenerateReportDialog_31;
+    public static String GenerateReportDialog_30_many;
+    public static String GenerateReportDialog_31_many;
     public static String GenerateReportDialog_32;
     public static String GenerateReportDialog_33;
     public static String GenerateReportDialog_34;
@@ -96,6 +98,15 @@ public class Messages extends NLS {
     public static String ErrorOpeningGenereratedReport;
     public static String ReportMetaDataContext;
     public static String GenerateReportDialog_lblclassification;
+    public static String GenerateReportDialog_no_common_format;
+    public static String GenerateReportDialog_no_report_selected;
+
+    public static String GenerateReportDialog_select_directory_file_exist_message;
+    public static String GenerateReportDialog_select_directory_file_exist_title;
+    public static String GenerateReportDialog_select_directory_message;
+    public static String GenerateReportDialog_select_directory_title;
+    public static String MultipleSelectionCombo_cutted_expression;
+    public static String MultipleSelectionCombo_separator;
 
     static {
         // initialize resource bundle

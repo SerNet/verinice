@@ -4,15 +4,19 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -35,6 +39,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
@@ -66,9 +71,6 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.model.report.ReportTemplateMetaData.ReportContext;
 import sernet.verinice.service.commands.crud.LoadCnAElementByType;
 import sernet.verinice.service.commands.crud.LoadCnATreeElementTitles;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 
 public class GenerateReportDialog extends TitleAreaDialog {
     private DataBindingContext bindingContext = new DataBindingContext();
@@ -84,7 +86,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     private CnATreeElement selectedScope;
 
-    private ComboViewer comboReportType;
+    private MultipleSelectionCombo<ReportTemplateMetaData> reportSelector;
 
     private ComboViewer comboOutputFormat;
 
@@ -94,7 +96,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     private IOutputFormat chosenOutputFormat;
 
-    private ReportTemplateMetaData chosenReportMetaData;
+    private List<ReportTemplateMetaData> chosenReportsMetaData = new ArrayList<>();
 
     private Integer rootElement;
 
@@ -126,7 +128,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     private IReportSupplier supplier;
 
-    private WritableValue<String> classificationHint = new WritableValue<String>();
+    private WritableValue<String> classificationHint = new WritableValue<>();
+    private WritableValue<String> scopeName = new WritableValue<>();
 
     public GenerateReportDialog(Shell parentShell) {
         super(parentShell);
@@ -236,29 +239,25 @@ public class GenerateReportDialog extends TitleAreaDialog {
         gdLabelReportType.widthHint = 190;
         labelReportType.setLayoutData(gdLabelReportType);
 
-        comboReportType = new ComboViewer(reportGroup, SWT.READ_ONLY);
-        comboReportType.getCombo()
-                .setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-        comboReportType.setContentProvider(ArrayContentProvider.getInstance());
-        comboReportType.setLabelProvider(new LabelProvider() {
+        reportSelector = new MultipleSelectionCombo<>(reportGroup, SWT.READ_ONLY);
+
+        reportSelector.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+        reportSelector.setLabelProvider(new LabelProvider() {
             @Override
             public String getText(Object element) {
                 return ((ReportTemplateMetaData) element).getDecoratedOutputname();
             }
         });
-        comboReportType.setInput(reportTemplates);
-        comboReportType.addSelectionChangedListener(e -> {
-            if (reportTemplates.length > 0) {
-                chosenReportMetaData = (ReportTemplateMetaData) e.getStructuredSelection()
-                        .getFirstElement();
+        reportSelector.setInput(reportTemplates);
+        reportSelector.setSelectionChangedConsumer(chosenTemplates -> {
+            chosenReportsMetaData = chosenTemplates;
+            if (!chosenTemplates.isEmpty()) {
                 chosenReportType = reportTypes[0];
+                if (!isContextMenuCall()) {
+                    setupComboScopes(chosenTemplates.get(0).getContext());
+                }
             }
             setupComboOutputFormatContent();
-            if (!isContextMenuCall() && !e.getSelection().isEmpty()) {
-                setupComboScopes(
-                        ((ReportTemplateMetaData) e.getStructuredSelection().getFirstElement())
-                                .getContext());
-            }
         });
 
         Label labelScope = new Label(reportGroup, SWT.NULL);
@@ -276,6 +275,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 selectScope();
             }
         });
+        bindingContext.bindValue(WidgetProperties.text().observe(scopeCombo), scopeName, null,
+                null);
 
         Label labelOutputFormat = new Label(reportGroup, SWT.NONE);
         GridData gdLabelOutputFormat = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -294,19 +295,22 @@ public class GenerateReportDialog extends TitleAreaDialog {
         comboOutputFormat.getCombo()
                 .setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
         comboOutputFormat.addSelectionChangedListener(e -> {
-            if (chosenReportMetaData != null) {
+            if (!chosenReportsMetaData.isEmpty()) {
                 chosenOutputFormat = (IOutputFormat) e.getStructuredSelection().getFirstElement();
             }
         });
-        
+
         Label labelClassification = new Label(reportGroup, SWT.NONE);
         labelClassification.setText(Messages.GenerateReportDialog_lblclassification);
-        
+
         ComboViewer comboClassification = new ComboViewer(reportGroup, SWT.NONE);
-        comboClassification.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+        comboClassification.getCombo()
+                .setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
         comboClassification.setContentProvider(ArrayContentProvider.getInstance());
-        comboClassification.setInput(ServiceComponent.getDefault().getReportService().getClassificationHints());
-        bindingContext.bindValue(WidgetProperties.text().observe(comboClassification.getCombo()), classificationHint, null, null);
+        comboClassification.setInput(
+                ServiceComponent.getDefault().getReportService().getClassificationHints());
+        bindingContext.bindValue(WidgetProperties.text().observe(comboClassification.getCombo()),
+                classificationHint, null, null);
 
         if (!isContextMenuCall()) {
             Button reset = new Button(reportGroup, SWT.RIGHT);
@@ -317,8 +321,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
                     rootElement = null;
                     rootElements = null;
                     setupComboScopes(ReportContext.UNSPECIFIED);
-                    comboReportType.resetFilters();
-                    comboReportType.setSelection(StructuredSelection.EMPTY);
+                    reportSelector.resetFilters();
+                    reportSelector.setSelectedElements(new Object[] {});
                     comboOutputFormat.setSelection(StructuredSelection.EMPTY);
                 }
             });
@@ -381,7 +385,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
         extensionList.add("*.*"); //$NON-NLS-1$
         dlg.setFilterExtensions(extensionList.toArray(new String[extensionList.size()]));
-        dlg.setFileName(getDefaultOutputFilename());
+        dlg.setFileName(getDefaultOutputFilename(chosenReportsMetaData.get(0)));
         dlg.setOverwrite(true);
         String path = defaultFolder;
 
@@ -442,9 +446,10 @@ public class GenerateReportDialog extends TitleAreaDialog {
                         Messages.GenerateReportDialog_16 + elmt.getDbId() + ": " + elmt.getTitle()); // $NON-NLS-2$ //$NON-NLS-1$
             }
         }
-        boolean reportSupportsMultipleRootObjects = chosenReportMetaData != null
-                && chosenReportMetaData.isMultipleRootObjects();
-        if (reportSupportsMultipleRootObjects) {
+        boolean reportsSupportMultipleRootObjects = !chosenReportsMetaData.isEmpty()
+                && chosenReportsMetaData.stream()
+                        .allMatch(ReportTemplateMetaData::isMultipleRootObjects);
+        if (reportsSupportMultipleRootObjects) {
             scopeTitles.add(0, Messages.GenerateReportDialog_37);
         }
 
@@ -454,7 +459,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
             boolean elementFound = false;
             for (int i = 0; i < scopes.size(); i++) {
                 if (scopes.get(i).getDbId().equals(rootElement)) {
-                    scopeCombo.select(reportSupportsMultipleRootObjects ? i + 1 : i);
+                    scopeCombo.select(reportsSupportMultipleRootObjects ? i + 1 : i);
                     elementFound = true;
                     break;
                 }
@@ -463,7 +468,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 scopeCombo.clearSelection();
             }
         } else if (rootElements != null) {
-            if (reportSupportsMultipleRootObjects) {
+            if (reportsSupportMultipleRootObjects) {
                 scopeCombo.select(0);
             } else {
                 scopeCombo.clearSelection();
@@ -472,29 +477,47 @@ public class GenerateReportDialog extends TitleAreaDialog {
     }
 
     private void setupComboOutputFormatContent() {
+        setErrorMessage(null);
         if (reportTemplates.length > 0) {
-            if (chosenReportMetaData != null) {
-                List<IOutputFormat> supportedOutputFormats = Stream
-                        .of(chosenReportMetaData.getOutputFormats())
+            if (!chosenReportsMetaData.isEmpty()) {
+                List<Set<String>> formatNames = chosenReportsMetaData.stream()
+                        .map(r -> Stream.of(r.getOutputFormats())
+                                .map(getDepositService()::getOutputFormat).map(IOutputFormat::getId)
+                                .collect(Collectors.toSet()))
+                        .collect(Collectors.toList());
+
+                Set<String> allNames = formatNames.stream().flatMap(Collection::stream)
+                        .collect(Collectors.toSet());
+                formatNames.forEach(allNames::retainAll);
+                List<IOutputFormat> availableFormats = Stream
+                        .of(chosenReportsMetaData.get(0).getOutputFormats())
+                        .filter(t -> allNames.contains(t.name().toLowerCase()))
                         .map(getDepositService()::getOutputFormat).collect(Collectors.toList());
-                comboOutputFormat.setInput(supportedOutputFormats);
-                comboOutputFormat
-                        .setSelection(new StructuredSelection(supportedOutputFormats.get(0)));
+
+                comboOutputFormat.setInput(availableFormats);
+                if (!availableFormats.isEmpty()) {
+                    comboOutputFormat
+                            .setSelection(new StructuredSelection(availableFormats.get(0)));
+                } else {
+                    setErrorMessage(Messages.GenerateReportDialog_no_common_format);
+                }
+            } else {
+                comboOutputFormat.setInput(Collections.emptyList());
             }
         } else {
             showNoReportsExistant();
         }
     }
 
-    private String getDefaultOutputFilename() {
+    public String getDefaultOutputFilename(ReportTemplateMetaData chosenReportMetaData) {
         String outputFileName = chosenReportMetaData.getOutputname();
         if (outputFileName == null || outputFileName.isEmpty()) {
             outputFileName = "unknown"; //$NON-NLS-1$
         }
         StringBuilder sb = new StringBuilder(outputFileName);
-        String scopeName = StringUtil.convertToFileName(scopeCombo.getText());
-        if (scopeName != null && !scopeName.isEmpty()) {
-            sb.append("_").append(scopeName); //$NON-NLS-1$
+        String localScopeName = StringUtil.convertToFileName(this.scopeName.doGetValue());
+        if (localScopeName != null && !localScopeName.isEmpty()) {
+            sb.append("_").append(localScopeName); //$NON-NLS-1$
         }
         if (useDate) {
             String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date()); //$NON-NLS-1$
@@ -516,6 +539,17 @@ public class GenerateReportDialog extends TitleAreaDialog {
                         Messages.GenerateReportDialog_6);
                 return;
             }
+            if (chosenReportsMetaData.isEmpty()) {
+                MessageDialog.openWarning(getShell(), Messages.GenerateReportDialog_5,
+                        Messages.GenerateReportDialog_no_report_selected);
+                return;
+            }
+            if (getErrorMessage() != null) {
+                MessageDialog.openWarning(getShell(), Messages.GenerateReportDialog_5,
+                        getErrorMessage());
+                return;
+            }
+
             List<Integer> scopeIds = collectScopeIds();
             IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
             boolean dontShowValidationWarning = preferenceStore
@@ -537,16 +571,43 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 }
             }
 
-            String f = selectOutputFile();
-            if (f != null) {
-                outputFile = new File(f);
-                super.okPressed();
+            if (chosenReportsMetaData.size() == 1) {
+                String f = selectOutputFile();
+                if (f != null) {
+                    outputFile = new File(f);
+                    super.okPressed();
+                }
+            } else {
+                if (selectOutputDirectory()) {
+                    super.okPressed();
+                }
             }
         } catch (Exception e) {
             LOG.error("Error while creating report.", e); //$NON-NLS-1$
             MessageDialog.openError(getShell(), "Error", //$NON-NLS-1$
                     "An error occurred while creating report."); //$NON-NLS-1$
         }
+    }
+
+    private boolean selectOutputDirectory() {
+        DirectoryDialog directoryDialog = new DirectoryDialog(getShell());
+        directoryDialog.setText(Messages.GenerateReportDialog_select_directory_title);
+        directoryDialog.setMessage(Messages.GenerateReportDialog_select_directory_message);
+        String dir = directoryDialog.open();
+        if (dir != null) {
+            outputFile = new File(dir);
+            Set<String> listFiles = Arrays.asList(outputFile.listFiles()).stream()
+                    .map(File::getName).collect(Collectors.toSet());
+            if (chosenReportsMetaData.stream()
+                    .anyMatch(rtmd -> listFiles.contains(getDefaultOutputFilename(rtmd)))
+                    && !MessageDialog.openConfirm(getShell(),
+                            Messages.GenerateReportDialog_select_directory_file_exist_title,
+                            Messages.GenerateReportDialog_select_directory_file_exist_message)) {
+                return selectOutputDirectory();
+            }
+            return true;
+        }
+        return false;
     }
 
     private List<Integer> collectScopeIds() {
@@ -591,8 +652,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
         return chosenReportType;
     }
 
-    public ReportTemplateMetaData getReportMetaData() {
-        return chosenReportMetaData;
+    public List<ReportTemplateMetaData> getChosenReportsMetaData() {
+        return chosenReportsMetaData;
     }
 
     /**
@@ -725,7 +786,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
      */
     private void selectScope() {
         int s = scopeCombo.getSelectionIndex();
-        if (chosenReportMetaData != null && chosenReportMetaData.isMultipleRootObjects()) {
+        if (!chosenReportsMetaData.isEmpty() && chosenReportsMetaData.stream()
+                .allMatch(ReportTemplateMetaData::isMultipleRootObjects)) {
             if (s == 0) {
                 Integer[] roots = new Integer[scopes.size()];
                 for (int i = 0; i < scopes.size(); i++) {
@@ -753,13 +815,14 @@ public class GenerateReportDialog extends TitleAreaDialog {
         }
         List<ReportContext> validDomains = ReportContext.getValidContexts(element);
 
-        comboReportType.setFilters(new ViewerFilter() {
+        reportSelector.setFilters(new ViewerFilter() {
             @Override
             public boolean select(Viewer viewer, Object parentElement, Object element) {
                 ReportContext context = ((ReportTemplateMetaData) element).getContext();
                 return validDomains.contains(context);
             }
         });
+        reportSelector.setSelectedElements(new Object[] {});
     }
 
     /**

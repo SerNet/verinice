@@ -6,7 +6,7 @@ Element-Type: context
 Element-Version: 2.0
 Id: _tlZuIIx1Eei2UKUDmonytQ
 Runtime-Version: 2.5.3.202205021448
-Save-Time: 9/12/22, 4:13 PM
+Save-Time: 10/4/22, 4:35 PM
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
 Content-Type: text/ecl
@@ -54,51 +54,53 @@ if [ get-file [report-result-file $testname] | get exists]
 }
 
 proc "gen-rep-com" [val report] [val view] [val object] [val qualifier ""] [val suffix ".pdf"]{
-	get-view $view | get-tree | select $object | get-menu -path "Erzeuge Report..." | click
-	log [concat "create report: " $report " write to file: " [to-report-file $report $qualifier $suffix]]
-	try {
-		with [get-window Report] {
-			get-group "" | get-combo -after [get-label "Report auswählen:"] | select $report
-		    get-group "" | get-combo -after [get-label "Ausgabeformat"] | select [concat ".*" [ $suffix | invoke toUpperCase] "*."]
-			get-group "" | get-combo -after [get-label "Klassifizierung"] | set-text "a dev build"
-			set-dialog-result File [to-report-file $report $qualifier $suffix]
-			get-button OK | click
-		}
-		get-window "Report erfolgreich erzeugt" | get-button OK | click
-	} -catch {
-		log [concat "ERROR configuring report creation dialog for " $report " on " $object]
-		try {
-			get-window Report | get-button Abbrechen | click
-		} -catch {
-		//there is not always such window
-		}
-	}
+    get-view $view | get-tree | select $object | get-menu -path "Erzeuge Report..." | click
+    log [concat "create report: " $report " write to file: " [to-report-file $report $qualifier $suffix]]
+    
+    try {
+        with [get-window Report] {
+            get-group "" | get-object | invoke getChildren | invoke  get 1| invoke setSelectedIndexByName $report
+
+            get-group "" | get-combo -after [get-label "Ausgabeformat"] | select [concat ".*" [ $suffix | invoke toUpperCase] "*."]
+            get-group "" | get-combo -after [get-label "Klassifizierung"] | set-text "a dev build"
+            set-dialog-result File [to-report-file $report $qualifier $suffix]
+            get-button OK | click
+        }
+        get-window "Report erfolgreich erzeugt" | get-button OK | click
+    } -catch {
+        log [concat "ERROR configuring report creation dialog for " $report " on " $object]
+        try {
+            get-window Report | get-button Abbrechen | click
+        } -catch {
+        //there is not always such window
+        }
+    }
 }
 
 /* enable the logging for the reporting * */
 proc "enable-reporting-log" {
-	get-menu -path "Bearbeiten/Einstellungen..." | click
-	with [get-window Benutzervorgaben] {
-		get-tree | select Reports
-		if [not[get-window Benutzervorgaben | get-button "Reportlogging benutzen" | get-property selected -raw ] ]{
-		get-window Benutzervorgaben | get-button "Reportlogging benutzen" | check
-		get-window Benutzervorgaben | get-combo -after [get-label "Log-Level"] | select Alles
-		set-dialog-result Folder [concat $basedir [get-java-property "file.separator"] "log"]
-		get-button "Durchsuchen..." | click
-		}
-		get-button "Anwenden und Schließen" | click
-	}
+    get-menu -path "Bearbeiten/Einstellungen..." | click
+    with [get-window Benutzervorgaben] {
+        get-tree | select Reports
+        if [not[get-window Benutzervorgaben | get-button "Reportlogging benutzen" | get-property selected -raw ] ]{
+        get-window Benutzervorgaben | get-button "Reportlogging benutzen" | check
+        get-window Benutzervorgaben | get-combo -after [get-label "Log-Level"] | select Alles
+        set-dialog-result Folder [concat $basedir [get-java-property "file.separator"] "log"]
+        get-button "Durchsuchen..." | click
+        }
+        get-button "Anwenden und Schließen" | click
+    }
 }
 
 /* set the report deposite for the reporting * */
 proc "set-local-reporting-repository" [val path]{
     log [concat "setlocal report repository to " $path]
-	get-menu -path "Bearbeiten/Einstellungen..." | click
-	get-window Benutzervorgaben | get-tree | select Reports
-	set-dialog-result Folder $path
-	with [get-window Benutzervorgaben] {
-		get-button "Durchsuchen..." -after [get-label "Report-Templates"] | click
-		get-button "Anwenden und Schließen" | click
-	}
+    get-menu -path "Bearbeiten/Einstellungen..." | click
+    get-window Benutzervorgaben | get-tree | select Reports
+    set-dialog-result Folder $path
+    with [get-window Benutzervorgaben] {
+        get-button "Durchsuchen..." -after [get-label "Report-Templates"] | click
+        get-button "Anwenden und Schließen" | click
+    }
 }
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998--

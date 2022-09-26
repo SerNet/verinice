@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _BS1u8NatEei2hNb8h7sUBw
-Runtime-Version: 2.5.1.M3
-Save-Time: 9/1/20, 10:14 AM
+Runtime-Version: 2.5.3.202205021448
+Save-Time: 10/5/22, 2:22 PM
 Tags: bp
 Testcase-Type: ecl
 Verifications: _wm5P0CtBEeuMltfUUtdvug
@@ -17,6 +17,7 @@ Content-Type: text/ecl
 Entry-Name: .content
 
 log "test_2.17"
+
 
 create-bpmodel Reportverbund
 
@@ -30,9 +31,10 @@ with [get-window Benutzervorgaben] {
 get-menu -path "Datei/Report erzeugen..." | click
 with [get-window Report] {
 	with [get-group ""] {
-		get-combo -after [get-label "Report auswählen:"] | select "(L) Abhaengigkeiten"
 		get-combo -after [get-label "Geltungsbereich:"] | select Reportverbund
+		wait 300
 	}
+    get-group "" | get-object | invoke getChildren | invoke  get 1| invoke setSelectedIndexByName "(L) Abhaengigkeiten"
 	set-dialog-result File [concat $reportdir [get-java-property
 		"file.separator"] "(L) Abhaengigkeiten.pdf"]
 	get-button OK | click

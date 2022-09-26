@@ -22,9 +22,11 @@ package sernet.verinice.report.actions;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -48,6 +50,7 @@ import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
 import sernet.verinice.interfaces.report.ReportTypeException;
+import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.rcp.RightsEnabledActionDelegate;
 import sernet.verinice.report.rcp.GenerateReportDialog;
 import sernet.verinice.report.rcp.Messages;
@@ -91,14 +94,26 @@ public abstract class ReportAction extends RightsEnabledActionDelegate
         try {
             openDialog();
             if (dialog.open() == Dialog.OK) {
-                final IReportOptions ro = prepareReportOptions();
+                final List<ReportTemplateMetaData> chosenReportsMetaData = dialog
+                        .getChosenReportsMetaData();
 
                 PlatformUI.getWorkbench().getProgressService()
                         .busyCursorWhile(new IRunnableWithProgress() {
                             @Override
                             public void run(IProgressMonitor monitor)
                                     throws InvocationTargetException, InterruptedException {
-                                runUIBlockingReportGeneration(ro, monitor);
+                                monitor.beginTask("start report generation",
+                                        chosenReportsMetaData.size());
+                                for (ReportTemplateMetaData reportTemplateMetaData : chosenReportsMetaData) {
+                                    IReportOptions prepareReportOptions = prepareReportOptions(
+                                            reportTemplateMetaData);
+                                    String outputname = reportTemplateMetaData.getOutputname();
+                                    runUIBlockingReportGeneration(prepareReportOptions,
+                                            reportTemplateMetaData, SubMonitor.convert(monitor,
+                                                    outputname, IProgressMonitor.UNKNOWN));
+                                    monitor.worked(1);
+                                }
+                                monitor.done();
                             }
                         });
 
@@ -107,7 +122,6 @@ public abstract class ReportAction extends RightsEnabledActionDelegate
             ExceptionUtil.log(t, Messages.GenerateReportDialog_32);
             setGenerationSuccessful(Boolean.FALSE);
         }
-
         provideUserFeedback();
     }
 
@@ -123,11 +137,10 @@ public abstract class ReportAction extends RightsEnabledActionDelegate
         dialog.setContextMenuCall(isContextMenuCall());
     }
 
-    private IReportOptions prepareReportOptions() {
+    private IReportOptions prepareReportOptions(ReportTemplateMetaData reportTemplateMetaData) {
         final IReportOptions ro = new IReportOptions() {
             Integer rootElmt;
             Integer[] rootElmts;
-            String classificationHint;
 
             @Override
             public boolean isToBeEncrypted() {
@@ -146,7 +159,12 @@ public abstract class ReportAction extends RightsEnabledActionDelegate
 
             @Override
             public File getOutputFile() {
-                return dialog.getOutputFile();
+                if (dialog.getOutputFile().isDirectory()) {
+                    return new File(dialog.getOutputFile().getAbsolutePath() + "/"
+                            + dialog.getDefaultOutputFilename(reportTemplateMetaData));
+                } else {
+                    return dialog.getOutputFile();
+                }
             }
 
             @Override
@@ -191,15 +209,22 @@ public abstract class ReportAction extends RightsEnabledActionDelegate
     private void provideUserFeedback() {
         if (isGenerationSuccessful()) {
             Display.getDefault().asyncExec(() -> {
+                boolean isMany = dialog.getChosenReportsMetaData().size() > 1;
                 String path = dialog.getOutputFile().getAbsolutePath();
-                String reportName = dialog.getReportMetaData().getOutputname();
+                String reportName = dialog.getChosenReportsMetaData().stream()
+                        .map(ReportTemplateMetaData::getOutputname)
+                        .collect(Collectors.joining("\n "));
                 String[] dialogButtons = new String[] { IDialogConstants.OPEN_LABEL,
                         IDialogConstants.OK_LABEL };
-                ;
+
                 MessageDialog reportGeneratedDialog = new MessageDialog(
-                        Display.getCurrent().getActiveShell(), Messages.GenerateReportDialog_30,
+                        Display.getCurrent().getActiveShell(),
+                        (isMany ? Messages.GenerateReportDialog_30_many
+                                : Messages.GenerateReportDialog_30),
                         null,
-                        Messages.bind(Messages.GenerateReportDialog_31,
+                        Messages.bind(
+                                (isMany ? Messages.GenerateReportDialog_31_many
+                                        : Messages.GenerateReportDialog_31),
                                 new Object[] { reportName, path }),
                         MessageDialog.INFORMATION, dialogButtons, 1) {
                     @Override
@@ -217,12 +242,14 @@ public abstract class ReportAction extends RightsEnabledActionDelegate
         }
     }
 
-    private void runUIBlockingReportGeneration(final IReportOptions ro, IProgressMonitor monitor) {
-        monitor.beginTask(Messages.GenerateReportAction_1, IProgressMonitor.UNKNOWN);
+    private void runUIBlockingReportGeneration(final IReportOptions ro,
+            ReportTemplateMetaData reportTemplate, IProgressMonitor monitor) {
+        monitor.beginTask(Messages.GenerateReportAction_1 + " " + reportTemplate.getOutputname(),
+                IProgressMonitor.UNKNOWN);
         Activator.inheritVeriniceContextState();
         try {
             dialog.getReportType().createReport(ro);
-            dialog.getReportType().createReport(dialog.getReportMetaData());
+            dialog.getReportType().createReport(reportTemplate);
             setGenerationSuccessful(true);
         } catch (ReportTypeException exception) {
             if (exception.causedBySecurityException()) {

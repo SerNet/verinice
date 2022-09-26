@@ -1,0 +1,68 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _kD9CUIxPEei2UKUDmonytQ,_lGnj8Ix1Eei2UKUDmonytQ,_4GRncI0bEei2UKUDmonytQ
+Element-Name: test-generate-report-dialog-multiple
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _ropsIECXEe27m6rG3XFxWQ
+Runtime-Version: 2.5.3.202205021448
+Save-Time: 10/6/22, 12:40 PM
+Tags: bp
+Testcase-Type: ecl
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+proc "select-report" [val name]{
+get-window Report | get-group "" | get-object | invoke getChildren | invoke  get 1| invoke setSelectedIndexByName $name
+}
+
+create-bpmodel Informationsverbund
+
+try {
+    get-button "Report erzeugen..." | click -metaKeys ""
+    with [get-window Report] {
+        get-group "" | get-combo -after [get-label "Geltungsbereich:"] | select Informationsverbund
+        get-group "" | get-editbox -after [get-label "Report auswählen:"] | click-text
+        screen-shot Report "multi-select-report-1.png"
+        get-button Abbrechen | click -metaKeys ""
+    }
+} -error [val errorObj] -catch {
+    log  [concat "error simple 1: " [$errorObj | get message] ]
+}
+
+try {
+    get-button "Report erzeugen..." | click -metaKeys ""
+    select-report "(S) ITGS: A.1 Strukturanalyse"
+    with [get-window Report] {
+        get-group "" | get-combo -after [get-label "Geltungsbereich:"] | select Informationsverbund
+        get-group "" | get-editbox -after [get-label "Report auswählen:"] | click-text
+        screen-shot Report "multi-select-report-1-1.png"
+        get-button Abbrechen | click -metaKeys ""
+    }
+} -error [val errorObj] -catch {
+    log  [concat "error simple 2: " [$errorObj | get message] ]
+    screen-shot Report "error-multi-select-report-1-2.png"
+    get-window Report | close
+}
+
+try {
+    get-button "Report erzeugen..." | click -metaKeys ""
+    select-report "(S) ITGS: A.2 Schutzbedarfsfeststellung"
+    with [get-window Report] {
+        get-group "" | get-combo -after [get-label "Geltungsbereich:"] | select Informationsverbund
+        get-group "" | get-editbox -after [get-label "Report auswählen:"] | click-text
+        get-group "" | get-combo -after [get-label Klassifizierung] | select Vertraulich
+        screen-shot Report "multi-select-report-2-1.png"
+        get-button Abbrechen | click -metaKeys ""
+    }
+} -error [val errorObj] -catch {
+    log  [concat "error 2: " [$errorObj | get message] ]
+    screen-shot Report "error-multi-select-report-2.png"
+    get-window Report | close
+}
+
+delete-bpelement Informationsverbund
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
