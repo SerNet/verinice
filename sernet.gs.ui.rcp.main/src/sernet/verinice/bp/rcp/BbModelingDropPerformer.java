@@ -45,6 +45,7 @@ import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionModelingTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.VeriniceElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
@@ -277,7 +278,8 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
             } else {
                 this.targetElement = getTargetElement(rawTarget);
             }
-            isActive = isTargetElement();
+            isActive = isTargetElement()
+                    && CnAElementHome.getInstance().isWriteAllowed(targetElement);
         }
         return isActive;
     }
