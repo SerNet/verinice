@@ -298,6 +298,15 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 chosenOutputFormat = (IOutputFormat) e.getStructuredSelection().getFirstElement();
             }
         });
+        
+        Label labelClassification = new Label(reportGroup, SWT.NONE);
+        labelClassification.setText(Messages.GenerateReportDialog_lblclassification);
+        
+        ComboViewer comboClassification = new ComboViewer(reportGroup, SWT.NONE);
+        comboClassification.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+        comboClassification.setContentProvider(ArrayContentProvider.getInstance());
+        comboClassification.setInput(ServiceComponent.getDefault().getReportService().getClassificationHints());
+        bindingContext.bindValue(WidgetProperties.text().observe(comboClassification.getCombo()), classificationHint, null, null);
 
         if (!isContextMenuCall()) {
             Button reset = new Button(reportGroup, SWT.RIGHT);
@@ -314,15 +323,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 }
             });
         }
-        
-        Label labelClassification = new Label(reportGroup, SWT.NONE);
-        labelClassification.setText(Messages.GenerateReportDialog_lblclassification);
-        
-        ComboViewer comboClassification = new ComboViewer(reportGroup, SWT.NONE);
-        comboClassification.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-        comboClassification.setContentProvider(ArrayContentProvider.getInstance());
-        comboClassification.setInput(ServiceComponent.getDefault().getReportService().getClassificationHints());
-        bindingContext.bindValue(WidgetProperties.text().observe(comboClassification.getCombo()), classificationHint, null, null);
 
         Label reportGroupLabel = new Label(reportGroup, SWT.SEPARATOR | SWT.HORIZONTAL);
         reportGroupLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
