@@ -15657,7 +15657,7 @@
             </group>
             <group id="4595">
                 <property name="groupName">Linked Process</property>
-                <expression name="keyExpr" type="javascript">BirtStr.concat(row["Database__Id__(Business__Process)"], row["Title_18"])</expression>
+                <expression name="keyExpr" type="javascript">BirtStr.concat(row["Database__Id__(Business__Process)_15"], row["Title_18"])</expression>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
                     <structure>
