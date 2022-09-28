@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.annotation.NonNull;
+import org.elasticsearch.common.base.Objects;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.proxy.HibernateProxy;
@@ -40,6 +41,8 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IAuthAwareCommand;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
@@ -56,7 +59,7 @@ import sernet.verinice.service.NonNullUtils;
  * all collected info in a {@link ConsoliData} and sends this command to the
  * server to actually edit the properties.
  */
-public class ConsolidatorCommand extends GenericCommand {
+public class ConsolidatorCommand extends GenericCommand implements IAuthAwareCommand {
 
     private static final Logger logger = Logger.getLogger(ConsolidatorCommand.class);
 
@@ -64,6 +67,10 @@ public class ConsolidatorCommand extends GenericCommand {
     private ConsoliData data;
 
     private static String error;
+
+    private transient IAuthService authService;
+
+    private transient String userName;
 
     public ConsolidatorCommand(@NonNull ConsoliData data) {
         this.data = data;
@@ -74,6 +81,7 @@ public class ConsolidatorCommand extends GenericCommand {
         // Maybe evaluate and save everything from source, so I don't need to do
         // that again for every module.
         long start = System.currentTimeMillis();
+        userName = authService.getUsername();
         IBaseDao<BpRequirementGroup, Serializable> dao = getDaoFactory()
                 .getDAO(BpRequirementGroup.class);
 
@@ -144,16 +152,23 @@ public class ConsolidatorCommand extends GenericCommand {
 
         HUITypeFactory typeFactory = HitroUtil.getInstance().getTypeFactory();
         EntityType type = typeFactory.getEntityType(source.getTypeId());
+        boolean targetUpdated = false;
         if (data.getSelectedPropertyGroups().contains(source.getTypeId() + "_general")) {
-            type.getPropertyTypes().stream().filter(x -> x.getId() != null).forEach(
-                    x -> consolidateProperty(NonNullUtils.toNonNull(x.getId()), source, target));
+            targetUpdated = type.getPropertyTypes().stream().filter(x -> x.getId() != null).map(
+                    x -> consolidateProperty(NonNullUtils.toNonNull(x.getId()), source, target))
+                    .collect(Collectors.toSet()).contains(Boolean.TRUE);
         }
 
-        type.getPropertyGroups().stream()
+        targetUpdated |= type.getPropertyGroups().stream()
                 .filter(c -> data.getSelectedPropertyGroups().contains(c.getId()))
-                .forEach(x -> x.getPropertyTypes().stream()
-                        .forEach(y -> consolidateProperty(NonNullUtils.toNonNull(y.getId()), source,
-                                target)));
+                .flatMap(
+                        x -> x.getPropertyTypes().stream()
+                                .map(y -> consolidateProperty(NonNullUtils.toNonNull(y.getId()),
+                                        source, target)))
+                .collect(Collectors.toSet()).contains(Boolean.TRUE);
+        if (targetUpdated) {
+            target.getEntity().trackChange(userName);
+        }
     }
 
     private Map<String, @NonNull CnATreeElement> getLinkedIdElementMap(
@@ -180,12 +195,29 @@ public class ConsolidatorCommand extends GenericCommand {
                 x -> (CnATreeElement) NonNullUtils.toNonNull(x)));
     }
 
-    private static void consolidateProperty(@NonNull String property,
+    private static boolean consolidateProperty(@NonNull String property,
             @NonNull CnATreeElement source, @NonNull CnATreeElement target) {
-        target.setSimpleProperty(property, source.getEntity().getRawPropertyValue(property));
+        String oldValue = target.getEntity().getRawPropertyValue(property);
+        String newValue = source.getEntity().getRawPropertyValue(property);
+        if (!Objects.equal(oldValue, newValue)) {
+            target.setSimpleProperty(property, newValue);
+            return true;
+        }
+        return false;
     }
 
     public String getError() {
         return error;
+    }
+
+    @Override
+    public void setAuthService(IAuthService authService) {
+        this.authService = authService;
+
+    }
+
+    @Override
+    public IAuthService getAuthService() {
+        return authService;
     }
 }
