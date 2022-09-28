@@ -195,11 +195,12 @@ public class ConsolidatorCommand extends GenericCommand implements IAuthAwareCom
                 x -> (CnATreeElement) NonNullUtils.toNonNull(x)));
     }
 
-    private static boolean consolidateProperty(@NonNull String property,
-            @NonNull CnATreeElement source, @NonNull CnATreeElement target) {
+    private boolean consolidateProperty(@NonNull String property, @NonNull CnATreeElement source,
+            @NonNull CnATreeElement target) {
         String oldValue = target.getEntity().getRawPropertyValue(property);
         String newValue = source.getEntity().getRawPropertyValue(property);
         if (!Objects.equal(oldValue, newValue)) {
+            getDaoFactory().getDAO(CnATreeElement.class).checkRights(target);
             target.setSimpleProperty(property, newValue);
             return true;
         }
