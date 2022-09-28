@@ -37,7 +37,7 @@ public class DefaultTaskDescriptionHandler implements ITaskDescriptionHandler {
      * @see sernet.verinice.interfaces.bpm.ITaskDescriptionHandler#loadDescription(org.jbpm.api.task.Task)
      */
     @Override
-    public String loadDescription(String taskId, Map<String, Object> varMap) {
+    public String loadDescription(String taskId, Map<String, Object> varMap, boolean isHtml) {
         return Messages.getString(taskId + ITaskService.DESCRIPTION_SUFFIX);
     }
 

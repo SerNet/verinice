@@ -61,7 +61,7 @@ public class IndividualDeadlineAssigneeEmailHandler extends GenericEmailHandler
         String taskTitle = getTaskService().loadTaskTitle(type, processVariables);
         String taskTitleHtml = escapeForHTMLIfNecessary(taskTitle);
         String taskDescription = escapeForHTMLIfNecessary(
-                getTaskService().loadTaskDescription(type, processVariables));
+                getTaskService().loadTaskDescription(type, processVariables, isHtml()));
         emailParameter.put(TEMPLATE_TASK_DESCRIPTION, taskDescription);
         emailParameter.put(TEMPLATE_ELEMENT_TITLE, title);
         emailParameter.put(TEMPLATE_TASK_TITLE, taskTitleHtml);

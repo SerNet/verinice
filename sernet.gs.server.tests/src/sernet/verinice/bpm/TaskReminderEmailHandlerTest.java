@@ -33,6 +33,8 @@ import org.springframework.core.io.Resource;
 import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.snutils.DBException;
+import sernet.verinice.bpm.indi.IndividualTaskDescriptionHandler;
+import sernet.verinice.interfaces.bpm.IIndividualProcess;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
@@ -46,7 +48,7 @@ public class TaskReminderEmailHandlerTest {
         // we need to extend the code we want to test
         // to not deal with any DI spring stuff
         // like a mock
-        TaskReminderEmailHandler taskReminderEmailHandler = new TaskReminderEmailHandler() {
+        final TaskReminderEmailHandler taskReminderEmailHandler = new TaskReminderEmailHandler() {
 
             // first mock
             @Override
@@ -127,8 +129,10 @@ public class TaskReminderEmailHandlerTest {
                     }
 
                     @Override
-                    public String loadTaskDescription(String taskId, Map<String, Object> varMap) {
-                        return "<b>My description</b>";
+                    public String loadTaskDescription(String taskId, Map<String, Object> varMap, boolean isHtml) {
+                        IndividualTaskDescriptionHandler individualTaskDescriptionHandler = new IndividualTaskDescriptionHandler();
+                        String loadDescription = individualTaskDescriptionHandler.loadDescription(taskId, varMap, true) ;
+                        return loadDescription;
                     }
 
                     @Override
@@ -215,13 +219,14 @@ public class TaskReminderEmailHandlerTest {
             }
         };
 
-        Map<String, Object> pv = new HashMap<String, Object>();
+        Map<String, Object> pv = new HashMap<>();
+        pv.put(IIndividualProcess.VAR_DESCRIPTION," my text with € and ü and  a < together with an >" );
         taskReminderEmailHandler.send("", "", pv, null);
 
         assertEquals("&lt;b&gt;Title should be quoted&lt;/b&gt;", pv.get("elementTitle"));
         assertEquals("&lt;b&gt;My title&lt;/b&gt;", pv.get("taskTitle"));
         assertEquals("verinice task reminder: <b>My title</b>", pv.get("subject"));
-        assertEquals("<b>My description</b>", pv.get("taskDescription"));
+        assertEquals("<i> my text with &euro; and &uuml; and  a &lt; together with an &gt;</i> <br/>Sie haben drei M&ouml;glichkeiten: <ul><li><b>Verl&auml;ngerung beantragen</b>: Beantragen Sie eine Verl&auml;ngerung der Frist.</li><li><b>Nicht verantwortlich</b>: Sie sind nicht verantwortlich f&uuml;r die Umsetzung dieser Aufgabe.</li><li><b>Erledigt</b>: Sie haben die Aufgabe erledigt.</li></ul>", pv.get("taskDescription"));
     }
 
 }

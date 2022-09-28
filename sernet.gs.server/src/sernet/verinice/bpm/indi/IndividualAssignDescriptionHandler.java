@@ -21,6 +21,8 @@ package sernet.verinice.bpm.indi;
 
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.bpm.TaskService;
 import sernet.verinice.interfaces.bpm.IIndividualProcess;
@@ -43,7 +45,7 @@ public class IndividualAssignDescriptionHandler extends IndividualTaskDescriptio
     
 
     @Override
-    public String loadDescription(String taskId, Map<String, Object> varMap) {
+    public String loadDescription(String taskId, Map<String, Object> varMap, boolean isHtml) {
         String relationId = (String) varMap.get(getRelationVar());
         String relationKey = relationId + NAME_SUFFIX;
         String relation = HUITypeFactory.getInstance().getMessage(relationKey);
@@ -55,7 +57,9 @@ public class IndividualAssignDescriptionHandler extends IndividualTaskDescriptio
         } else if(value!=null) {
             description = (String) value;
         }
-        
+        if(isHtml) {
+            description = StringEscapeUtils.escapeHtml(description);
+        }
         if(relationId!=null && description!=null) {
             return Messages.getString(getDescriptionRelationKey(), relation, description);
         } else {

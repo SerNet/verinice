@@ -21,6 +21,7 @@ package sernet.verinice.bpm.indi;
 
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
 import sernet.verinice.bpm.IRemindService;
@@ -51,7 +52,7 @@ public class IndividualExtensionDescriptionHandler extends IndividualTaskDescrip
      * @see sernet.verinice.bpm.indi.IndividualTaskDescriptionHandler#loadDescription(java.lang.String, java.util.Map)
      */
     @Override
-    public String loadDescription(String taskId, Map<String, Object> varMap) {
+    public String loadDescription(String taskId, Map<String, Object> varMap, boolean isHtml) {
         Object value = varMap.get(getDescriptionVar());
         String description = "emtpy";
         if(value instanceof char[]) {
@@ -63,7 +64,9 @@ public class IndividualExtensionDescriptionHandler extends IndividualTaskDescrip
         String assignee = (String) varMap.get(IGenericProcess.VAR_ASSIGNEE_NAME);
         String address = "";
         String name = "";
-        
+        if(isHtml) {
+            description = StringEscapeUtils.escapeHtml(description);
+        }
         Map<String, String> assigneeData;
         try {
             assigneeData = getRemindService().loadUserData(assignee);

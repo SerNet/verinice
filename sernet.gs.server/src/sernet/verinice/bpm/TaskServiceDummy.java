@@ -102,7 +102,7 @@ public class TaskServiceDummy implements ITaskService {
      * @see sernet.verinice.interfaces.bpm.ITaskService#loadTaskDescription(java.lang.String, java.util.Map)
      */
     @Override
-    public String loadTaskDescription(String taskId, Map<String, Object> varMap) {
+    public String loadTaskDescription(String taskId, Map<String, Object> varMap, boolean isHtml) {
         return null;
     }
 

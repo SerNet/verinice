@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
@@ -58,8 +59,8 @@ public class GsmServiceTaskDescriptionHandler implements ITaskDescriptionHandler
      * @see sernet.verinice.interfaces.bpm.ITaskDescriptionHandler#loadDescription(java.lang.String, java.util.Map)
      */
     @Override
-    public String loadDescription(String taskId, Map<String, Object> processVars) {      
-        return loadDescriptionByVelocity(convertProcessVarsToTemplateVars(processVars));
+    public String loadDescription(String taskId, Map<String, Object> processVars, boolean isHtml) {      
+        return loadDescriptionByVelocity(convertProcessVarsToTemplateVars(processVars, isHtml));
     }
 
     private String loadDescriptionByVelocity(Map<String, Object> templateVars) {
@@ -70,21 +71,31 @@ public class GsmServiceTaskDescriptionHandler implements ITaskDescriptionHandler
                 templateVars);
     }
     
-    @SuppressWarnings("unchecked")
-    private Map<String, Object> convertProcessVarsToTemplateVars(Map<String, Object> processVars) { 
+    private Map<String, Object> convertProcessVarsToTemplateVars(Map<String, Object> processVars,
+            boolean isHtml) {
         Map<String, Object> templateVars = new HashMap<String, Object>();
-         
-        templateVars.put(IGsmIsmExecuteProzess.VAR_ASSET_DESCRIPTION_LIST, processVars.get(IGsmIsmExecuteProzess.VAR_ASSET_DESCRIPTION_LIST));
-        templateVars.put(IGsmIsmExecuteProzess.VAR_CONTROL_DESCRIPTION, processVars.get(IGsmIsmExecuteProzess.VAR_CONTROL_DESCRIPTION));           
-        templateVars.put(IGsmIsmExecuteProzess.VAR_RISK_VALUE, processVars.get(IGsmIsmExecuteProzess.VAR_RISK_VALUE));                             
-        
-        templateVars.put(IGsmIsmExecuteProzess.VAR_ASSIGNEE_DISPLAY_NAME, processVars.get(IGsmIsmExecuteProzess.VAR_ASSIGNEE_DISPLAY_NAME));   
-        templateVars.put(IGsmIsmExecuteProzess.VAR_CONTROL_GROUP_TITLE, processVars.get(IGsmIsmExecuteProzess.VAR_CONTROL_GROUP_TITLE));
+
+        templateVars.put(IGsmIsmExecuteProzess.VAR_ASSET_DESCRIPTION_LIST,
+                processVars.get(IGsmIsmExecuteProzess.VAR_ASSET_DESCRIPTION_LIST));
+        templateVars.put(IGsmIsmExecuteProzess.VAR_CONTROL_DESCRIPTION, escapeForHTMLIfNecessary(
+                processVars.get(IGsmIsmExecuteProzess.VAR_CONTROL_DESCRIPTION), isHtml));
+        templateVars.put(IGsmIsmExecuteProzess.VAR_RISK_VALUE,
+                processVars.get(IGsmIsmExecuteProzess.VAR_RISK_VALUE));
+
+        templateVars.put(IGsmIsmExecuteProzess.VAR_ASSIGNEE_DISPLAY_NAME, escapeForHTMLIfNecessary(
+                processVars.get(IGsmIsmExecuteProzess.VAR_ASSIGNEE_DISPLAY_NAME), isHtml));
+        templateVars.put(IGsmIsmExecuteProzess.VAR_CONTROL_GROUP_TITLE, escapeForHTMLIfNecessary(
+                processVars.get(IGsmIsmExecuteProzess.VAR_CONTROL_GROUP_TITLE), isHtml));
         return templateVars;
     }
+    
+    protected String escapeForHTMLIfNecessary(Object str, boolean isHtml) {
+        if (!isHtml || str == null) {
+            return (String) str;
+        }
+        return StringEscapeUtils.escapeHtml((String) str);
+    }
 
-    
-    
     /**
      * Returns the bundle/jar relative path to the velocity email template.
      * First a localized template is search by the default locale of the java vm.

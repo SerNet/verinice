@@ -413,7 +413,7 @@ public class TaskService implements ITaskService {
 
         Map<String, Object> varMap = loadVariables(task);
         taskInformation.setName(loadTaskTitle(task.getName(), varMap));
-        taskInformation.setDescription(loadTaskDescription(task.getName(), varMap));
+        taskInformation.setDescription(loadTaskDescription(task.getName(), varMap, false));
 
         taskInformation
                 .setIsRead(ITaskService.VAR_READ.equals(varMap.get(ITaskService.VAR_READ_STATUS)));
@@ -461,12 +461,12 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public String loadTaskDescription(String taskId, Map<String, Object> processVars) {
+    public String loadTaskDescription(String taskId, Map<String, Object> processVars, boolean isHtml) {
         ITaskDescriptionHandler handler = getDescriptionHandler().get(taskId);
         if (handler == null) {
             handler = getDefaultDescriptionHandler();
         }
-        return handler.loadDescription(taskId, processVars);
+        return handler.loadDescription(taskId, processVars, isHtml);
     }
 
     @Override

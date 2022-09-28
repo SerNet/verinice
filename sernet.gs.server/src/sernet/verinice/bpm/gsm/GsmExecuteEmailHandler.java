@@ -50,7 +50,7 @@ public class GsmExecuteEmailHandler extends GenericEmailHandler implements IEmai
         String taskTitle = getTaskService().loadTaskTitle(type, processVariables);
         emailParameter.put(TEMPLATE_TASK_TITLE, taskTitle);
         emailParameter.put(IRemindService.TEMPLATE_SUBJECT, Messages.getString("GsmExecuteEmailHandler.3",taskTitle)); //$NON-NLS-1$
-        String taskDescription = getTaskService().loadTaskDescription(type, processVariables);
+        String taskDescription = getTaskService().loadTaskDescription(type, processVariables, isHtml());
         emailParameter.put(TEMPLATE_TASK_DESCRIPTION, taskDescription);
     }
 

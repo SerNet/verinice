@@ -21,6 +21,8 @@ package sernet.verinice.bpm.indi;
 
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 import sernet.verinice.interfaces.bpm.IIndividualProcess;
 import sernet.verinice.interfaces.bpm.ITaskDescriptionHandler;
 import sernet.verinice.interfaces.bpm.ITaskService;
@@ -38,13 +40,16 @@ public class IndividualTaskDescriptionHandler implements ITaskDescriptionHandler
      * @see sernet.verinice.interfaces.bpm.ITaskDescriptionHandler#loadDescription(org.jbpm.api.task.Task)
      */
     @Override
-    public String loadDescription(String taskId, Map<String, Object> varMap) {
+    public String loadDescription(String taskId, Map<String, Object> varMap, boolean isHtml) {
         Object value = varMap.get(getDescriptionVar());
         String description = "emtpy";
         if(value instanceof char[]) {
             description = new String((char[])value);
         } else if(value!=null) {
             description = (String) value;
+        }
+        if(isHtml) {
+            description = StringEscapeUtils.escapeHtml(description);
         }
         if(getDescriptionKey()!=null) {
             if(varMap.containsKey(getDeclineDescriptionVar()) && taskId.contains(IIndividualProcess.TASK_EXECUTE)) {

@@ -36,9 +36,10 @@ public interface ITaskDescriptionHandler {
     /**
      * @param taskId a jBPM task-id
      * @param processVars jBPM process variables
+     * @param isHtml TODO
      * @return The description of a task
      */
-    String loadDescription(String taskId, Map<String, Object> processVars);
+    String loadDescription(String taskId, Map<String, Object> processVars, boolean isHtml);
 
     /**
      * @param taskId a jBPM task-id

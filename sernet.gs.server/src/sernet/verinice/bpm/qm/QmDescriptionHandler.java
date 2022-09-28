@@ -21,6 +21,8 @@ package sernet.verinice.bpm.qm;
 
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 import sernet.verinice.bpm.DefaultTaskDescriptionHandler;
 import sernet.verinice.interfaces.bpm.IIsaQmProcess;
 import sernet.verinice.interfaces.bpm.ITaskDescriptionHandler;
@@ -42,13 +44,16 @@ public abstract class QmDescriptionHandler extends DefaultTaskDescriptionHandler
      * @see sernet.verinice.interfaces.bpm.ITaskDescriptionHandler#loadDescription(org.jbpm.api.task.Task)
      */
     @Override
-    public String loadDescription(String taskId, Map<String, Object> varMap) {
+    public String loadDescription(String taskId, Map<String, Object> varMap, boolean isHtml) {
         Object value = varMap.get(IIsaQmProcess.VAR_FEEDBACK);
         String feedback = "emtpy";
         if(value instanceof char[]) {
             feedback = new String((char[])value);
         } else if(value!=null) {
             feedback = (String) value;
+        }
+        if(isHtml) {
+            feedback = StringEscapeUtils.escapeHtml(feedback);
         }
         return Messages.getString(getMessageKey(), feedback);   
     }

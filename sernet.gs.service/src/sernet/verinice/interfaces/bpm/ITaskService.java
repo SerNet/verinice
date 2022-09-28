@@ -136,7 +136,7 @@ public interface ITaskService {
      */
     void setVariables(String taskId, Map<String, Object> param);
     
-    String loadTaskDescription(String taskId, Map<String, Object> varMap);
+    String loadTaskDescription(String taskId, Map<String, Object> varMap, boolean isEmail);
     
     String loadTaskTitle(String taskId, Map<String, Object> varMap);
 
