@@ -27,7 +27,7 @@
     <stringAttribute key="product" value="sernet.gs.ui.rcp.main.product"/>
     <stringAttribute key="productFile" value="/sernet.verinice.releng.client.product/sernet.verinice.releng.client.product"/>
     <setAttribute key="selected_target_bundles">
-        <setEntry value="antlr@default:default"/>
+        <setEntry value="antlr*2.7.7@default:default"/>
         <setEntry value="ch.qos.logback.classic@default:default"/>
         <setEntry value="ch.qos.logback.core@default:default"/>
         <setEntry value="ch.qos.logback.slf4j@default:false"/>
@@ -46,7 +46,6 @@
         <setEntry value="com.springsource.javax.wsdl@default:default"/>
         <setEntry value="com.springsource.javax.xml.rpc@default:default"/>
         <setEntry value="com.springsource.javax.xml.soap@default:default"/>
-        <setEntry value="com.springsource.javax.xml.stream@default:default"/>
         <setEntry value="com.springsource.net.sf.cglib@default:default"/>
         <setEntry value="com.springsource.net.sf.ehcache@default:default"/>
         <setEntry value="com.springsource.org.aopalliance@default:default"/>
@@ -54,11 +53,9 @@
         <setEntry value="com.springsource.org.apache.commons.discovery@default:default"/>
         <setEntry value="com.springsource.org.apache.commons.lang@default:default"/>
         <setEntry value="com.springsource.org.apache.commons.net@default:default"/>
-        <setEntry value="org.apache.log4j@default:default"/>
         <setEntry value="com.springsource.org.apache.ws.commons.schema@default:default"/>
         <setEntry value="com.springsource.org.aspectj.runtime@default:default"/>
         <setEntry value="com.springsource.org.aspectj.weaver@default:default"/>
-        <setEntry value="com.springsource.org.dom4j@default:default"/>
         <setEntry value="com.springsource.org.hibernate@default:default"/>
         <setEntry value="com.springsource.org.objectweb.asm.attrs@default:default"/>
         <setEntry value="com.springsource.org.objectweb.asm@default:default"/>
@@ -66,15 +63,14 @@
         <setEntry value="com.sun.jna.platform@default:default"/>
         <setEntry value="com.sun.jna@default:default"/>
         <setEntry value="com.sun.xml.bind.jaxb-osgi@default:default"/>
+        <setEntry value="dom4j@default:default"/>
         <setEntry value="jakarta.activation-api@default:default"/>
         <setEntry value="jakarta.xml.bind-api@default:default"/>
         <setEntry value="javax.annotation@default:default"/>
         <setEntry value="javax.inject@default:default"/>
         <setEntry value="javax.jws@default:default"/>
         <setEntry value="javax.servlet-api@default:default"/>
-        <setEntry value="wrapped.javax.xml.ws.jaxws-api@default:default"/>
         <setEntry value="javax.xml@default:default"/>
-        <setEntry value="jaxen@default:default"/>
         <setEntry value="jfree.jcommon@default:default"/>
         <setEntry value="jfree.jfreechart-swt@default:default"/>
         <setEntry value="jfree.jfreechart@default:default"/>
@@ -107,13 +103,13 @@
         <setEntry value="org.apache.commons.logging@default:default"/>
         <setEntry value="org.apache.commons.text@default:default"/>
         <setEntry value="org.apache.felix.scr@2:true"/>
+        <setEntry value="org.apache.log4j@default:default"/>
         <setEntry value="org.apache.lucene.analyzers-common@default:default"/>
         <setEntry value="org.apache.lucene.analyzers-smartcn@default:default"/>
         <setEntry value="org.apache.lucene.core@default:default"/>
         <setEntry value="org.apache.poi.ooxml.schemas@default:default"/>
         <setEntry value="org.apache.poi.ooxml@default:default"/>
         <setEntry value="org.apache.poi@default:default"/>
-        <setEntry value="org.apache.servicemix.bundles.commons-beanutils@default:default"/>
         <setEntry value="org.apache.servicemix.bundles.elasticsearch@default:default"/>
         <setEntry value="org.apache.xalan@default:default"/>
         <setEntry value="org.apache.xmlbeans@default:default"/>
@@ -150,6 +146,7 @@
         <setEntry value="org.eclipse.birt.report.engine.emitter.html@default:default"/>
         <setEntry value="org.eclipse.birt.report.engine.emitter.pdf@default:default"/>
         <setEntry value="org.eclipse.birt.report.engine.emitter.prototype.excel@default:default"/>
+        <setEntry value="org.eclipse.birt.report.engine.emitter.wpml@default:default"/>
         <setEntry value="org.eclipse.birt.report.engine.fonts@default:default"/>
         <setEntry value="org.eclipse.birt.report.engine.ooxml@default:default"/>
         <setEntry value="org.eclipse.birt.report.engine.script.javascript@default:default"/>
@@ -204,12 +201,7 @@
         <setEntry value="org.eclipse.core.variables.nl_de@default:false"/>
         <setEntry value="org.eclipse.core.variables.nl_it@default:false"/>
         <setEntry value="org.eclipse.core.variables@default:default"/>
-        <setEntry value="org.eclipse.datatools.connectivity.nl_de@default:false"/>
-        <setEntry value="org.eclipse.datatools.connectivity.nl_it@default:false"/>
-        <setEntry value="org.eclipse.datatools.connectivity.oda.consumer.nl_de@default:false"/>
         <setEntry value="org.eclipse.datatools.connectivity.oda.consumer@default:default"/>
-        <setEntry value="org.eclipse.datatools.connectivity.oda.nl_de@default:false"/>
-        <setEntry value="org.eclipse.datatools.connectivity.oda.profile.nl_de@default:false"/>
         <setEntry value="org.eclipse.datatools.connectivity.oda.profile@default:default"/>
         <setEntry value="org.eclipse.datatools.connectivity.oda@default:default"/>
         <setEntry value="org.eclipse.datatools.connectivity@default:default"/>
@@ -420,7 +412,7 @@
         <setEntry value="org.ops4j.pax.web.pax-web-bundle@default:default"/>
         <setEntry value="org.sat4j.core@default:default"/>
         <setEntry value="org.sat4j.pb@default:default"/>
-        <setEntry value="org.slf4j.api*1.7.10.v20170428-1633@default:default"/>
+        <setEntry value="org.slf4j.api@default:default"/>
         <setEntry value="org.springframework.aop@default:default"/>
         <setEntry value="org.springframework.beans@default:default"/>
         <setEntry value="org.springframework.context.support@default:default"/>
@@ -438,12 +430,13 @@
         <setEntry value="org.springframework.web@default:default"/>
         <setEntry value="org.tukaani.xz@default:default"/>
         <setEntry value="org.verinicepatches@default:default"/>
-        <setEntry value="org.w3c.css.sac*1.3.1.v200903091627@default:default"/>
+        <setEntry value="org.w3c.css.sac@default:default"/>
         <setEntry value="org.w3c.dom.events@default:default"/>
-        <setEntry value="org.w3c.dom.smil*1.0.1.v200903091627@default:default"/>
+        <setEntry value="org.w3c.dom.smil@default:default"/>
         <setEntry value="org.w3c.dom.svg@default:default"/>
         <setEntry value="org.w3c.sac@default:default"/>
         <setEntry value="uk.co.spudsoft.birt.emitters.excel@default:default"/>
+        <setEntry value="wrapped.javax.xml.ws.jaxws-api@default:default"/>
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
         <setEntry value="jbpm@default:default"/>
