@@ -167,6 +167,7 @@ public class ConsolidatorCommand extends GenericCommand implements IAuthAwareCom
                                         source, target)))
                 .collect(Collectors.toSet()).contains(Boolean.TRUE);
         if (targetUpdated) {
+            getDaoFactory().getDAO(CnATreeElement.class).checkRights(target);
             target.getEntity().trackChange(userName);
         }
     }
@@ -200,7 +201,6 @@ public class ConsolidatorCommand extends GenericCommand implements IAuthAwareCom
         String oldValue = target.getEntity().getRawPropertyValue(property);
         String newValue = source.getEntity().getRawPropertyValue(property);
         if (!Objects.equal(oldValue, newValue)) {
-            getDaoFactory().getDAO(CnATreeElement.class).checkRights(target);
             target.setSimpleProperty(property, newValue);
             return true;
         }
