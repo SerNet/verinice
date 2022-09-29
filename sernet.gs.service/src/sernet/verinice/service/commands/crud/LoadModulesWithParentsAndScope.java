@@ -40,6 +40,7 @@ public class LoadModulesWithParentsAndScope extends GraphCommand implements Seri
 
     public LoadModulesWithParentsAndScope(Integer[] rootIds) {
         super();
+        setLoadLinks(false);
         GraphElementLoader processLoader = new GraphElementLoader();
         processLoader.setScopeIds(rootIds);
         processLoader.setTypeIds(new String[] { BusinessProcess.TYPE_ID, Application.TYPE_ID,
