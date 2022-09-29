@@ -16,6 +16,11 @@
  ******************************************************************************/
 package sernet.verinice.bp.rcp.consolidator;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.eclipse.core.databinding.observable.set.WritableSet;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -28,9 +33,16 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
+import sernet.gs.service.RuntimeCommandException;
+import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.service.commands.bp.ConsolidatorCheckPermissionsCommand;
+import sernet.verinice.service.commands.bp.ConsolidatorCheckPermissionsCommand.PermissionDeniedReason;
 
 /**
  * This is a page of the consolidator to select which data to consolidate.
@@ -59,14 +71,21 @@ public class DataSelectionPage extends WizardPage {
             } else {
                 wizard.getSelectedPropertyGroups().remove(option);
             }
+
+            checkPermissions();
         }
     }
 
     public DataSelectionPage(@NonNull ConsolidatorWizard wizard) {
-        super("wizardPage");
+        super("wizardPage"); //$NON-NLS-1$
         setTitle(Messages.dataSelection);
         setDescription(Messages.selectTheDataToBeConsolidated);
+        setPageComplete(false);
         this.wizard = wizard;
+        wizard.getSelectedModules().addChangeListener(event -> {
+            checkPermissions();
+            getContainer().updateButtons();
+        });
     }
 
     private Group createGroup(String title) {
@@ -140,5 +159,62 @@ public class DataSelectionPage extends WizardPage {
 
         scrolledComposite.setContent(composite);
         scrolledComposite.setMinSize(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        if (visible) {
+            checkPermissions();
+        }
+    }
+
+    private void checkPermissions() {
+        if (!Activator.getDefault().isStandalone()) {
+            setErrorMessage(null);
+            WritableSet<ConsolidatorTableContent> selectedModules = wizard.getSelectedModules();
+
+            Set<Integer> moduleIDs = selectedModules.stream().map(it -> it.getModule().getDbId())
+                    .collect(Collectors.toSet());
+
+            boolean needsWritePermissionOnModule = wizard.getSelectedPropertyGroups().stream()
+                    .anyMatch(it -> it.startsWith(BpRequirementGroup.TYPE_ID));
+            boolean needsWritePermissionOnRequirements = wizard.getSelectedPropertyGroups().stream()
+                    .anyMatch(it -> it.startsWith(BpRequirement.TYPE_ID)
+                            && !it.startsWith(BpRequirementGroup.TYPE_ID));
+            boolean needsWritePermissionOnSafeguards = wizard.getSelectedPropertyGroups().stream()
+                    .anyMatch(it -> it.startsWith(Safeguard.TYPE_ID));
+            boolean needsWritePermissionOnThreats = wizard.getSelectedPropertyGroups().stream()
+                    .anyMatch(it -> it.startsWith(BpThreat.TYPE_ID));
+
+            ConsolidatorCheckPermissionsCommand checkPermissionsCommand = new ConsolidatorCheckPermissionsCommand(
+                    moduleIDs, needsWritePermissionOnModule, needsWritePermissionOnRequirements,
+                    needsWritePermissionOnSafeguards, needsWritePermissionOnThreats);
+            try {
+                checkPermissionsCommand = ServiceFactory.lookupCommandService()
+                        .executeCommand(checkPermissionsCommand);
+                Map<Integer, PermissionDeniedReason> permissionIssues = checkPermissionsCommand
+                        .getPermissionIssues();
+                boolean issuesFound = !permissionIssues.isEmpty();
+                setPageComplete(!issuesFound);
+
+                if (issuesFound) {
+                    Set<PermissionDeniedReason> reasons = permissionIssues.values().stream()
+                            .collect(Collectors.toSet());
+                    if (reasons.contains(PermissionDeniedReason.MODULE)) {
+                        setErrorMessage(Messages.DataSelectionPage_PermissionError_Modules);
+                    } else if (reasons.contains(PermissionDeniedReason.REQUIREMENTS)) {
+                        setErrorMessage(Messages.DataSelectionPage_PermissionError_Requirements);
+                    } else if (reasons.contains(PermissionDeniedReason.LINKED_OBJECTS)) {
+                        setErrorMessage(Messages.DataSelectionPage_PermissionError_LinkedObjects);
+                    } else {
+                        throw new IllegalStateException("Unhandled reasons: " + reasons); //$NON-NLS-1$
+                    }
+                }
+            } catch (CommandException ex) {
+                throw new RuntimeCommandException("Error checking write permissions", ex); //$NON-NLS-1$
+            }
+        }
     }
 }

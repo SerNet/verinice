@@ -16,8 +16,12 @@
  ******************************************************************************/
 package sernet.verinice.bp.rcp.consolidator;
 
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.databinding.DataBindingContext;
@@ -34,37 +38,64 @@ import org.eclipse.jface.databinding.viewers.IViewerObservableSet;
 import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
 import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
 import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.IColorProvider;
+import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 
+import sernet.gs.service.RuntimeCommandException;
+import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.hui.swt.SWTResourceManager;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.service.commands.bp.ConsolidatorCheckPermissionsCommand;
+import sernet.verinice.service.commands.bp.ConsolidatorCheckPermissionsCommand.PermissionDeniedReason;
+
 /**
  * This is the page where the user selects the modules for the consolidator.
  */
 public class ModuleSelectionPage extends WizardPage {
     private List<ConsolidatorTableContent> allModules;
-    private WritableSet<ConsolidatorTableContent> selectedModules;
     private CheckboxTreeViewer treeViewer;
+    private ConsolidatorWizard wizard;
+    private Map<Integer, PermissionDeniedReason> moduleIDsWithWritePermissionIssues = Collections
+            .emptyMap();
 
-    public ModuleSelectionPage(@NonNull List<ConsolidatorTableContent> allModules,
-            @NonNull WritableSet<ConsolidatorTableContent> selectedModules) {
+    public ModuleSelectionPage(ConsolidatorWizard consolidatorWizard,
+            @NonNull List<ConsolidatorTableContent> allModules) {
         super("wizardPage");
+        this.wizard = consolidatorWizard;
         setPageComplete(false);
         this.allModules = allModules;
-        this.selectedModules = selectedModules;
         setTitle(Messages.selectModules);
         setDescription(Messages.selectTheModulesToBeConsolidated);
+        WritableSet<ConsolidatorTableContent> selectedModules = wizard.getSelectedModules();
+        selectedModules.addChangeListener(event -> {
 
-        this.selectedModules
-                .addChangeListener(event -> setPageComplete(!selectedModules.isEmpty()));
+            setPageComplete(!selectedModules.isEmpty());
+            setMessage(null, WARNING);
+            if (!moduleIDsWithWritePermissionIssues.isEmpty()) {
+                Set<Integer> moduleIDs = new HashSet<>(selectedModules.stream()
+                        .map(it -> it.getModule().getDbId()).collect(Collectors.toSet()));
+                moduleIDs.retainAll(moduleIDsWithWritePermissionIssues.keySet());
+                if (!moduleIDs.isEmpty()) {
+                    setMessage(Messages.nonWritableModulesWarning, WARNING);
+                }
+            }
+        });
     }
 
     @Override
@@ -135,6 +166,24 @@ public class ModuleSelectionPage extends WizardPage {
 
         if (allModules.isEmpty()) {
             setErrorMessage(Messages.noMatchingModules);
+        } else {
+            if (!Activator.getDefault().isStandalone()) {
+
+                Set<Integer> moduleIDs = allModules.stream().map(it -> it.getModule().getDbId())
+                        .collect(Collectors.toSet());
+
+                ConsolidatorCheckPermissionsCommand checkPermissionsCommand = new ConsolidatorCheckPermissionsCommand(
+                        moduleIDs, true, true, true, true);
+                try {
+                    checkPermissionsCommand = ServiceFactory.lookupCommandService()
+                            .executeCommand(checkPermissionsCommand);
+                    moduleIDsWithWritePermissionIssues = checkPermissionsCommand
+                            .getPermissionIssues();
+                    treeViewer.refresh(true);
+                } catch (CommandException e) {
+                    throw new RuntimeCommandException("Error checking write permissions", e);
+                }
+            }
         }
     }
 
@@ -155,7 +204,7 @@ public class ModuleSelectionPage extends WizardPage {
         IObservableMap<ConsolidatorTableContent, Object>[] observeMaps = observeMaps(
                 contentProvider.getKnownElements(), ConsolidatorTableContent.class,
                 new String[] { "title", "scope", "parent" });
-        treeViewer.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
+        treeViewer.setLabelProvider(new ModuleSelectionLabelProvider(observeMaps));
         //
         IObservableList<Object> selfList = Properties.selfList(ConsolidatorTableContent.class)
                 .observe(allModules.stream().map(x -> (Object) x).collect(Collectors.toList()));
@@ -163,8 +212,8 @@ public class ModuleSelectionPage extends WizardPage {
 
         IViewerObservableSet<ConsolidatorTableContent> checkboxTreeViewerObserveCheckedElements = ViewerProperties
                 .checkedElements(ConsolidatorTableContent.class).observe((Viewer) treeViewer);
-        bindingContext.bindSet(checkboxTreeViewerObserveCheckedElements, selectedModules, null,
-                null);
+        bindingContext.bindSet(checkboxTreeViewerObserveCheckedElements,
+                wizard.getSelectedModules(), null, null);
     }
 
     private static <E> IObservableMap<E, Object>[] observeMaps(IObservableSet<E> domain,
@@ -175,5 +224,44 @@ public class ModuleSelectionPage extends WizardPage {
             result[i] = PojoProperties.value(type, propertyNames[i]).observeDetail(domain);
         }
         return result;
+    }
+
+    private class ModuleSelectionLabelProvider extends ObservableMapLabelProvider
+            implements IColorProvider, IFontProvider {
+
+        private final Font italicFont;
+
+        public ModuleSelectionLabelProvider(
+                IObservableMap<ConsolidatorTableContent, Object>[] observeMaps) {
+            super(observeMaps);
+            Font defaultFont = JFaceResources.getDefaultFont();
+            FontData fontData = defaultFont.getFontData()[0];
+            italicFont = SWTResourceManager.getFont(fontData.getName(), fontData.getHeight(),
+                    SWT.ITALIC);
+        }
+
+        @Override
+        public Color getForeground(Object element) {
+            ConsolidatorTableContent c = (ConsolidatorTableContent) element;
+            if (moduleIDsWithWritePermissionIssues.containsKey(c.getModule().getDbId())) {
+                return SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY);
+            }
+            return null;
+        }
+
+        @Override
+        public Color getBackground(Object element) {
+            return null;
+        }
+
+        @Override
+        public Font getFont(Object element) {
+            ConsolidatorTableContent c = (ConsolidatorTableContent) element;
+            if (moduleIDsWithWritePermissionIssues.containsKey(c.getModule().getDbId())) {
+                return italicFont;
+            }
+            return null;
+        }
+
     }
 }

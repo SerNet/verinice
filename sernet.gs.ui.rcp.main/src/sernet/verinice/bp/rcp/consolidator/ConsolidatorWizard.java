@@ -40,7 +40,6 @@ import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.catalog.CatalogModel;
-import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.bp.ConsoliData;
 import sernet.verinice.service.commands.crud.LoadModulesWithParentsAndScope;
 
@@ -63,7 +62,7 @@ public class ConsolidatorWizard extends Wizard {
             .emptySet();
     final @NonNull BpRequirementGroup sourceModule;
     @SuppressWarnings("null")
-    private @NonNull WritableSet<@NonNull ConsolidatorTableContent> selectedTableContent = WritableSet
+    private @NonNull WritableSet<@NonNull ConsolidatorTableContent> selectedModules = WritableSet
             .withElementType(ConsolidatorTableContent.class);
     private @NonNull Set<String> selectedPropertyGroups = new HashSet<>();
 
@@ -122,7 +121,7 @@ public class ConsolidatorWizard extends Wizard {
         @NonNull
         List<@NonNull ConsolidatorTableContent> list = ConsolidatorTableContent
                 .getContent(potentialTargeRequirementGroupsAndScopes);
-        addPage(new ModuleSelectionPage(list, selectedTableContent));
+        addPage(new ModuleSelectionPage(this, list));
         addPage(new DataSelectionPage(this));
     }
 
@@ -133,7 +132,7 @@ public class ConsolidatorWizard extends Wizard {
         warning.setMessage(Messages.consolidatorWarning);
         if (warning.open() == SWT.YES) {
             ConsoliData xdata = new ConsoliData(sourceModule, selectedPropertyGroups,
-                    selectedTableContent.stream().map(x -> x.getModule().getUuid())
+                    selectedModules.stream().map(x -> x.getModule().getUuid())
                             .collect(Collectors.toSet()));
             String consolidatorError = Consolidator.consolidate(xdata);
             if (consolidatorError != null) {
@@ -148,7 +147,12 @@ public class ConsolidatorWizard extends Wizard {
         return true;
     }
 
-    public @NonNull Set<String> getSelectedPropertyGroups() {
+    @NonNull
+    Set<String> getSelectedPropertyGroups() {
         return selectedPropertyGroups;
+    }
+
+    WritableSet<ConsolidatorTableContent> getSelectedModules() {
+        return selectedModules;
     }
 }

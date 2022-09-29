@@ -51,6 +51,10 @@ public class Messages extends NLS {
     public static String consolidate;
     public static String consolidatorWarning;
     public static String consolidatorFailed;
+    public static String DataSelectionPage_PermissionError_LinkedObjects;
+    public static String DataSelectionPage_PermissionError_Modules;
+    public static String DataSelectionPage_PermissionError_Requirements;
+    public static String nonWritableModulesWarning;
 
     static {
         // initialize resource bundle
