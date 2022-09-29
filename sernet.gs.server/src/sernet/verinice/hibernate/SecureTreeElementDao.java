@@ -32,11 +32,13 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
+import sernet.gs.service.CollectionUtil;
 import sernet.gs.service.SecurityException;
 import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IConfigurationService;
+import sernet.verinice.interfaces.IDao;
 import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
@@ -200,8 +202,11 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
         }
 
         if (!hasAdminRole(roleArray)) {
-            idToScopeId
-                    .forEach((dbId, scopeId) -> checkRightsForNonAdmin(dbId, username, roleArray));
+            CollectionUtil
+                    .partition(List.copyOf(idToScopeId.keySet()), IDao.QUERY_MAX_ITEMS_IN_LIST)
+                    .forEach(chunk -> {
+                        checkRightsForNonAdmin(chunk, username, roleArray);
+                    });
         }
         if (isScopeOnly()) {
             Integer userScopeId = getConfigurationService().getScopeId(username);
@@ -218,26 +223,34 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
     }
 
     @SuppressWarnings("unchecked")
-    protected void checkRightsForNonAdmin(Integer dbId, String username, String[] roleArray) {
+    protected void checkRightsForNonAdmin(List<Integer> chunk, String username,
+            String[] roleArray) {
 
         DetachedCriteria criteria = DetachedCriteria.forClass(Permission.class)
-                .add(Restrictions.eq("cnaTreeElement.dbId", dbId))
+                .add(Restrictions.in("cnaTreeElement.dbId", chunk))
                 .add(Restrictions.eq("writeAllowed", true)).add(Restrictions.in("role", roleArray))
-                .setProjection(Projections.property("dbId"));
+                .setProjection(Projections.distinct(Projections.property("cnaTreeElement.dbId")));
         if (log.isDebugEnabled()) {
-            log.debug("checkRights, entity db-id: " + dbId);
+            log.debug("checkRights, entity db-id: " + chunk);
         }
 
         List<Integer> idList = getPermissionDao().findByCriteria(criteria);
         if (log.isDebugEnabled()) {
-            log.debug("checkRights, permission ids: ");
+            log.debug("checkRights, allowed element ids: ");
             for (Integer integer : idList) {
                 log.debug(integer);
             }
         }
-        if (idList == null || idList.isEmpty()) {
-            final String message = "User: " + username
-                    + " has no right to write CnATreeElement with id: " + dbId;
+        if (idList.size() != chunk.size()) {
+            String message;
+            if (chunk.size() == 1) {
+                message = "User: " + username + " has no right to write CnATreeElement with id: "
+                        + chunk.iterator().next();
+            } else {
+                message = "User: " + username + " has no right to write all " + chunk.size()
+                        + " CnATreeElements";
+
+            }
             log.warn(message);
             throw new SecurityException(message);
         }
