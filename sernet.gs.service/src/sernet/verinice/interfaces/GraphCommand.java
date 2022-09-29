@@ -43,6 +43,7 @@ public class GraphCommand extends GenericCommand implements IGraphCommand {
     private VeriniceGraph graph;
 
     private List<IGraphElementLoader> elementLoaderList;
+    private boolean loadLinks = true;
     private List<String> relationIdList;
 
     private transient IGraphService graphService;
@@ -69,11 +70,15 @@ public class GraphCommand extends GenericCommand implements IGraphCommand {
     }
 
     protected void initGraph() {
-        String[] relationIds = null;
-        if (relationIdList != null && !relationIdList.isEmpty()) {
-            relationIds = relationIdList.toArray(new String[relationIdList.size()]);
+        if (loadLinks) {
+            String[] relationIds = null;
+            if (relationIdList != null && !relationIdList.isEmpty()) {
+                relationIds = relationIdList.toArray(new String[relationIdList.size()]);
+            }
+            this.graph = getGraphService().create(getLoader(), relationIds);
+        } else {
+            this.graph = getGraphService().create(getLoader(), false);
         }
-        this.graph = getGraphService().create(getLoader(), relationIds);
     }
 
     @Override
@@ -92,6 +97,10 @@ public class GraphCommand extends GenericCommand implements IGraphCommand {
     @Override
     public void addLoader(IGraphElementLoader loader) {
         getLoader().add(loader);
+    }
+
+    protected void setLoadLinks(boolean loadLinks) {
+        this.loadLinks = loadLinks;
     }
 
     @Override
