@@ -63,12 +63,8 @@ public class ModuleSelectionPage extends WizardPage {
         setTitle(Messages.selectModules);
         setDescription(Messages.selectTheModulesToBeConsolidated);
 
-        this.selectedModules.addChangeListener(event -> setPageComplete(isPageComplete()));
-    }
-
-    @Override
-    public boolean isPageComplete() {
-        return !selectedModules.isEmpty();
+        this.selectedModules
+                .addChangeListener(event -> setPageComplete(!selectedModules.isEmpty()));
     }
 
     @Override
