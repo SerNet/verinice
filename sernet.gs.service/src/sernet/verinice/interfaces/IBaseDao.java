@@ -22,8 +22,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.orm.hibernate3.HibernateCallback;
+
+import sernet.verinice.model.common.CnATreeElement;
 
 public interface IBaseDao<T, ID extends Serializable> extends IDao<T, ID> {
 
@@ -129,5 +132,8 @@ public interface IBaseDao<T, ID extends Serializable> extends IDao<T, ID> {
     void clear();
 
     boolean contains(T entity);
+
+    Set<CnATreeElement> filterWritableElements(Collection<CnATreeElement> elements,
+            String userName);
 
 }

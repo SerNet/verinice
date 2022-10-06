@@ -392,6 +392,12 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         // empty
     }
 
+    @Override
+    public Set<CnATreeElement> filterWritableElements(Collection<CnATreeElement> elements,
+            String userName) {
+        return Set.copyOf(elements);
+    }
+
     public IElementSearchDao getSearchDao() {
         return searchDao;
     }

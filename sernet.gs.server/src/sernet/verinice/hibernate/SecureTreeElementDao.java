@@ -20,9 +20,12 @@ package sernet.verinice.hibernate;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
@@ -196,34 +199,67 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
     }
 
     private void doCheckRights(Map<Integer, Integer> idToScopeId, String username) {
+        Set<Integer> writableElements = filterWritableElements(idToScopeId, username);
+        if (writableElements.size() != idToScopeId.size()) {
+            String message;
+            if (idToScopeId.size() == 1) {
+                message = "User: " + username + " has no right to write CnATreeElement with id: "
+                        + idToScopeId.keySet().iterator().next();
+            } else {
+                message = "User: " + username + " has no right to write all " + idToScopeId.size()
+                        + " CnATreeElements";
+
+            }
+            log.warn(message);
+            throw new SecurityException(message);
+        }
+    }
+
+    @Override
+    public Set<CnATreeElement> filterWritableElements(Collection<CnATreeElement> entities,
+            String username) {
+        if (log.isDebugEnabled()) {
+            entities.forEach(element -> log.debug(
+                    "Checking rights for entity: " + element + " and username: " + username));
+        }
+        if (isPermissionHandlingNeeded()) {
+            Map<Integer, Integer> dbIdsToScopeIds = new HashMap<>(entities.size());
+            entities.forEach(entity -> dbIdsToScopeIds.put(entity.getDbId(), entity.getScopeId()));
+            Set<Integer> allowedIDs = filterWritableElements(dbIdsToScopeIds, username);
+            return entities.stream().filter(e -> allowedIDs.contains(e.getDbId()))
+                    .collect(Collectors.toSet());
+        } else {
+            return Set.copyOf(entities);
+        }
+    }
+
+    private Set<Integer> filterWritableElements(Map<Integer, Integer> idToScopeId,
+            String username) {
         String[] roleArray = getDynamicRoles(username);
         if (roleArray == null) {
             log.error("Role array is null for user: " + username);
         }
-
+        Set<Integer> result = new HashSet<>(idToScopeId.size());
         if (!hasAdminRole(roleArray)) {
             CollectionUtil
                     .partition(List.copyOf(idToScopeId.keySet()), IDao.QUERY_MAX_ITEMS_IN_LIST)
-                    .forEach(chunk -> {
-                        checkRightsForNonAdmin(chunk, username, roleArray);
-                    });
+                    .forEach(chunk -> result
+                            .addAll(filterWritableElementsForNonAdmin(chunk, username, roleArray)));
         }
         if (isScopeOnly()) {
             Integer userScopeId = getConfigurationService().getScopeId(username);
             for (Entry<Integer, Integer> e : idToScopeId.entrySet()) {
                 Integer scopeId = e.getValue();
                 if (!scopeId.equals(userScopeId)) {
-                    final String message = "User: " + username
-                            + " has no right to write CnATreeElement with id: " + e.getKey();
-                    log.warn(message);
-                    throw new SecurityException(message);
+                    result.remove(e.getKey());
                 }
             }
         }
+        return result;
     }
 
     @SuppressWarnings("unchecked")
-    protected void checkRightsForNonAdmin(List<Integer> chunk, String username,
+    protected Set<Integer> filterWritableElementsForNonAdmin(List<Integer> chunk, String username,
             String[] roleArray) {
 
         DetachedCriteria criteria = DetachedCriteria.forClass(Permission.class)
@@ -241,19 +277,7 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
                 log.debug(integer);
             }
         }
-        if (idList.size() != chunk.size()) {
-            String message;
-            if (chunk.size() == 1) {
-                message = "User: " + username + " has no right to write CnATreeElement with id: "
-                        + chunk.iterator().next();
-            } else {
-                message = "User: " + username + " has no right to write all " + chunk.size()
-                        + " CnATreeElements";
-
-            }
-            log.warn(message);
-            throw new SecurityException(message);
-        }
+        return chunk.stream().filter(idList::contains).collect(Collectors.toSet());
     }
 
     private void beforeExecution() {
