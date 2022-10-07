@@ -80,12 +80,14 @@ public class DataSelectionPage extends WizardPage {
         super("wizardPage"); //$NON-NLS-1$
         setTitle(Messages.dataSelection);
         setDescription(Messages.selectTheDataToBeConsolidated);
-        setPageComplete(false);
         this.wizard = wizard;
-        wizard.getSelectedModules().addChangeListener(event -> {
-            checkPermissions();
-            getContainer().updateButtons();
-        });
+        if (!Activator.getDefault().isStandalone()) {
+            setPageComplete(false);
+            wizard.getSelectedModules().addChangeListener(event -> {
+                checkPermissions();
+                getContainer().updateButtons();
+            });
+        }
     }
 
     private Group createGroup(String title) {
