@@ -240,7 +240,9 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
             log.error("Role array is null for user: " + username);
         }
         Set<Integer> result = new HashSet<>(idToScopeId.size());
-        if (!hasAdminRole(roleArray)) {
+        if (hasAdminRole(roleArray)) {
+            result.addAll(idToScopeId.keySet());
+        } else {
             CollectionUtil
                     .partition(List.copyOf(idToScopeId.keySet()), IDao.QUERY_MAX_ITEMS_IN_LIST)
                     .forEach(chunk -> result
