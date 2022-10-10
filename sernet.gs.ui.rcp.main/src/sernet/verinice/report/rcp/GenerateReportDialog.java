@@ -822,7 +822,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 return validDomains.contains(context);
             }
         });
-        reportSelector.setSelectedElements(new Object[] {});
+        if (chosenReportsMetaData.stream().noneMatch(t -> validDomains.contains(t.getContext()))) {
+            reportSelector.setSelectedElements(new Object[] {});
+        }
     }
 
     /**
