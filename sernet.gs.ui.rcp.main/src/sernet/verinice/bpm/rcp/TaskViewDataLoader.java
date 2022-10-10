@@ -384,8 +384,10 @@ public class TaskViewDataLoader {
                     taskView.getViewer());
             Display.getDefault().asyncExec(() -> {
                 refresh.refresh();
-                taskView.searchButton.setText(Messages.TaskView_29);
-                taskView.searchButton.setEnabled(true);
+                if (!taskView.searchButton.isDisposed()) {
+                    taskView.searchButton.setText(Messages.TaskView_29);
+                    taskView.searchButton.setEnabled(true);
+                }
             });
         }
     }
