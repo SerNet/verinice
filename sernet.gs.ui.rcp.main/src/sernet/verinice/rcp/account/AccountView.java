@@ -152,12 +152,6 @@ public class AccountView extends RightsEnabledView {
 
     private ModelChangeListener modelChangeListener;
 
-    private void init() throws CommandException {
-        findAccounts();
-        loadScopes();
-        initCombos();
-    }
-
     @Override
     public void createPartControl(Composite parent) {
         super.createPartControl(parent);
@@ -284,6 +278,7 @@ public class AccountView extends RightsEnabledView {
                 findAccounts();
             }
         });
+        initYesNoCombo(combo);
         return combo;
     }
 
@@ -305,6 +300,7 @@ public class AccountView extends RightsEnabledView {
                 findAccounts();
             }
         });
+        initYesNoCombo(combo);
         return combo;
     }
 
@@ -326,6 +322,7 @@ public class AccountView extends RightsEnabledView {
                 findAccounts();
             }
         });
+        initYesNoCombo(combo);
         return combo;
     }
 
@@ -706,7 +703,8 @@ public class AccountView extends RightsEnabledView {
                 try {
                     monitor.beginTask(Messages.AccountView_0, IProgressMonitor.UNKNOWN);
                     Activator.inheritVeriniceContextState();
-                    init();
+                    findAccounts();
+                    loadScopes();
                 } catch (Exception e) {
                     LOG.error("Error while loading data.", e); //$NON-NLS-1$
                     status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
@@ -727,15 +725,7 @@ public class AccountView extends RightsEnabledView {
         }
     }
 
-    protected void initCombos() {
-        getDisplay().syncExec(() -> {
-            initYesNoCombo(comboAdmin);
-            initYesNoCombo(comboLocalAdmin);
-            initYesNoCombo(comboScopeOnly);
-        });
-    }
-
-    private void initYesNoCombo(Combo combo) {
+    private static void initYesNoCombo(Combo combo) {
         combo.add(Messages.AccountView_35, COMBO_INDEX_BOTH);
         combo.add(Messages.AccountView_36, COMBO_INDEX_YES);
         combo.add(Messages.AccountView_37, COMBO_INDEX_NO);
