@@ -6,7 +6,7 @@ Element-Type: context
 Element-Version: 2.0
 Id: _tlZuIIx1Eei2UKUDmonytQ
 Runtime-Version: 2.5.3.202205021448
-Save-Time: 10/4/22, 4:35 PM
+Save-Time: 10/12/22, 10:26 AM
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
 Content-Type: text/ecl
@@ -16,11 +16,20 @@ global [val reportdir [concat [get-java-property basepath] [get-java-property "f
 
 
 proc "to-report-file" [val report] [val qualifier ""] [val suffix ".pdf"]  {
-    concat $reportdir [get-java-property "file.separator"] $qualifier $report $suffix| invoke replaceAll ":" "_" | invoke replaceAll " " "_" 
+   uri-from-path [concat $reportdir 
+                    [concat [get-java-property "file.separator"] $qualifier $report $suffix
+                       | invoke replaceAll ":" "_" | invoke replaceAll " " "_" ]
+                  ]
+}
+
+proc "to-report-file-for-dialog" [val report] [val qualifier ""] [val suffix ".pdf"]  {
+   concat $reportdir 
+                    [concat [get-java-property "file.separator"] $qualifier $report $suffix
+                       | invoke replaceAll ":" "_" | invoke replaceAll " " "_" ]
 }
 
 proc "report-result-file" [val testname]{
-    echo [concat $reportdir [get-java-property "file.separator"] $testname ".txt"]
+    uri-from-path [concat $reportdir [get-java-property "file.separator"] $testname ".txt"]
 }
 
 proc "test-for-report-file" [val testname] [val report] [val qualifier ""] [val suffix ".pdf"] {
