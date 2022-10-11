@@ -130,6 +130,7 @@ public abstract class ModelCopyTask implements Runnable {
                 .getRawPropertyValue(groupReleaseProperty);
         if (canUpdateFrom(scopeGroupRelease, compendiumGroupRelease)) {
             boolean elementRemoved = isElementRemoved(groupFromCompendium);
+            daoFactory.getDAO(CnATreeElement.class).checkRights(groupFromScope);
             updateExistingGroup(groupFromScope.getParent(), groupFromScope, groupFromCompendium,
                     elementRemoved);
         }
@@ -156,6 +157,7 @@ public abstract class ModelCopyTask implements Runnable {
                 if (shouldUpdate(scopeElement, compendiumElement)
                         && canUpdateFrom(scopeElementRelease, compendiumElementRelease)) {
                     boolean elementRemoved = isElementRemoved(compendiumElement);
+                    daoFactory.getDAO(CnATreeElement.class).checkRights(scopeElement);
                     updateExistingElement(groupFromScope.getParent(), scopeElement,
                             compendiumElement, elementRemoved);
                 } else {
