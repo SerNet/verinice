@@ -128,9 +128,11 @@ public abstract class ModelCopyTask implements Runnable {
                 .getRawPropertyValue(groupReleaseProperty);
         String compendiumGroupRelease = groupFromCompendium.getEntity()
                 .getRawPropertyValue(groupReleaseProperty);
+        boolean writeGroupPermissionChecked = false;
         if (canUpdateFrom(scopeGroupRelease, compendiumGroupRelease)) {
             boolean elementRemoved = isElementRemoved(groupFromCompendium);
             daoFactory.getDAO(CnATreeElement.class).checkRights(groupFromScope);
+            writeGroupPermissionChecked = true;
             updateExistingGroup(groupFromScope.getParent(), groupFromScope, groupFromCompendium,
                     elementRemoved);
         }
@@ -167,6 +169,9 @@ public abstract class ModelCopyTask implements Runnable {
             }
         }
         if (!missingElements.isEmpty()) {
+            if (!writeGroupPermissionChecked) {
+                daoFactory.getDAO(CnATreeElement.class).checkRights(groupFromScope);
+            }
             CopyCommand copyCommand = new ModelingCopyCommand(
                     groupFromScope.getParent(), groupFromScope.getUuid(), missingElements.stream()
                             .map(CnATreeElement::getUuid).collect(Collectors.toList()),
