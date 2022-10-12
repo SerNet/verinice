@@ -21,9 +21,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.Test;
 
-import org.junit.Assert;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.VeriniceContext;
@@ -49,7 +49,13 @@ public class IndividualDeadlineAdminEmailHandlerTest {
                 .createInstance(IndividualDeadlineAdminEmailHandlerTest.class
                         .getResource("/" + HUITypeFactory.HUI_CONFIGURATION_FILE));
         veriniceObjects.put(VeriniceContext.HUI_TYPE_FACTORY, huiTypeFactory);
-        ITaskService taskService = new TaskServiceDummy();
+        ITaskService taskService = new TaskServiceDummy() {
+            @Override
+            public String loadTaskDescription(String taskId, Map<String, Object> varMap,
+                    boolean isHtml) {
+                return "<b>Foo</b>";
+            }
+        };
         veriniceObjects.put(VeriniceContext.TASK_SERVICE, taskService);
 
         State state = new VeriniceContext.State();
@@ -63,6 +69,8 @@ public class IndividualDeadlineAdminEmailHandlerTest {
 
         Assert.assertEquals("M&uuml;ller", remindService.model
                 .get(IndividualDeadlineAdminEmailHandler.TEMPLATE_ASSIGNEE_NAME));
+
+        Assert.assertEquals("<b>Foo</b>", remindService.model.get("taskDescription"));
 
     }
 
