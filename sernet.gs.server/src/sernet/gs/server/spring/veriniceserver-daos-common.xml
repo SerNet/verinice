@@ -693,102 +693,88 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
-	<bean id="applicationGroupDAO" class="sernet.verinice.hibernate.TreeElementDao">
+	<bean id="applicationGroupDAO" parent="secureDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bp.groups.ApplicationGroup</value>
 		</constructor-arg>
-		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-  <bean id="bpPersonGroupDAO" class="sernet.verinice.hibernate.TreeElementDao">
+  <bean id="bpPersonGroupDAO" parent="secureDao">
     <constructor-arg>
         <value>sernet.verinice.model.bp.groups.BpPersonGroup</value>
     </constructor-arg>
-    <property name="sessionFactory" ref="sessionFactory" />
   </bean>
   
-  <bean id="bpRequirementGroupDAO" class="sernet.verinice.hibernate.TreeElementDao">
+  <bean id="bpRequirementGroupDAO" parent="secureDao">
     <constructor-arg>
         <value>sernet.verinice.model.bp.groups.BpRequirementGroup</value>
     </constructor-arg>
-    <property name="sessionFactory" ref="sessionFactory" />
   </bean>
   
-  <bean id="bpThreatGroupDAO" class="sernet.verinice.hibernate.TreeElementDao">
+  <bean id="bpThreatGroupDAO" parent="secureDao">
     <constructor-arg>
         <value>sernet.verinice.model.bp.groups.BpThreatGroup</value>
     </constructor-arg>
-    <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 	
-	<bean id="businessProcessGroupDAO" class="sernet.verinice.hibernate.TreeElementDao">
+	<bean id="businessProcessGroupDAO" parent="secureDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bp.groups.BusinessProcessGroup</value>
 		</constructor-arg>
-		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
  
-  <bean id="deviceGroupDAO" class="sernet.verinice.hibernate.TreeElementDao">
+  <bean id="deviceGroupDAO" parent="secureDao">
      <constructor-arg>
        <value>sernet.verinice.model.bp.groups.DeviceGroup</value>
      </constructor-arg>
-     <property name="sessionFactory" ref="sessionFactory" />
   </bean> 
 
-	<bean id="icsSystemGroupDAO" class="sernet.verinice.hibernate.TreeElementDao">
+	<bean id="icsSystemGroupDAO" parent="secureDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bp.groups.IcsSystemGroup</value>
 		</constructor-arg>
-		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>	
 	
-	<bean id="itSystemGroupDAO" class="sernet.verinice.hibernate.TreeElementDao">
+	<bean id="itSystemGroupDAO" parent="secureDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bp.groups.ItSystemGroup</value>
 		</constructor-arg>
-		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>	
 
-	<bean id="networkGroupDAO" class="sernet.verinice.hibernate.TreeElementDao">
+	<bean id="networkGroupDAO" parent="secureDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bp.groups.NetworkGroup</value>
 		</constructor-arg>
-		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
-	<bean id="roomGroupDAO" class="sernet.verinice.hibernate.TreeElementDao">
+	<bean id="roomGroupDAO" parent="secureDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bp.groups.RoomGroup</value>
 		</constructor-arg>
-		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
     
-  <bean id="safeguardGroupDAO" class="sernet.verinice.hibernate.TreeElementDao">
+  <bean id="safeguardGroupDAO" parent="secureDao">
     <constructor-arg>
       <value>sernet.verinice.model.bp.groups.SafeguardGroup</value>
     </constructor-arg>
-    <property name="sessionFactory" ref="sessionFactory" />
   </bean>
   
-    <bean id="bpDocumentGroupDAO" class="sernet.verinice.hibernate.TreeElementDao">
+    <bean id="bpDocumentGroupDAO" parent="secureDao">
         <constructor-arg>
             <value>sernet.verinice.model.bp.groups.BpDocumentGroup</value>
         </constructor-arg>
-        <property name="sessionFactory" ref="sessionFactory" />
     </bean>
   
-    <bean id="bpIncidentGroupDAO" class="sernet.verinice.hibernate.TreeElementDao">
+    <bean id="bpIncidentGroupDAO" parent="secureDao">
         <constructor-arg>
             <value>sernet.verinice.model.bp.groups.BpIncidentGroup</value>
         </constructor-arg>
-        <property name="sessionFactory" ref="sessionFactory" />
     </bean>
   
-    <bean id="bpRecordGroupDAO" class="sernet.verinice.hibernate.TreeElementDao">
+    <bean id="bpRecordGroupDAO" parent="secureDao">
         <constructor-arg>
             <value>sernet.verinice.model.bp.groups.BpRecordGroup</value>
         </constructor-arg>
-        <property name="sessionFactory" ref="sessionFactory" />
     </bean>
   
 			

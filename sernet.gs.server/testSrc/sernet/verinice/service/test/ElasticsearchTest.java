@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -31,6 +32,7 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.hamcrest.CoreMatchers;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.matchers.JUnitMatchers;
 
@@ -38,6 +40,8 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.search.IJsonBuilder;
 import sernet.verinice.interfaces.search.ISearchService;
+import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.Organization;
@@ -48,9 +52,10 @@ import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.search.IElementSearchDao;
 import sernet.verinice.search.Indexer;
+import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
-import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
+import sernet.verinice.service.test.helper.vnaimport.VNAImportHelper;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -60,7 +65,7 @@ import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
         "classpath:/sernet/gs/server/spring/veriniceserver-search-base.xml", // NON-NLS-1$
         "classpath:/sernet/gs/server/spring/veriniceserver-search.xml", // NON-NLS-1$
 })
-public class ElasticsearchTest extends BeforeEachVNAImportHelper {
+public class ElasticsearchTest extends AbstractModernizedBaseProtection {
 
     private static final Logger LOG = Logger.getLogger(ElasticsearchTest.class);
 
@@ -80,6 +85,21 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
 
     final String NEW_TITEL = "SerNet NOT defined yet";
     final String TITEL = "Cryptography";
+
+    private SyncCommand syncCommand;
+
+    @Before
+    public void setUp() throws IOException, CommandException, SyncParameterException {
+        syncCommand = VNAImportHelper.importFile(
+                this.getClass().getResource(VNA_FILENAME).getPath(), new SyncParameter(true, true,
+                        true, false, SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV));
+    }
+
+    @After
+    public void tearDown() throws CommandException {
+        VNAImportHelper.tearDown(syncCommand, elementDao);
+        searchDao.clear();
+    }
 
     @Test
     public void testIndexAndClear() {
@@ -204,10 +224,23 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
 
     }
 
-    @After
-    public void tearDown() throws CommandException {
-        searchDao.clear();
-        super.tearDown();
+    @Test
+    // VN-3119
+    public void findBpRequirementGroup() throws CommandException {
+        ItNetwork itNetwork = createNewBPOrganization();
+
+        createRequirementGroup(itNetwork, "Everything must be great");
+
+        searchIndexer.blockingIndexing();
+
+        VeriniceSearchResult result = searchService
+                .query(new VeriniceQuery("great", VeriniceQuery.MAX_LIMIT));
+        VeriniceSearchResultTable entity = result
+                .getVeriniceSearchObject(BpRequirementGroup.TYPE_ID);
+        assertNotNull(entity);
+
+        removeElement(itNetwork);
+
     }
 
     private void findAllElementsFromVna(boolean expectedResult) {
@@ -292,17 +325,6 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
         VeriniceQuery veriniceQuery = new VeriniceQuery(title, 200);
         VeriniceSearchResult result = searchService.query(veriniceQuery);
         return result;
-    }
-
-    @Override
-    protected String getFilePath() {
-        return this.getClass().getResource(VNA_FILENAME).getPath();
-    }
-
-    @Override
-    protected SyncParameter getSyncParameter() throws SyncParameterException {
-        return new SyncParameter(true, true, true, false,
-                SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
     }
 
 }

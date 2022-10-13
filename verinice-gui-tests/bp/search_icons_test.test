@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _EAi7sPh1EeiSda4Ee126Dw
-Runtime-Version: 2.5.1.M3
-Save-Time: 12/4/20, 4:51 PM
+Runtime-Version: 2.5.3.202205021448
+Save-Time: 10/14/22, 7:40 AM
 Testcase-Type: ecl
 Verifications: _wm5P0CtBEeuMltfUUtdvug
 
@@ -22,11 +22,18 @@ proc search [val query] {
 	}
 }
 
-proc "verify-search-icon" [val element] [val name] [val iconname] {
+proc "verify-search-icon" [val element] [val name] [val iconname] [val comboIndex 0]{
 	search $name
 	try -times 5 -delay 1000 -command {
-		get-view Suche | get-table | get-item -path $element -column Element | get-property "image.path" | equals
-			[concat "sernet.gs.ui.rcp.main/icons/base-protection/" $iconname ".png"] | verify-true
+		with [get-view Suche] {
+			with [get-combo] {
+				let [ val item [ get-combo-items | to-list | get $comboIndex ] ] {
+					select $item
+				}
+			}
+			get-table | get-item -path $element -column Element | get-property "image.path" | equals
+				[concat "sernet.gs.ui.rcp.main/icons/base-protection/" $iconname ".png"] | verify-true
+		}
 	}
 }
 
@@ -52,23 +59,24 @@ verify-search-icon "1c5" "1c5" ics_system
 
 import-compendium
 
-verify-search-icon "Sichere Anbindung von WLANs an ein LAN" "NET.2.1.A9" bp_requirement
+verify-search-icon "WLAN-Betrieb" "NET.2.1.A9" bp_requirement 0
+verify-search-icon "Sichere Anbindung von WLANs an ein LAN" "NET.2.1.A9" bp_requirement 1
 verify-search-icon "Sichere Anbindung von WLANs an ein LAN" "NET.2.1.M9" safeguard
 
 
-verify-search-icon Verlustmeldung "OPS.1.2.3.A5" bp_requirement
+verify-search-icon Verlustmeldung "OPS.1.2.3.A5" bp_requirement 1
 verify-search-icon Verlustmeldung "OPS.1.2.3.M5" safeguard
 
-verify-search-icon "Sichere Installation und Konfiguration von Standardsoftware" "CON.4.A3" bp_requirement
+verify-search-icon "Sichere Installation und Konfiguration von Standardsoftware" "CON.4.A3" bp_requirement 1
 verify-search-icon "Sichere Installation und Konfiguration von Standardsoftware" "CON.4.M3" safeguard
 
-verify-search-icon "Schutz der Authentisierung beim Einsatz von Active Directory" "APP.2.2.A9" bp_requirement
+verify-search-icon "Schutz der Authentisierung beim Einsatz von Active Directory" "APP.2.2.A9" bp_requirement 1
 verify-search-icon "Schutz der Authentisierung beim Einsatz von Active Directory" "APP.2.2.M9" safeguard
 
-verify-search-icon "Einsatzkriterien für IoT-Geräte" "SYS.4.4.A1" bp_requirement
+verify-search-icon "Einsatzkriterien für IoT-Geräte" "SYS.4.4.A1" bp_requirement 1
 verify-search-icon "Einsatzkriterien für IoT-Geräte" "SYS.4.4.M1" safeguard
 
-verify-search-icon "Zentrale Administration von Laptops" "SYS.3.1.A16" bp_requirement //TODO: remove " " from "Laptops " in compendium SYS.3.1.A16
+verify-search-icon "Zentrale Administration von Laptops" "SYS.3.1.A16" bp_requirement 1 //TODO: remove " " from "Laptops " in compendium SYS.3.1.A16
 verify-search-icon "Zentrale Administration von Laptops" "SYS.3.1.M16" safeguard
 
 delete-bpelement "1337"
