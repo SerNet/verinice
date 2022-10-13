@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _LtW4kD5EEe27m6rG3XFxWQ
 Runtime-Version: 2.5.3.202205021448
-Save-Time: 10/12/22, 10:44 AM
+Save-Time: 10/14/22, 3:21 PM
 Tags: bp
 Testcase-Type: ecl
 
@@ -19,6 +19,12 @@ proc "select-report" [val name]{
 get-window Report | get-group "" | get-object | invoke getChildren | invoke  get 1  
 | invoke setSelectedIndexByName $name
 }
+
+proc "to-report-file-for-dialog" [val report] [val qualifier ""] [val suffix ".pdf"]  {
+   concat $reportdir [concat [get-java-property "file.separator"] $qualifier $report $suffix
+                       | invoke replaceAll ":" "_" | invoke replaceAll " " "_" ]
+}
+
 
 log "Start test test-multible-reports"
 
