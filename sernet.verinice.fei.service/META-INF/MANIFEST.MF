@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: sernet.verinice.fei.service
 Bundle-SymbolicName: sernet.verinice.fei.service
-Bundle-Version: 1.25.0.qualifier
+Bundle-Version: 1.26.0.qualifier
 Bundle-Vendor: SerNet GmbH
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.apache.log4j;bundle-version="1.2.22",
