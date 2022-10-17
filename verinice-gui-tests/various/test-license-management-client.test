@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _8rWy4P1wEeqYO5h9EZ3cUQ
-Runtime-Version: 2.5.1.M3
-Save-Time: 1/18/21, 11:17 AM
+Runtime-Version: 2.5.3.202205021448
+Save-Time: 10/18/22, 1:52 PM
 Tags: ISO, clientOnlyTest
 Testcase-Type: ecl
 Verifications: _wm5P0CtBEeuMltfUUtdvug
@@ -27,11 +27,11 @@ global [val licenseDate "2031-01-01"]
 global [val isOSX [get-java-property "org.osgi.framework.os.name" | eq "MacOSX"]]
 
 proc "license-file" {
-	uri-from-path [concat $basedir [get-java-property "file.separator"]
+	 concat $basedir [get-java-property "file.separator"]
                            "wrks" [get-java-property "file.separator"]
                            "verinice-workspace" [get-java-property "file.separator"] 
                            "vnl" [get-java-property "file.separator"] 
-                           "MY_LIC.vnl"]
+                           "MY_LIC.vnl"
 }
 
 log "test-license-management"
@@ -48,13 +48,15 @@ get-view Objektbrowser | close
 
 log [concat "write license file:" [license-file]]
 read-file-in-data-dir "MY_LIC.vnl"|
-write-lines -uri [license-file]   -append false
+write-lines -uri [uri-from-path [license-file]]   -append false
 
 // on Mac OSX, the file watcher only polls every 10 seconds, so give it time to pick up the new file
 // see https://bugs.openjdk.java.net/browse/JDK-7133447
 // https://stackoverflow.com/questions/9588737/is-java-7-watchservice-slow-for-anyone-else
 if $isOSX {
-	wait 10000
+    wait 10000
+} -else {
+    wait 5000
 }
 
 get-button Objektbrowser | click 
@@ -65,11 +67,16 @@ get-view Objektbrowser | get-control Browser | get-property text | contains "kei
 
 get-view Objektbrowser | close
 log [concat "delete license file:" [license-file]]
-delete-file [license-file]
+delete-file [uri-from-path [license-file]]
+
+log [concat "test-license-management file exist: " [get-file [uri-from-path [license-file]] | get exists ]]
+get-file [uri-from-path [license-file]] | get exists | verify-false
 
 //see above
 if $isOSX {
 	wait 10000
+} -else {
+    wait 5000
 }
 
 get-button Objektbrowser | click 
