@@ -6,7 +6,7 @@ Element-Type: context
 Element-Version: 2.0
 Id: _tlZuIIx1Eei2UKUDmonytQ
 Runtime-Version: 2.5.3.202205021448
-Save-Time: 10/12/22, 10:26 AM
+Save-Time: 10/14/22, 2:51 PM
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
 Content-Type: text/ecl
@@ -14,27 +14,19 @@ Entry-Name: .ecl.context
 
 global [val reportdir [concat [get-java-property basepath] [get-java-property "file.separator"] "reports"]]
 
-
 proc "to-report-file" [val report] [val qualifier ""] [val suffix ".pdf"]  {
-   uri-from-path [concat $reportdir 
-                    [concat [get-java-property "file.separator"] $qualifier $report $suffix
-                       | invoke replaceAll ":" "_" | invoke replaceAll " " "_" ]
-                  ]
-}
-
-proc "to-report-file-for-dialog" [val report] [val qualifier ""] [val suffix ".pdf"]  {
    concat $reportdir 
                     [concat [get-java-property "file.separator"] $qualifier $report $suffix
                        | invoke replaceAll ":" "_" | invoke replaceAll " " "_" ]
 }
 
 proc "report-result-file" [val testname]{
-    uri-from-path [concat $reportdir [get-java-property "file.separator"] $testname ".txt"]
+    echo [concat $reportdir [get-java-property "file.separator"] $testname ".txt"]
 }
 
 proc "test-for-report-file" [val testname] [val report] [val qualifier ""] [val suffix ".pdf"] {
     try{
-        get-file [to-report-file $report $qualifier $suffix] | get exists | assert-true
+        get-file [uri-from-path [to-report-file $report $qualifier $suffix]] | get exists | assert-true
     } -catch {
         echo  [concat $report $qualifier $suffix " get-file failed"]  | write-lines  [report-result-file $testname] -append true
     }
@@ -45,7 +37,7 @@ proc "test-for-report-file" [val testname] [val report] [val qualifier ""] [val 
 * as reason of failure.
 */
 proc "test-for-report-errors" [val testname] {
-    get-file [report-result-file $testname]
+    get-file [uri-from-path [report-result-file $testname]]
     | get exists | not | assert-true 
         -message [return-report-error $testname]
 }
@@ -54,7 +46,7 @@ proc "test-for-report-errors" [val testname] {
 * Reads the error file as message.
 */
 proc "return-report-error" [val testname] {
-if [ get-file [report-result-file $testname] | get exists]
+if [ get-file [uri-from-path[report-result-file $testname]] | get exists]
     -then {
         concat "Error while creating reports" [read-lines [report-result-file $testname] ] 
     } -else {
