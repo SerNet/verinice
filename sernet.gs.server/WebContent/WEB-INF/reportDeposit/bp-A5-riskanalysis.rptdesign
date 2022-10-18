@@ -7855,7 +7855,7 @@
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
                     <label id="1090">
-                        <text-property name="text" key="main_label_abbr">Mitarbeiter:</text-property>
+                        <text-property name="text" key="main_label_employees">Mitarbeiter:</text-property>
                     </label>
                 </cell>
                 <cell id="1077">
@@ -8027,7 +8027,7 @@
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
                     <label id="1945">
-                        <text-property name="text" key="main_label_author">Version:</text-property>
+                        <text-property name="text" key="main_label_version">Version:</text-property>
                     </label>
                 </cell>
                 <cell id="1940">
