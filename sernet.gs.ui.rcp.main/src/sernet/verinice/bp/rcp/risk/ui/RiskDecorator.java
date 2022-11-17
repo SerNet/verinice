@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
@@ -50,6 +51,8 @@ import sernet.verinice.service.bp.risk.RiskService;
  */
 public class RiskDecorator extends LabelProvider implements ILightweightLabelDecorator {
 
+    private static final Logger logger = Logger.getLogger(RiskDecorator.class);
+
     private static final RGB GRAY = new RGB(180, 180, 180);
     private static final RGB BLACK = new RGB(0, 0, 0);
     private static final RGB WHITE = new RGB(255, 255, 255);
@@ -72,10 +75,12 @@ public class RiskDecorator extends LabelProvider implements ILightweightLabelDec
     public RiskDecorator() {
         decoratorEnabled = Activator.getDefault().getPreferenceStore()
                 .getBoolean(PreferenceConstants.SHOW_BP_RISK_ANALYSIS_DECORATOR);
+        logger.info("Initializing, decoratorEnabled = " + decoratorEnabled);
         Activator.getDefault().getPreferenceStore().addPropertyChangeListener(event -> {
             if (PreferenceConstants.SHOW_BP_RISK_ANALYSIS_DECORATOR.equals(event.getProperty())) {
                 decoratorEnabled = Activator.getDefault().getPreferenceStore()
                         .getBoolean(PreferenceConstants.SHOW_BP_RISK_ANALYSIS_DECORATOR);
+                logger.info("Activation state changed, decoratorEnabled = " + decoratorEnabled);
                 updateDecorations();
             }
         });
@@ -98,6 +103,9 @@ public class RiskDecorator extends LabelProvider implements ILightweightLabelDec
                 color = getColorForThreatGroup((BpThreatGroup) element);
             } else if (element instanceof ITargetObject) {
                 color = getColorForTargetObject((CnATreeElement) element);
+            }
+            if (logger.isDebugEnabled()) {
+                logger.debug("Color for " + element + " = " + element);
             }
             if (color != null) {
                 decoration.addOverlay(CACHED_OVERLAYS_PER_COLOR.computeIfAbsent(color,
