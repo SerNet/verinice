@@ -33,13 +33,10 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.ITargetObject;
 import sernet.hui.swt.SWTResourceManager;
-import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.risk.Risk;
@@ -73,13 +70,6 @@ public class RiskDecorator extends LabelProvider implements ILightweightLabelDec
     };
 
     public RiskDecorator() {
-        CnAElementFactory.getInstance().addLoadListener(new DefaultModelLoadListener() {
-            @Override
-            public void loaded(BpModel model) {
-                CnAElementFactory.getInstance().removeLoadListener(this);
-                super.loaded(model);
-            }
-        });
         decoratorEnabled = Activator.getDefault().getPreferenceStore()
                 .getBoolean(PreferenceConstants.SHOW_BP_RISK_ANALYSIS_DECORATOR);
         Activator.getDefault().getPreferenceStore().addPropertyChangeListener(event -> {
