@@ -35,6 +35,7 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.ITypedElement;
+import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.elements.BpPerson;
@@ -443,23 +444,31 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
      * @param enumType
      *            Enum class of property.
      */
-    public <T extends Enum<T>> T getDynamicEnumProperty(@NonNull String propertyType,
+    public <T extends Enum<T>> Set<T> getDynamicEnumProperty(@NonNull String propertyType,
             Class<T> enumType) {
         // The actual value is prefixed with entity type & property type
         // (entity_type_property_type_value).
-        String prefixedValue = getDynamicStringProperty(propertyType);
-        if (prefixedValue != null) {
-            String isolatedValue = prefixedValue
-                    .substring(getTypeId().length() + propertyType.length() + 2).toUpperCase();
-            try {
-                return Enum.valueOf(enumType, isolatedValue);
-            } catch (IllegalArgumentException ex) {
-                log.warn(MessageFormat.format(
-                        "Dynamic SNCA property {0} on entity type {1} has unexpected value.",
-                        propertyType, getTypeId()), ex);
+        String prefixedPropertyName = getDynamicPropertyName(propertyType);
+        PropertyList propertyList = getEntity().getTypedPropertyLists().get(prefixedPropertyName);
+        if (propertyList == null || propertyList.isEmpty()) {
+            return null;
+        }
+        Set<T> result = new HashSet<>(propertyList.getProperties().size());
+        for (Property property : propertyList.getProperties()) {
+            String prefixedValue = property.getPropertyValue();
+            if (prefixedValue != null) {
+                String isolatedValue = prefixedValue
+                        .substring(getTypeId().length() + propertyType.length() + 2).toUpperCase();
+                try {
+                    result.add(Enum.valueOf(enumType, isolatedValue));
+                } catch (IllegalArgumentException ex) {
+                    log.warn(MessageFormat.format(
+                            "Dynamic SNCA property {0} on entity type {1} has unexpected value.",
+                            propertyType, getTypeId()), ex);
+                }
             }
         }
-        return null;
+        return result;
     }
 
     public void setSimpleProperty(String typeId, String value) {

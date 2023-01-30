@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -42,7 +43,7 @@ public class DynamicEnumPropertyFilterTest {
         CnATreeElement treeElementMock = mock(CnATreeElement.class);
         when(treeElementMock.hasDynamicProperty("test_prop")).thenReturn(true);
         when(treeElementMock.getDynamicEnumProperty("test_prop", TestEnum.class))
-                .thenReturn(TestEnum.THIRD);
+                .thenReturn(Set.of(TestEnum.THIRD));
 
         Boolean passed = sut.select(null, null, treeElementMock);
 
@@ -58,11 +59,42 @@ public class DynamicEnumPropertyFilterTest {
         CnATreeElement treeElementMock = mock(CnATreeElement.class);
         when(treeElementMock.hasDynamicProperty("test_prop")).thenReturn(true);
         when(treeElementMock.getDynamicEnumProperty("test_prop", TestEnum.class))
-                .thenReturn(TestEnum.FIRST);
+                .thenReturn(Set.of(TestEnum.FIRST));
 
         Boolean passed = sut.select(null, null, treeElementMock);
 
         assertFalse(passed);
+    }
+
+    @Test
+    public void elementDoesNotPassForMissingProperty() {
+        DynamicEnumPropertyFilter<TestEnum> sut = new DynamicEnumPropertyFilter<>("test_prop",
+                TestEnum.class,
+                Stream.of(TestEnum.SECOND, TestEnum.THIRD).collect(Collectors.toSet()));
+
+        CnATreeElement treeElementMock = mock(CnATreeElement.class);
+        when(treeElementMock.hasDynamicProperty("test_prop")).thenReturn(true);
+        when(treeElementMock.getDynamicEnumProperty("test_prop", TestEnum.class)).thenReturn(null);
+
+        Boolean passed = sut.select(null, null, treeElementMock);
+
+        assertFalse(passed);
+    }
+
+    @Test
+    public void elementPassesForMultiValuedProperty() {
+        DynamicEnumPropertyFilter<TestEnum> sut = new DynamicEnumPropertyFilter<>("test_prop",
+                TestEnum.class,
+                Stream.of(TestEnum.SECOND, TestEnum.THIRD).collect(Collectors.toSet()));
+
+        CnATreeElement treeElementMock = mock(CnATreeElement.class);
+        when(treeElementMock.hasDynamicProperty("test_prop")).thenReturn(true);
+        when(treeElementMock.getDynamicEnumProperty("test_prop", TestEnum.class))
+                .thenReturn(Set.of(TestEnum.FIRST, TestEnum.SECOND));
+
+        Boolean passed = sut.select(null, null, treeElementMock);
+
+        assertTrue(passed);
     }
 }
 

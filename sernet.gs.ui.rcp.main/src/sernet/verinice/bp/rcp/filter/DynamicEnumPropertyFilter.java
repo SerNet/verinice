@@ -41,7 +41,7 @@ public class DynamicEnumPropertyFilter<T extends Enum<T>> extends AbstractDynami
 
     @Override
     protected boolean matches(CnATreeElement treeElement, String dynamicPropertyType) {
-        return filterValues
-                .contains(treeElement.getDynamicEnumProperty(dynamicPropertyType, enumType));
+        Set<T> elementValues = treeElement.getDynamicEnumProperty(dynamicPropertyType, enumType);
+        return elementValues != null && elementValues.stream().anyMatch(filterValues::contains);
     }
 }
