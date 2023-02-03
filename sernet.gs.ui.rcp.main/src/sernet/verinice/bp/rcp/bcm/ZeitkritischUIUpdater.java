@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.verinice.bp.rcp.bcm;
 
+import java.util.Optional;
 import java.util.Set;
 
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -60,8 +61,9 @@ class ZeitkritischUIUpdater implements IEntityChangedListener {
         if (deduceZeitkritisch) {
             CnATreeElement scope = Retriever.retrieveElement(element.getScopeId(),
                     RetrieveInfo.getPropertyInstance());
-            String damagePotentialValueRaw = scope.getEntity()
-                    .getRawPropertyValue(ItNetwork.PROP_UNTRAGBARKEITSNIVEAU);
+            String damagePotentialValueRaw = Optional.ofNullable(scope).map(
+                    it -> it.getEntity().getRawPropertyValue(ItNetwork.PROP_UNTRAGBARKEITSNIVEAU))
+                    .orElse(null);
             if (damagePotentialValueRaw == null || damagePotentialValueRaw.isEmpty()
                     || damagePotentialValueRaw
                             .equals(BCMUtils.DAMAGE_POTENTIAL_VALUE_UNEDITED_RAW)) {
