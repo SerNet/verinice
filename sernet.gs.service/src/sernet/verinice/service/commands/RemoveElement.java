@@ -132,7 +132,7 @@ public class RemoveElement extends GenericCommand
     }
 
     private void removeElement(CnATreeElement element) throws CommandException {
-        if (element instanceof IBpElement) {
+        if (element instanceof IBpElement && !element.getChildren().isEmpty()) {
             // We could be removing an element that has a safeguard as one
             // of its children. Since we want our manual event listeners to be
             // fired for those and their links as well (via element.remove()),
@@ -251,12 +251,16 @@ public class RemoveElement extends GenericCommand
     }
 
     private void checkRightsOfSubtree(CnATreeElement element) throws CommandException {
-        LoadSubtreeIds loadSubtreeIdsCommand = new LoadSubtreeIds(element);
-        loadSubtreeIdsCommand = getCommandService().executeCommand(loadSubtreeIdsCommand);
-        Set<Integer> dbIdsOfSubtree = loadSubtreeIdsCommand.getDbIdsOfSubtree();
-        Map<Serializable, Serializable> dbIdsToScopeIds = new HashMap<>(dbIdsOfSubtree.size());
-        dbIdsOfSubtree.forEach(id -> dbIdsToScopeIds.put(id, element.getScopeId()));
-        dao.checkRights(dbIdsToScopeIds);
+        if (element.getChildren().isEmpty()) {
+            dao.checkRights(element);
+        } else {
+            LoadSubtreeIds loadSubtreeIdsCommand = new LoadSubtreeIds(element);
+            loadSubtreeIdsCommand = getCommandService().executeCommand(loadSubtreeIdsCommand);
+            Set<Integer> dbIdsOfSubtree = loadSubtreeIdsCommand.getDbIdsOfSubtree();
+            Map<Serializable, Serializable> dbIdsToScopeIds = new HashMap<>(dbIdsOfSubtree.size());
+            dbIdsOfSubtree.forEach(id -> dbIdsToScopeIds.put(id, element.getScopeId()));
+            dao.checkRights(dbIdsToScopeIds);
+        }
     }
 
     /**
