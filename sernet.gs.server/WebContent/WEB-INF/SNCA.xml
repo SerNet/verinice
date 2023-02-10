@@ -9397,7 +9397,7 @@ Wurden bereits weitere Stellen informiert?
                  <option id="process_reporting_GFP_trainingNichtVorhanden" name="Nicht vorhanden" />
  			</huiproperty>
  		
- 			<huiproperty id="process_reporting_kennzahl1" inputtype="text" name="Kennzahl " tags="Risk"/>
+ 			<huiproperty id="process_reporting_kennzahl1" inputtype="text" name="Kennzahl " tags="BCM"/>
  			 <huiproperty id="process_reporting_Zielwert" name="Zielwert" required="false" />
  			 	 <huiproperty id="process_reporting_istWert" name="Ist-Wert" required="false" />
  			 	  <huiproperty id="process_reporting_sollIstWertAbweichung"
@@ -11871,7 +11871,7 @@ Wurden bereits weitere Stellen informiert?
                  <option id="bp_businessprocess_reporting_GFP_trainingNichtVorhanden" name="Nicht vorhanden" />
  			</huiproperty>
  		
- 			<huiproperty id="bp_businessprocess_reporting_kennzahl1" inputtype="text" name="Kennzahl " tags="Risk"/>
+ 			<huiproperty id="bp_businessprocess_reporting_kennzahl1" inputtype="text" name="Kennzahl " tags="BCM"/>
  			 <huiproperty id="bp_businessprocess_reporting_Zielwert" name="Zielwert" required="false" />
  			 	 <huiproperty id="bp_businessprocess_reporting_istWert" name="Ist-Wert" required="false" />
  			 	  <huiproperty id="bp_businessprocess_reporting_sollIstWertAbweichung"
