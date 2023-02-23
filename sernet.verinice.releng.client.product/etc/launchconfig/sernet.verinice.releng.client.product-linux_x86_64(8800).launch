@@ -15,6 +15,7 @@
     <setAttribute key="deselected_workspace_bundles"/>
     <booleanAttribute key="includeOptional" value="false"/>
     <stringAttribute key="location" value="${workspace_loc}/../runtime-sernet.verinice.releng.client.product"/>
+    <booleanAttribute key="org.eclipse.debug.core.ATTR_FORCE_SYSTEM_CONSOLE_ENCODING" value="false"/>
     <listAttribute key="org.eclipse.debug.ui.favoriteGroups">
         <listEntry value="org.eclipse.debug.ui.launchGroup.debug"/>
     </listAttribute>
@@ -28,13 +29,15 @@
     <stringAttribute key="productFile" value="/sernet.verinice.releng.client.product/sernet.verinice.releng.client.product"/>
     <setAttribute key="selected_target_bundles">
         <setEntry value="antlr*2.7.7@default:default"/>
+        <setEntry value="bcpg@default:default"/>
+        <setEntry value="bcprov@default:default"/>
         <setEntry value="ch.qos.logback.classic@default:default"/>
         <setEntry value="ch.qos.logback.core@default:default"/>
         <setEntry value="ch.qos.logback.slf4j@default:false"/>
         <setEntry value="com.github.librepdf.openpdf@default:default"/>
         <setEntry value="com.google.gson@default:default"/>
         <setEntry value="com.ibm.icu*67.1.0.v20200706-1749@default:default"/>
-        <setEntry value="com.ibm.icu*70.1.0@default:default"/>
+        <setEntry value="com.ibm.icu*72.1.0@default:default"/>
         <setEntry value="com.mchange.c3p0@default:default"/>
         <setEntry value="com.mchange.commons-java@default:default"/>
         <setEntry value="com.opencsv@default:default"/>
@@ -81,7 +84,8 @@
         <setEntry value="org.apache.batik.anim@default:default"/>
         <setEntry value="org.apache.batik.awt.util@default:default"/>
         <setEntry value="org.apache.batik.bridge@default:default"/>
-        <setEntry value="org.apache.batik.constants@default:default"/>
+        <setEntry value="org.apache.batik.constants*1.14.0.v20210324-0332@default:default"/>
+        <setEntry value="org.apache.batik.constants*1.16.0.v20221027-0840@default:default"/>
         <setEntry value="org.apache.batik.css@default:default"/>
         <setEntry value="org.apache.batik.dom.svg@default:default"/>
         <setEntry value="org.apache.batik.dom@default:default"/>
@@ -97,9 +101,9 @@
         <setEntry value="org.apache.commons.codec@default:default"/>
         <setEntry value="org.apache.commons.collections4@default:default"/>
         <setEntry value="org.apache.commons.collections@default:default"/>
-        <setEntry value="org.apache.commons.commons-io@default:default"/>
         <setEntry value="org.apache.commons.compress@default:default"/>
         <setEntry value="org.apache.commons.httpclient@default:default"/>
+        <setEntry value="org.apache.commons.io@default:default"/>
         <setEntry value="org.apache.commons.jxpath@default:default"/>
         <setEntry value="org.apache.commons.lang3@default:default"/>
         <setEntry value="org.apache.commons.logging@default:default"/>
@@ -117,8 +121,6 @@
         <setEntry value="org.apache.xalan@default:default"/>
         <setEntry value="org.apache.xmlbeans@default:default"/>
         <setEntry value="org.apache.xmlgraphics@default:default"/>
-        <setEntry value="org.bouncycastle.bcpg@default:default"/>
-        <setEntry value="org.bouncycastle.bcprov@default:default"/>
         <setEntry value="org.eclipse.ant.core.nl_cs@default:false"/>
         <setEntry value="org.eclipse.ant.core.nl_de@default:false"/>
         <setEntry value="org.eclipse.ant.core.nl_it@default:false"/>

@@ -94,7 +94,7 @@ Export-Package: de.sernet.model.licensemanagement,
  sernet.verinice.service.tree
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Eclipse-RegisterBuddy: sernet.springclient,com.springsource.org.hibernate
-Require-Bundle: org.apache.commons.commons-io,
+Require-Bundle: org.apache.commons.io,
  org.apache.log4j;bundle-version="1.2.22",
  sernet.hui.common,
  jbpm;bundle-version="4.4.1",
@@ -116,8 +116,8 @@ Require-Bundle: org.apache.commons.commons-io,
  javax.jws;bundle-version="2.0.0",
  jakarta.activation-api;bundle-version="1.2.2",
  wrapped.javax.xml.ws.jaxws-api;bundle-version="2.1.0",
- org.bouncycastle.bcprov;bundle-version="1.65.1",
- com.ibm.icu;bundle-version="67.1.0"
+ com.ibm.icu;bundle-version="67.1.0",
+ bcprov;bundle-version="1.72.0"
 Import-Package: org.eclipse.osgi.util,
  org.hibernate,
  org.hibernate.criterion,
