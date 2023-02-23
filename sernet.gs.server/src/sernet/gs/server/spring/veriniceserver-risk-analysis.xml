@@ -56,8 +56,8 @@
         <!-- See class ActionRightIDs for a list of all action ids.-->
         <security:intercept-methods>
             <security:protect
-                method="sernet.verinice.service.bp.risk.RiskServiceImpl.*"
-                access="ACTION_ID_RISKANALYSIS" />
+                method="sernet.verinice.service.bp.risk.RiskServiceImpl.updateRiskConfiguration*"
+                access="ACTION_ID_EDITRISKCONFIGURATION" />
         </security:intercept-methods>
     </bean>
     
