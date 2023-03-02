@@ -6342,6 +6342,144 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             name="Tags"
             tooltip="List of tags, separated by comma or space"
             tags="Basic"/>
+            
+            <!-- START: Attributes customizing according ISO/IEC 27002:2022-->  
+        <huiproperty
+            name="Control type"
+            id="control_type"
+            tooltip="Control type of ISO/IEC 27002:2022"
+            required="false"
+            inputtype="multioption"
+            tags="ISM:ISO/IEC_27002:2022_Control_Attributes">
+             <option
+                id="control_type_0"
+                name="#Preventive" />
+                <option
+                id="control_type_1"
+                name="#Detective" />
+                <option
+                id="control_type_2"
+                name="#Corrective" />
+        </huiproperty>
+        
+        <huiproperty
+            name="Information security properties"
+            id="control_information_security_properties"
+            tooltip="Information security properties of ISO/IEC 27002:2022"
+            required="false"
+            inputtype="multioption"
+            tags="ISM:ISO/IEC_27002:2022_Control_Attributes">
+             <option
+                id="control_information_security_properties_0"
+                name="#Confidentiality" />
+                <option
+                id="control_information_security_properties_1"
+                name="#Integrity" />
+                <option
+                id="control_information_security_properties_2"
+                name="#Availability" />
+        </huiproperty>
+            
+        <huiproperty
+            name="Cybersecurity concepts"
+            id="control_cybersecurity_concepts"
+            tooltip="Cybersecurity concepts of ISO/IEC 27002:2022 and ISO/IEC TS 27110"
+            required="false"
+            inputtype="multioption"
+            tags="ISM:ISO/IEC_27002:2022_Control_Attributes">
+             <option
+                id="control_cybersecurity_concepts_0"
+                name="#Identity" />
+                <option
+                id="control_cybersecurity_concepts_1"
+                name="#Protect" />
+                <option
+                id="control_cybersecurity_concepts_2"
+                name="#Detect" />
+                <option
+                id="control_cybersecurity_concepts_3"
+                name="#Respond" />
+                <option
+                id="control_cybersecurity_concepts_4"
+                name="#Recover" />
+        </huiproperty>
+        
+        <huiproperty
+            name="Operational capabilities"
+            id="control_operational_capabilities"
+            tooltip="Operational capabilities of ISO/IEC 27002:2022"
+            required="false"
+            inputtype="multioption"
+            tags="ISM:ISO/IEC_27002:2022_Control_Attributes">
+             <option
+                id="control_operational_capabilities_0"
+                name="#Governance" />
+                <option
+                id="control_operational_capabilities_1"
+                name="#Asset_management" />
+                <option
+                id="control_operational_capabilities_2"
+                name="#Information_protection" />
+                <option
+                id="control_operational_capabilities_3"
+                name="#Human_resource_security" />
+                <option
+                id="control_operational_capabilities_4"
+                name="#Physical_security" />
+                <option
+                id="control_operational_capabilities_5"
+                name="#System_and_network_security" />
+                <option
+                id="control_operational_capabilities_6"
+                name="#Application_security" />
+                <option
+                id="control_operational_capabilities_7"
+                name="#Secure_configuration" />
+                <option
+                id="control_operational_capabilities_8"
+                name="#Identity_and_access_management" />
+                <option
+                id="control_operational_capabilities_9"
+                name="#Threat_and_vulnerability_management" />
+                <option
+                id="control_operational_capabilities_10"
+                name="#Continuity" />
+                <option
+                id="control_operational_capabilities_11"
+                name="#Supplier_relationships_security" />
+                <option
+                id="control_operational_capabilities_12"
+                name="#Legal_and_compliance" />
+                <option
+                id="control_operational_capabilities_13"
+                name="#Information_security_event_management" />
+                <option
+                id="control_operational_capabilities_14"
+                name="#Information_security_assurance" />
+        </huiproperty>
+        
+        <huiproperty
+            name="Security domains"
+            id="control_security_domains"
+            tooltip="Cybersecurity domains of ISO/IEC 27002:2022"
+            required="false"
+            inputtype="multioption"
+            tags="ISM:ISO/IEC_27002:2022_Control_Attributes">
+             <option
+                id="control_security_domains_0"
+                name="#Governance_and_Ecosystem" />
+                <option
+                id="control_security_domains_1"
+                name="#Protection" />
+                <option
+                id="control_security_domains_2"
+                name="#Defence" />
+                <option
+                id="control_security_domains_3"
+                name="#Resilience" />
+        </huiproperty>
+        <!-- END: Attributes customizing according ISO/IEC 27002:2022-->    
+
         <huiproperty
             name="Description"
             id="control_desc"
@@ -6352,6 +6490,20 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             name="Document"
             id="control_document"
             isURL="true" />
+
+		<!-- START: Attributes customizing according ISO/IEC 27002:2022-->	
+
+
+        <huiproperty id="control_release" name="Release" editable="true" />
+        <huiproperty id="control_change_type" name="Change type" inputtype="multioption" editable="true">
+            <option id="control_change_type_new" name="New" />
+            <option id="control_type_changed" name="Changed" />
+            <option id="control_type_reordered" name="Reordered" />
+            <option id="control_change_type_removed" name="Removed" />
+        </huiproperty>
+
+		<!-- END: Attributes customizing according ISO/IEC 27002:2022-->	
+
 
 
 <!--
@@ -13696,6 +13848,145 @@ Wurden bereits weitere Stellen informiert?
             showInObjectBrowser="false" visible="true" />
         <huiproperty id="bp_requirement_tag" name="Tags"
             tooltip="List of tags, separated by comma or space" />
+            
+        <!-- START: Attributes customizing according ISO/IEC 27002:2022-->  
+        <huiproperty
+            name="Control type"
+            id="bp_requirement_type"
+            tooltip="Control type of ISO/IEC 27002:2022"
+            required="false"
+            inputtype="multioption"
+            tags="BSI:ISO/IEC_27002:2022_Control_Attributes">
+             <option
+                id="bp_requirement_type_0"
+                name="#Preventive" />
+                <option
+                id="bp_requirement_type_1"
+                name="#Detective" />
+                <option
+                id="bp_requirement_type_2"
+                name="#Corrective" />
+        </huiproperty>
+        
+        <huiproperty
+            name="Information security properties"
+            id="bp_requirement_information_security_properties"
+            tooltip="Information security properties of ISO/IEC 27002:2022"
+            required="false"
+            inputtype="multioption"
+            tags="BSI:ISO/IEC_27002:2022_Control_Attributes">
+             <option
+                id="bp_requirement_information_security_properties_0"
+                name="#Confidentiality" />
+                <option
+                id="bp_requirement_information_security_properties_1"
+                name="#Integrity" />
+                <option
+                id="bp_requirement_information_security_properties_2"
+                name="#Availability" />
+        </huiproperty>
+            
+        <huiproperty
+            name="Cybersecurity concepts"
+            id="bp_requirement_cybersecurity_concepts"
+            tooltip="Cybersecurity concepts of ISO/IEC 27002:2022 and ISO/IEC TS 27110"
+            required="false"
+            inputtype="multioption"
+            tags="BSI:ISO/IEC_27002:2022_Control_Attributes">
+             <option
+                id="bp_requirement_cybersecurity_concepts_0"
+                name="#Identity" />
+                <option
+                id="bp_requirement_cybersecurity_concepts_1"
+                name="#Protect" />
+                <option
+                id="bp_requirement_cybersecurity_concepts_2"
+                name="#Detect" />
+                <option
+                id="bp_requirement_cybersecurity_concepts_3"
+                name="#Respond" />
+                <option
+                id="bp_requirement_cybersecurity_concepts_4"
+                name="#Recover" />
+        </huiproperty>
+        
+        <huiproperty
+            name="Operational capabilities"
+            id="bp_requirement_operational_capabilities"
+            tooltip="Operational capabilities of ISO/IEC 27002:2022"
+            required="false"
+            inputtype="multioption"
+            tags="BSI:ISO/IEC_27002:2022_Control_Attributes">
+             <option
+                id="bp_requirement_operational_capabilities_0"
+                name="#Governance" />
+                <option
+                id="bp_requirement_operational_capabilities_1"
+                name="#Asset_management" />
+                <option
+                id="bp_requirement_operational_capabilities_2"
+                name="#Information_protection" />
+                <option
+                id="bp_requirement_operational_capabilities_3"
+                name="#Human_resource_security" />
+                <option
+                id="bp_requirement_operational_capabilities_4"
+                name="#Physical_security" />
+                <option
+                id="bp_requirement_operational_capabilities_5"
+                name="#System_and_network_security" />
+                <option
+                id="bp_requirement_operational_capabilities_6"
+                name="#Application_security" />
+                <option
+                id="bp_requirement_operational_capabilities_7"
+                name="#Secure_configuration" />
+                <option
+                id="bp_requirement_operational_capabilities_8"
+                name="#Identity_and_access_management" />
+                <option
+                id="bp_requirement_operational_capabilities_9"
+                name="#Threat_and_vulnerability_management" />
+                <option
+                id="bp_requirement_operational_capabilities_10"
+                name="#Continuity" />
+                <option
+                id="bp_requirement_operational_capabilities_11"
+                name="#Supplier_relationships_security" />
+                <option
+                id="bp_requirement_operational_capabilities_12"
+                name="#Legal_and_compliance" />
+                <option
+                id="bp_requirement_operational_capabilities_13"
+                name="#Information_security_event_management" />
+                <option
+                id="bp_requirement_operational_capabilities_14"
+                name="#Information_security_assurance" />
+        </huiproperty>
+        
+        <huiproperty
+            name="Security domains"
+            id="bp_requirement_security_domains"
+            tooltip="Cybersecurity domains of ISO/IEC 27002:2022"
+            required="false"
+            inputtype="multioption"
+            tags="BSI:ISO/IEC_27002:2022_Control_Attributes">
+             <option
+                id="bp_requirement_security_domains_0"
+                name="#Governance_and_Ecosystem" />
+                <option
+                id="bp_requirement_security_domains_1"
+                name="#Protection" />
+                <option
+                id="bp_requirement_security_domains_2"
+                name="#Defence" />
+                <option
+                id="bp_requirement_security_domains_3"
+                name="#Resilience" />
+        </huiproperty>
+        <!-- END: Attributes customizing according ISO/IEC 27002:2022-->
+            
+            
         <huiproperty id="bp_requirement_document" isURL="true" name="Document" />
         <huiproperty id="bp_requirement_last_change" name="Last Change" inputtype="date"
             editable="false">
@@ -15476,6 +15767,144 @@ Wurden bereits weitere Stellen informiert?
             showInObjectBrowser="false" textrows="4" visible="true" />
         <huiproperty id="bp_safeguard_tag" name="Tags"
             tooltip="List of tags, separated by comma or space" />
+			
+			<!-- START: Attributes customizing according ISO/IEC 27002:2022-->	
+		<huiproperty
+            name="Control type"
+            id="bp_safeguard_type"
+            tooltip="Control type of ISO/IEC 27002:2022"
+            required="false"
+            inputtype="multioption"
+			tags="BSI:ISO/IEC_27002:2022_Control_Attributes">
+			 <option
+                id="bp_safeguard_type_0"
+                name="#Preventive" />
+				<option
+                id="bp_safeguard_type_1"
+                name="#Detective" />
+				<option
+                id="bp_safeguard_type_2"
+                name="#Corrective" />
+		</huiproperty>
+		
+		<huiproperty
+            name="Information security properties"
+            id="bp_safeguard_information_security_properties"
+            tooltip="Information security properties of ISO/IEC 27002:2022"
+            required="false"
+            inputtype="multioption"
+			tags="BSI:ISO/IEC_27002:2022_Control_Attributes">
+			 <option
+                id="bp_safeguard_information_security_properties_0"
+                name="#Confidentiality" />
+				<option
+                id="bp_safeguard_information_security_properties_1"
+                name="#Integrity" />
+				<option
+                id="bp_safeguard_information_security_properties_2"
+                name="#Availability" />
+		</huiproperty>
+			
+		<huiproperty
+            name="Cybersecurity concepts"
+            id="bp_safeguard_cybersecurity_concepts"
+            tooltip="Cybersecurity concepts of ISO/IEC 27002:2022 and ISO/IEC TS 27110"
+            required="false"
+            inputtype="multioption"
+			tags="BSI:ISO/IEC_27002:2022_Control_Attributes">
+			 <option
+                id="bp_safeguard_cybersecurity_concepts_0"
+                name="#Identity" />
+				<option
+                id="bp_safeguard_cybersecurity_concepts_1"
+                name="#Protect" />
+				<option
+                id="bp_safeguard_cybersecurity_concepts_2"
+                name="#Detect" />
+				<option
+                id="bp_safeguard_cybersecurity_concepts_3"
+                name="#Respond" />
+				<option
+                id="bp_safeguard_cybersecurity_concepts_4"
+                name="#Recover" />
+		</huiproperty>
+		
+		<huiproperty
+            name="Operational capabilities"
+            id="bp_safeguard_operational_capabilities"
+            tooltip="Operational capabilities of ISO/IEC 27002:2022"
+            required="false"
+            inputtype="multioption"
+			tags="BSI:ISO/IEC_27002:2022_Control_Attributes">
+			 <option
+                id="bp_safeguard_operational_capabilities_0"
+                name="#Governance" />
+				<option
+                id="bp_safeguard_operational_capabilities_1"
+                name="#Asset_management" />
+				<option
+                id="bp_safeguard_operational_capabilities_2"
+                name="#Information_protection" />
+				<option
+                id="bp_safeguard_operational_capabilities_3"
+                name="#Human_resource_security" />
+				<option
+                id="bp_safeguard_operational_capabilities_4"
+                name="#Physical_security" />
+				<option
+                id="bp_safeguard_operational_capabilities_5"
+                name="#System_and_network_security" />
+				<option
+                id="bp_safeguard_operational_capabilities_6"
+                name="#Application_security" />
+				<option
+                id="bp_safeguard_operational_capabilities_7"
+                name="#Secure_configuration" />
+				<option
+                id="bp_safeguard_operational_capabilities_8"
+                name="#Identity_and_access_management" />
+				<option
+                id="bp_safeguard_operational_capabilities_9"
+                name="#Threat_and_vulnerability_management" />
+				<option
+                id="bp_safeguard_operational_capabilities_10"
+                name="#Continuity" />
+				<option
+                id="bp_safeguard_operational_capabilities_11"
+                name="#Supplier_relationships_security" />
+				<option
+                id="bp_safeguard_operational_capabilities_12"
+                name="#Legal_and_compliance" />
+				<option
+                id="bp_safeguard_operational_capabilities_13"
+                name="#Information_security_event_management" />
+				<option
+                id="bp_safeguard_operational_capabilities_14"
+                name="#Information_security_assurance" />
+		</huiproperty>
+		
+		<huiproperty
+            name="Security domains"
+            id="bp_safeguard_security_domains"
+            tooltip="Cybersecurity domains of ISO/IEC 27002:2022"
+            required="false"
+            inputtype="multioption"
+			tags="BSI:ISO/IEC_27002:2022_Control_Attributes">
+			 <option
+                id="bp_safeguard_security_domains_0"
+                name="#Governance_and_Ecosystem" />
+				<option
+                id="bp_safeguard_security_domains_1"
+                name="#Protection" />
+				<option
+                id="bp_safeguard_security_domains_2"
+                name="#Defence" />
+				<option
+                id="bp_safeguard_security_domains_3"
+                name="#Resilience" />
+		</huiproperty>
+		<!-- END: Attributes customizing according ISO/IEC 27002:2022-->
+			
         <huiproperty id="bp_safeguard_document" isURL="true" name="Document" />
           
         <huiproperty id="bp_safeguard_last_change" name="Last Change" inputtype="date"
