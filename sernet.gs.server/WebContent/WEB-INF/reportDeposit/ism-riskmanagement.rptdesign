@@ -4571,7 +4571,7 @@ if(isNaN(dim_max_p)){
 }
 
 ]]></method>
-            <method name="fetch"><![CDATA[if(counter<9){
+            <method name="fetch"><![CDATA[if(counter<dim_max_p){
 	row["prop"] = counter;
 	counter++;
 	return true;

@@ -331,8 +331,13 @@
             <property name="dataSource">scriptedSource</property>
             <method name="open"><![CDATA[counter = 0;
 counterI = 0;
+
+dim_max_a = parseInt(reportContext.getMessage("risk_a_dim"));
+if(isNaN(dim_max_a)){
+	dim_max_a = 5;
+}
 ]]></method>
-            <method name="fetch"><![CDATA[if(counter<5){
+            <method name="fetch"><![CDATA[if(counter<dim_max_a){
 	row["prop"] = counter;
 	row["prop"] = counter;
 	counter++;
@@ -379,8 +384,13 @@ counterI = null;]]></method>
             <property name="dataSource">scriptedSource</property>
             <method name="open"><![CDATA[counter = 0;
 counterI = 0;
+
+dim_max_c = parseInt(reportContext.getMessage("risk_c_dim"));
+if(isNaN(dim_max_c)){
+	dim_max_c = 4;
+}
 ]]></method>
-            <method name="fetch"><![CDATA[if(counter<4){
+            <method name="fetch"><![CDATA[if(counter<dim_max_c){
 	row["prop"] = counter;
 	row["prop"] = counter;
 	counter++;
@@ -427,8 +437,13 @@ counterI = null;]]></method>
             <property name="dataSource">scriptedSource</property>
             <method name="open"><![CDATA[counter = 0;
 counterI = 0;
+
+dim_max_i = parseInt(reportContext.getMessage("risk_i_dim"));
+if(isNaN(dim_max_i)){
+	dim_max_i = 3;
+}
 ]]></method>
-            <method name="fetch"><![CDATA[if(counter<3){
+            <method name="fetch"><![CDATA[if(counter<dim_max_i){
 	row["prop"] = counter;
 	row["prop"] = counter;
 	counter++;
@@ -475,8 +490,12 @@ counterI = null;]]></method>
             <property name="dataSource">scriptedSource</property>
             <method name="open"><![CDATA[counter = 0;
 counterI = 0;
-]]></method>
-            <method name="fetch"><![CDATA[if(counter<9){
+
+dim_max_p = parseInt(reportContext.getMessage("risk_propability_dim"));
+if(isNaN(dim_max_p)){
+	dim_max_p = 9;
+}]]></method>
+            <method name="fetch"><![CDATA[if(counter<dim_max_p){
 	row["prop"] = counter;
 	row["prop"] = counter;
 	counter++;
