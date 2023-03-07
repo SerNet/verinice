@@ -19,14 +19,32 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable.vlt;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
+import com.ibm.icu.text.CharsetDetector;
+import com.ibm.icu.text.CharsetMatch;
 
-import sernet.verinice.service.linktable.*;
+import sernet.verinice.service.linktable.ILinkTableConfiguration;
+import sernet.verinice.service.linktable.LinkTableConfiguration;
+import sernet.verinice.service.linktable.LinkTableException;
 
 /**
  * VeriniceLinkTableIO (de-)serialize Link Table configuration
@@ -101,14 +119,26 @@ public abstract class VeriniceLinkTableIO {
      */
     public static VeriniceLinkTable read(String fullPath) {
         try {
-            BufferedReader br = new BufferedReader(new FileReader(fullPath));
-            return gson.fromJson(br, VeriniceLinkTable.class);
+            String usedCharset = StandardCharsets.UTF_8.name();
+            try (BufferedInputStream testStream = new BufferedInputStream(new FileInputStream(fullPath))) {
+                CharsetDetector charsetDetector = new CharsetDetector();
+                CharsetMatch charsetMatch = charsetDetector.setText(testStream).detect();
+                if (charsetMatch != null) {
+                    usedCharset = charsetMatch.getName();
+                }
+            }
+            BufferedReader reader = new BufferedReader(new FileReader(fullPath, Charset.forName(usedCharset)));
+            return gson.fromJson(reader, VeriniceLinkTable.class);
         } catch (JsonParseException e) {
             String message = "Parse error while reading JSON file for Link-Table configuration: " + fullPath;
             LOG.error(message, e);
             throw new LinkTableException(message, e);
         } catch (FileNotFoundException e) {
             String message = "JSON with Link-Table configuration not found: " + fullPath;
+            LOG.error(message, e);
+            throw new LinkTableException(message, e);
+        } catch (IOException e) {
+            String message = "JSON with Link-Table configuration not readable: " + fullPath;
             LOG.error(message, e);
             throw new LinkTableException(message, e);
         }
@@ -164,7 +194,7 @@ public abstract class VeriniceLinkTableIO {
 
     private static void doWrite(VeriniceLinkTable vlt, String fullPath)
             throws IOException {
-        try (FileWriter writer = new FileWriter(fullPath)) {
+        try (FileWriter writer = new FileWriter(fullPath, StandardCharsets.UTF_8)) {
             writer.write(getContent(vlt));
         }
     }
