@@ -491,7 +491,7 @@ counterI = null;]]></method>
             <method name="open"><![CDATA[counter = 0;
 counterI = 0;
 
-dim_max_p = parseInt(reportContext.getMessage("risk_propability_dim"));
+dim_max_p = parseInt(reportContext.getMessage("risk_probability_dim"));
 if(isNaN(dim_max_p)){
 	dim_max_p = 9;
 }]]></method>
@@ -12321,7 +12321,7 @@ reportContext.setGlobalVariable("accepted_i", row["tolerableRiskI"]);
 reportContext.setGlobalVariable("accepted_a", row["tolerableRiskA"]);
 
 
-var c_yellow = parseInt(reportContext.getMessage("confidencialy_yellow_value"));
+var c_yellow = parseInt(reportContext.getMessage("confidentiality_yellow_value"));
 if(isNaN(c_yellow)){
 	c_yellow = 2;
 }
@@ -12333,13 +12333,13 @@ if(isNaN(i_yellow)){
 }
 reportContext.setGlobalVariable("i_yellow", i_yellow);
 
-var a_yellow = parseInt(reportContext.getMessage("availablility_yellow_value"));
+var a_yellow = parseInt(reportContext.getMessage("availability_yellow_value"));
 if(isNaN(a_yellow)){
 	a_yellow = 2;
 }
 reportContext.setGlobalVariable("a_yellow", a_yellow);
 
-var c_correction = parseInt(reportContext.getMessage("confidencialy_correction_value"));
+var c_correction = parseInt(reportContext.getMessage("confidentiality_correction_value"));
 if(isNaN(c_correction)){
 	c_correction = 2;
 }
@@ -12351,7 +12351,7 @@ if(isNaN(i_correction)){
 }
 reportContext.setGlobalVariable("i_correction", i_correction);
 
-var a_correction = parseInt(reportContext.getMessage("availablility_correction_value"));
+var a_correction = parseInt(reportContext.getMessage("availability_correction_value"));
 if(isNaN(a_correction)){
 	a_correction = 2;
 }
@@ -12431,7 +12431,7 @@ reportContext.setGlobalVariable("a_correction", a_correction);
                     <text id="2052">
                         <property name="marginLeft">5pt</property>
                         <property name="contentType">auto</property>
-                        <text-property name="content" key="risk_assasment_description"><![CDATA[Risk acceptance criteria shown on the left are defined in the risk assessment policy and approved by senior management.]]></text-property>
+                        <text-property name="content" key="risk_assesment_description"><![CDATA[Risk acceptance criteria shown on the left are defined in the risk assessment policy and approved by senior management.]]></text-property>
                     </text>
                 </cell>
             </row>
@@ -12604,7 +12604,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                                             <property name="content">
                                                 <label id="7480">
                                                     <property name="style">risk_matrix</property>
-                                                    <text-property name="text" key="risk_matrix_properbility_axis">Probability</text-property>
+                                                    <text-property name="text" key="risk_matrix_probability_axis">Probability</text-property>
                                                 </label>
                                             </property>
                                             <property name="style">risk_matrix_background</property>
@@ -12819,7 +12819,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                                             <property name="content">
                                                 <label id="7501">
                                                     <property name="style">risk_matrix</property>
-                                                    <text-property name="text" key="risk_matrix_properbility_axis">Probability</text-property>
+                                                    <text-property name="text" key="risk_matrix_probability_axis">Probability</text-property>
                                                 </label>
                                             </property>
                                             <property name="style">risk_matrix_background</property>
@@ -13036,7 +13036,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                                                 <label id="7523">
                                                     <property name="style">risk_matrix</property>
                                                     <structure name="toc"/>
-                                                    <text-property name="text" key="risk_matrix_properbility_axis">Probability</text-property>
+                                                    <text-property name="text" key="risk_matrix_probability_axis">Probability</text-property>
                                                 </label>
                                             </property>
                                             <property name="style">risk_matrix_background</property>
@@ -14696,7 +14696,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                                             <label id="7909">
                                                 <property name="style">sub_table_header</property>
                                                 <property name="textAlign">center</property>
-                                                <text-property name="text" key="effectiness_titel">Effectiveness</text-property>
+                                                <text-property name="text" key="effectiveness_titel">Effectiveness</text-property>
                                             </label>
                                         </cell>
                                         <cell id="7849"/>
@@ -15230,7 +15230,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                             <label id="3453">
                                 <property name="style">sub_table_header</property>
                                 <property name="textAlign">center</property>
-                                <text-property name="text" key="controls_affecting_likelyhood_titel">Controls affecting scenario</text-property>
+                                <text-property name="text" key="controls_affecting_likelihood_titel">Controls affecting scenario</text-property>
                             </label>
                         </cell>
                         <cell id="7795">
@@ -15254,7 +15254,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                             <label id="3457">
                                 <property name="style">sub_table_header</property>
                                 <property name="textAlign">center</property>
-                                <text-property name="text" key="effectiness_titel">Effectiveness</text-property>
+                                <text-property name="text" key="effectiveness_titel">Effectiveness</text-property>
                             </label>
                         </cell>
                         <cell id="3456">

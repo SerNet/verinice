@@ -10023,7 +10023,7 @@ reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expressi
                         </cell>
                         <cell id="5925">
                             <label id="5926">
-                                <text-property name="text" key="label_accects_confidencialy">Betrifft Vertraulichkeit:</text-property>
+                                <text-property name="text" key="label_accects_confidentiality">Betrifft Vertraulichkeit:</text-property>
                             </label>
                         </cell>
                         <cell id="5927">
@@ -10688,7 +10688,7 @@ reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expressi
                             <cell id="5595">
                                 <label id="5618">
                                     <property name="textAlign">left</property>
-                                    <text-property name="text" key="label_confidencialy">Vertraulichkeit:</text-property>
+                                    <text-property name="text" key="label_confidentiality">Vertraulichkeit:</text-property>
                                 </label>
                             </cell>
                             <cell id="5596">
@@ -11591,7 +11591,7 @@ reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expressi
                             <cell id="5992">
                                 <label id="5993">
                                     <property name="textAlign">left</property>
-                                    <text-property name="text" key="label_confidencialy">Vertraulichkeit:</text-property>
+                                    <text-property name="text" key="label_confidentiality">Vertraulichkeit:</text-property>
                                 </label>
                             </cell>
                             <cell id="5994">
@@ -11836,7 +11836,7 @@ reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expressi
                         </cell>
                         <cell id="6019">
                             <label id="6020">
-                                <text-property name="text" key="label_accects_confidencialy">Betrifft Vertraulichkeit:</text-property>
+                                <text-property name="text" key="label_accects_confidentiality">Betrifft Vertraulichkeit:</text-property>
                             </label>
                         </cell>
                         <cell id="6021">
@@ -12501,7 +12501,7 @@ reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expressi
                             <cell id="6086">
                                 <label id="6087">
                                     <property name="textAlign">left</property>
-                                    <text-property name="text" key="label_confidencialy">Vertraulichkeit:</text-property>
+                                    <text-property name="text" key="label_confidentiality">Vertraulichkeit:</text-property>
                                 </label>
                             </cell>
                             <cell id="6088">
@@ -12746,7 +12746,7 @@ reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expressi
                         </cell>
                         <cell id="6113">
                             <label id="6114">
-                                <text-property name="text" key="label_accects_confidencialy">Betrifft Vertraulichkeit:</text-property>
+                                <text-property name="text" key="label_accects_confidentiality">Betrifft Vertraulichkeit:</text-property>
                             </label>
                         </cell>
                         <cell id="6115">
@@ -13410,7 +13410,7 @@ reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expressi
                             <cell id="6273">
                                 <label id="6274">
                                     <property name="textAlign">left</property>
-                                    <text-property name="text" key="label_confidencialy">Vertraulichkeit:</text-property>
+                                    <text-property name="text" key="label_confidentiality">Vertraulichkeit:</text-property>
                                 </label>
                             </cell>
                             <cell id="6275">
@@ -13652,7 +13652,7 @@ reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expressi
                         </cell>
                         <cell id="6300">
                             <label id="6301">
-                                <text-property name="text" key="label_accects_confidencialy">Betrifft Vertraulichkeit:</text-property>
+                                <text-property name="text" key="label_accects_confidentiality">Betrifft Vertraulichkeit:</text-property>
                             </label>
                         </cell>
                         <cell id="6302">
@@ -14312,7 +14312,7 @@ reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expressi
                             <cell id="6367">
                                 <label id="6368">
                                     <property name="textAlign">left</property>
-                                    <text-property name="text" key="label_confidencialy">Vertraulichkeit:</text-property>
+                                    <text-property name="text" key="label_confidentiality">Vertraulichkeit:</text-property>
                                 </label>
                             </cell>
                             <cell id="6369">
@@ -14557,7 +14557,7 @@ reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expressi
                         </cell>
                         <cell id="6394">
                             <label id="6395">
-                                <text-property name="text" key="label_accects_confidencialy">Betrifft Vertraulichkeit:</text-property>
+                                <text-property name="text" key="label_accects_confidentiality">Betrifft Vertraulichkeit:</text-property>
                             </label>
                         </cell>
                         <cell id="6396">
@@ -15219,7 +15219,7 @@ reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expressi
                             <cell id="6461">
                                 <label id="6462">
                                     <property name="textAlign">left</property>
-                                    <text-property name="text" key="label_confidencialy">Vertraulichkeit:</text-property>
+                                    <text-property name="text" key="label_confidentiality">Vertraulichkeit:</text-property>
                                 </label>
                             </cell>
                             <cell id="6463">
@@ -16126,7 +16126,7 @@ reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expressi
                             <cell id="6555">
                                 <label id="6556">
                                     <property name="textAlign">left</property>
-                                    <text-property name="text" key="label_confidencialy">Vertraulichkeit:</text-property>
+                                    <text-property name="text" key="label_confidentiality">Vertraulichkeit:</text-property>
                                 </label>
                             </cell>
                             <cell id="6557">
@@ -16371,7 +16371,7 @@ reportContext.getMessage("risk_treatment_explanation") + ": " + value;</expressi
                         </cell>
                         <cell id="6582">
                             <label id="6583">
-                                <text-property name="text" key="label_accects_confidencialy">Betrifft Vertraulichkeit:</text-property>
+                                <text-property name="text" key="label_accects_confidentiality">Betrifft Vertraulichkeit:</text-property>
                             </label>
                         </cell>
                         <cell id="6584">
