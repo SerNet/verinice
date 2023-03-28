@@ -12480,9 +12480,7 @@ reportContext.setGlobalVariable("a_correction", a_correction);
                                     <property name="marginBottom">6pt</property>
                                     <property name="textAlign">center</property>
                                     <property name="pageBreakAfter">avoid</property>
-                                    <structure name="toc">
-                                        <expression name="expressionValue" type="javascript">"Risk Matrix: Confidentiality"</expression>
-                                    </structure>
+                                    <structure name="toc"/>
                                     <text-property name="text" key="number_of_identified_risks">Number of identified Risks</text-property>
                                 </label>
                                 <extended-item extensionName="Crosstab" extensionVersion="3.7.0" name="matrix-c1"
@@ -12695,9 +12693,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                                     <property name="marginBottom">6pt</property>
                                     <property name="textAlign">center</property>
                                     <property name="pageBreakAfter">avoid</property>
-                                    <structure name="toc">
-                                        <expression name="expressionValue" type="javascript">"Risk Matrix: Confidentiality"</expression>
-                                    </structure>
+                                    <structure name="toc"/>
                                     <text-property name="text" key="number_of_identified_risks">Number of identified Risks</text-property>
                                 </label>
                                 <extended-item extensionName="Crosstab" extensionVersion="3.7.0" name="matrix-i1"
@@ -12911,9 +12907,7 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                                     <property name="marginBottom">6pt</property>
                                     <property name="textAlign">center</property>
                                     <property name="pageBreakAfter">avoid</property>
-                                    <structure name="toc">
-                                        <expression name="expressionValue" type="javascript">"Risk Matrix: Confidentiality"</expression>
-                                    </structure>
+                                    <structure name="toc"/>
                                     <text-property name="text" key="number_of_identified_risks">Number of identified Risks</text-property>
                                 </label>
                                 <extended-item extensionName="Crosstab" extensionVersion="3.7.0" name="matrix-a1"
