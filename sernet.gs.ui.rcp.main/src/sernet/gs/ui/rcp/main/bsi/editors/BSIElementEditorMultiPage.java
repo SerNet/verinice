@@ -507,6 +507,9 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
     }
 
     private boolean riskConfiguationIsDirty() {
+        if(!rightsService.isEnabled(ActionRightIDs.EDITRISKCONFIGURATION)) {
+            return false;
+        }
         RiskConfiguration storedRiskConfiguration = ((ItNetwork) cnAElement).getRiskConfiguration();
         return !keptDefaultRiskConfiguation() && (riskConfiguationWasReset()
                 || !riskConfigurationState.deepEquals(storedRiskConfiguration));
