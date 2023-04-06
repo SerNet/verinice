@@ -37,7 +37,7 @@ import sernet.gs.ui.rcp.main.Activator;
 public class GeneralSettingsPage extends FieldEditorPreferencePage
         implements IWorkbenchPreferencePage {
 
-    private static final String[][] ENCODING_COMBO_VALUES = new String[][] {
+    static final String[][] ENCODING_COMBO_VALUES = new String[][] {
             new String[] { VeriniceCharset.CHARSET_UTF_8.displayName(),
                     VeriniceCharset.CHARSET_UTF_8.name() },
             new String[] { VeriniceCharset.CHARSET_ISO_8859_15.displayName(),
@@ -159,6 +159,12 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage
                 THUMBNAIL_SIZE_VALUES, getFieldEditorParent());
         addField(thumbnailSizeEditor);
 
+        ComboFieldEditor encodingFieldEditor = new ComboFieldEditor(
+                PreferenceConstants.VLT_CSV_EXPORT_ENCODING,
+                Messages.getString("GeneralSettingsPage.VltCsvExportEncoding"), //$NON-NLS-1$
+                GeneralSettingsPage.ENCODING_COMBO_VALUES, 
+                getFieldEditorParent());
+        addField(encodingFieldEditor);
     }
 
     @Override

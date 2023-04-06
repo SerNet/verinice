@@ -20,7 +20,6 @@
 package sernet.verinice.rcp.search;
 
 import java.io.File;
-import java.nio.charset.Charset;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -32,7 +31,6 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import sernet.gs.service.FileUtil;
-import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -88,21 +86,10 @@ public class CsvExportHandler {
         ICsvExport exporter = new CsvExport();
         exporter.setFilePath(filePath);
         exporter.setSeperator(getSeperator());
-        exporter.setCharset(getCharset());
+        exporter.setCharset(PreferenceConstants.getCharsetPreference(PreferenceConstants.SEARCH_CSV_EXPORT_ENCODING));
         exporter.exportToFile(simpleTable);
     }
     
-    private Charset getCharset() {
-        // read the charset from preference store
-        // charset value is set in CharsetHandler
-        String charsetName = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.SEARCH_CSV_EXPORT_ENCODING);
-        Charset charset = VeriniceCharset.CHARSET_DEFAULT;
-        if (charsetName != null && !charsetName.isEmpty()) {
-            charset = Charset.forName(charsetName);
-        }
-        return charset;
-    }
-
     /**
      * If no seperator is set, this getter will always return the default
      * seperatore {@link SearchPreferencePage#SEMICOLON}

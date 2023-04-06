@@ -35,7 +35,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.Activator;
 
 /**
@@ -48,8 +47,6 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
 
     public static final String SEMICOLON = ";"; //$NON-NLS-1$
     public static final String COMMA = ","; //$NON-NLS-1$
-
-    private static final String[][] ENCODING_COMBO_VALUES = new String[][] { new String[] { VeriniceCharset.CHARSET_UTF_8.displayName(), VeriniceCharset.CHARSET_UTF_8.name() }, new String[] { VeriniceCharset.CHARSET_ISO_8859_15.displayName(), VeriniceCharset.CHARSET_ISO_8859_15.name() }, new String[] { VeriniceCharset.CHARSET_WINDOWS_1250.displayName(), VeriniceCharset.CHARSET_WINDOWS_1250.name() } };
 
     private static final String[][] SEPERATOR_COMBO_VALUES = new String[][] { new String[] { Messages.getString("SearchPreferencePage.2"), SEMICOLON }, //$NON-NLS-1$
             new String[] { Messages.getString("SearchPreferencePage.5"), COMMA } //$NON-NLS-1$
@@ -129,7 +126,7 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
         encodingFieldEditor = new ComboFieldEditor(
                 PreferenceConstants.SEARCH_CSV_EXPORT_ENCODING,
                 Messages.getString("SearchPreferencePage.9"),
-                ENCODING_COMBO_VALUES, 
+                GeneralSettingsPage.ENCODING_COMBO_VALUES, 
                 csvExportSettingsGrid);
         encodingFieldEditor.setPreferenceStore(getPreferenceStore());
         encodingFieldEditor.load();

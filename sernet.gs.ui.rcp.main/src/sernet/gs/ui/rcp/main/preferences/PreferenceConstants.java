@@ -17,6 +17,10 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.preferences;
 
+import java.nio.charset.Charset;
+
+import sernet.gs.service.VeriniceCharset;
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.verinice.rcp.search.SearchView;
 
 /**
@@ -157,7 +161,20 @@ public final class PreferenceConstants {
     public static final String STANDALONE_UPDATENEWS_URL = "standalone_updatenews_url";
 
     public static final String FILTER_INFORMATION_NETWORKS_BY_PROCEEDING = "filter_information_networks_by_proceeding";
+    public static final String VLT_CSV_EXPORT_ENCODING = "vlt_csv_export_encoding";
 
+    public static Charset getCharsetPreference(String preferencesId) {
+        // read the charset from preference store
+        // charset value is set in CharsetHandler
+        String charsetName = Activator.getDefault().getPreferenceStore().getString(preferencesId);
+        Charset charset = VeriniceCharset.CHARSET_DEFAULT;
+        if (charsetName != null && !charsetName.isEmpty()) {
+            charset = Charset.forName(charsetName);
+        }
+        return charset;
+    }
+
+    
     /**
      * Returns the DONT_ASK_BEFORE_SWITCH_PERSPECTIVE preference name for a view
      * class.

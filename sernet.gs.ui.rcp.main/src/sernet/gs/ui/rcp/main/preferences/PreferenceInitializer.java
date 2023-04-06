@@ -122,5 +122,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
         store.setDefault(PreferenceConstants.BP_MODEL_SAFEGUARDS, true);
         store.setDefault(PreferenceConstants.BP_MODEL_DUMMY_SAFEGUARDS, false);
         store.setDefault(PreferenceConstants.FILTER_INFORMATION_NETWORKS_BY_PROCEEDING, false);
+        store.setDefault(PreferenceConstants.VLT_CSV_EXPORT_ENCODING, "UTF-8");
     }
 }
