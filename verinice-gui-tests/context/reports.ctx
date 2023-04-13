@@ -81,11 +81,11 @@ proc "gen-rep-com" [val report] [val view] [val object] [val qualifier ""] [val 
 /* enable the logging for the reporting * */
 proc "enable-reporting-log" {
     get-menu -path "Bearbeiten/Einstellungen..." | click
-    with [get-window Benutzervorgaben] {
+    with [get-window Einstellungen] {
         get-tree | select Reports
-        if [not[get-window Benutzervorgaben | get-button "Reportlogging benutzen" | get-property selected -raw ] ]{
-        get-window Benutzervorgaben | get-button "Reportlogging benutzen" | check
-        get-window Benutzervorgaben | get-combo -after [get-label "Log-Level"] | select Alles
+        if [not[get-window Einstellungen | get-button "Reportlogging benutzen" | get-property selected -raw ] ]{
+        get-window Einstellungen | get-button "Reportlogging benutzen" | check
+        get-window Einstellungen | get-combo -after [get-label "Log-Level"] | select Alles
         set-dialog-result Folder [concat $basedir [get-java-property "file.separator"] "log"]
         get-button "Durchsuchen..." | click
         }
@@ -97,9 +97,9 @@ proc "enable-reporting-log" {
 proc "set-local-reporting-repository" [val path]{
     log [concat "setlocal report repository to " $path]
     get-menu -path "Bearbeiten/Einstellungen..." | click
-    get-window Benutzervorgaben | get-tree | select Reports
+    get-window Einstellungen | get-tree | select Reports
     set-dialog-result Folder $path
-    with [get-window Benutzervorgaben] {
+    with [get-window Einstellungen] {
         get-button "Durchsuchen..." -after [get-label "Report-Templates"] | click
         get-button "Anwenden und Schließen" | click
     }

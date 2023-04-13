@@ -47,7 +47,7 @@ list-plugins | write-lines [concat "file:" $basedir "/before-instalable-units.tx
 list-features | write-lines [concat "file:" $basedir "/before-instalable-units.txt"] true
 
 get-menu -path "Bearbeiten/Einstellungen..." | click
-with [get-window Benutzervorgaben] {
+with [get-window Einstellungen] {
     get-tree | select "Installieren\\/Aktualisieren/Websites mit verfügbarer Software"
     with [get-table] {
         select "Öffentlicher Update-Server" | activate-cell-edit -type MouseClickSelection

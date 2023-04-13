@@ -34,9 +34,9 @@ proc "delete-bp-old-element" [val elementpath] {
 
 proc "import-bp-katalog" {
 	get-menu -path "Bearbeiten/Einstellungen..." | click
-	get-window Benutzervorgaben | get-tree | select "BSI IT-Grundschutz"
+	get-window Einstellungen | get-tree | select "BSI IT-Grundschutz"
 	set-dialog-result File  [concat $datadir "/it-grundschutz_el14_html_de.zip"]
-	with [get-window Benutzervorgaben] {
+	with [get-window Einstellungen] {
 	    get-group "BSI-Grundschutz-Kataloge" | get-button "Durchsuchen..." | click
 	    get-button "Anwenden und Schließen" | click
 	}

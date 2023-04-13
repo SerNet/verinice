@@ -22,7 +22,7 @@ log "test_2.17"
 create-bpmodel Reportverbund
 
 get-menu -path "Bearbeiten/Einstellungen..." | click
-with [get-window Benutzervorgaben] {
+with [get-window Einstellungen] {
 	get-tree | select Reports
 	get-editbox -after [get-label "Report-Templates"] | set-text $datadir
 	get-button "Anwenden und Schließen" | click

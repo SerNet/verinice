@@ -27,7 +27,7 @@ with [get-editor testname] {
 }
 
 get-menu -path "Bearbeiten/Einstellungen..." | click
-with [get-window Benutzervorgaben] {
+with [get-window Einstellungen] {
 	get-tree | select "Editoreinstellungen"
 	with [ get-table | get-item "ITGS-Profil" -column "Zeige nur Eigenschaften mit Tag" ]{
 		get-property checked | equals false | verify-true   
