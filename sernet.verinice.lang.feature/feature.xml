@@ -182,7 +182,6 @@ Library.
    </license>
 
    <requires>
-      <import plugin="org.eclipse.osgi"/>
       <import plugin="org.eclipse.compare.core"/>
       <import plugin="org.eclipse.core.commands"/>
       <import plugin="org.eclipse.core.contenttype"/>
@@ -198,18 +197,6 @@ Library.
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.core.variables"/>
-      <import plugin="org.eclipse.datatools.connectivity.db.generic"/>
-      <import plugin="org.eclipse.datatools.connectivity"/>
-      <import plugin="org.eclipse.datatools.connectivity.oda.consumer"/>
-      <import plugin="org.eclipse.datatools.connectivity.oda.design"/>
-      <import plugin="org.eclipse.datatools.connectivity.oda.design.ui"/>
-      <import plugin="org.eclipse.datatools.connectivity.oda"/>
-      <import plugin="org.eclipse.datatools.connectivity.oda.profile"/>
-      <import plugin="org.eclipse.datatools.connectivity.sqm.core"/>
-      <import plugin="org.eclipse.datatools.connectivity.ui"/>
-      <import plugin="org.eclipse.datatools.help"/>
-      <import plugin="org.eclipse.datatools.modelbase.dbdefinition"/>
-      <import plugin="org.eclipse.datatools.modelbase.sql"/>
       <import plugin="org.eclipse.e4.core.commands"/>
       <import plugin="org.eclipse.e4.core.contexts"/>
       <import plugin="org.eclipse.e4.core.di.annotations"/>
@@ -233,15 +220,8 @@ Library.
       <import plugin="org.eclipse.e4.ui.workbench.renderers.swt"/>
       <import plugin="org.eclipse.e4.ui.workbench.swt"/>
       <import plugin="org.eclipse.e4.ui.workbench3"/>
-      <import plugin="org.eclipse.equinox.app"/>
-      <import plugin="org.eclipse.equinox.bidi"/>
-      <import plugin="org.eclipse.equinox.common"/>
-      <import plugin="org.eclipse.equinox.concurrent"/>
-      <import plugin="org.eclipse.equinox.console"/>
-      <import plugin="org.eclipse.equinox.event"/>
       <import plugin="org.eclipse.equinox.frameworkadmin.equinox"/>
       <import plugin="org.eclipse.equinox.frameworkadmin"/>
-      <import plugin="org.eclipse.equinox.launcher"/>
       <import plugin="org.eclipse.equinox.p2.artifact.repository"/>
       <import plugin="org.eclipse.equinox.p2.console"/>
       <import plugin="org.eclipse.equinox.p2.core"/>
@@ -269,10 +249,6 @@ Library.
       <import plugin="org.eclipse.equinox.p2.ui.sdk.scheduler"/>
       <import plugin="org.eclipse.equinox.p2.updatechecker"/>
       <import plugin="org.eclipse.equinox.p2.updatesite"/>
-      <import plugin="org.eclipse.equinox.preferences"/>
-      <import plugin="org.eclipse.equinox.registry"/>
-      <import plugin="org.eclipse.equinox.security"/>
-      <import plugin="org.eclipse.equinox.security.ui"/>
       <import plugin="org.eclipse.equinox.simpleconfigurator.manipulator"/>
       <import plugin="org.eclipse.equinox.simpleconfigurator"/>
       <import plugin="org.eclipse.help.base"/>
@@ -282,8 +258,6 @@ Library.
       <import plugin="org.eclipse.jface"/>
       <import plugin="org.eclipse.jface.text"/>
       <import plugin="org.eclipse.ltk.core.refactoring"/>
-      <import plugin="org.eclipse.osgi.services"/>
-      <import plugin="org.eclipse.osgi.util"/>
       <import plugin="org.eclipse.swt"/>
       <import plugin="org.eclipse.text"/>
       <import plugin="org.eclipse.ui.cheatsheets"/>
@@ -299,27 +273,6 @@ Library.
       <import plugin="org.eclipse.update.configurator"/>
       <import plugin="org.eclipse.urischeme"/>
    </requires>
-
-   <plugin
-         id="org.eclipse.osgi.nl_cs"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.osgi.nl_de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.osgi.nl_it"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
 
    <plugin
          id="org.eclipse.compare.core.nl_cs"
@@ -1120,132 +1073,6 @@ Library.
          fragment="true"/>
 
    <plugin
-         id="org.eclipse.equinox.app.nl_cs"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.app.nl_de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.app.nl_it"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.bidi.nl_cs"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.bidi.nl_de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.bidi.nl_it"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.common.nl_cs"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.common.nl_de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.common.nl_it"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.concurrent.nl_cs"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.concurrent.nl_de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.concurrent.nl_it"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.console.nl_cs"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.console.nl_de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.console.nl_it"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.event.nl_cs"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.event.nl_de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.event.nl_it"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
          id="org.eclipse.equinox.frameworkadmin.equinox.nl_cs"
          download-size="0"
          install-size="0"
@@ -1282,27 +1109,6 @@ Library.
 
    <plugin
          id="org.eclipse.equinox.frameworkadmin.nl_it"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.nl_cs"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.nl_de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.nl_it"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -1876,90 +1682,6 @@ Library.
          fragment="true"/>
 
    <plugin
-         id="org.eclipse.equinox.preferences.nl_cs"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.preferences.nl_de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.preferences.nl_it"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.registry.nl_cs"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.registry.nl_de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.registry.nl_it"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.security.nl_cs"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.security.nl_de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.security.nl_it"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.security.ui.nl_cs"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.security.ui.nl_de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.security.ui.nl_it"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
          id="org.eclipse.equinox.simpleconfigurator.manipulator.nl_cs"
          download-size="0"
          install-size="0"
@@ -2143,48 +1865,6 @@ Library.
 
    <plugin
          id="org.eclipse.ltk.core.refactoring.nl_it"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.osgi.services.nl_cs"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.osgi.services.nl_de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.osgi.services.nl_it"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.osgi.util.nl_cs"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.osgi.util.nl_de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.osgi.util.nl_it"
          download-size="0"
          install-size="0"
          version="0.0.0"
