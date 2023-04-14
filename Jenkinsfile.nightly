@@ -49,11 +49,6 @@ pipeline {
                         runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'macOS current', artifactFilterRcptt, "${outputDir}/gui-test-mac-current", 'GUI Test Report (macOS)', 'macc-verince-client-log'
                     }
                 }
-                stage('Run UI tests on macOS Predecessor') {
-                    steps {
-                        runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'macOS predecessor', artifactFilterRcptt, "${outputDir}/gui-test-mac-predecessor", 'GUI Test Report (macOS)','macp-verince-client-log'
-                    }
-                }
                 stage('Run UI tests on Windows') {
                     steps {
                         runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'Windows 10', artifactFilterRcptt, "${outputDir}/gui-test-windows", 'GUI Test Report (Windows 10)', 'win-verince-client-log'
