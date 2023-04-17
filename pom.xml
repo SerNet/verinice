@@ -7,7 +7,7 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<tycho.version>2.7.5</tycho.version>
+		<tycho.version>3.0.5</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -145,6 +145,17 @@
 					<testRuntime>default</testRuntime>
 					<testFailureIgnore>true</testFailureIgnore>
 					<argLine>--add-opens java.base/java.lang=ALL-UNNAMED</argLine>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-director-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+					<formats>
+						<linux>zip</linux>
+						<macosx>zip</macosx>
+					</formats>
 				</configuration>
 			</plugin>
 		</plugins>
