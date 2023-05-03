@@ -49,7 +49,7 @@
                         <version>3.0.0-M7</version>
                         <configuration>
                                 <forkMode>once</forkMode>
-                                <argLine>-Xmx2g</argLine>
+                                <argLine>-Xmx2g --add-opens java.base/java.lang=ALL-UNNAMED</argLine>
                                 <testFailureIgnore>true</testFailureIgnore>
                                 <systemProperties>
                                     <property>

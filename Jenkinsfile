@@ -10,7 +10,7 @@ pipeline {
     environment {
         // In case the build server exports a custom JAVA_HOME, we fix the JAVA_HOME
         // to the one used by the docker image.
-        JAVA_HOME='/usr/lib/jvm/java-11-openjdk'
+        JAVA_HOME='/usr/lib/jvm/java-17-openjdk'
     }
     parameters {
         string(name: 'jreversion', defaultValue: 'jdk-17.0.8.1+1', description: 'Download and pack a JRE with this version. See https://adoptopenjdk.net/archive.html for a list of possible versions.', trim: true)
