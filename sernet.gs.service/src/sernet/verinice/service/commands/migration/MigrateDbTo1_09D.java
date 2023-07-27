@@ -70,7 +70,7 @@ public class MigrateDbTo1_09D extends DbMigration {
                 String statement = null;
                 if (isPostgres() || isOracle()) {
                     String indexName = spec.substring(0, spec.indexOf(' '));
-                    if (existingIndexes.contains(indexName)) {
+                    if (existingIndexes.stream().anyMatch(it -> it.equalsIgnoreCase(indexName))) {
                         return;
                     }
                     statement = "CREATE INDEX " + spec;
