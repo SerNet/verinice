@@ -9,6 +9,7 @@ java.lang.Enum
 java.lang.Exception
 java.lang.Long
 java.lang.NoClassDefFoundError
+java.lang.NullPointerException
 java.lang.Number
 java.lang.invoke.SerializedLambda
 java.lang.reflect.InvocationTargetException

@@ -18,6 +18,10 @@
 package sernet.verinice.service.commands.migration;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.annotation.NonNull;
@@ -37,16 +41,36 @@ public class MigrateDbTo1_08D extends DbMigration {
     public void execute() {
         IBaseDao<@NonNull Permission, Serializable> dao = getDaoFactory().getDAO(Permission.class);
         dao.executeCallback(session -> {
-            session.createSQLQuery(
-                    "CREATE INDEX changelogentry_changetime ON ChangeLogEntry(changetime)")
-                    .executeUpdate();
-            session.createSQLQuery(
-                    "CREATE INDEX changelogentry_elementChange ON ChangeLogEntry(elementChange)")
-                    .executeUpdate();
-            session.createSQLQuery(
-                    "CREATE INDEX changelogentry_stationid ON ChangeLogEntry(stationid)")
-                    .executeUpdate();
-            logger.info("Index sucessfully created");
+
+            Set<String> existingIndexes = new HashSet<>();
+            if (isOracle()) {
+                existingIndexes.addAll((List<String>) session
+                        .createSQLQuery("select index_name from USER_INDEXES").list());
+            } else if (isPostgres()) {
+                existingIndexes.addAll((List<String>) session
+                        .createSQLQuery("select indexname from pg_indexes").list());
+            }
+            Stream<String> specs = Stream.of(
+                    "changelogentry_changetime ON ChangeLogEntry(changetime)",
+                    "changelogentry_elementChange ON ChangeLogEntry(elementChange)",
+                    "changelogentry_stationid ON ChangeLogEntry(stationid)");
+
+            specs.forEach(spec -> {
+                String statement = null;
+                if (isPostgres() || isOracle()) {
+                    String indexName = spec.substring(0, spec.indexOf(' '));
+                    if (existingIndexes.contains(indexName)) {
+                        return;
+                    }
+                    statement = "CREATE INDEX " + spec;
+                } else if (isDerby()) {
+                    // derby seems to just ignore duplicate indexes, so
+                    // no special precautions here
+                    statement = "CREATE INDEX " + spec;
+                }
+                session.createSQLQuery(statement).executeUpdate();
+            });
+            logger.info("Index(es) sucessfully created");
             return null;
         });
 

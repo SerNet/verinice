@@ -88,7 +88,7 @@ public class VeriniceQuery implements Serializable {
     }
 
     private static String sanitizeQuery(String query) {
-        return Normalizer.normalize(query.replace("/", ""), Form.NFC);
+        return Normalizer.normalize(query, Form.NFC).replace("/", "");
     }
 
     /**
