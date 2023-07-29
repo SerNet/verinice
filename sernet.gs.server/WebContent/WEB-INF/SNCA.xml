@@ -2912,7 +2912,8 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                 name="Erläuterung"
                 required="false"
                 inputtype="text"
-                focus="true" />
+                focus="true"
+                textrows="10" />
             <huiproperty
                 id="mnums_umsetzung"
                 name="Umsetzung"
@@ -14019,7 +14020,7 @@ Wurden bereits weitere Stellen informiert?
                 <option id="bp_requirement_implementation_status_na" name="Not Applicable" />
             </huiproperty>
             <huiproperty id="bp_requirement_implementation_desc" name="Description"
-                required="false" inputtype="text" focus="true" />
+                required="false" inputtype="text" focus="true" textrows="10" />
             <huiproperty id="bp_requirement_implementation_by_date" name="Implementation by"
                 required="false" inputtype="date">
                 <defaultRule class="Today" />
