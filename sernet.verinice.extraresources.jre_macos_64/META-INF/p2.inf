@@ -1,5 +1,5 @@
 instructions.configure=\
-org.eclipse.equinox.p2.touchpoint.eclipse.setJvm(jvm:${artifact.location}/jre/lib/jli/libjli.dylib);\
+org.eclipse.equinox.p2.touchpoint.eclipse.setJvm(jvm:${artifact.location}/jre/lib/libjli.dylib);\
 org.eclipse.equinox.p2.touchpoint.natives.chmod(targetDir:${artifact.location}/jre/lib/,targetFile:jspawnhelper,permissions:755);
 instructions.unconfigure=\
 org.eclipse.equinox.p2.touchpoint.eclipse.setJvm(jvm:null);

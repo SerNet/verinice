@@ -85,7 +85,7 @@
 		<property name="verinice-ini-location" value="Contents/Eclipse/verinice.ini" />
 		<property name="verinice-plugins-location" value="Contents/Eclipse/plugins" />
 		<property name="verinice-plugins-location-relative-from-executable" value="../Eclipse/plugins" />
-		<property name="java-library-location" value="lib/jli/libjli.dylib" />
+		<property name="java-library-location" value="lib/libjli.dylib" />
 		<property name="java-binary-location" value="bin/java" />
 	</target>
 	<target name="setupPaths" depends="setupPathsLinux, setupPathsWindows, setupPathsMac">
@@ -542,6 +542,7 @@ ${verinice-workspace}
 -vm
 ${verinice.jre}/jre/${java-library-location}
 -vmargs
+--add-opens=java.base/java.lang=ALL-UNNAMED
 -Xms512m
 -Xmx2048m
 -Dorg.osgi.service.http.port=${verinice.server.port}
