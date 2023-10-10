@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sernet.verinice.samt.rcp;singleton:=true
-Bundle-Version: 1.26.1.qualifier
+Bundle-Version: 1.27.0.qualifier
 Bundle-Activator: sernet.verinice.samt.rcp.Activator
 Require-Bundle: sernet.gs.service,
  sernet.verinice.samt.service,

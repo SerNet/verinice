@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="verinice server" uid="sernet.verinice.releng.server.product" id="sernet.gs.server.product" application="org.eclipse.equinox.app.error" version="1.26.1.qualifier" useFeatures="true" includeLaunchers="false">
+<product name="verinice server" uid="sernet.verinice.releng.server.product" id="sernet.gs.server.product" application="org.eclipse.equinox.app.error" version="1.27.0.qualifier" useFeatures="true" includeLaunchers="false">
 
    <configIni use="default">
    </configIni>
@@ -25,7 +25,7 @@
    </plugins>
 
    <features>
-      <feature id="sernet.gs.server.feature" version="1.26.1.qualifier"/>
+      <feature id="sernet.gs.server.feature" version="1.27.0.qualifier"/>
    </features>
 
 
