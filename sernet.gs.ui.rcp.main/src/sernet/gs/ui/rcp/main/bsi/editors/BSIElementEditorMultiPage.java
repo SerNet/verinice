@@ -95,8 +95,10 @@ import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateContext;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateResult;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Domain;
 import sernet.verinice.rcp.Preferences;
 import sernet.verinice.service.bp.risk.RiskService;
+import sernet.verinice.service.commands.CnATypeMapper;
 import sernet.verinice.service.commands.crud.LoadElementForEditor;
 
 /**
@@ -295,7 +297,8 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
             // create in place editor for links to other objects
             // but not for simplified view:
             if (linkMaker != null) {
-                linkMaker.createPartControl(getIsWriteAllowed());
+                linkMaker.createPartControl(getIsWriteAllowed(),
+                        CnATypeMapper.getDomainFromTypeId(cnAElement.getTypeId()) == Domain.ISM);
                 linkMaker.setInputElmt(cnAElement);
             }
         } catch (Exception e) {
@@ -512,7 +515,7 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
     }
 
     private boolean riskConfiguationIsDirty() {
-        if(!rightsService.isEnabled(ActionRightIDs.EDITRISKCONFIGURATION)) {
+        if (!rightsService.isEnabled(ActionRightIDs.EDITRISKCONFIGURATION)) {
             return false;
         }
         RiskConfiguration storedRiskConfiguration = ((ItNetwork) cnAElement).getRiskConfiguration();
@@ -730,7 +733,8 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
 
     private void createLinkMakerPage() {
         linkMaker = new LinkMaker(getContainer(), this);
-        linkMaker.createPartControl(getIsWriteAllowed());
+        linkMaker.createPartControl(getIsWriteAllowed(),
+                CnATypeMapper.getDomainFromTypeId(cnAElement.getTypeId()) == Domain.ISM);
         linkMaker.setInputElmt(cnAElement);
         addNewPage(linkMaker, Messages.BSIElementEditorMultiPage_page_name_links);
     }

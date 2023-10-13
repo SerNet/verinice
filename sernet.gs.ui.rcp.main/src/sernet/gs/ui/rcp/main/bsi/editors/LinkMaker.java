@@ -177,12 +177,12 @@ public class LinkMaker extends Composite implements IRelationTable {
         removeLinkButton.setToolTipText(Messages.LinkMaker_4);
     }
 
-    public void createPartControl(Boolean isWriteAllowed) {
+    public void createPartControl(Boolean isWriteAllowed, boolean showRiskColumns) {
 
         this.writeable = isWriteAllowed;
 
         removeLinkButton.setEnabled(writeable && checkRights());
-        initLinkTableViewer();
+        initLinkTableViewer(showRiskColumns);
 
         // listeners to reload view:
         CnAElementFactory.getLoadedModel().addBSIModelListener(relationViewContentProvider);
@@ -222,8 +222,9 @@ public class LinkMaker extends Composite implements IRelationTable {
         hookDoubleClickAction();
     }
 
-    private void initLinkTableViewer() {
-        viewer = new RelationTableViewer(this, this, SWT.FULL_SELECTION | SWT.MULTI, true);
+    private void initLinkTableViewer(boolean showRiskColumns) {
+        viewer = new RelationTableViewer(this, this, SWT.FULL_SELECTION | SWT.MULTI,
+                showRiskColumns);
         viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
         viewer.getTable().setEnabled(writeable);
         relationViewContentProvider = new RelationViewContentProvider(this, viewer);

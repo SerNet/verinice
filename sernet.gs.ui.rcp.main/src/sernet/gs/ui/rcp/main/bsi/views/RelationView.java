@@ -20,7 +20,6 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
@@ -57,9 +56,11 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.CnATreeElementLabelGenerator;
+import sernet.verinice.model.common.Domain;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.catalog.CatalogView;
+import sernet.verinice.service.commands.CnATypeMapper;
 import sernet.verinice.service.commands.task.FindRelationsFor;
 
 /**
@@ -75,7 +76,7 @@ public class RelationView extends RightsEnabledView
 
     public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.RelationView"; //$NON-NLS-1$
 
-    private TableViewer viewer;
+    private RelationTableViewer viewer;
     private Action jumpToAction;
     private ISelectionListener selectionListener;
     private CnATreeElement inputElmt;
@@ -134,6 +135,8 @@ public class RelationView extends RightsEnabledView
                         Display.getDefault().syncExec(() -> {
                             if (!viewer.getTable().isDisposed()) {
                                 viewer.setInput(linkElmt);
+                                viewer.setShowRiskColumns(linkElmt != null && CnATypeMapper
+                                        .getDomainFromTypeId(linkElmt.getTypeId()) == Domain.ISM);
                             }
                         });
                     }
@@ -334,6 +337,8 @@ public class RelationView extends RightsEnabledView
         if (element instanceof CnATreeElement) {
             readOnly = part instanceof CatalogView;
             setNewInput((CnATreeElement) element);
+        } else {
+            viewer.setShowRiskColumns(false);
         }
     }
 
