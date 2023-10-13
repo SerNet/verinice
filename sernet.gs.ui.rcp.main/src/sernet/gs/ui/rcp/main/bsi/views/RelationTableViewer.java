@@ -19,13 +19,13 @@ package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.awt.MouseInfo;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.CellLabelProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -57,6 +57,19 @@ public class RelationTableViewer extends TableViewer {
 
     private static final Logger LOG = Logger.getLogger(RelationTableViewer.class);
 
+    private static final int defaultColumnWidth = 30;
+    private static final int viewerCol2Width = 100;
+    private static final int col4Width = 150;
+    private static final int col5Width = 100;
+    private static final int viewerCol5Width = 250;
+    private static final int colWithRiskTreatment = 130;
+
+    static final Map<Integer, String> TOOLTIPS = Map.of(7, Messages.RelationTableViewer_C, 8,
+            Messages.RelationTableViewer_I, 9, Messages.RelationTableViewer_A, 10,
+            Messages.RelationTableViewer_C_with_controls, 11,
+            Messages.RelationTableViewer_I_with_controls, 12,
+            Messages.RelationTableViewer_A_with_Controls);
+
     private TableViewerColumn col6;
     private TableViewerColumn col7;
     private TableViewerColumn col8;
@@ -74,16 +87,13 @@ public class RelationTableViewer extends TableViewer {
     private TableViewerColumn colIWithControls;
     private TableViewerColumn colAWithControls;
 
+    private boolean showingRiskColumns = false;
+
+    private RelationViewLabelProvider relationViewLabelProvider;
+
     public RelationTableViewer(IRelationTable relationView, Composite parent, int style,
             boolean showRisk) {
         super(parent, style);
-
-        final int defaultColumnWidth = 30;
-        final int viewerCol2Width = 100;
-        final int col4Width = 150;
-        final int col5Width = 100;
-        final int viewerCol5Width = 250;
-        final int colWithRiskTreatment = 130;
 
         ColumnViewerToolTipSupport.enableFor(this, ToolTip.NO_RECREATE);
 
@@ -124,37 +134,7 @@ public class RelationTableViewer extends TableViewer {
         viewerCol5.getColumn().setWidth(viewerCol5Width);
         viewerCol5.setEditingSupport(new RelationDescriptionEditingSupport(view, this));
 
-        // risk avalues if requested:
-        if (showRisk) {
-            colRiskTreatment = new TableViewerColumn(this, SWT.LEFT);
-            colRiskTreatment.getColumn().setText(Messages.RelationTableViewer_0);
-            colRiskTreatment.getColumn().setWidth(colWithRiskTreatment);
-            colRiskTreatment.setEditingSupport(new RiskTreatmentEditingSupport(view, this));
-
-            col6 = new TableViewerColumn(this, SWT.LEFT);
-            col6.getColumn().setText("C"); //$NON-NLS-1$
-            col6.getColumn().setWidth(defaultColumnWidth);
-
-            col7 = new TableViewerColumn(this, SWT.LEFT);
-            col7.getColumn().setText("I"); //$NON-NLS-1$
-            col7.getColumn().setWidth(defaultColumnWidth);
-
-            col8 = new TableViewerColumn(this, SWT.LEFT);
-            col8.getColumn().setText("A"); //$NON-NLS-1$
-            col8.getColumn().setWidth(defaultColumnWidth);
-
-            colCWithControls = new TableViewerColumn(this, SWT.LEFT);
-            colCWithControls.getColumn().setText(Messages.RelationTableViewer_2);
-            colCWithControls.getColumn().setWidth(defaultColumnWidth);
-
-            colIWithControls = new TableViewerColumn(this, SWT.LEFT);
-            colIWithControls.getColumn().setText(Messages.RelationTableViewer_8);
-            colIWithControls.getColumn().setWidth(defaultColumnWidth);
-
-            colAWithControls = new TableViewerColumn(this, SWT.LEFT);
-            colAWithControls.getColumn().setText(Messages.RelationTableViewer_9);
-            colAWithControls.getColumn().setWidth(defaultColumnWidth);
-        }
+        setShowRiskColumns(showRisk);
 
         setColumnProperties(new String[] { IRelationTable.COLUMN_IMG, IRelationTable.COLUMN_TYPE,
                 IRelationTable.COLUMN_TYPE_IMG, IRelationTable.COLUMN_SCOPE_ID,
@@ -173,27 +153,12 @@ public class RelationTableViewer extends TableViewer {
      * Provides an object path of the linked object in the title column in the
      * relation view.
      */
-    public static class InfoCellLabelProvider extends CellLabelProvider {
-
-        static final Map<Integer, String> TOOLTIPS;
-        static {
-            TOOLTIPS = new HashMap<>();
-            TOOLTIPS.put(7, Messages.RelationTableViewer_C);
-            TOOLTIPS.put(8, Messages.RelationTableViewer_I);
-            TOOLTIPS.put(9, Messages.RelationTableViewer_A);
-            TOOLTIPS.put(10, Messages.RelationTableViewer_C_with_controls);
-            TOOLTIPS.put(11, Messages.RelationTableViewer_I_with_controls);
-            TOOLTIPS.put(12, Messages.RelationTableViewer_A_with_Controls);
-        }
-
-        RelationViewLabelProvider relationViewLabelProvider;
+    public class InfoCellLabelProvider extends CellLabelProvider {
 
         /** current column index */
         private int column;
 
-        public InfoCellLabelProvider(RelationViewLabelProvider relationViewLabelProvider,
-                int column) {
-            this.relationViewLabelProvider = relationViewLabelProvider;
+        public InfoCellLabelProvider(int column) {
             this.column = column;
 
         }
@@ -218,7 +183,7 @@ public class RelationTableViewer extends TableViewer {
      * Provides an object path of the linked object in the title column in the
      * relation view.
      */
-    public static class PathCellLabelProvider extends CellLabelProvider {
+    public class PathCellLabelProvider extends CellLabelProvider {
 
         /** the current width of the verinice window */
         private int shellWidth;
@@ -234,11 +199,7 @@ public class RelationTableViewer extends TableViewer {
 
         private int charWidth;
 
-        RelationViewLabelProvider relationViewLabelProvider;
-
-        public PathCellLabelProvider(RelationViewLabelProvider relationViewLabelProvider,
-                Composite parent, int column) {
-            this.relationViewLabelProvider = relationViewLabelProvider;
+        public PathCellLabelProvider(Composite parent, int column) {
             this.parent = parent;
             this.column = column;
 
@@ -396,35 +357,77 @@ public class RelationTableViewer extends TableViewer {
     public List<PathCellLabelProvider> initToolTips(
             RelationViewLabelProvider relationViewLabelProvider, Composite parent) {
 
+        this.relationViewLabelProvider = relationViewLabelProvider;
         List<PathCellLabelProvider> relTblCellLabelProv = new ArrayList<>();
 
-        PathCellLabelProvider relTableCellProviderCol1 = new PathCellLabelProvider(
-                relationViewLabelProvider, parent, 0);
+        PathCellLabelProvider relTableCellProviderCol1 = new PathCellLabelProvider(parent, 0);
         relTblCellLabelProv.add(relTableCellProviderCol1);
         col1.setLabelProvider(relTableCellProviderCol1);
 
-        PathCellLabelProvider relTableCellProviderCol3 = new PathCellLabelProvider(
-                relationViewLabelProvider, parent, 2);
+        PathCellLabelProvider relTableCellProviderCol3 = new PathCellLabelProvider(parent, 2);
         relTblCellLabelProv.add(relTableCellProviderCol3);
         col3.setLabelProvider(relTableCellProviderCol3);
 
-        PathCellLabelProvider relTableCellProviderCol4 = new PathCellLabelProvider(
-                relationViewLabelProvider, parent, 3);
+        PathCellLabelProvider relTableCellProviderCol4 = new PathCellLabelProvider(parent, 3);
         relTblCellLabelProv.add(relTableCellProviderCol4);
         col4.setLabelProvider(relTableCellProviderCol4);
 
-        if (this.getTable().getColumnCount() > 7) {
-            col6.setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 7));
-            col7.setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 8));
-            col8.setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 9));
-            colCWithControls
-                    .setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 10));
-            colIWithControls
-                    .setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 11));
-            colAWithControls
-                    .setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 12));
-        }
         return relTblCellLabelProv;
+    }
+
+    public void setShowRiskColumns(boolean flag) {
+        if (flag && !showingRiskColumns) {
+            colRiskTreatment = new TableViewerColumn(this, SWT.LEFT);
+            colRiskTreatment.getColumn().setText(Messages.RelationTableViewer_0);
+            colRiskTreatment.getColumn().setWidth(colWithRiskTreatment);
+            colRiskTreatment.setEditingSupport(new RiskTreatmentEditingSupport(view, this));
+            colRiskTreatment.setLabelProvider(new ColumnLabelProvider() {
+                @Override
+                public String getText(Object element) {
+                    return relationViewLabelProvider.getColumnText(element, 6);
+                }
+            });
+            col6 = new TableViewerColumn(this, SWT.LEFT);
+            col6.getColumn().setText("C"); //$NON-NLS-1$
+            col6.getColumn().setWidth(defaultColumnWidth);
+            col6.setLabelProvider(new InfoCellLabelProvider(7));
+
+            col7 = new TableViewerColumn(this, SWT.LEFT);
+            col7.getColumn().setText("I"); //$NON-NLS-1$
+            col7.getColumn().setWidth(defaultColumnWidth);
+            col7.setLabelProvider(new InfoCellLabelProvider(8));
+
+            col8 = new TableViewerColumn(this, SWT.LEFT);
+            col8.getColumn().setText("A"); //$NON-NLS-1$
+            col8.getColumn().setWidth(defaultColumnWidth);
+            col8.setLabelProvider(new InfoCellLabelProvider(9));
+
+            colCWithControls = new TableViewerColumn(this, SWT.LEFT);
+            colCWithControls.getColumn().setText(Messages.RelationTableViewer_2);
+            colCWithControls.getColumn().setWidth(defaultColumnWidth);
+            colCWithControls.setLabelProvider(new InfoCellLabelProvider(10));
+
+            colIWithControls = new TableViewerColumn(this, SWT.LEFT);
+            colIWithControls.getColumn().setText(Messages.RelationTableViewer_8);
+            colIWithControls.getColumn().setWidth(defaultColumnWidth);
+            colIWithControls.setLabelProvider(new InfoCellLabelProvider(11));
+
+            colAWithControls = new TableViewerColumn(this, SWT.LEFT);
+            colAWithControls.getColumn().setText(Messages.RelationTableViewer_9);
+            colAWithControls.getColumn().setWidth(defaultColumnWidth);
+            colAWithControls.setLabelProvider(new InfoCellLabelProvider(12));
+
+        } else if (showingRiskColumns && !flag) {
+            colRiskTreatment.getColumn().dispose();
+            col6.getColumn().dispose();
+            col7.getColumn().dispose();
+            col8.getColumn().dispose();
+            colCWithControls.getColumn().dispose();
+            colIWithControls.getColumn().dispose();
+            colAWithControls.getColumn().dispose();
+
+        }
+        showingRiskColumns = flag;
     }
 
     public static boolean isAssetAndSzenario(CnALink link) {
