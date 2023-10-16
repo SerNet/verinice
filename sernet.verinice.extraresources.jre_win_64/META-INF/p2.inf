@@ -1,4 +1,0 @@
-instructions.configure=\
-org.eclipse.equinox.p2.touchpoint.eclipse.setJvm(jvm:${artifact.location}/jre/bin/server/jvm.dll);
-instructions.unconfigure=\
-org.eclipse.equinox.p2.touchpoint.eclipse.setJvm(jvm:null);

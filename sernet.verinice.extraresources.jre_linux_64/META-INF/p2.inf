@@ -1,6 +1,0 @@
-instructions.configure=\
-org.eclipse.equinox.p2.touchpoint.eclipse.setJvm(jvm:${artifact.location}/jre/lib/server/libjvm.so);
-instructions.unconfigure=\
-org.eclipse.equinox.p2.touchpoint.eclipse.setJvm(jvm:null);
-instructions.install = \
-org.eclipse.equinox.p2.touchpoint.natives.chmod(targetDir:${artifact.location}/jre/bin,targetFile:,permissions:755, options: -R);

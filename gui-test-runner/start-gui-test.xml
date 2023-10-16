@@ -344,7 +344,7 @@ lang        : ${verinice.lang}
 		
         <path id="verinice-jre">
             <dirset  dir="${verinice-aut-path}/${verinice-plugins-location}">
-                <include name="sernet.verinice.extraresources.jre_*" />
+                <include name="org.eclipse.justj.openjdk.hotspot.jre*" />
             </dirset>
         </path>
         <property name="v-jre" refid="verinice-jre"/>

@@ -58,11 +58,6 @@ pipeline {
                 sh "./verinice-distribution/build.sh QUALIFIER=${qualifier} clean"
             }
         }
-        stage('Fetch JREs') {
-            steps {
-                sh "./verinice-distribution/build.sh QUALIFIER=${qualifier} JREVERSION=${params.jreversion} -j4 jres"
-            }
-        }
         stage('Build') {
             steps {
                 script {

@@ -262,8 +262,7 @@ Library.
          optional="true"/>
 
    <includes
-         id="sernet.verinice.extraresources.feature"
-         version="0.0.0"
-         optional="true"/>
+         id="org.eclipse.justj.openjdk.hotspot.jre.full"
+         version="0.0.0"/>
 
 </feature>

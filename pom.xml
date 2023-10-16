@@ -30,7 +30,6 @@
 		<module>sernet.localdependencies</module>
 		<module>sernet.thirdparty.feature</module>
 		<module>sernet.verinice.lang.feature</module>
-		<module>sernet.verinice.extraresources.feature</module>
 		<module>sernet.verinice.app.feature</module>
 
 		<!-- Bundles -->
@@ -57,9 +56,6 @@
 		<module>sernet.verinice.samt.rcp</module>
 		<module>sernet.verinice.samt.service</module>
 		<module>waffle</module>
-		<module>sernet.verinice.extraresources.jre_linux_64</module>
-		<module>sernet.verinice.extraresources.jre_macos_64</module>
-		<module>sernet.verinice.extraresources.jre_win_64</module>
 
 		<!-- tests -->
 		<module>sernet.gs.server.tests</module>
@@ -118,6 +114,8 @@
 							<arch>x86_64</arch>
 						</environment>
 					</environments>
+					<executionEnvironment>org.eclipse.justj.openjdk.hotspot.jre.full-17</executionEnvironment>
+                    <executionEnvironmentDefault>org.eclipse.justj.openjdk.hotspot.jre.full-17</executionEnvironmentDefault>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -146,6 +144,7 @@
 				<configuration>
 					<testRuntime>default</testRuntime>
 					<testFailureIgnore>true</testFailureIgnore>
+					<argLine>--add-opens java.base/java.lang=ALL-UNNAMED</argLine>
 				</configuration>
 			</plugin>
 		</plugins>
