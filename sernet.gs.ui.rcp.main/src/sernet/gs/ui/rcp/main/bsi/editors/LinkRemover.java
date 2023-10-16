@@ -17,24 +17,20 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.editors;
 
+import sernet.verinice.model.bp.DefaultBpModelListener;
 import sernet.verinice.model.bp.IBpModelListener;
-import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
-import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
-import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
-import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.validation.CnAValidation;
 
 /**
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
-public class LinkRemover implements IBSIModelListener, IISO27KModelListener, IBpModelListener {
+public class LinkRemover extends DefaultBpModelListener
+        implements IBSIModelListener, IISO27KModelListener, IBpModelListener {
 
     private LinkMaker linkMaker;
 
@@ -45,80 +41,10 @@ public class LinkRemover implements IBSIModelListener, IISO27KModelListener, IBp
         this.linkMaker = linkMaker;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.IBSIModelListener#childAdded(sernet.verinice.model.common.CnATreeElement, sernet.verinice.model.common.CnATreeElement)
-     */
-    @Override
-    public void childAdded(CnATreeElement category, CnATreeElement child) {
-        
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.IBSIModelListener#childChanged(sernet.verinice.model.common.CnATreeElement, sernet.verinice.model.common.CnATreeElement)
-     */
-    @Override
-    public void childChanged(CnATreeElement child) {
-        
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.IBSIModelListener#childRemoved(sernet.verinice.model.common.CnATreeElement, sernet.verinice.model.common.CnATreeElement)
-     */
-    @Override
-    public void childRemoved(CnATreeElement category, CnATreeElement child) {
-        
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.IBSIModelListener#databaseChildAdded(sernet.verinice.model.common.CnATreeElement)
-     */
-    @Override
-    public void databaseChildAdded(CnATreeElement child) {
-        
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.IBSIModelListener#databaseChildChanged(sernet.verinice.model.common.CnATreeElement)
-     */
-    @Override
-    public void databaseChildChanged(CnATreeElement child) {
-        
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.IBSIModelListener#databaseChildRemoved(sernet.verinice.model.common.CnATreeElement)
-     */
-    @Override
-    public void databaseChildRemoved(CnATreeElement child) {
-        
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.IBSIModelListener#databaseChildRemoved(sernet.verinice.model.common.ChangeLogEntry)
-     */
-    @Override
-    public void databaseChildRemoved(ChangeLogEntry entry) {
-        
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.IBSIModelListener#linkAdded(sernet.verinice.model.common.CnALink)
-     */
-    @Override
-    public void linkAdded(CnALink link) {
-        
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.IBSIModelListener#linkChanged(sernet.verinice.model.common.CnALink, sernet.verinice.model.common.CnALink, java.lang.Object)
-     */
-    @Override
-    public void linkChanged(CnALink oldLink, CnALink newLink, Object source) {
-        
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.IBSIModelListener#linkRemoved(sernet.verinice.model.common.CnALink)
+    /*
+     * @see
+     * sernet.verinice.model.bsi.IBSIModelListener#linkRemoved(sernet.verinice.
+     * model.common.CnALink)
      */
     @Override
     public void linkRemoved(CnALink link) {
@@ -127,55 +53,22 @@ public class LinkRemover implements IBSIModelListener, IISO27KModelListener, IBp
         linkMaker.getInputElmt().removeLinkUp(link);
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.model.bsi.IBSIModelListener#modelRefresh()
      */
     @Override
     public void modelRefresh() {
-        
+
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.IBSIModelListener#modelRefresh(java.lang.Object)
-     */
-    @Override
-    public void modelRefresh(Object source) {
-        
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.IBSIModelListener#modelReload(sernet.verinice.model.bsi.BSIModel)
+    /*
+     * @see
+     * sernet.verinice.model.bsi.IBSIModelListener#modelReload(sernet.verinice.
+     * model.bsi.BSIModel)
      */
     @Override
     public void modelReload(BSIModel newModel) {
-        
-    }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.iso27k.IISO27KModelListener#modelReload(sernet.verinice.model.iso27k.ISO27KModel)
-     */
-    @Override
-    public void modelReload(ISO27KModel newModel) {
-        
     }
-    
-    @Override
-    public void validationAdded(Integer scopeId){};
-    
-    @Override
-    public void validationRemoved(Integer scopeId){};
-    
-    @Override
-    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){}
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.iso27k.IBpModelListener#modelReload(sernet.verinice.model.bp.elements.BpModel)
-     */
-    @Override
-    public void modelReload(BpModel newModel) {
-        
-    };
 
 }
-
-

@@ -25,85 +25,103 @@ import sernet.verinice.model.validation.CnAValidation;
  * Default listener used inside model. Does not do anything.
  *
  * @author koderman[at]sernet[dot]de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
 public class NullListener implements IBSIModelListener {
 
-	public void childAdded(CnATreeElement category, CnATreeElement child) {
-		// do nothing
-	}
-
-	public void childChanged(CnATreeElement child) {
-		// do nothing
-
-	}
-
-	public void childRemoved(CnATreeElement category, CnATreeElement child) {
-		// do nothing
-
-	}
-
-	public void linkChanged(CnALink old, CnALink link, Object source) {
-		// do nothing
-
-	}
-
-	/**
-	 * @deprecated Es soll stattdessen {@link #modelRefresh(Object)} verwendet werden
-	 */
-	public void modelRefresh() {
-		modelRefresh(null);
-	}
-
-	public void modelRefresh(Object source) {
-		// do nothing
-	}
-
-	public void linkRemoved(CnALink link) {
-		// do nothing
-		
-	}
-	
-	public void linkAdded(CnALink link) {
-		// do nothing
-	}
-
-	public void databaseChildAdded(CnATreeElement child) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void databaseChildChanged(CnATreeElement child) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void databaseChildRemoved(CnATreeElement child) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void modelReload(BSIModel newModel) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(sernet.gs.ui.rcp.main.common.model.ChangeLogEntry)
-	 */
-	public void databaseChildRemoved(ChangeLogEntry entry) {
-		// TODO Auto-generated method stub
-		
-	}
-	
     @Override
-    public void validationAdded(Integer scopeId){};
-    
+    public void childAdded(CnATreeElement category, CnATreeElement child) {
+        // do nothing
+    }
+
     @Override
-    public void validationRemoved(Integer scopeId){};
-    
+    public void childChanged(CnATreeElement child) {
+        // do nothing
+
+    }
+
     @Override
-    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
+    public void childRemoved(CnATreeElement category, CnATreeElement child) {
+        // do nothing
+
+    }
+
+    @Override
+    public void linkChanged(CnALink old, CnALink link, Object source) {
+        // do nothing
+
+    }
+
+    /**
+     * @deprecated Es soll stattdessen {@link #modelRefresh(Object)} verwendet
+     *             werden
+     */
+    @Override
+    public void modelRefresh() {
+        modelRefresh(null);
+    }
+
+    @Override
+    public void modelRefresh(Object source) {
+        // do nothing
+    }
+
+    @Override
+    public void linkRemoved(CnALink link) {
+        // do nothing
+
+    }
+
+    @Override
+    public void linkAdded(CnALink link) {
+        // do nothing
+    }
+
+    @Override
+    public void databaseChildAdded(CnATreeElement child) {
+        // do nothing
+    }
+
+    @Override
+    public void databaseChildChanged(CnATreeElement child) {
+        // do nothing
+    }
+
+    @Override
+    public void databaseChildRemoved(CnATreeElement child) {
+        // do nothing
+
+    }
+
+    @Override
+    public void modelReload(BSIModel newModel) {
+        // do nothing
+
+    }
+
+    /*
+     * @see
+     * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(
+     * sernet.gs.ui.rcp.main.common.model.ChangeLogEntry)
+     */
+    @Override
+    public void databaseChildRemoved(ChangeLogEntry entry) {
+        // do nothing
+    }
+
+    @Override
+    public void validationAdded(Integer scopeId) {
+        // do nothing
+    }
+
+    @Override
+    public void validationRemoved(Integer scopeId) {
+        // do nothing
+    }
+
+    @Override
+    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation) {
+        // do nothing
+    }
 }

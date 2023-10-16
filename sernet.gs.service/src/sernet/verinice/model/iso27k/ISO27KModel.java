@@ -34,163 +34,161 @@ import sernet.verinice.model.validation.CnAValidation;
 @SuppressWarnings("serial")
 public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
 
-	private static final Logger log = Logger.getLogger(ISO27KModel.class);
-	
-	public static final String TYPE_ID = "iso27kmodel"; //$NON-NLS-1$
-	
-	public static final String TITLE = "ISO 27000 Modeling"; //$NON-NLS-1$
-	
-	private transient List<IISO27KModelListener> listeners;
-	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitel()
-	 */
-	@Override
-	public String getTitle() {
-		return TITLE;
-	}
+    private static final Logger log = Logger.getLogger(ISO27KModel.class);
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
-	 */
-	@Override
-	public String getTypeId() {
-		return TYPE_ID;
-	}
-	
-	@Override
-	public boolean canContain(Object obj) {
-		return (obj instanceof Organization || obj instanceof ImportIsoGroup);
-	}
+    public static final String TYPE_ID = "iso27kmodel"; //$NON-NLS-1$
 
-	@Override
-	public void childAdded(CnATreeElement category, CnATreeElement child) {
-		for (IISO27KModelListener listener : getListeners()) {
-			listener.childAdded(category, child);
-			if (child instanceof Organization || child instanceof ImportIsoGroup) {
-				listener.modelRefresh(null);
-			}
-		}
-	}
-	
-	@Override
-	public void databaseChildAdded(CnATreeElement child) {
-		if (child == null){
-			return;
-		}
-		for (IISO27KModelListener listener : getListeners()) {
-			listener.databaseChildAdded(child);
-		}
-	}
-	
-	@Override
-	public void childRemoved(CnATreeElement category, CnATreeElement child) {
-		for (IISO27KModelListener listener : getListeners()) {
-			listener.childRemoved(category, child);
-		}
-	}
-	
-	@Override
-	public void removeChild(CnATreeElement child) {
-		if (getChildren().remove(child)) {
-			this.childRemoved(this, child);
-		}
-	}
-	
-	@Override
-	public void databaseChildRemoved(CnATreeElement child) {
-		for (IISO27KModelListener listener : getListeners()) {
-			listener.databaseChildRemoved(child);
-		}	
-	}
-	
-	@Override
-	public void databaseChildRemoved(ChangeLogEntry entry) {
-		for (IISO27KModelListener listener : getListeners()) {
-			listener.databaseChildRemoved(entry);
-		}
-	}
+    public static final String TITLE = "ISO 27000 Modeling"; //$NON-NLS-1$
 
-	
-	@Override
-	public void childChanged(CnATreeElement child) {
-		for (IISO27KModelListener listener : getListeners()) {
-			listener.childChanged(child);
-		}
-	}
-	
-	@Override
-	public void databaseChildChanged(CnATreeElement child) {
-		for (IISO27KModelListener listener : getListeners()) {
-			listener.databaseChildChanged(child);
-		}
-	}
-	
-	@Override
-	public void linkChanged(CnALink old, CnALink link, Object source) {
-		for (IISO27KModelListener listener : getListeners()) {
-			listener.linkChanged(old, link, source);
-		}
-	}
-	
-	@Override
-	public void linkRemoved(CnALink link) {
-		for (IISO27KModelListener listener : getListeners()) {
-			listener.linkRemoved(link);
-		}
-	}
-	
-	@Override
-	public void linkAdded(CnALink link) {
-		for (IISO27KModelListener listener : getListeners()) {
-			listener.linkAdded(link);
-		}
-	}
-	
-	public void modelReload(ISO27KModel newModel) {
-		for (IISO27KModelListener listener : getListeners()) {
-			listener.modelReload(newModel);
-			if (log.isDebugEnabled()) {
-				log.debug("modelReload, listener: " + listener); //$NON-NLS-1$
-			}
-		}
-	}
-	
-	public void addISO27KModelListener(IISO27KModelListener listener) {
-	    if (log.isDebugEnabled()) {
+    private transient List<IISO27KModelListener> listeners;
+
+    /*
+     * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitel()
+     */
+    @Override
+    public String getTitle() {
+        return TITLE;
+    }
+
+    /*
+     * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
+     */
+    @Override
+    public String getTypeId() {
+        return TYPE_ID;
+    }
+
+    @Override
+    public boolean canContain(Object obj) {
+        return (obj instanceof Organization || obj instanceof ImportIsoGroup);
+    }
+
+    @Override
+    public void childAdded(CnATreeElement category, CnATreeElement child) {
+        for (IISO27KModelListener listener : getListeners()) {
+            listener.childAdded(category, child);
+            if (child instanceof Organization || child instanceof ImportIsoGroup) {
+                listener.modelRefresh(null);
+            }
+        }
+    }
+
+    @Override
+    public void databaseChildAdded(CnATreeElement child) {
+        if (child == null) {
+            return;
+        }
+        for (IISO27KModelListener listener : getListeners()) {
+            listener.databaseChildAdded(child);
+        }
+    }
+
+    @Override
+    public void childRemoved(CnATreeElement category, CnATreeElement child) {
+        for (IISO27KModelListener listener : getListeners()) {
+            listener.childRemoved(category, child);
+        }
+    }
+
+    @Override
+    public void removeChild(CnATreeElement child) {
+        if (getChildren().remove(child)) {
+            this.childRemoved(this, child);
+        }
+    }
+
+    @Override
+    public void databaseChildRemoved(CnATreeElement child) {
+        for (IISO27KModelListener listener : getListeners()) {
+            listener.databaseChildRemoved(child);
+        }
+    }
+
+    @Override
+    public void databaseChildRemoved(ChangeLogEntry entry) {
+        for (IISO27KModelListener listener : getListeners()) {
+            listener.databaseChildRemoved(entry);
+        }
+    }
+
+    @Override
+    public void childChanged(CnATreeElement child) {
+        for (IISO27KModelListener listener : getListeners()) {
+            listener.childChanged(child);
+        }
+    }
+
+    @Override
+    public void databaseChildChanged(CnATreeElement child) {
+        for (IISO27KModelListener listener : getListeners()) {
+            listener.databaseChildChanged(child);
+        }
+    }
+
+    @Override
+    public void linkChanged(CnALink old, CnALink link, Object source) {
+        for (IISO27KModelListener listener : getListeners()) {
+            listener.linkChanged(old, link, source);
+        }
+    }
+
+    @Override
+    public void linkRemoved(CnALink link) {
+        for (IISO27KModelListener listener : getListeners()) {
+            listener.linkRemoved(link);
+        }
+    }
+
+    @Override
+    public void linkAdded(CnALink link) {
+        for (IISO27KModelListener listener : getListeners()) {
+            listener.linkAdded(link);
+        }
+    }
+
+    public void modelReload(ISO27KModel newModel) {
+        for (IISO27KModelListener listener : getListeners()) {
+            listener.modelReload(newModel);
+            if (log.isDebugEnabled()) {
+                log.debug("modelReload, listener: " + listener); //$NON-NLS-1$
+            }
+        }
+    }
+
+    public void addISO27KModelListener(IISO27KModelListener listener) {
+        if (log.isDebugEnabled()) {
             log.debug("Adding ISO model listener.");
         }
-		if (!getListeners().contains(listener)){
-			getListeners().add(listener);
-		}
-	}
-	
-	public void removeISO27KModelListener(IISO27KModelListener listener) {
-		if (getListeners().contains(listener)){
-			getListeners().remove(listener);
-		}
-	}
-	
-	private synchronized List<IISO27KModelListener> getListeners() {
-		if (listeners == null){
-			listeners = new CopyOnWriteArrayList<IISO27KModelListener>();
-		}
-		return listeners;
-	}
-	
-	@Override
-	public void refreshAllListeners(Object source) {
-		Logger.getLogger(this.getClass()).debug("Model refresh to all listeners."); //$NON-NLS-1$
-		for (IISO27KModelListener listener : getListeners()) {
-			listener.modelRefresh(source);
-		}
-	}
-	
+        if (!getListeners().contains(listener)) {
+            getListeners().add(listener);
+        }
+    }
+
+    public void removeISO27KModelListener(IISO27KModelListener listener) {
+        if (getListeners().contains(listener)) {
+            getListeners().remove(listener);
+        }
+    }
+
+    private synchronized List<IISO27KModelListener> getListeners() {
+        if (listeners == null) {
+            listeners = new CopyOnWriteArrayList<>();
+        }
+        return listeners;
+    }
+
+    @Override
+    public void refreshAllListeners(Object source) {
+        Logger.getLogger(this.getClass()).debug("Model refresh to all listeners."); //$NON-NLS-1$
+        for (IISO27KModelListener listener : getListeners()) {
+            listener.modelRefresh(source);
+        }
+    }
+
     /**
-     * Moves all {@link IISO27KModelListener} from this model
-     * to newModel.
+     * Moves all {@link IISO27KModelListener} from this model to newModel.
      * 
-     * @param newModel 
+     * @param newModel
      */
     public void moveListener(ISO27KModel newModel) {
         for (IISO27KModelListener listener : getListeners()) {
@@ -198,25 +196,25 @@ public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
         }
         for (IISO27KModelListener listener : getListeners()) {
             removeISO27KModelListener(listener);
-        }      
+        }
     }
-    
+
     @Override
-    public void validationAdded(Integer scopeId){
-        for(IISO27KModelListener listener : getListeners()){
+    public void validationAdded(Integer scopeId) {
+        for (IISO27KModelListener listener : getListeners()) {
             listener.validationAdded(scopeId);
         }
     }
-    
+
     @Override
-    public void validationRemoved(Integer scopeId){
-        for(IISO27KModelListener listener : getListeners()){
+    public void validationRemoved(Integer scopeId) {
+        for (IISO27KModelListener listener : getListeners()) {
             listener.validationRemoved(scopeId);
         }
     }
-    
+
     @Override
-    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){
+    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation) {
         // do nothing
     }
 }

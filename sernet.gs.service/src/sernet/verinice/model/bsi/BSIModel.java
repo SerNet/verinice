@@ -27,6 +27,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.annotation.NonNull;
+
 import sernet.verinice.interfaces.VersionConstants;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -94,7 +95,7 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 
     private synchronized List<IBSIModelListener> getListeners() {
         if (listeners == null) {
-            listeners = new CopyOnWriteArrayList<IBSIModelListener>();
+            listeners = new CopyOnWriteArrayList<>();
         }
         return listeners;
     }
@@ -204,7 +205,7 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
     }
 
     public List<BausteinUmsetzung> getBausteine() {
-        List<BausteinUmsetzung> result = new ArrayList<BausteinUmsetzung>();
+        List<BausteinUmsetzung> result = new ArrayList<>();
         Set<CnATreeElement> verbuende = getChildren();
         for (CnATreeElement verbund : verbuende) {
             getBausteine(verbund, result);
@@ -213,7 +214,7 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
     }
 
     public List<MassnahmenUmsetzung> getMassnahmen() {
-        ArrayList<MassnahmenUmsetzung> result = new ArrayList<MassnahmenUmsetzung>();
+        ArrayList<MassnahmenUmsetzung> result = new ArrayList<>();
         Set<CnATreeElement> verbuende = getChildren();
         for (CnATreeElement verbund : verbuende) {
             getMassnahmen(verbund, result);
@@ -265,7 +266,7 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
     }
 
     public List<Person> getPersonen() {
-        List<Person> result = new ArrayList<Person>(50);
+        List<Person> result = new ArrayList<>(50);
         Set<CnATreeElement> verbuende = getChildren();
         for (CnATreeElement verbund : verbuende) {
             for (CnATreeElement kategorie : verbund.getChildren()) {
@@ -282,7 +283,7 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
     }
 
     public List<CnATreeElement> getAllElementsFlatList(boolean includeMassnahmen) {
-        List<CnATreeElement> result = new ArrayList<CnATreeElement>();
+        List<CnATreeElement> result = new ArrayList<>();
 
         for (CnATreeElement child : getChildren()) {
             if (includeMassnahmen || !(child instanceof BausteinUmsetzung)) {
@@ -293,13 +294,14 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
         return result;
     }
 
-    private void findChildren(List<CnATreeElement> result, CnATreeElement parent, boolean includeMassnahmen) {
+    private void findChildren(List<CnATreeElement> result, CnATreeElement parent,
+            boolean includeMassnahmen) {
         if (!includeMassnahmen && parent instanceof BausteinUmsetzung) {
             return;
         }
 
         Set<CnATreeElement> children = parent.getChildren();
-        if (children != null && children.size() > 0) {
+        if (children != null && !children.isEmpty()) {
             result.addAll(children);
             for (CnATreeElement child : children) {
                 findChildren(result, child, includeMassnahmen);
@@ -308,12 +310,11 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
     }
 
     public List<CnALink> getAllLinks() {
-        List<CnALink> result = new ArrayList<CnALink>();
-        for (CnATreeElement element : getAllElementsFlatList(false /*
-                                                                    * do not
-                                                                    * load
-                                                                    * Massnahmen
-                                                                    */)) {
+        List<CnALink> result = new ArrayList<>();
+        for (CnATreeElement element : getAllElementsFlatList(
+                false /*
+                       * do not load Massnahmen
+                       */)) {
             result.addAll(element.getLinksDown());
         }
         return result;
@@ -321,7 +322,7 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 
     @Override
     public List<String> getTags() {
-        ArrayList<String> tags = new ArrayList<String>(50);
+        ArrayList<String> tags = new ArrayList<>(50);
         Set<CnATreeElement> verbuende = getChildren();
 
         for (CnATreeElement verbund : verbuende) {
@@ -336,8 +337,8 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
             }
         }
         // remove doubles:
-        HashSet<String> set = new HashSet<String>(tags);
-        tags = new ArrayList<String>(set);
+        HashSet<String> set = new HashSet<>(tags);
+        tags = new ArrayList<>(set);
 
         Collections.sort(tags);
         return tags;
@@ -394,16 +395,16 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
         for (IBSIModelListener listener : getListeners()) {
             listener.validationAdded(scopeId);
         }
-    };
+    }
 
     @Override
     public void validationRemoved(Integer scopeId) {
         for (IBSIModelListener listener : getListeners()) {
             listener.validationRemoved(scopeId);
         }
-    };
+    }
 
     @Override
     public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation) {
-    };
+    }
 }

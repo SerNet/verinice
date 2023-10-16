@@ -51,292 +51,279 @@ import sernet.verinice.model.bsi.SonstIT;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.validation.CnAValidation;
+import sernet.verinice.model.common.NullListener;
 import sernet.verinice.service.commands.task.FindMassnahmeById;
 
 /**
  * Gets Massnahmen from current BSIModel and reacts to model changes.
  * 
- * Update performed in synchronized thread, but only if
- * necessary, to optimize performance.
+ * Update performed in synchronized thread, but only if necessary, to optimize
+ * performance.
  * 
  * @author koderman[at]sernet[dot]de
  *
  */
 class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
-	
-	private static final Logger LOG = Logger.getLogger(MassnahmenUmsetzungContentProvider.class);
 
-	private static final int ADD     = 0;
-	private static final int UPDATE  = 1;
-	private static final int REMOVE  = 2;
-	private static final int REFRESH = 3;
-	
-	private TableViewer viewer;
-	private GenericMassnahmenView todoView;
-	
-	private IBSIModelListener modelListener = new IBSIModelListener()
-	{
+    private static final Logger LOG = Logger.getLogger(MassnahmenUmsetzungContentProvider.class);
 
-		public void childAdded(CnATreeElement category, CnATreeElement child) {
-			if (child instanceof BausteinUmsetzung && isOfInterest(child)){
-				reloadMeasures();
-			} else if (child instanceof ITVerbund){
-				todoView.compoundAdded((ITVerbund) child);
-			}
-		}
-		
-		public void linkChanged(CnALink old, CnALink link, Object source) {
-			if (link.getDependency() instanceof Person){
-				updateViewer(REFRESH, null);
-			}
-		}
-		
-		public void linkAdded(CnALink link) {
-			if (link.getDependency() instanceof Person) {
-				reloadMeasures();
-			}
-		}
-		
-		public void linkRemoved(CnALink link) {
-			if (link.getDependency() instanceof Person) {
-				reloadMeasures();
-			}
-		}
+    private static final int ADD = 0;
+    private static final int UPDATE = 1;
+    private static final int REMOVE = 2;
+    private static final int REFRESH = 3;
 
-		public void childChanged(CnATreeElement child) {
-			if (child instanceof MassnahmenUmsetzung) {
-				try {
-					if (!isOfInterest(child))
-					{
-						LOG.debug("MassnahmenUmsetzung is not of interest for view: " + child);
-						return;
-					}
-					Activator.inheritVeriniceContextState();
-					FindMassnahmeById command = new FindMassnahmeById(child.getDbId());
-					command = ServiceFactory.lookupCommandService().executeCommand(command);
-					List<TodoViewItem> items = command.getAll();
-					if (items.size()>0) {
-						TodoViewItem item = items.get(0);
-						updateViewer(UPDATE, item);
-					}
-				} catch (CommandException e) {
-					Logger.getLogger(this.getClass()).debug("Fehler beim Aktualisieren von TodoView", e);
-				}
-			} else if (child instanceof ITVerbund)
-			{
-				todoView.compoundChanged((ITVerbund) child);
-			}
-		}
+    private TableViewer viewer;
+    private GenericMassnahmenView todoView;
 
-		public void childRemoved(CnATreeElement category, CnATreeElement child) {
-			if (child instanceof ITVerbund)
-			{
-				todoView.compoundRemoved((ITVerbund) child);
-			}
-			else if (canContainMeasures(child)  && isOfInterest(child))
-			{
-				// When an element has been deleted it could have contained BausteinUmsetzung
-				// and MassnahmenUmsetzung instances. If this happens in an ITVerbund we are
-				// watching, reload the measures.
-				reloadMeasures();
-			}
-		}
-		
-		/**
-		 * @deprecated Es soll stattdessen {@link #modelRefresh(Object)} verwendet werden
-		 */
-		public void modelRefresh() {
-		   
-			modelRefresh(null);
-		}
+    private IBSIModelListener modelListener = new NullListener() {
 
-		public void modelRefresh(Object source) {
-			if (source != null) {
-			    todoView.setLoadBlockNumber(0);
-		        todoView.getLoadMoreAction().setEnabled(true);
-				reloadMeasures();
-			}
-		}
-		
-		public void databaseChildAdded(CnATreeElement child) {
-			if (child instanceof BausteinUmsetzung && isOfInterest(child)){
-				reloadMeasures();
-			}
-		}
+        @Override
+        public void childAdded(CnATreeElement category, CnATreeElement child) {
+            if (child instanceof BausteinUmsetzung && isOfInterest(child)) {
+                reloadMeasures();
+            } else if (child instanceof ITVerbund) {
+                todoView.compoundAdded((ITVerbund) child);
+            }
+        }
 
-		public void databaseChildChanged(CnATreeElement child) {
-			childChanged(child);
-		}
+        @Override
+        public void linkChanged(CnALink old, CnALink link, Object source) {
+            if (link.getDependency() instanceof Person) {
+                updateViewer(REFRESH, null);
+            }
+        }
 
-		public void databaseChildRemoved(CnATreeElement child) {
-			childRemoved(child.getParent(), child);
-		}
+        @Override
+        public void linkAdded(CnALink link) {
+            if (link.getDependency() instanceof Person) {
+                reloadMeasures();
+            }
+        }
 
-		public void modelReload(BSIModel newModel) {
-			/*
-			 * Intentionally do nothing since the view already has means to get
-			 * notified of model reloads.
-			 * 
-			 * @see IModelLoadListener
-			 */
-		}
+        @Override
+        public void linkRemoved(CnALink link) {
+            if (link.getDependency() instanceof Person) {
+                reloadMeasures();
+            }
+        }
 
-		/* (non-Javadoc)
-		 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(java.lang.Integer)
-		 */
-		public void databaseChildRemoved(ChangeLogEntry entry) {
-			// TODO server: remove element
-			// TODO akoderman really? this seems to be working fine.
-		}
-		
-	    @Override
-	    public void validationAdded(Integer scopeId){};
-	    
-	    @Override
-	    public void validationRemoved(Integer scopeId){};
-	    
-	    @Override
-	    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
-		
-	};
-	
-	public MassnahmenUmsetzungContentProvider(GenericMassnahmenView todoView) {
-		this.todoView = todoView;
-	}
+        @Override
+        public void childChanged(CnATreeElement child) {
+            if (child instanceof MassnahmenUmsetzung) {
+                try {
+                    if (!isOfInterest(child)) {
+                        LOG.debug("MassnahmenUmsetzung is not of interest for view: " + child);
+                        return;
+                    }
+                    Activator.inheritVeriniceContextState();
+                    FindMassnahmeById command = new FindMassnahmeById(child.getDbId());
+                    command = ServiceFactory.lookupCommandService().executeCommand(command);
+                    List<TodoViewItem> items = command.getAll();
+                    if (!items.isEmpty()) {
+                        TodoViewItem item = items.get(0);
+                        updateViewer(UPDATE, item);
+                    }
+                } catch (CommandException e) {
+                    Logger.getLogger(this.getClass())
+                            .debug("Fehler beim Aktualisieren von TodoView", e);
+                }
+            } else if (child instanceof ITVerbund) {
+                todoView.compoundChanged((ITVerbund) child);
+            }
+        }
 
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		this.viewer = (TableViewer) viewer;
-		BSIModel model = CnAElementFactory.getLoadedModel();
-		// When the DB is closed the clearing of the massnahmen table causes this method to be called.
-		// However at that time no model exists anymore. So we can safely skip this part.
-		if (model != null)
-		{
-			model.removeBSIModelListener(modelListener);
-			model.addBSIModelListener(modelListener);
-		}
-	}
+        @Override
+        public void childRemoved(CnATreeElement category, CnATreeElement child) {
+            if (child instanceof ITVerbund) {
+                todoView.compoundRemoved((ITVerbund) child);
+            } else if (canContainMeasures(child) && isOfInterest(child)) {
+                // When an element has been deleted it could have contained
+                // BausteinUmsetzung
+                // and MassnahmenUmsetzung instances. If this happens in an
+                // ITVerbund we are
+                // watching, reload the measures.
+                reloadMeasures();
+            }
+        }
 
+        /**
+         * @deprecated Es soll stattdessen {@link #modelRefresh(Object)}
+         *             verwendet werden
+         */
+        @Override
+        public void modelRefresh() {
 
-	@SuppressWarnings("unchecked")
-	public Object[] getElements(Object inputElement) {
-		if (inputElement instanceof PlaceHolder){
-			return new Object[] {inputElement};
-		}
-		List<TodoViewItem> mns = (List<TodoViewItem>) inputElement;
-		return mns.toArray(new Object[mns.size()]);
-		
-	}
+            modelRefresh(null);
+        }
 
-	public void dispose() {
-		BSIModel model = CnAElementFactory.getLoadedModel();
-		model.removeBSIModelListener(modelListener);
-	}
-	
-	void reloadMeasures() {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					try {
-					todoView.reloadMeasures();
-					} catch (RuntimeException e) {
-						ExceptionUtil.log(e, "Konnte Realisierungsplan nicht neu laden.");
-					}
-				}
-			});
-	}
-	
-	
-	void updateViewer(final int type, final Object child) {
-		if (Display.getCurrent() != null) {
-			switch (type) {
-			case ADD:
-				viewer.add(child);
-				return;
-			case UPDATE:
-				viewer.update(child, new String[] { MassnahmenUmsetzungFilter.UMSETZUNG_PROPERTY });
-				return;
-			case REMOVE:
-				viewer.remove(child);
-				return;
-			case REFRESH:
-				viewer.refresh();
-				return;
-			}
-			return;
-		}
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				switch (type) {
-				case ADD:
-					viewer.add(child);
-					return;
-				case UPDATE:
-					viewer.update(child, new String[] { MassnahmenUmsetzungFilter.UMSETZUNG_PROPERTY });
-					return;
-				case REMOVE:
-					viewer.remove(child);
-					return;
-				case REFRESH:
-					viewer.refresh();
-					return;
-				}
-			}
-		});
-	}
+        @Override
+        public void modelRefresh(Object source) {
+            if (source != null) {
+                todoView.setLoadBlockNumber(0);
+                todoView.getLoadMoreAction().setEnabled(true);
+                reloadMeasures();
+            }
+        }
 
-	
-	/**
-	 * Returns whether the given {@link CnATreeElement} instance
-	 * is of interest for the view.
-	 * 
-	 * <p>Such an instance is of interest when it belongs to the currently
-	 * selected IT-Verbund of the view.</p>
-	 * 
-	 * <p>This method is needed to decide whether the view's model will
-	 * be updated when the given {@link MassnahmenUmsetzung} instance
-	 * changed or a {@link BausteinUmsetzung} instance got removed etc.</p>
-	 */
-	private boolean isOfInterest(CnATreeElement child)
-	{
-		ITVerbund expectedCompound = todoView.getCurrentCompound();
-		
-		// No compound selected -> nothing is of interest.
-		if (expectedCompound == null){
-			return false;
-		}
-		// Otherwise climb the tree.
-		CnATreeElement parent = child.getParent();
-		while (! (parent instanceof ITVerbund))
-		{
-			if (parent == null)
-			{
-				LOG.warn("Element with no IT-Verbund ancestor. Skipping ...");
-				return false;
-			}
-			parent = Retriever.checkRetrieveParent(parent);
-			parent = parent.getParent();
-		}
-		
-		return parent.equals(expectedCompound);
-	}
-	
-	private boolean canContainMeasures(CnATreeElement child)
-	{
-		// TODO rschus: Could be more elegantly solved by adding a method 'canHaveMeasures'
-		// to CnATreeElement, implement it to return false by default and override it in the
-		// classes below to return true.
-		Class<?>[] classes = {
-				BausteinUmsetzung.class, Anwendung.class, Server.class,
-				Client.class, SonstIT.class, Gebaeude.class, NetzKomponente.class,
-				Raum.class };
-		
-		for (Class<?> c : classes)
-		{
-			if (c.isAssignableFrom(child.getClass())){
-				return true;
-			}
-		}
-		
-		return false;
-	}
+        @Override
+        public void databaseChildAdded(CnATreeElement child) {
+            if (child instanceof BausteinUmsetzung && isOfInterest(child)) {
+                reloadMeasures();
+            }
+        }
+
+        @Override
+        public void databaseChildChanged(CnATreeElement child) {
+            childChanged(child);
+        }
+
+        @Override
+        public void databaseChildRemoved(CnATreeElement child) {
+            childRemoved(child.getParent(), child);
+        }
+
+        /*
+         * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#
+         * databaseChildRemoved(java.lang.Integer)
+         */
+        public void databaseChildRemoved(ChangeLogEntry entry) {
+            // TODO server: remove element
+            // TODO akoderman really? this seems to be working fine.
+        }
+
+    };
+
+    public MassnahmenUmsetzungContentProvider(GenericMassnahmenView todoView) {
+        this.todoView = todoView;
+    }
+
+    @Override
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        this.viewer = (TableViewer) viewer;
+        BSIModel model = CnAElementFactory.getLoadedModel();
+        // When the DB is closed the clearing of the massnahmen table causes
+        // this method to be called.
+        // However at that time no model exists anymore. So we can safely skip
+        // this part.
+        if (model != null) {
+            model.removeBSIModelListener(modelListener);
+            model.addBSIModelListener(modelListener);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public Object[] getElements(Object inputElement) {
+        if (inputElement instanceof PlaceHolder) {
+            return new Object[] { inputElement };
+        }
+        List<TodoViewItem> mns = (List<TodoViewItem>) inputElement;
+        return mns.toArray(new Object[mns.size()]);
+
+    }
+
+    @Override
+    public void dispose() {
+        BSIModel model = CnAElementFactory.getLoadedModel();
+        model.removeBSIModelListener(modelListener);
+    }
+
+    void reloadMeasures() {
+        Display.getDefault().asyncExec(() -> {
+            try {
+                todoView.reloadMeasures();
+            } catch (RuntimeException e) {
+                ExceptionUtil.log(e, "Konnte Realisierungsplan nicht neu laden.");
+            }
+        });
+    }
+
+    void updateViewer(final int type, final Object child) {
+        if (Display.getCurrent() != null) {
+            switch (type) {
+            case ADD:
+                viewer.add(child);
+                return;
+            case UPDATE:
+                viewer.update(child, new String[] { MassnahmenUmsetzungFilter.UMSETZUNG_PROPERTY });
+                return;
+            case REMOVE:
+                viewer.remove(child);
+                return;
+            case REFRESH:
+                viewer.refresh();
+                return;
+            }
+            return;
+        }
+        Display.getDefault().asyncExec(() -> {
+            switch (type) {
+            case ADD:
+                viewer.add(child);
+                return;
+            case UPDATE:
+                viewer.update(child, new String[] { MassnahmenUmsetzungFilter.UMSETZUNG_PROPERTY });
+                return;
+            case REMOVE:
+                viewer.remove(child);
+                return;
+            case REFRESH:
+                viewer.refresh();
+                return;
+            }
+        });
+    }
+
+    /**
+     * Returns whether the given {@link CnATreeElement} instance is of interest
+     * for the view.
+     * 
+     * <p>
+     * Such an instance is of interest when it belongs to the currently selected
+     * IT-Verbund of the view.
+     * </p>
+     * 
+     * <p>
+     * This method is needed to decide whether the view's model will be updated
+     * when the given {@link MassnahmenUmsetzung} instance changed or a
+     * {@link BausteinUmsetzung} instance got removed etc.
+     * </p>
+     */
+    private boolean isOfInterest(CnATreeElement child) {
+        ITVerbund expectedCompound = todoView.getCurrentCompound();
+
+        // No compound selected -> nothing is of interest.
+        if (expectedCompound == null) {
+            return false;
+        }
+        // Otherwise climb the tree.
+        CnATreeElement parent = child.getParent();
+        while (!(parent instanceof ITVerbund)) {
+            if (parent == null) {
+                LOG.warn("Element with no IT-Verbund ancestor. Skipping ...");
+                return false;
+            }
+            parent = Retriever.checkRetrieveParent(parent);
+            parent = parent.getParent();
+        }
+
+        return parent.equals(expectedCompound);
+    }
+
+    private boolean canContainMeasures(CnATreeElement child) {
+        // TODO rschus: Could be more elegantly solved by adding a method
+        // 'canHaveMeasures'
+        // to CnATreeElement, implement it to return false by default and
+        // override it in the
+        // classes below to return true.
+        Class<?>[] classes = { BausteinUmsetzung.class, Anwendung.class, Server.class, Client.class,
+                SonstIT.class, Gebaeude.class, NetzKomponente.class, Raum.class };
+
+        for (Class<?> c : classes) {
+            if (c.isAssignableFrom(child.getClass())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
