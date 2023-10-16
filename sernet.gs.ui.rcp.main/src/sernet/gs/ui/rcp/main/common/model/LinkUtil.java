@@ -65,14 +65,14 @@ public final class LinkUtil {
 
             if (relevantDomains.contains(Domain.BASE_PROTECTION_OLD)
                     && CnAElementFactory.isModelLoaded()) {
-                CnAElementFactory.getLoadedModel().linkAdded(link);
+                CnAElementFactory.getLoadedModel().linksAdded(Set.of(link));
             }
             if (relevantDomains.contains(Domain.ISM) && CnAElementFactory.isIsoModelLoaded()) {
-                CnAElementFactory.getInstance().getISO27kModel().linkAdded(link);
+                CnAElementFactory.getInstance().getISO27kModel().linksAdded(Set.of(link));
             }
             if (relevantDomains.contains(Domain.BASE_PROTECTION)
                     && CnAElementFactory.isBpModelLoaded()) {
-                CnAElementFactory.getInstance().getBpModel().linkAdded(link);
+                CnAElementFactory.getInstance().getBpModel().linksAdded(Set.of(link));
             }
             return link;
         } catch (CommandException e) {

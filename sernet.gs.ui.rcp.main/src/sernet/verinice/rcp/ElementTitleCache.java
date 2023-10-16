@@ -1,6 +1,7 @@
 package sernet.verinice.rcp;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -133,7 +134,7 @@ public class ElementTitleCache
     }
 
     @Override
-    public void linkAdded(CnALink link) {
+    public void linksAdded(Collection<CnALink> links) {
     }
 
     @Override

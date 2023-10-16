@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -152,7 +153,7 @@ public class RelationViewContentProvider extends NullListener implements IStruct
      * rcp.main.common.model.CnALink)
      */
     @Override
-    public void linkAdded(CnALink link) {
+    public void linksAdded(Collection<CnALink> links) {
         view.reloadAll();
     }
 

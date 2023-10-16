@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.verinice.model.iso27k;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -140,9 +141,9 @@ public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
     }
 
     @Override
-    public void linkAdded(CnALink link) {
+    public void linksAdded(Collection<CnALink> links) {
         for (IISO27KModelListener listener : getListeners()) {
-            listener.linkAdded(link);
+            listener.linksAdded(links);
         }
     }
 

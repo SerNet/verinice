@@ -18,6 +18,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -94,8 +95,8 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
         }
 
         @Override
-        public void linkAdded(CnALink link) {
-            if (link.getDependency() instanceof Person) {
+        public void linksAdded(Collection<CnALink> links) {
+            if (links.stream().anyMatch(link -> link.getDependency() instanceof Person)) {
                 reloadMeasures();
             }
         }

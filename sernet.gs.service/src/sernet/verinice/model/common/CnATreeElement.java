@@ -20,6 +20,7 @@ package sernet.verinice.model.common;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -560,8 +561,8 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     }
 
     @Override
-    public void linkAdded(CnALink link) {
-        getModelChangeListener().linkAdded(link);
+    public void linksAdded(Collection<CnALink> links) {
+        getModelChangeListener().linksAdded(links);
     }
 
     public boolean removeLinkDown(CnALink link) {

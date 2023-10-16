@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.elements;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -158,9 +159,9 @@ public class BpModel extends CnATreeElement implements IBpRoot {
     }
 
     @Override
-    public void linkAdded(CnALink link) {
+    public void linksAdded(Collection<CnALink> links) {
         for (IBpModelListener listener : getListeners()) {
-            listener.linkAdded(link);
+            listener.linksAdded(links);
         }
     }
 

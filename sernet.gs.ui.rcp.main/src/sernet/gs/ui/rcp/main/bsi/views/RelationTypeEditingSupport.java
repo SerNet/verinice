@@ -197,12 +197,12 @@ public class RelationTypeEditingSupport extends EditingSupport {
                     CnAElementHome.getInstance().remove(cnaLink);
                     if (CnAElementFactory.isModelLoaded()) {
                         CnAElementFactory.getLoadedModel().linkRemoved(cnaLink);
-                        CnAElementFactory.getLoadedModel().linkAdded(newCnaLink);
+                        CnAElementFactory.getLoadedModel().linksAdded(Set.of(newCnaLink));
                     }
                     CnAElementFactory.getInstance().getISO27kModel().linkRemoved(cnaLink);
-                    CnAElementFactory.getInstance().getISO27kModel().linkAdded(newCnaLink);
+                    CnAElementFactory.getInstance().getISO27kModel().linksAdded(Set.of(newCnaLink));
                     CnAElementFactory.getInstance().getBpModel().linkRemoved(cnaLink);
-                    CnAElementFactory.getInstance().getBpModel().linkAdded(newCnaLink);
+                    CnAElementFactory.getInstance().getBpModel().linksAdded(Set.of(newCnaLink));
                 }
             } catch (CommandException e) {
                 ExceptionUtil.log(e, Messages.RelationTypeEditingSupport_1);

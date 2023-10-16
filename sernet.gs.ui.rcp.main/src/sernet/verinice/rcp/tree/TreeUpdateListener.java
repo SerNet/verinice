@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.rcp.tree;
 
+import java.util.Collection;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -240,8 +242,8 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
      * .ui.rcp.main.common.model.CnALink)
      */
     @Override
-    public void linkAdded(CnALink link) {
-        linkAddedOrRemoved(link);
+    public void linksAdded(Collection<CnALink> links) {
+        links.forEach(this::linkAddedOrRemoved);
     }
 
     /*

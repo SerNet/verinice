@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.model.iso27k;
 
+import java.util.Collection;
+
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -90,7 +92,7 @@ public interface IISO27KModelListener {
     /**
      * @param link
      */
-    void linkAdded(CnALink link);
+    void linksAdded(Collection<CnALink> links);
 
     /**
      * @param newModel

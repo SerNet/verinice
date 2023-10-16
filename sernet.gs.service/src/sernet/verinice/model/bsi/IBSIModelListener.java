@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.verinice.model.bsi;
 
+import java.util.Collection;
+
 import org.eclipse.jdt.annotation.NonNull;
 
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -58,7 +60,7 @@ public interface IBSIModelListener {
 
     void linkRemoved(CnALink link);
 
-    void linkAdded(CnALink link);
+    void linksAdded(Collection<CnALink> links);
 
     /**
      * New element was added to the database (by another client), hint to view

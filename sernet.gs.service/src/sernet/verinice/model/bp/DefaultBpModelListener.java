@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.verinice.model.bp;
 
+import java.util.Collection;
+
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
@@ -80,7 +82,7 @@ public class DefaultBpModelListener implements IBpModelListener {
     }
 
     @Override
-    public void linkAdded(CnALink link) {
+    public void linksAdded(Collection<CnALink> links) {
         // do nothing
     }
 

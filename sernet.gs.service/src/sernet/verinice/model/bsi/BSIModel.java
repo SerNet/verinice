@@ -18,6 +18,7 @@
 package sernet.verinice.model.bsi;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -129,9 +130,9 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
     }
 
     @Override
-    public void linkAdded(CnALink link) {
+    public void linksAdded(Collection<CnALink> links) {
         for (IBSIModelListener listener : getListeners()) {
-            listener.linkAdded(link);
+            listener.linksAdded(links);
         }
     }
 

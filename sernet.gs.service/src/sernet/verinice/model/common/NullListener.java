@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.verinice.model.common;
 
+import java.util.Collection;
+
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.validation.CnAValidation;
@@ -74,7 +76,7 @@ public class NullListener implements IBSIModelListener {
     }
 
     @Override
-    public void linkAdded(CnALink link) {
+    public void linksAdded(Collection<CnALink> links) {
         // do nothing
     }
 

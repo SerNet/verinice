@@ -17,6 +17,7 @@
 
 package sernet.verinice.rcp.tree;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -68,8 +69,8 @@ public class BpTreeLabelProvider extends TreeLabelProvider
         }
 
         @Override
-        public void linkAdded(CnALink link) {
-            handleLink(link);
+        public void linksAdded(Collection<CnALink> links) {
+            links.forEach(this::handleLink);
         }
 
         private void handleLink(CnALink link) {

@@ -595,23 +595,24 @@ public final class CnAElementHome {
             }
         }
 
-        // calling linkAdded for one link reloads all changed links
         if (newLinks != null && !newLinks.isEmpty()) {
-            CnALink link = newLinks.get(newLinks.size() - 1);
-            if ((link.getDependant() instanceof IBSIStrukturElement
-                    || link.getDependant() instanceof MassnahmenUmsetzung)
-                    || (link.getDependency() instanceof IBSIStrukturElement
-                            || link.getDependency() instanceof MassnahmenUmsetzung)) {
-                CnAElementFactory.getLoadedModel().linkAdded(link);
-            }
-            if (link.getDependant() instanceof IISO27kElement
-                    || link.getDependency() instanceof IISO27kElement) {
-                CnAElementFactory.getInstance().getISO27kModel().linkAdded(link);
-            }
-            if (link.getDependant() instanceof IBpElement
-                    || link.getDependency() instanceof IBpElement) {
-                CnAElementFactory.getInstance().getBpModel().linkAdded(link);
-            }
+            CnAElementFactory.getLoadedModel()
+                    .linksAdded(newLinks.stream()
+                            .filter(link -> (link.getDependant() instanceof IBSIStrukturElement
+                                    || link.getDependant() instanceof MassnahmenUmsetzung)
+                                    || (link.getDependency() instanceof IBSIStrukturElement
+                                            || link.getDependency() instanceof MassnahmenUmsetzung))
+                            .collect(Collectors.toSet()));
+            CnAElementFactory.getInstance().getISO27kModel()
+                    .linksAdded(newLinks.stream()
+                            .filter(link -> link.getDependant() instanceof IISO27kElement
+                                    || link.getDependency() instanceof IISO27kElement)
+                            .collect(Collectors.toSet()));
+            CnAElementFactory.getInstance().getBpModel()
+                    .linksAdded(newLinks.stream()
+                            .filter(link -> link.getDependant() instanceof IBpElement
+                                    || link.getDependency() instanceof IBpElement)
+                            .collect(Collectors.toSet()));
         }
         DNDItems.clear();
     }

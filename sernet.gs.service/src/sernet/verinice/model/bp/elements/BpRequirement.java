@@ -343,9 +343,9 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
     }
 
     @Override
-    public void linkAdded(CnALink link) {
-        super.linkAdded(link);
-        reevaluateLink(link);
+    public void linksAdded(Collection<CnALink> links) {
+        super.linksAdded(links);
+        links.forEach(this::reevaluateLink);
     }
 
     @Override

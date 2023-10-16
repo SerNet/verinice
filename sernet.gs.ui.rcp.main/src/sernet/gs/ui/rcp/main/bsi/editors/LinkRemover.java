@@ -70,5 +70,4 @@ public class LinkRemover extends DefaultBpModelListener
     public void modelReload(BSIModel newModel) {
 
     }
-
 }

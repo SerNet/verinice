@@ -127,8 +127,8 @@ public class CnALink implements Serializable, ITypedElement {
         dependency.addLinkUp(this);
         dependant.addLinkDown(this);
 
-        dependency.linkAdded(this);
-        dependant.linkAdded(this);
+        dependency.linksAdded(Set.of(this));
+        dependant.linksAdded(Set.of(this));
         this.linkType = linkTypeFor(dependency);
     }
 
