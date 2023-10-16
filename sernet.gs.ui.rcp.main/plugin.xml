@@ -1715,6 +1715,12 @@
             id="sernet.gs.ui.rcp.main.preferences.importexportpreferencepage"
             name="%page.name.12">
       </page>
+      <page
+            class="org.eclipse.ui.internal.dialogs.PerspectivesPreferencePage"
+            id="org.eclipse.ui.preferencePages.Perspectives"
+            name="%page.name.13">
+      </page>
+      
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
