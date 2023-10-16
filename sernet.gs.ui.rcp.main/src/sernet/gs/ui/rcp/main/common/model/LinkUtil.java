@@ -20,7 +20,7 @@
 
 package sernet.gs.ui.rcp.main.common.model;
 
-import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -50,31 +50,13 @@ public final class LinkUtil {
     private LinkUtil() {
     }
 
-    public static CnALink createLink(CnATreeElement source, CnATreeElement target,
+    private static CnALink createLink(CnATreeElement source, CnATreeElement target,
             String relationId) {
         CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source, target,
                 relationId, false);
         try {
             command = commandService.executeCommand(command);
-            CnALink link = command.getLink();
-            Domain dependantDomain = CnATypeMapper
-                    .getDomainFromTypeId(link.getDependant().getTypeId());
-            Domain dependencyDomain = CnATypeMapper
-                    .getDomainFromTypeId(link.getDependency().getTypeId());
-            Set<Domain> relevantDomains = EnumSet.of(dependantDomain, dependencyDomain);
-
-            if (relevantDomains.contains(Domain.BASE_PROTECTION_OLD)
-                    && CnAElementFactory.isModelLoaded()) {
-                CnAElementFactory.getLoadedModel().linksAdded(Set.of(link));
-            }
-            if (relevantDomains.contains(Domain.ISM) && CnAElementFactory.isIsoModelLoaded()) {
-                CnAElementFactory.getInstance().getISO27kModel().linksAdded(Set.of(link));
-            }
-            if (relevantDomains.contains(Domain.BASE_PROTECTION)
-                    && CnAElementFactory.isBpModelLoaded()) {
-                CnAElementFactory.getInstance().getBpModel().linksAdded(Set.of(link));
-            }
-            return link;
+            return command.getLink();
         } catch (CommandException e) {
             LOGGER.error("Link creation failed", e);
             return null;
@@ -83,17 +65,45 @@ public final class LinkUtil {
 
     public static void createLinks(Set<CnATreeElement> sources, CnATreeElement target,
             String relationId) {
+        Set<CnALink> createdLinks = new HashSet<>(sources.size());
         for (CnATreeElement source : sources) {
-            Optional.ofNullable(createLink(source, target, relationId))
-                    .ifPresent(target::addLinkUp);
+            Optional.ofNullable(createLink(source, target, relationId)).ifPresent(link -> {
+                target.addLinkUp(link);
+                createdLinks.add(link);
+            });
         }
+        fireEvents(createdLinks);
     }
 
     public static void createLinks(CnATreeElement source, Set<CnATreeElement> targets,
             String relationId) {
+        Set<CnALink> createdLinks = new HashSet<>(targets.size());
         for (CnATreeElement target : targets) {
-            Optional.ofNullable(createLink(source, target, relationId))
-                    .ifPresent(source::addLinkDown);
+            Optional.ofNullable(createLink(source, target, relationId)).ifPresent(link -> {
+                source.addLinkDown(link);
+                createdLinks.add(link);
+            });
+        }
+        fireEvents(createdLinks);
+    }
+
+    private static void fireEvents(Set<CnALink> links) {
+        if (links.isEmpty()) {
+            return;
+        }
+        CnALink firstLink = links.iterator().next();
+        // we know that there can only be one domain since cross-domain links
+        // are not possible and this method is only used internally
+        Domain relevantDomain = CnATypeMapper
+                .getDomainFromTypeId(firstLink.getDependant().getTypeId());
+        if (relevantDomain == Domain.BASE_PROTECTION_OLD && CnAElementFactory.isModelLoaded()) {
+            CnAElementFactory.getLoadedModel().linksAdded(links);
+        }
+        if (relevantDomain == Domain.ISM && CnAElementFactory.isIsoModelLoaded()) {
+            CnAElementFactory.getInstance().getISO27kModel().linksAdded(links);
+        }
+        if (relevantDomain == Domain.BASE_PROTECTION && CnAElementFactory.isBpModelLoaded()) {
+            CnAElementFactory.getInstance().getBpModel().linksAdded(links);
         }
     }
 

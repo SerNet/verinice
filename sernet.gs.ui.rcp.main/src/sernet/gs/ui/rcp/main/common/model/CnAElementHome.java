@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -596,25 +598,30 @@ public final class CnAElementHome {
         }
 
         if (newLinks != null && !newLinks.isEmpty()) {
-            CnAElementFactory.getLoadedModel()
-                    .linksAdded(newLinks.stream()
-                            .filter(link -> (link.getDependant() instanceof IBSIStrukturElement
-                                    || link.getDependant() instanceof MassnahmenUmsetzung)
-                                    || (link.getDependency() instanceof IBSIStrukturElement
-                                            || link.getDependency() instanceof MassnahmenUmsetzung))
-                            .collect(Collectors.toSet()));
-            CnAElementFactory.getInstance().getISO27kModel()
-                    .linksAdded(newLinks.stream()
-                            .filter(link -> link.getDependant() instanceof IISO27kElement
-                                    || link.getDependency() instanceof IISO27kElement)
-                            .collect(Collectors.toSet()));
-            CnAElementFactory.getInstance().getBpModel()
-                    .linksAdded(newLinks.stream()
-                            .filter(link -> link.getDependant() instanceof IBpElement
-                                    || link.getDependency() instanceof IBpElement)
-                            .collect(Collectors.toSet()));
+            fireEvent(newLinks,
+                    link -> (link.getDependant() instanceof IBSIStrukturElement
+                            || link.getDependant() instanceof MassnahmenUmsetzung)
+                            || (link.getDependency() instanceof IBSIStrukturElement
+                                    || link.getDependency() instanceof MassnahmenUmsetzung),
+                    CnAElementFactory.getLoadedModel()::linksAdded);
+            fireEvent(newLinks,
+                    link -> link.getDependant() instanceof IISO27kElement
+                            || link.getDependency() instanceof IISO27kElement,
+                    CnAElementFactory.getInstance().getISO27kModel()::linksAdded);
+            fireEvent(newLinks,
+                    link -> link.getDependant() instanceof IBpElement
+                            || link.getDependency() instanceof IBpElement,
+                    CnAElementFactory.getInstance().getBpModel()::linksAdded);
         }
         DNDItems.clear();
+    }
+
+    private static void fireEvent(Collection<CnALink> allLinks, Predicate<CnALink> filter,
+            Consumer<Collection<CnALink>> fireFunction) {
+        Set<CnALink> filteredLinks = allLinks.stream().filter(filter).collect(Collectors.toSet());
+        if (!filteredLinks.isEmpty()) {
+            fireFunction.accept(filteredLinks);
+        }
     }
 
     protected boolean linksAreConfiguredInSnca(final CnATreeElement dropTarget,
