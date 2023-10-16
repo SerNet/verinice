@@ -171,4 +171,17 @@ public class EditorPreferencePage extends FieldEditorPreferencePage
         }
     }
 
+    @Override
+    protected void performDefaults() {
+        super.performDefaults();
+        Preferences prefs = Activator.getDefault().getPluginPreferences();
+        prefs.setValue(PreferenceConstants.HUI_TAGS, 
+                prefs.getDefaultString(PreferenceConstants.HUI_TAGS));
+        
+        Object[] prefTagsArr = sernet.verinice.rcp.Preferences.getEditorTags();
+
+        if (prefTagsArr != null) {
+            viewer.setCheckedElements(prefTagsArr);
+        }
+    }
 }
