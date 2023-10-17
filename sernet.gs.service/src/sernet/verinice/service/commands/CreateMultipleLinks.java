@@ -21,7 +21,9 @@ package sernet.verinice.service.commands;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -44,6 +46,8 @@ public class CreateMultipleLinks extends GenericCommand {
     private List<Link> linkList;
     private transient IBaseDao<CnATreeElement, Serializable> dao;
     private transient IBaseDao<CnALink, Serializable> linkDao;
+    private transient Map<Integer, CnATreeElement> dependantsById;
+    private transient Map<Integer, CnATreeElement> dependenciesById;
     private boolean retrieve;
     private List<CnALink> createdLinks;
 
@@ -64,6 +68,32 @@ public class CreateMultipleLinks extends GenericCommand {
      */
     @Override
     public void execute() {
+        dependantsById = new HashMap<>(linkList.size());
+        dependenciesById = new HashMap<>(linkList.size());
+        for (Link link : linkList) {
+            CnATreeElement dependant = link.getFrom();
+            CnATreeElement dependency = link.getTo();
+            Integer dependantId = dependant.getDbId();
+            Integer dependencyId = dependency.getDbId();
+            if (!dependantsById.containsKey(dependantId)) {
+                if (retrieve) {
+                    RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
+                    ri.setLinksDown(true);
+                    dependant = getDao().retrieve(dependantId, ri);
+                }
+                dependantsById.put(dependantId, dependant);
+
+            }
+            if (!dependenciesById.containsKey(dependencyId)) {
+                if (retrieve) {
+                    RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
+                    ri.setLinksUp(true);
+                    dependency = getDao().retrieve(dependencyId, ri);
+                }
+                dependenciesById.put(dependencyId, dependency);
+            }
+        }
+
         createdLinks = new ArrayList<>(linkList.size());
         for (Link link : linkList) {
             createdLinks.add(createLink(link));
@@ -73,19 +103,8 @@ public class CreateMultipleLinks extends GenericCommand {
 
     private CnALink createLink(Link link) {
         try {
-            CnATreeElement dependency = link.getTo();
-            if (retrieve) {
-                RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
-                ri.setLinksUp(true);
-                dependency = getDao().retrieve(dependency.getDbId(), ri);
-            }
-
-            CnATreeElement dependant = link.getFrom();
-            if (retrieve) {
-                RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
-                ri.setLinksDown(true);
-                dependant = getDao().retrieve(dependant.getDbId(), ri);
-            }
+            CnATreeElement dependency = dependenciesById.get(link.getTo().getDbId());
+            CnATreeElement dependant = dependantsById.get(link.getFrom().getDbId());
 
             if (log.isDebugEnabled()) {
                 log.debug("Creating link from " + dependency.getTypeId() + " to "
