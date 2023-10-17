@@ -20,9 +20,10 @@
 
 package sernet.gs.ui.rcp.main.common.model;
 
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -31,8 +32,9 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Domain;
+import sernet.verinice.model.common.Link;
 import sernet.verinice.service.commands.CnATypeMapper;
-import sernet.verinice.service.commands.CreateLink;
+import sernet.verinice.service.commands.CreateMultipleLinks;
 
 /**
  * Utility class for creating Links (CnALink). Could get expanded to allow more
@@ -50,44 +52,41 @@ public final class LinkUtil {
     private LinkUtil() {
     }
 
-    private static CnALink createLink(CnATreeElement source, CnATreeElement target,
-            String relationId) {
-        CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source, target,
-                relationId, false);
-        try {
-            command = commandService.executeCommand(command);
-            return command.getLink();
-        } catch (CommandException e) {
-            LOGGER.error("Link creation failed", e);
-            return null;
-        }
-    }
-
     public static void createLinks(Set<CnATreeElement> sources, CnATreeElement target,
             String relationId) {
-        Set<CnALink> createdLinks = new HashSet<>(sources.size());
-        for (CnATreeElement source : sources) {
-            Optional.ofNullable(createLink(source, target, relationId)).ifPresent(link -> {
-                target.addLinkUp(link);
-                createdLinks.add(link);
-            });
+        List<Link> linkSpec = sources.stream().map(source -> new Link(source, target, relationId))
+                .collect(Collectors.toList());
+        CreateMultipleLinks command = new CreateMultipleLinks(linkSpec, true);
+        try {
+            command = commandService.executeCommand(command);
+
+            List<CnALink> createdLinks = command.getCreatedLinks();
+            createdLinks.forEach(target::addLinkUp);
+
+            fireEvents(createdLinks);
+        } catch (CommandException e) {
+            LOGGER.error("Link creation failed", e);
         }
-        fireEvents(createdLinks);
     }
 
     public static void createLinks(CnATreeElement source, Set<CnATreeElement> targets,
             String relationId) {
-        Set<CnALink> createdLinks = new HashSet<>(targets.size());
-        for (CnATreeElement target : targets) {
-            Optional.ofNullable(createLink(source, target, relationId)).ifPresent(link -> {
-                source.addLinkDown(link);
-                createdLinks.add(link);
-            });
+        List<Link> linkSpec = targets.stream().map(target -> new Link(source, target, relationId))
+                .collect(Collectors.toList());
+        CreateMultipleLinks command = new CreateMultipleLinks(linkSpec, true);
+        try {
+            command = commandService.executeCommand(command);
+
+            List<CnALink> createdLinks = command.getCreatedLinks();
+            createdLinks.forEach(source::addLinkDown);
+
+            fireEvents(createdLinks);
+        } catch (CommandException e) {
+            LOGGER.error("Link creation failed", e);
         }
-        fireEvents(createdLinks);
     }
 
-    private static void fireEvents(Set<CnALink> links) {
+    private static void fireEvents(Collection<CnALink> links) {
         if (links.isEmpty()) {
             return;
         }
