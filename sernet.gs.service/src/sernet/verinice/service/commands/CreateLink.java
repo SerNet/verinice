@@ -43,8 +43,6 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
 
     private static final Logger logger = Logger.getLogger(CreateLink.class);
 
-    private CnATreeElement dependant;
-    private CnATreeElement dependency;
     private Integer dependantId;
     private Integer dependencyId;
     private CnALink link;
@@ -84,8 +82,8 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
 
     public CreateLink(U dependant, V dependancy, String relationId, String comment,
             boolean retrieveLinkedElementProperties) {
-        this.dependant = dependant;
-        this.dependency = dependancy;
+        this.dependantId = dependant.getDbId();
+        this.dependencyId = dependancy.getDbId();
         this.relationId = relationId;
         this.comment = comment;
         this.retrieveLinkedElementProperties = retrieveLinkedElementProperties;
@@ -103,12 +101,12 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
             RetrieveInfo ri = retrieveLinkedElementProperties ? RetrieveInfo.getPropertyInstance()
                     : new RetrieveInfo();
             ri.setLinksUp(true);
-            dependency = dependencyDao.retrieve(getDependencyId(), ri);
+            CnATreeElement dependency = dependencyDao.retrieve(dependencyId, ri);
 
             ri = retrieveLinkedElementProperties ? RetrieveInfo.getPropertyInstance()
                     : new RetrieveInfo();
             ri.setLinksDown(true);
-            dependant = dependantDao.retrieve(getDependantId(), ri);
+            CnATreeElement dependant = dependantDao.retrieve(dependantId, ri);
 
             if (logger.isDebugEnabled()) {
                 logger.debug("Creating link from " + dependency.getTypeId() + " to "
@@ -140,22 +138,6 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
                 message = "Linktype did not pass validation";
             }
             throw new RuntimeException(message, e);
-        }
-    }
-
-    private Integer getDependantId() {
-        if (dependantId != null) {
-            return dependantId;
-        } else {
-            return dependant.getDbId();
-        }
-    }
-
-    private Integer getDependencyId() {
-        if (dependencyId != null) {
-            return dependencyId;
-        } else {
-            return dependency.getDbId();
         }
     }
 
