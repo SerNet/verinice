@@ -20,6 +20,7 @@
 package sernet.verinice.service.commands;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -44,6 +45,7 @@ public class CreateMultipleLinks extends GenericCommand {
     private transient IBaseDao<CnATreeElement, Serializable> dao;
     private transient IBaseDao<CnALink, Serializable> linkDao;
     private boolean retrieve;
+    private List<CnALink> createdLinks;
 
     public CreateMultipleLinks(List<Link> linkList) {
         super();
@@ -62,13 +64,14 @@ public class CreateMultipleLinks extends GenericCommand {
      */
     @Override
     public void execute() {
+        createdLinks = new ArrayList<>(linkList.size());
         for (Link link : linkList) {
-            createLink(link);
+            createdLinks.add(createLink(link));
         }
         linkList = null;
     }
 
-    private void createLink(Link link) {
+    private CnALink createLink(Link link) {
         try {
             CnATreeElement dependency = link.getTo();
             if (retrieve) {
@@ -92,7 +95,7 @@ public class CreateMultipleLinks extends GenericCommand {
             CnALink cnaLink = new CnALink(dependant, dependency, link.getRelationId(),
                     link.getComment());
 
-            getLinkDao().merge(cnaLink, true);
+            return getLinkDao().merge(cnaLink, true);
         } catch (RuntimeException e) {
             log.error("RuntimeException while creating link.", e);
             throw e;
@@ -124,4 +127,7 @@ public class CreateMultipleLinks extends GenericCommand {
         return linkDao;
     }
 
+    public List<CnALink> getCreatedLinks() {
+        return createdLinks;
+    }
 }
