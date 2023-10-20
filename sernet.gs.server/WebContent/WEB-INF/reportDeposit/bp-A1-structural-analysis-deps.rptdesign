@@ -1,9 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.24" id="1">
     <property name="author">A. Ben Nasrallah</property>
-    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.12.0.v202211281949</property>
     <text-property name="title">BSI IT-Grundschutz: A.1 Strukturanalyse-Abhängigkeiten</text-property>
     <property name="units">in</property>
+    <method name="initialize"><![CDATA[//provides two funtions to sort naturaly by an regex
+
+function SplitSort0(str) {
+if(str.length==0)
+  return "";
+
+var pattern = Packages.java.util.regex.Pattern.compile("(\\D*)(\\d*)");
+var matcher = pattern.matcher(str);
+
+//Packages.java.lang.System.out.println("0--->'"+str+"'");
+if(matcher.matches() &amp;&amp; matcher.groupCount()>1){
+		return matcher.group(1)
+}
+return "";
+}
+
+function SplitSort1(str) {
+if(str.length==0)
+  return 0;
+
+var pattern = Packages.java.util.regex.Pattern.compile("(\\D*)(\\d*)");
+var matcher = pattern.matcher(str);
+//Packages.java.lang.System.out.println("1--->'"+str+"'");
+if(matcher.matches() &amp;&amp; matcher.groupCount()>1){
+//Packages.java.lang.System.out.println("--->'"+matcher.group(2)+"'");
+		if(matcher.group(2).isEmpty())
+  			return 0;
+	
+		return Packages.java.lang.Integer.parseInt( matcher.group(2));
+}
+return 0;
+}
+
+reportContext.setPersistentGlobalVariable("SplitSort0", SplitSort0);
+reportContext.setPersistentGlobalVariable("SplitSort1", SplitSort1);
+
+]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">fixed layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -29,10 +66,7 @@
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44">
-            <property name="sncaUrl">http://localhost:8080/veriniceserver/GetHitroConfig</property>
-            <property name="serverURI">http://localhost:8080/veriniceserver</property>
-        </oda-data-source>
+        <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="verinice.oda.linktable.driver.dataSet.id" name="Information Network" id="2096">
@@ -16733,6 +16767,18 @@
                     <expression name="expression" type="javascript">dataSetRow["linkTitel_bp_document"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">sort0</property>
+                    <expression name="expression" type="javascript">SplitSort0(row["Kürzel_root"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sort1</property>
+                    <expression name="expression" type="javascript">SplitSort1(row["Kürzel_root"])</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">"Geschäftsprozesse"</expression>
@@ -16776,6 +16822,16 @@
                 </structure>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["sort0"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["sort1"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
                     <structure>
                         <expression name="key" type="javascript">row["Kürzel_root"]</expression>
                         <property name="direction">asc</property>
@@ -17487,6 +17543,18 @@
                     <expression name="expression" type="javascript">dataSetRow["linkTitel_bp_document"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">sort0</property>
+                    <expression name="expression" type="javascript">SplitSort0(row["Kürzel_root"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sort1</property>
+                    <expression name="expression" type="javascript">SplitSort1(row["Kürzel_root"])</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">"Anwendungen"</expression>
@@ -17530,6 +17598,16 @@
                 </structure>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["sort0"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["sort1"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
                     <structure>
                         <expression name="key" type="javascript">row["Kürzel_root"]</expression>
                         <property name="direction">asc</property>
@@ -18242,6 +18320,18 @@
                     <expression name="expression" type="javascript">dataSetRow["linkTitel_bp_document"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">sort0</property>
+                    <expression name="expression" type="javascript">SplitSort0(row["Kürzel_root"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sort1</property>
+                    <expression name="expression" type="javascript">SplitSort1(row["Kürzel_root"])</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">"IT-System"</expression>
@@ -18285,6 +18375,16 @@
                 </structure>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["sort0"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["sort1"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
                     <structure>
                         <expression name="key" type="javascript">row["Kürzel_root"]</expression>
                         <property name="direction">asc</property>
@@ -18996,6 +19096,18 @@
                     <expression name="expression" type="javascript">dataSetRow["linkTitel_bp_document"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">sort0</property>
+                    <expression name="expression" type="javascript">SplitSort0(row["Kürzel_root"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sort1</property>
+                    <expression name="expression" type="javascript">SplitSort1(row["Kürzel_root"])</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">"ICS-System"</expression>
@@ -19039,6 +19151,16 @@
                 </structure>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["sort0"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["sort1"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
                     <structure>
                         <expression name="key" type="javascript">row["Kürzel_root"]</expression>
                         <property name="direction">asc</property>
@@ -19750,6 +19872,18 @@
                     <expression name="expression" type="javascript">dataSetRow["linkTitel_bp_document"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">sort0</property>
+                    <expression name="expression" type="javascript">SplitSort0(row["Kürzel_root"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sort1</property>
+                    <expression name="expression" type="javascript">SplitSort1(row["Kürzel_root"])</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">"Anderes/IoT-System"</expression>
@@ -19793,6 +19927,16 @@
                 </structure>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["sort0"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["sort1"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
                     <structure>
                         <expression name="key" type="javascript">row["Kürzel_root"]</expression>
                         <property name="direction">asc</property>
@@ -20504,6 +20648,18 @@
                     <expression name="expression" type="javascript">dataSetRow["linkTitel_bp_document"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">sort0</property>
+                    <expression name="expression" type="javascript">SplitSort0(row["Kürzel_root"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sort1</property>
+                    <expression name="expression" type="javascript">SplitSort1(row["Kürzel_root"])</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">"Kommunikationsverbindungen"</expression>
@@ -20547,6 +20703,16 @@
                 </structure>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["sort0"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["sort1"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
                     <structure>
                         <expression name="key" type="javascript">row["Kürzel_root"]</expression>
                         <property name="direction">asc</property>
@@ -21258,6 +21424,18 @@
                     <expression name="expression" type="javascript">dataSetRow["linkTitel_bp_document"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">sort0</property>
+                    <expression name="expression" type="javascript">SplitSort0(row["Kürzel_root"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sort1</property>
+                    <expression name="expression" type="javascript">SplitSort1(row["Kürzel_root"])</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">"Räume"</expression>
@@ -21301,6 +21479,16 @@
                 </structure>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["sort0"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["sort1"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
                     <structure>
                         <expression name="key" type="javascript">row["Kürzel_root"]</expression>
                         <property name="direction">asc</property>
@@ -21976,6 +22164,18 @@
                     <expression name="expression" type="javascript">dataSetRow["linkTitel_bp_document"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">sort0</property>
+                    <expression name="expression" type="javascript">SplitSort0(row["Kürzel_root"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sort1</property>
+                    <expression name="expression" type="javascript">SplitSort1(row["Kürzel_root"])</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">"Personen"</expression>
@@ -22019,6 +22219,16 @@
                 </structure>
                 <property name="hideDetail">false</property>
                 <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["sort0"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["sort1"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
                     <structure>
                         <expression name="key" type="javascript">row["Kürzel_root"]</expression>
                         <property name="direction">asc</property>
