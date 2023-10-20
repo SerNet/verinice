@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.24" id="1">
     <property name="author">Urs Zeidler</property>
-    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.12.0.v202211281949</property>
     <text-property name="title">verinice - BSI IT-Grundschutz A.4 Grundschutz-Check</text-property>
     <simple-property-list name="includeResource">
         <value>bp-A4-securitycheck</value>
     </simple-property-list>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[function formatDateFromString(str) {
+//Packages.java.lang.System.out.println("formatDate '"+str+"'");
 	if(str != null &amp;&amp; str != "" &amp;&amp; str != "null"){
 		a = Packages.java.time.LocalDate.parse(str)
 		return a.format(Packages.java.time.format.DateTimeFormatter.ofPattern(reportContext.getMessage("date.format.string")))
@@ -15,7 +16,43 @@
 	return reportContext.getMessage("empty.date.string")
 }
 
-reportContext.setGlobalVariable("formatDateFromString", formatDateFromString)
+reportContext.setPersistentGlobalVariable("formatDateFromString", formatDateFromString)
+
+function SplitSort0(str) {
+if(str.length==0)
+  return ""
+
+var pattern = Packages.java.util.regex.Pattern.compile("(\\D*)(\\d*)")
+var matcher = pattern.matcher(str)
+
+//Packages.java.lang.System.out.println("0--->'"+str+"'")
+if(matcher.matches() &amp;&amp; matcher.groupCount()>1){
+		return matcher.group(1)
+}
+return ""
+}
+
+function SplitSort1(str) {
+if(str.length==0)
+  return 0
+
+var pattern = Packages.java.util.regex.Pattern.compile("(\\D*)(\\d*)")
+var matcher = pattern.matcher(str)
+//Packages.java.lang.System.out.println("1--->'"+str+"'");
+if(matcher.matches() &amp;&amp; matcher.groupCount()>1){
+//Packages.java.lang.System.out.println("--->'"+matcher.group(2)+"'");
+		if(matcher.group(2).isEmpty())
+  			return 0
+	
+		return Packages.java.lang.Integer.parseInt( matcher.group(2))
+}
+return 0
+}
+
+
+reportContext.setPersistentGlobalVariable("SplitSort0", SplitSort0)
+reportContext.setPersistentGlobalVariable("SplitSort1", SplitSort1)
+
 ]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">fixed layout</property>
@@ -42,10 +79,7 @@ reportContext.setGlobalVariable("formatDateFromString", formatDateFromString)
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44">
-            <property name="sncaUrl">http://localhost:8830/GetHitroConfig</property>
-            <property name="serverURI">http://localhost:8830</property>
-        </oda-data-source>
+        <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="verinice.oda.linktable.driver.dataSet.id" name="ITNetwork_LTR" id="3972">
@@ -10602,6 +10636,18 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                     <expression name="expression" type="javascript">dataSetRow["Umsetzung_-_Umsetzung_bis_(Maßnahme)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">sort0</property>
+                    <expression name="expression" type="javascript">SplitSort0(row["Kürzel-obj"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sort1</property>
+                    <expression name="expression" type="javascript">SplitSort1(row["Kürzel-obj"])</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">reportContext.getMessage("section_title_process")</expression>
@@ -10678,6 +10724,16 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                 <property name="hideDetail">false</property>
                 <property name="pageBreakInside">auto</property>
                 <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["sort0"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["sort1"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
                     <structure>
                         <expression name="key" type="javascript">row["Kürzel-obj"]</expression>
                         <property name="direction">asc</property>
@@ -11965,6 +12021,18 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                     <expression name="expression" type="javascript">dataSetRow["Umsetzung_-_Umsetzung_bis_(Maßnahme)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">sort0</property>
+                    <expression name="expression" type="javascript">SplitSort0(row["Kürzel-obj"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sort1</property>
+                    <expression name="expression" type="javascript">SplitSort1(row["Kürzel-obj"])</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">reportContext.getMessage("section_title_application")</expression>
@@ -12041,6 +12109,16 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                 <property name="hideDetail">false</property>
                 <property name="pageBreakInside">auto</property>
                 <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["sort0"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["sort1"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
                     <structure>
                         <expression name="key" type="javascript">row["Kürzel-obj"]</expression>
                         <property name="direction">asc</property>
@@ -13346,6 +13424,18 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                     <expression name="expression" type="javascript">dataSetRow["Umsetzung_-_Umsetzung_bis_(Maßnahme)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">sort0</property>
+                    <expression name="expression" type="javascript">SplitSort0(row["Kürzel-obj"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sort1</property>
+                    <expression name="expression" type="javascript">SplitSort1(row["Kürzel-obj"])</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">reportContext.getMessage("section_title_itsystem")</expression>
@@ -13422,6 +13512,16 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                 <property name="hideDetail">false</property>
                 <property name="pageBreakInside">auto</property>
                 <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["sort0"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["sort1"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
                     <structure>
                         <expression name="key" type="javascript">row["Kürzel-obj"]</expression>
                         <property name="direction">asc</property>
@@ -14727,6 +14827,18 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                     <expression name="expression" type="javascript">dataSetRow["Umsetzung_-_Umsetzung_bis_(Maßnahme)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">sort0</property>
+                    <expression name="expression" type="javascript">SplitSort0(row["Kürzel-obj"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sort1</property>
+                    <expression name="expression" type="javascript">SplitSort1(row["Kürzel-obj"])</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">reportContext.getMessage("section_title_icssystem")</expression>
@@ -14803,6 +14915,16 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                 <property name="hideDetail">false</property>
                 <property name="pageBreakInside">auto</property>
                 <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["sort0"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["sort1"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
                     <structure>
                         <expression name="key" type="javascript">row["Kürzel-obj"]</expression>
                         <property name="direction">asc</property>
@@ -16108,6 +16230,18 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                     <expression name="expression" type="javascript">dataSetRow["Umsetzung_-_Umsetzung_bis_(Maßnahme)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">sort0</property>
+                    <expression name="expression" type="javascript">SplitSort0(row["Kürzel-obj"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sort1</property>
+                    <expression name="expression" type="javascript">SplitSort1(row["Kürzel-obj"])</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">reportContext.getMessage("section_title_device")</expression>
@@ -16184,6 +16318,16 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                 <property name="hideDetail">false</property>
                 <property name="pageBreakInside">auto</property>
                 <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["sort0"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["sort1"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
                     <structure>
                         <expression name="key" type="javascript">row["Kürzel-obj"]</expression>
                         <property name="direction">asc</property>
@@ -17489,6 +17633,18 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                     <expression name="expression" type="javascript">dataSetRow["Umsetzung_-_Umsetzung_bis_(Maßnahme)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">sort0</property>
+                    <expression name="expression" type="javascript">SplitSort0(row["Kürzel-obj"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sort1</property>
+                    <expression name="expression" type="javascript">SplitSort1(row["Kürzel-obj"])</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">reportContext.getMessage("section_title_network")</expression>
@@ -17565,6 +17721,16 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                 <property name="hideDetail">false</property>
                 <property name="pageBreakInside">auto</property>
                 <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["sort0"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["sort1"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
                     <structure>
                         <expression name="key" type="javascript">row["Kürzel-obj"]</expression>
                         <property name="direction">asc</property>
@@ -18876,6 +19042,18 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                     <expression name="expression" type="javascript">dataSetRow["Umsetzung_-_Umsetzung_bis_(Maßnahme)"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">sort0</property>
+                    <expression name="expression" type="javascript">SplitSort0(row["Kürzel-obj"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sort1</property>
+                    <expression name="expression" type="javascript">SplitSort1(row["Kürzel-obj"])</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">reportContext.getMessage("section_title_room")</expression>
@@ -18952,6 +19130,16 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                 <property name="hideDetail">false</property>
                 <property name="pageBreakInside">auto</property>
                 <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["sort0"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["sort1"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
                     <structure>
                         <expression name="key" type="javascript">row["Kürzel-obj"]</expression>
                         <property name="direction">asc</property>
