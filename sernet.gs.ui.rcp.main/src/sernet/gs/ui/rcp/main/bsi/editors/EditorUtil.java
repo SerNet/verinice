@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -56,10 +58,34 @@ public final class EditorUtil {
         super();
     }
 
+    @FunctionalInterface
+    public interface EditorConsumer{
+        void consumeEditor(IWorkbenchPage page, IEditorReference editorRef);
+    }
+    
     /**
      * Closes the editor for a given element by its uuid.
      */
-    public static void closeEditorForElement(String uuid) {
+    public static void closeEditorForElement(CnATreeElement source) {
+        doWithOpenEditorForElement(source, (page, editorReference) -> {
+            page.closeEditors(new IEditorReference[] { editorReference }, true);
+        });
+    }
+
+    /**
+     * Sync the image property with an open editor.
+     */
+    public static void changeEditorImage(CnATreeElement source) {
+        doWithOpenEditorForElement(source, (page, editorReference) -> {
+            IEditorPart editor = editorReference.getEditor(false);
+            if (editor instanceof BSIElementEditorMultiPage) {
+                BSIElementEditorMultiPage bsiEditor = (BSIElementEditorMultiPage) editor;
+                Display.getDefault().asyncExec(() -> bsiEditor.updateIcon(source.getIconPath()));
+            }
+        });
+    }
+
+    private static void doWithOpenEditorForElement(CnATreeElement source, EditorConsumer consumer) {
         Stream.of(PlatformUI.getWorkbench().getWorkbenchWindows())
                 .forEach(window -> Stream.of(window.getPages()).forEach(
                         page -> Stream.of(page.getEditorReferences()).forEach(editorReference -> {
@@ -68,14 +94,12 @@ public final class EditorUtil {
                                         .getEditorInput() instanceof BSIElementEditorInput) {
                                     CnATreeElement element = ((BSIElementEditorInput) editorReference
                                             .getEditorInput()).getCnAElement();
-                                    if (uuid.equals(element.getUuid())) {
-                                        page.closeEditors(
-                                                new IEditorReference[] { editorReference }, true);
-                                    }
+                                    if (source.equals(element)) {
+                                        consumer.consumeEditor(page, editorReference);
+                                     }
                                 }
-
                             } catch (PartInitException e) {
-                                logger.error("Error while closing element editor.", e);
+                                logger.error("Error while doWithOpenEditorForElement.", e);
                             }
                         })));
     }

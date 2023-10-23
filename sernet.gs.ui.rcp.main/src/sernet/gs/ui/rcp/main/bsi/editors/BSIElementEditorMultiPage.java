@@ -487,6 +487,11 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
         // not supported
     }
 
+    public void updateIcon(String path) {
+        cnAElement.setIconPath(path);
+        setIcon();
+    }
+    
     private void setIcon() {
         Image icon = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
         if (cnAElement != null) {

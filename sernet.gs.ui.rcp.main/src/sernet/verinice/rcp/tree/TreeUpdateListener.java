@@ -264,7 +264,7 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
             RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance().setParent(true);
             requirement = Retriever.retrieveElement(requirement, ri);
             childChanged(requirement);
-            EditorUtil.closeEditorForElement(requirement.getUuid());
+            EditorUtil.closeEditorForElement(requirement);
         } else if (BpThreat.TYPE_ID.equals(link.getDependant().getTypeId())) {
             CnATreeElement targetObject = Retriever.checkRetrieveElement(link.getDependency());
             updater.refresh(targetObject);

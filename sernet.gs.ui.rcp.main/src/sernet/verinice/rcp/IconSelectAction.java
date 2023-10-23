@@ -38,6 +38,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.bsi.editors.EditorUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
@@ -102,6 +103,7 @@ public class IconSelectAction
                             // notify all views of change:
                             for (CnATreeElement element : updateIcon.getChangedElements()) {
                                 CnAElementFactory.getModel(element).childChanged(element);
+                                EditorUtil.changeEditorImage(element);
                             }
                         } catch (Exception e) {
                             LOG.error("Error while changing icons.", e); //$NON-NLS-1$
