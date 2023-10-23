@@ -1,12 +1,9 @@
 plugins {
-  id "org.standardout.bnd-platform" version "1.7.0"
+  id "org.standardout.bnd-platform" version "3.0.0"
 }
 
 repositories {
-	jcenter()
-	maven {
-		url 'http://conjars.org/repo/'
-	}
+	mavenCentral()
 }
 
 platform {
