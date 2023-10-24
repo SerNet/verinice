@@ -27,7 +27,7 @@ Export-Package: com.heatonresearch.datamover;uses:="com.heatonresearch.datamover
  sernet.verinice.rcp.linktable.ui,
  sernet.verinice.rcp.tree,
  sernet.verinice.rcp.unify
-Require-Bundle: org.apache.log4j;bundle-version="1.2.22",
+Require-Bundle: org.apache.log4j;bundle-version="1.2.25",
  org.eclipse.jface;bundle-version="3.5.2",
  org.eclipse.ui.workbench;bundle-version="3.5.2",
  sernet.gs.service;visibility:=reexport,

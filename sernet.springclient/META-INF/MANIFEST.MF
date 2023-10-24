@@ -12,7 +12,7 @@ Export-Package: sernet.springclient;
    org.springframework.beans.factory"
 Bundle-Vendor: SerNet
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.apache.log4j;bundle-version="1.2.22",
+Require-Bundle: org.apache.log4j;bundle-version="1.2.25",
  org.eclipse.equinox.common;bundle-version="3.5.1",
  org.eclipse.jface;bundle-version="3.5.2",
  org.springframework.beans;bundle-version="2.5.6.SEC03",

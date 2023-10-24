@@ -95,7 +95,7 @@ Export-Package: de.sernet.model.licensemanagement,
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Eclipse-RegisterBuddy: sernet.springclient,com.springsource.org.hibernate
 Require-Bundle: org.apache.commons.io,
- org.apache.log4j;bundle-version="1.2.22",
+ org.apache.log4j;bundle-version="1.2.25",
  sernet.hui.common,
  jbpm;bundle-version="4.4.1",
  com.springsource.net.sf.ehcache;bundle-version="1.6.0",
