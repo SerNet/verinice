@@ -178,14 +178,14 @@ DynamicImport-Package: *
 	</location>
 	<location includeDependencyDepth="direct" includeDependencyScopes="compile" includeSource="true" missingManifest="error" type="Maven">
 
-		<feature id="jaxb" version="2.3.6">
+		<feature id="jaxb" version="2.3.9">
 
 </feature>
 		<dependencies>
 			<dependency>
 				<groupId>com.sun.xml.bind</groupId>
 				<artifactId>jaxb-osgi</artifactId>
-				<version>2.3.6</version>
+				<version>2.3.9</version>
 				<type>jar</type>
 			</dependency>
 		</dependencies>
