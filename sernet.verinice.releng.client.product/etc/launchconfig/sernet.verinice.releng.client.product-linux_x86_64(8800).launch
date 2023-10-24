@@ -98,10 +98,11 @@
         <setEntry value="org.apache.batik.transcoder@default:default"/>
         <setEntry value="org.apache.batik.util@default:default"/>
         <setEntry value="org.apache.batik.xml@default:default"/>
-        <setEntry value="org.apache.commons.beanutils@default:default"/>
         <setEntry value="org.apache.commons.codec@default:default"/>
         <setEntry value="org.apache.commons.collections4@default:default"/>
         <setEntry value="org.apache.commons.collections@default:default"/>
+        <setEntry value="org.apache.commons.commons-beanutils@default:default"/>
+        <setEntry value="org.apache.commons.commons-text@default:default"/>
         <setEntry value="org.apache.commons.compress@default:default"/>
         <setEntry value="org.apache.commons.httpclient@default:default"/>
         <setEntry value="org.apache.commons.io@default:default"/>
@@ -109,7 +110,6 @@
         <setEntry value="org.apache.commons.lang3@default:default"/>
         <setEntry value="org.apache.commons.logging@default:default"/>
         <setEntry value="org.apache.commons.math3@default:default"/>
-        <setEntry value="org.apache.commons.text@default:default"/>
         <setEntry value="org.apache.felix.scr@2:true"/>
         <setEntry value="org.apache.log4j@default:default"/>
         <setEntry value="org.apache.lucene.analysis-common@default:default"/>

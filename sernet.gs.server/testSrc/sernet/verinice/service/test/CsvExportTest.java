@@ -96,7 +96,7 @@ public class CsvExportTest {
                 .withCSVParser(new CSVParserBuilder().withSeparator(';').build()).build()) {
             String[] nextLine;
             Iterator<String[]> rowIterator = table.iterator();
-            while ((nextLine = reader.readNext()) != null) {
+            while ((nextLine = reader.readNextSilently()) != null) {
                 assertTrue("Not enough rows in CSV file", rowIterator.hasNext());
                 String[] row = rowIterator.next();
                 checkLine(nextLine, row);

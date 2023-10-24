@@ -295,10 +295,10 @@ public class PropertiesSelectionPage extends WizardPage {
                         .withCSVParser(new CSVParserBuilder().withSeparator(getSeparator()).build())
                         .build()) {
             // ignore first line
-            columnHeaders = reader.readNext();
+            columnHeaders = reader.readNextSilently();
             this.csvContent.clear();
             String[] nextLine = null;
-            while ((nextLine = reader.readNext()) != null) {
+            while ((nextLine = reader.readNextSilently()) != null) {
                 this.csvContent.add(Arrays.asList(nextLine));
             }
         }

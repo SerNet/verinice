@@ -147,7 +147,7 @@ public class CsvExportTest {
                 .build()) {
             String[] nextLine;
             Iterator<VeriniceSearchResultRow> rows = result.getAllResults().iterator();
-            while ((nextLine = reader.readNext()) != null && rows.hasNext()) {
+            while ((nextLine = reader.readNextSilently()) != null && rows.hasNext()) {
                 VeriniceSearchResultRow row = rows.next();
                 checkLine(nextLine, row, columnStore);
             }

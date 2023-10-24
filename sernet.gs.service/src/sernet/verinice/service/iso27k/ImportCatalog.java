@@ -112,7 +112,7 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
             String[] nextLine;
             Item item = null;
             int n = 1;
-            while ((nextLine = reader.readNext()) != null) {
+            while ((nextLine = reader.readNextSilently()) != null) {
                 // nextLine[] is an array of values from the line
                 if (nextLine.length >= 4) {
                     item = processLine(nextLine, item);

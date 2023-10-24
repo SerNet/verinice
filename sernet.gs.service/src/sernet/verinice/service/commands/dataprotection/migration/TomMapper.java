@@ -33,6 +33,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
 
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
@@ -60,7 +61,7 @@ public final class TomMapper {
             isoMapping = transformCsv(readAll);
             readAll = readMapping(MAPPING_ITGS_CONTROLS_CSV);
             itgsMapping = transformCsv(readAll);
-        } catch (IOException e) {
+        } catch (IOException | CsvException e) {
             LOG.error("Error initalizing Mapping", e);
         }
     }
@@ -69,8 +70,9 @@ public final class TomMapper {
      * @param filename
      * @return
      * @throws IOException
+     * @throws CsvException
      */
-    private List<String[]> readMapping(String filename) throws IOException {
+    private List<String[]> readMapping(String filename) throws IOException, CsvException {
         try (InputStream resourceAsStream = getClass().getResourceAsStream(filename);
                 InputStreamReader reader = new InputStreamReader(resourceAsStream,
                         StandardCharsets.UTF_8);
