@@ -525,6 +525,7 @@
         <setEntry value="org.hibernate.commons-annotations@default:default"/>
         <setEntry value="org.hibernate.javax.persistence.hibernate-jpa-2.0-api@default:default"/>
         <setEntry value="org.jgrapht.core@default:default"/>
+        <setEntry value="org.jheaps@default:default"/>
         <setEntry value="org.mortbay.jetty.server@default:default"/>
         <setEntry value="org.mortbay.jetty.util@default:default"/>
         <setEntry value="org.mozilla.javascript@default:default"/>

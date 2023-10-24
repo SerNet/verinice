@@ -72,6 +72,7 @@ org.jgrapht.graph.AbstractBaseGraph
 org.jgrapht.graph.AbstractBaseGraph$BackwardsCompatibleEdgeFactory
 org.jgrapht.graph.BaseIntrusiveEdgesSpecifics
 org.jgrapht.graph.DefaultGraphType
+org.jgrapht.graph.FastLookupGraphSpecificsStrategy
 org.jgrapht.graph.IntrusiveEdge
 org.jgrapht.graph.Pseudograph
 org.jgrapht.graph.UniformIntrusiveEdgesSpecifics
@@ -81,6 +82,8 @@ org.jgrapht.graph.specifics.UndirectedEdgeContainer
 org.jgrapht.graph.specifics.UndirectedSpecifics
 org.jgrapht.util.ArrayUnenforcedSet
 org.jgrapht.util.SupplierUtil
+org.jgrapht.util.SupplierUtil$ConstructorSupplier
+org.jgrapht.util.SupplierUtil$ConstructorSupplier$SerializedForm
 org.springframework.remoting.support.RemoteInvocation
 org.springframework.remoting.support.RemoteInvocationResult
 org.xml.sax.SAXException
