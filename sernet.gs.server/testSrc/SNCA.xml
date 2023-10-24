@@ -4898,7 +4898,44 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         <huiproperty id="org_ds_eu_tel" name="Telefonnummer" />
         <huiproperty id="org_ds_eu_email" name="E-Mail-Adresse" />
     </huipropertygroup>
-
+ <!-- START: BCM Aenderung -->
+          <huipropertygroup name="Business Continuity Management (BCM)" id="org_bcm" tags="BCM" >
+             
+           
+             <huiproperty name="Abzusichernder Zeitraum" id="org_BCM_abzusichernderZeitraum" inputtype="text" />  
+         
+            <huiproperty
+                    id="org_value_untragbarkeitsniveau"
+                    name="Untragbarkeitsniveau"
+                     tags="BCM"
+                     tooltip="Ab welchem Schwellenwert sind Auswirkungen für die Organisation inakzeptabel?"
+                    inputtype="numericoption" min="0" max="4" >
+             <option
+                        id="org_damage_potential_value_unset"
+                        name="Unbearbeitet"
+                        value="0" />
+             <option
+                        id="org_damage_potential_value_insignificant"
+                        name="Niedrig"
+                        value="1" />
+                    <option
+                        id="org_damage_potential_value_normal"
+                        name="Mittel"
+                        value ="2" />
+                    <option
+                        id="org_damage_potential_value_high"
+                        name=" Hoch"
+                        value="3" />
+                    <option
+                        id="org_damage_potential_value_veryhigh"
+                        name="4 Sehr hoch"
+                        value="4" />
+                </huiproperty>
+      
+                                
+ <huiproperty name="Planung/Zweck der Änderung am BCMS" id="org_modification" inputtype="text" />  
+         </huipropertygroup>
+         <!-- ENDE:  BCM Aenderung, BCM BIA 1.27 ENDE -->
 
     </huientity>
 
@@ -5114,6 +5151,11 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             <huiproperty id="asset_bcm_rpo" name="RPO (h)" tags="BCM" />
             <huiproperty id="asset_bcm_rto" name="RTO (h)" tags="BCM" />
 
+<!-- BCM 1.27 --> 
+         <huiproperty id="asset_datensicherungszyklus" inputtype="text" name="Datensicherungsintervall im Normalbetrieb" />
+
+          <huiproperty id="asset_normalbetriebRessourcenbedarf" name="Ressourcenbedarf im Normalbetrieb" />
+<!-- BCM 1.27 ENDE-->
             <huiproperty id="asset_bcm_time1" name="Impact after 8h" tags="BCM" inputtype="numericoption" min="-1" max="3" defaultValue="-1">
                 <option
                     id="asset_bcm_time1_unset"
@@ -5136,6 +5178,9 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                     name="3 Very High"
                     value="3" />
             </huiproperty>
+                <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="asset_notbetriebRessourcenbedarfz1" name="Ressourcenbedarf im Notbetrieb" />
+      <!-- BCM 1.27 -->
 
               <huiproperty id="asset_bcm_tim24" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="-1" max="3" defaultValue="-1">
                 <option
@@ -5159,7 +5204,9 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                     name="3 Very High"
                     value="3" />
             </huiproperty>
-
+ <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="asset_notbetriebRessourcenbedarfz2" name="Ressourcenbedarf im Notbetrieb" />
+      <!-- BCM 1.27 -->
               <huiproperty id="asset_bcm_time48" name="Impact after 48h" tags="BCM" inputtype="numericoption" min="-1" max="3" defaultValue="-1">
                 <option
                     id="asset_bcm_time48_unset"
@@ -5183,6 +5230,9 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                     value="3" />
             </huiproperty>
 
+ <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="asset_notbetriebRessourcenbedarfz3" name="Ressourcenbedarf im Notbetrieb" />
+      <!-- BCM 1.27 -->
               <huiproperty id="asset_bcm_time96" name="Impact after 96h" tags="BCM" inputtype="numericoption" min="-1" max="3" defaultValue="-1">
                 <option
                     id="asset_bcm_time96_unset"
@@ -5206,6 +5256,9 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                     value="3" />
             </huiproperty>
 
+ <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="asset_notbetriebRessourcenbedarfz4" name="Ressourcenbedarf im Notbetrieb" />
+      <!-- BCM 1.27 -->
               <huiproperty id="asset_bcm_time168" name="Impact after 168h" tags="BCM" inputtype="numericoption" min="-1" max="3" defaultValue="-1">
                 <option
                     id="asset_bcm_time168_unset"
@@ -5228,7 +5281,9 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                     name="3 Very High"
                     value="3" />
             </huiproperty>
-
+ <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="asset_notbetriebRessourcenbedarfz5" name="Ressourcenbedarf im Notbetrieb" />
+      <!-- BCM 1.27 -->
               <huiproperty id="asset_bcm_time720" name="Impact after 720h" tags="BCM" inputtype="numericoption" min="-1" max="3" defaultValue="-1">
                 <option
                     id="asset_bcm_time720_unset"
@@ -5251,7 +5306,9 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                     name="3 Very High"
                     value="3" />
             </huiproperty>
-
+ <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="asset_notbetriebRessourcenbedarfz6" name="Ressourcenbedarf im Notbetrieb" />
+      <!-- BCM 1.27 -->
              <huiproperty id="asset_bcm_timegt720" name="Impact after >720h" tags="BCM" inputtype="numericoption" min="-1" max="3" defaultValue="-1">
                 <option
                     id="asset_bcm_timegt720_unset"
@@ -5274,7 +5331,9 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                     name="3 Very High"
                     value="3" />
             </huiproperty>
-
+ <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="asset_notbetriebRessourcenbedarfz7" name="Ressourcenbedarf im Notbetrieb" />
+      <!-- BCM 1.27 -->
 <!-- START:  BCM Aenderung -->
              <huiproperty id="asset_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung" />
 
@@ -5286,7 +5345,28 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                 </defaultRule>
                 </huiproperty>
                 
-                 <huiproperty id="asset_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
+                    <!-- BCM 1.27 -->
+                 <huiproperty id="asset_bcm_erhebungsart" name="Art der Erhebung" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="asset_bcm_timez1_erhebungsart"
+                    name="unedited"
+                    value="0" />
+                <option
+                    id="asset_bcm_erhebungsart_1"
+                    name="1 Selbstauskunft durch den/die Prozesseigentümer/-in"
+                    value="1" />
+                     <option
+                    id="asset_bcm_erhebungsart_2"
+                    name="2 Einzelinterviews mit verschiedenen Personen"
+                    value="2" />
+                     <option
+                    id="asset_bcm_erhebungsart_3"
+                    name="3 Workshops, mit mehreren Personen."
+                    value="3" />
+            </huiproperty>
+                      <!-- BCM 1.27 Ende--> 
+                
+                 <huiproperty id="asset_notbetriebsniveau" inputtype="text" name="MBCO, en: minimum business continuity objective" />
                         
                <huiproperty
                     id="asset_SPoF_value_1"
@@ -5296,8 +5376,22 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         </huiproperty>
     <huiproperty id="asset_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />   
         
+      
         </huipropertygroup>
-<!-- Ende:  BCM Aenderung -->
+        
+<!--  BCM 1.27  -->
+        <huipropertygroup name="BCM SOLL-IST Vergleich" id="asset_SollIstVergleich" tags="BCM" >
+              <huiproperty id="asset_SollIstVergleich_RTA" name="Tatsächliche Wiederanlaufzeit (RTA)" />
+    <huiproperty id="asset_SollIstVergleich_RTA_Nachweis" name="Nachweis" />
+     <huiproperty id="asset_SollIstVergleich_RTA_kleiner_RTO" name="RTA kleiner/gleich RTO?" />
+        
+         <huiproperty id="asset_SollIstVergleich_RPA" name="Tatsächlicher Datenverlust (RPA)" />
+           <huiproperty id="asset__SollIstVergleich_RPA_Nachweis" name="Nachweis" />
+     <huiproperty id="asset_SollIstVergleich_RPA_kleiner_Datensicherungszyklus"  name="Datensicherungszyklus kleiner/gleich RPO?" />
+       
+        </huipropertygroup>
+           <!-- ENDE:  BCM Aenderung -->
+     
         <huipropertygroup id="asset_value_group" name="Business Impact" tags="Risk" >
         <huiproperty
                     id="asset_value_method_confidentiality"
@@ -5547,6 +5641,11 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         <huirelation to="person-iso" id="rel_person_person_employee"
             name="Mitarbeiter von" reversename="Mitarbeiter" tooltip="" />
 
+  <!-- BCM 1.27 -->
+               <huirelation to="person-iso" id="rel_iso_person_person"
+            name="kommuniziert mit" reversename="zuständig für" tooltip="" />
+            <!-- ENDE: BCM 1.27 -->
+
         <huirelation to="org" id="rel_person_org_ceo"
             name="CEO of" reversename="CEO" tooltip="" />
         <huirelation to="org" id="rel_person_org_cto"
@@ -5557,8 +5656,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             name="DSB von" reversename="DSB" tooltip="" />
         <huirelation to="org" id="rel_person_org_interw_Pers"
             name="Interviewte Person" reversename="Interviewte Person" tooltip="" />
-
-
+   
         <huirelation to="requirement" id="rel_person_requirement_responsible"
             name="responsible for" reversename="responsible" tooltip="" />
 <!--  START: BCM Relation -->
@@ -5718,16 +5816,16 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                                      <!-- START: BCM-Rollen 01062022 -->
              <option
                 id="person-iso_62"
-                name="BCM-Koordinator/in" />
+                name="BC-Koordinierende" />
              <option
                 id="person-iso_61"
-                name="BCM-Beauftragte/r" />
+                name="BC-Beauftragte" />
              <option
                 id="person-iso_63"
-                name="BCM-Kernteam" />
+                name="Kernteam" />
                 <option
                 id="person-iso_66"
-                name="BCM-Stab" />
+                name="Stab" />
                      <!-- ENDE: BCM-Rollen 01062022 -->
             <option
                 id="person-iso_9"
@@ -5869,7 +5967,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                    <!-- START: BCM-Rollen 30052022 -->
              <option
                 id="person-iso_64"
-                name="Notfallvorsorgeteam" />
+                name="BC-Vorsorgeteam" />
              <option
                 id="person-iso_65"
                 name="Notfallbewältigungsteam" />
@@ -5891,7 +5989,25 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                     inputtype="booleanoption"  defaultValue="0" >
         </huiproperty>
     <huiproperty id="person_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
-          
+                   
+             <!-- START:  BCM 1.27 --> 
+            <huiproperty id="person_kommunikationsbedarf_normalbetrieb" inputtype="text" name="Kommunikationsbedarf im Normalbetrieb" />
+            <huiproperty id="person_kommunikationsbedarf_notfall" inputtype="text" name="Kommunikationsbedarf im Notfall" />
+            <huiproperty id="person_intervall" inputtype="text" name="Zeit-Intervall"/>
+    		<huiproperty id="person_kommunikationswege" inputtype="multioption" name="Kommunikationswege" required="false" >
+			<option id="person_kommunikationswege_0" name="E-Mail" />
+			<option id="person_kommunikationswege_1" name="Telefon" />
+			<option id="person_kommunikationswege_2" name="Notfall-Hotline" />
+			<option id="person_kommunikationswege_3" name="Webseite der Institution mit Informationen über den Notfall und FAQs" />
+		    <option id="person_kommunikationswege_4" name="alternative Notfall-Webseite („Dark Site“)" />
+			<option id="person_kommunikationswege_5" name="Public-Relations-Agentur" />
+			<option id="person_kommunikationswege_6" name="Soziale Medien" />
+			<option id="person_kommunikationswege_7" name="persönliches Interview" />
+			<option id="person_kommunikationswege_8" name="Fernseh- oder Radio-Interview" />
+			<option id="person_kommunikationswege_9" name="Pressemitteilung" />
+			<option id="person_kommunikationswege_10" name="Pressekonferenz" />
+		</huiproperty>      
+		  <!-- ENDE:  BCM 1.27 --> 
          </huipropertygroup>
            <!-- ENDE:  BCM Aenderung -->
     <huipropertygroup id="infos_dsb" name="Allgemeine Informationen DSB">
@@ -6540,6 +6656,11 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                     <param id="control_implby_timeDifference">2</param>
                 </defaultRule>
             </huiproperty>
+             <!--  BCM V1.27 -->
+                <huiproperty id="control_requirement_implementation_date" name="Fertiggestellt am:"
+                required="false" inputtype="date">
+                <defaultRule class="Today" />
+            </huiproperty>
         </huipropertygroup>
 
         <huipropertygroup name="SoA" id="control_soa_group" tags="SoA" >
@@ -6569,7 +6690,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
 
         <huipropertygroup name="Business Continuity Management (BCM)" id="control_bcm" tags="BCM" >
          <huiproperty id="business_continuity_control_selectedBCM"
-                name="Business Continuity control"
+                name="Business Continuity control/strategy"
                 inputtype="booleanoption"
                 defaultValue="0"
                 tags="BCM" />
@@ -6577,6 +6698,19 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
 <huiproperty editable="true" id="control_bcStrategie" inputtype="text" name="Beschreibung der BC-Strategie"
  			  showInObjectBrowser="false" visible="true" />
 
+<!--  verinice 1.27 -->
+ 			 <huiproperty id="control_status_bcstrategy1" name="BC-Strategie Status" inputtype="singleoption">
+                <option id="control_status_bcstrategy2" name="vorgeschlagen" />
+                <option id="control_status_bcstrategy3" name="freigegeben" />
+                <option id="control_status_bcstrategy4" name="umgesetzt" />
+ 			</huiproperty>
+ 			
+ 			<huiproperty id="control_bcstrategy_wirksamAngemessen"
+                name="BC-Strategie/-Lösung wirksam und angemessen?"
+                inputtype="booleanoption"
+                defaultValue="0"
+                tags="BCM" />
+             <!--  verinice 1.27 --> 
               <huiproperty id="control_bcm_wiederanlaufzeit" name="Wiederanlaufzeit" tags="BCM" inputtype="numericoption" min="-1" max="6" defaultValue="-1">
                        <option
                     id="control_bcm_wiederanlaufzeit_unset"
@@ -6651,7 +6785,21 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         <option id="control_desc_plan_priorityMittel" name="Mittel"/>
         <option id="control_desc_plan_priorityHoch" name="Hoch"/>
       </huiproperty>
-            
+              <!--  BCM 1.27  -->
+            <huiproperty id="control_massnahmenplan"
+                name="Maßnahme freigegeben"
+                inputtype="booleanoption"
+                defaultValue="0"
+                tags="BCM" />
+                
+                  <huiproperty id="control_massnahmenplan2"
+                name="Maßnahme abgeschlossen und Wirksamkeit geprüft"
+                inputtype="booleanoption"
+                defaultValue="0"
+                tags="BCM" />
+                
+<huiproperty editable="true" id="control_desc_plan_ressourcenbedarf" inputtype="text" name="Notwendige Ressourcen"
+            showInObjectBrowser="false" textrows="4" visible="true" />
          </huipropertygroup>
            <!-- ENDE:  BCM control 01062022-->
         <huipropertygroup id="control_data_protection_objectives_eugdpr" name="Data privacy control objectives according to Art. 32 EU GDPR"
@@ -8386,7 +8534,49 @@ Wurden bereits weitere Stellen informiert?
                 <huiproperty id="incident_bsig_others_further" inputtype="text" name="Further" tooltip="Voluntary indication"/>
                 
             </huipropertygroup>
-            
+             <!-- START: BCM 1.27 -->
+                  <huipropertygroup name="BCM Notfallbewältigung" id="incident_BCM" tags="BCM">
+                   
+                  <huiproperty id="incident_NuK2" name="Rückführung in den Normalbetrieb"
+                    inputtype="text"
+                    textrows="10">
+                    <defaultRule class="SimpleValue">
+                        <param id="incident_NuK2_Leitfragen">Leitfragen:
+- Wie und wann wird die BAO aufgelöst und in die normale AAO überführt?
+- Welche Arbeitsrückstände sind institutionsweit entstanden und wie können diese am besten abgearbeitet werden?
+- Durch wen erfolgt die interne und externe Kommunikation für die Dauer der Nacharbeiten?
+- Wie, durch wen und in welchen zeitlichen Intervallen werden die Mitarbeitenden über den Fortschritt der Rückführung in den Normalbetrieb informiert?
+- An wen sollen die Organisationseinheiten in dieser Zeit ihre Erkenntnisse und
+Fortschritte melden? Gemeldet werden sollten z. B Schäden oder Verluste durch den Notbetrieb, der aktuelle Stand der Arbeitsrückstände sowie die erwartete Dauer bis zur Rückkehr in den Normalbetrieb
+</param>
+                    </defaultRule>
+                </huiproperty> 
+                
+                     <huiproperty id="incident_NuK3" name="Fragenkatalog – Analyse der Bewältigung"
+                    inputtype="text"
+                    textrows="20">
+                    <defaultRule class="SimpleValue">
+                        <param id="incident_NuK3_Leitfragen">Leitfragen:
+- Wie kam es zu dem Ereignis?
+- Welche Auswirkungen hatte das Ereignis?
+- Wie schnell und wie effektiv erfolgte die Reaktion auf das Ereignis (insbesondere BAO-Reaktionszeit)?
+- Welche Elemente der Aufbau- und Ablauforganisation der BAO haben gut funk-
+tioniert und welche weniger gut?
+- Gab es Unterschiede zur geplanten Notfallbewältigung?
+- Waren alle zeitkritischen Geschäftsprozesse und Ressourcen bekannt?
+- Welche der vorbereiteten Notfallmaßnahmen wurden ergriffen?
+- Welche Notfallmaßnahmen wurden neu eingeführt?
+- Wie gut haben die vorbereiteten Notfallpläne funktioniert?
+- Wurden Notfallpläne neu erstellt oder angepasst?
+- Wie gut hat die interne NuK-Kommunikation funktioniert? (z. B. Kooperationsbereitschaft der Mitarbeitenden, Einhaltung der Schweigepflichten)
+- Wie gut hat die externe NuK-Kommunikation funktioniert? (z. B. Effektivität des
+Medienmonitorings, Einflussmöglichkeiten auf die externe Wahrnehmung)
+</param>
+                    </defaultRule>
+                </huiproperty>       
+                             
+                              </huipropertygroup>
+                   <!-- ENDE: BCM 1.27 -->
             
     </huientity>
 
@@ -9331,7 +9521,10 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="process_bcm_mtpd" name="MTPD (h)" tags="BCM" ></huiproperty>
             <huiproperty id="process_bcm_rpo" name="RPO (h)" tags="BCM" ></huiproperty>
             <huiproperty id="process_bcm_rto" name="RTO (h)" tags="BCM" ></huiproperty>
-
+<!-- BCM 1.27 --> 
+                <huiproperty id="process_datensicherungszyklus" inputtype="text" name="Datensicherungsintervall im Normalbetrieb" />
+          <huiproperty id="process_normalbetriebRessourcenbedarf" name="Ressourcenbedarf im Normalbetrieb" />
+<!-- BCM 1.27 ENDE-->
             <huiproperty id="process_bcm_time1" name="Impact after 8h" tags="BCM" inputtype="numericoption" min="-1" max="3" defaultValue="-1">
                 <option
                     id="process_bcm_time1_unset"
@@ -9355,6 +9548,9 @@ Wurden bereits weitere Stellen informiert?
                     value="3" />
             </huiproperty>
 
+             <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="process_notbetriebRessourcenbedarfz1" name="Ressourcenbedarf im Notbetrieb" />
+      <!-- BCM 1.27 -->
               <huiproperty id="process_bcm_tim24" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="-1" max="3" defaultValue="-1">
                 <option
                     id="process_bcm_tim24_unset"
@@ -9377,7 +9573,9 @@ Wurden bereits weitere Stellen informiert?
                     name="3 Very High"
                     value="3" />
             </huiproperty>
-
+   <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="process_notbetriebRessourcenbedarfz2" name="Ressourcenbedarf im Notbetrieb" />
+      <!-- BCM 1.27 -->
               <huiproperty id="process_bcm_time48" name="Impact after 48h" tags="BCM" inputtype="numericoption" min="-1" max="3" defaultValue="-1">
                 <option
                     id="process_bcm_time48_unset"
@@ -9401,6 +9599,10 @@ Wurden bereits weitere Stellen informiert?
                     value="3" />
             </huiproperty>
 
+   <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="process_notbetriebRessourcenbedarfz3" name="Ressourcenbedarf im Notbetrieb" />
+      <!-- BCM 1.27 -->
+      
               <huiproperty id="process_bcm_time96" name="Impact after 96h" tags="BCM" inputtype="numericoption" min="-1" max="3" defaultValue="-1">
                 <option
                     id="process_bcm_time96_unset"
@@ -9424,6 +9626,11 @@ Wurden bereits weitere Stellen informiert?
                     value="3" />
             </huiproperty>
 
+   <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="process_notbetriebRessourcenbedarfz4" name="Ressourcenbedarf im Notbetrieb" />
+      <!-- BCM 1.27 -->
+      
+      
               <huiproperty id="process_bcm_time168" name="Impact after 168h" tags="BCM" inputtype="numericoption" min="-1" max="3" defaultValue="-1">
                 <option
                     id="process_bcm_time168_unset"
@@ -9447,6 +9654,10 @@ Wurden bereits weitere Stellen informiert?
                     value="3" />
             </huiproperty>
 
+   <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="process_notbetriebRessourcenbedarfz5" name="Ressourcenbedarf im Notbetrieb" />
+      <!-- BCM 1.27 -->
+      
               <huiproperty id="process_bcm_time720" name="Impact after 720h" tags="BCM" inputtype="numericoption" min="-1" max="3" defaultValue="-1">
                 <option
                     id="process_bcm_time720_unset"
@@ -9469,7 +9680,9 @@ Wurden bereits weitere Stellen informiert?
                     name="3 Very High"
                     value="3" />
             </huiproperty>
-
+   <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="process_notbetriebRessourcenbedarfz6" name="Ressourcenbedarf im Notbetrieb" />
+      <!-- BCM 1.27 -->
              <huiproperty id="process_bcm_timegt720" name="Impact after >720h" tags="BCM" inputtype="numericoption" min="-1" max="3" defaultValue="-1">
                 <option
                     id="process_bcm_timegt720_unset"
@@ -9492,7 +9705,9 @@ Wurden bereits weitere Stellen informiert?
                     name="3 Very High"
                     value="3" />
             </huiproperty>
-
+   <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="process_notbetriebRessourcenbedarfz7" name="Ressourcenbedarf im Notbetrieb" />
+      <!-- BCM 1.27 -->
 <!-- START:  BCM Aenderung -->
              <huiproperty id="process_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung" />
 
@@ -9503,7 +9718,25 @@ Wurden bereits weitere Stellen informiert?
                 <defaultRule class="Today">
                 </defaultRule>
                 </huiproperty>
-                
+                                    <!-- BCM 1.27 -->
+                 <huiproperty id="process_bcm_erhebungsart" name="Art der Erhebung" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="process_bcm_timez1_erhebungsart"
+                    name="unedited"
+                    value="0" />
+                <option
+                    id="process_bcm_erhebungsart_1"
+                    name="1 Selbstauskunft durch den/die Prozesseigentümer/-in"
+                    value="1" />
+                     <option
+                    id="process_bcm_erhebungsart_2"
+                    name="2 Einzelinterviews mit verschiedenen Personen"
+                    value="2" />
+                     <option
+                    id="process_bcm_erhebungsart_3"
+                    name="3 Workshops, mit mehreren Personen."
+                    value="3" />
+            </huiproperty>
                  <huiproperty id="process_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
                         
                <huiproperty
@@ -9568,6 +9801,17 @@ Wurden bereits weitere Stellen informiert?
               </huipropertygroup>
            <!-- ENDE:  BCM Aenderung -->
 
+<!--  BCM 1.27  -->
+        <huipropertygroup name="BCM SOLL-IST Vergleich" id="process_SollIstVergleich" tags="BCM" >
+              <huiproperty id="process_SollIstVergleich_RTA" name="Tatsächliche Wiederanlaufzeit (RTA)" />
+    <huiproperty id="process_SollIstVergleich_RTA_Nachweis" name="Nachweis" />
+     <huiproperty id="process_SollIstVergleich_RTA_kleiner_RTO" name="RTA kleiner/gleich RTO?" />
+        
+         <huiproperty id="process_SollIstVergleich_RPA" name="Tatsächlicher Datenverlust (RPA)" />
+           <huiproperty id="process_SollIstVergleich_RPA_Nachweis" name="Nachweis" />
+     <huiproperty id="process_SollIstVergleich_RPA_kleiner_Datensicherungszyklus"  name="Datensicherungszyklus kleiner/gleich RPO?" />
+        </huipropertygroup>
+           <!-- ENDE:  BCM Aenderung -->
      
 
 
@@ -10768,15 +11012,21 @@ Wurden bereits weitere Stellen informiert?
          <!-- START: BCM Aenderung -->
           <huipropertygroup name="Business Continuity Management (BCM)" id="bp_itnetwork_bcm" tags="BCM" >
              
-             <huiproperty id="bp_itnetwork_geltungsbereichBCM" name="BCMS-Geltungsbereich" />
-             <huiproperty name="Planung/Zweck der Änderung am BCMS" id="bp_itnetwork_modification" inputtype="text" />
-             <huiproperty id="bp_itnetwork_methodBCMS" name="Method of BCMS" inputtype="singleoption">
+             <huiproperty id="bp_itnetwork_geltungsbereichBCM" name="BCMS-Geltungsbereich" tags="BCM" />
+             <!--  BCM 1.27 -->
+           <huiproperty name="Abzusichernder Zeitraum" id="bp_itnetwork_BCM_abzusichernderZeitraum" inputtype="text" tags="BCM"/>  
+           <huiproperty id="bp_itnetwork_BAOReaktionszeit" name="BAO-Reaktionszeit" tags="BCM" tooltip = "Die BAO-Reaktionszeit ist in der
+			Regel unabhängig von den einzelnen Geschäftsprozessen und sollte daher zentral/informationverbundübergreifend festgelegt werden." />
+               
+          <!--  ENDE BCM 1.27  -->
+             <huiproperty id="bp_itnetwork_methodBCMS" name="Method of BCMS" inputtype="singleoption" tags="BCM">
                 <option id="bp_itnetwork_methodBCMS_reaktiv" name="Reaktiv-BCMS" />
                 <option id="bp_itnetwork_methodBCMS_aufbau" name="Aufbau-BCMS" />
                 <option id="bp_itnetwork_methodBCMS_standard" name="Standard-BCMS" />
               </huiproperty>
+    
             <huiproperty
-                    id="bp_itnetwork_value_untragbarkeitsniveau"
+                    id="bp_itnetwork_value_untragbarkeitsniveau" 
                     name="Untragbarkeitsniveau"
                      tags="BCM"
                     inputtype="numericoption" min="0" max="4" >
@@ -10801,9 +11051,11 @@ Wurden bereits weitere Stellen informiert?
                         name="4 Sehr hoch"
                         value="4" />
                 </huiproperty>
-           
+                
+ <huiproperty name="Planung/Zweck der Änderung am BCMS" id="bp_itnetwork_modification" inputtype="text" />  
          </huipropertygroup>
          <!-- ENDE:  BCM Aenderung -->
+     
         <huipropertygroup id="bp_itnetwork_report" name="Reporting" tags="Dok.mgmt.">
             <huiproperty id="bp_itnetwork_author" name="Author" tags="Dok.mgmt." />
             <huiproperty id="bp_itnetwork_version" name="Version" tags="Dok.mgmt." />
@@ -11222,8 +11474,31 @@ Wurden bereits weitere Stellen informiert?
                 <defaultRule class="Today">
                 </defaultRule>
                 </huiproperty>
-                
-                 <huiproperty id="bp_application_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
+            
+                 <!-- BCM 1.27 -->
+                 <huiproperty id="bp_application_bcm_erhebungsart" name="Art der Erhebung" tags="BCM" inputtype="numericoption" min="0" max="3" >
+                <option
+                    id="bp_application_bcm_timez1_erhebungsart"
+                    name="unedited"
+                    value="0" />
+                <option
+                    id="bp_application_bcm_erhebungsart_1"
+                    name="1 Selbstauskunft durch den/die Prozesseigentümer/-in"
+                    value="1" />
+                     <option
+                    id="bp_application_bcm_erhebungsart_2"
+                    name="2 Einzelinterviews mit verschiedenen Personen"
+                    value="2" />
+                     <option
+                    id="bp_application_bcm_erhebungsart_3"
+                    name="3 Workshops, mit mehreren Personen."
+                    value="3" />
+          </huiproperty>
+ <!-- BCM 1.27 --> 
+          <huiproperty id="bp_application_normalbetriebRessourcenbedarf" name="Ressourcenbedarf im Normalbetrieb" tags="BCM"/>
+                      <!-- BCM 1.27 ENDE-->
+                <!--  BCM V1.27 -->
+                 <huiproperty id="bp_application_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" tags="BCM"/>
 
               <huiproperty id="bp_application_bcm_time24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
@@ -11247,6 +11522,10 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
+            
+             <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_application_notbetriebRessourcenbedarfz1" name="Ressourcenbedarf im Notbetrieb" tags="BCM"/>
+      <!-- BCM 1.27 -->
 
               <huiproperty id="bp_application_bcm_time3d" name="Impact after 3d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
@@ -11270,7 +11549,11 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
-
+            
+<!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_application_notbetriebRessourcenbedarfz2" name="Ressourcenbedarf im Notbetrieb" tags="BCM"/>
+      <!-- BCM 1.27 ENDE -->
+      
               <huiproperty id="bp_application_bcm_time7d" name="Impact after 7d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
                     id="bp_application_bcm_time7d_unset"
@@ -11293,6 +11576,10 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
+            
+            <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_application_notbetriebRessourcenbedarfz3" name="Ressourcenbedarf im Notbetrieb"  tags="BCM"/>
+      <!-- BCM 1.27 ENDE -->
 
               <huiproperty id="bp_application_bcm_time14d" name="Impact after 14d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
@@ -11317,6 +11604,9 @@ Wurden bereits weitere Stellen informiert?
                     value="4" />
             </huiproperty>
 
+  <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_application_notbetriebRessourcenbedarfz4" name="Ressourcenbedarf im Notbetrieb" tags="BCM"/>
+      <!-- BCM 1.27 ENDE -->
               <huiproperty id="bp_application_bcm_time30d" name="Impact after 30d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
                     id="bp_application_bcm_time30d_unset"
@@ -11339,6 +11629,10 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
+              <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_application_notbetriebRessourcenbedarfz5" name="Ressourcenbedarf im Notbetrieb" tags="BCM"/>
+      <!-- BCM 1.27 ENDE -->
+      
 <huiproperty defaultValue="1" id="bp_application_value_deduce_mtpd1" inputtype="booleanoption" name="MTPD ableiten aus der Schadensbewertung" tags="BCM"/>
 
             <huiproperty id="bp_application_bcm_mtpd1" name="MTPD" tags="BCM" inputtype="numericoption" min="-1" max="5" defaultValue="-1">
@@ -11372,7 +11666,7 @@ Wurden bereits weitere Stellen informiert?
                     name="30 d"
                     value="5" />
             </huiproperty>
-             <huiproperty id="bp_application_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung" />
+             <huiproperty id="bp_application_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung"  tags="BCM"/>
                      <huiproperty
                     id="bp_application_schadensszenario_value_1"
                      tags="BCM"
@@ -11440,7 +11734,7 @@ Wurden bereits weitere Stellen informiert?
                     name="-"
                     value="6" />
             </huiproperty>
-         <huiproperty id="bp_application_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
+         <huiproperty id="bp_application_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" tags="BCM"/>
 
               <huiproperty id="bp_application_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="-1" max="5" editable="false" defaultValue="-1">
                 <option
@@ -11472,7 +11766,11 @@ Wurden bereits weitere Stellen informiert?
                     name="30 d"
                     value="5" />
             </huiproperty>
-            
+          <!--  BCM V1.27  -->
+      <huiproperty id="bp_application_BAOReaktionszeit" name="BAO-Reaktionszeit" tags="BCM" tooltip = "Die BAO-Reaktionszeit ist in der
+			Regel unabhängig von den einzelnen Geschäftsprozessen und sollte daher zentral/informationverbundübergreifend festgelegt werden. Es wird empfohlen von der MTPD die
+BAO-Reaktionszeit abzuziehen, um die RTO zu ermitteln." />
+               
          <huiproperty id="bp_application__rto" name="Geforderte Wiederanlaufzeit (WAZ/RTO) für notw. Ressourcen aus Prozess-MTPD" tags="BCM" />
          <huiproperty id="bp_application__rtoK" name="Kleinste RTO der Ressource" tags="BCM" />
              
@@ -11482,7 +11780,7 @@ Wurden bereits weitere Stellen informiert?
                     name="Single-Point-of-Failure/of-Knowledge/of-Contact (SPoF/SPoK/SPoC)"
                     inputtype="booleanoption"  defaultValue="0" >
         </huiproperty>
-    <huiproperty id="bp_application_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
+    <huiproperty id="bp_application_description_SPoF" inputtype="text" name="Kommentar/Hinweise" tags="BCM"/>
 
             <huiproperty id="bp_application_bcm_rpo" name="Maximal zulässiger Datenverlust (RPO)" tags="BCM" inputtype="numericoption" min="-1" max="9" defaultValue="-1">
                 <option
@@ -11530,8 +11828,23 @@ Wurden bereits weitere Stellen informiert?
                     name="Jährlich"
                     value="9" />
             </huiproperty>
+            
+              <!--  BCM 1.27  -->
+                <huiproperty id="bp_application_datensicherungszyklus" inputtype="text" name="Datensicherungsintervall im Normalbetrieb" tags="BCM" />
+            
          </huipropertygroup>
            <!-- ENDE:  BCM Aenderung -->
+           
+ <!--  BCM 1.27  -->
+        <huipropertygroup name="BCM SOLL-IST Vergleich" id="bp_application_SollIstVergleich" tags="BCM" >
+              <huiproperty id="bp_application_SollIstVergleich_RTA" name="Tatsächliche Wiederanlaufzeit (RTA)"  tags="BCM"/>
+    <huiproperty id="bp_application_SollIstVergleich_RTA_Nachweis" name="Nachweis"  tags="BCM"/>
+     <huiproperty id="bp_application_SollIstVergleich_RTA_kleiner_RTO" name="RTA kleiner/gleich RTO?"  tags="BCM"/>
+         <huiproperty id="bp_application_SollIstVergleich_RPA" name="Tatsächlicher Datenverlust (RPA)"  tags="BCM"/>
+           <huiproperty id="bp_application_SollIstVergleich_RPA_Nachweis" name="Nachweis"  tags="BCM"/>
+     <huiproperty id="bp_application_SollIstVergleich_RPA_kleiner_Datensicherungszyklus"  name="Datensicherungszyklus kleiner/gleich RPO?"  tags="BCM"/>
+       
+        </huipropertygroup>
                </huientity>
     <huientity id="bp_application_group" name="Application Group">
         <huiproperty id="bp_application_group_name" name="Title" required="true" />
@@ -11672,10 +11985,32 @@ Wurden bereits weitere Stellen informiert?
                 <defaultRule class="Today">
                 </defaultRule>
                 </huiproperty>
-                
-                 <huiproperty id="bp_businessprocess_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
-
-              <huiproperty id="bp_businessprocess_bcm_time24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
+                <!-- BCM 1.27 -->
+                 <huiproperty id="bp_businessprocess_bcm_erhebungsart" name="Art der Erhebung" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="bp_businessprocess_bcm_timez1_erhebungsart"
+                    name="unedited"
+                    value="0" />
+                <option
+                    id="bp_businessprocess_bcm_erhebungsart_1"
+                    name="1 Selbstauskunft durch den/die Prozesseigentümer/-in"
+                    value="1" />
+                     <option
+                    id="bp_businessprocess_bcm_erhebungsart_2"
+                    name="2 Einzelinterviews mit verschiedenen Personen"
+                    value="2" />
+                     <option
+                    id="bp_businessprocess_bcm_erhebungsart_3"
+                    name="3 Workshops, mit mehreren Personen."
+                    value="3" />
+    
+            </huiproperty>
+                      <!-- BCM 1.27 --> 
+          <huiproperty id="bp_businessprocess_normalbetriebRessourcenbedarf" name="Ressourcenbedarf im Normalbetrieb" tags="BCM"/>
+                      <!-- BCM 1.27 ENDE-->   
+           <huiproperty id="bp_businessprocess_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" tags="BCM"/>
+         <!-- BCM BIA Schadensbewertung, Definition der Zeithorizonte inkl. Schadenskategorien -->
+           <huiproperty id="bp_businessprocess_bcm_time24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
                     id="bp_businessprocess_bcm_time24h_unset"
                     name="unedited"
@@ -11697,7 +12032,9 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
-
+                  <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_businessprocess_notbetriebRessourcenbedarfz1" name="Ressourcenbedarf im Notbetrieb" tags="BCM"/>
+      <!-- BCM 1.27 --> 
               <huiproperty id="bp_businessprocess_bcm_time3d" name="Impact after 3d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
                     id="bp_businessprocess_bcm_time3d_unset"
@@ -11720,7 +12057,9 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
-
+      <!-- BCM 1.27  Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_businessprocess_notbetriebRessourcenbedarfz2" name="Ressourcenbedarf im Notbetrieb" tags="BCM"/>
+      <!-- BCM 1.27 --> 
               <huiproperty id="bp_businessprocess_bcm_time7d" name="Impact after 7d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
                     id="bp_businessprocess_bcm_time7d_unset"
@@ -11743,6 +12082,9 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
+                  <!-- BCM 1.27  Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+ <huiproperty id="bp_businessprocess_notbetriebRessourcenbedarfz3" name="Ressourcenbedarf im Notbetrieb" tags="BCM" />
+                  <!-- BCM 1.27 ENDE--> 
 
               <huiproperty id="bp_businessprocess_bcm_time14d" name="Impact after 14d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
@@ -11766,6 +12108,9 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
+                  <!-- BCM 1.27  Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+<huiproperty id="bp_businessprocess_notbetriebRessourcenbedarfz4" name="Ressourcenbedarf im Notbetrieb" tags="BCM"/>
+                  <!-- BCM 1.27 ENDE--> 
 
               <huiproperty id="bp_businessprocess_bcm_time30d" name="Impact after 30d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
@@ -11789,7 +12134,10 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
-<huiproperty defaultValue="1" id="bp_businessprocess_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="Risk"/>
+           <!-- BCM 1.27  Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+<huiproperty id="bp_businessprocess_notbetriebRessourcenbedarfz5" name="Ressourcenbedarf im Notbetrieb" tags="BCM" />
+           <!-- BCM 1.27 ENDE--> 
+<huiproperty defaultValue="1" id="bp_businessprocess_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="BCM"/>
 
             <huiproperty id="bp_businessprocess_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="-1" max="5" defaultValue="-1">
                 <depends option="bp_businessprocess_value_deduce_mtpd1" value="0" />
@@ -11803,26 +12151,26 @@ Wurden bereits weitere Stellen informiert?
                     value="0" />
                       <option
                     id="bp_businessprocess_bcm_time24hMtpd1"
-                    name="24 h"
+                    name="24 h "
                     value="1" />
                      <option
                     id="bp_businessprocess_bcm_time3dMtpd1"
-                    name="3 d"
+                    name="3 days"
                     value="2" />
                      <option
                     id="bp_businessprocess_bcm_time7dMtpd1"
-                    name="7 d"
+                    name="7 days"
                     value="3" />
                      <option
                     id="bp_businessprocess_bcm_time14dMtpd1"
-                    name="14 d"
+                    name="14 days"
                     value="4" />
                       <option
                     id="bp_businessprocess_bcm_time30dMtpd1"
-                    name="30 d"
+                    name="30 days"
                     value="5" />
             </huiproperty>
-             <huiproperty id="bp_businessprocess_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung" />
+             <huiproperty id="bp_businessprocess_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung" tags="BCM" />
                      <huiproperty
                     id="bp_businessprocess_schadensszenario_value_1"
                      tags="BCM"
@@ -11856,7 +12204,7 @@ Wurden bereits weitere Stellen informiert?
                     inputtype="booleanoption"  defaultValue="0" >
         </huiproperty>
 
-           <huiproperty id="bp_businessprocess_bcm_mtpd2" name="Geänderte MTPD aufgrund von Prozessabhängigkeiten" tags="BCM" inputtype="numericoption" min="-1" max="6" defaultValue="-1">
+           <huiproperty id="bp_businessprocess_bcm_mtpd2" name="Geänderte MTPD aufgrund von Abhängigkeiten" tags="BCM" inputtype="numericoption" min="-1" max="6" defaultValue="-1">
                 <option
                     id="bp_businessprocess_bcm_Mtpd2_unset"
                     name="unedited"
@@ -11871,28 +12219,28 @@ Wurden bereits weitere Stellen informiert?
                     value="1" />
                      <option
                     id="bp_businessprocess_bcm_time3dMtpd2"
-                    name="3 d"
+                    name=" 3 days"
                     value="2" />
                      <option
                     id="bp_businessprocess_bcm_time7dMtpd2"
-                    name="7 d"
+                    name="7 days"
                     value="3" />
                      <option
                     id="bp_businessprocess_bcm_time14dMtpd2"
-                    name="14 d"
+                    name="14 days"
                     value="4" />
                       <option
                     id="bp_businessprocess_bcm_time30dMtpd2"
-                    name="30 d"
+                    name="30 days"
                     value="5" />
                      <option
                     id="bp_businessprocess_bcm_keineAenderungMtpd2"
                     name="-"
                     value="6" />
             </huiproperty>
-         <huiproperty id="bp_businessprocess_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
+         <huiproperty id="bp_businessprocess_description_changeMtpd2" inputtype="text" name="Begründung der Änderung"  tags="BCM"/>
 
-              <huiproperty id="bp_businessprocess_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="-1" max="5" editable="false" defaultValue="-1">
+              <huiproperty id="bp_businessprocess_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Abhängigkeiten)" tags="BCM" inputtype="numericoption" min="-1" max="5" editable="false" defaultValue="-1">
                 <option
                     id="bp_businessprocess_bcm_timeMtpdMin_unset"
                     name="unedited"
@@ -11922,6 +12270,10 @@ Wurden bereits weitere Stellen informiert?
                     name="30 d"
                     value="5" />
             </huiproperty>
+            <!--  BCM V1.27  -->
+      <huiproperty id="bp_businessprocess_BAOReaktionszeit" name="BAO-Reaktionszeit" tags="BCM" tooltip="Die BAO-Reaktionszeit ist in der
+			Regel unabhängig von den einzelnen Geschäftsprozessen und sollte daher zentral/informationverbundübergreifend festgelegt werden. Es wird empfohlen von der MTPD die
+BAO-Reaktionszeit abzuziehen, um die RTO zu ermitteln."/>
             
          <huiproperty id="bp_businessprocess__rto" name="Geforderte Wiederanlaufzeit (WAZ/RTO) für notw. Ressourcen aus Prozess-MTPD" tags="BCM" />
          <huiproperty id="bp_businessprocess__rtoK" name="Kleinste RTO der Ressource" tags="BCM" />
@@ -11932,7 +12284,7 @@ Wurden bereits weitere Stellen informiert?
                     name="Single-Point-of-Failure/of-Knowledge/of-Contact (SPoF/SPoK/SPoC)"
                     inputtype="booleanoption"  defaultValue="0" >
         </huiproperty>
-    <huiproperty id="bp_businessprocess_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
+    <huiproperty id="bp_businessprocess_description_SPoF" inputtype="text" name="Kommentar/Hinweise" tags="BCM" />
 
             <huiproperty id="bp_businessprocess_bcm_rpo" name="Maximal zulässiger Datenverlust (RPO)" tags="BCM" inputtype="numericoption" min="-1" max="9" defaultValue="-1">
                 <option
@@ -11980,6 +12332,8 @@ Wurden bereits weitere Stellen informiert?
                     name="Jährlich"
                     value="9" />
             </huiproperty>
+            <!--  BCM 1.27  -->
+                <huiproperty id="bp_businessprocess_datensicherungszyklus" inputtype="text" name="Datensicherungsintervall im Normalbetrieb" tags="BCM"/>
             
          </huipropertygroup>
          
@@ -11997,7 +12351,7 @@ Wurden bereits weitere Stellen informiert?
                 defaultValue="1"
                 tags="BCM" />
                 
-             <huiproperty id="bp_businessprocess_reporting_zeitkritisch" name="Zeitkritischer Geschäftsprozess" inputtype="singleoption">
+             <huiproperty id="bp_businessprocess_reporting_zeitkritisch" name="Zeitkritischer Geschäftsprozess"  tags="BCM" inputtype="singleoption">
                 <depends option="bp_business_continuity_reporting_selectedzeitkritisch" value="0" />
                 <option id="bp_businessprocess_reporting_zeitkritisch_ja" name="ja" />
                  <option id="bp_businessprocess_reporting_zeitkritisch_nein" name="nein" />
@@ -12005,20 +12359,20 @@ Wurden bereits weitere Stellen informiert?
  			</huiproperty>
  			
  			
- 			 <huiproperty id="bp_businessprocess_reporting_GFP" name="Im Geschäftsfortführungsplan (GFP) vorhanden?" inputtype="singleoption">
+ 			 <huiproperty id="bp_businessprocess_reporting_GFP" name="Im Geschäftsfortführungsplan (GFP) vorhanden?"  tags="BCM" inputtype="singleoption">
                 <option id="bp_businessprocess_reporting_GFP_ja" name="ja" />
                  <option id="bp_businessprocess_reporting_GFP_nein" name="nein" />
                  <option id="bp_businessprocess_reporting_GFP_fehlendeDaten" name="Fehlende Daten" />
                  <option id="bp_businessprocess_reporting_GFP_nichtRelevant" name="Nicht relevant" />
  			</huiproperty>
                 
-          <huiproperty id="bp_businessprocess_reporting_qualityGFP" name="Qualität des Geschäftsfortführungsplans (GFP)?" inputtype="singleoption">
+          <huiproperty id="bp_businessprocess_reporting_qualityGFP" name="Qualität des Geschäftsfortführungsplans (GFP)?"  tags="BCM" inputtype="singleoption">
                 <option id="businessprocess_reporting_GFP_qualityAngemessen" name="Angemessen und plausibel" />
                  <option id="bp_businessprocess_reporting_GFP_qualityfehlendeDaten" name="Fehlende Daten" />
                  <option id="bp_businessprocess_reporting_GFP_qualityNichtRelevant" name="Nicht relevant" />
  			</huiproperty>
  			
- 			<huiproperty id="bp_businessprocess_reporting_trainingGFP" name="Anhand des Geschäftsfortführungsplans (GFP) geübt?" inputtype="singleoption">
+ 			<huiproperty id="bp_businessprocess_reporting_trainingGFP" name="Anhand des Geschäftsfortführungsplans (GFP) geübt?"  tags="BCM" inputtype="singleoption">
                 <option id="bp_businessprocess_reporting_GFP_trainingAngemessen" name="GFP ist funkrtionsfähig und wirksam" />
                  <option id="bp_businessprocess_reporting_GFP_trainingfehlendeDaten" name="Fehlende Daten" />
                  <option id="bp_businessprocess_reporting_GFP_trainingNichtVorhanden" name="Nicht vorhanden" />
@@ -12032,14 +12386,26 @@ Wurden bereits weitere Stellen informiert?
                 inputtype="booleanoption"
                 defaultValue="0"
                 tags="BCM" />
-                 <huiproperty id="bp_businessprocess_reporting_ursache" name="Ursache" required="false" />
+                 <huiproperty id="bp_businessprocess_reporting_ursache" name="Ursache"  tags="BCM" required="false" />
  			
- 			<huiproperty id="bp_businessprocess_reporting_schweregrad" name="Schweregrad" inputtype="singleoption">
+ 			<huiproperty id="bp_businessprocess_reporting_schweregrad" name="Schweregrad" inputtype="singleoption" tags="BCM">
                 <option id="bp_businessprocess_reporting_GFP_schweregradGering" name="Gering" />
                  <option id="bp_businessprocess_reporting_GFP_schweregradMittel" name="Mittel" />
                  <option id="bp_businessprocess_reporting_GFP_schweregradHoch" name="Hoch" />
  			</huiproperty>
               </huipropertygroup>
+                 
+ <!--  BCM 1.27  -->
+        <huipropertygroup name="BCM SOLL-IST Vergleich" id="bp_businessprocess_SollIstVergleich" tags="BCM" >
+              <huiproperty id="bp_businessprocess_SollIstVergleich_RTA" name="Tatsächliche Wiederanlaufzeit (RTA)"  tags="BCM" />
+    <huiproperty id="bp_businessprocess_SollIstVergleich_RTA_Nachweis" name="Nachweis"  tags="BCM"/>
+     <huiproperty id="bp_businessprocess_SollIstVergleich_RTA_kleiner_RTO" name="RTA kleiner/gleich RTO?"  tags="BCM"/>
+        
+         <huiproperty id="bp_businessprocess_SollIstVergleich_RPA" name="Tatsächlicher Datenverlust (RPA)"  tags="BCM" />
+           <huiproperty id="bp_businessprocess_SollIstVergleich_RPA_Nachweis" name="Nachweis" tags="BCM" />
+     <huiproperty id="bp_businessprocess_SollIstVergleich_RPA_kleiner_Datensicherungszyklus"  name="Datensicherungszyklus kleiner/gleich RPO?" tags="BCM"/>
+       
+        </huipropertygroup>
            <!-- ENDE:  BCM Aenderung -->
         <huiproperty id="bp_businessprocess_privacy_yesno" name="Aufnahme in das Verzeichnis der Verarbeitungstätigkeiten" inputtype="booleanoption" />
 
@@ -12763,7 +13129,29 @@ Wurden bereits weitere Stellen informiert?
                 </defaultRule>
                 </huiproperty>
                 
-                 <huiproperty id="bp_icssystem_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
+               <!-- BCM 1.27 -->
+                 <huiproperty id="bp_icssystem_bcm_erhebungsart" name="Art der Erhebung" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="bp_icssystem_bcm_timez1_erhebungsart"
+                    name="unedited"
+                    value="0" />
+                <option
+                    id="bp_icssystem_bcm_erhebungsart_1"
+                    name="1 Selbstauskunft durch den/die Prozesseigentümer/-in"
+                    value="1" />
+                     <option
+                    id="bp_icssystem_bcm_erhebungsart_2"
+                    name="2 Einzelinterviews mit verschiedenen Personen"
+                    value="2" />
+                     <option
+                    id="bp_icssystem_bcm_erhebungsart_3"
+                    name="3 Workshops, mit mehreren Personen."
+                    value="3" />
+       </huiproperty>
+ <!-- BCM 1.27 --> 
+          <huiproperty id="bp_icssystem_normalbetriebRessourcenbedarf" name="Ressourcenbedarf im Normalbetrieb"  tags="BCM" />
+                      <!-- BCM 1.27 ENDE-->
+                 <huiproperty id="bp_icssystem_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" tags="BCM" />
 
               <huiproperty id="bp_icssystem_bcm_time24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4" defaultValue="-1">
                 <option
@@ -12787,6 +13175,9 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
+                <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_icssystem_notbetriebRessourcenbedarfz1" name="Ressourcenbedarf im Notbetrieb"  tags="BCM"/>
+      <!-- BCM 1.27 -->
 
               <huiproperty id="bp_icssystem_bcm_time3d" name="Impact after 3d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
@@ -12811,6 +13202,10 @@ Wurden bereits weitere Stellen informiert?
                     value="4" />
             </huiproperty>
 
+ <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_icssystem_notbetriebRessourcenbedarfz2" name="Ressourcenbedarf im Notbetrieb"  tags="BCM"/>
+      <!-- BCM 1.27 -->
+      
               <huiproperty id="bp_icssystem_bcm_time7d" name="Impact after 7d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
                     id="bp_icssystem_bcm_time7d_unset"
@@ -12834,6 +13229,10 @@ Wurden bereits weitere Stellen informiert?
                     value="4" />
             </huiproperty>
 
+ <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_icssystem_notbetriebRessourcenbedarfz3" name="Ressourcenbedarf im Notbetrieb" tags="BCM" />
+      <!-- BCM 1.27 -->
+      
               <huiproperty id="bp_icssystem_bcm_time14d" name="Impact after 14d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
                     id="bp_icssystem_bcm_time14d_unset"
@@ -12857,6 +13256,9 @@ Wurden bereits weitere Stellen informiert?
                     value="4" />
             </huiproperty>
 
+ <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_icssystem_notbetriebRessourcenbedarfz4" name="Ressourcenbedarf im Notbetrieb"  tags="BCM" />
+      <!-- BCM 1.27 -->
               <huiproperty id="bp_icssystem_bcm_time30d" name="Impact after 30d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
                     id="bp_icssystem_bcm_time30d_unset"
@@ -12879,7 +13281,11 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
-<huiproperty defaultValue="1" id="bp_icssystem_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="Risk"/>
+            
+             <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_icssystem_notbetriebRessourcenbedarfz5" name="Ressourcenbedarf im Notbetrieb"  tags="BCM"/>
+      <!-- BCM 1.27 -->
+<huiproperty defaultValue="1" id="bp_icssystem_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="BCM"/>
 
             <huiproperty id="bp_icssystem_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="-1" max="5" defaultValue="-1">
                 <depends option="bp_icssystem_value_deduce_mtpd1" value="0" />
@@ -12980,7 +13386,7 @@ Wurden bereits weitere Stellen informiert?
                     name="-"
                     value="6" />
             </huiproperty>
-         <huiproperty id="bp_icssystem_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
+         <huiproperty id="bp_icssystem_description_changeMtpd2" inputtype="text" name="Begründung der Änderung"  tags="BCM" />
 
               <huiproperty id="bp_icssystem_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="-1" max="5" editable="false" defaultValue="-1">
                 <option
@@ -13012,7 +13418,11 @@ Wurden bereits weitere Stellen informiert?
                     name="30 d"
                     value="5" />
             </huiproperty>
-            
+      <!--  BCM V1.27  -->
+      <huiproperty id="bp_icssystem_BAOReaktionszeit" name="BAO-Reaktionszeit" tags="BCM" tooltip="Die BAO-Reaktionszeit ist in der
+			Regel unabhängig von den einzelnen Geschäftsprozessen und sollte daher zentral/informationverbundübergreifend festgelegt werden. Es wird empfohlen von der MTPD die
+BAO-Reaktionszeit abzuziehen, um die RTO zu ermitteln." />
+                   
          <huiproperty id="bp_icssystem__rto" name="Geforderte Wiederanlaufzeit (WAZ/RTO) für notw. Ressourcen aus Prozess-MTPD" tags="BCM" />
          <huiproperty id="bp_icssystem__rtoK" name="Kleinste RTO der Ressource" tags="BCM" />
              
@@ -13022,7 +13432,7 @@ Wurden bereits weitere Stellen informiert?
                     name="Single-Point-of-Failure/of-Knowledge/of-Contact (SPoF/SPoK/SPoC)"
                     inputtype="booleanoption"  defaultValue="0" >
         </huiproperty>
-    <huiproperty id="bp_icssystem_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
+    <huiproperty id="bp_icssystem_description_SPoF" inputtype="text" name="Kommentar/Hinweise"  tags="BCM"/>
 
             <huiproperty id="bp_icssystem_bcm_rpo" name="Maximal zulässiger Datenverlust (RPO)" tags="BCM" inputtype="numericoption" min="-1" max="9" defaultValue="-1">
                 <option
@@ -13071,7 +13481,23 @@ Wurden bereits weitere Stellen informiert?
                     value="9" />
             </huiproperty>
             
+              <!--  BCM 1.27  -->
+                <huiproperty id="bp_icssystem_datensicherungszyklus" inputtype="text" name="Datensicherungsintervall im Normalbetrieb"  tags="BCM"/>
+            
+            
          </huipropertygroup>
+         
+          <!--  BCM 1.27  -->
+        <huipropertygroup name="BCM SOLL-IST Vergleich" id="bp_icssystem_SollIstVergleich" tags="BCM" >
+              <huiproperty id="bp_icssystem_SollIstVergleich_RTA" name="Tatsächliche Wiederanlaufzeit (RTA)"  tags="BCM" />
+    <huiproperty id="bp_icssystem_SollIstVergleich_RTA_Nachweis" name="Nachweis"  tags="BCM"/>
+     <huiproperty id="bp_icssystem_SollIstVergleich_RTA_kleiner_RTO" name="RTA kleiner/gleich RTO?"  tags="BCM"/>
+        
+         <huiproperty id="bp_icssystem_SollIstVergleich_RPA" name="Tatsächlicher Datenverlust (RPA)"  tags="BCM"/>
+           <huiproperty id="bp_icssystem_SollIstVergleich_RPA_Nachweis" name="Nachweis"  tags="BCM"/>
+     <huiproperty id="bp_icssystem_SollIstVergleich_RPA_kleiner_Datensicherungszyklus"  name="Datensicherungszyklus kleiner/gleich RPO?"  tags="BCM"/>
+       
+        </huipropertygroup>
            <!-- ENDE:  BCM Aenderung -->
         <huipropertygroup name="KIX" id="bp_icssystem_kix" tags="KIX" >
             <huiproperty name="KIX Ticket 1" id="bp_icssystem_kix_ticket1" isURL="true"/>
@@ -13232,8 +13658,31 @@ Wurden bereits weitere Stellen informiert?
                 <defaultRule class="Today">
                 </defaultRule>
                 </huiproperty>
-                
-                 <huiproperty id="bp_itsystem_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
+               
+                  <!-- BCM 1.27 -->
+                 <huiproperty id="bp_itsystem_bcm_erhebungsart" name="Art der Erhebung" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="bp_itsystem_bcm_timez1_erhebungsart"
+                    name="unedited"
+                    value="0" />
+                <option
+                    id="bp_itsystem_bcm_erhebungsart_1"
+                    name="1 Selbstauskunft durch den/die Prozesseigentümer/-in"
+                    value="1" />
+                     <option
+                    id="bp_itsystem_bcm_erhebungsart_2"
+                    name="2 Einzelinterviews mit verschiedenen Personen"
+                    value="2" />
+                     <option
+                    id="bp_itsystem_bcm_erhebungsart_3"
+                    name="3 Workshops, mit mehreren Personen."
+                    value="3" />
+                              </huiproperty>
+
+ <!-- BCM 1.27 --> 
+          <huiproperty id="bp_itsystem_normalbetriebRessourcenbedarf" name="Ressourcenbedarf im Normalbetrieb"  tags="BCM"/>
+                      <!-- BCM 1.27 ENDE-->
+                 <huiproperty id="bp_itsystem_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" tags="BCM" />
 
               <huiproperty id="bp_itsystem_bcm_time24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
@@ -13257,6 +13706,10 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
+            
+                 <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_itsystem_notbetriebRessourcenbedarfz1" name="Ressourcenbedarf im Notbetrieb"  tags="BCM" />
+      <!-- BCM 1.27 -->
 
               <huiproperty id="bp_itsystem_bcm_time3d" name="Impact after 3d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
@@ -13280,6 +13733,11 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
+            
+               <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_itsystem_notbetriebRessourcenbedarfz2" name="Ressourcenbedarf im Notbetrieb" tags="BCM" />
+      <!-- BCM 1.27 -->
+            
 
               <huiproperty id="bp_itsystem_bcm_time7d" name="Impact after 7d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
@@ -13304,6 +13762,10 @@ Wurden bereits weitere Stellen informiert?
                     value="4" />
             </huiproperty>
 
+   <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_itsystem_notbetriebRessourcenbedarfz3" name="Ressourcenbedarf im Notbetrieb"  tags="BCM"/>
+      <!-- BCM 1.27 -->
+
               <huiproperty id="bp_itsystem_bcm_time14d" name="Impact after 14d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
                     id="bp_itsystem_bcm_time14d_unset"
@@ -13327,6 +13789,10 @@ Wurden bereits weitere Stellen informiert?
                     value="4" />
             </huiproperty>
 
+   <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_itsystem_notbetriebRessourcenbedarfz4" name="Ressourcenbedarf im Notbetrieb"  tags="BCM" />
+      <!-- BCM 1.27 -->
+
               <huiproperty id="bp_itsystem_bcm_time30d" name="Impact after 30d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
                     id="bp_itsystem_bcm_time30d_unset"
@@ -13349,7 +13815,12 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
-<huiproperty defaultValue="1" id="bp_itsystem_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="Risk"/>
+            
+               <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_itsystem_notbetriebRessourcenbedarfz5" name="Ressourcenbedarf im Notbetrieb"  tags="BCM"/>
+      <!-- BCM 1.27 -->
+            
+<huiproperty defaultValue="1" id="bp_itsystem_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="BCM"/>
 
             <huiproperty id="bp_itsystem_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="-1" max="5" defaultValue="-1">
                 <depends option="bp_itsystem_value_deduce_mtpd1" value="0" />
@@ -13382,7 +13853,7 @@ Wurden bereits weitere Stellen informiert?
                     name="30 d"
                     value="5" />
             </huiproperty>
-             <huiproperty id="bp_itsystem_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung" />
+             <huiproperty id="bp_itsystem_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung"  tags="BCM" />
                      <huiproperty
                     id="bp_itsystem_schadensszenario_value_1"
                      tags="BCM"
@@ -13450,7 +13921,7 @@ Wurden bereits weitere Stellen informiert?
                     name="-"
                     value="6" />
             </huiproperty>
-         <huiproperty id="bp_itsystem_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
+         <huiproperty id="bp_itsystem_description_changeMtpd2" inputtype="text" name="Begründung der Änderung"  tags="BCM"/>
 
               <huiproperty id="bp_itsystem_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="-1" max="5" editable="false" defaultValue="-1">
                 <option
@@ -13482,7 +13953,11 @@ Wurden bereits weitere Stellen informiert?
                     name="30 d"
                     value="5" />
             </huiproperty>
-            
+      <!--  BCM V1.27  -->
+      <huiproperty id="bp_itsystem_BAOReaktionszeit" name="BAO-Reaktionszeit" tags="BCM" tooltip="Die BAO-Reaktionszeit ist in der
+			Regel unabhängig von den einzelnen Geschäftsprozessen und sollte daher zentral/informationverbundübergreifend festgelegt werden. Es wird empfohlen von der MTPD die
+BAO-Reaktionszeit abzuziehen, um die RTO zu ermitteln." />
+                  
          <huiproperty id="bp_itsystem__rto" name="Geforderte Wiederanlaufzeit (WAZ/RTO) für notw. Ressourcen aus Prozess-MTPD" tags="BCM" />
          <huiproperty id="bp_itsystem__rtoK" name="Kleinste RTO der Ressource" tags="BCM" />
              
@@ -13492,7 +13967,7 @@ Wurden bereits weitere Stellen informiert?
                     name="Single-Point-of-Failure/of-Knowledge/of-Contact (SPoF/SPoK/SPoC)"
                     inputtype="booleanoption"  defaultValue="0" >
         </huiproperty>
-    <huiproperty id="bp_itsystem_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
+    <huiproperty id="bp_itsystem_description_SPoF" inputtype="text" name="Kommentar/Hinweise" tags="BCM" />
 
             <huiproperty id="bp_itsystem_bcm_rpo" name="Maximal zulässiger Datenverlust (RPO)" tags="BCM" inputtype="numericoption" min="-1" max="9" defaultValue="-1">
                 <option
@@ -13540,9 +14015,23 @@ Wurden bereits weitere Stellen informiert?
                     name=" Jährlich"
                     value="9" />
             </huiproperty>
-            
+            <!--  BCM 1.27  -->
+     <huiproperty id="bp_itsystem_datensicherungszyklus" inputtype="text" name="Datensicherungsintervall im Normalbetrieb"  tags="BCM"/>
+     
          </huipropertygroup>
            <!-- ENDE:  BCM Aenderung -->
+           <!--  BCM 1.27  -->
+        <huipropertygroup name="BCM SOLL-IST Vergleich" id="bp_itsystem_SollIstVergleich" tags="BCM" >
+              <huiproperty id="bp_itsystem_SollIstVergleich_RTA" name="Tatsächliche Wiederanlaufzeit (RTA)" tags="BCM" />
+    <huiproperty id="bp_itsystem_SollIstVergleich_RTA_Nachweis" name="Nachweis" tags="BCM" />
+     <huiproperty id="bp_itsystem_SollIstVergleich_RTA_kleiner_RTO" name="RTA kleiner/gleich RTO?" tags="BCM" />
+        
+         <huiproperty id="bp_itsystem_SollIstVergleich_RPA" name="Tatsächlicher Datenverlust (RPA)"  tags="BCM"/>
+           <huiproperty id="bp_itsystem_SollIstVergleich_RPA_Nachweis" name="Nachweis" tags="BCM" />
+     <huiproperty id="bp_itsystem_SollIstVergleich_RPA_kleiner_Datensicherungszyklus"  name="Datensicherungszyklus kleiner/gleich RPO?"  tags="BCM"/>
+       
+        </huipropertygroup>
+           
         <huipropertygroup name="KIX" id="bp_itsystem_kix" tags="KIX" >
             <huiproperty name="KIX Ticket 1" id="bp_itsystem_kix_ticket1" isURL="true"/>
             <huiproperty name="KIX Ticket 2" id="bp_itsystem_kix_ticket2" isURL="true"/>
@@ -13604,6 +14093,11 @@ Wurden bereits weitere Stellen informiert?
 <!--  START: BCM Relation -->
         <huirelation to="bp_requirement" id="rel_bp_person_requirement_interest_group"
             name="interest group expected/requested" reversename="expected by/requested by" tooltip="" />
+        <!-- BCM 1.27 -->
+               <huirelation to="bp_person" id="rel_bp_person_person"
+            name="kommuniziert mit" reversename="zuständig für" tooltip="" />
+            <!-- ENDE: BCM 1.27 -->
+            
 <!-- ENDE : BCM Relation -->
         <huirelation to="bp_requirement_group" id="rel_bp_person_bp_requirement_group_additional"
             name="additional responsibility" reversename="additional responsibilities" />
@@ -13690,10 +14184,10 @@ Wurden bereits weitere Stellen informiert?
 			<option id="bp_person_role_5"
 				name="Behörden-/Unternehmensleitung" />
 							<!-- START: BCM-Rollen  01062022-->
-			<option id="bp_person_role_61" name="BCM-Beauftragte/r" />
-			<option id="bp_person_role_62" name="BCM-Koordinator/in" />
-			<option id="bp_person_role_63" name="BCM-Kernteam" />
-			<option id="bp_person_role_66" name="BCM-Stab" />
+			<option id="bp_person_role_61" name="BC-Beauftragte" />
+			<option id="bp_person_role_62" name="BC-Koordinierende" />
+			<option id="bp_person_role_63" name="Kernteam" />
+			<option id="bp_person_role_66" name="Stab" />
 				<!-- ENDE: BCM-Rollen  01062022-->
 			<option id="bp_person_role_6" name="Benutzer" />
 			<option id="bp_person_role_7" name="Beschaffer" />
@@ -13725,7 +14219,7 @@ Wurden bereits weitere Stellen informiert?
 			<option id="bp_person_role_22" name="Mitarbeiter" />
 			<option id="bp_person_role_24" name="Notfall-Verantwortliche" />
 						<!-- START: BCM-Rollen  01062022-->
-			<option id="bp_person_role_64" name="Notfallvorsorgeteam" />
+			<option id="bp_person_role_64" name="BC-Vorsorgeteam" />
 			<option id="bp_person_role_65" name="Notfallbewältigungsteam" />
 			<!-- ENDE: BCM-Rollen 01062022 -->
 			<option id="bp_person_role_25" name="Personalabteilung" />
@@ -13791,7 +14285,7 @@ Wurden bereits weitere Stellen informiert?
 <!-- START:  BCM Aenderung -->
              <huipropertygroup name="Business Continuity Management (BCM)" id="bp_person_bcm" tags="BCM" >
 
-             <huiproperty id="bp_person_info_degree_of_influence" name="Degree of influence" inputtype="singleoption">
+             <huiproperty id="bp_person_info_degree_of_influence" name="Degree of influence" tags="BCM" inputtype="singleoption">
                 <option id="bp_person_info_influence_low" name="low" />
                 <option id="bp_person_info_influence_medium" name="medium" />
                 <option id="bp_person_info_influence_high" name="high" />
@@ -13803,9 +14297,28 @@ Wurden bereits weitere Stellen informiert?
                      tags="BCM"
                     name="Single-Point-of-Failure/of-Knowledge/of-Contact (SPoF/SPoK/SPoC)"
                     inputtype="booleanoption"  defaultValue="0" >
+                    
         </huiproperty>
-    <huiproperty id="bp_person_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
-          
+    <huiproperty id="bp_person_description_SPoF" inputtype="text" tags="BCM" name="Kommentar/Hinweise" />  
+
+             <!-- START:  BCM 1.27 --> 
+            <huiproperty id="bp_person_kommunikationsbedarf_normalbetrieb" inputtype="text" name="Kommunikationsbedarf im Normalbetrieb" tags="BCM" />
+            <huiproperty id="bp_person_kommunikationsbedarf_notfall" inputtype="text" name="Kommunikationsbedarf im Notfall" />
+            <huiproperty id="bp_person_intervall" inputtype="text" name="Zeit-Intervall"/>
+    		<huiproperty id="bp_person_kommunikationswege" inputtype="multioption" name="Kommunikationswege" required="false" >
+			<option id="bp_person_kommunikationswege_0" name="E-Mail" />
+			<option id="bp_person_kommunikationswege_1" name="Telefon" />
+			<option id="bp_person_kommunikationswege_2" name="Notfall-Hotline" />
+			<option id="bp_person_kommunikationswege_3" name="Webseite der Institution mit Informationen über den Notfall und FAQs" />
+		    <option id="bp_person_kommunikationswege_4" name="alternative Notfall-Webseite („Dark Site“)" />
+			<option id="bp_person_kommunikationswege_5" name="Public-Relations-Agentur" />
+			<option id="bp_person_kommunikationswege_6" name="Soziale Medien" />
+			<option id="bp_person_kommunikationswege_7" name="persönliches Interview" />
+			<option id="bp_person_kommunikationswege_8" name="Fernseh- oder Radio-Interview" />
+			<option id="bp_person_kommunikationswege_9" name="Pressemitteilung" />
+			<option id="bp_person_kommunikationswege_10" name="Pressekonferenz" />
+		</huiproperty>      
+		  <!-- ENDE:  BCM 1.27 --> 
          </huipropertygroup>
            <!-- ENDE:  BCM Aenderung -->
     </huientity>
@@ -13817,12 +14330,16 @@ Wurden bereits weitere Stellen informiert?
 
     <huientity id="bp_requirement" name="Requirement">
         <huirelation to="bp_safeguard" id="rel_bp_requirement_bp_safeguard" name="fulfilled through" reversename="fulfills" />
+        <!-- BCM 1.27 -->
+         <huirelation to="bp_safeguard" id="rel_bp_requirement_bp_safeguard2" name="berücksichtigt" reversename="erfüllt" />
+        <!-- BCM 1.27 -->
         <huirelation to="bp_threat" id="rel_bp_requirement_bp_threat" name="reduces risk" reversename="risk reduced by" />
 
         <huirelation to="bp_itnetwork" id="rel_bp_requirement_bp_itnetwork" name="models"  reversename="modeled with" />
         <huirelation to="bp_businessprocess" id="rel_bp_requirement_bp_businessprocess"  name="models" reversename="modeled with" />
         <huirelation to="bp_application" id="rel_bp_requirement_bp_application" name="models" reversename="modeled with" />
         <huirelation to="bp_itsystem" id="rel_bp_requirement_bp_itsystem" name="models" reversename="modeled with" />
+        
         <huirelation to="bp_icssystem" id="rel_bp_requirement_bp_icssystem" name="models" reversename="modeled with" />
         <huirelation to="bp_device" id="rel_bp_requirement_bp_device" name="models"  reversename="modeled with" />
         <huirelation to="bp_network" id="rel_bp_requirement_bp_network" name="models"  reversename="modeled with" />
@@ -14025,6 +14542,11 @@ Wurden bereits weitere Stellen informiert?
                 required="false" inputtype="date">
                 <defaultRule class="Today" />
             </huiproperty>
+             <!--  BCM V1.27 -->
+                <huiproperty id="bp_requirement_implementation_date" name="Fertiggestellt am:"
+                required="false" inputtype="date">
+                <defaultRule class="Today" />
+            </huiproperty>
         </huipropertygroup>
 
 
@@ -14092,18 +14614,30 @@ Wurden bereits weitere Stellen informiert?
         <!-- START: BCM Aenderung -->
                   <huipropertygroup name="Business Continuity Management (BCM)" id="bp_requirement_bcm" tags="BCM" >
              <huiproperty id="bp_business_continuity_requirement_selectedBCM"
-                name="Business Continuity requirement"
+                name="Business Continuity requirement/-strategy"
                 inputtype="booleanoption"
                 defaultValue="0"
                 tags="BCM" />
            
-             <huiproperty id="bp_requirement_info_degree_of_influence" name="Degree of influence" inputtype="singleoption">
+             <huiproperty id="bp_requirement_info_degree_of_influence" name="Degree of influence" inputtype="singleoption" tags="BCM" >
                 <option id="bp_requirement_info_influence_gering" name="gering" />
                 <option id="bp_requirement_info_influence_mittel" name="mittel" />
                 <option id="bp_requirement_info_influence_hoch" name="hoch" />
  			</huiproperty>
+ 			<!--  verinice 1.27 -->
+ 			 <huiproperty id="bp_requirement_status_bcstrategy1" name="BC-Strategie Status" inputtype="singleoption" tags="BCM">
+                <option id="bp_requirement_status_bcstrategy2" name="vorgeschlagen" />
+                <option id="bp_requirement_status_bcstrategy3" name="freigegeben" />
+                <option id="bp_requirement_status_bcstrategy4" name="umgesetzt" />
+ 			</huiproperty>
  			
- 			  <huiproperty editable="true" id="bp_requirement_bcStrategie" inputtype="text" name="Beschreibung der BC-Strategie"
+ 			<huiproperty id="bp_business_continuity_requirement_wirksamAngemessen"
+                name="BC-Strategie/-Lösung wirksam und angemessen?"
+                inputtype="booleanoption"
+                defaultValue="0"
+                tags="BCM" />
+             <!--  verinice 1.27 --> 
+ 			  <huiproperty editable="true" id="bp_requirement_bcStrategie" inputtype="text" name="Beschreibung der BC-Strategie" tags="BCM"
  			  showInObjectBrowser="false" visible="true" />
  			  
  			    <huiproperty id="bp_requirement_bcm_wiederanlaufzeit" name="Wiederanlaufzeit" tags="BCM" inputtype="numericoption" min="0" max="5">
@@ -14133,38 +14667,38 @@ Wurden bereits weitere Stellen informiert?
                     value="5" />
             </huiproperty>
             
-               <huiproperty id="bp_requirement_schaden" name="Schaden bis zum Wiederanlauf" inputtype="singleoption">
+               <huiproperty id="bp_requirement_schaden" name="Schaden bis zum Wiederanlauf" inputtype="singleoption" tags="BCM">
                 <option id="bp_requirement_schaden_unkritisch" name="unkritisch" />
                 <option id="bp_requirement_schaden_normal" name="mittel" />
                 <option id="bp_requirement_schaden_hoch" name="hoch" />
                  <option id="bp_requirement_schaden_sehrhoch" name="sehr hoch" />
  			</huiproperty>
- 			  <huiproperty editable="true" id="bp_requirement_RtoEinhalten" inputtype="text" name="Einhalten der RTO"
+ 			  <huiproperty editable="true" id="bp_requirement_RtoEinhalten" inputtype="text" name="Einhalten der RTO" tags="BCM"
  			  showInObjectBrowser="false" visible="true" />
- 			  <huiproperty editable="true" id="bp_requirement_ErreichbaresNotbetriebsniveau" inputtype="text" name="Erreichbares Notbetriebsniveau"
+ 			  <huiproperty editable="true" id="bp_requirement_ErreichbaresNotbetriebsniveau" inputtype="text" name="Erreichbares Notbetriebsniveau" tags="BCM"
  			  showInObjectBrowser="false" visible="true" />
- 			  <huiproperty editable="true" id="bp_requirement_Restrisiko" inputtype="text" name="Verbleibendes Restrisiko"
+ 			  <huiproperty editable="true" id="bp_requirement_Restrisiko" inputtype="text" name="Verbleibendes Restrisiko" tags="BCM"
  			  showInObjectBrowser="false" visible="true" />
- 			  <huiproperty editable="true" id="bp_requirement_finanzielleAufwaende" inputtype="text" name="Finanzielle Aufwände"
+ 			  <huiproperty editable="true" id="bp_requirement_finanzielleAufwaende" inputtype="text" name="Finanzielle Aufwände" tags="BCM"
  			  showInObjectBrowser="false" visible="true" />
- 			  <huiproperty editable="true" id="bp_requirement_EinhaltungAnf" inputtype="text" name="Einhaltung interner und externer Anforderungen"
+ 			  <huiproperty editable="true" id="bp_requirement_EinhaltungAnf" inputtype="text" name="Einhaltung interner und externer Anforderungen" tags="BCM"
  			  showInObjectBrowser="false" visible="true" />
- 			  <huiproperty editable="true" id="bp_requirement_NotbetriebsdauerMax" inputtype="text" name="Maximal mögliche Notbetriebsdauer"
+ 			  <huiproperty editable="true" id="bp_requirement_NotbetriebsdauerMax" inputtype="text" name="Maximal mögliche Notbetriebsdauer" tags="BCM"
  			  showInObjectBrowser="false" visible="true" />
- 			  <huiproperty editable="true" id="bp_requirement_aufwaende" inputtype="text" name="Organisatorische Aufwände"
+ 			  <huiproperty editable="true" id="bp_requirement_aufwaende" inputtype="text" name="Organisatorische Aufwände" tags="BCM"
  			  showInObjectBrowser="false" visible="true" />
- 			  <huiproperty editable="true" id="bp_requirement_risken" inputtype="text" name="Entstehende Risiken"
+ 			  <huiproperty editable="true" id="bp_requirement_risken" inputtype="text" name="Entstehende Risiken" tags="BCM"
  			  showInObjectBrowser="false" visible="true" />
- 			  <huiproperty editable="true" id="bp_requirement_zusatznutzen" inputtype="text" name="Entstehender Zusatznutzen"
+ 			  <huiproperty editable="true" id="bp_requirement_zusatznutzen" inputtype="text" name="Entstehender Zusatznutzen" tags="BCM"
  			  showInObjectBrowser="false" visible="true" />
          </huipropertygroup>
          
          <huipropertygroup name="BCM-Maßnahmenplan" id="bp_requirement_plan" tags="BCM" >
          
-           <huiproperty editable="true" id="bp_requirement_desc_plan_korrekturbedarf" inputtype="text" name="Korrekturbedarf/Verbesserungspotenzial"
+           <huiproperty editable="true" id="bp_requirement_desc_plan_korrekturbedarf" inputtype="text" name="Korrekturbedarf/Verbesserungspotenzial" tags="BCM"
             showInObjectBrowser="false" textrows="4" visible="true" />
             
-               <huiproperty editable="true" id="bp_requirement_desc_plan_ursache" inputtype="text" name="Ursache"
+               <huiproperty editable="true" id="bp_requirement_desc_plan_ursache" inputtype="text" name="Ursache" tags="BCM"
             showInObjectBrowser="false" textrows="4" visible="true" />
             
                   <huiproperty id="bp_requirement_desc_plan_priority" inputtype="singleoption" name="Festgelegte Priorität" tags="BCM">
@@ -14172,9 +14706,24 @@ Wurden bereits weitere Stellen informiert?
         <option id="bp_requirement_desc_plan_priorityMittel" name="Mittel"/>
         <option id="bp_requirement_desc_plan_priorityHoch" name="Hoch"/>
       </huiproperty>
-            
+      
+          <!--  BCM 1.27  -->
+            <huiproperty id="bp_business_continuity_requirement_safeguard"
+                name="Maßnahme freigegeben"
+                inputtype="booleanoption"
+                defaultValue="0"
+                tags="BCM" />
+                
+                  <huiproperty id="bp_business_continuity_requirement_safeguard2"
+                name="Maßnahme abgeschlossen und Wirksamkeit geprüft"
+                inputtype="booleanoption"
+                defaultValue="0"
+                tags="BCM" />
+                
+<huiproperty editable="true" id="bp_requirement_desc_plan_ressourcenbedarf" inputtype="text" name="Notwendige Ressourcen" tags="BCM"
+            showInObjectBrowser="false" textrows="4" visible="true" />
          </huipropertygroup>
-         <!-- ENDE:  BCM Aenderung -->
+                              <!-- ENDE:  BCM Aenderung -->
     <huipropertygroup id="bp_requirement_group_kosten" name="Kosten" tags="Finance">
       <huiproperty id="bp_requirement_kosten_ptfix" name="Personalkosten fix EUR" tags="Finance"/>
       <huiproperty id="bp_requirement_kosten_ptvar" name="Personalkosten var. EUR" tags="Finance"/>
@@ -14546,8 +15095,29 @@ Wurden bereits weitere Stellen informiert?
                 <defaultRule class="Today">
                 </defaultRule>
                 </huiproperty>
-                
-                 <huiproperty id="bp_network_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
+                       <!-- BCM 1.27 -->
+                 <huiproperty id="bp_network_bcm_erhebungsart" name="Art der Erhebung" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="bp_network_bcm_timez1_erhebungsart"
+                    name="unedited"
+                    value="0" />
+                <option
+                    id="bp_network_bcm_erhebungsart_1"
+                    name="1 Selbstauskunft durch den/die Prozesseigentümer/-in"
+                    value="1" />
+                     <option
+                    id="bp_network_bcm_erhebungsart_2"
+                    name="2 Einzelinterviews mit verschiedenen Personen"
+                    value="2" />
+                     <option
+                    id="bp_network_bcm_erhebungsart_3"
+                    name="3 Workshops, mit mehreren Personen."
+                    value="3" />
+          </huiproperty>
+ <!-- BCM 1.27 --> 
+          <huiproperty id="bp_network_normalbetriebRessourcenbedarf" name="Ressourcenbedarf im Normalbetrieb"  tags="BCM"/>
+                      <!-- BCM 1.27 ENDE-->
+                 <huiproperty id="bp_network_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" tags="BCM" />
 
               <huiproperty id="bp_network_bcm_time24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
@@ -14572,6 +15142,10 @@ Wurden bereits weitere Stellen informiert?
                     value="4" />
             </huiproperty>
 
+   <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_network_notbetriebRessourcenbedarfz1" name="Ressourcenbedarf im Notbetrieb"  tags="BCM"/>
+      <!-- BCM 1.27 -->
+      
               <huiproperty id="bp_network_bcm_time3d" name="Impact after 3d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
                     id="bp_network_bcm_time3d_unset"
@@ -14595,6 +15169,10 @@ Wurden bereits weitere Stellen informiert?
                     value="4" />
             </huiproperty>
 
+   <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_network_notbetriebRessourcenbedarfz2" name="Ressourcenbedarf im Notbetrieb"  tags="BCM"/>
+      <!-- BCM 1.27 -->
+      
               <huiproperty id="bp_network_bcm_time7d" name="Impact after 7d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
                     id="bp_network_bcm_time7d_unset"
@@ -14617,6 +15195,10 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
+            
+               <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_network_notbetriebRessourcenbedarfz3" name="Ressourcenbedarf im Notbetrieb" tags="BCM" />
+      <!-- BCM 1.27 -->
 
               <huiproperty id="bp_network_bcm_time14d" name="Impact after 14d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
@@ -14640,6 +15222,10 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
+            
+               <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_network_notbetriebRessourcenbedarfz4" name="Ressourcenbedarf im Notbetrieb"  tags="BCM"/>
+      <!-- BCM 1.27 -->
 
               <huiproperty id="bp_network_bcm_time30d" name="Impact after 30d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
@@ -14663,7 +15249,11 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
-<huiproperty defaultValue="1" id="bp_network_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="Risk"/>
+            
+                 <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_network_notbetriebRessourcenbedarfz5" name="Ressourcenbedarf im Notbetrieb" tags="BCM" />
+      <!-- BCM 1.27 -->
+<huiproperty defaultValue="1" id="bp_network_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="BCM"/>
 
             <huiproperty id="bp_network_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="-1" max="5" defaultValue="-1">
                 <depends option="bp_network_value_deduce_mtpd1" value="0" />
@@ -14696,7 +15286,7 @@ Wurden bereits weitere Stellen informiert?
                     name="30 d"
                     value="5" />
             </huiproperty>
-             <huiproperty id="bp_network_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung" />
+             <huiproperty id="bp_network_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung"  tags="BCM" />
                      <huiproperty
                     id="bp_network_schadensszenario_value_1"
                      tags="BCM"
@@ -14764,7 +15354,7 @@ Wurden bereits weitere Stellen informiert?
                     name="-"
                     value="6" />
             </huiproperty>
-         <huiproperty id="bp_network_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
+         <huiproperty id="bp_network_description_changeMtpd2" inputtype="text" name="Begründung der Änderung"  tags="BCM"/>
 
               <huiproperty id="bp_network_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="-1" max="5" editable="false" defaultValue="-1">
                 <option
@@ -14797,6 +15387,11 @@ Wurden bereits weitere Stellen informiert?
                     value="5" />
             </huiproperty>
             
+                  <!--  BCM V1.27  -->
+      <huiproperty id="bp_network_BAOReaktionszeit" name="BAO-Reaktionszeit" tags="BCM" tooltip="Die BAO-Reaktionszeit ist in der
+			Regel unabhängig von den einzelnen Geschäftsprozessen und sollte daher zentral/informationverbundübergreifend festgelegt werden. Es wird empfohlen von der MTPD die
+BAO-Reaktionszeit abzuziehen, um die RTO zu ermitteln."/>
+      
          <huiproperty id="bp_network__rto" name="Geforderte Wiederanlaufzeit (WAZ/RTO) für notw. Ressourcen aus Prozess-MTPD" tags="BCM" />
          <huiproperty id="bp_network__rtoK" name="Kleinste RTO der Ressource" tags="BCM" />
              
@@ -14806,7 +15401,7 @@ Wurden bereits weitere Stellen informiert?
                     name="Single-Point-of-Failure/of-Knowledge/of-Contact (SPoF/SPoK/SPoC)"
                     inputtype="booleanoption"  defaultValue="0" >
         </huiproperty>
-    <huiproperty id="bp_network_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
+    <huiproperty id="bp_network_description_SPoF" inputtype="text" name="Kommentar/Hinweise" tags="BCM" />
 
             <huiproperty id="bp_network_bcm_rpo" name="Maximal zulässiger Datenverlust (RPO)" tags="BCM" inputtype="numericoption" min="-1" max="9" defaultValue="-1">
                 <option
@@ -14854,8 +15449,23 @@ Wurden bereits weitere Stellen informiert?
                     name=" Jährlich"
                     value="9" />
             </huiproperty>
+        <!--  BCM 1.27  -->
+     <huiproperty id="bp_network_datensicherungszyklus" inputtype="text" name="Datensicherungsintervall im Normalbetrieb" tags="BCM" />
             
          </huipropertygroup>
+         
+                  <!--  BCM 1.27  -->
+        <huipropertygroup name="BCM SOLL-IST Vergleich" id="bp_network_SollIstVergleich" tags="BCM" >
+              <huiproperty id="bp_network_SollIstVergleich_RTA" name="Tatsächliche Wiederanlaufzeit (RTA)" tags="BCM" />
+    <huiproperty id="bp_network_SollIstVergleich_RTA_Nachweis" name="Nachweis" tags="BCM" />
+     <huiproperty id="bp_network_SollIstVergleich_RTA_kleiner_RTO" name="RTA kleiner/gleich RTO?" tags="BCM" />
+        
+         <huiproperty id="bp_network_SollIstVergleich_RPA" name="Tatsächlicher Datenverlust (RPA)" tags="BCM" />
+           <huiproperty id="bp_network_SollIstVergleich_RPA_Nachweis" name="Nachweis" tags="BCM" />
+     <huiproperty id="bp_network_SollIstVergleich_RPA_kleiner_Datensicherungszyklus"  name="Datensicherungszyklus kleiner/gleich RPO?" tags="BCM" />
+       
+        </huipropertygroup>
+        
         <!-- ENDE:  BCM Aenderung -->
         <huipropertygroup name="KIX" id="bp_network_kix" tags="KIX" >
             <huiproperty name="KIX Ticket 1" id="bp_network_kix_ticket1" isURL="true"/>
@@ -14876,6 +15486,8 @@ Wurden bereits weitere Stellen informiert?
                 <option id="bp_network_kix_workflow_status_failure" name="Failure"/>
             </huiproperty>
         </huipropertygroup>
+        
+       
     </huientity>
 
     <huientity id="bp_network_group" name="Network Group">
@@ -14991,7 +15603,30 @@ Wurden bereits weitere Stellen informiert?
                 </defaultRule>
                 </huiproperty>
                 
-                 <huiproperty id="bp_device_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
+                  <!-- BCM 1.27 -->
+                 <huiproperty id="bp_device_bcm_erhebungsart" name="Art der Erhebung" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="bp_device_bcm_timez1_erhebungsart"
+                    name="unedited"
+                    value="0" />
+                <option
+                    id="bp_device_bcm_erhebungsart_1"
+                    name="1 Selbstauskunft durch den/die Prozesseigentümer/-in"
+                    value="1" />
+                     <option
+                    id="bp_device_bcm_erhebungsart_2"
+                    name="2 Einzelinterviews mit verschiedenen Personen"
+                    value="2" />
+                     <option
+                    id="bp_device_bcm_erhebungsart_3"
+                    name="3 Workshops, mit mehreren Personen."
+                    value="3" />     
+                         </huiproperty>
+
+ <!-- BCM 1.27 --> 
+          <huiproperty id="bp_device_normalbetriebRessourcenbedarf" name="Ressourcenbedarf im Normalbetrieb"  tags="BCM"/>
+                      <!-- BCM 1.27 ENDE-->
+                 <huiproperty id="bp_device_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" tags="BCM" />
 
               <huiproperty id="bp_device_bcm_time24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
@@ -15015,6 +15650,10 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
+            
+                 <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_device_notbetriebRessourcenbedarfz1" name="Ressourcenbedarf im Notbetrieb" />
+      <!-- BCM 1.27 -->
 
               <huiproperty id="bp_device_bcm_time3d" name="Impact after 3d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
@@ -15039,6 +15678,10 @@ Wurden bereits weitere Stellen informiert?
                     value="4" />
             </huiproperty>
 
+  <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_device_notbetriebRessourcenbedarfz2" name="Ressourcenbedarf im Notbetrieb" tags="BCM" />
+      <!-- BCM 1.27 -->
+      
               <huiproperty id="bp_device_bcm_time7d" name="Impact after 7d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
                     id="bp_device_bcm_time7d_unset"
@@ -15061,6 +15704,10 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
+
+  <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_device_notbetriebRessourcenbedarfz3" name="Ressourcenbedarf im Notbetrieb"  tags="BCM"/>
+      <!-- BCM 1.27 -->
 
               <huiproperty id="bp_device_bcm_time14d" name="Impact after 14d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
@@ -15085,6 +15732,10 @@ Wurden bereits weitere Stellen informiert?
                     value="4" />
             </huiproperty>
 
+  <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_device_notbetriebRessourcenbedarfz4" name="Ressourcenbedarf im Notbetrieb"  tags="BCM"/>
+      <!-- BCM 1.27 -->
+      
               <huiproperty id="bp_device_bcm_time30d" name="Impact after 30d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
                     id="bp_device_bcm_time30d_unset"
@@ -15107,7 +15758,11 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
-<huiproperty defaultValue="1" id="bp_device_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="Risk"/>
+            
+              <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_device_notbetriebRessourcenbedarfz5" name="Ressourcenbedarf im Notbetrieb"  tags="BCM"/>
+      <!-- BCM 1.27 -->
+<huiproperty defaultValue="1" id="bp_device_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="BCM"/>
 
             <huiproperty id="bp_device_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="-1" max="5" defaultValue="-1">
                 <depends option="bp_device_value_deduce_mtpd1" value="0" />
@@ -15140,7 +15795,7 @@ Wurden bereits weitere Stellen informiert?
                     name="30 d"
                     value="5" />
             </huiproperty>
-             <huiproperty id="bp_device_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung" />
+             <huiproperty id="bp_device_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung"  tags="BCM"/>
                      <huiproperty
                     id="bp_device_schadensszenario_value_1"
                      tags="BCM"
@@ -15208,7 +15863,7 @@ Wurden bereits weitere Stellen informiert?
                     name="-"
                     value="6" />
             </huiproperty>
-         <huiproperty id="bp_device_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
+         <huiproperty id="bp_device_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" tags="BCM" />
 
               <huiproperty id="bp_device_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="-1" max="5" editable="false" defaultValue="-1">
                 <option
@@ -15240,7 +15895,11 @@ Wurden bereits weitere Stellen informiert?
                     name="30 d"
                     value="5" />
             </huiproperty>
-            
+              <!--  BCM V1.27  -->
+      <huiproperty id="bp_device_BAOReaktionszeit" name="BAO-Reaktionszeit" tags="BCM" tooltip="Die BAO-Reaktionszeit ist in der
+			Regel unabhängig von den einzelnen Geschäftsprozessen und sollte daher zentral/informationverbundübergreifend festgelegt werden. Es wird empfohlen von der MTPD die
+BAO-Reaktionszeit abzuziehen, um die RTO zu ermitteln." />
+      
          <huiproperty id="bp_device__rto" name="Geforderte Wiederanlaufzeit (WAZ/RTO) für notw. Ressourcen aus Prozess-MTPD" tags="BCM" />
          <huiproperty id="bp_device__rtoK" name="Kleinste RTO der Ressource" tags="BCM" />
              
@@ -15250,7 +15909,7 @@ Wurden bereits weitere Stellen informiert?
                     name="Single-Point-of-Failure/of-Knowledge/of-Contact (SPoF/SPoK/SPoC)"
                     inputtype="booleanoption"  defaultValue="0" >
         </huiproperty>
-    <huiproperty id="bp_device_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
+    <huiproperty id="bp_device_description_SPoF" inputtype="text" name="Kommentar/Hinweise"  tags="BCM"/>
 
             <huiproperty id="bp_device_bcm_rpo" name="Maximal zulässiger Datenverlust (RPO)" tags="BCM" inputtype="numericoption" min="-1" max="9" defaultValue="-1">
                 <option
@@ -15298,7 +15957,23 @@ Wurden bereits weitere Stellen informiert?
                     name=" Jährlich"
                     value="9" />
             </huiproperty>
+            
+              <!--  BCM 1.27  -->
+     <huiproperty id="bp_device_datensicherungszyklus" inputtype="text" name="Datensicherungsintervall im Normalbetrieb"  tags="BCM"/>
+             
          </huipropertygroup>
+          
+              <!--  BCM 1.27  -->
+        <huipropertygroup name="BCM SOLL-IST Vergleich" id="bp_device_SollIstVergleich" tags="BCM" >
+              <huiproperty id="bp_device_SollIstVergleich_RTA" name="Tatsächliche Wiederanlaufzeit (RTA)"  tags="BCM" />
+    <huiproperty id="bp_device_SollIstVergleich_RTA_Nachweis" name="Nachweis" tags="BCM" />
+     <huiproperty id="bp_device_SollIstVergleich_RTA_kleiner_RTO" name="RTA kleiner/gleich RTO?" tags="BCM" />
+        
+         <huiproperty id="bp_device_SollIstVergleich_RPA" name="Tatsächlicher Datenverlust (RPA)"  tags="BCM"/>
+           <huiproperty id="bp_device_SollIstVergleich_RPA_Nachweis" name="Nachweis"  tags="BCM"/>
+     <huiproperty id="bp_device_SollIstVergleich_RPA_kleiner_Datensicherungszyklus"  name="Datensicherungszyklus kleiner/gleich RPO?" tags="BCM" />
+       
+        </huipropertygroup>
            <!-- ENDE:  BCM Aenderung -->
         <huipropertygroup name="KIX" id="bp_device_kix" tags="KIX" >
             <huiproperty name="KIX Ticket 1" id="bp_device_kix_ticket1" isURL="true"/>
@@ -15430,8 +16105,31 @@ Wurden bereits weitere Stellen informiert?
                 <defaultRule class="Today">
                 </defaultRule>
                 </huiproperty>
-                
-                 <huiproperty id="bp_room_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" />
+               
+                    <!-- BCM 1.27 -->
+                 <huiproperty id="bp_room_bcm_erhebungsart" name="Art der Erhebung" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="bp_room_bcm_timez1_erhebungsart"
+                    name="unedited"
+                    value="0" />
+                <option
+                    id="bp_room_bcm_erhebungsart_1"
+                    name="1 Selbstauskunft durch den/die Prozesseigentümer/-in"
+                    value="1" />
+                     <option
+                    id="bp_room_bcm_erhebungsart_2"
+                    name="2 Einzelinterviews mit verschiedenen Personen"
+                    value="2" />
+                     <option
+                    id="bp_room_bcm_erhebungsart_3"
+                    name="3 Workshops, mit mehreren Personen."
+                    value="3" />
+                              </huiproperty>
+
+ <!-- BCM 1.27 --> 
+          <huiproperty id="bp_room_normalbetriebRessourcenbedarf" name="Ressourcenbedarf im Normalbetrieb" tags="BCM" />
+                      <!-- BCM 1.27 ENDE--> 
+                 <huiproperty id="bp_room_notbetriebsniveau" inputtype="text" name="Notbetriebsniveau" tags="BCM" />
 
               <huiproperty id="bp_room_bcm_time24h" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
@@ -15455,6 +16153,10 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
+            
+              <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_room_notbetriebRessourcenbedarfz1" name="Ressourcenbedarf im Notbetrieb" tags="BCM" />
+      <!-- BCM 1.27 -->
 
               <huiproperty id="bp_room_bcm_time3d" name="Impact after 3d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
@@ -15479,6 +16181,10 @@ Wurden bereits weitere Stellen informiert?
                     value="4" />
             </huiproperty>
 
+    <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_room_notbetriebRessourcenbedarfz2" name="Ressourcenbedarf im Notbetrieb" tags="BCM" />
+      <!-- BCM 1.27 -->
+      
               <huiproperty id="bp_room_bcm_time7d" name="Impact after 7d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
                     id="bp_room_bcm_time7d_unset"
@@ -15501,6 +16207,10 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
+            
+                <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_room_notbetriebRessourcenbedarfz3" name="Ressourcenbedarf im Notbetrieb" tags="BCM" />
+      <!-- BCM 1.27 -->
 
               <huiproperty id="bp_room_bcm_time14d" name="Impact after 14d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
@@ -15524,6 +16234,11 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
+            
+             <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_room_notbetriebRessourcenbedarfz4" name="Ressourcenbedarf im Notbetrieb" tags="BCM" />
+      <!-- BCM 1.27 -->
+            
 
               <huiproperty id="bp_room_bcm_time30d" name="Impact after 30d" tags="BCM" inputtype="numericoption" min="0" max="4">
                 <option
@@ -15547,7 +16262,12 @@ Wurden bereits weitere Stellen informiert?
                     name="4 Very High"
                     value="4" />
             </huiproperty>
-<huiproperty defaultValue="1" id="bp_room_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="Risk"/>
+            
+                     <!-- BCM 1.27 Ressourcenbedarf in Abhängigkeit des Zeitverlaufs --> 
+          <huiproperty id="bp_room_notbetriebRessourcenbedarfz5" name="Ressourcenbedarf im Notbetrieb" tags="BCM" />
+      <!-- BCM 1.27 -->
+            
+<huiproperty defaultValue="1" id="bp_room_value_deduce_mtpd1" inputtype="booleanoption" name="Maximum Tolerable Period of Disruption (MTPD) ableiten aus der Schadensbewertung" tags="BCM"/>
 
             <huiproperty id="bp_room_bcm_mtpd1" name="MTPD (MTA)" tags="BCM" inputtype="numericoption" min="-1" max="5" defaultValue="-1">
                 <depends option="bp_room_value_deduce_mtpd1" value="0" />
@@ -15580,7 +16300,7 @@ Wurden bereits weitere Stellen informiert?
                     name="30 d"
                     value="5" />
             </huiproperty>
-             <huiproperty id="bp_room_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung" />
+             <huiproperty id="bp_room_description_schadensbewertung" inputtype="text" name="Begründung Schadensbewertung" tags="BCM" />
                      <huiproperty
                     id="bp_room_schadensszenario_value_1"
                      tags="BCM"
@@ -15648,7 +16368,7 @@ Wurden bereits weitere Stellen informiert?
                     name="-"
                     value="6" />
             </huiproperty>
-         <huiproperty id="bp_room_description_changeMtpd2" inputtype="text" name="Begründung der Änderung" />
+         <huiproperty id="bp_room_description_changeMtpd2" inputtype="text" name="Begründung der Änderung"  tags="BCM"/>
 
               <huiproperty id="bp_room_bcm_mtpdMIN" name="MTPD (MIN aus Schadensbewertung und Prozessabhängigkeiten)" tags="BCM" inputtype="numericoption" min="-1" max="5" editable="false" defaultValue="-1">
                 <option
@@ -15680,7 +16400,11 @@ Wurden bereits weitere Stellen informiert?
                     name="30 d"
                     value="5" />
             </huiproperty>
-            
+            <!--  BCM V1.27  -->
+      <huiproperty id="bp_room_BAOReaktionszeit" name="BAO-Reaktionszeit" tags="BCM" tooltip="Die BAO-Reaktionszeit ist in der
+			Regel unabhängig von den einzelnen Geschäftsprozessen und sollte daher zentral/informationverbundübergreifend festgelegt werden. Es wird empfohlen von der MTPD die
+BAO-Reaktionszeit abzuziehen, um die RTO zu ermitteln."/>
+      
          <huiproperty id="bp_room__rto" name="Geforderte Wiederanlaufzeit (WAZ/RTO) für notw. Ressourcen aus Prozess-MTPD" tags="BCM" />
          <huiproperty id="bp_room__rtoK" name="Kleinste RTO der Ressource" tags="BCM" />
              
@@ -15690,7 +16414,7 @@ Wurden bereits weitere Stellen informiert?
                     name="Single-Point-of-Failure/of-Knowledge/of-Contact (SPoF/SPoK/SPoC)"
                     inputtype="booleanoption"  defaultValue="0" >
         </huiproperty>
-    <huiproperty id="bp_room_description_SPoF" inputtype="text" name="Kommentar/Hinweise" />
+    <huiproperty id="bp_room_description_SPoF" inputtype="text" name="Kommentar/Hinweise" tags="BCM" />
 
             <huiproperty id="bp_room_bcm_rpo" name="Maximal zulässiger Datenverlust (RPO)" tags="BCM" inputtype="numericoption" min="-1" max="9" defaultValue="-1">
                 <option
@@ -15738,7 +16462,24 @@ Wurden bereits weitere Stellen informiert?
                     name=" Jährlich"
                     value="9" />
             </huiproperty>
+            
+           <!--  BCM 1.27  -->
+     <huiproperty id="bp_room_datensicherungszyklus" inputtype="text" name="Datensicherungsintervall im Normalbetrieb" tags="BCM" />
+    
          </huipropertygroup>
+         
+                  <!--  BCM 1.27  -->
+        <huipropertygroup name="BCM SOLL-IST Vergleich" id="bp_room_SollIstVergleich" tags="BCM" >
+              <huiproperty id="bp_room_SollIstVergleich_RTA" name="Tatsächliche Wiederanlaufzeit (RTA)" tags="BCM" />
+    <huiproperty id="bp_room_SollIstVergleich_RTA_Nachweis" name="Nachweis" tags="BCM" />
+     <huiproperty id="bp_room_SollIstVergleich_RTA_kleiner_RTO" name="RTA kleiner/gleich RTO?" tags="BCM" />
+        
+         <huiproperty id="bp_room_SollIstVergleich_RPA" name="Tatsächlicher Datenverlust (RPA)" tags="BCM" />
+           <huiproperty id="bp_room_SollIstVergleich_RPA_Nachweis" name="Nachweis" tags="BCM" />
+     <huiproperty id="bp_room_SollIstVergleich_RPA_kleiner_Datensicherungszyklus"  name="Datensicherungszyklus kleiner/gleich RPO?" tags="BCM" />
+       
+        </huipropertygroup>
+           <!-- ENDE:  BCM Aenderung -->
            <!-- ENDE:  BCM Aenderung -->
     </huientity>
 
@@ -15940,6 +16681,11 @@ Wurden bereits weitere Stellen informiert?
                 required="false" inputtype="date">
                 <defaultRule class="Today" />
             </huiproperty>
+            <!--  BCM V1.27 -->
+                <huiproperty id="bp_safeguard_implementation_date" name="Fertiggestellt am:"
+                required="false" inputtype="date">
+                <defaultRule class="Today" />
+            </huiproperty>
         </huipropertygroup>
         <huipropertygroup id="bp_safeguard_revision" name="Revision">
             <huiproperty id="bp_safeguard_revision_previous_revision_date" inputtype="date" name="Previous revision date">
@@ -15955,12 +16701,24 @@ Wurden bereits weitere Stellen informiert?
         </huipropertygroup><!-- START: BCM Aenderung -->
                   <huipropertygroup name="Business Continuity Management (BCM)" id="bp_safeguard_bcm" tags="BCM" >
              <huiproperty id="bp_business_continuity_safeguard_selectedBCM"
-                name="Business Continuity Maßnahme"
+                name="Business Continuity Strategie/-Maßnahme"
                 inputtype="booleanoption"
                 defaultValue="0"
                 tags="BCM" />
-
- 			  <huiproperty editable="true" id="bp_safeguard_bcStrategie" inputtype="text" name="Beschreibung der BC-Strategie"
+                <!-- verinice 1.27 -->
+                 <huiproperty id="bp_safeguard_status_bcstrategy1" name="BC-Strategie Status" inputtype="singleoption"  tags="BCM">
+                <option id="bp_safeguard_status_bcstrategy2" name="vorgeschlagen" />
+                <option id="bp_safeguard_status_bcstrategy3" name="freigegeben" />
+                <option id="bp_safeguard_status_bcstrategy4" name="umgesetzt" />
+ 			</huiproperty>
+ 			
+ 			<huiproperty id="bp_safeguard_continuity_requirement_wirksamAngemessen"
+                name="BC-Strategie/-Lösung wirksam und angemessen?"
+                inputtype="booleanoption"
+                defaultValue="0"
+                tags="BCM" />
+   <!-- verinice 1.27 -->
+ 			  <huiproperty editable="true" id="bp_safeguard_bcStrategie" inputtype="text" name="Beschreibung der BC-Strategie"  tags="BCM"
  			    showInObjectBrowser="false" visible="true" />
 
  			  <huiproperty id="bp_safeguard_bcm_wiederanlaufzeit" name="Wiederanlaufzeit" tags="BCM" inputtype="numericoption" min="0" max="5">
@@ -15990,45 +16748,62 @@ Wurden bereits weitere Stellen informiert?
                     value="5" />
             </huiproperty>
             
-               <huiproperty id="bp_safeguard_schaden" name="Schaden bis zum Wiederanlauf" inputtype="singleoption">
+               <huiproperty id="bp_safeguard_schaden" name="Schaden bis zum Wiederanlauf" inputtype="singleoption"  tags="BCM">
                 <option id="bp_safeguard_schaden_unkritisch" name="unkritisch" />
                 <option id="bp_safeguard_schaden_normal" name="mittel" />
                 <option id="bp_safeguard_schaden_hoch" name="hoch" />
                  <option id="bp_safeguard_schaden_sehrhoch" name="sehr hoch" />
  			</huiproperty>
- 			  <huiproperty editable="true" id="bp_safeguard_RtoEinhalten" inputtype="text" name="Einhalten der RTO"
+ 			  <huiproperty editable="true" id="bp_safeguard_RtoEinhalten" inputtype="text" name="Einhalten der RTO"  tags="BCM"
  			    showInObjectBrowser="false" visible="true" />
- 			  <huiproperty editable="true" id="bp_safeguard_ErreichbaresNotbetriebsniveau" inputtype="text" name="Erreichbares Notbetriebsniveau"
+ 			  <huiproperty editable="true" id="bp_safeguard_ErreichbaresNotbetriebsniveau" inputtype="text" name="Erreichbares Notbetriebsniveau" tags="BCM"
  			    showInObjectBrowser="false" visible="true" />
- 			  <huiproperty editable="true" id="bp_safeguard_Restrisiko" inputtype="text" name="Verbleibendes Restrisiko"
+ 			  <huiproperty editable="true" id="bp_safeguard_Restrisiko" inputtype="text" name="Verbleibendes Restrisiko" tags="BCM"
  			    showInObjectBrowser="false" visible="true" />
- 			  <huiproperty editable="true" id="bp_safeguard_finanzielleAufwaende" inputtype="text" name="Finanzielle Aufwände"
+ 			  <huiproperty editable="true" id="bp_safeguard_finanzielleAufwaende" inputtype="text" name="Finanzielle Aufwände" tags="BCM"
  			    showInObjectBrowser="false" visible="true" />
- 			  <huiproperty editable="true" id="bp_safeguard_EinhaltungAnf" inputtype="text" name="Einhaltung interner und externer Anforderungen"
+ 			  <huiproperty editable="true" id="bp_safeguard_EinhaltungAnf" inputtype="text" name="Einhaltung interner und externer Anforderungen" tags="BCM"
  			    showInObjectBrowser="false" visible="true" />
- 			  <huiproperty editable="true" id="bp_safeguard_NotbetriebsdauerMax" inputtype="text" name="Maximal mögliche Notbetriebsdauer"
+ 			  <huiproperty editable="true" id="bp_safeguard_NotbetriebsdauerMax" inputtype="text" name="Maximal mögliche Notbetriebsdauer" tags="BCM"
  			    showInObjectBrowser="false" visible="true" />
- 			  <huiproperty editable="true" id="bp_safeguard_aufwaende" inputtype="text" name="Organisatorische Aufwände"
+ 			  <huiproperty editable="true" id="bp_safeguard_aufwaende" inputtype="text" name="Organisatorische Aufwände" tags="BCM"
  			    showInObjectBrowser="false" visible="true" />
- 			  <huiproperty editable="true" id="bp_safeguard_risken" inputtype="text" name="Entstehende Risiken"
+ 			  <huiproperty editable="true" id="bp_safeguard_risken" inputtype="text" name="Entstehende Risiken" tags="BCM"
  			    showInObjectBrowser="false" visible="true" />
- 			  <huiproperty editable="true" id="bp_safeguard_zusatznutzen" inputtype="text" name="Entstehender Zusatznutzen"
+ 			  <huiproperty editable="true" id="bp_safeguard_zusatznutzen" inputtype="text" name="Entstehender Zusatznutzen" tags="BCM"
  			    showInObjectBrowser="false" visible="true" />
          </huipropertygroup>
          
          <huipropertygroup name="BCM-Maßnahmenplan" id="bp_safeguard_plan" tags="BCM" >
          
-           <huiproperty editable="true" id="bp_safeguard_desc_plan_korrekturbedarf" inputtype="text" name="Korrekturbedarf/Verbesserungspotenzial"
+           <huiproperty editable="true" id="bp_safeguard_desc_plan_korrekturbedarf" inputtype="text" name="Korrekturbedarf/Verbesserungspotenzial" tags="BCM"
             showInObjectBrowser="false" textrows="4" visible="true" />
             
-               <huiproperty editable="true" id="bp_safeguard_desc_plan_ursache" inputtype="text" name="Ursache"
+               <huiproperty editable="true" id="bp_safeguard_desc_plan_ursache" inputtype="text" name="Ursache" tags="BCM"
             showInObjectBrowser="false" textrows="4" visible="true" />
+            
             
           <huiproperty id="bp_safeguard_desc_plan_priority" inputtype="singleoption" name="Festgelegte Priorität" tags="BCM">
         <option id="bp_safeguard_desc_plan_priorityGering" name="Gering"/>
         <option id="bp_safeguard_desc_plan_priorityMittel" name="Mittel"/>
         <option id="bp_safeguard_desc_plan_priorityHoch" name="Hoch"/>
       </huiproperty>
+      
+      <!--  BCM 1.27  -->
+            <huiproperty id="bp_business_continuity_safeguard_safeguard1"
+                name="Maßnahme freigegeben"
+                inputtype="booleanoption"
+                defaultValue="0"
+                tags="BCM" />
+                
+                  <huiproperty id="bp_business_continuity_safeguard_safeguard2"
+                name="Maßnahme abgeschlossen und Wirksamkeit geprüft"
+                inputtype="booleanoption"
+                defaultValue="0"
+                tags="BCM" />
+                
+<huiproperty editable="true" id="bp_safeguard_desc_plan_ressourcenbedarf" inputtype="text" name="Notwendige Ressourcen" tags="BCM"
+            showInObjectBrowser="false" textrows="4" visible="true" />
          </huipropertygroup>
          
          <!-- ENDE:  BCM Aenderung -->
@@ -16363,7 +17138,53 @@ Wurden bereits weitere Stellen informiert?
                     name="Is a report necessary?"
                     inputtype="booleanoption" defaultValue="0" >
                 </huiproperty>
+                <!-- START: BCM 1.27 -->
+                  <huipropertygroup name="BCM Notfallbewältigung" id="bp_incident_BCM" tags="BCM">
+                   
+                  <huiproperty id="bp_incident_NuK2" name="Rückführung in den Normalbetrieb"
+                    inputtype="text"
+                    tags="BCM"
+                    textrows="10">
+                    <defaultRule class="SimpleValue">
+                        <param id="bp_incident_NuK2_Leitfragen">Leitfragen:
+- Wie und wann wird die BAO aufgelöst und in die normale AAO überführt?
+- Welche Arbeitsrückstände sind institutionsweit entstanden und wie können diese am besten abgearbeitet werden?
+- Durch wen erfolgt die interne und externe Kommunikation für die Dauer der Nacharbeiten?
+- Wie, durch wen und in welchen zeitlichen Intervallen werden die Mitarbeitenden über den Fortschritt der Rückführung in den Normalbetrieb informiert?
+- An wen sollen die Organisationseinheiten in dieser Zeit ihre Erkenntnisse und
+Fortschritte melden? Gemeldet werden sollten z. B Schäden oder Verluste durch den Notbetrieb, der aktuelle Stand der Arbeitsrückstände sowie die erwartete Dauer bis zur Rückkehr in den Normalbetrieb
+</param>
+                    </defaultRule>
+                </huiproperty> 
                 
+                     <huiproperty id="bp_incident_NuK3" name="Fragenkatalog – Analyse der Bewältigung"
+                    inputtype="text"
+                    tags="BCM"
+                    textrows="20">
+                    <defaultRule class="SimpleValue">
+                        <param id="bp_incident_NuK3_Leitfragen">Leitfragen:
+- Wie kam es zu dem Ereignis?
+- Welche Auswirkungen hatte das Ereignis?
+- Wie schnell und wie effektiv erfolgte die Reaktion auf das Ereignis (insbesondere BAO-Reaktionszeit)?
+- Welche Elemente der Aufbau- und Ablauforganisation der BAO haben gut funk-
+tioniert und welche weniger gut?
+- Gab es Unterschiede zur geplanten Notfallbewältigung?
+- Waren alle zeitkritischen Geschäftsprozesse und Ressourcen bekannt?
+- Welche der vorbereiteten Notfallmaßnahmen wurden ergriffen?
+- Welche Notfallmaßnahmen wurden neu eingeführt?
+- Wie gut haben die vorbereiteten Notfallpläne funktioniert?
+- Wurden Notfallpläne neu erstellt oder angepasst?
+- Wie gut hat die interne NuK-Kommunikation funktioniert? (z. B. Kooperationsbereitschaft der Mitarbeitenden, Einhaltung der Schweigepflichten)
+- Wie gut hat die externe NuK-Kommunikation funktioniert? (z. B. Effektivität des
+Medienmonitorings, Einflussmöglichkeiten auf die externe Wahrnehmung)
+</param>
+                    </defaultRule>
+                </huiproperty>       
+                             
+                              </huipropertygroup>
+                  
+                  
+                   <!-- ENDE: BCM 1.27 -->
         <huipropertygroup name="General information about the incident" id="bp_incident_vv_bsig" tags="§_8b_Absatz_4_BSIG">
             <huiproperty name="VV BSIG Type" id="bp_incident_vv_bsig_type" inputtype="singleoption" visible="false">
                 <option name="Parried Malware" id="bp_incident_vv_bsig_parried_malware" />
