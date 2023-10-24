@@ -691,7 +691,12 @@ ${verinice.jre}/jre/${java-library-location}
 	gs_cna_vnserver_uri=${server.test.url}
 	gs_cna_operationmode=gs_cna_operationmode_withserver
 	</echo>
-	        <antcall target="@{target}">
+			<!--
+				RCPTT expects that the vm parameter points to the binary, not the shared lib
+				https://bugs.eclipse.org/bugs/show_bug.cgi?id=515501.
+			 -->
+			<replace file="${verinice-aut-path}/${verinice-ini-location}" token="${java-library-location}" value="${java-binary-location}"/>
+            <antcall target="@{target}">
 	            <param name="aut-path" value="${verinice-aut-path}" />
 	            <param name="aut-workspace" value="${verinice-sever-workspace}" />
 	            <param name="test-path" value="${verinice.test.path}" />
