@@ -87,10 +87,10 @@ pipeline {
                 // 3-tier test
                 // the last parameter can be adjusted to control which tests are to be run
                 // e.g. 'bp*.test'
-                // run3TierUITests tests: '*.test'
+                run3TierUITests tests: '*.test'
 
                 // report verinice en and de
-                // triggerRCPTTBuild 'rcptt-all-report-tests'
+                triggerRCPTTBuild 'rcptt-all-report-tests'
                 
                 // product tests
                 //product tests partially is broken see VN-2882
