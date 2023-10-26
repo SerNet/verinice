@@ -714,10 +714,9 @@ ${verinice.jre}/jre/${java-library-location}
 		<sequential>
 			<echo>running client tests with target: @{target}</echo>
             <property name="mode" value="Client"/>
-			<property name="verince.program" location="${verinice-aut-path}/${verinice-executable}" />
 
+			<antcall target="configure.verinice" />
 			<antcall target="configure-aut" />
-			<antcall target="start.verinice.client" />
 			<!--
 				RCPTT expects that the vm parameter points to the binary, not the shared lib
 				https://bugs.eclipse.org/bugs/show_bug.cgi?id=515501.
