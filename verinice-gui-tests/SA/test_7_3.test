@@ -20,7 +20,9 @@ create-sa-org x1
 create-sa-org x2
 try -command {
 	with [get-view "Security Assessment" | get-tree] {
-		select "x1/Audits/Security Assessment/Controls" "x2/Audits/Security Assessment/Controls"
+		try -times 10 -delay 200 -command {
+			select "x1/Audits/Security Assessment/Controls" "x2/Audits/Security Assessment/Controls"
+		}
 		get-menu -path "Konsolidieren..." | click
 	}
 	with [get-window Konsolidierung] {
