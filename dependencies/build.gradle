@@ -56,7 +56,7 @@ platform {
         }
 	}
 
-	feature(id: 'spring', name: 'spring', version: '0.9.0') {
+	feature(id: 'spring', name: 'spring', version: '0.10.0') {
 		plugin fileTree("${project.projectDir}/spring/") {
    			include '**/*.jar'
    			exclude '**/*sources.jar'
@@ -78,6 +78,12 @@ platform {
         plugin fileTree ("${project.projectDir}/spring/spring-core-verinice-patch.jar"), {
             bnd {
                 version =  '2.5.6.SEC03-' + new Date().format('yyyyMMddHHmmss')
+            }
+        }
+        //we backported https://hibernate.atlassian.net/browse/HHH-3860 into this jar
+        plugin fileTree ("${project.projectDir}/spring/com.springsource.org.hibernate_3.2.6.ga.jar"), {
+            bnd {
+                version =  '3.2.6.' + new Date().format('yyyyMMddHHmmss')
             }
         }
 
