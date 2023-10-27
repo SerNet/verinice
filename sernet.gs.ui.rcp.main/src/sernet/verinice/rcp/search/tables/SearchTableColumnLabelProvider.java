@@ -29,7 +29,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.elasticsearch.search.SearchService;
 
 import sernet.hui.swt.SWTResourceManager;
 import sernet.verinice.interfaces.search.ISearchService;
@@ -122,7 +121,7 @@ public class SearchTableColumnLabelProvider extends StyledCellLabelProvider {
         VeriniceQuery query = row.getParent().getParent().getVeriniceQuery();
         List<StyleRange> styleRanges = new ArrayList<StyleRange>(0);
 
-        if (query.isQueryEmpty()){
+        if (query.isQueryEmpty()) {
             return;
         }
 

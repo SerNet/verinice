@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -29,7 +30,6 @@ import java.util.stream.Stream;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.annotation.NonNull;
-import org.elasticsearch.common.base.Objects;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.proxy.HibernateProxy;
@@ -200,7 +200,7 @@ public class ConsolidatorCommand extends GenericCommand implements IAuthAwareCom
             @NonNull CnATreeElement target) {
         String oldValue = target.getEntity().getRawPropertyValue(property);
         String newValue = source.getEntity().getRawPropertyValue(property);
-        if (!Objects.equal(oldValue, newValue)) {
+        if (!Objects.equals(oldValue, newValue)) {
             target.setSimpleProperty(property, newValue);
             return true;
         }
