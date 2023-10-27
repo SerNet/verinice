@@ -138,11 +138,14 @@ public class RiskConfiguration implements Serializable {
     }
 
     public Risk getRisk(String frequencyId, String impactId) {
-        int frequencyIndex = getFrequencyIndex(
-                frequencies.stream().filter(frequency -> frequency.getId().equals(frequencyId))
-                        .findFirst().orElse(null));
-        int impactIndex = getImpactIndex(impacts.stream()
-                .filter(impact -> impact.getId().equals(impactId)).findFirst().orElse(null));
+        int frequencyIndex = getFrequencyIndex(frequencies.stream()
+                .filter(frequency -> frequency.getId().equals(frequencyId)).findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Frequency ID " + frequencyId + " not available in risk configuration")));
+        int impactIndex = getImpactIndex(
+                impacts.stream().filter(impact -> impact.getId().equals(impactId)).findFirst()
+                        .orElseThrow(() -> new IllegalArgumentException(
+                                "Impact ID " + impactId + " not available in risk configuration")));
         int riskIndex = configuration[impactIndex][frequencyIndex];
         if (riskIndex == -1) {
             return null;

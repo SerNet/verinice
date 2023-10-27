@@ -253,6 +253,7 @@ public class ShowBulkEditAction extends ViewAndWindowAction {
             Entity editEntity = elmt.getEntity();
             editEntity.copyEntity(dialogEntity);
             if (elementIsThreat) {
+                logger.info("Deducing risk values in " + elmt.getTitle());
                 RiskDeductionUtil.deduceRisk((BpThreat) elmt);
             }
             elementsToSave.add(elmt);

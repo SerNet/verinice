@@ -20,6 +20,7 @@ package sernet.verinice.service.bp.risk;
 import java.util.Optional;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.model.bp.elements.BpThreat;
@@ -28,6 +29,8 @@ import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.common.CnATreeElement;
 
 public class RiskDeductionUtil {
+
+    private final static Logger logger = Logger.getLogger(RiskDeductionUtil.class);
 
     private RiskDeductionUtil() {
     }
@@ -49,24 +52,30 @@ public class RiskDeductionUtil {
         final String impactWithAdditionalSafeguards = threat.getImpactWithAdditionalSafeguards();
 
         RiskConfiguration riskConfiguration = findRiskConfiguration(threat.getScopeId());
+        try {
+            String riskWithoutSafeguards = calculateRisk(riskConfiguration,
+                    frequencyWithoutSafeguards, impactWithoutSafeguards).orElse(null);
+            setPropertyIfNecessary(threat, BpThreat.PROP_RISK_WITHOUT_SAFEGUARDS,
+                    riskWithoutSafeguards);
 
-        String riskWithoutSafeguards = calculateRisk(riskConfiguration, frequencyWithoutSafeguards,
-                impactWithoutSafeguards).orElse(null);
-        setPropertyIfNecessary(threat, BpThreat.PROP_RISK_WITHOUT_SAFEGUARDS,
-                riskWithoutSafeguards);
+            String riskWithoutAdditionalSafeguards = calculateRisk(riskConfiguration,
+                    frequencyWithoutAdditionalSafeguards, impactWithoutAdditionalSafeguards)
+                            .orElse(null);
+            setPropertyIfNecessary(threat, BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    riskWithoutAdditionalSafeguards);
 
-        String riskWithoutAdditionalSafeguards = calculateRisk(riskConfiguration,
-                frequencyWithoutAdditionalSafeguards, impactWithoutAdditionalSafeguards)
-                        .orElse(null);
-        setPropertyIfNecessary(threat, BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
-                riskWithoutAdditionalSafeguards);
+            String riskWithAdditionalSafeguards = calculateRisk(riskConfiguration,
+                    frequencyWithAdditionalSafeguards, impactWithAdditionalSafeguards).orElse(null);
+            setPropertyIfNecessary(threat, BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS,
+                    riskWithAdditionalSafeguards);
 
-        String riskWithAdditionalSafeguards = calculateRisk(riskConfiguration,
-                frequencyWithAdditionalSafeguards, impactWithAdditionalSafeguards).orElse(null);
-        setPropertyIfNecessary(threat, BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS,
-                riskWithAdditionalSafeguards);
-
-        return threat;
+            return threat;
+        } catch (Exception e) {
+            logger.error(
+                    "Error computing risk values for " + threat.getFullTitle() + "(" + threat + ")",
+                    e);
+            throw e;
+        }
     }
 
     public static Optional<String> calculateRisk(RiskConfiguration riskConfiguration,
