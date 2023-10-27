@@ -24,34 +24,6 @@ platform {
 	determineImportVersions = true
     importVersionStrategy = MINIMUM
 
-	feature(id: 'org.hibernate', name: 'hibernate-core', version: '3.6.11') {
-		plugin('org.hibernate:hibernate-core:3.6.10.Final') {
-			bnd {
-				optionalImport 'net.sf.cglib.beans'
-				optionalImport 'net.sf.cglib.core'
-				optionalImport 'net.sf.cglib.proxy'
-				optionalImport 'net.sf.cglib.reflect'
-				optionalImport 'net.sf.cglib.transform'
-				optionalImport 'net.sf.cglib.transform.impl'
-
-				instruction 'Eclipse-BuddyPolicy', 'registered'
-			}
-		}
-		plugin('dom4j:dom4j:1.6.1') {
-			bnd {
-				optionalImport 'com.sun.msv.datatype'
-				optionalImport 'com.sun.msv.datatype.xsd'
-				optionalImport 'org.gjt.xpp'
-				optionalImport 'org.jaxen'
-				optionalImport 'org.jaxen.dom4j'
-				optionalImport 'org.jaxen.pattern'
-				optionalImport 'org.jaxen.saxpath'
-				optionalImport 'org.relaxng.datatype'
-				optionalImport 'org.xmlpull.v1'
-			}
-		}
-	}
-
 	feature(id: 'jfree', name: 'jfreechart-swt', version: '1.0.0') {
 		plugin('jfree:jfreechart-swt:1.0.9') {
 			exclude group: 'org.eclipse.swt', module: 'org.eclipse.swt.cocoa.macosx.x86_64'
