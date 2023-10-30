@@ -21,6 +21,10 @@ platform {
 	determineImportVersions = true
     importVersionStrategy = MINIMUM
 
+    feature(id: 'antlr', name: 'antlr', version: '2.7.7') {
+        plugin('antlr:antlr:2.7.7')
+    }
+    
 	feature(id: 'jfree', name: 'jfreechart-swt', version: '1.0.0') {
 		plugin('jfree:jfreechart-swt:1.0.9') {
 			exclude group: 'org.eclipse.swt', module: 'org.eclipse.swt.cocoa.macosx.x86_64'
