@@ -48,7 +48,7 @@ pipeline {
                             error("Target platform uses repositories on bob: $repositoriesOnBob")
                         }
                     }
-                    def httpRepositories = repositoryLocations.findAll{it =~ /http:/}.findAll{!(it =~ '^http://bob\\.')}
+                    def httpRepositories = repositoryLocations.findAll{it =~ /http:/}.findAll{!(it =~ '^http://bob(-2023)?\\.')}
                     if (!httpRepositories.isEmpty()){
                         error("Target platform uses non-HTTPS repositories: $httpRepositories")
                     }
