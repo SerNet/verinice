@@ -76,6 +76,7 @@
     <unit id="ch.qos.logback.core.source" version="1.2.3.v20200428-2012"/>
     <unit id="ch.qos.logback.slf4j" version="1.2.3.v20200428-2012"/>
     <unit id="javax.jws" version="0.0.0"/>
+    <unit id="jakarta.activation" version="1.2.2.v20201119-1642"/>
 <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20211122181901/repository/"/>
 </location>
 
@@ -165,16 +166,6 @@
 				<groupId>com.sun.xml.bind</groupId>
 				<artifactId>jaxb-osgi</artifactId>
 				<version>2.3.9</version>
-				<type>jar</type>
-			</dependency>
-		</dependencies>
-	</location>
-	<location includeDependencyDepth="direct" includeDependencyScopes="compile" includeSource="true" missingManifest="error" type="Maven">
-		<dependencies>
-			<dependency>
-				<groupId>jakarta.activation</groupId>
-				<artifactId>jakarta.activation-api</artifactId>
-				<version>1.2.2</version>
 				<type>jar</type>
 			</dependency>
 		</dependencies>
