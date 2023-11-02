@@ -14330,9 +14330,6 @@ BAO-Reaktionszeit abzuziehen, um die RTO zu ermitteln." />
 
     <huientity id="bp_requirement" name="Requirement">
         <huirelation to="bp_safeguard" id="rel_bp_requirement_bp_safeguard" name="fulfilled through" reversename="fulfills" />
-        <!-- BCM 1.27 -->
-         <huirelation to="bp_safeguard" id="rel_bp_requirement_bp_safeguard2" name="berücksichtigt" reversename="erfüllt" />
-        <!-- BCM 1.27 -->
         <huirelation to="bp_threat" id="rel_bp_requirement_bp_threat" name="reduces risk" reversename="risk reduced by" />
 
         <huirelation to="bp_itnetwork" id="rel_bp_requirement_bp_itnetwork" name="models"  reversename="modeled with" />
