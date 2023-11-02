@@ -551,7 +551,6 @@ ${verinice.jre}/jre/${java-library-location}
 -Djavax.xml.soap.SOAPFactory=org.apache.axis.soap.SOAPFactoryImpl
 -Djavax.xml.soap.MessageFactory=org.apache.axis.soap.MessageFactoryImpl
 -Djavax.xml.soap.SOAPConnectionFactory=org.apache.axis.soap.SOAPConnectionFactoryImpl
--Djdk.util.zip.disableZip64ExtraFieldValidation=true
 -Dimages=${images}
 -Dbasepath=${test-results}
 -Dtest-data=${test-data}
@@ -622,7 +621,6 @@ ${verinice.jre}/jre/${java-library-location}
 		</echo>
 
 		<java jar="${runner-path}/plugins/${erunner}" fork="true">
-			<jvmarg value="-Djdk.util.zip.disableZip64ExtraFieldValidation=true" />
 			<arg value="-application" />
 			<arg value="org.eclipse.rcptt.runner.headless" />
 
