@@ -148,9 +148,8 @@ public class JsonBuilder implements IJsonBuilder {
         // bools are ignored, reference types are ignored (VN-1204)
         return entityType.getAllPropertyTypes().stream()
                 .filter(p -> !p.isBooleanSelect() && !p.isReference());
-       }
+    }
 
-    
     private static void addPermissions(XContentBuilder builder, CnATreeElement element)
             throws IOException {
         element = Retriever.checkRetrievePermissions(element);
@@ -193,8 +192,6 @@ public class JsonBuilder implements IJsonBuilder {
             mappedValue = mapDateProperty(e.getRawPropertyValue(pType.getId()));
         } else if (pType.isSingleSelect() || pType.isMultiselect()) {
             mappedValue = mapMultiSelectProperty(value, pType);
-        } else if (pType.isNumericSelect()) {
-            mappedValue = mapNumericSelectProperty(value, pType);
         } else {
             mappedValue = value;
         }
@@ -208,10 +205,6 @@ public class JsonBuilder implements IJsonBuilder {
         } else {
             return "unedited";
         }
-    }
-
-    private static String mapNumericSelectProperty(String value, PropertyType type) {
-        return type.getNameForValue(Integer.parseInt(value));
     }
 
     private static String mapMultiSelectProperty(String value, PropertyType type) {
