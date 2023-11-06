@@ -29,7 +29,7 @@
     <stringAttribute key="product" value="sernet.gs.ui.rcp.main.product"/>
     <stringAttribute key="productFile" value="/sernet.verinice.releng.client.product/sernet.verinice.releng.client.product"/>
     <setAttribute key="selected_target_bundles">
-        <setEntry value="antlr*2.7.7@default:default"/>
+        <setEntry value="antlr@default:default"/>
         <setEntry value="bcpg@default:default"/>
         <setEntry value="bcprov@default:default"/>
         <setEntry value="ch.qos.logback.classic@default:default"/>
@@ -37,8 +37,7 @@
         <setEntry value="ch.qos.logback.slf4j@default:false"/>
         <setEntry value="com.github.librepdf.openpdf@default:default"/>
         <setEntry value="com.google.gson@default:default"/>
-        <setEntry value="com.ibm.icu*67.1.0.v20200706-1749@default:default"/>
-        <setEntry value="com.ibm.icu*73.1.0@default:default"/>
+        <setEntry value="com.ibm.icu@default:default"/>
         <setEntry value="com.mchange.c3p0@default:default"/>
         <setEntry value="com.mchange.commons-java@default:default"/>
         <setEntry value="com.opencsv@default:default"/>
@@ -49,7 +48,6 @@
         <setEntry value="com.springsource.javax.mail@default:default"/>
         <setEntry value="com.springsource.javax.transaction@default:default"/>
         <setEntry value="com.springsource.javax.wsdl@default:default"/>
-        <setEntry value="com.springsource.javax.xml.rpc@default:default"/>
         <setEntry value="com.springsource.javax.xml.soap@default:default"/>
         <setEntry value="com.springsource.net.sf.cglib@default:default"/>
         <setEntry value="com.springsource.net.sf.ehcache@default:default"/>
@@ -68,14 +66,14 @@
         <setEntry value="com.sun.jna.platform@default:default"/>
         <setEntry value="com.sun.jna@default:default"/>
         <setEntry value="com.sun.xml.bind.jaxb-osgi@default:default"/>
-        <setEntry value="dom4j@default:default"/>
-        <setEntry value="jakarta.activation-api@default:default"/>
+        <setEntry value="jakarta.activation@default:default"/>
         <setEntry value="jakarta.annotation-api@default:default"/>
+        <setEntry value="jakarta.inject.jakarta.inject-api@default:default"/>
         <setEntry value="jakarta.xml.bind-api@default:default"/>
-        <setEntry value="javax.inject@default:default"/>
+        <setEntry value="javax.activation@default:default"/>
         <setEntry value="javax.jws@default:default"/>
         <setEntry value="javax.servlet-api@default:default"/>
-        <setEntry value="javax.transaction.jta@default:default"/>
+        <setEntry value="javax.xml.rpc@default:default"/>
         <setEntry value="javax.xml@default:default"/>
         <setEntry value="jfree.jcommon@default:default"/>
         <setEntry value="jfree.jfreechart-swt@default:default"/>
@@ -85,8 +83,7 @@
         <setEntry value="org.apache.batik.anim@default:default"/>
         <setEntry value="org.apache.batik.awt.util@default:default"/>
         <setEntry value="org.apache.batik.bridge@default:default"/>
-        <setEntry value="org.apache.batik.constants*1.14.0.v20210324-0332@default:default"/>
-        <setEntry value="org.apache.batik.constants*1.16.0.v20221027-0840@default:default"/>
+        <setEntry value="org.apache.batik.constants@default:default"/>
         <setEntry value="org.apache.batik.css@default:default"/>
         <setEntry value="org.apache.batik.dom.svg@default:default"/>
         <setEntry value="org.apache.batik.dom@default:default"/>
@@ -122,6 +119,7 @@
         <setEntry value="org.apache.xalan@default:default"/>
         <setEntry value="org.apache.xmlbeans@default:default"/>
         <setEntry value="org.apache.xmlgraphics@default:default"/>
+        <setEntry value="org.dom4j@default:default"/>
         <setEntry value="org.eclipse.ant.core.nl_cs@default:false"/>
         <setEntry value="org.eclipse.ant.core.nl_de@default:false"/>
         <setEntry value="org.eclipse.ant.core.nl_it@default:false"/>
@@ -522,8 +520,6 @@
         <setEntry value="org.eclipse.urischeme.nl_de@default:false"/>
         <setEntry value="org.eclipse.urischeme.nl_it@default:false"/>
         <setEntry value="org.eclipse.urischeme@default:default"/>
-        <setEntry value="org.hibernate.commons-annotations@default:default"/>
-        <setEntry value="org.hibernate.javax.persistence.hibernate-jpa-2.0-api@default:default"/>
         <setEntry value="org.jgrapht.core@default:default"/>
         <setEntry value="org.jheaps@default:default"/>
         <setEntry value="org.mortbay.jetty.server@default:default"/>
