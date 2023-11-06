@@ -123,5 +123,11 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
         store.setDefault(PreferenceConstants.BP_MODEL_DUMMY_SAFEGUARDS, false);
         store.setDefault(PreferenceConstants.FILTER_INFORMATION_NETWORKS_BY_PROCEEDING, false);
         store.setDefault(PreferenceConstants.VLT_CSV_EXPORT_ENCODING, "UTF-8");
+        
+        //
+        store.setDefault(PreferenceConstants.BIA_VIEW_LINK_COLOR_1, "38,162,105");
+        store.setDefault(PreferenceConstants.BIA_VIEW_LINK_COLOR_2, "198,70,0");
+        store.setDefault(PreferenceConstants.BIA_VIEW_LINK_COLOR_3, "0,0,0");
+        store.setDefault(PreferenceConstants.BIA_VIEW_SELECTED_COLOR, "53,132,228");
     }
 }

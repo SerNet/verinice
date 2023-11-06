@@ -162,6 +162,11 @@ public final class PreferenceConstants {
 
     public static final String FILTER_INFORMATION_NETWORKS_BY_PROCEEDING = "filter_information_networks_by_proceeding";
     public static final String VLT_CSV_EXPORT_ENCODING = "vlt_csv_export_encoding";
+    //bia view
+    public static final String BIA_VIEW_LINK_COLOR_1 = "bia_view_link_color_1";
+    public static final String BIA_VIEW_LINK_COLOR_2 = "bia_view_link_color_2";
+    public static final String BIA_VIEW_LINK_COLOR_3 = "bia_view_link_color_3";
+    public static final String BIA_VIEW_SELECTED_COLOR = "bia_view_selected_color";
 
     public static Charset getCharsetPreference(String preferencesId) {
         // read the charset from preference store

@@ -93,7 +93,10 @@ Require-Bundle: org.apache.log4j;bundle-version="1.2.25",
  jfree.jcommon,
  jfree.jfreechart,
  jfree.jfreechart-swt,
- bcpg;bundle-version="1.72.0"
+ bcpg;bundle-version="1.72.0",
+ org.eclipse.zest.core,
+ org.eclipse.zest.layouts,
+ com.springsource.javax.transaction;bundle-version="1.1.0"
 Import-Package: org.apache.axis.encoding.ser,
  org.eclipse.core.runtime,
  org.eclipse.osgi.service.datalocation,
