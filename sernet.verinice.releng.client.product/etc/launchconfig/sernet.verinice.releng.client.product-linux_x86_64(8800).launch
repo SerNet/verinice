@@ -37,7 +37,8 @@
         <setEntry value="ch.qos.logback.slf4j@default:false"/>
         <setEntry value="com.github.librepdf.openpdf@default:default"/>
         <setEntry value="com.google.gson@default:default"/>
-        <setEntry value="com.ibm.icu@default:default"/>
+        <setEntry value="com.ibm.icu*67.1.0.v20200706-1749@default:default"/>
+        <setEntry value="com.ibm.icu*73.2.0@default:default"/>
         <setEntry value="com.mchange.c3p0@default:default"/>
         <setEntry value="com.mchange.commons-java@default:default"/>
         <setEntry value="com.opencsv@default:default"/>
@@ -83,10 +84,12 @@
         <setEntry value="org.apache.batik.anim@default:default"/>
         <setEntry value="org.apache.batik.awt.util@default:default"/>
         <setEntry value="org.apache.batik.bridge@default:default"/>
-        <setEntry value="org.apache.batik.constants@default:default"/>
+        <setEntry value="org.apache.batik.constants*1.14.0.v20210324-0332@default:default"/>
+        <setEntry value="org.apache.batik.constants*1.16.0.v20221027-0840@default:default"/>
         <setEntry value="org.apache.batik.css@default:default"/>
         <setEntry value="org.apache.batik.dom.svg@default:default"/>
         <setEntry value="org.apache.batik.dom@default:default"/>
+        <setEntry value="org.apache.batik.ext@default:default"/>
         <setEntry value="org.apache.batik.gvt@default:default"/>
         <setEntry value="org.apache.batik.i18n@default:default"/>
         <setEntry value="org.apache.batik.parser@default:default"/>
@@ -520,6 +523,8 @@
         <setEntry value="org.eclipse.urischeme.nl_de@default:false"/>
         <setEntry value="org.eclipse.urischeme.nl_it@default:false"/>
         <setEntry value="org.eclipse.urischeme@default:default"/>
+        <setEntry value="org.eclipse.zest.core@default:default"/>
+        <setEntry value="org.eclipse.zest.layouts@default:default"/>
         <setEntry value="org.jgrapht.core@default:default"/>
         <setEntry value="org.jheaps@default:default"/>
         <setEntry value="org.mortbay.jetty.server@default:default"/>

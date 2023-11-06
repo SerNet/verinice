@@ -214,6 +214,13 @@
             restorable="true">
       </view>
 
+      <view
+            class="sernet.verinice.bcm.ui.BiaView"
+            icon="icons/wrench.png"
+            id="sernet.verinice.bcm.ui.biaview"
+            name="%view.name.biaview"
+            restorable="true">
+      </view>
 
    </extension>
    <extension point="org.eclipse.ui.commands">
@@ -1719,6 +1726,11 @@
             class="org.eclipse.ui.internal.dialogs.PerspectivesPreferencePage"
             id="org.eclipse.ui.preferencePages.Perspectives"
             name="%page.name.13">
+      </page>
+      <page
+            class="sernet.verinice.bcm.ui.BiaViewPreferences"
+            id="sernet.verinice.bcm.ui.BiaViewPreferences"
+            name="%page.name.BiaPreferences">
       </page>
       
    </extension>

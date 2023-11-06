@@ -52,6 +52,7 @@
             <action id="baseprotectionmodeling" />
             <action id="baseprotectionview" />
             <action id="bausteinzuordnung" />
+            <action id="biaview" />
             <action id="bpimporter" />
             <action id="bsibrowser" />
             <action id="bsidnd" />

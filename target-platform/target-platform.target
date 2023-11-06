@@ -18,6 +18,14 @@
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.zest.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.zest.sdk.feature.group" version="0.0.0"/>
+<unit id="org.apache.commons.io" version="0.0.0"/>
+<repository location="https://download.eclipse.org/releases/2022-09/"/>
+</location>
+
+
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.birt.chart.device.pdf" version="0.0.0"/>
 <unit id="org.eclipse.birt.chart.device.swt" version="0.0.0"/>
 <unit id="org.eclipse.birt.chart.engine" version="0.0.0"/>

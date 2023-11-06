@@ -155,6 +155,9 @@ public final class BCMUtils {
         public final String propertyImpact30d;
         public final String propertyMtpdOverride;
         public final String propertyMtpdMin;
+        public final String propertyRto;
+        public final String propertyMinRto;
+        public final String propertyRpo;
 
         BCMProperties(String typeId) {
             this.propertyMtpd = typeId + "_bcm_mtpd1";
@@ -166,6 +169,9 @@ public final class BCMUtils {
             this.propertyImpact7d = typeId + "_bcm_time7d";
             this.propertyImpact14d = typeId + "_bcm_time14d";
             this.propertyImpact30d = typeId + "_bcm_time30d";
+            this.propertyRto = typeId + "__rto";
+            this.propertyMinRto = typeId + "__rtoK";
+            this.propertyRpo = typeId + "_bcm_rpo";
 
         }
 
