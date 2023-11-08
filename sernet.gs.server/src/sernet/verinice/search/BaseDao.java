@@ -167,7 +167,6 @@ public abstract class BaseDao implements ISearchDao {
                     id);
             request.add(deleteRequest);
         }
-        request.execute().actionGet();
         BulkResponse response = request.execute().actionGet();
         if (LOG.isDebugEnabled()) {
             LOG.debug("Index removed, uuids: " + ids);
