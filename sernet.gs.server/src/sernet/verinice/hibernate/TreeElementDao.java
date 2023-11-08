@@ -224,7 +224,7 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
             }
         }
 
-        if (elementsToIndex.isEmpty()) {
+        if (!elementsToIndex.isEmpty()) {
             index(elementsToIndex);
         }
         return result;
