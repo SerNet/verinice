@@ -20,7 +20,6 @@ package sernet.verinice.hibernate;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -247,13 +246,9 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
             if (getSearchDao() != null) {
                 IJsonBuilder builder = getJsonBuilder();
                 if (builder != null) {
-
-                    Map<String, String> idToJson = new HashMap<>(elements.size());
-                    for (CnATreeElement element : elements) {
-                        if (builder.isIndexableElement(element)) {
-                            idToJson.put(element.getUuid(), builder.getJson(element));
-                        }
-                    }
+                    Map<String, String> idToJson = elements.parallelStream()
+                            .filter(builder::isIndexableElement)
+                            .collect(Collectors.toMap(CnATreeElement::getUuid, builder::getJson));
                     getSearchDao().updateOrIndex(idToJson);
                 }
             }
