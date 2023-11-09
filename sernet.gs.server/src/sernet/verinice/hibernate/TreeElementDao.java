@@ -20,10 +20,13 @@ package sernet.verinice.hibernate;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -35,6 +38,7 @@ import org.hibernate.criterion.Restrictions;
 import sernet.gs.service.CollectionUtil;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
+import sernet.gs.service.ServerInitializer;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.IElementTitleCache;
@@ -248,7 +252,7 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
                 if (builder != null) {
                     Map<String, String> idToJson = elements.parallelStream()
                             .filter(builder::isIndexableElement)
-                            .collect(Collectors.toMap(CnATreeElement::getUuid, builder::getJson));
+                            .collect(toJsonMap(CnATreeElement::getUuid, builder::getJson));
                     getSearchDao().updateOrIndex(idToJson);
                 }
             }
@@ -420,6 +424,17 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
 
     public void setTitleCache(IElementTitleCache titleCache) {
         this.titleCache = titleCache;
+    }
+
+    public static <T, K, V> Collector<T, Map<K, V>, Map<K, V>> toJsonMap(
+            final Function<? super T, K> keyMapper, final Function<T, V> valueMapper) {
+        return Collector.of(HashMap::new, (kvMap, t) -> {
+            ServerInitializer.inheritVeriniceContextState();
+            kvMap.put(keyMapper.apply(t), valueMapper.apply(t));
+        }, (kvMap, kvMap2) -> {
+            kvMap.putAll(kvMap2);
+            return kvMap;
+        }, Function.identity(), Collector.Characteristics.IDENTITY_FINISH);
     }
 
 }
