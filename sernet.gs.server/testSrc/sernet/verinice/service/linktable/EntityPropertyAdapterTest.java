@@ -42,4 +42,25 @@ public class EntityPropertyAdapterTest extends ContextConfiguration {
         assertEquals("2019-01-01", valueFromPropertyAdapter);
     }
 
+    @Test
+    public void test_get_bp_requirement_bcm_wiederanlaufzeit_unset() {
+        BpRequirement requirement = new BpRequirement(null);
+
+        EntityPropertyAdapter entityPropertyAdapter = new EntityPropertyAdapter(requirement);
+        String valueFromPropertyAdapter = entityPropertyAdapter
+                .getPropertyValue("bp_requirement_bcm_wiederanlaufzeit");
+        assertEquals("0", valueFromPropertyAdapter);
+    }
+
+    @Test
+    public void test_get_bp_requirement_bcm_wiederanlaufzeit() {
+        BpRequirement requirement = new BpRequirement(null);
+        requirement.setNumericProperty("bp_requirement_bcm_wiederanlaufzeit", 2);
+
+        EntityPropertyAdapter entityPropertyAdapter = new EntityPropertyAdapter(requirement);
+        String valueFromPropertyAdapter = entityPropertyAdapter
+                .getPropertyValue("bp_requirement_bcm_wiederanlaufzeit");
+        assertEquals("2", valueFromPropertyAdapter);
+    }
+
 }
