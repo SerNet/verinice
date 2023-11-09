@@ -60,6 +60,7 @@ java.util.regex.Pattern
 javax.xml.bind.DataBindingException
 javax.xml.bind.JAXBException
 javax.xml.bind.UnmarshalException
+org.eclipse.birt.chart.factory.RunTimeContext
 org.hibernate.collection.AbstractPersistentCollection
 org.hibernate.collection.PersistentList
 org.hibernate.collection.PersistentMap
