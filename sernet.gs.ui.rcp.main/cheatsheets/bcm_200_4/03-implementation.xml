@@ -1,0 +1,62 @@
+<cheatsheet title="7.03 Umsetzung des BCMS (DO) / AUFBAU UND BEFÄHIGUNG DER BAO (Krise)">
+
+    <intro>
+        <description>
+Dieses Tutorial beschäftigt sich mit dem ersten Prozesschritt der Do-Phase, dem Aufbau und Befähigung der BAO. Dieser beinhaltet alle Aspekte, um eine funktionierende BAO zu etablieren, die im Not- und Krisenfall sofort erreichbar und arbeitsfähig ist. Die Institution wird so im Fall von Schadensereignissen unmittelbar handlungsfähig, unabhängig davon, ob bereits Notfallpläne für die Fortführung von Geschäftsprozessen vorliegen.        </description>
+
+    </intro>
+
+
+    <item title="AUFBAU UND BEFÄHIGUNG DER BAO (Krise)">
+        <description>
+            Legen Sie falls noch nicht im Rahmen der Abbildung Ihrer BC-Aufbauorganisation geschehen, die BAO als Personen-Objekte an. Unter anderem zählen hierzu Stab, die Kernteams, die situative Erweiterung, die Stabsassistenz sowie die Bewältigungsteams. 
+<br/><br/>
+Nachdem Sie die Personen-Objekte angelegt haben, können Sie in den nachfolgenden Prozessschritten diese Personen als Verantwortliche mit anderen Objekten, wie z.B. mit den Baustein-Anforderungen, verknüpfen. 
+<br/><br/>
+Im Anschluss haben Sie die Möglichkeit sich per Report-Abfrage eine Übersicht der Verknüpfungen ausgeben zu lassen, um eine Zusammenfassung davon zu erhalten, welche Aufgaben und Zuständigkeiten welcher BC-Rolle bzw. Person zugewiesen wurde. 
+        </description>
+    </item>
+    
+    <item title="Definition von Sofortmaßnahmen">
+        <description>
+        Mit Sofortmaßnahmen sind Maßnahmen gemeint, die keinen zeitlichen Aufschub dulden und möglichst unmittelbar nach Eintritt eines Schadensereignisses eingeleitet werden müssen, um den Schutz von Leib und Leben sicherzustellen sowie weitere Schäden
+abzuwenden.
+<br/><br/>
+Je Gefährdung bzw. Risikoszenario können Sie identifizierte Sofortmaßnahmen definieren und Zuständigkeiten festlegen. Sie können sich entscheiden die Sofortmaßnahmen als Baustein-Anforderung oder Maßnahmen-Objekt in verinice abzubilden.
+<br/> 
+Wenn sich die Verantwortlichkeiten pro Teilaufgabe einer Maßnahme unterscheidet, können Sie mehrere Maßnahmen anlegen, um die zuständige Person für jeden Prozessschritt einzeln erfassen und verknüpfen zu können. 
+        
+        </description>
+    </item>
+    
+    <item title="NuK-Kommunikation (Notfall- und Krisen-Kommunikation)">
+        <description>
+        Zur BAO gehört auch das NuK-Kommunikationsteam. Die NuK-Kommunikation muss im Vorfeld gut vorbereitet, geplant und dokumentiert werden. So ist es wichtig, dass in der Institution präventiv überlegt wird, wann Meldungen an die Mitarbeitenden und an externe Interessengruppen erforderlich sind und wie die externe NuK-Kommunikation kontrolliert werden kann, um Reputationsschäden zu vermeiden.
+        <br/><br/>
+        Überlegen Sie sich allgemeine Regelungen zur Kommunikation. Unter anderem was die Mitarbeitenden wann erfahren dürfen oder müssen, was die Mitarbeitenden wann und wie gegenüber der Presse und in sozialen Medien äußern dürfen und was nicht, sowie  was die Rolle Kommunikation wann und wie gegenüber der Presse und in sozialen Medien bekannt geben soll, Regelungen für den Kontakt mit Polizei und anderen Behörden sowie Hilfsorganisationen, Meldepflichten der Institution, die sich aus einem Notfall ergeben, Regelungen zum Medienmonitoring. 
+        </description>
+    </item>
+    
+    <item title="Nacharbeiten und Deeskalation eines Schadensereignisses">
+        <description>
+        Ist das Schadensereignis überwunden, sollte der Stab den Notfall offiziell für beendet erklären (Deeskalation) und diese Entscheidung innerhalb der Institution kommunizieren. 
+Hierzu können die gleichen Kommunikationskanäle verwendet werden wie beim
+Ausrufen des Notfalls. Angaben zu den Kommunikationskanälen je interessierte Partei werden unter dem Personen-Objekt erfasst. Zum Festhalten konkreter Prüfpunkte bzw. von Entscheidungen für die Rückführung in den Normalbetrieb kann eine Checkliste entwickelt werden. Neben den direkt ersichtlichen Aspekten, wie z. B. der Reihenfolge, in der die Geschäftsprozesse wieder in den 
+Normalbetrieb zu versetzen sind, ist es hilfreich, auch die durch den Notbetrieb entstandenen Folgen zu betrachten. 
+        <br/><br/>
+Legen Sie das Schadensereignis als Vorfall-Objekt an und beantworten Sie die einzelnen Punkte aus der Checkliste zur Rückführung in den Normalbetrieb oder hinterlegen Sie eine eigene Checkliste, die Sie für nächste Ereignisse als Vorlage verwenden können. 
+        </description>
+    </item>
+    
+    <item title="Analyse der Bewältigung">
+        <description>
+            Nachdem die Institution einen Notfall oder eine Krise bewältigt hat, ist die Analyse der
+            Bewältigung ein weiterer wichtiger Schritt. Nur so kann die Institution aus Notfällen und
+            Krisen lernen. Durch eine strukturierte Analyse kann ermittelt werden, was gut funktioniert hat und an welchen Stellen Optimierungsbedarf besteht. Anschließend kann aus
+            den Ergebnissen der Analyse abgeleitet werden, was noch präventiv getan werden kann,
+            damit die Notfallbewältigung und somit auch die Resilienz der Institution weiter verbessert werden können.
+             <br/><br/>
+            Falls noch nicht geschehen, legen Sie ein neues <b>Vorfall-Objekt für das Schadensereignis</b> an oder füllen Sie das Feld mit dem <b>Fragenkatalog zur Analyse der Bewältigung</b> bei dem bestehenden Vorfall-Objekt aus, oder hinterlegen Sie einen eigenen Fragenkatalog, den Sie für nächste Ereignisse als Vorlage verwenden können.        
+        </description>
+    </item>
+</cheatsheet>

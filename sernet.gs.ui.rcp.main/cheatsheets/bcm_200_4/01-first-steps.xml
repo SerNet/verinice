@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<cheatsheet title="7.01.Erste Schritte">
+
+    <intro>
+        <description>
+            <b>Willkommen bei verinice.</b>
+            <br ></br>
+            Mit diesem Tutorial lernen Sie, wie Sie Teilaspekte Ihres BCMS in verinice erfassen.
+            Welche Daten Sie verwalten können und wie Sie dabei Schritt-für-Schritt nach der
+            Vorgehensweise des BSI-Standards 200-4 vorgehen, soll Ihnen in diesem Tutorial
+            aufgezeigt werden.
+        </description>
+    </intro>
+
+    <item title="Initiierung des BCMS">
+        <description>
+            Unabdinglich für einen erfolgreichen Aufbau und eine Entwicklung eines BCMS ist
+            die Übernahme der
+            Verantwortung durch die Leitungsebene. Bevor Sie mit der Umsetzung
+            Ihres BCMS starten,
+            sollte eine Leitlinie BCMS entwickelt und von der Institutionsleitung
+            freigegeben worden
+            sein. Diese können Sie dann unter der Dokumentenstruktur ablegen oder
+            einen externen
+            Link auf das Dokument hinterlegen.
+        </description>
+    </item>
+
+    <item title="Informationsverbund anlegen">
+        <description>Im View Modernisierter Grundschutz finden Sie einen leeren oder bereits vorhandenen
+Informationsverbund. (Sollte dies nicht der Fall sein, so können Sie einen neuen Informationsverbund anlegen. Klicken Sie dazu in der oberen Werkzeugleiste das 
+entsprechende <b>Icon: Blatt Papier</b> mit einem Sternchen. Es wird ein neuer Verbund angelegt.) Klicken Sie den neu erzeugten Informationsverbund doppelt an. Im rechten oberen Bereich öffnet sich das Editor-View mit den Eigenschaften des Objekts <b>Informationsverbund</b>. Hier können Sie die Angaben und Eigenschaften für den Verbund definieren. 
+<br/><br/>
+In Bezug auf das BCMS können Sie Angaben zum <b>abzusichernden Zeitraum</b> machen, den <b>BCMS-Geltungsbereich</b> und die <b>BAO-Reaktionszeit</b> festlegen, sich für eine <b>Vorgehensweise</b> entscheiden, ob Sie ein Standard-BCMS, Reaktiv BCMS oder Aufbau-BCMS planen und <b>Änderungen am BCMS</b> festhalten.
+<br/><br/>
+Nachdem Sie Ihre Angaben vervollständigt haben, speichern Sie diese (klick auf Icon: Diskette oder Tastenkombination: Strg+S) und schließen Sie den Editor (klick auf x im Reiter oder Tastenkombination: Strg+W)
+</description>
+    </item>
+
+    <item title="Benennung des oder der BCB">
+        <description>
+            Navigieren Sie zum Personen-Objekt und legen Ihren BCB als Personen-Zielobjekt
+            an, alternativ können Sie mit verinice.PRO Personen-Zielobjekte aus einem AD
+            importieren, wie z.B. den BC-Beauftragten.
+        </description>
+    </item>
+
+</cheatsheet>

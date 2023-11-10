@@ -1,0 +1,289 @@
+<cheatsheet title="7.04 Angemessene Absicherung der Geschäftsprozesse/ Business-Impact-Analyse (DO)">
+
+    <intro>
+        <description>
+Dieses Tutorial beschäftigt sich mit dem zweiten Prozessschritt der Do-Phase, der Gewährleistung einer angemessenen Absicherung der Geschäftsprozesse.  
+        </description>
+
+    </intro>
+
+
+    <item title="Vorbereitung der BIA / Erheben der Geschäftsprozesse">
+        <description>
+Liegt ein ISMS nach
+BSI-Standard 200-2 vor,
+können die bereits identifizierten Geschäftsprozesse als Grundlage
+verwendet werden. Das Verzeichnis von Verarbeitungstätigkeiten für
+den Datenschutz kann möglicherweise ebenfalls als Grundlage genutzt
+werden. Es fasst alle Verfahrenstätigkeiten zusammen, in denen
+personenbezogene Daten verarbeitet werden. Verfahrenstätigkeiten
+können gegebenenfalls auch als Geschäftsprozesse verstanden werden
+oder diese können daraus abgeleitet werden.
+<br/><br/>
+Falls Sie noch keine
+Geschäftsprozesse in verinice erfasst haben, drücken Sie auf das
+Objekt Geschäftsprozess mit rechtem Mausklick und legen ihre
+Geschäftsprozesse als neue Objekte an.
+</description>
+</item>
+
+<item title="Festlegung der BIA-Parameter und betrachteten Zeithorizonte ">
+<description>
+
+Ziel der BIA ist es,
+einheitlich festzustellen, ob ein Geschäftsprozess zeitkritisch ist
+und wie lange dieser ausfallen darf, bevor nicht mehr tolerierbare
+Schäden entstehen. In der BIA wird betrachtet, welche Schäden durch
+den ausgefallenen Geschäftsprozess über einen definierten
+Zeitverlauf entstehen. Dafür müssen sogenannte Zeithorizonte
+festgelegt werden.
+<br/><br/>
+Unter dem
+Geschäftsprozess sowie unter den Zielobjekten sind die <b>Zeithorizonte</b>
+definiert. Falls Ihre <b>Zeithorizonte</b> von den in verinice
+hinterlegten Standardwerten abweichen, müssen Sie diese per
+Customizing anpassen. Des Weiteren werden unter dem
+Informationsverbund Informationen zur Vorbereitung auf die
+Business-Impact-Analyse dokumentiert, die institutionsübergreifend
+gelten, wie das <b>Untragbarkeitsniveau</b>, sowie die
+<b>BAO</b>-<b>Reaktionszeit</b>. 
+
+Des Weiteren können
+Sie unter dem Informationsverbund überprüfen, ob die
+Schutzbedarfskategorien und <b>Schadensszenarien</b> aus dem ISMS,
+identisch mit den <b>Schadenskategorien</b> aus dem BCMS sind,
+sollten diese voneinander abweichen, dokumentieren Sie dies in einem
+separaten Dokument z.B. in Ihrer internen Prozessbeschreibung zur
+Business-Impact-Analyse. 
+
+<br/><br/>
+Über die
+Zielobjekt-Typen können Sie Ihre Ressourcenkategorien und -Cluster
+bilden, und Ihre Ressourcen in die entsprechenden Kategorien/Cluster
+einordnen. 
+
+</description>
+</item>
+
+<item title="Planung der BIA-Erhebung ">
+<description>
+
+Vor Beginn der BIA
+sollte festgelegt werden, wie die Informationen zur BIA erhoben
+werden sollen.
+Tragen Sie hierfür unter <b>Datum der Erhebung</b> und<b> Art der
+Erhebung</b> ein, mittels welchen Formats Sie die BIA-Daten wann
+erhoben haben. 
+
+</description>
+</item>
+
+<item title="Durchführung der BIA/ Festlegung der MTPD">
+<description>
+Um zeitkritische
+Geschäftsprozesse zu identifizieren, müssen Sie das
+Schadenspotenzial jedes einzelnen Geschäftsprozess bewerten. Führen
+Sie hierfür die Schadensbewertung durch, indem Sie <b>das
+Schadenspotenzial für jeden einzelnen Zeithorizont</b> bewerten. 
+
+In verinice erfassen
+Sie das Schadenspotenzial in vereinfachter Form nach dem Worst-Case-
+Prinzip, welches
+alle Schadensszenarien beinhaltet. Aufbauend darauf können Sie im
+nächsten Schritt auswählen, welches Schadensszenario
+ausschlaggebend für die Bewertung ist. Daraus resultiert im
+Anschluss die maximal tolerierbare Ausfallzeit (MTA/MTPD). 
+
+<br/><br/>
+Sollten Sie die
+Zeithorizonte sowie die Schadenspotenziale per Customizing angepasst
+haben, so ist die automatische Ableitung für die Festlegung der MTPD
+deaktiviert und Sie müssen den MTPD-Wert manuell festlegen. Falls
+Sie mit den Standardwerten arbeiten können, so wird der MTPD-Wert
+automatisch abgeleitet. Im Anschluss an der Bewertung des
+Schadenspotenzials müssen Sie die Begründung dokumentieren. 
+
+</description>
+</item>
+
+<item title="Durchführung der BIA/ Festlegung der RTO für zeitkritische Geschäftsprozesse">
+<description>
+Nachdem Sie die MTPD
+bestimmt haben, müssen Sie zusätzlich die geforderte
+Wiederanlaufzeit (RTO) für zeitkritische Geschäftsprozesse
+festlegen. Sie beschreibt, wie lange der reine Wiederanlauf dauern
+darf, bevor es zu nicht tolerablen Schäden kommt. 
+
+<br/><br/>
+Für die Bestimmung
+des RTO-Werts wird empfohlen die BAO-Reaktionszeit von der MTPD
+abzuziehen. Die RTO muss kleiner als die MTPD sein. 
+
+<br/><br/>
+Notieren Sie die RTO
+unter dem Feld<b> Geforderte Wiederanlaufzeit (WAZ/RTO) für notw.
+Ressourcen aus Prozess-MTPD. </b>
+
+</description>
+</item>
+
+<item title="Durchführung der BIA/ Festlegung des Notbetriebsniveaus (MBCO)">
+<description>
+Zusätzlich zur RTO
+und zum MTPD können Sie unter dem Feld <b>Notbetriebsniveau</b>, das
+Notbetriebsniveau für den Geschäftsprozess definieren.  
+
+</description>
+</item>
+
+<item title="Durchführung der BIA/ Identifizierung der Prozessabhängigkeiten ">
+<description>
+
+Nachdem Sie erste
+Bewertungen durchgeführt haben, können Sie über den Link-Maker
+oder per Drag-und-Drop die Prozessabhängigkeiten abbilden. Beim
+Erstellen der Verknüpfungen können Sie wählen, ob die Prozesse
+nachgelagert, parallel oder vorgelagert stattfinden. 
+
+Aufgrund der
+Prozessabhängigkeiten kann es vorkommen, dass die MTPD des
+Geschäftsprozesses sich ändert, hierfür können Sie unter dem Feld
+<b>Geänderte MTPD aufgrund von Prozessabhängigkeiten </b>ggf. den
+geänderten MTPD festhalten, und eine Begründung hierfür notieren.
+Nachdem Sie beide MTPD-Werte festgelegt haben, wird Ihnen automatisch
+die MTPD (MIN aus Schadensbewertung und Prozessabhängigkeit)
+ausgegeben. Wenn Sie ein Customizing vorgenommen haben, müssen die
+MTPD-Werte manuell eingetragen werden. 
+
+</description>
+</item>
+
+<item title="Durchführung der BIA/ Identifizierung der Ressourcenabhängigkeiten ">
+<description>
+
+Für alle
+zeitkritischen Geschäftsprozesse müssen anhand der festgelegten
+Ressourcenkategorien, die für einen Notbetrieb erforderlichen
+Ressourcen ermittelt und den entsprechenden Geschäftsprozessen
+zugeordnet werden.
+<br/><br/>
+Verknüpfen Sie
+hierfür die notwendigen Ressourcen mit den entsprechenden
+Geschäftsprozessen. 
+
+</description>
+</item>
+
+<item title="Durchführung der BIA/ RTO der benötigten Ressourcen">
+<description>
+Anhand der RTO des
+zeitkritischen Geschäftsprozesses muss die RTO der prozessnot-
+wendigen Ressourcen
+(cluster) so abgeleitet werden, dass der Notbetrieb rechtzeitig er-
+reicht wird. Ähnlich
+wie die RTO in den Prozessabhängigkeiten kann auch die RTO der
+Ressourcen(cluster)
+individuell abgestimmt werden. Falls mehrere Geschäftsprozesse auf
+dieselbe(n)
+Ressourcen(cluster) zurückgreifen, muss die kleinste RTO für diese
+Ressource
+gewählt werden. Im
+Falle, dass eine Ressource von mehreren Geschäftsprozessen benötigt
+wird, tragen Sie unter der Ressource/dem Zielobjekt den kleinsten
+RTO-Wert ein. 
+
+<br/><br/>
+Um einen besseren
+Überblick über die Prozess-und Ressourcenabhängigkeiten und deren
+MTPD bzw. RTO-Werten zu erhalten, empfehlen wir unter Ansicht &gt;Zeige
+View &gt; Verknüpfungen, das Verknüpfungen-View parallel zur
+Eingabemaske geöffnet zu haben. 
+
+</description>
+</item>
+
+<item title="Durchführung der BIA/ Ressourcenbedarf in Abhängigkeit zur Dauer des Notbetriebs ">
+<description>
+
+Für viele
+Ressourcenkategorien wie z. B. Personal und Arbeitsplätze, aber auch
+Maschinen oder Arbeitsmittel kann sich die Anzahl der benötigten
+Ressourcen mit der Dauer
+des Notbetriebs
+verändern. Für diese Ressourcenkategorien ist es empfehlenswert,
+die Anzahl der benötigten Ressourcen über die definierten
+Zeithorizonte im Notbetrieb hinweg zu erheben.
+<br/><br/>
+Füllen Sie hierfür
+die Felder für den <b>Ressourcenbedarf im Normal- und Notbetrieb</b>
+aus. 
+
+</description>
+</item>
+
+<item title="Durchführung der BIA/ Festlegung der RPO ">
+<description>
+
+Bei
+informationsbasierten Ressourcenkategorien (beispielsweise die
+Ressourcenkategorien Informationen und IT (Daten)) muss zusätzlich
+die RPO bestimmt werden. Die RPO stellt in diesem Zusammenhang eine
+fachliche Anforderung des Prozesseigentümers oder der -eigentümerin
+dar, bis zu welchem Zeitpunkt man mit dem zurückfallen darf, um mit
+geeigneten Informationen (Daten) im Notbetrieb noch arbeiten zu
+können. Die RPO ist unabhängig von der MTPD oder der RTO und muss
+daher nicht darauf abgestimmt werden. Jedoch sollte analog zur RTO
+auch die RPO konsolidiert werden, wenn mehrere Geschäftsprozesse auf
+dieselbe(n) informationsbasierten Ressourcen(cluster) zurückgreifen
+(Minimalprinzip).
+<br/><br/>
+Erfassen Sie für
+informationsbasierte Ressourcen die RPO.
+</description>
+</item>
+
+<item title="Durchführung der BIA/ Identifizierung von SPoF/SPoC/SPoK">
+<description>
+Sollten viele
+zeitkritische Geschäftsprozesse eine einzelne Ressource benötigen,
+müssen Sie  die Ressource als Single Point of Failure kennzeichnen,
+da dies ein erhöhtes Risiko für eine Geschäftsunterbrechung
+darstellt. Setzen Sie den Hacken unter dem Feld Es wird unterschieden
+zwischen: Wissen (Single Point of Knowledge, SPoK), Technik oder
+Dienstleistung (Single Point of Failure, SPoF) und Kontakte (Single
+Point of Contact, SPoC). 
+
+</description>
+</item>
+
+<item title="Auswertung der BIA">
+<description>
+
+Um ein einheitlich
+hohes Qualitätsniveau der BIA-Ergebnisse sicherzustellen, müssen
+die BIA-Ergebnisse dahingehend überprüft werden, ob diese
+vollständig, korrekt und nachvollziehbar sind. Es ist
+empfehlenswert, zu überprüfen, ob sämtliche notwendigen
+Informationen erhoben sowie die Schadensanalyse formal korrekt
+vorgenommen wurde und ob die Begründung der Schadensanalyse
+plausibel erscheint. Zusätzlich ist es hilfreich zu prüfen, ob die
+RTO der Ressourcen korrekt aus der MTPD der zeitkritischen Prozesse
+abgeleitet wurde.
+<br/><br/>
+Nachdem die
+Ergebnisse qualitätsgesichert wurden, können Sie sich die
+Einzelergebnisse zu einer Gesamtübersicht der zeitkritischen
+Geschäftsprozesse und Ressourcen per Report-Abfrage ausgeben lassen.
+Die Gesamtübersicht sollte mindestens folgende Inhalte umfassen:
+<br/>
+• Übersicht der
+zeitkritischen Geschäftsprozesse und zugehörigen Kontaktpersonen,
+<br/>
+• Übersicht der
+Prozessabhängigkeiten sowie
+<br/>
+• Übersicht der
+abhängigen Ressourcen und SpoFs sowie deren RTO bzw. RPO. 
+        </description>
+    </item>
+</cheatsheet>

@@ -1,0 +1,166 @@
+<cheatsheet title="7.06 Risikoanalyse">
+
+    <intro>
+        <description>
+Dieses Tutorial beschäftigt sich mit der BCM-Risikoanalyse.
+        </description>
+
+    </intro>
+    
+    
+    <item title="Auswahl einer geeigneten Methode">
+        <description>
+
+Der BSI-Standard
+200-4 beschreibt keine eigenständige Methodik für eine
+BCM-Risikoanalyse. Vielmehr kann hierzu auf etablierte Risikoanalyse
+oder auf eine in anderen in Risikomanagement-Standards definierte
+Methode zurückgegriffen werden. In verinice führen Sie die
+BCM-Risikoanalyse nach dem BSI-Standard 200-3 durch. Grundlegendes
+zur Risikoanalyse nach dem 200-3 Standard entnehmen Sie bitte dem
+Tutorial zur Risikoanalyse nach 200-3.
+<br/><br/>
+Es müssen die
+BCM-relevanten Risiken für alle zeitkritischen Ressourcen,
+insbesondere SpoFs, sowie für alle zeitkritischen Geschäftsprozesse
+systematisch untersucht werden. Unter BCM-relevanten Risiken werden
+dabei in der Regel Risiken verstanden, die sich unmittelbar auf die
+Verfügbarkeit der zeitkritischen Ressourcen auswirken. Sofern kein
+hinreichendes ISMS vorliegt, sollten die Grundwerte Integrität und
+Vertraulichkeit in einer BCM-Risikoanalyse berücksichtigt werden,
+sodass zumindest die hieraus resultierenden Auswirkungen auf die
+Verfügbarkeit in den BC-Strategien behandelt werden können.
+</description>
+</item>
+
+<item title="Vorbereitung der Risikoanalyse">
+<description>
+Durch die BIA liegt
+bereits die Liste der zeitkritischen Ressourcen und damit der
+relevanten Zielobjekte für die BCM-Risikoanalyse vor. Die
+Vorbereitung zur Risikoanalyse gemäß
+BSI-Standard 200-3
+beschränkt sich daher auf eine geeignete Gruppenbildung dieser
+relevanten Zielobjekte. In der BCM-Risikoanalyse kann auch auf die
+bereits definierten Res-
+sourcen(cluster)
+gemäß BIA zurückgegriffen werden. Aufgrund ihrer hohen Bedeutung
+sollten zusätzlich
+die in der BIA identifizierten SPoFs als eigenständige Zielobjekte
+in der
+BCM-Risikoanalyse
+betrachtet werden.
+</description>
+</item>
+
+<item title="Erstellung einer Gefährdungsübersicht ">
+<description>
+
+Um eine
+Gefährdungsübersicht zu erstellen, kann in der BCM-Risikoanalyse
+analog zum
+BSI-Standard 200-3
+vorgegangen werden. Die Risikoanalyse gemäß BSI-Standard 200-3
+greift auf eine
+Liste von elementaren Gefährdungen zurück, die als Ausgangsbasis
+zur
+Risikoeinstufung
+dient. Diese beinhalten bereits die üblichen Kombinationen aus
+Bedrohungen und Schwachstellen.
+<br/>
+Für das BCM besteht
+die Besonderheit, dass aus dieser Liste nur jene Gefährdungen als
+relevant betrachtet
+werden, die sich auf das Schutzziel Verfügbarkeit beziehen.
+Gefährdungen, die sich nur auf andere Schutzziele auswirken, wie z.
+B. Gefährdungen, die die
+Vertraulichkeit oder
+Integrität beeinträchtigen, werden innerhalb des BCM nicht direkt
+behandelt.
+<br/><br/>
+Legen Sie eine
+Gefährdungsgruppe an, mit rechtem Mausklick auf den
+Informationsverbund &gt; Neu &gt; Gefährdungen-Gruppe und erstellen
+Sie eine Gefährdungsübersicht. Mit Rechtsklick auf die
+Gefährdungen-Gruppe können Sie neue Gefährdungen anlegen. 
+<br/>
+Der
+Beispielinformationsverbund beinhaltet eine Gefährdungen-Gruppe mit
+den elementaren Gefährdungen vom BSI, die sich auf das Schutzziel
+Verfügbarkeit auswirken. Sie können diese Gefährdungen-Gruppe
+kopieren und in Ihren Informationsverbund einfügen. 
+
+</description>
+</item>
+
+<item title="Risikoeinschätzung">
+<description>
+
+In diesem
+BCM-Prozessschritt wird gemäß BSI-Standard 200-3, Kapitel 5.1
+Risikoeinschätzung anhand der relevanten Gefährdungen vorgenommen,
+welches Risiko von diesen ausgeht.
+Die
+Risikoeinschätzung in der BCM-Risikoanalyse unterscheidet sich
+inhaltlich nicht vom
+im BSI-Standard
+200-3 beschriebenen Vorgehen. 
+
+<br/><br/>
+Legen Sie für die
+konkreten abgeleiteten Gefährdungen, resultierend aus einer
+elementaren Gefährdung, eine neue Gefährdungen-Gruppe an und
+erfassen Sie innerhalb dieser Gruppe die Gefährdungen. Um die
+Eintrittshäufigkeit und Schadenshöhe zu bestimmen, müssen Sie
+sowohl bestehende risikoreduzierende Maßnahmen als auch die
+Wiederanlauffähigkeit berücksichtigen. Legen Sie für die
+risikoreduzierenden Maßnahmen einen neuen Baustein an und erstellen
+Sie neue Baustein-Anforderungen für jede Maßnahme. 
+
+<br/><br/>
+Mit rechtem
+Mausklick auf das Zielobjekt können Sie die Gefährdungen-Gruppe
+sowie den Baustein unter dem Zielobjekt, für welches die
+Risikoanalyse erforderlich ist, modellieren. 
+
+<br/><br/>
+Da Sie im BCM nicht
+mit fertigmodellierten Bausteinen arbeiten, müssen Sie im Anschluss
+die Objekte miteinander verknüpfen. 
+
+<br/><br/>
+Verknüpfen Sie die
+Gefährdungen mit den Baustein-Anforderungen. Alle neu angelegten
+Objekte, Baustein-Anforderungen und Gefährdungen mit dem Zielobjekt.
+Im Ergebnis müssten Sie unter dem Zielobjekt unter den Verknüpfungen
+sehen, mit welchen Baustein-Anforderungen das Zielobjekt modelliert
+wurde und auch durch welche Gefährdungen das Zielobjekt beeinflusst
+wird. 
+</description>
+</item>
+
+<item title="Risikobewertung">
+<description>
+Bewerten Sie
+nachfolgend die identifizierten Risiken hinsichtlich ihres weiteren
+Handlungsbedarfs. Die Risiko-Parameter für die Risiko-Matrix können
+Sie unter dem Informationsverbund auf Ihre Institution anpassen.
+(Siehe Tutorial zur Risikoanalyse nach 200-3)
+</description>
+</item>
+
+<item title="Risikobehandlung">
+<description>
+Die Risikobehandlung
+im BCMS orientiert sich grundlegend an den vier
+Risikobehandlungsoptionen des BSI-Standard 200-3. Jedoch ist die
+Risikobehandlungsoption Transfer von Risiken im BCM nur bedingt
+geeignet.Die weitere Risikobehandlung erfolgt im BCM anhand von
+Business-Continuity-Strategien und -Lösungen, die im nachfolgenden
+Schritt näher erläutert werden. Alle Risiken, die einer weiteren
+Risikobehandlung unterzogen werden sollen, müssen in der Festlegung
+der Business-Continuity-Strategien berücksichtigt werden.
+</description>
+</item>        
+        
+</cheatsheet>

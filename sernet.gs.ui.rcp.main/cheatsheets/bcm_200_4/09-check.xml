@@ -1,0 +1,88 @@
+<cheatsheet title="7.09 Überprüfung des BCMS (Check)">
+
+    <intro>
+        <description>
+Um das BCMS
+aufrechtzuerhalten und kontinuierlich verbessern zu können, muss
+regel-
+mäßig überprüft
+werden, ob das BCMS angemessen, wirksam und effizient ist. Anhand
+der
+Leistungsüberprüfung kann festgestellt werden, ob die jeweiligen
+Vorgaben des BCMS eingehalten und Ziele des BCMS erreicht werden.
+Außerdem werden Korrekturbedarfe und Verbesserungsmöglichkeiten
+sowie Abweichungen zu den definierten Vorgaben im BCM aufgedeckt, die
+durch die Korrektur und Verbesserung des BCMS behandelt werden.
+        </description>
+    </intro>
+
+    <item title="Auswahl von
+Messzielen, Kennzahlen und Zielwerten">
+        <description>
+Im ersten Schritt
+muss die Institution festlegen, was mittels Kennzahlen gemessen wer-
+den soll, d. h.
+Messziele festlegen. In der Praxis werden zumeist Kennzahlen erhoben,
+die sich auf das
+konkrete Ergebnis eines oder mehrerer BCM-Prozessschritte beziehen.
+Aber auch konkrete
+Ergebnisobjekte, die sich aus den BCM-Prozessschritten ergeben,
+können anhand einer
+Kennzahl untersucht werden. Die Messziele müssen in der Gesamtheit
+einen jeweils aktuellen Überblick über den Status des BCMS und die
+einzelnen BCM-Prozessschritte ermöglichen. Übergreifend müssen die
+Effektivität und Effizienz des BCMS eingeschätzt werden.
+<b>Kennzahlen ohne
+Zielwerte</b>
+In verinice haben
+Sie die Möglichkeit <b>Kennzahlen ohne Zielwerte</b> unter dem
+Geschäftsprozess-Objekt zu erfassen und auszuwerten. Im Bereich
+BCM-Reporting finden Sie beispielhafte Kennzahlen aufgeführt, die
+Aussagen über den Reifegrad und die Effektivität der BIA, der
+Geschäftsfortführungsplanung sowie der Überprüfung von GFP anhand
+von Tests und Übungen treffen. Per Customizing können Sie die
+Kennzahlen ohne Zielwert beliebig anpassen und erweitern. Die
+erfassten Kennzahlen können mittels der Report-Abfrage ausgegeben
+und in einem separaten Bericht entsprechend ausgewertet und
+aufbereitet werden.
+</description>
+</item>
+
+<item title="Kennzahlen mit
+definierten Zielwerten">
+<description>
+Darüber hinaus
+können Kennzahlen auch einen eher informativen Charakter besitzen,
+der nicht primär
+dazu dient, die Qualität des BCMS zu bewerten. Sie können dazu
+dienen, wesentliche Ergebnisse des BCMS zu zählen und
+zusammenzufassen. Ein typisches Beispiel hierfür wäre die Anzahl
+der Geschäftsprozesse je MTPD-Stufe. Um Abweichungen aufzuzeigen,
+sollten nach Möglichkeit Zielwerte für diese festgelegt werden.
+Insbesondere die grundlegenden Zielsetzungen des BCMS, die
+allgemeinen Anforderungen sowie die aktuelle und gewünschte Reife
+sollten dabei beachtet werden.
+<br/><br/>
+Zum Verwalten von
+Kennzahlen mit definierten Zielwerten empfehlen wir, wie im
+Beispielverbund ersichtlich, eine neue Geschäftsprozess-Gruppe
+anzulegen. Diese kann beliebig benannt werden (Beispiel:
+Kennzahlen-Verwaltung mit Zielwert nach BCM-Prozess). 
+<br/>
+Unter der Gruppe
+legen Sie für jede Kennzahl einen neuen Geschäftsprozess an. Als
+Titel benennen Sie die Kennzahl und erwähnen im Beschreibungsfeld,
+dass in diesem Objekt die bestimmte Kennzahl verwaltet wird, mit
+Verweis auf den Bereich „BCM-Reporting“. 
+<br/>
+Unter dem
+BCM-Reporting können Sie dann Ihre Kennzahl erneut beschreiben, den
+Zielwert sowie den Ist-Wert dokumentieren und angeben, ob eine
+Abweichung zwischen Soll- und Ist-Wert vorliegt. Wenn ja können Sie
+die Ursache notieren und den Schweregrad dieser Abweichung
+einschätzen. Die erfassten Kennzahlen können
+mittels der Report-Abfrage ausgegeben und in einem separaten Bericht
+entsprechend ausgewertet und aufbereitet werden.       
+        </description>
+    </item>
+</cheatsheet>

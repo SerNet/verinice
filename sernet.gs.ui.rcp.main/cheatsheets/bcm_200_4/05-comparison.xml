@@ -1,0 +1,89 @@
+<cheatsheet title="7.05 SOLL-IST VERGLEICH">
+
+    <intro>
+        <description>
+Dieses Tutorial beschäftigt sich mit dem Soll-Ist-Vergleich. Anhand diesem wird festgestellt, ob die benötigten Ressourcen schon ausreichend abgesichert sind. Mit diesen Informationen kann die BAO in einem Schadensfall direkt erkennen, wo lediglich der Wiederanlauf gestartet werden muss und wo noch weitere Aktionen benötigt werden.
+        </description>
+
+    </intro>
+
+
+<item title="Identifizierung
+der Ressourcenzuständigkeiten">
+<description>
+Vor dem
+Soll-Ist-Vergleich ist es notwendig, die Ressourcenzuständigen zu
+identifizieren.
+Da der oder die BCB
+in der Regel über den besten Gesamtüberblick über die BIA-
+Ergebnisse verfügt,
+ist es empfehlenswert, dass er oder sie diese Aufgabe übernimmt.
+<br/><br/>
+Legen Sie die
+Geschäfts- bzw. Ressourcenzuständigen als Personen-Objekt an und
+verknüpfen diese mit den Ressourcen. 
+
+</description>
+</item>
+
+<item title="Durchführung des
+Soll-Ist-Vergleichs">
+<description>
+Als Ergebnis der BIA
+liegen für alle betrachteten zeitkritischen Ressourcen die RTOs
+sowie
+gegebenenfalls die
+RPO vor. RTO und RPO stellen gewünschte Soll-Werte dar. Die
+Ressourcenzuständigen müssen im Rahmen des Soll-Ist-Vergleichs die
+Frage beantworten, ob die RTO der Ressource mit vorhandenen
+technischen und organisatorischen Maßnahmen erreicht werden kann.
+Dazu wird der RTO die tatsächliche Wiederanlaufzeit (RTA)
+gegenübergestellt und die Zeitwerte werden miteinander verglichen.
+Die RTA einer zeitkritischen Ressource bezeichnet den real
+erreichbaren Zeitraum ab dem Ausruf des Notfalls bis zu dem
+Zeitpunkt, an dem eine BC-Lösung für diese Ressource produktiv
+gesetzt wird. Analog muss für informationsbasierte Ressourcen auch
+die RPO mit dem Recovery Point Actual (RPA, deutsch: tatsächlicher
+Datenverlust) verglichen werden.
+<br/><br/>
+Öffnen Sie den
+Bereich <b>SOLL-IST Vergleich</b> unter jedem Zielobjekt und erfassen
+Sie die <b>RTA</b>. Notieren Sie den <b>Nachweis</b> und treffen Sie
+eine Aussage darüber, ob die RTA kleiner gleich der RTO ist. Für
+die Ressourcenkategorien, für die eine RPO festgelegt wurde, muss
+diese mit
+dem vom IT-Betrieb
+festgelegten <b>Datensicherungszyklus</b> abgeglichen werden. Hierfür
+finden Sie unter dem BCM-Bereich ein Feld zur <b>Festlegung des
+Datensicherungszyklus</b>. Notieren Sie den <b>tatsächlichen
+Datenverlust (RPA)</b> und treffen Sie eine Aussage darüber, ob der
+Datensicherungszyklus kleiner/gleich der RPO ist. 
+
+</description>
+</item>
+
+<item title="Auswertung und
+Freigabe der Ergebnisse ">
+<description>
+
+Eine Übersicht
+aller zeitkritischen Ressourcen, insbesondere jedoch der unzureichend
+ab-
+gesicherten
+Ressourcen, muss erstellt und mit der Institutionsleitung abgestimmt
+wer-
+den. Die
+Institutionsleitung sollte die folgenden Informationen zur Kenntnis
+nehmen und
+bestätigen:
+Übersicht der zeitkritischen Geschäftsprozesse gemäß BIA,
+Übersicht der zeitkritischen Ressourcen gemäß BIA, Übersicht der
+unzureichend abgesicherten Ressourcen gemäß Soll-Ist-Vergleich,
+Einschätzung möglicher Risiken aus den identifizierten Lücken
+gemäß Soll-Ist-Vergleich. Die Übersichten für die
+Institutionsleitung können Sie sich per Report-Abfrage ausgeben
+lassen. 
+        </description>
+        
+    </item>
+</cheatsheet>

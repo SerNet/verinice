@@ -1,0 +1,138 @@
+<cheatsheet title="7.07 BC-Strategien/-Lösungen">
+
+    <intro>
+        <description>
+Dieses Tutorial beschäftigt sich mit der Identifizierung, Bewertung und Auswahl von BC-Strategien/-Lösungen, die zum Behandeln von Risiken entwickelt werden.
+        </description>
+
+    </intro>
+    
+    
+    <item title="Identifizierung möglicher BC-Strategien">
+        <description>
+Die
+BCM-Risikoanalyse liefert die relevanten Risiken, die durch die zu
+entwickelnden BC-
+Strategien vermieden
+oder reduziert werden sollen. Mithilfe von BC-Strategien muss die
+Institutionsleitung für den gesamten Geltungsbereich des BCMS
+strategisch festlegen, wie sie die BC-Planung der zeitkritischen
+Ressourcen und Geschäftsprozesse gestalten und umsetzen lassen
+möchte. Die Institution muss geeignete BC-Strategien definieren, die
+den Handlungsbedarf aus der BCM-Risikoanalyse und der BIA abdecken.
+<br/><br/>
+Für jede
+Ressourcenkategorie ist es empfehlenswert zu prüfen, welche
+grundsätzlichen BC-Strategien möglich wären, um die jeweilige
+Ressourcenkategorie bzw. Ressource abzusichern.
+<br/><br/>
+Für den Fall, dass
+Sie das Risiko behandeln müssen, legen Sie Ihre
+BC-Strategien/-Lösungen als Baustein/Baustein-Anforderungen oder
+Maßnahmen-Objekt an und verknüpfen diese ebenfalls mit dem
+Zielobjekt und den Gefährdungen. 
+
+<br/><br/>
+Als Ergebnis dieses
+Abschnitts verfügt der oder die BCB je Ressourcenkategorie über
+eine
+Liste möglicher
+BC-Strategien.
+</description>
+</item>
+
+<item title="Bewertung der Strategie">
+<description>
+
+Nachdem der oder die
+BCB die grundsätzlich möglichen BC-Strategien identifiziert hat,
+muss er oder sie
+bewerten, ob diese für die Institution wirksam und angemessen sind.
+Eine BC-Strategie
+ist dann <b>wirksam</b>, wenn durch die umgesetzte BC-Strategie die
+Eintrittshäufigkeit eines Ausfalls auf ein akzeptables Maß gesenkt
+werden kann oder die
+zeitkritischen
+Geschäftsprozesse innerhalb der RTO auf dem Notbetriebsniveau
+fortgeführt werden können. 
+</description>
+</item>
+
+<item title="Angemessen">
+<description>
+ist eine BC-Strategie dann, wenn sie den allgemeinen Zielen der
+Institution entspricht, die geltenden rechtlichen und regulatorischen
+Anforderungen einhält und wenn der Nutzen die Kosten überwiegt. 
+
+<br/><br/>
+Um die BC-Strategien
+bewerten zu können, ist es empfehlenswert, dass der oder die BCB
+verschiedene Bewertungskriterien festlegt. Anhand der
+Bewertungskriterien können die BC-Strategien qualitativ und
+quantitativ bewertet und gegeneinander abgewogen werden. Falls sich
+frühzeitig herausstellt, dass eine BC-Strategie nicht wirksam oder
+nicht angemessen ist, ist es nicht notwendig, diese weiter zu
+bewerten.
+<br/><br/>
+Unter dem
+Baustein-Anforderungs-Objekt mittels welchem die BC-Strategie in
+verinice abgebildet ist, bewerten Sie die BC-Strategie, in dem Sie
+die Felder mit den Bewertungskriterien, die mindestens berücksichtigt
+werden müssen, ausfüllen. (Beschreibung der BC-Strategie, Einhalten
+der RTO, Erreichbares Notbetriebsniveau, Verbleibendes Restrisiko,
+Finanzielle Aufwände, Einhaltung interner und externer
+Anforderungen, maximal mögliche Notbetriebsdauer, Organisatorische
+Aufwände, Entstehende Risiken, Entstehender Zusatznutzen) Sie können
+anschließend den Status der BC-Strategie auf vorgeschlagen setzen. 
+</description>
+</item>
+
+<item title="Auswahl der
+BC-Strategie durch die Institutionsleitung ">
+<description>
+Nachdem der oder die
+BCB mögliche BC-Strategien vorausgewählt und bewertet hat, muss die
+Institutionsleitung in ihrer Rolle als Gesamtverantwortliche für das
+BCM sowie aufgrund der Reichweite der BC-Strategien über die
+letztlich umzusetzenden BC-Strategien entscheiden. Die
+Institutionsleitung muss hierzu die Wirksamkeit beziehungsweise den
+Nutzen der BC-Strategien sowie die erwarteten Kosten und die eigene
+Risikobereitschaft gegeneinander abwägen.
+<br/><br/>
+Lassen Sie sich über
+die Report-Abfrage die vorgeschlagenen BC-Strategien tabellarisch
+ausgeben und legen Sie diese der Institutionsleitung vor. Diese kann
+die BC-Strategie dann prüfen und ggf. freigeben. Wenn eine
+BC-Strategie freigegeben wird, können Sie den Status der
+BC-Strategie in verinice auf freigegeben setzen. 
+</description>
+</item>
+
+<item title="Umsetzung der
+BC-Strategie und -Lösungen ">
+<description>
+Nachdem die
+Institutionsleitung die BC-Strategien freigegeben hat, muss
+festgelegt wer-
+den, wer für die
+Umsetzung zuständig ist und wer das hierzu notwendige Fachwissen
+beisteuern kann.
+Gemeinsam mit dem oder der BCB können diese Personen sich abstimmen,
+wie die
+BC-Strategien umgesetzt werden sollen. Hierzu ist es empfehlenswert,
+zunächst zu prüfen, aus welchen Vorsorgemaßnahmen, BC-Lösungen
+und Notfallmaßnahmen sich die
+ausgewählten
+BC-Strategien zusammensetzen. 
+
+<br/><br/>
+Halten Sie die
+Ergebnisse per Verknüpfungen fest. Im Ergebnis sollte die
+BC-Strategie mit Vorsorgemaßnahmen, Notfallmaßnahmen, und der
+zuständigen Person, die für die Umsetzung verantwortlich ist,
+verknüpft sein. Im Nachgang kann der Umsetzungsstatus dokumentiert
+werden und am Schluss der Staus der BC-Strategie auf umgesetzt
+gesetzt werden.         
+        </description>
+    </item>
+</cheatsheet>
