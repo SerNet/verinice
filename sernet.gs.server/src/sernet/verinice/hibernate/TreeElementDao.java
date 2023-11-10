@@ -38,7 +38,8 @@ import org.hibernate.criterion.Restrictions;
 import sernet.gs.service.CollectionUtil;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
-import sernet.gs.service.ServerInitializer;
+import sernet.hui.common.VeriniceContext;
+import sernet.hui.common.VeriniceContext.State;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.IElementTitleCache;
@@ -428,8 +429,9 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
 
     public static <T, K, V> Collector<T, Map<K, V>, Map<K, V>> toJsonMap(
             final Function<? super T, K> keyMapper, final Function<T, V> valueMapper) {
+        State parentState = VeriniceContext.getState();
         return Collector.of(HashMap::new, (kvMap, t) -> {
-            ServerInitializer.inheritVeriniceContextState();
+            VeriniceContext.setState(parentState);
             kvMap.put(keyMapper.apply(t), valueMapper.apply(t));
         }, (kvMap, kvMap2) -> {
             kvMap.putAll(kvMap2);
