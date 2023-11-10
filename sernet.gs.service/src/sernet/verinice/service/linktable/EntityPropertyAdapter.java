@@ -27,8 +27,8 @@ import sernet.hui.common.connect.URLUtil;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * An EntityPropertyAdapter reads properties from an CnATreeElement. This class
- * is used in the context of link tables.
+ * An EntityPropertyAdapter reads properties from an CnATreeElement.
+ * This class is used in the context of link tables.
  * 
  * See ILinkTableService for an introduction to link tables.
  *
@@ -36,68 +36,64 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class EntityPropertyAdapter implements IPropertyAdapter {
 
+
     private final CnATreeElement element;
 
     public EntityPropertyAdapter(CnATreeElement elment) {
         this.element = elment;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.verinice.service.linktable.IPropertyAdapter#getPropertyValue(java.
-     * lang.Object, java.lang.String)
+    /* (non-Javadoc)
+     * @see sernet.verinice.service.linktable.IPropertyAdapter#getPropertyValue(java.lang.Object, java.lang.String)
      */
     @Override
     public String getPropertyValue(String propertyId) {
-        if (element == null) {
+        if(element==null) {
             return null;
         }
         Entity entity = element.getEntity();
-        if (entity == null) {
+        if(entity==null) {
             return null;
         }
-
+        
         return getPropertyValue(entity, propertyId);
     }
 
     public String getPropertyValue(Entity entity, String propertyId) {
-        String value;
-        if (CnATreeElement.isStaticProperty(propertyId)) {
+        String value;      
+        if(CnATreeElement.isStaticProperty(propertyId)) {
             value = CnATreeElement.getStaticProperty(element, propertyId);
-        } else {
+        } else {             
             value = entity.getPropertyValue(propertyId);
             PropertyType propertyType = getPropertyType(element.getTypeId(), propertyId);
-            if (isUrlAndNotEmpty(propertyType, value)) {
+            if(isUrlAndNotEmpty(propertyType, value)) {
                 value = URLUtil.createLinkForSpreadsheet(value);
-            } else if (isDate(propertyType)) {
+            }
+            if(isDate(propertyType)) {
                 value = entity.getDateInISO8601(propertyId);
-            } else if (propertyType.isNumericSelect()) {
-                value = entity.getRawPropertyValue(propertyId);
             }
         }
         return value;
     }
 
     protected boolean isUrlAndNotEmpty(PropertyType propertyType, String value) {
-        return propertyType != null && propertyType.isURL() && isNotEmpty(value);
+        return propertyType!=null && propertyType.isURL() && isNotEmpty(value);
     }
 
     private boolean isDate(PropertyType propertyType) {
-        return propertyType != null && propertyType.isDate();
+        return propertyType!=null && propertyType.isDate();
     }
-
+    
     private boolean isNotEmpty(String value) {
-        return value != null && !value.isEmpty();
+        return value!=null && !value.isEmpty();
     }
-
+    
     private PropertyType getPropertyType(String elementId, String propertyId) {
         return getEntityType(elementId).getPropertyType(propertyId);
     }
-
+    
     private EntityType getEntityType(String elementId) {
         return HUITypeFactory.getInstance().getEntityType(elementId);
     }
-
+    
 }

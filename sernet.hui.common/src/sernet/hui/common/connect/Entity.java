@@ -188,10 +188,6 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                 String value;
                 if (propertyType.isSingleSelect() || propertyType.isMultiselect()) {
                     value = getValueOfOptionProperty(propertyType, property);
-                } else if (propertyType.isNumericSelect()) {
-                    Integer numeric = getNumericValue(propertyTypeId);
-                    value = numeric != null ? propertyType.getNameForValue(numeric)
-                            : StringUtils.EMPTY;
                 } else if (propertyType.isDate()) {
                     value = getValueOfDateProperty(property);
                 } else {
@@ -444,7 +440,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 
     public Integer getNumericValue(String propertyType) {
         try {
-            return Integer.valueOf(getRawPropertyValue(propertyType));
+            return Integer.valueOf(getPropertyValue(propertyType));
         } catch (NumberFormatException ex) {
             return null;
         }
