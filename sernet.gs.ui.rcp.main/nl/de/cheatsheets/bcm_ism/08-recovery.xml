@@ -1,0 +1,43 @@
+<cheatsheet title="8.08 Geschäftsfortführungsplanung und Wiederanlauf- und Wiederherstellungsplanung">
+
+    <intro>
+        <description>
+Dieses Tutorial beschäftigt sich mit dem Verwalten von Notfallmaßnahmen im Rahmen der Geschäftsfortführungs- und Wiederanlauf und Wiederherstellungsplanung.  
+        </description>
+
+    </intro>
+
+
+    <item title="Notfallmaßnahmen verwalten">
+        <description>
+Die
+Geschäftsfortführungspläne dokumentieren, bezogen auf
+Geschäftsprozesse, und die Wiederanlaufpläne, bezogen auf
+Ressourcen, die Handlungsschritte, die im Notfall durchgeführt
+werden müssen, damit die zeitkritischen Geschäftsprozesse innerhalb
+der geforderten Zeit fortgeführt werden können. Die
+Wiederherstellungspläne geben Hilfestellungen, welche
+Handlungsschritte nötig sind, um wieder ausreichend Ressourcen für
+den Normalbetrieb bereitzustellen. Innerhalb der Erstellung der GFPs
+müssen <b>Notfallmaßnahmen entwickelt und dokumentiert</b> werden,
+um ausgefallene Geschäftsprozesse in einem definierten Notbetrieb
+wiederaufzunehmen. 
+
+<br/><br/>
+Diese werden
+üblicherweise von den zuständigen Kontaktpersonen der GFPs
+erstellt. Hierzu muss beschrieben werden, wie auf Basis der
+festgelegten BC-Strategien und -Lösungen die Geschäftsprozesse
+innerhalb der erforderlichen Zeit und auf dem Notbetriebsniveau
+wiederaufgenommen werden sollen.
+<br/><br/>
+Die entwickelten
+Notfallmaßnahmen können Sie in verinice dokumentieren und die
+Zuständigkeiten festhalten. Legen Sie dafür neue Control-Gruppen an
+und erfassen die Maßnahmen als Control-Objekte. Hinterlegen Sie als
+nächstes die Verknüpfungen. Die Maßnahmen können als nächstes
+als Checkliste durch die Report-Abfrage ausgegeben werden und den GFP
+/WAP und WHP beigefügt werden. 
+</description>
+</item>
+</cheatsheet>

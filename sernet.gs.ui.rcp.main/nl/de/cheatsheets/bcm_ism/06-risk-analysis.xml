@@ -1,0 +1,50 @@
+<cheatsheet title="8.06 Risikoanalyse">
+
+    <intro>
+        <description>
+Dieses Tutorial beschäftigt sich mit der BCM-Risikoanalyse.
+        </description>
+
+    </intro>
+    
+    
+    <item title="Auswahl einer geeigneten Methode">
+        <description>
+Es kann auf
+etablierte Risikoanalyse Methoden zurückgegriffen werden. In
+verinice führen Sie die BCM-Risikoanalyse nach dem ISO/IEC 27005
+Standard durch. 
+
+<br/><br/>
+Es müssen die
+BCM-relevanten Risiken für alle zeitkritischen Ressourcen,
+insbesondere SpoFs, sowie für alle zeitkritischen Geschäftsprozesse
+systematisch untersucht werden. Unter BCM-relevanten Risiken werden
+dabei in der Regel Risiken verstanden, die sich unmittelbar auf die
+Verfügbarkeit der zeitkritischen Ressourcen auswirken. Sofern kein
+hinreichendes ISMS vorliegt, sollten die Grundwerte Integrität und
+Vertraulichkeit in einer BCM-Risikoanalyse berücksichtigt werden,
+sodass zumindest die hieraus resultierenden Auswirkungen auf die
+Verfügbarkeit in den BC-Strategien behandelt werden können.
+<br/><br/>
+</description>
+</item>
+
+<item title="Erstellung einer Übersicht der Risikoszenarien">
+<description>
+Erstellen Sie eine
+Szenario-Gruppe, in der Sie Risikoszenarien erfassen, die sich
+insbesondere auf das Schutzziel Verfügbarkeit beziehen. Sie können
+zuvor auch Schwachstellen und Bedrohungen erfassen und sich aus den
+beiden Objekten das Risikoszenario automatisch generieren lassen.
+Risiken, die sich nur auf andere Schutzziele auswirken, wie z. B.
+Risiken, die die Vertraulichkeit oder Integrität beeinträchtigen,
+werden innerhalb des BCM nicht direkt behandelt.
+<br/><br/>
+Grundlegendes zur
+Risikoanalyse entnehmen Sie bitte dem Tutorial <b>3.2
+Risikomanagement basierend auf ISO 27005.</b>
+</description>
+</item>        
+        
+</cheatsheet>

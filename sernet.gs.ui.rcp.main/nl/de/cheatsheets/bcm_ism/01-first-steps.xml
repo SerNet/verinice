@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<cheatsheet title="8.01.Erste Schritte">
+
+    <intro>
+        <description>
+            <b>Willkommen bei verinice.</b>
+            <br ></br>
+Mit diesem Tutorial
+lernen Sie, wie Sie Teilaspekte Ihres BCMS in verinice erfassen.
+Welche Daten Sie verwalten und wie Sie dabei Schritt-für-Schritt
+vorgehen können.
+        </description>
+    </intro>
+
+<item title="Führung und Verpflichtung ">
+<description>
+Unabdinglich für
+einen erfolgreichen Aufbau und eine Entwicklung eines BCMS ist die
+Übernahme der Verantwortung durch die Leitungsebene. Bevor Sie mit
+der Umsetzung Ihres BCMS starten, sollte eine Leitlinie BCMS
+entwickelt und von der Institutionsleitung freigegeben worden sein.
+Diese können Sie dann unter der Dokumentenstruktur ablegen oder
+einen externen Link auf das Dokument hinterlegen.
+</description>
+</item>
+
+<item title="Scope anlegen">
+<description>
+Im View ISM finden
+Sie einen leeren oder bereits vorhandenen Scope. Sollte dies nicht
+der Fall sein, so können Sie einen neuen Scope anlegen. Klicken Sie
+dazu in der oberen Werkzeugleiste das entsprechende Icon: Blatt
+Papier mit einem Sternchen. Klicken Sie den neu erzeugten Scope
+doppelt an. Im rechten oberen Bereich öffnet sich das Editor-View
+mit den Eigenschaften des Objekts Scope. Hier können Sie die Angaben
+und Eigenschaften für den Scope definieren. 
+</description>
+</item>
+
+<item title="Anwendungsbereich des Business Continuity Management Systems ">
+<description>
+Im Scope definieren
+Sie den Anwendungsbereich und können Ausschlüsse separat
+dokumentieren. Ebenfalls können Angaben zum abzusichernden Zeitraum,
+Änderungen am BCMS festgehalten und wichtige Definitionen zur
+Vorbereitung auf die  Business Impact Analyse, wie das
+Untragbarkeitsniveau, und die Schadenskategorien unter dem Schutzziel
+Verfügbarkeit angepasst werden. 
+
+<br/><br/>
+Nachdem Sie Ihre
+Angaben vervollständigt haben, speichern Sie diese (klick auf Icon:
+Diskette oder Tastenkombination: Strg+S) und schließen Sie den
+Editor (klick auf x im Reiter oder Tastenkombination: Strg+W)
+</description>
+</item>
+
+<item title="Benennung des oder der BCB">
+<description>
+Navigieren Sie zum
+Personen-Objekt und legen Ihren BCB als Personen-Zielobjekt an,
+alternativ können Sie mit verinice.PRO Personen-Zielobjekte aus
+einem AD importieren, wie z.B. den BC-Beauftragten. 
+        </description>
+    </item>
+
+</cheatsheet>

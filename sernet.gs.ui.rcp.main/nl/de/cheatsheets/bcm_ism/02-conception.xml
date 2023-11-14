@@ -1,0 +1,145 @@
+<cheatsheet title="8.02 Konzeption und Planung des BCMS (PLAN)">
+
+    <intro>
+        <description>
+Dieses Tutorial beschäftigt sich mit der Konzeption und Planung des BCMS, insbesondere mit der Analyse von Anforderungen und Erwartungen von interessierten Parteien. Zusätzlich dazu, wird darauf eingegangen, wie die interessierten Parteien angelegt und mit den Anforderungen verknüpft werden können. Zudem wird beschrieben, wo Angaben zur Kommunikation mit den Interessierten Parteien dokumentiert werden. In einem nächsten Schritt wird aufgezeigt, wie Sie Ihre Reaktionsstruktur in verinice abbilden. Abschließend wird auf die Ablage der BC-relevanten Dokumente eingegangen.
+        </description>
+
+    </intro>
+
+
+    <item
+        title="Erfordernisse und Erwartungen interessierter Parteien">
+        <description>
+Für eine
+erfolgreiche Umsetzung und Aufrechterhaltung des BCMS sollten die
+Rahmenbedingungen zu dem BCMS genau analysiert werden und das BCMS
+auf die Bedürfnisse und Anforderungen von relevanten interessierten
+Parteien ausgerichtet werden. Nur so kann sichergestellt werden, dass
+das BCMS anforderungsgerecht aufgebaut und betrieben wird. 
+
+<br/><br/>
+Um die
+identifizierten Erfordernisse, Erwartungen und Einflussfaktoren an
+das BCMS in verinice zu erfassen, legen Sie eine neue
+Anforderungs-Gruppe an. Navigieren Sie dafür mit rechtem Mausklick
+auf Ihren Scope &gt; Neu &gt; Anforderungsgruppe. In der Baumstruktur
+Ihres Scopes befindet sich jetzt eine neue Anforderungsgruppe. Es
+wird empfohlen nach externen und internen Interessengruppen zu
+unterscheiden. Legen Sie hierfür zwei Unter-Gruppen an. Mit erneutem
+rechten Mausklick auf das Anforderungsgruppen-Objekt können Sie
+Anforderungen erfassen. (Anforderungsgruppe &gt; Neue Anforderung). 
+
+<br/><br/>
+Beschreiben Sie die
+Anforderung unter dem Beschreibungsfeld und fügen Sie hinzu, welchen
+<b>Einfluss die Anforderung</b> (niedrig, mittel, hoch)<b> </b>auf
+das BCMS hat und setzen Sie den Hacken, dass es sich um eine Business
+Continuity Anforderung handelt.  
+</description>
+</item>
+
+<item title="Anlegen der
+Interessierten Parteien und Verknüpfung mit den Anforderungen">
+<description>
+Als Nächstes können
+die identifizierten interessierten Parteien gruppiert nach intern und
+extern, als Personen-Objekte angelegt werden. Unter dem
+Personen-Objekt können Sie ebenfalls den <b>Grad der Einflussnahme</b>
+festlegen, und Verknüpfungen zu den Anforderungen herstellen. Als
+Verknüpfungstyp wählen Sie <b>Interessierte Partei erwartet/fordert</b>
+aus. 
+
+<br/><br/>
+Es gibt zwei
+Möglichkeiten in verinice, wie Sie Abhängigkeiten/Verknüpfungen
+zwischen den Objekten herstellen können. 
+<br/>
+1. Drag&amp;Drop: Im
+View ISM kann die Verknüpfung über Drag&amp;Drop hergestellt
+werden. Dazu wählen Sie ein Objekt aus und ziehen es mit der linken
+Maustaste auf das jeweilige Objekt mit dem Sie es verknüpfen wollen.
+Die Verknüpfung wird sofort übernommen und kann im Verknüpfung-View
+oder im Link-Maker des Objektes eingesehen werden. 
+<br/>
+2. Link-Maker: Über
+den sogenannten Link-Maker, der sich im unteren Teil des
+Editorbereichs jedes Objektes befindet, können Sie die Verknüpfung
+zwischen Objekten herstellen, indem Sie zunächst das Element
+auswählen, welches mit Ihrem Objekt verknüpft werden soll, und
+anschließend auf Hinzufügen klicken. Nun erscheint ein neues
+Fenster, in diesem werden Ihnen alle Objekte des Elementes in Ihrem
+Informationsverbund angezeigt. Wenn 
+
+Sie
+verbundübergreifend Verknüpfungen herstellen wollen, so sollte <b>Nur
+aktueller Scope</b>
+ abgewählt werden.
+In diesem Auswahlfenster können Sie mit einem einfachen Klick alle
+Objekte auswählen, die mit Ihrem Objekt verknüpft werden sollen.
+Durch anschließendes Betätigen des OK-Buttons werden die
+Verknüpfungen hergestellt. 
+</description>
+</item>
+
+<item title="Warnung und
+Kommunikation ">
+<description>
+
+Aufbauend auf der
+Analyse der Interessierten Parteien können Sie für jede
+Interessierte Partei Angaben zur Kommunikation dokumentieren, um eine
+adressatengerechte Kommunikation im Laufe des gesamten PDCA-Zyklus zu
+ermöglichen und aufrechtzuerhalten. 
+
+<br/><br/>
+Befüllen Sie die
+Felder <b>Kommunikation im Normalbetrieb</b>,<b> Kommunikation im
+Notbetrieb</b>, <b>Zeit-Intervall </b>und<b> Kommunikationsweg </b>unter
+dem<b> Personen-Objekt,</b> um Angaben dazu zu machen, welchen
+Informationsanspruch die Interessengruppe hat, ob Kommunikation
+stattfinden soll oder darf, welche Informationen weitergegeben
+werden, über welches Medium kommuniziert wird, wie häufig und zu
+welchen Zeitpunkten kommuniziert wird.
+<br/><br/>
+Ebenfalls können
+Sie zwischen zwei Personen-Objekten verknüpfen, um darzustellen wer
+mit wem kommuniziert bzw. für wen zuständig ist. Hierfür können
+Sie zusätzlich zu den interessierten Parteien in der
+Reaktionsstruktur ein NuK-Kommunikationsteam abbilden.
+</description>
+</item>
+
+<item title="Definition der Reaktionsstruktur">
+<description>
+Zusätzlich zu den
+Interessierten Parteien können Sie die Gesamtheit aller Rollen im
+BCM als <b>Personen-Objekte</b> abbilden. Eine Möglichkeit ist die
+Reaktionsstruktur in zwei Gruppen aufzuteilen: erstens in die
+BC-Vorsorgeorganisation, zweitens die Bewältigungsorganisation für
+Notfälle und Krisen (Besondere Aufbauorganisation (BAO)). Legen Sie
+die am BCMS beteiligten Mitarbeitenden Ihrer Institution als
+Personen-Objekte an und weisen Sie diesen <b>BCM-Rollen</b> zu. So
+können Sie die Verantwortlichkeiten für relevante BCM-Rollen
+sicherstellen. 
+</description>
+</item>
+
+<item title="Dokumentation der BC-relevanten Dokumente">
+<description>
+Bauen Sie ihre
+eigene Dokumentenstruktur auf und legen Sie die Dokumente in verinice
+ab oder verweisen über den Externen Link darüber.
+<br/><br/>
+Sie können
+unterscheiden zwischen zwei Dokumentenarten. Dokumente zur Vorsorge
+beschreiben die Elemente des BCMS oder stellen Anforderungen an
+dieses. Zusätzlich gehören alle Dokumente dazu, die in der
+Notfallvorsorge benötigt werden. 
+
+Dokumente zur
+Reaktion werden explizit für die Notfallbewältigung erstellt und
+genutzt. 
+        </description>
+    </item>
+</cheatsheet>
