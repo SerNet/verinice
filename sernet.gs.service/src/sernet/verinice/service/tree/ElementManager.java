@@ -147,7 +147,7 @@ public class ElementManager {
      */
     public void elementChanged(CnATreeElement element) {
         try {
-            element = replaceEntityInCache(element);
+            element = replaceDataInCache(element);
             updateParentInCache(element);
         } catch (RuntimeException re) {
             LOG.error("RuntimeException in elementChanged", re);
@@ -246,19 +246,20 @@ public class ElementManager {
     }
 
     /**
-     * Replaces the entity of an element in cache. If element is not found in
+     * Replaces the data of an element in cache. If element is not found in
      * cache element is not added to cache.
      * 
      * @param element
      *            A CnATreeElement
-     * @return The element from cache with replaced entity or unchanged element
-     *         if element was not found in cache.
+     * @return The element from cache with replaced data or unchanged element if
+     *         element was not found in cache.
      */
-    private CnATreeElement replaceEntityInCache(CnATreeElement element) {
+    private CnATreeElement replaceDataInCache(CnATreeElement element) {
         CacheObject cachedObject = cache.getCachedObject(element);
         if (cachedObject != null) {
             CnATreeElement cachedElement = cachedObject.getElement();
             cachedElement.setEntity(element.getEntity());
+            cachedElement.setIconPath(element.getIconPath());
             cache.addObject(new CacheObject(cachedElement,
                     cachedObject.isChildrenPropertiesLoaded(), cachedObject.getHasChildren()));
             return cachedElement;
