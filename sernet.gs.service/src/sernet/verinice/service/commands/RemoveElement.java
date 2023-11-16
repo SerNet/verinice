@@ -246,10 +246,10 @@ public class RemoveElement extends GenericCommand
 
         propertyDao.delete(allProperties);
         allPropertyLists.forEach(it -> it.getProperties().clear());
-        propertyDao.flush();
 
         propertyListDao.delete(allPropertyLists);
         allEntities.forEach(it -> it.getTypedPropertyLists().clear());
+        propertyDao.flush();
         propertyListDao.flush();
 
         elements.forEach(it -> {
