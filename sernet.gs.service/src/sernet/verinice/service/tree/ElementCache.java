@@ -76,18 +76,19 @@ public class ElementCache {
                 // for debug only
                 boolean replaced = false;
                 if (LOG.isDebugEnabled()) {
-                    replaced = getCache().get(cacheObject.getElement().getUuid()) != null;
+
+                    replaced = getCache().get(cacheObject.getElement().getDbId()) != null;
                     ElementChecker.checkParent(cacheObject.getElement());
                     ElementChecker.checkChildrenSet(cacheObject.getElement());
                 }
-                getCache().put(new Element(cacheObject.getElement().getUuid(), cacheObject));
+                getCache().put(new Element(cacheObject.getElement().getDbId(), cacheObject));
                 if (LOG.isInfoEnabled()) {
                     if (replaced) {
-                        LOG.info("Element replaced, uuid: " + cacheObject.getElement().getUuid()
+                        LOG.info("Element replaced, dbId: " + cacheObject.getElement().getDbId()
                                 + ", has children: " + cacheObject.getHasChildren()
                                 + ", children loaded: " + cacheObject.isChildrenPropertiesLoaded());
                     } else {
-                        LOG.info("Element added, uuid: " + cacheObject.getElement().getUuid()
+                        LOG.info("Element added, dbId: " + cacheObject.getElement().getDbId()
                                 + ", has children: " + cacheObject.getHasChildren()
                                 + ", children loaded: " + cacheObject.isChildrenPropertiesLoaded());
                     }
@@ -121,16 +122,16 @@ public class ElementCache {
         try {
             CacheObject cacheObject = null;
             if (e != null) {
-                Element element = getCache().get(e.getUuid());
+                Element element = getCache().get(e.getDbId());
                 if (element != null) {
                     cacheObject = ((CacheObject) element.getObjectValue());
                     if (LOG.isDebugEnabled()) {
                         if (cacheObject != null) {
-                            LOG.debug("Cache hit for uuid: " + e.getUuid() + ", has children: "
+                            LOG.debug("Cache hit for dbId: " + e.getDbId() + ", has children: "
                                     + cacheObject.getHasChildren() + ", children loaded: "
                                     + cacheObject.isChildrenPropertiesLoaded());
                         } else {
-                            LOG.debug("No cached element for uuid: " + e.getUuid());
+                            LOG.debug("No cached element for dbId: " + e.getDbId());
                         }
                     }
                 }
@@ -145,18 +146,18 @@ public class ElementCache {
     public void remove(CnATreeElement element) {
         try {
             removeFromParentChilds(element);
-            getCache().remove(element.getUuid());
+            getCache().remove(element.getDbId());
             if (LOG.isInfoEnabled()) {
-                LOG.info("Element removed, uuid: " + element.getUuid());
+                LOG.info("Element removed, dbId: " + element.getDbId());
             }
         } catch (Exception t) {
             LOG.error("Error while removing object", t);
         }
     }
 
-    public void remove(String uuid) {
+    public void remove(Integer dbId) {
         try {
-            CnATreeElement element = getElement(uuid);
+            CnATreeElement element = getElement(dbId);
             if (element != null) {
                 remove(element);
             }
@@ -165,11 +166,11 @@ public class ElementCache {
         }
     }
 
-    public CnATreeElement getElement(String uuid) {
+    public CnATreeElement getElement(Integer dbId) {
         CnATreeElement element = null;
         try {
             CacheObject cacheObject = null;
-            Element cachedElement = getCache().get(uuid);
+            Element cachedElement = getCache().get(dbId);
             if (cachedElement != null) {
                 cacheObject = ((CacheObject) cachedElement.getObjectValue());
                 if (cacheObject != null) {
@@ -177,7 +178,7 @@ public class ElementCache {
                 }
             }
         } catch (Exception t) {
-            LOG.error("Error while getting object, uuid: " + uuid, t);
+            LOG.error("Error while getting object, dbId: " + dbId, t);
         }
         return element;
     }

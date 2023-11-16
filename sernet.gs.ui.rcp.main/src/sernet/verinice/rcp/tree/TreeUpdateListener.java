@@ -104,7 +104,7 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
     public void databaseChildRemoved(ChangeLogEntry entry) {
         try {
             if (entry != null && entry.getUuid() != null) {
-                getElementManager().elementRemoved(entry.getUuid());
+                getElementManager().elementRemoved(entry.getDbId());
                 updater.refresh();
             }
         } catch (Exception e) {
