@@ -139,19 +139,28 @@ public class RemoveElement extends GenericCommand
             // we need to delete them by hand. This is not an optimal solution
             // and should be replaced by Hibernate event listeners someday.
             // (see VN-2084)
-
-            LoadSubtreeIds loadSubtreeIds = new LoadSubtreeIds(element);
-
-            LoadSubtreeIds subTrees = getCommandService().executeCommand(loadSubtreeIds);
-            Set<Integer> ids = subTrees.getDbIdsOfSubtree();
-            List<CnATreeElement> elements = new ArrayList<>(ids.size());
-            for (List<Integer> chunk : CollectionUtil.partition(List.copyOf(ids),
-                    IDao.QUERY_MAX_ITEMS_IN_LIST)) {
+            List<CnATreeElement> elements;
+            if (element.isScope()) {
                 DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class)
-                        .add(Restrictions.in("dbId", chunk));
+                        .add(Restrictions.eq("scopeId", element.getDbId()));
                 RetrieveInfo.getPropertyInstance().configureCriteria(criteria);
-                elements.addAll(dao.findByCriteria(criteria));
+                elements = dao.findByCriteria(criteria);
+
+            } else {
+                LoadSubtreeIds loadSubtreeIds = new LoadSubtreeIds(element);
+
+                LoadSubtreeIds subTrees = getCommandService().executeCommand(loadSubtreeIds);
+                Set<Integer> ids = subTrees.getDbIdsOfSubtree();
+                elements = new ArrayList<>(ids.size());
+                for (List<Integer> chunk : CollectionUtil.partition(List.copyOf(ids),
+                        IDao.QUERY_MAX_ITEMS_IN_LIST)) {
+                    DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class)
+                            .add(Restrictions.in("dbId", chunk));
+                    RetrieveInfo.getPropertyInstance().configureCriteria(criteria);
+                    elements.addAll(dao.findByCriteria(criteria));
+                }
             }
+
             Set<CnATreeElement> persons = elements.stream().filter(CnATreeElement::isPerson)
                     .collect(Collectors.toSet());
             if (!persons.isEmpty()) {
