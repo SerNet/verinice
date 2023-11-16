@@ -262,7 +262,7 @@ Library.
          optional="true"/>
 
    <includes
-         id="org.eclipse.justj.openjdk.hotspot.jre.full"
+         id="org.eclipse.justj.openjdk.hotspot.jre.minimal.stripped"
          version="0.0.0"/>
 
 </feature>
