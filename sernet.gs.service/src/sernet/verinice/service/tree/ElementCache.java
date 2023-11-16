@@ -32,166 +32,171 @@ import net.sf.ehcache.Status;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * In memory cache for {@link CnATreeElement}s.
- * Elements are cached with ehcache: http://ehcache.org/
+ * In memory cache for {@link CnATreeElement}s. Elements are cached with
+ * ehcache: http://ehcache.org/
  * 
- * Cache is configured by parameter:
- * MAX_ELEMENTS_IN_MEMORY 
- * TIME_TO_LIVE_SECONDS  
- * TIME_TO_IDLE_SECONDS
- * See comments for details.
+ * Cache is configured by parameter: MAX_ELEMENTS_IN_MEMORY TIME_TO_LIVE_SECONDS
+ * TIME_TO_IDLE_SECONDS See comments for details.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class ElementCache {
 
     private static final Logger LOG = Logger.getLogger(ElementCache.class);
-	
+
     /*
      * Configuration parameter
-     */  
-    //Maximal number of elements in cache
-    private static final int MAX_ELEMENTS_IN_MEMORY = 5000;  
+     */
+    // Maximal number of elements in cache
+    private static final int MAX_ELEMENTS_IN_MEMORY = 5000;
     // Time to live in seconds, 7200s = 2h
-    private static final int TIME_TO_LIVE_SECONDS = 7200;    
+    private static final int TIME_TO_LIVE_SECONDS = 7200;
     // Time to idle in seconds, 7200s = 2h
     private static final int TIME_TO_IDLE_SECONDS = 7200;
-    
-	private transient CacheManager manager = null;
+
+    private CacheManager manager = null;
     private String cacheId = null;
-    private transient Cache cache = null;
-	
-	public ElementCache() {
-		createCache();
-	}
-	
-	public void addObject(Object o) {
-	    if(o!=null && o instanceof CnATreeElement) {
-	        addObject((CnATreeElement)o);
-	    } else {
+    private Cache cache = null;
+
+    public ElementCache() {
+        createCache();
+    }
+
+    public void addObject(Object o) {
+        if (o instanceof CnATreeElement) {
+            addObject(o);
+        } else {
             LOG.warn("Object is null or not an CnATreeElement. Will not add this to cache.");
         }
- 	}
-	
-	public void addObject(CacheObject cacheObject) {
-	    try {
-            if(ElementChecker.checkNull(cacheObject)) {
+    }
+
+    public void addObject(CacheObject cacheObject) {
+        try {
+            if (ElementChecker.checkNull(cacheObject)) {
                 // for debug only
                 boolean replaced = false;
                 if (LOG.isDebugEnabled()) {
-                    replaced = getCache().get(cacheObject.getElement().getUuid())!=null;
+                    replaced = getCache().get(cacheObject.getElement().getUuid()) != null;
                     ElementChecker.checkParent(cacheObject.getElement());
                     ElementChecker.checkChildrenSet(cacheObject.getElement());
                 }
                 getCache().put(new Element(cacheObject.getElement().getUuid(), cacheObject));
-                if (LOG.isInfoEnabled()) {               
-                    if(replaced) {
-                        LOG.info("Element replaced, uuid: " + cacheObject.getElement().getUuid() + ", has children: " + cacheObject.getHasChildren() + ", children loaded: " + cacheObject.isChildrenPropertiesLoaded() );
+                if (LOG.isInfoEnabled()) {
+                    if (replaced) {
+                        LOG.info("Element replaced, uuid: " + cacheObject.getElement().getUuid()
+                                + ", has children: " + cacheObject.getHasChildren()
+                                + ", children loaded: " + cacheObject.isChildrenPropertiesLoaded());
                     } else {
-                        LOG.info("Element added, uuid: " + cacheObject.getElement().getUuid() + ", has children: " + cacheObject.getHasChildren() + ", children loaded: " + cacheObject.isChildrenPropertiesLoaded());
+                        LOG.info("Element added, uuid: " + cacheObject.getElement().getUuid()
+                                + ", has children: " + cacheObject.getHasChildren()
+                                + ", children loaded: " + cacheObject.isChildrenPropertiesLoaded());
                     }
                     if (LOG.isDebugEnabled()) {
                         Statistics s = getCache().getStatistics();
-                        LOG.debug("Cache size: " + s.getObjectCount() + ", hits: " + s.getCacheHits());                  
+                        LOG.debug("Cache size: " + s.getObjectCount() + ", hits: "
+                                + s.getCacheHits());
                     }
                 }
             } else {
                 ElementChecker.logIfNull(cacheObject, "Will not add this to cache.");
             }
-        } catch(Exception t) {
-            LOG.error("Error while adding object",t);
+        } catch (Exception t) {
+            LOG.error("Error while adding object", t);
         }
-	}
+    }
 
     public void clear() {
         if (LOG.isDebugEnabled()) {
             Statistics s = getCache().getStatistics();
-            LOG.debug("Size of cache before clearing, size: " + s.getObjectCount() + ", hits: " + s.getCacheHits());
+            LOG.debug("Size of cache before clearing, size: " + s.getObjectCount() + ", hits: "
+                    + s.getCacheHits());
         }
         getManager().clearAll();
-		if (LOG.isInfoEnabled()) {
+        if (LOG.isInfoEnabled()) {
             LOG.info("Cache cleared");
         }
-	}
-	
-	public CacheObject getCachedObject(CnATreeElement e) {
+    }
+
+    public CacheObject getCachedObject(CnATreeElement e) {
         try {
             CacheObject cacheObject = null;
-            if(e!=null) {
+            if (e != null) {
                 Element element = getCache().get(e.getUuid());
-                if(element!=null) {
-                    cacheObject = ((CacheObject) element.getObjectValue());            
+                if (element != null) {
+                    cacheObject = ((CacheObject) element.getObjectValue());
                     if (LOG.isDebugEnabled()) {
-                        if(cacheObject!=null) {
-                            LOG.debug("Cache hit for uuid: " + e.getUuid() + ", has children: " + cacheObject.getHasChildren() + ", children loaded: " + cacheObject.isChildrenPropertiesLoaded());
+                        if (cacheObject != null) {
+                            LOG.debug("Cache hit for uuid: " + e.getUuid() + ", has children: "
+                                    + cacheObject.getHasChildren() + ", children loaded: "
+                                    + cacheObject.isChildrenPropertiesLoaded());
                         } else {
                             LOG.debug("No cached element for uuid: " + e.getUuid());
                         }
                     }
-                }   
+                }
             }
             return cacheObject;
-        } catch(Exception t) {
-            LOG.error("Error while getting object",t);
+        } catch (Exception t) {
+            LOG.error("Error while getting object", t);
             return null;
         }
     }
-	
-	public void remove(CnATreeElement element) {
+
+    public void remove(CnATreeElement element) {
         try {
             removeFromParentChilds(element);
             getCache().remove(element.getUuid());
             if (LOG.isInfoEnabled()) {
                 LOG.info("Element removed, uuid: " + element.getUuid());
             }
-        } catch(Exception t) {
-            LOG.error("Error while removing object",t);
-        }   
+        } catch (Exception t) {
+            LOG.error("Error while removing object", t);
+        }
     }
-	
-	public void remove(String uuid) {
+
+    public void remove(String uuid) {
         try {
             CnATreeElement element = getElement(uuid);
-            if(element!=null) {
-               remove(element);                 
+            if (element != null) {
+                remove(element);
             }
-        } catch(Exception t) {
-            LOG.error("Error while removing object",t);
-        }   
+        } catch (Exception t) {
+            LOG.error("Error while removing object", t);
+        }
     }
-	
-	public CnATreeElement getElement(String uuid) {
-	    CnATreeElement element = null;
-	    try { 	    
+
+    public CnATreeElement getElement(String uuid) {
+        CnATreeElement element = null;
+        try {
             CacheObject cacheObject = null;
             Element cachedElement = getCache().get(uuid);
-            if(cachedElement!=null) {
+            if (cachedElement != null) {
                 cacheObject = ((CacheObject) cachedElement.getObjectValue());
-                if(cacheObject!=null) {
-                    element = cacheObject.getElement();                              
+                if (cacheObject != null) {
+                    element = cacheObject.getElement();
                 }
-            }          
-	    } catch(Exception t) {
+            }
+        } catch (Exception t) {
             LOG.error("Error while getting object, uuid: " + uuid, t);
-        } 
-	    return element;
+        }
+        return element;
     }
 
     @SuppressWarnings("unchecked")
     private void removeFromParentChilds(CnATreeElement element) {
         CacheObject cacheObject = getCachedObject(element);
-        if(cacheObject!=null) {
+        if (cacheObject != null) {
             CnATreeElement oldElement = cacheObject.getElement();
             CnATreeElement oldParent = oldElement.getParent();
             CacheObject cacheObjectParent = getCachedObject(oldParent);
-            if(cacheObjectParent!=null) {
+            if (cacheObjectParent != null) {
                 oldParent = cacheObjectParent.getElement();
                 boolean exists = oldParent.getChildren().remove(element);
                 if (exists && LOG.isDebugEnabled()) {
                     LOG.debug("Element removed from parent child set in cache...");
-                }              
+                }
             }
-        } else {            
+        } else {
             List<String> keys = getCache().getKeys();
             for (String key : keys) {
                 cacheObject = (CacheObject) getCache().get(key).getObjectValue();
@@ -200,52 +205,51 @@ public class ElementCache {
         }
     }
 
-	
-	
-	private Cache getCache() {     
-        if(manager==null || Status.STATUS_SHUTDOWN.equals(manager.getStatus()) || cache==null || !Status.STATUS_ALIVE.equals(cache.getStatus())) {
+    private Cache getCache() {
+        if (manager == null || Status.STATUS_SHUTDOWN.equals(manager.getStatus()) || cache == null
+                || !Status.STATUS_ALIVE.equals(cache.getStatus())) {
             cache = createCache();
         } else {
             cache = getManager().getCache(cacheId);
         }
         return cache;
     }
-    
+
     private Cache createCache() {
         shutdownCache();
         cacheId = UUID.randomUUID().toString();
         manager = CacheManager.create();
-        cache = new Cache(cacheId, MAX_ELEMENTS_IN_MEMORY, false, false, TIME_TO_LIVE_SECONDS, TIME_TO_IDLE_SECONDS);
+        cache = new Cache(cacheId, MAX_ELEMENTS_IN_MEMORY, false, false, TIME_TO_LIVE_SECONDS,
+                TIME_TO_IDLE_SECONDS);
         manager.addCache(cache);
         if (LOG.isInfoEnabled()) {
-            LOG.info("In memory cache created. MAX_ELEMENTS_IN_MEMORY: " + MAX_ELEMENTS_IN_MEMORY + ", TIME_TO_LIVE_SECONDS: " + TIME_TO_LIVE_SECONDS + ", TIME_TO_IDLE_SECONDS: " + TIME_TO_IDLE_SECONDS + ", cacheId: " + cacheId );
+            LOG.info("In memory cache created. MAX_ELEMENTS_IN_MEMORY: " + MAX_ELEMENTS_IN_MEMORY
+                    + ", TIME_TO_LIVE_SECONDS: " + TIME_TO_LIVE_SECONDS + ", TIME_TO_IDLE_SECONDS: "
+                    + TIME_TO_IDLE_SECONDS + ", cacheId: " + cacheId);
         }
         return cache;
     }
 
     private void shutdownCache() {
-        if(manager!=null && !Status.STATUS_SHUTDOWN.equals(manager.getStatus())) {
+        if (manager != null && !Status.STATUS_SHUTDOWN.equals(manager.getStatus())) {
             manager.shutdown();
             if (LOG.isInfoEnabled()) {
-                LOG.info("Cache shutdown." );
+                LOG.info("Cache shutdown.");
             }
         }
     }
-    
+
     private CacheManager getManager() {
-        if(manager==null || Status.STATUS_SHUTDOWN.equals(manager.getStatus())) {
+        if (manager == null || Status.STATUS_SHUTDOWN.equals(manager.getStatus())) {
             createCache();
         }
         return manager;
     }
-    
-    /* (non-Javadoc)
-     * @see java.lang.Object#finalize()
-     */
+
     @Override
     protected void finalize() throws Throwable {
         shutdownCache();
         super.finalize();
     }
-	
+
 }

@@ -225,7 +225,7 @@ public class ElementManager {
 
     public List<IParameter> getParameterList() {
         if (paramerterList == null) {
-            paramerterList = new ArrayList<IParameter>();
+            paramerterList = new ArrayList<>();
         }
         return paramerterList;
     }
@@ -365,11 +365,11 @@ public class ElementManager {
     }
 
     private static ChildrenExist checkChildren(CnATreeElement element) {
-        ChildrenExist hasChildren = ChildrenExist.UNKNOWN;
-        if (element.getChildren().size() > 0) {
-            hasChildren = ChildrenExist.YES;
-        } else {
+        ChildrenExist hasChildren;
+        if (element.getChildren().isEmpty()) {
             hasChildren = ChildrenExist.NO;
+        } else {
+            hasChildren = ChildrenExist.YES;
         }
         return hasChildren;
     }
