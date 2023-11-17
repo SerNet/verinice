@@ -19,9 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.model.iso27k;
 
-import java.util.Arrays;
-
-import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -60,12 +57,19 @@ public abstract class Group<T> extends CnATreeElement {
      */
     @Override
     public boolean canContain(Object obj) {
-        boolean canContain = false;
         if (obj instanceof CnATreeElement) {
             CnATreeElement element = (CnATreeElement) obj;
-            canContain = Arrays.asList(getChildTypes()).contains(element.getTypeId())
-                    || this.getTypeId().equals(element.getTypeId());
+            String elementType = element.getTypeId();
+            if (this.getTypeId().equals(elementType)) {
+                return true;
+            }
+            String[] childTypes = getChildTypes();
+            for (int i = 0; i < childTypes.length; i++) {
+                if (elementType.equals(childTypes[i])) {
+                    return true;
+                }
+            }
         }
-        return canContain;
+        return false;
     }
 }
