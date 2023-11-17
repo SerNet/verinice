@@ -204,6 +204,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 }
             }
             List<SyncObject> soList = syncData.getSyncObject();
+            elementSet = new HashSet<>(soList.size());
             Set<String> idsOfObjectsWithLinks = syncData.getSyncLink().stream()
                     .flatMap(l -> Stream.of(l.getDependant(), l.getDependency()))
                     .collect(Collectors.toUnmodifiableSet());
@@ -1031,9 +1032,6 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     }
 
     protected void addElement(CnATreeElement element) {
-        if (elementSet == null) {
-            elementSet = new HashSet<>();
-        }
         elementSet.add(element);
     }
 
