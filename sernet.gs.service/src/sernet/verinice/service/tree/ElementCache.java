@@ -183,7 +183,6 @@ public class ElementCache {
         return element;
     }
 
-    @SuppressWarnings("unchecked")
     private void removeFromParentChilds(CnATreeElement element) {
         CacheObject cacheObject = getCachedObject(element);
         if (cacheObject != null) {
@@ -198,8 +197,9 @@ public class ElementCache {
                 }
             }
         } else {
-            List<String> keys = getCache().getKeys();
-            for (String key : keys) {
+            @SuppressWarnings("rawtypes")
+            List keys = getCache().getKeys();
+            for (Object key : keys) {
                 cacheObject = (CacheObject) getCache().get(key).getObjectValue();
                 cacheObject.getElement().getChildren().remove(element);
             }
