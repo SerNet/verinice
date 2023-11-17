@@ -122,7 +122,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         }
         String[] types = entityTypeFromFactory.getAllPropertyTypeIds();
         for (String type : types) {
-            PropertyType propertyType = huiTypeFactory.getPropertyType(this.entityType, type);
+            PropertyType propertyType = entityTypeFromFactory.getPropertyType(type);
             if (propertyType.isNumericSelect() || propertyType.isBooleanSelect()) {
                 setNumericValue(propertyType, propertyType.getNumericDefault());
             } else if ((propertyType.isText() || propertyType.isDate() || propertyType.isLine())
