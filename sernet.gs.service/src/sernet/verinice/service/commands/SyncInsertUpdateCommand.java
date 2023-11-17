@@ -473,10 +473,10 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      * RuntimeException in case of unvalid data
      */
     private boolean validateInformation(boolean licenseManagement, SyncAttribute sa) {
-        boolean licenseListCardinality = checkEqualCardinalityOfLists(sa);
         if (sa.getLicenseContentId().isEmpty() && sa.getLimitedLicense().isEmpty()) {
             return true;
         }
+        boolean licenseListCardinality = checkEqualCardinalityOfLists(sa);
         boolean licenseManagementValid = licenseManagement && licenseListCardinality;
 
         if (licenseManagement && !licenseListCardinality) {
