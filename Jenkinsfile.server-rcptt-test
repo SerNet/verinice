@@ -1,8 +1,5 @@
 pipeline {
     agent none
-    environment {
-        JAVA_HOME = '/usr/lib/jvm/java-11-openjdk-amd64/'
-    }
     options {
         buildDiscarder(logRotator(numToKeepStr: '100'))
         throttleJobProperty categories: ['rcptt-jenkins'], limitOneJobWithMatchingParams: false, maxConcurrentPerNode: 3, maxConcurrentTotal: 3, paramsToUseForLimit: '', throttleEnabled: true, throttleOption: 'category'
@@ -39,6 +36,9 @@ pipeline {
                 node {
                     label 'linux-gui-tester'
                 }
+            }
+            tools {
+              jdk 'Java11'
             }
             steps {
                 sh 'env'
