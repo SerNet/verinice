@@ -45,10 +45,9 @@ hinterlegten Standardwerten abweichen, müssen Sie diese per
 Customizing anpassen. Des Weiteren werden unter dem
 Informationsverbund Informationen zur Vorbereitung auf die
 Business-Impact-Analyse dokumentiert, die institutionsübergreifend
-gelten, wie das <b>Untragbarkeitsniveau</b>, sowie die
-<b>BAO</b>-<b>Reaktionszeit</b>. 
+gelten, wie das <b>Untragbarkeitsniveau</b>. 
 
-Des Weiteren können
+Ebenfalls können
 Sie unter dem Informationsverbund überprüfen, ob die
 Schutzbedarfskategorien und <b>Schadensszenarien</b> aus dem ISMS,
 identisch mit den <b>Schadenskategorien</b> aus dem BCMS sind,
@@ -71,9 +70,9 @@ einordnen.
 Vor Beginn der BIA
 sollte festgelegt werden, wie die Informationen zur BIA erhoben
 werden sollen.
-Tragen Sie hierfür unter <b>Datum der Erhebung</b> und<b> Art der
+Öffnen Sie einen Geschäftsprozess und tragen unter <b>Datum der Erhebung</b> und<b> Art der
 Erhebung</b> ein, mittels welchen Formats Sie die BIA-Daten wann
-erhoben haben. 
+erhoben haben bzw. erheben werden. 
 
 </description>
 </item>
@@ -146,10 +145,13 @@ Erstellen der Verknüpfungen können Sie wählen, ob die Prozesse
 nachgelagert, parallel oder vorgelagert stattfinden. 
 
 Aufgrund der
-Prozessabhängigkeiten kann es vorkommen, dass die MTPD des
-Geschäftsprozesses sich ändert, hierfür können Sie unter dem Feld
+Prozessabhängigkeiten kann es vorkommen, dass sich die MTPD des
+Geschäftsprozesses ändert, hierfür können Sie unter dem Feld
 <b>Geänderte MTPD aufgrund von Prozessabhängigkeiten </b>ggf. den
 geänderten MTPD festhalten, und eine Begründung hierfür notieren.
+<br/>
+Um dem Prozesseigentümer die Bewertung zu erleichtern, ob der MTPD-Wert, aufgrund der Abhängigkeiten zu anderen Prozessen, sich ändern muss, wurde ein neues View entwickelt: das BIA View. Navigieren Sie zur Ansicht> Zeige View> BIA View. Mit Klick auf einen Geschäftsprozess wird Ihnen im BIA View angezeigt, zu welchen Geschäftsprozessen und Ressourcen eine Abhängigkeit besteht. Darüber lässt sich ableiten, ob der MTPD-Wert einer Änderung bedarf.
+<br/><br/>
 Nachdem Sie beide MTPD-Werte festgelegt haben, wird Ihnen automatisch
 die MTPD (MIN aus Schadensbewertung und Prozessabhängigkeit)
 ausgegeben. Wenn Sie ein Customizing vorgenommen haben, müssen die
@@ -193,11 +195,7 @@ wird, tragen Sie unter der Ressource/dem Zielobjekt den kleinsten
 RTO-Wert ein. 
 
 <br/><br/>
-Um einen besseren
-Überblick über die Prozess-und Ressourcenabhängigkeiten und deren
-MTPD bzw. RTO-Werten zu erhalten, empfehlen wir unter Ansicht &gt;Zeige
-View &gt; Verknüpfungen, das Verknüpfungen-View parallel zur
-Eingabemaske geöffnet zu haben. 
+Um dem Ressourcenzuständigen die Bewertung der RTO zu erleichtern, öffnen Sie das BIA View. Anschließend klicken Sie auf die Ressource für die Sie den RTO-Wert bestimmen möchten. Klicken Sie im BIA View auf RTO. Ihnen wird im View die Abhängigkeiten dieser Ressource angezeigt, sollte die Ressource von mehreren Geschäftsprozessen benötigt werden, würden Sie dies in der Darstellung erkennen und könnten daraus den kleinsten RTO-Wert für die Ressource ableiten. Tragen Sie diesen Wert unter dem Feld <b>Kleinste RTO der Ressource</b> ein. 
 
 </description>
 </item>
@@ -229,7 +227,7 @@ informationsbasierten Ressourcenkategorien (beispielsweise die
 Ressourcenkategorien Informationen und IT (Daten)) muss zusätzlich
 die RPO bestimmt werden. Die RPO stellt in diesem Zusammenhang eine
 fachliche Anforderung des Prozesseigentümers oder der -eigentümerin
-dar, bis zu welchem Zeitpunkt man mit dem zurückfallen darf, um mit
+dar, bis zu welchem Zeitpunkt man zurückfallen darf, um mit
 geeigneten Informationen (Daten) im Notbetrieb noch arbeiten zu
 können. Die RPO ist unabhängig von der MTPD oder der RTO und muss
 daher nicht darauf abgestimmt werden. Jedoch sollte analog zur RTO
@@ -239,6 +237,8 @@ dieselbe(n) informationsbasierten Ressourcen(cluster) zurückgreifen
 <br/><br/>
 Erfassen Sie für
 informationsbasierte Ressourcen die RPO.
+<br/>
+Um sich die Abhängigkeiten der Ressource grafisch darstellen zu lassen, öffnen Sie das BIA View. Drücken Sie auf RPO. Der Prozesseigentümer sollte zuvor unter dem Feld RPO im Geschäftsprozess festlegen, wie alt die Daten sein dürfen, um im Notbetrieb mit diesen Daten arbeiten zu können. Wenn keine informationsbasierten Ressourcen genutzt werden, sollte in der Auswahlbox „-„gesetzt werden. Wurden die Angaben bei den Prozessen hinterlegt, kann der Ressourcenzuständige im BIA View den RPO nach dem Minimalprinzip ableiten und den maximal zulässigen Datenverlust (RPO) dieser Ressource festlegen.
 </description>
 </item>
 
@@ -248,7 +248,7 @@ Sollten viele
 zeitkritische Geschäftsprozesse eine einzelne Ressource benötigen,
 müssen Sie  die Ressource als Single Point of Failure kennzeichnen,
 da dies ein erhöhtes Risiko für eine Geschäftsunterbrechung
-darstellt. Setzen Sie den Hacken unter dem Feld Es wird unterschieden
+darstellt. Setzen Sie den Haken unter dem Feld Single-Point-of-Failure/of-Knowledge/of-Contacts(SPoF/SPoK/SPoC). Es wird unterschieden
 zwischen: Wissen (Single Point of Knowledge, SPoK), Technik oder
 Dienstleistung (Single Point of Failure, SPoF) und Kontakte (Single
 Point of Contact, SPoC). 
@@ -273,7 +273,7 @@ abgeleitet wurde.
 Nachdem die
 Ergebnisse qualitätsgesichert wurden, können Sie sich die
 Einzelergebnisse zu einer Gesamtübersicht der zeitkritischen
-Geschäftsprozesse und Ressourcen per Report-Abfrage ausgeben lassen.
+Geschäftsprozesse und Ressourcen ausgeben lassen.
 Die Gesamtübersicht sollte mindestens folgende Inhalte umfassen:
 <br/>
 • Übersicht der

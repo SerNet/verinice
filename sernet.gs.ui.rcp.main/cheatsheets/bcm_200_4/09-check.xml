@@ -40,11 +40,7 @@ Geschäftsprozess-Objekt zu erfassen und auszuwerten. Im Bereich
 BCM-Reporting finden Sie beispielhafte Kennzahlen aufgeführt, die
 Aussagen über den Reifegrad und die Effektivität der BIA, der
 Geschäftsfortführungsplanung sowie der Überprüfung von GFP anhand
-von Tests und Übungen treffen. Per Customizing können Sie die
-Kennzahlen ohne Zielwert beliebig anpassen und erweitern. Die
-erfassten Kennzahlen können mittels der Report-Abfrage ausgegeben
-und in einem separaten Bericht entsprechend ausgewertet und
-aufbereitet werden.
+von Tests und Übungen treffen.
 </description>
 </item>
 
@@ -76,13 +72,13 @@ dass in diesem Objekt die bestimmte Kennzahl verwaltet wird, mit
 Verweis auf den Bereich „BCM-Reporting“. 
 <br/>
 Unter dem
-BCM-Reporting können Sie dann Ihre Kennzahl erneut beschreiben, den
+BCM-Reporting können Sie dann Ihre Kennzahl unter dem Feld Kennzahl erneut beschreiben, den
 Zielwert sowie den Ist-Wert dokumentieren und angeben, ob eine
 Abweichung zwischen Soll- und Ist-Wert vorliegt. Wenn ja können Sie
 die Ursache notieren und den Schweregrad dieser Abweichung
-einschätzen. Die erfassten Kennzahlen können
-mittels der Report-Abfrage ausgegeben und in einem separaten Bericht
-entsprechend ausgewertet und aufbereitet werden.       
+einschätzen.
+<br/><br/>
+Eine Zusammenfassung und Auswertung der Kennzahlen können Sie sich mittels des Standard-Reports ausgeben lassen.
         </description>
     </item>
 </cheatsheet>

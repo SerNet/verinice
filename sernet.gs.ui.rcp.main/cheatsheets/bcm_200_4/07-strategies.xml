@@ -26,15 +26,11 @@ Ressourcenkategorie ist es empfehlenswert zu prüfen, welche
 grundsätzlichen BC-Strategien möglich wären, um die jeweilige
 Ressourcenkategorie bzw. Ressource abzusichern.
 <br/><br/>
-Für den Fall, dass
-Sie das Risiko behandeln müssen, legen Sie Ihre
-BC-Strategien/-Lösungen als Baustein/Baustein-Anforderungen oder
-Maßnahmen-Objekt an und verknüpfen diese ebenfalls mit dem
-Zielobjekt und den Gefährdungen. 
+Erstellen Sie pro Ressourcenkategorie einen neuen Baustein und benennen diesen nach der Ressourcenkategorie um. Im Anschluss können Sie die empfohlenen BC-Strategie für diese Ressourcenkategorie als Baustein-Anforderungen anlegen. Schreiben Sie mindestens unter dem Identifier „BC-Strategie“ und nummerieren diese fortlaufend durch. 
+Setzen Sie unter dem Baustein-Anforderungs-Objekt den Hacken „Business Continuity Anforderung/Strategie“ und den Status der BC-Strategie (vorgeschlagen, freigegeben, umgesetzt). Zusätzlich können Sie die BC-Strategie mit der Gefährdung verknüpfen, um zu begründen, welches Risiko durch die BC-Strategie reduziert wird. 
 
 <br/><br/>
-Als Ergebnis dieses
-Abschnitts verfügt der oder die BCB je Ressourcenkategorie über
+Als Ergebnis verfügt der oder die BCB je Ressourcenkategorie über
 eine
 Liste möglicher
 BC-Strategien.
@@ -82,8 +78,7 @@ werden müssen, ausfüllen. (Beschreibung der BC-Strategie, Einhalten
 der RTO, Erreichbares Notbetriebsniveau, Verbleibendes Restrisiko,
 Finanzielle Aufwände, Einhaltung interner und externer
 Anforderungen, maximal mögliche Notbetriebsdauer, Organisatorische
-Aufwände, Entstehende Risiken, Entstehender Zusatznutzen) Sie können
-anschließend den Status der BC-Strategie auf vorgeschlagen setzen. 
+Aufwände, Entstehende Risiken, Entstehender Zusatznutzen)
 </description>
 </item>
 
@@ -99,12 +94,7 @@ Institutionsleitung muss hierzu die Wirksamkeit beziehungsweise den
 Nutzen der BC-Strategien sowie die erwarteten Kosten und die eigene
 Risikobereitschaft gegeneinander abwägen.
 <br/><br/>
-Lassen Sie sich über
-die Report-Abfrage die vorgeschlagenen BC-Strategien tabellarisch
-ausgeben und legen Sie diese der Institutionsleitung vor. Diese kann
-die BC-Strategie dann prüfen und ggf. freigeben. Wenn eine
-BC-Strategie freigegeben wird, können Sie den Status der
-BC-Strategie in verinice auf freigegeben setzen. 
+Führen Sie den Report zur BC-Strategie aus und legen diesen der Institutionsleitung zur Prüfung und Freigabe vor. Wenn eine BC-Strategie freigegeben wird, können Sie den Status der BC-Strategie in verinice auf freigegeben setzen.
 </description>
 </item>
 
@@ -131,7 +121,7 @@ Ergebnisse per Verknüpfungen fest. Im Ergebnis sollte die
 BC-Strategie mit Vorsorgemaßnahmen, Notfallmaßnahmen, und der
 zuständigen Person, die für die Umsetzung verantwortlich ist,
 verknüpft sein. Im Nachgang kann der Umsetzungsstatus dokumentiert
-werden und am Schluss der Staus der BC-Strategie auf umgesetzt
+werden und am Schluss der Status der BC-Strategie auf umgesetzt
 gesetzt werden.         
         </description>
     </item>

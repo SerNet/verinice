@@ -29,12 +29,12 @@ Erfassen der Anforderungen der Interessengruppen an das BCMS">
             Baustein-Gruppen an. Mit erneutem rechten Mausklick auf das Baustein-Objekt können Sie
             Anforderungen als Baustein-Anforderungs-Objekte erfassen. (<b>Baustein > Neue Anforderung</b>).
             Beschreiben Sie die Anforderung unter dem Beschreibungsfeld und fügen Sie hinzu, welchen
-            <b>Einfluss die Anforderung</b> (niedrig, mittel, hoch) auf das BCMS hat.
+            <b>Einfluss die Anforderung</b> (niedrig, mittel, hoch) auf das BCMS hat. Setzen Sie den Haken unter dem Feld „Business Continuity Anforderung/Strategie“.
         </description>
     </item>
     <item
         title="Anlegen der Interessierten Parteien und Verknüpfung mit den Anforderungen">
-        <description>Als Nächstes können die identifizierten interessierten Parteien gruppiert nach intern und extern, als Personen-Objekte angelegt werden. Unter dem Personen-Objekt können Sie den <b>Grad der Einflussnahme</b> festlegen, und Verknüpfungen zu den Anforderungen herstellen. Als Verknüpfungstyp wählen Sie <b>Interessierte Partei erwartet</b> aus. 
+        <description>Als Nächstes können die identifizierten interessierten Parteien gruppiert nach intern und extern, als Personen-Objekte angelegt werden. Unter dem Personen-Objekt können Sie den <b>Grad der Einflussnahme</b> festlegen, und Verknüpfungen zu den Anforderungen herstellen. Als Verknüpfungstyp wählen Sie <b>Interessierte Partei erwartet/erfordert</b> aus. 
 <br/><br/>
 Es gibt zwei Möglichkeiten in verinice, wie Sie Abhängigkeiten/Verknüpfungen zwischen den Objekten herstellen können.<br/>
 1. Drag&amp;Drop: Im View Modernisierter IT-Grundschutz kann die Verknüpfung über Drag&amp;Drop hergestellt werden. Dazu wählen Sie ein Objekt aus und ziehen es mit der 
@@ -42,20 +42,23 @@ linken Maustaste auf das jeweilige Objekt mit dem Sie es verknüpfen wollen. Die
 Link-Maker des Objektes eingesehen werden.<br/>
 2. Link-Maker: Über den sogenannten Link-Maker, der sich im unteren Teil des Editorbereichs jedes Objektes befindet, können Sie die Verknüpfung zwischen Objekten herstellen, indem Sie zunächst das Element auswählen, welches mit Ihrem Objekt verknüpft werden soll, und anschließend auf Hinzufügen klicken. Nun erscheint ein neues Fenster, in diesem werden Ihnen alle Objekte des Elementes in Ihrem Informationsverbund angezeigt. Wenn 
 Sie verbundübergreifend Verknüpfungen herstellen wollen, so sollte <b>Nur aktueller Scope</b>
- abgewählt werden. In diesem Auswahlfenster können Sie mit einem einfachen Klick alle Objekte auswählen, die mit Ihrem Objekt verknüpft werden sollen. Durch anschließendes Betätigen des OK-Buttons werden die Verknüpfungen hergestellt. ten in verinice, wie Sie Abhängigkeiten/Verknüpfungen zwischen den Objekten herstellen können.         </description>
+ abgewählt werden. In diesem Auswahlfenster können Sie mit einem einfachen Klick alle Objekte auswählen, die mit Ihrem Objekt verknüpft werden sollen. Durch anschließendes Betätigen des OK-Buttons werden die Verknüpfungen hergestellt. 
+<br/>
+ Zusätzlich zur Verknüpfung zur interessierten Partei kann die BCM-Anforderung auch mit einem oder mehreren Maßnahmen-Objekt/en verknüpft werden. Erstellen Sie hierfür eine neue Maßnahmen-Gruppe in Ihrem Informationsverbund, unter welcher Sie die Maßnahmen verwalten, die Sie zur Erfüllung der BCM-Anforderung planen umzusetzen. Mit Klick auf das Verknüpfungen-View im Anforderungs-Objekt sehen Sie im Ergebnis von welcher interessierten Partei diese BCM-Anforderung erwartet/angefordert wird und durch welche Maßnahmen diese Anforderung erfüllt wird. Den Umsetzungsstatus können Sie dann aus den verknüpften Maßnahmen-Objekten automatisch ableiten lassen. 
+ </description>
     </item>
     <item title="Festlegung der Kommunikation mit Interessengruppen">
         <description>
             Aufbauend auf der Interessengruppenanalyse können Sie für jede Interessierte Partei Angaben zur Kommunikation dokumentieren, um eine adressatengerechte Kommunikation im Laufe des gesamten PDCA-Zyklus zu ermöglichen und aufrechtzuerhalten. 
             <br/><br/>
-            Befüllen Sie die Felder <b>Kommunikation im Normalbetrieb</b>, <b>Kommunikation im Notbetrieb</b>, <b>Zeit-Intervall</b> und <b>Kommunikationsweg</b>, um Angaben dazu zu machen, welchen Informationsanspruch die Interessengruppe hat, ob Kommunikation stattfinden soll oder darf, welche Informationen weitergegeben werden, über welches Medium kommuniziert wird, wie häufig und zu welchen Zeitpunkten kommuniziert wird.
+            Befüllen Sie die Felder <b>Kommunikation im Normalbetrieb</b>, <b>Kommunikation im Notbetrieb</b>, <b>Zeit-Intervall</b> und <b>Kommunikationsweg</b>, um Angaben dazu zu machen, welchen Informationsanspruch die Interessengruppe hat, ob Kommunikation stattfinden soll oder darf, welche Informationen weitergegeben werden, über welches Medium kommuniziert wird und wie häufig und zu welchen Zeitpunkten kommuniziert wird.
             <br/><br/>
             Ebenfalls können Sie zwischen zwei Personen-Objekten verknüpfen, um darzustellen wer mit wem kommuniziert bzw. für wen zuständig ist. Hierfür können Sie zusätzlich zu den interessierten Parteien in der BC-Aufbauorganisation Ihr NuK-Kommunikationsteam abbilden.
         </description>
     </item>
     <item title="Definition der BC-Aufbauorganisation">
         <description>
-            Zusätzlich zu den Interessierten Parteien können Sie die Gesamtheit aller Rollen im BCM (= BC-Aufbauorganisation) als <b>Personen-Objekte</b> abbilden. Sie beinhaltet zum einen die BC-Vorsorgeorganisation, zum anderen die Bewältigungsorganisation für Notfälle und Krisen (Besondere Aufbauorganisation (BAO)). Legen Sie die am BCMS beteiligten Mitarbeitenden Ihrer Institution als Personen-Objekte an und weisen Sie diesen BCM-Rollen zu. So können Sie die Verantwortlichkeiten für relevante BCM-Rollen sicherstellen. 
+            Zusätzlich zu den Interessierten Parteien können Sie die Gesamtheit aller Rollen im BCM (= BC-Aufbauorganisation) als <b>Personen-Objekte</b> abbilden. Sie beinhaltet zum einen die BC-Vorsorgeorganisation, zum anderen die Bewältigungsorganisation für Notfälle und Krisen (Besondere Aufbauorganisation (BAO)). Legen Sie die am BCMS beteiligten Mitarbeitenden Ihrer Institution als Personen-Objekte an und weisen Sie diesen BC-Rollen zu. So können Sie die Verantwortlichkeiten für relevante BC-Rollen sicherstellen. 
         </description>
     </item>
     <item title="Dokumentation der BC-relevanten Dokumente">
@@ -63,7 +66,7 @@ Sie verbundübergreifend Verknüpfungen herstellen wollen, so sollte <b>Nur aktu
             Der BSI-Standard 200-4 unterscheidet zwischen zwei Dokumentenarten. Dokumente zur Vorsorge beschreiben die Elemente des BCMS oder stellen Anforderungen an dieses. Zusätzlich gehören alle Dokumente dazu, die in der Notfallvorsorge benötigt werden. 
             Dokumente zur Reaktion werden explizit für die Notfallbewältigung erstellt und genutzt.
             <br/><br/>
-            Bauen Sie ihre eigene Dokumentenstruktur auf und legen Sie die Dokumente in verinice ab oder verweisen über den Externen Link darüber. Zum Schluss können Sie sich per Report-Abfrage eine Dokumentenmatrix ausgeben lassen. 
+            Bauen Sie ihre eigene Dokumentenstruktur auf und legen Sie die Dokumente in verinice ab oder verweisen über den Externen Link darüber. Zum Schluss können Sie sich eine Dokumentenmatrix über den Report ausgeben lassen. Damit in der Dokumentenmatrix nur die BCM-relevanten Dokumente erscheinen, wird empfohlen die Dokumente für das BCM in einem eigenen Informationsverbund zu verwalten.  
         </description>
     </item>
 </cheatsheet>
