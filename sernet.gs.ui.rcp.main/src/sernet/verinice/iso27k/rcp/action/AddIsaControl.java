@@ -77,11 +77,11 @@ public class AddIsaControl implements IObjectActionDelegate, RightEnabledUserInt
     private IWorkbenchPart targetPart;
 
     private static final Logger LOG = Logger.getLogger(AddIsaControl.class);
-    
-    public static final Map<String, String> TITLE_FOR_TYPE;
-    
+
+    private static final Map<String, String> TITLE_FOR_TYPE;
+
     static {
-        TITLE_FOR_TYPE = new HashMap<String, String>();
+        TITLE_FOR_TYPE = new HashMap<>();
         TITLE_FOR_TYPE.put(AssetGroup.TYPE_ID, Messages.getString("AddElement.0")); //$NON-NLS-1$
         TITLE_FOR_TYPE.put(AuditGroup.TYPE_ID, Messages.getString("AddElement.1")); //$NON-NLS-1$
         TITLE_FOR_TYPE.put(ControlGroup.TYPE_ID, Messages.getString("AddElement.22")); //$NON-NLS-1$
@@ -101,9 +101,13 @@ public class AddIsaControl implements IObjectActionDelegate, RightEnabledUserInt
         TITLE_FOR_TYPE.put(VulnerabilityGroup.TYPE_ID, Messages.getString("AddElement.16")); //$NON-NLS-1$
         TITLE_FOR_TYPE.put(Asset.TYPE_ID, Messages.getString("AddElement.18")); //$NON-NLS-1$
     }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
+     * action.IAction, org.eclipse.ui.IWorkbenchPart)
      */
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
         this.targetPart = targetPart;
@@ -111,27 +115,30 @@ public class AddIsaControl implements IObjectActionDelegate, RightEnabledUserInt
 
     public void run(IAction action) {
         try {
-            
-            if(checkRights()){
-                Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
+
+            if (checkRights()) {
+                Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider()
+                        .getSelection()).getFirstElement();
                 CnATreeElement newElement = null;
-    
+
                 if (sel instanceof IISO27kGroup) {
                     IISO27kGroup group = (IISO27kGroup) sel;
                     String childType = null;
-                    if(group.getChildTypes()!=null && group.getChildTypes().length>0) {
-                        // TODO - getChildTypes()[0] problem for more than one type
+                    if (group.getChildTypes() != null && group.getChildTypes().length > 0) {
+                        // TODO - getChildTypes()[0] problem for more than one
+                        // type
                         childType = group.getChildTypes()[1];
-                        if(group instanceof Asset) {
+                        if (group instanceof Asset) {
                             childType = SamtTopic.TYPE_ID;
                         }
                     } else {
                         LOG.error(Messages.getString("AddElement.17")); //$NON-NLS-1$
                     }
-                    if(childType!=null) {
+                    if (childType != null) {
                         boolean inheritIcon = Activator.getDefault().getPreferenceStore()
-                                .getBoolean(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON);                        
-                        newElement = CnAElementFactory.getInstance().saveNew((CnATreeElement) group, childType, null, inheritIcon);                  
+                                .getBoolean(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON);
+                        newElement = CnAElementFactory.getInstance().saveNew((CnATreeElement) group,
+                                childType, null, inheritIcon);
                     }
                 }
                 if (newElement != null) {
@@ -140,7 +147,7 @@ public class AddIsaControl implements IObjectActionDelegate, RightEnabledUserInt
             } else {
                 throw new NotSufficientRightsException("Action not allowed for user");
             }
-        } catch (NotSufficientRightsException e){
+        } catch (NotSufficientRightsException e) {
             LOG.error("Could not add element", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.getString("AddElement.21")); //$NON-NLS-1$
         } catch (Exception e) {
@@ -150,32 +157,36 @@ public class AddIsaControl implements IObjectActionDelegate, RightEnabledUserInt
 
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+    /*
+     * @see
+     * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.
+     * IAction, org.eclipse.jface.viewers.ISelection)
      */
-    @SuppressWarnings("unchecked")
     public void selectionChanged(IAction action, ISelection selection) {
         action.setEnabled(checkRights());
-        if(selection instanceof IStructuredSelection) {
+        if (selection instanceof IStructuredSelection) {
             Object sel = ((IStructuredSelection) selection).getFirstElement();
             boolean allowed = false;
-            boolean enabled = false;        
+            boolean enabled = false;
             if (sel instanceof CnATreeElement) {
-                allowed = CnAElementHome.getInstance().isNewChildAllowed((CnATreeElement) sel);           
+                allowed = CnAElementHome.getInstance().isNewChildAllowed((CnATreeElement) sel);
             }
-            if(sel instanceof Audit) {
-                enabled = false;
+            if (sel instanceof Audit) {
                 action.setText(Messages.getString("AddElement.20"));
-            } else if(sel instanceof IISO27kGroup) {
+            } else if (sel instanceof IISO27kGroup) {
                 enabled = true;
                 IISO27kGroup group = (IISO27kGroup) sel;
-                // TODO - getChildTypes()[0] might be a problem for more than one type
+                // TODO - getChildTypes()[0] might be a problem for more than
+                // one type
                 String childType = group.getChildTypes()[1];
-                if(group instanceof Asset) {
+                if (group instanceof Asset) {
                     childType = SamtTopic.TYPE_ID;
                 }
-                action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getImageForTypeId(childType))); 
-                action.setText( TITLE_FOR_TYPE.get(group.getTypeId())!=null ? TITLE_FOR_TYPE.get(group.getTypeId()) : Messages.getString("AddElement.20") ); //$NON-NLS-1$
+                action.setImageDescriptor(ImageDescriptor
+                        .createFromImage(ImageCache.getInstance().getImageForTypeId(childType)));
+                action.setText(TITLE_FOR_TYPE.get(group.getTypeId()) != null
+                        ? TITLE_FOR_TYPE.get(group.getTypeId())
+                        : Messages.getString("AddElement.20")); //$NON-NLS-1$
             }
             // Only change state when it is enabled, since we do not want to
             // trash the enablement settings of plugin.xml
@@ -185,16 +196,17 @@ public class AddIsaControl implements IObjectActionDelegate, RightEnabledUserInt
         }
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
     public boolean checkRights() {
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override

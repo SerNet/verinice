@@ -9,31 +9,24 @@ import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 
-public class ShowSpiderChartACtion extends ShowSomeViewAction implements IViewActionDelegate, RightEnabledUserInteraction {
+public class ShowSpiderChartAction extends ShowSomeViewAction
+        implements IViewActionDelegate, RightEnabledUserInteraction {
 
-    
-    /**
-     * @return
-     */
     @Override
     protected String getViewId() {
         return SpiderChartView.ID;
     }
-    
-    @Override
-    public void init(final IAction action){
-        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
-            IInternalServerStartListener listener = new IInternalServerStartListener(){
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if(e.isStarted()){
-                        action.setEnabled(checkRights());
-                    }
-                }
 
+    @Override
+    public void init(final IAction action) {
+        if (Activator.getDefault().isStandalone()
+                && !Activator.getDefault().getInternalServer().isRunning()) {
+            IInternalServerStartListener listener = e -> {
+                if (e.isStarted()) {
+                    action.setEnabled(checkRights());
+                }
             };
             Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
         } else {
@@ -41,16 +34,17 @@ public class ShowSpiderChartACtion extends ShowSomeViewAction implements IViewAc
         }
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
     public boolean checkRights() {
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override
@@ -58,14 +52,12 @@ public class ShowSpiderChartACtion extends ShowSomeViewAction implements IViewAc
         return ActionRightIDs.SHOWCHARTVIEW;
     }
 
-    /* (non-Javadoc)
+    /*
      * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
      */
     @Override
     public void init(IViewPart arg0) {
-        // TODO Auto-generated method stub
-        
+        // no-op
+
     }
 }
-
-

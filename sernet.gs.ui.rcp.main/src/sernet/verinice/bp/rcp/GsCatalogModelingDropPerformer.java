@@ -95,14 +95,14 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
                 Baustein b = (Baustein) item;
                 String title = b.getId() + " " + b.getTitel();//$NON-NLS-1$
                 if (group instanceof BpThreatGroup) {
-                    Group<?> saveGroup = createGroup(group, title, 
-                            BpThreatGroup.class, BpThreatGroup.TYPE_ID);
+                    Group<?> saveGroup = createGroup(group, title, BpThreatGroup.class,
+                            BpThreatGroup.TYPE_ID);
                     for (Gefaehrdung g : b.getGefaehrdungen()) {
                         transformGefaehrdung(saveGroup, elements, g);
                     }
                 } else if (group instanceof SafeguardGroup) {
-                    Group<?> saveGroup = createGroup(group, title, 
-                            SafeguardGroup.class, SafeguardGroup.TYPE_ID);
+                    Group<?> saveGroup = createGroup(group, title, SafeguardGroup.class,
+                            SafeguardGroup.TYPE_ID);
                     for (Massnahme m : b.getMassnahmen()) {
                         transformMassnahme(saveGroup, elements, m);
                     }
@@ -153,9 +153,11 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
          * @param gefaehrdung
          *            - the source object
          */
-        private void transformGefaehrdung(Group<?> group, List<CnATreeElement> elements, Gefaehrdung gefaehrdung) {
+        private void transformGefaehrdung(Group<?> group, List<CnATreeElement> elements,
+                Gefaehrdung gefaehrdung) {
             BpThreat bpThreat = new BpThreat(group);
-//            bpThreat.setIdentifier(g.getId()); // TODO: maybe BpThreat will return identifier + title as getTitle later like Safeguard does
+            // bpThreat.setIdentifier(g.getId()); // TODO: maybe BpThreat will
+            // return identifier + title as getTitle later like Safeguard does
             bpThreat.setTitel(gefaehrdung.getId() + " " + gefaehrdung.getTitel()); //$NON-NLS-1$
             try {
                 String description = HtmlWriter.getHtml(gefaehrdung);
@@ -176,7 +178,8 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
          * @param massnahme
          *            - the source object
          */
-        private void transformMassnahme(Group<?> group, List<CnATreeElement> elements, Massnahme massnahme) {
+        private void transformMassnahme(Group<?> group, List<CnATreeElement> elements,
+                Massnahme massnahme) {
             Safeguard safeguard = new Safeguard(group);
             safeguard.setIdentifier(massnahme.getId());
             safeguard.setTitle(massnahme.getTitel());
@@ -295,12 +298,12 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
      * @param preferenceConstant
      *            - the preference identifier
      */
-    private void displayToggleDialog(String message, String title, String toggleMessage, 
+    private void displayToggleDialog(String message, String title, String toggleMessage,
             IPreferenceStore preferenceStore, String preferenceConstant) {
         boolean dontShow = preferenceStore.getBoolean(preferenceConstant);
         if (!dontShow) {
             MessageDialogWithToggle dialog = MessageDialogWithToggle.openInformation(
-                    PlatformUI.getWorkbench().getDisplay().getActiveShell(), title, message, 
+                    PlatformUI.getWorkbench().getDisplay().getActiveShell(), title, message,
                     toggleMessage, dontShow, preferenceStore, preferenceConstant);
             preferenceStore.setValue(preferenceConstant, dialog.getToggleState());
         }
@@ -354,8 +357,8 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
     @Override
     public boolean checkRights() {
         Activator.inheritVeriniceContextState();
-        RightsServiceClient service = (RightsServiceClient) VeriniceContext.get(
-                VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 

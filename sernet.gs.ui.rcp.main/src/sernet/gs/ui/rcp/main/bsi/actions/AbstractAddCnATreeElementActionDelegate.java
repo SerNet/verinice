@@ -12,10 +12,13 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.common.CnATreeElement;
 
-public abstract class AbstractAddCnATreeElementActionDelegate implements IObjectActionDelegate, RightEnabledUserInteraction {
+public abstract class AbstractAddCnATreeElementActionDelegate
+        implements IObjectActionDelegate, RightEnabledUserInteraction {
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+    /*
+     * @see
+     * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.
+     * IAction, org.eclipse.jface.viewers.ISelection)
      */
     public final void selectionChanged(IAction action, ISelection selection) {
         action.setEnabled(checkRights());
@@ -31,18 +34,19 @@ public abstract class AbstractAddCnATreeElementActionDelegate implements IObject
             }
         }
     }
-    
+
     @Override
-    public String getRightID(){
+    public String getRightID() {
         return ActionRightIDs.ADDBSIELEMENT;
     }
-    
-    /* (non-Javadoc)
+
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
     public boolean checkRights() {
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 

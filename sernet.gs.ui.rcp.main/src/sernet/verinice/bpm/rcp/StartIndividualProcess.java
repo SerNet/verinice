@@ -94,7 +94,7 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
      */
     @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-
+        // no-op
     }
 
     /*

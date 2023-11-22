@@ -30,9 +30,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
@@ -81,7 +81,7 @@ public class IconSelectAction
     public void run(IAction arg0) {
         try {
             final IconSelectDialog dialog = new IconSelectDialog(shell);
-            if (Dialog.OK == dialog.open() && dialog.isSomethingSelected()) {
+            if (Window.OK == dialog.open() && dialog.isSomethingSelected()) {
                 WorkspaceJob updateIconJob = new WorkspaceJob(Messages.IconSelectAction_0) {
                     @Override
                     public IStatus runInWorkspace(final IProgressMonitor monitor) {

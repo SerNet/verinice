@@ -27,10 +27,10 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
@@ -72,8 +72,7 @@ public class StartQmProcess implements IObjectActionDelegate, RightEnabledUserIn
      */
     @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-        // TODO Auto-generated method stub
-
+        // no-op
     }
 
     /*
@@ -84,7 +83,7 @@ public class StartQmProcess implements IObjectActionDelegate, RightEnabledUserIn
         if (!selectedUuids.isEmpty()) {
             NewQmIssueDialog dialog = new NewQmIssueDialog(Display.getCurrent().getActiveShell(),
                     selectedTitles.get(0));
-            if (dialog.open() == Dialog.OK) {
+            if (dialog.open() == Window.OK) {
                 startProcess(dialog.getDescription(), dialog.getPriority());
             }
         }

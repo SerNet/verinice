@@ -76,8 +76,7 @@ public class StartIsaControlFlowProcess
      */
     @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-        // TODO Auto-generated method stub
-
+        // no-op
     }
 
     /*
@@ -147,8 +146,8 @@ public class StartIsaControlFlowProcess
      */
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
-        action.setEnabled(checkRights());
         if (!Activator.getDefault().isStandalone()) {
+            action.setEnabled(checkRights());
             if (selection instanceof ITreeSelection) {
                 ITreeSelection treeSelection = (ITreeSelection) selection;
                 selectedControlUuids.clear();

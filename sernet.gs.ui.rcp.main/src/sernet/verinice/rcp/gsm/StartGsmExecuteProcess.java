@@ -67,8 +67,6 @@ public class StartGsmExecuteProcess implements IObjectActionDelegate, RightEnabl
 
     private int numberOfProcess = 0;
 
-    private Boolean isActive = null;
-
     private String validationMessage = Messages.StartGsmExecuteProcess_10;
 
     /*
@@ -78,6 +76,7 @@ public class StartGsmExecuteProcess implements IObjectActionDelegate, RightEnabl
      */
     @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+        // no-op
     }
 
     /*

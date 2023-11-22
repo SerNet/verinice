@@ -110,7 +110,7 @@
                style="push">
          </action>
          <action
-               class="sernet.verinice.samt.rcp.ShowSpiderChartACtion"
+               class="sernet.verinice.samt.rcp.ShowSpiderChartAction"
                icon="icons/chart.png"
                id="sernet.verinice.samt.rcp.ShowMaturitySummaryAction"
                label="%action.label.1"

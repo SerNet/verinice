@@ -47,49 +47,47 @@ import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
 import sernet.verinice.service.commands.DeriveStatusCommand;
 
 /**
- * This {@link ActionDelegate} determines all generic and specific measures (controls) that are
- * linked to an isa question (samttopic) and transfers the maturity of the question
- * to the measures, if maturity not unset or NA.
- * Execution is is done by remote call on the server in {@link DeriveStatusCommand}.
+ * This {@link ActionDelegate} determines all generic and specific measures
+ * (controls) that are linked to an isa question (samttopic) and transfers the
+ * maturity of the question to the measures, if maturity not unset or NA.
+ * Execution is is done by remote call on the server in
+ * {@link DeriveStatusCommand}.
  * 
  * @see DeriveStatusCommand
  */
 @SuppressWarnings("restriction")
-public class DeriveStatusAction extends ActionDelegate implements IViewActionDelegate, IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {
-    
+public class DeriveStatusAction extends ActionDelegate implements IViewActionDelegate,
+        IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {
+
     private static final Logger LOG = Logger.getLogger(DeriveStatusAction.class);
-    
+
     public static final String ID = "sernet.verinice.iso27k.rcp.action.DeriveStatusAction"; //$NON-NLS-1$
-    
+
     private boolean serverIsRunning = true;
-    
+
     private List<ControlGroup> selectedGroups;
-    
+
     private int samtCount = 0;
-    
+
     private int measureCount = 0;
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
     public boolean checkRights() {
-        RightsServiceClient service = (RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override
@@ -98,35 +96,31 @@ public class DeriveStatusAction extends ActionDelegate implements IViewActionDel
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.
      * IWorkbenchWindow)
      */
     @Override
     public void init(IWorkbenchWindow arg0) {
+        // no-op
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
      */
     @Override
     public void init(IViewPart arg0) {
+        // no-op
     }
 
     @Override
     public void init(final IAction action) {
-        if (Activator.getDefault().isStandalone() && !Activator.getDefault().getInternalServer().isRunning()) {
+        if (Activator.getDefault().isStandalone()
+                && !Activator.getDefault().getInternalServer().isRunning()) {
             serverIsRunning = false;
-            IInternalServerStartListener listener = new IInternalServerStartListener() {
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if (e.isStarted()) {
-                        serverIsRunning = true;
-                        action.setEnabled(checkRights());
-                    }
+            IInternalServerStartListener listener = e -> {
+                if (e.isStarted()) {
+                    serverIsRunning = true;
+                    action.setEnabled(checkRights());
                 }
             };
             Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
@@ -139,24 +133,34 @@ public class DeriveStatusAction extends ActionDelegate implements IViewActionDel
     public void run(IAction action) {
         if (selectedGroups != null && !selectedGroups.isEmpty()) {
             String title = selectedGroups.get(0).getTitle();
-            boolean confirm = MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.getString("DeriveStatus.1"), NLS.bind(Messages.getString("DeriveStatus.2"), title)); //$NON-NLS-1$ //$NON-NLS-2$
-            if (!confirm){
+            boolean confirm = MessageDialog.openConfirm(Display.getDefault().getActiveShell(),
+                    Messages.getString("DeriveStatus.1"), //$NON-NLS-1$
+                    NLS.bind(Messages.getString("DeriveStatus.2"), title)); //$NON-NLS-1$
+            if (!confirm) {
                 return;
             }
             try {
-                PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-                    @Override
-                    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                        monitor.beginTask(Messages.getString("DeriveStatus.3"), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
-                        derivateStatus();
-                        monitor.done();
-                    }
-                });
-                InfoDialogWithShowToggle.openInformation(Messages.getString("DeriveStatus.1"), NLS.bind(Messages.getString("DeriveStatus.4"), new Object[]{measureCount, samtCount}), Messages.getString("DeriveStatus.6"), PreferenceConstants.INFO_STATUS_DERIVED); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                PlatformUI.getWorkbench().getProgressService()
+                        .busyCursorWhile(new IRunnableWithProgress() {
+                            @Override
+                            public void run(IProgressMonitor monitor)
+                                    throws InvocationTargetException, InterruptedException {
+                                monitor.beginTask(Messages.getString("DeriveStatus.3"), //$NON-NLS-1$
+                                        IProgressMonitor.UNKNOWN);
+                                derivateStatus();
+                                monitor.done();
+                            }
+                        });
+                InfoDialogWithShowToggle.openInformation(Messages.getString("DeriveStatus.1"), //$NON-NLS-1$
+                        NLS.bind(Messages.getString("DeriveStatus.4"), //$NON-NLS-1$
+                                new Object[] { measureCount, samtCount }),
+                        Messages.getString("DeriveStatus.6"), //$NON-NLS-1$
+                        PreferenceConstants.INFO_STATUS_DERIVED);
             } catch (Exception e) {
                 final String message = Messages.getString("DeriveStatusAction.6"); //$NON-NLS-1$
-                LOG.error(message, e); //$NON-NLS-1$
-                MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.getString("DeriveStatusAction.7"), message); //$NON-NLS-1$
+                LOG.error(message, e); // $NON-NLS-1$
+                MessageDialog.openError(Display.getDefault().getActiveShell(),
+                        Messages.getString("DeriveStatusAction.7"), message); //$NON-NLS-1$
             }
         }
     }
@@ -168,15 +172,15 @@ public class DeriveStatusAction extends ActionDelegate implements IViewActionDel
             measureCount = 0;
             boolean update = false;
             for (ControlGroup group : selectedGroups) {
-                DeriveStatusCommand command = new DeriveStatusCommand(group);          
+                DeriveStatusCommand command = new DeriveStatusCommand(group);
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
-                if(!command.getChangedElements().isEmpty()) {
+                if (!command.getChangedElements().isEmpty()) {
                     update = true;
                 }
                 samtCount += command.getSamtTopicCount();
                 measureCount += command.getMeasureCount();
-            }  
-            if(update) {
+            }
+            if (update) {
                 updateModel();
             }
         } catch (CommandException e) {
@@ -186,8 +190,6 @@ public class DeriveStatusAction extends ActionDelegate implements IViewActionDel
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action
      * .IAction, org.eclipse.jface.viewers.ISelection)
@@ -197,16 +199,17 @@ public class DeriveStatusAction extends ActionDelegate implements IViewActionDel
         if (serverIsRunning) {
             action.setEnabled(checkRights());
         }
-        selectedGroups = new LinkedList<ControlGroup>();
+        selectedGroups = new LinkedList<>();
         if (selection instanceof ITreeSelection) {
             ITreeSelection treeSelection = (ITreeSelection) selection;
-            for (Iterator<Object> iterator = treeSelection.iterator(); iterator.hasNext();) {
+            for (@SuppressWarnings("rawtypes")
+            Iterator iterator = treeSelection.iterator(); iterator.hasNext();) {
                 Object selected = iterator.next();
                 if (selected instanceof ControlGroup) {
                     selectedGroups.add((ControlGroup) selected);
                 }
             }
-            
+
         }
     }
 

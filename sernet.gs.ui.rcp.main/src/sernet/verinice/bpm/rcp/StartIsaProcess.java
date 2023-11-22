@@ -67,8 +67,7 @@ public class StartIsaProcess implements IObjectActionDelegate, RightEnabledUserI
      */
     @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-        // TODO Auto-generated method stub
-
+        // no-op
     }
 
     /*

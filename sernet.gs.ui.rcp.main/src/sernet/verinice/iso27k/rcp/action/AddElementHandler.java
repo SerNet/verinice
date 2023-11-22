@@ -76,63 +76,68 @@ import sernet.verinice.rcp.RightsEnabledHandler;
  */
 public class AddElementHandler extends RightsEnabledHandler implements IElementUpdater {
 
-	private static final Logger LOG = Logger.getLogger(AddElementHandler.class);
-	
-	public static final Map<String, String> TITLE_FOR_TYPE;
-	
-	static {
-		TITLE_FOR_TYPE = new HashMap<String, String>();
-		TITLE_FOR_TYPE.put(AssetGroup.TYPE_ID, Messages.getString("AddElement.0")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(AuditGroup.TYPE_ID, Messages.getString("AddElement.1")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(ControlGroup.TYPE_ID, Messages.getString("AddElement.2")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(DocumentGroup.TYPE_ID, Messages.getString("AddElement.3")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(EvidenceGroup.TYPE_ID, Messages.getString("AddElement.4")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(ExceptionGroup.TYPE_ID, Messages.getString("AddElement.5")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(FindingGroup.TYPE_ID, Messages.getString("AddElement.6")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(IncidentGroup.TYPE_ID, Messages.getString("AddElement.7")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(IncidentScenarioGroup.TYPE_ID, Messages.getString("AddElement.8")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(InterviewGroup.TYPE_ID, Messages.getString("AddElement.9")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(PersonGroup.TYPE_ID, Messages.getString("AddElement.10")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(ProcessGroup.TYPE_ID, Messages.getString("AddElement.11")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(RecordGroup.TYPE_ID, Messages.getString("AddElement.12")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(RequirementGroup.TYPE_ID, Messages.getString("AddElement.13")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(ResponseGroup.TYPE_ID, Messages.getString("AddElement.14")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(ThreatGroup.TYPE_ID, Messages.getString("AddElement.15")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(VulnerabilityGroup.TYPE_ID, Messages.getString("AddElement.16")); //$NON-NLS-1$
+    private static final Logger LOG = Logger.getLogger(AddElementHandler.class);
+
+    private static final Map<String, String> TITLE_FOR_TYPE;
+
+    static {
+        TITLE_FOR_TYPE = new HashMap<>();
+        TITLE_FOR_TYPE.put(AssetGroup.TYPE_ID, Messages.getString("AddElement.0")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(AuditGroup.TYPE_ID, Messages.getString("AddElement.1")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(ControlGroup.TYPE_ID, Messages.getString("AddElement.2")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(DocumentGroup.TYPE_ID, Messages.getString("AddElement.3")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(EvidenceGroup.TYPE_ID, Messages.getString("AddElement.4")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(ExceptionGroup.TYPE_ID, Messages.getString("AddElement.5")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(FindingGroup.TYPE_ID, Messages.getString("AddElement.6")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(IncidentGroup.TYPE_ID, Messages.getString("AddElement.7")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(IncidentScenarioGroup.TYPE_ID, Messages.getString("AddElement.8")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(InterviewGroup.TYPE_ID, Messages.getString("AddElement.9")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(PersonGroup.TYPE_ID, Messages.getString("AddElement.10")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(ProcessGroup.TYPE_ID, Messages.getString("AddElement.11")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(RecordGroup.TYPE_ID, Messages.getString("AddElement.12")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(RequirementGroup.TYPE_ID, Messages.getString("AddElement.13")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(ResponseGroup.TYPE_ID, Messages.getString("AddElement.14")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(ThreatGroup.TYPE_ID, Messages.getString("AddElement.15")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(VulnerabilityGroup.TYPE_ID, Messages.getString("AddElement.16")); //$NON-NLS-1$
         TITLE_FOR_TYPE.put(Asset.TYPE_ID, Messages.getString("AddElement.18")); //$NON-NLS-1$
-	}
-	
+    }
+
     public AddElementHandler() {
         super();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+    /*
+     * @see
+     * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
+     * ExecutionEvent)
      */
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        try {     
-            if(checkRights()){
-                final IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);         
+        try {
+            if (checkRights()) {
+                final IStructuredSelection selection = (IStructuredSelection) HandlerUtil
+                        .getCurrentSelection(event);
                 Object sel = selection.getFirstElement();
                 CnATreeElement newElement = null;
-    
+
                 if (sel instanceof IISO27kGroup) {
                     IISO27kGroup group = (IISO27kGroup) sel;
                     String childType = null;
-                    if(group.getChildTypes()!=null && group.getChildTypes().length>0) {
-                        // TODO - getChildTypes()[0] problem for more than one type
+                    if (group.getChildTypes() != null && group.getChildTypes().length > 0) {
+                        // TODO - getChildTypes()[0] problem for more than one
+                        // type
                         childType = group.getChildTypes()[0];
-                        if(group instanceof Asset) {
+                        if (group instanceof Asset) {
                             childType = Control.TYPE_ID;
                         }
                     } else {
                         LOG.error(Messages.getString("AddElement.17")); //$NON-NLS-1$
                     }
-                    if(childType!=null) {
+                    if (childType != null) {
                         boolean inheritIcon = Activator.getDefault().getPreferenceStore()
                                 .getBoolean(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON);
-                        newElement = CnAElementFactory.getInstance().saveNew((CnATreeElement) group, childType, null, inheritIcon);                  
+                        newElement = CnAElementFactory.getInstance().saveNew((CnATreeElement) group,
+                                childType, null, inheritIcon);
                     }
                 }
                 if (newElement != null) {
@@ -141,7 +146,7 @@ public class AddElementHandler extends RightsEnabledHandler implements IElementU
             } else {
                 throw new NotSufficientRightsException("Action not allowed for user");
             }
-        } catch (NotSufficientRightsException e){
+        } catch (NotSufficientRightsException e) {
             LOG.error("Could not add element", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.getString("AddElement.21")); //$NON-NLS-1$
         } catch (Exception e) {
@@ -150,33 +155,38 @@ public class AddElementHandler extends RightsEnabledHandler implements IElementU
         }
         return null;
     }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
+
+    /*
+     * @see
+     * org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.
+     * menus.UIElement, java.util.Map)
      */
     @Override
     public void updateElement(UIElement menu, Map arg1) {
         ISelection selection = getSelection();
-        if(selection instanceof IStructuredSelection) {
+        if (selection instanceof IStructuredSelection) {
             Object sel = ((IStructuredSelection) selection).getFirstElement();
             boolean allowed = false;
-            boolean enabled = false;        
+            boolean enabled = false;
             if (sel instanceof CnATreeElement) {
-                allowed = CnAElementHome.getInstance().isNewChildAllowed((CnATreeElement) sel);           
+                allowed = CnAElementHome.getInstance().isNewChildAllowed((CnATreeElement) sel);
             }
-            if(sel instanceof Audit) {
-                enabled = false;
+            if (sel instanceof Audit) {
                 menu.setText(Messages.getString("AddElement.20"));
-            } else if(sel instanceof IISO27kGroup) {
+            } else if (sel instanceof IISO27kGroup) {
                 enabled = true;
                 IISO27kGroup group = (IISO27kGroup) sel;
-                // TODO - getChildTypes()[0] might be a problem for more than one type
+                // TODO - getChildTypes()[0] might be a problem for more than
+                // one type
                 String childType = group.getChildTypes()[0];
-                if(group instanceof Asset) {
+                if (group instanceof Asset) {
                     childType = Control.TYPE_ID;
                 }
-                menu.setIcon(ImageDescriptor.createFromImage(ImageCache.getInstance().getImageForTypeId(childType))); 
-                menu.setText( TITLE_FOR_TYPE.get(group.getTypeId())!=null ? TITLE_FOR_TYPE.get(group.getTypeId()) : Messages.getString("AddElement.20") ); //$NON-NLS-1$
+                menu.setIcon(ImageDescriptor
+                        .createFromImage(ImageCache.getInstance().getImageForTypeId(childType)));
+                menu.setText(TITLE_FOR_TYPE.get(group.getTypeId()) != null
+                        ? TITLE_FOR_TYPE.get(group.getTypeId())
+                        : Messages.getString("AddElement.20")); //$NON-NLS-1$
             }
             // Only change state when it is enabled, since we do not want to
             // trash the enablement settings of plugin.xml
@@ -191,22 +201,21 @@ public class AddElementHandler extends RightsEnabledHandler implements IElementU
         IWorkbench workbench = activator.getWorkbench();
         IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
         ISelectionService selectionService = workbenchWindow.getSelectionService();
-        ISelection selection = selectionService.getSelection();
-        return selection;
+        return selectionService.getSelection();
     }
-    
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
     public boolean checkRights() {
         Activator.inheritVeriniceContextState();
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override

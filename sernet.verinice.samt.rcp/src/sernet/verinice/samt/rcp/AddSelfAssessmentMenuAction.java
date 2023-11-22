@@ -1,4 +1,5 @@
 package sernet.verinice.samt.rcp;
+
 import java.io.IOException;
 
 import org.eclipse.jface.action.IAction;
@@ -13,13 +14,13 @@ import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 
-public class AddSelfAssessmentMenuAction implements IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {
+public class AddSelfAssessmentMenuAction
+        implements IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {
 
     public static final String ID = "sernet.verinice.samt.rcp.AddSelfAssessmentMenuAction"; //$NON-NLS-1$
-    
+
     @Override
     public void dispose() {
         // do nothing
@@ -32,7 +33,7 @@ public class AddSelfAssessmentMenuAction implements IWorkbenchWindowActionDelega
 
     @Override
     public void run(IAction action) {
-        if(checkRights()){
+        if (checkRights()) {
             CreateNewSelfAssessmentService createSamtService = new CreateNewSelfAssessmentService();
             try {
                 createSamtService.createSelfAssessment();
@@ -46,31 +47,30 @@ public class AddSelfAssessmentMenuAction implements IWorkbenchWindowActionDelega
 
     @Override
     public void selectionChanged(final IAction action, ISelection selection) {
-        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
-            IInternalServerStartListener listener = new IInternalServerStartListener(){
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if(e.isStarted()){
-                        action.setEnabled(checkRights());
-                    }
+        if (Activator.getDefault().isStandalone()
+                && !Activator.getDefault().getInternalServer().isRunning()) {
+            IInternalServerStartListener listener = e -> {
+                if (e.isStarted()) {
+                    action.setEnabled(checkRights());
                 }
             };
             Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-       } else {
-           action.setEnabled(checkRights());
-       }
+        } else {
+            action.setEnabled(checkRights());
+        }
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
     public boolean checkRights() {
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override

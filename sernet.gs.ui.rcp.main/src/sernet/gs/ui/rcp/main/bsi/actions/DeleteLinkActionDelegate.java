@@ -43,7 +43,8 @@ import sernet.verinice.model.common.CnALink;
  * @author akoderman[at]sernet[dot]de
  * 
  */
-public class DeleteLinkActionDelegate implements IObjectActionDelegate, RightEnabledUserInteraction {
+public class DeleteLinkActionDelegate
+        implements IObjectActionDelegate, RightEnabledUserInteraction {
 
     private IWorkbenchPart targetPart;
 
@@ -52,22 +53,24 @@ public class DeleteLinkActionDelegate implements IObjectActionDelegate, RightEna
     }
 
     public void run(IAction action) {
-        
-        if(!checkRights()){
+
+        if (!checkRights()) {
             return;
         }
 
-        if (!MessageDialog.openQuestion((Shell) targetPart.getAdapter(Shell.class), Messages.DeleteLinkActionDelegate_0, Messages.DeleteLinkActionDelegate_1)) {
+        if (!MessageDialog.openQuestion(targetPart.getAdapter(Shell.class),
+                Messages.DeleteLinkActionDelegate_0, Messages.DeleteLinkActionDelegate_1)) {
             return;
         }
 
         // close editors first:
-        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true /*
-                                                                                                   * ask
-                                                                                                   * save
-                                                                                                   */);
+        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                .closeAllEditors(true /*
+                                       * ask save
+                                       */);
 
-        IStructuredSelection selection = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection());
+        IStructuredSelection selection = ((IStructuredSelection) targetPart.getSite()
+                .getSelectionProvider().getSelection());
 
         for (Iterator iter = selection.iterator(); iter.hasNext();) {
             Object sel = iter.next();
@@ -106,16 +109,17 @@ public class DeleteLinkActionDelegate implements IObjectActionDelegate, RightEna
 
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
     public boolean checkRights() {
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override

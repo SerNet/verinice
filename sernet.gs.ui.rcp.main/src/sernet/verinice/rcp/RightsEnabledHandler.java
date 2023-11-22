@@ -25,36 +25,34 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 
 /**
- * Handler extending this class are conected to the rights service.
- * Subclasses must implement getRightsID. 
+ * Handler extending this class are conected to the rights service. Subclasses
+ * must implement getRightsID.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public abstract class RightsEnabledHandler extends AbstractHandler implements RightEnabledUserInteraction {
+public abstract class RightsEnabledHandler extends AbstractHandler
+        implements RightEnabledUserInteraction {
 
-    public RightsEnabledHandler() {
+    protected RightsEnabledHandler() {
         this(true);
     }
-    
-    public RightsEnabledHandler(boolean enable) {
+
+    protected RightsEnabledHandler(boolean enable) {
         super();
-        if(enable) {
+        if (enable) {
             enableAccordingToUserRights();
         }
     }
 
     private void enableAccordingToUserRights() {
-        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
-            IInternalServerStartListener listener = new IInternalServerStartListener(){
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if(e.isStarted()){
-                        setBaseEnabled(checkRights());
-                   }
+        if (Activator.getDefault().isStandalone()
+                && !Activator.getDefault().getInternalServer().isRunning()) {
+            IInternalServerStartListener listener = e -> {
+                if (e.isStarted()) {
+                    setBaseEnabled(checkRights());
                 }
             };
             Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
@@ -63,14 +61,14 @@ public abstract class RightsEnabledHandler extends AbstractHandler implements Ri
         }
     }
 
-
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
     public boolean checkRights() {
         Activator.inheritVeriniceContextState();
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 

@@ -31,10 +31,10 @@ public interface RightEnabledUserInteraction {
      * @return true if authorized, false if not
      */
     public boolean checkRights();
-    
+
     /**
      * @return The rightID of the interaction
      */
     public String getRightID();
-    
+
 }

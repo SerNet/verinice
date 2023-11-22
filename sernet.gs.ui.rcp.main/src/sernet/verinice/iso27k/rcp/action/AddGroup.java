@@ -128,8 +128,8 @@ public class AddGroup extends Action implements IObjectActionDelegate, RightEnab
         }
         boolean inheritIcon = Activator.getDefault().getPreferenceStore()
                 .getBoolean(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON);
-        CnATreeElement newElement = CnAElementFactory.getInstance().saveNew((CnATreeElement) parent,
-                currentType, null, inheritIcon);
+        CnATreeElement newElement = CnAElementFactory.getInstance().saveNew(parent, currentType,
+                null, inheritIcon);
         Optional.ofNullable(newElement).ifPresent(EditorFactory.getInstance()::openEditor);
     }
 

@@ -84,15 +84,13 @@ public class AddFileActionDelegate implements IObjectActionDelegate, RightEnable
                     attachment.setFilePath(selected);
                     attachment.setFileSize(String.valueOf(file.length()));
 
-                    attachment.addListener(new Attachment.INoteChangedListener() {
-                        public void noteChanged() {
-                            IViewPart page = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-                                    .getActivePage().findView(FileView.ID);
-                            if (page != null) {
-                                ((FileView) page).loadFiles();
-                            }
-
+                    attachment.addListener(() -> {
+                        IViewPart page = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                                .getActivePage().findView(FileView.ID);
+                        if (page != null) {
+                            ((FileView) page).loadFiles();
                         }
+
                     });
 
                     EditorFactory.getInstance().openEditor(attachment);

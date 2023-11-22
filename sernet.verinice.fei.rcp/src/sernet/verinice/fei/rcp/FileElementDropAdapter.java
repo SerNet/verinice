@@ -54,55 +54,56 @@ import sernet.verinice.rcp.InfoDialogWithShowToggle;
 public class FileElementDropAdapter implements IDropActionDelegate, RightEnabledUserInteraction {
 
     private static final Logger LOG = Logger.getLogger(FileElementDropAdapter.class);
-    
+
     private int numberOfFiles = 0;
     private List<FileExceptionNoStop> errorList;
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.part.IDropActionDelegate#run(java.lang.Object, java.lang.Object)
+
+    /*
+     * @see org.eclipse.ui.part.IDropActionDelegate#run(java.lang.Object,
+     * java.lang.Object)
      */
     @Override
     public boolean run(Object data, final Object target) {
-        try {  
-            if(!checkRights()) {
+        try {
+            if (!checkRights()) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("User is not allowed to perform this file drop.");
                 }
                 return false;
             }
-            
+
             ByteArrayInputStream bai = new ByteArrayInputStream((byte[]) data);
             ObjectInputStream oi = new ObjectInputStream(bai);
-            final String[] filePathes = (String[]) oi.readObject(); 
-            
+            final String[] filePathes = (String[]) oi.readObject();
+
             boolean startImport = true;
-            boolean doConfirm = !Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.FEI_DND_CONFIRM);
-            
-            if(doConfirm) {
+            boolean doConfirm = !Activator.getDefault().getPreferenceStore()
+                    .getBoolean(PreferenceConstants.FEI_DND_CONFIRM);
+
+            if (doConfirm) {
                 MessageDialogWithToggle dialog = InfoDialogWithShowToggle.openYesNoCancelQuestion(
-                        Messages.FileElementDropAdapter_0,  
-                        getMessage(filePathes),
-                        Messages.FileElementDropAdapter_1,
-                        PreferenceConstants.FEI_DND_CONFIRM);
+                        Messages.FileElementDropAdapter_0, getMessage(filePathes),
+                        Messages.FileElementDropAdapter_1, PreferenceConstants.FEI_DND_CONFIRM);
                 startImport = IDialogConstants.YES_ID == dialog.getReturnCode();
             }
-                                  
-            if(startImport) {  
+
+            if (startImport) {
                 IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-                progressService.run(true, true, new IRunnableWithProgress() {                 
+                progressService.run(true, true, new IRunnableWithProgress() {
                     @Override
-                    public void run(IProgressMonitor arg0) throws InvocationTargetException, InterruptedException {
-                        try { 
-                            importFiles(filePathes, (Group<CnATreeElement>)target);                        
+                    public void run(IProgressMonitor arg0)
+                            throws InvocationTargetException, InterruptedException {
+                        try {
+                            importFiles(filePathes, (Group<CnATreeElement>) target);
                         } catch (Exception e) {
                             LOG.error("Error while importing data.", e); //$NON-NLS-1$
                         }
                     }
                 });
-                showResult();       
+                showResult();
             }
             return true;
-         } catch (Exception e) {
+        } catch (Exception e) {
             LOG.error("Error while performing file drop", e); //$NON-NLS-1$
             return false;
         }
@@ -115,93 +116,90 @@ public class FileElementDropAdapter implements IDropActionDelegate, RightEnabled
     private void importFiles(String[] filePathes, Group<CnATreeElement> target) {
         Activator.inheritVeriniceContextState();
         if (LOG.isDebugEnabled()) {
-            LOG.debug( "Importing files from: " + filePathes[0] + " to group: " + target.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+            LOG.debug("Importing files from: " + filePathes[0] + " to group: " + target.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
         }
-        numberOfFiles=0;
+        numberOfFiles = 0;
         for (String file : filePathes) {
             FileElementImportTraverser traverser = new FileElementImportTraverser(file, target);
             traverser.traverseFileSystem();
             numberOfFiles += traverser.getNumberOfFiles();
             addErrors(traverser.getErrorList());
-        }       
+        }
     }
-    
 
     private void addErrors(List<FileExceptionNoStop> errorList) {
-        if(errorList!=null && !errorList.isEmpty()) {
-            if(this.errorList==null) {
-                this.errorList = new LinkedList<FileExceptionNoStop>();
+        if (errorList != null && !errorList.isEmpty()) {
+            if (this.errorList == null) {
+                this.errorList = new LinkedList<>();
             }
             this.errorList.addAll(errorList);
-        }      
+        }
     }
 
     protected void showResult() {
-        if(!Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.FEI_SHOW_RESULT)) {
-            Display.getDefault().asyncExec(new Runnable() {
-                @Override
-                public void run() {
-                    MessageDialogWithToggle dialog = InfoDialogWithShowToggle.openInformation(
-                        Messages.FileElementDropAdapter_0,  
-                        createResultMessage(),
-                        Messages.FileElementDropAdapter_8,
-                        PreferenceConstants.FEI_SHOW_RESULT);
-                }
-            });
+        if (!Activator.getDefault().getPreferenceStore()
+                .getBoolean(PreferenceConstants.FEI_SHOW_RESULT)) {
+            Display.getDefault()
+                    .asyncExec(() -> InfoDialogWithShowToggle.openInformation(
+                            Messages.FileElementDropAdapter_0, createResultMessage(),
+                            Messages.FileElementDropAdapter_8,
+                            PreferenceConstants.FEI_SHOW_RESULT));
         }
     }
-    
+
     private String createResultMessage() {
-        StringBuilder sb = new StringBuilder();        
-        sb.append(NLS.bind(Messages.FileElementDropAdapter_7,numberOfFiles));
-        if(errorList!=null && !errorList.isEmpty()) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(NLS.bind(Messages.FileElementDropAdapter_7, numberOfFiles));
+        if (errorList != null && !errorList.isEmpty()) {
             sb.append("\n\n"); //$NON-NLS-1$
             sb.append(Messages.FileElementDropAdapter_9).append("\n"); //$NON-NLS-1$
-            for (FileExceptionNoStop error : errorList) {         
-                sb.append(NLS.bind(Messages.FileElementDropAdapter_10,error.getPath(),error.getMessage())).append("\n"); //$NON-NLS-1$               
+            for (FileExceptionNoStop error : errorList) {
+                sb.append(NLS.bind(Messages.FileElementDropAdapter_10, error.getPath(),
+                        error.getMessage())).append("\n"); //$NON-NLS-1$
             }
         }
         return sb.toString();
     }
-    
+
     /**
      * @param filePathes
      * @return
      */
     private String getMessage(String[] filePathes) {
         String message = ""; //$NON-NLS-1$
-        if(filePathes!=null && filePathes.length==1) {
+        if (filePathes != null && filePathes.length == 1) {
             message = NLS.bind(Messages.FileElementDropAdapter_5, filePathes[0]);
         }
-        if(filePathes!=null && filePathes.length>1) {         
-            StringBuilder sb =  new StringBuilder();
+        if (filePathes != null && filePathes.length > 1) {
+            StringBuilder sb = new StringBuilder();
             boolean first = true;
             for (String dir : filePathes) {
-                if(!first) {
+                if (!first) {
                     sb.append("\n"); //$NON-NLS-1$
                 }
                 sb.append("  ").append(dir); //$NON-NLS-1$
                 first = false;
             }
-            message = NLS.bind(Messages.FileElementDropAdapter_6,  sb.toString());
+            message = NLS.bind(Messages.FileElementDropAdapter_6, sb.toString());
         }
         return message;
     }
-    
+
     private Shell getShell() {
         return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
     public boolean checkRights() {
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override
