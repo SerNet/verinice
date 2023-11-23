@@ -44,10 +44,10 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
+import sernet.verinice.rcp.RightEnabledUserInteraction;
 
 /**
  * 

@@ -27,7 +27,6 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.ControlGroup;
@@ -35,6 +34,7 @@ import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
+import sernet.verinice.rcp.RightEnabledUserInteraction;
 
 @SuppressWarnings("restriction")
 public class AssignAllIsaTopics implements IObjectActionDelegate, RightEnabledUserInteraction {

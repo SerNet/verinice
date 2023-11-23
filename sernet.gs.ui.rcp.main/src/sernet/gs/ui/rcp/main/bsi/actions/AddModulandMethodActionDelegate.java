@@ -9,8 +9,8 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.rcp.RightEnabledUserInteraction;
 
 public abstract class AddModulandMethodActionDelegate
         implements IObjectActionDelegate, RightEnabledUserInteraction {

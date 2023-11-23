@@ -31,7 +31,6 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.iso27k.rcp.GS2BSITransformOperation;
 import sernet.verinice.iso27k.service.ItemTransformException;
@@ -41,6 +40,7 @@ import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
+import sernet.verinice.rcp.RightEnabledUserInteraction;
 
 public class BSIModelDropPerformer extends ViewerDropAdapter
         implements DropPerformer, RightEnabledUserInteraction {

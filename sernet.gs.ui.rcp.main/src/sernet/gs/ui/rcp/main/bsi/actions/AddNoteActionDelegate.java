@@ -28,9 +28,9 @@ import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.bsi.Note;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.rcp.RightEnabledUserInteraction;
 
 public class AddNoteActionDelegate implements IObjectActionDelegate, RightEnabledUserInteraction {
 

@@ -30,9 +30,9 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.rcp.RightEnabledUserInteraction;
 import sernet.verinice.rcp.RightsEnabledActionDelegate;
 
 public class AddITVerbundActionDelegate extends RightsEnabledActionDelegate implements IViewActionDelegate, RightEnabledUserInteraction  {

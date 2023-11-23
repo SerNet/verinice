@@ -15,7 +15,7 @@
  * Contributors:
  * Sebastian Hagedorn - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.interfaces;
+package sernet.verinice.rcp;
 
 /**
  * Right enabled user interactions checks if a right ID is assigned to the user

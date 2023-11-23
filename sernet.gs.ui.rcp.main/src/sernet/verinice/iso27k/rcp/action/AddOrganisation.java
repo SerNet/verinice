@@ -31,9 +31,9 @@ import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.NotSufficientRightsException;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.rcp.RightEnabledUserInteraction;
 import sernet.verinice.rcp.RightsEnabledActionDelegate;
 
 /**

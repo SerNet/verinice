@@ -34,8 +34,8 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.common.CnALink;
+import sernet.verinice.rcp.RightEnabledUserInteraction;
 
 /**
  * Delete items on user request.

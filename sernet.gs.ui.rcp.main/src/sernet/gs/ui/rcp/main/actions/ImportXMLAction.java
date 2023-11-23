@@ -11,7 +11,7 @@ import org.eclipse.ui.IViewPart;
 
 import sernet.gs.ui.rcp.main.bsi.dialogs.XMLImportDialog;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.rcp.RightEnabledUserInteraction;
 import sernet.verinice.rcp.RightsEnabledActionDelegate;
 
 /**

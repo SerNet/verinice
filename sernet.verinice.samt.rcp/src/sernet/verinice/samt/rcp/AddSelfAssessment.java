@@ -36,9 +36,9 @@ import org.eclipse.ui.IViewPart;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
+import sernet.verinice.rcp.RightEnabledUserInteraction;
 import sernet.verinice.rcp.RightsEnabledActionDelegate;
 
 /**

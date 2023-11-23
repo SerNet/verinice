@@ -45,7 +45,6 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
@@ -68,6 +67,7 @@ import sernet.verinice.model.iso27k.ResponseGroup;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.rcp.RightEnabledUserInteraction;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

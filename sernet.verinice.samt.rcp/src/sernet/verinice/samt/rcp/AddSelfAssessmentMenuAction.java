@@ -14,7 +14,7 @@ import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.rcp.RightEnabledUserInteraction;
 
 public class AddSelfAssessmentMenuAction
         implements IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {

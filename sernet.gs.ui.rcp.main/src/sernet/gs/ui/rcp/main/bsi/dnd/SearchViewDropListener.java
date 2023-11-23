@@ -33,11 +33,11 @@ import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.action.DropPerformer;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
+import sernet.verinice.rcp.RightEnabledUserInteraction;
 import sernet.verinice.service.commands.LoadElementByUuid;
 
 /**

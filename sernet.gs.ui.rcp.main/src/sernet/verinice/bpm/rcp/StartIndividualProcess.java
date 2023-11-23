@@ -46,7 +46,6 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.bpm.IIndividualService;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
 import sernet.verinice.interfaces.bpm.IndividualServiceParameter;
@@ -59,6 +58,7 @@ import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
 import sernet.verinice.rcp.NonModalWizardDialog;
+import sernet.verinice.rcp.RightEnabledUserInteraction;
 import sernet.verinice.service.commands.CnATypeMapper;
 
 /**

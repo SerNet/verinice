@@ -2,8 +2,8 @@ package sernet.verinice.report.actions;
 
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.report.IReportType;
+import sernet.verinice.rcp.RightEnabledUserInteraction;
 import sernet.verinice.report.rcp.GenerateReportDialog;
 
 public class GenerateReportAction extends ReportAction implements IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {

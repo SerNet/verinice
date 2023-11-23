@@ -26,7 +26,7 @@ import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.rcp.RightEnabledUserInteraction;
 
 /**
  * JFace action that can be configured with rights profile management.

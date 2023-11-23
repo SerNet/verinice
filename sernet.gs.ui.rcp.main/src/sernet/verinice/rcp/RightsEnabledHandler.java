@@ -25,7 +25,6 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
 
 /**
  * Handler extending this class are conected to the rights service. Subclasses

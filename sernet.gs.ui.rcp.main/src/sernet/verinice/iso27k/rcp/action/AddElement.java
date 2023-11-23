@@ -39,7 +39,6 @@ import sernet.gs.ui.rcp.main.common.model.NotSufficientRightsException;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
@@ -62,6 +61,7 @@ import sernet.verinice.model.iso27k.RequirementGroup;
 import sernet.verinice.model.iso27k.ResponseGroup;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
+import sernet.verinice.rcp.RightEnabledUserInteraction;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

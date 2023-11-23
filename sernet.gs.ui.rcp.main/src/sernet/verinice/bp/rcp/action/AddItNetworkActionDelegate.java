@@ -31,9 +31,9 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.rcp.RightEnabledUserInteraction;
 import sernet.verinice.rcp.RightsEnabledActionDelegate;
 
 /**

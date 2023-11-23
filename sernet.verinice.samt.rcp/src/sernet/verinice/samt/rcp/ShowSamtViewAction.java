@@ -9,7 +9,7 @@ import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.rcp.RightEnabledUserInteraction;
 
 public class ShowSamtViewAction extends ShowSomeViewAction
         implements IViewActionDelegate, RightEnabledUserInteraction {
