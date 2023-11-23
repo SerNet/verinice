@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _SlfjEGUPEeqN8MswvNs8LA
-Runtime-Version: 2.5.3.202205021448
-Save-Time: 9/20/22, 8:21 AM
+Runtime-Version: 2.5.5.202311201505
+Save-Time: 11/23/23, 8:15 AM
 Tags: ISM
 Testcase-Type: ecl
 Verifications: _wm5P0CtBEeuMltfUUtdvug
@@ -45,10 +45,6 @@ proc "verify-element-exists" [val view] [val path] [val caption] {
 }
 
 proc "wait-for-imports-or-fail" {
-	get-menu -path "Ansicht/Zeige View.../Modernisierter IT-Grundschutz" | click
-	try-dont-switch
-	get-menu -path "Ansicht/Zeige View.../GS-Modell" | click
-	try-dont-switch
 	try -times 40 -delay 10000 -command {
 		verify-element-exists ISM "importierte Objekte/Beispiel: NoKyTo GmbH 2018 \\[DP\\]"
 			"Beispiel: NoKyTo GmbH 2018 [DP]"
@@ -64,6 +60,11 @@ proc "wait-for-imports-or-fail" {
 
 log "6.2: 6.2 started"
 get-view Objektbrowser | close
+
+get-menu -path "Ansicht/Zeige View.../Modernisierter IT-Grundschutz" | click
+try-dont-switch
+get-menu -path "Ansicht/Zeige View.../GS-Modell" | click
+try-dont-switch
 
 ism-import-vna "RECPLAST.vna"
 ism-import-vna "Beispiel_NoKyTo_GmbH_2018.vna"
