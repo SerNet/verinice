@@ -38,8 +38,6 @@ import org.eclipse.ui.part.IDropActionDelegate;
 import org.eclipse.ui.progress.IProgressService;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.hui.common.VeriniceContext;
-import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
@@ -187,16 +185,6 @@ public class FileElementDropAdapter implements IDropActionDelegate, RightEnabled
 
     private Shell getShell() {
         return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-    }
-
-    /*
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
-     */
-    @Override
-    public boolean checkRights() {
-        RightsServiceClient service = (RightsServiceClient) VeriniceContext
-                .get(VeriniceContext.RIGHTS_SERVICE);
-        return service.isEnabled(getRightID());
     }
 
     /*

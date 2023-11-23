@@ -5,11 +5,9 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.hui.common.VeriniceContext;
-import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.rcp.RightEnabledUserInteraction;
 
 public class ShowSpiderChartAction extends ShowSomeViewAction
         implements IViewActionDelegate, RightEnabledUserInteraction {
@@ -32,16 +30,6 @@ public class ShowSpiderChartAction extends ShowSomeViewAction
         } else {
             action.setEnabled(checkRights());
         }
-    }
-
-    /*
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
-     */
-    @Override
-    public boolean checkRights() {
-        RightsServiceClient service = (RightsServiceClient) VeriniceContext
-                .get(VeriniceContext.RIGHTS_SERVICE);
-        return service.isEnabled(getRightID());
     }
 
     /*

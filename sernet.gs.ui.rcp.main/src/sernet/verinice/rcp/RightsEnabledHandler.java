@@ -22,8 +22,6 @@ package sernet.verinice.rcp;
 import org.eclipse.core.commands.AbstractHandler;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.hui.common.VeriniceContext;
-import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 
 /**
@@ -58,17 +56,6 @@ public abstract class RightsEnabledHandler extends AbstractHandler
         } else {
             setBaseEnabled(checkRights());
         }
-    }
-
-    /*
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
-     */
-    @Override
-    public boolean checkRights() {
-        Activator.inheritVeriniceContextState();
-        RightsServiceClient service = (RightsServiceClient) VeriniceContext
-                .get(VeriniceContext.RIGHTS_SERVICE);
-        return service.isEnabled(getRightID());
     }
 
 }

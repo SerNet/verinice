@@ -6,8 +6,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.hui.common.VeriniceContext;
-import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.RightEnabledUserInteraction;
@@ -38,16 +36,6 @@ public abstract class AbstractAddCnATreeElementActionDelegate
     @Override
     public String getRightID() {
         return ActionRightIDs.ADDBSIELEMENT;
-    }
-
-    /*
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
-     */
-    @Override
-    public boolean checkRights() {
-        RightsServiceClient service = (RightsServiceClient) VeriniceContext
-                .get(VeriniceContext.RIGHTS_SERVICE);
-        return service.isEnabled(getRightID());
     }
 
 }

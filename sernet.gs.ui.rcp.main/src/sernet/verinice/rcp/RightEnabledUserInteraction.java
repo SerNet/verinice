@@ -17,6 +17,10 @@
  ******************************************************************************/
 package sernet.verinice.rcp;
 
+import sernet.gs.ui.rcp.main.Activator;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
+
 /**
  * Right enabled user interactions checks if a right ID is assigned to the user
  * account.
@@ -30,7 +34,12 @@ public interface RightEnabledUserInteraction {
      * 
      * @return true if authorized, false if not
      */
-    public boolean checkRights();
+    default boolean checkRights() {
+        Activator.inheritVeriniceContextState();
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
+        return service.isEnabled(getRightID());
+    }
 
     /**
      * @return The rightID of the interaction
