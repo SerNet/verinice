@@ -1,0 +1,29 @@
+<cheatsheet title="8.06 Risk analysis">
+
+    <intro>
+        <description>
+This tutorial deals with BCM risk analysis.
+        </description>
+
+    </intro>
+    
+    
+    <item title="Selection of a suitable method">
+        <description>
+Established risk analysis methods can be used. In verinice you carry out the BCM risk analysis according to the ISO/IEC 27005 standard. 
+
+<br/><br/>
+The BCM-relevant risks for all time-critical resources, especially SpoFs, and for all time-critical business processes must be systematically analyzed. BCM-relevant risks are generally understood to be risks that have a direct impact on the availability of time-critical resources. If there is no adequate ISMS, the fundamental values of integrity and confidentiality should be taken into account in a BCM risk analysis so that at least the resulting impact on availability can be addressed in the BC strategies.
+<br/><br/>
+</description>
+</item>
+
+<item title="Creating an overview of the risk scenarios">
+<description>
+Create a scenario group in which you record risk scenarios that relate in particular to the availability protection objective. You can also record vulnerabilities and threats beforehand and have the risk scenario generated automatically from the two objects. Risks that only affect other protection objectives, such as risks that affect confidentiality or integrity, are not dealt with directly within BCM.
+<br/><br/>
+For basic information on risk analysis, please refer to the tutorial <b>3.2 Risk management based on ISO 27005.</b>
+</description>
+</item>        
+        
+</cheatsheet>

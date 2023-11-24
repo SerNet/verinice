@@ -1,0 +1,29 @@
+<cheatsheet title="8.09 Checking the BCMS (Check)">
+
+    <intro>
+        <description>
+In order to maintain and continuously improve the BCMS, it is necessary to regularly check whether the BCMS is appropriate, effective and efficient. The performance review can be used to determine whether the respective BCMS requirements are being met and BCMS objectives are being achieved. In addition, corrective actions and opportunities for improvement as well as deviations from the defined requirements in the BCM are uncovered, which are addressed by correcting and improving the BCMS.
+        </description>
+    </intro>
+
+<item title="Selection of measurement targets, key figures and target values">
+<description>
+
+In the first step, the institution must determine what is to be measured using key figures, i.e. set measurement targets. In practice, key figures are usually collected that relate to the specific result of one or more BCM process steps. However, specific result objects resulting from the BCM process steps can also be examined using a key figure. The measurement objectives as a whole must provide an up-to-date overview of the status of the BCMS and the individual BCM process steps. The overall effectiveness and efficiency of the BCMS must be assessed.
+</description>
+</item>
+
+<item title="Key figures without target values">
+<description>
+In verinice, you have the option of recording and evaluating <b>Key figures without target values</b> under the process object. In the BCM Reporting section, you will find examples of key figures that provide information about the maturity level and effectiveness of the BIA, business continuity planning and the review of CFP using tests and exercises. You can customize and extend the key figures without a target value as you wish. The recorded key figures can be output using the report query and evaluated and prepared accordingly in a separate report.
+</description>
+</item>
+
+<item title="Key figures with defined target values">
+<description>
+In addition, key figures can also have a more informative character that is not primarily used to evaluate the quality of the BCMS. They can be used to count and summarize key results of the BCMS. A typical example of this would be the number of business processes per MTPD level. Where possible, target values should be set for these in order to highlight deviations. In particular, the basic objectives of the BCMS, the general requirements and the current and desired maturity should be taken into account.
+<br/><br/>
+To manage KPIs with defined target values, we recommend creating a new process group, as shown in the example scope. This can be named as desired (example: Key figure management with target value according to BCM process); if desired, the icon for this process group can be changed. Under the group, create a new business process for each key figure. Name the key figure as the title and mention in the description field that the specific key figure is managed in this object, with a reference to the "BCM reporting" area.  Under BCM reporting, you can then describe your key figure again, document the <b>target value</b> and the <b>actual value</b> and specify whether there is a <b>difference</b> between the target and actual value. If so, you can note the <b>cause</b> and assess the <b>severity</b> of this deviation. The recorded key figures can be output using the report query and evaluated and prepared accordingly in a separate report. 
+        </description>
+    </item>
+</cheatsheet>

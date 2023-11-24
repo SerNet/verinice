@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<cheatsheet title="8.01.First steps">
+
+    <intro>
+        <description>
+            <b>Welcome to verinice</b>.
+            <br></br>
+In this tutorial, you will learn how to record aspects of your BCMS in verinice, which data you can manage and how to proceed step by step.
+        </description>
+    </intro>
+
+<item title="Management and commitment">
+<description>
+The assumption of responsibility by management is essential for the successful establishment and development of a BCMS. Before you start implementing your BCMS, a BCMS guideline should be developed and approved by the institution's management. You can then store this under the document structure or provide an external link to the document.
+</description>
+</item>
+
+<item title="Create scope">
+<description>
+In the ISM view, you will find an empty or existing scope. If this is not the case, you can create a new scope. To do this, click the corresponding icon in the top toolbar: Sheet of paper with an asterisk. Double-click on the newly created scope. The editor view with the properties of the scope object opens in the top right-hand area. Here you can define the specifications and properties for the scope. 
+</description>
+</item>
+
+<item title="Scope of the Business Continuity Management System">
+<description>
+In the scope, you define the area of application and can document exclusions separately. You can also record information on the period to be covered, changes to the BCMS and adjust important definitions in preparation for the business impact analysis, such as the intolerability level and the damage categories under the availability protection objective.
+
+<br/><br/>
+Once you have completed your entries, save them (click on icon: Diskette or key combination: Ctrl+S) and close the editor (click on x in the tab or key combination: Ctrl+W).
+</description>
+</item>
+
+<item title="Naming of the BCB(s)">
+<description>
+Navigate to the person object and create your BCB as a person target object, alternatively you can import person target objects from an AD with verinice.PRO, e.g. the BC representative.
+        </description>
+    </item>
+
+</cheatsheet>

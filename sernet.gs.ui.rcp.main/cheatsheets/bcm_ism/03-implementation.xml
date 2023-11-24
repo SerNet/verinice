@@ -1,0 +1,46 @@
+<cheatsheet title="8.03 Implementation of the BCMS (DO) - Structure and empowerment of the BAO">
+
+    <intro>
+        <description>
+This tutorial deals with the first process step of the Do phase, setting up and enabling the BAO. This includes all aspects of establishing a functioning BAO that is immediately accessible and operational in the event of an emergency or crisis. This enables the institution to act immediately in the event of an incident, regardless of whether emergency plans are already in place for the continuation of business processes.
+        </description>
+
+    </intro>
+
+
+    <item title="Definition of immediate measures">
+        <description>
+Immediate measures are measures that cannot be delayed and must be initiated as soon as possible after the occurrence of an incident in order to ensure the protection of life and limb and prevent further damage.
+<br/><br/>
+For each risk scenario, you can map the identified immediate measures in verinice and define responsibilities. Create the immediate measures as a control object and link them to the corresponding object (asset or risk scenario and person object).
+<br/>
+If the responsibilities differ for each subtask of an action, you can create multiple actions to link the person responsible for each process step individually.	
+</description>
+</item>
+
+<item title="NuK communication (emergency and crisis communication)">
+<description>
+Emergency communication must be well prepared, planned and documented in advance. It is therefore important for the institution to consider preventively when notifications to employees and external interest groups are required and how external NAC communication can be controlled to avoid reputational damage.
+<br/><br/>
+Consider general rules on communication. Among other things, what employees may or must know and when, what employees may and may not say to the press and on social media and when and how, as well as what the Communications role should disclose to the press and on social media and when and how, rules for contact with the police and other authorities and aid organizations, reporting obligations of the institution arising from an emergency, rules for media monitoring. 
+</description>
+</item>
+
+<item title="Follow-up and de-escalation of an incident">
+<description>
+
+Once the incident has been overcome, the staff should officially declare the emergency over (de-escalation) and communicate this decision within the institution.  The same communication channels can be used for this as for declaring the emergency. <b>Information on the communication channels</b> for each interested party is recorded under the person object. A checklist can be developed to record specific checkpoints or decisions for the return to normal operation. In addition to the directly obvious aspects, such as the order in which the business processes are to be returned to normal operation, it is also helpful to consider the consequences of the emergency operation. 
+
+<br/><br/>
+Create the damage event as an <b>incident object</b> and answer the individual points from the <b>checklist for returning to normal operation</b> or create your own checklist that you can use as a template for subsequent events. 
+</description>
+</item>
+
+<item title="Analysis of the management">
+<description>
+After the institution has dealt with an emergency or crisis, analyzing the response is another important step. This is the only way the institution can learn from emergencies and crises. A structured analysis can be used to determine what worked well and where there is a need for optimization. The results of the analysis can then be used to determine what can be done preventively to further improve emergency management and thus the institution's resilience.
+<br/><br/>
+If you have not already done so, create a new <b>incident object for the incident</b> or fill in the field with the <b>questionnaire for analyzing the response</b> for the existing incident object, or store your own questionnaire that you can use as a template for future incidents.
+</description>
+</item>
+</cheatsheet>

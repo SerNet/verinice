@@ -1,0 +1,75 @@
+<cheatsheet title="8.02 Design and planning of the BCMS (PLAN)">
+
+    <intro>
+        <description>
+This tutorial deals with the conception and planning of the BCMS, in particular with the analysis of requirements and expectations of interested parties. It also looks at how the interested parties can be created and linked to the requirements. It also describes where information on communication with interested parties is documented. The next step shows how to map your response structure in verinice. Finally, the storage of BC-relevant documents is discussed.
+        </description>
+
+    </intro>
+
+
+    <item title="Requirements and expectations of interested parties">
+        <description>
+In order to successfully implement and maintain the BCMS, the framework conditions for the BCMS should be analyzed in detail and the BCMS should be aligned with the needs and requirements of relevant interested parties. This is the only way to ensure that the BCMS is set up and operated in line with requirements.
+
+<br/><br/>
+To record the identified requirements, expectations and influencing factors for the BCMS in verinice, create a new requirements group. To do this, right-click on your scope &gt; New &gt; requirements group. There is now a new requirement group in the tree structure of your scope. It is recommended to differentiate between external and internal interest groups. To do this, create two sub-groups. You can enter requirements by right-clicking on the requirement group object again. (Requirement group &gt; New requirement).
+
+<br/><br/>
+Describe the requirement under the description field and add what <b>impact the requirement</b> (low, medium, high)<b> </b>has on the BCMS and check the box to indicate that it is a business continuity requirement.  
+</description>
+</item>
+
+<item title="Creating the interested parties and linking to the requirements">
+<description>
+Next, the identified interested parties can be grouped according to internal and external and created as person objects. Under the person object, you can also define the <b>degree of influence</b> and create links to the requirements. Select <b>Interested party expects/requests</b> as the link type. 
+
+<br/><br/>
+There are two ways in verinice how you can create dependencies/links between the objects.
+<br/>
+1. drag&amp;drop: In the ISM view, the link can be created using drag&amp;drop. To do this, select an object and drag it with the left mouse button onto the respective object to which you want to link it. The link is applied immediately and can be viewed in the link view or in the object's link maker.
+<br/>
+2. link maker: Using the so-called link maker, which is located in the lower part of the editor area of each object, you can create the link between objects by first selecting the element that is to be linked to your object and then clicking on Add. A new window will now appear, in which all objects of the element in your information network will be displayed. If you want to create cross-network links, <b>Current scope only</b> should be deselected. In this selection window, you can select all objects that are to be linked to your object with a single click. The links are then created by clicking the OK button.
+</description>
+</item>
+
+<item title="Warning and communication">
+<description>
+
+Based on the
+analysis of the interested parties, you can document information on communication for each interested party in order to enable and maintain target group-oriented communication throughout the PDCA cycle. 
+
+<br/><br/>
+Fill in the
+fields <b>Communication in normal operation</b>,<b> Communication in
+emergency operation</b>, <b>Time interval </b>and<b> Communication path </b>under
+the<b> person-object,</b> in order to provide information on which
+information entitlement of the interest group, whether communication
+should or may take place, what information is passed on
+is communicated, which medium is used, how often and at what
+how often and at what times communication takes place.
+<br/><br/>
+You can also
+link between two person objects to show who is communicating with
+communicates with whom or is responsible for whom. For this you can
+In addition to the interested parties in the
+response structure, you can map a NuK communication team.
+</description>
+</item>
+
+<item title="Definition of the response structure">
+<description>
+In addition to the
+Interested parties, you can map the entirety of all roles in BCM as <b>Person Objects</b>. One option is to divide the response structure into two groups: firstly, the BC prevention organization and secondly, the management organization for emergencies and crises (special organizational structure (BAO)). Create the employees of your institution involved in the BCMS as person objects and assign them <b>BCM roles</b>. In this way, you can ensure the responsibilities for relevant BCM roles. 
+</description>
+</item>
+
+<item title="Documentation of BC-relevant documents">
+<description>
+Set up your own document structure and store the documents in verinice or refer to them via the external link.
+<br/><br/>
+You can distinguish between two types of documents. Documents on prevention describe the elements of the BCMS or set requirements for it. They also include all documents that are required for emergency preparedness.  
+Response documents are created and used explicitly for emergency response. 
+        </description>
+    </item>
+</cheatsheet>

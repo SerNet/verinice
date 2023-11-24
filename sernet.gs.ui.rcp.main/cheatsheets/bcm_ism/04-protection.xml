@@ -1,0 +1,109 @@
+<cheatsheet title="8.04 Appropriate safeguarding of business processes/ business impact analysis (DO)">
+
+    <intro>
+        <description>
+This tutorial deals with the second process step of the Do phase, ensuring appropriate validation of business processes.  
+        </description>
+
+    </intro>
+
+
+<item title="Preparation of the BIA / Elicitation of the business processes">
+<description>
+If an ISMS according to
+ISO standard 27001, the business processes already identified can be used as a basis. The directory of processing activities for data protection can possibly also be used as a basis. It summarizes all process activities in which personal data is processed. Procedural activities may also be understood as business processes or these may be derived from them.
+<br/><br/>
+If you have not yet entered any business processes in verinice, right-click on the Processes object and create your business processes as new objects.
+</description>
+</item>
+
+<item title="Preparing the BIA / defining the BIA parameters and time horizons under consideration">
+<description>
+
+The aim of the BIA is to uniformly determine whether a business process is time-critical and how long it may fail before intolerable damage occurs. The BIA looks at the damage caused by the failed business process over a defined period of time. Time horizons must be defined for this. The <b>time horizons</b> are defined under the process and asset object. If your <b>time horizons</b> differ from the default values stored in verinice, you must adjust them in Customizing.
+<br/><br/>
+In addition, information on preparing for the business impact analysis that applies across institutions, such as the <b>sustainability level</b>, is documented under the scope. You can also check under the scope whether the protection requirement categories and <b>damage scenarios</b> from the ISMS are identical to the <b>damage categories</b> from the BCMS; if they differ, document this in a separate document, e.g. in your internal process description for the business impact analysis. 
+
+<br/><br/>
+You can create your resources as an asset object.
+</description>
+</item>
+
+<item title="Planning the BIA survey">
+<description>
+
+Before starting the BIA, you should define how the BIA information is to be collected. You can then enter under <b>Date of survey</b> and<b> Type of survey</b> which format you used to collect the BIA data and when. 
+</description>
+</item>
+
+<item title="Implementation of the BIA/determination of the MTPD">
+<description>
+To identify time-critical business processes, you need to assess the damage potential of each individual business process. To do this, carry out the damage assessment by evaluating <b>the damage potential for each individual time horizon</b>. This then results in the maximum tolerable downtime (MTA/MTPD). Following the assessment of the damage potential, you must document a justification. 
+</description>
+</item>
+
+<item title="Carrying out the BIA/determining the RTO">
+<description>
+Once you have determined the MTPD, you must also define the required restart time (RTO). This describes how long the pure restart may take before intolerable damage occurs. The RTO must be less than the MTPD. 
+</description>
+</item>
+
+<item title="Performance of the BIA/determination of the MBCO">
+<description>
+In addition to the RTO and the MTPD, you can define the emergency operating level for the process in the <b>Emergency operating level</b> field.
+</description>
+</item>
+
+<item title="Execution of the BIA/identification of process dependencies">
+<description>
+Once you have carried out initial assessments, you can map the process dependencies using the link maker or drag and drop. When creating the links, you can choose whether the processes take place downstream, in parallel or upstream. Due to the process dependencies, the MTPD of the business process may change.
+</description>
+</item>
+
+<item title="Execution of the BIA/identification of resource dependencies">
+<description>
+For all time-critical business processes, the resources required for emergency operation must be determined and assigned to the corresponding business processes.
+<br/><br/>
+To do this, link the necessary resources to the corresponding business processes. 
+</description>
+</item>
+
+<item title="Execution of the BIA/ RTO of the required resources">
+<description>
+Based on the RTO of the time-critical business process, the RTO of the resources required for the process must be derived in such a way that emergency operation is achieved on time. Similar to the RTO in the process dependencies, the RTO of the resources can also be individually adjusted. If several business processes rely on the same resource(s), the smallest RTO must be selected for this resource. If a resource is required by several business processes, enter the lowest RTO value under the resource. 
+</description>
+</item>
+
+<item title="Execution of the BIA/ resource requirement depending on the duration of the emergency operation">
+<description>
+For many resource categories, such as personnel and workstations, but also machines or work equipment, the number of resources required can change with the duration of the emergency operation. For these resource categories, it is advisable to record the number of resources required over the defined time horizons during emergency operation.
+<br/><br/>
+To do this, fill in the fields for <b>resource requirements in normal and emergency operation</b>
+</description>
+</item>
+
+<item title="Implementation of the BIA/determination of the RPO">
+<description>
+For information-based resource categories (for example, the resource categories information and IT (data)), the RPO must also be determined. In this context, the RPO represents a technical requirement of the process owner as to the point in time up to which one may fall back in order to still be able to work with suitable information (data) in emergency operation. The RPO is independent of the MTPD or the RTO and therefore does not need to be coordinated with them. However, analogous to the RTO, the RPO should also be consolidated if several business processes access the same information-based resource(s) (minimum principle).
+<br/><br/>
+Enter the RPO for information-based resources.
+</description>
+</item>
+
+<item title="Implementation of the BIA/identification of SPoF/SPoC/SPoK">
+<description>
+If many time-critical business processes require a single resource, you must mark the resource as a single point of failure, as this represents an increased risk of business interruption. Check the box under the Distinguish between: Knowledge (Single Point of Knowledge, SPoK), Technology or Service (Single Point of Failure, SPoF) and Contacts (Single Point of Contact, SPoC). 
+</description>
+</item>
+
+<item title="Evaluation of the BIA">
+<description>
+To ensure a consistently high level of quality of the BIA results, the BIA results must be checked to ensure that they are complete, correct and comprehensible. It is advisable to check whether all the necessary information has been collected, whether the damage analysis has been carried out correctly in formal terms and whether the reasons for the damage analysis appear plausible. It is also helpful to check whether the RTO of the resources was correctly derived from the MTPD of the time-critical processes.
+<br/><br/>
+Once the results have been quality-assured, you can have the individual results output in a general overview of the time-critical business processes and resources via a report query. The overall overview should include at least the following content:<br/>
+- Overview of time-critical business processes and associated contact persons,<br/>
+- Overview of process dependencies and<br/>
+- Overview of dependent resources and SpoFs and their RTO or RPO. 
+        </description>
+    </item>
+</cheatsheet>

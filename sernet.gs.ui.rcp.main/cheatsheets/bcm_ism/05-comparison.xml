@@ -1,0 +1,34 @@
+<cheatsheet title="8.05 TARGET-ACTUAL COMPARISON">
+
+    <intro>
+        <description>
+The target/actual comparison determines whether the required resources are already sufficiently secured. With this information, the BAO can recognize directly in the event of damage where only the restart needs to be started and where further actions are required.
+        </description>
+
+    </intro>
+
+
+<item title="Identification of resource responsibilities">
+<description>
+Before the target/actual comparison, it is necessary to identify the resource owners. As the BCB usually has the best overall view of the BIA results, it is recommended that he or she takes on this task.
+<br/><br/>
+Create the business or resource owners as person objects and link them to the resources. 
+</description>
+</item>
+
+<item title="Execution of the target/actual comparison">
+<description>
+As a result of the BIA, the RTOs and, if applicable, the RPO are available for all time-critical resources under consideration. <b>RTO and RPO</b> represent desired target values. As part of the target/actual comparison, the resource managers must answer the question of whether the RTO of the resource can be achieved with existing technical and organizational measures. To do this, the RTO is compared with the <b>actual restart time (RTA)</b> and the time values are compared with each other. The RTA of a time-critical resource denotes the actual achievable period from the time the emergency is called until the time when a BC solution for this resource is put into production. Similarly, for information-based resources, the RPO must also be compared with the <b>Recovery Point Actual (RPA)</b>.
+<br/><br/>
+Open the <b>SOLL-IST comparison</b> area under each target object and enter the <b>RTA</b>. Note the <b>evidence</b> and make a statement as to whether the RTA is less than or equal to the RTO. For the resource categories for which an RPO has been defined, this must be compared with the <b>data backup cycle</b> defined by IT operations. For this purpose, you will find a field for <b>defining the data backup cycle</b> under the BCM area. Note the <b>actual data loss (RPA)</b> and make a statement as to whether the data backup cycle is less than/equal to the RPO. 
+</description>
+</item>
+
+<item title="Evaluation and release of the results">
+<description>
+
+An overview of all time-critical resources, but in particular those that are insufficiently backed up, must be drawn up and agreed with the institution's management. The institution management should take note of and confirm the following information Overview of time-critical business processes according to BIA, Overview of time-critical resources according to BIA, Overview of insufficiently secured resources according to target/actual comparison, Assessment of possible risks from the identified gaps according to target/actual comparison. The overviews for the institution management can be output via a report query. 
+        </description>
+        
+    </item>
+</cheatsheet>
