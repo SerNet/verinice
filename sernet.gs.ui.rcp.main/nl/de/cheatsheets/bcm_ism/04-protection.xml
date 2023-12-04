@@ -8,8 +8,7 @@ Dieses Tutorial beschäftigt sich mit dem zweiten Prozessschritt der Do-Phase, d
     </intro>
 
 
-<item title="Vorbereitung der
-BIA / Erheben der Geschäftsprozesse ">
+<item title="Vorbereitung der BIA / Erheben der Geschäftsprozesse ">
 <description>
 Liegt ein ISMS nach
 ISO-Norm 27001 vor, können die bereits identifizierten
@@ -28,8 +27,7 @@ Geschäftsprozesse als neue Objekte an.
 </description>
 </item>
 
-<item title="Vorbereitung der
-BIA / Festlegung der BIA-Parameter und betrachteten Zeithorizonte ">
+<item title="Vorbereitung der BIA / Festlegung der BIA-Parameter und betrachteten Zeithorizonte ">
 <description>
 
 Ziel der BIA ist es,
@@ -60,21 +58,19 @@ können Sie Ihre Ressourcen anlegen.
 </description>
 </item>
 
-<item title="Planung der
-BIA-Erhebung ">
+<item title="Planung der BIA-Erhebung">
 <description>
 
 Vor Beginn der BIA
 sollte festgelegt werden, wie die Informationen zur BIA erhoben
 werden sollen.
-Anschließend können unter <b>Datum der Erhebung</b> und<b> Art der
+Anschließend können unter <b>Datum der Erhebung</b> und <b>Art der
 Erhebung</b> eingetragen werden, mittels welchen Formats Sie die
 BIA-Daten wann erhoben haben. 
 </description>
 </item>
 
-<item title="Durchführung der
-BIA/ Festlegung der MTPD">
+<item title="Durchführung der BIA/ Festlegung der MTPD">
 <description>
 Um zeitkritische
 Geschäftsprozesse zu identifizieren, müssen Sie das
@@ -90,8 +86,7 @@ dokumentieren.
 </description>
 </item>
 
-<item title="Durchführung der
-BIA/ Festlegung der RTO ">
+<item title="Durchführung der BIA/ Festlegung der RTO ">
 <description>
 Nachdem Sie die MTPD
 bestimmt haben, müssen Sie zusätzlich die geforderte
@@ -101,8 +96,7 @@ kommt. Die RTO muss kleiner als die MTPD sein.
 </description>
 </item>
 
-<item title="Durchführung der
-BIA/ Festlegung des MBCO">
+<item title="Durchführung der BIA/ Festlegung des MBCO">
 <description>
 Zusätzlich zur RTO
 und zum MTPD können Sie unter dem Feld <b>Notbetriebsniveau</b>, das
@@ -110,8 +104,7 @@ Notbetriebsniveau für den Prozess definieren.
 </description>
 </item>
 
-<item title="Durchführung der
-BIA/ Identifizierung der Prozessabhängigkeiten ">
+<item title="Durchführung der BIA/ Identifizierung der Prozessabhängigkeiten ">
 <description>
 Nachdem Sie erste
 Bewertungen durchgeführt haben, können Sie über den Link-Maker

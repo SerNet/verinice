@@ -27,7 +27,7 @@ grundsätzlichen BC-Strategien möglich wären, um die jeweilige
 Ressourcenkategorie bzw. Ressource abzusichern.
 <br/><br/>
 Erstellen Sie pro Ressourcenkategorie einen neuen Baustein und benennen diesen nach der Ressourcenkategorie um. Im Anschluss können Sie die empfohlenen BC-Strategie für diese Ressourcenkategorie als Baustein-Anforderungen anlegen. Schreiben Sie mindestens unter dem Identifier „BC-Strategie“ und nummerieren diese fortlaufend durch. 
-Setzen Sie unter dem Baustein-Anforderungs-Objekt den Hacken „Business Continuity Anforderung/Strategie“ und den Status der BC-Strategie (vorgeschlagen, freigegeben, umgesetzt). Zusätzlich können Sie die BC-Strategie mit der Gefährdung verknüpfen, um zu begründen, welches Risiko durch die BC-Strategie reduziert wird. 
+Setzen Sie unter dem Baustein-Anforderungs-Objekt den Haken „Business Continuity Anforderung/Strategie“ und den Status der BC-Strategie (vorgeschlagen, freigegeben, umgesetzt). Zusätzlich können Sie die BC-Strategie mit der Gefährdung verknüpfen, um zu begründen, welches Risiko durch die BC-Strategie reduziert wird. 
 
 <br/><br/>
 Als Ergebnis verfügt der oder die BCB je Ressourcenkategorie über
@@ -50,13 +50,9 @@ Eintrittshäufigkeit eines Ausfalls auf ein akzeptables Maß gesenkt
 werden kann oder die
 zeitkritischen
 Geschäftsprozesse innerhalb der RTO auf dem Notbetriebsniveau
-fortgeführt werden können. 
-</description>
-</item>
-
-<item title="Angemessen">
-<description>
-ist eine BC-Strategie dann, wenn sie den allgemeinen Zielen der
+fortgeführt werden können.
+<br/><br/> 
+Angemessen ist eine BC-Strategie dann, wenn sie den allgemeinen Zielen der
 Institution entspricht, die geltenden rechtlichen und regulatorischen
 Anforderungen einhält und wenn der Nutzen die Kosten überwiegt. 
 

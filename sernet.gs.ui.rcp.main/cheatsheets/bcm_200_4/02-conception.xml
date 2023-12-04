@@ -2,14 +2,12 @@
 
     <intro>
         <description>
-Dieses Tutorial beschäftigt sich mit der Konzeption und Planung des BCMS, insbesondere mit der  Analyse von erweiterten Rahmenbedingungen. Es wird beschrieben, wie die Anforderungen der Interessengruppen an das BCMS erfasst, wie diese angelegt und mit den Anforderungen verknüft werden können. Des Weiteren wird beschrieben, wo Angaben zur Kommunikation mit den Interessengruppen dokumentiert werden. In einem nächsten Schritt wird aufgezeigt, wie Sie Ihre BC-Aufbauorganisation in verinice abbilden. Abschließend wird auf die Ablage der BC-relevanten Dokumente eingegangen.        </description>
+Dieses Tutorial beschäftigt sich mit der Konzeption und Planung des BCMS, insbesondere mit der  Analyse von erweiterten Rahmenbedingungen. Es wird beschrieben, wie die Anforderungen der Interessengruppen an das BCMS erfasst, wie diese angelegt und mit den Anforderungen verknüpft werden können. Des Weiteren wird beschrieben, wo Angaben zur Kommunikation mit den Interessengruppen dokumentiert werden. In einem nächsten Schritt wird aufgezeigt, wie Sie Ihre BC-Aufbauorganisation in verinice abbilden. Abschließend wird auf die Ablage der BC-relevanten Dokumente eingegangen.        </description>
     </intro>
 
 
     <item
-        title="Analyse von erweiterten Rahmenbedingungen 
-Identifizierung von Anforderungen und Einflussfaktoren an das BCMS 
-Erfassen der Anforderungen der Interessengruppen an das BCMS">
+        title="Erfassen der Anforderungen der Interessengruppen an das BCMS">
         <description>Für den Erfolg des Aufbau- und Standard-BCMS ist es entscheidend, die Rahmenbedingungen
             zu dem BCMS
             genau zu analysieren und das BCMS auf die Bedürfnisse und Anforderungen von
@@ -35,6 +33,8 @@ Erfassen der Anforderungen der Interessengruppen an das BCMS">
     <item
         title="Anlegen der Interessierten Parteien und Verknüpfung mit den Anforderungen">
         <description>Als Nächstes können die identifizierten interessierten Parteien gruppiert nach intern und extern, als Personen-Objekte angelegt werden. Unter dem Personen-Objekt können Sie den <b>Grad der Einflussnahme</b> festlegen, und Verknüpfungen zu den Anforderungen herstellen. Als Verknüpfungstyp wählen Sie <b>Interessierte Partei erwartet/erfordert</b> aus. 
+<br/>
+Zusätzlich zur Verknüpfung zur interessierten Partei kann die BCM-Anforderung auch mit einem oder mehreren Maßnahmen-Objekt/en verknüpft werden. Erstellen Sie hierfür eine neue Maßnahmen-Gruppe in Ihrem Informationsverbund, unter welcher Sie die Maßnahmen verwalten, die Sie zur Erfüllung der BCM-Anforderung planen umzusetzen. Mit Klick auf das Verknüpfungen-View im Anforderungs-Objekt sehen Sie im Ergebnis von welcher interessierten Partei diese BCM-Anforderung erwartet/angefordert wird und durch welche Maßnahmen diese Anforderung erfüllt wird. Den Umsetzungsstatus können Sie dann aus den verknüpften Maßnahmen-Objekten automatisch ableiten lassen. 
 <br/><br/>
 Es gibt zwei Möglichkeiten in verinice, wie Sie Abhängigkeiten/Verknüpfungen zwischen den Objekten herstellen können.<br/>
 1. Drag&amp;Drop: Im View Modernisierter IT-Grundschutz kann die Verknüpfung über Drag&amp;Drop hergestellt werden. Dazu wählen Sie ein Objekt aus und ziehen es mit der 
@@ -43,8 +43,6 @@ Link-Maker des Objektes eingesehen werden.<br/>
 2. Link-Maker: Über den sogenannten Link-Maker, der sich im unteren Teil des Editorbereichs jedes Objektes befindet, können Sie die Verknüpfung zwischen Objekten herstellen, indem Sie zunächst das Element auswählen, welches mit Ihrem Objekt verknüpft werden soll, und anschließend auf Hinzufügen klicken. Nun erscheint ein neues Fenster, in diesem werden Ihnen alle Objekte des Elementes in Ihrem Informationsverbund angezeigt. Wenn 
 Sie verbundübergreifend Verknüpfungen herstellen wollen, so sollte <b>Nur aktueller Scope</b>
  abgewählt werden. In diesem Auswahlfenster können Sie mit einem einfachen Klick alle Objekte auswählen, die mit Ihrem Objekt verknüpft werden sollen. Durch anschließendes Betätigen des OK-Buttons werden die Verknüpfungen hergestellt. 
-<br/>
- Zusätzlich zur Verknüpfung zur interessierten Partei kann die BCM-Anforderung auch mit einem oder mehreren Maßnahmen-Objekt/en verknüpft werden. Erstellen Sie hierfür eine neue Maßnahmen-Gruppe in Ihrem Informationsverbund, unter welcher Sie die Maßnahmen verwalten, die Sie zur Erfüllung der BCM-Anforderung planen umzusetzen. Mit Klick auf das Verknüpfungen-View im Anforderungs-Objekt sehen Sie im Ergebnis von welcher interessierten Partei diese BCM-Anforderung erwartet/angefordert wird und durch welche Maßnahmen diese Anforderung erfüllt wird. Den Umsetzungsstatus können Sie dann aus den verknüpften Maßnahmen-Objekten automatisch ableiten lassen. 
  </description>
     </item>
     <item title="Festlegung der Kommunikation mit Interessengruppen">

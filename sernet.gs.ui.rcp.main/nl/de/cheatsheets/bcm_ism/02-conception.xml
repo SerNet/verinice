@@ -34,13 +34,12 @@ Anforderungen erfassen. (Anforderungsgruppe &gt; Neue Anforderung).
 Beschreiben Sie die
 Anforderung unter dem Beschreibungsfeld und fügen Sie hinzu, welchen
 <b>Einfluss die Anforderung</b> (niedrig, mittel, hoch)<b> </b>auf
-das BCMS hat und setzen Sie den Hacken, dass es sich um eine Business
+das BCMS hat und setzen Sie den Haken, dass es sich um eine Business
 Continuity Anforderung handelt.  
 </description>
 </item>
 
-<item title="Anlegen der
-Interessierten Parteien und Verknüpfung mit den Anforderungen">
+<item title="Anlegen der Interessierten Parteien und Verknüpfung mit den Anforderungen">
 <description>
 Als Nächstes können
 die identifizierten interessierten Parteien gruppiert nach intern und
@@ -49,7 +48,10 @@ Personen-Objekt können Sie ebenfalls den <b>Grad der Einflussnahme</b>
 festlegen, und Verknüpfungen zu den Anforderungen herstellen. Als
 Verknüpfungstyp wählen Sie <b>Interessierte Partei erwartet/fordert</b>
 aus. 
-
+<br/><br/>
+Zusätzlich zur Verknüpfung zur interessierten Partei kann die BCM-Anforderung auch mit einem oder mehreren Control-Objekt/en verknüpft werden. Erstellen Sie hierfür eine neue Control-Gruppe in Ihrem Scope, unter welcher Sie die Controls verwalten, die Sie zur Erfüllung der BCM-Anforderung planen umzusetzen. Details zum Umsetzungsstatus  können somit im Control erfasst werden. 
+<br/><br/>
+Mit Klick auf das Verknüpfungen-View im Anforderungs-Objekt sehen Sie im Ergebnis von welcher interessierten Partei diese BCM-Anforderung erwartet/angefordert wird und durch welches Control diese Anforderung erfüllt wird.
 <br/><br/>
 Es gibt zwei
 Möglichkeiten in verinice, wie Sie Abhängigkeiten/Verknüpfungen
@@ -82,8 +84,7 @@ Verknüpfungen hergestellt.
 </description>
 </item>
 
-<item title="Warnung und
-Kommunikation ">
+<item title="Warnung und Kommunikation ">
 <description>
 
 Aufbauend auf der
@@ -119,7 +120,7 @@ Reaktionsstruktur in zwei Gruppen aufzuteilen: erstens in die
 BC-Vorsorgeorganisation, zweitens die Bewältigungsorganisation für
 Notfälle und Krisen (Besondere Aufbauorganisation (BAO)). Legen Sie
 die am BCMS beteiligten Mitarbeitenden Ihrer Institution als
-Personen-Objekte an und weisen Sie diesen <b>BCM-Rollen</b> zu. So
+Personen-Objekte an und weisen Sie diesen <b>BC-Rollen</b> zu. So
 können Sie die Verantwortlichkeiten für relevante BCM-Rollen
 sicherstellen. 
 </description>

@@ -70,7 +70,7 @@ einordnen.
 Vor Beginn der BIA
 sollte festgelegt werden, wie die Informationen zur BIA erhoben
 werden sollen.
-Öffnen Sie einen Geschäftsprozess und tragen unter <b>Datum der Erhebung</b> und<b> Art der
+Öffnen Sie einen Geschäftsprozess und tragen unter <b>Datum der Erhebung</b> und <b>Art der
 Erhebung</b> ein, mittels welchen Formats Sie die BIA-Daten wann
 erhoben haben bzw. erheben werden. 
 
@@ -148,9 +148,9 @@ Aufgrund der
 Prozessabhängigkeiten kann es vorkommen, dass sich die MTPD des
 Geschäftsprozesses ändert, hierfür können Sie unter dem Feld
 <b>Geänderte MTPD aufgrund von Prozessabhängigkeiten </b>ggf. den
-geänderten MTPD festhalten, und eine Begründung hierfür notieren.
+geänderten MTPD festhalten, und eine <b>Begründung</b> hierfür notieren.
 <br/>
-Um dem Prozesseigentümer die Bewertung zu erleichtern, ob der MTPD-Wert, aufgrund der Abhängigkeiten zu anderen Prozessen, sich ändern muss, wurde ein neues View entwickelt: das BIA View. Navigieren Sie zur Ansicht> Zeige View> BIA View. Mit Klick auf einen Geschäftsprozess wird Ihnen im BIA View angezeigt, zu welchen Geschäftsprozessen und Ressourcen eine Abhängigkeit besteht. Darüber lässt sich ableiten, ob der MTPD-Wert einer Änderung bedarf.
+Um dem Prozesseigentümer die Bewertung zu erleichtern, ob der MTPD-Wert, aufgrund der Abhängigkeiten zu anderen Prozessen, sich ändern muss, wurde ein neues View entwickelt: das <b>BIA View</b>. Navigieren Sie zur <b>Ansicht> Zeige View> BIA View</b>. Mit Klick auf einen Geschäftsprozess wird Ihnen im BIA View angezeigt, zu welchen Geschäftsprozessen und Ressourcen eine Abhängigkeit besteht. Darüber lässt sich ableiten, ob der MTPD-Wert einer Änderung bedarf.
 <br/><br/>
 Nachdem Sie beide MTPD-Werte festgelegt haben, wird Ihnen automatisch
 die MTPD (MIN aus Schadensbewertung und Prozessabhängigkeit)
@@ -179,10 +179,8 @@ Geschäftsprozessen.
 <item title="Durchführung der BIA/ RTO der benötigten Ressourcen">
 <description>
 Anhand der RTO des
-zeitkritischen Geschäftsprozesses muss die RTO der prozessnot-
-wendigen Ressourcen
-(cluster) so abgeleitet werden, dass der Notbetrieb rechtzeitig er-
-reicht wird. Ähnlich
+zeitkritischen Geschäftsprozesses muss die RTO der prozessnotwendigen Ressourcen
+(cluster) so abgeleitet werden, dass der Notbetrieb rechtzeitig erreicht wird. Ähnlich
 wie die RTO in den Prozessabhängigkeiten kann auch die RTO der
 Ressourcen(cluster)
 individuell abgestimmt werden. Falls mehrere Geschäftsprozesse auf
