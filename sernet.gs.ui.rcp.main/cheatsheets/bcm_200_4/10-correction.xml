@@ -34,7 +34,7 @@ die wesentlichen Inhalte eines BCM-Maßnahmenplans Felder
 hinzugefügt. Somit können die Korrektur- und Verbesserungsmaßnahmen
 ausführlich dokumentiert werden.
 <br/><br/>
-Erstellen Sie eine Maßnahmen-Gruppe für den „BCM-Maßnahmenplan“. Legen Sie für jede Korrektur- und Verbesserungsmaßnahme ein neues Maßnahmen-Objekt an. Vergeben Sie einen Identifier, Titel und beschreiben die Maßnahme. Setzen Sie unter der BCM-Gruppe den Hacken unter dem Feld Business Continuity Strategie/Maßnahme. Unter der Gruppe BCM-Maßnahmenplan beschreiben Sie den Korrekturbedarf bzw. das Verbesserungspotenzial, die Ursache sowie die notwendigen Ressourcen und legen eine Priorität fest. Um einen Überblick über den Umsetzungsstatus zu erhalten, füllen Sie die Felder unter der Gruppe Umsetzung aus. Hier können Sie z.B. das geplante Umsetzungs-Datum und die tatsächliche Fertigstellung hinterlegen, sowie weitere Angaben zu Umsetzungsdetails dokumentieren. 
+Erstellen Sie eine Maßnahmen-Gruppe für den „BCM-Maßnahmenplan“. Legen Sie für jede Korrektur- und Verbesserungsmaßnahme ein neues Maßnahmen-Objekt an. Vergeben Sie einen Identifier, Titel und beschreiben die Maßnahme. Setzen Sie unter der BCM-Gruppe den Haken unter dem Feld Business Continuity Strategie/Maßnahme. Unter der Gruppe BCM-Maßnahmenplan beschreiben Sie den Korrekturbedarf bzw. das Verbesserungspotenzial, die Ursache sowie die notwendigen Ressourcen und legen eine Priorität fest. Um einen Überblick über den Umsetzungsstatus zu erhalten, füllen Sie die Felder unter der Gruppe Umsetzung aus. Hier können Sie z.B. das geplante Umsetzungs-Datum und die tatsächliche Fertigstellung hinterlegen, sowie weitere Angaben zu Umsetzungsdetails dokumentieren. 
 </description>
 </item>
 

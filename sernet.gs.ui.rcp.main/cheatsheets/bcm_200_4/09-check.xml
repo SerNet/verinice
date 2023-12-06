@@ -4,8 +4,7 @@
         <description>
 Um das BCMS
 aufrechtzuerhalten und kontinuierlich verbessern zu können, muss
-regel-
-mäßig überprüft
+regelmäßig überprüft
 werden, ob das BCMS angemessen, wirksam und effizient ist. Anhand
 der
 Leistungsüberprüfung kann festgestellt werden, ob die jeweiligen
@@ -20,8 +19,8 @@ durch die Korrektur und Verbesserung des BCMS behandelt werden.
 Messzielen, Kennzahlen und Zielwerten">
         <description>
 Im ersten Schritt
-muss die Institution festlegen, was mittels Kennzahlen gemessen wer-
-den soll, d. h.
+muss die Institution festlegen, was mittels Kennzahlen gemessen 
+werden soll, d. h.
 Messziele festlegen. In der Praxis werden zumeist Kennzahlen erhoben,
 die sich auf das
 konkrete Ergebnis eines oder mehrerer BCM-Prozessschritte beziehen.
@@ -32,8 +31,11 @@ Kennzahl untersucht werden. Die Messziele müssen in der Gesamtheit
 einen jeweils aktuellen Überblick über den Status des BCMS und die
 einzelnen BCM-Prozessschritte ermöglichen. Übergreifend müssen die
 Effektivität und Effizienz des BCMS eingeschätzt werden.
-<b>Kennzahlen ohne
-Zielwerte</b>
+</description>
+</item>
+
+<item title="Kennzahlen ohne Zielwert">
+<description>
 In verinice haben
 Sie die Möglichkeit <b>Kennzahlen ohne Zielwerte</b> unter dem
 Geschäftsprozess-Objekt zu erfassen und auszuwerten. Im Bereich
