@@ -2,7 +2,7 @@
 
     <intro>
         <description>
-This tutorial deals with the management of emergency measures as part of business continuation and restart and recovery planning.  
+This tutorial deals with the management of emergency measures as part of business continuation, restart and recovery planning.  
         </description>
 
     </intro>
@@ -10,12 +10,12 @@ This tutorial deals with the management of emergency measures as part of busines
 
     <item title="Managing emergency measures">
         <description>
-The business continuation plans document, in relation to business processes, and the restart plans, in relation to resources, the action steps that must be carried out in an emergency so that the time-critical business processes can be continued within the required time. The recovery plans provide guidance on the action steps required to restore sufficient resources for normal operations. When creating the CFPs, <b>emergency measures must be developed and documented</b> in order to resume failed business processes in a defined emergency operation. 
+The Business continuation plans document, in relation to business processes, and the restart plans, in relation to resources, document the action steps that must be taken in an emergency so that the time-critical business processes can be continued within the required time. The recovery plans provide guidance on the action steps required to restore sufficient resources for normal operations. When creating the business continuation plans, <b>emergency measures must be developed and documented</b> in order to resume failed business processes in a defined emergency operation. 
 
 <br/><br/>
-These are usually created by the responsible contact persons at the CFPs. For this purpose, it must be described how the business processes are to be resumed within the required time and at the emergency operation level on the basis of the defined BC strategies and solutions.
+These are usually created by the responsible contact persons at the business continuation plans. For this purpose, it must be described how the business processes are to be resumed within the required time and at the emergency operation level on the basis of the defined BC strategies and solutions.
 <br/><br/>
-You can document the emergency measures developed in verinice and record the responsibilities. To do this, create new control groups and record the measures as control objects. Next, store the links. The measures can then be output as a checklist using the report query and attached to the CFP/WAP and WHP. 
+You can document the emergency measures developed in verinice and record the responsibilities. To do this, create new control groups and record the measures as control objects. Next, store the links. The measures can then be output as a checklist by the report query and attached to the business continuation plans or restart and recovery plans. 
 </description>
 </item>
 </cheatsheet>

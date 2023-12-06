@@ -2,7 +2,7 @@
 
     <intro>
         <description>
-As part of the Act phase of the BCMS, the identified correction requirements and opportunities for improvement are translated into specific measures that are implemented in the structural and standard BCMS and also followed up. In a Reactive BCMS, the targeted transition to a subsequent stage is also planned in the Act phase.
+As part of the act phase of the BCMS, the identified correction requirements and opportunities for improvement are translated into specific measures that are implemented in the structural and standard BCMS and also followed up. In a reactive BCMS, the targeted transition to a subsequent stage is also planned in the act phase.
         </description>
 
     </intro>
@@ -10,7 +10,7 @@ As part of the Act phase of the BCMS, the identified correction requirements and
 
     <item title="Preparation of a BCM action plan and derivation of corrective and improvement measures">
         <description>
-In order to maintain an overview of all corrective and improvement measures and to be able to manage them more easily, the BCB should prepare a document template for a BCM action plan. 
+In order to maintain an overview of all corrective and improvement measures and to be able to manage them more easily, the Business Continuity Officer should prepare a document template for a BCM action plan. 
 
 <br/><br/>
 In verinice, fields have been added under the action object (or module request object) for the main contents of a BCM action plan. This allows the corrective and improvement measures to be documented in detail.
@@ -24,7 +24,7 @@ Once the corrective or improvement measures have been planned and documented, th
 The implementation status can also be checked regularly in order to recognize undesirable developments in terms of quality or the planned completion date at an early stage and to be able to counteract them. 
 
 <br/><br/>
-The BCB should then check whether the measure has been approved, completed and is effective. You can record the results of this check in verinice. If the result of the investigation shows that the implemented corrective and improvement measures are not effective, new corrective and improvement measures should be planned and implemented.      
+The Business Continuity Officer should then check whether the measure has been approved, completed and is effective. You can record the results of this check in verinice. If the result of the investigation shows that the implemented corrective and improvement measures are not effective, new corrective and improvement measures should be planned and implemented.      
         </description>
     </item>
 </cheatsheet>

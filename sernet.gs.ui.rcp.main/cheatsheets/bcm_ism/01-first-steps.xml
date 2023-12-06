@@ -30,9 +30,9 @@ Once you have completed your entries, save them (click on icon: Diskette or key 
 </description>
 </item>
 
-<item title="Naming of the BCB(s)">
+<item title="Naming of the BCO(s)">
 <description>
-Navigate to the person object and create your BCB as a person target object, alternatively you can import person target objects from an AD with verinice.PRO, e.g. the BC representative.
+Navigate to the person object and create your Business Continuity Officer as a person target object, alternatively you can import person target objects from an AD with verinice.PRO, e.g. the BC representative.
         </description>
     </item>
 

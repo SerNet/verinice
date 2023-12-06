@@ -16,26 +16,26 @@ For each resource, it is advisable to check which basic BC strategies would be p
 <br/><br/>
 If you need to handle the risk, create your BC strategies/solutions as a control object and also link them to the asset or the risk scenario. Depending on whether the BC strategy reduces the probability of occurrence or the impact of the loss.
 <br/><br/>
-As a result of this section, the BCB has a list of possible BC strategies for each resource.
+As a result of this section, the Business Continuity Officer has a list of possible BC strategies for each resource.
 </description>
 </item>
 
 <item title="Evaluation of the strategy">
 <description>
 
-Once the BCB has identified the possible BC strategies, he or she must assess whether they are effective and appropriate for the institution. A BC strategy is <b>effective</b> if the BC strategy implemented can reduce the frequency of occurrence of a failure to an acceptable level or if the time-critical business processes within the RTO can be continued at the emergency operating level. <b>An appropriate</b> BC strategy is one that meets the overall objectives of the institution, complies with applicable legal and regulatory requirements and where the benefits outweigh the costs. 
+Once the Business Continuity Officer has identified the possible BC strategies, he or she must assess whether they are effective and appropriate for the institution. A BC strategy is <b>effective</b> if the BC strategy implemented can reduce the frequency of occurrence of a failure to an acceptable level or if the time-critical business processes within the RTO can be continued at the emergency operating level. <b>An appropriate</b> BC strategy is one that meets the overall objectives of the institution, complies with applicable legal and regulatory requirements and where the benefits outweigh the costs. 
 
 <br/><br/>
-In order to evaluate BC strategies, it is advisable for the BCB to define various evaluation criteria. Based on the evaluation criteria, the BC strategies can be evaluated qualitatively and quantitatively and weighed against each other. If it becomes apparent at an early stage that a BC strategy is not effective or appropriate, it is not necessary to evaluate it further.
+In order to evaluate BC strategies, it is advisable for the Business Continuity Officer to define various evaluation criteria. Based on the evaluation criteria, the BC strategies can be evaluated qualitatively and quantitatively and weighed against each other. If it becomes apparent at an early stage that a BC strategy is not effective or appropriate, it is not necessary to evaluate it further.
 <br/><br/>
-Under the module requirement object by means of which the BC strategy is mapped in verinice, you evaluate the BC strategy by filling in the fields with the evaluation criteria that must at least be taken into account. (Description of the BC strategy, Compliance with the RTO, Achievable emergency operation level, Remaining residual risk, Financial expenses, Compliance with internal and external requirements, Maximum possible emergency operation duration, Organizational expenses, Emerging risks, Emerging additional benefits) You can then set the status of the BC strategy to proposed. 
+Under the module requirement object, in which the BC strategy is mapped inverinice, you evaluate the BC strategy by filling in the fields with the evaluation criteria that must at least be taken into account (Description of the BC strategy, Compliance with the RTO, Achievable emergency operation level, Remaining residual risk, Financial expenses, Compliance with internal and external requirements, Maximum possible emergency operation duration, Organizational expenses, Emerging risks, Emerging additional benefits). You can then set the status of the BC strategy to proposed.
 </description>
 </item>
 
 <item title="Selection of the BC strategy by the institution management">
 <description>
 
-After the BCB has preselected and evaluated possible BC strategies, the institution management must decide on the BC strategies to be implemented in its role as the person with overall responsibility for BCM and based on the scope of the BC strategies. To this end, the institution's management must weigh up the effectiveness and benefits of the BC strategies against the expected costs and its own risk appetite.
+After the Business Continuity Officer has preselected and evaluated possible BC strategies, the institution management must decide on the BC strategies to be implemented in its role as the person with overall responsibility for BCM and based on the scope of the BC strategies. To this end, the institution's management must weigh up the effectiveness and benefits of the BC strategies against the expected costs and its own risk appetite.
 <br/><br/>
 Use the report query to display the proposed BC strategies in tabular form and present them to the institution's management. They can then check the BC strategy and approve it if necessary. If a BC strategy is released, you can set the status of the BC strategy in verinice to released.
 </description>
@@ -44,7 +44,7 @@ Use the report query to display the proposed BC strategies in tabular form and p
 <item title="Implementation of the BC strategy and solutions">
 <description>
 
-Once the institution management has approved the BC strategies, it must be determined who is responsible for implementation and who can contribute the necessary expertise. Together with the BCB, these people can agree on how the BC strategies should be implemented. To this end, it is advisable to first check which precautionary measures, BC solutions and emergency measures make up the selected BC strategies. 
+Once the institution management has approved the BC strategies, it must be determined who is responsible for implementation and who can contribute the necessary expertise. Together with the Business Continuity Officer, these people can agree on how the BC strategies should be implemented. To this end, it is advisable to first check which precautionary measures, BC solutions and emergency measures make up the selected BC strategies. 
 
 <br/><br/>
 Record the results using links. As a result, the BC strategy should be linked to precautionary measures, emergency measures and the person responsible for implementation. Subsequently, the implementation status can be documented and the status of the BC strategy can be set to implemented at the end.

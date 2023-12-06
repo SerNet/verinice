@@ -22,7 +22,7 @@ Describe the requirement under the description field and add what <b>impact the 
 
 <item title="Creating the interested parties and linking to the requirements">
 <description>
-Next, the identified interested parties can be grouped according to internal and external and created as person objects. Under the person object, you can also define the <b>degree of influence</b> and create links to the requirements. Select <b>Interested party expects/requests</b> as the link type. 
+Next, the identified interested parties, grouped according to internal and external, can be created as person objects. Under the person object, you can also define the <b>degree of influence</b> and create links to the requirements. Select <b>Interested party expects/requests</b> as the link type.
 
 <br/><br/>
 There are two ways in verinice how you can create dependencies/links between the objects.
@@ -36,24 +36,12 @@ There are two ways in verinice how you can create dependencies/links between the
 <item title="Warning and communication">
 <description>
 
-Based on the
-analysis of the interested parties, you can document information on communication for each interested party in order to enable and maintain target group-oriented communication throughout the PDCA cycle. 
+Based on the analysis of the interested parties, you can document information on communication for each interested party in order to enable and maintain target group-oriented communication throughout the PDCA cycle. 
 
 <br/><br/>
-Fill in the
-fields <b>Communication in normal operation</b>,<b> Communication in
-emergency operation</b>, <b>Time interval </b>and<b> Communication path </b>under
-the<b> person-object,</b> in order to provide information on which
-information entitlement of the interest group, whether communication
-should or may take place, what information is passed on
-is communicated, which medium is used, how often and at what
-how often and at what times communication takes place.
+Fill in the fields <b>Communication in normal mode</b> <b>Communication in emergency mode</b>, <b>Time interval</b> and <b>Communication path</b> under the <b>Person object</b> in order to specify which information claim the interest group has, whether communication should or may take place, which information is passed on, which medium is used for communication, how often and at what times communication takes place.
 <br/><br/>
-You can also
-link between two person objects to show who is communicating with
-communicates with whom or is responsible for whom. For this you can
-In addition to the interested parties in the
-response structure, you can map a NuK communication team.
+You can also link between two person objects to show who is communicating with whom or who is responsible for whom. To do this, you can map a emergency and crisis communication team in addition to the interested parties in the response structure.
 </description>
 </item>
 
