@@ -59,6 +59,7 @@ gen-rep "(S) ITGS: A.6 Realisierungsplan" $path_org_reportTestData1
 gen-rep "(S) ITGS: Risikomatrix" $path_org_reportTestData1
 gen-rep "(S) ITGS: Meldeformular BSIG8b IS" $path_org_Datenschutz_GmbH
 gen-rep "(S) ITGS: Auditbericht" $path_audit
+gen-rep "(S) ITGS: Managementbericht" $path_org_reportTestData1
 
 //test docx
 gen-rep "(S) ITGS: A.1 Strukturanalyse" $path_org_reportTestData1 ".docx"
