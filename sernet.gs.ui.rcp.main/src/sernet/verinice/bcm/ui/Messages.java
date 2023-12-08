@@ -34,6 +34,9 @@ public class Messages extends NLS {
     public static String BiaView_tree_Layout;
     public static String BiaView_vertical_layout;
     public static String BiaView_viewModeTooltip;
+    public static String BiaView_MtpdTooltip;
+    public static String BiaView_RPOTooltip;
+    public static String BiaView_RTOTooltip;
     public static String BiaViewPreferences_color_parallel;
     public static String BiaViewPreferences_color_pre_after;
     public static String BiaViewPreferences_color_resource;
