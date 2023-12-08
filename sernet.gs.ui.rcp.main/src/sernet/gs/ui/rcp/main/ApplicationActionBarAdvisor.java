@@ -333,7 +333,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                 ImageCache.VIEW_CATALOG, ActionRightIDs.CATALOGVIEW);
 
         this.openBiaViewAction = new OpenViewAction(window,
-                Messages.ApplicationActionBarAdvisor_Bia_View, BiaView.ID, ImageCache.WRENCH,
+                Messages.ApplicationActionBarAdvisor_Bia_View, BiaView.ID, "Refresh.png", //$NON-NLS-1$
                 ActionRightIDs.BIAVIEW);
 
         Stream.of(this.exitAction, this.copyAction, this.pasteAction, this.aboutAction,
@@ -485,6 +485,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         // VDA - done by samt-plugin
         viewsMenu.add(new Separator());
 
+        viewsMenu.add(this.openBiaViewAction);
+        viewsMenu.add(new Separator());
+
         // global
         viewsMenu.add(this.openCatalogViewAction);
         viewsMenu.add(this.openDocumentViewAction);
@@ -500,7 +503,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         viewsMenu.add(this.openGroupViewAction);
         viewsMenu.add(this.openTaskViewAction);
         viewsMenu.add(this.openReportdepositViewAction);
-        viewsMenu.add(this.openBiaViewAction);
         viewsMenu.add(new Separator());
 
         viewsMenu.add(new Separator());

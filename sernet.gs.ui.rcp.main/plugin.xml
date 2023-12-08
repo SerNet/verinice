@@ -216,7 +216,7 @@
 
       <view
             class="sernet.verinice.bcm.ui.BiaView"
-            icon="icons/wrench.png"
+            icon="icons/Refresh.png"
             id="sernet.verinice.bcm.ui.biaview"
             name="%view.name.biaview"
             restorable="true">

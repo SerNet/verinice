@@ -162,7 +162,23 @@ public class BiaView extends RightsEnabledView
     }
 
     public enum Displaymode {
-        MIN_MTPD, RTO, RPO
+        MIN_MTPD("tree-icons/Fugue/clock--exclamation.png", Messages.BiaView_MtpdTooltip),  //$NON-NLS-1$
+        RTO("tree-icons/Fugue/clock--arrow.png", Messages.BiaView_RTOTooltip),  //$NON-NLS-1$
+        RPO("tree-icons/Fugue/clock--pencil.png", Messages.BiaView_RPOTooltip);  //$NON-NLS-1$
+        
+        Displaymode(String iconPath, String tooltip){
+            this.iconPath = iconPath;
+            this.tooltip = tooltip;
+        }
+        
+        private final String tooltip;
+        private final String iconPath;
+        public String getTooltip() {
+            return tooltip;
+        }
+        public String getIconPath() {
+            return iconPath;
+        }
     }
 
     public enum ViewMode {
@@ -303,9 +319,9 @@ public class BiaView extends RightsEnabledView
                     graphViewer.refresh();
                 }
             });
-            item.setText(dm.name());
             item.setData(dm);
-            item.setToolTipText(Messages.bind(Messages.BiaView_viewModeTooltip, dm.name()));
+            item.setImage(ImageCache.getInstance().getCustomImage(dm.getIconPath()));
+            item.setToolTipText(Messages.bind(Messages.BiaView_viewModeTooltip, dm.getTooltip()));
             item.setSelection(dm == displayMode);
             return item;
         }).collect(Collectors.toList());
@@ -465,16 +481,6 @@ public class BiaView extends RightsEnabledView
             ti.setEnabled(viewMode.availableModes.contains(ti.getData())
                     && isRpoEnabled((Displaymode) ti.getData()));
             ti.setSelection(displayMode.equals(ti.getData()));
-            if (ti.getData() == Displaymode.MIN_MTPD && selectedDomain == Domain.ISM) {
-                ti.setText(Messages.BiaView_ISM_Mtpd);
-                ti.setToolTipText(Messages.bind(Messages.BiaView_viewModeTooltip, Messages.BiaView_ISM_Mtpd));
-                ti.getParent().getParent().layout(true);
-            } else if (ti.getData() == Displaymode.MIN_MTPD
-                    && selectedDomain == Domain.BASE_PROTECTION) {
-                ti.setText(Messages.BiaView_MOGS_Mtpd);
-                ti.setToolTipText(Messages.bind(Messages.BiaView_viewModeTooltip, Messages.BiaView_MOGS_Mtpd));
-                ti.getParent().getParent().layout(true);
-            }
         });
 
         WorkspaceJob loadJob = new WorkspaceJob(Messages.BiaView_loadJobText) {
