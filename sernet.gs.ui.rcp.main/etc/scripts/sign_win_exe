@@ -6,7 +6,12 @@ DESCRIPTION="SerNet Service Network GmbH"
 URL="https://www.sernet.de/en/"
 FILE_TO_SIGN=verinice/verinice.exe
 CMD=/usr/bin/osslsigncode
-TIMESTAMPURL=http://timestamp.sectigo.com/
+# 2023-12-18 - DM - Beim Signieren der 1.27.0 gabe es einen 
+# 404 Fehler beim laden der URL http://timestamp.sectigo.com/
+# Aus diesem Grund habe ich die neue TIMESTAMPURL
+# http://timestamp.comodoca.com/authenticode eingetragen
+#TIMESTAMPURL=http://timestamp.sectigo.com/
+TIMESTAMPURL=http://timestamp.comodoca.com/authenticode
 
 
 # usage
@@ -61,6 +66,7 @@ Url: $URL"
 # the sign command
 $CMD sign -pkcs12 "$PATH_TO_KEY" \
   -askpass \
+  -h sha256 \
   -n "$DESCRIPTION" \
   -i "$URL" \
   -t $TIMESTAMPURL \
