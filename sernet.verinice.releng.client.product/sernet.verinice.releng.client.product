@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="verinice" uid="sernet.verinice.releng.client" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.27.0.qualifier" type="features" includeLaunchers="true" autoIncludeRequirements="true">
+<product name="verinice" uid="sernet.verinice.releng.client" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.28.0.qualifier" type="features" includeLaunchers="true" autoIncludeRequirements="true">
 
    <aboutInfo>
       <image path="/sernet.gs.ui.rcp.main/verinice_icons/about_img.png"/>
       <text>
-         SerNet verinice 1.27.0 - Codename &apos;Siargao&apos;
+         SerNet verinice 1.28.0 - Codename &apos;Kalifornien (SH)&apos;
 
 (c) SerNet Service Network GmbH and others
 1996–2023
@@ -797,7 +797,7 @@ Public License instead of this License.  But first, please read
    </plugins>
 
    <features>
-      <feature id="sernet.verinice.app.feature" version="1.27.0.qualifier"/>
+      <feature id="sernet.verinice.app.feature" version="1.28.0.qualifier"/>
    </features>
 
    <configurations>

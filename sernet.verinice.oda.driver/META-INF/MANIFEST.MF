@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: verinice ODA Driver
 Bundle-SymbolicName: sernet.verinice.oda.driver;singleton:=true
-Bundle-Version: 1.27.0.qualifier
+Bundle-Version: 1.28.0.qualifier
 Bundle-ClassPath: .,
  lib/bsh.jar
 Bundle-Activator: sernet.verinice.oda.driver.Activator

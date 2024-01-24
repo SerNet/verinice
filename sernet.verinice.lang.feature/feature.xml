@@ -2,7 +2,7 @@
 <feature
       id="sernet.verinice.lang.feature"
       label="Language Feature"
-      version="1.27.0.qualifier"
+      version="1.28.0.qualifier"
       provider-name="SerNet">
 
    <description url="https://verinice.com">
