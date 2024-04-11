@@ -1,3 +1,3 @@
 [submodule "verinice-distribution"]
 	path = verinice-distribution
-	url = ssh://git@git.verinice.org:7999/isms/verinice-distribution.git
+	url = git@gitlab.int.sernet.de:verinice/verinice-distribution.git
