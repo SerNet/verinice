@@ -49,7 +49,7 @@ pipeline {
                     rm -f -r *.zip
 
                     echo "using tomcat : ${params.TOMCAT_VERSION}"
-                    wget http://bob.int.sernet.de/tomcat-distributions/apache-tomcat-${params.TOMCAT_VERSION}.zip
+                    wget https://bob-2023.int.sernet.de/tomcat-distributions/apache-tomcat-${params.TOMCAT_VERSION}.zip
                     unzip -q apache-tomcat-${params.TOMCAT_VERSION}.zip
 
                     rm -f -r war
