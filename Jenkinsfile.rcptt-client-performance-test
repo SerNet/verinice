@@ -81,18 +81,6 @@ pipeline {
     post {
         always {
             archiveArtifacts allowEmptyArchive: true, artifacts: 'gui-test-runner/result/**/*.*', excludes: 'build/result/auth/**'
-            notifyBitbucket stashServerBaseUrl: 'https://git.verinice.org/bb',
-                  credentialsId: 'bitbucket',
-                  commitSha1: '',
-                  considerUnstableAsSuccess: false,
-                  disableInprogressNotification: false,
-                  ignoreUnverifiedSSLPeer: false,
-                  includeBuildNumberInKey: false,
-                  prependParentProjectKey: false,
-                  buildStatus: currentBuild.result,
-                  buildName: currentBuild.fullDisplayName,
-                  projectKey: ''
-
             cleanWs patterns: [[pattern: '*.zip', type: 'INCLUDE']],
                     notFailBuild: true
         }
