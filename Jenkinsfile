@@ -26,6 +26,10 @@ pipeline {
     }
     options {
         buildDiscarder(logRotator(numToKeepStr: '3'))
+        gitLabConnection('sernet-gitlab')
+    }
+    triggers {
+        gitlab(triggerOnPush: true, triggerOnMergeRequest: true, branchFilterType: 'All')
     }
     stages {
         stage('Setup') {
@@ -166,11 +170,15 @@ pipeline {
             recordIssues(tools: [taskScanner(highTags: 'FIXME', ignoreCase: true, normalTags: 'TODO', includePattern: '**/*.java, **/*.xml')])
         }
         failure {
-            emailext body: '${JELLY_SCRIPT,template="text"}', subject: '$DEFAULT_SUBJECT', to: 'dm@sernet.de, uz@sernet.de, jk@sernet.de, ak@sernet.de'
+            updateGitlabCommitStatus name: 'build', state: 'failed'
         }
         success {
+            updateGitlabCommitStatus name: 'build', state: 'success'
             sh './verinice-distribution/build.sh QUALIFIER=${qualifier} clean'
         }
+        aborted {
+            updateGitlabCommitStatus name: 'build', state: 'canceled'
+      }
     }
 }
 
