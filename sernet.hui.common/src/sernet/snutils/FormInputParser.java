@@ -104,7 +104,7 @@ public final class FormInputParser {
             throw new AssertException("Wrong / missing date: " + string);
         }
         DateTimeFormatter formatter;
-        if (string.charAt(2) == '.') {
+        if (string.length() == 10 && string.charAt(2) == '.') {
             formatter = GERMAN_DATE_FORMATTER;
         } else if (string.charAt(4) == '-') {
             formatter = DateTimeFormatter.ISO_LOCAL_DATE;
