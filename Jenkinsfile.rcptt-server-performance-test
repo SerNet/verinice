@@ -29,6 +29,9 @@ pipeline {
     }
     stages {
         stage('Run RCPTT tests') {
+            tools {
+              jdk 'Java11'
+            }
             steps {
                 sh 'env'
                 buildDescription "branch: ${env.GIT_BRANCH} (${env.GIT_COMMIT[0..8]})<br>tests: ${env.TEST_LIST}"
