@@ -100,6 +100,8 @@ public final class CnAElementHome {
 
     private Set<String> roles = null;
 
+    private AdminState isAdmin = AdminState.UNKNOWN;
+
     private static CnAElementHome instance;
 
     protected static final String LINK_NO_COMMENT = ""; //$NON-NLS-1$
@@ -471,7 +473,15 @@ public final class CnAElementHome {
 
             // Short cut 2: If we are the admin, then everything is writable as
             // well.
-            if (getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN })) {
+            if (isAdmin == AdminState.UNKNOWN) {
+                if (getAuthService()
+                        .currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN })) {
+                    isAdmin = AdminState.YES;
+                } else {
+                    isAdmin = AdminState.NO;
+                }
+            }
+            if (isAdmin == AdminState.YES) {
                 return true;
             }
 
@@ -761,5 +771,9 @@ public final class CnAElementHome {
 
     private IAuthService getAuthService() {
         return ServiceFactory.lookupAuthService();
+    }
+
+    enum AdminState {
+        UNKNOWN, YES, NO
     }
 }
