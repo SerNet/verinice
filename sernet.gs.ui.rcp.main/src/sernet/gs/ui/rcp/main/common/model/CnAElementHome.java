@@ -20,7 +20,9 @@ package sernet.gs.ui.rcp.main.common.model;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -101,6 +103,17 @@ public final class CnAElementHome {
     private Set<String> roles = null;
 
     private AdminState isAdmin = AdminState.UNKNOWN;
+
+    private final Map<Integer, CacheEntry> elementWritableCache = new LinkedHashMap<>() {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<Integer, CacheEntry> eldest) {
+            return size() > 5000;
+
+        }
+    };
 
     private static CnAElementHome instance;
 
@@ -499,6 +512,11 @@ public final class CnAElementHome {
 
                 roles = c.getRoles();
             }
+            Integer id = cte.getDbId();
+            CacheEntry cachedEntry = elementWritableCache.get(id);
+            if (cachedEntry != null && !cachedEntry.isExpired()) {
+                return cachedEntry.value;
+            }
 
             CnATreeElement elemntWithPermissions = Retriever.checkRetrievePermissions(cte);
             if (elemntWithPermissions == null) {
@@ -509,9 +527,12 @@ public final class CnAElementHome {
             }
             for (Permission p : elemntWithPermissions.getPermissions()) {
                 if (p.isWriteAllowed() && roles.contains(p.getRole())) {
+                    elementWritableCache.put(id, new CacheEntry(true));
                     return true;
                 }
             }
+            elementWritableCache.put(id, new CacheEntry(false));
+            return false;
         } catch (Exception e) {
             log.error("Error while checking write permission.", e);
         }
@@ -775,5 +796,21 @@ public final class CnAElementHome {
 
     enum AdminState {
         UNKNOWN, YES, NO
+    }
+
+    private static final class CacheEntry {
+        static final long TTL = 5000l;
+        long creationTime;
+        boolean value;
+
+        private CacheEntry(boolean value) {
+            creationTime = System.currentTimeMillis();
+            this.value = value;
+        }
+
+        public boolean isExpired() {
+            return creationTime + TTL < System.currentTimeMillis();
+        }
+
     }
 }
