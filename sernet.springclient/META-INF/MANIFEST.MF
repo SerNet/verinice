@@ -34,7 +34,7 @@ Import-Package: org.apache.derby.shared.common.error;resolution:=optional,
  org.eclipse.core.runtime;version="3.4.0",
  org.osgi.framework;version="1.5.0",
  org.springframework.beans.factory;version="2.5.6.SEC03",
- org.springframework.security.ui.digestauth;version="2.0.5.RELEASE"
+ org.springframework.security.ui.digestauth;version="2.0.7.RELEASE"
 Eclipse-BuddyPolicy: global
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: sernet.springclient
