@@ -20,7 +20,7 @@ Bundle-ClassPath: .,
  WebContent/WEB-INF/lib/lucene-sandbox-4.10.3.jar,
  WebContent/WEB-INF/lib/lucene-spatial-4.10.3.jar,
  WebContent/WEB-INF/lib/lucene-suggest-4.10.3.jar,
- WebContent/WEB-INF/lib/javax.faces-2.2.20.jar,
+ WebContent/WEB-INF/lib/javax.faces-2.3.9.jar,
  WebContent/WEB-INF/lib/primefaces-6.2.jar
 Bundle-Activator: sernet.gs.server.Activator
 Export-Package: com.sun.faces,
