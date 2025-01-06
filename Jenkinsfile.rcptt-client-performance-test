@@ -24,32 +24,34 @@ pipeline {
     stages {
         stage('Run RCPTT tests') {
             steps {
-                sh 'env'
-                buildDescription "branch: ${env.GIT_BRANCH} (${env.GIT_COMMIT[0..8]})<br>tests: ${env.TEST_LIST}"
-                //remove old stuff
-                sh '''
-                    rm -f *.zip
-                '''
+                gitlabCommitStatus(name: 'RCPTT client performance tests') {
+                    sh 'env'
+                    buildDescription "branch: ${env.GIT_BRANCH} (${env.GIT_COMMIT[0..8]})<br>tests: ${env.TEST_LIST}"
+                    //remove old stuff
+                    sh '''
+                        rm -f *.zip
+                    '''
 
-                copyArtifacts filter: "**/verinice-*${VERINICE_CLIENT_SELECTOR_OS_COMPONENT}.zip",
-                  fingerprintArtifacts: true, flatten: true,
-                  projectName: params.job_to_copy_from,
-                  selector: buildParameter(params.build_to_copy_from)
+                    copyArtifacts filter: "**/verinice-*${VERINICE_CLIENT_SELECTOR_OS_COMPONENT}.zip",
+                    fingerprintArtifacts: true, flatten: true,
+                    projectName: params.job_to_copy_from,
+                    selector: buildParameter(params.build_to_copy_from)
 
-                wrap([$class: 'Xvfb', additionalOptions: '', assignedLabels: '',
-                  autoDisplayName: true, displayNameOffset: 0, installationName: 'default-Xvfb',
-                  screen: '1200x960x24']) {
-                    withAnt(installation: 'Ant 1.9.0') {
-                        withEnv(["rcptt_runner_HOME=${tool name: 'rcptt_runner-nightly', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'}"]) {
-                            script {
-                                sh """
-                                ant -buildfile gui-test-runner/start-gui-test.xml test-verinice-client-test-custom \
-                                 -Drunner-path=${rcptt_runner_HOME} \
-                                 -Dtest-list="${params.TEST_LIST}" \
-                                 -Dverinice.timeout="${params.SERVER_TIMEOUT}" \
-                                 -Dskip-tags="skipExecution;serverOnlyTest" \
-                                 -Dtest-options="${params.TEST_OPTIONS}" \
-                                 -Dverinice.lang=de"""
+                    wrap([$class: 'Xvfb', additionalOptions: '', assignedLabels: '',
+                    autoDisplayName: true, displayNameOffset: 0, installationName: 'default-Xvfb',
+                    screen: '1200x960x24']) {
+                        withAnt(installation: 'Ant 1.9.0') {
+                            withEnv(["rcptt_runner_HOME=${tool name: 'rcptt_runner-nightly', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'}"]) {
+                                script {
+                                    sh """
+                                    ant -buildfile gui-test-runner/start-gui-test.xml test-verinice-client-test-custom \
+                                    -Drunner-path=${rcptt_runner_HOME} \
+                                    -Dtest-list="${params.TEST_LIST}" \
+                                    -Dverinice.timeout="${params.SERVER_TIMEOUT}" \
+                                    -Dskip-tags="skipExecution;serverOnlyTest" \
+                                    -Dtest-options="${params.TEST_OPTIONS}" \
+                                    -Dverinice.lang=de"""
+                                }
                             }
                         }
                     }

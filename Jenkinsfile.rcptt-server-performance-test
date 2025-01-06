@@ -33,65 +33,66 @@ pipeline {
               jdk 'Java11'
             }
             steps {
-                sh 'env'
-                buildDescription "branch: ${env.GIT_BRANCH} (${env.GIT_COMMIT[0..8]})<br>tests: ${env.TEST_LIST}"
+                gitlabCommitStatus(name: 'RCPTT server performance tests') {
+                    sh 'env'
+                    buildDescription "branch: ${env.GIT_BRANCH} (${env.GIT_COMMIT[0..8]})<br>tests: ${env.TEST_LIST}"
 
-                sh """
-                    rm -f -r apache-tomcat-${params.TOMCAT_VERSION}
-                    rm -f -r *.zip
+                    sh """
+                        rm -f -r apache-tomcat-${params.TOMCAT_VERSION}
+                        rm -f -r *.zip
 
-                    echo "using tomcat : ${params.TOMCAT_VERSION}"
-                    wget https://bob-2023.int.sernet.de/tomcat-distributions/apache-tomcat-${params.TOMCAT_VERSION}.zip
-                    unzip -q apache-tomcat-${params.TOMCAT_VERSION}.zip
+                        echo "using tomcat : ${params.TOMCAT_VERSION}"
+                        wget https://bob-2023.int.sernet.de/tomcat-distributions/apache-tomcat-${params.TOMCAT_VERSION}.zip
+                        unzip -q apache-tomcat-${params.TOMCAT_VERSION}.zip
 
-                    rm -f -r war
-                """
-                copyArtifacts filter: "**/verinice-*${VERINICE_CLIENT_SELECTOR_OS_COMPONENT}.zip",
-                  fingerprintArtifacts: true, flatten: true,
-                  projectName: params.job_to_copy_from,
-                  selector: buildParameter(params.build_to_copy_from)
+                        rm -f -r war
+                    """
+                    copyArtifacts filter: "**/verinice-*${VERINICE_CLIENT_SELECTOR_OS_COMPONENT}.zip",
+                      fingerprintArtifacts: true, flatten: true,
+                      projectName: params.job_to_copy_from,
+                      selector: buildParameter(params.build_to_copy_from)
 
-                copyArtifacts filter: 'sernet.verinice.releng.server.product/target/*.war',
-                  fingerprintArtifacts: true, flatten: true,
-                  projectName: params.job_to_copy_from,
-                  target: 'war',
-                  selector: buildParameter(params.build_to_copy_from)
+                    copyArtifacts filter: 'sernet.verinice.releng.server.product/target/*.war',
+                      fingerprintArtifacts: true, flatten: true,
+                      projectName: params.job_to_copy_from,
+                      target: 'war',
+                      selector: buildParameter(params.build_to_copy_from)
 
-                sh 'mv war/*.war veriniceserver.war'
-                script {
-                    def portDatabase = "559${env.EXECUTOR_NUMBER}"
-                    def portTomcat = "803${env.EXECUTOR_NUMBER}"
-                    def portTomcatShutdown = "813${env.EXECUTOR_NUMBER}"
-                    if (params.monitor_server){
-                        env.MELODY_TOOL_PATH = 'gui-test-runner/etc/melody'
-                    }
+                    sh 'mv war/*.war veriniceserver.war'
+                    script {
+                        def portDatabase = "559${env.EXECUTOR_NUMBER}"
+                        def portTomcat = "803${env.EXECUTOR_NUMBER}"
+                        def portTomcatShutdown = "813${env.EXECUTOR_NUMBER}"
+                        if (params.monitor_server){
+                            env.MELODY_TOOL_PATH = 'gui-test-runner/etc/melody'
+                        }
 
-                    docker.image("postgres:${params.POSTGRESQL_VERSION}-alpine").withRun("--name postgresql-verinice-server-rcptt-test-executor-${env.BUILD_NUMBER} -e POSTGRES_USER=verinice -e POSTGRES_PASSWORD=verinice -e POSTGRES_DB=verinicedb -p ${portDatabase}:5432") { db ->
-                        wrap([$class: 'Xvfb', additionalOptions: '', assignedLabels: '',
-                          autoDisplayName: true, displayNameOffset: 0, installationName: 'default-Xvfb',
-                          screen: '1200x960x24']) {
-                            withAnt(installation: 'Ant 1.9.0') {
-                                withEnv(["rcptt_runner_HOME=${tool name: 'rcptt_runner-nightly', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'}"]) {
-                                    sh """
-                                    ant -buildfile gui-test-runner/start-gui-test.xml test-verinice-server-test-custom \
-                                     -Drunner-path=${rcptt_runner_HOME} \
-                                     -Dverinice.timeout=${params.SERVER_TIMEOUT} \
-                                     -Dtest-list="${params.TEST_LIST}" \
-                                     -Dskip-tags="skipExecution;serverOnlyTest" \
-                                     -Dtest-options="${params.TEST_OPTIONS}" \
-                                     -Dverinice.lang=de \
-                                     -Dserver-database-url=jdbc:postgresql://127.0.0.1:${portDatabase}/verinicedb \
-                                     -Dtomcat-dir=${WORKSPACE}/apache-tomcat-${params.TOMCAT_VERSION} \
-                                     -Dwar-file=veriniceserver.war \
-                                     -Dserver-port=${portTomcat} \
-                                     -Dserver-shutdown-port=${portTomcatShutdown}
-                                     """
+                        docker.image("postgres:${params.POSTGRESQL_VERSION}-alpine").withRun("--name postgresql-verinice-server-rcptt-test-executor-${env.BUILD_NUMBER} -e POSTGRES_USER=verinice -e POSTGRES_PASSWORD=verinice -e POSTGRES_DB=verinicedb -p ${portDatabase}:5432") { db ->
+                            wrap([$class: 'Xvfb', additionalOptions: '', assignedLabels: '',
+                              autoDisplayName: true, displayNameOffset: 0, installationName: 'default-Xvfb',
+                              screen: '1200x960x24']) {
+                                withAnt(installation: 'Ant 1.9.0') {
+                                    withEnv(["rcptt_runner_HOME=${tool name: 'rcptt_runner-nightly', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'}"]) {
+                                        sh """
+                                        ant -buildfile gui-test-runner/start-gui-test.xml test-verinice-server-test-custom \
+                                        -Drunner-path=${rcptt_runner_HOME} \
+                                        -Dverinice.timeout=${params.SERVER_TIMEOUT} \
+                                        -Dtest-list="${params.TEST_LIST}" \
+                                        -Dskip-tags="skipExecution;serverOnlyTest" \
+                                        -Dtest-options="${params.TEST_OPTIONS}" \
+                                        -Dverinice.lang=de \
+                                        -Dserver-database-url=jdbc:postgresql://127.0.0.1:${portDatabase}/verinicedb \
+                                        -Dtomcat-dir=${WORKSPACE}/apache-tomcat-${params.TOMCAT_VERSION} \
+                                        -Dwar-file=veriniceserver.war \
+                                        -Dserver-port=${portTomcat} \
+                                        -Dserver-shutdown-port=${portTomcatShutdown}
+                                        """
+                                    }
                                 }
                             }
                         }
                     }
                 }
-
                 dir(tool(name: 'logparser', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool')){
                     sh "./logParser -i log4j  -d $WORKSPACE/gui-test-runner/result/log -f verinice-client.* -o jenkins -n $WORKSPACE/gui-test-runner/result/log/clientlogparsed.txt"
                 }

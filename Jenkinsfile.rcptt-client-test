@@ -37,40 +37,43 @@ pipeline {
                 }
             }
             steps {
-                sh 'env'
-                buildDescription "branch: ${env.GIT_BRANCH} (${env.GIT_COMMIT[0..8]})<br>node: ${env.NODE_NAME}<br>tests: ${params.TEST_LIST}"
-                //remove old stuff
-                sh '''
-                    rm -f *.zip
-                '''
+                gitlabCommitStatus(name: "RCPTT tests ${params.LANGUAGE} on ${params.OPERATING_SYSTEM} (${params.TEST_LIST})") {
 
-                copyArtifacts filter: "**/verinice-*${VERINICE_CLIENT_SELECTOR_OS_COMPONENT}.zip",
-                  fingerprintArtifacts: true, flatten: true,
-                  projectName: params.job_to_copy_from,
-                  selector: buildParameter(params.build_to_copy_from)
-
-                withAnt(installation: 'Ant 1.9.0') {
-                    withEnv(["rcptt_runner_HOME=${tool name: 'rcptt_runner-nightly', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'}"]) {
-                        script {
-                            def skipTags = ['skipExecution', 'serverOnlyTest']
-                            if (!params.runPerformanceTests){
-                                skipTags << 'performance'
-                            }
-                            if (!params.runReportingTests){
-                                skipTags << 'report'
-                            }
-                            // work around https://issues.jenkins-ci.org/browse/JENKINS-63850
-                            if (env.NODE_LABELS.split(' ').contains('linux-gui-tester')){
-                                wrap([$class: 'Xvfb', additionalOptions: '', assignedLabels: '',
-                                  autoDisplayName: true, displayNameOffset: 0, installationName: 'default-Xvfb',
-                                  screen: '1200x960x24']) {
-                                    runRCPTT(rcptt_runner_HOME, "883${env.EXECUTOR_NUMBER}", params.TEST_LIST, params.SERVER_TIMEOUT, skipTags, params.TEST_OPTIONS, params.LANGUAGE)
-                                }
-                            } else {
-                                runRCPTT(rcptt_runner_HOME, "883${env.EXECUTOR_NUMBER}", params.TEST_LIST, params.SERVER_TIMEOUT, skipTags, params.TEST_OPTIONS, params.LANGUAGE)
-                            }
-                        }
-                    }
+	                sh 'env'
+	                buildDescription "branch: ${env.GIT_BRANCH} (${env.GIT_COMMIT[0..8]})<br>node: ${env.NODE_NAME}<br>tests: ${params.TEST_LIST}"
+	                //remove old stuff
+	                sh '''
+	                    rm -f *.zip
+	                '''
+	
+	                copyArtifacts filter: "**/verinice-*${VERINICE_CLIENT_SELECTOR_OS_COMPONENT}.zip",
+	                  fingerprintArtifacts: true, flatten: true,
+	                  projectName: params.job_to_copy_from,
+	                  selector: buildParameter(params.build_to_copy_from)
+	
+	                withAnt(installation: 'Ant 1.9.0') {
+	                    withEnv(["rcptt_runner_HOME=${tool name: 'rcptt_runner-nightly', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'}"]) {
+	                        script {
+	                            def skipTags = ['skipExecution', 'serverOnlyTest']
+	                            if (!params.runPerformanceTests){
+	                                skipTags << 'performance'
+	                            }
+	                            if (!params.runReportingTests){
+	                                skipTags << 'report'
+	                            }
+	                            // work around https://issues.jenkins-ci.org/browse/JENKINS-63850
+	                            if (env.NODE_LABELS.split(' ').contains('linux-gui-tester')){
+	                                wrap([$class: 'Xvfb', additionalOptions: '', assignedLabels: '',
+	                                  autoDisplayName: true, displayNameOffset: 0, installationName: 'default-Xvfb',
+	                                  screen: '1200x960x24']) {
+	                                    runRCPTT(rcptt_runner_HOME, "883${env.EXECUTOR_NUMBER}", params.TEST_LIST, params.SERVER_TIMEOUT, skipTags, params.TEST_OPTIONS, params.LANGUAGE)
+	                                }
+	                            } else {
+	                                runRCPTT(rcptt_runner_HOME, "883${env.EXECUTOR_NUMBER}", params.TEST_LIST, params.SERVER_TIMEOUT, skipTags, params.TEST_OPTIONS, params.LANGUAGE)
+	                            }
+	                        }
+	                    }
+	                }
                 }
                 dir(tool(name: 'logparser', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool')){
                     sh "./logParser -i log4j  -d ${WORKSPACE.replace('\\', '/')}/gui-test-runner/result/log -f verinice-client.* -o jenkins -n ${WORKSPACE.replace('\\', '/')}/gui-test-runner/result/log/clientlogparsed.txt"

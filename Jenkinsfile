@@ -34,50 +34,54 @@ pipeline {
     stages {
         stage('Setup') {
             steps {
-                script {
-                    qualifier = "v${new Date().format('yyyyMMddHHmmss')}"
-                    echo "Using build qualifier $qualifier"
-                    if (params.distSign && !params.dists) {
-                        def msg = 'You have to enable dists, if you want to sign packages.'
-                        buildDescription msg
-                        error msg
-                    }
-                    def targetPlatform = 'target-platform/target-platform.target'
-                    def content = readFile(file: targetPlatform, encoding: 'UTF-8')
-                    def repositoryLocations = content.findAll('location\\s*=\\s*"([^"]+)"'){it[1]}
-                    if (env.TAG_NAME){
-                        currentBuild.keepLog = true
-                        def repositoriesOnBob = repositoryLocations.findAll{it =~ /\bbob\b/}
-                        if (!repositoriesOnBob.isEmpty()){
-                            error("Target platform uses repositories on bob: $repositoriesOnBob")
+                gitlabCommitStatus(name: 'Setup') {
+                    script {
+                        qualifier = "v${new Date().format('yyyyMMddHHmmss')}"
+                        echo "Using build qualifier $qualifier"
+                        if (params.distSign && !params.dists) {
+                            def msg = 'You have to enable dists, if you want to sign packages.'
+                            buildDescription msg
+                            error msg
+                        }
+                        def targetPlatform = 'target-platform/target-platform.target'
+                        def content = readFile(file: targetPlatform, encoding: 'UTF-8')
+                        def repositoryLocations = content.findAll('location\\s*=\\s*"([^"]+)"'){it[1]}
+                        if (env.TAG_NAME){
+                            currentBuild.keepLog = true
+                            def repositoriesOnBob = repositoryLocations.findAll{it =~ /\bbob\b/}
+                            if (!repositoriesOnBob.isEmpty()){
+                                error("Target platform uses repositories on bob: $repositoriesOnBob")
+                            }
+                        }
+                        def httpRepositories = repositoryLocations.findAll{it =~ /http:/}.findAll{!(it =~ '^http://bob(-2023)?\\.')}
+                        if (!httpRepositories.isEmpty()){
+                            error("Target platform uses non-HTTPS repositories: $httpRepositories")
                         }
                     }
-                    def httpRepositories = repositoryLocations.findAll{it =~ /http:/}.findAll{!(it =~ '^http://bob(-2023)?\\.')}
-                    if (!httpRepositories.isEmpty()){
-                        error("Target platform uses non-HTTPS repositories: $httpRepositories")
-                    }
+                    buildDescription "${env.GIT_BRANCH} ${env.GIT_COMMIT[0..8]}"
+                    sh "./verinice-distribution/build.sh QUALIFIER=${qualifier} clean"
                 }
-                buildDescription "${env.GIT_BRANCH} ${env.GIT_COMMIT[0..8]}"
-                sh "./verinice-distribution/build.sh QUALIFIER=${qualifier} clean"
             }
         }
         stage('Build') {
             steps {
-                script {
-                    def buildTask = params.runIntegrationTests ? 'verify' : 'products'
-	                sh "./verinice-distribution/build.sh QUALIFIER=${qualifier} ${buildTask}"
-	                archiveArtifacts artifacts: 'sernet.verinice.releng.client.product/target/products/*.zip,sernet.verinice.releng.server.product/target/*.war', fingerprint: true
-	                if (params.archiveUpdateSite || params.dists){
-	                    archiveArtifacts artifacts: 'sernet.verinice.releng.client.product/target/repository/**', fingerprint: true
-	                }
-	                if (params.runIntegrationTests){
-		                junit allowEmptyResults: true, testResults: '**/build/reports/**/*.xml,**/target/surefire-reports/*.xml'
-		                if (params.archiveIntegrationTestResults){
-		                    archiveArtifacts artifacts: '**/build/reports/**/*.xml,**/target/surefire-reports/*.xml'
-		                }
+                gitlabCommitStatus(name: 'Build') {
+                    script {
+                        def buildTask = params.runIntegrationTests ? 'verify' : 'products'
+                        sh "./verinice-distribution/build.sh QUALIFIER=${qualifier} ${buildTask}"
+                        archiveArtifacts artifacts: 'sernet.verinice.releng.client.product/target/products/*.zip,sernet.verinice.releng.server.product/target/*.war', fingerprint: true
+                        if (params.archiveUpdateSite || params.dists){
+                            archiveArtifacts artifacts: 'sernet.verinice.releng.client.product/target/repository/**', fingerprint: true
+                        }
+                        if (params.runIntegrationTests){
+                            junit allowEmptyResults: true, testResults: '**/build/reports/**/*.xml,**/target/surefire-reports/*.xml'
+                            if (params.archiveIntegrationTestResults){
+                                archiveArtifacts artifacts: '**/build/reports/**/*.xml,**/target/surefire-reports/*.xml'
+                            }
 
-	                }
-                }
+                        }
+                    }
+            }
             }
         }
         stage('Trigger RCPTT') {
@@ -116,17 +120,21 @@ pipeline {
         stage('generate SNCA Report') {
             when { expression { params.generateSNCAReport } }
             steps {
-                archiveArtifacts artifacts: 'sernet.gs.server/WebContent/WEB-INF/SNCA.xml,sernet.gs.server/WebContent/WEB-INF/snca-messages*.properties', fingerprint: true
-                build job: 'snca-report', wait: false, parameters: [
-                                string(name: 'job_to_copy_from', value: "${currentBuild.fullProjectName}"),
-                                string(name: 'build_to_copy_from', value: "<SpecificBuildSelector plugin=\"copyartifact@1.42.1\"><buildNumber>${env.BUILD_NUMBER}</buildNumber></SpecificBuildSelector>"),
-                                ]
+                gitlabCommitStatus(name: 'generate SNCA Report') {
+                    archiveArtifacts artifacts: 'sernet.gs.server/WebContent/WEB-INF/SNCA.xml,sernet.gs.server/WebContent/WEB-INF/snca-messages*.properties', fingerprint: true
+                    build job: 'snca-report', wait: false, parameters: [
+                                    string(name: 'job_to_copy_from', value: "${currentBuild.fullProjectName}"),
+                                    string(name: 'build_to_copy_from', value: "<SpecificBuildSelector plugin=\"copyartifact@1.42.1\"><buildNumber>${env.BUILD_NUMBER}</buildNumber></SpecificBuildSelector>"),
+                                    ]
+                }
             }
         }
         stage('Documentation') {
             steps {
-                sh "./verinice-distribution/build.sh QUALIFIER=${qualifier} -j4 docs"
-                archiveArtifacts artifacts: 'doc/manual/*/*.pdf,doc/manual/*/*.zip', fingerprint: true
+                gitlabCommitStatus(name: 'Documentation') {
+                    sh "./verinice-distribution/build.sh QUALIFIER=${qualifier} -j4 docs"
+                    archiveArtifacts artifacts: 'doc/manual/*/*.pdf,doc/manual/*/*.zip', fingerprint: true
+                }
             }
         }
         stage('Sign clients') {
@@ -134,12 +142,14 @@ pipeline {
                 expression { params.clientSign && currentBuild.result in [null, 'SUCCESS'] }
             }
             steps {
-                script {
-                    def fileNameWindows = sh returnStdout: true, script: 'ls sernet.verinice.releng.client.product/target/products/*win32*zip'
-                    def windowsClientUrl = input message: 'Supply URLS to client ZIPs with signed executables', parameters: [string(name: 'windows', description: 'URL to Windows Client ZIP')], submitter: 'dm'
-                    sh "rm $fileNameWindows"
-                    sh "curl $windowsClientUrl --output $fileNameWindows"
-                    archiveArtifacts artifacts: 'sernet.verinice.releng.client.product/target/products/*.zip', fingerprint: true
+                gitlabCommitStatus(name: 'Sign clients') {
+                    script {
+                        def fileNameWindows = sh returnStdout: true, script: 'ls sernet.verinice.releng.client.product/target/products/*win32*zip'
+                        def windowsClientUrl = input message: 'Supply URLS to client ZIPs with signed executables', parameters: [string(name: 'windows', description: 'URL to Windows Client ZIP')], submitter: 'dm'
+                        sh "rm $fileNameWindows"
+                        sh "curl $windowsClientUrl --output $fileNameWindows"
+                        archiveArtifacts artifacts: 'sernet.verinice.releng.client.product/target/products/*.zip', fingerprint: true
+                    }
                 }
             }
         }
@@ -148,7 +158,9 @@ pipeline {
                 expression { params.dists && currentBuild.result in [null, 'SUCCESS'] }
             }
             steps {
-                sh "./verinice-distribution/build.sh QUALIFIER=${qualifier} -j2 dists"
+                gitlabCommitStatus(name: 'Distributions') {
+                    sh "./verinice-distribution/build.sh QUALIFIER=${qualifier} -j2 dists"
+                }
             }
         }
         // Signing is a separate step because we want to be able to build RPMs any time, to test them.
@@ -158,8 +170,10 @@ pipeline {
                 expression { params.distSign && currentBuild.result in [null, 'SUCCESS'] }
             }
             steps {
-                sh "./verinice-distribution/sign-rpms verinice-distribution/rhel-?/RPMS/noarch/*"
-                archiveArtifacts artifacts: 'verinice-distribution/rhel-?/RPMS/noarch/*', fingerprint: true
+                gitlabCommitStatus(name: 'Distributions Signing') {
+                    sh "./verinice-distribution/sign-rpms verinice-distribution/rhel-?/RPMS/noarch/*"
+                    archiveArtifacts artifacts: 'verinice-distribution/rhel-?/RPMS/noarch/*', fingerprint: true
+                }
             }
         }
     }
@@ -169,16 +183,9 @@ pipeline {
             recordIssues(tools: [java()])
             recordIssues(tools: [taskScanner(highTags: 'FIXME', ignoreCase: true, normalTags: 'TODO', includePattern: '**/*.java, **/*.xml')])
         }
-        failure {
-            updateGitlabCommitStatus name: 'build', state: 'failed'
-        }
         success {
-            updateGitlabCommitStatus name: 'build', state: 'success'
             sh './verinice-distribution/build.sh QUALIFIER=${qualifier} clean'
         }
-        aborted {
-            updateGitlabCommitStatus name: 'build', state: 'canceled'
-      }
     }
 }
 
