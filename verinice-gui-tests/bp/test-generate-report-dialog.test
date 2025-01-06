@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _rI7VYASsEeupd5XMAdmhgA
-Runtime-Version: 2.5.2.202109052355
-Save-Time: 10/5/22 4:34 PM
+Runtime-Version: 2.5.5.202409072058
+Save-Time: 1/7/25, 1:13 PM
 Tags: bp
 Testcase-Type: ecl
 Verifications: _wm5P0CtBEeuMltfUUtdvug
@@ -75,7 +75,7 @@ with [get-window Report] {
         $scopeCompo | get-property selection | is-empty | verify-true
         
         // when switching to a reports with no common format no is selected
-        select-report-file "(S) ISM-ISO: Export: Aufgaben (de),(S) ISM-ISA: Information Security Assessment 4 Report"
+        select-report-file "(S) ISM-ISO: Export: Aufgaben (de),(S) ISM-ISA: Information Security Assessment 6 Report detailliert"
         $ouputFormatCompo | get-property selection | is-empty | verify-true
         $scopeCompo | get-property selection | is-empty | verify-true
         

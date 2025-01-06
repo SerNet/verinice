@@ -6,8 +6,8 @@ Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _gvil8MiBEeipUK6ek91lPA
-Runtime-Version: 2.5.3.202205021448
-Save-Time: 9/19/22, 1:39 PM
+Runtime-Version: 2.5.5.202409072058
+Save-Time: 1/7/25, 3:02 PM
 Testcase-Type: ecl
 Verifications: _wm5P0CtBEeuMltfUUtdvug
 
@@ -19,7 +19,7 @@ log "test_7.1-7.2"
 with [get-view "Security Assessment"] {
     get-button "Erzeugt ein neues Security Assessment" | click
     get-tree 
-        | select "\\[Mein Unternehmen\\]/Audits/Security Assessment/Controls/6 Supplier Relationships/6.1 Supplier Relationships/6.1.1 Inwieweit wird die Informationssicherheit bei Auftragnehmern und Kooperat…" 
+        | select "\\[Mein Unternehmen\\]/Audits/Security Assessment/Controls/6 Lieferantenbeziehungen/6.1 Lieferantenbeziehungen/6.1.1 Inwieweit wird die Informationssicherheit bei Auftragnehmern und Kooperat…"
         | double-click
 }
 with [get-editor "6.1.1 Inwieweit wir…" | get-section ""] {
