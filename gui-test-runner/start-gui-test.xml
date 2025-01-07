@@ -244,6 +244,7 @@ catalina.base : ${server-work-dir}
     	<classpath path="${tomcat-classpath}" />
         <jvmarg value="-Dcatalina.home=${tomcat-dir}" />
         <jvmarg value="-Dcatalina.base=${server-work-dir}" />
+        <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
     	<arg value="start"/>
     </java>
 
