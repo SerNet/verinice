@@ -438,6 +438,8 @@ Require-Bundle: org.springframework.beans;bundle-version="2.5.6.SEC03",
  bcprov;bundle-version="1.72.0",
  com.springsource.javax.mail;bundle-version="1.4.1"
 Import-Package: com.google.gson;version="2.6.2",
+ javax.annotation,
+ javax.xml.bind,
  org.apache.log4j;version="1.2.19",
  org.eclipse.core.runtime;version="3.4.0",
  org.eclipse.osgi.util;version="1.1.0",
