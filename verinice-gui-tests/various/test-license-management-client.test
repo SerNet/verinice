@@ -29,7 +29,7 @@ global [val isOSX [get-java-property "org.osgi.framework.os.name" | eq "MacOSX"]
 proc "license-file" {
 	 concat $basedir [get-java-property "file.separator"]
                            "wrks" [get-java-property "file.separator"]
-                           "aut-workspace-" [get-java-property "file.separator"] 
+                           "verinice-workspace" [get-java-property "file.separator"] 
                            "vnl" [get-java-property "file.separator"] 
                            "MY_LIC.vnl"
 }
