@@ -52,7 +52,7 @@ pipeline {
 	                  selector: buildParameter(params.build_to_copy_from)
 	
 	                withAnt(installation: 'Ant 1.9.0', jdk: 'java-21') {
-	                    withEnv(["rcptt_runner_HOME=${tool name: 'rcptt_runner-nightly', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'}"]) {
+	                    withEnv(["rcptt_runner_HOME=${tool name: 'rcptt-runner-2.7.2', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'}"]) {
 	                        script {
 	                            def skipTags = ['skipExecution', 'serverOnlyTest']
 	                            if (!params.runPerformanceTests){
