@@ -104,6 +104,12 @@ pipeline {
                     recordIssues(tools: [groovyScript(id: 'verince-client-log', name: 'verince-client-log', parserId: 'verinice-log-parser', pattern: 'gui-test-runner/result/log/clientlogparsed.txt')])
                     recordIssues(tools: [groovyScript(id: 'verince-server-log', name: 'verince-server-log', parserId: 'verinice-log-parser', pattern: 'gui-test-runner/result/log/serverlogparsed.txt')])
                 }
+                // https://github.com/jenkinsci/gitlab-plugin/issues/713#issuecomment-412875379
+                script {
+                    if (currentBuild.result == 'UNSTABLE') {
+                        updateGitlabCommitStatus name: 'RCPTT server performance tests', state: 'failed'
+                    }
+                }
                 publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'gui-test-runner/result', reportFiles: 'results.html', reportName: 'Gui Test Report', reportTitles: "${job_to_copy_from}"])
             }
         }

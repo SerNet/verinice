@@ -82,6 +82,12 @@ pipeline {
                   recordIssues(tools: [groovyScript(parserId: 'aut-eclipse-log', pattern: 'gui-test-runner/result/log/verinice-aut/.log*')])
                   recordIssues(tools: [groovyScript(id: 'verince-client-log', name: 'verince-client-log', parserId: 'verinice-log-parser', pattern: 'gui-test-runner/result/log/clientlogparsed.txt')])
                 }
+                // https://github.com/jenkinsci/gitlab-plugin/issues/713#issuecomment-412875379
+                script {
+                    if (currentBuild.result == 'UNSTABLE') {
+                        updateGitlabCommitStatus name: "RCPTT tests ${params.LANGUAGE} on ${params.OPERATING_SYSTEM} (${params.TEST_LIST})", state: 'failed'
+                    }
+                }
                 publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'gui-test-runner/result', reportFiles: 'results.html', reportName: 'Gui Test Report', reportTitles: "${job_to_copy_from}"])
             }
             post {
