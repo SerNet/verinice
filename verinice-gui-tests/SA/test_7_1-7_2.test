@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _gvil8MiBEeipUK6ek91lPA
 Runtime-Version: 2.5.5.202409072058
-Save-Time: 1/7/25, 3:02 PM
+Save-Time: 1/9/25, 11:46 AM
 Testcase-Type: ecl
 Verifications: _wm5P0CtBEeuMltfUUtdvug
 
@@ -33,7 +33,7 @@ with [get-editor "6.1.1 Inwieweit wir…" | get-section ""] {
 
 
 with [get-view "Security Assessment" | get-tree] {
-    select "[Mein Unternehmen]/Audits/Security Assessment/Controls/5 IT Security \\/ Cyber Security" "[Mein Unternehmen]/Audits/Security Assessment/Controls/4 Identity and Access Management"
+    select "[Mein Unternehmen]/Audits/Security Assessment/Controls/5 IT-Sicherheit\\/Cybersicherheit" "[Mein Unternehmen]/Audits/Security Assessment/Controls/4 Identitäts- und Zugriffsverwaltung"
     get-menu -path "Konsolidieren..." | click
 }
 with [get-window Konsolidierung] {
