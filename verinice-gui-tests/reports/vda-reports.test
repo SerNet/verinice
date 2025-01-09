@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _4p4koHx6Eem8dP2aL_a6MA
 Runtime-Version: 2.5.5.202409072058
-Save-Time: 1/7/25, 1:59 PM
+Save-Time: 1/9/25, 10:27 AM
 Tags: report
 Testcase-Type: ecl
 
@@ -25,6 +25,7 @@ global [val path_org_4.1.1_DE "importierte Objekte/4.1.1 DE neu \\[7982e2\\]"]
        [val path_org_4.1.1_EN "importierte Objekte/4.1.1 EN new \\[7982e2\\]"]
        [val path_org_5.0.3_DE "importierte Objekte/5.0.3 DE neu \\[7982e2\\]"]
        [val path_org_5.0.3_EN "importierte Objekte/5.0.3 EN new \\[7982e2\\]"]
+       [val path_org_6_DE "importierte Objekte/CarTec \\[7033da\\]"]
        [val path_vn_2916 "importierte Objekte/test \\[eda149\\]"]
        
 proc "gen-rep" [val report] [val path_to_organization] [val qualifier ""] {
@@ -46,14 +47,18 @@ enable-reporting-log
 
 // VN-2875
 ism-import-vna "VDA-ISA-Vorlage_20210112.vna"
+ism-import-vna "CarTec.vna"
 
 gen-rep "(S) ISM-ISA: Information Security Assessment 5 Report kompakt" $path_org_5.0.3_DE
 gen-rep "(S) ISM-ISA: Information Security Assessment 5 Report detailliert"  $path_org_5.0.3_DE
+gen-rep "(S) ISM-ISA: Information Security Assessment 6 Report kompakt" $path_org_6_DE
+gen-rep "(S) ISM-ISA: Information Security Assessment 6 Report detailliert"  $path_org_6_DE
 
 delete-iso-model $path_org_4.1.1_DE
 delete-iso-model $path_org_4.1.1_EN
 delete-iso-model $path_org_5.0.3_DE
 delete-iso-model $path_org_5.0.3_EN
+delete-iso-model $path_org_6_DE
 
 //VN-2916
 ism-import-vna "test-vn-2916-vda-isa.vna"
