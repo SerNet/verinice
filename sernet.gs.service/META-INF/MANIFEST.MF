@@ -118,6 +118,7 @@ Require-Bundle: org.apache.commons.io,
  com.ibm.icu;bundle-version="67.1.0",
  bcprov;bundle-version="1.72.0"
 Import-Package: javax.xml.bind;version="2.2.0",
+ javax.xml.bind.annotation,
  org.eclipse.osgi.util,
  org.hibernate,
  org.hibernate.criterion,
