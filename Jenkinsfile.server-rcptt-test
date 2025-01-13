@@ -20,7 +20,7 @@ pipeline {
           description: 'Semicolon separated list of tests, or wildcard expression. Use *.test for all tests.')
         choice name: 'TOMCAT_VERSION', choices: ['7.0.94', '8.5.43', '6.0.53'],
           description: 'The tomcat to deploy the jar to.'
-        string(name: 'POSTGRESQL_VERSION', defaultValue: '9.4',
+        string(name: 'POSTGRESQL_VERSION', defaultValue: '15.10',
           description: 'The postgres database version to use.')
         string(name: 'SERVER_TIMEOUT', defaultValue: '360',
           description: 'The startup timeout of the verinice server.')

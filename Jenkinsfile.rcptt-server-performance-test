@@ -20,7 +20,7 @@ pipeline {
           description: 'The startup timeout of the verinice server.')
         choice name: 'TOMCAT_VERSION', choices: ['7.0.94', '8.5.43', '6.0.53'],
           description: 'The tomcat to deploy the jar to.'
-        string(name: 'POSTGRESQL_VERSION', defaultValue: '9.4',
+        string(name: 'POSTGRESQL_VERSION', defaultValue: '15.10',
           description: 'The postgres database version to use.')
         string(name: 'TEST_OPTIONS', defaultValue: 'testExecTimeout=45000;execTimeout=410000;reportingIncludeIgnoredWaitDetails=true;passedTestDetails=true;runtimeEnableActivityLogs=true;q7ImageCapture=true;jobHangTimeout=900000;contextRunnableTimeout=900000',
           description: 'The options of the rcptt testing program.')
