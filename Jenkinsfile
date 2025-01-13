@@ -213,5 +213,9 @@ def triggerRCPTTBuild(String jobName, Map opts = [:]){
         parameters << string(name: 'test-list', value: testList)// support the old jobs
         parameters << string(name: 'TEST_LIST', value: testList)
     }
+    String tomcat = opts.tomcat
+    if (tomcat != null){
+        parameters << string(name: 'TOMCAT_VERSION', value: tomcat)// allow to choose the tomcat version
+    }
     build job: jobName, wait: false, parameters: parameters
 }

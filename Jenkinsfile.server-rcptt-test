@@ -18,7 +18,7 @@ pipeline {
         booleanParam defaultValue: false, description: 'Run reporting tests', name: 'runReportingTests'
         string(name: 'TEST_LIST', defaultValue: '*.test',
           description: 'Semicolon separated list of tests, or wildcard expression. Use *.test for all tests.')
-        choice name: 'TOMCAT_VERSION', choices: ['7.0.94', '8.5.43', '6.0.53'],
+        choice name: 'TOMCAT_VERSION', choices: ['8.5.43', '9.0.85', '10.1.18'],
           description: 'The tomcat to deploy the jar to.'
         string(name: 'POSTGRESQL_VERSION', defaultValue: '15.10',
           description: 'The postgres database version to use.')
