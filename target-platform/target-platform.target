@@ -74,7 +74,7 @@
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-        <repository location="https://download.eclipse.org/justj/jres/17/updates/release/latest/" />
+        <repository location="https://download.eclipse.org/justj/jres/21/updates/release/latest/" />
         <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.stripped.feature.group" version="0.0.0" />
     </location>
 
