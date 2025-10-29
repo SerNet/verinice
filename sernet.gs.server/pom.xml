@@ -137,7 +137,7 @@
 		<dependency>
 			<groupId>com.sun.activation</groupId>
 			<artifactId>jakarta.activation</artifactId>
-			<version>1.2.2.redhat-00003</version>
+			<version>1.2.2.redhat-00005</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
