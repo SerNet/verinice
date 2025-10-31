@@ -42,7 +42,11 @@ function getLabeledEnumVal(messageKey, numberValue) {
 }
 
 function getLabeledVal(labelKey, value) {
-    return "<b>" + getMessage(labelKey) + "</b>: " + (value || "-");
+    var str = (value || "-")
+    while (str.indexOf('\n')!=-1)
+        str = str.replace('\n', '<br>');
+
+    return "<b>" + getMessage(labelKey) + "</b>: " + str;
 }
 
 function getLabeledVal_normal(labelKey, value) {
