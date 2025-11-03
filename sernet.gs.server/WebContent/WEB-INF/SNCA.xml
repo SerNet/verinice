@@ -14923,7 +14923,8 @@ BAO-Reaktionszeit abzuziehen, um die RTO zu ermitteln." />
                 name="Explanation of risk treatment"
                 id="bp_threat_risk_treatment_explanation"
                 inputtype="text"
-                tags="BSI-200-3" />
+		    tags="BSI-200-3"
+		    textrows="10" />
         </huipropertygroup>
         <huipropertygroup id="bp_threat_risk_with_additional_safeguards" name="Risk with additional safeguards" tags="BSI-200-3">
             <huiproperty id="bp_threat_risk_with_additional_safeguards_frequency" name="Frequency of occurrence"
