@@ -55,7 +55,6 @@
         <setEntry value="com.springsource.net.sf.cglib@default:default"/>
         <setEntry value="com.springsource.net.sf.ehcache@default:default"/>
         <setEntry value="com.springsource.org.aopalliance@default:default"/>
-        <setEntry value="com.springsource.org.apache.axis@default:default"/>
         <setEntry value="com.springsource.org.apache.commons.discovery@default:default"/>
         <setEntry value="com.springsource.org.apache.commons.lang@default:default"/>
         <setEntry value="com.springsource.org.apache.commons.net@default:default"/>
