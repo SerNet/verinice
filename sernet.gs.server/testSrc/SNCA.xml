@@ -9321,13 +9321,13 @@ Medienmonitorings, Einflussmöglichkeiten auf die externe Wahrnehmung)
 
    <!-- Start: BCM relation -->
         <huirelation to="process" id="rel_process_bp_process2"
-            name="parallel" reversename="parallel" />
+            name="benötigt notfallrelevant (parallel)" reversename="notfallrelevant für (parallel)" />
             
         <huirelation to="process" id="rel_process_bp_process3"
-            name="vorgelagert" reversename="nachgelagert" />
+            name="benötigt notfallrelevant (vorgelagert)" reversename="notfallrelevant für (vorgelagert)" />
             
         <huirelation to="process" id="rel_bp_process_process4"
-            name="nachgelagert" reversename="vorgelagert" />
+            name="benötigt notfallrelevant (nachgelagert)" reversename="notfallrelevant für (nachgelagert)" />
               <!-- Ende: BCM relation -->
     <huirelation to="controlgroup" id="rel_process_controlgroup"
             name="impact reduced by" reversename="reduces impact of" tooltip=""/>
@@ -11859,13 +11859,13 @@ BAO-Reaktionszeit abzuziehen, um die RTO zu ermitteln." />
             name="depends on" reversename="necessary for" />
             <!-- Start: BCM relation -->
         <huirelation to="bp_businessprocess" id="rel_bp_businessprocess_bp_businessprocess2"
-            name="parallel" reversename="parallel" />
+            name="benötigt parallel" reversename="notfallrelevant für (parallel)" />
             
         <huirelation to="bp_businessprocess" id="rel_bp_businessprocess_bp_businessprocess3"
-            name="vorgelagert" reversename="nachgelagert" />
+            name="benötigt vorgelagert" reversename="notfallrelevant für (vorgelagert)" />
             
         <huirelation to="bp_businessprocess" id="rel_bp_businessprocess_bp_businessprocess4"
-            name="nachgelagert" reversename="vorgelagert" />
+            name="benötigt nachgelagert" reversename="notfallrelevant für (nachgelagert)" />
               <!-- Ende: BCM relation -->
               <huirelation to="bp_room" id="rel_bp_businessprocess_bp_room"
             name="findet statt im" reversename="Durchführung von" />
