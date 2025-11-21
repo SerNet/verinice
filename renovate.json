@@ -1,3 +1,17 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json"
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/.*\\.target$/"
+      ],
+      "matchStrings": [
+        "<groupId>(?<groupId>.*?)<\\/groupId>\\s*<artifactId>(?<artifactId>.*?)<\\/artifactId>\\s*<version>(?<currentValue>.*?)<\\/version>"
+      ],
+      "datasourceTemplate": "maven",
+      "versioningTemplate": "maven",
+      "packageNameTemplate": "{{{groupId}}}:{{{artifactId}}}"
+    }
+  ]
 }
