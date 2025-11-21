@@ -1,5 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "reviewers": [
+    "jk",
+    "uz"
+  ],
+  "automerge": true,
+  "automergeType": "pr",
+  "assignAutomerge": true,
   "customManagers": [
     {
       "customType": "regex",
