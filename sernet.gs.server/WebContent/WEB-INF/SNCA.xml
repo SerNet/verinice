@@ -6656,11 +6656,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                     <param id="control_implby_timeDifference">2</param>
                 </defaultRule>
             </huiproperty>
-             <!--  BCM V1.27 -->
-                <huiproperty id="control_requirement_implementation_date" name="Fertiggestellt am:"
-                required="false" inputtype="date">
-                <defaultRule class="Today" />
-            </huiproperty>
+         
         </huipropertygroup>
 
         <huipropertygroup name="SoA" id="control_soa_group" tags="SoA" >
@@ -6797,6 +6793,12 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                 inputtype="booleanoption"
                 defaultValue="0"
                 tags="BCM" />
+                
+                    <!--  BCM V1.27 -->
+                <huiproperty id="control_requirement_implementation_date" name="Fertiggestellt am:"
+                required="false" inputtype="date">
+                <defaultRule class="Today" />
+            </huiproperty>
                 
 <huiproperty editable="true" id="control_desc_plan_ressourcenbedarf" inputtype="text" name="Notwendige Ressourcen"
             showInObjectBrowser="false" textrows="4" visible="true" />
@@ -14539,11 +14541,7 @@ BAO-Reaktionszeit abzuziehen, um die RTO zu ermitteln." />
                 required="false" inputtype="date">
                 <defaultRule class="Today" />
             </huiproperty>
-             <!--  BCM V1.27 -->
-                <huiproperty id="bp_requirement_implementation_date" name="Fertiggestellt am:"
-                required="false" inputtype="date">
-                <defaultRule class="Today" />
-            </huiproperty>
+            
         </huipropertygroup>
 
 
@@ -14717,6 +14715,12 @@ BAO-Reaktionszeit abzuziehen, um die RTO zu ermitteln." />
                 defaultValue="0"
                 tags="BCM" />
                 
+                 <!--  BCM V1.27 -->
+                <huiproperty id="bp_requirement_implementation_date" name="Fertiggestellt am:" tags="BCM" 
+                required="false" inputtype="date">
+                  <defaultRule class="Today" />
+            </huiproperty>
+            
 <huiproperty editable="true" id="bp_requirement_desc_plan_ressourcenbedarf" inputtype="text" name="Notwendige Ressourcen" tags="BCM"
             showInObjectBrowser="false" textrows="4" visible="true" />
          </huipropertygroup>
@@ -16679,11 +16683,7 @@ BAO-Reaktionszeit abzuziehen, um die RTO zu ermitteln."/>
                 required="false" inputtype="date">
                 <defaultRule class="Today" />
             </huiproperty>
-            <!--  BCM V1.27 -->
-                <huiproperty id="bp_safeguard_implementation_date" name="Fertiggestellt am:"
-                required="false" inputtype="date">
-                <defaultRule class="Today" />
-            </huiproperty>
+           
         </huipropertygroup>
         <huipropertygroup id="bp_safeguard_revision" name="Revision">
             <huiproperty id="bp_safeguard_revision_previous_revision_date" inputtype="date" name="Previous revision date">
@@ -16800,8 +16800,15 @@ BAO-Reaktionszeit abzuziehen, um die RTO zu ermitteln."/>
                 defaultValue="0"
                 tags="BCM" />
                 
+                 <!--  BCM V1.27 -->
+                <huiproperty id="bp_safeguard_implementation_date" name="Fertiggestellt am:"  tags="BCM" 
+                required="false" inputtype="date">
+                <defaultRule class="Today" />
+            </huiproperty>
+                
 <huiproperty editable="true" id="bp_safeguard_desc_plan_ressourcenbedarf" inputtype="text" name="Notwendige Ressourcen" tags="BCM"
             showInObjectBrowser="false" textrows="4" visible="true" />
+            
          </huipropertygroup>
          
          <!-- ENDE:  BCM Aenderung -->
